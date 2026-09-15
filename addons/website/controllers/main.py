@@ -24,6 +24,7 @@ from odoo import _, fields, http, models, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import SessionExpiredException, request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import OrderedSet, consteq, escape_psql, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.json import scriptsafe as json
@@ -38,6 +39,7 @@ from odoo.addons.website.tools import get_base_hostname
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
@@ -87,20 +89,92 @@ class QueryURL:
         return path
 
 
+def _create_sitemap_attachment(url, content, mimetype):
+    _debug.lifecycle("sitemap_attachment_created", url=url, bytes=len(content))
+    return (
+        request.env["ir.attachment"]
+        .sudo()
+        .create(
+            {
+                "raw": content.encode(),
+                "mimetype": mimetype,
+                "type": "binary",
+                "name": url,
+                "url": url,
+            }
+        )
+    )
+
+
+def _font_content_matches_extension(filename, data):
+    ext = filename.rsplit(".")[-1].lower()
+    if ext == "otf":
+        return data.startswith(b"OTTO")
+    elif ext == "woff":
+        return data.startswith(b"wOFF")
+    elif ext == "woff2":
+        return data.startswith(b"wOF2")
+    elif ext == "ttf":
+        TOC_OFFSET = 12
+        TOC_ENTRY_LENGTH = 16
+        table_size = int.from_bytes(data[4:6], "big") * TOC_ENTRY_LENGTH
+        if TOC_OFFSET + table_size > len(data):
+            return False
+        mandatory_tags = {
+            b"cmap",
+            b"glyf",
+            b"head",
+            b"hhea",
+            b"hmtx",
+            b"loca",
+            b"maxp",
+            b"name",
+            b"post",
+        }
+        for offset in range(TOC_OFFSET, TOC_OFFSET + table_size, TOC_ENTRY_LENGTH):
+            tag = data[offset : offset + 4]
+            mandatory_tags.discard(tag)
+        return not mandatory_tags
+    return False
+
+
+def _create_font_attachment(font, data):
+    ext = font["name"].rsplit(".")[-1].lower()
+    font["mimetype"] = f"font/{ext}"
+    attachment = request.env["ir.attachment"].create(
+        {
+            "name": font["name"],
+            "mimetype": font["mimetype"],
+            "raw": data,
+            "public": True,
+        }
+    )
+    font["id"] = attachment.id
+    font["url"] = f"/web/content/{attachment.id}/{font['name']}"
+    _debug.lifecycle(
+        "font_attachment_created", name=font["name"], attachment=attachment.id
+    )
+    return font
+
+
 class Website(Home):
     @http.route("/", auth="public", website=True, sitemap=True)
     def index(self, **kw):
         homepage_url = request.website._get_cached("homepage_url")
         if homepage_url and homepage_url != "/":
+            _debug.logic("index_rerouted", to=homepage_url)
             request.reroute(homepage_url)
 
         website_page = request.env["ir.http"]._serve_page()
         if website_page:
+            _debug.logic("index", by="website_page")
             return website_page
 
         if homepage_url and homepage_url != "/":
+            _debug.logic("index_homepage_route_attempted", url=homepage_url)
             try:
                 rule, args = request.env["ir.http"]._match(homepage_url)
+                _debug.logic("index", by="homepage_route", url=homepage_url)
                 return request._serve_ir_http(rule, args)
             except AccessError, NotFound, SessionExpiredException:
                 pass
@@ -116,8 +190,10 @@ class Website(Home):
 
         reachable_menus = top_menu.child_id.filtered(is_reachable)
         if reachable_menus:
+            _debug.logic("index", by="first_reachable_menu", url=reachable_menus[0].url)
             return request.redirect(reachable_menus[0].url)
 
+        _debug.logic("index", by="not_found", menus=len(top_menu.child_id))
         raise request.prepare_not_found_error()
 
     @http.route(
@@ -134,6 +210,7 @@ class Website(Home):
             request.env.user.has_group("website.group_multi_website")
             and request.env.user.has_group("website.group_website_restricted_editor")
         ):
+            _debug.logic("website_force_refused", reason="no_group", website=website_id)
             return request.redirect(path)
 
         website = request.env["website"].browse(website_id)
@@ -147,7 +224,14 @@ class Website(Home):
                     website.domain,
                     f"/website/force/{website.id}?{query_params}",
                 )
+                _debug.logic(
+                    "website_force_cross_domain",
+                    website=website_id,
+                    host=domain_from,
+                    to=domain_to,
+                )
                 return request.redirect(url_to, local=False)
+        _debug.lifecycle("website_force", website=website_id, path=path)
         website._force()
         return request.redirect(path)
 
@@ -169,6 +253,7 @@ class Website(Home):
 
         if request.env.user._is_internal():
             path = request.website.get_client_action_url(path, mode_edit, mode_debug)
+            _debug.logic("client_action_redirect", by="backend", path=path)
 
         return request.redirect(path)
 
@@ -218,6 +303,7 @@ class Website(Home):
         request.update_context(lang=lang_code)
         redirect = request.redirect(r or ("/%s" % lang))
         redirect.set_cookie("frontend_lang", lang_code)
+        _debug.lifecycle("lang_changed", lang=lang, code=lang_code, to=r)
         return redirect
 
     @http.route(
@@ -281,22 +367,14 @@ class Website(Home):
         hashed_url_root = md5(url_root.encode()).hexdigest()[:8]
         sitemap_base_url = "/sitemap-%d-%s" % (current_website.id, hashed_url_root)
 
-        def create_sitemap(url, content):
-            return Attachment.create(
-                {
-                    "raw": content.encode(),
-                    "mimetype": mimetype,
-                    "type": "binary",
-                    "name": url,
-                    "url": url,
-                }
-            )
-
         dom = [("url", "=", "%s.xml" % sitemap_base_url), ("type", "=", "binary")]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             delta = fields.Datetime.now() - sitemap.create_date
             if delta < SITEMAP_CACHE_TIME:
+                _debug.logic(
+                    "sitemap", by="cache", website=current_website.id, age=delta
+                )
                 content = sitemap.raw
 
         if not content:
@@ -305,6 +383,11 @@ class Website(Home):
                 ("url", "=like", "/sitemap-%d-%%" % current_website.id),
             ]
             sitemaps = Attachment.search(dom)
+            _debug.lifecycle(
+                "sitemap_cache_dropped",
+                website=current_website.id,
+                attachments=len(sitemaps),
+            )
             sitemaps.unlink()
 
             pages = 0
@@ -320,13 +403,15 @@ class Website(Home):
                         "website.sitemap_xml", {"content": urls}
                     )
                     pages += 1
-                    last_sitemap = create_sitemap(
-                        "%s-%d.xml" % (sitemap_base_url, pages), content
+                    last_sitemap = _create_sitemap_attachment(
+                        "%s-%d.xml" % (sitemap_base_url, pages), content, mimetype
                     )
                 else:
                     break
 
+            _debug.perf.count("sitemap_built", website=current_website.id, pages=pages)
             if not pages:
+                _debug.logic("sitemap", by="empty", website=current_website.id)
                 return request.prepare_not_found_error()
             elif pages == 1:
                 last_sitemap.write(
@@ -348,7 +433,9 @@ class Website(Home):
                         "url_root": url_root,
                     },
                 )
-                create_sitemap("%s.xml" % sitemap_base_url, content)
+                _create_sitemap_attachment(
+                    "%s.xml" % sitemap_base_url, content, mimetype
+                )
 
         return request.prepare_response(content, [("Content-Type", mimetype)])
 
@@ -409,8 +496,10 @@ class Website(Home):
     )
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group("website.group_website_designer"):
+            _debug.logic("configurator_refused", reason="not_designer")
             raise werkzeug.exceptions.NotFound
         if request.website.configurator_done:
+            _debug.logic("configurator_refused", reason="already_done")
             return request.redirect("/")
         if request.env.lang != request.website.default_lang_id.code:
             return request.redirect(
@@ -434,7 +523,9 @@ class Website(Home):
     def social(self, social, **kwargs):
         url = getattr(request.website, "social_%s" % social, False)
         if not url:
+            _debug.logic("social_refused", reason="unset", network=social)
             raise werkzeug.exceptions.NotFound
+        _debug.logic("social_redirect", network=social)
         return request.redirect(url, local=False)
 
     @http.route(
@@ -490,6 +581,13 @@ class Website(Home):
                     }
                 )
 
+        _debug.pipeline(
+            "suggested_links",
+            needle=needle,
+            pages=len(matching_pages),
+            last_modified=len(matching_last_modified),
+            controllers=len(suggested_controllers),
+        )
         return {
             "matching_pages": sorted(matching_pages, key=lambda o: o["label"]),
             "others": [
@@ -518,6 +616,7 @@ class Website(Home):
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ("grid", "list"), "Invalid layout mode"
         view_id = int(view_id)
+        _debug.lifecycle("layout_mode_saved", view=view_id, mode=layout_mode)
         request.session[f"website_{view_id}_layout_mode"] = layout_mode
 
     @http.route(
@@ -647,11 +746,18 @@ class Website(Home):
                 )
             )
         except ValueError:
+            _debug.logic("autocomplete_order_rejected", order=order)
             results_count, search_results, fuzzy_term = (
                 request.website._search_with_fuzzy(
                     search_type, term, limit, self._get_search_order(None), options
                 )
             )
+        _debug.perf.count(
+            "autocomplete",
+            search_type=search_type,
+            results=results_count,
+            fuzzy=fuzzy_term or None,
+        )
         if not results_count:
             return {
                 "results": [],
@@ -678,46 +784,12 @@ class Website(Home):
                 reverse=bool(order) and "name desc" in order,
             )
         results_data = results_data[:limit]
-        result = []
-        for record in results_data:
-            mapping = record["_mapping"]
-            mapped = {
-                "_fa": record.get("_fa"),
-            }
-            for mapped_name, field_meta in mapping.items():
-                value = record.get(field_meta.get("name"))
-                if not value:
-                    mapped[mapped_name] = ""
-                    continue
-                field_type = field_meta.get("type")
-                if field_type == "text":
-                    if field_meta.get("truncate", True):
-                        value = shorten(value, max_nb_chars, placeholder="...")
-                    if field_meta.get("match") and highlight_pattern:
-                        parts = highlight_pattern.split(value)
-                        if len(parts) > 1:
-                            value = (
-                                request.env["ir.ui.view"]
-                                .sudo()
-                                ._render_template(
-                                    "website.search_text_with_highlight",
-                                    {"parts": parts},
-                                )
-                            )
-                            field_type = "html"
-
-                if (
-                    field_type not in ("image", "binary")
-                    and ("ir.qweb.field.%s" % field_type) in request.env
-                ):
-                    opt = {}
-                    if field_type == "monetary":
-                        opt["display_currency"] = options.get("display_currency")
-                    value = request.env[
-                        ("ir.qweb.field.%s" % field_type)
-                    ].value_to_html(value, opt)
-                mapped[mapped_name] = escape(value)
-            result.append(mapped)
+        result = [
+            self._render_autocomplete_record(
+                record, max_nb_chars, highlight_pattern, options
+            )
+            for record in results_data
+        ]
 
         return {
             "results": result,
@@ -725,6 +797,47 @@ class Website(Home):
             "parts": {key: True for mapping in mappings for key in mapping},
             "fuzzy_search": fuzzy_term,
         }
+
+    def _render_autocomplete_record(
+        self, record, max_nb_chars, highlight_pattern, options
+    ):
+        mapped = {
+            "_fa": record.get("_fa"),
+        }
+        for mapped_name, field_meta in record["_mapping"].items():
+            value = record.get(field_meta.get("name"))
+            if not value:
+                mapped[mapped_name] = ""
+                continue
+            field_type = field_meta.get("type")
+            if field_type == "text":
+                if field_meta.get("truncate", True):
+                    value = shorten(value, max_nb_chars, placeholder="...")
+                if field_meta.get("match") and highlight_pattern:
+                    parts = highlight_pattern.split(value)
+                    if len(parts) > 1:
+                        value = (
+                            request.env["ir.ui.view"]
+                            .sudo()
+                            ._render_template(
+                                "website.search_text_with_highlight",
+                                {"parts": parts},
+                            )
+                        )
+                        field_type = "html"
+
+            if (
+                field_type not in ("image", "binary")
+                and ("ir.qweb.field.%s" % field_type) in request.env
+            ):
+                opt = {}
+                if field_type == "monetary":
+                    opt["display_currency"] = options.get("display_currency")
+                value = request.env[("ir.qweb.field.%s" % field_type)].value_to_html(
+                    value, opt
+                )
+            mapped[mapped_name] = escape(value)
+        return mapped
 
     def _get_page_search_options(self, **post):
         return {
@@ -878,8 +991,14 @@ class Website(Home):
             limit=1,
         )
         if menu:
+            _debug.lifecycle(
+                "menu_bound_to_new_page", menu=menu.id, page=page["page_id"]
+            )
             menu.page_id = page["page_id"]
 
+        _debug.lifecycle(
+            "pagenew", path=path, url=url, extension=ext or None, add_menu=add_menu
+        )
         if redirect:
             if ext_special_case:
                 return request.redirect(f"/odoo/ir.ui.view/{page.get('view_id')}")
@@ -966,6 +1085,11 @@ class Website(Home):
                     )
                 except Exception as error:
                     if hasattr(error, "qweb"):
+                        _debug.logic(
+                            "page_template_skipped",
+                            reason="incompatible_theme",
+                            key=template.key,
+                        )
                         logger.warning(
                             "Theme not compatible with template %r: %s",
                             template.key,
@@ -975,12 +1099,21 @@ class Website(Home):
                         raise
             if group["templates"]:
                 result.append(group)
+        _debug.pipeline(
+            "new_page_templates",
+            groups=len(result),
+            templates=sum(len(group["templates"]) for group in result),
+        )
         return result
 
     @http.route("/website/save_xml", type="jsonrpc", auth="user", website=True)
     def save_xml(self, view_id, arch):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "save_xml_refused", reason="not_restricted_editor", view=view_id
+            )
             raise werkzeug.exceptions.Forbidden
+        _debug.lifecycle("save_xml", view=view_id, length=len(arch or ""))
         request.env["ir.ui.view"].browse(view_id).with_context(
             lang=request.website.default_lang_id.code,
             delay_translations=True,
@@ -1009,8 +1142,14 @@ class Website(Home):
     )
     def reset_template(self, view_id, mode="soft", **kwargs):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "reset_template_refused",
+                reason="not_restricted_editor",
+                view=view_id,
+            )
             raise werkzeug.exceptions.Forbidden
         view = request.env["ir.ui.view"].browse(int(view_id))
+        _debug.lifecycle("reset_template", view=view.id, key=view.key, mode=mode)
         view.with_context(website_id=None).reset_arch(mode)
         return True
 
@@ -1027,23 +1166,26 @@ class Website(Home):
         language = [match.group(1), match.group(2) or ""] if match else ["en", "US"]
         url = "https://www.google.com/complete/search"
         try:
-            req = request.env["ir.egress"].request(
-                "GET",
-                url,
-                purpose="seo_suggest",
-                params={
-                    "ie": "utf8",
-                    "oe": "utf8",
-                    "output": "toolbar",
-                    "q": keywords,
-                    "hl": language[0],
-                    "gl": language[1],
-                },
-                timeout=5,
-            )
+            with _debug.perf("seo_suggest_requested", lang=language[0]) as span:
+                req = request.env["ir.egress"].request(
+                    "GET",
+                    url,
+                    purpose="seo_suggest",
+                    params={
+                        "ie": "utf8",
+                        "oe": "utf8",
+                        "output": "toolbar",
+                        "q": keywords,
+                        "hl": language[0],
+                        "gl": language[1],
+                    },
+                    timeout=5,
+                )
+                span.set(status=getattr(req, "status_code", None))
             req.raise_for_status()
             response = req.content
         except OSError:
+            _debug.logic("seo_suggest_failed", reason="unreachable")
             return json.dumps([])
         xmlroot = defused_fromstring(response)
         return json.dumps(
@@ -1057,11 +1199,18 @@ class Website(Home):
     @http.route(["/website/get_alt_images"], type="jsonrpc", auth="user", website=True)
     def get_alt_images(self, models):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("alt_images_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
         result = []
         for model in models:
             record = self._get_html_record(model["model"], model["id"])
             if not record.has_access("read"):
+                _debug.logic(
+                    "alt_images_record_skipped",
+                    reason="no_read_access",
+                    model=model["model"],
+                    record=model["id"],
+                )
                 continue
             field_name = "arch_db" if model["field"] == "arch" else model["field"]
             tree = self._get_html_tree(record, field_name)
@@ -1084,6 +1233,7 @@ class Website(Home):
                             "field": field_name,
                         }
                     )
+        _debug.pipeline("alt_images", records=len(models), images=len(result))
         return json.dumps(result)
 
     @http.route(
@@ -1091,7 +1241,9 @@ class Website(Home):
     )
     def update_alt_images(self, imgs):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("update_alt_images_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
+        _debug.lifecycle("update_alt_images", images=len(imgs))
         self._update_html_fields(imgs, self._update_image_attributes)
 
     def _update_image_attributes(self, tree, imgs):
@@ -1103,6 +1255,9 @@ class Website(Home):
             if img := images_by_id.pop(f"{prefix}{index}", None):
                 if "src" in img and img["src"] != element.get("src"):
                     logger.debug("Stale website image target id=%s", img["id"])
+                    _debug.logic(
+                        "image_update_refused", reason="stale_src", img=img["id"]
+                    )
                     raise UserError(
                         _(
                             "The page images have changed. Refresh the page before saving image descriptions."
@@ -1127,6 +1282,11 @@ class Website(Home):
                 modified = True
         if any("src" in img for img in images_by_id.values()):
             logger.debug("Missing website image targets count=%d", len(images_by_id))
+            _debug.logic(
+                "image_update_refused",
+                reason="missing_targets",
+                missing=len(images_by_id),
+            )
             raise UserError(
                 _(
                     "The page images have changed. Refresh the page before saving image descriptions."
@@ -1139,7 +1299,9 @@ class Website(Home):
     )
     def update_broken_links(self, links):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("update_links_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
+        _debug.lifecycle("update_broken_links", links=len(links))
         self._update_html_fields(links, self._update_link_urls)
 
     def _update_link_urls(self, tree, links):
@@ -1172,9 +1334,21 @@ class Website(Home):
         ), field_updates in updates_by_field.items():
             record = self._get_html_record(model_name, record_id)
             if not record.has_access("write"):
+                _debug.logic(
+                    "html_update_skipped",
+                    reason="no_write_access",
+                    model=model_name,
+                    record=record_id,
+                )
                 continue
             field = record._fields.get(field_name)
             if not field or field.type not in ("html", "text") or not field.store:
+                _debug.logic(
+                    "html_update_skipped",
+                    reason="not_a_stored_html_field",
+                    model=model_name,
+                    field=field_name,
+                )
                 continue
             tree = self._get_html_tree(record, field_name)
             modified = update_tree(tree, field_updates)
@@ -1189,6 +1363,13 @@ class Website(Home):
             if modified:
                 new_html_content = html.tostring(
                     tree, encoding="unicode", method="html"
+                )
+                _debug.lifecycle(
+                    "html_field_rewritten",
+                    model=model_name,
+                    record=record_id,
+                    field=field_name,
+                    updates=len(field_updates),
                 )
                 record.write({field_name: new_html_content})
 
@@ -1241,6 +1422,7 @@ class Website(Home):
                 record = request.env[res_model].browse(res_id)
                 record.check_access("write")
             except AccessError:
+                _debug.logic("seo_data_refused", model=res_model, record=res_id)
                 raise werkzeug.exceptions.Forbidden from None
 
         fields = [
@@ -1258,6 +1440,7 @@ class Website(Home):
         try:
             request.website._check_access_to_modify(record)
         except AccessError:
+            _debug.logic("seo_read_only", model=res_model, record=res_id)
             res["can_edit_seo"] = False
         if request.env.user.has_group("website.group_website_restricted_editor"):
             record = record.sudo()
@@ -1284,6 +1467,7 @@ class Website(Home):
     )
     def check_can_modify_any(self, records):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("check_modify_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
         first_error = None
         for rec in records:
@@ -1296,6 +1480,11 @@ class Website(Home):
                     first_error = e
                 continue
         if first_error:
+            _debug.logic(
+                "check_modify_refused",
+                reason="no_writable_record",
+                records=len(records),
+            )
             raise first_error
         return True
 
@@ -1310,12 +1499,14 @@ class Website(Home):
     def google_console_search(self, key, **kwargs):
         if not request.website.google_search_console:
             logger.warning("Google Search Console not enable")
+            _debug.logic("google_console_refused", reason="not_configured")
             raise werkzeug.exceptions.NotFound
         gsc = request.website.google_search_console
         trusted = gsc.removeprefix("google").removesuffix(".html")
 
         if not consteq(key, trusted):
             logger.warning("Google Search Console %s not recognize", key)
+            _debug.logic("google_console_refused", reason="key_mismatch")
             raise werkzeug.exceptions.NotFound
 
         return request.prepare_response(
@@ -1348,13 +1539,19 @@ class Website(Home):
         )
         yesterday = fields.Datetime.add(fields.Datetime.now(), days=-1)
         if not metadata or metadata.write_date < yesterday:
-            req = request.env["ir.egress"].request(
-                "GET",
-                "https://fonts.google.com/metadata/fonts",
-                purpose="google_fonts",
-                timeout=5,
-            )
+            with _debug.perf("google_fonts_requested", cached=bool(metadata)) as span:
+                req = request.env["ir.egress"].request(
+                    "GET",
+                    "https://fonts.google.com/metadata/fonts",
+                    purpose="google_fonts",
+                    timeout=5,
+                )
+                span.set(status=getattr(req, "status_code", None))
             if req.status_code != requests.codes.ok:
+                _debug.logic(
+                    "google_fonts_failed",
+                    status=getattr(req, "status_code", None),
+                )
                 return {
                     "familyMetadataList": [],
                 }
@@ -1398,13 +1595,24 @@ class Website(Home):
     ):
         if disable:
             records = self._get_customize_data(disable, is_view_data).filtered("active")
+            _debug.lifecycle(
+                "theme_customize",
+                action="disable",
+                views=is_view_data,
+                records=records,
+                reset_arch=reset_view_arch,
+            )
             if reset_view_arch:
                 records.reset_arch(mode="hard")
             records.write({"active": False})
 
         if enable:
             records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({"active": True})
+            enabled = records.filtered(lambda x: not x.active)
+            _debug.lifecycle(
+                "theme_customize", action="enable", views=is_view_data, records=enabled
+            )
+            enabled.write({"active": True})
 
     @http.route(
         ["/website/theme_customize_bundle_reload"],
@@ -1464,64 +1672,22 @@ class Website(Home):
     )
     def theme_upload_font(self, name, data):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("font_upload_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
-
-        def check_content(filename, data):
-            ext = filename.rsplit(".")[-1].lower()
-            if ext == "otf":
-                return data.startswith(b"OTTO")
-            elif ext == "woff":
-                return data.startswith(b"wOFF")
-            elif ext == "woff2":
-                return data.startswith(b"wOF2")
-            elif ext == "ttf":
-                TOC_OFFSET = 12
-                TOC_ENTRY_LENGTH = 16
-                table_size = int.from_bytes(data[4:6], "big") * TOC_ENTRY_LENGTH
-                if TOC_OFFSET + table_size > len(data):
-                    return False
-                mandatory_tags = {
-                    b"cmap",
-                    b"glyf",
-                    b"head",
-                    b"hhea",
-                    b"hmtx",
-                    b"loca",
-                    b"maxp",
-                    b"name",
-                    b"post",
-                }
-                for offset in range(
-                    TOC_OFFSET, TOC_OFFSET + table_size, TOC_ENTRY_LENGTH
-                ):
-                    tag = data[offset : offset + 4]
-                    mandatory_tags.discard(tag)
-                return not mandatory_tags
-            return False
-
-        def create_attachment(font, data):
-            ext = font["name"].rsplit(".")[-1].lower()
-            font["mimetype"] = f"font/{ext}"
-            attachment = request.env["ir.attachment"].create(
-                {
-                    "name": font["name"],
-                    "mimetype": font["mimetype"],
-                    "raw": data,
-                    "public": True,
-                }
-            )
-            font["id"] = attachment.id
-            font["url"] = f"/web/content/{attachment.id}/{font['name']}"
-            return font
 
         result = []
         if len(data) > 4 * ((MAX_FONT_UPLOAD_SIZE + 2) // 3):
+            _debug.logic("font_upload_refused", reason="encoded_too_large")
             raise UserError(_("Font upload exceeds maximum allowed file size"))
         try:
             binary_data = base64.b64decode(data, validate=True)
         except binascii.Error, ValueError:
+            _debug.logic("font_upload_refused", reason="not_base64")
             raise UserError(_("Font upload is not valid base64 data")) from None
         if len(binary_data) > MAX_FONT_UPLOAD_SIZE:
+            _debug.logic(
+                "font_upload_refused", reason="too_large", bytes=len(binary_data)
+            )
             raise UserError(_("Font upload exceeds maximum allowed file size"))
         readable_data = BytesIO(binary_data)
         if zipfile.is_zipfile(readable_data):
@@ -1537,6 +1703,12 @@ class Website(Home):
                     len(entries) > MAX_FONT_ARCHIVE_ENTRIES
                     or expanded_size > MAX_FONT_ARCHIVE_SIZE
                 ):
+                    _debug.logic(
+                        "font_upload_refused",
+                        reason="archive_too_large",
+                        entries=len(entries),
+                        expanded=expanded_size,
+                    )
                     raise UserError(
                         _(
                             "Font archive exceeds maximum allowed size or number of files"
@@ -1544,6 +1716,11 @@ class Website(Home):
                     )
                 for entry in entries:
                     if entry.file_size > MAX_FONT_FILE_SIZE:
+                        _debug.logic(
+                            "font_upload_refused",
+                            reason="entry_too_large",
+                            entry=entry.filename,
+                        )
                         raise UserError(
                             _(
                                 "File '%s' exceeds maximum allowed file size",
@@ -1568,13 +1745,18 @@ class Website(Home):
                         NotImplementedError,
                         zlib.error,
                     ):
+                        _debug.logic(
+                            "font_upload_refused",
+                            reason="corrupt_entry",
+                            entry=entry.filename,
+                        )
                         raise UserError(
                             _("File '%s' is corrupted", entry.filename)
                         ) from None
-                    if not check_content(entry.filename, data):
+                    if not _font_content_matches_extension(entry.filename, data):
                         continue
                     result.append(
-                        create_attachment(
+                        _create_font_attachment(
                             {
                                 "name": f"{name}-{entry.filename.replace('/', '-')}",
                             },
@@ -1583,12 +1765,17 @@ class Website(Home):
                     )
         elif len(binary_data) > MAX_FONT_FILE_SIZE:
             logger.debug("Oversized standalone font bytes=%d", len(binary_data))
+            _debug.logic(
+                "font_upload_refused", reason="file_too_large", bytes=len(binary_data)
+            )
             raise UserError(_("File '%s' exceeds maximum allowed file size", name))
         elif name.rsplit(".", 1)[
             -1
-        ].lower() in SUPPORTED_FONT_EXTENSIONS and check_content(name, binary_data):
+        ].lower() in SUPPORTED_FONT_EXTENSIONS and _font_content_matches_extension(
+            name, binary_data
+        ):
             result.append(
-                create_attachment(
+                _create_font_attachment(
                     {
                         "name": name,
                     },
@@ -1596,7 +1783,9 @@ class Website(Home):
                 )
             )
         if not result:
+            _debug.logic("font_upload_refused", reason="unrecognized", name=name)
             raise UserError(_("File '%s' is not recognized as a font", name))
+        _debug.lifecycle("fonts_uploaded", name=name, fonts=len(result))
         return result
 
     @http.route(
@@ -1634,12 +1823,18 @@ class Website(Home):
             except ValueError:
                 pass
 
-        if action:
-            if action.state == "code" and action.website_published:
+        if action and action.state == "code" and action.website_published:
+            with _debug.perf("server_action_run", cr=request.env.cr, action=action.id):
                 action_res = ServerActions.browse(action.id).run()
-                if isinstance(action_res, werkzeug.wrappers.Response):
-                    return action_res
+            if isinstance(action_res, werkzeug.wrappers.Response):
+                return action_res
 
+        _debug.logic(
+            "server_action_not_served",
+            reference=path_or_xml_id_or_id,
+            action=action.id if action else None,
+            state=action.state if action else None,
+        )
         return request.redirect("/")
 
     @http.route(
@@ -1681,6 +1876,13 @@ class Website(Home):
                 "js", views, bundles_restriction, only_user_custom_files
             )
 
+        _debug.pipeline(
+            "assets_editor_resources",
+            key=key,
+            views=len(views),
+            scss_bundles=len(scss_files_data_by_bundle),
+            js_bundles=len(js_files_data_by_bundle),
+        )
         return {
             "views": (get_views and views) or [],
             "scss": (get_scss and scss_files_data_by_bundle) or [],
@@ -1765,6 +1967,12 @@ class Website(Home):
                     "customized": url_info["customized"],
                 }
 
+        _debug.perf.count(
+            "editor_resources_loaded",
+            file_type=file_type,
+            bundles=len(files_data_by_bundle),
+            urls=len(urls),
+        )
         return files_data_by_bundle
 
     @http.route(
@@ -1779,6 +1987,13 @@ class Website(Home):
                 for key, value in translation.items():
                     translation[key] = field.translate.term_converter(value)
             source_lang = record._get_base_lang()
+        _debug.lifecycle(
+            "field_translation_updated",
+            model=model,
+            record=record_id,
+            field=field_name,
+            langs=sorted(translations or ()),
+        )
         return record._update_field_translations(
             field_name,
             translations,

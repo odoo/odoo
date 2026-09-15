@@ -4,6 +4,9 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class CrmLead(models.Model):
@@ -356,6 +359,11 @@ class CrmLead(models.Model):
             "country_id",
         ]
         if any(key not in fields for key in values):
+            _debug.logic(
+                "lead_update_refused",
+                reason="unauthorized_field",
+                fields=sorted(set(values) - set(fields)),
+            )
             raise UserError(
                 _(
                     "Not allowed to update the following field(s): %s.",
@@ -382,6 +390,7 @@ class CrmLead(models.Model):
             self.env.user.partner_id.grade_id
             or self.env.user.commercial_partner_id.grade_id
         ):
+            _debug.logic("partner_assign_refused", reason="no_grade", user=self.env.uid)
             raise AccessDenied
         user = self.env.user
         self = self.sudo()

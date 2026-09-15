@@ -1,8 +1,10 @@
 import logging
 
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
@@ -13,6 +15,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # Visitor analytics are internal merge metadata, scoped to these contacts.
         visitors = dst_partner.sudo().visitor_ids | src_partners.sudo().visitor_ids
         dst_visitor = visitors[:1]
+        _debug.lifecycle(
+            "partner_merge_visitors",
+            destination=dst_partner.id,
+            sources=len(src_partners),
+            visitors=len(visitors),
+        )
         for visitor in visitors[1:]:
             visitor._merge_visitor(dst_visitor)
 

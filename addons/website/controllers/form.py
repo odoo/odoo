@@ -10,6 +10,7 @@ from werkzeug.exceptions import BadRequest
 from odoo import SUPERUSER_ID, Command, http
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import nl2br, nl2br_enclose
 from odoo.tools import plaintext2html
 from odoo.tools.misc import consteq, hmac
@@ -19,6 +20,7 @@ from ..tools import website_form_signature_payload
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -45,7 +47,9 @@ class WebsiteForm(http.Controller):
     def website_form(self, model_name, **kwargs):  # noqa: E8528 - a visitor's form; a signed-in session's CSRF token is checked in the body
         csrf_token = request.params.pop("csrf_token", None)
         if request.session.uid and not request.is_valid_csrf(csrf_token):
+            _debug.logic("form_refused", reason="invalid_csrf", model=model_name)
             raise BadRequest("Session expired (invalid CSRF token)")
+        _debug.pipeline("form_submitted", model=model_name, fields=sorted(kwargs))
 
         try:
             with request.env.cr.savepoint() as sp:
@@ -58,12 +62,14 @@ class WebsiteForm(http.Controller):
                     sp.closed = True
                 return res
         except (ValidationError, UserError) as e:
+            _debug.logic("form_refused", reason="validation", model=model_name)
             return request.prepare_json_response(
                 {
                     "error": e.args[0],
                 }
             )
         except IntegrityError:
+            _debug.logic("form_refused", reason="integrity_error", model=model_name)
             return request.prepare_json_response(False)
 
     def _handle_website_form(self, model_name, **kwargs):
@@ -73,6 +79,9 @@ class WebsiteForm(http.Controller):
             .search([("model", "=", model_name), ("website_form_access", "=", True)])
         )
         if not model_record:
+            _debug.logic(
+                "form_refused", reason="model_not_form_enabled", model=model_name
+            )
             return request.prepare_json_response(
                 {"error": _("The form's specified model does not exist")}
             )
@@ -90,11 +99,22 @@ class WebsiteForm(http.Controller):
             hash_value = hmac(model_record.env, "website_form_signature", value)
             if not consteq(signature, hash_value):
                 _logger.debug("Rejected website mail form before record creation")
+                _debug.logic(
+                    "form_refused",
+                    reason="bad_mail_signature",
+                    recipients=sorted(extra_recipients),
+                )
                 raise AccessDenied(self.env._("invalid website_form_signature"))
 
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
+            _debug.logic(
+                "form_refused",
+                reason="field_errors",
+                model=model_name,
+                fields=e.args[0],
+            )
             return request.prepare_json_response({"error_fields": e.args[0]})
 
         id_record = self.create_record(
@@ -114,6 +134,12 @@ class WebsiteForm(http.Controller):
         request.session["form_builder_model"] = model_record.name
         request.session["form_builder_id"] = id_record
 
+        _debug.lifecycle(
+            "form_record_created",
+            model=model_name,
+            record=id_record,
+            attachments=len(data["attachments"]),
+        )
         return request.prepare_json_response({"id": id_record})
 
     _meta_label = _lt("Metadata")
@@ -168,6 +194,42 @@ class WebsiteForm(http.Controller):
         "tags": tags,
     }
 
+    def _extract_authorized_field(self, data, authorized_fields, field_name, value):
+        if "_property" in authorized_fields[field_name]:
+            field_data = authorized_fields[field_name]
+            properties_field_name = field_data["_property"]["field"]
+            del field_data["_property"]
+            properties = data["record"].setdefault(properties_field_name, [])
+            property_type = authorized_fields[field_name]["type"]
+            filter_type = "one2many" if property_type == "many2many" else property_type
+            field_data["value"] = self._input_filters[filter_type](
+                self, field_name, value
+            )
+            properties.append(field_data)
+            return
+        input_filter = self._input_filters[authorized_fields[field_name]["type"]]
+        data["record"][field_name] = input_filter(self, field_name, value)
+
+    def _extract_request_metadata(self):
+        if not (
+            request.env["ir.config_parameter"]
+            .sudo()
+            .get_param("website_form_enable_metadata")
+        ):
+            return ""
+        environ = request.httprequest.headers.environ
+        _debug.logic("form_metadata_collected")
+        return "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % (
+            "IP",
+            environ.get("REMOTE_ADDR"),
+            "USER_AGENT",
+            environ.get("HTTP_USER_AGENT"),
+            "ACCEPT_LANGUAGE",
+            environ.get("HTTP_ACCEPT_LANGUAGE"),
+            "REFERER",
+            environ.get("HTTP_REFERER"),
+        )
+
     def extract_data(self, model_sudo, values):
         if not model_sudo.env.su:
             raise ValueError("model_sudo should get passed with sudo")
@@ -209,32 +271,16 @@ class WebsiteForm(http.Controller):
 
             elif field_name in authorized_fields:
                 try:
-                    if "_property" in authorized_fields[field_name]:
-                        field_data = authorized_fields[field_name]
-                        properties_field_name = field_data["_property"]["field"]
-                        del field_data["_property"]
-                        properties = data["record"].setdefault(
-                            properties_field_name, []
-                        )
-                        property_type = authorized_fields[field_name]["type"]
-                        filter_type = (
-                            "one2many"
-                            if property_type == "many2many"
-                            else property_type
-                        )
-                        input_filter = self._input_filters[filter_type]
-                        field_data["value"] = input_filter(
-                            self, field_name, field_value
-                        )
-                        properties.append(field_data)
-                    else:
-                        input_filter = self._input_filters[
-                            authorized_fields[field_name]["type"]
-                        ]
-                        data["record"][field_name] = input_filter(
-                            self, field_name, field_value
-                        )
+                    self._extract_authorized_field(
+                        data, authorized_fields, field_name, field_value
+                    )
                 except ValueError:
+                    _debug.logic(
+                        "form_field_rejected",
+                        model=dest_model._name,
+                        field=field_name,
+                        type=authorized_fields[field_name]["type"],
+                    )
                     error_fields.append(field_name)
 
                 if dest_model._name == "mail.mail" and field_name == "email_from":
@@ -256,22 +302,7 @@ class WebsiteForm(http.Controller):
 
         data["custom"] = "\n".join(["%s : %s" % v for v in custom_fields])
 
-        if (
-            request.env["ir.config_parameter"]
-            .sudo()
-            .get_param("website_form_enable_metadata")
-        ):
-            environ = request.httprequest.headers.environ
-            data["meta"] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % (
-                "IP",
-                environ.get("REMOTE_ADDR"),
-                "USER_AGENT",
-                environ.get("HTTP_USER_AGENT"),
-                "ACCEPT_LANGUAGE",
-                environ.get("HTTP_ACCEPT_LANGUAGE"),
-                "REFERER",
-                environ.get("HTTP_REFERER"),
-            )
+        data["meta"] += self._extract_request_metadata()
 
         if hasattr(dest_model, "website_form_input_filter"):
             data["record"] = dest_model.website_form_input_filter(
@@ -284,8 +315,21 @@ class WebsiteForm(http.Controller):
             if field["required"] and label not in data["record"]
         ]
         if any(error_fields):
+            _debug.logic(
+                "form_extract_refused",
+                model=dest_model._name,
+                errors=error_fields,
+                missing=missing_required_fields,
+            )
             raise ValidationError(error_fields + missing_required_fields)
 
+        _debug.pipeline(
+            "form_data_extracted",
+            model=dest_model._name,
+            fields=len(data["record"]),
+            attachments=len(data["attachments"]),
+            custom=len(custom_fields),
+        )
         return data
 
     def create_record(self, request, model_sudo, values, custom, meta=None):
@@ -329,6 +373,7 @@ class WebsiteForm(http.Controller):
                     custom_content = nl2br(custom_content)
                 record.update({default_field.name: custom_content})
             elif hasattr(record, "_message_log"):
+                _debug.logic("form_custom_content", by="chatter", model=model_name)
                 record._message_log(
                     body=nl2br_enclose(custom_content, "p"),
                     message_type="comment",
@@ -362,6 +407,13 @@ class WebsiteForm(http.Controller):
                 record_sudo[file.field_name] = value
             else:
                 orphan_attachment_ids.append(attachment_id.id)
+        _debug.lifecycle(
+            "form_attachments_created",
+            model=model_name,
+            record=id_record,
+            files=len(files),
+            orphans=len(orphan_attachment_ids),
+        )
 
         if (
             model_name != "mail.mail"

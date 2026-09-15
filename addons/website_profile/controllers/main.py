@@ -9,7 +9,10 @@ from odoo import _, fields, http, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import LazyTranslate
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -36,8 +39,15 @@ class WebsiteProfile(http.Controller):
             return user_sudo, False
 
         if not user_sudo.website_published:
+            _debug.logic("profile_refused", reason="private", user=user_id)
             return False, _("This profile is private!")
         elif request.env.user.karma < request.website.karma_profile_min:
+            _debug.logic(
+                "profile_refused",
+                reason="karma",
+                user=user_id,
+                required=request.website.karma_profile_min,
+            )
             return False, _("Not have enough karma to view other users' profile.")
         return user_sudo, False
 

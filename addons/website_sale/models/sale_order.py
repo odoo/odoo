@@ -7,6 +7,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 
 from odoo.addons.website_sale.models.website import (
@@ -14,6 +15,8 @@ from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
 )
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -188,6 +191,12 @@ class SaleOrder(models.Model):
                 if "company_id" in vals:
                     company = self.env["res.company"].browse(vals["company_id"])
                     if website.company_id.id != company.id:
+                        _debug.logic(
+                            "cart_create_refused",
+                            reason="company_mismatch",
+                            website=website.id,
+                            company=company.id,
+                        )
                         raise UserError(
                             _(
                                 "The company of the website you are trying to sell from (%(website_company)s)"
@@ -345,6 +354,13 @@ class SaleOrder(models.Model):
         if existing_sol := self._cart_find_product_line(
             product_id, uom_id=uom_id, **kwargs
         )[:1]:
+            _debug.logic(
+                "cart_add",
+                by="merged_into_line",
+                order=self.id,
+                product=product_id,
+                line=existing_sol.id,
+            )
             return self._cart_update_line_quantity(
                 line_id=existing_sol.id,  # type: ignore[attr-defined]
                 quantity=existing_sol.product_qty + quantity,
@@ -360,8 +376,16 @@ class SaleOrder(models.Model):
         )
 
         order_line = self._create_new_cart_line(product_id, quantity, uom_id, **kwargs)
+        _debug.lifecycle(
+            "cart_line_created",
+            order=self.id,
+            product=product_id,
+            line=order_line.id,
+            quantity=quantity,
+        )
 
         if warning:
+            _debug.logic("cart_warning", order=self.id, by="add")
             (order_line or self).shop_warning = warning
 
         if not self.env.context.get("skip_cart_verification"):
@@ -427,6 +451,12 @@ class SaleOrder(models.Model):
         self = self.with_company(self.company_id)
 
         if not (order_line := self.line_ids.filtered(lambda sol: sol.id == line_id)):
+            _debug.logic(
+                "cart_update_refused",
+                reason="line_not_in_cart",
+                order=self.id,
+                line=line_id,
+            )
             return {
                 "warning": _(
                     "We weren't able to update your cart. Please refresh your page before trying"
@@ -446,6 +476,13 @@ class SaleOrder(models.Model):
             warning = ""
 
         added_qty = quantity - order_line.product_qty
+        _debug.lifecycle(
+            "cart_line_quantity",
+            order=self.id,
+            line=line_id,
+            quantity=quantity,
+            added=added_qty,
+        )
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
         if not self.env.context.get("skip_cart_verification"):
             self._sync_cart_after_update()
@@ -563,6 +600,7 @@ class SaleOrder(models.Model):
         product = product_template._create_product_variant(combination)
 
         if not product:
+            _debug.logic("cart_line_refused", reason="no_variant", order=self.id)
             raise UserError(
                 _(
                     "The given combination does not exist therefore it cannot be added to cart."
@@ -639,9 +677,16 @@ class SaleOrder(models.Model):
 
     def _sync_cart_after_update(self):
         if self.only_services:
+            _debug.logic("cart_delivery", by="services_only", order=self.id)
             self._remove_delivery_line()
         elif self.carrier_id:
             rate = self.carrier_id.rate_shipment(self)
+            _debug.logic(
+                "cart_delivery",
+                by="rated" if rate["success"] else "rate_failed",
+                order=self.id,
+                carrier=self.carrier_id.id,
+            )
             if rate["success"]:
                 self.line_ids.filtered("is_delivery").price_unit = rate["price"]
             else:
@@ -686,6 +731,12 @@ class SaleOrder(models.Model):
                     )
                 )
 
+        _debug.perf.count(
+            "cart_accessories",
+            order=self.id,
+            lines=len(self.website_order_line),
+            accessories=len(all_accessory_products),
+        )
         return random.sample(all_accessory_products, len(all_accessory_products))
 
     def _cart_recovery_email_send(self):
@@ -696,6 +747,12 @@ class SaleOrder(models.Model):
                 order._portal_ensure_token()
                 template.send_mail(order.id)
                 sent_orders |= order
+        _debug.lifecycle(
+            "cart_recovery_mails",
+            orders=self,
+            considered=len(self),
+            sent=len(sent_orders),
+        )
         sent_orders.write({"cart_recovery_email_sent": True})
 
     def _message_mail_after_hook(self, mails):

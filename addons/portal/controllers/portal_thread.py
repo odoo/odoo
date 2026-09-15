@@ -3,11 +3,14 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.controllers.utils import to_record_id
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.portal.utils import get_portal_partner
+
+_debug = DebugLog(__name__)
 
 
 class PortalChatter(ThreadController):
@@ -91,10 +94,18 @@ class PortalChatter(ThreadController):
     @http.route("/mail/chatter_fetch", type="jsonrpc", auth="public", website=True)
     def portal_message_fetch(self, thread_model, thread_id, fetch_params=None, **kw):
         if thread_model not in request.env:
+            _debug.logic(
+                "chatter_fetch_refused", reason="unknown_model", model=str(thread_model)
+            )
             raise NotFound
         model = request.env[thread_model]
         field = model._fields.get("website_message_ids")
         if field is None:
+            _debug.logic(
+                "chatter_fetch_refused",
+                reason="not_a_portal_thread",
+                model=thread_model,
+            )
             raise NotFound
         thread_id = to_record_id(thread_id)
         domain = Domain(
@@ -111,6 +122,12 @@ class PortalChatter(ThreadController):
                 token=kw.get("token"),
             )
             if not thread:
+                _debug.logic(
+                    "chatter_fetch_refused",
+                    reason="token_rejected",
+                    model=thread_model,
+                    record=thread_id,
+                )
                 raise NotFound
             if portal_partner := get_portal_partner(
                 thread,
@@ -129,6 +146,13 @@ class PortalChatter(ThreadController):
             domain, **Message._sanitize_fetch_params(fetch_params)
         )
         messages = res.pop("messages")
+        _debug.pipeline(
+            "chatter_fetch",
+            model=thread_model,
+            record=thread_id,
+            messages=len(messages),
+            by_token=bool(kw.get("token")),
+        )
         return {
             **res,
             "data": {"mail.message": messages.portal_message_format(options=kw)},
@@ -144,5 +168,8 @@ class PortalChatter(ThreadController):
     @http.route(["/mail/update_is_internal"], type="jsonrpc", auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):
         message = request.env["mail.message"].browse(to_record_id(message_id))
+        _debug.lifecycle(
+            "message_is_internal", message=message.id, internal=bool(is_internal)
+        )
         message.write({"is_internal": bool(is_internal)})
         return message.is_internal

@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -35,6 +38,12 @@ class ResCompany(models.Model):
         super()._check_active()
         for company in self:
             if not company.active and company.website_id:
+                _debug.logic(
+                    "company_archive_refused",
+                    reason="has_website",
+                    company=company.id,
+                    website=company.website_id.id,
+                )
                 raise ValidationError(
                     _(
                         "The company “%(company_name)s” cannot be archived because it has a linked website “%(website_name)s”."

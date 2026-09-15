@@ -10,10 +10,12 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 try:
     import vobject
@@ -499,6 +501,7 @@ class EventTrack(models.Model):
 
     def _search_wishlist_visitor_ids(self, operator, operand):
         if operator in ("not in", "not any"):
+            _debug.logic("wishlist_search_refused", operator=operator)
             raise UserError(
                 self.env._("Unsupported 'Not In' operation on track wishlist visitors")
             )
@@ -581,6 +584,7 @@ class EventTrack(models.Model):
                 )
 
         tracks = super().create(vals_list)
+        _debug.lifecycle("create", tracks=tracks, count=len(tracks))
 
         post_values = (
             {}
@@ -610,13 +614,18 @@ class EventTrack(models.Model):
             vals["kanban_state"] = "normal"
         if vals.get("stage_id"):
             stage = self.env["event.track.stage"].browse(vals["stage_id"])
+            _debug.lifecycle(
+                "track_stage_changed", tracks=self, stage=stage.id, name=stage.name
+            )
             self._sync_with_stage(stage)
         return super().write(vals)
 
     def _sync_with_stage(self, stage):
         if stage.is_fully_accessible:
+            _debug.lifecycle("track_published", by="stage", tracks=self)
             self.is_published = True
         elif stage.is_cancel:
+            _debug.lifecycle("track_unpublished", by="stage_cancel", tracks=self)
             self.is_published = False
 
     @api.model

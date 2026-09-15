@@ -10,9 +10,11 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class SlideChannel(models.Model):
@@ -954,6 +956,9 @@ class SlideChannel(models.Model):
 
     def unlink(self):
 
+        _debug.lifecycle(
+            "unlink", channels=self, count=len(self), slides=len(self.slide_ids)
+        )
         self.slide_ids.unlink()
         return super().unlink()
 
@@ -972,6 +977,7 @@ class SlideChannel(models.Model):
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         self.check_singleton()
         if kwargs.get("message_type") == "comment" and not self.can_review:
+            _debug.logic("channel_review_refused", reason="karma", channels=self)
             raise AccessError(_("Not enough karma to review"))
         if parent_id:
             parent_message = self.env["mail.message"].sudo().browse(parent_id)
@@ -1097,7 +1103,14 @@ class SlideChannel(models.Model):
         SlideChannelPartnerSudo = self.env["slide.channel.partner"].sudo()
         allowed_channels = self._filter_add_members(raise_on_access=raise_on_access)
         if not allowed_channels or not target_partners:
+            _debug.logic(
+                "members_not_added",
+                reason="no_allowed_channel_or_partner",
+                channels=self,
+                partners=len(target_partners),
+            )
             return SlideChannelPartnerSudo
+        _debug.pipeline("add_members", channels=allowed_channels, status=member_status)
 
         existing_channel_partners = (
             self.env["slide.channel.partner"]
@@ -1176,6 +1189,11 @@ class SlideChannel(models.Model):
         if controlled_access := (self - allowed):
             allowed += controlled_access._filtered_access("write")
             if raise_on_access and allowed != self:
+                _debug.logic(
+                    "add_members_refused",
+                    reason="no_write_access",
+                    channels=self - allowed,
+                )
                 raise AccessError(
                     _(
                         "You are not allowed to add members to this course. "

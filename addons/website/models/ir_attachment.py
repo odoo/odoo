@@ -2,8 +2,10 @@ import logging
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrAttachment(models.Model):
@@ -22,6 +24,11 @@ class IrAttachment(models.Model):
                 and "not_force_website_id" not in self.env.context
             ):
                 vals["website_id"] = website.id
+        _debug.lifecycle(
+            "attachment_website_defaulted",
+            website=website.id if website else None,
+            count=len(vals_list),
+        )
         return super().create(vals_list)
 
     @api.model

@@ -11,8 +11,11 @@ from odoo import Command, _, fields, http, tools
 from odoo.fields import Domain
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
+
+_debug = DebugLog(__name__)
 
 
 class EventTrackController(http.Controller):
@@ -623,10 +626,13 @@ class EventTrackController(http.Controller):
     def _get_track(self, track_id, allow_sudo=False):
         track = request.env["event.track"].browse(track_id).exists()
         if not track:
+            _debug.logic("track_refused", reason="missing", track=track_id)
             raise NotFound
         if not track.has_access("read"):
             if not allow_sudo:
+                _debug.logic("track_refused", reason="no_read", track=track_id)
                 raise Forbidden
+            _debug.logic("track_access", by="sudo", track=track_id)
             track = track.sudo()
 
         event = track.event_id
@@ -634,8 +640,10 @@ class EventTrackController(http.Controller):
             hasattr(request, "website_id")
             and not event.can_access_from_current_website()
         ):
+            _debug.logic("track_refused", reason="other_website", track=track_id)
             raise NotFound
         if not event.has_access("read"):
+            _debug.logic("track_refused", reason="event_no_read", event=event.id)
             raise Forbidden
 
         return track

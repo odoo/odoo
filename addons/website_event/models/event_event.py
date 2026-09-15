@@ -10,7 +10,10 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import format_date, get_lang
+
+_debug = DebugLog(__name__)
 
 GOOGLE_CALENDAR_URL = "https://www.google.com/calendar/render?"
 
@@ -271,6 +274,12 @@ class EventEvent(models.Model):
     def _check_website_id(self):
         for event in self:
             if event.website_id and event.website_id.company_id != event.company_id:
+                _debug.logic(
+                    "event_website_refused",
+                    reason="company_mismatch",
+                    event=event.id,
+                    website=event.website_id.id,
+                )
                 raise ValidationError(
                     _("The website must be from the same company as the event.")
                 )

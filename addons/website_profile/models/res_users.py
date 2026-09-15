@@ -5,7 +5,10 @@ from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
+
+_debug = DebugLog(__name__)
 
 VALIDATION_KARMA_GAIN = 3
 VALIDATION_EMAIL_COOLDOWN = timedelta(seconds=60)
@@ -37,6 +40,9 @@ class ResUsers(models.Model):
                     not user.partner_id._can_edit_country()
                     and vals["country_id"] != user.partner_id.country_id.id
                 ):
+                    _debug.logic(
+                        "profile_country_refused", reason="not_editable", user=user.id
+                    )
                     raise UserError(
                         _(
                             "Changing the country is not allowed once document(s) "
@@ -74,6 +80,7 @@ class ResUsers(models.Model):
         now = fields.Datetime.now()
         last_sent = self.profile_validation_email_last_sent
         if last_sent and now - last_sent < VALIDATION_EMAIL_COOLDOWN:
+            _debug.logic("validation_email_throttled", user=self.id)
             return False
         self.sudo().profile_validation_email_last_sent = now
         token = self._generate_profile_token(self.id, self.email)

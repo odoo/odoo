@@ -1,7 +1,10 @@
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import email_normalize
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class PortalWizard(models.TransientModel):
@@ -162,6 +165,11 @@ class PortalWizardUser(models.TransientModel):
         self._assert_user_email_uniqueness()
 
         if self.is_portal or self.is_internal:
+            _debug.logic(
+                "grant_access_refused",
+                reason="already_has_access",
+                partner=self.partner_id.id,
+            )
             raise UserError(
                 _(
                     'The partner "%s" already has the portal access.',
@@ -178,6 +186,12 @@ class PortalWizardUser(models.TransientModel):
         if not user_sudo:
             company = self.partner_id.company_id or self.env.company
             user_sudo = self.sudo().with_company(company.id)._create_user()
+            _debug.lifecycle(
+                "portal_user_created",
+                partner=self.partner_id.id,
+                user=user_sudo.id,
+                company=company.id,
+            )
 
         self.user_id = user_sudo
 
@@ -192,6 +206,9 @@ class PortalWizardUser(models.TransientModel):
         )
         user_sudo.partner_id.signup_prepare()
 
+        _debug.lifecycle(
+            "portal_access_granted", partner=self.partner_id.id, user=user_sudo.id
+        )
         self.with_context(active_test=True)._send_email()
 
         return self.action_refresh_modal()
@@ -200,6 +217,11 @@ class PortalWizardUser(models.TransientModel):
         self.check_singleton()
         self._invalidate_user_state()
         if not self.is_portal:
+            _debug.logic(
+                "revoke_access_refused",
+                reason="no_portal_access",
+                partner=self.partner_id.id,
+            )
             raise UserError(
                 _(
                     'The partner "%s" has no portal access or is internal.',
@@ -214,6 +236,11 @@ class PortalWizardUser(models.TransientModel):
         user_sudo = self.user_id.sudo()
 
         if user_sudo and user_sudo._is_portal():
+            _debug.lifecycle(
+                "portal_access_revoked",
+                partner=self.partner_id.id,
+                user=user_sudo.id,
+            )
             user_sudo.write({"active": False})
 
         return self.action_refresh_modal()
@@ -224,6 +251,9 @@ class PortalWizardUser(models.TransientModel):
         self._assert_user_email_uniqueness()
 
         if not self.is_portal:
+            _debug.logic(
+                "invite_refused", reason="no_portal_access", partner=self.partner_id.id
+            )
             raise UserError(
                 _(
                     'You should first grant the portal access to the partner "%s".',
@@ -232,6 +262,7 @@ class PortalWizardUser(models.TransientModel):
             )
 
         self._update_partner_email()
+        _debug.lifecycle("portal_invite_resent", partner=self.partner_id.id)
         self.with_context(active_test=True)._send_email()
 
         return self.action_refresh_modal()
@@ -269,6 +300,7 @@ class PortalWizardUser(models.TransientModel):
             "auth_signup.portal_set_password_email", raise_if_not_found=False
         )
         if not template:
+            _debug.logic("portal_invite_refused", reason="no_template")
             raise UserError(
                 _(
                     'The template "Portal: new user" not found for sending email to the portal user.'
@@ -286,15 +318,22 @@ class PortalWizardUser(models.TransientModel):
             medium="portalinvite",
         ).send_mail(self.user_id.id, force_send=True)
 
+        _debug.lifecycle("portal_invite_sent", user=self.user_id.id, lang=lang or None)
         return True
 
     def _assert_user_email_uniqueness(self):
         self.check_singleton()
         if self.email_state == "ko":
+            _debug.logic(
+                "portal_email_refused", reason="invalid", partner=self.partner_id.id
+            )
             raise UserError(
                 _('The contact "%s" does not have a valid email.', self.partner_id.name)
             )
         if self.email_state == "exist":
+            _debug.logic(
+                "portal_email_refused", reason="taken", partner=self.partner_id.id
+            )
             raise UserError(
                 _(
                     'The contact "%s" has the same email as an existing user',
@@ -309,6 +348,7 @@ class PortalWizardUser(models.TransientModel):
             self.email_state == "ok"
             and email_normalize(self.partner_id.email) != email_normalized
         ):
+            _debug.lifecycle("partner_email_updated", partner=self.partner_id.id)
             self.partner_id.write({"email": email_normalized})
 
     def _get_domain_similar_users(self, portal_users_with_email):

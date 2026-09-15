@@ -6,12 +6,14 @@ from pathlib import PurePosixPath
 
 from odoo import api, fields, http, models, tools
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, escape_psql
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class PageCannotBeCached(Exception):
@@ -146,6 +148,12 @@ class WebsitePage(models.Model):
             ):
                 ids.append(page.id)
             previous_page = page
+        _debug.perf.count(
+            "most_specific_pages",
+            website=self.env.context.get("website_id"),
+            candidates=len(self),
+            kept=len(ids),
+        )
         return self.browse(ids)
 
     def copy_data(self, default=None):
@@ -157,6 +165,12 @@ class WebsitePage(models.Model):
                 new_view = page.view_id.copy({"website_id": default.get("website_id")})
                 vals["view_id"] = new_view.id
                 vals["key"] = new_view.key
+                _debug.lifecycle(
+                    "page_view_copied",
+                    page=page.id,
+                    view=page.view_id.id,
+                    copy=new_view.id,
+                )
             vals["url"] = default.get(
                 "url", self.env["website"].get_unique_path(page.url)
             )
@@ -183,6 +197,13 @@ class WebsitePage(models.Model):
                     {"url": new_page.url, "name": new_page.name, "page_id": new_page.id}
                 )
 
+        _debug.lifecycle(
+            "page_cloned",
+            page=int(page_id),
+            clone=new_page.id,
+            url=new_page.url,
+            clone_menu=clone_menu,
+        )
         return new_page.url
 
     def unlink(self):
@@ -190,6 +211,9 @@ class WebsitePage(models.Model):
             lambda v: v.page_ids <= self and not v.inherit_children_ids
         )
         self -= views_to_delete.page_ids
+        _debug.lifecycle(
+            "unlink", pages=self, count=len(self), views=len(views_to_delete)
+        )
         views_to_delete.unlink()
 
         if self:
@@ -197,7 +221,13 @@ class WebsitePage(models.Model):
         return super().unlink()
 
     def write(self, vals):
+        _debug.lifecycle("write", pages=self, count=len(self), fields=sorted(vals))
         if "visibility" in vals and vals["visibility"] != "restricted_group":
+            _debug.logic(
+                "page_groups_cleared",
+                reason="visibility",
+                visibility=vals["visibility"],
+            )
             vals["group_ids"] = False
 
         if "url" in vals or "name" in vals:
@@ -232,6 +262,14 @@ class WebsitePage(models.Model):
                             websites -= self.search(  # noqa: E8507 - url renames are sequential: each page's unique path and homepage rewrite depend on the previous page's write
                                 [("url", "=", old_url), ("website_id", "!=", False)]
                             ).website_id
+                        _debug.lifecycle(
+                            "page_url_changed",
+                            page=page.id,
+                            old=old_url,
+                            new=url,
+                            homepages=len(websites),
+                            menus=len(page.menu_ids),
+                        )
                         websites.homepage_url = url
                     page_vals["url"] = url
 
@@ -249,6 +287,10 @@ class WebsitePage(models.Model):
             res = super().write(vals)
 
         if not vals.keys() <= self._NON_RENDERING_FIELDS:
+            _debug.lifecycle(
+                "templates_cache_cleared",
+                by=sorted(vals.keys() - self._NON_RENDERING_FIELDS),
+            )
             self.env.registry.clear_cache("templates")
 
         return res
@@ -377,6 +419,12 @@ class WebsitePage(models.Model):
         results = results.filtered(
             lambda result: is_page_accessible(search, result, results)
         )
+        _debug.pipeline(
+            "page_search",
+            search=search or None,
+            candidates=len(most_specific_pages),
+            accessible=len(results),
+        )
         return results[:limit], len(results)
 
     def action_page_debug_view(self):
@@ -441,6 +489,12 @@ class WebsitePage(models.Model):
             try:
                 response, cache_key = self._get_response_cached(request)
             except PageCannotBeCached as notCache:
+                _debug.logic(
+                    "page_response",
+                    by="uncacheable",
+                    page=self.id,
+                    rendered=bool(notCache.result and notCache.result[0]),
+                )
                 if notCache.result:
                     return notCache.result[0]
 
@@ -453,8 +507,10 @@ class WebsitePage(models.Model):
                     response=[response.response[0]],
                 )
                 self._post_process_response_from_cache(request, resp)
+                _debug.logic("page_response", by="cache", page=self.id)
                 return resp
 
+            _debug.logic("page_response", by="cache_expired", page=self.id)
             response = self._get_response_raw(request)
             if response:
                 response.flatten()
@@ -463,6 +519,7 @@ class WebsitePage(models.Model):
                 )
             return response
 
+        _debug.logic("page_response", by="uncached", page=self.id)
         return self._get_response_raw(request)
 
     @tools.conditional(
@@ -471,14 +528,20 @@ class WebsitePage(models.Model):
     )
     def _get_response_cached(self, request) -> tuple[http.Response, int, str]:
         cache_key = self._get_cache_key(request)
-        response = self._get_response_raw(request)
+        with _debug.perf(
+            "page_response_cache_miss", cr=self.env.cr, page=self.id
+        ) as span:
+            response = self._get_response_raw(request)
+            span.set(rendered=bool(response))
         result = response, cache_key
 
         if not response:
+            _debug.logic("page_not_cached", reason="no_response", page=self.id)
             raise PageCannotBeCached(result)
 
         response.flatten()
         if not self._is_cache_insertion_allowed(response.response[-1]):
+            _debug.logic("page_not_cached", reason="layout_refused", page=self.id)
             raise PageCannotBeCached(result)
 
         return result
@@ -516,6 +579,13 @@ class WebsitePage(models.Model):
             response.time = time.time()
             return response
 
+        _debug.logic(
+            "page_render_skipped",
+            page=self.id,
+            path=req_page,
+            visible=self.is_visible,
+            specific=bool(self.website_id),
+        )
         return None
 
     @tools.conditional(
@@ -539,6 +609,9 @@ class WebsitePage(models.Model):
             )
             page = self.sudo().search_fetch(
                 page_domain, order="website_id asc", limit=1
+            )
+            _debug.logic(
+                "page_info", by="case_insensitive_url", path=req_page, page=page.id
             )
 
         if page:

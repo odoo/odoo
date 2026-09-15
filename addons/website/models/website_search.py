@@ -4,12 +4,14 @@ from collections import defaultdict
 
 from odoo import models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import escape_psql
 from odoo.tools import SQL, Query
 
 from odoo.addons.website.tools import similarity_score, text_from_html
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class Website(models.Model):
@@ -27,7 +29,11 @@ class Website(models.Model):
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
         if search and options.get("allowFuzzy", True):
-            fuzzy_term = self._search_find_fuzzy_term(search_details, search)
+            with _debug.perf(
+                "fuzzy_term", cr=self.env.cr, search=search or None
+            ) as span:
+                fuzzy_term = self._search_find_fuzzy_term(search_details, search)
+                span.set(term=fuzzy_term or None)
             if fuzzy_term:
                 count, results = self._search_exact(
                     search_details, fuzzy_term, limit, order
@@ -35,11 +41,19 @@ class Website(models.Model):
                 if fuzzy_term.lower() == search.lower():
                     fuzzy_term = False
             else:
+                _debug.logic("fuzzy_term_not_found", search=search)
                 count, results = self._search_exact(
                     search_details, search, limit, order
                 )
         else:
             count, results = self._search_exact(search_details, search, limit, order)
+        _debug.pipeline(
+            "website_search",
+            search_type=search_type,
+            search=search or None,
+            fuzzy=fuzzy_term or None,
+            results=count,
+        )
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, limit, order):
@@ -47,7 +61,13 @@ class Website(models.Model):
         total_count = 0
         for search_detail in search_details:
             model = self.env[search_detail["model"]]
-            results, count = model._search_fetch(search_detail, search, limit, order)
+            with _debug.perf(
+                "search_fetch", cr=self.env.cr, model=search_detail["model"]
+            ) as span:
+                results, count = model._search_fetch(
+                    search_detail, search, limit, order
+                )
+                span.set(results=count)
             search_detail["results"] = results
             total_count += count
             search_detail["count"] = count
@@ -60,7 +80,13 @@ class Website(models.Model):
             results = search_detail["results"]
             icon = search_detail["icon"]
             mapping = search_detail["mapping"]
-            results_data = results._search_render_results(fields, mapping, icon, limit)
+            with _debug.perf(
+                "search_render", cr=self.env.cr, model=search_detail["model"]
+            ) as span:
+                results_data = results._search_render_results(
+                    fields, mapping, icon, limit
+                )
+                span.set(rows=len(results_data))
             search_detail["results_data"] = results_data
         return search_details
 
@@ -72,6 +98,7 @@ class Website(models.Model):
             or " " in search
             or len(re.findall(r"\d", search)) / len(search) >= 0.8
         ):
+            _debug.logic("fuzzy_skipped", reason="search_shape", search=search)
             return search
         search = search.lower()
         words = set()
@@ -81,6 +108,11 @@ class Website(models.Model):
             self._trigram_enumerate_words
             if self.env.registry.has_trigram
             else self._basic_enumerate_words
+        )
+        _debug.logic(
+            "fuzzy_enumerate",
+            by="trigram" if self.env.registry.has_trigram else "basic",
+            search=search,
         )
         for word in word_list or enumerate_words(search_details, search, limit):
             if search in word:
@@ -211,6 +243,45 @@ class Website(models.Model):
             similarity,
         )
 
+    def _get_trigram_relation_query(
+        self, model, relation_name, relation_fields, search
+    ):
+        direct_field = model._fields[relation_name]
+        comodel = model.env[direct_field.comodel_name]
+        relation_domain = None
+        if direct_field.type in ("one2many", "many2many"):
+            comodel = comodel.with_context(**direct_field.context)
+            relation_domain = direct_field.get_comodel_domain(model)
+        id_column = rel_table = rel_joinkey = ""
+        if direct_field.type == "one2many":
+            id_column = direct_field._description_relation_field
+        elif direct_field.type == "many2many":
+            id_column = direct_field.column1
+            rel_table = direct_field.relation
+            rel_joinkey = direct_field.column2
+        elif direct_field.type == "many2one" and direct_field.store:
+            id_column = "id"
+            rel_table = model._table
+            rel_joinkey = direct_field.name
+        else:
+            _debug.logic(
+                "trigram_relation_skipped",
+                model=model._name,
+                field=relation_name,
+                type=direct_field.type,
+            )
+            return None
+        return self._get_trigram_similarity_query(
+            comodel,
+            relation_fields,
+            search,
+            id_column,
+            rel_table,
+            rel_joinkey,
+            direct_field,
+            relation_domain,
+        )
+
     def _trigram_enumerate_words(self, search_details, search, limit):
         match_pattern = r"[\w./-]{%s,}" % min(4, len(search) - 3)
         self.env.cr.execute("SET LOCAL pg_trgm.word_similarity_threshold to 0.3;")
@@ -233,37 +304,11 @@ class Website(models.Model):
                 else []
             )
             for relation_name, relation_fields in fields_by_relation.items():
-                direct_field = model._fields[relation_name]
-                comodel = model.env[direct_field.comodel_name]
-                relation_domain = None
-                if direct_field.type in ("one2many", "many2many"):
-                    comodel = comodel.with_context(**direct_field.context)
-                    relation_domain = direct_field.get_comodel_domain(model)
-                id_column = rel_table = rel_joinkey = ""
-                if direct_field.type == "one2many":
-                    id_column = direct_field._description_relation_field
-                elif direct_field.type == "many2many":
-                    id_column = direct_field.column1
-                    rel_table = direct_field.relation
-                    rel_joinkey = direct_field.column2
-                elif direct_field.type == "many2one" and direct_field.store:
-                    id_column = "id"
-                    rel_table = model._table
-                    rel_joinkey = direct_field.name
-                else:
-                    continue
-                subqueries.append(
-                    self._get_trigram_similarity_query(
-                        comodel,
-                        relation_fields,
-                        search,
-                        id_column,
-                        rel_table,
-                        rel_joinkey,
-                        direct_field,
-                        relation_domain,
-                    )
+                subquery = self._get_trigram_relation_query(
+                    model, relation_name, relation_fields, search
                 )
+                if subquery is not None:
+                    subqueries.append(subquery)
             if not subqueries:
                 continue
             eligible = model._search(domain)
@@ -288,6 +333,13 @@ class Website(models.Model):
                 fields,
                 len(ids),
                 limit,
+            )
+            _debug.perf.count(
+                "trigram_candidates",
+                model=model_name,
+                candidates=len(ids),
+                limit=limit,
+                subqueries=len(subqueries),
             )
             domain = Domain.AND([domain, Domain([("id", "in", list(ids))])])
             records = (
@@ -337,6 +389,9 @@ class Website(models.Model):
                 else []
             )
             if len(records) == perf_limit:
+                _debug.logic(
+                    "basic_enumerate_truncated", model=model_name, limit=perf_limit
+                )
                 exact_records, _count = model._search_fetch(
                     search_detail, search, 1, None
                 )

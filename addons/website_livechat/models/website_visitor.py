@@ -1,9 +1,12 @@
 from odoo import Command, _, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import get_lang
 
 from odoo.addons.mail.tools.discuss import Store
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteVisitor(models.Model):
@@ -72,6 +75,11 @@ class WebsiteVisitor(models.Model):
             [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)]
         )
         if unavailable_visitors_count:
+            _debug.logic(
+                "visitor_unlink_refused",
+                reason="live_chat_open",
+                sessions=unavailable_visitors_count,
+            )
             raise UserError(
                 _(
                     "Recipients are not available. Please refresh the page to get latest visitors status."
@@ -79,6 +87,9 @@ class WebsiteVisitor(models.Model):
             )
         for website in self.mapped("website_id"):
             if not website.channel_id:
+                _debug.logic(
+                    "livechat_refused", reason="no_channel", website=website.id
+                )
                 raise UserError(
                     _(
                         "No Livechat Channel allows you to send a chat request for website %s.",

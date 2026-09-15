@@ -3,6 +3,7 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
 from odoo.tools.translate import _
@@ -12,11 +13,14 @@ from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
+_debug = DebugLog(__name__)
+
 
 class Cart(PaymentPortal):
     @route(route="/shop/cart", type="http", auth="public", website=True, sitemap=False)
     def cart(self, id=None, access_token=None, revive_method="", **post):
         if not request.website.has_ecommerce_access():
+            _debug.logic("cart_refused", reason="no_ecommerce_access")
             return request.redirect("/web/login")
 
         order_sudo = request.cart
@@ -27,15 +31,29 @@ class Cart(PaymentPortal):
             if not abandoned_order or not consteq(
                 abandoned_order.access_token, access_token
             ):
+                _debug.logic(
+                    "abandoned_cart_refused", reason="bad_token", order=int(id)
+                )
                 raise NotFound
             if abandoned_order.state != "draft":
                 values.update({"abandoned_proceed": True})
             elif revive_method == "squash" or (
                 revive_method == "merge" and not request.session.get("sale_order_id")
             ):
+                _debug.lifecycle(
+                    "abandoned_cart_revived",
+                    by="squash",
+                    order=abandoned_order.id,
+                )
                 request.session["sale_order_id"] = abandoned_order.id
                 return request.redirect("/shop/cart")
             elif revive_method == "merge":
+                _debug.lifecycle(
+                    "abandoned_cart_revived",
+                    by="merge",
+                    order=abandoned_order.id,
+                    lines=len(abandoned_order.line_ids),
+                )
                 abandoned_order.line_ids.write(
                     {"order_id": request.session["sale_order_id"]}
                 )
@@ -56,6 +74,14 @@ class Cart(PaymentPortal):
             }
         )
         if order_sudo:
+            if _debug.lifecycle.enabled:
+                _debug.lifecycle(
+                    "cart_inactive_lines_dropped",
+                    order=order_sudo.id,
+                    lines=order_sudo.line_ids.filtered(
+                        lambda sol: sol.product_id and not sol.product_id.active
+                    ),
+                )
             order_sudo.line_ids.filtered(
                 lambda sol: sol.product_id and not sol.product_id.active
             ).unlink()
@@ -69,6 +95,53 @@ class Cart(PaymentPortal):
 
     def _cart_values(self, **post):
         return {}
+
+    def _cart_add_linked_product(self, order_sudo, product_data, line_ids, kwargs):
+        product_sudo = (
+            request.env["product.product"]
+            .sudo()
+            .browse(product_data["product_id"])
+            .exists()
+        )
+        if product_data["quantity"] and (
+            not product_sudo
+            or (
+                not product_sudo._is_add_to_cart_allowed()
+                and not product_data.get("combo_item_id")
+            )
+        ):
+            _debug.logic(
+                "add_to_cart_refused",
+                reason="linked_product_not_addable",
+                product=product_data["product_id"],
+            )
+            raise UserError(
+                _(
+                    "The given product does not exist therefore it cannot be added to cart."
+                )
+            )
+
+        _debug.lifecycle(
+            "add_linked_product_to_cart",
+            order=order_sudo.id,
+            product=product_data["product_id"],
+            quantity=product_data["quantity"],
+        )
+        return order_sudo.with_context(skip_cart_verification=True)._cart_add(
+            product_id=product_data["product_id"],
+            quantity=product_data["quantity"],
+            uom_id=product_data.get("uom_id"),
+            product_custom_attribute_values=product_data[
+                "product_custom_attribute_values"
+            ],
+            no_variant_attribute_value_ids=[
+                int(value_id)
+                for value_id in product_data["no_variant_attribute_value_ids"]
+            ],
+            linked_line_id=line_ids[product_data["parent_product_template_id"]],
+            **self._get_additional_cart_update_values(product_data),
+            **kwargs,
+        )
 
     @route(
         route="/shop/cart/add",
@@ -94,6 +167,12 @@ class Cart(PaymentPortal):
 
         product = request.env["product.product"].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
+            _debug.logic(
+                "add_to_cart_refused",
+                reason="product_not_addable",
+                product=product_id,
+                order=order_sudo.id,
+            )
             raise UserError(
                 _(
                     "The given product does not exist therefore it cannot be added to cart."
@@ -109,6 +188,14 @@ class Cart(PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs,
         )
+        _debug.lifecycle(
+            "add_to_cart",
+            order=order_sudo.id,
+            product=product_id,
+            quantity=quantity,
+            line=values["line_id"],
+            added=values["added_qty"],
+        )
         line_ids = {product_template_id: values["line_id"]}
         added_qty_per_line[values["line_id"]] = values["added_qty"]
         is_combo = product.type == "combo"
@@ -119,43 +206,15 @@ class Cart(PaymentPortal):
 
         if linked_products and values["line_id"]:
             for product_data in linked_products:
-                product_sudo = (
-                    request.env["product.product"]
-                    .sudo()
-                    .browse(product_data["product_id"])
-                    .exists()
-                )
-                if product_data["quantity"] and (
-                    not product_sudo
-                    or (
-                        not product_sudo._is_add_to_cart_allowed()
-                        and not product_data.get("combo_item_id")
-                    )
-                ):
-                    raise UserError(
-                        _(
-                            "The given product does not exist therefore it cannot be added to cart."
-                        )
-                    )
-
-                product_values = order_sudo.with_context(
-                    skip_cart_verification=True
-                )._cart_add(
-                    product_id=product_data["product_id"],
-                    quantity=product_data["quantity"],
-                    uom_id=product_data.get("uom_id"),
-                    product_custom_attribute_values=product_data[
-                        "product_custom_attribute_values"
-                    ],
-                    no_variant_attribute_value_ids=[
-                        int(value_id)
-                        for value_id in product_data["no_variant_attribute_value_ids"]
-                    ],
-                    linked_line_id=line_ids[product_data["parent_product_template_id"]],
-                    **self._get_additional_cart_update_values(product_data),
-                    **kwargs,
+                product_values = self._cart_add_linked_product(
+                    order_sudo, product_data, line_ids, kwargs
                 )
                 if is_combo and not product_values.get("quantity"):
+                    _debug.logic(
+                        "combo_rolled_back",
+                        order=order_sudo.id,
+                        line=updated_line.id,
+                    )
                     updated_line.unlink()
                     return {
                         "cart_quantity": order_sudo.cart_quantity,
@@ -295,6 +354,13 @@ class Cart(PaymentPortal):
             )[:1].id
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
+        _debug.lifecycle(
+            "update_cart",
+            order=order_sudo.id,
+            line=line_id,
+            quantity=quantity,
+            product=product_id,
+        )
 
         values["cart_quantity"] = order_sudo.cart_quantity
         values["cart_ready"] = order_sudo._is_cart_ready()
@@ -408,11 +474,17 @@ class Cart(PaymentPortal):
 
     @route(route="/shop/cart/clear", type="jsonrpc", auth="public", website=True)
     def clear_cart(self):
+        _debug.lifecycle(
+            "clear_cart",
+            order=request.cart.id,
+            lines=len(request.cart.line_ids),
+        )
         request.cart.line_ids.unlink()
 
     def _get_cart_notification_information(self, order, added_qty_per_line):
         lines = order.line_ids.filtered(lambda line: line.id in set(added_qty_per_line))
         if not lines:
+            _debug.logic("cart_notification_skipped", reason="no_lines", order=order.id)
             return {}
 
         return {

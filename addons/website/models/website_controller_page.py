@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteControllerPage(models.Model):
@@ -79,6 +82,11 @@ class WebsiteControllerPage(models.Model):
         for model_id in self.mapped("model_id"):
             Model = self.env[model_id.model]
             if Model._transient or Model._abstract or not Model._auto:
+                _debug.logic(
+                    "controller_page_refused",
+                    reason="not_a_concrete_model",
+                    model=model_id.model,
+                )
                 raise ValidationError(
                     self.env._("A page must be set to display a concrete model.")
                 )
@@ -121,13 +129,21 @@ class WebsiteControllerPage(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
+        _debug.lifecycle("create", pages=res, count=len(res))
         res._check_user_has_model_access()
         return res
 
     def write(self, vals):
         res = super().write(vals)
+        _debug.lifecycle("write", pages=self, count=len(self), fields=sorted(vals))
         if "name" in vals or "name_slugified" in vals:
             for rec in self:
+                _debug.lifecycle(
+                    "controller_page_menus_renamed",
+                    page=rec.id,
+                    menus=len(rec.menu_ids),
+                    url=f"/model/{rec.name_slugified}",
+                )
                 rec.menu_ids.write(
                     {
                         "url": f"/model/{rec.name_slugified}",
@@ -143,6 +159,9 @@ class WebsiteControllerPage(models.Model):
             lambda v: v.controller_page_ids <= self and not v.inherit_children_ids
         )
         self -= views_to_delete.controller_page_ids
+        _debug.lifecycle(
+            "unlink", pages=self, count=len(self), views=len(views_to_delete)
+        )
         views_to_delete.unlink()
 
         if self:

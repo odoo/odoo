@@ -14,6 +14,7 @@ from odoo import api, exceptions, http, models, tools
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import Response, request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.urls import keep_query
 
 from odoo.addons.base.models import ir_http
@@ -21,6 +22,7 @@ from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.res_lang import LangData
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 _SLUG_NAME = r"\w{1,2}|\w[\w-]+?\w"
 _SLUG_ID = r"-?\d+"
@@ -62,6 +64,7 @@ class IrHttp(models.AbstractModel):
         except AttributeError:
             identifier, name = value
         if not identifier:
+            _debug.logic("slug_refused", reason="no_id")
             raise ValueError("Cannot slug non-existent record %r" % (value,))
         slugname = cls._slugify(name or "")
         if not slugname:
@@ -105,6 +108,7 @@ class IrHttp(models.AbstractModel):
     def _lang_url_prefix(cls, path: str, url_code: str) -> str:
         if not path.startswith("/"):
             _logger.warning("Lang-prefixing a non root-relative path %r", path)
+            _debug.logic("lang_prefix_on_relative_path", path=path, lang=url_code)
             path = "/" + path
         return f"/{url_code}{path if path != '/' else ''}"
 
@@ -175,6 +179,7 @@ class IrHttp(models.AbstractModel):
             werkzeug.routing.BuildError,
             ValueError,
         ):
+            _debug.logic("url_localize", by="quote_unrouted", url=url, lang=lang.code)
             path = urllib.parse.quote(url, safe="/%")
         if force_default_lang or lang != request.env["ir.http"]._get_default_lang():
             path = cls._lang_url_prefix(path, lang.url_code)
@@ -240,6 +245,9 @@ class IrHttp(models.AbstractModel):
         path = self._lang_url_unprefix(path, lang_url_codes)
 
         if "/static/" in path or path.startswith("/web/"):
+            _debug.logic(
+                "multilang_url", verdict=False, reason="asset_or_web", url=local_url
+            )
             return False
 
         try:
@@ -255,6 +263,9 @@ class IrHttp(models.AbstractModel):
                 local_url,
                 exc_info=True,
             )
+            _debug.logic(
+                "multilang_url", verdict=False, reason="rewrite_failed", url=local_url
+            )
             return False
 
     @api.model
@@ -269,6 +280,7 @@ class IrHttp(models.AbstractModel):
         lang = Lang._get_data(code=lang_code) if lang_code else None
         if not lang:
             lang = next(iter(Lang._get_active_by_field("code").values()))
+            _debug.logic("default_lang", by="first_active", lang=lang.code)
         return lang
 
     @api.model
@@ -329,6 +341,7 @@ class IrHttp(models.AbstractModel):
         base = _lang_base(lang_code)
         if not base:
             return None
+        _debug.logic("nearest_lang", wanted=lang_code, base=base)
         return next((code for code in frontend_langs if _lang_base(code) == base), None)
 
     @classmethod
@@ -357,6 +370,7 @@ class IrHttp(models.AbstractModel):
 
         if allow_redirect and "//" in path:
             new_url = re.sub(r"/{2,}", "/", path)
+            _debug.logic("path_collapsed", path=path, to=new_url)
             werkzeug.exceptions.abort(
                 request.redirect_query(
                     new_url, request.httprequest.args, code=301, local=True
@@ -377,6 +391,7 @@ class IrHttp(models.AbstractModel):
         try:
             return cls._match_and_flag(path)
         except NotFound:
+            _debug.logic("frontend_not_found", path=path)
             request.is_frontend = True
             request.is_frontend_multilang = True
             raise
@@ -390,6 +405,12 @@ class IrHttp(models.AbstractModel):
         request.is_frontend = routing.get("website", False)
         request.is_frontend_multilang = request.is_frontend and routing.get(
             "multilang", routing["type"] == "http"
+        )
+        _debug.logic(
+            "route_flagged",
+            path=path,
+            frontend=request.is_frontend,
+            multilang=request.is_frontend_multilang,
         )
         return rule, args
 
@@ -409,6 +430,20 @@ class IrHttp(models.AbstractModel):
                     nearest_url_lang or cookie_lang or context_lang or default_lang.code
                 )
             )
+            _debug.logic(
+                "frontend_lang",
+                by=(
+                    "url"
+                    if nearest_url_lang
+                    else "cookie"
+                    if cookie_lang
+                    else "context"
+                    if context_lang
+                    else "default"
+                ),
+                lang=request.lang.code,
+                url_code=url_lang_str or None,
+            )
         return default_lang, nearest_url_lang
 
     @classmethod
@@ -427,6 +462,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _redirect_lang(cls, target: str, code: int = 303) -> typing.NoReturn:
+        _debug.logic("lang_redirect", to=target, code=code, lang=request.lang.code)
         redirect = request.redirect_query(target, request.httprequest.args, code=code)
         redirect.set_cookie("frontend_lang", request.lang.code)
         werkzeug.exceptions.abort(redirect)
@@ -457,10 +493,12 @@ class IrHttp(models.AbstractModel):
                 path,
                 request_url_code,
             )
+            _debug.logic("reroute_for_lang", by="bot", path=path)
             request.lang = default_lang
 
         # See /4, no lang in url and should not redirect (e.g. POST), continue
         elif not url_lang_str and not allow_redirect:
+            _debug.logic("reroute_for_lang", by="no_lang_no_redirect", path=path)
             _logger.debug(
                 "%r (lang: %r) no lang in url and should not redirect (e.g. POST), continue",
                 path,
@@ -472,13 +510,33 @@ class IrHttp(models.AbstractModel):
             _logger.debug(
                 "%r (lang: %r) missing lang in url, redirect", path, request_url_code
             )
+            _debug.logic("reroute_for_lang", by="missing_lang", path=path)
             cls._redirect_lang(cls._lang_url_prefix(path, request_url_code))
 
+        else:
+            return cls._reroute_for_prefixed_lang(
+                path, path_no_lang, url_lang_str, default_lang, allow_redirect
+            )
+
+        return path
+
+    @classmethod
+    def _reroute_for_prefixed_lang(
+        cls,
+        path: str,
+        path_no_lang: str,
+        url_lang_str: str,
+        default_lang: LangData,
+        allow_redirect: bool,
+    ) -> str:
+        request_url_code = request.lang.url_code
+
         # See /6, default lang in url, /en/home -> /home
-        elif url_lang_str == default_lang.url_code and allow_redirect:
+        if url_lang_str == default_lang.url_code and allow_redirect:
             _logger.debug(
                 "%r (lang: %r) default lang in url, redirect", path, request_url_code
             )
+            _debug.logic("reroute_for_lang", by="default_lang_in_url", path=path)
             cls._redirect_lang(path_no_lang)
 
         # See /7, lang alias in url, /fr_FR/home -> /fr/home
@@ -486,6 +544,7 @@ class IrHttp(models.AbstractModel):
             _logger.debug(
                 "%r (lang: %r) lang alias in url, redirect", path, request_url_code
             )
+            _debug.logic("reroute_for_lang", by="lang_alias", path=path)
             cls._redirect_lang(
                 cls._lang_url_prefix(path_no_lang, request_url_code), code=301
             )
@@ -497,6 +556,7 @@ class IrHttp(models.AbstractModel):
                 path,
                 request_url_code,
             )
+            _debug.logic("reroute_for_lang", by="trailing_slash", path=path)
             cls._redirect_lang(path[:-1], code=301)
 
         # See /9, valid lang in url
@@ -506,6 +566,7 @@ class IrHttp(models.AbstractModel):
                 path,
                 request_url_code,
             )
+            _debug.logic("reroute_for_lang", by="valid_lang_rerouted", path=path)
             request.reroute(path_no_lang)
             path = path_no_lang
 
@@ -515,6 +576,7 @@ class IrHttp(models.AbstractModel):
                 path,
                 request_url_code,
             )
+            _debug.logic("reroute_for_lang", by="unrouted", path=path)
 
         return path
 

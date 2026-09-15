@@ -6,10 +6,12 @@ from datetime import datetime
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.json import scriptsafe as json_safe
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class ForumPost(models.Model):
@@ -508,12 +510,21 @@ class ForumPost(models.Model):
             if post.parent_id and (
                 post.parent_id.state == "close" or post.parent_id.active is False
             ):
+                _debug.logic(
+                    "post_refused", reason="parent_closed", parent=post.parent_id.id
+                )
                 raise UserError(
                     _(
                         "Posting answer on a [Deleted] or [Closed] question is not possible."
                     )
                 )
             if not post.parent_id and not post.can_ask:
+                _debug.logic(
+                    "post_refused",
+                    reason="karma_ask",
+                    forum=post.forum_id.id,
+                    required=post.forum_id.karma_ask,
+                )
                 raise AccessError(
                     _(
                         "%d karma required to create a new question.",
@@ -521,6 +532,12 @@ class ForumPost(models.Model):
                     )
                 )
             if post.parent_id and not post.can_answer:
+                _debug.logic(
+                    "post_refused",
+                    reason="karma_answer",
+                    forum=post.forum_id.id,
+                    required=post.forum_id.karma_answer,
+                )
                 raise AccessError(
                     _(
                         "%d karma required to answer a question.",
@@ -528,12 +545,16 @@ class ForumPost(models.Model):
                     )
                 )
             if not post.parent_id and not post.can_post:
+                _debug.lifecycle(
+                    "post_pending_moderation", post=post.id, forum=post.forum_id.id
+                )
                 post.sudo().state = "pending"
 
             if not post.parent_id and post.state == "active":
                 post.create_uid.sudo()._add_karma(
                     post.forum_id.karma_gen_question_new, post, _("Ask a new question")
                 )
+        _debug.lifecycle("create", posts=posts, count=len(posts))
         posts.sudo()._notify_state_update()
         return posts
 
@@ -750,6 +771,7 @@ class ForumPost(models.Model):
 
     def reopen(self):
         if any(post.parent_id or post.state != "close" for post in self):
+            _debug.logic("reopen_refused", reason="not_a_closed_question", posts=self)
             return False
 
         reason_offensive = self.env.ref("website_forum.reason_7")
@@ -776,12 +798,15 @@ class ForumPost(models.Model):
                     karma * -1, post, _("Reopen a banned question")
                 )
 
+        _debug.lifecycle("posts_reopened", posts=self, count=len(self))
         self.sudo().write({"state": "active"})
         return None
 
     def close(self, reason_id):
         if any(post.parent_id for post in self):
+            _debug.logic("close_refused", reason="answer_not_question", posts=self)
             return False
+        _debug.lifecycle("posts_closed", posts=self, count=len(self), reason=reason_id)
 
         reason_offensive = self.env.ref("website_forum.reason_7").id
         reason_spam = self.env.ref("website_forum.reason_8").id
@@ -824,6 +849,12 @@ class ForumPost(models.Model):
     def validate(self):
         for post in self:
             if not post.can_moderate:
+                _debug.logic(
+                    "validate_refused",
+                    reason="karma_moderate",
+                    post=post.id,
+                    required=post.forum_id.karma_moderate,
+                )
                 raise AccessError(
                     _(
                         "%d karma required to validate a post.",
@@ -836,6 +867,7 @@ class ForumPost(models.Model):
                     post,
                     _("Ask a question"),
                 )
+            _debug.lifecycle("post_validated", post=post.id, moderator=self.env.uid)
             post.write(
                 {
                     "state": "active",
@@ -849,12 +881,14 @@ class ForumPost(models.Model):
     def _refuse(self):
         for post in self:
             if not post.can_moderate:
+                _debug.logic("refuse_refused", reason="karma_moderate", post=post.id)
                 raise AccessError(
                     _(
                         "%d karma required to refuse a post.",
                         post.forum_id.karma_moderate,
                     )
                 )
+            _debug.lifecycle("post_refused_by_moderator", post=post.id)
             post.moderator_id = self.env.user
         return True
 
@@ -862,6 +896,12 @@ class ForumPost(models.Model):
         res = []
         for post in self:
             if not post.can_flag:
+                _debug.logic(
+                    "flag_refused",
+                    reason="karma_flag",
+                    post=post.id,
+                    required=post.forum_id.karma_flag,
+                )
                 raise AccessError(
                     _("%d karma required to flag a post.", post.forum_id.karma_flag)
                 )

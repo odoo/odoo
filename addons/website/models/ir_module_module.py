@@ -7,6 +7,7 @@ import werkzeug
 from odoo import api, fields, models
 from odoo.exceptions import MissingError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.models import PREFETCH_MAX
 from odoo.modules import Manifest
 from odoo.tools import SQL
@@ -14,6 +15,7 @@ from odoo.tools import SQL
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrModuleModule(models.Model):
@@ -84,6 +86,12 @@ class IrModuleModule(models.Model):
                             else Website
                         )
 
+                    _debug.pipeline(
+                        "theme_stream_load",
+                        module=module.name,
+                        state=module.state,
+                        websites=len(websites_to_update),
+                    )
                     for website in websites_to_update:
                         module._theme_load(website)
 
@@ -91,6 +99,11 @@ class IrModuleModule(models.Model):
 
     def _get_module_data(self, model_name):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "theme_data_refused",
+                reason="not_restricted_editor",
+                model=model_name,
+            )
             raise werkzeug.exceptions.Forbidden
 
         self_sudo = self.sudo()
@@ -144,6 +157,12 @@ class IrModuleModule(models.Model):
                     )
                     if imd and imd.noupdate:
                         _logger.info("Noupdate set for %s (%s)", find, imd)
+                        _debug.logic(
+                            "theme_record_kept",
+                            reason="noupdate",
+                            model=model_name,
+                            record=find.id,
+                        )
                     else:
                         if "active" in rec_data:
                             rec_data.pop("active")
@@ -151,10 +170,24 @@ class IrModuleModule(models.Model):
                             find.arch_updated or find.arch == rec_data["arch"]
                         ):
                             rec_data.pop("arch")
+                        _debug.lifecycle(
+                            "theme_record_updated",
+                            model=model_name,
+                            template=rec.id,
+                            record=find.id,
+                            website=website.id,
+                        )
                         find.update(rec_data)
                         self._post_copy(rec, find)
                 else:
                     new_rec = self.env[model_name].create(rec_data)
+                    _debug.lifecycle(
+                        "theme_record_created",
+                        model=model_name,
+                        template=rec.id,
+                        record=new_rec.id,
+                        website=website.id,
+                    )
                     self._post_copy(rec, new_rec)
 
             remaining = queued
@@ -162,6 +195,12 @@ class IrModuleModule(models.Model):
         if len(remaining):
             error = "Error - Remaining: %s" % remaining.mapped("display_name")
             _logger.error(error)
+            _debug.logic(
+                "theme_records_unresolved",
+                model=model_name,
+                website=website.id,
+                remaining=len(remaining),
+            )
             raise MissingError(error)
 
         self._theme_cleanup(model_name, website)
@@ -225,7 +264,14 @@ class IrModuleModule(models.Model):
             )
 
             for model_name in self._theme_model_names:
-                module._update_records(model_name, website)
+                with _debug.perf(
+                    "theme_model_loaded",
+                    cr=self.env.cr,
+                    module=module.name,
+                    model=model_name,
+                    website=website.id,
+                ):
+                    module._update_records(model_name, website)
 
             if self.env.context.get("apply_new_theme"):
                 self.env["theme.utils"].with_context(website_id=website.id)._post_copy(
@@ -249,11 +295,23 @@ class IrModuleModule(models.Model):
                     .mapped("copy_ids")
                     .filtered(lambda m: m.website_id == website)
                 )
+                _debug.lifecycle(
+                    "theme_model_unloaded",
+                    module=module.name,
+                    model=model_name,
+                    website=website.id,
+                    records=len(models),
+                )
                 models.unlink()
                 module._theme_cleanup(model_name, website)
 
     def _theme_cleanup(self, model_name, website):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "theme_cleanup_refused",
+                reason="not_restricted_editor",
+                model=model_name,
+            )
             raise werkzeug.exceptions.Forbidden
 
         self.check_singleton()
@@ -269,6 +327,13 @@ class IrModuleModule(models.Model):
                 ("website_id", "=", website.id),
                 ("theme_template_id", "=", False),
             ]
+        )
+        _debug.lifecycle(
+            "theme_orphans_removed",
+            module=self.name,
+            model=model_name,
+            website=website.id,
+            orphans=len(orphans),
         )
         orphans.unlink()
         return None
@@ -303,11 +368,18 @@ class IrModuleModule(models.Model):
 
     def _theme_upgrade_upstream(self):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("theme_upgrade_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
 
         themes = self.env["ir.module.module"].search(self.get_domain_themes())
         if self - themes:
+            _debug.logic(
+                "theme_upgrade_refused",
+                reason="not_a_theme",
+                modules=(self - themes).mapped("name"),
+            )
             raise werkzeug.exceptions.Forbidden
+        _debug.pipeline("theme_upgrade_upstream", modules=self.mapped("name"))
 
         def install_or_upgrade(theme):
             if theme.state != "installed":
@@ -324,8 +396,12 @@ class IrModuleModule(models.Model):
         )._reset_default_config()
 
         if not website.theme_id:
+            _debug.logic("theme_remove_skipped", reason="no_theme", website=website.id)
             return
 
+        _debug.lifecycle(
+            "theme_removed", website=website.id, theme=website.theme_id.name
+        )
         for theme in reversed(website.theme_id._theme_get_stream_themes()):
             theme._theme_unload(website)
         website.theme_id = False
@@ -336,6 +412,7 @@ class IrModuleModule(models.Model):
 
         self._theme_remove(website)
 
+        _debug.lifecycle("theme_chosen", website=website.id, theme=self.name)
         website.theme_id = self
 
         if request:
@@ -387,6 +464,9 @@ class IrModuleModule(models.Model):
             image_paths = ["/%s/%s" % (theme.name, image) for image in images]
             if all(image_path in existing_urls for image_path in image_paths):
                 continue
+            _debug.lifecycle(
+                "theme_images_registered", theme=theme.name, images=len(image_paths)
+            )
             for image_path in image_paths:
                 image_name = image_path.split("/")[-1]
                 IrAttachment.create(
@@ -422,10 +502,72 @@ class IrModuleModule(models.Model):
         super()._check()
         View = self.env["ir.ui.view"]
         views_to_adapt = self.pool.loading.state("ir.ui.view.cow_views_to_adapt", list)
+        _debug.pipeline("cow_views_replayed", views=len(views_to_adapt))
         for view_replay in views_to_adapt:
             cow_view = View.browse(view_replay[0])
             View._load_records_write_on_cow(cow_view, view_replay[1], view_replay[2])
         views_to_adapt.clear()
+
+    def _load_specific_view_terms(
+        self,
+        View,
+        field,
+        generic_arch_db,
+        specific_arch_db,
+        specific_id,
+        langs,
+        overwrite,
+    ):
+        langs_update = (langs & generic_arch_db.keys()) - {"en_US"}
+        if not langs_update:
+            return 0
+        generic_arch_db_en = generic_arch_db.get("_en_US", generic_arch_db.get("en_US"))
+        specific_arch_db_en = specific_arch_db.get(
+            "_en_US", specific_arch_db.get("en_US")
+        )
+        generic_arch_db_update = {
+            k: generic_arch_db.get("_" + k, generic_arch_db[k]) for k in langs_update
+        }
+        specific_arch_db_update = {
+            k: specific_arch_db.get(
+                "_" + k, specific_arch_db.get(k, specific_arch_db_en)
+            )
+            for k in langs_update
+        }
+        generic_translation_dictionary = field.get_translation_dictionary(
+            generic_arch_db_en, generic_arch_db_update
+        )
+        specific_translation_dictionary = field.get_translation_dictionary(
+            specific_arch_db_en, specific_arch_db_update
+        )
+        for term_en, specific_term_langs in specific_translation_dictionary.items():
+            if term_en not in generic_translation_dictionary:
+                continue
+            for lang, generic_term_lang in generic_translation_dictionary[
+                term_en
+            ].items():
+                if overwrite or term_en == specific_term_langs[lang]:
+                    specific_term_langs[lang] = generic_term_lang
+        for lang in langs_update:
+            if specific_arch_db.get("_" + lang) == specific_arch_db.get(lang):
+                specific_arch_db.pop("_" + lang, None)
+            specific_arch_db[
+                ("_" + lang) if ("_" + lang) in specific_arch_db else lang
+            ] = field.translate(
+                lambda term, lang=lang, translations=specific_translation_dictionary: (
+                    translations.get(term, {lang: None})[lang]
+                ),
+                specific_arch_db_en,
+            )
+        field._update_cache(
+            View.with_context(prefetch_langs=True).browse(specific_id),
+            specific_arch_db,
+            dirty=True,
+        )
+        _debug.lifecycle(
+            "specific_view_terms", view=specific_id, langs=sorted(langs_update)
+        )
+        return 1
 
     @api.model
     def _load_module_terms(self, modules, langs, overwrite=False):
@@ -447,60 +589,24 @@ class IrModuleModule(models.Model):
                                          AND generic.arch_db IS NOT NULL
                                          AND specific.arch_db IS NOT NULL
                             """)
+        views_updated = 0
         while batch := self.env.cr.fetchmany(batch_size):
             for generic_arch_db, specific_arch_db, specific_id in batch:
-                langs_update = (langs & generic_arch_db.keys()) - {"en_US"}
-                if not langs_update:
-                    continue
-                generic_arch_db_en = generic_arch_db.get(
-                    "_en_US", generic_arch_db.get("en_US")
-                )
-                specific_arch_db_en = specific_arch_db.get(
-                    "_en_US", specific_arch_db.get("en_US")
-                )
-                generic_arch_db_update = {
-                    k: generic_arch_db.get("_" + k, generic_arch_db[k])
-                    for k in langs_update
-                }
-                specific_arch_db_update = {
-                    k: specific_arch_db.get(
-                        "_" + k, specific_arch_db.get(k, specific_arch_db_en)
-                    )
-                    for k in langs_update
-                }
-                generic_translation_dictionary = field.get_translation_dictionary(
-                    generic_arch_db_en, generic_arch_db_update
-                )
-                specific_translation_dictionary = field.get_translation_dictionary(
-                    specific_arch_db_en, specific_arch_db_update
-                )
-                for (
-                    term_en,
-                    specific_term_langs,
-                ) in specific_translation_dictionary.items():
-                    if term_en not in generic_translation_dictionary:
-                        continue
-                    for lang, generic_term_lang in generic_translation_dictionary[
-                        term_en
-                    ].items():
-                        if overwrite or term_en == specific_term_langs[lang]:
-                            specific_term_langs[lang] = generic_term_lang
-                for lang in langs_update:
-                    if specific_arch_db.get("_" + lang) == specific_arch_db.get(lang):
-                        specific_arch_db.pop("_" + lang, None)
-                    specific_arch_db[
-                        ("_" + lang) if ("_" + lang) in specific_arch_db else lang
-                    ] = field.translate(
-                        lambda term, lang=lang, translations=specific_translation_dictionary: (
-                            translations.get(term, {lang: None})[lang]
-                        ),
-                        specific_arch_db_en,
-                    )
-                field._update_cache(
-                    View.with_context(prefetch_langs=True).browse(specific_id),
+                views_updated += self._load_specific_view_terms(
+                    View,
+                    field,
+                    generic_arch_db,
                     specific_arch_db,
-                    dirty=True,
+                    specific_id,
+                    langs,
+                    overwrite,
                 )
+        _debug.pipeline(
+            "specific_view_terms_loaded",
+            modules=len(modules),
+            langs=sorted(langs),
+            views=views_updated,
+        )
         default_menu = self.env.ref("website.main_menu", raise_if_not_found=False)
         if not default_menu:
             return res
@@ -554,60 +660,108 @@ class IrModuleModule(models.Model):
             ]
         )
 
+    def _create_missing_snippet_views(self, create_values):
+        create_values = [values for values in create_values if values]
+
+        keys = [values["key"] for values in create_values]
+        existing_primary_template_keys = (
+            self.env["ir.ui.view"]
+            .with_context(active_test=False)
+            .search_fetch(
+                [
+                    ("mode", "=", "primary"),
+                    ("key", "in", keys),
+                ],
+                ["key"],
+            )
+            .mapped("key")
+        )
+        missing_create_values = [
+            values
+            for values in create_values
+            if values["key"] not in existing_primary_template_keys
+        ]
+        missing_records = (
+            self.env["ir.ui.view"]
+            .with_context(no_cow=True)
+            .create(missing_create_values)
+        )
+        self._create_model_data(missing_records)
+        _debug.lifecycle(
+            "snippet_templates_created",
+            module=self.name,
+            wanted=len(create_values),
+            created=len(missing_records),
+        )
+        return len(missing_records)
+
+    def _get_snippet_template_vals(self, name, snippet_key, parent_wrap, new_wrap):
+        module, xmlid = (
+            snippet_key.split(".") if "." in snippet_key else ("website", snippet_key)
+        )
+        parent_key = f"{module}.{parent_wrap % xmlid}"
+        parent_id = self.env["ir.model.data"]._xmlid_to_res_model_res_id(
+            parent_key, False
+        )
+        if not parent_id:
+            _logger.warning("No such snippet template: %r", parent_key)
+            _debug.logic(
+                "snippet_template_skipped", reason="no_parent", parent=parent_key
+            )
+            return None
+        return {
+            "name": name,
+            "key": f"{module}.{new_wrap % xmlid}",
+            "inherit_id": parent_id[1],
+            "mode": "primary",
+            "type": "qweb",
+            "arch": "<t/>",
+        }
+
+    def _create_new_page_snippet_templates(self, templates, get_distinct_snippet_names):
+        get_create_vals = self._get_snippet_template_vals
+        create_count = 0
+
+        create_values = [
+            get_create_vals(
+                f"Snippet {snippet_name!r} for new page templates",
+                snippet_name,
+                "%s",
+                "new_page_template_%s",
+            )
+            for snippet_name in get_distinct_snippet_names(templates)
+        ]
+        create_count += self._create_missing_snippet_views(create_values)
+
+        create_values = [
+            get_create_vals(
+                f"Snippet {snippet_name!r} for new page {group!r} templates",
+                snippet_name,
+                "new_page_template_%s",
+                f"new_page_template_{group}_%s",
+            )
+            for group in templates
+            for snippet_name in get_distinct_snippet_names(templates[group])
+        ]
+        create_count += self._create_missing_snippet_views(create_values)
+
+        create_values = [
+            get_create_vals(
+                f"Snippet {snippet_name!r} for new page {group!r} template {template_name!r}",
+                snippet_name,
+                f"new_page_template_{group}_%s",
+                f"new_page_template_{group}_{template_name}_%s",
+            )
+            for group in templates
+            for template_name in templates[group]
+            for snippet_name in templates[group][template_name]
+        ]
+        create_count += self._create_missing_snippet_views(create_values)
+        return create_count
+
     def _create_primary_snippet_templates(self):
-        def split_key(snippet_key):
-            return (
-                snippet_key.split(".")
-                if "." in snippet_key
-                else ("website", snippet_key)
-            )
-
-        def create_missing_views(create_values):
-            create_values = [values for values in create_values if values]
-
-            keys = [values["key"] for values in create_values]
-            existing_primary_template_keys = (
-                self.env["ir.ui.view"]
-                .with_context(active_test=False)
-                .search_fetch(
-                    [
-                        ("mode", "=", "primary"),
-                        ("key", "in", keys),
-                    ],
-                    ["key"],
-                )
-                .mapped("key")
-            )
-            missing_create_values = [
-                values
-                for values in create_values
-                if values["key"] not in existing_primary_template_keys
-            ]
-            missing_records = (
-                self.env["ir.ui.view"]
-                .with_context(no_cow=True)
-                .create(missing_create_values)
-            )
-            self._create_model_data(missing_records)
-            return len(missing_records)
-
-        def get_create_vals(name, snippet_key, parent_wrap, new_wrap):
-            module, xmlid = split_key(snippet_key)
-            parent_key = f"{module}.{parent_wrap % xmlid}"
-            parent_id = self.env["ir.model.data"]._xmlid_to_res_model_res_id(
-                parent_key, False
-            )
-            if not parent_id:
-                _logger.warning("No such snippet template: %r", parent_key)
-                return None
-            return {
-                "name": name,
-                "key": f"{module}.{new_wrap % xmlid}",
-                "inherit_id": parent_id[1],
-                "mode": "primary",
-                "type": "qweb",
-                "arch": "<t/>",
-            }
+        get_create_vals = self._get_snippet_template_vals
+        create_missing_views = self._create_missing_snippet_views
 
         def get_distinct_snippet_names(structure):
             items = []
@@ -660,46 +814,17 @@ class IrModuleModule(models.Model):
         create_count += create_missing_views(create_values)
 
         templates = manifest.get("new_page_templates", {})
+        create_count += self._create_new_page_snippet_templates(
+            templates, get_distinct_snippet_names
+        )
 
-        create_values = []
-        for snippet_name in get_distinct_snippet_names(templates):
-            create_values.append(
-                get_create_vals(
-                    f"Snippet {snippet_name!r} for new page templates",
-                    snippet_name,
-                    "%s",
-                    "new_page_template_%s",
-                )
-            )
-        create_count += create_missing_views(create_values)
-
-        create_values = []
-        for group in templates:
-            for snippet_name in get_distinct_snippet_names(templates[group]):
-                create_values.append(
-                    get_create_vals(
-                        f"Snippet {snippet_name!r} for new page {group!r} templates",
-                        snippet_name,
-                        "new_page_template_%s",
-                        f"new_page_template_{group}_%s",
-                    )
-                )
-        create_count += create_missing_views(create_values)
-
-        create_values = []
-        for group in templates:
-            for template_name in templates[group]:
-                for snippet_name in templates[group][template_name]:
-                    create_values.append(
-                        get_create_vals(
-                            f"Snippet {snippet_name!r} for new page {group!r} template {template_name!r}",
-                            snippet_name,
-                            f"new_page_template_{group}_%s",
-                            f"new_page_template_{group}_{template_name}_%s",
-                        )
-                    )
-        create_count += create_missing_views(create_values)
-
+        _debug.pipeline(
+            "primary_snippet_templates",
+            module=self.name,
+            created=create_count,
+            configurator_pages=len(configurator_snippets),
+            template_groups=len(templates),
+        )
         if create_count:
             _logger.info(
                 "Generated %s primary snippet templates for %r", create_count, self.name
@@ -752,6 +877,13 @@ class IrModuleModule(models.Model):
                 update_count += 1
             else:
                 missing_create_values.append(create_value)
+        _debug.pipeline(
+            "primary_page_templates",
+            module=self.name,
+            wanted=len(create_values),
+            created=len(missing_create_values),
+            updated=update_count,
+        )
         if missing_create_values:
             missing_records = View.create(missing_create_values)
             self._create_model_data(missing_records)

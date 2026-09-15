@@ -3,8 +3,11 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.utils import get_url_with_params
+
+_debug = DebugLog(__name__)
 
 
 class MixinPortal(models.AbstractModel):
@@ -65,6 +68,12 @@ class MixinPortal(models.AbstractModel):
             try:
                 record.check_access("read")
             except AccessError:
+                _debug.logic(
+                    "access_action",
+                    by="super_no_read",
+                    model=self._name,
+                    record=self.id,
+                )
                 return super()._get_access_action(
                     access_uid=access_uid, force_website=force_website
                 )
@@ -75,6 +84,12 @@ class MixinPortal(models.AbstractModel):
                 record.check_access("read")
             except AccessError:
                 if force_website:
+                    _debug.logic(
+                        "access_action",
+                        by="access_url",
+                        model=self._name,
+                        record=self.id,
+                    )
                     return {
                         "type": "ir.actions.act_url",
                         "url": record.access_url,
@@ -82,6 +97,9 @@ class MixinPortal(models.AbstractModel):
                         "res_id": record.id,
                     }
             else:
+                _debug.logic(
+                    "access_action", by="share_url", model=self._name, record=self.id
+                )
                 return {
                     "type": "ir.actions.act_url",
                     "url": record._get_share_url(),

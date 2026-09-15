@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -40,6 +43,12 @@ class SaleOrderLine(models.Model):
         if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
             cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)
             if cart_qty > avl_qty:
+                _debug.logic(
+                    "line_out_of_stock",
+                    line=self.id,
+                    wanted=cart_qty,
+                    available=avl_qty,
+                )
                 self._set_shop_warning_stock(cart_qty, max(avl_qty, 0))
                 return False
         return True

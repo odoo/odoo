@@ -1,7 +1,10 @@
 from urllib.parse import parse_qs, urlsplit
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -166,11 +169,21 @@ class ResConfigSettings(models.TransientModel):
                         0
                     ]
                     config.plausible_site = url.path.split("/")[-1]
+                    _debug.logic(
+                        "plausible_key_parsed",
+                        website=config.website_id.id,
+                        site=config.plausible_site,
+                    )
                 except ValueError:
                     pass
 
     def _inverse_shared_user_account(self):
         for config in self:
+            _debug.lifecycle(
+                "shared_user_account",
+                website=config.website_id.id,
+                shared=config.shared_user_account,
+            )
             config.website_id.specific_user_account = not config.shared_user_account
 
     @api.depends("website_id.auth_signup_uninvited")
@@ -182,6 +195,11 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_auth_signup_uninvited(self):
         for config in self:
+            _debug.lifecycle(
+                "signup_scope",
+                website=config.website_id.id,
+                scope=config.auth_signup_uninvited,
+            )
             config.website_id.auth_signup_uninvited = config.auth_signup_uninvited
 
     @api.depends("website_id")
@@ -193,6 +211,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             if config.has_plausible_shared_key:
                 continue
+            _debug.lifecycle("plausible_cleared", website=config.website_id.id)
             config.plausible_shared_key = False
             config.plausible_site = False
 
@@ -205,6 +224,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             if config.has_google_analytics:
                 continue
+            _debug.lifecycle("google_analytics_cleared", website=config.website_id.id)
             config.google_analytics_key = False
 
     @api.depends("website_id")
@@ -215,6 +235,7 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_has_google_search_console(self):
         for config in self:
             if not config.has_google_search_console:
+                _debug.lifecycle("google_console_cleared", website=config.website_id.id)
                 config.google_search_console = False
 
     @api.depends("website_id")
@@ -225,14 +246,23 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_has_default_share_image(self):
         for config in self:
             if not config.has_default_share_image:
+                _debug.lifecycle(
+                    "default_share_image_cleared", website=config.website_id.id
+                )
                 config.social_default_image = False
 
     @api.onchange("language_ids")
     def _onchange_language_ids(self):
         language_ids = self.language_ids._origin
         if not language_ids:
+            _debug.logic("default_lang_reset", reason="no_languages")
             self.website_default_lang_id = False
         elif self.website_default_lang_id not in language_ids:
+            _debug.logic(
+                "default_lang_reset",
+                reason="no_longer_enabled",
+                lang=language_ids[0].code,
+            )
             self.website_default_lang_id = language_ids[0]
 
     def action_website_create_new(self):

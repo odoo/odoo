@@ -2,7 +2,10 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_list
+
+_debug = DebugLog(__name__)
 
 
 class PortalShare(models.TransientModel):
@@ -104,6 +107,7 @@ class PortalShare(models.TransientModel):
         self.check_singleton()
         record = self._get_portal_record()
         if not record:
+            _debug.logic("share_refused", reason="no_portal_page")
             raise UserError(_("This document cannot be shared: it has no portal page."))
         record.check_access("read")
         return record

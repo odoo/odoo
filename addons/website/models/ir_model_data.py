@@ -2,10 +2,12 @@ import logging
 
 from odoo import api, models
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrModelData(models.Model):
@@ -30,6 +32,12 @@ class IrModelData(models.Model):
                     copy_ids.ids,
                     record._name,
                     copy_ids.mapped("website_id"),
+                )
+                _debug.lifecycle(
+                    "theme_copies_unlinked",
+                    model=record._name,
+                    record=record.id,
+                    copies=len(copy_ids),
                 )
                 copy_ids.unlink()
 

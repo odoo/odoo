@@ -1,7 +1,10 @@
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.web import urls
 from odoo.tools.json import scriptsafe as json_scriptsafe
+
+_debug = DebugLog(__name__)
 
 
 class IrActionsServer(models.Model):
@@ -60,4 +63,8 @@ class IrActionsServer(models.Model):
     @api.model
     def _run_action_code_multi(self, eval_context=None):
         res = super()._run_action_code_multi(eval_context)
+        _debug.logic(
+            "server_action_response",
+            by="eval_context" if "response" in eval_context else "super",
+        )
         return eval_context.get("response", res)

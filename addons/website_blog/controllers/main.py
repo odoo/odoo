@@ -6,11 +6,14 @@ import werkzeug
 from odoo import fields, http, models, tools
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.website.controllers.main import QueryURL
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -263,6 +266,7 @@ class WebsiteBlog(http.Controller):
                 search=search,
                 **opt,
             )()
+            _debug.logic("blog_index_redirect", by="single_blog", to=url)
             return request.redirect(url, code=302)
 
         date_begin, date_end = opt.get("date_begin"), opt.get("date_end")
@@ -279,6 +283,7 @@ class WebsiteBlog(http.Controller):
                     date_end=date_end,
                     search=search,
                 )()
+                _debug.logic("blog_index_redirect", by="first_tag_only", tags=len(tags))
                 return request.redirect(url, code=302)
 
         values = self._prepare_blog_values(
@@ -375,6 +380,12 @@ class WebsiteBlog(http.Controller):
         )
 
         if blog_post.blog_id.id != blog.id:
+            _debug.logic(
+                "blog_post_redirect",
+                reason="wrong_blog",
+                post=blog_post.id,
+                blog=blog.id,
+            )
             return request.redirect(
                 "/blog/%s/%s"
                 % (
@@ -393,6 +404,12 @@ class WebsiteBlog(http.Controller):
         all_post = BlogPost.search(blog_post_domain)
 
         if blog_post not in all_post:
+            _debug.logic(
+                "blog_post_redirect",
+                reason="not_visible_yet",
+                post=blog_post.id,
+                blog=blog.id,
+            )
             return request.redirect(
                 "/blog/%s" % (request.env["ir.http"]._slug(blog_post.blog_id))
             )

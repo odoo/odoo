@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -81,6 +84,7 @@ class ProductProduct(models.Model):
     @api.constrains("base_unit_count")
     def _check_base_unit_count(self):
         if any(product.base_unit_count < 0 for product in self):
+            _debug.logic("base_unit_count_refused", products=self)
             raise ValidationError(
                 _(
                     "The value of Base Unit Count must be greater than 0."
@@ -125,10 +129,15 @@ class ProductProduct(models.Model):
         if self.env.user.has_group("base.group_system"):
             return True
         if not self.active or not self.website_published:
+            _debug.logic("add_to_cart_denied", reason="unpublished", product=self.id)
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
+            _debug.logic(
+                "add_to_cart_denied", reason="outside_product_domain", product=self.id
+            )
             return False
         if request.website.prevent_zero_price_sale and not self._get_contextual_price():
+            _debug.logic("add_to_cart_denied", reason="zero_price", product=self.id)
             return False
         return request.website.has_ecommerce_access()
 

@@ -4,7 +4,10 @@ from operator import itemgetter
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import html_translate
+
+_debug = DebugLog(__name__)
 
 MOST_USED_TAGS_COUNT = 5
 

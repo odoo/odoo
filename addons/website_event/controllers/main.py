@@ -9,11 +9,14 @@ from odoo import Command, _, fields, http
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import lazy
 from odoo.tools.misc import get_lang
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.website.controllers.main import QueryURL
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -383,6 +386,12 @@ class WebsiteEventController(http.Controller):
                     request.env["event.slot"].browse(int(slot_id)).seats_available or 0
                 )
             if seats_available < ordered_seats:
+                _debug.logic(
+                    "registration_unavailable",
+                    event=event.id,
+                    wanted=ordered_seats,
+                    available=seats_available,
+                )
                 availability_check = False
         if not tickets:
             return False
@@ -423,6 +432,11 @@ class WebsiteEventController(http.Controller):
         ]
         for posted_id in posted:
             if int(posted_id) not in offered_ids and offered_ids:
+                _debug.logic(
+                    "registration_field_refused",
+                    field=field_name,
+                    value=str(posted_id),
+                )
                 raise UserError(message)
 
     def _process_attendees_form(self, event, form_details):
@@ -629,6 +643,9 @@ class WebsiteEventController(http.Controller):
     def event_registration_success(self, event, registration_ids):
         visitor = request.env["website.visitor"]._get_visitor_from_request()
         if not visitor:
+            _debug.logic(
+                "registration_success_refused", reason="no_visitor", event=event.id
+            )
             raise NotFound
         attendees_sudo = (
             request.env["event.registration"]

@@ -1,16 +1,20 @@
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
 
 from odoo.addons.mail.controllers import mail
 from odoo.addons.portal.utils import get_url_with_params
+
+_debug = DebugLog(__name__)
 
 
 class MailController(mail.MailController):
     @classmethod
     def _redirect_to_generic_fallback(cls, model, res_id, access_token=None, **kwargs):
         if request.session.uid and request.env.user.share:
+            _debug.logic("mail_redirect", by="portal_home", model=model, record=res_id)
             return request.redirect("/my")
         return super()._redirect_to_generic_fallback(
             model, res_id, access_token=access_token, **kwargs
@@ -48,6 +52,12 @@ class MailController(mail.MailController):
                             url = get_url_with_params(
                                 url, {"pid": pid, "hash": hash_param}
                             )
+                        _debug.logic(
+                            "mail_redirect",
+                            by="portal_token",
+                            model=model,
+                            record=res_id,
+                        )
                         return request.redirect(url)
         return super()._redirect_to_record(
             model, res_id, access_token=access_token, **kwargs

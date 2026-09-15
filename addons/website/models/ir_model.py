@@ -1,6 +1,9 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 
 from . import ir_http
+
+_debug = DebugLog(__name__)
 
 
 class Base(models.AbstractModel):
@@ -14,8 +17,10 @@ class Base(models.AbstractModel):
         if self._name == "website":
             return self.domain or super().get_base_url()
         if "website_id" in self and self.sudo().website_id.domain:
+            _debug.logic("base_url", by="record_website", model=self._name)
             return self.sudo().website_id.domain
         if "company_id" in self and self.company_id.website_id.domain:
+            _debug.logic("base_url", by="company_website", model=self._name)
             return self.company_id.website_id.domain
         return super().get_base_url()
 

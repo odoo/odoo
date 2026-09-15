@@ -1,6 +1,9 @@
 from odoo import models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -110,6 +113,9 @@ class SaleOrder(models.Model):
             if not line._check_availability()
         ]
         if values:
+            _debug.logic(
+                "cart_unavailable", order=self.id, unavailable_lines=len(values)
+            )
             raise ValidationError(" ".join(values))
         return super()._check_cart_is_ready_to_be_paid()
 

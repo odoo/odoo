@@ -8,12 +8,14 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.datetime import all_timezones
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, _
 from odoo.tools.misc import _format_time_ago
 
 from odoo.addons.base.models.res_partner import _selection_timezones
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteTrack(models.Model):
@@ -56,6 +58,7 @@ class WebsiteVisitor(models.Model):
 
     def _get_access_token(self):
         if not request:
+            _debug.logic("visitor_token_refused", reason="no_request")
             raise ValueError("Visitors can only be created through the frontend.")
 
         if not request.env.user._is_public():
@@ -309,19 +312,10 @@ class WebsiteVisitor(models.Model):
             "context": compose_ctx,
         }
 
-    def _upsert_visitor(
-        self,
-        access_token,
-        force_track_values=None,
-        *,
-        lang_id=None,
-        country_code=None,
-        website_id=None,
-        timezone=None,
+    def _get_upsert_values(
+        self, access_token, *, lang_id, country_code, website_id, timezone
     ):
-        updated_fields = ["last_connection_datetime", "visit_count", "timezone"]
-        self.flush_model(["access_token", *updated_fields])
-        create_values = {
+        return {
             "access_token": str(access_token),
             "lang_id": (request.lang.id if lang_id is None else lang_id) or None,
             "country_code": (
@@ -338,6 +332,26 @@ class WebsiteVisitor(models.Model):
             "create_uid": self.env.uid,
             "partner_id": None if len(str(access_token)) == 32 else access_token,
         }
+
+    def _upsert_visitor(
+        self,
+        access_token,
+        force_track_values=None,
+        *,
+        lang_id=None,
+        country_code=None,
+        website_id=None,
+        timezone=None,
+    ):
+        updated_fields = ["last_connection_datetime", "visit_count", "timezone"]
+        self.flush_model(["access_token", *updated_fields])
+        create_values = self._get_upsert_values(
+            access_token,
+            lang_id=lang_id,
+            country_code=country_code,
+            website_id=website_id,
+            timezone=timezone,
+        )
         query = SQL(
             """
             INSERT INTO website_visitor (
@@ -380,7 +394,10 @@ class WebsiteVisitor(models.Model):
                 page_id=force_track_values.get("page_id"),
             )
 
-        [result] = self.env.execute_query(query)
+        tracked = bool(force_track_values)
+        with _debug.perf("visitor_upsert", cr=self.env.cr, tracked=tracked) as span:
+            [result] = self.env.execute_query(query)
+            span.set(visitor=result[0], created=result[1])
         visitor = self.browse(result[0])
         if force_track_values:
             updated_fields.append("website_track_ids")
@@ -391,15 +408,20 @@ class WebsiteVisitor(models.Model):
             partner.invalidate_recordset(["visitor_ids"])
             partner.modified(["visitor_ids"])
         _logger.debug(
-            "Visitor upsert id=%s created=%s tracked=%s",
-            result[0],
-            result[1],
-            bool(force_track_values),
+            "Visitor upsert id=%s created=%s tracked=%s", result[0], result[1], tracked
+        )
+        _debug.lifecycle(
+            "visitor_upsert",
+            visitor=result[0],
+            created=result[1],
+            tracked=tracked,
+            partner=create_values["partner_id"],
         )
         return result
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
         if not (request and request.env and request.env.uid):
+            _debug.logic("visitor_skipped", reason="no_request_env")
             return None
 
         access_token = self._get_access_token()
@@ -419,8 +441,14 @@ class WebsiteVisitor(models.Model):
         if not self.env.cr.readonly and visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
+                _debug.lifecycle(
+                    "visitor_timezone_backfilled", visitor=visitor.id, tz=tz
+                )
                 visitor._update_visitor_timezone(tz)
 
+        _debug.logic(
+            "visitor_from_request", by="lookup", visitor=visitor.id, found=bool(visitor)
+        )
         return visitor
 
     def _handle_webpage_dispatch(self, website_page):
@@ -428,6 +456,7 @@ class WebsiteVisitor(models.Model):
         website_track_values = {"url": url}
         if website_page:
             website_track_values["page_id"] = website_page.id
+        _debug.pipeline("webpage_dispatch_tracked", page=website_page or None, url=url)
 
         self._get_visitor_from_request(
             force_create=True, force_track_values=website_track_values
@@ -440,6 +469,11 @@ class WebsiteVisitor(models.Model):
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(
             minutes=30
         ):
+            _debug.lifecycle(
+                "visitor_track_created",
+                visitor=self.id,
+                by="new" if not last_view else "stale",
+            )
             self.env["website.track"].create(
                 {**website_track_values, "visitor_id": self.id}
             )
@@ -447,13 +481,21 @@ class WebsiteVisitor(models.Model):
 
     def _merge_visitor(self, target):
         if not target.partner_id:
+            _debug.logic("visitor_merge_refused", reason="target_has_no_partner")
             raise ValueError("The `target` visitor should be linked to a partner.")
+        _debug.lifecycle(
+            "visitor_merged",
+            visitor=self.id,
+            target=target.id,
+            tracks=len(self.website_track_ids),
+        )
         self.website_track_ids.visitor_id = target.id
         self.unlink()
 
     def _cron_unlink_old_visitors(self, batch_size=1000):
         domain = self._get_domain_inactive_visitors()
         visitors = self.env["website.visitor"].sudo().search(domain, limit=batch_size)
+        _debug.pipeline("gc_visitors", batch=batch_size, removed=len(visitors))
         visitors.unlink()
         self.env["ir.cron"]._commit_progress(
             processed=len(visitors),
@@ -484,6 +526,7 @@ class WebsiteVisitor(models.Model):
                 FOR NO KEY UPDATE SKIP LOCKED
             )
         """
+        _debug.lifecycle("visitor_timezone_set", visitor=self.id, tz=timezone)
         self.env.cr.execute(query, (timezone, self.id))
         self.invalidate_recordset(["timezone"])
         self.modified(["timezone"])
@@ -513,8 +556,10 @@ class WebsiteVisitor(models.Model):
     def _get_visitor_timezone(self):
         tz = request.cookies.get("tz") if request else None
         if tz in all_timezones():
+            _debug.logic("visitor_timezone", by="cookie", tz=tz)
             return tz
         elif not self.env.user._is_public():
+            _debug.logic("visitor_timezone", by="user", tz=self.env.user.tz)
             return self.env.user.tz
         else:
             return None

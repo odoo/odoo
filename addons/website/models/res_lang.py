@@ -1,8 +1,11 @@
 from odoo import _, models, tools
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base.models.res_lang import LangData, LangDataDict
+
+_debug = DebugLog(__name__)
 
 
 class ResLang(models.Model):
@@ -13,6 +16,9 @@ class ResLang(models.Model):
             if self.env["website"].search_count(
                 [("language_ids", "in", self._ids)], limit=1
             ):
+                _debug.logic(
+                    "lang_deactivation_refused", reason="used_by_website", langs=self
+                )
                 raise UserError(
                     _(
                         "Cannot deactivate a language that is currently used on a website."
@@ -54,6 +60,11 @@ class ResLang(models.Model):
                     already_shortened.append(short_code)
                 else:
                     lang["hreflang"] = code.lower().replace("_", "-")
+            _debug.perf.count(
+                "frontend_langs_computed",
+                website=self.env.context.get("website_id"),
+                langs=len(langs),
+            )
             return LangDataDict({lang["code"]: LangData(lang) for lang in langs})
 
         return super()._get_frontend()

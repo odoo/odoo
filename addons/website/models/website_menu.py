@@ -6,7 +6,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import html_translate
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteMenu(models.Model):
@@ -136,6 +139,9 @@ class WebsiteMenu(models.Model):
                 level += 1
                 current_menu = current_menu.parent_id
                 if level > 2:
+                    _debug.logic(
+                        "menu_refused", reason="too_deep", menu=record.id, level=level
+                    )
                     raise UserError(
                         _("Menus cannot have more than two levels of hierarchy.")
                     )
@@ -144,6 +150,9 @@ class WebsiteMenu(models.Model):
                 if parent_menu.is_mega_menu or (
                     record.is_mega_menu and (parent_menu.parent_id or record.child_id)
                 ):
+                    _debug.logic(
+                        "menu_refused", reason="mega_menu_nesting", menu=record.id
+                    )
                     raise UserError(
                         _("A mega menu cannot have a parent or child menu.")
                     )
@@ -151,6 +160,9 @@ class WebsiteMenu(models.Model):
                 if record.child_id and (
                     parent_menu.parent_id or record.child_id.child_id
                 ):
+                    _debug.logic(
+                        "menu_refused", reason="submenu_with_children", menu=record.id
+                    )
                     raise UserError(
                         _("Menus with child menus cannot be added as a submenu.")
                     )
@@ -189,18 +201,30 @@ class WebsiteMenu(models.Model):
                         "parent_id": parent_id,
                     }
                 )
+            _debug.logic(
+                "menu_create",
+                by="fanned_out",
+                websites=len(websites),
+                url=vals.get("url"),
+            )
             new_menu = super().create(w_vals)[-1:]
             if default_menu and vals.get("parent_id") == default_menu.id:
                 new_menu = super().create(vals)
             menus |= new_menu
+        _debug.lifecycle("create", menus=menus, count=len(menus))
         return menus
 
     def write(self, vals):
+        _debug.lifecycle("write", menus=self, count=len(self), fields=sorted(vals))
         self.env.registry.clear_cache("templates")
         res = super().write(vals)
         if "group_ids" in vals and not self.env.context.get(
             "adding_designer_group_to_menu"
         ):
+            if _debug.lifecycle.enabled:
+                _debug.lifecycle(
+                    "menu_designer_group_added", menus=self.filtered("group_ids")
+                )
             self.filtered("group_ids").with_context(
                 adding_designer_group_to_menu=True
             ).group_ids += self.env.ref("website.group_website_designer")
@@ -226,12 +250,20 @@ class WebsiteMenu(models.Model):
                     ("website_id", "!=", False),
                 ]
             )
+        _debug.lifecycle(
+            "unlink",
+            menus=self,
+            count=len(self),
+            generic=len(generic_menus),
+            cascaded=len(menus_to_remove) - len(self),
+        )
         return super(WebsiteMenu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_tags(self):
         main_menu = self.env.ref("website.main_menu", raise_if_not_found=False)
         if main_menu and main_menu in self:
+            _debug.logic("menu_unlink_refused", reason="main_menu")
             raise UserError(
                 _(
                     "You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."
@@ -334,7 +366,14 @@ class WebsiteMenu(models.Model):
     @api.model
     def save(self, website_id, data):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("menu_save_refused", reason="not_restricted_editor")
             raise AccessError(_("Only website editors can edit the menus."))
+        _debug.pipeline(
+            "menu_save",
+            website=website_id,
+            menus=len(data.get("data") or ()),
+            deleted=len(data.get("to_delete") or ()),
+        )
 
         def replace_id(old_id, new_id):
             for menu in data["data"]:
@@ -368,6 +407,7 @@ class WebsiteMenu(models.Model):
                 )
                 page = self.env["website.page"].search(domain, limit=1)  # noqa: E8507 - one probe per submitted menu url; the limit=1 pick follows the website-specific ordering
                 if page:
+                    _debug.logic("menu_bound", by="page", menu=menu_id.id, page=page.id)
                     menu["page_id"] = page.id
                     menu["url"] = page.url
                     if isinstance(menu.get("parent_id"), str):
@@ -375,8 +415,20 @@ class WebsiteMenu(models.Model):
                 elif menu_id.page_id:
                     try:
                         self.env["ir.http"]._match(menu["url"])
+                        _debug.logic(
+                            "menu_bound",
+                            by="controller",
+                            menu=menu_id.id,
+                            url=menu["url"],
+                        )
                         menu_id.page_id = None
                     except werkzeug.exceptions.NotFound:
+                        _debug.logic(
+                            "menu_bound",
+                            by="page_url_rewritten",
+                            menu=menu_id.id,
+                            url=menu["url"],
+                        )
                         menu_id.page_id.write({"url": menu["url"]})
             menu_id.write(
                 {k: v for k, v in menu.items() if k in self._SAVE_ALLOWED_FIELDS}

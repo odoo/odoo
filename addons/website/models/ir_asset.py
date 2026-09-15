@@ -2,6 +2,9 @@ from uuid import uuid4
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrAsset(models.Model):
@@ -56,6 +59,11 @@ class IrAsset(models.Model):
         )
         to_remove = set(themes.mapped("name"))
 
+        _debug.logic(
+            "theme_addons_filtered",
+            website=website_id,
+            removed=len(to_remove & set(addons_list)),
+        )
         return [name for name in addons_list if name not in to_remove]
 
     def _filtered_most_specific(self, website_id=None):
@@ -87,6 +95,7 @@ class IrAsset(models.Model):
 
         for asset in self.with_context(active_test=False):
             if asset.website_id:
+                _debug.logic("asset_cow_write", by="already_specific", asset=asset.id)
                 super(IrAsset, asset).write(vals)
                 continue
 
@@ -98,17 +107,30 @@ class IrAsset(models.Model):
                     {"key": vals.get("key") or f"website.asset_{uuid4().hex}"}
                 )
                 asset_values = {**vals, "key": asset.key}
+                _debug.lifecycle("asset_key_generated", asset=asset.id, key=asset.key)
 
             website_specific_asset = asset.search(
                 [("key", "=", asset.key), ("website_id", "=", current_website_id)],
                 limit=1,
             )
             if website_specific_asset:
+                _debug.logic(
+                    "asset_cow_write",
+                    by="existing_specific",
+                    asset=asset.id,
+                    specific=website_specific_asset.id,
+                )
                 super(IrAsset, website_specific_asset).write(asset_values)
                 continue
 
             copy_vals = {"website_id": current_website_id, "key": asset.key}
             website_specific_asset = asset.copy(copy_vals)
+            _debug.lifecycle(
+                "asset_cow_copied",
+                asset=asset.id,
+                specific=website_specific_asset.id,
+                website=current_website_id,
+            )
 
             super(IrAsset, website_specific_asset).write(asset_values)
 

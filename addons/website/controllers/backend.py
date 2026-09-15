@@ -2,6 +2,9 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteBackend(http.Controller):
@@ -38,6 +41,13 @@ class WebsiteBackend(http.Controller):
             dashboard_data["dashboards"]["plausible_share_url"] = (
                 current_website._get_plausible_share_url()
             )
+        _debug.pipeline(
+            "dashboard_data",
+            website=current_website.id,
+            websites=len(dashboard_data["websites"]),
+            designer=has_group_designer,
+            system=has_group_system,
+        )
         return dashboard_data
 
     @http.route(
@@ -54,6 +64,7 @@ class WebsiteBackend(http.Controller):
     )
     def check_create_access_rights(self, models):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("new_content_rights_refused", reason="not_restricted_editor")
             raise werkzeug.exceptions.Forbidden
 
         return {model: request.env[model].has_access("create") for model in models}
@@ -70,6 +81,11 @@ class WebsiteBackend(http.Controller):
         )
 
         total_features = total_features or len(features_not_installed)
+        _debug.pipeline(
+            "module_install_progress",
+            total=total_features,
+            remaining=len(features_not_installed),
+        )
         return {
             "total": total_features,
             "nbInstalled": total_features - len(features_not_installed),

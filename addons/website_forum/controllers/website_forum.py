@@ -8,6 +8,7 @@ from odoo import _, http, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import is_html_empty
 from odoo.tools.translate import LazyTranslate
 
@@ -16,6 +17,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteForum(WebsiteProfile):
@@ -315,6 +317,7 @@ class WebsiteForum(WebsiteProfile):
             or len(tag_char) > 1
             or (tag_char and not tag_char.isalpha())
         ):
+            _debug.logic("forum_tags_refused", reason="bad_tag_char", forum=forum.id)
             raise werkzeug.exceptions.BadRequest(
                 _('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char)
             )
@@ -354,6 +357,12 @@ class WebsiteForum(WebsiteProfile):
             if not search:
                 tags = request.env["forum.tag"].search(domain, limit=None, order=order)
         else:
+            _debug.logic(
+                "forum_tags_refused",
+                reason="bad_filter",
+                forum=forum.id,
+                filter=str(filters),
+            )
             raise werkzeug.exceptions.BadRequest(
                 _('Bad "filters" value "%(filters)s".', filters=filters)
             )
@@ -430,9 +439,15 @@ class WebsiteForum(WebsiteProfile):
     )
     def question(self, forum, question, **post):
         if not forum.active:
+            _debug.logic(
+                "forum_question_refused", reason="forum_archived", forum=forum.id
+            )
             return request.render("website_forum.header", {"forum": forum})
 
         if not question.can_view:
+            _debug.logic(
+                "forum_question_refused", reason="cannot_view", post=question.id
+            )
             raise werkzeug.exceptions.NotFound
 
         user = request.env.user
@@ -441,6 +456,13 @@ class WebsiteForum(WebsiteProfile):
             and user.karma < forum.karma_post
             and question.create_uid != user
         ):
+            _debug.logic(
+                "forum_question_refused",
+                reason="pending_low_karma",
+                post=question.id,
+                karma=user.karma,
+                required=forum.karma_post,
+            )
             raise werkzeug.exceptions.NotFound
 
         if question.parent_id:
@@ -500,6 +522,11 @@ class WebsiteForum(WebsiteProfile):
                 answer = record
                 break
         else:
+            _debug.logic(
+                "forum_edit_answer_refused",
+                reason="no_answer_of_mine",
+                post=question.id,
+            )
             raise werkzeug.exceptions.NotFound
         slug = request.env["ir.http"]._slug
         return request.redirect(f"/forum/{slug(forum)}/post/{slug(answer)}/edit")
@@ -744,6 +771,13 @@ class WebsiteForum(WebsiteProfile):
     def validation_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
+            _debug.logic(
+                "moderation_refused",
+                queue="validation",
+                forum=forum.id,
+                karma=user.karma,
+                required=forum.karma_moderate,
+            )
             raise werkzeug.exceptions.NotFound
 
         Post = request.env["forum.post"]
@@ -769,6 +803,13 @@ class WebsiteForum(WebsiteProfile):
     def flagged_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
+            _debug.logic(
+                "moderation_refused",
+                queue="flagged",
+                forum=forum.id,
+                karma=user.karma,
+                required=forum.karma_moderate,
+            )
             raise werkzeug.exceptions.NotFound
 
         Post = request.env["forum.post"]
@@ -797,6 +838,13 @@ class WebsiteForum(WebsiteProfile):
     def offensive_posts(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
+            _debug.logic(
+                "moderation_refused",
+                queue="offensive",
+                forum=forum.id,
+                karma=user.karma,
+                required=forum.karma_moderate,
+            )
             raise werkzeug.exceptions.NotFound
 
         Post = request.env["forum.post"]
@@ -825,6 +873,13 @@ class WebsiteForum(WebsiteProfile):
     )
     def closed_posts(self, forum, **kwargs):
         if request.env.user.karma < forum.karma_moderate:
+            _debug.logic(
+                "moderation_refused",
+                queue="closed",
+                forum=forum.id,
+                karma=request.env.user.karma,
+                required=forum.karma_moderate,
+            )
             raise werkzeug.exceptions.NotFound
 
         closed_posts_ids = request.env["forum.post"].search(
@@ -887,6 +942,9 @@ class WebsiteForum(WebsiteProfile):
     )
     def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
         if not post.can_moderate:
+            _debug.logic(
+                "mark_offensive_refused", reason="cannot_moderate", post=post.id
+            )
             raise AccessError(
                 _(
                     "%d karma required to mark a post as offensive.",

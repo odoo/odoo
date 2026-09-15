@@ -8,8 +8,10 @@ from lxml import etree, html
 from odoo import _, api, fields, models
 from odoo.exceptions import MissingError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -68,6 +70,11 @@ class WebsiteSnippetFilter(models.Model):
     def _check_data_source_is_provided(self):
         for record in self:
             if bool(record.action_server_id) == bool(record.filter_id):
+                _debug.logic(
+                    "snippet_filter_refused",
+                    reason="ambiguous_data_source",
+                    filter=record.id,
+                )
                 raise ValidationError(
                     _("Either action_server_id or filter_id must be provided.")
                 )
@@ -76,6 +83,12 @@ class WebsiteSnippetFilter(models.Model):
     def _check_limit(self):
         for record in self:
             if not 0 < record.limit <= 16:
+                _debug.logic(
+                    "snippet_filter_refused",
+                    reason="limit_out_of_range",
+                    filter=record.id,
+                    limit=record.limit,
+                )
                 raise ValidationError(_("The limit must be between 1 and 16."))
 
     @api.constrains("field_names")
@@ -100,12 +113,22 @@ class WebsiteSnippetFilter(models.Model):
         self and self.check_singleton()
 
         if not template_key or ".dynamic_filter_template_" not in template_key:
+            _debug.logic(
+                "snippet_render_refused",
+                reason="not_a_dynamic_filter_template",
+                template=template_key,
+            )
             return []
         if (
             not self.env["ir.ui.view"]
             .sudo()
             ._get_template_view(template_key, raise_if_not_found=False)
         ):
+            _debug.logic(
+                "snippet_render_refused",
+                reason="unknown_template",
+                template=template_key,
+            )
             return []
         if search_domain is None:
             search_domain = []
@@ -114,9 +137,21 @@ class WebsiteSnippetFilter(models.Model):
             self.website_id
             and self.env["website"].get_current_website() != self.website_id
         ):
+            _debug.logic(
+                "snippet_render_refused",
+                reason="other_website",
+                filter=self.id,
+                website=self.website_id.id,
+            )
             return []
 
         if self.model_name and self.model_name.replace(".", "_") not in template_key:
+            _debug.logic(
+                "snippet_render_refused",
+                reason="template_model_mismatch",
+                model=self.model_name,
+                template=template_key,
+            )
             return []
 
         records = self._prepare_values(
@@ -125,6 +160,13 @@ class WebsiteSnippetFilter(models.Model):
         is_sample = with_sample and not records
         if is_sample:
             records = self._prepare_sample(limit, res_model=res_model)
+        _debug.pipeline(
+            "snippet_filter_rendered",
+            filter=self.id,
+            template=template_key,
+            records=len(records or ()),
+            sample=is_sample,
+        )
         content = (
             self.env["ir.qweb"]
             .with_context(inherit_branding=False)
@@ -165,6 +207,12 @@ class WebsiteSnippetFilter(models.Model):
         if self.filter_id or single_record_filter:
             model = self._resolve_model(model_name)
             if model is None:
+                _debug.logic(
+                    "snippet_values_refused",
+                    reason="unknown_model",
+                    filter=self.id,
+                    model=model_name,
+                )
                 return []
             filter_sudo = self.filter_id.sudo()
             if single_record_filter:
@@ -189,16 +237,29 @@ class WebsiteSnippetFilter(models.Model):
                 for condition in search_domain.iter_conditions():
                     field_expr = condition.field_expr
                     if "." in field_expr or field_expr not in model._fields:
+                        _debug.logic(
+                            "snippet_search_domain_refused",
+                            filter=self.id,
+                            field=field_expr,
+                        )
                         raise ValueError(
                             f"Invalid field {field_expr!r} in search domain"
                         )
                 domain &= search_domain
             try:
-                records = (
-                    model.sudo(False)
-                    .with_context(**context)
-                    .search(domain, order=order, limit=limit)
-                )
+                with _debug.perf(
+                    "snippet_filter_records",
+                    cr=self.env.cr,
+                    filter=self.id,
+                    model=model._name,
+                    limit=limit,
+                ) as span:
+                    records = (
+                        model.sudo(False)
+                        .with_context(**context)
+                        .search(domain, order=order, limit=limit)
+                    )
+                    span.set(records=len(records))
                 return self._filter_records_to_values(
                     records.sudo(), res_model=model_name
                 )
@@ -209,9 +270,24 @@ class WebsiteSnippetFilter(models.Model):
                         domain,
                         self._name,
                     )
+                _debug.logic(
+                    "snippet_filter_missing_records",
+                    filter=self.id,
+                    single=single_record_filter,
+                )
                 return []
         elif self.action_server_id:
-            try:
+            return self._prepare_values_from_action(limit, search_domain)
+        return None
+
+    def _prepare_values_from_action(self, limit, search_domain):
+        try:
+            with _debug.perf(
+                "snippet_filter_action",
+                cr=self.env.cr,
+                filter=self.id,
+                action=self.action_server_id.id,
+            ):
                 return (
                     self.action_server_id.with_context(
                         dynamic_filter=self,
@@ -222,14 +298,18 @@ class WebsiteSnippetFilter(models.Model):
                     .run()
                     or []
                 )
-            except MissingError:
-                _logger.warning(
-                    "The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'",
-                    search_domain,
-                    self._name,
-                )
-                return []
-        return None
+        except MissingError:
+            _logger.warning(
+                "The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'",
+                search_domain,
+                self._name,
+            )
+            _debug.logic(
+                "snippet_action_missing_records",
+                filter=self.id,
+                action=self.action_server_id.id,
+            )
+            return []
 
     def _get_field_name_and_type(self, model, field_name):
         field_name, _sep, field_widget = field_name.partition(":")

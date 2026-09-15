@@ -12,6 +12,7 @@ from odoo import _, fields, http, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import Response, request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq, email_normalize_all
 from odoo.tools.translate import LazyTranslate
 from odoo.tools.urls import keep_query
@@ -22,6 +23,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 def handle_wslide_error(exception, **kwargs):
@@ -82,26 +84,43 @@ class WebsiteSlides(WebsiteProfile):
 
     def _slide_mark_completed(self, slide):
         if slide.slide_category == "quiz" or slide.has_questions:
+            _debug.logic(
+                "slide_complete_refused", reason="has_questions", slide=slide.id
+            )
             raise UserError(
                 _(
                     "Slide with questions must be marked as done when submitting all good answers "
                 )
             )
         if not slide.can_self_mark_completed:
+            _debug.logic(
+                "slide_complete_refused", reason="not_self_markable", slide=slide.id
+            )
             raise werkzeug.exceptions.Forbidden(
                 _("This slide can not be marked as completed.")
             )
+        _debug.lifecycle("slide_completed", slide=slide.id)
         slide.action_mark_completed()
 
     def _slide_mark_uncompleted(self, slide):
         if not slide.can_self_mark_uncompleted:
+            _debug.logic(
+                "slide_uncomplete_refused", reason="not_self_markable", slide=slide.id
+            )
             raise werkzeug.exceptions.Forbidden(
                 _("This slide can not be marked as uncompleted.")
             )
+        _debug.lifecycle("slide_uncompleted", slide=slide.id)
         slide.action_mark_uncompleted()
 
     def _check_channel_publisher(self, channel, require_upload=True):
         if not channel.can_publish or (require_upload and not channel.can_upload):
+            _debug.logic(
+                "channel_publish_refused",
+                channel=channel.id,
+                can_publish=channel.can_publish,
+                can_upload=channel.can_upload,
+            )
             raise werkzeug.exceptions.Forbidden(
                 channel._get_can_publish_error_message()
             )
@@ -111,9 +130,13 @@ class WebsiteSlides(WebsiteProfile):
         try:
             record_id = int(record_id)
         except (TypeError, ValueError) as error:
+            _debug.logic("record_refused", reason="bad_id", model=model)
             raise werkzeug.exceptions.NotFound from error
         record = request.env[model].browse(record_id).exists()
         if not record:
+            _debug.logic(
+                "record_refused", reason="missing", model=model, record=record_id
+            )
             raise werkzeug.exceptions.NotFound
         return record
 

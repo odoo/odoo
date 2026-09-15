@@ -9,10 +9,13 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.web import urls
 from odoo.tools import float_is_zero, float_round
 
 from odoo.addons.website_sale import const, utils
+
+_debug = DebugLog(__name__)
 
 XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>'
 
@@ -86,6 +89,7 @@ class ProductFeed(models.Model):
                 case "gmc":
                     path = "/gmc.xml"
                 case _:
+                    _debug.logic("product_feed_unsupported_format")
                     raise NotImplementedError
 
             feed.url = urls.urljoin(
@@ -109,6 +113,7 @@ class ProductFeed(models.Model):
                 feed._get_domain_feed_product(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
             )
             if product_count > const.PRODUCT_FEED_SOFT_LIMIT:
+                _debug.logic("product_feed_refused", feeds=self)
                 raise ValidationError(
                     feed.env._(
                         "A single feed cannot contain more than %(limit)s products."

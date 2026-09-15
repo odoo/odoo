@@ -5,11 +5,14 @@ from werkzeug.exceptions import NotFound
 from odoo import fields, http
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -208,6 +211,7 @@ class WebsiteAccount(CustomerPortal):
     )
     def portal_my_lead(self, lead, **kw):
         if lead.type != "lead":
+            _debug.logic("portal_lead_refused", reason="not_a_lead", lead=lead.id)
             raise NotFound
         return request.render(
             "website_crm_partner_assign.portal_my_lead", {"lead": lead}
@@ -223,6 +227,9 @@ class WebsiteAccount(CustomerPortal):
     )
     def portal_my_opportunity(self, opp, **kw):
         if opp.type != "opportunity":
+            _debug.logic(
+                "portal_opportunity_refused", reason="not_an_opportunity", lead=opp.id
+            )
             raise NotFound
 
         return request.render(

@@ -5,6 +5,9 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -47,6 +50,7 @@ class SaleOrder(models.Model):
 
     def _try_pending_coupon(self):
         if not request:
+            _debug.logic("pending_coupon_skipped", reason="no_request")
             return False
 
         pending_coupon_code = request.session.get("pending_coupon_code")

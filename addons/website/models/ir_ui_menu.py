@@ -2,6 +2,9 @@ import copy
 
 from odoo import api, models, tools
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrUiMenu(models.Model):
@@ -29,4 +32,10 @@ class IrUiMenu(models.Model):
                 ):
                     menu["action"] = f"{web_menu['actionModel']},{web_menu['actionID']}"
 
+        _debug.perf.count(
+            "root_menus_computed",
+            user=self.env.uid,
+            forced=bool(self.env.context.get("force_action")),
+            menus=len(root_menus["children"]),
+        )
         return root_menus

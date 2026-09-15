@@ -9,6 +9,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, clean_context, float_round, lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
@@ -25,6 +26,8 @@ from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
 )
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -1043,6 +1046,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         request.session["sale_last_order_id"] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
+            _debug.pipeline("checkout", verdict="redirected", order=order_sudo.id)
             return redirection
 
         query_params = self._sanitize_client_address_params(query_params)
@@ -1561,6 +1565,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo = request.cart
 
         if redirection := self._check_cart_and_addresses(order_sudo):
+            _debug.pipeline("payment_page", verdict="redirected", order=order_sudo.id)
             return redirection
 
         order_sudo._recompute_cart()
@@ -1568,6 +1573,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         render_values["only_services"] = order_sudo and order_sudo.only_services
 
         if render_values["errors"]:
+            _debug.logic(
+                "payment_page_blocked",
+                order=order_sudo.id,
+                errors=len(render_values["errors"]),
+            )
             render_values.pop("payment_methods_sudo", "")
             render_values.pop("tokens_sudo", "")
 

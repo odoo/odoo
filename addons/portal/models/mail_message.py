@@ -1,8 +1,11 @@
 from odoo import models
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_datetime, groupby
 
 from odoo.addons.portal.utils import get_url_with_params
+
+_debug = DebugLog(__name__)
 
 
 class MailMessage(models.Model):

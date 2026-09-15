@@ -1,6 +1,7 @@
 import logging
 
 from odoo import api, fields, models, modules
+from odoo.libs.debug_log import DebugLog
 from odoo.modules.module import get_resource_from_path
 from odoo.tools.translate import xml_translate
 
@@ -16,6 +17,7 @@ from odoo.addons.base.models.ir_asset import (
 )
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class ThemeIrAsset(models.Model):
@@ -116,6 +118,12 @@ class ThemeIrUiView(models.Model):
                 lambda x: x.website_id == website
             )
             if not inherit:
+                _debug.logic(
+                    "theme_view_deferred",
+                    reason="parent_not_copied_yet",
+                    view=self.id,
+                    key=self.key,
+                )
                 return False
 
         if inherit and inherit.website_id != website:
@@ -128,6 +136,12 @@ class ThemeIrUiView(models.Model):
                 )
             )
             if website_specific_inherit:
+                _debug.logic(
+                    "theme_view_inherit_retargeted",
+                    view=self.id,
+                    inherit=website_specific_inherit.id,
+                    website=website.id,
+                )
                 inherit = website_specific_inherit
 
         new_view = {
@@ -271,6 +285,12 @@ class ThemeWebsitePage(models.Model):
         self.check_singleton()
         view_id = self.view_id.copy_ids.filtered(lambda x: x.website_id == website)
         if not view_id:
+            _debug.logic(
+                "theme_page_deferred",
+                reason="view_not_copied_yet",
+                page=self.id,
+                url=self.url,
+            )
             return False
 
         return {
@@ -325,12 +345,18 @@ class ThemeUtils(models.AbstractModel):
         theme_post_copy = "_%s_post_copy" % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info("Executing method %s", theme_post_copy)
+            _debug.pipeline("theme_post_copy", theme=mod.name, method=theme_post_copy)
             method = getattr(self, theme_post_copy)
             return method(mod)
+        _debug.logic("theme_post_copy_absent", theme=mod.name)
         return False
 
     @api.model
     def _reset_default_config(self):
+        _debug.lifecycle(
+            "theme_config_reset",
+            website=self.env["website"].get_current_website().id,
+        )
         self.env["website.assets"].update_scss_customization(
             "/website/static/src/scss/options/user_values.scss",
             {
@@ -378,7 +404,17 @@ class ThemeUtils(models.AbstractModel):
                 >= 1
             )
             if not has_specific and active == obj.active:
+                _debug.logic(
+                    "asset_toggle_noop", key=key, active=active, website=website.id
+                )
                 return
+        _debug.lifecycle(
+            "asset_toggled",
+            key=key,
+            active=active,
+            website=website.id,
+            assets=obj,
+        )
         obj.write({"active": active})
 
     @api.model
@@ -398,7 +434,20 @@ class ThemeUtils(models.AbstractModel):
                 >= 1
             )
             if not has_specific and active == obj.active:
+                _debug.logic(
+                    "view_toggle_noop",
+                    xmlid=xml_id,
+                    active=active,
+                    website=website.id,
+                )
                 return
+        _debug.lifecycle(
+            "view_toggled",
+            xmlid=xml_id,
+            active=active,
+            website=website.id,
+            views=obj,
+        )
         obj.write({"active": active})
 
     @api.model
@@ -446,6 +495,11 @@ class IrUiView(models.Model):
                 other_views += record
         res = super(IrUiView, other_views).write(vals)
         if no_arch_updated_views:
+            _debug.logic(
+                "theme_arch_unchanged",
+                views=no_arch_updated_views,
+                count=len(no_arch_updated_views),
+            )
             res &= super(IrUiView, no_arch_updated_views).write(
                 dict(vals, arch_updated=False)
             )

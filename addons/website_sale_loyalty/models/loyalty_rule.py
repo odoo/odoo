@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class LoyaltyRule(models.Model):
@@ -32,9 +35,13 @@ class LoyaltyRule(models.Model):
             for website in website_checks:
                 val = (res["code"], website)
                 if val in existing_codes:
+                    _debug.logic(
+                        "promo_code_refused", reason="duplicate", code=res["code"]
+                    )
                     raise ValidationError(_("The promo code must be unique."))
                 existing_codes.add(val)
         if self.env["loyalty.card"].search_count(
             [("code", "in", mapped_codes), ("active", "=", True)], limit=1
         ):
+            _debug.logic("promo_code_refused", reason="coupon_exists")
             raise ValidationError(_("A coupon with the same code was found."))

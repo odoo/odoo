@@ -10,12 +10,14 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 _lt = LazyTranslate(__name__)
 
 
@@ -594,6 +596,13 @@ class Website(models.Model):
             )
             pricelists |= partner_pricelist
 
+        _debug.perf.count(
+            "pricelists_available",
+            website=self.id,
+            country=country_code or None,
+            visible_only=show_visible,
+            pricelists=len(pricelists),
+        )
         return pricelists.sudo().sorted().ids
 
     def get_pricelist_available(self, show_visible=False):
@@ -604,6 +613,7 @@ class Website(models.Model):
         if not self.env["res.groups"]._is_feature_enabled(
             "product.group_product_pricelist"
         ):
+            _debug.logic("pricelists_disabled", website=self.id)
             return ProductPricelist
 
         country_code = self._get_geoip_country_code()
@@ -673,6 +683,12 @@ class Website(models.Model):
 
         sale_order_sudo = sale_order_sudo.with_user(self.env.user).sudo()
 
+        _debug.lifecycle(
+            "cart_created",
+            website=self.id,
+            order=sale_order_sudo.id,
+            partner=partner_sudo.id,
+        )
         request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
         request.session["website_sale_cart_quantity"] = sale_order_sudo.cart_quantity
         request.cart = sale_order_sudo
@@ -777,6 +793,7 @@ class Website(models.Model):
             try:
                 _state = sale_order_sudo and sale_order_sudo.state
             except MissingError:
+                _debug.logic("cart_reset", reason="order_gone", website=self.id)
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
 
@@ -786,6 +803,12 @@ class Website(models.Model):
                 in ("pending", "authorized", "done")
                 or sale_order_sudo.website_id != self
             ):
+                _debug.logic(
+                    "cart_reset",
+                    reason="not_a_live_draft_cart",
+                    website=self.id,
+                    order=sale_order_sudo.id,
+                )
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
 
@@ -795,6 +818,11 @@ class Website(models.Model):
                 and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
                 and not request.env.cr.readonly
             ):
+                _debug.lifecycle(
+                    "cart_partner_reassigned",
+                    order=sale_order_sudo.id,
+                    partner=self.env.user.partner_id.id,
+                )
                 sale_order_sudo._update_address(
                     self.env.user.partner_id.id, ["partner_id"]
                 )
@@ -815,6 +843,12 @@ class Website(models.Model):
                 limit=1,
             )
             if abandonned_cart_sudo:
+                _debug.logic(
+                    "cart_resumed",
+                    website=self.id,
+                    order=abandonned_cart_sudo.id,
+                    partner=partner_sudo.id,
+                )
                 if not request.env.cr.readonly:
                     abandonned_cart_sudo._update_address(
                         partner_sudo.id, ["partner_id"]
@@ -833,6 +867,9 @@ class Website(models.Model):
         return sale_order_sudo
 
     def sale_reset(self):
+        _debug.lifecycle(
+            "sale_session_reset", order=request.session.get(CART_SESSION_CACHE_KEY)
+        )
         request.session.pop(CART_SESSION_CACHE_KEY, None)
         request.session.pop("website_sale_cart_quantity", None)
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
@@ -926,6 +963,12 @@ class Website(models.Model):
                 continue
 
             abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            _debug.pipeline(
+                "abandoned_cart_mails",
+                website=website.id,
+                candidates=len(all_abandoned_carts),
+                sendable=len(abandoned_carts),
+            )
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
@@ -940,6 +983,7 @@ class Website(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         websites = super().create(vals_list)
+        _debug.lifecycle("checkout_steps_created", websites=websites)
         for website in websites:
             website._create_checkout_steps()
         return websites

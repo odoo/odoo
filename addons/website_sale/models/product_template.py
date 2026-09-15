@@ -7,6 +7,7 @@ from odoo.db import FunctionStatus
 from odoo.db.schema import column_exists, create_column
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
@@ -18,6 +19,7 @@ from odoo.addons.website_sale.const import SHOP_PATH
 RARE_DELIMITER = "\u241e"
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 def get_translated_field_gist_index(registry, column_name):
@@ -459,6 +461,9 @@ class ProductTemplate(models.Model):
     def _is_add_to_cart_possible(self, parent_combination=None):
         self.check_singleton()
         if not self.active or not self._can_be_added_to_cart():
+            _debug.logic(
+                "add_to_cart_impossible", reason="not_sellable", template=self.id
+            )
             return False
         return (
             next(self._get_possible_combinations(parent_combination), False)

@@ -6,10 +6,12 @@ import werkzeug
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.controllers.portal import _get_url_with_params
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteRoute(models.Model):
@@ -24,6 +26,7 @@ class WebsiteRoute(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if not self.search_count(domain, limit=1):
+            _debug.logic("routes_refresh", by="search_display_name")
             self._refresh()
         return domain
 
@@ -34,6 +37,7 @@ class WebsiteRoute(models.Model):
             name, domain=domain, operator=operator, limit=limit
         )
         if not result:
+            _debug.logic("routes_refresh", by="name_search")
             self._refresh()
             result = super().name_search(
                 name, domain=domain, operator=operator, limit=limit
@@ -58,6 +62,13 @@ class WebsiteRoute(models.Model):
             len(paths),
             len(missing_paths),
             len(obsolete_routes),
+        )
+        _debug.lifecycle(
+            "routes_refreshed",
+            existing=len(routes),
+            current=len(paths),
+            created=len(missing_paths),
+            obsolete=len(obsolete_routes),
         )
         if missing_paths:
             self.create([{"path": path} for path in sorted(missing_paths)])
@@ -111,63 +122,106 @@ class WebsiteRewrite(models.Model):
         for rewrite in self:
             if rewrite.redirect_type in ["301", "302", "308"]:
                 if not rewrite.url_to:
+                    _debug.logic(
+                        "rewrite_refused", reason="no_url_to", rewrite=rewrite.id
+                    )
                     raise ValidationError(_('"URL to" can not be empty.'))
                 if not rewrite.url_from:
+                    _debug.logic(
+                        "rewrite_refused", reason="no_url_from", rewrite=rewrite.id
+                    )
                     raise ValidationError(_('"URL from" can not be empty.'))
                 if rewrite.url_to.startswith("#") or rewrite.url_from.startswith("#"):
+                    _debug.logic(
+                        "rewrite_refused", reason="fragment_url", rewrite=rewrite.id
+                    )
                     raise ValidationError(_("URL must not start with '#'."))
                 if rewrite.url_to.split("#")[0] == rewrite.url_from.split("#")[0]:
+                    _debug.logic(
+                        "rewrite_refused", reason="self_redirect", rewrite=rewrite.id
+                    )
                     raise ValidationError(
                         _("base URL of 'URL to' should not be same as 'URL from'.")
                     )
 
             if rewrite.redirect_type == "308":
-                if not rewrite.url_to.startswith("/"):
-                    raise ValidationError(
-                        _('"URL to" must start with a leading slash.')
-                    )
-                for param in re.findall(r"/<.*?>", rewrite.url_from):
-                    if param not in rewrite.url_to:
-                        raise ValidationError(
-                            _(
-                                '"URL to" must contain parameter %s used in "URL from".',
-                                param,
-                            )
-                        )
-                for param in re.findall(r"/<.*?>", rewrite.url_to):
-                    if param not in rewrite.url_from:
-                        raise ValidationError(
-                            _(
-                                '"URL to" cannot contain parameter %s which is not used in "URL from".',
-                                param,
-                            )
-                        )
+                rewrite._check_url_to_rewrite()
 
-                if rewrite.url_to == "/":
+    def _check_url_to_rewrite(self):
+        for rewrite in self:
+            if not rewrite.url_to.startswith("/"):
+                _debug.logic(
+                    "rewrite_refused",
+                    reason="url_to_not_absolute",
+                    rewrite=rewrite.id,
+                )
+                raise ValidationError(_('"URL to" must start with a leading slash.'))
+            for param in re.findall(r"/<.*?>", rewrite.url_from):
+                if param not in rewrite.url_to:
+                    _debug.logic(
+                        "rewrite_refused",
+                        reason="param_missing_in_url_to",
+                        rewrite=rewrite.id,
+                        param=param,
+                    )
                     raise ValidationError(
                         _(
-                            '"URL to" cannot be set to "/". To change the homepage content, use the "Homepage URL" field in the website settings or the page properties on any custom page.'
+                            '"URL to" must contain parameter %s used in "URL from".',
+                            param,
+                        )
+                    )
+            for param in re.findall(r"/<.*?>", rewrite.url_to):
+                if param not in rewrite.url_from:
+                    _debug.logic(
+                        "rewrite_refused",
+                        reason="param_missing_in_url_from",
+                        rewrite=rewrite.id,
+                        param=param,
+                    )
+                    raise ValidationError(
+                        _(
+                            '"URL to" cannot contain parameter %s which is not used in "URL from".',
+                            param,
                         )
                     )
 
-                if any(
-                    rule
-                    for rule in self.env["ir.http"].routing_map().iter_rules()
-                    if rule.rule.rstrip("/") == rewrite.url_to.rstrip("/")
-                ):
-                    raise ValidationError(
-                        _('"URL to" cannot be set to an existing page.')
+            if rewrite.url_to == "/":
+                _debug.logic(
+                    "rewrite_refused", reason="url_to_is_root", rewrite=rewrite.id
+                )
+                raise ValidationError(
+                    _(
+                        '"URL to" cannot be set to "/". To change the homepage content, use the "Homepage URL" field in the website settings or the page properties on any custom page.'
                     )
+                )
 
-                try:
-                    converters = self.env["ir.http"]._get_converters()
-                    routing_map = werkzeug.routing.Map(
-                        strict_slashes=False, converters=converters
-                    )
-                    rule = werkzeug.routing.Rule(rewrite.url_to)
-                    routing_map.add(rule)
-                except ValueError as e:
-                    raise ValidationError(_('"URL to" is invalid: %s', e)) from e
+            if any(
+                rule
+                for rule in self.env["ir.http"].routing_map().iter_rules()
+                if rule.rule.rstrip("/") == rewrite.url_to.rstrip("/")
+            ):
+                _debug.logic(
+                    "rewrite_refused",
+                    reason="url_to_is_a_route",
+                    rewrite=rewrite.id,
+                    url=rewrite.url_to,
+                )
+                raise ValidationError(_('"URL to" cannot be set to an existing page.'))
+
+            try:
+                converters = self.env["ir.http"]._get_converters()
+                routing_map = werkzeug.routing.Map(
+                    strict_slashes=False, converters=converters
+                )
+                rule = werkzeug.routing.Rule(rewrite.url_to)
+                routing_map.add(rule)
+            except ValueError as e:
+                _debug.logic(
+                    "rewrite_refused",
+                    reason="url_to_unparseable",
+                    rewrite=rewrite.id,
+                )
+                raise ValidationError(_('"URL to" is invalid: %s', e)) from e
 
     @staticmethod
     def _get_redirect_source_urls(path, full_path):
@@ -219,6 +273,13 @@ class WebsiteRewrite(models.Model):
             len(redirects),
             len(website_ids),
             len(excluded_ids),
+        )
+        _debug.pipeline(
+            "redirect_cycle_check",
+            candidates=len(redirects),
+            websites=len(website_ids),
+            excluded=len(excluded_ids),
+            fallback_scopes=len(fallbacks_by_website),
         )
         for website_id in website_ids:
             specific_fallbacks = fallbacks_by_website.get(website_id, {})
@@ -284,6 +345,14 @@ class WebsiteRewrite(models.Model):
                     redirect.id,
                     len(seen),
                 )
+                _debug.logic(
+                    "rewrite_refused",
+                    reason="redirect_cycle",
+                    rewrite=self.id,
+                    website=website_id,
+                    repeated=redirect.id,
+                    hops=len(seen),
+                )
                 raise ValidationError(
                     _("This redirect creates a cycle with another active redirect.")
                 )
@@ -304,11 +373,18 @@ class WebsiteRewrite(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rewrites = super().create(vals_list)
+        _debug.lifecycle(
+            "create",
+            rewrites=rewrites,
+            count=len(rewrites),
+            types=sorted(set(rewrites.mapped("redirect_type"))),
+        )
         if set(rewrites.mapped("redirect_type")) & {"308", "404"}:
             self._invalidate_routing()
         return rewrites
 
     def write(self, vals):
+        _debug.lifecycle("write", rewrites=self, count=len(self), fields=sorted(vals))
         need_invalidate = set(self.mapped("redirect_type")) & {"308", "404"}
         res = super().write(vals)
         need_invalidate |= set(self.mapped("redirect_type")) & {"308", "404"}
@@ -317,6 +393,7 @@ class WebsiteRewrite(models.Model):
         return res
 
     def unlink(self):
+        _debug.lifecycle("unlink", rewrites=self, count=len(self))
         need_invalidate = set(self.mapped("redirect_type")) & {"308", "404"}
         res = super().unlink()
         if need_invalidate:
@@ -324,6 +401,7 @@ class WebsiteRewrite(models.Model):
         return res
 
     def _invalidate_routing(self):
+        _debug.lifecycle("routing_cache_cleared")
         self.env.registry.clear_cache("routing")
 
     def refresh_routes(self):

@@ -1,10 +1,13 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
 from odoo.addons.website.tools import text_from_html
+
+_debug = DebugLog(__name__)
 
 
 class BlogBlog(models.Model):
@@ -56,6 +59,12 @@ class BlogBlog(models.Model):
                 self.env["blog.post"]
                 .with_context(active_test=False)
                 .search([("blog_id", "in", self.ids)])
+            )
+            _debug.lifecycle(
+                "blog_posts_toggled",
+                blogs=self,
+                posts=len(post_ids),
+                active=vals["active"],
             )
             for blog_post in post_ids:
                 blog_post.active = vals["active"]
@@ -351,6 +360,9 @@ class BlogPost(models.Model):
                     render_values={"post": post},
                     subtype_xmlid="website_blog.mt_blog_blog_published",
                 )
+            _debug.lifecycle(
+                "blog_posts_published", posts=self.filtered(lambda p: p.active)
+            )
             return True
         return False
 
@@ -359,13 +371,16 @@ class BlogPost(models.Model):
         posts = super(BlogPost, self.with_context(mail_create_nolog=True)).create(
             vals_list
         )
+        _debug.lifecycle("create", posts=posts, count=len(posts))
         for post, vals in zip(posts, vals_list, strict=True):
             post._check_for_publication(vals)
         return posts
 
     def write(self, vals):
         result = True
+        _debug.lifecycle("write", posts=self, count=len(self), fields=sorted(vals))
         if "active" in vals and not vals["active"]:
+            _debug.logic("blog_post_unpublished", reason="archived", posts=self)
             vals["is_published"] = False
         for post in self:
             copy_vals = dict(vals)
@@ -378,6 +393,11 @@ class BlogPost(models.Model):
                     or post.published_date <= fields.Datetime.now()
                 )
             ):
+                _debug.lifecycle(
+                    "blog_post_published_date_set",
+                    post=post.id,
+                    by=sorted(published_in_vals),
+                )
                 copy_vals["published_date"] = (
                     vals[next(iter(published_in_vals))] and fields.Datetime.now()
                 ) or False

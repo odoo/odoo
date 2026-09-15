@@ -5,10 +5,13 @@ from urllib.parse import urlsplit
 from odoo import models
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import lazy
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
+
+_debug = DebugLog(__name__)
 
 re_background_image = re.compile(
     r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)"
@@ -64,37 +67,17 @@ class IrQweb(models.AbstractModel):
             != irQweb.env["ir.http"]._get_default_lang().code
         )
         editable = editable and not translatable
+        _debug.logic(
+            "frontend_editability",
+            editable=editable,
+            translatable=translatable,
+            designer=irQweb.env.user.has_group("website.group_website_designer"),
+        )
 
         if has_group_restricted_editor and irQweb.env.user.has_group(
             "website.group_multi_website"
         ):
-            values["multi_website_websites_current"] = lazy(
-                lambda: current_website.name
-            )
-            values["multi_website_websites"] = lazy(
-                lambda: [
-                    {
-                        "website_id": website.id,
-                        "name": website.name,
-                        "domain": website.domain,
-                    }
-                    for website in current_website.search(
-                        [("id", "!=", current_website.id)]
-                    )
-                ]
-            )
-
-            cur_company = irQweb.env.company
-            values["multi_website_companies_current"] = lazy(
-                lambda: {"company_id": cur_company.id, "name": cur_company.name}
-            )
-            values["multi_website_companies"] = lazy(
-                lambda: [
-                    {"company_id": comp.id, "name": comp.name}
-                    for comp in irQweb.env.user.company_ids
-                    if comp != cur_company
-                ]
-            )
+            self._add_multi_website_values(values, irQweb, current_website)
 
         values.update(
             {
@@ -136,7 +119,43 @@ class IrQweb(models.AbstractModel):
         )
         irQweb = irQweb.with_context(cookies_allowed=is_allowed_optional_cookies)
 
+        _debug.pipeline(
+            "frontend_environment",
+            website=current_website.id,
+            editable=editable,
+            translatable=translatable,
+            restricted_editor=has_group_restricted_editor,
+            cookies_allowed=is_allowed_optional_cookies,
+        )
         return irQweb
+
+    def _add_multi_website_values(self, values, irQweb, current_website):
+        _debug.logic("multi_website_switcher", website=current_website.id)
+        values["multi_website_websites_current"] = lazy(lambda: current_website.name)
+        values["multi_website_websites"] = lazy(
+            lambda: [
+                {
+                    "website_id": website.id,
+                    "name": website.name,
+                    "domain": website.domain,
+                }
+                for website in current_website.search(
+                    [("id", "!=", current_website.id)]
+                )
+            ]
+        )
+
+        cur_company = irQweb.env.company
+        values["multi_website_companies_current"] = lazy(
+            lambda: {"company_id": cur_company.id, "name": cur_company.name}
+        )
+        values["multi_website_companies"] = lazy(
+            lambda: [
+                {"company_id": comp.id, "name": comp.name}
+                for comp in irQweb.env.user.company_ids
+                if comp != cur_company
+            ]
+        )
 
     def _get_post_processing_att_names(self):
         return None
@@ -197,6 +216,11 @@ class IrQweb(models.AbstractModel):
             if remove_src or cookies_watchlist["classes"].intersection(
                 (atts.get("class") or "").split(" ")
             ):
+                _debug.logic(
+                    "third_party_blocked",
+                    tag=tagName,
+                    by="src" if remove_src else "class",
+                )
                 atts["data-need-cookies-approval"] = "true"
                 if "src" in atts:
                     atts["data-nocookie-src"] = atts["src"]

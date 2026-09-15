@@ -9,16 +9,67 @@ from odoo import api, models, release
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.modules.module import get_manifest
 from odoo.tools.translate import _
 
 from odoo.addons.iap.tools import iap_tools
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 DEFAULT_WEBSITE_ENDPOINT = "https://website.api.odoo.com"
 DEFAULT_OLG_ENDPOINT = "https://olg.api.odoo.com"
 CONFIGURATOR_IMAGE_MAX_BYTES = 10 * 1024 * 1024
+
+
+FALLBACK_INDUSTRY_IMAGES = [
+    ("s_intro_pill_default_image", "library_image_10"),
+    ("s_intro_pill_default_image_2", "library_image_14"),
+    ("s_banner_default_image_2", "s_image_text_default_image"),
+    ("s_banner_default_image_3", "s_product_list_default_image_1"),
+    ("s_striped_top_default_image", "s_picture_default_image"),
+    ("s_text_cover_default_image", "s_cover_default_image"),
+    ("s_showcase_default_image", "s_image_text_default_image"),
+    ("s_image_hexagonal_default_image", "s_cover_default_image"),
+    ("s_image_hexagonal_default_image_1", "s_company_team_image_1"),
+    ("s_accordion_image_default_image", "s_image_text_default_image"),
+    ("s_pricelist_boxed_default_background", "s_product_catalog_default_image"),
+    ("s_image_title_default_image", "s_cover_default_image"),
+    ("s_key_images_default_image_1", "s_media_list_default_image_1"),
+    ("s_key_images_default_image_2", "s_image_text_default_image"),
+    ("s_key_images_default_image_3", "s_media_list_default_image_2"),
+    ("s_key_images_default_image_4", "s_text_image_default_image"),
+    ("s_kickoff_default_image", "s_cover_default_image"),
+    ("s_quadrant_default_image_1", "library_image_03"),
+    ("s_quadrant_default_image_2", "library_image_10"),
+    ("s_quadrant_default_image_3", "library_image_13"),
+    ("s_quadrant_default_image_4", "library_image_05"),
+    ("s_sidegrid_default_image_1", "library_image_03"),
+    ("s_sidegrid_default_image_2", "library_image_10"),
+    ("s_sidegrid_default_image_3", "library_image_13"),
+    ("s_sidegrid_default_image_4", "library_image_05"),
+    ("s_cta_box_default_image", "library_image_02"),
+    ("s_image_punchy_default_image", "s_cover_default_image"),
+    ("s_image_frame_default_image", "s_carousel_default_image_2"),
+    ("s_carousel_intro_default_image_1", "s_cover_default_image"),
+    ("s_carousel_intro_default_image_2", "s_image_text_default_image"),
+    ("s_carousel_intro_default_image_3", "s_text_image_default_image"),
+    ("s_website_form_overlay_default_image", "s_cover_default_image"),
+    ("s_website_form_cover_default_image", "s_cover_default_image"),
+    ("s_split_intro_default_image", "s_cover_default_image"),
+    ("s_framed_intro_default_image", "s_cover_default_image"),
+    ("s_wavy_grid_default_image_1", "s_cover_default_image"),
+    ("s_wavy_grid_default_image_2", "s_image_text_default_image"),
+    ("s_wavy_grid_default_image_3", "s_text_image_default_image"),
+    ("s_wavy_grid_default_image_4", "s_carousel_default_image_1"),
+    ("s_timeline_images_default_image_1", "s_media_list_default_image_1"),
+    ("s_timeline_images_default_image_2", "s_media_list_default_image_2"),
+    ("s_carousel_cards_default_image_1", "s_carousel_default_image_1"),
+    ("s_carousel_cards_default_image_2", "s_carousel_default_image_2"),
+    ("s_carousel_cards_default_image_3", "s_carousel_default_image_3"),
+    ("s_banner_connected_default_image", "s_cover_default_image"),
+]
 
 
 class Website(models.Model):
@@ -35,9 +86,10 @@ class Website(models.Model):
         api_endpoint = IrConfigParameter.get_param(
             endpoint_param_name, default_endpoint
         )
-        return iap_tools.iap_jsonrpc(
-            api_endpoint + route, params=params, **kwargs, env=self.env
-        )
+        with _debug.perf("configurator_api_rpc", route=route, endpoint=api_endpoint):
+            return iap_tools.iap_jsonrpc(
+                api_endpoint + route, params=params, **kwargs, env=self.env
+            )
 
     def _website_api_rpc(self, route, params):
         return self._api_rpc(
@@ -191,12 +243,24 @@ class Website(models.Model):
                             "Skipping snippet '%s' because the target snippet is misconfigured.",
                             snippet_name,
                         )
+                        _debug.logic(
+                            "configurator_snippet_skipped",
+                            reason="unknown_target",
+                            snippet=snippet_name,
+                            target=target,
+                        )
 
         return configurator_snippets
 
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env["website.menu"].search(
             [("url", "in", list(module_data.keys())), ("website_id", "=", self.id)]
+        )
+        _debug.lifecycle(
+            "configurator_menu_links",
+            website=self.id,
+            menus=len(menus),
+            urls=len(module_data),
         )
         for m in menus:
             m.sequence = module_data[m.url]["sequence"]
@@ -236,7 +300,15 @@ class Website(models.Model):
             r["industries"] = result["industries"]
         except AccessError as e:
             logger.warning(e.args[0])
+            _debug.logic("configurator_industries_unavailable")
             r["industries"] = []
+        _debug.pipeline(
+            "configurator_init",
+            website=current_website.id,
+            features=len(configurator_features),
+            industries=len(r["industries"]),
+            done=r["configurator_done"],
+        )
         return r
 
     @api.model
@@ -261,12 +333,19 @@ class Website(models.Model):
         process_svg = self.env["website.configurator.feature"]._process_svg
         for theme in themes_suggested:
             theme["svg"] = process_svg(theme["name"], palette, theme.pop("image_urls"))
+        _debug.pipeline(
+            "configurator_recommended_themes",
+            industry=industry_id,
+            client_themes=len(client_themes),
+            suggested=len(themes_suggested),
+        )
         return themes_suggested
 
     @api.model
     def configurator_skip(self):
         website = self.get_current_website()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
+        _debug.lifecycle("configurator_skipped", website=website.id)
         website.configurator_done = True
         return theme.button_choose_theme()
 
@@ -300,23 +379,155 @@ class Website(models.Model):
                     logger.warning(
                         "Failed to update footer links in view %s: %s", footer_id, e
                     )
+                    _debug.logic(
+                        "footer_links_skipped",
+                        reason="unparseable_arch",
+                        view=footer_id,
+                    )
                 else:
                     el = arch_string.xpath("//t[@t-set='configurator_footer_links']")
                     if not el:
                         logger.warning(
                             "No 'configurator_footer_links' found in view %s", footer_id
                         )
+                        _debug.logic(
+                            "footer_links_skipped",
+                            reason="no_anchor",
+                            view=footer_id,
+                        )
                         continue
                     el[0].attrib["t-value"] = json.dumps(footer_links)
+                    _debug.lifecycle(
+                        "footer_links_written",
+                        view=footer_id,
+                        website=website.id,
+                        links=len(footer_links),
+                    )
                     view_id.with_context(website_id=website.id).write(
                         {"arch_db": etree.tostring(arch_string)}
                     )
+
+    def _configurator_stored_image_names(self, website):
+        return (
+            self.env["ir.model.data"]
+            .search(
+                [
+                    ("name", "=ilike", f"configurator\\_{website.id}\\_%"),
+                    ("module", "=", "website"),
+                    ("model", "=", "ir.attachment"),
+                ]
+            )
+            .mapped("name")
+        )
+
+    def _configurator_download_images(self, website, images, names):
+        stored = 0
+        for name, image_src in images.items():
+            extn_identifier = "configurator_%s_%s" % (website.id, name.split(".")[1])
+            if extn_identifier in names:
+                continue
+            try:
+                with _debug.perf("configurator_image_requested", name=name) as span:
+                    response = self.env["ir.egress"].request(
+                        "GET",
+                        image_src,
+                        purpose="website_configurator",
+                        timeout=3,
+                        max_bytes=CONFIGURATOR_IMAGE_MAX_BYTES,
+                    )
+                    span.set(status=getattr(response, "status_code", None))
+                response.raise_for_status()
+            except Exception as e:
+                logger.warning("Failed to download image: %s.\n%s", image_src, e)
+                _debug.logic("configurator_image_failed", name=name, src=image_src)
+            else:
+                attachment = self.env["ir.attachment"].create(
+                    {
+                        "name": name,
+                        "website_id": website.id,
+                        "key": name,
+                        "type": "binary",
+                        "raw": response.content,
+                        "public": True,
+                    }
+                )
+                self.env["ir.model.data"].create(
+                    {
+                        "name": extn_identifier,
+                        "module": "website",
+                        "model": "ir.attachment",
+                        "res_id": attachment.id,
+                        "noupdate": True,
+                    }
+                )
+                stored += 1
+        _debug.pipeline(
+            "configurator_images",
+            website=website.id,
+            offered=len(images),
+            stored=stored,
+        )
+
+    def _configurator_write_cta(self, website, cta_data):
+        parent_view = (
+            self.env["website"]
+            .with_context(website_id=website.id)
+            .viewref("website.snippets")
+        )
+        _debug.lifecycle(
+            "configurator_cta", website=website.id, href=cta_data["cta_btn_href"]
+        )
+        self.env["ir.ui.view"].create(
+            {
+                "name": parent_view.key + " CTA",
+                "key": parent_view.key + "_cta",
+                "inherit_id": parent_view.id,
+                "website_id": website.id,
+                "type": "qweb",
+                "priority": 32,
+                "arch_db": """
+                <data>
+                    <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
+                        <t t-set="cta_btn_href">%s</t>
+                    </xpath>
+                    <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
+                        <t t-set="cta_btn_text">%s</t>
+                    </xpath>
+                </data>
+            """
+                % (
+                    escape(cta_data["cta_btn_href"]),
+                    escape(cta_data["cta_btn_text"]),
+                ),
+            }
+        )
+        try:
+            view_id = self.env["website"].viewref("website.header_call_to_action")
+            el = etree.fromstring(view_id.arch_db)
+        except (MissingError, etree.XMLSyntaxError) as e:
+            logger.warning("Could not update the header call to action: %s", e)
+            _debug.logic("configurator_cta_header_skipped", website=website.id)
+        else:
+            btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
+            if btn_cta_el:
+                btn_cta_el[0].attrib["href"] = cta_data["cta_btn_href"]
+                btn_cta_el[0].text = cta_data["cta_btn_text"]
+            view_id.with_context(website_id=website.id).write(
+                {"arch_db": etree.tostring(el)}
+            )
 
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
         theme_name = kwargs["theme_name"]
         theme = self.env["ir.module.module"].search([("name", "=", theme_name)])
+        _debug.pipeline(
+            "configurator_apply",
+            website=website.id,
+            theme=theme_name,
+            industry=kwargs.get("industry_name"),
+            features=len(kwargs.get("selected_features") or ()),
+        )
         redirect_url = theme.button_choose_theme()
 
         website.configurator_done = True
@@ -363,49 +574,7 @@ class Website(models.Model):
             kwargs.get("website_purpose"), kwargs.get("website_type")
         )
         if cta_data["cta_btn_text"]:
-            xpath_view = "website.snippets"
-            parent_view = (
-                self.env["website"]
-                .with_context(website_id=website.id)
-                .viewref(xpath_view)
-            )
-            self.env["ir.ui.view"].create(
-                {
-                    "name": parent_view.key + " CTA",
-                    "key": parent_view.key + "_cta",
-                    "inherit_id": parent_view.id,
-                    "website_id": website.id,
-                    "type": "qweb",
-                    "priority": 32,
-                    "arch_db": """
-                    <data>
-                        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
-                            <t t-set="cta_btn_href">%s</t>
-                        </xpath>
-                        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
-                            <t t-set="cta_btn_text">%s</t>
-                        </xpath>
-                    </data>
-                """
-                    % (
-                        escape(cta_data["cta_btn_href"]),
-                        escape(cta_data["cta_btn_text"]),
-                    ),
-                }
-            )
-            try:
-                view_id = self.env["website"].viewref("website.header_call_to_action")
-                el = etree.fromstring(view_id.arch_db)
-            except (MissingError, etree.XMLSyntaxError) as e:
-                logger.warning("Could not update the header call to action: %s", e)
-            else:
-                btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
-                if btn_cta_el:
-                    btn_cta_el[0].attrib["href"] = cta_data["cta_btn_href"]
-                    btn_cta_el[0].text = cta_data["cta_btn_text"]
-                view_id.with_context(website_id=website.id).write(
-                    {"arch_db": etree.tostring(el)}
-                )
+            self._configurator_write_cta(website, cta_data)
 
         features = self.env["website.configurator.feature"].browse(
             kwargs.get("selected_features")
@@ -416,6 +585,11 @@ class Website(models.Model):
             len(features.filtered("menu_sequence")) > 5
             and len(features.filtered("menu_company")) > 1
         ):
+            _debug.logic(
+                "configurator_company_menu",
+                website=website.id,
+                features=len(features),
+            )
             menu_company = self.env["website.menu"].create(
                 {
                     "name": _("Company"),
@@ -460,6 +634,9 @@ class Website(models.Model):
                 pages_views[feature.iap_page_code] = result["view_id"]
 
         if modules:
+            _debug.lifecycle(
+                "configurator_modules_installed", modules=modules.mapped("name")
+            )
             modules.button_immediate_install()
 
         self.env["website"].browse(website.id).configurator_set_menu_links(
@@ -516,20 +693,32 @@ class Website(models.Model):
         translated_ratio = html_text_processor._get_translation_ratio(
             generated_content, translated_content
         )
+        _debug.pipeline(
+            "configurator_content_collected",
+            pages=len(requested_pages),
+            placeholders=len(generated_content),
+            translated=len(translated_content),
+            ratio=translated_ratio,
+        )
         if translated_ratio > 0.8:
             try:
                 database_id = (
                     self.env["ir.config_parameter"].sudo().get_param("database.uuid")
                 )
-                response = self._OLG_api_rpc(
-                    "/api/olg/1/generate_placeholder",
-                    {
-                        "placeholders": list(generated_content.keys()),
-                        "lang": website.default_lang_id.name,
-                        "industry": industry,
-                        "database_id": database_id,
-                    },
-                )
+                with _debug.perf(
+                    "configurator_ai_text",
+                    placeholders=len(generated_content),
+                    industry=industry,
+                ):
+                    response = self._OLG_api_rpc(
+                        "/api/olg/1/generate_placeholder",
+                        {
+                            "placeholders": list(generated_content.keys()),
+                            "lang": website.default_lang_id.name,
+                            "industry": industry,
+                            "database_id": database_id,
+                        },
+                    )
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 for key in generated_content:
                     if response.get(key):
@@ -542,6 +731,11 @@ class Website(models.Model):
             logger.info(
                 "Skip AI text generation because translation coverage is too low (%s%%)",
                 translated_ratio * 100,
+            )
+            _debug.logic(
+                "configurator_ai_text_skipped",
+                reason="low_translation_coverage",
+                ratio=translated_ratio,
             )
 
         for index, page_code in enumerate(sorted(requested_pages)):
@@ -591,6 +785,18 @@ class Website(models.Model):
                     rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
+                    _debug.logic(
+                        "configurator_snippet_render_failed",
+                        page=page_code,
+                        snippet=snippet,
+                    )
+            _debug.lifecycle(
+                "configurator_page_built",
+                page=page_code,
+                view=page_view_id.id,
+                snippets=len(rendered_snippets),
+                wanted=nb_snippets,
+            )
             page_view_id.save(
                 value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                 xpath="(//div[hasclass('oe_structure')])[last()]",
@@ -603,52 +809,8 @@ class Website(models.Model):
             )
 
         images = custom_resources.get("images", {})
-        names = (
-            self.env["ir.model.data"]
-            .search(
-                [
-                    ("name", "=ilike", f"configurator\\_{website.id}\\_%"),
-                    ("module", "=", "website"),
-                    ("model", "=", "ir.attachment"),
-                ]
-            )
-            .mapped("name")
-        )
-        for name, image_src in images.items():
-            extn_identifier = "configurator_%s_%s" % (website.id, name.split(".")[1])
-            if extn_identifier in names:
-                continue
-            try:
-                response = self.env["ir.egress"].request(
-                    "GET",
-                    image_src,
-                    purpose="website_configurator",
-                    timeout=3,
-                    max_bytes=CONFIGURATOR_IMAGE_MAX_BYTES,
-                )
-                response.raise_for_status()
-            except Exception as e:
-                logger.warning("Failed to download image: %s.\n%s", image_src, e)
-            else:
-                attachment = self.env["ir.attachment"].create(
-                    {
-                        "name": name,
-                        "website_id": website.id,
-                        "key": name,
-                        "type": "binary",
-                        "raw": response.content,
-                        "public": True,
-                    }
-                )
-                self.env["ir.model.data"].create(
-                    {
-                        "name": extn_identifier,
-                        "module": "website",
-                        "model": "ir.attachment",
-                        "res_id": attachment.id,
-                        "noupdate": True,
-                    }
-                )
+        names = self._configurator_stored_image_names(website)
+        self._configurator_download_images(website, images, names)
 
         def fallback_create_missing_industry_image(image_name, fallback_img_name):
             image_name = f"website.{image_name}"
@@ -680,54 +842,7 @@ class Website(models.Model):
                         }
                     )
 
-        fallback_industry_images = [
-            ("s_intro_pill_default_image", "library_image_10"),
-            ("s_intro_pill_default_image_2", "library_image_14"),
-            ("s_banner_default_image_2", "s_image_text_default_image"),
-            ("s_banner_default_image_3", "s_product_list_default_image_1"),
-            ("s_striped_top_default_image", "s_picture_default_image"),
-            ("s_text_cover_default_image", "s_cover_default_image"),
-            ("s_showcase_default_image", "s_image_text_default_image"),
-            ("s_image_hexagonal_default_image", "s_cover_default_image"),
-            ("s_image_hexagonal_default_image_1", "s_company_team_image_1"),
-            ("s_accordion_image_default_image", "s_image_text_default_image"),
-            ("s_pricelist_boxed_default_background", "s_product_catalog_default_image"),
-            ("s_image_title_default_image", "s_cover_default_image"),
-            ("s_key_images_default_image_1", "s_media_list_default_image_1"),
-            ("s_key_images_default_image_2", "s_image_text_default_image"),
-            ("s_key_images_default_image_3", "s_media_list_default_image_2"),
-            ("s_key_images_default_image_4", "s_text_image_default_image"),
-            ("s_kickoff_default_image", "s_cover_default_image"),
-            ("s_quadrant_default_image_1", "library_image_03"),
-            ("s_quadrant_default_image_2", "library_image_10"),
-            ("s_quadrant_default_image_3", "library_image_13"),
-            ("s_quadrant_default_image_4", "library_image_05"),
-            ("s_sidegrid_default_image_1", "library_image_03"),
-            ("s_sidegrid_default_image_2", "library_image_10"),
-            ("s_sidegrid_default_image_3", "library_image_13"),
-            ("s_sidegrid_default_image_4", "library_image_05"),
-            ("s_cta_box_default_image", "library_image_02"),
-            ("s_image_punchy_default_image", "s_cover_default_image"),
-            ("s_image_frame_default_image", "s_carousel_default_image_2"),
-            ("s_carousel_intro_default_image_1", "s_cover_default_image"),
-            ("s_carousel_intro_default_image_2", "s_image_text_default_image"),
-            ("s_carousel_intro_default_image_3", "s_text_image_default_image"),
-            ("s_website_form_overlay_default_image", "s_cover_default_image"),
-            ("s_website_form_cover_default_image", "s_cover_default_image"),
-            ("s_split_intro_default_image", "s_cover_default_image"),
-            ("s_framed_intro_default_image", "s_cover_default_image"),
-            ("s_wavy_grid_default_image_1", "s_cover_default_image"),
-            ("s_wavy_grid_default_image_2", "s_image_text_default_image"),
-            ("s_wavy_grid_default_image_3", "s_text_image_default_image"),
-            ("s_wavy_grid_default_image_4", "s_carousel_default_image_1"),
-            ("s_timeline_images_default_image_1", "s_media_list_default_image_1"),
-            ("s_timeline_images_default_image_2", "s_media_list_default_image_2"),
-            ("s_carousel_cards_default_image_1", "s_carousel_default_image_1"),
-            ("s_carousel_cards_default_image_2", "s_carousel_default_image_2"),
-            ("s_carousel_cards_default_image_3", "s_carousel_default_image_3"),
-            ("s_banner_connected_default_image", "s_cover_default_image"),
-        ]
-        for image_name, fallback_img_name in fallback_industry_images:
+        for image_name, fallback_img_name in FALLBACK_INDUSTRY_IMAGES:
             try:
                 fallback_create_missing_industry_image(image_name, fallback_img_name)
             except Exception:
@@ -736,7 +851,14 @@ class Website(models.Model):
                     image_name,
                     exc_info=True,
                 )
+                _debug.logic("configurator_fallback_image_failed", name=image_name)
 
+        _debug.lifecycle(
+            "configurator_applied",
+            website=website.id,
+            theme=theme_name,
+            url=redirect_url,
+        )
         return {"url": redirect_url, "website_id": website.id}
 
     def configurator_addons_apply(self, industry_name=None, **kwargs):

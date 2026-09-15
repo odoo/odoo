@@ -1,9 +1,12 @@
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
+_debug = DebugLog(__name__)
 
 
 class Delivery(WebsiteSale):
@@ -37,6 +40,12 @@ class Delivery(WebsiteSale):
         ):
             for tx_sudo in order_sudo.transaction_ids:
                 if tx_sudo.state not in ("draft", "cancel", "error"):
+                    _debug.logic(
+                        "delivery_change_refused",
+                        reason="transaction_in_progress",
+                        order=order_sudo.id,
+                        transaction=tx_sudo.id,
+                    )
                     raise UserError(
                         _(
                             "It seems that there is already a transaction for your order; you can't"
@@ -46,6 +55,9 @@ class Delivery(WebsiteSale):
 
             delivery_method_sudo = (
                 request.env["delivery.carrier"].sudo().browse(dm_id).exists()
+            )
+            _debug.lifecycle(
+                "delivery_method_chosen", order=order_sudo.id, carrier=dm_id
             )
             order_sudo._set_delivery_method(delivery_method_sudo)
         return self._order_summary_values(order_sudo, **kwargs)
@@ -80,9 +92,16 @@ class Delivery(WebsiteSale):
     )
     def shop_get_delivery_rate(self, dm_id):
         if not (order_sudo := request.cart):
+            _debug.logic("delivery_rate_refused", reason="empty_cart")
             raise ValidationError(_("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
+            _debug.logic(
+                "delivery_rate_refused",
+                reason="carrier_not_available",
+                order=order_sudo.id,
+                carrier=int(dm_id),
+            )
             raise UserError(
                 _(
                     "It seems that a delivery method is not compatible with your address. Please"

@@ -2,9 +2,12 @@ import base64
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.image import is_image_size_above
 
 from odoo.addons.html_editor.tools import get_video_embed_code, get_video_thumbnail
+
+_debug = DebugLog(__name__)
 
 
 class ProductImage(models.Model):
@@ -68,6 +71,7 @@ class ProductImage(models.Model):
     def _check_valid_video_url(self):
         for image in self:
             if image.video_url and not image.embed_code:
+                _debug.logic("product_image_refused", reason="bad_video_url")
                 raise ValidationError(
                     _(
                         "Provided video URL for '%s' is not valid. Please enter a valid video URL.",

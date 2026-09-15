@@ -12,10 +12,12 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 from odoo.tools.pdf import PdfReader
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class SlideSlide(models.Model):
@@ -1104,6 +1106,7 @@ class SlideSlide(models.Model):
     def message_post(self, *, message_type="notification", **kwargs):
         self.check_singleton()
         if message_type == "comment" and not self.channel_id.can_comment:
+            _debug.logic("slide_comment_refused", reason="karma", slides=self)
             raise AccessError(_("Not enough karma to comment"))
         return super().message_post(message_type=message_type, **kwargs)
 
@@ -1200,6 +1203,11 @@ class SlideSlide(models.Model):
             lambda channel: not channel.share_slide_template_id
         )
         if courses_without_templates:
+            _debug.logic(
+                "slide_share_refused",
+                reason="no_share_template",
+                channels=courses_without_templates,
+            )
             raise UserError(
                 _(
                     'Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
@@ -1257,6 +1265,7 @@ class SlideSlide(models.Model):
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if any(not slide.channel_id.is_member for slide in self):
+            _debug.logic("slide_view_refused", reason="not_a_member", slides=self)
             raise UserError(
                 _("You cannot mark a slide as viewed if you are not among its members.")
             )

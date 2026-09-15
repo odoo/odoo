@@ -6,6 +6,9 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class Website(models.Model):
@@ -74,6 +77,11 @@ class IrModel(models.Model):
     @api.model
     def get_fields_authorized(self, model_name, property_origins):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "form_fields_refused",
+                reason="not_restricted_editor",
+                model=model_name,
+            )
             raise AccessError(
                 _("Only website editors can introspect form model fields.")
             )
@@ -155,11 +163,13 @@ class IrModel(models.Model):
                                 property_definition
                             )
 
+        _debug.pipeline("form_fields", model=model_name, fields=len(fields_get))
         return fields_get
 
     @api.model
     def get_compatible_form_models(self):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic("form_models_refused", reason="not_restricted_editor")
             return []
         return self.sudo().search_read(
             [("website_form_access", "=", True)],
@@ -203,6 +213,13 @@ class IrModelFields(models.Model):
                 for field in self:
                     xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
                     if arch_parsed.xpath(xpath_selector):
+                        _debug.logic(
+                            "field_unlink_refused",
+                            reason="used_in_website_form",
+                            model=field.model,
+                            field=field.name,
+                            record=record.id,
+                        )
                         raise ValidationError(
                             _(
                                 "The field '%(field)s' cannot be deleted because it is referenced in a website view.\n"
@@ -230,6 +247,7 @@ class IrModelFields(models.Model):
             return False
 
         if not self.env.user.has_group("website.group_website_designer"):
+            _debug.logic("form_whitelist_refused", reason="not_designer", model=model)
             return False
 
         fields = [self._formbuilder_field_name(model, field) for field in fields]
@@ -237,6 +255,12 @@ class IrModelFields(models.Model):
             field for field in fields if field not in self.env[model]._fields
         ]
         if unexisting_fields:
+            _debug.logic(
+                "form_whitelist_refused",
+                reason="unknown_fields",
+                model=model,
+                fields=sorted(unexisting_fields),
+            )
             raise ValueError(
                 "Unable to whitelist field(s) %r for model %r."
                 % (unexisting_fields, model)
@@ -248,6 +272,7 @@ class IrModelFields(models.Model):
             " WHERE model=%s AND name = ANY(%s)",
             (model, list(fields)),
         )
+        _debug.lifecycle("form_fields_whitelisted", model=model, fields=sorted(fields))
         return True
 
     website_form_blacklisted = fields.Boolean(

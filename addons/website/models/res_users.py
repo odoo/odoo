@@ -3,8 +3,10 @@ import logging
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class ResUsers(models.Model):
@@ -37,6 +39,9 @@ class ResUsers(models.Model):
             (list(self.ids),),
         )
         if self.env.cr.rowcount:
+            _debug.logic(
+                "user_login_refused", reason="duplicate", users=self, count=len(self)
+            )
             raise ValidationError(_("You can not have two users with the same login!"))
 
     @api.model
@@ -60,6 +65,12 @@ class ResUsers(models.Model):
         values["company_ids"] = [Command.link(current_website.company_id.id)]
         if request and current_website.specific_user_account:
             values["website_id"] = current_website.id
+        _debug.lifecycle(
+            "signup_user",
+            website=current_website.id,
+            company=current_website.company_id.id,
+            specific=bool(values.get("website_id")),
+        )
         return super()._signup_create_user(values)
 
     @api.model
@@ -87,11 +98,23 @@ class ResUsers(models.Model):
             )
             if visitor_current_user_sudo:
                 if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
+                    _debug.lifecycle(
+                        "visitor_merged_on_login",
+                        user=auth_info["uid"],
+                        anonymous=visitor_pre_authenticate_sudo.id,
+                        known=visitor_current_user_sudo.id,
+                    )
                     visitor_pre_authenticate_sudo._merge_visitor(
                         visitor_current_user_sudo
                     )
                 visitor_current_user_sudo._update_visitor_last_visit()
             else:
+                _debug.lifecycle(
+                    "visitor_claimed_on_login",
+                    user=auth_info["uid"],
+                    visitor=visitor_pre_authenticate_sudo.id,
+                    partner=user_partner.id,
+                )
                 visitor_pre_authenticate_sudo.access_token = user_partner.id
                 visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return auth_info
@@ -101,6 +124,11 @@ class ResUsers(models.Model):
         super()._check_disjoint_groups()
         internal_users = self.env.ref("base.group_user").all_user_ids & self
         if any(user.website_id for user in internal_users):
+            _debug.logic(
+                "internal_user_refused",
+                reason="partner_bound_to_website",
+                users=internal_users,
+            )
             raise ValidationError(
                 _("Remove website on related partner before they become internal user.")
             )

@@ -1,6 +1,9 @@
 from urllib.parse import urlencode
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -18,6 +21,7 @@ class ResPartner(models.Model):
             self.env["website"].get_current_website().google_maps_api_key
         )
         if not google_maps_api_key:
+            _debug.logic("google_map_unavailable", reason="no_api_key")
             return False
         params = {
             "center": "%s, %s %s, %s"

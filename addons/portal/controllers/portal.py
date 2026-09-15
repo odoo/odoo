@@ -13,11 +13,14 @@ from odoo.exceptions import (
     ValidationError,
 )
 from odoo.http import Controller, prepare_content_disposition_header, request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.portal.utils import get_url_with_params as _get_url_with_params
 from odoo.addons.web.controllers.utils import _is_local_url
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -110,6 +113,7 @@ def _parse_record_id(raw_id):
     try:
         return int(raw_id)
     except TypeError, ValueError:
+        _debug.logic("record_id_rejected", raw=str(raw_id))
         raise NotFound from None
 
 
@@ -355,8 +359,14 @@ class CustomerPortal(Controller):
         )
 
         if partner_sudo and not partner_sudo._can_be_edited_by_current_customer():
+            _debug.logic(
+                "address_form_refused", reason="not_editable", partner=partner_sudo.id
+            )
             raise Forbidden
 
+        _debug.pipeline(
+            "address_form", partner=partner_sudo.id, address_type=address_type
+        )
         query_params = self._sanitize_client_address_params(query_params)
 
         address_form_values = {
@@ -448,6 +458,11 @@ class CustomerPortal(Controller):
             .browse(_parse_record_id(partner_id))
         )
         if partner_sudo and not partner_sudo._can_be_edited_by_current_customer():
+            _debug.logic(
+                "address_submit_refused",
+                reason="not_editable",
+                partner=partner_sudo.id,
+            )
             raise Forbidden
 
         form_data = self._sanitize_client_address_params(form_data)
@@ -469,6 +484,11 @@ class CustomerPortal(Controller):
         **form_data,
     ):
         if address_type not in ("billing", "delivery"):
+            _debug.logic(
+                "address_submit_refused",
+                reason="bad_address_type",
+                address_type=str(address_type),
+            )
             raise BadRequest
         verify_address_values = verify_address_values is not False
         use_delivery_as_billing = _parse_bool_param(use_delivery_as_billing)
@@ -908,11 +928,14 @@ class CustomerPortal(Controller):
             .exists()
         )
         if not address_sudo or not address_sudo._can_be_edited_by_current_customer():
+            _debug.logic("address_archive_refused", reason="not_editable")
             raise Forbidden
 
         if address_sudo == request.env.user.partner_id:
+            _debug.logic("address_archive_refused", reason="main_address")
             raise UserError(_("You cannot archive your main address"))
 
+        _debug.lifecycle("address_archived", partner=address_sudo.id)
         address_sudo.action_archive()
 
     @route(
@@ -951,6 +974,7 @@ class CustomerPortal(Controller):
     def _update_password(self, old, new1, new2):
         for k, v in [("old", old), ("new1", new1), ("new2", new2)]:
             if not v:
+                _debug.logic("password_change_refused", reason="empty", field=k)
                 return {
                     "errors": {
                         "password": {k: _("You cannot leave any password empty.")}
@@ -958,6 +982,7 @@ class CustomerPortal(Controller):
                 }
 
         if new1 != new2:
+            _debug.logic("password_change_refused", reason="mismatch")
             return {
                 "errors": {
                     "password": {
@@ -976,13 +1001,16 @@ class CustomerPortal(Controller):
                 msg = _(
                     "The old password you provided is incorrect, your password was not changed."
                 )
+            _debug.logic("password_change_refused", reason="access_denied")
             return {"errors": {"password": {"old": msg}}}
         except UserError as e:
+            _debug.logic("password_change_refused", reason="user_error")
             return {"errors": {"password": str(e)}}
 
         new_token = request.env.user._get_session_token(request.session.sid)
         request.session.session_token = new_token
 
+        _debug.lifecycle("password_changed", user=request.env.uid)
         return {"success": {"password": True}}
 
     @route(
@@ -1002,18 +1030,24 @@ class CustomerPortal(Controller):
         }
 
         if validation != request.env.user.login:
+            _debug.logic(
+                "deactivate_refused", reason="login_mismatch", user=request.env.uid
+            )
             values["errors"] = {"deactivate": "validation"}
         else:
             try:
                 request.env.user._check_credentials(credential, {"interactive": True})
+                _debug.lifecycle("portal_user_deactivated", user=request.env.uid)
                 request.env.user.sudo()._deactivate_portal_user(**post)
                 request.session.logout()
                 return request.redirect(
                     f"/web/login?message={quote(_('Account deleted!'), safe='/:')}"
                 )
             except AccessDenied:
+                _debug.logic("deactivate_refused", reason="bad_password")
                 values["errors"] = {"deactivate": "password"}
             except UserError as e:
+                _debug.logic("deactivate_refused", reason="user_error")
                 values["errors"] = {"deactivate": {"other": str(e)}}
 
         return request.render(
@@ -1029,6 +1063,7 @@ class CustomerPortal(Controller):
                 "ir.attachment", int(attachment_id), access_token=access_token
             )
         except AccessError, MissingError, TypeError, ValueError:
+            _debug.logic("attachment_remove_refused", reason="no_access")
             raise UserError(
                 _(
                     "The attachment does not exist or you do not have the rights to access it."
@@ -1039,6 +1074,12 @@ class CustomerPortal(Controller):
             attachment_sudo.res_model != "mail.compose.message"
             or attachment_sudo.res_id != 0
         ):
+            _debug.logic(
+                "attachment_remove_refused",
+                reason="not_pending",
+                attachment=attachment_sudo.id,
+                model=attachment_sudo.res_model,
+            )
             raise UserError(
                 _(
                     "The attachment %s cannot be removed because it is not in a pending state.",
@@ -1049,6 +1090,11 @@ class CustomerPortal(Controller):
         if attachment_sudo.env["mail.message"].search_count(
             [("attachment_ids", "in", attachment_sudo.ids)], limit=1
         ):
+            _debug.logic(
+                "attachment_remove_refused",
+                reason="linked_to_message",
+                attachment=attachment_sudo.id,
+            )
             raise UserError(
                 _(
                     "The attachment %s cannot be removed because it is linked to a message.",
@@ -1056,12 +1102,19 @@ class CustomerPortal(Controller):
                 )
             )
 
+        _debug.lifecycle("attachment_removed", attachment=attachment_sudo.id)
         return attachment_sudo.unlink()
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         document = request.env[model_name].browse(document_id)
         document_sudo = document.with_user(SUPERUSER_ID).exists()
         if not document_sudo:
+            _debug.logic(
+                "document_access",
+                verdict="missing",
+                model=model_name,
+                record=document_id,
+            )
             raise MissingError(_("This document does not exist."))
         try:
             document.check_access("read")
@@ -1077,7 +1130,20 @@ class CustomerPortal(Controller):
                 or not stored_token
                 or not consteq(stored_token, access_token)
             ):
+                _debug.logic(
+                    "document_access",
+                    verdict="refused",
+                    model=model_name,
+                    record=document_id,
+                    token_supplied=bool(access_token),
+                )
                 raise
+            _debug.logic(
+                "document_access",
+                verdict="by_token",
+                model=model_name,
+                record=document_id,
+            )
         return document_sudo
 
     def _get_page_view_values(
@@ -1117,19 +1183,32 @@ class CustomerPortal(Controller):
 
     def _show_report(self, model, report_type, report_ref, download=False):
         if report_type not in ("html", "pdf", "text"):
+            _debug.logic(
+                "report_refused", reason="bad_type", report_type=str(report_type)
+            )
             raise UserError(_("Invalid report type: %s", report_type))
 
         ReportAction = request.env["ir.actions.report"].sudo()
 
         if "company_id" in model._fields:
             if len(model.company_id) > 1:
+                _debug.logic(
+                    "report_refused", reason="multi_company", model=model._name
+                )
                 raise UserError(_("Multi company reports are not supported."))
             ReportAction = ReportAction.with_company(model.company_id)
 
         method_name = f"_render_qweb_{report_type}"
-        report = getattr(ReportAction, method_name)(
-            report_ref, list(model.ids), data={"report_type": report_type}
-        )[0]
+        with _debug.perf(
+            "portal_report_rendered",
+            cr=request.env.cr,
+            report=report_ref,
+            report_type=report_type,
+            records=len(model),
+        ):
+            report = getattr(ReportAction, method_name)(
+                report_ref, list(model.ids), data={"report_type": report_type}
+            )[0]
         headers = self._get_http_headers(model, report_type, report, download)
         return request.prepare_response(report, headers=list(headers.items()))
 

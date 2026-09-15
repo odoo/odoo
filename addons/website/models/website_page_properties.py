@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsitePagePropertiesBase(models.TransientModel):
@@ -65,6 +68,9 @@ class WebsitePagePropertiesBase(models.TransientModel):
         target = self.target_model_id
         if self.is_in_menu:
             if not self.menu_ids:
+                _debug.lifecycle(
+                    "page_added_to_menu", url=self.url, website=self.website_id.id
+                )
                 self.env["website.menu"].create(
                     {
                         "name": target.name,
@@ -81,6 +87,12 @@ class WebsitePagePropertiesBase(models.TransientModel):
                 self._get_domain_menu()
             )
             if menus:
+                _debug.lifecycle(
+                    "page_removed_from_menu",
+                    url=self.url,
+                    website=self.website_id.id,
+                    menus=len(menus),
+                )
                 menus.unlink()
 
     @api.depends("url", "website_id.homepage_url")
@@ -95,8 +107,14 @@ class WebsitePagePropertiesBase(models.TransientModel):
         url = self.url
         if self.is_homepage:
             if url and url != "/":
+                _debug.lifecycle(
+                    "homepage_url_set", website=self.website_id.id, url=url
+                )
                 self.website_id.homepage_url = url
         elif self.website_id.homepage_url == url:
+            _debug.lifecycle(
+                "homepage_url_cleared", website=self.website_id.id, url=url
+            )
             self.website_id.homepage_url = False
 
     @api.depends("target_model_id")
@@ -134,8 +152,19 @@ class WebsitePagePropertiesBase(models.TransientModel):
                 else:
                     target.visibility = "restricted_group"
                     target.group_ids += self._get_ir_ui_view_unpublish_group()
+                _debug.lifecycle(
+                    "view_publication",
+                    view=target.id,
+                    published=self.is_published,
+                )
                 self.env.registry.clear_cache("templates")
         elif "is_published" in target._fields:
+            _debug.lifecycle(
+                "record_publication",
+                model=target._name,
+                record=target.id,
+                published=self.is_published,
+            )
             target.is_published = self.is_published
 
     def _get_ir_ui_view_unpublish_group(self):
@@ -231,6 +260,13 @@ class WebsitePageProperties(models.TransientModel):
                 old_url = record.old_url
                 new_url = record.url
                 if old_url != new_url:
+                    _debug.lifecycle(
+                        "page_properties_url_changed",
+                        page=record.target_model_id.id,
+                        old=old_url,
+                        new=new_url,
+                        redirect=bool(vals.get("redirect_old_url")),
+                    )
                     if vals.get("redirect_old_url"):
                         website_id = (
                             vals.get("website_id") or record.website_id.id or False

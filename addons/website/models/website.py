@@ -16,6 +16,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import escape_psql
 from odoo.libs.web import contains_dot_segments
 from odoo.tools import SQL
@@ -27,6 +28,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import get_base_hostname
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 DEFAULT_CDN_FILTERS = [
@@ -51,6 +53,18 @@ TEMPLATE_AFFECTING_FIELDS = frozenset(
 
 
 DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = "youtu.be\nyoutube.com\nyoutube-nocookie.com\ninstagram.com\ninstagr.am\nig.me\nvimeo.com\ndailymotion.com\ndai.ly\nyouku.com\ntudou.com\nfacebook.com\nfacebook.net\nfb.com\nfb.me\nfb.watch\ntiktok.com\nx.com\ntwitter.com\nt.co\ngoogletagmanager.com\ngoogle-analytics.com\ngoogle.com\ngoogle.ad\ngoogle.ae\ngoogle.com.af\ngoogle.com.ag\ngoogle.al\ngoogle.am\ngoogle.co.ao\ngoogle.com.ar\ngoogle.as\ngoogle.at\ngoogle.com.au\ngoogle.az\ngoogle.ba\ngoogle.com.bd\ngoogle.be\ngoogle.bf\ngoogle.bg\ngoogle.com.bh\ngoogle.bi\ngoogle.bj\ngoogle.com.bn\ngoogle.com.bo\ngoogle.com.br\ngoogle.bs\ngoogle.bt\ngoogle.co.bw\ngoogle.by\ngoogle.com.bz\ngoogle.ca\ngoogle.cd\ngoogle.cf\ngoogle.cg\ngoogle.ch\ngoogle.ci\ngoogle.co.ck\ngoogle.cl\ngoogle.cm\ngoogle.cn\ngoogle.com.co\ngoogle.co.cr\ngoogle.com.cu\ngoogle.cv\ngoogle.com.cy\ngoogle.cz\ngoogle.de\ngoogle.dj\ngoogle.dk\ngoogle.dm\ngoogle.com.do\ngoogle.dz\ngoogle.com.ec\ngoogle.ee\ngoogle.com.eg\ngoogle.es\ngoogle.com.et\ngoogle.fi\ngoogle.com.fj\ngoogle.fm\ngoogle.fr\ngoogle.ga\ngoogle.ge\ngoogle.gg\ngoogle.com.gh\ngoogle.com.gi\ngoogle.gl\ngoogle.gm\ngoogle.gr\ngoogle.com.gt\ngoogle.gy\ngoogle.com.hk\ngoogle.hn\ngoogle.hr\ngoogle.ht\ngoogle.hu\ngoogle.co.id\ngoogle.ie\ngoogle.co.il\ngoogle.im\ngoogle.co.in\ngoogle.iq\ngoogle.is\ngoogle.it\ngoogle.je\ngoogle.com.jm\ngoogle.jo\ngoogle.co.jp\ngoogle.co.ke\ngoogle.com.kh\ngoogle.ki\ngoogle.kg\ngoogle.co.kr\ngoogle.com.kw\ngoogle.kz\ngoogle.la\ngoogle.com.lb\ngoogle.li\ngoogle.lk\ngoogle.co.ls\ngoogle.lt\ngoogle.lu\ngoogle.lv\ngoogle.com.ly\ngoogle.co.ma\ngoogle.md\ngoogle.me\ngoogle.mg\ngoogle.mk\ngoogle.ml\ngoogle.com.mm\ngoogle.mn\ngoogle.com.mt\ngoogle.mu\ngoogle.mv\ngoogle.mw\ngoogle.com.mx\ngoogle.com.my\ngoogle.co.mz\ngoogle.com.na\ngoogle.com.ng\ngoogle.com.ni\ngoogle.ne\ngoogle.nl\ngoogle.no\ngoogle.com.np\ngoogle.nr\ngoogle.nu\ngoogle.co.nz\ngoogle.com.om\ngoogle.com.pa\ngoogle.com.pe\ngoogle.com.pg\ngoogle.com.ph\ngoogle.com.pk\ngoogle.pl\ngoogle.pn\ngoogle.com.pr\ngoogle.ps\ngoogle.pt\ngoogle.com.py\ngoogle.com.qa\ngoogle.ro\ngoogle.ru\ngoogle.rw\ngoogle.com.sa\ngoogle.com.sb\ngoogle.sc\ngoogle.se\ngoogle.com.sg\ngoogle.sh\ngoogle.si\ngoogle.sk\ngoogle.com.sl\ngoogle.sn\ngoogle.so\ngoogle.sm\ngoogle.sr\ngoogle.st\ngoogle.com.sv\ngoogle.td\ngoogle.tg\ngoogle.co.th\ngoogle.com.tj\ngoogle.tl\ngoogle.tm\ngoogle.tn\ngoogle.to\ngoogle.com.tr\ngoogle.tt\ngoogle.com.tw\ngoogle.co.tz\ngoogle.com.ua\ngoogle.co.ug\ngoogle.co.uk\ngoogle.com.uy\ngoogle.co.uz\ngoogle.com.vc\ngoogle.co.ve\ngoogle.co.vi\ngoogle.com.vn\ngoogle.vu\ngoogle.ws\ngoogle.rs\ngoogle.co.za\ngoogle.co.zm\ngoogle.co.zw\ngoogle.cat"
+
+
+def normalize_sitemap_url(url):
+    return "/" if url == "/" else url.rstrip("/")
+
+
+def get_underlying_function(f):
+    if isinstance(f, functools.partial):
+        f = f.func
+    if isinstance(f, types.MethodType):
+        return f.__func__
+    return f
 
 
 def to_punycode(host):
@@ -399,6 +413,7 @@ class Website(models.Model):
                 vals["user_id"] = company._get_public_user().id
 
         websites = super().create(vals_list)
+        _debug.lifecycle("create", websites=websites, count=len(websites))
         self.env.registry.clear_cache()
         websites.company_id._compute_website_id()
         for website in websites:
@@ -412,6 +427,7 @@ class Website(models.Model):
             groups = self.env["res.groups"].concat(
                 *(self.env.ref(it) for it in all_user_groups.split(","))
             )
+            _debug.lifecycle("multi_website_group_implied", groups=groups)
             groups.write(
                 {"implied_ids": [(4, self.env.ref("website.group_multi_website").id)]}
             )
@@ -424,6 +440,7 @@ class Website(models.Model):
         values = vals
         self._update_vals(values)
 
+        _debug.lifecycle("write", websites=self, count=len(self), fields=sorted(values))
         self.env.registry.clear_cache()
 
         if "company_id" in values and "user_id" not in values:
@@ -432,6 +449,11 @@ class Website(models.Model):
             )
             if public_user_to_change_websites:
                 company = self.env["res.company"].browse(values["company_id"])
+                _debug.lifecycle(
+                    "public_user_moved",
+                    websites=public_user_to_change_websites,
+                    company=values["company_id"],
+                )
                 super(Website, public_user_to_change_websites).write(
                     dict(values, user_id=company and company._get_public_user().id)
                 )
@@ -439,6 +461,10 @@ class Website(models.Model):
         result = super(Website, self - public_user_to_change_websites).write(values)
 
         if not TEMPLATE_AFFECTING_FIELDS.isdisjoint(values):
+            _debug.lifecycle(
+                "templates_cache_cleared",
+                by=sorted(TEMPLATE_AFFECTING_FIELDS.intersection(values)),
+            )
             self.env.registry.clear_cache("templates")
 
         if "sequence" in values or "company_id" in values:
@@ -460,6 +486,11 @@ class Website(models.Model):
                     website, self.env["website.page"]
                 )
                 if not values["cookies_bar"]:
+                    _debug.lifecycle(
+                        "cookie_policy_page_removed",
+                        website=website.id,
+                        pages=existing_policy_page,
+                    )
                     existing_policy_page.unlink()
                 elif not existing_policy_page:
                     cookies_view = self.env.ref(
@@ -472,6 +503,9 @@ class Website(models.Model):
                         specific_cook_view = website.with_context(
                             website_id=website.id
                         ).viewref("website.cookie_policy")
+                        _debug.lifecycle(
+                            "cookie_policy_page_created", website=website.id
+                        )
                         self.env["website.page"].create(
                             {
                                 "is_published": True,
@@ -535,6 +569,7 @@ class Website(models.Model):
                 ) from None
 
             if contains_dot_segments(parsed.path):
+                _debug.logic("domain_refused", reason="dot_segments", website=record.id)
                 raise ValidationError(
                     _(
                         "The domain path cannot contain relative path segments like '/./' or '/../'."
@@ -550,6 +585,7 @@ class Website(models.Model):
                 try:
                     re.compile(line)
                 except re.error as e:
+                    _debug.logic("cdn_filter_refused", website=website.id, filter=line)
                     raise ValidationError(
                         _(
                             "The CDN filter %(filter)s is not a valid regular expression: %(error)s",
@@ -562,6 +598,11 @@ class Website(models.Model):
     def _check_homepage_url(self):
         for website in self.filtered("homepage_url"):
             if not website.homepage_url.startswith("/"):
+                _debug.logic(
+                    "homepage_url_refused",
+                    reason="not_relative",
+                    website=website.id,
+                )
                 raise ValidationError(
                     _("The homepage URL should be relative and start with '/'.")
                 )
@@ -572,6 +613,7 @@ class Website(models.Model):
             "website.default_website", raise_if_not_found=False
         )
         if default_website and default_website in self:
+            _debug.logic("unlink_refused", reason="default_website")
             raise UserError(
                 _(
                     "You cannot delete default website %s. Try to change its settings instead",
@@ -580,6 +622,7 @@ class Website(models.Model):
             )
 
     def unlink(self):
+        _debug.lifecycle("unlink", websites=self, count=len(self))
         self._remove_attachments_on_website_unlink()
 
         self.env["website.page"].search([("website_id", "in", self.ids)]).unlink()
@@ -603,6 +646,11 @@ class Website(models.Model):
                 ("url", "ilike", ".assets\\_"),
             ]
         )
+        _debug.lifecycle(
+            "website_attachments_removed",
+            websites=self,
+            attachments=len(attachments_to_unlink),
+        )
         attachments_to_unlink.unlink()
 
     def _idna_url(self, url):
@@ -615,6 +663,7 @@ class Website(models.Model):
         Page = self.env["website.page"]
         standard_homepage = self.env.ref("website.homepage", raise_if_not_found=False)
         if not standard_homepage:
+            _debug.logic("bootstrap_homepage_skipped", reason="no_standard_homepage")
             return
 
         new_homepage_view = """<t name="Homepage" t-name="website.homepage">
@@ -649,6 +698,12 @@ class Website(models.Model):
             [("website_id", "=", self.id), ("url", "=", "/")]
         )
         home_menu.page_id = homepage_page
+        _debug.lifecycle(
+            "homepage_bootstrapped",
+            website=self.id,
+            page=homepage_page.id,
+            menu=home_menu.id,
+        )
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
@@ -670,6 +725,12 @@ class Website(models.Model):
             )
             for submenu in top_menu.child_id:
                 copy_menu(submenu, new_top_menu)
+            _debug.lifecycle(
+                "menu_hierarchy_copied",
+                website=website.id,
+                source=top_menu.id,
+                top_menu=new_top_menu.id,
+            )
 
     @api.model
     def new_page(
@@ -686,6 +747,9 @@ class Website(models.Model):
     ):
         template_record = self.env.ref(template, raise_if_not_found=False)
         if not template_record:
+            _debug.logic(
+                "new_page_refused", reason="unknown_template", template=template
+            )
             raise UserError(_("'%s' is not a valid template reference.", template))
         if namespace:
             template_module = namespace
@@ -754,6 +818,7 @@ class Website(models.Model):
                     default_menu_values.update(menu_values)
                 menu = self.env["website.menu"].create(default_menu_values)
             result["menu_id"] = menu.id
+        _debug.lifecycle("new_page", url=page_url, key=key, **result)
         return result
 
     def get_unique_path(self, page_url):
@@ -771,6 +836,8 @@ class Website(models.Model):
         ):
             inc += 1
             page_temp = page_url + ((inc and "-%s" % inc) or "")
+        if _debug.logic.enabled and inc:
+            _debug.logic("page_url_deduplicated", wanted=page_url, used=page_temp)
         return page_temp
 
     def _get_plausible_script_url(self):
@@ -817,6 +884,8 @@ class Website(models.Model):
         ):
             inc += 1
             key_copy = string + ((inc and "-%s" % inc) or "")
+        if _debug.logic.enabled and inc:
+            _debug.logic("view_key_deduplicated", wanted=string, used=key_copy)
         return key_copy
 
     @api.model
@@ -850,6 +919,7 @@ class Website(models.Model):
         for model_name, field_name in self._get_fields_html():
             Model = self.env[model_name]
             if not Model.has_access("read"):
+                _debug.logic("dependency_model_skipped", model=model_name)
                 continue
 
             domains = []
@@ -883,6 +953,12 @@ class Website(models.Model):
                     for rec in dependency_records
                 ]
 
+        _debug.pipeline(
+            "url_dependencies",
+            model=res_model,
+            urls=len(search_criteria),
+            groups=len(dependencies),
+        )
         return dependencies
 
     @api.model
@@ -891,11 +967,14 @@ class Website(models.Model):
         if request and request.session.get("force_website_id"):
             forced_id = request.session["force_website_id"]
             if self._is_website_live(forced_id):
+                _debug.logic("current_website", by="session_force", website=forced_id)
                 return self.browse(forced_id)
+            _debug.logic("forced_website_dropped", reason="gone", website=forced_id)
             request.session.pop("force_website_id")
 
         website_id = self.env.context.get("website_id")
         if website_id and self._is_website_live(website_id):
+            _debug.logic("current_website", by="context", website=website_id)
             return self.browse(website_id)
 
         if not is_frontend_request and not fallback:
@@ -910,6 +989,9 @@ class Website(models.Model):
             or ""
         )
         website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
+        _debug.logic(
+            "current_website", by="domain", host=domain_name, website=website_id
+        )
         return self.browse(website_id)
 
     @api.model
@@ -947,9 +1029,20 @@ class Website(models.Model):
 
         if not websites:
             if not fallback:
+                _debug.logic("website_by_domain", verdict="no_match", host=domain_name)
                 return False
+            _debug.logic(
+                "website_by_domain", verdict="fallback_first", host=domain_name
+            )
             return self.search([], limit=1).id
 
+        _debug.logic(
+            "website_by_domain",
+            verdict="matched",
+            host=domain_name,
+            website=websites[0].id,
+            candidates=len(found_websites),
+        )
         return websites[0].id
 
     def _force(self):
@@ -957,6 +1050,7 @@ class Website(models.Model):
 
     def _force_website(self, website_id):
         if request:
+            _debug.lifecycle("website_forced", website=website_id)
             request.session["force_website_id"] = (
                 website_id and str(website_id).isdigit() and int(website_id)
             )
@@ -1055,16 +1149,13 @@ class Website(models.Model):
         url_set = set()
 
         sitemap_endpoint_done = set()
-
-        def normalize_url(url):
-            return "/" if url == "/" else url.rstrip("/")
-
-        def get_underlying_function(f):
-            if isinstance(f, functools.partial):
-                f = f.func
-            if isinstance(f, types.MethodType):
-                return f.__func__
-            return f
+        _debug.pipeline(
+            "enumerate_pages",
+            website=self.id,
+            pages=len(pages),
+            query=query_string or None,
+            force=force,
+        )
 
         for rule in router.iter_rules():
             sitemap_func = rule.endpoint.routing.get("sitemap")
@@ -1081,7 +1172,7 @@ class Website(models.Model):
                     rule,
                     query_string,
                 ):
-                    loc_norm = {**loc, "loc": normalize_url(loc["loc"])}
+                    loc_norm = {**loc, "loc": normalize_sitemap_url(loc["loc"])}
                     url = loc_norm["loc"]
                     if url not in url_set:
                         yield loc_norm
@@ -1146,7 +1237,7 @@ class Website(models.Model):
 
             for value in values:
                 _domain_part, url = rule.build(value, append_unknown=False)
-                url = normalize_url(url)
+                url = normalize_sitemap_url(url)
                 pattern = query_string and "*%s*" % "*".join(query_string.split("/"))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
                     page = {"loc": url}
@@ -1158,6 +1249,9 @@ class Website(models.Model):
 
     def get_website_page_ids(self):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
+            _debug.logic(
+                "page_ids_refused", reason="not_restricted_editor", user=self.env.uid
+            )
             raise AccessError(_("Access Denied"))
 
         domain = Domain("url", "!=", False)
@@ -1181,7 +1275,11 @@ class Website(models.Model):
     def _get_website_pages(self, domain=None, order="name", limit=None):
         website = self.get_current_website()
         domain = Domain(domain or Domain.TRUE) & website.website_domain()
-        pages = self.env["website.page"].sudo().search(domain, order=order, limit=limit)
+        with _debug.perf("website_pages", cr=self.env.cr, website=website.id) as span:
+            pages = (
+                self.env["website.page"].sudo().search(domain, order=order, limit=limit)
+            )
+            span.set(found=len(pages))
         return pages.with_context(website_id=website.id)._get_most_specific_pages()
 
     def search_pages(self, needle=None, limit=None):
@@ -1216,11 +1314,13 @@ class Website(models.Model):
             .bind_to_environ(request.httprequest.environ)
         )
         if not router.test(path_info=page, method="GET"):
+            _debug.logic("page_existing", verdict="no_route", page=page)
             return False
 
         try:
             rule, args = router.match(page, method="GET", return_rule=True)
         except werkzeug.routing.RequestRedirect:
+            _debug.logic("page_existing", verdict="route_redirect", page=page)
             return True
 
         try:
@@ -1232,10 +1332,15 @@ class Website(models.Model):
                         and args[arg].website_id
                         and args[arg].website_id != self
                     ):
+                        _debug.logic(
+                            "page_existing", verdict="other_website", page=page
+                        )
                         return False
             rule.build(args, append_unknown=False)
         except MissingError:
+            _debug.logic("page_existing", verdict="missing_record", page=page)
             return False
+        _debug.logic("page_existing", verdict="route", page=page)
         return True
 
     def get_suggested_controllers(self):
@@ -1271,6 +1376,7 @@ class Website(models.Model):
         cdn_filters = (self.cdn_filters or "").splitlines()
         for flt in cdn_filters:
             if flt and re.match(flt, uri):
+                _debug.logic("cdn_url", uri=uri, filter=flt, cdn=cdn_url)
                 return tools.urls.urljoin(cdn_url, uri)
         return uri
 
@@ -1282,6 +1388,7 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
                 "website.backend_dashboard"
             )
+        _debug.logic("dashboard_refused", user=self.env.uid)
         raise AccessError(
             _("You don't have the necessary access rights to access this dashboard.")
         )
@@ -1330,6 +1437,7 @@ class Website(models.Model):
     def _get_cached_values(self):
         self.check_singleton()
 
+        _debug.perf.count("cached_values_computed", website=self.id)
         self.fetch(
             ["user_id", "company_id", "default_lang_id", "homepage_url", "cookies_bar"]
         )
@@ -1382,6 +1490,7 @@ class Website(models.Model):
                 continue
 
             html_fields.append((model_name, field_name))
+        _debug.perf.count("html_fields_computed", fields=len(html_fields))
         return html_fields
 
     def _is_snippet_used(
@@ -1417,6 +1526,12 @@ class Website(models.Model):
         )
 
         snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
+        _debug.perf.count(
+            "snippet_occurrences_scanned",
+            snippet=snippet_id,
+            models=len(html_fields),
+            occurrences=len(snippet_occurences),
+        )
         return self._is_snippet_used_in_occurrences(
             snippet_occurences, asset_type, asset_version
         )
@@ -1436,6 +1551,7 @@ class Website(models.Model):
         record.check_access("write")
 
     def _disable_unused_snippets_assets(self):
+        _debug.pipeline("disable_unused_snippets", website=self.id)
         snippet_assets = (
             self.env["ir.asset"]
             .with_context(active_test=False)
@@ -1466,6 +1582,11 @@ class Website(models.Model):
                 )
             is_snippet_used = snippet_used[key]
             if is_snippet_used != snippet_asset.active:
+                _debug.lifecycle(
+                    "snippet_asset_toggled",
+                    path=snippet_asset.path,
+                    active=is_snippet_used,
+                )
                 snippet_asset.active = is_snippet_used
                 if (
                     snippet_id == "s_quotes_carousel"

@@ -1,10 +1,13 @@
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 
 from odoo.addons.sale.controllers.product_configurator import (
     SaleProductConfiguratorController,
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteSaleProductConfiguratorController(
@@ -28,6 +31,12 @@ class WebsiteSaleProductConfiguratorController(
                 lambda op: self._is_product_shown(op, combination)
             )
         )
+        _debug.logic(
+            "product_configurator",
+            template=product_template_id,
+            optional=has_optional_products,
+            configured=is_product_configured,
+        )
         return has_optional_products or not (
             single_product_variant.get("product_id") or is_product_configured
         )
@@ -50,6 +59,11 @@ class WebsiteSaleProductConfiguratorController(
                 ],
                 limit=1,
             ):
+                _debug.logic(
+                    "configurator_template",
+                    by="published_combo",
+                    template=product_template_id,
+                )
                 return (
                     request.env["product.template"].sudo().browse(product_template_id)
                 )
@@ -74,6 +88,7 @@ class WebsiteSaleProductConfiguratorController(
         website=True,
     )
     def website_sale_product_configurator_create_product(self, *args, **kwargs):
+        _debug.lifecycle("configurator_variant_created")
         return super().sale_product_configurator_create_product(*args, **kwargs)
 
     @route(

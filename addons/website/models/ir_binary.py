@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrBinary(models.AbstractModel):
@@ -22,6 +25,12 @@ class IrBinary(models.AbstractModel):
                     domain.append(("public", "=", True))
                     Attachment = Attachment.sudo()
                 record = Attachment.search(domain, limit=1)
+                _debug.logic(
+                    "theme_attachment_lookup",
+                    xmlid=xmlid,
+                    website=website.id,
+                    found=bool(record),
+                )
 
         if not record:
             record = super()._get_record(
