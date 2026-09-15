@@ -219,6 +219,24 @@ time type are overlapping with public holidays, meaning that the balance of thos
             raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
 been taken for this time off type. Changing it now would affect existing employee balances."))
 
+    @api.model
+    def _get_types_by_country(self, countries):
+        """Map any country to its types, or to the country-less ones when it ships none."""
+        types_by_country = self.search(
+            [('country_id', 'in', countries.ids + [False])]).grouped('country_id')
+        countryless_types = types_by_country.get(self.env['res.country'], self.browse())
+        return {
+            country: types_by_country.get(country, countryless_types)
+            for country in countries
+        } | {self.env['res.country']: countryless_types}
+
+    def _get_allowed_request_durations(self):
+        if self.request_unit == 'half_day':
+            return ['full', 'am', 'pm']
+        if self.request_unit == 'hour':
+            return ['full', 'am', 'pm', 'specific']
+        return ['full']
+
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         """Return the types of ``self`` the employee can request time off of during a period.
 

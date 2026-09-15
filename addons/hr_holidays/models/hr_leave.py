@@ -372,13 +372,9 @@ class HrLeave(models.Model):
         :rtype: list[str]
         """
         self.ensure_one()
-        if self.last_several_days or self.work_entry_type_request_unit == "day":
+        if self.last_several_days:
             return ["full"]
-        if self.work_entry_type_request_unit == "half_day":
-            return ["full", "am", "pm"]
-        if self.work_entry_type_request_unit == "hour":
-            return ["full", "am", "pm", "specific"]
-        return ["full"]
+        return self.work_entry_type_id._get_allowed_request_durations()
 
     @api.onchange("work_entry_type_id", "work_entry_type_request_unit", "last_several_days")
     def _onchange_request_duration_unit(self):
@@ -408,33 +404,34 @@ class HrLeave(models.Model):
 
     def _apply_request_duration(self):
         for leave in self:
-            if not leave.request_duration:
-                continue
-            if leave.work_entry_type_request_unit == "half_day":
-                if leave.request_duration == "full":
-                    leave.request_date_from_period = "am"
-                    leave.request_date_to_period = "pm"
-                elif leave.request_duration in ("am", "pm"):
-                    leave.request_date_from_period = leave.request_duration
-                    leave.request_date_to_period = leave.request_duration
-            elif leave.work_entry_type_request_unit == "hour":
-                if leave.request_duration == "full":
-                    leave._set_request_hours()
-                elif leave.request_duration == "am":
-                    leave._set_request_hours(day_period="morning")
-                elif leave.request_duration == "pm":
-                    leave._set_request_hours(day_period="afternoon")
+            if leave.request_duration:
+                leave.update(self._get_request_duration_values(
+                    leave.work_entry_type_id, leave.request_duration, leave.employee_id, leave.request_date_from,
+                    leave.request_date_to, leave.request_hour_from, leave.request_hour_to))
 
-    def _set_request_hours(self, day_period=None):
-        if not (self.employee_id and self.request_date_from and self.request_date_to):
-            return
-        if day_period:
-            hour_from, _ = self._get_hour_from_to(self.request_date_from, self.request_date_from, day_period)
-            _, hour_to = self._get_hour_from_to(self.request_date_to, self.request_date_to, day_period)
-        else:
-            hour_from, hour_to = self._get_hour_from_to(self.request_date_from, self.request_date_to)
-        self.request_hour_from = hour_from
-        self.request_hour_to = hour_to
+    @api.model
+    def _get_request_duration_values(self, work_entry_type, request_duration, employee, request_date_from,
+                                     request_date_to, request_hour_from=0.0, request_hour_to=0.0):
+        """Return the periods or the hours ``request_duration`` stands for on a request of ``work_entry_type``."""
+        if work_entry_type.request_unit == "half_day":
+            if request_duration == "full":
+                return {"request_date_from_period": "am", "request_date_to_period": "pm"}
+            if request_duration in ("am", "pm"):
+                return {"request_date_from_period": request_duration, "request_date_to_period": request_duration}
+        elif work_entry_type.request_unit == "hour" and request_duration in ("full", "am", "pm") \
+                and employee and request_date_from and request_date_to:
+            explicit_hours = (request_hour_from, request_hour_to)
+            if request_duration == "full":
+                hour_from, hour_to = self._get_request_hours(
+                    work_entry_type, employee, request_date_from, request_date_to, None, False, *explicit_hours)
+            else:
+                day_period = "morning" if request_duration == "am" else "afternoon"
+                hour_from, _ = self._get_request_hours(
+                    work_entry_type, employee, request_date_from, request_date_from, day_period, False, *explicit_hours)
+                _, hour_to = self._get_request_hours(
+                    work_entry_type, employee, request_date_to, request_date_to, day_period, False, *explicit_hours)
+            return {"request_hour_from": hour_from, "request_hour_to": hour_to}
+        return {}
 
     @api.depends(*POSITION_DEPENDS)
     @api.depends_context('uid', 'tz')
@@ -474,11 +471,7 @@ class HrLeave(models.Model):
         """
         self.ensure_one()
         if self.work_entry_type_request_unit == 'hour':
-            leave_tz = ZoneInfo(self.tz or 'UTC')
-            return tuple(
-                value and convert_timezone(value, leave_tz, reader_tz).replace(microsecond=0)
-                for value in (self.date_from, self.date_to)
-            )
+            return self._get_wall_clock_dates(reader_tz)
         if not (self.request_date_from and self.request_date_to):
             return (False, False)
         is_half_day = self.work_entry_type_request_unit == 'half_day'
@@ -488,6 +481,15 @@ class HrLeave(models.Model):
             hours=12 if is_half_day and self.request_date_to_period == 'am' else 24)
         # same as stamping and converting, 20x cheaper -- runs for every request read
         return start - reader_tz.utcoffset(start), stop - reader_tz.utcoffset(stop)
+
+    def _get_wall_clock_dates(self, reader_tz):
+        """Return ``date_from`` and ``date_to`` with the wall clock of the request's timezone restamped in ``reader_tz``."""
+        self.ensure_one()
+        leave_tz = ZoneInfo(self.tz or 'UTC')
+        return tuple(
+            value and convert_timezone(value, leave_tz, reader_tz).replace(microsecond=0)
+            for value in (self.date_from, self.date_to)
+        )
 
     def _get_generated_leave_domain(self):
         """Return the domain of the leaves generated by time rules (outputs and remainders).
@@ -2827,21 +2829,29 @@ class HrLeave(models.Model):
         :return: ``(hour_from, hour_to)`` as float hours
         :rtype: tuple
         """
-        working_time_in_hours = self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time"
-        if working_time_in_hours and self.request_hour_to > self.request_hour_from:
+        return self._get_request_hours(
+            self.work_entry_type_id, self.employee_id, request_date_from, request_date_to, day_period,
+            count_non_working_days, self.request_hour_from, self.request_hour_to)
+
+    @api.model
+    def _get_request_hours(self, work_entry_type, employee, request_date_from, request_date_to, day_period=None,
+                           count_non_working_days=False, request_hour_from=0.0, request_hour_to=0.0):
+        """:meth:`_get_hour_from_to` of a request of ``work_entry_type`` by ``employee``, of explicit hours ``request_hour_from`` to ``request_hour_to``."""
+        working_time_in_hours = work_entry_type.request_unit == "hour" and work_entry_type.count_as == "working_time"
+        if working_time_in_hours and request_hour_to > request_hour_from:
             # explicit hours given
-            hour_from, hour_to = self.request_hour_from, self.request_hour_to
+            hour_from, hour_to = request_hour_from, request_hour_to
         else:
-            hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
-            _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
+            hour_from, _ = employee.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
+            _, hour_to = employee.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
             if working_time_in_hours and hour_to - hour_from >= 24:
                 half_day = HOURS_PER_DAY / 2
                 hour_from, hour_to = 12.0 - half_day, 12.0 + half_day
-            elif working_time_in_hours and self.employee_id and request_date_from == request_date_to and not day_period:
+            elif working_time_in_hours and employee and request_date_from == request_date_to and not day_period:
                 # a day of work is counted on the clock, so by default it lasts its planned hours from its start
-                calendar = self.employee_id.sudo()._get_version(request_date_from).resource_calendar_id
-                day_start = self._to_utc(request_date_from, 0, self.employee_id).replace(tzinfo=UTC)
-                day_end = self._to_utc(request_date_from + timedelta(days=1), 0, self.employee_id).replace(tzinfo=UTC)
+                calendar = employee.sudo()._get_version(request_date_from).resource_calendar_id
+                day_start = self._to_utc(request_date_from, 0, employee).replace(tzinfo=UTC)
+                day_end = self._to_utc(request_date_from + timedelta(days=1), 0, employee).replace(tzinfo=UTC)
                 planned_hours = calendar.get_work_hours_count(day_start, day_end, compute_leaves=False)
                 hour_to = min(hour_from + (planned_hours or calendar.hours_per_day or HOURS_PER_DAY), 24)
 
