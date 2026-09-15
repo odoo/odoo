@@ -1034,3 +1034,64 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             bill.invoice_line_ids.mapped('tax_ids.amount'),
             [23.0, 23.0, 5.0],
         )
+
+    @freeze_time('2026-01-23')
+    def test_scenario_correction_ksef_not_sent(self):
+        """Test that the credit note of an Invoice NOT sent/accepted in KSeF falls back to <NrKSeFN>1</NrKSeFN> tag."""
+        invoice = self.standard_invoice
+        invoice.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].create({
+            'reason': 'Correction of an invoice',
+            'journal_id': invoice.journal_id.id,
+            'move_ids': invoice.ids,
+        })
+        reversal_wizard.refund_moves()
+        credit_note = invoice.reversal_move_ids
+        credit_note.action_post()
+
+        xml = credit_note._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:RodzajFaktury"), 'KOR')
+        self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"), '1')
+        self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"))
+        self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"))
+
+    @freeze_time('2026-01-23')
+    def test_scenario_correction_ksef_accepted(self):
+        """Test that the credit note of an Invoice already accepted in KSeF use
+        <NrKSeF>1</NrKSeF> and <NrKSeFFaKorygowanej> tags instead of the fallback"""
+        invoice = self.standard_invoice
+        invoice.action_post()
+
+        fake_ksef_number = '5795955811-20260123-123456-78'
+        with (
+            patch.object(KsefApiService, 'open_ksef_session'),
+            patch.object(KsefApiService, 'send_invoice', return_value={'referenceNumber': '999999'}),
+            patch.object(KsefApiService, 'get_invoice_status', return_value={
+                'ksefNumber': fake_ksef_number,
+                'status': {'code': 200},
+            })
+        ):
+            wizard = self.env['account.move.send.wizard'].with_company(self.company).create({
+                'move_id': invoice.id,
+                'extra_edi_checkboxes': {'pl_ksef': {'checked': True}}
+            })
+            wizard.action_send_and_print()
+
+        self.assertEqual(invoice.l10n_pl_edi_status, 'accepted')
+        self.assertEqual(invoice.l10n_pl_edi_number, fake_ksef_number)
+
+        reversal_wizard = self.env['account.move.reversal'].create({
+            'reason': 'Correction of KSeF accepted invoice',
+            'journal_id': invoice.journal_id.id,
+            'move_ids': invoice.ids,
+        })
+        reversal_wizard.refund_moves()
+        credit_note = invoice.reversal_move_ids
+        credit_note.action_post()
+
+        xml = credit_note._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:RodzajFaktury"), 'KOR')
+        self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"), '1')
+        self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"), fake_ksef_number)
+        self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"))
