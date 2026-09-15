@@ -243,23 +243,30 @@ def add_form_signature(html_fragment, env_sudo):
         form_values['email_to'].addnext(hash_node)
 
 
-def assert_form_signature(form_data: dict, target_model: odoo.models.BaseModel) -> None:
+def assert_form_signature(form_data: dict, model: odoo.models.BaseModel) -> None:
     signature = form_data.pop('__sign__', None)
     if signature is None:
         raise AccessDenied(_("The form must be signed to be valid"))
 
-    signed_data: dict[str, str | None]
-    signed_data, model_name = verify_hash_signed(target_model.sudo().env, 'website_form_sign', signature)
+    signed_fields: dict[str, str | None]
+    try:
+        signed_fields, signed_model_name = verify_hash_signed(model.sudo().env, 'website_form_sign', signature)
+    except (TypeError, ValueError):
+        raise AccessDenied(_("The form's integrity is not verified (the signature is malformed)"))
 
-    if target_model._name != model_name:
-        raise AccessDenied(_("The form's integrity is not verified (the model is not correct: %s)", model_name))
+    if model._name != signed_model_name:
+        raise AccessDenied(_("The form's integrity is not verified (the model is not correct: %s expected)", signed_model_name))
 
-    for name, value in signed_data.items():
-        if value is None:
-            if name in form_data:
-                raise AccessDenied(_("The form's integrity is not verified (%s has been modified)", name))
+    for name, value in form_data.items():
+        if name not in model._fields:
             continue
-        if name not in form_data:
-            raise AccessDenied(_("The form's integrity is not verified (%s is missing)", name))
-        if value != form_data[name]:
+        if name not in signed_fields:
+            raise AccessDenied(_("The form's integrity is not verified (%s has been added)", name))
+        expected_value = signed_fields.pop(name)
+        if expected_value is None:
+            continue
+        if expected_value != value:
             raise AccessDenied(_("The form's integrity is not verified (%s has been modified)", name))
+
+    if removed_entry_names := [name for name, value in signed_fields.items() if value is not None]:
+        raise AccessDenied(_("The form's integrity is not verified (%s is missing)", ', '.join(removed_entry_names)))
