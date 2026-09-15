@@ -132,7 +132,7 @@ export class Store extends Record {
                             }
                         }
                     }
-                    deletingRecordsByLocalId.set(record.localId, record);
+                    deletingRecordsByLocalId.set(record.localId, record._proxy);
                     this.recordByLocalId.delete(record.localId);
                     record._[IS_DELETING_SYM] = true;
                     record._proxy[IS_DELETED_SYM] = true;
