@@ -185,10 +185,10 @@ span[itemprop="streetAddress"] {
     white-space: normal;
 }
 
-// Force a max width on quantity column to handle long UoM
+// Force a min width on quantity column to handle long UoM
 .o_td_quantity {
     min-width: 7rem;
-    max-width: 9rem;
+    white-space: nowrap;
 }
 
 // Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
