@@ -17,10 +17,22 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Contacts" sample="1" multi_edit="1">
+<<<<<<< dd153b3cb418c2e4d4302ac62398ef95d51c9891
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
                     <field name="complete_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
                     <field name="display_name" string="Name"/>
                     <field name="vat" optional="hide" readonly="1"/>
+||||||| 58162df5d197e1a8552de62218a0aceaef340103
+                    <field name="complete_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+                    <field name="display_name" string="Name"/>
+                    <field name="phone" class="o_force_ltr" optional="show"/>
+                    <field name="mobile" optional="hide"/>
+=======
+                    <field name="complete_name" string="Name"/>
+                    <field name="display_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+                    <field name="phone" class="o_force_ltr" optional="show"/>
+                    <field name="mobile" optional="hide"/>
+>>>>>>> 6277913ade00a67f36350145d84a8e0500cc1dab
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
