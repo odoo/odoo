@@ -174,6 +174,27 @@ one exception, and the scanner has a control showing it tells the two apart.
   resumed **5.1 s** after the outage. One caller probes at a time, or a dead
   replica draws a connection attempt from every request that arrives while it
   is out.
+
+  **A replica borrow never waits out `db_borrow_timeout`.** It has a
+  fallback, so `ReplicaRouter` opens it with `borrow_timeout=REPLICA_BORROW_TIMEOUT`
+  (5 s) and `fail_fast=True`. Measured before that against a refused port:
+  the first read-only request blocked **30.00 s** — the probe files a refused
+  connect as *transient*, which is right for the primary (a restart should be
+  waited out) and hands the whole deadline to `getconn`, which retries a
+  server that is not listening; and the breaker re-probed on every cooldown,
+  so a request stalled 30 s at each half-open attempt. `fail_fast` ends the
+  borrow the moment the probe reports a transient failure, and it also
+  re-probes a *surviving* pool whose proof is gone and which has nothing
+  idle: psycopg_pool keeps counting the connections it cannot open in
+  `pool_size`, so the pool object outlives the outage and, without that,
+  every attempt walked into `getconn` again. Traced through a killable TCP
+  proxy in front of the socket: replica dies → the first borrow costs the 5 s
+  `getconn` deadline (the timeout revokes the proof), every attempt after that
+  falls back in 0.00 s, and the replica serves again on the first half-open
+  attempt after it returns. The one 5 s is the proven-key case, where nothing
+  before `getconn` can know the backend is gone; a replica that dies within
+  `db_healthcheck_grace` of a return hands its dead connection out once
+  unchecked, which is that window's documented trade.
 - **Staleness is bounded, not merely tolerated**: read-only routes are chosen
   because they tolerate stale reads, but "tolerates any amount, unmeasured" is
   not a guarantee. `db_replica_max_lag` (0 = off) demotes reads to the primary
