@@ -336,6 +336,12 @@
                     <field name="address_id" context="{'show_address': 1, 'default_parent_id': company_partner_id, 'default_type': 'other'}" placeholder="Remote"/>
                 </div>
                 <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+
+                <label for="expected_experience" class="o_form_label" name="expected_experience_label"/>
+                <div class="oe_inline" name="expected_experience_div">
+                    <field name="expected_experience" nolabel="1" class="oe_inline"/> Years minimum
+                </div>
+
             </group>
 
             <xpath expr="//group" position="after">

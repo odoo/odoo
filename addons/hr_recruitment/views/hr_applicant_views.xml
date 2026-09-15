@@ -181,9 +181,10 @@
                     </page>
                     <page string="Details" name="application_details">
                         <group>
-                            <group string="Applicant">
+                            <group string="Applicant" name="applicant">
                                 <field name="type_id" placeholder="e.g. Masters"/>
                                 <field name="availability" placeholder="Directly"/>
+                                <field name="willing_to_relocate" widget="boolean_toggle"/>
                             </group>
                             <group string="Job">
                                 <field name="department_id"/>
