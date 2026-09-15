@@ -94,3 +94,10 @@ class TestRoomFrontend(RoomCommon, HttpCase):
                 {},
             )
         self.assertTrue(self.bookings[0].exists())
+
+    def test_room_backend_tour(self):
+        self.start_tour("/odoo/meeting-rooms", "room_backend_tour", login="admin")
+        booking = self.env["calendar.event"].search([("name", "=", "Tour meeting")])
+        self.assertEqual(booking.resource_ids, self.profiles[1])
+        self.assertEqual(booking.reservation_ids.resource_id, self.rooms[1].resource_id)
+        self.assertEqual(booking.appointment_type_id, self.room_type)

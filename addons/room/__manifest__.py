@@ -22,10 +22,17 @@
         "demo/room_demo.xml",
     ],
     "assets": {
+        "web.assets_tests": [
+            "room/static/tests/tours/**/*",
+        ],
         "web.assets_unit_tests": [
             "room/static/src/room_booking/**/*.js",
             "room/static/src/room_booking/**/*.xml",
             "room/static/tests/**/*",
+            (
+                "remove",
+                "room/static/tests/tours/**/*",
+            ),
         ],
         "room.assets_room_booking": [
             "room/static/src/room_booking/primary_variables.scss",
