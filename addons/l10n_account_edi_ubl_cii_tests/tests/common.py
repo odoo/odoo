@@ -145,6 +145,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'city': seller.city,
             'vat': seller.vat,
             'country_id': seller.country_id.id,
+            'routing_scheme': seller.routing_scheme,
+            'routing_endpoint': seller.routing_endpoint,
         })
 
         move_type = invoice_kwargs['move_type']

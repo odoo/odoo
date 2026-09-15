@@ -105,6 +105,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'vat': 'FR05677404089',
             'bank_ids': [Command.create({'account_number': 'FR15001559627230', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.fr').id,
+            'routing_scheme': '9957',
+            'routing_endpoint': 'FR05677404089',
             **kwargs,
         })
 
@@ -306,6 +308,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
             'vat': 'FR23334175221',
             'additional_identifiers': {'FR_SIRET': '40678483500521'},
             'country_id': cls.env.ref('base.fr').id,
+            'routing_scheme': '9957',
+            'routing_endpoint': 'FR23334175221',
         })
         return company
 
