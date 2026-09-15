@@ -7,9 +7,10 @@ from typing import NamedTuple
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import DOMAIN_PREDICATES
 
 from ..tools import debug_log as dbg
-from odoo.addons.stock.const import PY_OPERATORS, QUANTITY_FIELDS
+from odoo.addons.stock.const import QUANTITY_FIELDS
 from odoo.addons.stock.tools.quantity import (
     QuantityFilters,
     get_domain_quantity_in_python,
@@ -232,7 +233,7 @@ class ProductProductQuantity(models.Model):
 
     def _search_qty_available(self, operator, value):
         filters = QuantityFilters.from_context(self.env)
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if (
             op is not None
             and not op(0.0, value)
@@ -298,14 +299,14 @@ class ProductProductQuantity(models.Model):
         return [("id", "in", matched)]
 
     def _get_domain_product_quantity(self, operator, value, field):
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if op is None:
             return get_domain_quantity_in_python(self, field, operator, value)
         totals, __ = self._get_quantity_totals(field)
         return self._get_domain_quantity_search(totals, op, operator, value, field)
 
     def _get_product_ids_from_quants(self, operator, value, filters=None):
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if not op:
             return NotImplemented
         if isinstance(value, Iterable) and not isinstance(value, str):

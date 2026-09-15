@@ -4,10 +4,9 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import TransactionMemo, frozendict
+from odoo.tools import DOMAIN_PREDICATES, TransactionMemo, frozendict
 
 from ..tools import debug_log as dbg
-from odoo.addons.stock.const import PY_OPERATORS
 
 # the fields that decide which orderpoints a move's product and warehouses
 # reach; a write to any of them discards the transaction's memo
@@ -728,7 +727,7 @@ class StockWarehouseOrderpoint(models.Model):
         return Domain("route_id", "in", routes.ids) | Domain("id", "in", matched_ids)
 
     def _search_qty_to_order(self, operator, value):
-        if PY_OPERATORS.get(operator) is None:
+        if DOMAIN_PREDICATES.get(operator) is None:
             return NotImplemented
         return Domain(
             [

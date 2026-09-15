@@ -4,9 +4,9 @@ from collections.abc import Iterable
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import DOMAIN_PREDICATES
 
 from ..tools import debug_log as dbg
-from odoo.addons.stock.const import PY_OPERATORS
 from odoo.addons.stock.tools.quantity import get_domain_quantity_in_python
 
 
@@ -365,7 +365,7 @@ class StockLot(models.Model):
                 )
 
     def _search_product_qty(self, operator, value):
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if not op:
             return get_domain_quantity_in_python(self, "product_qty", operator, value)
         if isinstance(value, Iterable) and not isinstance(value, str):

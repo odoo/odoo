@@ -3,12 +3,12 @@ from datetime import timedelta
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import DOMAIN_PREDICATES
 
 from odoo.addons.stock.const import (
     CONTEXT_BLOCK_COMPLETING,
     CONTEXT_BLOCK_EXCLUDED_TYPES,
     INTERNAL_CONTEXT_FLAG,
-    PY_OPERATORS,
     get_internal_payload,
     is_internal_flag,
     read_internal_payload,
@@ -261,7 +261,9 @@ class TestQuantDormancyBounds(TestStockCommon):
                     )
                     self.assertEqual(
                         matched,
-                        PY_OPERATORS[operator](quant.days_since_last_movement, bound),
+                        DOMAIN_PREDICATES[operator](
+                            quant.days_since_last_movement, bound
+                        ),
                     )
 
     def test_elapsed_days_never_run_backwards(self):

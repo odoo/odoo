@@ -1073,6 +1073,6 @@ class TestTemplateQuantitySearch(TransactionCase):
         self.assertIn(empty.product_tmpl_id, found)
         self.assertNotIn(self.template, found)
 
-    def test_an_operator_outside_PY_OPERATORS_falls_back_to_python(self):
+    def test_a_set_operator_is_answered_in_python(self):
         found = self.env["product.template"].search([("qty_available", "in", [7])])
         self.assertIn(self.template, found)

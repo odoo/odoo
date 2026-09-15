@@ -2091,3 +2091,46 @@ class TestLeaveResourceCalendar(TestHrHolidaysCommon):
             "to hand the leave a schedule that does not begin until two days "
             "after it starts",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestBalanceSearchOperators(TestHrHolidaysCommon):
+    """`_search_balance` answers `not in` itself rather than leaving the ORM to
+    negate its `in` answer.
+
+    The two are not the same when `always_matches` is passed. A type needing no
+    allocation has no balance, so it matches any condition on one -- including a
+    negated condition. Answered through the negated inverse it was excluded from
+    every one of them.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.unlimited = cls.env["hr.leave.type"].create(
+            {"name": "No allocation needed", "requires_allocation": False}
+        )
+        cls.limited = cls.env["hr.leave.type"].create(
+            {"name": "Allocation needed", "requires_allocation": True}
+        )
+        cls.both = cls.unlimited | cls.limited
+
+    def _search(self, operator, value):
+        return self.env["hr.leave.type"].search(
+            [("virtual_remaining_leaves", operator, value), ("id", "in", self.both.ids)]
+        )
+
+    def test_a_type_needing_no_allocation_matches_a_negated_balance_too(self):
+        for operator, value in (("!=", 5.0), ("not in", [5.0])):
+            with self.subTest(operator=operator):
+                self.assertIn(
+                    self.unlimited,
+                    self._search(operator, value),
+                    "a type with no balance to compare matches any condition on "
+                    "one, and negating the positive answer dropped it instead",
+                )
+
+    def test_a_type_needing_no_allocation_still_matches_a_positive_balance(self):
+        for operator, value in (("=", 5.0), ("in", [5.0]), (">", 0.0)):
+            with self.subTest(operator=operator):
+                self.assertIn(self.unlimited, self._search(operator, value))

@@ -1,5 +1,4 @@
 import logging
-import operator as py_operator
 from collections import defaultdict
 from datetime import date, datetime
 
@@ -10,21 +9,11 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
-from odoo.tools import format_date
+from odoo.tools import DOMAIN_PREDICATES, SET_DOMAIN_OPERATORS, format_date
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
-
-PY_OPERATORS = {
-    ">": py_operator.gt,
-    "<": py_operator.lt,
-    ">=": py_operator.ge,
-    "<=": py_operator.le,
-    "=": py_operator.eq,
-    "!=": py_operator.ne,
-    "in": lambda elem, container: elem in container,
-}
 
 
 class HrLeaveType(models.Model):
@@ -452,10 +441,10 @@ class HrLeaveType(models.Model):
         misses every type that has no allocation row at all -- including the
         ones whose balance is legitimately zero.
         """
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if not op:
             return NotImplemented
-        if operator != "in":
+        if operator not in SET_DOMAIN_OPERATORS:
             value = float(value)
         leave_types = self.search([])
         matching = leave_types.filtered(

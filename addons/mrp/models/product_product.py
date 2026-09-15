@@ -4,8 +4,9 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import DOMAIN_PREDICATES
 
-from odoo.addons.stock.const import PY_OPERATORS, QUANTITY_FIELDS
+from odoo.addons.stock.const import QUANTITY_FIELDS
 
 _debug = DebugLog(__name__)
 
@@ -347,7 +348,7 @@ class ProductProduct(models.Model):
         )
 
     def _get_product_ids_from_quants(self, operator, value, filters=None):
-        op = PY_OPERATORS.get(operator)
+        op = DOMAIN_PREDICATES.get(operator)
         if not op:
             return NotImplemented
         product_ids = super()._get_product_ids_from_quants(operator, value, filters)

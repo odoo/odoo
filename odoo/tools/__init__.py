@@ -95,6 +95,7 @@ from .misc import (
     unique,
     resolve_hash_signed,
 )
+from .domain_predicates import DOMAIN_PREDICATES, SET_DOMAIN_OPERATORS
 from .query import Query
 
 from odoo.libs.sql import (

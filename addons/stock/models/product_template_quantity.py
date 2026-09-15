@@ -2,9 +2,10 @@ from collections import defaultdict
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.tools import DOMAIN_PREDICATES
 
 from ..tools import debug_log as dbg
-from odoo.addons.stock.const import PY_OPERATORS, TEMPLATE_QUANTITY_FIELDS
+from odoo.addons.stock.const import TEMPLATE_QUANTITY_FIELDS
 from odoo.addons.stock.tools.quantity import get_domain_quantity_in_python
 
 
@@ -56,7 +57,7 @@ class ProductTemplateQuantity(models.Model):
 
     def _get_domain_variant_quantity(self, field_name, operator, value):
         Product = self.env["product.product"]
-        operation = PY_OPERATORS.get(operator)
+        operation = DOMAIN_PREDICATES.get(operator)
         if operation is None:
             return get_domain_quantity_in_python(self, field_name, operator, value)
 
