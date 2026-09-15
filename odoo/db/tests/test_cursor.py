@@ -602,7 +602,7 @@ class TestConnectionRecord(unittest.TestCase):
         def __init__(self):
             self.borrowed: list = []
 
-        def borrow(self, dsn, key=None):
+        def borrow(self, dsn, key=None, **kw):
             self.borrowed.append((dsn, key))
             raise RuntimeError("stop before a real connection")
 

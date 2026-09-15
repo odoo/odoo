@@ -230,28 +230,34 @@ class ConnectionPool:
         _logger_conn.debug(("%r " + msg), self, *args)
 
     def _get_or_create_pool(
-        self, key: frozenset, connection_info: dict, deadline: float | None = None
+        self,
+        key: frozenset,
+        connection_info: dict,
+        deadline: float | None = None,
+        *,
+        fail_fast: bool = False,
     ) -> _PsycopgPool:
         pool = self._pools.get(key)
         if pool is not None and not pool.closed:
+            if fail_fast and self._is_pool_unproven_and_empty(key, pool):
+                # A surviving pool with nothing idle and its proof revoked is
+                # psycopg_pool still counting the connections it cannot open:
+                # getconn would wait the deadline out. Ask the probe first.
+                conninfo, kwargs, _idle_session_ms = self._prepare_connect_args(
+                    key, connection_info
+                )
+                self._check_connectable_or_fail_fast(
+                    key, conninfo, kwargs, deadline, fail_fast=True
+                )
             mark_active(pool)
             return pool
 
-        kwargs = dict(connection_info)
-        conninfo = kwargs.pop("dsn", "")
-        kwargs["autocommit"] = False
-
-        idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
-        dbname = _get_key_dbname(key)
-        kwargs["options"] = _prepare_connection_options(
-            conninfo,
-            kwargs,
-            idle_session_ms,
-            session_gucs=self._settings.session_gucs,
-            forced_gucs=_get_forced_gucs(dbname, self._settings),
+        conninfo, kwargs, idle_session_ms = self._prepare_connect_args(
+            key, connection_info
         )
-
-        self._probe.check_connectable(key, conninfo, kwargs, deadline)
+        self._check_connectable_or_fail_fast(
+            key, conninfo, kwargs, deadline, fail_fast=fail_fast
+        )
 
         with self._lock:
             pool = self._pools.get(key)
@@ -332,6 +338,46 @@ class ConnectionPool:
             )
         return pool
 
+    def _prepare_connect_args(
+        self, key: frozenset, connection_info: dict
+    ) -> tuple[str, dict, int]:
+        kwargs = dict(connection_info)
+        conninfo = kwargs.pop("dsn", "")
+        kwargs["autocommit"] = False
+        idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
+        kwargs["options"] = _prepare_connection_options(
+            conninfo,
+            kwargs,
+            idle_session_ms,
+            session_gucs=self._settings.session_gucs,
+            forced_gucs=_get_forced_gucs(_get_key_dbname(key), self._settings),
+        )
+        return conninfo, kwargs, idle_session_ms
+
+    def _check_connectable_or_fail_fast(
+        self,
+        key: frozenset,
+        conninfo: str,
+        kwargs: dict,
+        deadline: float | None,
+        *,
+        fail_fast: bool,
+    ) -> None:
+        if self._probe.check_connectable(key, conninfo, kwargs, deadline):
+            return
+        if fail_fast:
+            dbname = _get_key_dbname(key)
+            _debug.logic("pool.borrow_refused", db=dbname, reason="fail_fast")
+            raise PoolError(
+                f"Could not connect to {dbname!r} and the caller asked not to "
+                f"wait for it (fail_fast)"
+            )
+
+    def _is_pool_unproven_and_empty(self, key: frozenset, pool: _PsycopgPool) -> bool:
+        if self._probe.is_proven(key):
+            return False
+        return pool.get_stats().get("pool_available", 0) == 0
+
     def _reap_idle_pools_if_due(self) -> None:
         if not self._reaper.is_probably_due():
             return
@@ -367,10 +413,15 @@ class ConnectionPool:
         )
 
     def borrow(
-        self, connection_info: dict, key: frozenset | None = None
+        self,
+        connection_info: dict,
+        key: frozenset | None = None,
+        *,
+        timeout: float | None = None,
+        fail_fast: bool = False,
     ) -> psycopg.Connection:
         started = monotonic()
-        deadline = started + self._borrow_timeout
+        deadline = started + (self._borrow_timeout if timeout is None else timeout)
         if key is None:
             key = _get_dsn_key(connection_info)
         dbname = _get_key_dbname(key)
@@ -378,7 +429,9 @@ class ConnectionPool:
             _debug.logic("pool.borrow_routed", db=dbname, route="direct")
             return self._borrow_directly(connection_info, deadline)
         try:
-            pool = self._get_or_create_pool(key, connection_info, deadline)
+            pool = self._get_or_create_pool(
+                key, connection_info, deadline, fail_fast=fail_fast
+            )
         except BaseException as exc:
             self.stats.record_borrow_failed()
             _debug.logic(

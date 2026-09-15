@@ -296,6 +296,9 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         dbname: str,
         dsn: dict,
         key: frozenset | None = None,
+        *,
+        borrow_timeout: float | None = None,
+        fail_fast: bool = False,
     ):
         super().__init__()
         self._init_metrics_state()
@@ -319,7 +322,9 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
         self._thread = threading.current_thread()
 
-        self._cnx: psycopg.Connection = pool.borrow(dsn, key=key)
+        self._cnx: psycopg.Connection = pool.borrow(
+            dsn, key=key, timeout=borrow_timeout, fail_fast=fail_fast
+        )
         try:
             self._obj: psycopg.Cursor = self._cnx.cursor()
             if _logger.isEnabledFor(logging.DEBUG):
@@ -1161,7 +1166,9 @@ class Connection:
     def dbname(self) -> str:
         return self.__dbname
 
-    def cursor(self) -> Cursor:
+    def cursor(
+        self, *, borrow_timeout: float | None = None, fail_fast: bool = False
+    ) -> Cursor:
         if _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("create cursor to %r", self.dsn)
         _debug.pipeline(
@@ -1169,8 +1176,17 @@ class Connection:
             db=self.__dbname,
             readonly=self.__pool.readonly,
             thread=threading.current_thread().name,
+            borrow_timeout=borrow_timeout,
+            fail_fast=fail_fast,
         )
-        return Cursor(self.__pool, self.__dbname, self.__dsn, key=self.__key)
+        return Cursor(
+            self.__pool,
+            self.__dbname,
+            self.__dsn,
+            key=self.__key,
+            borrow_timeout=borrow_timeout,
+            fail_fast=fail_fast,
+        )
 
 
 if TYPE_CHECKING:

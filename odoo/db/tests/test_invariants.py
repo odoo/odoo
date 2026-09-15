@@ -533,7 +533,7 @@ class TestOneConnectionOptionsAssembler(unittest.TestCase):
             )
 
     def test_both_borrow_paths_use_it(self):
-        for path in ("_get_or_create_pool", "_borrow_directly"):
+        for path in ("_prepare_connect_args", "_borrow_directly"):
             with self.subTest(path=path):
                 self.assertIn(
                     "_prepare_connection_options",
@@ -542,6 +542,11 @@ class TestOneConnectionOptionsAssembler(unittest.TestCase):
                     "one assembler, or the exemption goes back to being an "
                     "accident nobody can see.",
                 )
+        self.assertIn(
+            "_prepare_connect_args",
+            _callees(pool.ConnectionPool._get_or_create_pool),
+            "the pooled path reaches the assembler through its connect-args helper",
+        )
 
 
 class TestAListValuedGucIsOneEntry(unittest.TestCase):
@@ -709,7 +714,7 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
             self.conn = conn
             self.given_back = []
 
-        def borrow(self, dsn, key=None):
+        def borrow(self, dsn, key=None, **kw):
             return self.conn
 
         def give_back(self, conn, keep_in_pool=True):

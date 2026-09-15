@@ -32,11 +32,12 @@ def get_libpq_connect_timeout(deadline: float | None, cap: int) -> int:
 
 
 class _InFlightProbe:
-    __slots__ = ("done", "exc")
+    __slots__ = ("connected", "done", "exc")
 
     def __init__(self) -> None:
         self.done = threading.Event()
         self.exc: BaseException | None = None
+        self.connected = True
 
 
 class ReachabilityProbe:
@@ -95,7 +96,7 @@ class ReachabilityProbe:
         conninfo: str,
         kwargs: dict,
         deadline: float | None = None,
-    ) -> None:
+    ) -> bool:
         with self._lock:
             if key in self._proven:
                 proven = True
@@ -110,7 +111,7 @@ class ReachabilityProbe:
         if proven:
             self._stats.record_probe_outcome("skipped_proven")
             _debug.logic("pool.probe.skipped_proven", db=_get_key_dbname(key))
-            return
+            return True
         assert probe is not None
         _debug.logic(
             "pool.probe",
@@ -118,8 +119,13 @@ class ReachabilityProbe:
             leader=leader,
             deadline_s=None if deadline is None else max(0.0, deadline - monotonic()),
         )
-        self._probe_or_await_leader(key, probe, leader, conninfo, kwargs, deadline)
+        return self._probe_or_await_leader(
+            key, probe, leader, conninfo, kwargs, deadline
+        )
 
+    # True unless a connect was attempted and failed transiently; a permanent
+    # failure raises. A follower that gave up waiting answers True: it knows
+    # nothing, and the borrow's own deadline decides.
     def _probe_or_await_leader(
         self,
         key: frozenset,
@@ -128,10 +134,12 @@ class ReachabilityProbe:
         conninfo: str,
         kwargs: dict,
         deadline: float | None = None,
-    ) -> None:
+    ) -> bool:
         if leader:
             try:
-                self.probe_connectable(conninfo, kwargs, deadline)
+                probe.connected = (
+                    self.probe_connectable(conninfo, kwargs, deadline) is not False
+                )
             except BaseException as e:
                 probe.exc = e
                 raise
@@ -143,7 +151,9 @@ class ReachabilityProbe:
                     "pool.probe.leader_done",
                     db=_get_key_dbname(key),
                     failed=probe.exc is not None,
+                    connected=probe.connected,
                 )
+            return probe.connected
         else:
             wait_timeout = (
                 None if deadline is None else max(0.0, deadline - monotonic())
@@ -157,14 +167,15 @@ class ReachabilityProbe:
             )
             if done and probe.exc is not None:
                 raise probe.exc.with_traceback(None)
+            return probe.connected if done else True
 
     def probe_connectable(
         self, conninfo: str, kwargs: dict, deadline: float | None = None
-    ) -> None:
+    ) -> bool:
         probe_timeout = get_libpq_connect_timeout(deadline, PROBE_CONNECT_TIMEOUT)
         if not probe_timeout:
             _debug.logic("pool.probe.skipped_deadline", db=kwargs.get("dbname"))
-            return
+            return True
         self._stats.record_probe_started()
         probe_kwargs = {**kwargs, "autocommit": True}
         probe_kwargs["connect_timeout"] = probe_timeout
@@ -197,6 +208,7 @@ class ReachabilityProbe:
                 "Pool pre-flight probe failed (treating as transient)",
                 exc_info=True,
             )
+            return False
         except Exception as e:
             self._stats.record_probe_outcome("transient")
             _debug.logic("pool.probe.transient", error=type(e).__name__)
@@ -204,14 +216,15 @@ class ReachabilityProbe:
                 "Pool pre-flight probe failed (treating as transient)",
                 exc_info=True,
             )
-        else:
-            _debug.lifecycle(
-                "pool.probe.ok",
-                db=kwargs.get("dbname"),
-                backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
-            )
-            with contextlib.suppress(Exception):
-                conn.close()
+            return False
+        _debug.lifecycle(
+            "pool.probe.ok",
+            db=kwargs.get("dbname"),
+            backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+        )
+        with contextlib.suppress(Exception):
+            conn.close()
+        return True
 
     def is_database_absent(
         self, conninfo: str, kwargs: dict, deadline: float | None = None

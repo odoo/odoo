@@ -334,7 +334,7 @@ class TestPoolErrorIsRaisedForCapacity(unittest.TestCase):
         pool._budget.acquire(1.0)
         seen = {}
 
-        def fake_get_or_create(key, connection_info, deadline=None):
+        def fake_get_or_create(key, connection_info, deadline=None, **kw):
             seen["deadline"] = deadline
             return _FakePool()
 

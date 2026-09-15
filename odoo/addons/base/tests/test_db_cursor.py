@@ -3576,6 +3576,8 @@ class TestPoolFailsFastOnMissingDatabase(BaseCase):
 
     def test_probe_is_wired_into_pool_creation(self):
         src = inspect.getsource(ConnectionPool._get_or_create_pool)
+        self.assertIn("_check_connectable_or_fail_fast", src)
+        src = inspect.getsource(ConnectionPool._check_connectable_or_fail_fast)
         self.assertIn(
             "self._probe.check_connectable",
             src,
@@ -5716,7 +5718,11 @@ class TestDdlDrainsSiblingConnections(BaseCase):
 
 class TestMaintenanceConnectionOptions(BaseCase):
     def test_both_borrow_paths_share_one_options_assembler(self):
-        for path in ("_get_or_create_pool", "_borrow_directly"):
+        self.assertIn(
+            "_prepare_connect_args",
+            inspect.getsource(ConnectionPool._get_or_create_pool),
+        )
+        for path in ("_prepare_connect_args", "_borrow_directly"):
             src = inspect.getsource(getattr(ConnectionPool, path))
             self.assertIn(
                 "_prepare_connection_options",
@@ -5733,7 +5739,7 @@ class TestMaintenanceConnectionOptions(BaseCase):
         )
         self.assertIn(
             "session_gucs=self._settings.session_gucs",
-            inspect.getsource(ConnectionPool._get_or_create_pool),
+            inspect.getsource(ConnectionPool._prepare_connect_args),
             "the pooled path applies the pool's configured session policy",
         )
 

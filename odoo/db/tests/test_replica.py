@@ -7,7 +7,7 @@ from odoo.db import replica as replica_module
 from odoo.db import settings as pool_settings
 from odoo.db.lag import ReplicaLagGate
 from odoo.db.pool import PoolError
-from odoo.db.replica import REPLICA_RETRY_TIME, ReplicaRouter
+from odoo.db.replica import REPLICA_BORROW_TIMEOUT, REPLICA_RETRY_TIME, ReplicaRouter
 from odoo.db.settings import PoolSettings
 from odoo.libs.breaker import CircuitBreaker
 from odoo.tools.config import configmanager
@@ -22,8 +22,9 @@ class _Conn:
         self.queries = 0
         self.opened = []
 
-    def cursor(self):
+    def cursor(self, **borrow):
         self.attempts += 1
+        self.borrow_options = borrow
         if self.fails:
             raise psycopg.OperationalError(f"{self.label} is down")
         cr = _Cursor(self)
@@ -54,6 +55,29 @@ def _router(*, replica_fails=False, with_replica=True, lag=0.0, max_lag=0.0):
         typing.cast("typing.Any", readonly),
         max_lag=max_lag,
     )
+
+
+class TestTheReplicaBorrowNeverWaitsOutTheBudget(unittest.TestCase):
+    def test_the_replica_is_asked_with_a_short_deadline_and_fail_fast(self):
+        primary, replica = _Conn("primary"), _Conn("replica")
+        router = ReplicaRouter(primary, replica)
+        _cr, mode = router.cursor(readonly=True)
+        self.assertEqual(mode, "ro")
+        self.assertEqual(
+            replica.borrow_options,
+            {"borrow_timeout": REPLICA_BORROW_TIMEOUT, "fail_fast": True},
+            "a dead replica cost the first read-only request the whole "
+            "db_borrow_timeout (30 s measured against a refused port), once "
+            "per breaker half-open attempt; the primary is the fallback, so "
+            "the replica borrow probes and gives up",
+        )
+        self.assertLess(REPLICA_BORROW_TIMEOUT, 30.0)
+
+    def test_the_primary_keeps_the_full_budget(self):
+        primary, replica = _Conn("primary"), _Conn("replica")
+        router = ReplicaRouter(primary, replica)
+        router.cursor(readonly=False)
+        self.assertEqual(primary.borrow_options, {})
 
 
 class TestRouting(unittest.TestCase):
@@ -95,7 +119,7 @@ class TestRouting(unittest.TestCase):
     def test_a_pool_error_counts_as_a_replica_failure(self):
         router = _router()
 
-        def no_connection():
+        def no_connection(**borrow):
             raise PoolError("no connection")
 
         router.readonly.cursor = no_connection
@@ -199,8 +223,8 @@ class TestLagGating(unittest.TestCase):
 
         original = router.readonly.cursor
 
-        def cursor_with_broken_execute():
-            cr = original()
+        def cursor_with_broken_execute(**borrow):
+            cr = original(**borrow)
             cr.execute = boom
             return cr
 

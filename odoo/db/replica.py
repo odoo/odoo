@@ -20,6 +20,12 @@ _debug = DebugLog(__name__)
 
 REPLICA_RETRY_TIME = 20 * 60
 
+# A replica borrow has a fallback, so it never waits out db_borrow_timeout:
+# a dead replica cost the first read-only request the full 30 s, once per
+# breaker half-open attempt (measured against a refused port). The probe's
+# own connect timeout bounds the reachable-but-slow case.
+REPLICA_BORROW_TIMEOUT = 5.0
+
 CursorMode = typing.Literal["ro", "ro->rw", "rw"]
 
 
@@ -93,7 +99,7 @@ class ReplicaRouter:
             )
             return None
         try:
-            cr = replica.cursor()
+            cr = replica.cursor(borrow_timeout=REPLICA_BORROW_TIMEOUT, fail_fast=True)
         except (psycopg.OperationalError, PoolError) as e:
             self.breaker.record_failure()
             _debug.lifecycle(
