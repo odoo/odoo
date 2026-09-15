@@ -10,11 +10,13 @@
     ],
     'data': [
         'data/hr_work_entry_type_data.xml',
+        'data/hr_time_rule_data.xml',
         'wizard/hr_work_entry_export_views.xml',
         'views/hr_work_entry_type_views.xml',
         'views/hr_employee_views.xml',
         'views/res_company_views.xml',
         'views/resource_calendar_views.xml',
+        'views/hr_time_rule_views.xml',
         'views/menuitems.xml',
         'security/ir.access.csv',
     ],

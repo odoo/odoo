@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" ?>
 <templates xml:space="preserve">
     <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard mb-2 px-3">
         <div class="d-flex flex-row p-0 pb-2 gap-3 overflow-x-auto">
@@ -14,9 +14,11 @@
             </t>
             <div t-if="this.state.allocationsNumber"
                  class="o_timeoff_card d-flex justify-content-center gap-3"
-                 role="button"
             >
-                <div class="d-inline-flex flex-row align-items-center justify-content-center bg-warning-subtle bg-gradient rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner">
+                <div class="d-inline-flex flex-row align-items-center justify-content-center bg-warning-subtle bg-gradient rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner"
+                     role="button"
+                     t-on-click="this.openPendingAllocations"
+                >
                     <span class="o_timeoff_duration font-monospace">
                         <t t-out="this.state.allocationsNumber"/>
                     </span>
@@ -24,19 +26,19 @@
                         <span class="o_timeoff_name m-0 fw-semibold">Pending<br/>Allocations</span>
                     </div>
                 </div>
-                <a
-                    class="btn btn-secondary d-inline-flex flex-column gap-2 align-items-center justify-content-center bg-gradient shadow-sm rounded p-3 gap-2 cursor-pointer o_timeoff_card_inner"
-                    role="button"
-                    t-on-click.prevent="this.openNewAllocation"
-                >
-                    <i class="oi fs-3" data-icon="handshake" aria-hidden="true"/>
-                    New Request
-                </a>
             </div>
+            <a
+                class="btn btn-secondary d-inline-flex flex-column gap-2 align-items-center justify-content-center bg-gradient shadow-sm rounded p-3 gap-2 cursor-pointer o_timeoff_card_inner"
+                role="button"
+                t-on-click.prevent="this.openNewAllocation"
+            >
+                <i class="oi fs-3" data-icon="calendar_add_on" aria-hidden="true"/>
+                New Request
+            </a>
             <div t-if="this.hasAccrualAllocation or this.hasFutureAllocation"
                  class="o_timeoff_card d-flex justify-content-center"
             >
-                <span class="text-danger o_timeoff_name">Balance at the</span>                
+                <span class="text-danger o_timeoff_name">Balance at the</span>
                 <div class="d-flex flex-column align-items-start justify-content-center o_timeoff_validity">
                     <DateTimeInput
                             type="'date'"

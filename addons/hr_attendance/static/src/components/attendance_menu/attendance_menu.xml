@@ -69,6 +69,10 @@
                                                     t-out="this._formatAttendanceTime(session.checkOut)"/>
                                                 <t t-else="">Now</t>
                                             </span>
+                                            <span t-if="session.timeTypeAbbr"
+                                                  class="o_tag badge rounded-pill flex-shrink-0"
+                                                  t-attf-class="o_tag_color_{{ session.timeTypeColor }}"
+                                                  t-out="session.timeTypeAbbr"/>
                                         </div>
                                         <strong class="text-nowrap">
                                             <t t-out="session.durationLabel"/>
