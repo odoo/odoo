@@ -2646,3 +2646,43 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 3, "The new recurrence must have three events.")
         check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_prevent_creating_contact_for_meeting_rooms(self):
+        initial_partner_number = len(self.env["res.partner"].search([]))
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': self.public_partner.email,
+                'responseStatus': 'needsAction',
+            }, {
+                'displayName': 'Meeting Room',
+                'email': 'meetingroom@resource.calendar.google.com',
+                'resource': True,
+            }, {
+                'displayName': self.private_partner.name,
+                'email': self.private_partner.email,
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels',
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels',
+            },
+        }
+        self.env["calendar.event"]._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        #  Check that the meeting room has been ignored
+        self.assertTrue(event, "An event should have been created")
+        self.assertEqual(initial_partner_number, len(self.env["res.partner"].search([])), "No new partner should have been created")
+        self.assertEqual(len(event.partner_ids), 2, "Only humans should attend the event")
+        self.assertTrue(self.public_partner in event.partner_ids)
+        self.assertTrue(self.private_partner in event.partner_ids)
+        self.assertGoogleAPINotCalled()
