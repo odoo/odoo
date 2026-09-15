@@ -2370,6 +2370,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }
         )
         allocation.action_approve()
+        # responsible_ids' own domain admits only Time Off Officers, and
+        # Many2many.read applies it: a user without the group is stored and then
+        # dropped from every read of the field.
+        self.user_employee.group_ids += self.env.ref(
+            "hr_holidays.group_hr_holidays_user"
+        )
         self.holidays_type_2.responsible_ids = [Command.link(self.user_employee.id)]
         test_holiday_2 = self.env["hr.leave"].create(
             {
