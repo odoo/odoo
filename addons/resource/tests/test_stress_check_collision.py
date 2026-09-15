@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class TestCheckCollisionStress(TransactionCase):
     """
-    Stress tests for _check_collision / _check_attendances_variable.
+    Stress tests for _check_collision / _check_attendances_flexible.
 
     The collision tree grows exponentially when recurrences share common dates:
     with N mutually-colliding recurrent attendances, level k of the tree contains
@@ -25,7 +25,7 @@ class TestCheckCollisionStress(TransactionCase):
         super().setUpClass()
         cls.calendar = cls.env['resource.calendar'].create({
             'name': 'Stress Test Calendar',
-            'calendar_type': 'variable',
+            'calendar_type': 'flexible',
         })
 
     def setUp(self):
@@ -234,7 +234,7 @@ class TestCheckCollisionStress(TransactionCase):
 
     @warmup
     def test_stress_realistic_complex_calendar(self):
-        """Realistic variable calendar for an employee with alternating 2-week schedule.
+        """Realistic flexible calendar for an employee with alternating 2-week schedule.
 
         Week A (bi-weekly from Mon Jan 6 2025) — full time:
           Mon-Fri  8h-12h  morning   (5 recurrences, every 2 weeks)
