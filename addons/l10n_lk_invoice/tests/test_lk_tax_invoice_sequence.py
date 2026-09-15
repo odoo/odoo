@@ -2,6 +2,7 @@
 
 import json
 import re
+from xml.etree import ElementTree as ET
 
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
@@ -449,6 +450,12 @@ class TestLkTaxInvoiceSequence(AccountTestInvoicingCommon):
 
         company_partner.vat = "123456789"
         self.assertFalse(self.env.company.l10n_lk_vat_registered)
+
+    def test_l10n_lk_vat_registered_partner_form_layout(self):
+        """VAT Registered must not be inside #vat_div."""
+        arch = self.env["res.partner"].get_view(view_type="form")["arch"]
+        tree = ET.fromstring(arch)
+        self.assertFalse(tree.findall(".//div[@id='vat_div']//field[@name='l10n_lk_vat_registered']"))
 
     # ----------------------------------------
     # Tax Invoice Qualification (_l10n_lk_is_tax_invoice_company)
