@@ -98,8 +98,9 @@ class MixinApprovalLifecycle(models.AbstractModel):
             self.sudo().action_confirm()
 
     def action_cancel(self):
+        result = super().action_cancel()
         self._refuse_pending_approval()
-        return super().action_cancel()
+        return result
 
     def _refuse_pending_approval(self):
         for record in self.filtered(
