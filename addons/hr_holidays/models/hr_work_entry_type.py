@@ -16,6 +16,13 @@ from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
+REQUEST_DURATIONS = [
+    ("full", "Full Day"),
+    ("am", "Morning"),
+    ("pm", "Afternoon"),
+    ("specific", "Specific"),
+]
+
 PY_OPERATORS = {
     '>': py_operator.gt,
     '<': py_operator.lt,
@@ -211,6 +218,22 @@ time type are overlapping with public holidays, meaning that the balance of thos
         if leave_count:
             raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
 been taken for this time off type. Changing it now would affect existing employee balances."))
+
+    @api.model
+    def _get_types_by_country(self, countries):
+        """Map any country to its types, or to the country-less ones when it ships none."""
+        types_by_country = self.search(
+            [('country_id', 'in', countries.ids + [False])]).grouped('country_id')
+        return defaultdict(
+            lambda: types_by_country.get(self.env['res.country'], self.browse()),
+            types_by_country)
+
+    def _get_allowed_request_durations(self):
+        if self.request_unit == 'half_day':
+            return ['full', 'am', 'pm']
+        if self.request_unit == 'hour':
+            return [key for key, _label in REQUEST_DURATIONS]
+        return ['full']
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
