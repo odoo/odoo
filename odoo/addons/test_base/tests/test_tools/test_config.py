@@ -503,7 +503,7 @@ class TestConfigManager(TransactionCase):
             'update': {'account': True, 'website': True},
             'reinit': ['account'],
             'with_demo': True,
-            'with_test_data': False,
+            'with_test_data': True,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
             'import_partial': '/tmp/import-partial',
