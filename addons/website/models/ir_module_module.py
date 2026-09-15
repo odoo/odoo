@@ -404,6 +404,7 @@ class IrModuleModule(models.Model):
             theme._theme_unload(website)
         website.theme_id = False
 
+    @_debug.perf.timed
     def button_choose_theme(self):
         self.check_singleton()
         website = self.env["website"].get_current_website()

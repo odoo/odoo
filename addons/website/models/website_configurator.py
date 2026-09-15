@@ -546,6 +546,13 @@ class Website(models.Model):
             )
         elif not company.uses_default_logo:
             website.logo = company.logo.decode("utf-8")
+        _debug.lifecycle(
+            "configurator_logo",
+            website=website.id,
+            by="upload"
+            if logo_attachment_id
+            else ("company" if not company.uses_default_logo else "default"),
+        )
 
     def _configurator_apply_features(self, website, features, menu_company):
         pages_views = {}
@@ -581,9 +588,17 @@ class Website(models.Model):
                     template=feature.page_view_id.key,
                 )
                 pages_views[feature.iap_page_code] = result["view_id"]
+        _debug.pipeline(
+            "configurator_features",
+            website=website.id,
+            features=features,
+            to_install=modules,
+            pages=len(pages_views),
+        )
         return pages_views, modules, module_data
 
     @api.model
+    @_debug.perf.timed
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
         theme_name = kwargs["theme_name"]
@@ -642,8 +657,8 @@ class Website(models.Model):
         )
 
         if modules:
-            _debug.lifecycle("configurator_modules_installed", modules=modules)
-            modules.button_immediate_install()
+            with _debug.perf("modules_install", cr=self.env.cr, modules=modules):
+                modules.button_immediate_install()
 
         self.env["website"].browse(website.id).configurator_set_menu_links(
             menu_company, module_data
