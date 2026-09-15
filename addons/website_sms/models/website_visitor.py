@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteVisitor(models.Model):
@@ -18,6 +21,12 @@ class WebsiteVisitor(models.Model):
 
     def action_send_sms(self):
         self.check_singleton()
+        _debug.logic(
+            "visitor_sms_composer",
+            visitor=self,
+            partner=self.partner_id,
+            reachable=self._check_for_sms_composer(),
+        )
         if not self._check_for_sms_composer():
             raise UserError(
                 _(

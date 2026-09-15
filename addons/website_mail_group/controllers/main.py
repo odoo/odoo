@@ -1,5 +1,8 @@
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteMailGroup(http.Controller):
@@ -12,12 +15,16 @@ class WebsiteMailGroup(http.Controller):
         token = kw.get("token")
 
         if token and token != group._generate_group_access_token():
+            _debug.logic("group_membership_bad_token", group=group)
             return None
 
         if token:
             group = group.sudo()
 
         if not group.has_access("read"):
+            _debug.logic(
+                "group_membership_no_read_access", group=group, tokened=bool(token)
+            )
             return None
 
         if not request.env.user._is_public():
@@ -27,6 +34,12 @@ class WebsiteMailGroup(http.Controller):
             partner_id = None
 
         member = group.sudo()._find_member(email, partner_id)
+        _debug.logic(
+            "group_membership_resolved",
+            group=group,
+            member=member,
+            by_partner=bool(partner_id),
+        )
 
         return {
             "is_member": bool(member),

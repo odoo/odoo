@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ForumForum(models.Model):
@@ -31,6 +34,12 @@ class ForumForum(models.Model):
     def _compute_slide_channel_id(self):
         for forum in self:
             if forum.slide_channel_ids:
+                _debug.logic(
+                    "forum_course_resolved",
+                    forum=forum,
+                    chosen=forum.slide_channel_ids[:1],
+                    candidates=forum.slide_channel_ids,
+                )
                 forum.slide_channel_id = forum.slide_channel_ids[0]
             else:
                 forum.slide_channel_id = None

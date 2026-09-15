@@ -1,4 +1,7 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ChatbotScriptStep(models.Model):
@@ -11,4 +14,9 @@ class ChatbotScriptStep(models.Model):
                 "%s's New Lead", discuss_channel.livechat_visitor_id.display_name
             )
             values["visitor_ids"] = [(4, discuss_channel.livechat_visitor_id.id)]
+            _debug.logic(
+                "chatbot_lead_named_after_visitor",
+                channel=discuss_channel,
+                visitor=discuss_channel.livechat_visitor_id,
+            )
         return values
