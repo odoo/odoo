@@ -7,6 +7,8 @@ import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
+/** @typedef {import("@web/core/emoji_picker/emoji_picker").EmojiPicker} EmojiPicker */
+
 export class QuickReactionMenu extends Component {
     static template = "mail.QuickReactionMenu";
     static components = { Dropdown };
@@ -86,7 +88,11 @@ export class QuickReactionMenu extends Component {
         }
     }
 
-    toggleReaction(emoji) {
+    /**
+     * @param {string} emoji
+     * @param {boolean} [resetOnSelect=true] {@link EmojiPicker.selectEmoji}
+     */
+    toggleReaction(emoji, resetOnSelect = true) {
         const reaction = this.props.message.reactions.find(
             (r) => r.content === emoji && this.props.message.effectiveSelf.in(r.personas)
         );
@@ -96,8 +102,10 @@ export class QuickReactionMenu extends Component {
             this.props.message.react(emoji);
             this.frequentEmojiService.incrementEmojiUsage(emoji);
         }
-        this.dropdown.close();
-        this.picker.close();
+        if (resetOnSelect) {
+            this.dropdown.close();
+            this.picker.close();
+        }
     }
 
     get attClass() {
