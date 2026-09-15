@@ -1,7 +1,16 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { makeMockServer, mountView } from "@web/../tests/web_test_helpers";
+import {
+    defineActions,
+    getService,
+    makeMockServer,
+    mountView,
+    mountWithCleanup,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { defineHrModels } from "@hr/../tests/hr_test_helpers";
+import { HrEmployee } from "@hr/../tests/mock_server/mock_models/hr_employee";
+import { WebClient } from "@web/webclient/webclient";
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 
@@ -97,4 +106,50 @@ test("Loading a new older version sorts it correctly", async () => {
         ["May 01, 2024", "Mar 01, 2024", "Jan 01, 2024", "Dec 01, 2023"],
         "new older version should appear last in the descending DOM order"
     );
+});
+
+async function openEmployeeFormAction(action) {
+    const { env } = await makeMockServer();
+    const employeeId = env["hr.employee"].create({ name: "Employee" });
+    const versionIds = ["Jan 01, 2024", "Jan 01, 2025"].map((display_name) =>
+        env["hr.version"].create({ display_name, employee_id: employeeId })
+    );
+    env["hr.employee"].write([employeeId], { version_id: versionIds[1] });
+
+    HrEmployee._views.form = /* xml */ `
+        <form>
+            <header>
+                <field name="version_id" widget="versions_timeline"/>
+            </header>
+        </form>
+    `;
+    onRpc("hr.version", "search_read", ({ kwargs }) => expect.step(kwargs.fields.toString()));
+    defineActions([
+        {
+            id: 1,
+            name: "Employee",
+            res_model: "hr.employee",
+            res_id: employeeId,
+            views: [[false, "form"]],
+            ...action,
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+}
+
+test("versions_timeline widget fetches display_name on a full-page form", async () => {
+    await openEmployeeFormAction({});
+
+    expect.verifySteps(["display_name"]);
+    expect(".o_arrow_button_current").toHaveText("Jan 01, 2025");
+});
+
+test("versions_timeline widget still fetches display_name when the form is opened in a dialog", async () => {
+    await openEmployeeFormAction({ target: "new" });
+
+    expect(".o_dialog .o_form_view .o_control_panel").toHaveCount(0);
+    expect.verifySteps(["display_name"]);
+    expect(".o_dialog .o_arrow_button_current").toHaveText("Jan 01, 2025");
 });
