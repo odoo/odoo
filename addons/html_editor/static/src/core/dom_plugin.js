@@ -21,7 +21,6 @@ import {
     isContentEditable,
     isEmpty,
     getDeepestEditablePosition,
-    isInPre,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -110,6 +109,7 @@ const makeSpacesVisible = (text) =>
  * @typedef {((fragment: DocumentFragment) => void)[]} text_to_insert_processors
  * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
  *
+ * @typedef {((position: [node: Node, offset: number]) => boolean | void)[]} should_process_text_for_insertion_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  *
@@ -349,10 +349,13 @@ export class DomPlugin extends Plugin {
      * @returns {DocumentFragment}
      */
     processTextForInsertion(text) {
-        const { focusNode } = this.dependencies.selection.getEditableSelection();
         const doc = this.document;
         const fragment = doc.createDocumentFragment();
-        if (isInPre(focusNode)) {
+        const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
+        const position = [focusNode, focusOffset];
+        if (
+            this.checkPredicates("should_process_text_for_insertion_predicates", position) === false
+        ) {
             fragment.textContent = text;
             return fragment;
         }

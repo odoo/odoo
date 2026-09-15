@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { isEmptyBlock, isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isInPre, isZWS } from "@html_editor/utils/dom_info";
 import {
     childNodes,
     closestElement,
@@ -53,6 +53,11 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+        should_process_text_for_insertion_predicates: ([focusNode]) => {
+            if (isInPre(focusNode)) {
+                return false;
+            }
+        },
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
     };
 
