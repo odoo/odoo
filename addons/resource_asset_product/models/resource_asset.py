@@ -15,6 +15,10 @@ class ResourceAsset(models.Model):
         related="product_id.product_tmpl_id",
         store=True,
     )
+    log_ids = fields.One2many(
+        comodel_name="resource.asset.log",
+        inverse_name="asset_id",
+    )
     kind_id = fields.Many2one(
         compute="_compute_kind_id",
         precompute=True,

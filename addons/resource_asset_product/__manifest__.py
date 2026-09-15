@@ -1,6 +1,6 @@
 {
     "name": "Assets - Product",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "summary": "A product whose units are assets: the kind on the template, the asset on the unit",
     "author": "AgroMarin",
@@ -10,6 +10,8 @@
         "product",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/resource_asset_product_security.xml",
         "views/product_template_views.xml",
         "views/resource_asset_views.xml",
     ],
