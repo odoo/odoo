@@ -23,7 +23,7 @@ class MailMessage(models.Model):
             if not chatbot_message.script_step_id:
                 return False
             answer = chatbot_message.user_script_answer_id
-            data = {
+            return {
                 "scriptStep": chatbot_message.script_step_id.id,
                 "message": message.id,
                 "operatorFound":
@@ -31,24 +31,8 @@ class MailMessage(models.Model):
                     # sudo: discuss.channel - visitors/guests can check if an operator exists
                     bool(message.channel_id.sudo().livechat_agent_partner_ids),
                 "selectedAnswer": answer.id if answer else False,
+                "user_answer_chatbot_message_ids": chatbot_message.user_answer_chatbot_message_ids.ids,
             }
-            if chatbot_message.script_step_id.step_type in [
-                "free_input_multi",
-                "free_input_single",
-                "question_email",
-                "question_phone",
-            ]:
-                domain = [
-                    ("script_step_id", "=", chatbot_message.script_step_id.id),
-                    ("id", "!=", chatbot_message.id),
-                    ("discuss_channel_id", "=", message.channel_id.id),
-                ]
-                # sudo: chatbot.message - checking the user answer to the step is allowed
-                user_answer_message = (
-                    self.env["chatbot.message"].sudo().search_fetch(domain, limit=1)
-                )
-                data["rawAnswer"] = user_answer_message.user_raw_answer
-            return data
 
         res.attr("chatbotStep", value=chatbot_step_data, predicate=is_chatbot_authored)
         res.many(
@@ -56,6 +40,9 @@ class MailMessage(models.Model):
             lambda res: (
                 res.one("script_step_id", ["message", "step_type"]),
                 res.one("user_script_answer_id", ["name"]),
+                res.many("user_answer_chatbot_message_ids",
+                    lambda res: res.one("mail_message_id", ["body"]),
+                ),
             ),
             only_data=True,
             predicate=is_chatbot_authored,
