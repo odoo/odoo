@@ -1,0 +1,369 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+<record id="paperformat_invoice_no_top_margin" model="report.paperformat">
+  <field name="name">Invoice - No Top Margin</field>
+  <field name="default" eval="False"/>
+  <field name="format">A4</field>
+  <field name="orientation">Portrait</field>
+
+  <field name="margin_top" eval="0"/>
+  <field name="margin_bottom" eval="0"/>
+  <field name="margin_left" eval="0"/>
+  <field name="margin_right" eval="0"/>
+
+  <field name="header_line" eval="False"/>
+  <field name="header_spacing" eval="0"/>
+  <field name="dpi">90</field>
+</record>
+
+    <!-- Custom Khmer Invoice Template (completely independent) -->
+    <template id="customer_payment_khmer_invoice_document">
+        <div class="article" style="margin: 0; padding: 10mm; font-size: 16px;">
+
+                <!-- Company Header -->
+                <div style="position: relative; min-height: 175px; margin-bottom: 15px;">
+                    <!-- Company Logo (absolute left) -->
+                    <div style="position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="height: 200px; width: auto; margin-left: -70px;" alt="Company Logo"/>
+                    </div>
+                    <!-- Company Info (absolute center) -->
+                    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center;">
+                        <h3 style="margin: 0; font-weight: bold; font-size: 32px;">
+                            <span t-field="o.company_id.name"/>
+                        </h3>
+                        <h4 style="margin: 0; font-weight: bold; font-size: 18px;">
+                            រោងម៉ាស៊ីនតកិនស្រូវ ទិញ លក់ ស្រូវ អង្ករ ជី និងថ្នាំកសិកម្មគ្រប់ប្រភេទ
+                        </h4>
+                        <div style="margin-top: 5px; font-size: 16px;">
+                            <div t-if="o.company_id.street or o.company_id.street2">
+                                <span t-field="o.company_id.street"/>
+                                <span t-if="o.company_id.street2" t-field="o.company_id.street2"/>
+                            </div>
+                            <div t-if="o.company_id.phone">
+                                Tel: <span t-field="o.company_id.phone"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer and Invoice Information Boxes -->
+                <div class="row mb-4 align-items-start">
+                    <!-- Customer Information (Left) -->
+                    <div class="col-6">
+                        <div style="border: 1px solid #000000; padding: 15px; border-radius: 5px; font-size: 18px;">
+                            <h5 style="margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #999; font-size: 20px;">អតិថិជន</h5>
+                            <div style="margin-top: 0;">
+                                <strong>ឈ្មោះ:</strong> <span t-field="o.partner_id.name"/><br/>
+                                <strong>អាសយដ្ឋាន:</strong>
+                                <t t-if="o.partner_id.street">
+                                    <span t-field="o.partner_id.street"/>
+                                </t>
+                                <t t-if="o.partner_id.city">
+                                    <span t-field="o.partner_id.city"/>
+                                </t>
+                                <br/>
+                                <strong>ទូរស័ព្ទ:</strong>
+                                <t t-if="o.partner_id.phone">
+                                    <span t-field="o.partner_id.phone"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Reference (Right) -->
+                    <div class="col-6">
+                        <div style="border: 1px solid #000000; padding: 15px; border-radius: 5px; font-size: 18px;">
+                            <h5 style="margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #999; text-align: right; font-size: 20px;">យោង</h5>
+                            <div style="margin-top: 0; color: #333;">
+                                <strong style="color: #000;">លេខ:</strong>
+                                    <span t-field="o.name" /><br/>
+                                <strong style="color: #000;">កាលបរិច្ឆេទវិក្កយបត្រ:</strong>
+                                    <span t-field="o.invoice_date" t-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}" /><br/>
+                                <strong style="color: #000;">កាលបរិច្ឆេទចេញវិក្កយបត្រ:</strong>
+                                    <span t-esc="(datetime.datetime.utcnow() + datetime.timedelta(hours=7)).strftime('%d/%m/%Y %H:%M')" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix invoice_main">
+                    <div class="page mb-4">
+                        <table class="o_has_total_table table o_main_table table-bordered mb-0" name="invoice_line_table" style="font-size: 18px;">
+                            <thead t-attf-style="#{has_long_desc and 'display: table-row-group;' or ''}">
+                                <tr style="background-color: #e9ecef; color: #0000; font-weight: bold;">
+                                    <th name="th_product" class="text-center"><span>ល.រ</span></th>
+                                    <th name="th_description" class="text-start"><span>រាយមុខទំនិញ</span></th>
+                                    <th name="th_quantity" class="text-end"><span>ចំនួន</span></th>
+                                    <th name="th_priceunit" t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>តម្លៃរាយ</span></th>
+                                    <th name="th_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                        <span>Disc.%</span>
+                                    </th>
+                                    <th name="th_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>ពន្ធ</span></th>
+                                    <th name="th_subtotal" class="text-end">
+                                        <span>តម្លៃសរុប</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+                                <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
+                                <t t-set="current_section" t-value="None"/>
+                                <t t-set="current_subsection" t-value="None"/>
+                                <t t-set="line_number" t-value="0"/>
+
+                                <t t-foreach="lines_to_report" t-as="line">
+                                    <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
+                                    <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
+                                    <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
+                                    <t t-set="is_product" t-value="line.display_type == 'product'"/>
+
+                                    <t t-if="is_section">
+                                        <t t-set="current_section" t-value="line"/>
+                                        <t t-set="current_subsection" t-value="None"/>
+                                        <t t-set="line_padding" t-value="0"/>
+                                    </t>
+                                    <t t-elif="is_subsection">
+                                        <t t-set="current_subsection" t-value="line"/>
+                                        <t t-set="line_padding" t-value="3"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="line_padding" t-value="4 if current_subsection else (3 if current_section else 0)"/>
+                                    </t>
+                                    <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                    <t t-set="hide_details" t-value="line.collapse_composition"/>
+                                    <t t-set="hide_prices" t-value="line.collapse_prices"/>
+
+                                    <t t-if="not hide_details and not hide_prices">
+                                        <tr t-att-class="                                             'fw-bolder o_line_section' if is_section else                                             'fw-bold o_line_subsection' if is_subsection else                                             'fst-italic o_line_note' if is_note                                             else ''">
+                                            <t t-set="line_colspan" t-value="4 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
+                                            <t t-if="is_product" name="account_invoice_line_accountable">
+                                                <t t-set="line_number" t-value="line_number + 1"/>
+                                                <td name="td_line_number" class="text-center">
+                                                    <span t-out="line_number"/>
+                                                </td>
+                                                <td name="account_invoice_line_name" t-att-class="padding_class">
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                                </td>
+                                                <td name="td_quantity" class="o_td_quantity text-end">
+                                                    <span t-field="line.quantity" class="text-nowrap">3.00</span>
+                                                    <span t-field="line.product_uom_id" groups="uom.group_uom">units</span>
+                                                    <span t-if="line.product_uom_id != line.product_id.uom_id" groups="uom.group_uom" class="text-muted small">
+                                                        <br/>
+                                                        <t t-set="product_uom_qty" t-value="line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)"/>
+                                                        <span t-out="product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}" data-oe-demo="3.00"/> <span t-field="line.product_id.uom_id" data-oe-demo="units"/>
+                                                    </span>
+                                                </td>
+                                                <td name="td_price_unit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                                    <span t-if="not hide_prices" class="text-nowrap" t-field="line.price_unit">9.00</span>
+                                                </td>
+                                                <td name="td_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                                    <span class="text-nowrap" t-field="line.discount">0</span>
+                                                </td>
+                                                <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
+                                                <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                                    <span t-if="not hide_prices" t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                                                </td>
+                                                <td name="td_subtotal" class="text-end o_price_total">
+                                                    <span t-if="not hide_prices and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                    <span t-if="not hide_prices and o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
+                                                </td>
+                                            </t>
+                                            <t t-elif="line.display_type in ('line_section', 'line_subsection')">
+                                                <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
+                                                <td name="td_section_number" class="text-center"/>
+                                                <!-- For desktop -->
+                                                <td name="line_name_td" t-att-colspan="(1 if is_product else line_colspan)" t-attf-class="{{'d-none d-md-table-cell' if report_type == 'html' else ''}} {{padding_class}}">
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                </td>
+                                                <!-- For mobile -->
+                                                <td colspan="2" t-attf-class="{{'d-md-none d-table-cell' if report_type == 'html' else 'd-none'}} {{padding_class}}">
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                </td>
+                                                <td colspan="1" class="text-end o_price_total">
+                                                    <span t-out="section_subtotal" class="text-nowrap" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                                </td>
+                                            </t>
+                                            <t t-elif="is_note">
+                                                <td colspan="99">
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="grouped_lines" t-value="line._get_child_lines()"/>
+                                        <t t-foreach="grouped_lines" t-as="grouped_line">
+                                            <t t-if="grouped_line['display_type'] == 'product'">
+                                                <t t-set="line_number" t-value="line_number + 1"/>
+                                                <t t-set="line_colspan" t-value="1"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-set="line_colspan" t-value="4 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') else 0)"/>
+                                            </t>
+                                            <t t-if="hide_prices">
+                                                <t t-if="grouped_line['display_type'] == 'line_section'">
+                                                    <t t-set="current_section" t-value="grouped_line"/>
+                                                    <t t-set="current_subsection" t-value="None"/>
+                                                </t>
+                                                <t t-if="grouped_line['display_type'] == 'line_subsection'">
+                                                    <t t-set="current_subsection" t-value="grouped_line"/>
+                                                </t>
+                                                <t t-set="line_padding" t-value="4 if current_subsection and grouped_line['display_type'] != 'line_subsection' else                                                             3 if current_section and grouped_line['display_type'] != 'line_section' else                                                             0"/>
+                                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                            </t>
+                                            <tr t-att-class="                                                 'fw-bolder o_line_section' if grouped_line.get('display_type') == 'line_section' and not hide_details else                                                 'fw-bold o_line_subsection' if grouped_line.get('display_type') == 'line_subsection' and not hide_details else                                                 ''">
+                                                <td name="td_grouped_line_number" class="text-center">
+                                                    <span t-if="grouped_line['display_type'] == 'product'" t-out="line_number"/>
+                                                </td>
+                                                <!-- For desktop -->
+                                                <td name="account_invoice_line_name_grouped_desktop" t-att-colspan="line_colspan" t-attf-class="{{'d-none d-md-table-cell' if report_type == 'html' else ''}} {{padding_class}}">
+                                                    <span t-out="grouped_line['name']" t-options="{'widget': 'text'}">Group 1</span>
+                                                </td>
+                                                <!-- For mobile -->
+                                                <td name="account_invoice_line_name_grouped" t-att-colspan="2 if grouped_line['display_type'] != 'product' else 1" t-attf-class="{{'d-md-none d-table-cell' if report_type == 'html' else 'd-none'}} {{padding_class}}">
+                                                    <span t-out="grouped_line['name']" t-options="{'widget': 'text'}">Group 1</span>
+                                                </td>
+                                                <td name="td_quantity_grouped" colspan="1" t-if="hide_details or (hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection'))" class="o_td_quantity text-end">
+                                                    <!-- If line is hide composition, always show 1 unit -->
+                                                    <div t-if="hide_details">
+                                                        <span>1.00</span>
+                                                        <span groups="uom.group_uom">Units</span>
+                                                    </div>
+                                                    <!-- Else, show the line quantity -->
+                                                    <div t-if="hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection')">
+                                                        <span t-out="grouped_line['quantity']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}">1.00</span>
+                                                        <t t-if="grouped_line.get('line_uom')">
+                                                            <span t-out="grouped_line['line_uom'].display_name" groups="uom.group_uom">Unit</span>
+                                                            <span t-if="grouped_line.get('product_uom') != grouped_line['line_uom']" groups="uom.group_uom" class="text-muted small">
+                                                                <br/>
+                                                                <t t-set="product_uom_qty" t-value="grouped_line['line_uom']._compute_quantity(grouped_line['quantity'], grouped_line['product_uom'])"/>
+                                                                <span t-out="product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}" data-oe-demo="3.00"/> <span t-out="grouped_line['product_uom'].display_name" data-oe-demo="units"/>
+                                                            </span>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                                <td name="td_price_unit_grouped" t-if="grouped_line['display_type'] not in ('line_section', 'line_subsection')" colspan="1" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                                    <span t-if="not hide_prices" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'decimal_precision': 'Product Price'}" class="text-nowrap">9.00</span>
+                                                </td>
+                                                <td name="td_discount_grouped" t-if="display_discount and grouped_line['display_type'] == 'product'" colspan="1" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"/>
+                                                <td name="td_taxes_grouped" colspan="1" t-if="display_taxes and (grouped_line['display_type'] == 'product' or grouped_line.get('taxes'))" t-attf-class="text-end {{'d-none d-md-table-cell' if report_type == 'html' else ''}}">
+                                                    <span t-if="grouped_line.get('taxes')" t-out="','.join(grouped_line['taxes'])" id="grouped_line_tax_ids">Tax 15%</span>
+                                                </td>
+                                                <td name="td_subtotal_grouped" colspan="1" class="text-end o_price_total">
+                                                    <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}">27.00</span>
+                                                    <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}">31.05</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Handwritten Notes Section -->
+                
+                <div class="row mt-2 mb-3">
+                    <div class="col-12">
+                        <div style="min-height: 60px; border-bottom: 1px solid #eee;">
+                            <!-- Space for handwritten notes -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Table (Right-aligned) -->
+                <div class="row">
+                    <div class="col-5">
+                        <!-- Empty space on left -->
+                    </div>
+                    <div class="col-7">
+                        <table class="table table-sm table-bordered" style="font-size: 18px; font-weight: bold; color: #999;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 55%;">សរុបវិក័យប័ត្រថ្មី</td>
+                                    <td class="text-end" style="width: 45%; font-weight: normal;">
+                                        <span t-field="o.cp_invoice_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        សរុបវិក័យប័ត្រចាស់
+                                        <t t-if="o.invoice_date">
+                                            (<span t-esc="int(o.invoice_date.year)"/>)
+                                        </t>
+                                    </td>
+                                    <td class="text-end" style="font-weight: normal;">
+                                        <span t-field="o.cp_previous_invoices_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #e9ecef; font-weight: bold;">
+                                    <td>សរុបវិក័យប័ត្រថ្មី + ចាស់</td>
+                                    <td class="text-end" style="font-weight: normal;">
+                                        <span t-field="o.cp_cumulative_invoice_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ទឹកប្រាក់សង</td>
+                                    <td class="text-end" style="font-weight: normal;">
+                                        <span t-field="o.cp_total_payments" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #cfe2ff; font-weight: bold;">
+                                    <td>ជំពាក់សរុបទាំងអស់</td>
+                                    <td class="text-end" style="font-weight: normal;">
+                                        <span t-field="o.cp_remaining_balance" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payment Note & Signature Section -->
+                <div class="row" style="font-size: 18px; margin-top: 80px;">
+                    <div class="col-4 text-end align-self-end" style="font-size: 20px; color: #1a237e;">
+                        <strong style="border-bottom: 1px solid #1a237e; font-size: 22px; color: #1a237e;">★ បញ្ចាក់:</strong> ជឿបានរយៈពេល3ខែបេីលេីសសុំគិតការ3%
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="margin-top: 80px; border-top: 1px solid #999; display: inline-block; padding: 5px 40px;">
+                            អ្នកលក់ ហត្ថលេខា
+                        </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div style="margin-top: 80px; border-top: 1px solid #999; display: inline-block; padding: 5px 40px;">
+                            អតិថិជន ហត្ថលេខា
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </template>
+
+    <!-- Custom Report Action for Customer Invoices -->
+    <record id="account_invoices_customer_khmer" model="ir.actions.report">
+        <field name="name">Khmer Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_payment.report_khmer_invoice</field>
+        <field name="report_file">customer_payment.report_khmer_invoice</field>
+        <field name="is_invoice_report">True</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="attachment"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    <field name="paperformat_id" ref="customer_payment.paperformat_invoice_no_top_margin"/></record>
+
+    
+    <template id="report_khmer_invoice">
+        <t t-call="web.html_container">
+            <style>html, body { margin: 0 !important; padding: 0 !important; }
+.page { margin: 0 !important; padding: 0 !important; }
+.o_report_layout, .o_report_layout_standard { padding-top: 0 !important; margin-top: 0 !important; }</style><t t-foreach="docs" t-as="o"> 
+                <t t-call="customer_payment.customer_payment_khmer_invoice_document"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
