@@ -18,11 +18,17 @@ import {
     isZWS,
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    ancestors,
+    closestElement,
+    descendants,
+    findFurthest,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { isColorGradient, normalizeCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
@@ -202,9 +208,30 @@ export class ColorPlugin extends Plugin {
         }
 
         const findTopMostDecoration = (current) => {
-            const decoration = closestElement(current.parentNode, "s, u");
-            return decoration?.textContent === current.textContent
-                ? findTopMostDecoration(decoration)
+            let topMostDecoration = findFurthest(
+                current,
+                closestBlock(current),
+                (node) => isElement(node) && node.matches("u, s")
+            );
+            const unsplittable = closestElement(current, this.dependencies.split.isUnsplittable);
+            if (unsplittable && topMostDecoration?.contains(unsplittable)) {
+                const unsplittableStyleParent = this.dependencies.split.splitAroundUntil(
+                    unsplittable,
+                    topMostDecoration
+                );
+                const decorations = ancestors(
+                    unsplittable,
+                    unsplittableStyleParent.parentElement
+                ).filter((node) => node.matches("u, s"));
+                for (const node of decorations) {
+                    node.replaceWith(...node.childNodes);
+                    node.append(...unsplittable.childNodes);
+                    unsplittable.append(node);
+                }
+                topMostDecoration = decorations.at(-1);
+            }
+            return topMostDecoration
+                ? this.dependencies.split.splitAroundUntil(current, topMostDecoration)
                 : current;
         };
 
