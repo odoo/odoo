@@ -314,6 +314,22 @@ decision; the plan that weighed the alternative (one slot holding the truth,
 visibility applied on the way out) is
 `agromarin-knowledge/plans/2026-09-14-x2many-cache-access-scope.md`.
 
+**A many2many write reaches only the links its writer can read.** `Many2many.write_real`
+builds the old relation from the writer's own slot, and `_apply_relation_delta` deletes only
+pairs that were in it. So a restricted user's `Command.clear()` or `Command.set()` leaves in
+place the links their record rules hide, and a sudo write reaches every link. The rule is the
+mirror of `_check_new_relation_access`, which refuses a link to a record the writer cannot read:
+a user can neither add nor remove what they cannot see. It is also what keeps a multi-company
+field such as a product's taxes whole when one company's user saves it.
+
+Before the scopes split, the result depended on what the shared slot happened to hold. The
+removal reached the hidden links only if a sudo or admin read had just filled the slot. Upstream's
+`test_many2many` read that accident as "clear removes all records".
+
+`TestRules.test_a_user_clear_keeps_the_links_the_user_cannot_read_whatever_is_cached` and
+`test_a_user_set_replaces_only_the_links_the_user_can_read` pin the rule, and both go red on the
+shared-slot behaviour.
+
 **A per-transaction memo is `TransactionMemo`** (`odoo/tools/cache.py`): a
 container in `cr.cache` that `BaseModel.create`, `write` and `unlink` discard
 for the models it names (`invalidated_by`, a list of models or a mapping model →

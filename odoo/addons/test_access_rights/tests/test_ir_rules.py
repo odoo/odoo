@@ -98,7 +98,36 @@ class TestRules(TransactionCase):
         container_user.invalidate_model(["some_ids"])
         self.assertItemsEqual(container_user.some_ids.ids, [])
         container_admin.invalidate_model(["some_ids"])
-        self.assertItemsEqual(container_admin.some_ids.ids, [])
+        self.assertItemsEqual(container_admin.some_ids.ids, [self.forbidden.id])
+
+    def _container_holding_both(self):
+        container = self.env["test_access_right.container"].create(
+            {"some_ids": [Command.set([self.allowed.id, self.forbidden.id])]}
+        )
+        return container, container.with_user(self.env.ref("base.public_user"))
+
+    def test_a_user_clear_keeps_the_links_the_user_cannot_read_whatever_is_cached(self):
+        container_admin, container_user = self._container_holding_both()
+        container_admin.invalidate_model(["some_ids"])
+        self.assertEqual(len(container_admin.some_ids), 2)
+        container_user.write({"some_ids": [Command.clear()]})
+        container_admin.invalidate_model(["some_ids"])
+        self.assertEqual(container_admin.some_ids, self.forbidden)
+
+    def test_a_user_set_replaces_only_the_links_the_user_can_read(self):
+        other = self.env["test_access_right.some_obj"].create(
+            {"val": 2, "categ_id": self.categ.id}
+        )
+        container_admin, container_user = self._container_holding_both()
+        container_user.write({"some_ids": [Command.set(other.ids)]})
+        container_admin.invalidate_model(["some_ids"])
+        self.assertEqual(container_admin.some_ids, other | self.forbidden)
+
+    def test_a_superuser_clear_removes_every_link(self):
+        container_admin, _container_user = self._container_holding_both()
+        container_admin.sudo().write({"some_ids": [Command.clear()]})
+        container_admin.invalidate_model(["some_ids"])
+        self.assertFalse(container_admin.some_ids)
 
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref("base.public_user"))
