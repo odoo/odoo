@@ -41,7 +41,7 @@ test("Should open the search panel when search button is clicked", async () => {
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessagesPanel");
     await contains(".o-mail-ActionPanel-header .o-mail-SearchMessageInput");
-    await contains(".o-mail-SearchInput input");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
 });
 
 test.tags("desktop");
@@ -80,12 +80,16 @@ test("Search a message", async () => {
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
-    await editInput(document.body, ".o-mail-SearchInput input", "message");
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "message"
+    );
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
-    expect(".o-mail-SearchInput input").toHaveValue("message");
+    expect(".o-mail-SearchMessageInput .o-mail-SearchInput input").toHaveValue("message");
     await click("button[aria-label='Clear']");
     await contains(".o-mail-SearchMessagesPanel:not(:has(.o-mail-Message))");
-    expect(".o-mail-SearchInput input").toHaveValue("");
+    expect(".o-mail-SearchMessageInput .o-mail-SearchInput input").toHaveValue("");
 });
 
 test.tags("desktop");
@@ -120,7 +124,11 @@ test("Searching messages shows spinner icon", async () => {
     ]);
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
-    await editInput(document.body, ".o-mail-SearchInput input", "message");
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "message"
+    );
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput.o-searching");
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput i.oi.oi-spin");
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput i.oi[data-icon='search']", {
@@ -174,7 +182,11 @@ test("Clearing message input while pending search should empty message results",
     ]);
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
-    await editInput(document.body, ".o-mail-SearchInput input", "This is");
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "This is"
+    );
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput.o-searching");
     blockedFetchMessages.resolve();
     await waitStoreFetch([
@@ -188,10 +200,14 @@ test("Clearing message input while pending search should empty message results",
     ]);
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput:not(.o-searching)");
     await contains(".o-mail-SearchMessageResult .o-mail-Message");
-    await editInput(document.body, ".o-mail-SearchInput input", "This is a message");
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "This is a message"
+    );
     await contains(".o-mail-SearchMessageInput .o-mail-SearchInput.o-searching");
     await click("button[aria-label='Clear']");
-    await contains(".o-mail-SearchInput input", { value: "" });
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
     blockedFetchMessages.resolve();
     await waitStoreFetch([
         [
@@ -204,7 +220,7 @@ test("Clearing message input while pending search should empty message results",
     ]);
     await animationFrame();
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 0 });
-    await contains(".o-mail-SearchInput input", { value: "" });
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
 });
 
 test.tags("desktop");
@@ -224,7 +240,7 @@ test("Search should be hightlighted", async () => {
     await contains(".o-mail-Message");
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "message");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
@@ -259,7 +275,7 @@ test("Search a message in 60 messages should return 30 message first", async () 
     await contains(".o-mail-Message", { count: 30 });
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "message");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     // give enough time to useVisible to potentially load more (unexpected) messages
     await tick();
@@ -285,7 +301,7 @@ test("Scrolling to the bottom should load more searched message", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "message");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
@@ -311,7 +327,7 @@ test("Search a message containing round brackets", async () => {
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "(message");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "(message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
@@ -326,7 +342,7 @@ test("Search a message containing single quotes", async () => {
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "can't");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "can't");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
@@ -357,7 +373,7 @@ test("Search should trigger a single store fetch", async () => {
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
     listenStoreFetch("/discuss/channel/messages");
-    await insertText(".o-mail-SearchInput input", "message");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
     await waitStoreFetch("/discuss/channel/messages");
     await waitStoreFetch();
 });
