@@ -42,6 +42,8 @@ class NewId:
     def __hash__(self) -> int:
         return self.__hash
 
+    # a total order in which a NewId sorts right after its origin and every
+    # NewId without one sorts last: n < NewId(origin=n) < n + 1 < NewId()
     def __lt__(self, other: object) -> bool:
         if isinstance(other, NewId):
             s, o = self.origin, other.origin

@@ -28,7 +28,7 @@ class TestSort(TransactionCase):
 
     def test_basic(self):
         db_result = self.env["test_orm.country"].search([])
-        with self.assertQueryCount(1):
+        with self.assertQueryCount(0):
             self.assertEqual(db_result.ids, self.countries.sorted().ids)
         with self.assertQueryCount(0):
             self.assertEqual(

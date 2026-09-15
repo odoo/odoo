@@ -1384,7 +1384,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # the column, one verification per model, the partners' and the
         # currencies' rows: the record a Reference answers carries the
         # siblings naming its model as prefetch ids, as a many2one's does
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(3):
             names = [record.reference.display_name for record in records]
         self.assertEqual(names[1], "ref partner 1")
         self.assertEqual(names[0], currencies[0].display_name)
@@ -4959,7 +4959,7 @@ class TestSelectionUpdates(TransactionCase):
         related_record = self.env[self.MODEL_BASE].create({"my_selection": "foo"})
         # warm the model's defaults cache; the pin counts the create, not the cache
         self.env[self.MODEL_RELATED].create({"selection_id": related_record.id})
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             record = self.env[self.MODEL_RELATED].create(
                 {"selection_id": related_record.id}
             )
@@ -4969,7 +4969,7 @@ class TestSelectionUpdates(TransactionCase):
     def test_selection_related(self):
         related_record = self.env[self.MODEL_BASE].create({"my_selection": "foo"})
         self.env[self.MODEL_RELATED_UPDATE].create({"selection_id": related_record.id})
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             record = self.env[self.MODEL_RELATED_UPDATE].create(
                 {"selection_id": related_record.id}
             )

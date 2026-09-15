@@ -518,6 +518,18 @@ class _RelationalMulti(_Relational):
         except NotImplementedError:
             return False
 
+    def _writer_scope_keeps(self, env: Environment, added: Collection[IdType]) -> bool:
+        # the writer's own slot lists what the writer wrote only when the
+        # writer's search would list it too: a create or write rule may admit
+        # a record the read rule hides, and the slot answers reads
+        if env.su or not all(isinstance(id_, int) for id_ in added):
+            return True
+        key = env.get_cache_key(self)
+        if self._is_superuser_scope(env, key):
+            # a computed x2many keeps one slot for every scope
+            return True
+        return self._scope_can_read(env, key, added)
+
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
         index = env._field_depends_context[self].index("access")

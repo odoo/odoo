@@ -176,19 +176,15 @@ class UnlinkMixin(_ModelStubs):
         self._invalidate_ref_cache(gone)
 
     def _invalidate_ref_cache(self, model_names: typing.Iterable[str]) -> None:
-        ref_cache = self.env.transaction._ref_cache
-        if not ref_cache:
-            return
         names = set(model_names)
-        keys = [key for key in ref_cache if key[0] in names]
-        for key in keys:
-            del ref_cache[key]
-        _debug.logic(
-            "unlink.ref_cache_evicted",
-            model=self._name,
-            models=len(names),
-            keys=len(keys),
-        )
+        keys = self.env.transaction.forget_refs_of(names)
+        if keys:
+            _debug.logic(
+                "unlink.ref_cache_evicted",
+                model=self._name,
+                models=len(names),
+                keys=keys,
+            )
 
     def _unlink_process_batch(self, sub_ids: tuple[int, ...]) -> None:
         self.env.backend.unlink_rows(self, sub_ids)

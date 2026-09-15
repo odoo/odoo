@@ -1152,7 +1152,7 @@ class TestComputeOnchange2(TransactionCase):
 
         partners.copy()
 
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             new_partners = partners.copy()
 
         for old_partner, new_partner in zip(partners, new_partners, strict=False):

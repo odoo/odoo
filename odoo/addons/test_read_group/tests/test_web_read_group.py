@@ -210,7 +210,7 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.env.invalidate_all()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -248,7 +248,7 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.env.invalidate_all()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -420,7 +420,7 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.env.invalidate_all()
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -514,7 +514,7 @@ class TestWebReadGroup(common.TransactionCase):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -675,7 +675,7 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.env.invalidate_all()
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(5):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -763,7 +763,7 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.env.invalidate_all()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],
@@ -967,7 +967,7 @@ class TestWebReadGroup(common.TransactionCase):
             unfold_read_specification=read_spec,
         )
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(2):
             self.assertEqual(
                 Model.web_read_group(
                     domain=[],

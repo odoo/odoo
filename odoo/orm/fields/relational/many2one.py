@@ -428,8 +428,22 @@ class Many2one(_Relational):
             if not valid_records:
                 continue
             invf._sync_other_scopes(corecord.env, corecord.id, added=valid_records._ids)
-            ids0 = invf._get_cache(corecord.env).get(corecord.id)
+            inv_cache = invf._get_cache(corecord.env)
+            ids0 = inv_cache.get(corecord.id)
             if ids0 is None and corecord.id:
+                continue
+            if corecord.id and not invf._writer_scope_keeps(
+                corecord.env, valid_records._ids
+            ):
+                _debug.logic(
+                    "field.many2one.inverse_evicted_from_writer_scope",
+                    model=self.model_name,
+                    field=self.name,
+                    inverse=f"{invf.model_name}.{invf.name}",
+                    corecord=corecord.id,
+                    uid=corecord.env.uid,
+                )
+                inv_cache.pop(corecord.id, None)
                 continue
             ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
             if corecord.id and not _is_cache_order_stable(records, ids1):

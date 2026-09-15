@@ -1264,7 +1264,7 @@ class PropertiesCase(TestPropertiesMixin):
         ]
 
         self.partner.unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(2):
             self.assertIs(
                 self.message_2.read(["attributes"])[0]["attributes"][0].get("value"),
                 None,
@@ -1278,7 +1278,7 @@ class PropertiesCase(TestPropertiesMixin):
         ]
         self.partner_2.unlink()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(1):
             value = self.message_2.read(["attributes"])
             value = value[0]["attributes"]
             self.assertFalse(value[1]["value"])
@@ -1755,7 +1755,7 @@ class PropertiesCase(TestPropertiesMixin):
         def id_name_pairs(records):
             return list(zip(records._ids, records.mapped("display_name"), strict=False))
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -1777,12 +1777,12 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertIsInstance(hash(self.message_1.attributes), int)
 
         partners[:5].unlink()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(2):
             attributes = self.message_1.read(["attributes"])[0]["attributes"]
             self.assertEqual(attributes[0]["value"], id_name_pairs(partners[5:10]))
 
         partners[5].unlink()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(2):
             properties = self.message_1.read(["attributes"])[0]["attributes"]
         self.assertEqual(properties[0]["value"], id_name_pairs(partners[6:10]))
 
@@ -2503,7 +2503,7 @@ class PropertiesCase(TestPropertiesMixin):
         messages = self.message_1 | self.message_2 | self.message_3
         self.env.invalidate_all()
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(5):
             messages[0]["attributes"]["many2many"]
             messages[1]["attributes"]["many2many"]
 
@@ -3289,7 +3289,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {"mychar": "boum"}
 
         Model = self.env["test_orm.message"]
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             result = Model.web_read_group(
                 domain=[],
                 aggregates=["__count"],

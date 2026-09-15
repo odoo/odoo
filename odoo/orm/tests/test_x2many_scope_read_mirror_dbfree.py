@@ -13,6 +13,7 @@ class Order(models.Model):
 
     name = fields.Char()
     line_ids = fields.One2many("mirror.line", "order_id")
+    held_ids = fields.One2many("mirror.line", "order_id", compute="_compute_held_ids")
     tag_ids = fields.Many2many("mirror.tag")
     total = fields.Integer(compute="_compute_total", store=True)
 
@@ -20,6 +21,11 @@ class Order(models.Model):
     def _compute_total(self):
         for order in self:
             order.total = sum(order.line_ids.mapped("value"))
+
+    @api.depends("line_ids")
+    def _compute_held_ids(self):
+        for order in self:
+            order.held_ids = order.line_ids
 
 
 class Line(models.Model):
@@ -61,10 +67,10 @@ class IrRuleOpen(models.AbstractModel):
 class IrRuleOnLines(models.AbstractModel):
     _name = "ir.rule"
     _module = _MOD + "_rules_lines"
-    _description = "ir.rule (test stub, secret lines are hidden)"
+    _description = "ir.rule (test stub, secret lines are hidden from reads)"
 
     def _get_domain_accessible_records(self, model_name, mode="read"):
-        if model_name == "mirror.line":
+        if (model_name, mode) == ("mirror.line", "read"):
             return Domain("secret", "=", False)
         return Domain.TRUE
 
@@ -151,3 +157,61 @@ class TestAUserReadFillsTheSuperuserSlot:
                 order.id: ("planted",)
             }
             field._get_cache(env)[order.id] = (line.id,)
+
+
+class TestTheWriterSlotListsWhatTheWriterMayRead:
+    def test_a_line_the_creator_may_not_read_leaves_its_slot(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            order = as_user.create({"name": "o"})
+            shown = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create({"order_id": order.id, "value": 1})
+            )
+            field = order._fields["line_ids"]
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: (shown.id,)
+            }
+            hidden = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create({"order_id": order.id, "value": 2, "secret": True})
+            )
+            # the writer's slot is evicted: its next read searches and hides
+            assert order.id not in _slots(env, field).get(
+                as_user.env.get_cache_key(field), {}
+            )
+            assert order.line_ids == shown
+            # the superuser's slot took both, as the superuser reads both
+            assert order.sudo().line_ids._ids == (shown.id, hidden.id)
+            assert order.sudo().total == 3
+
+    def test_a_line_the_creator_may_read_stays_in_its_slot(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            order = as_user.create(
+                {"name": "o", "line_ids": [(0, 0, {"value": 1}), (0, 0, {"value": 2})]}
+            )
+            field = order._fields["line_ids"]
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: order.line_ids._ids
+            }
+            assert len(order.line_ids) == 2
+
+    def test_a_computed_inverse_has_one_slot_and_no_scope_to_evict(self):
+        # a computed one2many naming the same inverse keeps one slot for every
+        # scope (its access key is None): the writer's addition is not judged
+        # against a reader, there is none to name
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            order = as_user.create({"name": "o"})
+            held = order._fields["held_ids"]
+            assert as_user.env.get_cache_key(held) == (None,)
+            assert not order.held_ids
+            line = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create({"order_id": order.id, "value": 1, "secret": True})
+            )
+            assert order.sudo().held_ids == line.sudo()

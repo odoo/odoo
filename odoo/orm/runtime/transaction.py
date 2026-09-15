@@ -307,6 +307,16 @@ class Transaction:
             reset_cached_properties(env)
         self.clear()
 
+    def forget_refs_of(self, model_names: typing.Iterable[str]) -> int:
+        ref_cache = self._ref_cache
+        if not ref_cache:
+            return 0
+        names = set(model_names)
+        keys = [key for key in ref_cache if key[0] in names]
+        for key in keys:
+            del ref_cache[key]
+        return len(keys)
+
     def invalidate_field_data(self, *, keep_new_records: bool = False) -> None:
         _debug.lifecycle("transaction.invalidate_field_data", db=self.registry.db_name)
         self._cache_store.invalidate_all(keep=_is_new_id if keep_new_records else None)

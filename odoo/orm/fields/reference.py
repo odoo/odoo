@@ -302,10 +302,15 @@ class Many2oneReference(Integer):
                 continue
             invf = typing.cast("_RelationalMulti", invf)
             invf._sync_other_scopes(corecord.env, corecord.id, added=recs._ids)
-            ids0 = invf._get_cache(corecord.env).get(corecord.id)
-            if ids0 is not None or not corecord.id:
-                ids1 = tuple(unique((ids0 or ()) + recs._ids))
-                invf._update_cache(corecord, ids1, keep_other_scopes=True)
+            inv_cache = invf._get_cache(corecord.env)
+            ids0 = inv_cache.get(corecord.id)
+            if ids0 is None and corecord.id:
+                continue
+            if corecord.id and not invf._writer_scope_keeps(corecord.env, recs._ids):
+                inv_cache.pop(corecord.id, None)
+                continue
+            ids1 = tuple(unique((ids0 or ()) + recs._ids))
+            invf._update_cache(corecord, ids1, keep_other_scopes=True)
 
     def _get_record_ids_per_res_model(
         self, records: BaseModel
