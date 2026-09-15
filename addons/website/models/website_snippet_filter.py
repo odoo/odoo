@@ -90,6 +90,7 @@ class WebsiteSnippetFilter(models.Model):
         # 16, and only for newly configured snippets.
         max_limit = max(self.limit, 16) if self.env.context.get('_bugfix_force_minimum_max_limit_to_16') else self.limit
         limit = limit and min(limit, max_limit) or max_limit
+        website = self.env['website'].get_current_website()
 
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
@@ -97,17 +98,19 @@ class WebsiteSnippetFilter(models.Model):
             if 'website_id' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
             if 'company_id' in self.env[filter_sudo.model_id]:
-                website = self.env['website'].get_current_website()
                 domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
                 domain = expression.AND([domain, search_domain])
             try:
-                records = self.env[filter_sudo.model_id].sudo(False).with_context(**literal_eval(filter_sudo.context)).search(
-                    domain,
-                    order=','.join(literal_eval(filter_sudo.sort)) or None,
-                    limit=limit
+                records = self.env[filter_sudo.model_id].sudo(False).with_context(
+                    **literal_eval(filter_sudo.context),
+                    lang=website.default_lang_id.code,
+                ).search(
+                        domain,
+                        order=','.join(literal_eval(filter_sudo.sort)) or None,
+                        limit=limit,
                 )
                 return self._filter_records_to_values(records)
             except MissingError:
@@ -119,6 +122,7 @@ class WebsiteSnippetFilter(models.Model):
                     dynamic_filter=self,
                     limit=limit,
                     search_domain=search_domain,
+                    lang=website.default_lang_id.code,
                 ).sudo().run() or []
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
