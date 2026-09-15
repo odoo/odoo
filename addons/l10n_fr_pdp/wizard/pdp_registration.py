@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 class PdpRegistration(models.TransientModel):
     _name = 'pdp.registration'
-    _description = "PDP Registration"
+    _description = "Approved Platform Registration"
 
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -360,7 +360,7 @@ class PdpRegistration(models.TransientModel):
             raise UserError(self.env._("Cannot register a user with a '%s' application", pdp_state_translated))
 
         if self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'):
-            raise UserError(self.env._("There is a connection to Peppol (non-PA) already"))
+            raise UserError(self.env._("There is already another e-invoicing connection."))
 
         if not self.env["res.company"]._check_pdp_identifier(self.pdp_identifier):
             raise UserError(self.env._("The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"))
