@@ -593,7 +593,7 @@ class MobileToolbarOverlay {
     }
 
     open({ props }) {
-        props.class = "shadow";
+        props.class = "shadow o_no_touch_title_tooltip";
         props.editable = this.editable;
         if (!this.isOpen) {
             const modal = this.editable.closest(".o_modal_full");
