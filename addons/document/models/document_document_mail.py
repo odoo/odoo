@@ -111,6 +111,7 @@ class DocumentsDocument(models.Model):
             folder=folder,
             tags=len(custom_values["tag_ids"]),
             attachments=len(msg_dict.get("attachments") or ()),
+            active=custom_values["active"],
         )
         return (
             super()
