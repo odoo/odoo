@@ -2136,6 +2136,42 @@ class TestWorkerCpuLimitHandoff:
         ].index("stop"), "joined after stop() closed resources"
         assert ("stop", False) in order, "self.alive was not cleared before stop()"
 
+    def test_a_second_sigxcpu_during_the_grace_join_is_not_a_crash(self, srv, multi):
+        """Linux re-sends SIGXCPU every second past the soft limit.  Measured
+        2026-09-15: the second one escaped `run()` as an uncaught error, the
+        worker exited 1, and the master held the respawn as a crash."""
+        w = srv.Worker(multi)
+        w.pid = os.getpid()
+        w.logger = MagicMock()
+        installed = []
+
+        class _T:
+            def start(self):
+                pass
+
+            def join(self, timeout=None):
+                if timeout is None:
+                    raise srv.CpuTimeLimitExceeded("cpu")
+                # A SIGXCPU landing during the grace join raises again unless
+                # the handler was disarmed first.
+                assert signal.getsignal(signal.SIGXCPU) is signal.SIG_IGN
+
+            def is_alive(self):
+                return False
+
+        previous = signal.getsignal(signal.SIGXCPU)
+        try:
+            with (
+                patch.object(srv.Worker, "start", lambda self: None),
+                patch.object(srv.Worker, "stop", lambda self: installed.append("stop")),
+                patch("odoo.service._worker.threading.Thread", lambda **kw: _T()),
+                server_settings.override(limit_time_cpu=1),
+            ):
+                assert w.run() is None
+        finally:
+            signal.signal(signal.SIGXCPU, previous)
+        assert installed == ["stop"]
+
 
 class TestTheStartupLineNamesTheSocketItActuallyGot:
     """Three ways to get a listening socket, three different things to say.

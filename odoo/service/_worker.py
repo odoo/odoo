@@ -267,6 +267,10 @@ class Worker:
                 len(Registry.registries),
             )
         except CpuTimeLimitExceeded:
+            # The kernel keeps sending SIGXCPU once a second while the process
+            # stays over the soft limit; the first one is the verdict, and a
+            # second raise would escape this handler as a crash.
+            signal.signal(signal.SIGXCPU, signal.SIG_IGN)
             self.logger.warning(
                 "CPU time limit (%ss) exceeded; recycling worker.",
                 current().limit_time_cpu,
