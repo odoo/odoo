@@ -7565,7 +7565,7 @@ class AccountMove(models.Model):
             **additional_info,
         }
 
-    def _get_invoice_portal_extra_values(self, custom_amount=None):
+    def _prepare_invoice_portal_extra_values(self, custom_amount=None):
         self.check_singleton()
         return {
             "invoice": self,

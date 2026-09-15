@@ -68,7 +68,7 @@ class PortalAccount(CustomerPortal):
                 custom_amount = None
         values = {
             "page_name": "invoice",
-            **invoice._get_invoice_portal_extra_values(custom_amount=custom_amount),
+            **invoice._prepare_invoice_portal_extra_values(custom_amount=custom_amount),
         }
         return self._get_page_view_values(
             invoice, access_token, values, "my_invoices_history", False, **kwargs
@@ -202,7 +202,7 @@ class PortalAccount(CustomerPortal):
                 "date": date_begin,
                 "invoices": lambda pager_offset: (
                     [
-                        invoice._get_invoice_portal_extra_values()
+                        invoice._prepare_invoice_portal_extra_values()
                         for invoice in AccountInvoice.search(
                             domain,
                             order=order,
