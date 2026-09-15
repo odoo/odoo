@@ -2,6 +2,7 @@
 from . import account_move
 from . import base_document_layout
 from . import res_company
+from . import res_partner
 from . import template_fr
 from . import template_fr_asso
 from . import template_fr_comp
