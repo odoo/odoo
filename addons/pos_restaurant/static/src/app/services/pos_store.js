@@ -870,6 +870,7 @@ patch(PosStore.prototype, {
         const order = course.order_id;
         course.fired = true;
         order.deselectCourse();
+        await this.syncAllOrders({ orders: [order] });
         await this.printCourseTicket(course);
         return true;
     },
