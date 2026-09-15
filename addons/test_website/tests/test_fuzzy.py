@@ -108,7 +108,7 @@ class TestAutoComplete(TransactionCase):
         test_page.name = 'testTotallyUnique'
 
         # Editor and Designer see pages in result
-        self._autocomplete_page('testTotallyUnique', 1, None)
+        self._autocomplete_page('testTotallyUnique', 1, False)
 
         test_page.visibility = 'connected'
         self._autocomplete_page('testTotallyUnique', 1, False)
