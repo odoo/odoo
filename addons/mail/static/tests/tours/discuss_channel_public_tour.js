@@ -226,7 +226,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: ".o-mail-SearchMessageInput",
         },
         {
-            trigger: ".o-mail-SearchInput input",
+            trigger: ".o-mail-SearchMessageInput .o-mail-SearchInput input",
             run: "edit text.txt",
         },
         {

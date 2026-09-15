@@ -1,13 +1,14 @@
-import { propSignal } from "@mail/utils/common/hooks";
+import { SearchInput } from "@mail/core/common/search_input";
+import { propSignal, useSearch } from "@mail/utils/common/hooks";
 import { Component, signal, types, useEffect, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class DiscussSearch extends Component {
     static template = "mail.DiscussSearch";
-    static components = {};
+    static components = { SearchInput };
 
-    searchInput = signal();
+    searchInput = signal.ref();
 
     setup() {
         this.store = useService("mail.store");
@@ -18,6 +19,9 @@ export class DiscussSearch extends Component {
         );
         this.props = useProps({
             class: types.or([types.string(), types.object()]).optional(),
+        });
+        this.search = useSearch({
+            searchTerm: this.messagingMenuUiState()._.fieldsAttrSignal.get("searchTerm"),
         });
         useEffect(() => {
             if (this.autofocus?.()) {
@@ -40,11 +44,11 @@ export class DiscussSearch extends Component {
         if (getActiveHotkey(ev) === "escape") {
             ev.stopPropagation();
             ev.preventDefault();
-            this.messagingMenuUiState().searchTerm = "";
+            this.onClearSearch();
         }
     }
 
     onClearSearch() {
-        this.messagingMenuUiState().searchTerm = "";
+        this.search.searchTerm = "";
     }
 }

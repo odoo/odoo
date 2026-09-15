@@ -1110,7 +1110,7 @@ test("Can quick search when more than 20 items", async () => {
     await insertText(".o-mail-MessagingMenu input", "nice");
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem-name:text('Nice channel')");
-    await click("[title='Clear search']");
+    await click(".o-mail-MessagingMenu .o-mail-SearchInput [title='Clear']");
     await insertText(".o-mail-MessagingMenu input", "cool", { replace: true });
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem-name:text('Cool channel')");
