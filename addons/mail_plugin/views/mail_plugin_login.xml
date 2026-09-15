@@ -2,19 +2,27 @@
 <odoo>
     <template id="mail_plugin.app_auth" name="Accept app">
         <t t-call="web.login_layout" disable_database_manager="1">
-            <form role="form" method="post" action="/mail_plugin/auth/confirm">
+            <form role="form" method="post" action="/mail_plugin/auth/confirm" class="mw-25 mx-auto my-5">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="redirect" t-att-value="redirect"/>
                 <input type="hidden" name="scope" t-att-value="scope"/>
                 <input type="hidden" name="state" t-att-value="state"/>
                 <input type="hidden" name="friendlyname" t-att-value="friendlyname"/>
+                <div t-if="logo_url" class="o_logo_container d-flex justify-content-center align-items-center">
+                    <img src="/web/static/img/odoo-icon-192x192.png" class="object-fit-cover h-50"/>
+                    <i class="fa fa-plug px-2 fs-4 text-muted" aria-hidden="true"/>
+                    <img t-att-src="logo_url" class="object-fit-cover h-50"/>
+                </div>
+                <h1 class="text-center fs-5">
+                    Connect Odoo with <t t-out="friendlyname"/>.
+                </h1>
                 <p class="text-center">
-                    Allow <t t-out="friendlyname"/> to access your Odoo database?
+                    Do you give <t t-out="friendlyname"/> permission to access your Odoo database?
                 </p>
-                <p class="text-center">
-                    <button type="submit" name="do" value="1" class="btn btn-link btn-sm">Allow</button>
-                    <button type="submit" name="do" class="btn btn-link btn-sm">Deny</button>
-                </p>
+                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <button type="submit" name="do" value="1" class="btn btn-primary w-100">Allow</button>
+                    <button type="submit" name="do" class="btn btn-light w-100">Deny</button>
+                </div>
             </form>
         </t>
     </template>
