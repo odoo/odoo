@@ -5,7 +5,7 @@ import functools
 import inspect
 import logging
 import warnings
-from collections.abc import Callable, Collection, Generator, Iterable
+from collections.abc import Callable, Generator, Iterable
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
@@ -16,7 +16,7 @@ from odoo.tools.misc import submap
 
 from ._params import ParamSpec, get_param_specs
 from .constants import DEFAULT_ALLOWED_METHODS, ROUTING_KEYS, SAFE_HTTP_METHODS
-from .controller import Controller, _get_classes_newest_by_identity
+from .controller import Controller, _get_controllers
 from .exceptions import ParameterError
 
 if TYPE_CHECKING:
@@ -288,103 +288,6 @@ def route(route: str | Iterable[str] | None = None, **routing: Any) -> Callable:
         return route_wrapper
 
     return decorator
-
-
-def _is_from_installed_addon(cls: type, modules: Collection[str]) -> bool:
-    path = cls.__module__.split(".")
-    return path[:2] == ["odoo", "addons"] and path[2] in modules
-
-
-def _get_leaf_classes(cls: type, modules: Collection[str]) -> list[type]:
-    result = []
-    for subcls in cls.__subclasses__():
-        if _is_from_installed_addon(subcls, modules):
-            result.extend(_get_leaf_classes(subcls, modules))
-    if not result and _is_from_installed_addon(cls, modules):
-        result.append(cls)
-    return _get_classes_newest_by_identity(result)
-
-
-def _group_controller_trees(
-    trees: Iterable[tuple[type, list[type]]],
-) -> list[tuple[type, list[type]]]:
-    groups: list[list[type]] = []
-    tops: list[type] = []
-    owner: dict[type, int] = {}
-
-    for top_ctrl, leaves in trees:
-        if not leaves:
-            continue
-        hits = sorted({owner[leaf] for leaf in leaves if leaf in owner})
-        if hits:
-            target, *also = hits
-            for other in also:
-                groups[target].extend(groups[other])
-                groups[other] = []
-            groups[target] = _get_classes_newest_by_identity([*groups[target], *leaves])
-        else:
-            target = len(groups)
-            groups.append(list(leaves))
-            tops.append(top_ctrl)
-        for leaf in groups[target]:
-            owner[leaf] = target
-
-    _debug.pipeline(
-        "http.controller.trees_grouped",
-        trees=len(tops),
-        groups=sum(1 for group in groups if group),
-    )
-    return [(tops[i], group) for i, group in enumerate(groups) if group]
-
-
-def _get_controllers(modules: Collection[str]) -> Generator[Controller]:
-    yield from (ctrl() for ctrl in Controller.children_classes.get("", []))
-
-    highest_controllers = []
-    for module in modules:
-        highest_controllers.extend(Controller.children_classes.get(module, []))
-    _debug.pipeline(
-        "http.controller.roots",
-        modules=len(modules),
-        tops=len(highest_controllers),
-        server_wide=len(Controller.children_classes.get("", [])),
-    )
-
-    trees = (
-        (top_ctrl, _get_leaf_classes(top_ctrl, modules))
-        for top_ctrl in highest_controllers
-    )
-
-    for top_ctrl, leaf_controllers in _group_controller_trees(trees):
-        name = top_ctrl.__name__
-        if leaf_controllers != [top_ctrl]:
-            extended_by = ", ".join(
-                bot_ctrl.__name__
-                for bot_ctrl in leaf_controllers
-                if bot_ctrl is not top_ctrl
-            )
-            name += f" (extended by {extended_by})"
-
-        _debug.pipeline(
-            "http.controller.assembled", controller=name, leaves=len(leaf_controllers)
-        )
-        try:
-            Ctrl = type(name, tuple(reversed(leaf_controllers)), {})
-        except TypeError:
-            _debug.logic("http.controller.mro_conflict", controller=top_ctrl.__name__)
-            _logger.error(
-                "Cannot combine the controllers %s: they extend a shared base "
-                "in incompatible orders, so no method resolution order exists "
-                "for them. Their routes are not served. Make the base order "
-                "agree between them. (%s)",
-                ", ".join(f"{c.__module__}.{c.__qualname__}" for c in leaf_controllers),
-                " / ".join(
-                    f"{c.__name__}: {' -> '.join(b.__name__ for b in c.__mro__[:-2])}"
-                    for c in leaf_controllers
-                ),
-            )
-            continue
-        yield Ctrl()
 
 
 class _ResolvedRoute(NamedTuple):

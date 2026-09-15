@@ -152,7 +152,7 @@ def test_overlapping_leaf_sets_are_fused_into_one_tree(overlap):
 
 
 def test_the_fused_tree_carries_every_leaf(overlap):
-    from odoo.http.routing import _get_controllers
+    from odoo.http.controller import _get_controllers
 
     controllers = list(_get_controllers(["rd_ov", "rd_ov_leaves"]))
     assert len(controllers) == 1
@@ -161,7 +161,7 @@ def test_the_fused_tree_carries_every_leaf(overlap):
 
 
 def test_fusion_is_transitive():
-    from odoo.http.routing import _group_controller_trees
+    from odoo.http.controller import _group_controller_trees
 
     A = _cls("A")
     B = _cls("B")
@@ -178,7 +178,7 @@ def test_fusion_is_transitive():
 
 
 def test_unrelated_trees_stay_apart():
-    from odoo.http.routing import _group_controller_trees
+    from odoo.http.controller import _group_controller_trees
 
     A = _cls("A")
     B = _cls("B")
@@ -190,7 +190,7 @@ def test_unrelated_trees_stay_apart():
 
 
 def test_a_tree_with_no_leaf_contributes_nothing():
-    from odoo.http.routing import _group_controller_trees
+    from odoo.http.controller import _group_controller_trees
 
     A = _cls("A")
     L1 = _cls("L1")
@@ -199,7 +199,7 @@ def test_a_tree_with_no_leaf_contributes_nothing():
 
 
 def test_leaf_order_survives_fusion():
-    from odoo.http.routing import _group_controller_trees
+    from odoo.http.controller import _group_controller_trees
 
     A = _cls("A")
     B = _cls("B")

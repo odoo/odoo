@@ -212,8 +212,8 @@ review does.
 | `_response.py` | serving | `_RequestResponseMixin`: `prepare_response`, `prepare_json_response`, redirects, `render` |
 | `_csrf.py` | serving | `_RequestCsrfMixin`: CSRF token generation and validation |
 | `dispatcher.py` | serving | `Dispatcher` and its three subclasses (`HttpDispatcher`, `JsonRPCDispatcher`, `Json2Dispatcher`), selected by `routing["type"]` |
-| `routing.py` | serving | `route()`, the `route_wrapper` it builds, `LazyCompiledBuilder` / `FasterRule`, `prepare_routing_map` (used by both maps the framework serves from) and the routing-parameter registry |
-| `controller.py` | serving | `Controller` and the controller registry |
+| `routing.py` | serving | `route()`, the `route_wrapper` it builds, `LazyCompiledBuilder` / `FasterRule`, `prepare_routing_map` (used by both maps the framework serves from), `_generate_routing_rules` over the assembled controllers, and the routing-parameter registry |
+| `controller.py` | serving | `Controller`, the controller registry, and the assembly of one class per top controller from the installed modules' leaves (`_get_controllers`, `_group_controller_trees`) that the routing map is generated from |
 | `session.py` | serving | `Session`, `FilesystemSessionStore`, session rotation and GC |
 | `stream.py` | serving | `Stream`: file/attachment streaming and conditional responses |
 | `wrappers.py` | serving | `HTTPRequest`, `_Response`, `Headers`, `ResponseCacheControl`, `prepare_no_content_response`, `prepare_content_disposition_header` — the werkzeug wrappers, cookie defaults, and the `HTTPException.get_response` override that keeps a status-less exception from answering 200. **`HTTPRequest.environ` is a filtered copy**: every `werkzeug.*`, `wsgi.*` and `socket*` key is dropped except `wsgi.url_scheme` and `werkzeug.proxy_fix.orig`, so `environ["wsgi.input"]` raises `KeyError` — `raw_environ` is the unfiltered one |
