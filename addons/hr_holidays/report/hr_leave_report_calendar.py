@@ -119,6 +119,9 @@ class HrLeaveReportCalendar(models.Model):
         elif self.leave_manager_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('manager', 'both'):
             # If the user is the employee's time off approver, approve the leave
             self.sudo().leave_id.sudo(False).action_approve()
+        elif self.employee_id.hr_responsible_id.user_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('hr', 'both'):
+            # If the user is the employee's HR responsible, approve the leave
+            self.sudo().leave_id.sudo(False).action_approve()
         else:
             # If the user is not a leave manager, raise an error
             raise ValidationError(self.env._("You are not allowed to approve this leave request."))
@@ -130,6 +133,9 @@ class HrLeaveReportCalendar(models.Model):
             self.leave_id.action_refuse()
         elif self.leave_manager_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('manager', 'both'):
             # If the user is the employee's time off approver, refuse the leave
+            self.sudo().leave_id.sudo(False).action_refuse()
+        elif self.employee_id.hr_responsible_id.user_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('hr', 'both'):
+            # If the user is the employee's HR responsible, refuse the leave
             self.sudo().leave_id.sudo(False).action_refuse()
         else:
             # If the user is not a leave manager, raise an error
