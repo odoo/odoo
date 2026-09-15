@@ -429,11 +429,11 @@ reason, so a first reach there is a contradiction rather than a cost.
 Inside the ORM the reach is narrower still. Everything the ORM asks of the
 models-that-describe-models, of access, of external ids, of files, of settings
 and of the locale goes through the six port objects named under **Seams**; the
-`env["<base model>"]` sites left outside them are nine (`res.company` in
-`helpers.py`, `res.groups` in `mixins/access.py`, `base` in
-`fields/properties.py`, the import converter and the module list in
-`mixins/load.py`, `res.currency.rate` in `read_group/sql.py`, the in-memory
-reflection in `model_test_env.py` and `registration.py`) and are frozen by
+`env["<base model>"]` sites left outside them are eight (`res.company` in
+`helpers.py`, `res.groups` in `mixins/access.py`, `base` twice in
+`fields/properties.py`, the import converter in `mixins/load.py`,
+`res.currency.rate` in `read_group/sql.py`, the in-memory reflection's two in
+`model_test_env.py`) and are frozen by
 `odoo/orm/tests/test_architecture_pins.py`, which also freezes the seven
 statements the models, fields and domain layers still execute themselves (DDL
 and schema in `mixins/schema.py` and `fields/_field_ddl.py`, read_group's
@@ -479,7 +479,7 @@ seam, not an import.**
 | Layer 1 ↔ `BaseModel` | the model layer injects `BaseModel` into `orm/_recordset.py` via `set_base_model()`, so `fields/` and `domain/` recognise recordsets without importing Layer 2 |
 | CRUD ↔ persistence | the model mixins dispatch row I/O through `env.backend`; a locked or conditional column write goes through `env.backend.columns` (`fetch_and_add`, `try_write`), a sequence through `env.backend.sequences` |
 | ORM ↔ `addons/base` | six port objects on the registry, each the one file that names the base models it needs: `registry.metaschema` (ir.model, ir.model.fields, ir.model.constraint, ir.default, ir.model.data's load end), `registry.access_policy` (ir.model.access, ir.rule), `registry.xmlids` (ir.model.data), `registry.file_store` (ir.attachment), `registry.settings` (ir.config_parameter), `registry.locale` (res.lang, decimal.precision). The in-memory `ModelRegistry` carries the same six |
-| framework ↔ addon models | string key (`env["res.users"]`), never an import; nine such sites remain in the ORM outside the ports and are pinned (below) |
+| framework ↔ addon models | string key (`env["res.users"]`), never an import; eight such sites remain in the ORM outside the ports and are pinned (below) |
 | `ir.ui.view` ↔ view types | an addon that adds a view type registers an `ElementHandler` for its root tag (`addons/base/models/ir_ui_view_arch.py`) instead of inheriting the model; the pipeline stages stay on the model |
 
 **`env.backend` is non-optional and has two implementors**: `PostgresBackend`
