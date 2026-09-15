@@ -13,12 +13,10 @@ class TestSMSPost(TestMassMailCommon):
         super(TestSMSPost, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
 
-        cls.sms_all = cls.env['sms.sms']
-        for x in range(10):
-            cls.sms_all |= cls.env['sms.sms'].create({
-                'number': '+324560000%s%s' % (x, x),
-                'body': cls._test_body,
-            })
+        cls.sms_all = cls.env['sms.sms'].create([{
+            'number': '+324560000%s%s' % (x, x),
+            'body': cls._test_body,
+        } for x in range(10)])
 
         # tracking info
         cls.utm_c = cls.env['utm.campaign'].create({
