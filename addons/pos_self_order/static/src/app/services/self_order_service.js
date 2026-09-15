@@ -5,6 +5,7 @@ import { formatCurrency as webFormatCurrency } from "@web/core/currency";
 import { markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
@@ -24,6 +25,8 @@ import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_p
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 
 const { DateTime } = luxon;
+
+export const PENDING_PREPARATION_KEY = "self_order_pending_preparation";
 
 export class SelfOrder extends Reactive {
     static serviceDependencies = [
@@ -792,6 +795,48 @@ export class SelfOrder extends Reactive {
         } catch (error) {
             this.handleErrorNotification(error);
         }
+    }
+
+    // Print the pending preparation ticket (precedent order that have been made on this Kiosk in another language)
+    async printPendingPreparation() {
+        const accessToken = browser.sessionStorage.getItem(PENDING_PREPARATION_KEY);
+        if (!accessToken || this.config.self_ordering_mode !== "kiosk") {
+            return;
+        }
+
+        browser.sessionStorage.removeItem(PENDING_PREPARATION_KEY);
+        let order = false;
+        try {
+            order = await this.getOrderByAccessToken(accessToken);
+            if (order) {
+                await this.ticketPrinter.printOrderChanges({ order, webFallback: false });
+            }
+        } catch (error) {
+            this.handleErrorNotification(error);
+        } finally {
+            // The order was only fetched to be printed, the kiosk keeps no order
+            order?.delete();
+        }
+    }
+
+    setPendingPreparation(accessToken) {
+        browser.sessionStorage.setItem(PENDING_PREPARATION_KEY, accessToken);
+    }
+
+    /**
+     * Kiosk orders are not kept in the local database, so they have to be fetched
+     * back from the server after a page load
+     */
+    async getOrderByAccessToken(accessToken) {
+        const orders = this.models["pos.order"];
+        let order = orders.find((o) => o.access_token === accessToken);
+
+        if (!order) {
+            await this.getUserDataFromServer([accessToken]);
+            order = orders.find((o) => o.access_token === accessToken);
+        }
+
+        return order;
     }
 
     shouldUpdateLastOrderChange() {
