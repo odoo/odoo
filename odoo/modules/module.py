@@ -90,6 +90,7 @@ _DEFAULT_MANIFEST = {
     'sequence': 100,
     'summary': '',
     'test': [],
+    'test_data': [],
     'theme_customizations': {},  # themes
     'uninstall_hook': '',
     'version': '1.0',
