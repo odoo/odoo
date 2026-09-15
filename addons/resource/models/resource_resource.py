@@ -446,3 +446,34 @@ class ResourceResource(models.Model):
 
     def _get_resources_per_tz(self):
         return self.grouped(lambda r: ZoneInfo(r.tz))
+
+    # --------------------------------------------------
+    # New API
+    # --------------------------------------------------
+
+    def _attendance_intervals(self, dt_from, dt_to, domain=None):
+        """
+        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
+            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
+            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
+        As calendars aren't bound to timezones, the return intervals are given back with naive datetimes.
+
+        :param dt_from: start date of the period (included).
+        :param dt_to: end date of the period (included)
+        :param domain: optional domain to filter attendances
+        """
+        intervals_per_resource = {}
+        for resource in self:
+            intervals_per_resource[resource] = Intervals([])  # TODO BEDO
+        return intervals_per_resource
+
+    def _leave_intervals(self, dt_from, dt_to, domain=None):
+        return {}  # TODO BEDO
+
+    def _work_intervals(self, dt_from, dt_to, domain=None):
+        attendances = self._attendance_intervals(dt_from, dt_to, domain)
+        leaves = self._leave_intervals(dt_from, dt_to, domain)
+        return {
+            record: attendances.get(record, Intervals([])) - leaves.get(record, Intervals([]))
+            for record in self
+        }
