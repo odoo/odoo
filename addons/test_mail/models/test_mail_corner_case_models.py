@@ -122,7 +122,7 @@ class MailTestTrackAll(models.Model):
     datetime_field = fields.Datetime('Datetime', tracking=4)
     float_field = fields.Float('Float', tracking=5)
     float_field_with_digits = fields.Float('Precise Float', digits=(10, 8), tracking=5)
-    html_field = fields.Html('Html', tracking=False)
+    html_field = fields.Html('Html', tracking=6)
     integer_field = fields.Integer('Integer', tracking=7)
     many2many_field = fields.Many2many(
         'mail.test.track.all.m2m', string='Many2Many',
