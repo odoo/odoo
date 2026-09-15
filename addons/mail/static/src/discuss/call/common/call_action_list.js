@@ -8,7 +8,18 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
+
+/**
+ * What a small screen keeps in its bar; everything else goes into "More". "deafen" is there
+ * because it swaps places with "mute": without it the bar loses its audio control once deafened.
+ */
+const SMALL_SCREEN_BAR_ACTION_IDS = [
+    "camera-on",
+    "deafen",
+    "mute",
+    "quick-video-settings",
+    "quick-voice-settings",
+];
 
 export class CallActionList extends Component {
     static components = { ActionList };
@@ -24,9 +35,12 @@ export class CallActionList extends Component {
             channel: types.instanceOf(this.store["discuss.channel"]),
             className: types.string().optional(),
             compact: types.boolean().optional(),
+            /** Action groups a caller folds into the small-screen "More" instead of rendering. */
+            extraMoreActionGroups: types.array().optional(),
             pipExtraActions: types.array().optional(),
         });
         this.rtc = useService("discuss.rtc");
+        this.ui = useService("ui");
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
         this.popover = usePopover(Tooltip, {
@@ -34,6 +48,9 @@ export class CallActionList extends Component {
         });
         this.actions = computed(() => {
             const partition = toRaw(this.callActions).partition;
+            if (this.ui.isSmall) {
+                return this.smallScreenActions(partition);
+            }
             const other = partition.other.filter((a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT));
             const group2 = [];
             let disconnectGroupIndex = -1;
@@ -83,15 +100,6 @@ export class CallActionList extends Component {
                         this.callActionsParams,
                         {
                             actions: [layoutActions],
-                            // Pulse the toggle to nudge fullscreen, as the Fullscreen action that
-                            // used to carry the pulse now lives inside this menu.
-                            btnClass: ({ channel }) =>
-                                attClassObjectToString({
-                                    "o-discuss-CallActionList-pulse": Boolean(
-                                        channel?.promoteFullscreen ===
-                                            CALL_PROMOTE_FULLSCREEN.ACTIVE
-                                    ),
-                                }),
                             dropdownMenuClass: attClassObjectToString({
                                 "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
                                 "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
@@ -113,6 +121,65 @@ export class CallActionList extends Component {
             }
             return [...group2, other];
         });
+    }
+
+    /**
+     * The groups of a small screen's bar, in bar order. Everything folds into a single "More": the
+     * wide bar's one menu per group is more chrome than a phone fits.
+     *
+     * @param {{ group: Array<Array>, other: Array }} partition
+     */
+    smallScreenActions(partition) {
+        const barGroups = [];
+        const moreGroups = [];
+        const joinLeave = [];
+        for (const groupActions of partition.group) {
+            const kept = [];
+            const moved = [];
+            for (const action of groupActions) {
+                if (action.tags.includes(ACTION_TAGS.JOIN_LEAVE_CALL)) {
+                    joinLeave.push(action);
+                } else if (SMALL_SCREEN_BAR_ACTION_IDS.includes(action.id)) {
+                    kept.push(action);
+                } else {
+                    moved.push(action);
+                }
+            }
+            if (kept.length) {
+                barGroups.push(kept);
+            }
+            if (moved.length) {
+                moreGroups.push(moved);
+            }
+        }
+        if (this.props.pipExtraActions?.length) {
+            moreGroups.push(this.props.pipExtraActions);
+        }
+        // The layout actions (Fullscreen, Adjust view, Picture in Picture) carry no sequenceGroup.
+        if (partition.other.length) {
+            moreGroups.push(partition.other);
+        }
+        // A meeting hands its side actions over rather than opening a second "More" beside this.
+        moreGroups.push(...(this.props.extraMoreActionGroups ?? []));
+        const moreGroup = moreGroups.length
+            ? [
+                  this.callActions.more(
+                      this.callActionsParams,
+                      {
+                          actions: moreGroups,
+                          dropdownMenuClass: attClassObjectToString({
+                              "m-0 mb-1 overflow-x-hidden": true,
+                              "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                          }),
+                          dropdownPosition: "top-end",
+                          id: "small-screen-more",
+                          name: this.MORE,
+                      },
+                      "small-screen-more"
+                  ),
+              ]
+            : [];
+        return [...barGroups, moreGroup, joinLeave].filter((group) => group.length);
     }
 
     get callActionsParams() {

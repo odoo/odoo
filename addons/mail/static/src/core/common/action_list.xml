@@ -80,9 +80,9 @@
     <!-- roundness -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
-        'rounded-circle':  this.props.inline and  isInlineCircleButton,
-        'rounded-start-3': this.props.inline and !isInlineCircleButton and this.props.isFirstInGroup,
-        'rounded-end-3':   this.props.inline and !isInlineCircleButton and this.props.isLastInGroup,
+        'rounded-circle':  !this.hasOwnRounding and this.props.inline and  isInlineCircleButton,
+        'rounded-start-3': !this.hasOwnRounding and this.props.inline and !isInlineCircleButton and this.props.isFirstInGroup,
+        'rounded-end-3':   !this.hasOwnRounding and this.props.inline and !isInlineCircleButton and this.props.isLastInGroup,
     })"/>
     <!-- margin -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
