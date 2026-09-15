@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import groupby
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -21,6 +24,7 @@ class AccountMove(models.Model):
         sale_moves = self.filtered(
             lambda move: move.is_sale_document(include_receipts=True),
         )
+        _debug.perf.count("move_team_resolved", moves=len(self), sale=len(sale_moves))
         for (user_id, company_id), moves in groupby(
             sale_moves,
             key=lambda m: (m.invoice_user_id.id, m.company_id.id),

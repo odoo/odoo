@@ -554,9 +554,13 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="update_line", order=order_id)
             return request.redirect("/my")
 
         if not order_sudo._can_be_edited_on_portal():
+            _debug.logic(
+                "portal_line_update_refused", order=order_sudo, reason="order_readonly"
+            )
             return None
 
         order_line = request.env["sale.order.line"].sudo().browse(int(line_id)).exists()
@@ -565,6 +569,9 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             or order_line.order_id != order_sudo
             or not order_line._can_be_edited_on_portal()
         ):
+            _debug.logic(
+                "portal_line_update_refused", order=order_sudo, reason="line_readonly"
+            )
             return None
 
         if input_quantity is not False:
@@ -577,6 +584,12 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             combo_item_lines = order_line._get_lines_linked().filtered("combo_item_id")
             combo_item_lines.update({"product_qty": quantity})
 
+        _debug.lifecycle(
+            "portal_line_quantity_set",
+            order=order_sudo,
+            line=order_line,
+            quantity=quantity,
+        )
         order_line.product_qty = quantity
         return None
 

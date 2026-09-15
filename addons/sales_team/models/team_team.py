@@ -95,6 +95,9 @@ class TeamTeam(models.Model):
         SO_COUNT_TRIGGER = 5
         for team in self.sudo().filtered("use_sale"):
             if team.sale_order_count >= SO_COUNT_TRIGGER:
+                _debug.logic(
+                    "team_unlink_refused", team=team, orders=team.sale_order_count
+                )
                 raise UserError(
                     _(
                         "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider cancelling them or archiving the team instead.",
@@ -143,6 +146,7 @@ class TeamTeam(models.Model):
         else:
             data_map = {}
 
+        _debug.perf.count("team_invoiced", teams=len(self), rows=len(data_map))
         for team in self:
             team.invoiced = data_map.get(team._origin.id, 0.0)
 
@@ -157,6 +161,7 @@ class TeamTeam(models.Model):
             ["__count"],
         )
         data_map = {team.id: count for team, count in sale_order_data}
+        _debug.perf.count("team_sale_order_count", teams=len(self), rows=len(data_map))
         for team in self:
             team.sale_order_count = data_map.get(team.id, 0)
 
@@ -168,6 +173,7 @@ class TeamTeam(models.Model):
         return super().action_primary_channel_button()
 
     def update_invoiced_target(self, value):
+        _debug.lifecycle("invoiced_target_set", teams=self, value=value)
         return self.write({"invoiced_target": round(float(value or 0))})
 
     def _is_in_sale_scope(self):

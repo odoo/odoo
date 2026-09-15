@@ -157,6 +157,11 @@ class ResConfigSettings(models.TransientModel):
                 .search([("sale_order_template_id", "!=", False)])
             )
             if companies:
+                _debug.lifecycle(
+                    "company_templates_cleared",
+                    companies=companies,
+                    reason="templates_feature_off",
+                )
                 companies.sale_order_template_id = False
         super().set_values()
         _debug.lifecycle(

@@ -445,6 +445,9 @@ class SaleOrder(models.Model):
                 order.notes = template.note
                 continue
             if not use_invoice_terms:
+                _debug.logic(
+                    "notes_skipped", order=order, reason="invoice_terms_disabled"
+                )
                 continue
             company = order.company_id
             order_company = order.with_company(company)
@@ -672,6 +675,7 @@ class SaleOrder(models.Model):
     @api.onchange("sale_order_template_id")
     def _onchange_sale_order_template_id(self):
         if not self.sale_order_template_id:
+            _debug.logic("template_lines_skipped", reason="no_template")
             return
 
         sale_order_template = self.sale_order_template_id.with_context(
@@ -687,6 +691,12 @@ class SaleOrder(models.Model):
         if len(order_lines_data) >= 2:
             order_lines_data[1][2]["sequence"] = -99
 
+        _debug.pipeline(
+            "order_lines_from_template",
+            order=self._origin,
+            template=self.sale_order_template_id,
+            lines=len(order_lines_data) - 1,
+        )
         self.line_ids = order_lines_data
 
     @api.onchange("partner_id")
@@ -711,6 +721,12 @@ class SaleOrder(models.Model):
         t_lines = self.sale_order_template_id.sale_order_template_line_ids
 
         if all(starmap(line_eqv, zip_longest(lines, t_lines))):
+            _debug.logic(
+                "template_lines_reapplied",
+                order=self._origin,
+                template=self.sale_order_template_id,
+                reason="lines_untouched",
+            )
             self._onchange_sale_order_template_id()
 
     @api.onchange("company_id")
@@ -902,6 +918,11 @@ class SaleOrder(models.Model):
 
         for order in self:
             if order.sale_order_template_id.mail_template_id:
+                _debug.logic(
+                    "confirmation_mail_from_template",
+                    order=order,
+                    template=order.sale_order_template_id.mail_template_id,
+                )
                 order._send_mail_order_notification(
                     order.sale_order_template_id.mail_template_id
                 )

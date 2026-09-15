@@ -504,6 +504,11 @@ class SaleOrderLine(models.Model):
                             lang=lang
                         )._get_line_multiline_description_variants()
                     )
+                    _debug.logic(
+                        "line_name_from_template",
+                        line=line,
+                        template=line.order_id.sale_order_template_id,
+                    )
                     break
 
     @api.depends("product_id", "product_uom_id", "product_qty")

@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -49,6 +52,9 @@ class SaleOrder(models.Model):
                     )
                 )
             order.team_id = cached_teams[key]
+        _debug.perf.count(
+            "team_defaults_resolved", orders=len(self), keys=len(cached_teams)
+        )
 
     def _default_team_id(self):
         return self.env.context.get("default_team_id", False) or self.team_id.id
