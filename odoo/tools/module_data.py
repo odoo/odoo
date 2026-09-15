@@ -142,6 +142,139 @@ def retire_empty_module(cr: _SqlCursor, module: str) -> None:
         _logger.info("%s retired: every record it shipped now lives elsewhere", module)
 
 
+def rename_module(cr: _SqlCursor, old: str, new: str) -> bool:
+    cr.execute(SQL("SELECT id FROM ir_module_module WHERE name = %s", old))
+    if not cr.fetchone():
+        return False
+    _drop_uninstalled_placeholder(cr, old, new)
+    cr.execute(
+        SQL(
+            "UPDATE ir_module_module SET name = %s, data_file_checksums = NULL "
+            "WHERE name = %s",
+            new,
+            old,
+        )
+    )
+    for table in ("ir_module_module_dependency", "ir_module_module_exclusion"):
+        cr.execute(
+            SQL(
+                """
+                DELETE FROM %(table)s stale
+                      WHERE stale.name = %(old)s
+                        AND EXISTS (SELECT 1 FROM %(table)s kept
+                                     WHERE kept.module_id = stale.module_id
+                                       AND kept.name = %(new)s)
+                """,
+                table=SQL.identifier(table),
+                old=old,
+                new=new,
+            )
+        )
+        cr.execute(
+            SQL(
+                "UPDATE %s SET name = %s WHERE name = %s",
+                SQL.identifier(table),
+                new,
+                old,
+            )
+        )
+    moved = _rename_module_xmlids(cr, old, new)
+    cr.execute(
+        SQL(
+            """
+            UPDATE ir_config_parameter
+               SET key = %(new)s || substring(key from %(tail)s)
+             WHERE key LIKE %(like)s
+               AND NOT EXISTS (
+                   SELECT 1 FROM ir_config_parameter existing
+                    WHERE existing.key = %(new)s || substring(ir_config_parameter.key from %(tail)s)
+               )
+            """,
+            new=f"{new}.",
+            tail=len(old) + 2,
+            like=_like_prefix(f"{old}."),
+        )
+    )
+    rename_in_stored_expressions(cr, f"{old}.", f"{new}.")
+    cr.execute(
+        SQL(
+            "UPDATE ir_ui_view SET key = %s || substring(key from %s) WHERE key LIKE %s",
+            f"{new}.",
+            len(old) + 2,
+            _like_prefix(f"{old}."),
+        )
+    )
+    if column_exists(cr, "ir_asset", "path"):
+        cr.execute(
+            SQL(
+                "UPDATE ir_asset SET path = regexp_replace(path, %s, %s) WHERE path ~ %s",
+                f"^(/?){old}/",
+                rf"\1{new}/",
+                f"^/?{old}/",
+            )
+        )
+    _debug.lifecycle("module_data.module_renamed", old=old, new=new, xmlids=moved)
+    _logger.info("renamed module %s to %s with %s xml id(s)", old, new, moved)
+    return True
+
+
+def _drop_uninstalled_placeholder(cr: _SqlCursor, old: str, new: str) -> None:
+    cr.execute(SQL("SELECT id, state FROM ir_module_module WHERE name = %s", new))
+    if not (row := cr.fetchone()):
+        return
+    module_id, state = row
+    if state != "uninstalled":
+        raise ValueError(
+            f"{old} and {new} are both present and {new} is {state}; "
+            f"uninstall {new}, then upgrade base again"
+        )
+    cr.execute(
+        SQL(
+            "DELETE FROM ir_model_data WHERE module = 'base' "
+            "AND model = 'ir.module.module' AND res_id = %s",
+            module_id,
+        )
+    )
+    for table in ("ir_module_module_dependency", "ir_module_module_exclusion"):
+        cr.execute(
+            SQL("DELETE FROM %s WHERE module_id = %s", SQL.identifier(table), module_id)
+        )
+    cr.execute(SQL("DELETE FROM ir_module_module WHERE id = %s", module_id))
+    _logger.info("dropped the uninstalled %s placeholder", new)
+
+
+def _rename_module_xmlids(cr: _SqlCursor, old: str, new: str) -> int:
+    cr.execute(
+        SQL(
+            """
+            SELECT d.name FROM ir_model_data d
+             WHERE d.module = %s
+               AND EXISTS (SELECT 1 FROM ir_model_data o
+                            WHERE o.module = %s AND o.name = d.name)
+            """,
+            old,
+            new,
+        )
+    )
+    if clashing := sorted(name for (name,) in cr.fetchall()):
+        raise ValueError(f"{old} and {new} both own {clashing}")
+    cr.execute(SQL("UPDATE ir_model_data SET module = %s WHERE module = %s", new, old))
+    moved = cr.rowcount
+    cr.execute(
+        SQL(
+            "UPDATE ir_model_data SET name = %s "
+            "WHERE module = 'base' AND model = 'ir.module.module' AND name = %s",
+            f"module_{new}",
+            f"module_{old}",
+        )
+    )
+    return moved
+
+
+def _like_prefix(prefix: str) -> str:
+    return prefix.replace("_", "\\_") + "%"
+
+
 READONLY_FORERUNNERS: Mapping[str, str] = {
     "stock_group_readonly": "stock",
     "sale_group_readonly": "sale",

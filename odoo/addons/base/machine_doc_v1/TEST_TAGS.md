@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3803 methods, 771 classes, 135 files)
+# All base tests (3808 methods, 772 classes, 136 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (75 files, 441 classes)
+### Tagged Files (76 files, 442 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -147,6 +147,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_mixin_merge.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_module_data_rename_model.py` | `post_install`, `-at_install` | 2 | 10 | TransactionCase |
+| `test_module_data_rename_module.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_neutralize.py` | `post_install`, `-at_install`, `neutralize` | 2 | 2 | TransactionCase, BaseCase |
 | `test_nplusone.py` | `-standard`, `nplusone` | 3 | 12 | TransactionCase, TestNplusOneDetection |
 | `test_orm.py` | `post_install`, `-at_install` | 6 | 30 | TransactionCase |
@@ -251,12 +252,12 @@ These run in **both** at_install and post_install phases by default.
 
 | Metric | Value |
 |--------|-------|
-| Total test files | 135 |
-| Total test classes | 771 |
-| Total test methods | 3803 |
-| Files with @tagged | 75 (56%) |
+| Total test files | 136 |
+| Total test classes | 772 |
+| Total test methods | 3808 |
+| Files with @tagged | 76 (56%) |
 | Files without @tagged | 60 (44%) |
-| Classes using post_install | 240 |
+| Classes using post_install | 241 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (115 classes, 385 tests) |
 

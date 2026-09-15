@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_line_list" model="ir.ui.view">
+        <field name="name">account.move.line.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_list_accounting" />
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="turn_as_asset"
+                    type="object"
+                    string="Create Asset"
+                    groups="account.group_account_user"
+                    data-hotkey="c" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page
+                    name="page_automation"
+                    string="Automation"
+                    invisible="not can_create_asset">
+                    <group>
+                        <group>
+                            <field name="can_create_asset" invisible="1" />
+                            <label for="create_asset" string="Automate Asset" />
+                            <field
+                                name="create_asset"
+                                widget="radio"
+                                nolabel="1"
+                                invisible="not can_create_asset" />
+                            <field
+                                name="multiple_assets_per_line"
+                                string="Manage Items"
+                                invisible="not can_create_asset or create_asset == 'no'" />
+                            <field
+                                name="asset_model_ids"
+                                string="Asset Model"
+                                widget="many2many_tags"
+                                domain="[('state', '=', 'model')]"
+                                context="{                                         'default_state': 'model',                                         'form_view_ref': 'account_depreciation.view_account_asset_form',                                         'default_account_depreciation_id': id,                                    }"
+                                options="{'no_quick_create': True}"
+                                invisible="context.get('hide_model_on_account') or (create_asset == 'no' or not can_create_asset)"
+                                required="create_asset == 'validate' and can_create_asset" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

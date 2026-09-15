@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_asset_export_template" model="ir.exports">
+        <field name="name">Assets</field>
+        <field name="resource">account.asset</field>
+        <field name="export_fields">
+            <record
+                id="account_asset_export_template_line_name"
+                model="ir.exports.line">
+                <field name="name">name</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_original_value"
+                model="ir.exports.line">
+                <field name="name">original_value</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_acquisition_date"
+                model="ir.exports.line">
+                <field name="name">acquisition_date</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_asset_group_id"
+                model="ir.exports.line">
+                <field name="name">asset_group_id</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_method"
+                model="ir.exports.line">
+                <field name="name">method</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_method_number"
+                model="ir.exports.line">
+                <field name="name">method_number</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_method_period"
+                model="ir.exports.line">
+                <field name="name">method_period</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_method_progress_factor"
+                model="ir.exports.line">
+                <field name="name">method_progress_factor</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_prorata_computation_type"
+                model="ir.exports.line">
+                <field name="name">prorata_computation_type</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_prorata_date"
+                model="ir.exports.line">
+                <field name="name">prorata_date</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_already_depreciated_amount_import"
+                model="ir.exports.line">
+                <field name="name">already_depreciated_amount_import</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_salvage_value"
+                model="ir.exports.line">
+                <field name="name">salvage_value</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_company_id"
+                model="ir.exports.line">
+                <field name="name">company_id</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_account_asset_id"
+                model="ir.exports.line">
+                <field name="name">account_asset_id</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_account_depreciation_id"
+                model="ir.exports.line">
+                <field name="name">account_depreciation_id</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_account_depreciation_expense_id"
+                model="ir.exports.line">
+                <field name="name">account_depreciation_expense_id</field>
+            </record>
+            <record
+                id="account_asset_export_template_line_journal_id"
+                model="ir.exports.line">
+                <field name="name">journal_id</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

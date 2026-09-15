@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record
+            id="account_return_check_template_asset_movement_and_accounting_treatment"
+            model="account.return.check.template">
+            <field name="name">Asset movement and accounting treatment</field>
+            <field
+                name="description">Identify acquisitions, disposals, write-offs, etc. Ensure correct accounting treatment, depreciation, and capital gains processing.</field>
+            <field name="type">check</field>
+            <field name="model" eval="False" />
+            <field name="cycle">fixed_assets</field>
+            <field name="return_type" ref="account.default_audit_return_type" />
+            <field
+                name="code">_account_return_check_template_asset_movement_and_accounting_treatment</field>
+            <field
+                name="action_id"
+                ref="account_depreciation.action_account_report_assets" />
+            <field
+                name="additional_action_params">{
+                'options': {
+                    'date': {
+                        'date_to': return_end_date,
+                        'filter': 'custom',
+                        'mode': 'single',
+                    },
+                },
+                'ignore_session': True
+            }</field>
+        </record>
+        <record
+            id="account_return_check_template_review_depreciation_periods_new_acquisitions"
+            model="account.return.check.template">
+            <field name="name">Review depreciation periods for new acquisitions</field>
+            <field
+                name="description">Check depreciation periods for new acquisitions and ensure consistency with similar assets. Document any changes in accounting methods.</field>
+            <field name="type">check</field>
+            <field name="model" eval="False" />
+            <field name="cycle">fixed_assets</field>
+            <field name="return_type" ref="account.default_audit_return_type" />
+            <field
+                name="code">_account_return_check_template_review_depreciation_periods_new_acquisitions</field>
+            <field
+                name="action_id"
+                ref="account_depreciation.action_account_report_assets" />
+            <field
+                name="additional_action_params">{
+                'options': {
+                    'date': {
+                        'date_to': return_end_date,
+                        'filter': 'custom',
+                        'mode': 'single',
+                    },
+                },
+                'ignore_session': True
+            }</field>
+        </record>
+        <record
+            id="account_return_check_template_monitoring_of_depreciation"
+            model="account.return.check.template">
+            <field name="name">Monitoring of Depreciation </field>
+            <field
+                name="description">Ensure compliance with local tax rules on depreciation.
+Verify that the depreciation methods, depreciation period, and start dates align with tax requirements (e.g. linear depreciation, pro rata temporis application, no double declining for tax purposes).</field>
+            <field name="type">check</field>
+            <field name="cycle">state</field>
+            <field name="return_type" ref="account.default_audit_return_type" />
+            <field
+                name="code">_account_return_check_template_monitoring_of_depreciation</field>
+            <field
+                name="action_id"
+                ref="account_depreciation.action_account_report_assets" />
+            <field
+                name="additional_action_params">{
+                'options': {
+                    'date': {
+                        'date_to': return_end_date,
+                        'filter': 'custom',
+                        'mode': 'single',
+                    },
+                },
+                'ignore_session': True
+            }</field>
+        </record>
+    </data>
+
+</odoo>

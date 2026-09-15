@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Configuration -->
+    <menuitem
+        id="menu_finance_config_assets"
+        name="Assets and Revenues"
+        parent="account.menu_finance_configuration"
+        sequence="25" />
+
+    <menuitem
+        id="account_assets_liabilities_menu"
+        name="Assets &amp; Liabilities"
+        parent="account.menu_finance_entries"
+        sequence="15" />
+
+    <menuitem
+        id="menu_action_account_asset_form"
+        parent="account_assets_liabilities_menu"
+        action="action_account_asset_form"
+        sequence="60"
+        groups="account.group_account_readonly" />
+
+    <menuitem
+        id="menu_action_account_asset_model_form"
+        parent="account.menu_account_accounting"
+        action="action_account_asset_model_form"
+        groups="account.group_account_readonly" />
+
+    <menuitem
+        id="menu_action_account_report_assets"
+        name="Depreciation Schedule"
+        parent="account.account_audit_inventory_entries_menu"
+        action="action_account_report_assets"
+        sequence="20"
+        groups="account.group_account_readonly" />
+
+</odoo>

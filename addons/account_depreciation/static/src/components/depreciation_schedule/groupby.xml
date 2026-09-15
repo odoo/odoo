@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_depreciation.DepreciationScheduleGroupBy">
+        <t t-set="groupings" t-value="[
+            ['account_id', 'Group by Account'],
+            ['asset_group_id', 'Group by Asset Group'],
+            ['none', 'No Grouping'],
+        ]"/>
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa-solid fa-list me-1"/>
+                <t t-foreach="groupings" t-as="grouping" t-key="grouping[0]">
+                    <t t-if="controller.cachedFilterOptions.assets_grouping_field === grouping[0]" t-esc="grouping[1]"/>
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem t-foreach="groupings" t-as="grouping" t-key="grouping[0]"
+                    class="{ 'selected': controller.cachedFilterOptions.assets_grouping_field === grouping[0] }"
+                    onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: grouping[0], reload: true})"
+                >
+                    <t t-esc="grouping[1]"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
