@@ -75,11 +75,20 @@ class IrQwebField(models.AbstractModel):
             lang = record.env.lang or 'en_US'
             base_lang = record._get_base_lang()
             if lang == base_lang:
-                attrs['data-oe-translation-state'] = 'translated'
+                translation_state = 'translated'
             else:
                 base_value = record.with_context(lang=base_lang)[field_name]
                 value = record[field_name]
-                attrs['data-oe-translation-state'] = 'translated' if base_value != value else 'to_translate'
+                if base_value == value:
+                    translation_state = 'to_translate'
+                else:
+                    translations = record._get_stored_translations(field_name)
+                    translation_state = (
+                        'translated'
+                        if not translations or lang in dict(translations)
+                        else 'to_translate'
+                    )
+            attrs['data-oe-translation-state'] = translation_state
 
         return attrs
 
