@@ -1,9 +1,9 @@
 import typing
 
 from odoo.orm.components.storage import DictBackend
+from odoo.orm.runtime._backend_memory import InMemoryBackend
 from odoo.orm.runtime.backend import (
     ColumnStore,
-    InMemoryBackend,
     PostgresBackend,
     PostgresColumnStore,
 )

@@ -434,10 +434,11 @@ and of the locale goes through the six port objects named under **Seams**; the
 `fields/properties.py`, the import converter and the module list in
 `mixins/load.py`, `res.currency.rate` in `read_group/sql.py`, the in-memory
 reflection in `model_test_env.py` and `registration.py`) and are frozen by
-`odoo/orm/tests/test_architecture_pins.py`, which also freezes the fifteen
-statements the models, fields and domain layers still execute themselves (DDL,
-schema, read_group's aggregation, four field lookups). Both maps may shrink and
-must not grow; a regression names the file and where the site belongs.
+`odoo/orm/tests/test_architecture_pins.py`, which also freezes the nine
+statements the models, fields and domain layers still execute themselves (DDL
+and schema in `mixins/schema.py` and `fields/_field_ddl.py`, read_group's
+grouping sets and its empty-having probe). Both maps may shrink and must not
+grow; a regression names the file and where the site belongs.
 
 ### Direction rules are blind to cycles
 
@@ -482,13 +483,17 @@ seam, not an import.**
 | `ir.ui.view` ↔ view types | an addon that adds a view type registers an `ElementHandler` for its root tag (`addons/base/models/ir_ui_view_arch.py`) instead of inheriting the model; the pipeline stages stay on the model |
 
 **`env.backend` is non-optional and has two implementors**: `PostgresBackend`
-owns the SQL — every `INSERT`, `UPDATE`, `DELETE`, locking `SELECT` and
-m2m-table statement is a method of the backend taking the model as its
-argument; `runtime/backend.py`'s `InMemoryBackend` adapts the same port to
-`DictBackend` (`components/storage.py`). The mixins call the port and nothing
-else, so the two implementors read side by side in one file, and what stays on
-the model is query *compilation* — `_field_to_sql`, `_order_to_sql`,
-`_traverse_related_sql` — which `Domain._to_sql` and `read_group` call too.
+(`runtime/backend.py`, beside the `StorageBackend` protocol) owns the SQL —
+every `INSERT`, `UPDATE`, `DELETE`, locking `SELECT`, m2m-table statement,
+the reachability query behind `_has_cycle` and the counter increment behind
+`_increment_fields_skiplock` is a method of the backend taking the model as its
+argument; `runtime/_backend_memory.py`'s `InMemoryBackend` adapts the same
+port to `DictBackend` (`components/storage.py`), the in-memory `read_group`,
+foreign-key plan and table-constraint checks with it. The mixins call the port
+and nothing else, so the production file carries no test-tier emulation, and
+what stays on the model is query *compilation* — `_field_to_sql`,
+`_order_to_sql`, `_traverse_related_sql` — which `Domain._to_sql` and
+`read_group` call too.
 
 PostgreSQL search compiles SQL and flushes its metadata at execution. The
 in-memory adapter discovers domain, relation and ordering dependencies directly
@@ -504,16 +509,19 @@ pins the database-free boundary.
 Production CRUD sniffs the test backend neither via `transaction.storage` nor
 via a null check.
 
-**Capabilities: 1 declared, no branch that is lossy or blocking** (frozen at
+**Capabilities: none declared, no branch that is lossy or blocking** (frozen at
 odoo `f7e799ce3578`, 2026-09-13, re-read 2026-09-14 when the Reference field's
 sibling prefetch moved onto `backend.columns` and `supports_column_scan` went
-with it; pinned by `odoo/orm/tests/test_backend_dispatch_surface.py` and
+with it, and again 2026-09-15 when `_has_cycle`, `_increment_fields_skiplock`
+and the transient vacuum's backlog probe moved onto the port and
+`supports_recursive_queries` went with them; pinned by
+`odoo/orm/tests/test_backend_dispatch_surface.py` and
 `test_backend_protocol.py`):
 
 | Measure | Value | What it counts |
 |---|---:|---|
-| declared capabilities | 1 | `supports_recursive_queries` -- guards a site whose in-memory branch the inventory marks *equivalent* |
-| dispatch sites | 20 across 12 files, 5 in Layer 1 | every `env.backend.<method>(` in the mixins, fields and domain |
+| declared capabilities | 0 | a backend answers every question of the protocol itself; a site that branched on what the backend could do was a site the backend now owns |
+| dispatch sites | 28 across 19 files, 7 in Layer 1 | every `env.backend.<method>(` in the models, fields and domain |
 | protocol methods without a caller | 0 | every `StorageBackend` method is dispatched from the ORM or from a base model spelling `env.backend.` |
 
 What used to branch now calls the port: a many2many read is `read_m2m_groups`

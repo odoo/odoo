@@ -4,11 +4,11 @@ import typing
 
 import pytest
 
-from odoo.orm.runtime.backend import InMemoryBackend, StorageBackend
+from odoo.orm.runtime._backend_memory import InMemoryBackend
+from odoo.orm.runtime.backend import StorageBackend
 
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
-_MIXINS_DIR = _ORM_DIR / "models" / "mixins"
-_DISPATCH_DIRS = (_MIXINS_DIR, _ORM_DIR / "fields", _ORM_DIR / "domain")
+_DISPATCH_DIRS = (_ORM_DIR / "models", _ORM_DIR / "fields", _ORM_DIR / "domain")
 # addon models are port callers too (ir.ui.view walks view ancestry, res.users
 # reads password columns, account's sequence tries a value); some name their
 # file-storage backends `backend`, so only the spelled-out `env.backend.` counts
@@ -17,9 +17,7 @@ _ADDON_ROOTS = (
     _ORM_DIR.parent.parent / "addons",
 )
 
-_CAPABILITY_MEMBERS = {
-    "supports_recursive_queries",
-}
+_CAPABILITY_MEMBERS: frozenset[str] = frozenset()
 _ATTRIBUTE_MEMBERS = _CAPABILITY_MEMBERS | {"sequences", "columns"}
 
 

@@ -5,7 +5,6 @@ from typing import Self
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
-from odoo.libs.sql import SQL
 from odoo.tools.cache import TransactionMemo
 from odoo.tools.translate import _
 
@@ -40,36 +39,20 @@ class WriteMixin(_ModelStubs):
                     f"_increment_fields_skiplock: field {field!r} is not an integer"
                 )
 
-        cr = self.env.cr
-        tablename = self._table
-        cr.execute(
-            SQL(
-                """
-            UPDATE %s
-               SET %s
-             WHERE id IN (SELECT id FROM %s WHERE id = ANY(%s) FOR UPDATE SKIP LOCKED)
-            """,
-                SQL.identifier(tablename),
-                SQL(", ").join(
-                    SQL(
-                        "%s = COALESCE(%s, 0) + 1",
-                        SQL.identifier(field),
-                        SQL.identifier(field),
-                    )
-                    for field in fields
-                ),
-                SQL.identifier(tablename),
-                self.ids,
-            )
-        )
+        # a pending write of a counter lands before the increment, and the
+        # cache drops the counters after it: a read in the same transaction
+        # answers the incremented value, not the one written or fetched before
+        self.flush_recordset(fields)
+        updated = self.env.backend.increment_columns_skip_locked(self, fields, self.ids)
+        self._invalidate_cache(fields, self._ids, flush=False)
         _debug.logic(
             "write.increment_skiplock",
             model=self._name,
             fields=list(fields),
             records=len(self),
-            updated=cr.rowcount,
+            updated=updated,
         )
-        return bool(cr.rowcount)
+        return bool(updated)
 
     def _write_check_field_access(self, vals: ValuesType) -> None:
         self.check_access("write")

@@ -280,7 +280,7 @@ def test_every_construction_path_sets_all_slots() -> None:
 
 
 def test_persistence_backend_seam_is_wired() -> None:
-    from odoo.orm.runtime.backend import InMemoryBackend
+    from odoo.orm.runtime._backend_memory import InMemoryBackend
 
     with model_test_env(IScalars) as env:
         backend = env.backend

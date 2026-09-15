@@ -1,7 +1,6 @@
 from odoo.orm.components.storage import DictBackend
+from odoo.orm.runtime._backend_memory import InMemoryBackend, InMemorySequenceStore
 from odoo.orm.runtime.backend import (
-    InMemoryBackend,
-    InMemorySequenceStore,
     PostgresBackend,
     PostgresSequenceStore,
     SequenceStore,

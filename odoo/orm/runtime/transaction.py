@@ -14,7 +14,8 @@ from ..components.compute import ComputeEngine
 from ..components.core import OrmCore
 from ..components.unit_of_work import UnitOfWork
 from ..primitives import SUPERUSER_ID, NewId
-from .backend import POSTGRES_BACKEND, InMemoryBackend
+from ._backend_memory import InMemoryBackend
+from .backend import POSTGRES_BACKEND
 from .recordset_cache import Cache
 from .registry import Registry
 

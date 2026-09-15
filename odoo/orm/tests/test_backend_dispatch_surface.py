@@ -4,12 +4,12 @@ import re
 
 import pytest
 
-from odoo.orm.runtime.backend import InMemoryBackend
+from odoo.orm.runtime._backend_memory import InMemoryBackend
 
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-six sites across eighteen files
+# has grown to twenty-eight sites across nineteen files
 # -- including seven in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
@@ -32,6 +32,15 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "first value when the column was not an object yet"
     ),
     ("models/mixins/write.py", "_get_records_with_parent_changed"): "equivalent",
+    ("models/mixins/write.py", "_increment_fields_skiplock"): (
+        "equivalent: the rows that exist are incremented and counted; SKIP "
+        "LOCKED has nothing to skip in memory, where no other transaction holds "
+        "a row"
+    ),
+    ("models/transient.py", "_remove_transient_rows_over_count"): (
+        "equivalent: OFFSET n LIMIT 1 on PostgreSQL, the table's row count in "
+        "memory, the same verdict on whether the vacuum has a backlog"
+    ),
     ("models/mixins/write.py", "_update_parent_path_on_write"): "equivalent",
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
         "equivalent: both unlink_rows refuse a record a company-dependent "
@@ -101,8 +110,10 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "NotImplementedError for an order by an array aggregate"
     ),
     ("models/mixins/traversal.py", "_has_cycle"): (
-        "guarded by backend.supports_recursive_queries: the reachability CTE on "
-        "PostgreSQL, one relation read per step in memory, the same verdict"
+        "equivalent: the reachability CTE over the relation on PostgreSQL, the "
+        "same closure walked over the relation rows in memory, the same verdict; "
+        "the mixin only names the relation (the table and its many2one column, "
+        "or the many2many triple) and flushes it first"
     ),
     ("runtime/recordset_cache.py", "process"): (
         "equivalent: Cache.check reads a stored column through backend.columns "
@@ -266,6 +277,8 @@ _NUMBER_WORDS = {
     "twenty-four": 24,
     "twenty-five": 25,
     "twenty-six": 26,
+    "twenty-seven": 27,
+    "twenty-eight": 28,
 }
 
 

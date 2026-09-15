@@ -183,7 +183,7 @@ one; a figure is as of that date.
 | Cache / compute logic | `odoo/orm/components/` | pure Python, collaborators injected, no `pool` or `env` reach |
 | A persistence primitive | `odoo/db/` | no ORM import; cross the boundary by injection |
 | Something the ORM needs from a `base` model | the matching port in `odoo/orm/runtime/` (`metaschema`, `access_policy`, `xmlids`, `filestore`, `settings`, `locale`) | a method on the port, implemented for both registries; never a new `env["ir.*"]` in a mixin or field |
-| A statement the ORM must run | `odoo/orm/runtime/backend.py` | a `StorageBackend` method with a PostgreSQL and an in-memory body; the protocol test refuses one without a caller |
+| A statement the ORM must run | `odoo/orm/runtime/backend.py` and `_backend_memory.py` | a `StorageBackend` method with a PostgreSQL body in the first and an in-memory body in the second; the protocol test refuses one without a caller |
 | A view type | the addon's own module | `register("<root tag>")` an `ElementHandler` from `odoo/addons/base/models/ir_ui_view_arch.py`; do not inherit `ir.ui.view` for it |
 | An HTTP feature | `odoo/http/` `[features]` | must not import `[serving]` |
 | A third-party patch | `odoo/_monkeypatches/<module>.py` | expose `patch_module()` (names starting with `_` are helpers) |

@@ -759,13 +759,13 @@ class TestIncrementFieldsSkipLock(TransactionCase):
                 "" if did_update else "not ",
             )
 
-        self.record.invalidate_recordset()
-
         self.assertTrue(
             did_update,
             "increment_fields_skiplock should have updated the field: "
             "no concurrent transaction holds the row lock.",
         )
+        # the increment dropped the counter from the cache: the read that
+        # follows fetches the row, without an invalidation by the caller
         with self.assertQueryCount(1):
             self.assertEqual(
                 self.record.value,

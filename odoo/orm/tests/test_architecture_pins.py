@@ -37,9 +37,6 @@ EXECUTED_STATEMENTS = {
     "models/mixins/schema.py": 4,
     "fields/_field_ddl.py": 3,
     "models/mixins/read_group/mixin.py": 2,
-    "models/transient.py": 1,
-    "models/mixins/write.py": 1,
-    "models/mixins/traversal.py": 1,
 }
 
 _REACH = re.compile(r'env\["(?:ir|res|base|decimal)[a-z._]*"\]')

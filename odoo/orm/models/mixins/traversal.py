@@ -9,7 +9,7 @@ from odoo.libs.accel import batch_cache_get as _batch_cache_get
 from odoo.libs.accel import batch_group_ids as _batch_group_ids
 from odoo.libs.accel import sort_ids_by_cache as _sort_ids_by_cache
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, OrderedSet
+from odoo.tools import OrderedSet
 from odoo.tools.misc import PENDING, SENTINEL
 
 from ... import decorators as api
@@ -598,66 +598,17 @@ class TraversalMixin(_ModelStubs):
             return False
 
         self.flush_model([field_name])
-        if not self.env.backend.supports_recursive_queries:
-            return self._has_cycle_by_walk(field_name)
         if field.is_many2many:
-            assert (
-                field.relation is not None
-                and field.column1 is not None
-                and field.column2 is not None
-            )
-            relation = field.relation
-            column1 = field.column1
-            column2 = field.column2
+            relation, column1, column2 = field._get_relation_triple()
         else:
-            relation = self._table
-            column1 = "id"
-            column2 = field_name
-        cr = self.env.cr
-        cr.execute(
-            SQL(
-                """
-            WITH RECURSIVE __reachability AS (
-                SELECT %(col1)s AS source, %(col2)s AS destination
-                FROM %(rel)s
-                WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL
-            UNION
-                SELECT r.source, t.%(col2)s
-                FROM __reachability r
-                JOIN %(rel)s t ON r.destination = t.%(col1)s AND t.%(col2)s IS NOT NULL
-            )
-            SELECT 1 FROM __reachability
-            WHERE source = destination
-            LIMIT 1
-            """,
-                ids=tuple(self.ids),
-                rel=SQL.identifier(relation),
-                col1=SQL.identifier(column1),
-                col2=SQL.identifier(column2),
-            )
-        )
+            relation, column1, column2 = self._table, "id", field_name
+        cyclic = self.env.backend.has_cycle(self, relation, column1, column2, self.ids)
         _debug.perf.count(
             "traversal.cycle_checked",
             model=self._name,
             field=field_name,
             records=len(self.ids),
             many2many=field.is_many2many,
-            cyclic=bool(cr.rowcount),
+            cyclic=cyclic,
         )
-        return bool(cr.fetchone())
-
-    def _has_cycle_by_walk(self, field_name: str) -> bool:
-        # the reachability CTE, one relation read per step: a source that reaches
-        # itself through the relation closes a cycle
-        for source in self.sudo().with_context(active_test=False):
-            seen: set = set()
-            frontier = source[field_name]
-            while frontier:
-                if source in frontier:
-                    return True
-                seen.update(frontier._ids)
-                parents = frontier[field_name]
-                frontier = parents.browse(
-                    id_ for id_ in parents._ids if id_ not in seen
-                )
-        return False
+        return cyclic

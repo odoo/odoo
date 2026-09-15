@@ -1,7 +1,7 @@
 import datetime
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, config, lazy_classproperty
+from odoo.tools import config, lazy_classproperty
 
 from .. import decorators as api
 from ..domain import Domain
@@ -50,14 +50,7 @@ class TransientModel(Model):
         return sum(counts), any(count >= GC_UNLINK_LIMIT for count in counts)
 
     def _remove_transient_rows_over_count(self, max_count: int) -> int:
-        self.env.cr.execute(
-            SQL(
-                "SELECT 1 FROM %s OFFSET %s LIMIT 1",
-                SQL.identifier(self._table),
-                max_count,
-            )
-        )
-        if self.env.cr.fetchone():
+        if self.env.backend.has_rows_beyond(self, max_count):
             _debug.logic("transient.over_count", model=self._name, max_count=max_count)
             return self._remove_transient_rows_older_than(
                 _TRANSIENT_VACUUM_MIN_AGE_SECONDS
