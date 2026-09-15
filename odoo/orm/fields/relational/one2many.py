@@ -195,7 +195,7 @@ class One2many(_RelationalMulti):
                 line_ids.sort(key=position.__getitem__)
 
         values = [tuple(group[id_]) for id_ in records._ids]
-        self._insert_cache(records, values)
+        self._insert_read_cache(records, values)
         _debug.pipeline(
             "field.one2many.read",
             model=self.model_name,

@@ -596,15 +596,13 @@ class CreateMixin(_ModelStubs):
         common_set_vals = _BAD_NAMES_LOG
 
         env = self.env
-        _stored_x2m_caches = []
+        _stored_x2m_fields = []
         _stored_scalar_caches = []
         for field in self._fields.values():
             if not field.store:
                 continue
             if field.is_x2many:
-                _stored_x2m_caches.extend(
-                    (field, cache) for cache in field._get_created_caches(env)
-                )
+                _stored_x2m_fields.append(field)
             else:
                 default = PENDING if field.is_stored_computed else None
                 _stored_scalar_caches.append(
@@ -630,8 +628,11 @@ class CreateMixin(_ModelStubs):
             record_ids.append(record._ids[0])
 
         supplied = set().union(*set_vals_list) if set_vals_list else set()
-        for _field, cache in _stored_x2m_caches:
-            cache.update(dict.fromkeys(record_ids, ()))
+        # a new row has no relation rows: the empty value is primed in the
+        # creating scope and mirrored to the superuser one, where a compute_sudo
+        # compute reads it -- unmirrored, that read fetched the relation
+        for field in _stored_x2m_fields:
+            field._update_cache(records, (), created=True)
         for _field, fname, cache, default in _stored_scalar_caches:
             if fname not in supplied:
                 cache.update(dict.fromkeys(record_ids, default))
@@ -663,7 +664,7 @@ class CreateMixin(_ModelStubs):
             "create.cache_primed",
             model=self._name,
             records=len(record_ids),
-            x2many_fields=len(_stored_x2m_caches),
+            x2many_fields=len(_stored_x2m_fields),
             scalar_fields=len(_stored_scalar_caches),
             supplied=len(supplied),
             inverse_updates=len(inverses_update),
@@ -684,7 +685,7 @@ class CreateMixin(_ModelStubs):
                 "record": rec,
                 "noupdate": noupdate,
             }
-            for rec, xid in zip(records, xids, strict=False)
+            for rec, xid in zip(records, xids, strict=True)
             if xid and isinstance(xid, str)
         ]
         _debug.lifecycle(
