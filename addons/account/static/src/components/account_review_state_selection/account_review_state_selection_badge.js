@@ -52,20 +52,21 @@ export class AccountReviewStateSelectionBadge extends Component {
 
     async getEditableOptions () {
         const editableOptions = []
+        if (this.props.readonly || this.props.record.model.useSampleModel || !this.props.record.resId) {
+            return editableOptions;
+        }
+
         if (this.props.options[false] === undefined) {
             editableOptions.push(false);
         }
-
-        if (!this.props.record.model.useSampleModel && this.props.record.resId && await user.checkAccessRight(this.props.record.resModel, "write", this.props.record.resId)) {
-            for (let [key, value] of Object.entries(this.props.options)) {
-                if (
-                    [true, undefined].includes(value.can_edit)
-                    || (typeof value.can_edit == 'string' && (await Promise.all(
-                        value.can_edit.split(",").map(group => user.hasGroup(group))
-                    )).some(Boolean))
-                ) {
-                    editableOptions.push(key === 'false' ? false : key);
-                }
+        for (let [key, value] of Object.entries(this.props.options)) {
+            if (
+                [true, undefined].includes(value.can_edit)
+                || (typeof value.can_edit == 'string' && (await Promise.all(
+                    value.can_edit.split(",").map(group => user.hasGroup(group))
+                )).some(Boolean))
+            ) {
+                editableOptions.push(key === 'false' ? false : key);
             }
         }
 
@@ -126,7 +127,7 @@ export class AccountReviewStateSelectionBadge extends Component {
 export const accountReviewStateSelectionBadge = {
     supportedTypes: ["selection"],
     component: AccountReviewStateSelectionBadge,
-    extractProps: ({options}) => ({ options }),
+    extractProps: ({ options }, dynamicInfo) => ({ options, readonly: dynamicInfo.readonly }),
 }
 
 registry.category("fields").add("account_review_state_selection_badge", accountReviewStateSelectionBadge)
