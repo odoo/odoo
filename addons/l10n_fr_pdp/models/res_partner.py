@@ -99,6 +99,8 @@ class ResPartner(models.Model):
             return 'siren', siren
         elif len(siret) == 14:
             return 'siret', siret
+        elif siren := self._l10n_fr_get_siren_from_vat():
+            return 'siren', siren
         return None, None
 
     def _get_suggested_pdp_identifier(self):
