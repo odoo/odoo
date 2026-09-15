@@ -4,10 +4,6 @@ from odoo.orm.model_test_env import model_test_env
 
 _MOD = "test_manual_model_cleanup"
 
-_IR_MODEL_QUERY = (
-    "SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'"
-)
-
 
 class CParent(models.Model):
     _name = "c.parent"
@@ -31,7 +27,7 @@ class CChild(models.Model):
 
 
 def test_cleanup_discards_from_inherits_children():
-    with model_test_env(CParent, CChild, fixtures={_IR_MODEL_QUERY: []}) as env:
+    with model_test_env(CParent, CChild) as env:
         parent_cls = env.registry["c.parent"]
         assert "c.child" in parent_cls._inherits_children
 

@@ -230,13 +230,14 @@ class TestFieldSearchMethodLadder(unittest.TestCase):
 
     def test_nothing_implemented_raises_user_error(self):
 
-        class _EnvWithIrModel(_StubEnv):
-            def __getitem__(self, name):
-                if name == "ir.model":
-                    return types.SimpleNamespace(
-                        _get=lambda n: types.SimpleNamespace(name="Model M")
-                    )
-                return self._model
+        class _EnvWithMetaschema(_StubEnv):
+            # the message names the model through the metaschema port, never
+            # through env["ir.model"] itself
+            registry = types.SimpleNamespace(
+                metaschema=types.SimpleNamespace(
+                    model_description=lambda env, model_name: "Model M"
+                )
+            )
 
             def _(self, source, **kwargs):
                 return source % kwargs
@@ -244,8 +245,10 @@ class TestFieldSearchMethodLadder(unittest.TestCase):
         calls: list = []
         model = self._model({}, calls)
         model._fields["f"].get_description = lambda env, attrs: {"string": "Field F"}
-        model.env = _EnvWithIrModel(model)
-        with self.assertRaisesRegex(UserError, "Unsupported operator"):
+        model.env = _EnvWithMetaschema(model)
+        with self.assertRaisesRegex(
+            UserError, r"Unsupported operator on Field F 'Model M' \(m\)"
+        ):
             DomainCondition("f", "like", "x")._optimize_field_search_method(model)
         self.assertEqual(calls, ["like", "not like"])
 

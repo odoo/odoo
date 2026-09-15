@@ -76,6 +76,9 @@ class MetaSchema:
     # -- manual models and fields
 
     def manual_model_data(self, env: Environment) -> list[dict]:
+        if "ir.model" not in env.registry:
+            # a registry without the model table declares no manual model
+            return []
         return env["ir.model"]._get_manual_model_data()
 
     def manual_class_attrs(self, env: Environment, model_data: dict) -> dict:
