@@ -229,7 +229,7 @@ def load_module_graph(
                 if package.demo:
                     package.demo = load_demo(env, package, idref, mode)
 
-            if install_test_data and all(p.test_data for p in package.depends):
+            if (install_test_data or package.test_data) and all(p.test_data for p in package.depends):
                 load_data(env, idref, mode, kind='test', package=package)
                 package.test_data = True
             env.cr.execute(

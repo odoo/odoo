@@ -15,7 +15,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('lead_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLead(TestCrmCommon):
 
     @classmethod
@@ -244,7 +243,7 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_currency_sync(self):
-        lead_company = self.env['res.company'].sudo().create({
+        lead_company = self.add_company('base.test_company_template', {
             'name': 'EUR company',
             'currency_id': self.env.ref('base.EUR').id,
         })

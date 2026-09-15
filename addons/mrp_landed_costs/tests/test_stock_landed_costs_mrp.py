@@ -145,7 +145,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         # Create a user with only manager access to stock
         stock_manager = self.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': "Stock Manager",
-            'login': "test",
+            'login': "test_x",
             'email': "test@test.com",
             'group_ids': [(6, 0, [self.env.ref('stock.group_stock_manager').id])]
         })

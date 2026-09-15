@@ -33,7 +33,7 @@ class TestCompanyCheck(common.TransactionCase):
         })
         cls.test_user = cls.env['res.users'].create({
             'name': 'Test',
-            'login': 'test',
+            'login': 'test user',
             'company_id': cls.company_a.id,
             'company_ids': (cls.company_a | cls.company_c).ids,
         })

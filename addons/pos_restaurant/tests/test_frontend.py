@@ -35,6 +35,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon, CommonPosTest):
         })
 
         main_company = cls.env.company
+        cls.env.user.company_ids = main_company
         test_sale_journal_2 = cls.env['account.journal'].create({
             'name': 'Sales Journal - Test2',
             'code': 'TSJ2',
