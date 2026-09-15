@@ -1,5 +1,8 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -9,6 +12,7 @@ class StockMove(models.Model):
         self.check_singleton()
 
         if self.product_id.expense_policy == "sales_price":
+            _debug.logic("reinvoice_price", move=self, by="pricelist")
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
@@ -20,6 +24,7 @@ class StockMove(models.Model):
             "Product Unit"
         )
         if float_is_zero(self.quantity, precision_digits=uom_precision_digits):
+            _debug.logic("reinvoice_price", move=self, by="zero_quantity")
             return 0.0
 
         price_unit = self.product_id.standard_price
@@ -28,6 +33,7 @@ class StockMove(models.Model):
             and price_unit
             and self.company_id.currency_id == order.currency_id
         ):
+            _debug.logic("reinvoice_price", move=self, by="standard_price")
             return self.company_id.currency_id.round(price_unit)
 
         currency_id = self.company_id.currency_id

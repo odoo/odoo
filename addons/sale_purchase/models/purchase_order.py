@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 from .exception_activity import group_by_order, notify_orders_of_exception
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -36,6 +39,7 @@ class PurchaseOrder(models.Model):
 
     def action_cancel(self):
         result = super().action_cancel()
+        _debug.pipeline("sale_notified_of_purchase_cancel", purchase_orders=self)
         self.sudo()._activity_cancel_on_sale()
         return result
 

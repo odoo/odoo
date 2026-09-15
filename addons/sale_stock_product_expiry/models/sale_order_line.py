@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -11,6 +14,7 @@ class SaleOrderLine(models.Model):
             SaleOrderLine, self.with_context(fresh_qty_forecast=True)
         )._read_qties(date, wh)
         if any(self.mapped("use_expiration_date")):
+            _debug.logic("free_qty_from_expiry", lines=self)
             for res_record, read_record in zip(
                 res,
                 self.mapped("product_id")

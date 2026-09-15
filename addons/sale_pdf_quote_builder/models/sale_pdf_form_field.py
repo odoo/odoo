@@ -3,8 +3,11 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_pdf_quote_builder import utils
+
+_debug = DebugLog(__name__)
 
 
 class SalePdfFormField(models.Model):
@@ -49,6 +52,11 @@ class SalePdfFormField(models.Model):
         name_pattern = re.compile(r"^(\w|-)+$")
         for form_field in self:
             if not re.match(name_pattern, form_field.name):
+                _debug.logic(
+                    "form_field_name_rejected",
+                    field=form_field,
+                    reason="bad_characters",
+                )
                 raise ValidationError(
                     _(
                         "Invalid form field name %(field_name)s. It should only contain alphanumerics,"
@@ -57,6 +65,11 @@ class SalePdfFormField(models.Model):
                     )
                 )
             if form_field.name.startswith("sol_id_"):
+                _debug.logic(
+                    "form_field_name_rejected",
+                    field=form_field,
+                    reason="reserved_prefix",
+                )
                 raise ValidationError(
                     _(
                         "Invalid form field name %(field_name)s. A form field name in a header or a"
@@ -70,6 +83,11 @@ class SalePdfFormField(models.Model):
         name_pattern = re.compile(r"^(\w|-|\.)+$")
         for form_field in self.filtered("path"):
             if not re.match(name_pattern, form_field.path):
+                _debug.logic(
+                    "form_field_path_rejected",
+                    field=form_field,
+                    reason="bad_characters",
+                )
                 raise ValidationError(
                     _(
                         "Invalid path %(path)s. It should only contain alphanumerics, hyphens,"
@@ -94,6 +112,12 @@ class SalePdfFormField(models.Model):
                         )
                     )
                 if field_name not in Model._fields:
+                    _debug.logic(
+                        "form_field_path_rejected",
+                        field=form_field,
+                        reason="unknown_field",
+                        model=Model._name,
+                    )
                     raise ValidationError(
                         _(
                             "The field %(field_name)s doesn't exist on model %(model_name)s",

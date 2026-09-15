@@ -1,7 +1,10 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_gelato import utils
+
+_debug = DebugLog(__name__)
 
 
 class ProviderGelato(models.Model):
@@ -37,6 +40,7 @@ class ProviderGelato(models.Model):
                 source.move_ids.product_id.mapped("gelato_product_uid")
             )
         else:
+            _debug.logic("gelato_carriers_refused", reason="bad_source_type")
             raise UserError(_("Invalid source document type"))
         if is_gelato_order:
             return available_delivery_methods.filtered(

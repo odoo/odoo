@@ -6,8 +6,10 @@ from http import HTTPStatus
 from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
+from odoo.libs.debug_log import DebugLog
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class QuotationDocumentController(Controller):
@@ -36,6 +38,11 @@ class QuotationDocumentController(Controller):
                 "company_id": request.env.company.id,
             }
         files = request.httprequest.files.getlist("ufile")
+        _debug.pipeline(
+            "quotation_documents_upload",
+            files=len(files),
+            template=sale_order_template,
+        )
         result = {"success": _("All files uploaded")}
         for uploaded_file in files:
             try:
@@ -49,6 +56,11 @@ class QuotationDocumentController(Controller):
                     }
                 ).flush_recordset()
             except UserError as e:
+                _debug.logic(
+                    "quotation_document_refused",
+                    name=uploaded_file.filename,
+                    error=type(e).__name__,
+                )
                 request.env.cr.rollback()
                 return request.prepare_json_response(
                     {"error": e},

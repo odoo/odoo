@@ -4,10 +4,12 @@ from functools import partial, wraps
 
 from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_gelato import const, utils
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 def post_commit(func):
@@ -33,6 +35,12 @@ class SaleOrder(models.Model):
                 lambda l: l.product_id.sale_ok and l.product_id.type != "service"
             )
             if gelato_lines and non_gelato_lines:
+                _debug.logic(
+                    "gelato_mix_refused",
+                    order=order,
+                    gelato_lines=gelato_lines,
+                    other_lines=non_gelato_lines,
+                )
                 raise ValidationError(
                     _(
                         "You cannot mix Gelato products with non-Gelato products in the same order."
@@ -48,6 +56,9 @@ class SaleOrder(models.Model):
             gelato_delivery_method = self.env["delivery.carrier"].search(
                 [("delivery_type", "=", "gelato")], limit=1
             )
+            _debug.logic(
+                "gelato_carrier_defaulted", order=self, carrier=gelato_delivery_method
+            )
             res["context"]["default_carrier_id"] = gelato_delivery_method.id
         return res
 
@@ -57,6 +68,9 @@ class SaleOrder(models.Model):
             lambda o: any(o.line_ids.product_id.mapped("gelato_product_uid"))
         ):
             if message := order._get_incomplete_address_error():
+                _debug.logic(
+                    "gelato_order_refused", order=order, reason="incomplete_address"
+                )
                 raise ValidationError(message)
             order._create_order_on_gelato()
         return res
@@ -95,6 +109,7 @@ class SaleOrder(models.Model):
             "shipmentMethodUid": delivery_line.product_id.default_code or "cheapest",
             "shippingAddress": self.partner_shipping_id._gelato_prepare_address_payload(),
         }
+        _debug.pipeline("gelato_order_send", order=self, items=len(payload["items"]))
         try:
             api_key = self.company_id.sudo().gelato_api_key
             data = utils.send_request(api_key, "order", "v4", "orders", payload=payload)
@@ -106,6 +121,7 @@ class SaleOrder(models.Model):
                 partial(self._remove_order_on_gelato, data["id"])
             )
         except UserError as e:
+            _debug.logic("gelato_order_send_failed", order=self, error=str(e))
             raise UserError(
                 _(
                     "The order with reference %(order_reference)s was not sent to Gelato.\n"
@@ -118,6 +134,7 @@ class SaleOrder(models.Model):
         _logger.info(
             "Notification received from Gelato with data:\n%s", pprint.pformat(data)
         )
+        _debug.lifecycle("gelato_order_created", order=self, gelato_id=data["id"])
         self.message_post(
             body=_("The order has been successfully passed on Gelato."),
             author_id=self.env.ref("base.partner_root").id,
@@ -162,6 +179,7 @@ class SaleOrder(models.Model):
                 method="PATCH",
             )
         except UserError:
+            _debug.logic("gelato_confirm_failed", order=self, gelato_id=gelato_order_id)
             self.message_post(
                 body=self.env._(
                     "Unable to confirm the order %s on Gelato.", gelato_order_id
@@ -191,6 +209,7 @@ class SaleOrder(models.Model):
                 api_key, "order", "v4", f"orders/{gelato_order_id}", method="DELETE"
             )
         except UserError:
+            _debug.logic("gelato_delete_failed", order=self, gelato_id=gelato_order_id)
             self.message_post(
                 body=self.env._(
                     "Unable to delete the order %s on Gelato.", gelato_order_id

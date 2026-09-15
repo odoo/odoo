@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -9,6 +12,7 @@ class DocumentsDocument(models.Model):
 
     def _gelato_prepare_file_payload(self):
         if not self.datas:
+            _debug.logic("gelato_file_payload_refused", document=self)
             raise UserError(
                 _("Print images must be set on products before they can be ordered.")
             )

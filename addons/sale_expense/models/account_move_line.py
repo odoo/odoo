@@ -1,4 +1,7 @@
 from odoo import Command, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
@@ -7,6 +10,7 @@ class AccountMoveLine(models.Model):
     def _sale_can_be_reinvoiced(self):
         self.check_singleton()
         if self.expense_id:
+            _debug.logic("reinvoice_check", line=self, by="expense")
             return (
                 self.expense_id.product_id.expense_policy in {"sales_price", "cost"}
                 and self.expense_id.sale_order_id
@@ -45,6 +49,7 @@ class AccountMoveLine(models.Model):
         res = super(
             AccountMoveLine, self - expensed_lines
         )._sale_create_reinvoice_sale_line()
+        _debug.pipeline("expense_lines_reinvoiced_unmerged", lines=expensed_lines)
         res.update(
             super(
                 AccountMoveLine,

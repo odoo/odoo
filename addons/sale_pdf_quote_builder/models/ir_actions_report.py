@@ -3,6 +3,7 @@ import io
 import json
 
 from odoo import _, api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_amount, format_date, format_datetime, pdf, str2bool
 from odoo.tools.pdf import (
     BrandedFileWriter,
@@ -11,6 +12,8 @@ from odoo.tools.pdf import (
     PdfReader,
     create_string_object,
 )
+
+_debug = DebugLog(__name__)
 
 
 class IrActionsReport(models.Model):
@@ -21,6 +24,7 @@ class IrActionsReport(models.Model):
             report_ref, data, res_ids=res_ids
         )
         if self._get_report(report_ref).report_name != "sale.report_saleorder":
+            _debug.logic("quote_builder_skipped", reason="other_report")
             return result
 
         ICP = self.env["ir.config_parameter"].sudo()
@@ -43,6 +47,9 @@ class IrActionsReport(models.Model):
                 )
 
                 if not headers and not has_product_document and not footers:
+                    _debug.logic(
+                        "quote_builder_skipped", order=order, reason="no_documents"
+                    )
                     continue
 
                 form_fields_values_mapping = {}
@@ -84,6 +91,13 @@ class IrActionsReport(models.Model):
                     writer.write(_buffer)
                     stream = io.BytesIO(_buffer.getvalue())
                 result[order.id].update({"stream": stream})
+                _debug.pipeline(
+                    "quote_pdf_assembled",
+                    order=order,
+                    headers=headers,
+                    footers=footers,
+                    form_fields=len(form_fields_values_mapping),
+                )
 
         return result
 

@@ -1,8 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_pdf_quote_builder import utils
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -33,12 +36,18 @@ class DocumentsDocument(models.Model):
     def _check_attached_on_and_datas_compatibility(self):
         for doc in self.filtered(lambda doc: doc.attached_on_sale == "inside"):
             if doc.type != "binary":
+                _debug.logic(
+                    "inside_document_rejected", document=doc, reason="not_a_file"
+                )
                 raise ValidationError(
                     _(
                         "When attached inside a quote, the document must be a file, not a URL."
                     )
                 )
             if doc.datas and not doc.mimetype.endswith("pdf"):
+                _debug.logic(
+                    "inside_document_rejected", document=doc, reason="not_a_pdf"
+                )
                 raise ValidationError(
                     _("Only PDF documents can be attached inside a quote.")
                 )
@@ -57,6 +66,12 @@ class DocumentsDocument(models.Model):
                 and doc.mimetype
                 and doc.mimetype.endswith("pdf")
             )
+        )
+        _debug.pipeline(
+            "form_fields_parsed",
+            documents=self,
+            with_data=document_to_parse,
+            kind="product_document",
         )
         if document_to_parse:
             doc_type = "product_document"

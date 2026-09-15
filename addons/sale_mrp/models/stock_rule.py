@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockRule(models.Model):
@@ -23,5 +26,6 @@ class StockRule(models.Model):
             lambda line: line.product_id.id == move_values["product_id"]
         )[:1]
         if bom_line:
+            _debug.logic("move_bom_line_resolved", rule=self, bom_line=bom_line)
             move_values["bom_line_id"] = bom_line.id
         return move_values

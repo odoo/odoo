@@ -1,6 +1,9 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -73,7 +76,17 @@ class SaleOrder(models.Model):
         self.quotation_document_ids &= self.available_quotation_document_ids
 
         if not self.sale_order_template_id.quotation_document_ids:
+            _debug.logic(
+                "quotation_documents_kept",
+                order=self._origin,
+                reason="template_declares_none",
+            )
             return
+        _debug.pipeline(
+            "quotation_documents_from_template",
+            order=self._origin,
+            template=self.sale_order_template_id,
+        )
         self.quotation_document_ids |= (
             self.sale_order_template_id.quotation_document_ids.filtered(
                 lambda doc: (

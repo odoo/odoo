@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpBom(models.Model):
@@ -32,6 +35,7 @@ class MrpBom(models.Model):
         )
         if lines:
             product_names = ", ".join(lines.product_id.mapped("display_name"))
+            _debug.logic("bom_change_refused", boms=self, order_lines=lines)
             raise UserError(
                 _(
                     "As long as there are some sale order lines that must be delivered/invoiced and are "

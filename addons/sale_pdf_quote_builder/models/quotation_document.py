@@ -1,8 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_pdf_quote_builder import utils
+
+_debug = DebugLog(__name__)
 
 
 class QuotationDocument(models.Model):
@@ -53,6 +56,9 @@ class QuotationDocument(models.Model):
     def _check_pdf_validity(self):
         for doc in self:
             if doc.datas and not doc.mimetype.endswith("pdf"):
+                _debug.logic(
+                    "quotation_document_rejected", document=doc, reason="not_a_pdf"
+                )
                 raise ValidationError(
                     _("Only PDF documents can be used as header or footer.")
                 )
@@ -64,6 +70,12 @@ class QuotationDocument(models.Model):
     def _compute_form_field_ids(self):
         self.form_field_ids = [Command.clear()]
         document_to_parse = self.filtered(lambda doc: doc.datas)
+        _debug.pipeline(
+            "form_fields_parsed",
+            documents=self,
+            with_data=document_to_parse,
+            kind="quotation_document",
+        )
         if document_to_parse:
             doc_type = "quotation_document"
             self.env[
@@ -89,6 +101,7 @@ class QuotationDocument(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         docs = super().create(vals_list)
+        _debug.lifecycle("create", documents=docs, rows=len(vals_list))
         for doc in docs:
             doc.write({"res_model": "quotation.document", "res_id": doc.id})
         return docs

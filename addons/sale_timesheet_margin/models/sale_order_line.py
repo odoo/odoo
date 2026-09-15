@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -34,6 +37,11 @@ class SaleOrderLine(models.Model):
                 so_line.id: -amount_sum / unit_amount_sum if unit_amount_sum else 0.0
                 for so_line, amount_sum, unit_amount_sum in group_amount
             }
+            _debug.perf.count(
+                "timesheet_cost_read_group",
+                lines=len(timesheet_sols),
+                rows=len(mapped_sol_timesheet_amount),
+            )
             for line in timesheet_sols:
                 line = line.with_company(line.company_id)
                 product_cost = mapped_sol_timesheet_amount.get(
@@ -45,6 +53,9 @@ class SaleOrderLine(models.Model):
                         product_cost, line.company_id.project_time_mode_id
                     )
 
+                _debug.logic(
+                    "line_cost", line=line, by="timesheet_amount", cost=product_cost
+                )
                 line.purchase_price = line._convert_to_sol_currency(
                     product_cost, line.product_id.cost_currency_id
                 )

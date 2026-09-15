@@ -1,11 +1,14 @@
 from lxml import etree
 
 from odoo import Command, _, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 from odoo.tools.xml_utils import dict_to_xml
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Order
+
+_debug = DebugLog(__name__)
 
 
 class SaleEdiXmlUbl_Bis3(models.AbstractModel):
@@ -19,6 +22,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         xml_content = dict_to_xml(
             document_node, template=Order, nsmap=self._get_document_nsmap(vals)
         )
+        _debug.pipeline("edi_order_exported", order=sale_order)
         return etree.tostring(xml_content, xml_declaration=True, encoding="UTF-8")
 
     def _get_sale_order_node(self, vals):
@@ -355,6 +359,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             line.pop("deferred_start_date", False)
             line.pop("deferred_end_date", False)
             if not line.get("product_id"):
+                _debug.logic("edi_product_unmatched", order=order, name=line["name"])
                 line_logs.append(
                     _(
                         "Could not retrieve the product named: %(name)s",
@@ -367,11 +372,19 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
         order_vals["line_ids"] = [Command.create(line_vals) for line_vals in lines_vals]
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
+        _debug.pipeline(
+            "edi_order_parsed",
+            order=order,
+            lines=len(lines_vals),
+            logs=len(logs),
+            partner=partner,
+        )
 
         return order_vals, logs
 
     def _import_order_ubl(self, order, file_data, new):
         res = super()._import_order_ubl(order, file_data, new)
+        _debug.pipeline("edi_prices_recomputed", order=order, lines=order.line_ids)
         order.line_ids.filtered("product_id").with_context(
             force_price_recomputation=True
         )._compute_price_and_discount()

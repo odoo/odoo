@@ -3,10 +3,13 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
 from odoo.tools.misc import get_lang
 
 from .exception_activity import group_by_order, notify_orders_of_exception
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -52,6 +55,7 @@ class SaleOrderLine(models.Model):
 
     def _is_service_purchase_decrease(self):
         if self.state != "done" or self.product_id.type != "service":
+            _debug.logic("purchase_decrease_check", line=self, by="not_done_service")
             return False
         if not self.product_id.with_company(
             self._purchase_service_get_company()
@@ -91,6 +95,12 @@ class SaleOrderLine(models.Model):
                 increased[change["line"].id] = change["old_qty"]
             elif direction < 0:
                 decreased[change["line"].id] = change["old_qty"]
+        _debug.pipeline(
+            "subcontracted_qty_changes",
+            lines=purchased,
+            increased=len(increased),
+            decreased=len(decreased),
+        )
         if increased:
             purchased.browse(list(increased))._purchase_increase_ordered_qty(increased)
         if decreased:
@@ -118,10 +128,19 @@ class SaleOrderLine(models.Model):
                     ),
                     0.0,
                 )
+                _debug.lifecycle(
+                    "purchase_line_quantity_raised",
+                    line=line,
+                    purchase_line=last_purchase_line,
+                    remaining=remaining,
+                )
                 last_purchase_line.product_qty = line.product_uom_id._compute_quantity(
                     remaining, last_purchase_line.product_uom_id
                 )
             else:
+                _debug.lifecycle(
+                    "purchase_line_added", line=line, reason="last_line_not_draft"
+                )
                 line._purchase_service_create(
                     quantity=line.product_qty - origin_values[line.id]
                 )
@@ -223,6 +242,7 @@ class SaleOrderLine(models.Model):
             uom_id=self.product_uom_id,
         )
         if warning and not supplier:
+            _debug.logic("no_vendor_for_service", line=self, product=self.product_id)
             raise UserError(
                 _(
                     "There is no vendor associated to the product %s. Please define a vendor for this product.",
@@ -270,8 +290,15 @@ class SaleOrderLine(models.Model):
         purchase_order = self._purchase_service_match_purchase_order(
             supplierinfo.partner_id
         )
+        _debug.logic(
+            "purchase_order_matched",
+            line=self,
+            order=purchase_order,
+            found=bool(purchase_order),
+        )
         if not purchase_order:
             purchase_order = self._create_purchase_order(supplierinfo)
+            _debug.lifecycle("purchase_order_created", line=self, order=purchase_order)
         return purchase_order
 
     def _get_purchase_partner(self):
@@ -298,6 +325,12 @@ class SaleOrderLine(models.Model):
             )
             purchase_line = line.env["purchase.order.line"].create(values)
 
+            _debug.lifecycle(
+                "purchase_line_created",
+                line=line,
+                purchase_line=purchase_line,
+                order=purchase_order,
+            )
             sale_line_purchase_map.setdefault(line, line.env["purchase.order.line"])
             sale_line_purchase_map[line] |= purchase_line
         return sale_line_purchase_map
@@ -308,4 +341,9 @@ class SaleOrderLine(models.Model):
             line = line.with_company(line._purchase_service_get_company())
             if line.product_id.service_to_purchase and not line.purchase_line_count:
                 sale_line_purchase_map.update(line._purchase_service_create())
+        _debug.pipeline(
+            "purchase_service_generation",
+            lines=self,
+            generated=len(sale_line_purchase_map),
+        )
         return sale_line_purchase_map

@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProduction(models.Model):
@@ -47,6 +50,11 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for production in self.filtered("sale_line_id"):
+            _debug.lifecycle(
+                "finished_moves_linked_to_sale_line",
+                production=production,
+                line=production.sale_line_id,
+            )
             production.move_finished_ids.filtered(
                 lambda move, production=production: (
                     move.product_id == production.product_id

@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -25,6 +28,7 @@ class StockMove(models.Model):
                 product, company_id=order_line.company_id.id, bom_type="phantom"
             )[product]
             if kit_bom:
+                _debug.logic("sale_line_price_unit", move=self, by="kit_bom")
                 return self._get_kit_price_unit(
                     product, kit_bom, order_line.qty_transferred
                 )
@@ -33,6 +37,7 @@ class StockMove(models.Model):
     def _get_cogs_price_unit(self, quantity=0):
         order_line, kit_bom = self._get_sale_kit()
         if kit_bom:
+            _debug.logic("cogs_price_unit", move=self, by="kit_bom", bom=kit_bom)
             return self._get_kit_cogs_price_unit(
                 order_line.product_id.with_company(order_line.company_id),
                 kit_bom,

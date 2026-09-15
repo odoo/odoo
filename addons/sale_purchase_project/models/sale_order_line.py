@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -12,6 +15,11 @@ class SaleOrderLine(models.Model):
         )
         analytic_distribution = self.order_id.project_id._get_analytic_distribution()
         if not self.analytic_distribution and analytic_distribution:
+            _debug.logic(
+                "purchase_analytic_from_project",
+                line=self,
+                project=self.order_id.project_id,
+            )
             purchase_line_vals["analytic_distribution"] = analytic_distribution
         return purchase_line_vals
 

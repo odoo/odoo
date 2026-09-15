@@ -2,7 +2,10 @@ from itertools import groupby
 
 from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_amount
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -37,6 +40,7 @@ class SaleOrderLine(models.Model):
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "sale_order_line", "is_service"):
+            _debug.lifecycle("is_service_column_backfilled", model=self._name)
             create_column(self.env.cr, "sale_order_line", "is_service", "bool")
             self.env.cr.execute("""
                 UPDATE sale_order_line line
@@ -84,6 +88,7 @@ class SaleOrderLine(models.Model):
             and operator in ("like", "ilike")
             and limit is not None
         ):
+            _debug.logic("service_name_search", by="ordered_index", limit=limit)
             sols = self.search_fetch(
                 domain,
                 ["display_name"],

@@ -7,7 +7,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round, lazy, str2bool
+
+_debug = DebugLog(__name__)
 
 
 def _generate_random_reward_code():
@@ -156,6 +159,12 @@ class SaleOrder(models.Model):
             if any(
                 order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons
             ):
+                _debug.logic(
+                    "confirm_refused",
+                    order=order,
+                    reason="negative_coupon_points",
+                    coupons=all_coupons,
+                )
                 raise ValidationError(
                     _(
                         "One or more rewards on the sale order is invalid. Please check them."
@@ -175,9 +184,13 @@ class SaleOrder(models.Model):
         for coupon, change in (
             self.filtered(lambda s: s.state != "done")._get_point_changes().items()
         ):
+            _debug.lifecycle(
+                "coupon_points_applied", coupon=coupon, change=change, orders=self
+            )
             coupon.points += change
         res = super().action_confirm()
         if isinstance(res, bool) and has_claimable_rewards:
+            _debug.logic("claimable_rewards_notice", orders=self)
             res = {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -204,6 +217,9 @@ class SaleOrder(models.Model):
             ]
         )
         if order_history_lines:
+            _debug.lifecycle(
+                "loyalty_history_removed", orders=self, lines=order_history_lines
+            )
             order_history_lines.sudo().unlink()
 
         for coupon, changes in (
@@ -211,6 +227,9 @@ class SaleOrder(models.Model):
             ._get_point_changes()
             .items()
         ):
+            _debug.lifecycle(
+                "coupon_points_reverted", coupon=coupon, change=changes, orders=self
+            )
             coupon.points -= changes
         self.line_ids.filtered(lambda l: l.is_reward_line).unlink()
         self.coupon_point_ids.coupon_id.sudo().filtered(
@@ -271,6 +290,7 @@ class SaleOrder(models.Model):
         reward_products = reward.reward_product_ids
         product = product or reward_products[:1]
         if not product or product not in reward_products:
+            _debug.logic("reward_product_rejected", order=self, reward=reward)
             raise UserError(_("Invalid product to claim."))
         taxes = self.fiscal_position_id.map_tax(
             product.taxes_id._filter_taxes_by_company(self.company_id)
@@ -589,6 +609,7 @@ class SaleOrder(models.Model):
                         "points_cost": 0,
                     }
                 ]
+            _debug.logic("discount_refused", order=self, reason="nothing_to_discount")
             raise UserError(_("There is nothing to discount"))
 
         max_discount = reward_currency._convert(
@@ -1477,6 +1498,12 @@ class SaleOrder(models.Model):
                     limit=1,
                 )
                 if not points and not coupon:
+                    _debug.logic(
+                        "program_refused",
+                        order=self,
+                        program=program,
+                        reason="no_card_and_no_points",
+                    )
                     return {
                         "error": _(
                             "No card found for this loyalty program and no points will be given with this order."
@@ -1510,13 +1537,25 @@ class SaleOrder(models.Model):
                     )
                 )
                 self._add_points_for_coupon(dict(zip(coupons, all_points, strict=True)))
+                _debug.lifecycle(
+                    "loyalty_cards_created",
+                    order=self,
+                    program=program,
+                    coupons=coupons,
+                )
         return {"coupon": coupons}
 
     def _try_apply_program(self, program, coupon=None):
         self.check_singleton()
         if not program.filtered_domain(self._get_domain_program()):
+            _debug.logic(
+                "program_refused", order=self, program=program, reason="domain_mismatch"
+            )
             return {"error": _("The program is not available for this order.")}
         elif program in self._get_applied_programs():
+            _debug.logic(
+                "program_refused", order=self, program=program, reason="already_applied"
+            )
             return {
                 "error": _("This program is already applied to this order."),
                 "already_applied": True,
@@ -1541,6 +1580,12 @@ class SaleOrder(models.Model):
                     applied_global_reward, best_global_rewards
                 )
             ):
+                _debug.logic(
+                    "program_refused",
+                    order=self,
+                    program=program,
+                    reason="incompatible_global_discount",
+                )
                 return {
                     "error": _(
                         'This discount (%(discount)s) is not compatible with "%(other_discount)s". '
@@ -1551,6 +1596,9 @@ class SaleOrder(models.Model):
                 }
         status = self._program_check_compute_points(program)[program]
         if "error" in status:
+            _debug.logic(
+                "program_refused", order=self, program=program, reason="points_check"
+            )
             return status
         return self.__try_apply_program(program, coupon, status)
 
@@ -1570,6 +1618,7 @@ class SaleOrder(models.Model):
             rule in self.code_enabled_rule_ids
             and program in self.line_ids.filtered("is_reward_line").reward_id.program_id
         ):
+            _debug.logic("code_refused", order=self, reason="already_applied")
             return {"error": _("This promo code is already applied.")}
 
         if not program:
@@ -1580,21 +1629,31 @@ class SaleOrder(models.Model):
                 or not coupon.program_id.reward_ids
                 or not coupon.program_id.filtered_domain(self._get_domain_program())
             ):
+                _debug.logic("code_refused", order=self, reason="unknown_code")
                 return {
                     "error": _("This code is invalid (%s).", code),
                     "not_found": True,
                 }
             if coupon.expiration_date and coupon.expiration_date < check_date:
+                _debug.logic("code_refused", order=self, reason="coupon_expired")
                 return {"error": _("This coupon is expired.")}
             elif coupon.points < min(
                 coupon.program_id.reward_ids.mapped("required_points")
             ):
+                _debug.logic("code_refused", order=self, reason="coupon_spent")
                 return {"error": _("This coupon has already been used.")}
             program = coupon.program_id
 
         if not program or not program.active:
+            _debug.logic("code_refused", order=self, reason="no_active_program")
             return {"error": _("This code is invalid (%s).", code), "not_found": True}
         elif program.program_type in ("loyalty", "ewallet"):
+            _debug.logic(
+                "code_refused",
+                order=self,
+                reason="program_type_not_code_applicable",
+                program=program,
+            )
             return {"error": _("This program cannot be applied with code.")}
 
         self.env.cr.execute(
@@ -1605,6 +1664,9 @@ class SaleOrder(models.Model):
         )
 
         if program.limit_usage and program.total_order_count >= program.max_usage:
+            _debug.logic(
+                "code_refused", order=self, reason="usage_limit", program=program
+            )
             return {"error": _("This code is expired (%s).", code)}
 
         if rule:
@@ -1635,6 +1697,7 @@ class SaleOrder(models.Model):
             "sale.automatic_invoice"
         )
         if str2bool(auto_invoice):
+            _debug.pipeline("fully_discounted_order_auto_invoiced", order=self)
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
             invoice.action_post()

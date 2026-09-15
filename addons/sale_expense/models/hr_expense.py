@@ -1,4 +1,7 @@
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrExpense(models.Model):
@@ -41,6 +44,9 @@ class HrExpense(models.Model):
         for expense in self.filtered(lambda e: not e.can_be_reinvoiced):
             expense.sale_order_id = False
             expense.sale_order_line_id = False
+            _debug.logic(
+                "expense_sale_links_cleared", expense=expense, reason="policy_no"
+            )
 
     @api.onchange("sale_order_id")
     def _onchange_sale_order_id(self):
@@ -54,6 +60,11 @@ class HrExpense(models.Model):
 
     def _sale_expense_reset_sol_quantities(self):
         self.check_access("write")
+        _debug.lifecycle(
+            "expense_sol_quantities_reset",
+            expenses=self,
+            lines=self.sudo().sale_order_line_id,
+        )
         self.sudo().sale_order_line_id.write(
             {
                 "qty_transferred": 0.0,
@@ -75,6 +86,12 @@ class HrExpense(models.Model):
                     expense.sale_order_id._prepare_analytic_account_data()
                 )
                 expense.analytic_distribution = {analytic_account.id: 100}
+                _debug.lifecycle(
+                    "expense_analytic_account_created",
+                    expense=expense,
+                    order=expense.sale_order_id,
+                    account=analytic_account,
+                )
         return super().action_post()
 
     def action_view_sale_order(self):

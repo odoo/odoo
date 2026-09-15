@@ -1,8 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale_gelato import utils
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -55,6 +58,7 @@ class ProductTemplate(models.Model):
                 method="GET",
             )
         except UserError as e:
+            _debug.logic("gelato_template_sync_failed", template=self, error=str(e))
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -66,6 +70,11 @@ class ProductTemplate(models.Model):
                 },
             }
 
+        _debug.pipeline(
+            "gelato_template_synced",
+            template=self,
+            variants=len(template_info["variants"]),
+        )
         self._create_attributes_from_gelato_info(template_info)
         self._create_print_images_from_gelato_info(template_info)
 
@@ -85,6 +94,7 @@ class ProductTemplate(models.Model):
 
     def _create_attributes_from_gelato_info(self, template_info):
         if len(template_info["variants"]) == 1:
+            _debug.logic("gelato_single_variant", template=self)
             self.gelato_product_uid = template_info["variants"][0]["productUid"]
         else:
             for variant_data in template_info["variants"]:

@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -34,6 +37,7 @@ class SaleOrder(models.Model):
                 self.env.companies.ids,
             )
             query = self.sudo()._search(domain & company_domain)
+            _debug.logic("expense_order_search_widened", user=self.env.user)
             return Domain("id", "in", query)
         return super()._search_display_name(operator, value)
 

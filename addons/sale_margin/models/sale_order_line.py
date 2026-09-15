@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -44,6 +47,9 @@ class SaleOrderLine(models.Model):
             line.purchase_price = line._convert_to_sol_currency(
                 product_cost, line.product_id.cost_currency_id
             )
+            _debug.logic(
+                "line_cost", line=line, standard=product_cost, cost=line.purchase_price
+            )
 
     @api.depends(
         "price_subtotal",
@@ -54,6 +60,13 @@ class SaleOrderLine(models.Model):
     )
     def _compute_margins(self):
         for line in self:
+            _debug.logic(
+                "margin_basis",
+                line=line,
+                by="delivered"
+                if line.qty_transferred and not line.product_qty
+                else "ordered",
+            )
             if line.qty_transferred and not line.product_qty:
                 calculated_subtotal = line.price_unit * line.qty_transferred
                 line.margin = calculated_subtotal - (

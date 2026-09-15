@@ -1,7 +1,10 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import OrderedSet, float_compare
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -28,6 +31,7 @@ class SaleOrderLine(models.Model):
         boms_per_line = self._get_kit_bom_per_line()
         super()._compute_qty_transferred()
 
+        _debug.perf.count("kit_bom_lines", lines=len(self), kits=len(boms_per_line))
         for line, boms in boms_per_line.items():
             line.qty_transferred += line._get_kit_transferred_qty(*boms)
 
@@ -60,6 +64,7 @@ class SaleOrderLine(models.Model):
             relevant_bom = boms.filtered(line._is_own_phantom_bom)
             if not relevant_bom and retry:
                 relevant_bom = get_bom(line)
+                _debug.logic("phantom_bom_retried", line=line, bom=relevant_bom)
             result[line] = (boms, relevant_bom)
         return result
 
@@ -92,6 +97,7 @@ class SaleOrderLine(models.Model):
     def _get_kit_transferred_qty(self, boms, kit_bom):
         self.check_singleton()
         if any(move._is_dropshipped() for move in self.move_ids):
+            _debug.logic("kit_qty", line=self, by="dropship")
             return self._get_dropshipped_kit_qty()
 
         if not kit_bom:
@@ -100,6 +106,7 @@ class SaleOrderLine(models.Model):
                 move.state == "done" and move.location_dest_id.usage == "customer"
                 for move in moves
             )
+            _debug.logic("kit_qty", line=self, by="no_bom", delivered=delivered)
             return self.product_qty if delivered else 0.0
 
         moves = self._get_kit_moves().filtered(
@@ -112,6 +119,9 @@ class SaleOrderLine(models.Model):
         )
         qty_transferred = moves._get_kit_quantity(
             self.product_id, order_qty, kit_bom, self._get_kit_delivery_moves_filter()
+        )
+        _debug.logic(
+            "kit_qty", line=self, by="bom_components", bom=kit_bom, qty=qty_transferred
         )
         return kit_bom.product_uom_id._compute_quantity_reconcile(
             qty_transferred, self.product_uom_id
@@ -229,6 +239,7 @@ class SaleOrderLine(models.Model):
             )[self.product_id]
         )
         if bom and self.move_ids:
+            _debug.logic("procurement_qty", line=self, by="kit_bom", bom=bom)
             moves = self.move_ids.filtered(
                 lambda r: r.state != "cancel" and r.location_dest_usage != "inventory"
             )

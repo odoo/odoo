@@ -6,8 +6,10 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import SUPERUSER_ID, _
 from odoo.http import Controller, request, route
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class GelatoController(Controller):
@@ -20,10 +22,15 @@ class GelatoController(Controller):
             "Webhook notification received from Gelato:\n%s", pprint.pformat(event_data)
         )
 
+        _debug.pipeline(
+            "gelato_webhook",
+            event=event_data["event"] if isinstance(event_data, dict) else "malformed",
+        )
         if event_data["event"] == "order_status_updated":
             order_id = int(event_data["orderReferenceId"])
             order_sudo = request.env["sale.order"].sudo().browse(order_id).exists()
             if not order_sudo:
+                _debug.logic("gelato_webhook_unknown_order", order=order_id)
                 request.env["inbound.access.log"]._record_unknown_caller(
                     "sale.order",
                     f"Gelato order {order_id}",
@@ -104,6 +111,7 @@ class GelatoController(Controller):
         company_sudo = order_sudo.company_id.sudo()
         expected_signature = company_sudo.gelato_webhook_secret
         if not expected_signature:
+            _debug.logic("gelato_signature_missing", company=company_sudo)
             _logger.warning(
                 "gelato_webhook_secret not set for this company %s (id: %s)",
                 company_sudo.name,
@@ -112,6 +120,7 @@ class GelatoController(Controller):
             raise Forbidden
 
         if not hmac.compare_digest(received_signature, expected_signature):
+            _debug.logic("gelato_signature_invalid", order=order_sudo)
             _logger.warning("Received notification with invalid signature.")
             raise Forbidden
 

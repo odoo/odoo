@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -19,6 +22,7 @@ class SaleOrder(models.Model):
         res = super().set_delivery_line(carrier, amount)
         for order in self:
             if any(line.reward_id.reward_type == "shipping" for line in order.line_ids):
+                _debug.pipeline("free_shipping_reward_revalued", order=order)
                 order._update_programs_and_rewards()
         return res
 
@@ -34,6 +38,12 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_free_shipping(self, reward, coupon, **kwargs):
         delivery_line = self.line_ids.filtered(lambda l: l.is_delivery)[:1]
+        _debug.logic(
+            "free_shipping_reward",
+            order=self,
+            reward=reward,
+            delivery_line=delivery_line,
+        )
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(
             self.company_id
         )
@@ -66,6 +76,7 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.check_singleton()
         if reward.reward_type == "shipping":
+            _debug.logic("reward_line_values", order=self, by="free_shipping")
             self = self.with_context(lang=self._get_lang())
             reward = reward.with_context(lang=self._get_lang())
             return self._get_reward_values_free_shipping(reward, coupon, **kwargs)
@@ -81,5 +92,8 @@ class SaleOrder(models.Model):
                 )
                 if filtered_rewards:
                     filtered_res[coupon] = filtered_rewards
+            _debug.logic(
+                "shipping_rewards_hidden", order=self, remaining=len(filtered_res)
+            )
             res = filtered_res
         return res

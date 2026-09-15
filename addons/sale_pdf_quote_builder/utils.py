@@ -3,7 +3,10 @@ import io
 
 from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import pdf
+
+_debug = DebugLog(__name__)
 
 
 def _check_document_not_encrypted(document):
@@ -15,6 +18,7 @@ def _check_document_not_encrypted(document):
     except pdf.DependencyError, pdf.PdfReadError:
         document_is_invalid = True
     if document_is_invalid:
+        _debug.logic("pdf_document_encrypted")
         raise ValidationError(
             _(
                 "It seems that we're not able to process this pdf inside a quotation. It is either"

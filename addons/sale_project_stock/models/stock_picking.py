@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -21,6 +24,12 @@ class StockPicking(models.Model):
             if not reinvoicable_stock_moves:
                 continue
             if sale_order.state in ("draft", "sent"):
+                _debug.logic(
+                    "picking_validate_refused",
+                    picking=picking,
+                    order=sale_order,
+                    reason="order_not_confirmed",
+                )
                 raise UserError(
                     _(
                         "The Sales Order %(order)s linked to the Project %(project)s must be"
@@ -30,6 +39,12 @@ class StockPicking(models.Model):
                     )
                 )
             if sale_order.state == "cancel":
+                _debug.logic(
+                    "picking_validate_refused",
+                    picking=picking,
+                    order=sale_order,
+                    reason="order_cancelled",
+                )
                 raise UserError(
                     _(
                         "The Sales Order %(order)s linked to the Project %(project)s is cancelled."
@@ -39,6 +54,12 @@ class StockPicking(models.Model):
                     )
                 )
             if sale_order.locked:
+                _debug.logic(
+                    "picking_validate_refused",
+                    picking=picking,
+                    order=sale_order,
+                    reason="order_locked",
+                )
                 raise UserError(
                     _(
                         "The Sales Order %(order)s linked to the Project %(project)s is currently locked."
@@ -65,6 +86,12 @@ class StockPicking(models.Model):
                     )
                 )
                 last_sequence += 1
+            _debug.lifecycle(
+                "reinvoiced_lines_from_picking",
+                picking=picking,
+                order=sale_order,
+                lines=len(sale_line_values_to_create),
+            )
             self.env["sale.order.line"].with_context(
                 skip_procurement=True
             ).sudo().create(sale_line_values_to_create)

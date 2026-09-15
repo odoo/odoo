@@ -2,6 +2,9 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -97,6 +100,7 @@ class SaleOrder(models.Model):
                         Therefore, it only raises an Error for now.
                         """
                         if len(order_lines) > 1:
+                            _debug.logic("matrix_qty_refused", lines=order_lines)
                             raise ValidationError(
                                 _(
                                     "You cannot change the quantity of a product present in multiple sale lines."
@@ -124,6 +128,9 @@ class SaleOrder(models.Model):
                             ),
                         )
                     )
+            _debug.pipeline(
+                "matrix_applied", order=self._origin, new_lines=len(new_lines)
+            )
             if new_lines:
                 self.update({"line_ids": new_lines})
 

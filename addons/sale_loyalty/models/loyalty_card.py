@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class LoyaltyCard(models.Model):
@@ -47,6 +50,9 @@ class LoyaltyCard(models.Model):
             [("coupon_id", "in", self.ids)], ["coupon_id"], ["__count"]
         )
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
+        _debug.perf.count(
+            "coupon_use_count", cards=len(self), rows=len(count_per_coupon)
+        )
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
 
@@ -54,6 +60,7 @@ class LoyaltyCard(models.Model):
         return super()._has_source_order() or bool(self.order_id)
 
     def action_archive(self):
+        _debug.lifecycle("loyalty_cards_archived", cards=self)
         self.env["sale.order.coupon.points"].search(
             [
                 ("coupon_id", "in", self.ids),
