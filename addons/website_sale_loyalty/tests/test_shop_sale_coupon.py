@@ -23,7 +23,9 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
                 "name": "Mitchell Admin",
                 "email": "mitchell.admin@example.com",
                 "street": "215 Vine St",
-                "phone": "+1 555-555-5555",
+                "phone_ids": [
+                    Command.create({"number": "+1 555-555-5555", "type": "landline"})
+                ],
                 "city": "Scranton",
                 "zip": "18503",
                 "country_id": cls.env.ref("base.us").id,
