@@ -113,3 +113,19 @@ def test_a_prefork_worker_never_exposes_the_socket_for_hijacking(worker):
         assert identity.multiprocess is True
     finally:
         peer.close()
+
+
+def test_an_upgraded_connection_keeps_its_socket(worker):
+    """The upgrade thread owns the socket from the 101 on; closing it here
+    would cut the websocket under it."""
+    client, peer = _socketpair()
+    try:
+        with patch.object(
+            _worker, "serve_prefork_connection", return_value=_worker.Outcome.UPGRADED
+        ):
+            worker.process_request(client, ("127.0.0.1", 1234))
+        assert client.fileno() != -1
+        assert worker.request_count == 1
+    finally:
+        peer.close()
+        client.close()

@@ -29,12 +29,7 @@ def _is_inherited(limit: int) -> bool:
 
 
 def _get_first_owned_limit(*limits: int) -> int:
-    limit = limits[0]
-    for candidate in limits[1:]:
-        if not _is_inherited(limit):
-            break
-        limit = candidate
-    return limit
+    return next((limit for limit in limits if not _is_inherited(limit)), limits[-1])
 
 
 def _is_socket_activated(config: OptionSource) -> bool:

@@ -153,32 +153,29 @@ class ThreadedServer(CommonServer):
         longest_s = 0.0  # debuglog
         for thread in threading.enumerate():
             thread_type = getattr(thread, "type", None)
-            if thread_type in _TIME_LIMITED_THREAD_TYPES:
-                start_time = getattr(thread, "start_time", None)
-                if start_time:
-                    thread_execution_time = now - start_time
-                    watched += 1  # debuglog
-                    longest_s = max(longest_s, thread_execution_time)  # debuglog
-                    thread_limit_time_real = settings.get_real_time_budget(thread_type)
-                    if (
-                        thread_limit_time_real > 0
-                        and thread_execution_time > thread_limit_time_real
-                    ):
-                        self.logger.warning(
-                            "Thread %s real time limit (%.1f/%ds) reached.",
-                            thread,
-                            thread_execution_time,
-                            thread_limit_time_real,
-                        )
-                        _debug.logic(
-                            "server.thread_over_limit",
-                            thread=thread.name,
-                            type=thread_type,
-                            elapsed_s=thread_execution_time,
-                            limit_s=thread_limit_time_real,
-                        )
-                        self.limits_reached_threads.add(thread)
-                        self._overrun_start_times[thread] = start_time
+            if thread_type not in _TIME_LIMITED_THREAD_TYPES:
+                continue
+            start_time = getattr(thread, "start_time", None)
+            if not start_time:
+                continue
+            elapsed = now - start_time
+            watched += 1  # debuglog
+            longest_s = max(longest_s, elapsed)  # debuglog
+            budget = settings.get_real_time_budget(thread_type)
+            if budget <= 0 or elapsed <= budget:
+                continue
+            self.logger.warning(
+                "Thread %s real time limit (%.1f/%ds) reached.", thread, elapsed, budget
+            )
+            _debug.logic(
+                "server.thread_over_limit",
+                thread=thread.name,
+                type=thread_type,
+                elapsed_s=elapsed,
+                limit_s=budget,
+            )
+            self.limits_reached_threads.add(thread)
+            self._overrun_start_times[thread] = start_time
         # An observed overrun requests process recycling, even if that cron/job
         # finishes before the monitor's next pass. Only thread exit clears it --
         # or, for a pooled HTTP thread, the end of the request that overran.

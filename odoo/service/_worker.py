@@ -45,6 +45,7 @@ from ._cron import (
 from ._env import get_env_int
 from ._limits import empty_pipe, get_memory_over_soft_limit
 from ._transport import (
+    Outcome,
     ServerIdentity,
     TransportLimits,
     serve_prefork_connection,
@@ -339,6 +340,7 @@ class WorkerHTTP(Worker):
         self.sock_timeout = self.limits.socket_timeout
 
     def process_request(self, client: socket.socket, addr: tuple[str, int]) -> None:
+        outcome = Outcome.CLOSE
         try:
             client.setblocking(True)
             client.settimeout(self.sock_timeout)
@@ -354,12 +356,15 @@ class WorkerHTTP(Worker):
                     request=self.request_count + 1,
                     request_max=self.request_max,
                 ):
-                    serve_prefork_connection(
+                    outcome = serve_prefork_connection(
                         client, addr, self.multi.app, identity, self.limits
                     )
         finally:
-            with contextlib.suppress(OSError):
-                client.close()
+            # An upgrade handed the socket to its own thread; every other
+            # way out, including an exception before serving, closes it here.
+            if outcome is not Outcome.UPGRADED:
+                with contextlib.suppress(OSError):
+                    client.close()
         self.request_count += 1
 
     def _get_identity(self, sock: socket.socket) -> ServerIdentity:

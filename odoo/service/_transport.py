@@ -728,12 +728,16 @@ def serve_prefork_connection(
     app: WSGIApp,
     identity: ServerIdentity,
     limits: TransportLimits,
-) -> None:
+) -> Outcome:
     conn = Connection(sock, addr)
+    outcome = Outcome.CLOSE
     try:
-        serve_one(conn, app, identity, limits, allow_keep_alive=False)
+        outcome = serve_one(conn, app, identity, limits, allow_keep_alive=False)
     finally:
-        conn.close()
+        # An upgrade handed the socket to its own thread, which closes it.
+        if outcome is not Outcome.UPGRADED:
+            conn.close()
+    return outcome
 
 
 __all__ = (
