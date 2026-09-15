@@ -146,7 +146,8 @@ export class PortalAdditionalIdentifiers extends Interaction {
         button.title = _t("Remove");
         button.setAttribute('aria-label', _t("Remove"));
         const icon = document.createElement('i');
-        icon.className = 'fa fa-trash-o';
+        icon.className = 'oi';
+        icon.dataset.icon = 'delete';
         button.appendChild(icon);
 
         group.append(input, button);
@@ -172,7 +173,8 @@ export class PortalAdditionalIdentifiers extends Interaction {
         button.setAttribute('data-bs-toggle', 'dropdown');
         button.setAttribute('aria-expanded', 'false');
         const icon = document.createElement('i');
-        icon.className = 'fa fa-plus me-1';
+        icon.className = 'oi me-1';
+        icon.dataset.icon = 'add';
         button.append(icon, document.createTextNode(_t("Add identifier")));
 
         const menu = document.createElement('div');
