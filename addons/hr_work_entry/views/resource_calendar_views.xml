@@ -4,7 +4,9 @@
     <record id="resource_schedule_exception_view_search_inherit" model="ir.ui.view">
         <field name="name">resource.schedule.exception.search.inherit</field>
         <field name="model">resource.schedule.exception</field>
-        <field name="inherit_id" ref="resource.view_resource_schedule_exception_search" />
+        <field
+            name="inherit_id"
+            ref="resource.view_resource_schedule_exception_search" />
         <field name="arch" type="xml">
             <filter name="resource" position="after">
                 <field name="work_entry_type_id" groups="hr.group_hr_user" />
@@ -46,7 +48,8 @@
     </record>
 
     <record id="resource_schedule_exception_view_form" model="ir.ui.view">
-        <field name="name">resource.schedule.exception.form.inherit.hr.work.entry</field>
+        <field
+            name="name">resource.schedule.exception.form.inherit.hr.work.entry</field>
         <field name="model">resource.schedule.exception</field>
         <field name="inherit_id" ref="resource.resource_schedule_exception_form" />
         <field name="arch" type="xml">
@@ -57,7 +60,8 @@
     </record>
 
     <record id="resource_schedule_exception_view_tree" model="ir.ui.view">
-        <field name="name">resource.schedule.exception.list.inherit.hr.work.entry</field>
+        <field
+            name="name">resource.schedule.exception.list.inherit.hr.work.entry</field>
         <field name="model">resource.schedule.exception</field>
         <field name="inherit_id" ref="resource.resource_schedule_exception_tree" />
         <field name="arch" type="xml">

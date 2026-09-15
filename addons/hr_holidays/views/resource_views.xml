@@ -4,7 +4,9 @@
     <record id="resource_schedule_exception_view_search_inherit" model="ir.ui.view">
         <field name="name">resource.schedule.exception.search.inherit</field>
         <field name="model">resource.schedule.exception</field>
-        <field name="inherit_id" ref="resource.view_resource_schedule_exception_search" />
+        <field
+            name="inherit_id"
+            ref="resource.view_resource_schedule_exception_search" />
         <field name="arch" type="xml">
             <filter name="resource" position="attributes">
                 <attribute name="invisible">1</attribute>
