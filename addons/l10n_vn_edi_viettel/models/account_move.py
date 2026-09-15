@@ -557,6 +557,7 @@ class AccountMove(models.Model):
         items_information = []
         code_map = {
             'product': 1,
+            'downpayment': 1,
             'line_note': 2,
             'discount': 3,
         }
