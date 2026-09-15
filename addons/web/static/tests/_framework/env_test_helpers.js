@@ -190,7 +190,13 @@ export function restoreRegistry(registry) {
         registry.content = Object.fromEntries(registriesContent.get(registry));
     }
 
-    for (const subRegistry of Object.values(registry.subRegistries)) {
-        restoreRegistry(subRegistry);
+    for (const [name, subRegistry] of Object.entries(registry.subRegistries)) {
+        if (registriesContent.has(subRegistry)) {
+            restoreRegistry(subRegistry);
+        } else {
+            // Did not exist before the test started, remove to avoid leaking
+            // into the next test.
+            delete registry.subRegistries[name];
+        }
     }
 }
