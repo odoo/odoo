@@ -151,3 +151,55 @@ class WebsiteSale(main.WebsiteSale):
             # and does not follow the request's context
             request.website = request.website.with_context(website_sale_loyalty_delete=True)
         return super().cart_update_json(*args, set_qty=set_qty, **kwargs)
+<<<<<<< a3497c9d84076131bac706078d0661553906a5f1
+||||||| d0d25ed0666c94ca615d384d772d1c4698edbe8b
+
+
+class PaymentPortal(main.PaymentPortal):
+
+    def _validate_transaction_for_order(self, transaction, sale_order_id):
+        """Update programs & rewards before finalizing transaction.
+
+        :param payment.transaction transaction: The payment transaction
+        :param int order_id: The id of the sale order to pay
+        :raise: ValidationError if the order amount changed after updating rewards
+        """
+        super()._validate_transaction_for_order(transaction, sale_order_id)
+        order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+        if order_sudo.exists():
+            initial_amount = order_sudo.amount_total
+            order_sudo._update_programs_and_rewards()
+            order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud taxes if necessary
+            if order_sudo.currency_id.compare_amounts(initial_amount, order_sudo.amount_total):
+                raise ValidationError(
+                    _(
+                        "Cannot process payment: applied reward was changed or has expired.\n"
+                        "Please refresh the page and try again."
+                    )
+                )
+=======
+
+
+class PaymentPortal(main.PaymentPortal):
+
+    def _validate_transaction_for_order(self, transaction, sale_order_id):
+        """Update programs & rewards before finalizing transaction.
+
+        :param payment.transaction transaction: The payment transaction
+        :param int order_id: The id of the sale order to pay
+        :raise: ValidationError if the order amount changed after updating rewards
+        """
+        super()._validate_transaction_for_order(transaction, sale_order_id)
+        order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+        if order_sudo.exists():
+            initial_amount = order_sudo.amount_total
+            order_sudo._update_programs_and_rewards()
+            order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud/avatax taxes if necessary
+            if order_sudo.currency_id.compare_amounts(initial_amount, order_sudo.amount_total):
+                raise ValidationError(
+                    _(
+                        "Cannot process payment: applied reward was changed or has expired.\n"
+                        "Please refresh the page and try again."
+                    )
+                )
+>>>>>>> 8ef44e58f77f015f5dbb017771c1157df532f638

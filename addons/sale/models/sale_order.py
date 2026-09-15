@@ -2238,7 +2238,29 @@ class SaleOrder(models.Model):
                 **kwargs,
             )
 
+<<<<<<< a3497c9d84076131bac706078d0661553906a5f1
         return sol._get_discounted_price()
+||||||| d0d25ed0666c94ca615d384d772d1c4698edbe8b
+    #=== HOOKS ===#
+
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
+
+    def validate_taxes_on_sales_order(self):
+        # Override for correct taxcloud computation
+        # when using coupon and delivery
+        return True
+=======
+    #=== HOOKS ===#
+
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
+
+    def validate_taxes_on_sales_order(self):
+        # Override for correct taxcloud or avatax computation
+        # when using coupon and delivery
+        return True
+>>>>>>> 8ef44e58f77f015f5dbb017771c1157df532f638
 
     #=== TOOLING ===#
 
