@@ -171,6 +171,17 @@ export function descendants(node, posterity = []) {
     return posterity;
 }
 
+export function getTextNodesIterator(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    walker[Symbol.iterator] = () => ({
+        next() {
+            const value = walker.nextNode();
+            return { value, done: !value };
+        },
+    });
+    return walker;
+}
+
 /**
  * Values which can be returned while browsing the DOM which gives information
  * to why the path ended.
