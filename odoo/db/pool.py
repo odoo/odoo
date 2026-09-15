@@ -26,7 +26,7 @@ from .lifecycle import (
 )
 from .probe import PROBE_CONNECT_TIMEOUT, ReachabilityProbe, get_libpq_connect_timeout
 from .reaper import IdlePoolReaper, mark_active
-from .settings import PoolSettings, current
+from .settings import PoolSettings, resolve
 from .stats import PoolStats
 from .utils import is_maintenance_db
 
@@ -143,7 +143,7 @@ class ConnectionPool:
         self,
         maxconn: int = 64,
         readonly: bool = False,
-        minconn: int = 0,
+        minconn: int | None = None,
         *,
         borrow_timeout: float | None = None,
         max_lifetime: int | None = None,
@@ -153,7 +153,9 @@ class ConnectionPool:
         pool_workers: int | None = None,
         settings: PoolSettings | None = None,
     ):
-        settings = settings if settings is not None else current()
+        settings = resolve(settings)
+        if minconn is None:
+            minconn = settings.minconn
         if borrow_timeout is None:
             borrow_timeout = settings.borrow_timeout
         if max_lifetime is None:
@@ -240,7 +242,7 @@ class ConnectionPool:
         kwargs["autocommit"] = False
 
         idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
-        dbname = kwargs.get("dbname") or _get_key_dbname(key)
+        dbname = _get_key_dbname(key)
         kwargs["options"] = _prepare_connection_options(
             conninfo,
             kwargs,
@@ -275,7 +277,7 @@ class ConnectionPool:
                     max_lifetime=self._max_lifetime,
                     max_idle=self._max_idle,
                     reconnect_timeout=15,
-                    configure=_configure_connection,
+                    configure=self._configure_connection,
                     reset=self._reset_connection,
                     check=self._check_connection,
                     num_workers=self._pool_workers,
@@ -371,7 +373,7 @@ class ConnectionPool:
         deadline = started + self._borrow_timeout
         if key is None:
             key = _get_dsn_key(connection_info)
-        dbname = connection_info.get("dbname") or _get_key_dbname(key)
+        dbname = _get_key_dbname(key)
         if is_maintenance_db(dbname, self._settings):
             _debug.logic("pool.borrow_routed", db=dbname, route="direct")
             return self._borrow_directly(connection_info, deadline)
@@ -464,8 +466,13 @@ class ConnectionPool:
     def settings(self) -> PoolSettings:
         return self._settings
 
+    def _configure_connection(self, conn: psycopg.Connection) -> None:
+        _configure_connection(conn, readonly=self._readonly)
+
     def _reset_connection(self, conn: psycopg.Connection) -> None:
-        _reset_connection(conn, discard=self._settings.discard_on_return)
+        _reset_connection(
+            conn, discard=self._settings.discard_on_return, readonly=self._readonly
+        )
 
     def _check_connection(self, conn: psycopg.Connection) -> None:
         _check_connection(conn, grace=self._settings.healthcheck_grace)
@@ -537,7 +544,7 @@ class ConnectionPool:
             ):
                 conn = psycopg.connect(conninfo, **kwargs)
             try:
-                _configure_connection(conn)
+                self._configure_connection(conn)
                 self._check_min_server_version(conn)
             except BaseException:
                 with contextlib.suppress(Exception):
@@ -747,7 +754,7 @@ class ConnectionPool:
     def close_database(self, db_name: str) -> None:
         with self._lock:
             pools = [self._pools.pop(k) for k in self._get_keys_for_database(db_name)]
-            self._probe.clear_keys_matching(lambda k: _get_key_dbname(k) == db_name)
+            self._probe.clear_database(db_name)
         self._close_pools(pools, db_name)
 
     def close_all(self) -> None:

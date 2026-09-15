@@ -2774,6 +2774,7 @@ class TestHealthCheckGracePeriod(BaseCase):
 
     def test_configure_and_reset_stamp_freshness(self):
         conn = MagicMock()
+        conn.pgconn.exec_.return_value.status = 1
         _configure_connection(conn)
         first = getattr(conn, _IDLE_SINCE_ATTR)
         self.assertIsInstance(first, float)
@@ -2794,35 +2795,40 @@ class TestDiscardOnReturn(BaseCase):
         config["db_discard_on_return"] = value
         self.addCleanup(config.__setitem__, "db_discard_on_return", old)
 
-    def test_default_runs_cheap_session_reset(self):
+    def _conn(self):
         conn = MagicMock()
-        seen = []
-        conn.execute.side_effect = lambda sql, **kw: seen.append(
-            (sql, conn.autocommit, kw.get("prepare"))
-        )
+        conn.autocommit = False
+        conn.pgconn.exec_.return_value.status = 1
+        return conn
+
+    def test_default_runs_cheap_session_reset(self):
+        conn = self._conn()
         self._set_discard(False)
         _reset_connection(conn)
         self.assertEqual(
-            seen,
-            [(_RESET_SESSION_STATE_SQL, True, False)],
+            [c.args for c in conn.pgconn.exec_.call_args_list],
+            [(_RESET_SESSION_STATE_SQL.encode(),)],
             "default return path must run the cheap session reset "
             "(and never DISCARD ALL)",
         )
+        conn.execute.assert_not_called()
         self.assertEqual(conn.prepare_threshold, 2)
         self.assertEqual(conn.prepared_max, 500)
         self.assertFalse(conn.autocommit)
 
-    def test_opt_in_runs_discard_all_in_autocommit(self):
-        conn = MagicMock()
-        seen = []
-        conn.execute.side_effect = lambda sql, **kw: seen.append(
-            (sql, conn.autocommit, kw.get("prepare"))
-        )
+    def test_opt_in_runs_discard_all_without_touching_autocommit(self):
+        conn = self._conn()
         self._set_discard(True)
         _reset_connection(conn)
-        self.assertEqual(seen, [("DISCARD ALL", True, False)])
+        self.assertEqual(
+            [c.args for c in conn.pgconn.exec_.call_args_list], [(b"DISCARD ALL",)]
+        )
         conn._prepared.clear.assert_called_once_with()
-        self.assertFalse(conn.autocommit)
+        self.assertFalse(
+            conn.autocommit,
+            "the simple-query call folds no BEGIN in, so the autocommit toggle "
+            "that used to bracket the reset is gone with its 1 us",
+        )
         self.assertEqual(conn.prepare_threshold, 2)
         self.assertEqual(conn.prepared_max, 500)
 

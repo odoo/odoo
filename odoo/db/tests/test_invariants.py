@@ -703,16 +703,13 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
             def cursor(self):
                 return self.obj
 
+        class _PoolThatFailsLate(self._FakePool):
             @property
-            def isolation_level(self):
-                return None
-
-            @isolation_level.setter
-            def isolation_level(self, value):
+            def readonly(self):
                 raise RuntimeError("setup failed after a statement")
 
         conn = _AbortedAfterAStatement()
-        fake_pool = self._FakePool(conn)
+        fake_pool = _PoolThatFailsLate(conn)
         with self.assertRaisesRegex(RuntimeError, "after a statement"):
             cursor.Cursor(
                 typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
@@ -723,6 +720,17 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
             [(conn, False)],
             "a connection whose setup raised after a statement sits in a "
             "failed transaction; handing it back as warm passes it on",
+        )
+
+    def test_the_guard_asks_the_pool_nothing(self):
+        src = inspect.getsource(cursor.Cursor.__init__)
+        guard = src[src.index("except BaseException:") :]
+        before_release = guard[: guard.index("pool.give_back(")]
+        self.assertNotIn(
+            "pool.",
+            before_release,
+            "the guard used to re-read pool.readonly for its own debug line, "
+            "so a pool attribute that raised escaped before give_back ran",
         )
 
 

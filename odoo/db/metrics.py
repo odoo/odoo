@@ -70,9 +70,10 @@ class _MetricsMixin:
             self.sql_statement_count += 1
         sql_counter += count
         t = self._thread
+        # http.application sets the pair together on a request thread; one
+        # question answers for both.
         if hasattr(t, "query_count"):
             t.query_count += count
-        if hasattr(t, "query_time"):
             t.query_time += delay
         for hook in hooks or ():
             hook(self, query, params, start, delay)

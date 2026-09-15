@@ -6,7 +6,15 @@ from typing import Any, Self
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.settings import OptionSource, SettingsSlot
 
-__all__ = ["PoolSettings", "current", "installed", "override", "provide", "slot"]
+__all__ = [
+    "PoolSettings",
+    "current",
+    "installed",
+    "override",
+    "provide",
+    "resolve",
+    "slot",
+]
 
 _debug = DebugLog(__name__)
 
@@ -129,3 +137,7 @@ provide = slot.provide
 current = slot.current
 installed = slot.installed
 override = slot.override
+
+
+def resolve(settings: PoolSettings | None) -> PoolSettings:
+    return settings if settings is not None else current()

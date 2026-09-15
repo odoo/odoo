@@ -4,7 +4,7 @@ from urllib.parse import parse_qsl, urlsplit
 
 from odoo.libs.debug_log import DebugLog
 
-from .settings import PoolSettings, current
+from .settings import PoolSettings, resolve
 
 _ODOO_PGAPPNAME_WARNED = False
 _debug = DebugLog(__name__)
@@ -16,7 +16,7 @@ SYSTEM_DBS = frozenset({"postgres", "template0", "template1"})
 def is_maintenance_db(db_name: str, settings: PoolSettings | None = None) -> bool:
     if db_name in SYSTEM_DBS:
         return True
-    template = (settings if settings is not None else current()).template
+    template = resolve(settings).template
     return db_name == template
 
 
@@ -34,7 +34,7 @@ def get_connection_info_for_database(
     db_or_uri: str, readonly: bool = False, settings: PoolSettings | None = None
 ) -> tuple[str, dict]:
     global _ODOO_PGAPPNAME_WARNED  # noqa: PLW0603  warn-once latch for the whole process
-    settings = settings if settings is not None else current()
+    settings = resolve(settings)
     app_name = settings.app_name
     if "ODOO_PGAPPNAME" in os.environ:
         _debug.logic("db.pgappname_deprecated", warned=_ODOO_PGAPPNAME_WARNED)

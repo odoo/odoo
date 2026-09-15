@@ -212,7 +212,9 @@ library.
   (600s), a quiet database is reaped and rebuilt repeatedly and used to re-probe
   every time. The proof is revoked wherever its premise could have changed:
   `close_database` (Odoo's drop/rename path), stale-credential eviction, and any
-  connect failure.
+  connect failure. `mark_proven` runs on every borrow and looks before it
+  locks: set membership is one atomic read (27 ns against 157 ns with the
+  lock), and a stale miss only takes the lock it would have taken anyway.
 - **Reaping is edge-triggered on a return, so every return triggers it.**
   `_reap_idle_pools_if_due` has no timer, deliberately: a timer is a thread and
   this class already carries `db_pool_workers + 1` of them per database. That
@@ -234,6 +236,24 @@ library.
   already runs returns off the caller's thread, so the extra two buy parallelism
   between returns *of the same database*. The default is 1, which is 2.0 threads
   per database.
+- **A pooled connection's transaction flags are set once, and the session
+  reset goes through libpq's simple-query call.** `Cursor.__init__` used to
+  set `isolation_level` and `read_only` on every borrow and `_reset_connection`
+  set both back to `None` on every return: four psycopg setters, 2.5 µs per
+  cursor cycle, to re-establish the same two values. A pooled connection serves
+  one pool for its whole life, so `_configure_connection(conn, readonly=…)`
+  sets them once and `_reset_connection` compares before it sets (50 ns) —
+  only `enforce_readonly()` ever changes one, and the comparison is what puts
+  it back. The reset string itself is sent with `conn.pgconn.exec_`: one
+  simple-query round trip with no BEGIN folded in, so the `autocommit` toggle
+  that bracketed it is gone too, and none of `execute()`'s per-statement
+  machinery runs — **14 µs against 24 µs**, measured. Its `status` is a bare
+  `int`, never the `ExecStatus` member: an identity comparison passed against a
+  fake and failed every live reset (each return discarded the connection and
+  the cycle read 2.2 ms), which is why `tests/test_lifecycle.py`'s fake returns
+  the `int`. Cycle (open, `SELECT 1`, close): **160 µs → 134 µs**. The
+  `__init__` guard also no longer re-reads `pool.readonly` for its own debug
+  line — a pool attribute that raised there escaped before `give_back` ran.
 - **A cursor close only discards a DAMAGED connection**: `Cursor._close` asks
   `transaction_status` (`_is_connection_clean`) rather than treating any
   exception from `_rollback` as connection damage — that method also runs
@@ -700,6 +720,13 @@ library.
   to `give_back(keep_in_pool=False)`. Pinned against a fake pool in
   `tests/test_invariants.py` and live in
   `TestCursorDelReclaimsConnection.test_del_reclaims_the_permit_of_a_dead_connection_too`.
+- **One fact per attribute.** `in_pipeline` is `_pipeline is not None`; the
+  `_pipeline_entered` flag that shadowed it was set and reset in the same two
+  places and existed only to be kept in step. `_backend_pid` is a property
+  over `conn.info.backend_pid` (a libpq call, 115 ns) read by debug lines only,
+  instead of a per-cursor fetch that every cursor paid for. `EndpointRegistry`
+  hands `ConnectionPool` its `settings` and nothing the constructor already
+  reads from them.
 - **A statement that failed still cost a round trip**: `_record_metrics` ran
   after the `try/except`, so every server-side failure counted as zero queries —
   in `sql_log_count`, in the process-wide `sql_counter`, and therefore in

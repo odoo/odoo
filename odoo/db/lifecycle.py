@@ -3,7 +3,9 @@ from __future__ import annotations
 from time import monotonic
 
 import psycopg
+from psycopg import IsolationLevel
 from psycopg.adapt import Loader
+from psycopg.pq import ExecStatus
 from psycopg_pool import ConnectionPool as _PsycopgPool
 
 from odoo.libs.debug_log import DebugLog
@@ -25,6 +27,8 @@ exactly like a session-state leak, and `TestResetConnectionClosesSessionGucLeak`
 filters by cursor name rather than counting for that reason.
 """
 _PREPARED_MAX = 500
+
+_ISOLATION_LEVEL = IsolationLevel.REPEATABLE_READ
 
 _IDLE_SINCE_ATTR = "_odoo_idle_since"
 
@@ -72,35 +76,57 @@ def _mark_idle(conn: psycopg.Connection) -> None:
     setattr(conn, _IDLE_SINCE_ATTR, monotonic())
 
 
-def _configure_connection(conn: psycopg.Connection) -> None:
+# The two flags psycopg folds into every BEGIN. A pooled connection serves one
+# pool for its whole life, so they are set once here and only re-set on return
+# when a cursor changed them (enforce_readonly): the pair of setters cost 2.5 us
+# per cursor cycle when re-issued unconditionally, the comparison 50 ns.
+def _set_transaction_flags(conn: psycopg.Connection, readonly: bool) -> None:
+    if conn.isolation_level is not _ISOLATION_LEVEL:
+        conn.isolation_level = _ISOLATION_LEVEL
+    if conn.read_only is not readonly:
+        conn.read_only = readonly
+
+
+def _configure_connection(conn: psycopg.Connection, *, readonly: bool = False) -> None:
     register_adapters(conn)
+    _set_transaction_flags(conn, readonly)
     _mark_idle(conn)
     _debug.lifecycle(
         "connection.configured",
         backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+        readonly=readonly,
         prepare_threshold=_PREPARE_THRESHOLD,
         prepared_max=_PREPARED_MAX,
     )
 
 
-def _reset_connection(conn: psycopg.Connection, *, discard: bool | None = None) -> None:
+# libpq's simple-query call: one round trip for the multi-statement string, no
+# BEGIN folded in (so no autocommit toggle around it) and none of the
+# per-statement machinery psycopg's execute() runs -- 14 us against 24 us,
+# on a path taken once per cursor cycle.
+def _run_session_reset(conn: psycopg.Connection, sql: str) -> None:
+    result = conn.pgconn.exec_(sql.encode())
+    if result.status != ExecStatus.COMMAND_OK:
+        raise psycopg.OperationalError(result.get_error_message())
+
+
+def _reset_connection(
+    conn: psycopg.Connection, *, discard: bool | None = None, readonly: bool = False
+) -> None:
     if discard is None:
         discard = current().discard_on_return
     with _debug.perf("connection.reset", discard=discard):
         if discard:
-            conn.autocommit = True
-            conn.execute("DISCARD ALL", prepare=False)
+            _run_session_reset(conn, "DISCARD ALL")
             clear_prepared_cache(conn)
         else:
-            conn.autocommit = True
-            conn.execute(_RESET_SESSION_STATE_SQL, prepare=False)
-    conn.autocommit = False
-    conn.isolation_level = None
-    conn.read_only = None
+            _run_session_reset(conn, _RESET_SESSION_STATE_SQL)
+    _set_transaction_flags(conn, readonly)
     _mark_idle(conn)
     _debug.lifecycle(
         "connection.returned_idle",
         discard=discard,
+        readonly=readonly,
         backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
     )
 

@@ -10,7 +10,7 @@ from odoo.libs.debug_log import DebugLog
 
 from .lag import LAG_SQL, ReplicaLagGate
 from .pool import PoolError
-from .settings import PoolSettings, current
+from .settings import PoolSettings, resolve
 
 if typing.TYPE_CHECKING:
     from .cursor import BaseCursor, Connection
@@ -24,7 +24,7 @@ CursorMode = typing.Literal["ro", "ro->rw", "rw"]
 
 
 def is_readonly_cursor_enabled(settings: PoolSettings | None = None) -> bool:
-    return (settings if settings is not None else current()).readonly_cursors
+    return resolve(settings).readonly_cursors
 
 
 class ReplicaRouter:
@@ -132,25 +132,26 @@ class ReplicaRouter:
             _debug.logic("replica.lag_query_failed", error=type(e).__name__)
             _logger.debug("Could not measure replica lag", exc_info=True)
             measured = None
-        was_allowed = self.lag.is_replica_usable()
+        was_usable = self.lag.is_replica_usable()
         self.lag.record(measured)
-        usability_changed = was_allowed != self.lag.is_replica_usable()  # debuglog
-        if _debug.lifecycle.enabled and usability_changed:
-            _debug.lifecycle(
-                "replica.lag_state_changed",
-                usable=self.lag.is_replica_usable(),
-                lag=self.lag.last_lag,
-                max_lag=self.lag.max_lag,
+        usable = self.lag.is_replica_usable()
+        if usable == was_usable:
+            return
+        _debug.lifecycle(
+            "replica.lag_state_changed",
+            usable=usable,
+            lag=self.lag.last_lag,
+            max_lag=self.lag.max_lag,
+        )
+        if usable:
+            _logger.info(
+                "Replica caught up (%.1fs behind); resuming readonly cursors",
+                self.lag.last_lag,
             )
-        if was_allowed and not self.lag.is_replica_usable():
+        else:
             _logger.warning(
                 "Replica %.1fs behind (db_replica_max_lag=%.1fs); serving "
                 "readonly requests from the primary until it catches up",
                 self.lag.last_lag,
                 self.lag.max_lag,
-            )
-        elif not was_allowed and self.lag.is_replica_usable():
-            _logger.info(
-                "Replica caught up (%.1fs behind); resuming readonly cursors",
-                self.lag.last_lag,
             )

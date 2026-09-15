@@ -497,9 +497,11 @@ def rename_column(
             SQL(
                 """
                 SELECT 1
-                  FROM pg_constraint
-                 WHERE conrelid = %s::regclass
-                   AND conname = %s
+                  FROM pg_constraint c
+                  JOIN pg_class t ON t.oid = c.conrelid
+                 WHERE t.relname = %s
+                   AND c.conname = %s
+                   AND t.relnamespace = current_schema::regnamespace
                 """,
                 tablename,
                 old_constraint,
@@ -625,7 +627,7 @@ def add_constraint(
         kind=definition.split(None, 1)[0].upper() if definition.strip() else "",
     ):
         cr.execute(query1, log_exceptions=False)
-    cr.execute(query2, log_exceptions=False)
+        cr.execute(query2, log_exceptions=False)
     _schema.debug(
         "Table %r: added constraint %r as %s",
         tablename,
@@ -925,8 +927,8 @@ def add_index(
         comment=query_comment is not None,
     ):
         cr.execute(query, log_exceptions=False)
-    if query_comment:
-        cr.execute(query_comment, log_exceptions=False)
+        if query_comment:
+            cr.execute(query_comment, log_exceptions=False)
     _schema.debug(
         "Table %r: created index %r (%s)", tablename, indexname, definition.code
     )

@@ -8,7 +8,6 @@ from time import monotonic
 from typing import TYPE_CHECKING, Any, Literal, NoReturn, Self
 
 import psycopg
-from psycopg import IsolationLevel
 from psycopg import sql as _sql
 from psycopg.pq import TransactionStatus as _TxStatus
 
@@ -313,7 +312,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._pipeline_stack: ExitStack | None = None
         self._pipeline: psycopg.Pipeline | None = None
         self._pipeline_statements = 0
-        self._pipeline_entered = False
         self._pipeline_statement_time = 0.0
         self._pipeline_wait_time = 0.0
         self._pipeline_exit_started = 0.0
@@ -322,17 +320,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._thread = threading.current_thread()
 
         self._cnx: psycopg.Connection = pool.borrow(dsn, key=key)
-        self._backend_pid = getattr(
-            getattr(self._cnx, "info", None), "backend_pid", None
-        )
         try:
             self._obj: psycopg.Cursor = self._cnx.cursor()
             if _logger.isEnabledFor(logging.DEBUG):
                 self.__caller = frame_codeinfo(currentframe(), 2)
             else:
                 self.__caller = False
-            self._cnx.isolation_level = IsolationLevel.REPEATABLE_READ
-            self._cnx.read_only = pool.readonly
             self._readonly = bool(pool.readonly)
 
             self._closed = False
@@ -354,11 +347,18 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             _debug.lifecycle(
                 "cursor.open_failed",
                 db=dbname,
-                readonly=bool(getattr(pool, "readonly", None)),
+                readonly=vars(self).get("_readonly"),
                 keep_in_pool=keep_in_pool,
             )
             pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
             raise
+
+    @property
+    def _backend_pid(self) -> int | None:  # debuglog
+        try:
+            return self._cnx.info.backend_pid
+        except Exception:
+            return None
 
     def _wait_in_pipeline[T](self, wait: Callable[..., T], *args: Any) -> T:
         t0 = monotonic()
@@ -370,20 +370,19 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         return result
 
     def _sync_pipeline_results(self) -> None:
-        pipeline = self._pipeline
-        if pipeline is not None and self._pipeline_pending:
+        if self._pipeline_pending and (pipeline := self._pipeline) is not None:
             _debug.pipeline("cursor.pipeline_synced_for_result", db=self.dbname)
             self._wait_in_pipeline(pipeline.sync)
 
     def _fetchall(self) -> list[tuple[Any, ...]]:
         obj = self._obj
-        if self._pipeline_entered:
+        if self._pipeline is not None:
             return self._wait_in_pipeline(obj.fetchall)
         return obj.fetchall()
 
     def _fetchmany(self, size: int) -> list[tuple[Any, ...]]:
         obj = self._obj
-        if self._pipeline_entered:
+        if self._pipeline is not None:
             return self._wait_in_pipeline(obj.fetchmany, size)
         return obj.fetchmany(size)
 
@@ -421,7 +420,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
     def fetchone(self) -> tuple[Any, ...] | None:
         obj = self._obj
-        if self._pipeline_entered:
+        if self._pipeline is not None:
             return self._wait_in_pipeline(obj.fetchone)
         return obj.fetchone()
 
@@ -437,19 +436,16 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
     @property
     def description(self) -> list[Any] | None:
-        if self._pipeline_entered:
-            self._sync_pipeline_results()
+        self._sync_pipeline_results()
         return self._obj.description
 
     @property
     def rowcount(self) -> int:
-        if self._pipeline_entered:
-            self._sync_pipeline_results()
+        self._sync_pipeline_results()
         return self._obj.rowcount
 
     def nextset(self) -> bool | None:
-        if self._pipeline_entered:
-            self._sync_pipeline_results()
+        self._sync_pipeline_results()
         return self._obj.nextset()
 
     @contextmanager
@@ -460,7 +456,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         *,
         writer: Any = None,
     ) -> Generator[Any]:
-        if self._pipeline_entered:
+        if self._pipeline is not None:
             _debug.logic("cursor.copy_refused", db=self.dbname, reason="in_pipeline")
             raise _prepare_copy_in_pipeline_error("cr.copy()")
         self._before_statement()
@@ -472,7 +468,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             "cursor.copy_opened",
             db=self.dbname,
             custom_writer=writer is not None,
-            in_pipeline=self._pipeline_entered,
+            in_pipeline=self._pipeline is not None,
         )
         try:
             with self._obj.copy(statement, params, writer=writer) as copy:
@@ -561,7 +557,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         _debug.logic(
             "cursor.statement_failed",
             db=vars(self).get("dbname"),
-            backend_pid=vars(self).get("_backend_pid"),
+            backend_pid=self._backend_pid,
             label=label,
             error=type(exc).__name__,
             sqlstate=getattr(exc, "sqlstate", None),
@@ -569,7 +565,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             recoverable=isinstance(exc, PG_RECOVERABLE_EXCEPTIONS),
             user_fault=isinstance(exc, PG_USER_FAULT_EXCEPTIONS),
             logged=log_exceptions,
-            in_pipeline=vars(self).get("_pipeline_entered"),
+            in_pipeline=vars(self).get("_pipeline") is not None,
             savepoint_depth=vars(self).get("_savepoint_depth"),
         )
         return has_reached_server(exc)
@@ -603,7 +599,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             _debug.perf.count(
                 "cursor.statement",
                 db=vars(self).get("dbname"),
-                backend_pid=vars(self).get("_backend_pid"),
+                backend_pid=self._backend_pid,
                 label=label,
                 head=words[0][:12].upper() if words else "",
                 kind=query_type,
@@ -611,7 +607,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 ms=delay * 1000.0,
                 rows=count,
                 ok=counts,
-                in_pipeline=vars(self).get("_pipeline_entered"),
+                in_pipeline=vars(self).get("_pipeline") is not None,
             )
         if counts:
             self._record_metrics(
@@ -666,7 +662,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         try:
             obj.execute(query, params, prepare=prepare)
             counts = True
-            self._pipeline_pending = self._pipeline_entered
+            self._pipeline_pending = self._pipeline is not None
         except Exception as e:
             counts = self._statement_failed(
                 e, query, log_exceptions=log_exceptions, prepared=prepare is not False
@@ -838,7 +834,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         try:
             obj.executemany(query, rows, returning=returning)
             counts = True
-            self._pipeline_pending = self._pipeline_entered
+            self._pipeline_pending = self._pipeline is not None
         except Exception as e:
             counts = self._statement_failed(e, query, log_exceptions=log_exceptions)
             raise
@@ -858,14 +854,13 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
     @property
     def in_pipeline(self) -> bool:
-        return self._pipeline_entered
+        return self._pipeline is not None
 
     def _arm_pipeline(self) -> None:
         self._pipeline_statements += 1
         if self._pipeline_statements == 2 and self._pipeline_stack is not None:
             self._pipeline = self._pipeline_stack.enter_context(self._cnx.pipeline())
             self._pipeline_stack.callback(self._mark_pipeline_exit_started)
-            self._pipeline_entered = True
             _debug.lifecycle("cursor.pipeline_entered", db=self.dbname)
 
     def _mark_pipeline_exit_started(self) -> None:
@@ -926,7 +921,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 "cursor.pipeline",
                 db=self.dbname,
                 statements=self._pipeline_statements,
-                entered=self._pipeline_entered,
+                entered=self._pipeline is not None,
                 statement_ms=self._pipeline_statement_time * 1000.0,
                 wait_ms=waited * 1000.0,
                 error=failed,
@@ -934,7 +929,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             self._pipeline_stack = None
             self._pipeline = None
             self._pipeline_depth = 0
-            self._pipeline_entered = False
             self._pipeline_pending = False
 
     def close(self) -> None:
@@ -979,7 +973,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 _debug.lifecycle(
                     "cursor.closed",
                     db=state.get("dbname"),
-                    backend_pid=state.get("_backend_pid"),
+                    backend_pid=self._backend_pid,
                     keep_in_pool=keep_in_pool,
                     commits=state.get("commit_count"),
                     statements=state.get("sql_statement_count"),
@@ -1027,7 +1021,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             db=self.dbname,
             precommit=len(self.precommit),
             postcommit=len(self.postcommit),
-            in_pipeline=self._pipeline_entered,
+            in_pipeline=self._pipeline is not None,
         )
         with _debug.perf("cursor.commit.flush", cr=self, db=self.dbname):
             self.flush()
