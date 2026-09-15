@@ -5,10 +5,10 @@ from odoo.libs.debug_log import DebugLog
 from . import metrics as _metrics
 from . import settings as pool_settings
 from .budget import ConnectionBudget
-from .cursor import BaseCursor, Cursor, Savepoint
+from .cursor import BaseCursor, Connection, Cursor, Savepoint
 from .endpoints import EndpointRegistry, get_endpoint_key
 from .metrics import classify_query
-from .pool import Connection, ConnectionPool, PoolError
+from .pool import ConnectionPool, PoolError
 from .savepoint import get_or_create_row
 from .settings import PoolSettings
 from .schema import FunctionStatus, get_unaccent_status, has_trigram

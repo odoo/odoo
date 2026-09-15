@@ -18,8 +18,9 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.func import Callbacks, frame_codeinfo
 from odoo.libs.sql import SQL
 
-from .bulk import _BulkAccessMixin
+from .bulk import _BulkAccessMixin, _prepare_copy_in_pipeline_error
 from .ddl import _has_schema_changing_statement, _inline_ddl_params, classify_statement
+from .dsn import _expand_conninfo, _get_dsn_key
 from .errors import (
     PG_RECOVERABLE_EXCEPTIONS,
     PG_STALE_PLAN_EXCEPTIONS,
@@ -459,6 +460,9 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         *,
         writer: Any = None,
     ) -> Generator[Any]:
+        if self._pipeline_entered:
+            _debug.logic("cursor.copy_refused", db=self.dbname, reason="in_pipeline")
+            raise _prepare_copy_in_pipeline_error("cr.copy()")
         self._before_statement()
         hooks = getattr(self._thread, "query_hooks", None)
         start = real_time() if hooks else 0.0
@@ -507,19 +511,26 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         raise self._prepare_copy_refused_error()
 
     def __del__(self) -> None:
-        if not self._closed and not self._cnx.closed:
-            msg = "Cursor not closed explicitly\n"
-            if self.__caller:
-                msg += f"Cursor was created at {self.__caller[0]}:{self.__caller[1]}"
-            else:
-                msg += "Please enable sql debugging to trace the caller."
-            _logger.warning(msg)
-            _debug.lifecycle(
-                "cursor.not_closed_explicitly",
-                db=vars(self).get("dbname"),
-                caller=self.__caller and f"{self.__caller[0]}:{self.__caller[1]}",
-            )
-            self._close()
+        if self._closed:
+            return
+        msg = "Cursor not closed explicitly\n"
+        if self.__caller:
+            msg += f"Cursor was created at {self.__caller[0]}:{self.__caller[1]}"
+        else:
+            msg += "Please enable sql debugging to trace the caller."
+        _logger.warning(msg)
+        _debug.lifecycle(
+            "cursor.not_closed_explicitly",
+            db=vars(self).get("dbname"),
+            caller=self.__caller and f"{self.__caller[0]}:{self.__caller[1]}",
+            connection_closed=self._cnx.closed,
+        )
+        if self._cnx.closed:
+            self._closed = True
+            del self._obj
+            self.__pool.give_back(self._cnx, keep_in_pool=False)
+            return
+        self._close()
 
     def _statement_failed(
         self,
@@ -629,8 +640,8 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 raise ValueError(
                     "Unexpected parameters combined with a SQL query object"
                 )
-            code, embedded = query.code, query.params
-            query, params = code, embedded
+            params = query.params
+            query = query.code
         else:
             if isinstance(query, _sql.Composable):
                 query = query.as_string(self._cnx)
@@ -673,17 +684,18 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 debug=debug,
             )
 
-        self._after_statement(qs, ddl_kw, rollback_to)
+        self._after_statement(qs, ddl_kw, rollback_to, delay, debug)
 
-        if debug:
-            query_type, table = classify_query(qs)
-            self._record_sql_log(query_type, table, delay)
-
-    def _after_statement(self, qs: str, ddl_kw: str | None, rollback_to: bool) -> None:
+    def _after_statement(
+        self, qs: str, ddl_kw: str | None, rollback_to: bool, delay: float, debug: bool
+    ) -> None:
         if _has_schema_changing_statement(qs, ddl_kw):
             self._invalidate_caches_after_ddl()
         elif rollback_to:
             self._on_rollback_to_savepoint()
+        if debug:
+            query_type, table = classify_query(qs)
+            self._record_sql_log(query_type, table, delay)
 
     def _prepare_ddl_statement(
         self,
@@ -842,11 +854,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 debug=debug,
             )
 
-        self._after_statement(qs, ddl_kw, rollback_to)
-
-        if debug:
-            query_type, table = classify_query(qs)
-            self._record_sql_log(query_type, table, delay)
+        self._after_statement(qs, ddl_kw, rollback_to, delay, debug)
 
     @property
     def in_pipeline(self) -> bool:
@@ -978,17 +986,17 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 )
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
-    def _is_connection_clean(self) -> bool:
+    def _get_transaction_status(self) -> _TxStatus | None:
         try:
-            return self._cnx.info.transaction_status == _TX_IDLE
+            return self._cnx.info.transaction_status
         except Exception:
-            return False
+            return None
+
+    def _is_connection_clean(self) -> bool:
+        return self._get_transaction_status() == _TX_IDLE
 
     def in_failed_transaction(self) -> bool:
-        try:
-            return self._cnx.info.transaction_status == _TX_INERROR
-        except Exception:
-            return False
+        return self._get_transaction_status() == _TX_INERROR
 
     def enforce_readonly(self) -> None:
         if self._readonly:
@@ -1038,8 +1046,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             self._schema_changed = False
             self._drain_sibling_connections()
         self.clear()
-        self._schema_cache.clear()
-        self._now = None
+        self._reset_transaction_caches()
         self.prerollback.clear()
         self.postrollback.clear()
         with _debug.perf(
@@ -1097,8 +1104,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             ):
                 self._cnx.rollback()
             self._schema_changed = False
-            self._schema_cache.clear()
-        self._now = None
+            self._reset_transaction_caches()
         with _debug.perf(
             "cursor.rollback.postrollback",
             cr=self,
@@ -1106,6 +1112,10 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             hooks=len(self.postrollback),
         ):
             self.postrollback.run()
+
+    def _reset_transaction_caches(self) -> None:
+        self._schema_cache.clear()
+        self._now = None
 
     def __getattr__(self, name: str) -> Any:
         if name.startswith("__") and name.endswith("__"):
@@ -1136,6 +1146,37 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     @property
     def readonly(self) -> bool:
         return self._readonly
+
+
+class Connection:
+    __slots__ = ("__dbname", "__dsn", "__key", "__pool")
+
+    def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
+        self.__dbname = dbname
+        self.__dsn = dict(dsn)
+        self.__pool = pool
+        self.__key = _get_dsn_key(dsn)
+
+    @property
+    def dsn(self) -> dict:
+        dsn = _expand_conninfo(self.__dsn)
+        dsn.pop("password", None)
+        return dsn
+
+    @property
+    def dbname(self) -> str:
+        return self.__dbname
+
+    def cursor(self) -> Cursor:
+        if _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug("create cursor to %r", self.dsn)
+        _debug.pipeline(
+            "cursor.requested",
+            db=self.__dbname,
+            readonly=self.__pool.readonly,
+            thread=threading.current_thread().name,
+        )
+        return Cursor(self.__pool, self.__dbname, self.__dsn, key=self.__key)
 
 
 if TYPE_CHECKING:

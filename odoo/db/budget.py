@@ -77,3 +77,13 @@ class ConnectionBudget:
     def exhausted_count(self) -> int:
         with self._cond:
             return self._exhausted
+
+    def get_snapshot(self) -> dict[str, int]:
+        with self._cond:
+            in_use, exhausted = self._in_use, self._exhausted
+        return {
+            "budget_maxconn": self.maxconn,
+            "budget_available": self.maxconn - in_use,
+            "budget_in_use": in_use,
+            "budget_exhausted": exhausted,
+        }

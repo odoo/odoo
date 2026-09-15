@@ -726,6 +726,49 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
         )
 
 
+class TestADroppedCursorAlwaysGivesItsConnectionBack(unittest.TestCase):
+    _FakePool = TestCursorConstructionNeverLeaksAPermit._FakePool
+
+    def _dropped(self, conn):
+        fake_pool = self._FakePool(conn)
+        cr = cursor.Cursor(
+            typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
+        )
+        with self.assertLogs("odoo.db.cursor", level="WARNING") as cm:
+            cr.__del__()
+        self.assertTrue(any("not closed explicitly" in m for m in cm.output))
+        return fake_pool.given_back
+
+    def test_a_live_connection_is_rolled_back_and_pooled(self):
+        conn = _FakeConn()
+        conn.rollback = mock.Mock()
+        self.assertEqual(self._dropped(conn), [(conn, True)])
+        conn.rollback.assert_called_once()
+
+    def test_a_dead_connection_is_still_given_back_so_the_permit_returns(self):
+        conn = _FakeConn()
+        conn.closed = True
+        conn.rollback = mock.Mock(side_effect=AssertionError("never asked"))
+        self.assertEqual(
+            self._dropped(conn),
+            [(conn, False)],
+            "__del__ used to return early on a closed connection, and "
+            "give_back is the only release of the permit and the checkout: "
+            "measured live, a cursor dropped after pg_terminate_backend left "
+            "budget_in_use=1 and checked_out=1 for the life of the process",
+        )
+
+    def test_a_closed_cursor_is_left_alone(self):
+        conn = _FakeConn()
+        fake_pool = self._FakePool(conn)
+        cr = cursor.Cursor(
+            typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
+        )
+        cr.close()
+        cr.__del__()
+        self.assertEqual(len(fake_pool.given_back), 1)
+
+
 class TestTheProbeAsksItsQuestionOnce(unittest.TestCase):
     class _CountingLock:
         def __init__(self):

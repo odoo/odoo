@@ -181,7 +181,7 @@ class TestSemaphoreAccounting(unittest.TestCase):
 
     def test_repr_counts_direct_connections(self):
         pool = ConnectionPool(maxconn=8)
-        pool._pools = {_key(database="db"): _FakePool(size=3, available=1)}
+        pool._pools = {_key(dbname="db"): _FakePool(size=3, available=1)}
         pool._direct_out = 2
         text = repr(pool)
         self.assertIn("used=2/total=3/limit=8", text)
@@ -194,7 +194,7 @@ class TestIdlePoolReaping(unittest.TestCase):
 
     def test_disabled_when_ttl_is_not_positive(self):
         pool = self._pool(ttl=0)
-        pool._pools = {_key(database="db"): _FakePool()}
+        pool._pools = {_key(dbname="db"): _FakePool()}
         setattr(next(iter(pool._pools.values())), _LAST_BORROW_ATTR, monotonic() - 1e6)
         self.assertEqual(pool._reaper.get_keys_reapable(pool._pools), [])
 
@@ -203,9 +203,9 @@ class TestIdlePoolReaping(unittest.TestCase):
         fresh, stale = _FakePool(), _FakePool()
         setattr(fresh, _LAST_BORROW_ATTR, monotonic())
         setattr(stale, _LAST_BORROW_ATTR, monotonic() - 60)
-        pool._pools = {_key(database="fresh"): fresh, _key(database="stale"): stale}
+        pool._pools = {_key(dbname="fresh"): fresh, _key(dbname="stale"): stale}
         self.assertEqual(
-            [dict(k)["database"] for k in pool._reaper.get_keys_reapable(pool._pools)],
+            [dict(k)["dbname"] for k in pool._reaper.get_keys_reapable(pool._pools)],
             ["stale"],
         )
 
@@ -213,12 +213,12 @@ class TestIdlePoolReaping(unittest.TestCase):
         pool = self._pool(ttl=10)
         held = _FakePool(size=2, available=1)
         setattr(held, _LAST_BORROW_ATTR, monotonic() - 60)
-        pool._pools = {_key(database="held"): held}
+        pool._pools = {_key(dbname="held"): held}
         self.assertEqual(pool._reaper.get_keys_reapable(pool._pools), [])
 
     def test_excluded_key_is_never_reaped(self):
         pool = self._pool(ttl=10)
-        k = _key(database="mine")
+        k = _key(dbname="mine")
         p = _FakePool()
         setattr(p, _LAST_BORROW_ATTR, monotonic() - 60)
         pool._pools = {k: p}
@@ -228,7 +228,7 @@ class TestIdlePoolReaping(unittest.TestCase):
         pool = self._pool(ttl=10)
         p = _FakePool()
         setattr(p, _LAST_BORROW_ATTR, monotonic() - 60)
-        pool._pools = {_key(database="db"): p}
+        pool._pools = {_key(dbname="db"): p}
         mark_active(p)
         self.assertEqual(pool._reaper.get_keys_reapable(pool._pools), [])
 
@@ -252,9 +252,9 @@ class TestCloseAndDrainMatching(unittest.TestCase):
         a, b, other = _FakePool(), _FakePool(), _FakePool()
         cp = self._pool_with()
         cp._pools = {
-            _key(database="db", host="h1"): a,
-            _key(database="db", host="h2", password_fp="ab"): b,
-            _key(database="elsewhere"): other,
+            _key(dbname="db", host="h1"): a,
+            _key(dbname="db", host="h2", password_fp="ab"): b,
+            _key(dbname="elsewhere"): other,
         }
         cp.close_database("db")
         self.assertEqual((a.close_calls, b.close_calls, other.close_calls), (1, 1, 0))
@@ -263,7 +263,7 @@ class TestCloseAndDrainMatching(unittest.TestCase):
     def test_close_all_empties_the_registry(self):
         a, b = _FakePool(), _FakePool()
         cp = self._pool_with()
-        cp._pools = {_key(database="a"): a, _key(database="b"): b}
+        cp._pools = {_key(dbname="a"): a, _key(dbname="b"): b}
         cp.close_all()
         self.assertEqual(cp._pools, {})
         self.assertTrue(a.close_calls and b.close_calls)
@@ -272,22 +272,22 @@ class TestCloseAndDrainMatching(unittest.TestCase):
         live, dead = _FakePool(), _FakePool(closed=True)
         cp = self._pool_with()
         cp._pools = {
-            _key(database="db", host="a"): live,
-            _key(database="db", host="b"): dead,
+            _key(dbname="db", host="a"): live,
+            _key(dbname="db", host="b"): dead,
         }
         cp.drain_database("db")
         self.assertEqual((live.drain_calls, dead.drain_calls), (1, 0))
 
     def test_get_stats_is_keyed_by_database_name(self):
         cp = self._pool_with()
-        cp._pools = {_key(database="db"): _FakePool(size=4, available=2)}
+        cp._pools = {_key(dbname="db"): _FakePool(size=4, available=2)}
         self.assertEqual(cp.get_stats(), {"db": {"pool_size": 4, "pool_available": 2}})
 
     def test_health_reports_backends_summed_across_databases(self):
         cp = ConnectionPool(maxconn=2)
         cp._pools = {
-            _key(database="a"): _FakePool(size=3, available=3),
-            _key(database="b"): _FakePool(size=2, available=2),
+            _key(dbname="a"): _FakePool(size=3, available=3),
+            _key(dbname="b"): _FakePool(size=2, available=2),
         }
         health = cp.get_health()
         self.assertEqual(health["databases"], 2)
@@ -300,7 +300,7 @@ class TestCloseAndDrainMatching(unittest.TestCase):
 
     def test_health_backends_includes_direct_connections(self):
         cp = ConnectionPool(maxconn=4)
-        cp._pools = {_key(database="a"): _FakePool(size=1, available=1)}
+        cp._pools = {_key(dbname="a"): _FakePool(size=1, available=1)}
         cp._direct_out = 2
         self.assertEqual(cp.get_health()["backends"], 3)
 

@@ -48,12 +48,8 @@ def _expand_conninfo(info: dict | str) -> dict:
     if isinstance(info, str):
         return conninfo_to_dict(info)
     raw = info.get("dsn")
-    if raw:
-        return {
-            **conninfo_to_dict(raw),
-            **{k: v for k, v in info.items() if k != "dsn"},
-        }
-    return dict(info)
+    keywords = {k: v for k, v in info.items() if k != "dsn"}
+    return {**conninfo_to_dict(raw), **keywords} if raw else keywords
 
 
 def _get_dsn_key(dsn: dict | str) -> frozenset:
@@ -63,18 +59,20 @@ def _get_dsn_key(dsn: dict | str) -> frozenset:
         pw_fp = hashlib.blake2s(str(password).encode(), digest_size=8).hexdigest()
     else:
         pw_fp = ""
-    alias_keys = {"dbname": "database"}
-    items = (
-        (alias_keys.get(k, k), str(v))
-        for k, v in dsn.items()
-        if k != "password" and v is not None
-    )
+    items = ((k, str(v)) for k, v in dsn.items() if k != "password" and v is not None)
     key = frozenset((*items, ("password_fp", pw_fp)))
     _debug.logic(
         "dsn.key_built",
-        db=dsn.get("dbname") or dsn.get("database"),
+        db=dsn.get("dbname"),
         host=dsn.get("host"),
         keys=len(key) - 1,
         password=bool(password),
     )
     return key
+
+
+def _get_key_dbname(key: frozenset) -> str:
+    for name, value in key:
+        if name == "dbname":
+            return value
+    return ""

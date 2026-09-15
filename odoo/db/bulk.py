@@ -183,11 +183,14 @@ def _check_copy_args(
         )
     if cursor.in_pipeline:
         _debug.logic("bulk.copy.args_refused", table=table, reason="in_pipeline")
-        raise _errors.NotSupportedError(
-            f"copy_from({table!r}) cannot run inside pipeline mode; "
-            f"use execute_values, or move the COPY out of the enclosing "
-            f"cr.pipeline() block."
-        )
+        raise _prepare_copy_in_pipeline_error(f"copy_from({table!r})")
+
+
+def _prepare_copy_in_pipeline_error(call: str) -> _errors.NotSupportedError:
+    return _errors.NotSupportedError(
+        f"{call} cannot run inside pipeline mode; use execute_values, or move "
+        f"the COPY out of the enclosing cr.pipeline() block."
+    )
 
 
 def _prepare_copy_statement(
@@ -313,34 +316,29 @@ class _BulkAccessMixin:
             fetch=fetch,
             template=template is not None,
         ) as span:
-            try:
-                with ctx:
-                    for i in batches:
-                        batch = argslist[i : i + page_size]
-                        placeholders = []
-                        params: list[Any] = []
-                        for row in batch:
-                            if isinstance(row, (list, tuple)):
-                                if template:
-                                    placeholders.append(template)
-                                elif (ph := ph_by_len.get(len(row))) is not None:
-                                    placeholders.append(ph)
-                                else:
-                                    ph = "(" + ", ".join(["%s"] * len(row)) + ")"
-                                    ph_by_len[len(row)] = ph
-                                    placeholders.append(ph)
-                                params.extend(row)
+            with ctx:
+                for i in batches:
+                    batch = argslist[i : i + page_size]
+                    placeholders = []
+                    params: list[Any] = []
+                    for row in batch:
+                        if isinstance(row, (list, tuple)):
+                            if template:
+                                placeholders.append(template)
+                            elif (ph := ph_by_len.get(len(row))) is not None:
+                                placeholders.append(ph)
                             else:
-                                placeholders.append(template or "(%s)")
-                                params.append(row)
-                        full_query = f"{prefix}{', '.join(placeholders)}{suffix}"
-                        self.execute(full_query, params, log_exceptions)
-                        if fetch:
-                            results.extend(self.fetchall())
-            except Exception as e:
-                if has_reached_server(e):
-                    self._statement_failed(e, query, log_exceptions=log_exceptions)
-                raise
+                                ph = "(" + ", ".join(["%s"] * len(row)) + ")"
+                                ph_by_len[len(row)] = ph
+                                placeholders.append(ph)
+                            params.extend(row)
+                        else:
+                            placeholders.append(template or "(%s)")
+                            params.append(row)
+                    full_query = f"{prefix}{', '.join(placeholders)}{suffix}"
+                    self.execute(full_query, params, log_exceptions)
+                    if fetch:
+                        results.extend(self.fetchall())
             span.set(fetched=len(results))
         return results if fetch else None
 
@@ -398,12 +396,15 @@ class _BulkAccessMixin:
                     if col_types:
                         copy.set_types(col_types)
                     for row in write_rows:
-                        copy.write_row(row)
+                        try:
+                            copy.write_row(row)
+                        except Exception as e:
+                            if binary:
+                                _add_binary_types_note(e, table, columns)
+                            raise
                         row_count += 1
                 counts = True
             except Exception as e:
-                if binary:
-                    _add_binary_types_note(e, table, columns)
                 counts = self._statement_failed(
                     e,
                     render_copy_statement,

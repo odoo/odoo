@@ -13,8 +13,7 @@ from .pool import PoolError
 from .settings import PoolSettings, current
 
 if typing.TYPE_CHECKING:
-    from .cursor import BaseCursor
-    from .pool import Connection
+    from .cursor import BaseCursor, Connection
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)

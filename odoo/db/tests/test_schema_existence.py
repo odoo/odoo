@@ -22,3 +22,36 @@ class TestColumnIndexExistsReturnBool(unittest.TestCase):
         cr = self._Cursor(0)
         self.assertIs(column_exists(cr, "t", "c"), False)
         self.assertIs(index_exists(cr, "i"), False)
+
+
+class TestExistenceAdmitsEveryTableKind(unittest.TestCase):
+    def test_the_relkinds_are_derived_from_table_kind(self):
+        from odoo.db.schema import _EXISTING_RELKINDS, TableKind
+
+        self.assertEqual(set(_EXISTING_RELKINDS), {"r", "v", "m", "f", "p"})
+        for kind in TableKind:
+            if kind in (TableKind.Temporary, TableKind.Other):
+                continue
+            self.assertIn(
+                kind.value,
+                _EXISTING_RELKINDS,
+                "a kind get_table_kind can name but get_tables_existing "
+                "reports as absent makes _auto_init issue CREATE TABLE over "
+                "it and the registry fail to load with DuplicateTable",
+            )
+
+    def test_the_query_asks_for_exactly_those(self):
+        from odoo.db.schema import _EXISTING_RELKINDS, get_tables_existing
+
+        class _Cursor:
+            params = None
+
+            def execute(self, query):
+                self.params = query.params
+
+            def fetchall(self):
+                return []
+
+        cr = _Cursor()
+        get_tables_existing(cr, ["t"])
+        self.assertEqual(cr.params, (["t"], list(_EXISTING_RELKINDS)))

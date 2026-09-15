@@ -44,11 +44,22 @@ class TestSchemaCacheClearsHaveDistinctCallSites(unittest.TestCase):
         )
 
     def test_transaction_boundaries_clear_everything(self):
+        self.assertEqual(
+            _calls_on(cursor.Cursor._reset_transaction_caches, "_schema_cache"),
+            {"clear"},
+        )
         for method in ("commit", "_rollback"):
             with self.subTest(method=method):
+                self.assertIn(
+                    "_reset_transaction_caches",
+                    _callees(getattr(cursor.Cursor, method)),
+                    "both transaction boundaries forget the transaction-scoped "
+                    "caches through the one helper, so a cache added there is "
+                    "forgotten at both",
+                )
                 self.assertEqual(
                     _calls_on(getattr(cursor.Cursor, method), "_schema_cache"),
-                    {"clear"},
+                    set(),
                 )
 
     def test_savepoint_rollback_releases_exactly_the_tables_the_savepoint_locked(self):
@@ -210,9 +221,8 @@ class TestPipelineModeCannotBypassTheFailureSeam(unittest.TestCase):
             "a seam that never marks can never short-circuit",
         )
 
-    def test_execute_values_hands_its_own_failures_to_the_seam(self):
+    def test_execute_values_carries_no_seam_of_its_own(self):
         called = _callees(bulk._BulkAccessMixin.execute_values)
-        self.assertIn("_statement_failed", called)
         self.assertNotIn(
             "_log_sql_error",
             called,
@@ -220,11 +230,19 @@ class TestPipelineModeCannotBypassTheFailureSeam(unittest.TestCase):
             "mark off every pipelined execute_values, and the ORM's bulk "
             "writers reach this path",
         )
-        self.assertIn(
-            "has_reached_server",
+        self.assertNotIn(
+            "_statement_failed",
             called,
-            "a client-side rejection never reached the wire and is not the "
-            "seam's, as in Cursor.pipeline",
+            "every statement execute_values issues goes through self.execute, "
+            "whose own except is the seam, and a deferred pipelined error "
+            "surfaces at the exit of the self.pipeline() block it opened; a "
+            "third call here only ever short-circuited on the mark (measured: "
+            "both paths logged cursor.statement_seam_short_circuit)",
+        )
+        self.assertEqual(
+            {"execute", "pipeline"} & called,
+            {"execute", "pipeline"},
+            "the two entry points that carry the seam on its behalf",
         )
 
 

@@ -17,7 +17,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.release import MIN_PG_VERSION
 
 from .budget import ConnectionBudget
-from .dsn import _expand_conninfo, _get_dsn_key
+from .dsn import _expand_conninfo, _get_dsn_key, _get_key_dbname
 from .leaks import CheckoutTracker
 from .lifecycle import (
     _check_connection,
@@ -32,8 +32,6 @@ from .utils import is_maintenance_db
 
 if TYPE_CHECKING:
     from types import FrameType
-
-    from .cursor import Cursor
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
@@ -226,7 +224,7 @@ class ConnectionPool:
     def readonly(self) -> bool:
         return self._readonly
 
-    def _debug(self, msg: str, *args: object) -> None:
+    def _log_connection(self, msg: str, *args: object) -> None:
         _logger_conn.debug(("%r " + msg), self, *args)
 
     def _get_or_create_pool(
@@ -242,7 +240,7 @@ class ConnectionPool:
         kwargs["autocommit"] = False
 
         idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
-        dbname = kwargs.get("dbname") or dict(key).get("database", "")
+        dbname = kwargs.get("dbname") or _get_key_dbname(key)
         kwargs["options"] = _prepare_connection_options(
             conninfo,
             kwargs,
@@ -256,15 +254,13 @@ class ConnectionPool:
         with self._lock:
             pool = self._pools.get(key)
             if pool is not None and not pool.closed:
-                _debug.logic(
-                    "pool.create_raced", db=dict(key).get("database"), won=False
-                )
+                _debug.logic("pool.create_raced", db=_get_key_dbname(key), won=False)
                 mark_active(pool)
                 return pool
 
             with _debug.perf(
                 "pool.open",
-                db=dict(key).get("database"),
+                db=_get_key_dbname(key),
                 readonly=self._readonly,
                 min=self._minconn,
                 idle_session_ms=idle_session_ms,
@@ -288,10 +284,10 @@ class ConnectionPool:
             mark_active(pool)
             self._pools[key] = pool
             self.stats.record_pool_created()
-            self._debug("Created pool for %s", dict(key))
+            self._log_connection("Created pool for %s", dict(key))
             _debug.lifecycle(
                 "pool.created",
-                db=dict(key).get("database"),
+                db=_get_key_dbname(key),
                 readonly=self._readonly,
                 pools=len(self._pools),
                 min=self._minconn,
@@ -375,7 +371,7 @@ class ConnectionPool:
         deadline = started + self._borrow_timeout
         if key is None:
             key = _get_dsn_key(connection_info)
-        dbname = connection_info.get("dbname") or dict(key).get("database", "")
+        dbname = connection_info.get("dbname") or _get_key_dbname(key)
         if is_maintenance_db(dbname, self._settings):
             _debug.logic("pool.borrow_routed", db=dbname, route="direct")
             return self._borrow_directly(connection_info, deadline)
@@ -589,32 +585,34 @@ class ConnectionPool:
         connection_info: dict,
         deadline: float,
     ) -> tuple[psycopg.Connection, _PsycopgPool]:
-        for attempt in range(2):
+        rebuilt = False
+        while True:
             remaining = max(0.1, deadline - monotonic())
             try:
                 return pool.getconn(timeout=remaining), pool
             except PoolClosed as e:
                 self._discard_pool(key, pool)
-                if attempt == 1:
+                if rebuilt:
                     _logger.info("Connection to the database failed: %s", e)
                     raise PoolError(str(e)) from e
-                self._debug("Pool closed under borrow(); rebuilding for %s", dict(key))
-                _debug.lifecycle(
-                    "pool.rebuilt_under_borrow", db=dict(key).get("database")
+                self._log_connection(
+                    "Pool closed under borrow(); rebuilding for %s", dict(key)
                 )
+                _debug.lifecycle("pool.rebuilt_under_borrow", db=_get_key_dbname(key))
                 pool = self._get_or_create_pool(key, connection_info, deadline)
+                rebuilt = True
             except PoolTimeout as e:
                 _debug.logic(
                     "pool.borrow_timeout",
-                    db=dict(key).get("database"),
-                    attempt=attempt,
+                    db=_get_key_dbname(key),
+                    rebuilt=rebuilt,
                     pool_size=pool.get_stats().get("pool_size", 0),
                     waiting=pool.get_stats().get("requests_waiting", 0),
                 )
                 if pool.get_stats().get("pool_size", 0) == 0:
                     self._discard_pool(key, pool)
                     _debug.lifecycle(
-                        "pool.closed_after_timeout", db=dict(key).get("database")
+                        "pool.closed_after_timeout", db=_get_key_dbname(key)
                     )
                 self._probe.clear_key(key)
                 _logger.info("Connection to the database failed: %s", e)
@@ -623,14 +621,13 @@ class ConnectionPool:
                 self._probe.clear_key(key)
                 _debug.logic(
                     "pool.getconn_failed",
-                    db=dict(key).get("database"),
-                    attempt=attempt,
+                    db=_get_key_dbname(key),
+                    rebuilt=rebuilt,
                     error=type(e).__name__,
                     sqlstate=getattr(e, "sqlstate", None),
                 )
                 _logger.info("Connection to the database failed: %s", e)
                 raise
-        raise PoolError("getconn retry budget exhausted")
 
     def _discard_pool(self, key: frozenset, pool: _PsycopgPool) -> None:
         with self._lock:
@@ -644,7 +641,9 @@ class ConnectionPool:
         try:
             self._check_min_server_version(conn)
             if _logger_conn.isEnabledFor(logging.DEBUG):
-                self._debug("Borrow connection backend PID %d", conn.info.backend_pid)
+                self._log_connection(
+                    "Borrow connection backend PID %d", conn.info.backend_pid
+                )
             conn._odoo_pool = pool
         except BaseException as exc:
             _debug.logic(
@@ -661,9 +660,9 @@ class ConnectionPool:
     ) -> None:
         if _logger_conn.isEnabledFor(logging.DEBUG):
             if not connection.closed:
-                self._debug("Give back connection to %r", connection.info.dsn)
+                self._log_connection("Give back connection to %r", connection.info.dsn)
             else:
-                self._debug("Give back dead connection %r", connection)
+                self._log_connection("Give back dead connection %r", connection)
         held_s = self._checkouts.release(connection)
         pool = connection.__dict__.pop("_odoo_pool", None)
         if pool is None:
@@ -740,27 +739,25 @@ class ConnectionPool:
 
     def has_database(self, db_name: str) -> bool:
         with self._lock:
-            return any(dict(k).get("database") == db_name for k in self._pools)
+            return any(_get_key_dbname(k) == db_name for k in self._pools)
 
     def _get_keys_for_database(self, db_name: str) -> list[frozenset]:
-        return [k for k in self._pools if dict(k).get("database") == db_name]
+        return [k for k in self._pools if _get_key_dbname(k) == db_name]
 
     def close_database(self, db_name: str) -> None:
         with self._lock:
             pools = [self._pools.pop(k) for k in self._get_keys_for_database(db_name)]
-            self._probe.clear_keys_matching(
-                lambda k: dict(k).get("database") == db_name
-            )
-        self._close_pools(pools, "for %s" % db_name)
+            self._probe.clear_keys_matching(lambda k: _get_key_dbname(k) == db_name)
+        self._close_pools(pools, db_name)
 
     def close_all(self) -> None:
         with self._lock:
             pools = list(self._pools.values())
             self._pools.clear()
             self._probe.clear()
-        self._close_pools(pools, "")
+        self._close_pools(pools, None)
 
-    def _close_pools(self, pools: list[_PsycopgPool], scope: str) -> None:
+    def _close_pools(self, pools: list[_PsycopgPool], db_name: str | None) -> None:
         for pool in pools:
             self._close_pool_safely(pool)
         if pools:
@@ -768,26 +765,26 @@ class ConnectionPool:
                 "pool.pools_closed",
                 readonly=self._readonly,
                 count=len(pools),
-                db=scope.removeprefix("for ") if scope else "all",
+                db=db_name or "all",
             )
             _logger.info(
                 "%r: Closed %d pool(s)%s",
                 self,
                 len(pools),
-                f" {scope}" if scope else "",
+                f" for {db_name}" if db_name else "",
             )
 
     def drain_database(self, db_name: str) -> None:
         with self._lock:
             pools = [self._pools[k] for k in self._get_keys_for_database(db_name)]
-        self._drain_pools(pools, "for %s" % db_name)
+        self._drain_pools(pools, db_name)
 
     def drain_all(self) -> None:
         with self._lock:
             pools = list(self._pools.values())
-        self._drain_pools(pools, "")
+        self._drain_pools(pools, None)
 
-    def _drain_pools(self, pools: list[_PsycopgPool], scope: str) -> None:
+    def _drain_pools(self, pools: list[_PsycopgPool], db_name: str | None) -> None:
         for pool in pools:
             if not pool.closed:
                 self._drain_pool_safely(pool)
@@ -796,13 +793,13 @@ class ConnectionPool:
                 "pool.pools_drained",
                 readonly=self._readonly,
                 count=len(pools),
-                db=scope.removeprefix("for ") if scope else "all",
+                db=db_name or "all",
             )
             _logger.debug(
                 "%r: Drained %d pool(s)%s",
                 self,
                 len(pools),
-                f" {scope}" if scope else "",
+                f" for {db_name}" if db_name else "",
             )
 
     def get_stats(self) -> dict[str, dict]:
@@ -810,7 +807,7 @@ class ConnectionPool:
             snapshot = list(self._pools.items())
         stats = {}
         for key, pool in snapshot:
-            db_name = dict(key).get("database", "unknown")
+            db_name = _get_key_dbname(key) or "unknown"
             stats[db_name] = pool.get_stats()
         return stats
 
@@ -840,36 +837,3 @@ class ConnectionPool:
             ),
             "per_database": per_database,
         }
-
-
-class Connection:
-    __slots__ = ("__dbname", "__dsn", "__key", "__pool")
-
-    def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
-        self.__dbname = dbname
-        self.__dsn = dict(dsn)
-        self.__pool = pool
-        self.__key = _get_dsn_key(dsn)
-
-    @property
-    def dsn(self) -> dict:
-        dsn = _expand_conninfo(self.__dsn)
-        dsn.pop("password", None)
-        return dsn
-
-    @property
-    def dbname(self) -> str:
-        return self.__dbname
-
-    def cursor(self) -> Cursor:
-        from .cursor import Cursor
-
-        if _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("create cursor to %r", self.dsn)
-        _debug.pipeline(
-            "pool.cursor_requested",
-            db=self.__dbname,
-            readonly=self.__pool.readonly,
-            thread=threading.current_thread().name,
-        )
-        return Cursor(self.__pool, self.__dbname, self.__dsn, key=self.__key)

@@ -1,3 +1,4 @@
+import contextlib
 import threading
 import unittest
 from decimal import Decimal
@@ -135,6 +136,118 @@ class TestCopyFromMetrics(unittest.TestCase):
         cursor = _FakeCursorForCopyMetrics()
         cursor.copy_from("t", ["a"], iter([(1,), (2,), (3,)]))  # type: ignore[misc]
         self.assertEqual(cursor.statement_done_calls, [3])
+
+
+class _RejectingCopyBlock(_FakeCopyBlock):
+    def write_row(self, row):
+        raise TypeError("psycopg could not dump the row")
+
+
+class _FakeObjWithBlock(_FakeObj):
+    def __init__(self, block):
+        self.block = block
+
+    def copy(self, stmt):
+        return self.block
+
+
+class _FakeCursorForBinaryCopy(_FakeCursorForCopyMetrics):
+    def __init__(self, block):
+        super().__init__()
+        self._obj = _FakeObjWithBlock(block)
+        self._cnx = None
+
+    def _get_column_type_oids(self, table, columns):
+        return [23] * len(columns)
+
+    def _is_binary_copy_worthwhile(self, oids):
+        return True
+
+
+class TestTheBinaryTypeNoteNamesOnlyTheEncoder(unittest.TestCase):
+    def test_a_row_psycopg_refuses_to_encode_gets_the_note(self):
+        cursor = _FakeCursorForBinaryCopy(_RejectingCopyBlock())
+        with self.assertRaises(TypeError) as ctx:
+            cursor.copy_from("t", ["a"], [(1,)], binary=True)  # type: ignore[misc]
+        self.assertTrue(any("binary=True" in note for note in ctx.exception.__notes__))
+
+    def test_a_failure_in_the_callers_own_row_source_does_not(self):
+        cursor = _FakeCursorForBinaryCopy(_FakeCopyBlock())
+
+        def rows():
+            yield (1,)
+            raise KeyError("the caller's generator")
+
+        with self.assertRaises(KeyError) as ctx:
+            cursor.copy_from("t", ["a"], rows(), binary=True)  # type: ignore[misc]
+        self.assertIsNone(
+            getattr(ctx.exception, "__notes__", None),
+            "the note explains psycopg's client-side encoding; a KeyError "
+            "raised by the caller's own generator has nothing to do with it "
+            "and used to get the note anyway",
+        )
+
+
+class _FakeCursorForExecuteValues(_BulkAccessMixin):
+    def __init__(self, fail_on_statement=None):
+        self._obj = None
+        self.executed: list = []
+        self.marked: list = []
+        self.pipeline_blocks: list = []
+        self._fail_on_statement = fail_on_statement
+
+    def _before_statement(self):
+        pass
+
+    def execute(self, query, params=None, log_exceptions=True):
+        self.executed.append(query)
+        if len(self.executed) == self._fail_on_statement:
+            exc = RuntimeError("server rejected the statement")
+            self.marked.append(exc)
+            raise exc
+
+    def fetchall(self):
+        return [(len(self.executed),)]
+
+    @contextlib.contextmanager
+    def pipeline(self, log_exceptions=True, query=None):
+        self.pipeline_blocks.append((log_exceptions, query))
+        yield
+
+
+class TestExecuteValuesReachesTheSeamThroughItsEntryPoints(unittest.TestCase):
+    def test_every_page_is_a_plain_execute(self):
+        cursor = _FakeCursorForExecuteValues()
+        cursor.execute_values(  # type: ignore[misc]
+            "INSERT INTO t VALUES %s", [(i,) for i in range(250)], page_size=100
+        )
+        self.assertEqual(len(cursor.executed), 3)
+        self.assertEqual(
+            cursor.pipeline_blocks,
+            [(True, "INSERT INTO t VALUES %s")],
+            "a multi-page write opens one pipeline block that keeps the "
+            "caller's log flag and names the caller's template",
+        )
+
+    def test_a_failing_page_propagates_exactly_what_execute_raised(self):
+        cursor = _FakeCursorForExecuteValues(fail_on_statement=2)
+        with self.assertRaises(RuntimeError) as ctx:
+            cursor.execute_values(  # type: ignore[misc]
+                "INSERT INTO t VALUES %s", [(i,) for i in range(250)], page_size=100
+            )
+        self.assertIs(ctx.exception, cursor.marked[0])
+        self.assertEqual(len(cursor.executed), 2, "the remaining pages are not sent")
+
+    def test_fetch_never_pipelines(self):
+        cursor = _FakeCursorForExecuteValues()
+        rows = cursor.execute_values(  # type: ignore[misc]
+            "INSERT INTO t VALUES %s RETURNING id",
+            [(i,) for i in range(250)],
+            page_size=100,
+            fetch=True,
+        )
+        self.assertEqual(rows, [(1,), (2,), (3,)])
+        self.assertEqual(cursor.pipeline_blocks, [])
 
 
 class TestExecuteValuesValidation(unittest.TestCase):

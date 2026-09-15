@@ -4,16 +4,25 @@ import psycopg
 
 from odoo.db.dsn import (
     _LOCALE_INDEPENDENT_AUTH_MARKERS,
+    _expand_conninfo,
     _get_dsn_key,
+    _get_key_dbname,
     _resolve_connect_error,
 )
 
 
 class TestNormalizeDsnKey(unittest.TestCase):
-    def test_dbname_aliased_to_database(self):
+    def test_dbname_keeps_its_libpq_name(self):
         key_dict = dict(_get_dsn_key({"dbname": "test", "host": "localhost"}))
-        self.assertEqual(key_dict["database"], "test")
-        self.assertNotIn("dbname", key_dict)
+        self.assertEqual(key_dict["dbname"], "test")
+        self.assertNotIn("database", key_dict)
+
+    def test_key_dbname_reads_the_one_field_the_pool_files_by(self):
+        self.assertEqual(
+            _get_key_dbname(_get_dsn_key({"dbname": "test", "host": "h"})), "test"
+        )
+        self.assertEqual(_get_key_dbname(_get_dsn_key({"host": "h"})), "")
+        self.assertEqual(_get_key_dbname(frozenset()), "")
 
     def test_password_excluded(self):
         key_dict = dict(_get_dsn_key({"dbname": "test", "password": "secret"}))
@@ -25,13 +34,30 @@ class TestNormalizeDsnKey(unittest.TestCase):
 
     def test_string_dsn(self):
         key_dict = dict(_get_dsn_key("dbname=test host=localhost"))
-        self.assertEqual(key_dict["database"], "test")
+        self.assertEqual(key_dict["dbname"], "test")
         self.assertEqual(key_dict["host"], "localhost")
 
     def test_same_dsn_same_key(self):
         key1 = _get_dsn_key({"dbname": "test", "host": "localhost"})
-        key2 = _get_dsn_key({"database": "test", "host": "localhost"})
+        key2 = _get_dsn_key("dbname=test host=localhost")
         self.assertEqual(key1, key2)
+
+
+class TestExpandConninfo(unittest.TestCase):
+    def test_the_dsn_key_never_survives_expansion(self):
+        self.assertEqual(
+            _expand_conninfo({"dsn": "", "dbname": "x", "autocommit": True}),
+            {"dbname": "x", "autocommit": True},
+        )
+        self.assertEqual(
+            _expand_conninfo({"dsn": "host=h", "dbname": "x"}),
+            {"host": "h", "dbname": "x"},
+        )
+
+    def test_keywords_override_what_the_dsn_spells(self):
+        self.assertEqual(
+            _expand_conninfo({"dsn": "dbname=a host=h", "dbname": "b"})["dbname"], "b"
+        )
 
 
 class TestNormalizeDsnKeyPassword(unittest.TestCase):
@@ -60,7 +86,7 @@ class TestNormalizeDsnKeyUriExpansion(unittest.TestCase):
         )
         self.assertNotIn("s3cret", str(sorted(key)))
         kd = dict(key)
-        self.assertEqual(kd.get("database"), "dbz")
+        self.assertEqual(kd.get("dbname"), "dbz")
         self.assertEqual(kd.get("host"), "h")
 
     def test_uri_password_rotation_changes_key(self):

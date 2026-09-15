@@ -12,6 +12,7 @@ from odoo.libs.debug_log import DebugLog
 from .dsn import (
     _NON_RETRYABLE_CONNECT_ERRORS,
     _expand_conninfo,
+    _get_key_dbname,
     _resolve_connect_error,
 )
 
@@ -54,7 +55,7 @@ class ReachabilityProbe:
             if _debug.lifecycle.enabled and key not in self._proven:
                 _debug.lifecycle(
                     "pool.reachability_proven",
-                    db=dict(key).get("database"),
+                    db=_get_key_dbname(key),
                     proven=len(self._proven) + 1,
                 )
             self._proven.add(key)
@@ -62,9 +63,7 @@ class ReachabilityProbe:
     def clear_key(self, key: frozenset) -> None:
         with self._lock:
             if _debug.lifecycle.enabled and key in self._proven:
-                _debug.lifecycle(
-                    "pool.reachability_revoked", db=dict(key).get("database")
-                )
+                _debug.lifecycle("pool.reachability_revoked", db=_get_key_dbname(key))
             self._proven.discard(key)
 
     def clear_keys(self, keys) -> None:
@@ -103,12 +102,12 @@ class ReachabilityProbe:
                     probe = self._inflight[key] = _InFlightProbe()
         if proven:
             self._stats.record_probe_outcome("skipped_proven")
-            _debug.logic("pool.probe.skipped_proven", db=dict(key).get("database"))
+            _debug.logic("pool.probe.skipped_proven", db=_get_key_dbname(key))
             return
         assert probe is not None
         _debug.logic(
             "pool.probe",
-            db=dict(key).get("database"),
+            db=_get_key_dbname(key),
             leader=leader,
             deadline_s=None if deadline is None else max(0.0, deadline - monotonic()),
         )
@@ -135,7 +134,7 @@ class ReachabilityProbe:
                     probe.done.set()
                 _debug.pipeline(
                     "pool.probe.leader_done",
-                    db=dict(key).get("database"),
+                    db=_get_key_dbname(key),
                     failed=probe.exc is not None,
                 )
         else:
@@ -145,7 +144,7 @@ class ReachabilityProbe:
             done = probe.done.wait(wait_timeout)
             _debug.logic(
                 "pool.probe.awaited",
-                db=dict(key).get("database"),
+                db=_get_key_dbname(key),
                 done=done,
                 failed=probe.exc is not None,
             )
@@ -210,10 +209,8 @@ class ReachabilityProbe:
     def is_database_absent(
         self, conninfo: str, kwargs: dict, deadline: float | None = None
     ) -> bool:
-        maint = (
-            _expand_conninfo({"dsn": conninfo, **kwargs}) if conninfo else dict(kwargs)
-        )
-        db_name = kwargs.get("dbname") or maint.get("dbname")
+        maint = _expand_conninfo({"dsn": conninfo, **kwargs})
+        db_name = maint.get("dbname")
         if not db_name or db_name == "postgres":
             _debug.logic(
                 "pool.probe.absence_check_skipped",

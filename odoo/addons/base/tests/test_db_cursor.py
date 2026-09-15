@@ -22,7 +22,7 @@ from psycopg_pool import PoolTimeout
 
 import odoo
 from odoo import api, tools
-from odoo.db import db_connect, get_or_create_row
+from odoo.db import Connection, db_connect, get_or_create_row
 from odoo.db import pool as pool_module
 from odoo.db import schema as sql_schema
 from odoo.db import settings as pool_settings
@@ -37,7 +37,6 @@ from odoo.db.lifecycle import (
     _RESET_SESSION_STATE_SQL,
 )
 from odoo.db.pool import (
-    Connection,
     ConnectionPool,
     PoolError,
     _check_connection,
@@ -1857,7 +1856,7 @@ class TestPoolBasics(BaseCase):
         def churn():
             i = 0
             while not stop.is_set():
-                pool._pools[frozenset([("database", f"d{i & 7}"), ("n", str(i))])] = (
+                pool._pools[frozenset([("dbname", f"d{i & 7}"), ("n", str(i))])] = (
                     _FakePool()
                 )
                 keys = list(pool._pools)
@@ -2196,6 +2195,42 @@ class TestCursorDelReclaimsConnection(BaseCase):
             2,
             "Cursor.__del__ leaked the pool semaphore permit",
         )
+
+    def test_del_reclaims_the_permit_of_a_dead_connection_too(self):
+        import gc
+
+        pool = ConnectionPool(maxconn=2)
+        self.addCleanup(pool.close_all)
+        dbname = common.get_db_name()
+        info = self._info()
+
+        def leak():
+            cr = Cursor(pool, dbname, info)
+            cr.execute("SELECT pg_backend_pid()")
+            pid = cr.fetchscalar()
+            with contextlib.closing(db_connect(dbname).cursor()) as admin:
+                admin.execute("SELECT pg_terminate_backend(%s)", (pid,))
+                admin.commit()
+            with self.assertRaises(psycopg.OperationalError):
+                cr.execute("SELECT 1")
+            self.assertTrue(cr._cnx.closed, "psycopg marks a killed backend closed")
+            self.assertEqual(pool._budget.available, 1)
+            self.assertEqual(len(pool._checkouts), 1)
+
+        with self.assertLogs("odoo.db.cursor", level="WARNING") as cm:
+            leak()
+            gc.collect()
+
+        self.assertTrue(any("not closed explicitly" in m for m in cm.output))
+        self.assertEqual(
+            pool._budget.available,
+            2,
+            "__del__ used to skip _close() on a dead connection, and _close() "
+            "is the only path that gives the permit back: a request whose "
+            "backend died and whose cursor was never closed lost one permit "
+            "for the life of the process",
+        )
+        self.assertEqual(len(pool._checkouts), 0)
 
 
 class TestPoolTimeoutCleanup(BaseCase):
@@ -4400,7 +4435,7 @@ class TestPoolCleanupIsolatesFailures(BaseCase):
 
     def _make_pool_with(self, *fakes):
         cp = ConnectionPool(maxconn=8)
-        cp._pools = {frozenset([("database", fp.name)]): fp for fp in fakes}
+        cp._pools = {frozenset([("dbname", fp.name)]): fp for fp in fakes}
         return cp
 
     def test_close_all_closes_survivors_despite_failure(self):
@@ -4417,8 +4452,8 @@ class TestPoolCleanupIsolatesFailures(BaseCase):
         b = self._FakePool("db")
         cp = ConnectionPool(maxconn=8)
         cp._pools = {
-            frozenset([("database", "db"), ("host", "h1")]): a,
-            frozenset([("database", "db"), ("host", "h2")]): b,
+            frozenset([("dbname", "db"), ("host", "h1")]): a,
+            frozenset([("dbname", "db"), ("host", "h2")]): b,
         }
         cp.close_database("db")
         self.assertTrue(a.close_called and b.close_called)
@@ -4436,8 +4471,8 @@ class TestPoolCleanupIsolatesFailures(BaseCase):
         b = self._FakePool("db")
         cp = ConnectionPool(maxconn=8)
         cp._pools = {
-            frozenset([("database", "db"), ("host", "h1")]): a,
-            frozenset([("database", "db"), ("host", "h2")]): b,
+            frozenset([("dbname", "db"), ("host", "h1")]): a,
+            frozenset([("dbname", "db"), ("host", "h2")]): b,
         }
         cp.drain_database("db")
         self.assertTrue(a.drain_called and b.drain_called)

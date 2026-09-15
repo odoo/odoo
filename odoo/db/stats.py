@@ -152,10 +152,7 @@ class PoolStats:
             out["checked_out"] = len(checkouts)
             out["checked_out_oldest_seconds"] = round(checkouts.get_oldest_age(), 3)
         if budget is not None:
-            out["budget_maxconn"] = budget.maxconn
-            out["budget_available"] = budget.available
-            out["budget_in_use"] = budget.in_use
-            out["budget_exhausted"] = budget.exhausted_count
+            out.update(budget.get_snapshot())
         _debug.perf.count(
             "stats.snapshot",
             borrows=out["borrows"],

@@ -66,6 +66,25 @@ _CONFDELTYPES = {
 }
 
 
+class TableKind(enum.Enum):
+    Regular = "r"
+    Temporary = "t"
+    View = "v"
+    Materialized = "m"
+    Foreign = "f"
+    Partitioned = "p"
+    Other = None
+
+
+# Every relkind `TableKind` names; `Temporary` is a persistence, not a relkind,
+# and a kind reported as absent here makes `_auto_init` CREATE TABLE over it.
+_EXISTING_RELKINDS: tuple[str, ...] = tuple(
+    kind.value
+    for kind in TableKind
+    if kind not in (TableKind.Temporary, TableKind.Other)
+)
+
+
 def get_tables_existing(cr: BaseCursor, tablenames: Iterable[str]) -> list[str]:
     asked = list(tablenames)
     cr.execute(
@@ -78,7 +97,7 @@ def get_tables_existing(cr: BaseCursor, tablenames: Iterable[str]) -> list[str]:
            AND c.relnamespace = current_schema::regnamespace
     """,
             asked,
-            ["r", "v", "m", "p", "f"],
+            list(_EXISTING_RELKINDS),
         )
     )
     found = [row[0] for row in cr.fetchall()]
@@ -126,16 +145,6 @@ def table_exists(cr: BaseCursor, tablename: str) -> bool:
     exists = len(get_tables_existing(cr, {tablename})) == 1
     _debug.logic("schema.table_exists", table=tablename, exists=exists)
     return exists
-
-
-class TableKind(enum.Enum):
-    Regular = "r"
-    Temporary = "t"
-    View = "v"
-    Materialized = "m"
-    Foreign = "f"
-    Partitioned = "p"
-    Other = None
 
 
 def get_table_kind(cr: BaseCursor, tablename: str) -> TableKind | None:
@@ -301,11 +310,11 @@ def create_column(
     if not _SQL_TYPE_TOKEN.fullmatch(columntype):
         raise _refuse_column_type(columntype, tablename, columnname)
     sql = SQL(
-        "ALTER TABLE %s ADD COLUMN %s %s %s",
+        "ALTER TABLE %s ADD COLUMN %s %s%s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
         SQL(columntype),
-        SQL("DEFAULT false" if columntype.upper() == "BOOLEAN" else ""),
+        SQL(" DEFAULT false" if columntype.upper() == "BOOLEAN" else ""),
     )
     if comment:
         sql = SQL(
@@ -338,8 +347,6 @@ def create_column(
 def convert_column(
     cr: BaseCursor, tablename: str, columnname: str, columntype: str
 ) -> None:
-    if not _SQL_TYPE_TOKEN.fullmatch(columntype):
-        raise _refuse_column_type(columntype, tablename, columnname)
     using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
     _convert_column(cr, tablename, columnname, columntype, using)
 
