@@ -273,6 +273,17 @@ class TestQwebFieldContact(common.TransactionCase):
             "Empty telephone itemprop should be added to prevent issue with iOS Safari",
         )
 
+    def test_value_to_html_reads_the_phone_only_when_asked(self):
+        Contact = self.env["ir.qweb.field.contact"]
+        Contact.value_to_html(self.partner, {"fields": ["name", "phone"]})
+        counts = {}
+        for shown in (["name"], ["name", "phone"]):
+            self.env.invalidate_all()
+            count0 = self.cr.sql_statement_count
+            Contact.value_to_html(self.partner, {"fields": shown})
+            counts[len(shown)] = self.cr.sql_statement_count - count0
+        self.assertLess(counts[1], counts[2])
+
 
 class TestQwebFieldOne2Many(common.TransactionCase):
     def value_to_html(self, value, options=None):

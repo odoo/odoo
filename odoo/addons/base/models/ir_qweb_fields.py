@@ -759,7 +759,9 @@ class IrQwebFieldContact(models.AbstractModel):
                     contact = value[parent_field]
                     break
         phone = (
-            contact._phone_get_number().number if contact._name == "res.partner" else ""
+            contact._phone_get_number().number
+            if "phone" in opf and contact._name == "res.partner"
+            else ""
         )
         display_name = value.display_name or ""
         name_line, *address_lines = display_name.split("\n")
