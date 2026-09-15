@@ -191,7 +191,7 @@ class PdpRegistration(models.TransientModel):
             next_action = self.env['account.move'].browse(move_ids).action_send_and_print()
             next_action['views'] = [(False, 'form')]
         else:
-            next_action = {'type': 'ir.actions.act_window_close'}
+            next_action = {'type': 'ir.actions.client', 'tag': 'reload'}
 
         return {
             'type': 'ir.actions.client',
