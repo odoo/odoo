@@ -1,5 +1,8 @@
 from odoo import Command, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class PosConfig(models.Model):
@@ -46,6 +49,12 @@ class PosConfig(models.Model):
             if all(isinstance(cmd, (list, tuple)) for cmd in vals[field_name])
         }
 
+        _debug.pipeline(
+            "pos_config_employee_lists_written",
+            configs=self,
+            escalated_fields=len(sudo_vals),
+            managers_linked=len(vals["advanced_employee_ids"]),
+        )
         res = super().write(vals)
         if sudo_vals:
             super(PosConfig, self.sudo()).write(sudo_vals)
@@ -81,6 +90,15 @@ class PosConfig(models.Model):
 
     def _employee_domain(self, user_id):
         domain = self._check_company_domain(self.company_id)
+        _debug.logic(
+            "pos_employee_domain",
+            config=self,
+            user_id=user_id,
+            restricted=len(self.basic_employee_ids) > 0,
+            basic=self.basic_employee_ids,
+            advanced=self.advanced_employee_ids,
+            minimal=self.minimal_employee_ids,
+        )
         if len(self.basic_employee_ids) > 0:
             domain = Domain.AND(
                 [

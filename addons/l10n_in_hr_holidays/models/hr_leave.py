@@ -3,9 +3,12 @@ from datetime import datetime, time, timedelta
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_compare
 from odoo.tools.date_utils import get_intervals_hours
+
+_debug = DebugLog(__name__)
 
 
 class HrLeave(models.Model):
@@ -20,6 +23,12 @@ class HrLeave(models.Model):
             or self.env.company.resource_calendar_id
         )
         if not calendar:
+            _debug.logic(
+                "in_default_leave_hours_unknown",
+                reason="no_calendar",
+                leave=self,
+                employee=self.employee_id,
+            )
             return 0.0
         start_dt = self._to_utc(self.request_date_from, 0.0, self.employee_id)
         end_dt = self._to_utc(self.request_date_to, 24.0, self.employee_id)
@@ -30,6 +39,12 @@ class HrLeave(models.Model):
             calendar=calendar,
         )
         data = work_data.get(self.employee_id.id)
+        _debug.logic(
+            "in_default_leave_hours",
+            leave=self,
+            calendar=calendar,
+            hours=data.get("hours", 0.0) if data else 0.0,
+        )
         return data.get("hours", 0.0) if data else 0.0
 
     def _l10n_in_is_full_day_request(self, hours=None, default_hours=None):
@@ -57,6 +72,11 @@ class HrLeave(models.Model):
             lambda leave: leave.holiday_status_id.l10n_in_is_limited_to_optional_days
         )
         if not leaves_to_check:
+            _debug.logic(
+                "in_optional_holiday_check_skipped",
+                reason="no_optional_only_leave_type",
+                leaves=self,
+            )
             return
         date_from = min(leaves_to_check.mapped("request_date_from"))
         date_to = max(leaves_to_check.mapped("request_date_to"))
@@ -93,6 +113,14 @@ class HrLeave(models.Model):
                 get_intervals_hours(leave_intervals), 2
             ):
                 invalid_leaves.append(leave.display_name)
+        _debug.pipeline(
+            "in_optional_holiday_check",
+            leaves=leaves_to_check,
+            window_from=date_from,
+            window_to=date_to,
+            optional_days=len(optional_holidays),
+            invalid=len(invalid_leaves),
+        )
         if invalid_leaves:
             raise ValidationError(
                 self.env._(
@@ -189,6 +217,11 @@ class HrLeave(models.Model):
             )
         )
         if not indian_leaves:
+            _debug.logic(
+                "in_sandwich_context_empty",
+                reason="no_indian_sandwich_leave",
+                leaves=self,
+            )
             return (indian_leaves, {}, {})
 
         leaves_dates_by_employee = {}
@@ -238,6 +271,13 @@ class HrLeave(models.Model):
             )
         }
 
+        _debug.pipeline(
+            "in_sandwich_context_built",
+            leaves=self,
+            sandwich_leaves=indian_leaves,
+            employees_with_sibling_leaves=len(leaves_dates_by_employee),
+            companies_with_public_holidays=len(public_holidays_dates_by_company),
+        )
         return indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company
 
     def _l10n_in_apply_sandwich_rule(
@@ -245,6 +285,9 @@ class HrLeave(models.Model):
     ):
         self.check_singleton()
         if not (self.request_date_from and self.request_date_to):
+            _debug.logic(
+                "in_sandwich_not_applied", reason="no_request_dates", leave=self
+            )
             return 0
 
         date_from = self.request_date_from
@@ -269,6 +312,13 @@ class HrLeave(models.Model):
                 for x in range(1, (date_to - date_from).days)
             )
         ):
+            _debug.logic(
+                "in_sandwich_not_applied",
+                reason="wholly_non_working",
+                leave=self,
+                date_from=date_from,
+                date_to=date_to,
+            )
             return 0
 
         total_leaves = (date_to - date_from).days + 1
@@ -285,6 +335,17 @@ class HrLeave(models.Model):
             linked_after_leave and linked_after_leave.request_date_from > date_to
         )
 
+        _debug.logic(
+            "in_sandwich_links",
+            leave=self,
+            requested_days=total_leaves,
+            is_non_working_from=is_non_working_from,
+            is_non_working_to=is_non_working_to,
+            has_previous_link=has_previous_link,
+            has_next_link=has_next_link,
+            linked_before=linked_before_leave,
+            linked_after=linked_after_leave,
+        )
         if has_previous_link:
             total_leaves += self._l10n_in_count_adjacent_non_working(
                 date_from, public_holiday_dates, self.resource_calendar_id, reverse=True
@@ -309,6 +370,13 @@ class HrLeave(models.Model):
                 reverse=True,
                 include_start=True,
             )
+        _debug.logic(
+            "in_sandwich_total",
+            leave=self,
+            date_from=date_from,
+            date_to=date_to,
+            total_leaves=total_leaves,
+        )
         return total_leaves
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
@@ -321,21 +389,47 @@ class HrLeave(models.Model):
             self.l10n_in_contains_sandwich_leaves = False
             return result
 
+        _debug.pipeline(
+            "in_sandwich_durations_start",
+            leaves=self,
+            sandwich_leaves=indian_leaves,
+        )
+
         for leave in indian_leaves:
             leave_days, hours = result[leave.id]
             if not leave_days or (
                 leave.state in ["validate", "validate1"]
                 and not self.env.user.has_group("hr_holidays.group_hr_holidays_user")
             ):
+                _debug.logic(
+                    "in_sandwich_leave_skipped",
+                    reason="zero_days" if not leave_days else "validated_and_not_hr",
+                    leave=leave,
+                    state=leave.state,
+                )
                 continue
             default_hours = leave._l10n_in_get_default_leave_hours()
             if not leave._l10n_in_is_full_day_request(
                 hours=hours, default_hours=default_hours
             ):
+                _debug.logic(
+                    "in_sandwich_leave_skipped",
+                    reason="not_a_full_day_request",
+                    leave=leave,
+                    hours=hours,
+                    default_hours=default_hours,
+                )
                 leave.l10n_in_contains_sandwich_leaves = False
                 continue
             updated_days = leave._l10n_in_apply_sandwich_rule(
                 public_holidays_date_by_company, leaves_dates_by_employee
+            )
+            _debug.logic(
+                "in_sandwich_verdict",
+                leave=leave,
+                requested_days=leave_days,
+                sandwich_days=updated_days,
+                applied=bool(updated_days and updated_days != leave_days),
             )
             if updated_days and updated_days != leave_days:
                 updated_hours = (
@@ -359,6 +453,13 @@ class HrLeave(models.Model):
             leaves_dates_by_employee, public_holidays_dates_by_company
         )
         neighbors = (linked_before | linked_after) - self
+        _debug.pipeline(
+            "in_sandwich_neighbors",
+            leaves=self,
+            linked_before=linked_before,
+            linked_after=linked_after,
+            neighbors=neighbors,
+        )
         if not neighbors:
             return
 
@@ -387,6 +488,13 @@ class HrLeave(models.Model):
             updated_days = neighbor._l10n_in_apply_sandwich_rule(
                 public_holidays_date_by_company=public_holidays_dates_by_company,
                 leaves_dates_by_employee=leaves_dates_by_employee,
+            )
+            _debug.lifecycle(
+                "in_sandwich_neighbor_rewritten",
+                neighbor=neighbor,
+                base_days=base_days,
+                sandwich_days=updated_days,
+                applied=bool(updated_days and updated_days != base_days),
             )
             if updated_days and updated_days != base_days:
                 new_hours = (
