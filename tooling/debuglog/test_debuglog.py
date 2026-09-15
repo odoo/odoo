@@ -125,6 +125,19 @@ def test_list_counts_one_site_per_channel_kind(tmp_path):
         ("    value = _debug.perf('x')\n", "outside the strippable shapes"),
         ("    other = DebugLog('x')\n", "module-level"),
         ("    if _debug.logic.enabled:\n        total = 1\n", "debug lines and"),
+        (
+            "    _debug.logic('x', a=1, **{'b': 2})\n    return 1\n",
+            "may not mix explicit keywords",
+        ),
+        (
+            "    with _debug.perf('x', a=1, **{'b': 2}):\n        pass\n",
+            "may not mix explicit keywords",
+        ),
+        ("    _debug.logic(*parts)\n", "may not use a `*` expansion"),
+        (
+            "    with _debug.perf(*parts):\n        pass\n",
+            "may not use a `*` expansion",
+        ),
     ],
 )
 def test_check_refuses_an_unstrippable_shape(tmp_path, body, fragment):
@@ -132,6 +145,7 @@ def test_check_refuses_an_unstrippable_shape(tmp_path, body, fragment):
         "from odoo.libs.debug_log import DebugLog\n"
         "_debug = DebugLog(__name__)\n"
         "flag = True\n"
+        "parts = ['x']\n"
         "def f():\n" + body + "    return 1\n"
     )
     messages = _check(tmp_path, source)
@@ -196,6 +210,35 @@ def test_the_timed_decorator_is_refused_when_called(tmp_path):
     ).replace("def f():", "@_debug.perf.timed()\ndef f():")
     messages = _check(tmp_path, source)
     assert any("outside the strippable shapes" in m for m in messages), messages
+
+
+def test_a_splat_without_explicit_keywords_is_allowed(tmp_path):
+    """`event` is positional-only, so a lone `**` expansion cannot collide."""
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(counts):\n"
+        "    _debug.pipeline('x', **counts)\n"
+        "    return 1\n"
+    )
+    assert _check(tmp_path, source) == []
+
+
+def test_a_positional_star_is_refused_even_where_it_would_work_today(tmp_path):
+    """A one-element sequence binds `event` and passes; two raise.
+
+    So the shape is green until the sequence grows, which is why it is refused
+    on its form rather than on a length the checker cannot know.
+    """
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f():\n"
+        "    _debug.lifecycle(*['x'])\n"
+        "    return 1\n"
+    )
+    messages = _check(tmp_path, source)
+    assert any("may not use a `*` expansion" in m for m in messages), messages
 
 
 def test_a_module_without_debug_references_is_skipped(tmp_path):

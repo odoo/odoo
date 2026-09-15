@@ -28,6 +28,19 @@ Test suites are not scanned: a `test_*.py`, a `conftest.py`, or anything under
 a `tests/` directory that holds a `test_*.py`. A package merely named `tests`
 (`odoo/tests`, the test framework) is scanned like any other.
 
+Unpacking into a debug call is refused in two of its three forms, because a
+channel is `__call__(self, event, /, **fields)` and the call machinery decides
+the argument binding BEFORE the channel's level check -- so both of these fire
+with the channels off, where nothing else in this tool's remit can. A `*`
+expansion in the positional slot passes more than the single positional
+`event` takes for any length but one, and passes silently for a length of one,
+so the shape stays green until the sequence grows. A `**` expansion beside
+explicit keywords raises `TypeError: got multiple values for keyword argument`
+whenever an expanded key -- a runtime value -- matches a fixed one; prefix the
+expanded keys and fold the fixed ones into the same expansion rather than
+flattening the structure away. A `**` expansion on its own is legal and meant
+to be: `event` is positional-only and nothing can shadow it.
+
 A bare `_debug.perf(...)` statement is refused: the perf channel returns a
 span, so outside a `with` it silently does nothing. A site that is the only
 statement of its block is refused too, because stripping it would leave the
@@ -182,11 +195,48 @@ class _Scanner(ast.NodeVisitor):
         for stmt in body:
             self._visit_stmt(stmt, body)
 
+    def _check_unpacking(self, call: ast.Call) -> None:
+        """Unpacking into a debug call can raise before the level check.
+
+        A channel is `__call__(self, event, /, **fields)`, so the call
+        machinery -- not the channel -- decides both of these, and it decides
+        them with the channels off:
+
+        * `*` in the positional slot passes more than the one positional
+          `event` takes for any sequence whose length is not exactly 1, and
+          silently works for a length of 1, so the shape sits green until the
+          sequence grows.
+        * `**` beside explicit keywords collides whenever an expanded key
+          matches one of them, and the keys come from runtime data.
+
+        `**` alone is legal and stays legal: `event` is positional-only, so
+        nothing an expansion carries can collide with it.
+        """
+        starred = [arg for arg in call.args if isinstance(arg, ast.Starred)]
+        if starred:
+            self._violation(
+                call,
+                "a debug call may not use a `*` expansion: `event` is the only "
+                "positional parameter, so any length but one raises TypeError "
+                "at call time, channels off included -- and a length of one "
+                "passes, which hides the shape until the sequence grows",
+            )
+        if any(keyword.arg is None for keyword in call.keywords) and any(
+            keyword.arg is not None for keyword in call.keywords
+        ):
+            self._violation(
+                call,
+                "a debug call may not mix explicit keywords with a `**` "
+                "expansion: an expanded key colliding with one of them raises "
+                "TypeError at call time, channels off included",
+            )
+
     def _visit_stmt(self, stmt: ast.stmt, body: list[ast.stmt]) -> None:
         if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call):
             call = stmt.value
             channel = _line_channel(call)
             if channel is not None:
+                self._check_unpacking(call)
                 self._site(stmt, "line", channel)
                 self._check_removable(stmt, body)
                 return
@@ -243,6 +293,8 @@ class _Scanner(ast.NodeVisitor):
         if not _is_debug_call(item.context_expr, "perf"):
             self._violation(stmt, "only `with _debug.perf(...)` may open a span")
             return
+        assert isinstance(item.context_expr, ast.Call)
+        self._check_unpacking(item.context_expr)
         self._site(stmt, "span", "perf")
         alias = item.optional_vars
         name = alias.id if isinstance(alias, ast.Name) else None

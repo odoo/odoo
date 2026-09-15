@@ -301,10 +301,18 @@ class ModuleGraph:
             module.load_state = state
         _debug.pipeline(
             "module_graph.database_states",
-            names=len(names),
-            rows=len(rows),
-            mode=self.mode,
-            **{state.replace(" ", "_"): count for state, count in states.items()},
+            # one expansion and no fixed keyword beside it: the state names are
+            # database values, so a fixed keyword they happened to match would
+            # raise TypeError from the call machinery, channels off included
+            **{
+                "names": len(names),
+                "rows": len(rows),
+                "mode": self.mode,
+                **{
+                    f"state_{state.replace(' ', '_')}": count
+                    for state, count in states.items()
+                },
+            },
         )
 
     def _remove(self, name: str, log_dependents: bool = True) -> None:
