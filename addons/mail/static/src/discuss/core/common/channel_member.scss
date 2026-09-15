@@ -1,10 +1,8 @@
 .o-discuss-ChannelMember {
-    --border-opacity: var(--discuss-ChannelMember-actionButtonBorderOpacity, .35);
-
     &.o-offline {
         opacity: 33%;
 
-        &.cursor-pointer:hover, &.o-showingActions {
+        &.cursor-pointer:hover {
             opacity: 75%;
         }
     }
@@ -19,18 +17,14 @@
     }
 }
 
-.o-discuss-ChannelMember-actions button {
-    aspect-ratio: 1;
-
-    &:hover, &:active, &:focus-visible, &.o-showingActions {
-        --border-opacity: 1;
-        --border-color: #{rgba($o-action, var(--o-mail-DiscussSidebar-borderOpacity, 1))};
-
+// Keep the "..." legible on a dimmed offline row: move the dimming to the siblings.
+.o-discuss-ChannelMember-actions .o-discuss-ellipsisButton {
+    &:hover, &:active, &:focus-visible, &.show {
         .o-discuss-ChannelMember.o-offline:has(&) {
-            opacity: 75%;
+            opacity: 100%;
 
             > *:not(.o-discuss-ChannelMember-actions) {
-                opacity: (33 / 75) * 100%;
+                opacity: 33%;
             }
         }
     }

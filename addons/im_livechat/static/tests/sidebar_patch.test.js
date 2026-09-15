@@ -319,7 +319,9 @@ test("sidebar: leave non-livechat channel removes it from sidebar", async () => 
     await start();
     await openDiscuss();
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await click(".o-mail-NotificationItem:has(:text('General')) [data-icon='more_horiz']");
+    await click(
+        ".o-mail-NotificationItem:has(:text('General')) .o-mail-MessagingMenu-actions button"
+    );
     await click(".o-dropdown-item:contains('Leave Conversation')");
     await contains(
         ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?')"

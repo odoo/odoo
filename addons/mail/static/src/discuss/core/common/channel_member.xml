@@ -23,9 +23,7 @@
                 'd-flex': this.showingActions.isOpen or this.store.useMobileView,
             }">
                 <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this)">
-                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border border-dark" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
-                        <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
-                    </button>
+                    <button class="btn o-discuss-ellipsisButton ms-1 o-mail-DiscussApp-sidebarBgColor" title="Member Actions"/>
                     <t t-set-slot="content">
                         <ActionList actions="this.actions.actionsComputed" dropdown="true"/>
                     </t>
