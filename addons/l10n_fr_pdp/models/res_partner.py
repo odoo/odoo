@@ -108,7 +108,8 @@ class ResPartner(models.Model):
     def _l10n_fr_pdp_get_siren(self):
         self.ensure_one()
         all_identifiers = self._get_all_identifiers(enrich=True)
-        return all_identifiers.get('FR_SIREN')  # will be deduced by enrich=True if SIRET was set.
+        partner = self.commercial_partner_id or self
+        return all_identifiers.get('FR_SIREN') or (partner.l10n_fr_is_french and partner._l10n_fr_get_siren_from_vat())
 
     def _l10n_fr_pdp_get_siret(self):
         self.ensure_one()
