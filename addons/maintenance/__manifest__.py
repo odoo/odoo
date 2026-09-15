@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.4",
+    "version": "1.5",
     "category": "Supply Chain/Maintenance",
     "summary": "Track equipment and manage maintenance orders",
     "description": """
@@ -11,6 +11,7 @@ Track equipment and maintenance orders""",
     "depends": [
         "approval",
         "mail",
+        "resource_asset",
         "team",
     ],
     "data": [
@@ -20,6 +21,7 @@ Track equipment and maintenance orders""",
         "data/mail_message_subtype_data.xml",
         "views/maintenance_views.xml",
         "views/maintenance_plan_views.xml",
+        "views/resource_asset_views.xml",
         "views/mail_activity_views.xml",
         "wizards/res_config_settings_views.xml",
         "views/maintenance_menus.xml",

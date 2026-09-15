@@ -42,6 +42,7 @@ class MaintenanceEquipment(models.Model):
     )
     technician_user_id = fields.Many2one(
         compute="_compute_technician_user_id",
+        tracking=True,
         precompute=True,
         store=True,
         readonly=False,

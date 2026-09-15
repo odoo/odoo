@@ -464,6 +464,31 @@ class ResourceResource(models.Model):
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
+    def _find_free_window(
+        self,
+        start: datetime,
+        hours: float,
+        horizon_days: int = 700,
+    ) -> tuple[datetime, datetime] | tuple[None, None]:
+        length = timedelta(hours=hours or 1)
+        window_start = start
+        limit = start + timedelta(days=horizon_days)
+        Reservation = self.env["resource.reservation"]
+        while window_start <= limit:
+            window_end = window_start + length
+            busy = Reservation.sudo().search(
+                [
+                    ("resource_id", "in", self.ids),
+                    ("active", "=", True),
+                    ("date_start", "<", window_end),
+                    ("date_end", ">", window_start),
+                ]
+            )
+            if not busy:
+                return window_start, window_end
+            window_start = max(busy.mapped("date_end"))
+        return None, None
+
     def _get_calendars_validity_within_period(
         self,
         start: datetime,

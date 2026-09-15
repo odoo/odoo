@@ -765,3 +765,58 @@ class TestResourceCapacity(TransactionCase):
                         "capacity": 0,
                     }
                 )
+
+
+@tagged("post_install", "-at_install")
+class TestResourceFreeWindow(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Resource = cls.env["resource.resource"]
+        cls.press = Resource.create(
+            {"name": "Press", "resource_type": "material", "tz": "UTC"}
+        )
+        cls.crane = Resource.create(
+            {"name": "Crane", "resource_type": "material", "tz": "UTC"}
+        )
+
+    def _book(self, resource, start, end, mode="soft"):
+        return self.env["resource.reservation"].create(
+            {
+                "name": "Busy",
+                "resource_id": resource.id,
+                "date_start": start,
+                "date_end": end,
+                "enforcement_mode": mode,
+            }
+        )
+
+    def test_a_free_window_is_the_one_asked_for(self):
+        start = datetime(2026, 5, 4, 8)
+        self.assertEqual(
+            (self.press | self.crane)._find_free_window(start, 2),
+            (start, datetime(2026, 5, 4, 10)),
+        )
+
+    def test_the_window_steps_past_every_booking_of_every_resource(self):
+        self._book(self.press, datetime(2026, 5, 4, 7), datetime(2026, 5, 4, 9))
+        self._book(self.crane, datetime(2026, 5, 4, 9), datetime(2026, 5, 4, 12))
+        self.assertEqual(
+            (self.press | self.crane)._find_free_window(datetime(2026, 5, 4, 8), 2),
+            (datetime(2026, 5, 4, 12), datetime(2026, 5, 4, 14)),
+        )
+
+    def test_an_archived_booking_does_not_count(self):
+        booking = self._book(
+            self.press, datetime(2026, 5, 4, 8), datetime(2026, 5, 4, 10)
+        )
+        booking.active = False
+        start = datetime(2026, 5, 4, 8)
+        self.assertEqual(self.press._find_free_window(start, 1)[0], start)
+
+    def test_no_window_within_the_horizon_is_none(self):
+        self._book(self.press, datetime(2026, 5, 4), datetime(2026, 5, 10))
+        self.assertEqual(
+            self.press._find_free_window(datetime(2026, 5, 4), 1, horizon_days=3),
+            (None, None),
+        )

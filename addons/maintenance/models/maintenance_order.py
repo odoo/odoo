@@ -1,12 +1,25 @@
 from datetime import UTC, timedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
+from odoo.libs.datetime import timezone
 
 ORDER_ACTIVITY_TYPE = "maintenance.mail_act_maintenance_order"
 OPEN_STATES = ("draft", "confirmed", "in_progress")
 CLOSED_STATES = ("done", "cancel")
 BOOKING_STATES = ("confirmed", "in_progress")
+RESERVATION_FIELDS = frozenset(
+    {
+        "resource_ids",
+        "block_resource",
+        "schedule_date",
+        "schedule_end",
+        "duration",
+        "maintenance_type",
+        "plan_id",
+    }
+)
 
 
 class MaintenanceOrder(models.Model):
@@ -15,10 +28,13 @@ class MaintenanceOrder(models.Model):
         "mixin.mail.thread.cc",
         "mixin.mail.activity",
         "mixin.approval.lifecycle",
+        "mixin.resource.scheduling",
     ]
     _description = "Maintenance Order"
     _order = "id desc"
     _check_company_auto = True
+
+    _reservation_sync_manual = True
 
     _STATE_TRANSITIONS = {
         "draft": {"confirmed", "cancel"},
@@ -64,6 +80,27 @@ class MaintenanceOrder(models.Model):
         store=True,
         index="btree_not_null",
         readonly=True,
+    )
+    locked = fields.Boolean(tracking=True)
+    resource_ids = fields.Many2many(
+        comodel_name="resource.resource",
+        relation="maintenance_order_resource_rel",
+        column1="order_id",
+        column2="resource_id",
+        string="Maintained Resources",
+        domain="[('resource_type', '=', 'material')]",
+        check_company=True,
+        help="What this order maintains: machines, vehicles, work centres, any material resource. Each is booked, and so is every asset it is part of.",
+    )
+    asset_ids = fields.Many2many(
+        comodel_name="resource.asset",
+        string="Assets",
+        compute="_compute_asset_ids",
+        search="_search_asset_ids",
+    )
+    block_resource = fields.Boolean(
+        default=True,
+        help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
     )
     equipment_id = fields.Many2one(
         comodel_name="maintenance.equipment",
@@ -197,7 +234,29 @@ class MaintenanceOrder(models.Model):
         ]
 
     def _get_fields_approval_protected(self):
-        return ["equipment_id", "maintenance_type"]
+        return ["equipment_id", "resource_ids", "maintenance_type"]
+
+    @api.depends("resource_ids")
+    def _compute_asset_ids(self):
+        assets = self.env["resource.asset"].search(
+            [("resource_id", "in", self.resource_ids.ids)]
+        )
+        for order in self:
+            order.asset_ids = assets.filtered(
+                lambda asset, resources=order.resource_ids: (
+                    asset.resource_id in resources
+                )
+            )
+
+    def _search_asset_ids(self, operator, value):
+        if operator not in ("in", "not in", "any", "not any"):
+            return NotImplemented
+        if operator in ("any", "not any"):
+            assets = self.env["resource.asset"].search(value)
+        else:
+            assets = self.env["resource.asset"].browse(value)
+        domain = Domain("resource_ids", "in", assets.resource_id.ids)
+        return ~domain if operator.startswith("not") else domain
 
     @api.model
     def _get_domain_open(self):
@@ -238,11 +297,17 @@ class MaintenanceOrder(models.Model):
                     order.schedule_end - order.schedule_date
                 ).total_seconds() / 3600
 
-    @api.depends("company_id", "equipment_id")
+    @api.depends("company_id", "equipment_id", "resource_ids.maintenance_team_id")
     def _compute_maintenance_team_id(self):
         default_teams = {}
         for order in self:
-            team = order.equipment_id.maintenance_team_id or order.maintenance_team_id
+            team = (
+                order.resource_ids.maintenance_team_id.filtered(
+                    lambda t, c=order.company_id: not t.company_id or t.company_id == c
+                )[:1]
+                or order.equipment_id.maintenance_team_id
+                or order.maintenance_team_id
+            )
             if team.company_id and team.company_id != order.company_id:
                 team = team.browse()
             # The company default is the last resort of this precomputed field, not a field
@@ -272,10 +337,13 @@ class MaintenanceOrder(models.Model):
             )
         )
 
-    @api.depends("company_id", "equipment_id")
+    @api.depends("company_id", "equipment_id", "resource_ids.technician_user_id")
     def _compute_user_id(self):
         for order in self:
-            if order.equipment_id:
+            technician = order.resource_ids.technician_user_id[:1]
+            if technician:
+                order.user_id = technician
+            elif order.equipment_id:
                 order.user_id = (
                     order.equipment_id.technician_user_id
                     or order.equipment_id.category_id.technician_user_id
@@ -293,6 +361,14 @@ class MaintenanceOrder(models.Model):
             lambda order: order.owner_user_id or order.user_id
         )._add_followers()
         orders.activity_update()
+        typed_in = (
+            orders.browse()
+            if self.ids
+            else orders.filtered(lambda order: not order.date_occurrence)
+        )
+        typed_in._recreate_reservations()
+        (orders - typed_in)._recreate_reservations(refuse_taken_window=False)
+        orders.asset_ids._sync_state_from_maintenance()
         return orders
 
     def write(self, vals):
@@ -301,7 +377,26 @@ class MaintenanceOrder(models.Model):
         closing = self.browse()
         if vals.get("state") in CLOSED_STATES:
             closing = self.filtered(lambda order: order.state in OPEN_STATES)
+        was_booking = {order.id: order.state in BOOKING_STATES for order in self}
+        assets_before = self.asset_ids
+        if vals.get("state") == "done":
+            for order in self:
+                order._get_reservations_ahead().unlink()
+        if vals.get("state") == "cancel":
+            self.sudo().reservation_ids.unlink()
         res = super().write(vals)
+        if not self.env.context.get("skip_maintenance_reservations"):
+            if vals.keys() & RESERVATION_FIELDS:
+                self._recreate_reservations()
+            elif "state" in vals:
+                self.filtered(
+                    lambda order: (
+                        order.state != "done"
+                        and (order.state in BOOKING_STATES) != was_booking[order.id]
+                    )
+                )._recreate_reservations(refuse_taken_window=False)
+        if vals.keys() & {"resource_ids", "state"}:
+            (self.asset_ids | assets_before)._sync_state_from_maintenance()
         if vals.get("owner_user_id") or vals.get("user_id"):
             self._add_followers()
         if closing:
@@ -344,18 +439,131 @@ class MaintenanceOrder(models.Model):
 
     def unlink(self):
         plans = self.filtered(lambda order: order.state in OPEN_STATES).plan_id
+        assets = self.asset_ids
         res = super().unlink()
         plans.exists().sudo()._ensure_open_order()
+        assets.exists()._sync_state_from_maintenance()
         return res
 
     def _is_new_activity_required(self, vals):
-        return vals.get("equipment_id")
+        return vals.get("equipment_id") or vals.get("resource_ids")
 
     def _get_activity_note(self):
         self.check_singleton()
+        if self.asset_ids:
+            return _(
+                "Order planned for %s",
+                ", ".join(asset._get_html_link() for asset in self.asset_ids),
+            )
         if self.equipment_id:
             return _("Order planned for %s", self.equipment_id._get_html_link())
         return False
+
+    def _get_fields_reservation_date(self):
+        return ("schedule_date", "schedule_end")
+
+    def _get_booked_resources(self):
+        self.check_singleton()
+        resources = self.resource_ids
+        assets = self.asset_ids.parent_id
+        while assets:
+            resources |= assets.resource_id
+            assets = assets.parent_id
+        return resources
+
+    def _get_reservations_ahead(self):
+        self.check_singleton()
+        reservations = self.sudo().with_context(active_test=False).reservation_ids
+        if not reservations:
+            return reservations
+        first = min(reservations.mapped("date_start"))
+        return reservations.filtered(lambda r: r.date_start != first)
+
+    def _get_occurrences_to_book(self):
+        self.check_singleton()
+        dates = [self.schedule_date]
+        plan = self.plan_id
+        if (
+            plan.active
+            and plan.repeat_anchor == "fixed"
+            and plan.book_ahead_count > 0
+            and self.maintenance_type == "preventive"
+        ):
+            dates += plan._get_occurrences_after(
+                max(self.date_occurrence or self.schedule_date, self.schedule_date),
+                limit=plan.book_ahead_count,
+            )
+        return dates
+
+    def _recreate_reservations(self, refuse_taken_window=True):
+        self.sudo().reservation_ids.unlink()
+        Reservation = self.env["resource.reservation"].sudo()
+        for order in self:
+            resources = order._get_booked_resources()
+            if (
+                not resources
+                or not order.block_resource
+                or not order.schedule_date
+                or order.state not in BOOKING_STATES
+            ):
+                continue
+            desired = order.schedule_date
+            hours = order.duration or 1
+            if refuse_taken_window:
+                start, _end = resources._find_free_window(desired, hours)
+                if start != desired:
+                    raise UserError(
+                        self.env._(
+                            "%(resources)s already booked at that time: choose another window for %(order)s.",
+                            resources=", ".join(resources.mapped("name")),
+                            order=order.display_name,
+                        )
+                    )
+            first = None
+            missing = False
+            for occurrence in order._get_occurrences_to_book():
+                start, end = resources._find_free_window(occurrence, hours)
+                if not start:
+                    missing = True
+                    break
+                Reservation.create(
+                    [
+                        {
+                            "name": order.display_name,
+                            "res_model": order._name,
+                            "res_id": order.id,
+                            "resource_id": resource.id,
+                            "date_start": start,
+                            "date_end": end,
+                            "allocated_percentage": 100.0,
+                            "enforcement_mode": "hard",
+                        }
+                        for resource in resources
+                    ]
+                )
+                first = first or (start, end)
+            order.invalidate_recordset(["reservation_ids", "schedule_overlap_count"])
+            if first and first[0] != desired:
+                order.with_context(skip_maintenance_reservations=True).write(
+                    {"schedule_date": first[0], "schedule_end": first[1]}
+                )
+            if missing or (first and first[0] != desired):
+                order._warn_rescheduled(desired, first, missing)
+
+    def _warn_rescheduled(self, desired, first, missing):
+        self.check_singleton()
+        if missing:
+            note = self.env._("No free window within 700 days after the planned start.")
+        else:
+            tz = timezone(self.env.user.tz or "UTC")
+            note = self.env._(
+                "The schedule moved from %(desired)s to %(effective)s, past what already booked its resources.",
+                desired=desired.replace(tzinfo=UTC).astimezone(tz),
+                effective=first[0].replace(tzinfo=UTC).astimezone(tz),
+            )
+        self.activity_schedule(
+            "mail.mail_activity_data_warning", note=note, user_id=self.env.uid
+        )
 
     def activity_update(self):
         """Update maintenance activities based on current record set state.

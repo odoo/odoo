@@ -23,6 +23,7 @@ class MixinMaintenance(models.AbstractModel):
     maintenance_team_id = fields.Many2one(
         comodel_name="team.team",
         compute="_compute_maintenance_team_id",
+        precompute=True,
         store=True,
         index="btree_not_null",
         readonly=False,
@@ -32,7 +33,6 @@ class MixinMaintenance(models.AbstractModel):
     technician_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Technician",
-        tracking=True,
     )
     maintenance_ids = fields.One2many(
         comodel_name="maintenance.order"

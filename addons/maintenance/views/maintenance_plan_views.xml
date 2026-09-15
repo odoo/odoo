@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
+                <field name="resource_ids" />
                 <field name="equipment_id" />
                 <field name="maintenance_team_id" />
                 <field name="user_id" />
@@ -43,6 +44,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
+                <field name="resource_ids" widget="many2many_tags" optional="show" />
                 <field name="equipment_id" optional="show" />
                 <field name="repeat_interval" string="Every" />
                 <field name="repeat_unit" nolabel="1" />
@@ -93,6 +95,14 @@
                     </div>
                     <group>
                         <group name="target">
+                            <field
+                                name="resource_ids"
+                                widget="many2many_tags"
+                                options="{'no_create': True}" />
+                            <field name="block_resource" invisible="not resource_ids" />
+                            <field
+                                name="book_ahead_count"
+                                invisible="not resource_ids or not block_resource or repeat_anchor != 'fixed'" />
                             <field name="equipment_id" />
                             <field
                                 name="maintenance_team_id"

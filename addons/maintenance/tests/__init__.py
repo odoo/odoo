@@ -4,3 +4,4 @@ from . import test_maintenance_multicompany
 from . import test_maintenance_plan
 from . import test_maintenance_order_lifecycle
 from . import test_maintenance_team
+from . import test_maintenance_resources

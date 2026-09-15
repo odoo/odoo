@@ -10,6 +10,8 @@
                 <field name="name" string="Order" />
                 <field name="category_id" />
                 <field name="user_id" />
+                <field name="resource_ids" />
+                <field name="asset_ids" />
                 <field name="equipment_id" />
                 <field name="owner_user_id" />
                 <field name="state" />
@@ -205,6 +207,14 @@
                                 string="Requested By"
                                 invisible="1" />
                             <field
+                                name="resource_ids"
+                                widget="many2many_tags"
+                                options="{'no_create': True}" />
+                            <field name="block_resource" invisible="not resource_ids" />
+                            <field
+                                name="schedule_overlap_count"
+                                invisible="not resource_ids or not schedule_overlap_count" />
+                            <field
                                 name="equipment_id"
                                 context="{'default_company_id':company_id, 'default_category_id':category_id}" />
                             <field
@@ -300,6 +310,7 @@
                     <t t-name="card">
                         <field name="name" class="fw-bold fs-5" />
                         <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id" /></span>
+                        <field name="resource_ids" widget="many2many_tags" />
                         <span t-if="record.equipment_id.raw_value"><field name="equipment_id" /><span t-if="record.category_id.raw_value"> (<field name="category_id" />)</span></span>
                         <field name="schedule_date" />
                         <footer>

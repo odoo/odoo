@@ -4,4 +4,6 @@ from . import maintenance_equipment
 from . import maintenance_order
 from . import maintenance_plan
 from . import team_team
+from . import resource_resource
+from . import resource_asset
 from . import approval_category

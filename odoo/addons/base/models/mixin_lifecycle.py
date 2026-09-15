@@ -17,7 +17,6 @@ class MixinLifecycle(models.AbstractModel):
     locked = fields.Boolean(
         default=False,
         copy=False,
-        tracking=True,
         help="A locked document cannot be modified.",
     )
 

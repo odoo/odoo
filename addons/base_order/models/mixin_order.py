@@ -234,6 +234,7 @@ class MixinOrder(models.AbstractModel):
         "journal with the lowest sequence is used.",
     )
 
+    locked = fields.Boolean(tracking=True)
     acknowledged = fields.Boolean(
         copy=False,
         tracking=True,

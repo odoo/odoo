@@ -1,10 +1,11 @@
 from datetime import UTC, datetime
 
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestResourceAssetMaintenance(TransactionCase):
+class TestMaintenanceResources(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -31,28 +32,28 @@ class TestResourceAssetMaintenance(TransactionCase):
         return self.env["maintenance.order"].create(
             {
                 "name": "Oil change",
-                "asset_id": self.press.id,
+                "resource_ids": [(6, 0, self.press.resource_id.ids)],
                 "maintenance_team_id": self.team.id,
                 "schedule_date": self.start,
                 "schedule_end": self.end,
-                "block_asset": True,
+                "block_resource": True,
                 "state": "confirmed",
                 **vals,
             }
         )
 
-    def _bookings(self):
+    def _bookings(self, asset=None):
         return self.env["resource.reservation"].search(
-            [("resource_id", "=", self.press.resource_id.id)]
+            [("resource_id", "=", (asset or self.press).resource_id.id)]
         )
 
     def test_an_order_in_progress_puts_the_asset_under_maintenance(self):
         self.press.action_set_in_service()
-        first = self._order(block_asset=False)
+        first = self._order(block_resource=False)
         self.assertEqual(self.press.state, "in_service")
         first.action_start()
         self.assertEqual(self.press.state, "maintenance")
-        second = self._order(name="Belt", state="in_progress", block_asset=False)
+        second = self._order(name="Belt", state="in_progress", block_resource=False)
         first.action_done()
         self.assertEqual(self.press.state, "maintenance")
         second.action_cancel()
@@ -68,7 +69,7 @@ class TestResourceAssetMaintenance(TransactionCase):
         (self.press | other).action_set_in_service()
         order = self._order(state="in_progress")
         self.assertEqual(self.press.state, "maintenance")
-        order.asset_id = other
+        order.resource_ids = other.resource_id
         self.assertEqual(self.press.state, "in_service")
         self.assertEqual(other.state, "maintenance")
 
@@ -114,15 +115,16 @@ class TestResourceAssetMaintenance(TransactionCase):
             }
         )
         self.assertEqual(self._bookings().date_start, datetime(2026, 3, 3, 8, 0))
-        order.block_asset = False
+        order.block_resource = False
         self.assertFalse(self._bookings())
-        order.block_asset = True
+        order.block_resource = True
         self.assertEqual(len(self._bookings()), 1)
 
-    def test_a_done_or_cancelled_order_releases_the_asset(self):
+    def test_a_done_order_keeps_its_window_and_a_cancelled_one_releases_it(self):
         order = self._order()
         order.action_done()
-        self.assertFalse(self._bookings())
+        self.assertEqual(len(self._bookings()), 1)
+        order.sudo().reservation_ids.unlink()
         other = self._order(name="Belt")
         self.assertEqual(len(self._bookings()), 1)
         other.action_cancel()
@@ -135,10 +137,8 @@ class TestResourceAssetMaintenance(TransactionCase):
         self.assertEqual(len(self._bookings()), 1)
 
     def test_two_orders_cannot_block_the_same_window(self):
-        from odoo.exceptions import ValidationError
-
         self._order()
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self._order(
                 name="Second",
                 schedule_date=datetime(2026, 3, 2, 10, 0),
@@ -148,7 +148,7 @@ class TestResourceAssetMaintenance(TransactionCase):
     def test_the_asset_counts_its_orders_and_lends_its_team(self):
         self.press.write({"maintenance_team_id": self.team.id})
         order = self.env["maintenance.order"].create({"name": "Check"})
-        order.asset_id = self.press
+        order.resource_ids = self.press.resource_id
         self.assertEqual(order.maintenance_team_id, self.team)
         self.press.invalidate_recordset()
         self.assertEqual(self.press.maintenance_count, 1)
@@ -171,11 +171,15 @@ class TestResourceAssetMaintenance(TransactionCase):
             {"maintenance_team_id": self.team.id, "technician_user_id": technician.id}
         )
         order = self.env["maintenance.order"].create(
-            {"name": "Check", "equipment_id": equipment.id, "asset_id": self.press.id}
+            {
+                "name": "Check",
+                "equipment_id": equipment.id,
+                "resource_ids": [(6, 0, self.press.resource_id.ids)],
+            }
         )
         self.assertEqual(order.maintenance_team_id, self.team)
         self.assertEqual(order.user_id, technician)
-        order.asset_id = False
+        order.resource_ids = False
         self.assertEqual(order.maintenance_team_id, other_team)
 
     def test_an_asset_only_order_plans_an_activity_on_the_asset(self):
@@ -189,24 +193,102 @@ class TestResourceAssetMaintenance(TransactionCase):
         self.assertEqual(len(activity), 1)
         self.assertIn(self.press.name, activity.note)
 
-    def test_the_asset_outranks_the_work_centre(self):
-        Order = self.env["maintenance.order"]
-        if "workcenter_id" not in Order._fields:
-            self.skipTest("mrp_maintenance is not installed")
-        workcenter_team = self.env["team.team"].create(
-            {"use_maintenance": True, "name": "Line crew"}
+    def test_a_typed_in_order_is_refused_a_window_a_work_order_holds(self):
+        self.env["resource.reservation"].create(
+            {
+                "name": "Production run",
+                "resource_id": self.press.resource_id.id,
+                "date_start": datetime(2026, 3, 2, 11, 0),
+                "date_end": datetime(2026, 3, 2, 13, 0),
+                "enforcement_mode": "soft",
+            }
         )
-        workcenter = self.env["mrp.workcenter"].create(
-            {"name": "Press line", "maintenance_team_id": workcenter_team.id}
+        with self.assertRaises(UserError):
+            self._order()
+
+    def test_a_plan_occurrence_moves_past_what_holds_its_window(self):
+        self.env["resource.reservation"].create(
+            {
+                "name": "Production run",
+                "resource_id": self.press.resource_id.id,
+                "date_start": datetime(2026, 3, 2, 7, 0),
+                "date_end": datetime(2026, 3, 2, 10, 0),
+                "enforcement_mode": "soft",
+            }
         )
-        self.press.maintenance_team_id = self.team
-        sources = {
-            "maintenance_for": "workcenter",
-            "workcenter_id": workcenter.id,
-            "asset_id": self.press.id,
-        }
-        at_create = Order.create({"name": "Check", **sources})
-        after_write = Order.create({"name": "Check", "maintenance_for": "workcenter"})
-        after_write.write(sources)
-        self.assertEqual(at_create.maintenance_team_id, self.team)
-        self.assertEqual(after_write.maintenance_team_id, self.team)
+        plan = self.env["maintenance.plan"].create(
+            {
+                "name": "Monthly",
+                "resource_ids": [(6, 0, self.press.resource_id.ids)],
+                "block_resource": True,
+                "repeat_anchor": "fixed",
+                "repeat_interval": 1,
+                "repeat_unit": "month",
+                "tz": "UTC",
+                "date_start": datetime(2026, 3, 2, 8, 0),
+                "duration": 2,
+            }
+        )
+        order = plan.order_ids
+        self.assertEqual(order.schedule_date, datetime(2026, 3, 2, 10, 0))
+        self.assertEqual(
+            order.reservation_ids.mapped("date_start"), [datetime(2026, 3, 2, 10, 0)]
+        )
+
+    def test_one_order_books_every_resource_it_names(self):
+        tractor = self.env["resource.asset"].create(
+            {"name": "Tractor", "kind_id": self.machinery.id}
+        )
+        order = self._order(
+            resource_ids=[(6, 0, (self.press | tractor).resource_id.ids)]
+        )
+        self.assertEqual(order.asset_ids, self.press | tractor)
+        self.assertEqual(len(self._bookings()), 1)
+        self.assertEqual(len(self._bookings(tractor)), 1)
+
+    def test_maintaining_a_component_books_what_it_is_part_of(self):
+        line = self.env["resource.asset"].create(
+            {"name": "Press line", "kind_id": self.machinery.id}
+        )
+        self.press.parent_id = line
+        self._order()
+        self.assertEqual(len(self._bookings()), 1)
+        self.assertEqual(len(self._bookings(line)), 1)
+
+    def test_a_fixed_plan_books_its_next_occurrences_ahead(self):
+        plan = self.env["maintenance.plan"].create(
+            {
+                "name": "Weekly",
+                "resource_ids": [(6, 0, self.press.resource_id.ids)],
+                "block_resource": True,
+                "repeat_anchor": "fixed",
+                "repeat_interval": 1,
+                "repeat_unit": "week",
+                "tz": "UTC",
+                "date_start": datetime(2026, 3, 2, 8, 0),
+                "book_ahead_count": 2,
+            }
+        )
+        self.assertEqual(
+            sorted(plan.order_ids.reservation_ids.mapped("date_start")),
+            [
+                datetime(2026, 3, 2, 8, 0),
+                datetime(2026, 3, 9, 8, 0),
+                datetime(2026, 3, 16, 8, 0),
+            ],
+        )
+        plan.order_ids.action_done()
+        done = plan.order_ids.filtered(lambda o: o.state == "done")
+        self.assertEqual(
+            done.reservation_ids.mapped("date_start"), [datetime(2026, 3, 2, 8, 0)]
+        )
+
+    def test_a_machine_that_is_both_asset_and_resource_reports_one_mtbf(self):
+        self.press.expected_mtbf = 30
+        self.assertEqual(self.press.resource_id.expected_mtbf, 30)
+        self._order(maintenance_type="corrective", state="done")
+        self.press.invalidate_recordset()
+        self.assertEqual(self.press.maintenance_count, 1)
+        self.assertEqual(
+            self.press.maintenance_count, self.press.resource_id.maintenance_count
+        )

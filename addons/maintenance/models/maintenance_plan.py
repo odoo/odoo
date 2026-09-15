@@ -3,6 +3,7 @@ from itertools import count, islice, takewhile
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.tools.date_utils import get_timedelta, occurrences_after
 
@@ -12,6 +13,13 @@ from odoo.addons.base.models.res_partner import _selection_timezones
 RESCHEDULING_FIELDS = frozenset(
     {"date_start", "repeat_anchor", "repeat_interval", "repeat_unit", "tz"}
 )
+ORDER_FIELDS = ("resource_ids", "block_resource")
+BOOKING_FIELDS = RESCHEDULING_FIELDS | {
+    "active",
+    "book_ahead_count",
+    "repeat_type",
+    "repeat_until",
+}
 
 
 def _occurrence_key(order):
@@ -45,6 +53,24 @@ class MaintenancePlan(models.Model):
         ondelete="restrict",
         check_company=True,
         tracking=True,
+    )
+    resource_ids = fields.Many2many(
+        comodel_name="resource.resource",
+        relation="maintenance_plan_resource_rel",
+        column1="plan_id",
+        column2="resource_id",
+        string="Maintained Resources",
+        domain="[('resource_type', '=', 'material')]",
+        check_company=True,
+        tracking=True,
+    )
+    block_resource = fields.Boolean(
+        default=True,
+        help="Each order of this plan blocks its resources' time while it is confirmed or in progress.",
+    )
+    book_ahead_count = fields.Integer(
+        string="Occurrences to Book Ahead",
+        help="Block the resources for this many further occurrences in advance. Only a plan on fixed dates knows them.",
     )
     maintenance_team_id = fields.Many2one(
         comodel_name="team.team",
@@ -150,12 +176,24 @@ class MaintenancePlan(models.Model):
         return plans
 
     def write(self, vals):
-        res = super().write(vals)
+        quiet = self.with_context(skip_maintenance_reservations=True)
+        res = super(MaintenancePlan, quiet).write(vals)
         if vals.get("active"):
             self._ensure_open_order()
         if vals.keys() & RESCHEDULING_FIELDS:
-            for plan in self.filtered("active"):
+            for plan in quiet.filtered("active"):
                 plan._reschedule_open_order()
+        order_vals = {fname: vals[fname] for fname in ORDER_FIELDS if fname in vals}
+        if not order_vals and not vals.keys() & BOOKING_FIELDS:
+            return res
+        open_orders = self.env["maintenance.order"].concat(
+            *(plan._get_open_orders() for plan in self)
+        )
+        if order_vals:
+            open_orders.with_context(skip_maintenance_reservations=True).write(
+                order_vals
+            )
+        open_orders._recreate_reservations(refuse_taken_window=False)
         return res
 
     def _get_open_orders(self):
@@ -215,6 +253,8 @@ class MaintenancePlan(models.Model):
         for fname in ("equipment_id", "maintenance_team_id", "user_id"):
             if self[fname]:
                 vals[fname] = self[fname].id
+        vals["resource_ids"] = [Command.set(self.resource_ids.ids)]
+        vals["block_resource"] = self.block_resource
         return vals
 
     def _create_order(self, occurrence, previous=None):
