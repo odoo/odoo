@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='peppol']" position="after">
-                <block title="Electronic Invoicing" id="china_edi" invisible="country_code != 'CN'">
+                <block title="E-Fapiao" id="china_edi" invisible="country_code != 'CN'">
                     <setting string="Baiwang Integration Mode" company_dependent="1">
                         <div class="content-group">
                             <field name="l10n_cn_edi_mode" widget="radio"/>
