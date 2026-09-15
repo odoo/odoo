@@ -7,13 +7,13 @@ _logger = logging.getLogger(__name__)
 # database that installed `resource` before the correction kept the old rows.
 REPAIRS = (
     (
-        "resource_calendar_leaves_rule_group_user_modify",
-        "resource.calendar.leaves: employee modifies own",
+        "resource_schedule_exception_rule_group_user_modify",
+        "resource.schedule.exception: employee modifies own",
         "[('resource_id.user_id', '=', user.id)]",
     ),
     (
-        "resource_calendar_leaves_rule_group_admin_modify",
-        "resource.calendar.leaves: admin modifies any",
+        "resource_schedule_exception_rule_group_admin_modify",
+        "resource.schedule.exception: admin modifies any",
         "[(1, '=', 1)]",
     ),
 )

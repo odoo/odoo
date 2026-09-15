@@ -19,7 +19,7 @@ class TestLeaveDateToMultiCompanyTz(TransactionCase):
         root = self.env.ref("base.user_root")
         root.tz = False
         return (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .sudo()
             .with_context(
                 tz=None,
@@ -69,7 +69,7 @@ class TestLeaveDateToMultiCompanyTz(TransactionCase):
         # acting user is in Asia/Tokyo (UTC+9). Both compute() and
         # default_get() must resolve the same "end of day": the calendar's.
         leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_context(tz="Asia/Tokyo")
             .create(
                 {
@@ -93,7 +93,7 @@ class TestIntervalBatchStringTz(TransactionCase):
         cls.resource = cls.env["resource.resource"].create(
             {"name": "STZ res", "calendar_id": cls.calendar.id, "tz": "UTC"}
         )
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             {
                 "name": "Global off",
                 "calendar_id": cls.calendar.id,

@@ -191,7 +191,7 @@ class TestUnavailableIntervalsFlexible(TransactionCase):
         )
 
     def test_leaves_are_still_reported(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Day off",
                 "calendar_id": self.calendar.id,
@@ -214,7 +214,7 @@ class TestPlanDaysHonoursResource(TransactionCase):
         cls.resource = cls.env["resource.resource"].create(
             {"name": "Planned", "calendar_id": cls.calendar.id, "tz": "UTC"}
         )
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             {
                 "name": "Away all week",
                 "calendar_id": cls.calendar.id,
@@ -534,7 +534,7 @@ class TestLeaveSecurityRule(TransactionCase):
                 "tz": "UTC",
             }
         )
-        cls.machine_leave = cls.env["resource.calendar.leaves"].create(
+        cls.machine_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Maintenance",
                 "resource_id": cls.machine.id,
@@ -553,7 +553,7 @@ class TestLeaveSecurityRule(TransactionCase):
 
     def test_employee_cannot_create_machine_downtime(self):
         with self.assertRaises(AccessError):
-            self.env["resource.calendar.leaves"].with_user(self.employee).create(
+            self.env["resource.schedule.exception"].with_user(self.employee).create(
                 {
                     "name": "Fabricated outage",
                     "resource_id": self.machine.id,
@@ -575,7 +575,7 @@ class TestLeaveSecurityRule(TransactionCase):
             }
         )
         leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_user(self.employee)
             .create(
                 {

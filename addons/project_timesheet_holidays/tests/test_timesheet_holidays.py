@@ -201,7 +201,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         leave_start_datetime = datetime(2022, 1, 24, 7, 0, 0, 0)
         leave_end_datetime = datetime(2022, 1, 28, 18, 0, 0, 0)
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.employee_working_calendar.id,
@@ -275,7 +275,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         )
         time_off.with_user(SUPERUSER_ID).action_approve()
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "New Public Holiday",
                 "calendar_id": self.employee_working_calendar.id,
@@ -373,7 +373,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
     def test_multi_create_timesheets_from_calendar(self):
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Public holiday",
                 "date_from": datetime(2025, 5, 27, 0, 0),

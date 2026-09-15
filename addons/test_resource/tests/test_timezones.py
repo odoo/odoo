@@ -113,7 +113,7 @@ class TestTimezones(TestResourceCommon):
         self.assertEqual(data, {"days": 784, "hours": 6010})
 
     def test_leave_data(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -145,7 +145,7 @@ class TestTimezones(TestResourceCommon):
         self.assertEqual(data, {"days": 0.75, "hours": 6})
 
     def test_leaves(self):
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -272,7 +272,7 @@ class TestTimezones(TestResourceCommon):
                 "calendar_id": flexible_calendar.id,
             }
         )
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Standard Time Off",
                 "calendar_id": flexible_calendar.id,

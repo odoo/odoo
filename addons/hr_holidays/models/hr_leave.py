@@ -954,7 +954,7 @@ Versions:
 
     def _flexible_duration(self, calendar):
         self.check_singleton()
-        leaves = self.env["resource.calendar.leaves"]
+        leaves = self.env["resource.schedule.exception"]
         public_holidays = leaves.search(  # noqa: E8507 - one lookup per flexible leave, on its own calendar and dates
             leaves._get_domain_public_holidays(
                 self.date_from,
@@ -1025,12 +1025,13 @@ Versions:
         for leave in self:
             leave.tz_mismatch = leave.tz != self.env.user.tz
 
-    @api.depends("resource_calendar_id.tz")
+    @api.depends("employee_id.tz", "resource_calendar_id.tz")
     @api.depends_context("uid", "company")
     def _compute_tz(self):
         for leave in self:
             leave.tz = (
-                leave.resource_calendar_id.tz
+                leave.employee_id.tz
+                or leave.resource_calendar_id.tz
                 or self.env.company.resource_calendar_id.tz
                 or self.env.user.tz
                 or "UTC"
@@ -1472,11 +1473,11 @@ Versions:
 
     def _create_resource_leave(self):
         vals_list = [leave._prepare_resource_leave_vals() for leave in self]
-        return self.env["resource.calendar.leaves"].sudo().create(vals_list)
+        return self.env["resource.schedule.exception"].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
         return (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .sudo()
             .search([("holiday_id", "in", self.ids)])
             .unlink()
@@ -1488,7 +1489,7 @@ Versions:
 
         Idempotent, because it is not only called once at validation -- a
         working-schedule or contract change re-applies an already approved
-        leave, and appending a second `resource.calendar.leaves` row there
+        leave, and appending a second `resource.schedule.exception` row there
         would have the working-time engine subtract the period twice.
         """
         holidays = self.filtered("employee_id")

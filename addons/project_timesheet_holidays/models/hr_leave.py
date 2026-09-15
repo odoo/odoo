@@ -19,10 +19,10 @@ class HrLeave(models.Model):
         self._create_timesheets()
         return super()._apply_leave_request()
 
-    def _create_timesheets(self, ignored_resource_calendar_leaves=None):
+    def _create_timesheets(self, ignored_schedule_exceptions=None):
         vals_list = []
         leave_ids = []
-        calendar_leaves_data = self.env["resource.calendar.leaves"]._read_group(
+        calendar_leaves_data = self.env["resource.schedule.exception"]._read_group(
             [("holiday_id", "in", self.ids)], ["holiday_id"], ["id:array_agg"]
         )
         mapped_calendar_leaves = {
@@ -83,18 +83,14 @@ class HrLeave(models.Model):
                     date=leave_date,
                 )
             else:
-                ignored_resource_calendar_leaves = (
-                    ignored_resource_calendar_leaves or []
-                )
+                ignored_schedule_exceptions = ignored_schedule_exceptions or []
                 if leave in mapped_calendar_leaves:
-                    ignored_resource_calendar_leaves.append(
-                        mapped_calendar_leaves[leave]
-                    )
+                    ignored_schedule_exceptions.append(mapped_calendar_leaves[leave])
                 work_hours_data = leave.employee_id._list_work_time_per_day(
                     leave.date_from,
                     leave.date_to,
-                    domain=[("id", "not in", ignored_resource_calendar_leaves)]
-                    if ignored_resource_calendar_leaves
+                    domain=[("id", "not in", ignored_schedule_exceptions)]
+                    if ignored_schedule_exceptions
                     else None,
                 )[leave.employee_id.id]
                 _debug.perf.count(
@@ -102,7 +98,7 @@ class HrLeave(models.Model):
                     leave=leave,
                     employee=leave.employee_id,
                     days=len(work_hours_data),
-                    ignored_calendar_leaves=len(ignored_resource_calendar_leaves),
+                    ignored_calendar_leaves=len(ignored_schedule_exceptions),
                 )
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
@@ -167,7 +163,7 @@ class HrLeave(models.Model):
         min_date = min(self.mapped("date_from"))
         max_date = max(self.mapped("date_to"))
 
-        leaves = self.env["resource.calendar.leaves"]
+        leaves = self.env["resource.schedule.exception"]
         global_leaves = leaves.search(
             leaves._get_domain_public_holidays(min_date, max_date)
             & Domain("company_id.internal_project_id", "!=", False)

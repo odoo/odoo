@@ -101,7 +101,7 @@ class TestHrAuditRound3(TestHrCommon):
             "the written department's channel must auto-subscribe its members",
         )
 
-    def test_calendar_tz_batch_resolves_the_employee_local_date(self):
+    def test_schedule_tz_batch_answers_the_work_zone_whatever_the_version(self):
         tokyo = self.env["resource.calendar"].create(
             {"name": "R3 Tokyo", "tz": "Asia/Tokyo"}
         )
@@ -135,8 +135,8 @@ class TestHrAuditRound3(TestHrCommon):
             date(2026, 1, 15),
         )
         self.assertEqual(
-            employee._get_calendar_tz_batch(instant),
-            {employee.id: "Pacific/Auckland"},
+            employee._get_schedule_tz_batch(instant),
+            {employee.id: "Asia/Tokyo"},
         )
 
     def test_calendar_tz_batch_keeps_each_group_to_its_own_employees(self):
@@ -163,7 +163,7 @@ class TestHrAuditRound3(TestHrCommon):
         self.env.flush_all()
 
         self.assertEqual(
-            (tokyo_emp | ny_emp)._get_calendar_tz_batch(datetime(2026, 1, 15, 3, 0)),
+            (tokyo_emp | ny_emp)._get_schedule_tz_batch(datetime(2026, 1, 15, 3, 0)),
             {tokyo_emp.id: "Asia/Tokyo", ny_emp.id: "America/New_York"},
         )
 
@@ -574,7 +574,7 @@ class TestHrAuditRound3(TestHrCommon):
         )
         period_start = datetime(2026, 3, 2, tzinfo=ZoneInfo("UTC"))
         period_stop = datetime(2026, 3, 6, 23, 59, tzinfo=ZoneInfo("UTC"))
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "R3 Public Holiday",
                 "calendar_id": calendar.id,

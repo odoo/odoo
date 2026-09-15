@@ -215,7 +215,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)
 
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -243,7 +243,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)
         leave_end_datetime = leave_start_datetime + timedelta(days=5)
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -252,7 +252,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        self.env["resource.calendar.leaves"].with_company(self.test_company).create(
+        self.env["resource.schedule.exception"].with_company(self.test_company).create(
             {
                 "name": "Global leave",
                 "calendar_id": False,
@@ -265,7 +265,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        self.env["resource.calendar.leaves"].with_company(self.test_company_2).create(
+        self.env["resource.schedule.exception"].with_company(
+            self.test_company_2
+        ).create(
             {
                 "name": "Global leave in another company",
                 "calendar_id": False,
@@ -309,7 +311,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         today = datetime.today()
         leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -341,7 +343,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)
         day_off = datetime(2021, 1, 6, 0, 0, 0)
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.part_time_calendar.id,
@@ -364,7 +366,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)
 
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -393,7 +395,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             [("is_timeoff_task", "!=", False)]
         )
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Test",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -412,7 +414,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_end_datetime = datetime(2021, 1, 8, 18, 0)
 
         global_time_off = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_company(self.test_company)
             .create(
                 {
@@ -451,7 +453,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        self.env["resource.calendar.leaves"].with_company(new_company).create(
+        self.env["resource.schedule.exception"].with_company(new_company).create(
             {
                 "name": "Test",
                 "calendar_id": False,
@@ -467,7 +469,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertEqual(leave_task.effective_hours, 0)
 
     def test_timesheet_creation_for_global_time_off_wo_calendar_in_batch(self):
-        self.env["resource.calendar.leaves"].with_company(self.test_company).create(
+        self.env["resource.schedule.exception"].with_company(self.test_company).create(
             [
                 {
                     "name": "Easter Monday",
@@ -697,7 +699,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             ]
         )
         gto_09_04, gto_09_11, gto_11_06, gto_11_13 = self.env[
-            "resource.calendar.leaves"
+            "resource.schedule.exception"
         ].create(
             [
                 {
@@ -810,7 +812,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         )
         global_leave_end_datetime = global_leave_start_datetime + timedelta(hours=12)
 
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -818,7 +820,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
                 "date_to": global_leave_end_datetime,
             }
         )
-        gto_without_calendar = self.env["resource.calendar.leaves"].create(
+        gto_without_calendar = self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday without calendar",
                 "date_from": global_leave_start_datetime + timedelta(days=1),
@@ -865,7 +867,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         )
         holiday2.sudo().action_approve()
 
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -873,7 +875,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
                 "date_to": global_leave_end_datetime,
             }
         )
-        gto_without_calendar = self.env["resource.calendar.leaves"].create(
+        gto_without_calendar = self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday without calendar",
                 "date_from": global_leave_start_datetime + timedelta(days=1),
@@ -933,7 +935,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start = datetime(2025, 1, 1, 7, 0)
         leave_end = datetime(2025, 1, 1, 18, 0)
 
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "calendar_id": self.test_company.resource_calendar_id.id,
@@ -956,7 +958,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self,
     ):
         self.part_time_calendar.company_id = False
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "date_from": datetime(2021, 1, 4, 0, 0, 0),
@@ -992,7 +994,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "date_from": datetime(2021, 1, 4, 0, 0, 0),

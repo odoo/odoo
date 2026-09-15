@@ -173,16 +173,6 @@ class HrEmployee(models.Model):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
         totals = {}
-        # The employee's OWN zone, not `_get_tz()`. This figure is shown to the
-        # employee, about their own month, and `_get_tz()` answers a different
-        # question: it puts `resource_calendar_id.tz` first, and that calendar
-        # is inherited from the company unless the employee was given one, so
-        # resolving through it bounds the month at the company calendar's
-        # midnight for an employee who has explicitly said which zone they are
-        # in. `hr.attendance.date` and the overtime engine resolve through the
-        # schedule because they are about what the employer scheduled; this is
-        # not, and the two can disagree about an overnight shift. See the
-        # 2026-09-14 audit note.
         for tz_name, employees in self.grouped(lambda e: e.tz or "UTC").items():
             now_tz = now_utc.astimezone(timezone(tz_name))
             start_naive = (

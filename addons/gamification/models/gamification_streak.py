@@ -155,7 +155,7 @@ class GamificationStreakType(models.Model):
         # is built in the *user's* timezone and only then converted to UTC for
         # the query.  Storage stays UTC throughout -- this mirrors
         # ``lunch.supplier._compute_available_today`` and
-        # ``hr.employee._get_tz``, which resolve the relevant record's tz in
+        # ``hr.employee._get_schedule_tz``, which resolve the relevant record's tz in
         # backend/cron code for exactly this reason.
         #
         # Note ``fields.Date.context_today`` is deliberately *not* used: it
@@ -189,7 +189,7 @@ class GamificationStreakType(models.Model):
     def _get_streak_tz_name(self, user) -> str:
         """Return the timezone whose calendar day defines this user's streak.
 
-        Falls back the same way ``hr.employee._get_tz`` does, ending in UTC so
+        Falls back the same way ``hr.employee._get_schedule_tz`` does, ending in UTC so
         the behaviour is unchanged for users with no timezone set.
         """
         return user.tz or user.company_id.partner_id.tz or "UTC"

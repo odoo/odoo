@@ -139,6 +139,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee.tz, _tz)
 
     def test_employee_timezone(self):
+        schedule_zone = self.res_users_hr_officer.company_id.resource_calendar_id.tz
         self.res_users_hr_officer.tz = "Africa/Cairo"
         Employee = self.env["hr.employee"].with_user(self.res_users_hr_officer)
         employee_form = Form(Employee)
@@ -147,13 +148,13 @@ class TestHrEmployee(TestHrCommon):
         employee_form.work_email = "yoahm@example.com"
         employee = employee_form.save()
 
-        self.assertEqual(employee.tz, self.res_users_hr_officer.tz)
+        self.assertEqual(employee.tz, schedule_zone)
 
         self.res_users_hr_officer.tz = "Europe/Brussels"
-        self.assertEqual(self.res_users_hr_officer.tz, employee.tz)
+        self.assertEqual(employee.tz, schedule_zone)
 
         employee.tz = "Europe/London"
-        self.assertEqual(self.res_users_hr_officer.tz, employee.tz)
+        self.assertEqual(self.res_users_hr_officer.tz, "Europe/Brussels")
 
         with self.assertRaises(ValidationError):
             employee.tz = False
@@ -186,7 +187,7 @@ class TestHrEmployee(TestHrCommon):
         employee.name = "Raoul Grosbedon"
         self.assertEqual(self.res_users_hr_officer.name, "Raoul Grosbedon")
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
-        self.assertEqual(employee.tz, self.res_users_hr_officer.tz)
+        self.assertEqual(employee.tz, _tz)
 
     def test_employee_computed_from_user(self):
         self.res_users_hr_officer.name = "Raoul Grosbedon"

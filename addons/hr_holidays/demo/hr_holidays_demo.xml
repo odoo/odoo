@@ -428,7 +428,7 @@
         <function model="hr.leave" name="action_approve">
             <value eval="ref('hr_holidays.hr_holidays_sl_kim_2')" />
         </function>
-        <record id="resource_public_time_off_1" model="resource.calendar.leaves">
+        <record id="resource_public_time_off_1" model="resource.schedule.exception">
             <field name="name">Public Time Off</field>
             <field name="company_id" ref="base.main_company" />
             <field name="calendar_id" ref="resource.resource_calendar_std" />

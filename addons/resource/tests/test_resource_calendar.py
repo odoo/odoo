@@ -316,7 +316,7 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(data["days"], 1.25)
 
     def test_public_holiday_calendar_no_company(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             [
                 {
                     "name": "Public Holiday for company",
@@ -361,7 +361,7 @@ class TestResourceCalendar(TransactionCase):
         resource = self.env["resource.resource"].create(
             {"name": "Someone", "company_id": company_a.id}
         )
-        Leaves = self.env["resource.calendar.leaves"]
+        Leaves = self.env["resource.schedule.exception"]
 
         def holiday(company, day, **vals):
             return Leaves.with_company(company).create(

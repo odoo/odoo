@@ -215,7 +215,7 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(data, {"days": 5, "hours": 40})
 
         # half days
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "half",
                 "calendar_id": self.calendar_jean.id,
@@ -244,7 +244,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # leave size 0
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero",
                 "calendar_id": self.calendar_jean.id,
@@ -265,7 +265,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # leave very small size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small",
                 "calendar_id": self.calendar_jean.id,
@@ -286,7 +286,7 @@ class TestResMixin(TestResourceCommon):
 
     def test_leaves_days_data(self):
         # Jean takes a leave
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Jean is visiting India",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -301,7 +301,7 @@ class TestResMixin(TestResourceCommon):
         )
 
         # John takes a leave for Jean
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Jean is comming in USA",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -343,7 +343,7 @@ class TestResMixin(TestResourceCommon):
 
         # Jean takes a leave for John
         # Gives 3 hours (3/8 of a day)
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "John is sick",
                 "calendar_id": self.john.resource_calendar_id.id,
@@ -359,7 +359,7 @@ class TestResMixin(TestResourceCommon):
 
         # John takes a leave
         # Gives all day (12 hours)
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "John goes to holywood",
                 "calendar_id": self.john.resource_calendar_id.id,
@@ -382,7 +382,7 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(data, {"days": 0.958, "hours": 10})
 
         # half days
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "half",
                 "calendar_id": self.calendar_jean.id,
@@ -403,7 +403,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # leave size 0
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero",
                 "calendar_id": self.calendar_jean.id,
@@ -424,7 +424,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # leave very small size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small",
                 "calendar_id": self.calendar_jean.id,
@@ -446,7 +446,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
     def test_list_leaves(self):
-        jean_leave = self.env["resource.calendar.leaves"].create(
+        jean_leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Jean's son is sick",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -467,7 +467,7 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(leaves, [(date(2018, 4, 10), 8, jean_leave)])
 
         # half days
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "half",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -488,7 +488,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # very small size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -512,7 +512,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # size 0
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -562,7 +562,7 @@ class TestResMixin(TestResourceCommon):
         )
 
         # half days
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -592,7 +592,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # very small size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small",
                 "calendar_id": self.jean.resource_calendar_id.id,
@@ -615,7 +615,7 @@ class TestResMixin(TestResourceCommon):
         leave.unlink()
 
         # size 0
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero",
                 "calendar_id": self.jean.resource_calendar_id.id,

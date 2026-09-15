@@ -588,7 +588,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
-        employee_tz = timezone(self._get_tz() if self else self.env.user.tz or "utc")
+        employee_tz = timezone(self._get_schedule_tz() if self else self.env.user.tz or "utc")
         public_holidays = self._get_public_holidays(date_start, date_end).sorted(
             "date_from"
         )
@@ -635,7 +635,7 @@ class HrEmployee(models.Model):
         )
 
     def _get_public_holidays(self, date_start, date_end):
-        leaves = self.env["resource.calendar.leaves"]
+        leaves = self.env["resource.schedule.exception"]
         return leaves.search(
             leaves._get_domain_public_holidays(
                 date_start,

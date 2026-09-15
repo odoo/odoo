@@ -339,7 +339,7 @@ class HrAttendance(models.Model):
         for _pass in range(self._SCHEDULE_VERSION_PASSES):
             local_day = (
                 self.check_in.replace(tzinfo=UTC)
-                .astimezone(timezone(version._get_tz()))
+                .astimezone(timezone(version._get_schedule_tz()))
                 .date()
             )
             settled = employee._get_version(local_day)
@@ -358,7 +358,7 @@ class HrAttendance(models.Model):
         the version's -- and they disagree for anyone whose personal zone or
         schedule is not the one their work contact carries.
         """
-        return timezone((version or self._schedule_version())._get_tz())
+        return timezone((version or self._schedule_version())._get_schedule_tz())
 
     def _get_employee_calendar(self, version=None):
         self.check_singleton()
@@ -511,7 +511,7 @@ class HrAttendance(models.Model):
     @api.model
     def _get_day_start_and_day(self, employee, dt):
         if not dt.tzinfo:
-            calendar_tz = employee._get_calendar_tz_batch(dt)[employee.id]
+            calendar_tz = employee._get_schedule_tz_batch(dt)[employee.id]
             date_employee_tz = dt.replace(tzinfo=UTC).astimezone(timezone(calendar_tz))
         else:
             date_employee_tz = dt
@@ -1222,7 +1222,7 @@ class HrAttendance(models.Model):
             # into the employee's zone and then storing that wall clock as UTC
             # placed the marker a whole day off for anyone far enough east.
             local_day_start = datetime.combine(yesterday, time.min).replace(
-                tzinfo=timezone(emp.sudo()._get_version(yesterday)._get_tz())
+                tzinfo=timezone(emp.sudo()._get_version(yesterday)._get_schedule_tz())
             )
             check_in = local_day_start.astimezone(UTC).replace(tzinfo=None)
             technical_attendances_vals.append(

@@ -77,15 +77,6 @@ class HrVersion(models.Model):
         )
         return overtime.id if overtime else False
 
-    def _get_work_entry_tz(self):
-        self.check_singleton()
-        return timezone(
-            self.resource_calendar_id.tz
-            or self.company_id.resource_calendar_id.tz
-            or self.employee_id.tz
-            or "UTC"
-        )
-
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
 
@@ -126,8 +117,8 @@ class HrVersion(models.Model):
         )
         return domain & self._get_domain_sub_leave()
 
-    def _get_resource_calendar_leaves(self, start_dt, end_dt):
-        return self.env["resource.calendar.leaves"].search(
+    def _get_schedule_exceptions(self, start_dt, end_dt):
+        return self.env["resource.schedule.exception"].search(
             self._get_domain_leave(start_dt, end_dt)
         )
 
@@ -156,7 +147,6 @@ class HrVersion(models.Model):
                         start_dt,
                         end_dt,
                         resources=employees.resource_id,
-                        tz=timezone(calendar.tz),
                     )
                 )
         return result
@@ -359,12 +349,14 @@ class HrVersion(models.Model):
             start_dt, end_dt
         )
 
-        leaves_by_resource = defaultdict(lambda: self.env["resource.calendar.leaves"])
-        for leave in self._get_resource_calendar_leaves(start_dt, end_dt):
+        leaves_by_resource = defaultdict(
+            lambda: self.env["resource.schedule.exception"]
+        )
+        for leave in self._get_schedule_exceptions(start_dt, end_dt):
             leaves_by_resource[leave.resource_id.id] |= leave
 
         for version in self:
-            tz = version._get_work_entry_tz()
+            tz = timezone(version._get_schedule_tz())
             local_start = start_dt.astimezone(tz)
             local_end = end_dt.astimezone(tz)
             resource = version.employee_id.resource_id
@@ -426,7 +418,7 @@ class HrVersion(models.Model):
         date_stop = datetime.combine(fields.Date.to_date(date_stop), time.max)
         new_work_entries = self.env["hr.work.entry"]
         versions_by_company_tz = self.grouped(
-            lambda v: (v.company_id, v._get_work_entry_tz())
+            lambda v: (v.company_id, timezone(v._get_schedule_tz()))
         )
         _debug.pipeline(
             "generate_start",
@@ -495,7 +487,7 @@ class HrVersion(models.Model):
         intervals_to_generate = defaultdict(lambda: self.env["hr.version"])
         domain_to_nullify = Domain(False)
         for version in self:
-            tz = version._get_work_entry_tz()
+            tz = timezone(version._get_schedule_tz())
             version_start, version_stop = version._get_version_utc_bounds(tz, date_stop)
             domain_to_nullify |= version._get_domain_expired_work_entries(
                 tz, version_stop, date_stop
@@ -698,7 +690,7 @@ class HrVersion(models.Model):
     def _generate_work_entries_postprocess(self, vals_list):
         versions = self.browse({vals["version_id"] for vals in vals_list})
         tz_by_version = {
-            version.id: version._get_work_entry_tz() for version in versions
+            version.id: timezone(version._get_schedule_tz()) for version in versions
         }
         vals_list = self._split_work_entry_vals_on_local_midnight(
             vals_list, tz_by_version

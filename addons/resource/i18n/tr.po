@@ -191,10 +191,10 @@ msgstr "Şirketler"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
 msgstr "Firma"
@@ -207,7 +207,7 @@ msgstr "Onayla"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
 msgid "Created by"
 msgstr "Tarafından oluşturuldu"
@@ -215,13 +215,13 @@ msgstr "Tarafından oluşturuldu"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_date
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 msgid "Created on"
 msgstr "Oluşturuldu"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Date"
 msgstr "Tarih"
 
@@ -271,7 +271,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_res_users__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
@@ -303,7 +303,7 @@ msgid "Email"
 msgstr "E-Posta"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__date_to
 msgid "End Date"
 msgstr "Bitiş Tarihi"
 
@@ -415,7 +415,7 @@ msgstr "İnsan"
 #: model:ir.model.fields,field_description:resource.field_res_users__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 msgid "ID"
@@ -432,7 +432,7 @@ msgstr ""
 "musunuz?"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,help:resource.field_resource_schedule_exception__resource_id
 msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
@@ -483,7 +483,7 @@ msgstr "Tam Zamanlı mı"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_uid
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
@@ -491,7 +491,7 @@ msgstr "Son Güncelleyen"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_date
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
@@ -546,7 +546,7 @@ msgstr ""
 "saat sayısı."
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
+#: model:ir.model.fields.selection,name:resource.selection__resource_schedule_exception__time_type__other
 msgid "Other"
 msgstr "Diğer"
 
@@ -556,7 +556,7 @@ msgid "Partial working schedules"
 msgstr "Kısmi çalışma programları"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Period"
 msgstr "Dönem"
 
@@ -572,9 +572,9 @@ msgid "Provided datetimes needs to be timezoned"
 msgstr "Verilen tarih ve saatlerin zaman dilimiyle uyumlu olması gerekir."
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__name
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_tree
 msgid "Reason"
 msgstr "Sebep"
 
@@ -589,12 +589,12 @@ msgid "Required Full Time"
 msgstr "Tam Zamanlı Gereklidir"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Resource"
 msgstr "Kaynak"
 
@@ -604,14 +604,14 @@ msgid "Resource Mixin"
 msgstr "Kaynak Karışımı"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+#: model:ir.actions.act_window,name:resource.action_resource_schedule_exception_tree
+#: model:ir.actions.act_window,name:resource.resource_schedule_exception_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_schedule_exception_search
 msgid "Resource Time Off"
 msgstr "Kaynak İzinler"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: model:ir.model,name:resource.model_resource_schedule_exception
 msgid "Resource Time Off Detail"
 msgstr "Kaynak İzin Detayı"
 
@@ -674,7 +674,7 @@ msgid "Search Resource"
 msgstr "Arama Kaynağı"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Search Working Period Time Off"
 msgstr "Çalışma Dönemi İzinleri Ara"
 
@@ -716,7 +716,7 @@ msgid "Standard 40 hours/week"
 msgstr "Standart 40 saat/hafta"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__date_from
 msgid "Start Date"
 msgstr "Başlama Tarihi"
 
@@ -730,7 +730,7 @@ msgstr ""
 "24:00 gibi özel bir değer 23: 59: 59.999999 olarak yorumlanır."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Starting Date of Time Off"
 msgstr "İzin Başlangıç Tarihi"
 
@@ -788,7 +788,7 @@ msgstr "Günün tamamını kapsayacak şekilde saatler 12:00 civarında olacakt�
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource_calendar_leaves.py:0
+#: code:addons/resource/models/resource_schedule_exception.py:0
 msgid "The start date of the time off must be earlier than the end date."
 msgstr "İzin başlangıç tarihi bitiş tarihinden önce olmalıdır."
 
@@ -841,18 +841,18 @@ msgstr "Perşembe Sabahı"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+#: model:ir.model.fields.selection,name:resource.selection__resource_schedule_exception__time_type__leave
 msgid "Time Off"
 msgstr "İzin"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_tree
 msgid "Time Off Detail"
 msgstr "İzin Detayı"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__time_type
 msgid "Time Type"
 msgstr "Zaman Tipi"
 
@@ -968,7 +968,7 @@ msgstr ""
 "saatleri) bağlı kalmadan esnek bir şekilde çalışmasına olanak tanıyacaktır."
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
+#: model:ir.model.fields,help:resource.field_resource_schedule_exception__time_type
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
@@ -1017,7 +1017,7 @@ msgstr "Çalışılacak"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"

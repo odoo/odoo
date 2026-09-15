@@ -46,10 +46,13 @@ class TestResourceResourceCrud(TransactionCase):
         resource._onchange_company_id()
         self.assertEqual(resource.calendar_id, self.env.company.resource_calendar_id)
 
-    def test_onchange_user_sets_tz(self):
-        resource = self.env["resource.resource"].new({"user_id": self.user.id})
-        resource._onchange_user_id()
-        self.assertEqual(resource.tz, self.user.tz)
+    def test_choosing_a_user_does_not_move_the_work_zone(self):
+        resource = self.env["resource.resource"].create(
+            {"name": "Deployed", "tz": "America/Mazatlan"}
+        )
+        self.user.tz = "Europe/Brussels"
+        resource.user_id = self.user
+        self.assertEqual(resource.tz, "America/Mazatlan")
 
     @mute_logger("odoo.db.cursor")
     def test_create_zero_time_efficiency_violates_check(self):

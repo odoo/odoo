@@ -215,7 +215,7 @@ class TestLeaveDefaults(TransactionCase):
         )
         with freeze_time("2026-09-06 04:30:00"):
             defaults = (
-                self.env["resource.calendar.leaves"]
+                self.env["resource.schedule.exception"]
                 .with_context(default_calendar_id=calendar.id)
                 .default_get(["date_from", "date_to", "calendar_id"])
             )
@@ -245,7 +245,7 @@ class TestBatchedResourceQueries(TransactionCase):
                 for i in range(10)
             ]
         )
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             [
                 {
                     "name": "off",
@@ -397,7 +397,7 @@ class TestWorkSchedule(TransactionCase):
             {"name": "flexible", "calendar_id": flexible_calendar.id, "tz": "UTC"}
         )
         cls.free = Resource.create({"name": "free", "calendar_id": False, "tz": "UTC"})
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             {
                 "name": "off",
                 "resource_id": cls.fixed.id,

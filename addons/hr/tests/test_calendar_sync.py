@@ -64,7 +64,7 @@ class TestContractCalendars(TestHrCommon):
     def test_contract_transfer_leaves(self):
 
         def create_calendar_leave(start, end, resource=None):
-            return self.env["resource.calendar.leaves"].create(
+            return self.env["resource.schedule.exception"].create(
                 {
                     "name": "leave name",
                     "date_from": start,
@@ -143,7 +143,7 @@ class TestContractCalendars(TestHrCommon):
             )
 
     def test_employee_resource_contract_without_and_with_date_from(self):
-        leave_form = Form(self.env["resource.calendar.leaves"])
+        leave_form = Form(self.env["resource.schedule.exception"])
         leave_form.date_from = False
 
         leave_form.resource_id = self.employee.resource_id

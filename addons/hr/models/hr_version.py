@@ -988,11 +988,11 @@ class HrVersion(models.Model):
             and self_sudo.structure_type_id.country_id.code == country_code
         )
 
-    def _get_tz(self):
+    def _get_schedule_tz(self):
         self.check_singleton()
         return (
-            self.resource_calendar_id.tz
-            or self.tz
+            self.tz
+            or self.resource_calendar_id.tz
             or self.company_id.resource_calendar_id.tz
             or "UTC"
         )

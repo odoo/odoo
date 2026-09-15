@@ -48,7 +48,7 @@
         "views/booking/appointment_resource_views.xml",
         "views/booking/appointment_type_views.xml",
         "views/booking/appointment_slot_views.xml",
-        "views/booking/resource_calendar_leaves_views.xml",
+        "views/booking/resource_schedule_exception_views.xml",
         "views/booking/calendar_menus.xml",
         "views/booking/appointment_menus.xml",
         "views/booking/appointment_templates_appointments.xml",

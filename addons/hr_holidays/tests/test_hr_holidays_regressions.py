@@ -1346,7 +1346,7 @@ class TestFlexibleRequestDuration(TestHrHolidaysCommon):
             }
         )
         leave.action_approve()
-        resource_leave = self.env["resource.calendar.leaves"].search(
+        resource_leave = self.env["resource.schedule.exception"].search(
             [("holiday_id", "=", leave.id)]
         )
         self.assertTrue(resource_leave)
@@ -1791,7 +1791,7 @@ class TestGeneratedTimeOffWaitsForApproval(TestHrHolidaysCommon):
         )
 
     def _resource_leaves(self, leaves):
-        return self.env["resource.calendar.leaves"].search(
+        return self.env["resource.schedule.exception"].search(
             [("holiday_id", "in", leaves.ids)]
         )
 
@@ -1894,7 +1894,7 @@ class TestScheduleChangeRepricesFutureLeave(TestHrHolidaysCommon):
         return employee, leave
 
     def _bookings(self, leave):
-        return self.env["resource.calendar.leaves"].search(
+        return self.env["resource.schedule.exception"].search(
             [("holiday_id", "=", leave.id)]
         )
 
@@ -1978,7 +1978,7 @@ class TestFlexibleDurationOverAPublicHoliday(TestHrHolidaysCommon):
                 "company_id": cls.company.id,
             }
         )
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             {
                 "name": "A public holiday",
                 "resource_id": False,

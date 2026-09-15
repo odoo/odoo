@@ -1,7 +1,9 @@
 from datetime import date, datetime
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.libs.datetime import timezone
+from odoo.tests.common import TransactionCase
 
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
@@ -11,7 +13,7 @@ class TestCalendar(TestResourceCommon):
         super().setUp()
 
     def test_get_work_hours_count(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "resource_id": False,
@@ -25,7 +27,7 @@ class TestCalendar(TestResourceCommon):
             }
         )
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "leave for Jean",
                 "calendar_id": self.calendar_jean.id,
@@ -53,7 +55,7 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(hours, 40)
 
         # leave of size 0
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "zero_length",
                 "calendar_id": self.calendar_patel.id,
@@ -72,7 +74,7 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(hours, 35)
 
         # leave of medium size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero_length",
                 "calendar_id": self.calendar_patel.id,
@@ -95,7 +97,7 @@ class TestCalendar(TestResourceCommon):
         leave.unlink()
 
         # leave of very small size
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "zero_length",
                 "calendar_id": self.calendar_patel.id,
@@ -119,7 +121,7 @@ class TestCalendar(TestResourceCommon):
 
         # no timezone given should be converted to UTC
         # Should equal to a leave between 2018/04/03 10:00:00 and 2018/04/04 10:00:00
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "no timezone",
                 "calendar_id": self.calendar_patel.id,
@@ -165,7 +167,7 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(hours, 16)
 
         # 2 weeks calendar week 2, leave during a day where he doesn't work this week
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Time Off Jules week 2",
                 "calendar_id": self.calendar_jules.id,
@@ -188,7 +190,7 @@ class TestCalendar(TestResourceCommon):
         leave.unlink()
 
         # 2 weeks calendar week 2, leave during a day where he works this week
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Time Off Jules week 2",
                 "calendar_id": self.calendar_jules.id,
@@ -211,7 +213,7 @@ class TestCalendar(TestResourceCommon):
         leave.unlink()
 
         # leave without calendar, should count for anyone in the company
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small leave",
                 "resource_id": False,
@@ -438,7 +440,7 @@ class TestCalendar(TestResourceCommon):
         self.assertAlmostEqual(res, 24.0)
 
     def test_plan_hours(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "global",
                 "calendar_id": self.calendar_jean.id,
@@ -528,7 +530,7 @@ class TestCalendar(TestResourceCommon):
         )
 
     def test_plan_days(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "global",
                 "calendar_id": self.calendar_jean.id,
@@ -712,7 +714,7 @@ class TestCalendar(TestResourceCommon):
 
     def test_resource_calendar_update(self):
         """Ensure leave calendar gets set correctly when updating resource calendar."""
-        holiday = self.env["resource.calendar.leaves"].create(
+        holiday = self.env["resource.schedule.exception"].create(
             {
                 "name": "May Day",
                 "calendar_id": self.calendar_jean.id,
@@ -726,7 +728,7 @@ class TestCalendar(TestResourceCommon):
         )
 
         # Jean takes a leave
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Jean is AFK",
                 "calendar_id": self.calendar_jean.id,
@@ -1088,3 +1090,33 @@ class TestCalendar(TestResourceCommon):
             }
         )
         self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
+
+
+class TestScheduleChangeHook(TransactionCase):
+    def test_every_change_reports_its_scopes_before_and_after_once(self):
+        Exception_ = self.env["resource.schedule.exception"]
+        calls = []
+
+        def record(model, scopes):
+            calls.append([(scope["date_from"], scope["date_to"]) for scope in scopes])
+
+        with patch.object(type(Exception_), "_on_schedule_changed", record):
+            exception = Exception_.create(
+                {
+                    "name": "closure",
+                    "date_from": datetime(2030, 5, 1, 8),
+                    "date_to": datetime(2030, 5, 1, 17),
+                }
+            )
+            exception.name = "renamed"
+            exception.write(
+                {
+                    "date_from": datetime(2030, 5, 2, 8),
+                    "date_to": datetime(2030, 5, 2, 17),
+                }
+            )
+            exception.unlink()
+
+        first = (datetime(2030, 5, 1, 8), datetime(2030, 5, 1, 17))
+        second = (datetime(2030, 5, 2, 8), datetime(2030, 5, 2, 17))
+        self.assertEqual(calls, [[first], [first, second], [second]])

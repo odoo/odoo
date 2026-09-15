@@ -98,7 +98,7 @@ class ResourceCalendar(models.Model):
         domain=lambda self: [("id", "in", self.env.companies.ids)],
     )
     leave_ids = fields.One2many(
-        comodel_name="resource.calendar.leaves",
+        comodel_name="resource.schedule.exception",
         inverse_name="calendar_id",
         string="Time Off",
     )
@@ -133,7 +133,7 @@ class ResourceCalendar(models.Model):
         help="Number of hours to work on the company schedule to be considered as fulltime.",
     )
     global_leave_ids = fields.One2many(
-        comodel_name="resource.calendar.leaves",
+        comodel_name="resource.schedule.exception",
         inverse_name="calendar_id",
         string="Global Time Off",
         copy=True,
@@ -178,7 +178,7 @@ class ResourceCalendar(models.Model):
         string="Timezone",
         default=lambda self: self._default_tz(),
         required=True,
-        help="This field is used in order to define in which timezone the resources will work.",
+        help="The time zone of this schedule's company-level uses: the company working hours, and the public holidays and closures entered on it. A resource working this schedule reads its hours in the resource's own time zone, so one 08:00-17:00 schedule means 08:00-17:00 local time for employees deployed in other zones.",
     )
     tz_offset = fields.Char(
         string="Timezone offset",
@@ -798,7 +798,7 @@ class ResourceCalendar(models.Model):
 
         result = defaultdict(list)
         leave_bounds = {}
-        all_leaves = self.env["resource.calendar.leaves"].search(domain)
+        all_leaves = self.env["resource.schedule.exception"].search(domain)
         for leave in all_leaves:
             leave_resource = leave.resource_id
             leave_company = leave.company_id
@@ -1235,7 +1235,7 @@ class ResourceCalendar(models.Model):
         compute_leaves: bool = True,
         domain: list | None = None,
     ) -> float:
-        # domain filters resource.calendar.leaves; it only applies when
+        # domain filters resource.schedule.exception; it only applies when
         # compute_leaves=True, since compute_leaves=False never reads leaves.
         self.check_singleton()
         if not start_dt.tzinfo:

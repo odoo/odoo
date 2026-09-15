@@ -13,7 +13,7 @@ class TestHrHolidaysMultiCompanyCommon(TestHrHolidaysCommon):
         cls.company_2 = cls.env["res.company"].create({"name": "Test company 2"})
 
     def test_unrelated_public_leave(self):
-        public_leave = self.env["resource.calendar.leaves"].create(
+        public_leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off for Company 2",
                 "resource_id": False,

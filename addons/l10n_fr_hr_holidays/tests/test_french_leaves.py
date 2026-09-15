@@ -1868,7 +1868,7 @@ class TestFrenchLeaves(TransactionCase):
         # and subtract that from the holiday. With this, wherever you may be running the tests, the
         # result should be consistent
         tz = timezone(self.env.user.tz or "UTC")
-        self.env["resource.calendar.leaves"].with_company(self.company).create(
+        self.env["resource.schedule.exception"].with_company(self.company).create(
             {
                 "name": "Public Holiday",
                 "calendar_id": False,

@@ -60,7 +60,7 @@ class TestDashboard(TestHrHolidaysCommon):
                 "calendar_id": other_calendar.id,
             },
         ]
-        self.env["resource.calendar.leaves"].create(public_holiday_vals)
+        self.env["resource.schedule.exception"].create(public_holiday_vals)
 
         dashboard_data = self.env["hr.employee"].get_special_days_data(
             "2021-06-01", "2021-07-01"

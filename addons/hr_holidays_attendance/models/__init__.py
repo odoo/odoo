@@ -6,3 +6,4 @@ from . import hr_leave_type
 from . import hr_leave
 from . import ir_ui_menu
 from . import hr_employee
+from . import resource_schedule_exception

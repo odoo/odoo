@@ -2819,7 +2819,7 @@ class TestMrpAuditFixes(TestMrpCommon):
             }
         )
         self.assertTrue(manager.has_group("mrp.group_mrp_user"))
-        for model in ("mrp.production", "resource.calendar.leaves"):
+        for model in ("mrp.production", "resource.schedule.exception"):
             with self.subTest(model=model):
                 scoped = self.env[model].with_user(manager)
                 self.assertEqual(

@@ -2,8 +2,8 @@ from odoo.db.schema import column_exists
 
 OLD = "elligible_for_accrual_rate"
 NEW = "eligible_for_accrual_rate"
-TABLES = ("hr_leave_type", "resource_calendar_leaves")
-MODELS = ("hr.leave.type", "resource.calendar.leaves")
+TABLES = ("hr_leave_type", "resource_schedule_exception")
+MODELS = ("hr.leave.type", "resource.schedule.exception")
 
 
 def _rewrite(expr):

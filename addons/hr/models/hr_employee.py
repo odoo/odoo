@@ -2737,24 +2737,21 @@ class HrEmployee(models.Model):
             )
             employee.barcode = barcode
 
-    def _get_tz(self):
+    def _get_schedule_tz(self):
         self.check_singleton()
         return (
-            self.resource_calendar_id.tz
-            or self.tz
+            self.tz
+            or self.resource_calendar_id.tz
             or self.company_id.resource_calendar_id.tz
             or "UTC"
         )
 
-    def _get_tz_batch(self):
-        return {emp.id: emp._get_tz() for emp in self}
-
-    def _get_calendar_tz_batch(self, dt=None):
+    def _get_schedule_tz_batch(self, dt=None):
         employees_by_id = self.grouped("id")
 
         def get_timezones_by_employee_id(employees, date_at=None):
             return {
-                emp_id: calendar.sudo().tz or employees_by_id[emp_id].tz
+                emp_id: employees_by_id[emp_id].tz or calendar.sudo().tz
                 for emp_id, calendar in employees._get_calendars(date_at).items()
             }
 
@@ -2764,7 +2761,7 @@ class HrEmployee(models.Model):
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=UTC)
         employee_timezones = {}
-        for tz, employees in self.grouped(lambda emp: emp._get_tz()).items():
+        for tz, employees in self.grouped(lambda emp: emp._get_schedule_tz()).items():
             employee_timezones |= get_timezones_by_employee_id(
                 employees, dt.astimezone(timezone(tz)).date()
             )
@@ -2833,11 +2830,7 @@ class HrEmployee(models.Model):
             dbg.rec(versions),
         )
         for version in versions:
-            calendar_tz = (
-                timezone(version.resource_calendar_id.tz)
-                if version.resource_calendar_id
-                else timezone(version.employee_id.resource_id.tz)
-            )
+            calendar_tz = timezone(version.employee_id.resource_id.tz)
             date_start = self._combine_tz(
                 version.date_start, time.min, calendar_tz
             ).astimezone(UTC)

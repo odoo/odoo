@@ -75,13 +75,12 @@ class TestPartyDelegation(TransactionCase):
                 "tz": "Asia/Tokyo",
             }
         )
+        work_zone = employee.tz
         employee.user_id = user
         self.assertEqual(employee.resource_id.partner_id, user.partner_id)
-        self.assertEqual(employee.tz, "Asia/Tokyo")
+        self.assertEqual(employee.tz, work_zone)
 
-    def test_a_timezone_written_on_the_employee_reaches_the_user_through_the_party(
-        self,
-    ):
+    def test_a_work_zone_written_on_the_employee_leaves_the_user_display_zone(self):
         user = self.env["res.users"].create(
             {"name": "Party TZ", "login": "party_tz", "tz": "UTC"}
         )
@@ -89,7 +88,7 @@ class TestPartyDelegation(TransactionCase):
             {"name": "Party TZ", "user_id": user.id}
         )
         employee.tz = "America/Mexico_City"
-        self.assertEqual(user.tz, "America/Mexico_City")
+        self.assertEqual(user.tz, "UTC")
         self.assertEqual(employee.resource_id.tz, "America/Mexico_City")
 
     def test_the_work_channels_are_the_partys(self):

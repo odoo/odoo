@@ -164,7 +164,7 @@ class HrLeaveAttendanceReport(models.Model):
 
     def _join_calendar_leaves(self):
         return """
-            LEFT JOIN resource_calendar_leaves AS rcl
+            LEFT JOIN resource_schedule_exception AS rcl
                    ON (
                                (rc.id = rcl.calendar_id OR rcl.calendar_id IS NULL)
                            AND rcl.resource_id IS NULL
@@ -216,7 +216,7 @@ class HrLeaveAttendanceReport(models.Model):
                                                            ELSE EXTRACT(DOW FROM d.day) - 1
                                                        END
                                                   )
-                                        LEFT JOIN resource_calendar_leaves rcl2
+                                        LEFT JOIN resource_schedule_exception rcl2
                                                ON (
                                                           (rc.id = rcl2.calendar_id OR rcl2.calendar_id IS NULL)
                                                       AND rcl2.resource_id IS NULL

@@ -36,7 +36,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             ]
         )
 
-        cls.env["resource.calendar.leaves"].create(
+        cls.env["resource.schedule.exception"].create(
             [
                 {
                     "resource_id": cls.flex_resource.id,

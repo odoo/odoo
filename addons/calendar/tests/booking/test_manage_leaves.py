@@ -168,7 +168,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
         self.assertEqual(set(available_resources_16h), set(resources.ids))
 
         # Global calendar leave
-        self.env["resource.calendar.leaves"].sudo().create(
+        self.env["resource.schedule.exception"].sudo().create(
             {
                 "calendar_id": calendar.id,
                 "date_from": start_leave,
@@ -272,7 +272,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
             "date_from": datetime(2022, 2, 14, 14, 0, 0),
             "date_to": datetime(2022, 2, 14, 15, 0, 0),
         }
-        Leaves = self.env["resource.calendar.leaves"]
+        Leaves = self.env["resource.schedule.exception"]
         leave = Leaves.create(
             {**leave_vals, "resource_id": appointment_resource.resource_id.id}
         )

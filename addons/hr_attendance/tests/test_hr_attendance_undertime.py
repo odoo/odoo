@@ -86,7 +86,7 @@ class TestHrAttendanceUndertime(TransactionCase):
                 "name": "Marie-Edouard De La Court",
                 "user_id": cls.user.id,
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
@@ -97,7 +97,7 @@ class TestHrAttendanceUndertime(TransactionCase):
             {
                 "name": "Yolanda",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
@@ -151,7 +151,7 @@ class TestHrAttendanceUndertime(TransactionCase):
             {
                 "name": "No Contract",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": False,
@@ -161,7 +161,7 @@ class TestHrAttendanceUndertime(TransactionCase):
             {
                 "name": "Future contract",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2030, 1, 1),
@@ -478,7 +478,7 @@ class TestHrAttendanceUndertime(TransactionCase):
         overtime_record = early_attendance.linked_overtime_ids
         self.assertAlmostEqual(overtime_record.duration, -3, 2)
 
-        self.europe_employee.resource_calendar_id.tz = "America/New_York"
+        self.europe_employee.tz = "America/New_York"
 
         early_attendance2 = self.env["hr.attendance"].create(
             {

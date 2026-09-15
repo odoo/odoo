@@ -2,14 +2,13 @@ from collections import defaultdict
 from datetime import UTC
 
 from odoo import _, api, fields, models
-from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class ResourceScheduleException(models.Model):
+    _inherit = "resource.schedule.exception"
 
     timesheet_ids = fields.One2many(
         comodel_name="account.analytic.line",
@@ -46,7 +45,7 @@ class ResourceCalendarLeaves(models.Model):
             calendars=resource_calendars,
         )
 
-        leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
+        leaves_read_group = self.env["resource.schedule.exception"]._read_group(
             [("id", "in", self.ids), ("calendar_id", "!=", False)],
             ["calendar_id"],
             ["id:recordset", "resource_id:recordset", "date_from:min", "date_to:max"],
@@ -67,7 +66,7 @@ class ResourceCalendarLeaves(models.Model):
             }
             cal_attendance_intervals_dict[calendar.id] = calendar_data
 
-        comp_leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
+        comp_leaves_read_group = self.env["resource.schedule.exception"]._read_group(
             [("id", "in", self.ids), ("calendar_id", "=", False)],
             ["company_id"],
             ["id:recordset", "resource_id:recordset", "date_from:min", "date_to:max"],
@@ -122,7 +121,6 @@ class ResourceCalendarLeaves(models.Model):
                     cal_attendance_intervals_params_entry["date_from"],
                     cal_attendance_intervals_params_entry["date_to"],
                     cal_attendance_intervals_params_entry["resources"],
-                    tz=timezone(calendar.tz),
                 )
             for leave in cal_attendance_intervals_params_entry["leaves"]:
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
@@ -346,7 +344,7 @@ class ResourceCalendarLeaves(models.Model):
             vals.get("date_to"),
             vals.get("calendar_id"),
         )
-        global_time_off_updated = self.env["resource.calendar.leaves"]
+        global_time_off_updated = self.env["resource.schedule.exception"]
         overlapping_leaves = self.env["hr.leave"]
         if date_from or date_to or "calendar_id" in vals:
             global_time_off_updated = self.filtered(
@@ -400,5 +398,5 @@ class ResourceCalendarLeaves(models.Model):
         )
         if overlapping_leaves:
             overlapping_leaves.sudo()._create_timesheets(
-                ignored_resource_calendar_leaves=global_leaves.ids
+                ignored_schedule_exceptions=global_leaves.ids
             )

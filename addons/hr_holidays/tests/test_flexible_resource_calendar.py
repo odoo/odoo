@@ -58,7 +58,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
         )
 
     def test_flexible_resource_work_intervals_with_leaves(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             [
                 {
                     "resource_id": self.flex_resource.id,
@@ -300,7 +300,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
                 leaves.action_approve()
                 am, pm, hours, _day = leaves
                 calendar = (
-                    self.env["resource.calendar.leaves"]
+                    self.env["resource.schedule.exception"]
                     .search([("holiday_id", "in", leaves.ids)])
                     .calendar_id
                 )

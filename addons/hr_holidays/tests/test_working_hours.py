@@ -101,7 +101,7 @@ class TestWorkingHours(TestHrCalendarCommon):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id, self.company_B.id]
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": datetime(2023, 12, 25),

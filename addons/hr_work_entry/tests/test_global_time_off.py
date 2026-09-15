@@ -15,7 +15,7 @@ class TestGlobalTimeOff(TestWorkEntryBase):
         )
         start = datetime(2018, 1, 1, 0, 0, 0)
         end = datetime(2018, 1, 1, 23, 59, 59)
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "date_from": start,
                 "date_to": end,
@@ -41,7 +41,7 @@ class TestGlobalTimeOff(TestWorkEntryBase):
     def test_gto_no_calendar(self):
         start = datetime(2018, 1, 1, 0, 0, 0)
         end = datetime(2018, 1, 1, 23, 59, 59)
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "date_from": start,
                 "date_to": end,

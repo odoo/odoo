@@ -17,7 +17,7 @@ class AccountAnalyticLine(models.Model):
         copy=False,
     )
     global_leave_id = fields.Many2one(
-        comodel_name="resource.calendar.leaves",
+        comodel_name="resource.schedule.exception",
         string="Global Time Off",
         export_string_translation=False,
         index="btree_not_null",

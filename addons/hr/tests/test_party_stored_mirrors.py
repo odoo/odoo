@@ -22,7 +22,6 @@ PARTY_MODELS = frozenset(
 TWO_WAY_SYNCS = frozenset(
     {
         ("resource.resource", "name"),
-        ("resource.resource", "tz"),
     }
 )
 
@@ -68,7 +67,7 @@ class TestPartyStoredMirrors(TransactionCase):
                     break
         return found
 
-    def test_the_only_two_way_syncs_are_the_resources_name_and_timezone(self):
+    def test_the_only_two_way_sync_is_the_resources_name(self):
         two_way = {key for key, kind in self._mirrors().items() if kind == "two-way"}
         self.assertEqual(
             two_way,
@@ -90,11 +89,13 @@ class TestPartyStoredMirrors(TransactionCase):
 
         party.write({"name": "Renamed On Party", "tz": "America/Mexico_City"})
         self.assertEqual(
-            (resource.name, resource.tz), ("Renamed On Party", "America/Mexico_City")
+            (resource.name, resource.tz), ("Renamed On Party", "Europe/Brussels")
         )
 
         resource.write({"name": "Renamed On Resource", "tz": "Asia/Tokyo"})
-        self.assertEqual((party.name, party.tz), ("Renamed On Resource", "Asia/Tokyo"))
+        self.assertEqual(
+            (party.name, party.tz), ("Renamed On Resource", "America/Mexico_City")
+        )
         self.assertEqual(
             (employee.name, employee.tz), ("Renamed On Resource", "Asia/Tokyo")
         )
@@ -104,5 +105,5 @@ class TestPartyStoredMirrors(TransactionCase):
         mirrors = self._mirrors()
         self.assertEqual(mirrors.get(("hr.employee", "name")), "related")
         self.assertEqual(mirrors.get(("res.company", "name")), "related")
-        self.assertEqual(mirrors.get(("resource.resource", "tz")), "two-way")
+        self.assertEqual(mirrors.get(("resource.resource", "name")), "two-way")
         self.assertGreater(len(mirrors), 10)

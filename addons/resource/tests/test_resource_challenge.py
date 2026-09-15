@@ -11,7 +11,7 @@ class TestDeletingAScheduleDoesNotCreateAGlobalHoliday(TransactionCase):
         super().setUpClass()
         cls.Calendar = cls.env["resource.calendar"]
         cls.Resource = cls.env["resource.resource"]
-        cls.Leave = cls.env["resource.calendar.leaves"]
+        cls.Leave = cls.env["resource.schedule.exception"]
         cls.start = datetime(2026, 6, 1, tzinfo=UTC)
         cls.stop = datetime(2026, 6, 6, tzinfo=UTC)
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="resource_calendar_leaves_view_search_inherit" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.search.inherit</field>
-        <field name="model">resource.calendar.leaves</field>
-        <field name="inherit_id" ref="resource.view_resource_calendar_leaves_search" />
+    <record id="resource_schedule_exception_view_search_inherit" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.search.inherit</field>
+        <field name="model">resource.schedule.exception</field>
+        <field name="inherit_id" ref="resource.view_resource_schedule_exception_search" />
         <field name="arch" type="xml">
             <filter name="resource" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -12,10 +12,10 @@
         </field>
     </record>
 
-    <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.form.inherit</field>
-        <field name="model">resource.calendar.leaves</field>
-        <field name="inherit_id" ref="resource.resource_calendar_leave_form" />
+    <record id="resource_schedule_exception_form_inherit" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.form.inherit</field>
+        <field name="model">resource.schedule.exception</field>
+        <field name="inherit_id" ref="resource.resource_schedule_exception_form" />
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="holiday_id" options="{'no_quick_create': True}" />
@@ -23,10 +23,10 @@
         </field>
     </record>
 
-    <record id="resource_calendar_leaves_tree_inherit" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.list.inherit</field>
-        <field name="model">resource.calendar.leaves</field>
-        <field name="inherit_id" ref="resource.resource_calendar_leave_tree" />
+    <record id="resource_schedule_exception_tree_inherit" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.list.inherit</field>
+        <field name="model">resource.schedule.exception</field>
+        <field name="inherit_id" ref="resource.resource_schedule_exception_tree" />
         <field name="mode">primary</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -55,12 +55,12 @@
         id="resource_calendar_global_leaves_action_from_calendar"
         model="ir.actions.act_window">
         <field name="name">Public Holidays</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="resource_calendar_leaves_tree_inherit" />
+        <field name="view_id" ref="resource_schedule_exception_tree_inherit" />
         <field
             name="search_view_id"
-            ref="hr_holidays.resource_calendar_leaves_view_search_inherit" />
+            ref="hr_holidays.resource_schedule_exception_view_search_inherit" />
         <field name="domain">[('resource_id', '=', False)]</field>
         <field
             name="context">{
@@ -74,7 +74,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_form" />
         <field name="arch" type="xml">
             <xpath
-                expr="//button[@name='%(resource.resource_calendar_leaves_action_from_calendar)d']"
+                expr="//button[@name='%(resource.resource_schedule_exception_action_from_calendar)d']"
                 position="before">
                 <button
                     name="%(resource_calendar_global_leaves_action_from_calendar)d"
@@ -96,9 +96,9 @@
 
     <record id="open_view_public_holiday" model="ir.actions.act_window">
         <field name="name">Public Holidays</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">list,form</field>
-        <field name="view_id" ref="resource_calendar_leaves_tree_inherit" />
+        <field name="view_id" ref="resource_schedule_exception_tree_inherit" />
         <field name="domain">[('resource_id', '=', False)]</field>
         <field name="context">{'search_default_filter_date': True}</field>
         <field name="help" type="html">

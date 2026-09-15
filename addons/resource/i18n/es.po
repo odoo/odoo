@@ -184,10 +184,10 @@ msgstr "Compañías"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
 msgstr "Compañía"
@@ -200,7 +200,7 @@ msgstr "Confirmar"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
 msgid "Created by"
 msgstr "Creado por"
@@ -208,13 +208,13 @@ msgstr "Creado por"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_date
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Date"
 msgstr "Fecha"
 
@@ -264,7 +264,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_res_users__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
@@ -296,7 +296,7 @@ msgid "Email"
 msgstr "Correo electrónico"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__date_to
 msgid "End Date"
 msgstr "Fecha de finalización"
 
@@ -411,7 +411,7 @@ msgstr "Humano"
 #: model:ir.model.fields,field_description:resource.field_res_users__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 msgid "ID"
@@ -428,7 +428,7 @@ msgstr ""
 "inicio o de fin. ¿Confirmar la acción?"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,help:resource.field_resource_schedule_exception__resource_id
 msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
@@ -480,7 +480,7 @@ msgstr "Es de tiempo completo"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_uid
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
@@ -488,7 +488,7 @@ msgstr "Última actualización por"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_date
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
@@ -543,7 +543,7 @@ msgstr ""
 "como tiempo completo."
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
+#: model:ir.model.fields.selection,name:resource.selection__resource_schedule_exception__time_type__other
 msgid "Other"
 msgstr "Otro"
 
@@ -553,7 +553,7 @@ msgid "Partial working schedules"
 msgstr "Horarios laborales parciales"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Period"
 msgstr "Periodo"
 
@@ -569,9 +569,9 @@ msgid "Provided datetimes needs to be timezoned"
 msgstr "Las fechas y horas proporcionadas deben incluir una zona horaria"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__name
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_tree
 msgid "Reason"
 msgstr "Motivo"
 
@@ -586,12 +586,12 @@ msgid "Required Full Time"
 msgstr "Se requiere jornada completa"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Resource"
 msgstr "Recurso"
 
@@ -601,14 +601,14 @@ msgid "Resource Mixin"
 msgstr "Mixin de recursos"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+#: model:ir.actions.act_window,name:resource.action_resource_schedule_exception_tree
+#: model:ir.actions.act_window,name:resource.resource_schedule_exception_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_schedule_exception_search
 msgid "Resource Time Off"
 msgstr "Ausencia del recurso"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: model:ir.model,name:resource.model_resource_schedule_exception
 msgid "Resource Time Off Detail"
 msgstr "Detalle de las ausencias del recurso"
 
@@ -670,7 +670,7 @@ msgid "Search Resource"
 msgstr "Buscar recurso"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Search Working Period Time Off"
 msgstr "Buscar ausencias del horario de trabajo"
 
@@ -712,7 +712,7 @@ msgid "Standard 40 hours/week"
 msgstr "Estándar de 40 horas a la semana"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__date_from
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
@@ -726,7 +726,7 @@ msgstr ""
 "Un valor específico como 24:00 se interpretará como 23:59:59.999999."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_schedule_exception_search
 msgid "Starting Date of Time Off"
 msgstr "Fecha de inicio de la ausencia"
 
@@ -786,7 +786,7 @@ msgstr ""
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource_calendar_leaves.py:0
+#: code:addons/resource/models/resource_schedule_exception.py:0
 msgid "The start date of the time off must be earlier than the end date."
 msgstr ""
 "La fecha de inicio de la ausencia debe ser antes que la fecha de "
@@ -842,18 +842,18 @@ msgstr "Jueves por la mañana"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+#: model:ir.model.fields.selection,name:resource.selection__resource_schedule_exception__time_type__leave
 msgid "Time Off"
 msgstr "Ausencia"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_schedule_exception_tree
 msgid "Time Off Detail"
 msgstr "Detalles de la ausencia"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__time_type
 msgid "Time Type"
 msgstr "Tipo de tiempo"
 
@@ -970,7 +970,7 @@ msgstr ""
 "laboral)."
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
+#: model:ir.model.fields,help:resource.field_resource_schedule_exception__time_type
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
@@ -1019,7 +1019,7 @@ msgstr "Trabajar hasta"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_schedule_exception__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"

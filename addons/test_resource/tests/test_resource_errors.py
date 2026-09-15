@@ -10,7 +10,7 @@ class TestErrors(TestResourceCommon):
     def test_create_negative_leave(self):
         # from > to
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "error cannot return in the past",
                     "resource_id": False,
@@ -25,7 +25,7 @@ class TestErrors(TestResourceCommon):
             )
 
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "error caused by timezones",
                     "resource_id": False,

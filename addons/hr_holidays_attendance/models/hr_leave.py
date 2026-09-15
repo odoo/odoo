@@ -88,30 +88,5 @@ class HrLeave(models.Model):
     def action_refuse(self):
         return super().action_refuse()
 
-    def _apply_leave_request(self):
-        super()._apply_leave_request()
-        self._update_leaves_overtime()
-
-    def _remove_resource_leave(self):
-        res = super()._remove_resource_leave()
-        self._update_leaves_overtime()
-        return res
-
-    def _update_leaves_overtime(self):
-        Attendance = self.env["hr.attendance"].sudo()
-        dates = [
-            Attendance._get_day_start_and_day(leave.employee_id, moment)[1]
-            for leave in self.filtered(lambda leave: leave.employee_id)
-            for moment in (leave.date_from, leave.date_to)
-        ]
-        if dates:
-            Attendance.search(
-                [
-                    ("date", ">=", min(dates)),
-                    ("date", "<=", max(dates)),
-                    ("employee_id", "in", self.employee_id.ids),
-                ]
-            )._update_overtime()
-
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)

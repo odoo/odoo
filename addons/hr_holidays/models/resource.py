@@ -6,8 +6,8 @@ from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class ResourceScheduleException(models.Model):
+    _inherit = "resource.schedule.exception"
 
     holiday_id = fields.Many2one(
         comodel_name="hr.leave",
@@ -63,17 +63,6 @@ class ResourceCalendarLeaves(models.Model):
             ]
             for date in time_domain_dict
         ) & Domain("state", "not in", ["refuse", "cancel"])
-
-    def _get_time_domain_dict(self):
-        return [
-            {
-                "company_id": record.company_id.id,
-                "date_from": record.date_from,
-                "date_to": record.date_to,
-            }
-            for record in self
-            if not record.resource_id
-        ]
 
     def _reevaluate_leaves(self, time_domain_dict):
         if not time_domain_dict:
@@ -179,26 +168,22 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        vals_list = self._prepare_public_holidays_values(vals_list)
-        res = super().create(vals_list)
-        time_domain_dict = res._get_time_domain_dict()
-        self._reevaluate_leaves(time_domain_dict)
-        return res
+        return super().create(self._prepare_public_holidays_values(vals_list))
 
-    def write(self, vals):
-        time_domain_dict = self._get_time_domain_dict()
-        res = super().write(vals)
-        time_domain_dict.extend(self._get_time_domain_dict())
-        self._reevaluate_leaves(time_domain_dict)
-
-        return res
-
-    def unlink(self):
-        time_domain_dict = self._get_time_domain_dict()
-        res = super().unlink()
-        self._reevaluate_leaves(time_domain_dict)
-
-        return res
+    @api.model
+    def _on_schedule_changed(self, scopes):
+        super()._on_schedule_changed(scopes)
+        self._reevaluate_leaves(
+            [
+                {
+                    "company_id": scope["company_id"],
+                    "date_from": scope["date_from"],
+                    "date_to": scope["date_to"],
+                }
+                for scope in scopes
+                if not scope["resource_id"]
+            ]
+        )
 
     @api.depends("holiday_id.employee_id.company_id")
     def _compute_company_id(self):
@@ -223,8 +208,8 @@ class ResourceCalendar(models.Model):
         return super()._handle_flexible_leave_interval(dt0, dt1, leave)
 
     def _compute_associated_leaves_count(self):
-        leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
-            self.env["resource.calendar.leaves"]._get_domain_public_holidays(
+        leaves_read_group = self.env["resource.schedule.exception"]._read_group(
+            self.env["resource.schedule.exception"]._get_domain_public_holidays(
                 calendars=self
             ),
             ["calendar_id"],

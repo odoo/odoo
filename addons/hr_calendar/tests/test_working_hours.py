@@ -262,7 +262,7 @@ class TestWorkingHours(TestHrCalendarCommon):
         self.env["calendar.event"].search(
             [("user_id", "=", self.user_bxls.id)]
         ).unlink()
-        self.env["resource.calendar.leaves"].sudo().search(
+        self.env["resource.schedule.exception"].sudo().search(
             [("calendar_id", "=", self.user_bxls.resource_calendar_id.id)]
         ).unlink()
 
@@ -284,7 +284,7 @@ class TestWorkingHours(TestHrCalendarCommon):
         )
         self.assertFalse(meeting.unavailable_partner_ids)
 
-        self.env["resource.calendar.leaves"].sudo().create(
+        self.env["resource.schedule.exception"].sudo().create(
             {
                 "calendar_id": self.user_bxls.resource_calendar_id.id,
                 "date_from": test_date,
@@ -394,6 +394,7 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
         calendar_35h_london_tz = self.calendar_35h.copy()
         calendar_35h_london_tz.tz = "Europe/London"
         self.contractD.resource_calendar_id = calendar_35h_london_tz
+        self.employeeD.tz = "Europe/London"
         work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
             [self.partnerA.id, self.partnerD.id],
             datetime(2023, 12, 25).isoformat(),

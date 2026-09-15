@@ -256,7 +256,7 @@ A user without any rights on Time Off will be able to see the application, creat
         </record>
         <record id="resource_leaves_base_user" model="ir.rule">
             <field name="name">Time Off Resources: Approver</field>
-            <field name="model_id" ref="model_resource_calendar_leaves" />
+            <field name="model_id" ref="model_resource_schedule_exception" />
             <field name="domain_force">[('resource_id', '=', False)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
             <field name="perm_write" eval="False" />
@@ -265,7 +265,7 @@ A user without any rights on Time Off will be able to see the application, creat
         </record>
         <record id="resource_leaves_holidays_user" model="ir.rule">
             <field name="name">Time Off Resources: All Approver</field>
-            <field name="model_id" ref="model_resource_calendar_leaves" />
+            <field name="model_id" ref="model_resource_schedule_exception" />
             <field
                 name="domain_force">[
             '|',

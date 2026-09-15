@@ -301,7 +301,7 @@ class TestResourceSecondPass(TransactionCase):
         )
         resource = self._resource(name="Company A resource")
         with self.assertRaises(UserError) as caught:
-            leave = self.env["resource.calendar.leaves"].create(
+            leave = self.env["resource.schedule.exception"].create(
                 {
                     "name": "cross company",
                     "calendar_id": other_calendar.id,
@@ -322,7 +322,7 @@ class TestResourceSecondPass(TransactionCase):
         self.assertEqual(resource.calendar_id, shared)
 
     def _global_leave(self, calendar):
-        return self.env["resource.calendar.leaves"].create(
+        return self.env["resource.schedule.exception"].create(
             {
                 "name": "Public holiday",
                 "calendar_id": calendar.id,
@@ -367,7 +367,7 @@ class TestResourceSecondPass(TransactionCase):
             {"name": "stranded", "company_id": other_company.id, "tz": "UTC"}
         )
         with self.assertRaises(UserError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "stranded",
                     "calendar_id": other_calendar.id,
@@ -394,7 +394,7 @@ class TestResourceSecondPass(TransactionCase):
 
     def test_same_company_leave_is_accepted(self):
         resource = self._resource(name="Same company resource")
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "in company",
                 "calendar_id": self.calendar.id,

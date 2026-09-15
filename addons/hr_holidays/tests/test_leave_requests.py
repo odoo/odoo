@@ -1502,7 +1502,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 "name": "Test Company 2",
             }
         )
-        p_leave = self.env["resource.calendar.leaves"].create(
+        p_leave = self.env["resource.schedule.exception"].create(
             {
                 "date_from": datetime(2022, 3, 11),
                 "date_to": datetime(2022, 3, 11, 23, 59, 59),
@@ -1637,7 +1637,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         )
         self.assertEqual(time_off[0].number_of_days, 5)
         self.assertEqual(time_off[1].number_of_days, 5)
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": "2021-12-07 00:00:00",
@@ -1648,7 +1648,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(time_off[1].number_of_days, 4)
 
     def test_time_off_recovery_on_write(self):
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": "2021-12-07 00:00:00",
@@ -1695,7 +1695,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(time_off_2.number_of_days, 4)
 
     def test_time_off_recovery_on_unlink(self):
-        global_time_off = self.env["resource.calendar.leaves"].create(
+        global_time_off = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": "2021-12-07 00:00:00",
@@ -1726,7 +1726,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }
         )
         self.assertEqual(time_off.number_of_days, 5)
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": "2021-11-15 00:00:00",
@@ -2483,7 +2483,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }
         )
         self.employee_emp.resource_calendar_id = calendar
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "date_from": datetime(2022, 3, 11),
                 "date_to": datetime(2022, 3, 11, 23, 59, 59),
@@ -2582,7 +2582,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }
         )
         self.employee_emp.resource_calendar_id = calendar
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             [
                 {
                     "date_from": datetime(2022, 3, 8, 0, 0, 0),

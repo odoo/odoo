@@ -214,14 +214,18 @@ class ResourceResource(models.Model):
         resources_with_employee = self.filtered(lambda r: r.employee_id)
         if not resources_with_employee:
             return result
-        date_at = date_target.astimezone(tz) if tz else date_target
-        employee_calendars = resources_with_employee.employee_id._get_calendars(date_at)
-        dbg.logic.debug(
-            "_get_calendar_at on %s at %s: %s take their employee's calendar",
-            dbg.rec(self),
-            date_at,
-            dbg.rec(resources_with_employee),
+        zones = resources_with_employee.grouped(
+            lambda resource: tz or timezone(resource.tz)
         )
-        for resource in resources_with_employee:
-            result[resource] = employee_calendars[resource.employee_id.id]
+        for zone, resources in zones.items():
+            date_at = date_target.astimezone(zone)
+            employee_calendars = resources.employee_id._get_calendars(date_at)
+            dbg.logic.debug(
+                "_get_calendar_at on %s at %s: %s take their employee's calendar",
+                dbg.rec(self),
+                date_at,
+                dbg.rec(resources),
+            )
+            for resource in resources:
+                result[resource] = employee_calendars[resource.employee_id.id]
         return result

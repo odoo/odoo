@@ -241,7 +241,7 @@ class HrLeave(models.Model):
                 companies=len(fr_leaves_by_company),
             )
             if fr_leaves:
-                leaves = self.env["resource.calendar.leaves"]
+                leaves = self.env["resource.schedule.exception"]
                 public_holidays = leaves.search(
                     leaves._get_domain_public_holidays(
                         min(fr_leaves.mapped("date_from")) - relativedelta(days=1),

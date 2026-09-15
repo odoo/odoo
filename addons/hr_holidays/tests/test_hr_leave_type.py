@@ -42,7 +42,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         )
         leave_0.action_approve()
         self.assertEqual(
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .search([("holiday_id", "=", leave_0.id)])
             .time_type,
             "other",
@@ -75,7 +75,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         leave_1.action_approve()
 
         self.assertEqual(
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .search([("holiday_id", "=", leave_1.id)])
             .time_type,
             "leave",

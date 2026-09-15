@@ -274,7 +274,7 @@ class TestCalendarlessIntervalApi(TransactionCase):
 
     def test_empty_calendar_does_not_sweep_other_calendars_leaves(self):
         calendar = self.env["resource.calendar"].create({"name": "Owner", "tz": "UTC"})
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "owned leave",
                 "calendar_id": calendar.id,

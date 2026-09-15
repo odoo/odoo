@@ -25,7 +25,7 @@ class MixinResource(models.AbstractModel):
         related="resource_id.tz",
         string="Timezone",
         readonly=False,
-        help="This field is used in order to define in which timezone the resources will work.",
+        help="The time zone where this resource works. Its working schedule is read in this zone: an 08:00-17:00 schedule means 08:00-17:00 here, whatever zone the schedule names. For an employee deployed away from the corporate office, set the zone of the place of work.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

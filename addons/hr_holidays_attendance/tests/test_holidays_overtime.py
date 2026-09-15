@@ -365,7 +365,7 @@ class TestHolidaysOvertime(TransactionCase):
         ).ruleset_id = ruleset_with_timing_rule
         self.manager.company_id = self.env.company
         leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_company(self.manager.company_id)
             .create(
                 [
@@ -402,7 +402,7 @@ class TestHolidaysOvertime(TransactionCase):
     def test_public_leave_overtime_without_timing_rule(self):
         self.manager.company_id = self.env.company
         leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_company(self.manager.company_id)
             .create(
                 [
@@ -520,6 +520,29 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertEqual(attendance.overtime_hours, 4)
 
         leave.action_refuse()
+        self.assertEqual(attendance.overtime_hours, 0)
+
+    def test_a_company_holiday_added_after_the_attendance_reprices_it(self):
+        self.company.resource_calendar_id.tz = "UTC"
+        attendance = self.new_attendance(
+            check_in=datetime(2021, 1, 5, 8), check_out=datetime(2021, 1, 5, 12)
+        )
+        self.assertEqual(attendance.overtime_hours, 0)
+
+        holiday = (
+            self.env["resource.schedule.exception"]
+            .with_company(self.company)
+            .create(
+                {
+                    "name": "Company holiday",
+                    "date_from": datetime(2021, 1, 5),
+                    "date_to": datetime(2021, 1, 5, 23, 59, 59),
+                }
+            )
+        )
+        self.assertEqual(attendance.overtime_hours, 4)
+
+        holiday.unlink()
         self.assertEqual(attendance.overtime_hours, 0)
 
     def test_overtime_approval_after_refusal(self):

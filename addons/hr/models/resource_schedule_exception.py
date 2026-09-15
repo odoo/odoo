@@ -6,8 +6,8 @@ from odoo.libs.datetime import timezone
 from ..tools import debug_log as dbg
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class ResourceScheduleException(models.Model):
+    _inherit = "resource.schedule.exception"
 
     @api.depends("date_from")
     def _compute_calendar_id(self):
@@ -20,17 +20,19 @@ class ResourceCalendarLeaves(models.Model):
         )
         remaining = leaves_by_contract.pop(
             self.env["hr.version"],
-            self.env["resource.calendar.leaves"],
+            self.env["resource.schedule.exception"],
         )
         dbg.logic.debug(
-            "resource.calendar.leaves._compute_calendar_id on %s: %d contract "
+            "resource.schedule.exception._compute_calendar_id on %s: %d contract "
             "group(s), %s without a contract",
             dbg.rec(self),
             len(leaves_by_contract),
             dbg.rec(remaining),
         )
         for contract, leaves in leaves_by_contract.items():
-            tz = timezone(contract.resource_calendar_id.tz or "UTC")
+            tz = timezone(
+                contract.employee_id.tz or contract.resource_calendar_id.tz or "UTC"
+            )
             start_dt = date_to_datetime(contract.date_start, tz)
             end_dt = (
                 date_to_datetime(contract.date_end + timedelta(days=1), tz)
@@ -53,4 +55,4 @@ class ResourceCalendarLeaves(models.Model):
             )
             in_contract.calendar_id = contract.resource_calendar_id
 
-        super(ResourceCalendarLeaves, remaining)._compute_calendar_id()
+        super(ResourceScheduleException, remaining)._compute_calendar_id()

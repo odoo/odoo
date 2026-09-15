@@ -23,7 +23,7 @@ class ResourceCalendar(models.Model):
             else domain
         )
 
-        leaves = self.env["resource.calendar.leaves"].search(domain)
+        leaves = self.env["resource.schedule.exception"].search(domain)
         dbg.pipeline.debug(
             "resource.calendar %s -> %s: moving %s from %s (resources %s)",
             dbg.rec(self),

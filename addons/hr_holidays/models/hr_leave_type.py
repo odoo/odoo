@@ -316,7 +316,7 @@ class HrLeaveType(models.Model):
             return
 
         companies = self.company_id | self.env.company
-        public_holiday_leaves = self.env["resource.calendar.leaves"]
+        public_holiday_leaves = self.env["resource.schedule.exception"]
         public_holidays = public_holiday_leaves.search(
             public_holiday_leaves._get_domain_public_holidays(
                 min(leaves.mapped("date_from")),

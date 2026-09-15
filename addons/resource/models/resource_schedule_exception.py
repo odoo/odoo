@@ -10,9 +10,9 @@ from odoo.libs.datetime import timezone
 from odoo.models import ValuesType
 
 
-class ResourceCalendarLeaves(models.Model):
-    _name = "resource.calendar.leaves"
-    _description = "Resource Time Off Detail"
+class ResourceScheduleException(models.Model):
+    _name = "resource.schedule.exception"
+    _description = "Schedule Exception"
     _order = "date_from"
     _check_company_auto = True
 
@@ -127,6 +127,27 @@ class ResourceCalendarLeaves(models.Model):
             )
             leave.date_to = local_date_to.astimezone(UTC).replace(tzinfo=None)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._on_schedule_changed(records._get_schedule_scopes())
+        return records
+
+    def write(self, vals):
+        if self._get_fields_schedule_scope().isdisjoint(vals):
+            return super().write(vals)
+        scopes = self._get_schedule_scopes()
+        res = super().write(vals)
+        self._on_schedule_changed(scopes + self._get_schedule_scopes())
+        return res
+
+    def unlink(self):
+        scopes = self._get_schedule_scopes()
+        model = self.browse()
+        res = super().unlink()
+        model._on_schedule_changed(scopes)
+        return res
+
     def _copy_leave_vals(self) -> ValuesType:
         self.check_singleton()
         return {
@@ -158,3 +179,33 @@ class ResourceCalendarLeaves(models.Model):
         if calendars is not None:
             domain &= Domain("calendar_id", "in", [False, *calendars.ids])
         return domain
+
+    @api.model
+    def _get_fields_schedule_scope(self) -> frozenset[str]:
+        return frozenset(
+            {
+                "resource_id",
+                "calendar_id",
+                "company_id",
+                "date_from",
+                "date_to",
+                "time_type",
+            }
+        )
+
+    def _get_schedule_scopes(self) -> list[dict[str, Any]]:
+        return [
+            {
+                "resource_id": exception.resource_id.id,
+                "calendar_id": exception.calendar_id.id,
+                "company_id": exception.company_id.id,
+                "date_from": exception.date_from,
+                "date_to": exception.date_to,
+                "time_type": exception.time_type,
+            }
+            for exception in self
+        ]
+
+    @api.model
+    def _on_schedule_changed(self, scopes: list[dict[str, Any]]) -> None:
+        return

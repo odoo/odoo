@@ -361,7 +361,7 @@ class TestHrAuditRound2(TestHrCommon):
         current = emp.version_id
         self.assertEqual(str(current.date_end), "2026-07-31")
 
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "last day",
                 "resource_id": emp.resource_id.id,

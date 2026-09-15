@@ -115,16 +115,16 @@ class TestOvertimeDayAttribution(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestScheduleZoneBeatsPersonalZone(TransactionCase):
+class TestWorkZoneBeatsCalendarZone(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env["res.company"].create({"name": "Split Zones Ltd"})
         cls.calendar = cls.env["resource.calendar"].create(
             {
-                "name": "Auckland 8h",
+                "name": "Office 8h",
                 "company_id": cls.company.id,
-                "tz": "Pacific/Auckland",
+                "tz": "UTC",
                 "attendance_ids": [
                     Command.clear(),
                     *(
@@ -162,9 +162,9 @@ class TestScheduleZoneBeatsPersonalZone(TransactionCase):
         )
         cls.employee = cls.env["hr.employee"].create(
             {
-                "name": "Books Their Own Flights",
+                "name": "Deployed to Auckland",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Pacific/Auckland",
                 "resource_calendar_id": cls.calendar.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
@@ -183,8 +183,8 @@ class TestScheduleZoneBeatsPersonalZone(TransactionCase):
         )
 
     def test_the_two_zones_really_differ(self):
-        self.assertEqual(self.employee.tz, "UTC")
-        self.assertEqual(self.employee.resource_calendar_id.tz, "Pacific/Auckland")
+        self.assertEqual(self.employee.tz, "Pacific/Auckland")
+        self.assertEqual(self.employee.resource_calendar_id.tz, "UTC")
 
     def test_the_attendance_falls_on_the_scheduled_day(self):
         self.assertEqual(self.attendance.date, date(2026, 8, 31))
@@ -194,13 +194,11 @@ class TestScheduleZoneBeatsPersonalZone(TransactionCase):
         self.assertEqual(
             set(self.lines.mapped("date")),
             {self.attendance.date},
-            "`hr.attendance.date` resolves the day through the working "
-            "schedule's zone and the overtime engine must resolve it the same "
-            "way. `hr.version.tz` is related to the employee's PERSONAL zone, "
-            "so reading it splits one shift across two dates as soon as an "
-            "employee's own zone differs from the one their schedule is "
-            "written in: the attendance lands on 2026-08-31 and its overtime "
-            "on 2026-08-30.",
+            "`hr.attendance.date` resolves the day in the employee's work zone "
+            "and the overtime engine must resolve it the same way; reading the "
+            "calendar's zone splits one shift across two dates as soon as the "
+            "employee works away from the office: the attendance lands on "
+            "2026-08-31 and its overtime on 2026-08-30.",
         )
 
     def test_the_overtime_amount_is_measured_against_the_scheduled_day(self):

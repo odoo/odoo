@@ -372,7 +372,7 @@ class TestStreakTimezone(common.TransactionCase):
     """A streak day is the user's calendar day, not a UTC day.
 
     Storage stays UTC; only the day *window* is resolved in the user's
-    timezone, following the ``lunch.supplier`` / ``hr.employee._get_tz``
+    timezone, following the ``lunch.supplier`` / ``hr.employee._get_schedule_tz``
     pattern used elsewhere in core for calendar-day business logic.
     """
 

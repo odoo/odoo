@@ -261,10 +261,10 @@ class HrLeave(models.Model):
                     (holiday.date_to.date() - holiday.date_from.date()).days + 1
                 )
             }
-            for company_id, recs in self.env["resource.calendar.leaves"]._read_group(
-                domain=self.env["resource.calendar.leaves"]._get_domain_public_holidays(
-                    companies=indian_leaves.company_id
-                ),
+            for company_id, recs in self.env["resource.schedule.exception"]._read_group(
+                domain=self.env[
+                    "resource.schedule.exception"
+                ]._get_domain_public_holidays(companies=indian_leaves.company_id),
                 groupby=["company_id"],
                 aggregates=["id:recordset"],
             )

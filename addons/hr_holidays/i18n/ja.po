@@ -772,7 +772,7 @@ msgid "All Employees"
 msgstr "全従業員"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_schedule_exception_tree_inherit
 msgid "All Schedules"
 msgstr "すべてのスケジュール"
 
@@ -1794,7 +1794,7 @@ msgstr "破棄"
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_schedule_exception__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -1900,7 +1900,7 @@ msgstr "日単位の期間。必要に応じて使用する参照フィールド
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__elligible_for_accrual_rate
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__elligible_for_accrual_rate
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_schedule_exception__elligible_for_accrual_rate
 msgid "Eligible for Accrual Rate"
 msgstr "繰越(付与)率の対象"
 
@@ -2341,7 +2341,7 @@ msgstr "時間アイコン表示"
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_schedule_exception__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
@@ -2420,7 +2420,7 @@ msgstr "有効にすると、一部のメッセージに配信エラーが発生
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__elligible_for_accrual_rate
-#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_leaves__elligible_for_accrual_rate
+#: model:ir.model.fields,help:hr_holidays.field_resource_schedule_exception__elligible_for_accrual_rate
 msgid ""
 "If checked, this time off type will be taken into account for accruals "
 "computation."
@@ -2906,7 +2906,7 @@ msgstr "自分の休暇"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__name
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_schedule_exception_tree_inherit
 msgid "Name"
 msgstr "名称"
 
@@ -3528,7 +3528,7 @@ msgid "Resource Calendar"
 msgstr "リソースカレンダ"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
+#: model:ir.model,name:hr_holidays.model_resource_schedule_exception
 msgid "Resource Time Off Detail"
 msgstr "リソース休暇の詳細"
 
@@ -4265,7 +4265,7 @@ msgstr "休暇通知サブタイプ"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_id
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__holiday_id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_schedule_exception__holiday_id
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -5274,7 +5274,7 @@ msgid "e.g. Extra recuperation, Company unavailability, ..."
 msgstr "例: 追加療養、会社休業 ..."
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_schedule_exception_tree_inherit
 msgid "e.g. New Year's Day"
 msgstr "例: 元旦"
 

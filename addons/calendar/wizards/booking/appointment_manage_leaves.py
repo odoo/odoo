@@ -37,7 +37,7 @@ class AppointmentManageLeaves(models.TransientModel):
     reason = fields.Char()
 
     def action_create_leave(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             [
                 {
                     "calendar_id": resource.resource_calendar_id.id,

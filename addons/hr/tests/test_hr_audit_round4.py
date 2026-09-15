@@ -649,8 +649,8 @@ class TestTimezoneResolutionNeverReturnsFalsy(TestHrCommon):
             " -- which has no employee -- has none",
         )
         self.assertTrue(
-            template._get_tz(),
-            "_get_tz used to stop at self.tz and hand back False here; callers"
+            template._get_schedule_tz(),
+            "_get_schedule_tz used to stop at self.tz and hand back False here; callers"
             " pass the result straight to timezone(), which cannot take it",
         )
 
@@ -658,12 +658,12 @@ class TestTimezoneResolutionNeverReturnsFalsy(TestHrCommon):
         employee = self.env["hr.employee"].create({"name": "TZ Agreement"})
         self.env.flush_all()
         self.assertEqual(
-            employee._get_tz(),
-            employee.version_id._get_tz(),
+            employee._get_schedule_tz(),
+            employee.version_id._get_schedule_tz(),
             "two methods of the same name resolving the same question must not diverge",
         )
 
-    def test_the_calendar_still_wins_over_the_employee_timezone(self):
+    def test_the_work_zone_wins_over_the_calendar_timezone(self):
         calendar = self.env["resource.calendar"].create(
             {"name": "TZ Calendar", "tz": "Asia/Tokyo"}
         )
@@ -672,12 +672,13 @@ class TestTimezoneResolutionNeverReturnsFalsy(TestHrCommon):
         employee.resource_id.tz = "Europe/Brussels"
         employee.version_id.resource_calendar_id = calendar
         self.env.flush_all()
-        self.assertEqual(employee._get_tz(), "Asia/Tokyo")
+        self.assertEqual(employee._get_schedule_tz(), "Europe/Brussels")
         self.assertEqual(
-            employee.version_id._get_tz(),
-            "Asia/Tokyo",
-            "calendar-first precedence is load-bearing for hr_attendance's"
-            " overtime day attribution; both spellings must keep it",
+            employee.version_id._get_schedule_tz(),
+            "Europe/Brussels",
+            "an employee works the calendar's hours in their own work zone, and"
+            " hr_attendance attributes overtime days in it; both spellings must"
+            " agree",
         )
 
 
@@ -738,26 +739,26 @@ class TestHistoricalCalendarResolution(TestHrCommon):
                     self.auckland,
                 )
 
-    def test_the_timezone_batch_follows_the_historical_calendar(self):
+    def test_the_timezone_batch_is_the_work_zone_at_any_date(self):
         for with_contracts in (True, False):
             with self.subTest(contracts=with_contracts):
                 employee = self._employee_switching_calendar(
                     f"t{with_contracts}", with_contracts
                 )
                 self.assertEqual(
-                    employee._get_calendar_tz_batch(datetime(2021, 3, 1, 10, 0))[
+                    employee._get_schedule_tz_batch(datetime(2021, 3, 1, 10, 0))[
                         employee.id
                     ],
-                    "Europe/Brussels",
-                    "hr_attendance resolves an attendance's day through this;"
-                    " returning today's zone for a historical instant moves the"
-                    " day an attendance is attributed to",
+                    "UTC",
+                    "hr_attendance resolves an attendance's day through this; a"
+                    " schedule change must not move the zone past days are"
+                    " attributed in",
                 )
                 self.assertEqual(
-                    employee._get_calendar_tz_batch(datetime(2026, 8, 31, 10, 0))[
+                    employee._get_schedule_tz_batch(datetime(2026, 8, 31, 10, 0))[
                         employee.id
                     ],
-                    "Pacific/Auckland",
+                    "UTC",
                 )
 
 

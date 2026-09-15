@@ -40,11 +40,15 @@ def _slots(with_lunch):
         )
 
 
-class ScheduleZoneCase(TransactionCase):
-    """Employees whose schedule is written in a zone their work contact is not.
+OFFICE_ZONE = "Europe/Brussels"
 
-    Every calendar in the rest of this suite is in UTC, which is the one
-    configuration in which the module's three zone sources agree.
+
+class ScheduleZoneCase(TransactionCase):
+    """Employees who work the office's schedule in another time zone.
+
+    Every calendar here is written in the office's zone and every employee is
+    deployed in the zone under test, so a reader that interprets the schedule in
+    the calendar's zone instead of the employee's work zone is caught.
     """
 
     @classmethod
@@ -59,32 +63,35 @@ class ScheduleZoneCase(TransactionCase):
         )
 
     def _calendar(self, tz, with_lunch=True):
-        return self.env["resource.calendar"].create(
+        calendar = self.env["resource.calendar"].create(
             {
-                "name": f"9-17 {tz}",
-                "tz": tz,
+                "name": f"9-17 worked in {tz}",
+                "tz": OFFICE_ZONE,
                 "company_id": self.company.id,
                 "flexible_hours": False,
                 "hours_per_day": 7 if with_lunch else 9,
                 "attendance_ids": [Command.clear(), *_slots(with_lunch)],
             }
         )
+        self._work_zones[calendar] = tz
+        return calendar
 
-    def _employee(self, calendar, personal_tz="Europe/Brussels", **extra):
-        employee = self.env["hr.employee"].create(
+    def setUp(self):
+        super().setUp()
+        self._work_zones = {}
+
+    def _employee(self, calendar, work_tz=None, **extra):
+        return self.env["hr.employee"].create(
             {
                 "name": f"Works {calendar.tz}",
                 "company_id": self.company.id,
                 "resource_calendar_id": calendar.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
+                "tz": work_tz or self._work_zones.get(calendar, calendar.tz),
                 **extra,
             }
         )
-        # The resource's own zone follows the employee's work contact, not the
-        # schedule. Setting it here is the whole point of these tests.
-        employee.resource_id.tz = personal_tz
-        return employee
 
     @staticmethod
     def _utc(tz, moment):
@@ -131,14 +138,8 @@ class TestWorkedHoursDeductsTheLunchBreak(ScheduleZoneCase):
 @tagged("post_install", "-at_install")
 class TestTheDayIsTheVersionsDay(ScheduleZoneCase):
     def test_a_later_schedule_change_does_not_re_date_a_past_attendance(self):
-        """`date` is resolved through the version in force on the day worked.
-
-        Resolved through the employee's CURRENT schedule instead, moving an
-        employee to another zone re-dates every day they have ever worked --
-        away from the overtime lines of those days, which the engine files
-        under the version's zone. And it does it silently: the stored value
-        only moves the next time something retriggers the compute.
-        """
+        """`date` is the day in the employee's work zone, which a later schedule
+        change does not move."""
         tokyo = self._calendar("Asia/Tokyo", with_lunch=False)
         honolulu = self._calendar("Pacific/Honolulu", with_lunch=False)
         employee = self._employee(tokyo)

@@ -156,7 +156,7 @@ class TestBookingCapacity(TransactionCase):
         )[self.resource.id]
         self.assertAlmostEqual(hours[date(2025, 7, 28)], 2)
         self.assertAlmostEqual(hours[date(2025, 7, 29)], 8)
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Unavailable day",
                 "resource_id": self.resource.id,

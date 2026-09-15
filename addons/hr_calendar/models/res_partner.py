@@ -53,7 +53,7 @@ class ResPartner(models.Model):
         )
         for calendar, resources in resources_by_calendar.items():
             work_intervals = calendar._work_intervals_batch(
-                start_period, stop_period, resources=resources, tz=timezone(calendar.tz)
+                start_period, stop_period, resources=resources
             )
             del work_intervals[False]
             if merge:

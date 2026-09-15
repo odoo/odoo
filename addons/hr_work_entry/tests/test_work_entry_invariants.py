@@ -330,7 +330,7 @@ class TestWorkEntryInvariants(TransactionCase):
 
     def test_get_unusual_days_ignores_another_company_global_leave(self):
         other_company = self.env["res.company"].create({"name": "Unrelated Co"})
-        self.env["resource.calendar.leaves"].with_company(other_company).create(
+        self.env["resource.schedule.exception"].with_company(other_company).create(
             {
                 "name": "Other company shutdown",
                 "date_from": "2024-06-05 00:00:00",

@@ -82,11 +82,11 @@ class ResourceResource(models.Model):
         selection=_selection_timezones,
         string="Timezone",
         compute="_compute_tz",
-        inverse="_inverse_tz",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
+        help="The time zone where this resource works. Its working schedule is read in this zone: an 08:00-17:00 schedule means 08:00-17:00 here, whatever zone the schedule names. For an employee deployed away from the corporate office, set the zone of the place of work.",
     )
     color = fields.Integer(default=lambda self: self._default_color())
     time_efficiency = fields.Float(
@@ -240,8 +240,6 @@ class ResourceResource(models.Model):
                 party = self.env["res.partner"].sudo().browse(values["partner_id"])
                 if party.name:
                     values.pop("name", None)
-                if party.tz:
-                    values.pop("tz", None)
             if values.get("company_id") and "calendar_id" not in values:
                 values["calendar_id"] = (
                     self.env["res.company"]
@@ -360,14 +358,15 @@ class ResourceResource(models.Model):
             if party.name != resource.name:
                 party.name = resource.name
 
-    @api.depends("partner_id.tz")
+    @api.depends("calendar_id")
     def _compute_tz(self):
         for resource in self:
             resource.tz = (
-                resource.partner_id.sudo().tz
-                or resource.tz
-                or resource.user_id.sudo().tz
+                resource.tz
                 or resource.calendar_id.tz
+                or resource.company_id.resource_calendar_id.tz
+                or resource.partner_id.sudo().tz
+                or resource.user_id.sudo().tz
                 or self.env.context.get("tz")
                 or self.env.user.tz
                 or "UTC"
@@ -383,12 +382,6 @@ class ResourceResource(models.Model):
                     )
                 )
 
-    def _inverse_tz(self):
-        for resource in self.filtered("partner_id"):
-            party = resource.partner_id.sudo()
-            if party.tz != resource.tz:
-                party.tz = resource.tz
-
     @api.depends("partner_id.avatar_128", "user_id.avatar_128")
     def _compute_avatar_128(self):
         for resource in self:
@@ -400,11 +393,6 @@ class ResourceResource(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             self.calendar_id = self.company_id.resource_calendar_id.id
-
-    @api.onchange("user_id")
-    def _onchange_user_id(self):
-        if self.user_id:
-            self.tz = self.user_id.tz
 
     def _adjust_to_calendar(
         self,
@@ -501,7 +489,7 @@ class ResourceResource(models.Model):
             if not calendar:
                 continue
             resources_unavailable_intervals = calendar._unavailable_intervals_batch(
-                start_datetime, end_datetime, resources, tz=timezone(calendar.tz)
+                start_datetime, end_datetime, resources
             )
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping

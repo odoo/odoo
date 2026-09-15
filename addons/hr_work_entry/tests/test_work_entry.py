@@ -152,7 +152,7 @@ class TestWorkEntry(TestWorkEntryBase):
                 "wage": 1000,
             }
         )
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "date_from": datetime(2023, 8, 2, 0, 0, 0)
                 .replace(tzinfo=timezone("Asia/Hong_Kong"))

@@ -71,7 +71,7 @@ class TestSandwichLeave(TransactionCase):
                 "company_id": self.indian_company.id,
             }
         )
-        self.wednesday_public_holiday = self.env["resource.calendar.leaves"].create(
+        self.wednesday_public_holiday = self.env["resource.schedule.exception"].create(
             {
                 "name": "test public holiday",
                 "date_from": "2025-01-29 00:00:00",
@@ -97,7 +97,7 @@ class TestSandwichLeave(TransactionCase):
         )
 
     def test_long_sandwich_leave(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Independence Day",
                 "date_from": "2025-08-15",
@@ -591,7 +591,7 @@ class TestSandwichLeave(TransactionCase):
         -- working days: 3th-4th(Thu-Fri) July, 7th-8th(Mon-Tue) July, 10th-11th(Thu-Fri) July
         -- non-working days: 5th-6th(Sat-Sun) July,
         """
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "date_from": "2025-07-09 00:00:00",

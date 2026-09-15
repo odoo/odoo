@@ -13,7 +13,7 @@ class TestEmployee(TransactionCase):
                 "name": "Test Company",
             }
         )
-        cls.global_leave = cls.env["resource.calendar.leaves"].create(
+        cls.global_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Test Global Leave",
                 "date_from": "2020-01-01 00:00:00",
@@ -33,7 +33,7 @@ class TestEmployee(TransactionCase):
             }
         )
         resource_leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_company(self.company)
             .create(
                 {

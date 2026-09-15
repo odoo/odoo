@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.search</field>
-        <field name="model">resource.calendar.leaves</field>
+    <record id="view_resource_schedule_exception_search" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.search</field>
+        <field name="model">resource.schedule.exception</field>
         <field name="arch" type="xml">
             <search string="Search Working Period Time Off">
                 <field name="name" />
@@ -36,8 +36,8 @@
     </record>
 
     <record id="view_resource_calendar" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.calendar</field>
-        <field name="model">resource.calendar.leaves</field>
+        <field name="name">resource.schedule.exception.calendar</field>
+        <field name="model">resource.schedule.exception</field>
         <field name="arch" type="xml">
             <calendar
                 string="Resource"
@@ -53,9 +53,9 @@
         </field>
     </record>
 
-    <record id="resource_calendar_leave_form" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.form</field>
-        <field name="model">resource.calendar.leaves</field>
+    <record id="resource_schedule_exception_form" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.form</field>
+        <field name="model">resource.schedule.exception</field>
         <field name="arch" type="xml">
             <form string="Time Off Detail">
                 <field name="company_id" invisible="1" />
@@ -81,9 +81,9 @@
         </field>
     </record>
 
-    <record id="resource_calendar_leave_tree" model="ir.ui.view">
-        <field name="name">resource.calendar.leaves.list</field>
-        <field name="model">resource.calendar.leaves</field>
+    <record id="resource_schedule_exception_tree" model="ir.ui.view">
+        <field name="name">resource.schedule.exception.list</field>
+        <field name="model">resource.schedule.exception</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <list string="Time Off Detail">
@@ -100,20 +100,20 @@
         </field>
     </record>
 
-    <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
+    <record id="action_resource_schedule_exception_tree" model="ir.actions.act_window">
         <field name="name">Resource Time Off</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">list,form,calendar</field>
-        <field name="search_view_id" ref="view_resource_calendar_leaves_search" />
+        <field name="search_view_id" ref="view_resource_schedule_exception_search" />
     </record>
 
     <record
-        id="resource_calendar_leaves_action_from_calendar"
+        id="resource_schedule_exception_action_from_calendar"
         model="ir.actions.act_window">
         <field name="name">Resource Time Off</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">list,form,calendar</field>
-        <field name="search_view_id" ref="view_resource_calendar_leaves_search" />
+        <field name="search_view_id" ref="view_resource_schedule_exception_search" />
         <field
             name="context">{
             'default_calendar_id': active_id,
@@ -122,7 +122,7 @@
 
     <record id="resource_calendar_closing_days" model="ir.actions.act_window">
         <field name="name">Closing Days</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">calendar,list,form</field>
         <field
             name="domain">[('calendar_id','=',active_id), ('resource_id','=',False)]</field>
@@ -133,7 +133,7 @@
 
     <record id="resource_calendar_resources_leaves" model="ir.actions.act_window">
         <field name="name">Resources Time Off</field>
-        <field name="res_model">resource.calendar.leaves</field>
+        <field name="res_model">resource.schedule.exception</field>
         <field name="view_mode">calendar,list,form</field>
         <field
             name="domain">[('calendar_id','=',active_id), ('resource_id','!=',False)]</field>

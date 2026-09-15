@@ -81,11 +81,11 @@ class HrEmployee(models.Model):
         lines_vals = []
         today = fields.Datetime.today()
         global_leaves_wo_calendar = defaultdict(
-            lambda: self.env["resource.calendar.leaves"]
+            lambda: self.env["resource.schedule.exception"]
         )
         global_leaves_wo_calendar.update(
             dict(
-                self.env["resource.calendar.leaves"]._read_group(
+                self.env["resource.schedule.exception"]._read_group(
                     [
                         ("calendar_id", "=", False),
                         ("resource_id", "=", False),

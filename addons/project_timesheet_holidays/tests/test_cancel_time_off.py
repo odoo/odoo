@@ -13,7 +13,7 @@ class TestCancelTimeOff(TransactionCase):
                 "name": "Test Company",
             }
         )
-        cls.global_leave = cls.env["resource.calendar.leaves"].create(
+        cls.global_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Test Global Leave",
                 "date_from": "2020-01-08 00:00:00",

@@ -79,7 +79,7 @@ class HrAttendance(http.Controller):
         today = (
             fields.Datetime.now()
             .replace(tzinfo=UTC)
-            .astimezone(timezone(employee._get_tz()))
+            .astimezone(timezone(employee._get_schedule_tz()))
             .date()
         )
         # `manual_duration`, not `duration`: it is what `hr.attendance`'s

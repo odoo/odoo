@@ -8,7 +8,6 @@ from dateutil import relativedelta
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_compare, float_is_zero, float_round
@@ -663,7 +662,6 @@ class MrpWorkcenter(models.Model):
             date_start,
             date_stop,
             resources=resource,
-            tz=timezone(self.resource_calendar_id.tz),
         )[resource.id]
         occupied = (
             self.env["resource.reservation"]

@@ -254,7 +254,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
-        cls.global_leave = cls.env["resource.calendar.leaves"].create(
+        cls.global_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": date(2022, 3, 7),
@@ -262,7 +262,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
-        cls.calendar_leave = cls.env["resource.calendar.leaves"].create(
+        cls.calendar_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": date(2022, 3, 8),
@@ -280,7 +280,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
                     "date_from": date(2022, 3, 7),
@@ -290,7 +290,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             )
 
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
                     "date_from": date(2022, 3, 7),
@@ -299,7 +299,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             )
 
     def test_leave_on_calendar_leave(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Correct Time Off",
                 "date_from": date(2022, 3, 8),
@@ -309,7 +309,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
 
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
                     "date_from": date(2022, 3, 8),
@@ -318,7 +318,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             )
 
         with self.assertRaises(ValidationError):
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
                     "date_from": date(2022, 3, 8),
@@ -339,7 +339,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
         self.env.user.tz = "Europe/Brussels"
         global_leave = (
-            self.env["resource.calendar.leaves"]
+            self.env["resource.schedule.exception"]
             .with_user(self.env.user)
             .create(
                 {
@@ -362,7 +362,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
         self.employee_emp.resource_calendar_id = calendar_no_company
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Public Holiday",
                 "date_from": datetime(2024, 1, 3, 0, 0),
@@ -393,7 +393,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
 
     def test_global_leave_number_of_days_with_new(self):
-        global_leave = self.env["resource.calendar.leaves"].create(
+        global_leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": datetime(2024, 1, 3, 6, 0, 0),
@@ -476,7 +476,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
         partially_covered_leave.action_approve()
 
-        self.env["resource.calendar.leaves"].with_user(self.env.user).create(
+        self.env["resource.schedule.exception"].with_user(self.env.user).create(
             {
                 "name": "Public holiday",
                 "date_from": "2024-12-04 06:00:00",
@@ -485,7 +485,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
-        resource_leaves = self.env["resource.calendar.leaves"].search(
+        resource_leaves = self.env["resource.schedule.exception"].search(
             [("holiday_id", "=", partially_covered_leave.id)]
         )
         self.assertTrue(
@@ -531,7 +531,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
-        self.env["resource.calendar.leaves"].with_user(self.user_hrmanager).create(
+        self.env["resource.schedule.exception"].with_user(self.user_hrmanager).create(
             {
                 "name": "Public holiday day 1",
                 "date_from": datetime(2025, 5, 13),
@@ -547,7 +547,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
 
         employee_leave.with_user(user_timeoff_officer_david).action_approve()
-        self.env["resource.calendar.leaves"].with_user(self.user_hrmanager).create(
+        self.env["resource.schedule.exception"].with_user(self.user_hrmanager).create(
             {
                 "name": "Public holiday day 2",
                 "date_from": datetime(2025, 5, 14),
@@ -562,7 +562,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
 
         employee_leave.with_user(self.user_hruser).action_approve()
-        self.env["resource.calendar.leaves"].with_user(self.user_hrmanager).create(
+        self.env["resource.schedule.exception"].with_user(self.user_hrmanager).create(
             {
                 "name": "Public holiday day 3",
                 "date_from": datetime(2025, 5, 15),
@@ -586,7 +586,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "3 day holiday",
                 "calendar_id": flex_cal.id,
@@ -661,7 +661,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
         self.assertEqual(leave.number_of_days, 20, "Number of days should be 20")
 
-        public_holiday = self.env["resource.calendar.leaves"].create(
+        public_holiday = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "date_from": datetime(2025, 12, 31, 23, 0, 0),

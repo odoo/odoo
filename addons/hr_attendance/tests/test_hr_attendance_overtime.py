@@ -63,7 +63,7 @@ class TestHrAttendanceOvertime(HttpCase):
                 "name": "Marie-Edouard De La Court",
                 "user_id": cls.user.id,
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
@@ -74,7 +74,7 @@ class TestHrAttendanceOvertime(HttpCase):
             {
                 "name": "Yolanda",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2020, 1, 1),
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
@@ -128,7 +128,7 @@ class TestHrAttendanceOvertime(HttpCase):
             {
                 "name": "No Contract",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": False,
@@ -138,7 +138,7 @@ class TestHrAttendanceOvertime(HttpCase):
             {
                 "name": "Future contract",
                 "company_id": cls.company.id,
-                "tz": "UTC",
+                "tz": "Europe/Brussels",
                 "resource_calendar_id": cls.company.resource_calendar_id.id,
                 "date_version": date(2020, 1, 1),
                 "contract_date_start": date(2030, 1, 1),
@@ -1138,7 +1138,7 @@ class TestHrAttendanceOvertime(HttpCase):
         employee_today = (
             fields.Datetime.now()
             .replace(tzinfo=UTC)
-            .astimezone(timezone(self.employee._get_tz()))
+            .astimezone(timezone(self.employee._get_schedule_tz()))
             .date()
         )
         for _ in range(2):
@@ -1167,7 +1167,7 @@ class TestHrAttendanceOvertime(HttpCase):
             company_de = self.env["res.company"].create({"name": "Odoo DE"})
 
             with Form(
-                self.env["resource.calendar.leaves"].with_company(company_be)
+                self.env["resource.schedule.exception"].with_company(company_be)
             ) as holiday_form:
                 holiday_form.name = "Armistice Day"
                 holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
@@ -1463,7 +1463,7 @@ class TestHrAttendanceOvertime(HttpCase):
                     "ruleset_id": ruleset.id,
                 }
             )
-            self.env["resource.calendar.leaves"].create(
+            self.env["resource.schedule.exception"].create(
                 {
                     "name": "Personal leave",
                     "resource_id": employee.resource_id.id,

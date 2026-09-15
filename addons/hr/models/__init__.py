@@ -22,6 +22,6 @@ from . import res_partner_bank
 from . import resource
 from . import resource_assignment
 from . import resource_calendar
-from . import resource_calendar_leaves
+from . import resource_schedule_exception
 from . import ir_ui_menu
 from . import hr_employee_change_request

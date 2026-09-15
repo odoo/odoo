@@ -146,10 +146,10 @@ class TestExpression(TransactionCase):
             ),
         )
 
-    def test_resource_calendar_leave_compute_date_to(self):
+    def test_resource_schedule_exception_compute_date_to(self):
         date_from = Datetime.from_string("2024-05-01 00:00:00")
         date_to = Datetime.from_string("2024-05-03 23:59:59")
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "date_from": date_from,
                 "date_to": date_to,
@@ -168,11 +168,11 @@ class TestExpression(TransactionCase):
 
     def test_resource_creation_with_date_from(self):
         with self.assertRaises(AssertionError):
-            with Form(self.env["resource.calendar.leaves"]) as res:
+            with Form(self.env["resource.schedule.exception"]) as res:
                 res.date_from = False
                 res.date_to = Datetime.now()
 
-        with Form(self.env["resource.calendar.leaves"]) as res:
+        with Form(self.env["resource.schedule.exception"]) as res:
             date_from = Datetime.now()
             date_to = Datetime.now() + relativedelta(hours=24)
             res.date_from = date_from

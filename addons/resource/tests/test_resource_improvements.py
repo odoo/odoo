@@ -479,7 +479,7 @@ class TestFlexibleCalendarUnusualDays(TransactionCase):
         self.assertTrue(all(not v for v in result.values()))
 
     def test_unusual_days_with_leave(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Holiday",
                 "calendar_id": self.calendar.id,
@@ -544,7 +544,7 @@ class TestPlanHoursWithResource(TransactionCase):
         )
 
     def test_plan_hours_with_resource_leave(self):
-        self.env["resource.calendar.leaves"].create(
+        self.env["resource.schedule.exception"].create(
             {
                 "name": "Sick day",
                 "calendar_id": self.calendar.id,
@@ -713,7 +713,7 @@ class TestLeaveCompanyFallback(TransactionCase):
                 "tz": "UTC",
             }
         )
-        leave = self.env["resource.calendar.leaves"].create(
+        leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "B leave",
                 "resource_id": resource_b.id,
