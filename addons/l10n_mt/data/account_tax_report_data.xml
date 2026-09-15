@@ -445,6 +445,12 @@
                         <field name="formula">(mt_IV_subtotal.tax_amount - mt_excess_credit.BOX26) + (mt_adjustment_2.tax_base - mt_adjustment_1.tax_base)</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
+                    <record id="tax_report_line_excess_credit_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">mt_excess_credit.tax_base</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_title_excess_credit_BF" model="account.report.line">
@@ -474,6 +480,12 @@
                         <field name="label">tax_base</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">mt_tax_payable.BOX43 - mt_excess_credit_BF.tax_base</field>
+                    </record>
+                    <record id="tax_report_line_excess_tax_payable_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">mt_tax_payable.tax_base</field>
+                        <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>
             </record>
