@@ -135,7 +135,7 @@ class SaleOrderTemplate(models.Model):
         for template in self:
             template.has_productless_lines = any(
                 not (line.product_id or line.display_type)
-                for line in self.sale_order_template_line_ids
+                for line in template.sale_order_template_line_ids
             )
 
     # === CONSTRAINT METHODS ===#
