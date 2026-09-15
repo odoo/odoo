@@ -4,7 +4,13 @@ import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
-import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
+import {
+    childNodeIndex,
+    DIRECTIONS,
+    leftPos,
+    nodeSize,
+    rightPos,
+} from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
     isElement,
@@ -374,6 +380,14 @@ export class LinkPlugin extends Plugin {
                 );
             }
             return node;
+        },
+        position_after_insertion_processors: (position, insertedNodes) => {
+            const closestLink = closestElement(position[0], "a");
+            if (closestLink && insertedNodes.some((node) => node.contains(closestLink))) {
+                // We never want to continue writing in a link we just inserted.
+                return [closestLink.parentElement, childNodeIndex(closestLink) + 1];
+            }
+            return position;
         },
     };
 

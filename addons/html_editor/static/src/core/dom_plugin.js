@@ -21,6 +21,7 @@ import {
     isContentEditable,
     isEmpty,
     getDeepestEditablePosition,
+    isInPre,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -75,6 +76,14 @@ const createMarkerNode = (node, offset) => {
     return marker;
 };
 const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
+const makeSpacesVisible = (text) =>
+    text.replace(/( {2,})/g, (match) => {
+        let alternateValue = false;
+        return match.replace(/ /g, () => {
+            alternateValue = !alternateValue;
+            return alternateValue ? "\u00A0" : " ";
+        });
+    });
 
 /**
  * @typedef {Object} DomShared
@@ -98,6 +107,8 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
+ * @typedef {((fragment: DocumentFragment) => void)[]} text_to_insert_processors
+ * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
  *
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
@@ -181,6 +192,7 @@ export class DomPlugin extends Plugin {
             ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
         ].join(",");
         this.split = this.dependencies.split;
+        this.createBaseContainer = this.dependencies.baseContainer.createBaseContainer.bind(this);
     }
 
     // Shared
@@ -296,7 +308,19 @@ export class DomPlugin extends Plugin {
      */
     insert(content, { verbatim = false } = {}) {
         // Pre-process
-        let fragment = this.makeFragment(content);
+        if (typeof content === "string") {
+            content = this.processTextForInsertion(content);
+            if (!verbatim) {
+                // The difference between this and `fragment_to_insert_processors` is
+                // that we know everything in the fragment was meant as text originally.
+                content = this.processThrough("text_to_insert_processors", content);
+            }
+        }
+        let fragment = this.document.createDocumentFragment();
+        if (content) {
+            (isElement(content) ? [content] : children(content)).forEach(this.normalize.bind(this));
+            fragment.replaceChildren(content);
+        }
         if (!verbatim) {
             fragment = this.processThrough("fragment_to_insert_processors", fragment);
         }
@@ -307,8 +331,8 @@ export class DomPlugin extends Plugin {
         }
 
         // Insert
-        const children = nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item));
-        this.trigger("on_will_insert_handlers", children);
+        const nodesToInsert = nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item));
+        this.trigger("on_will_insert_handlers", nodesToInsert);
         const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
         let insertedContent = this.insertNodesAt(nodes, focusNode, focusOffset);
         insertedContent = this.processThrough("inserted_content_processors", insertedContent);
@@ -316,6 +340,37 @@ export class DomPlugin extends Plugin {
         // Move selection
         this.moveSelectionAfterInsertion(insertedContent);
         return insertedContent;
+    }
+
+    /**
+     * Before inserting text, process its whitespace.
+     *
+     * @param {string} text
+     * @returns {DocumentFragment}
+     */
+    processTextForInsertion(text) {
+        const { focusNode } = this.dependencies.selection.getEditableSelection();
+        const doc = this.document;
+        const fragment = doc.createDocumentFragment();
+        if (isInPre(focusNode)) {
+            fragment.textContent = text;
+            return fragment;
+        }
+        // Replace consecutive spaces with alternating nbsp/space.
+        const lines = text.split(/\r?\n/).map(makeSpacesVisible);
+        // Replace new lines with paragraph breaks or line breaks.
+        const block = closestBlock(focusNode);
+        fragment.append(doc.createTextNode(lines.shift()));
+        if (findUpTo(focusNode, block.parentElement, this.split.isUnsplittable.bind(this))) {
+            for (const line of lines) {
+                fragment.append(doc.createElement("br"), doc.createTextNode(line));
+            }
+        } else {
+            for (const line of lines) {
+                fragment.append(this.createBaseContainer({ children: [doc.createTextNode(line)] }));
+            }
+        }
+        return fragment;
     }
 
     /**
@@ -587,6 +642,11 @@ export class DomPlugin extends Plugin {
         if (isEditionBoundary(position[0], this.editable)) {
             position = getDeepestEditablePosition(...position);
         }
+        position = this.processThrough(
+            "position_after_insertion_processors",
+            position,
+            insertedNodes
+        );
         this.dependencies.selection.setSelection(
             { anchorNode: position[0], anchorOffset: position[1] },
             { normalize: false }
@@ -620,21 +680,6 @@ export class DomPlugin extends Plugin {
             node = parent;
         }
         return true;
-    }
-
-    /**
-     * @param {string | DocumentFragment | Element | null} content
-     * @returns {DocumentFragment}
-     */
-    makeFragment(content) {
-        const fragment = this.document.createDocumentFragment();
-        if (typeof content === "string") {
-            fragment.textContent = content;
-        } else if (content) {
-            (isElement(content) ? [content] : children(content)).forEach(this.normalize.bind(this));
-            fragment.replaceChildren(content);
-        }
-        return fragment;
     }
 
     /**
@@ -762,9 +807,7 @@ export class DomPlugin extends Plugin {
                 newCandidate.classList.add(extraClass);
             }
             if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
-                    nodeName: newCandidate.nodeName,
-                });
+                const baseContainer = this.createBaseContainer({ nodeName: newCandidate.nodeName });
                 this.copyAttributes(newCandidate, baseContainer);
                 newCandidate = baseContainer;
             }

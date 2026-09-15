@@ -12,14 +12,10 @@ import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
-import {
-    baseContainerGlobalSelector,
-    getBaseContainerSelector,
-} from "@html_editor/utils/base_container";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
 import { getRowIndex } from "@html_editor/utils/table";
-import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -108,7 +104,6 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
 
 /**
  * @typedef {Object} ClipboardShared
- * @property {ClipboardPlugin['pasteText']} pasteText
  */
 
 /**
@@ -138,7 +133,7 @@ export class ClipboardPlugin extends Plugin {
         "delete",
         "lineBreak",
     ];
-    static shared = ["pasteText"];
+    static shared = [];
 
     setup() {
         this.addDomListener(this.editable, "copy", this.onCopy);
@@ -215,7 +210,9 @@ export class ClipboardPlugin extends Plugin {
             this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ??
             false
         ) {
-            this.pasteText(ev.clipboardData.getData("text/plain"), { verbatim: true });
+            this.dependencies.dom.insert(ev.clipboardData.getData("text/plain"), {
+                verbatim: true,
+            });
         } else {
             this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
                 this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
@@ -316,68 +313,7 @@ export class ClipboardPlugin extends Plugin {
         if (this.delegateTo("paste_text_overrides", selection, text)) {
             return;
         } else {
-            this.pasteText(text);
-        }
-    }
-    /**
-     * @param {string} text
-     * @param {object} [options]
-     * @param {boolean} [options.verbatim = false] if true, insert without processing.
-     */
-    pasteText(text, { verbatim = false } = {}) {
-        const textFragments = text.split(/\r?\n/);
-        let selection = this.dependencies.selection.getEditableSelection();
-        const preEl = closestElement(selection.anchorNode, "PRE");
-        let textIndex = 1;
-        for (const textFragment of textFragments) {
-            let modifiedTextFragment = textFragment;
-
-            // <pre> preserves whitespace by default, so no need for &nbsp.
-            if (!preEl) {
-                // Replace consecutive spaces by alternating nbsp.
-                modifiedTextFragment = textFragment.replace(/( {2,})/g, (match) => {
-                    let alternateValue = false;
-                    return match.replace(/ /g, () => {
-                        alternateValue = !alternateValue;
-                        const replaceContent = alternateValue ? "\u00A0" : " ";
-                        return replaceContent;
-                    });
-                });
-            }
-            // TODO AGE: if we're inserting verbatim all the rest should also
-            // not be done. But I'll move that to insert anyway.
-            this.dependencies.dom.insert(modifiedTextFragment, { verbatim });
-            if (textIndex < textFragments.length) {
-                selection = this.dependencies.selection.getEditableSelection();
-                // Break line by inserting new paragraph and
-                // remove current paragraph's bottom margin.
-                const block = closestBlock(selection.anchorNode);
-                if (
-                    this.dependencies.split.isUnsplittable(block) ||
-                    closestElement(selection.anchorNode).tagName === "PRE"
-                ) {
-                    this.dependencies.lineBreak.insertLineBreak();
-                } else {
-                    const splitResult = this.dependencies.split.splitBlock();
-                    if (
-                        block &&
-                        block.matches(baseContainerGlobalSelector) &&
-                        splitResult.type === SPLIT_OPERATION_TYPES.BLOCK &&
-                        !splitResult.before.matches(getBaseContainerSelector("DIV"))
-                    ) {
-                        // Do something only if blockBefore is not a DIV (which is the no-margin option)
-                        // replace blockBefore by a DIV.
-                        const div = this.dependencies.baseContainer.createBaseContainer({
-                            nodeName: "DIV",
-                            children: [...childNodes(splitResult.before)],
-                        });
-                        const cursors = this.dependencies.selection.preserveSelection();
-                        splitResult.before.replaceWith(div);
-                        cursors.remapNode(splitResult.before, div).restore();
-                    }
-                }
-            }
-            textIndex++;
+            this.dependencies.dom.insert(text);
         }
     }
 

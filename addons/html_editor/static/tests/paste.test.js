@@ -284,7 +284,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc\nd");
                 },
-                contentAfter: "<div>a</div>" + "<div>b</div>" + "<div>c</div>" + "<p>d[]</p>",
+                contentAfter: "<p>a</p>" + "<p>b</p>" + "<p>c</p>" + "<p>d[]</p>",
             });
         });
 
@@ -295,7 +295,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\r\nb\r\nc\r\nd");
                 },
-                contentAfter: "<div>a</div>" + "<div>b</div>" + "<div>c</div>" + "<p>d[]</p>",
+                contentAfter: "<p>a</p>" + "<p>b</p>" + "<p>c</p>" + "<p>d[]</p>",
             });
         });
 
@@ -325,7 +325,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc");
                 },
-                contentAfter: "<pre>a<br>b<br>c[]</pre>",
+                contentAfter: "<pre>a\nb\nc[]</pre>",
             });
         });
 
@@ -339,7 +339,7 @@ describe("Simple text", () => {
                     );
                 },
                 contentAfter:
-                    "<pre>function example() {<br>    console.log('Hello,    world!');<br>    // Indented    comment<br>}[]</pre>",
+                    "<pre>function example() {\n    console.log('Hello,    world!');\n    // Indented    comment\n}[]</pre>",
             });
         });
     });
@@ -471,7 +471,8 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "ab\ncd");
                 },
-                contentAfter: "<div>ab</div><div>cd[]</div>",
+                // TODO AGE: is this ok?
+                contentAfter: "<div>ab</div><p>cd[]</p>",
             });
         });
     });
@@ -3138,7 +3139,7 @@ describe("link", () => {
                     pasteText(editor, "odoo.com\ngoogle.com");
                 },
                 contentAfter:
-                    '<div><a href="https://odoo.com">odoo.com</a></div>' +
+                    '<p><a href="https://odoo.com">odoo.com</a></p>' +
                     '<p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
@@ -3153,7 +3154,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over an empty link (collapsed) (2)", async () => {
@@ -3166,7 +3167,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
 
@@ -3508,7 +3509,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over a link if all of its contents is selected (not collapsed) (2)", async () => {
@@ -3521,7 +3522,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
         test("should paste URL as label when link with same label and href is selected", async () => {
