@@ -12,7 +12,7 @@ class StockRule(models.Model):
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values):
         move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values)
-        if (sol_id := values.get('sale_line_id')) is not None and 'product_id' in move_values:
+        if (sol_id := values.get('sale_line_id')) is not None and 'product_id' in move_values and not move_values.get('bom_line_id'):
             # if the SOL is for a kit
             sol = self.env['sale.order.line'].browse(sol_id)
             if move_values['product_id'] != sol.product_id.id:
