@@ -46,6 +46,7 @@ import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
 export const OPEN_DELAY = 400;
 export const CLOSE_DELAY = 200;
 export const SHOW_AFTER_DELAY = 250;
+export const TOUCH_MOVE_THRESHOLD = 5;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
@@ -54,6 +55,7 @@ class TooltipPlugin extends Plugin {
     #openTooltipTimeout = null;
     #closeTooltip = null;
     #showTimer = null;
+    #touchStartPosition = null;
     #target = null;
     #interval = null;
 
@@ -67,6 +69,7 @@ class TooltipPlugin extends Plugin {
         if (hasTouch()) {
             const onTouchCancelEnd = this.#onTouchCancelEnd.bind(this);
             useListener(document.body, "touchstart", this.#onTouchStart.bind(this));
+            useListener(document.body, "touchmove", this.#onTouchMove.bind(this));
             useListener(document.body, "touchend", onTouchCancelEnd);
             useListener(document.body, "touchcancel", onTouchCancelEnd);
         }
@@ -361,10 +364,36 @@ class TooltipPlugin extends Plugin {
      */
     #onTouchStart(ev) {
         this.#cleanup();
+        const touch = ev.touches[0];
+        this.#touchStartPosition = touch && { x: touch.clientX, y: touch.clientY };
         const timeoutDelay = this.#isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
         this.#showTimer = window.setTimeout(() => {
             this.#openElementsTooltip(ev.target, true);
         }, timeoutDelay);
+    }
+
+    /**
+     * Cancels the tooltip if the touch moved further than a small threshold
+     * since the "touchstart" (e.g. the user is scrolling or dragging).
+     *
+     * @param {TouchEvent} ev a "touchmove" event
+     */
+    #onTouchMove(ev) {
+        const touch = ev.touches[0];
+        if (!this.#touchStartPosition || !touch) {
+            return;
+        }
+        const distance = Math.hypot(
+            touch.clientX - this.#touchStartPosition.x,
+            touch.clientY - this.#touchStartPosition.y
+        );
+        if (distance < TOUCH_MOVE_THRESHOLD) {
+            return;
+        }
+        this.#touchStartPosition = null;
+        window.clearTimeout(this.#showTimer);
+        this.#showTimer = null;
+        this.#cleanup();
     }
 
     #onTouchCancelEnd(ev) {
