@@ -29,6 +29,7 @@ from . import res_partner
 from . import res_users
 from . import res_config_settings
 from . import res_lang
+from . import theme_engine
 from . import theme_models
 from . import website_configurator_feature
 from . import website_form

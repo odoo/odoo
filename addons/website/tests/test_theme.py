@@ -10,7 +10,7 @@ class TestTheme(common.TransactionCase):
         """
         theme_common_module = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
         self.env.ref('base.default_website').theme_id = theme_common_module.id
-        self.env['ir.module.module']._theme_remove(self.env.ref('base.default_website'))
+        self.env['theme.engine']._theme_remove(self.env.ref('base.default_website'))
 
     def test_02_disable_view(self):
         """This test ensure only one template header can be active at a time."""

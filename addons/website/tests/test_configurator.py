@@ -8,7 +8,7 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 
     def _theme_upgrade_upstream(self):
         # patch to prevent module install/upgrade during tests, but still generate the snippet templates the configurator needs.
-        self._generate_primary_snippet_templates()
+        self.env['theme.engine']._generate_primary_snippet_templates(self.ids)
 
     def setUp(self):
         super().setUp()
