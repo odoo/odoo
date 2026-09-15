@@ -4406,7 +4406,7 @@ class AccountMoveLine(models.Model):
     def _check_edi_line_tax_required(self):
         return self.product_id.type != "combo"
 
-    def _get_aml_values(self, **kwargs):
+    def _prepare_aml_values(self, **kwargs):
         self.check_singleton()
         return {
             "name": self.name,

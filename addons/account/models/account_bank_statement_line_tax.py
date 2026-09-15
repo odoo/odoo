@@ -165,7 +165,7 @@ class AccountBankStatementLine(models.Model):
                     Command.set(line.reconciled_lines_ids.ids)
                 ]
             lines_to_delete += line
-            lines_to_add_or_update.append(line._get_aml_values(**line_values))
+            lines_to_add_or_update.append(line._prepare_aml_values(**line_values))
 
         for tax_line_vals in tax_results["tax_lines_to_delete"]:
             lines_to_delete += tax_line_vals["record"]
@@ -181,7 +181,7 @@ class AccountBankStatementLine(models.Model):
             lines_to_delete += tax_line_vals["record"]
             new_line_vals = self._lines_prepare_tax_line({**grouping_key, **to_update})
             lines_to_add_or_update.append(
-                tax_line_vals["record"]._get_aml_values(**new_line_vals)
+                tax_line_vals["record"]._prepare_aml_values(**new_line_vals)
             )
 
         lines_to_keep = (liquidity_lines + other_lines) - lines_to_delete

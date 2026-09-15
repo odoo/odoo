@@ -71,7 +71,7 @@ class AccountBankStatementLine(models.Model):
                     )
                 )
                 epd_lines_vals = [
-                    payment_line_to_add._get_aml_values(
+                    payment_line_to_add._prepare_aml_values(
                         balance=-payment_line_to_add.balance,
                         amount_currency=-payment_line_to_add.amount_currency,
                         reconciled_lines_ids=[Command.set(payment_line_to_add.ids)],
@@ -92,7 +92,7 @@ class AccountBankStatementLine(models.Model):
                     }
                 ]
                 epd_lines_vals = [
-                    move_line._get_aml_values(
+                    move_line._prepare_aml_values(
                         balance=-move_line.amount_residual,
                         amount_currency=-move_line.amount_residual_currency,
                         reconciled_lines_ids=[Command.set(move_line.ids)],

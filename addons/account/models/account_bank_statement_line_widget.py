@@ -264,7 +264,7 @@ class AccountBankStatementLine(models.Model):
                     partial_applied = True
 
             new_lines_to_add = [
-                move_line._get_aml_values(
+                move_line._prepare_aml_values(
                     balance=new_line_balance,
                     amount_currency=new_amount_currency,
                     currency_id=move_line.currency_id.id,
@@ -438,7 +438,7 @@ class AccountBankStatementLine(models.Model):
                 reconciled_kept=len(edited_move_reconciled_line_ids),
             )
         move_line_to_edit.remove_move_reconcile()
-        move_line_to_edit_vals = move_line_to_edit._get_aml_values(**record_data)
+        move_line_to_edit_vals = move_line_to_edit._prepare_aml_values(**record_data)
         if edited_move_reconciled_line_ids:
             move_line_to_edit_vals["reconciled_lines_ids"] = [
                 Command.set(edited_move_reconciled_line_ids)

@@ -106,7 +106,7 @@ class AccountPayment(models.Model):
                     date=rate_date,
                 )
                 if line:
-                    line_to_create = line._get_aml_values(
+                    line_to_create = line._prepare_aml_values(
                         name=payment.name,
                         balance=balance,
                         amount_currency=amount,
@@ -228,7 +228,7 @@ class AccountPayment(models.Model):
                     or not payment_move_line.currency_id.is_zero(exchange_diff_balance)
                 )
                 amls_to_create.append(
-                    payment_move_line._get_aml_values(
+                    payment_move_line._prepare_aml_values(
                         balance=-(
                             payment_move_line.amount_residual + exchange_diff_balance
                         ),
@@ -274,7 +274,7 @@ class AccountPayment(models.Model):
                     )
                 )
                 amls_to_add = [
-                    line._get_aml_values(
+                    line._prepare_aml_values(
                         name=line.name,
                         balance=payment.currency_id._convert(
                             from_amount=-current_amount,
