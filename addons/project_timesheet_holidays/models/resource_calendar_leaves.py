@@ -3,6 +3,9 @@ from datetime import UTC
 
 from odoo import _, api, fields, models
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -25,11 +28,23 @@ class ResourceCalendarLeaves(models.Model):
                     ("company_id", "in", leaves_wo_calendar.company_id.ids + [False]),
                 ]
             )
+        _debug.perf.count(
+            "global_leave_calendars",
+            leaves=self,
+            with_calendar=leaves_with_calendar,
+            without_calendar=leaves_wo_calendar,
+            calendars=calendars,
+        )
         return calendars
 
     def _work_time_per_day(self, resource_calendars=False):
         resource_calendars = resource_calendars or self._get_resource_calendars()
         calendars_dict = {calendar.id: calendar for calendar in resource_calendars}
+        _debug.pipeline(
+            "global_leave_work_time_start",
+            leaves=self,
+            calendars=resource_calendars,
+        )
 
         leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
             [("id", "in", self.ids), ("calendar_id", "!=", False)],
@@ -97,12 +112,18 @@ class ResourceCalendarLeaves(models.Model):
             cal_attendance_intervals_params_entry,
         ) in cal_attendance_intervals_dict.items():
             calendar = calendars_dict[calendar_id]
-            work_hours_intervals = calendar._attendance_intervals_batch(
-                cal_attendance_intervals_params_entry["date_from"],
-                cal_attendance_intervals_params_entry["date_to"],
-                cal_attendance_intervals_params_entry["resources"],
-                tz=timezone(calendar.tz),
-            )
+            with _debug.perf(
+                "global_leave.attendance_intervals",
+                calendar=calendar,
+                resources=cal_attendance_intervals_params_entry["resources"],
+                leaves=cal_attendance_intervals_params_entry["leaves"],
+            ):
+                work_hours_intervals = calendar._attendance_intervals_batch(
+                    cal_attendance_intervals_params_entry["date_from"],
+                    cal_attendance_intervals_params_entry["date_to"],
+                    cal_attendance_intervals_params_entry["resources"],
+                    tz=timezone(calendar.tz),
+                )
             for leave in cal_attendance_intervals_params_entry["leaves"]:
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
 
@@ -118,6 +139,11 @@ class ResourceCalendarLeaves(models.Model):
                 results[calendar_id][leave.id] = sorted(
                     results[calendar_id][leave.id].items()
                 )
+        _debug.pipeline(
+            "global_leave_work_time_done",
+            leaves=self,
+            calendars_covered=len(results),
+        )
         return results
 
     def _timesheet_create_lines(self):
@@ -201,6 +227,15 @@ class ResourceCalendarLeaves(models.Model):
                 work_hours_list = work_hours_data[leave.calendar_id.id][leave.id]
                 vals_list = get_timesheets_data(employees, work_hours_list, vals_list)
 
+        _debug.pipeline(
+            "global_leave_timesheets_created",
+            leaves=self,
+            calendars=len(mapped_employee),
+            employees=len(employee_ids_all),
+            window_from=min_date,
+            window_to=max_date,
+            lines=len(vals_list),
+        )
         return self.env["account.analytic.line"].sudo().create(vals_list)
 
     def _timesheet_prepare_line_values(
@@ -232,11 +267,18 @@ class ResourceCalendarLeaves(models.Model):
                 and r.company_id.leave_timesheet_task_id
             )
         )
+        _debug.logic(
+            "global_leave_timesheet_candidates",
+            leaves=self,
+            eligible=results_with_leave_timesheet,
+        )
         if results_with_leave_timesheet:
             results_with_leave_timesheet._timesheet_create_lines()
 
     def _generate_public_time_off_timesheets(self, employees):
         timesheet_vals_list = []
+        skipped_calendar = 0  # debuglog
+        skipped_existing = 0  # debuglog
         resource_calendars = self._get_resource_calendars()
         work_hours_data = self._work_time_per_day(resource_calendars)
         timesheet_read_group = self.env["account.analytic.line"]._read_group(
@@ -253,6 +295,7 @@ class ResourceCalendarLeaves(models.Model):
                     leave.calendar_id
                     and employee.resource_calendar_id != leave.calendar_id
                 ):
+                    skipped_calendar += 1  # debuglog
                     continue
                 calendar = leave.calendar_id or employee.resource_calendar_id
                 work_hours_list = work_hours_data[calendar.id][leave.id]
@@ -260,11 +303,20 @@ class ResourceCalendarLeaves(models.Model):
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     generate_timesheet = day_date not in timesheet_dates
                     if not generate_timesheet:
+                        skipped_existing += 1  # debuglog
                         continue
                     timesheet_vals = leave._timesheet_prepare_line_values(
                         index, employee, work_hours_list, day_date, work_hours_count
                     )
                     timesheet_vals_list.append(timesheet_vals)
+        _debug.pipeline(
+            "public_time_off_timesheets_created",
+            leaves=self,
+            employees=employees,
+            lines=len(timesheet_vals_list),
+            skipped_wrong_calendar=skipped_calendar,
+            skipped_already_present=skipped_existing,
+        )
         return self.env["account.analytic.line"].sudo().create(timesheet_vals_list)
 
     def _get_overlapping_hr_leaves(self, domain=None):
@@ -284,6 +336,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         results = super().create(vals_list)
+        _debug.lifecycle("global_leaves_created", leaves=results)
         results._generate_timesheeets()
         return results
 
@@ -305,6 +358,12 @@ class ResourceCalendarLeaves(models.Model):
             )
             timesheets = global_time_off_updated.sudo().timesheet_ids
             if timesheets:
+                _debug.lifecycle(
+                    "global_leave_timesheets_dropped",
+                    trigger="dates_or_calendar_changed",
+                    leaves=global_time_off_updated,
+                    timesheets=timesheets,
+                )
                 timesheets.write({"global_leave_id": False})
                 timesheets.unlink()
             if calendar_id:
@@ -316,6 +375,12 @@ class ResourceCalendarLeaves(models.Model):
                     )
                     overlapping_leaves += gto._get_overlapping_hr_leaves(domain)
         result = super().write(vals)
+        _debug.pipeline(
+            "global_leave_write",
+            leaves=self,
+            regenerating=global_time_off_updated,
+            overlapping_leaves=overlapping_leaves,
+        )
         global_time_off_updated and global_time_off_updated.sudo()._generate_timesheeets()
         if overlapping_leaves:
             overlapping_leaves.sudo()._create_timesheets()
@@ -327,6 +392,12 @@ class ResourceCalendarLeaves(models.Model):
         global_leaves = self.filtered(lambda l: not l.resource_id)
         for global_leave in global_leaves:
             overlapping_leaves += global_leave._get_overlapping_hr_leaves()
+        _debug.lifecycle(
+            "global_leaves_unlinked",
+            leaves=self,
+            global_leaves=global_leaves,
+            overlapping_leaves=overlapping_leaves,
+        )
         if overlapping_leaves:
             overlapping_leaves.sudo()._create_timesheets(
                 ignored_resource_calendar_leaves=global_leaves.ids

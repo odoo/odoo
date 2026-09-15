@@ -1,4 +1,7 @@
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -27,6 +30,12 @@ class ResCompany(models.Model):
                             "company_id": company.id,
                         }
                     )
+                )
+                _debug.lifecycle(
+                    "leave_timesheet_task_created",
+                    company=company,
+                    project=company.internal_project_id,
+                    task=task,
                 )
                 company.write(
                     {

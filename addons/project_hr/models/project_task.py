@@ -1,8 +1,10 @@
 from odoo import api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
+_debug = DebugLog(__name__)
 
 
 class ProjectTask(models.Model):
@@ -61,6 +63,13 @@ class ProjectTask(models.Model):
     @api.depends("employee_ids.user_id", "direct_user_ids")
     def _compute_user_ids(self):
         for task in self:
+            _debug.logic(
+                "task_user_ids_composed",
+                task=task,
+                employees=task.employee_ids,
+                from_employees=task.employee_ids.user_id,
+                direct=task.direct_user_ids,
+            )
             task.user_ids = task.employee_ids.user_id | task.direct_user_ids
 
     def _assignee_commands_for_users(self, value, company):
@@ -102,6 +111,13 @@ class ProjectTask(models.Model):
                 or candidates[:1]
             )
 
+        _debug.pipeline(
+            "task_assignees_mapped",
+            company=company,
+            commands=len(commands),
+            users=len(user_ids),
+            users_with_employee=len(employees_by_user),
+        )
         employee_commands = []
         direct_commands = []
         for command in commands:
@@ -129,6 +145,12 @@ class ProjectTask(models.Model):
                     if employee := assignee(command[1]):
                         employee_commands.append(Command.link(employee.id))
                     else:
+                        _debug.logic(
+                            "task_assignee_kept_as_user",
+                            reason="no_employee_for_user",
+                            user_id=command[1],
+                            company=company,
+                        )
                         direct_commands.append(Command.link(command[1]))
                 case Command.UNLINK:
                     employee_commands += [
@@ -139,6 +161,12 @@ class ProjectTask(models.Model):
                 case Command.CLEAR:
                     employee_commands.append(Command.clear())
                     direct_commands.append(Command.clear())
+        _debug.logic(
+            "task_assignee_commands_built",
+            company=company,
+            employee_commands=len(employee_commands),
+            direct_commands=len(direct_commands),
+        )
         return {"employee_ids": employee_commands, "direct_user_ids": direct_commands}
 
     @api.model_create_multi
@@ -148,6 +176,11 @@ class ProjectTask(models.Model):
                 continue
             user_value = vals.pop("user_ids")
             if "employee_ids" in vals:
+                _debug.logic(
+                    "task_user_ids_dropped",
+                    reason="employee_ids_given_explicitly",
+                    on="create",
+                )
                 continue
             company = (
                 self.env["res.company"].browse(vals["company_id"])
@@ -162,6 +195,12 @@ class ProjectTask(models.Model):
         now = fields.Datetime.now()
         for task in tasks:
             if task.employee_ids and not task.date_assign:
+                _debug.lifecycle(
+                    "task_date_assign_set",
+                    trigger="created_with_assignees",
+                    task=task,
+                    employees=task.employee_ids,
+                )
                 task.sudo().date_assign = now
         return tasks
 
@@ -169,16 +208,34 @@ class ProjectTask(models.Model):
         self.check_singleton()
         start_field, end_field = self._get_fields_reservation_date()
         if not start_field or not end_field:
+            _debug.logic(
+                "task_reservation_skipped",
+                reason="model_declares_no_reservation_dates",
+                task=self,
+            )
             return []
         date_start = self[start_field]
         date_end = self[end_field]
         if not date_start or not date_end:
+            _debug.logic(
+                "task_reservation_skipped",
+                reason="dates_not_set",
+                task=self,
+                date_start=date_start,
+                date_end=date_end,
+            )
             return []
 
         vals_list = []
         for employee in self.employee_ids:
             resource = employee.resource_id
             if not resource:
+                _debug.logic(
+                    "task_reservation_skipped",
+                    reason="employee_has_no_resource",
+                    task=self,
+                    employee=employee,
+                )
                 continue
             vals_list.append(
                 {
@@ -190,6 +247,14 @@ class ProjectTask(models.Model):
                     "enforcement_mode": "soft",
                 }
             )
+        _debug.pipeline(
+            "task_reservations_prepared",
+            task=self,
+            employees=self.employee_ids,
+            reservations=len(vals_list),
+            date_start=date_start,
+            date_end=date_end,
+        )
         return vals_list
 
     def _get_fields_sync_trigger(self):
@@ -229,6 +294,11 @@ class ProjectTask(models.Model):
             user_value = vals.pop("user_ids")
             if "employee_ids" not in vals:
                 if len(self.company_id) > 1:
+                    _debug.logic(
+                        "task_assignees_split_by_company",
+                        tasks=self,
+                        companies=self.company_id,
+                    )
                     for company, tasks in self.grouped("company_id").items():
                         tasks.write(
                             {
@@ -255,8 +325,19 @@ class ProjectTask(models.Model):
             self._create_missing_triages()
             for task in self.sudo():
                 if not task.employee_ids and task.date_assign:
+                    _debug.lifecycle(
+                        "task_date_assign_cleared",
+                        trigger="last_assignee_removed",
+                        task=task,
+                    )
                     task.date_assign = False
                 elif task.id in task_ids_without_employee:
+                    _debug.lifecycle(
+                        "task_date_assign_set",
+                        trigger="first_assignee_added",
+                        task=task,
+                        employees=task.employee_ids,
+                    )
                     task.date_assign = now
 
         return result

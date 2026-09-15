@@ -1,7 +1,9 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -35,4 +37,10 @@ class ProjectProject(models.Model):
     @api.depends("employee_id.user_id")
     def _compute_user_id(self):
         for project in self:
+            _debug.logic(
+                "project_manager_user_followed_employee",
+                project=project,
+                employee=project.employee_id,
+                user=project.employee_id.user_id,
+            )
             project.user_id = project.employee_id.user_id

@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -25,9 +28,20 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange("internal_project_id")
     def _onchange_timesheet_project_id(self):
         if self.internal_project_id != self.leave_timesheet_task_id.project_id:
+            _debug.logic(
+                "leave_timesheet_task_cleared",
+                reason="internal_project_changed",
+                project=self.internal_project_id,
+                task=self.leave_timesheet_task_id,
+            )
             self.leave_timesheet_task_id = False
 
     @api.onchange("leave_timesheet_task_id")
     def _onchange_timesheet_task_id(self):
         if self.leave_timesheet_task_id:
+            _debug.logic(
+                "internal_project_followed_task",
+                task=self.leave_timesheet_task_id,
+                project=self.leave_timesheet_task_id.project_id,
+            )
             self.internal_project_id = self.leave_timesheet_task_id.project_id

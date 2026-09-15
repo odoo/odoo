@@ -2,6 +2,9 @@ import json
 
 from odoo import models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -10,6 +13,11 @@ class ProjectProject(models.Model):
 
     def _get_expense_action(self, domain=None, expense_ids=None):
         if not domain and not expense_ids:
+            _debug.logic(
+                "project_expense_action_empty",
+                reason="neither_domain_nor_ids",
+                project=self,
+            )
             return {}
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "hr_expense.hr_expense_actions_all"
@@ -80,6 +88,11 @@ class ProjectProject(models.Model):
 
     def _get_expenses_profitability_items(self, with_action=True):
         if not self.account_id:
+            _debug.logic(
+                "project_expense_profitability_empty",
+                reason="project_has_no_analytic_account",
+                project=self,
+            )
             return {}
         can_see_expense = with_action and self.env.user.has_group(
             "hr_expense.group_hr_expense_team_approver"
@@ -93,7 +106,18 @@ class ProjectProject(models.Model):
             groupby=["currency_id"],
             aggregates=["id:array_agg", "untaxed_amount_currency:sum"],
         )
+        _debug.perf.count(
+            "project_expense_profitability_read",
+            project=self,
+            currencies=len(expenses_read_group),
+            can_see_expense=can_see_expense,
+        )
         if not expenses_read_group:
+            _debug.logic(
+                "project_expense_profitability_empty",
+                reason="no_posted_expenses_on_this_account",
+                project=self,
+            )
             return {}
         expense_ids = []
         amount_billed = 0.0
@@ -127,6 +151,13 @@ class ProjectProject(models.Model):
                 "args": json.dumps(args),
             }
             expense_profitability_items["costs"]["action"] = action
+        _debug.pipeline(
+            "project_expense_profitability_built",
+            project=self,
+            expenses=len(expense_ids),
+            amount_billed=amount_billed,
+            with_action=with_action,
+        )
         return expense_profitability_items
 
     def _get_domain_profitability_aal(self):

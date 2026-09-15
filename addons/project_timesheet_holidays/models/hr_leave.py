@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrLeave(models.Model):
@@ -32,10 +35,23 @@ class HrLeave(models.Model):
             )
 
             if not project or not task or leave.holiday_status_id.time_type == "other":
+                _debug.logic(
+                    "leave_timesheets_skipped",
+                    reason="no_internal_project"
+                    if not project
+                    else "no_leave_task"
+                    if not task
+                    else "time_type_other",
+                    leave=leave,
+                    company=leave.employee_id.company_id,
+                )
                 continue
 
             leave_ids.append(leave.id)
             if not leave.employee_id:
+                _debug.logic(
+                    "leave_timesheets_skipped", reason="no_employee", leave=leave
+                )
                 continue
 
             calendar = leave.employee_id.resource_calendar_id
@@ -54,6 +70,17 @@ class HrLeave(models.Model):
                 else:
                     hours = calendar.hours_per_day
                 work_hours_data = [(leave_date, hours)]
+                _debug.logic(
+                    "leave_timesheets_flexible_day",
+                    leave=leave,
+                    unit="hours"
+                    if leave.request_unit_hours
+                    else "half"
+                    if leave.request_unit_half
+                    else "day",
+                    hours=hours,
+                    date=leave_date,
+                )
             else:
                 ignored_resource_calendar_leaves = (
                     ignored_resource_calendar_leaves or []
@@ -69,6 +96,13 @@ class HrLeave(models.Model):
                     if ignored_resource_calendar_leaves
                     else None,
                 )[leave.employee_id.id]
+                _debug.perf.count(
+                    "leave_timesheets_work_time_per_day",
+                    leave=leave,
+                    employee=leave.employee_id,
+                    days=len(work_hours_data),
+                    ignored_calendar_leaves=len(ignored_resource_calendar_leaves),
+                )
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(
@@ -88,9 +122,20 @@ class HrLeave(models.Model):
             .search([("project_id", "!=", False), ("holiday_id", "in", leave_ids)])
         )
         if old_timesheets:
+            _debug.pipeline(
+                "leave_timesheets_replaced",
+                leaves=self,
+                removed=old_timesheets,
+            )
             old_timesheets.holiday_id = False
             old_timesheets.unlink()
 
+        _debug.pipeline(
+            "leave_timesheets_created",
+            leaves=self,
+            eligible_leaves=len(leave_ids),
+            lines=len(vals_list),
+        )
         self.env["account.analytic.line"].sudo().create(vals_list)
 
     def _timesheet_prepare_line_values(
@@ -116,6 +161,7 @@ class HrLeave(models.Model):
 
     def _check_missing_global_leave_timesheets(self):
         if not self:
+            _debug.logic("global_leave_backfill_skipped", reason="empty_recordset")
             return
         min_date = min(self.mapped("date_from"))
         max_date = max(self.mapped("date_to"))
@@ -129,12 +175,26 @@ class HrLeave(models.Model):
                 ("company_id.leave_timesheet_task_id", "!=", False),
             ]
         )
+        _debug.pipeline(
+            "global_leave_backfill",
+            leaves=self,
+            employees=self.employee_id,
+            window_from=min_date,
+            window_to=max_date,
+            global_leaves=global_leaves,
+        )
         if global_leaves:
             global_leaves._generate_public_time_off_timesheets(self.employee_id)
 
     def action_refuse(self):
         result = super().action_refuse()
         timesheets = self.sudo().mapped("timesheet_ids")
+        _debug.lifecycle(
+            "leave_timesheets_dropped",
+            trigger="refused",
+            leaves=self,
+            timesheets=timesheets,
+        )
         timesheets.write({"holiday_id": False})
         timesheets.unlink()
         self._check_missing_global_leave_timesheets()
@@ -143,6 +203,12 @@ class HrLeave(models.Model):
     def _action_user_cancel(self, reason=None):
         res = super()._action_user_cancel(reason)
         timesheets = self.sudo().timesheet_ids
+        _debug.lifecycle(
+            "leave_timesheets_dropped",
+            trigger="user_cancelled",
+            leaves=self,
+            timesheets=timesheets,
+        )
         timesheets.write({"holiday_id": False})
         timesheets.unlink()
         self._check_missing_global_leave_timesheets()
@@ -151,6 +217,12 @@ class HrLeave(models.Model):
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)
         timesheets = self.sudo().timesheet_ids
+        _debug.lifecycle(
+            "leave_timesheets_dropped",
+            trigger="force_cancelled",
+            leaves=self,
+            timesheets=timesheets,
+        )
         timesheets.holiday_id = False
         timesheets.unlink()
 
@@ -159,6 +231,12 @@ class HrLeave(models.Model):
         timesheet_ids_to_remove = []
         for leave in self:
             if leave.number_of_days == 0 and leave.sudo().timesheet_ids:
+                _debug.lifecycle(
+                    "leave_timesheets_dropped",
+                    trigger="zero_days_after_write",
+                    leaves=leave,
+                    timesheets=leave.sudo().timesheet_ids,
+                )
                 leave.sudo().timesheet_ids.holiday_id = False
                 timesheet_ids_to_remove.extend(leave.timesheet_ids)
         self.env["account.analytic.line"].browse(
