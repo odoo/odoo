@@ -48,3 +48,22 @@ class L10nFRAccountEdiCii(models.AbstractModel):
                     vals['supplier'].commercial_partner_id, 'peppol_endpoint'
                 ),
             })
+
+    def _import_cii_retrieve_customer(self, collected_values):
+        self._import_retrieve_customer(collected_values)
+        customer_id = collected_values['to_write'].get('partner_id')
+        if customer_id:
+            customer = self.env['res.partner'].browse(customer_id)
+            peppol_endpoint = collected_values.get('peppol_endpoint')
+            if collected_values['company']._get_peppol_proxy_type() == 'pdp':
+                if customer.peppol_eas != '0225' or customer.peppol_endpoint != peppol_endpoint:
+                    # the partner linked to the bill needs to have a valid french EAS to be able to send cancel/accept message to the IAP.
+                    # If the retrieved customer doesn't have the same EAS as the bill, create a new contact on it with the right EAS.
+                    new_contact = customer.copy({
+                        'name': customer.name,
+                        'peppol_eas': '0225',
+                        'peppol_endpoint': peppol_endpoint,
+                        'parent_id': customer_id,
+                        'company_type': customer.company_type,
+                    })
+                    collected_values['to_write']['partner_id'] = new_contact.id
