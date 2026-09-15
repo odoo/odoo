@@ -1,5 +1,11 @@
+<<<<<<< fd67a90a91514443f70f380ce70ee2f44b6b5b2c
 import { useRef, useState } from "@web/owl2/utils";
 import { Component, onMounted } from "@odoo/owl";
+||||||| db708766f3368c3b1953c14f066708cdda090888
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
+=======
+import { Component, onMounted, status, useRef, useState } from "@odoo/owl";
+>>>>>>> c78068b07c054f6c9fb63c0dcc530364d1e00aa5
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -97,6 +103,12 @@ export class FileInput extends Component {
             }
         }
         const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
+        if (status(this) === "destroyed") {
+            // The component was destroyed while the upload was in flight (its
+            // dialog was closed, or the user navigated away). Nobody is left to
+            // receive the uploaded files, and the input ref no longer exists.
+            return;
+        }
         if (parsedFileData) {
             // When calling onUpload, also pass the files to allow to get data like their names
             this.props.onUpload(
