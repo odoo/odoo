@@ -2,9 +2,8 @@
 
 import logging
 
-import werkzeug
-
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.tools import SQL, split_every
 from odoo.tools.constants import IN_MAX
 from odoo.tools.translate import StoredTranslations
@@ -36,57 +35,28 @@ class IrModuleModule(models.Model):
         for module in self:
             module.is_installed_on_current_website = module == website.theme_id
 
-    def _button_immediate_function(self, func):
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        self.env['ir.config_parameter'].sudo().set_int('website.apply_new_theme', website.id)
-        res = super()._button_immediate_function(func)
-        self.env['ir.config_parameter'].sudo().set_int('website.apply_new_theme', False)
-        return res
-
     def write(self, vals):
         """
-            Override to correctly upgrade themes after upgrade/installation of modules.
+            Override to load a theme on the websites using it whenever its
+            template records change.
 
-            # Install
+            eg. If a website uses theme_A and we install sale, then theme_A_sale will be
+                autoinstalled, and in this case we need to load theme_A_sale for the website.
 
-                If this theme wasn't installed before, then load it for every website
-                for which it is in the stream.
-
-                eg. The very first installation of a theme on a website will trigger this.
-
-                eg. If a website uses theme_A and we install sale, then theme_A_sale will be
-                    autoinstalled, and in this case we need to load theme_A_sale for the website.
-
-            # Upgrade
-
-                There are 2 cases to handle when upgrading a theme:
-
-                * When clicking on the theme upgrade button on the interface,
-                    in which case there will be an http request made.
-
-                    -> We want to upgrade the current website only, not any other.
-
-                * When upgrading with -u, in which case no request should be set.
-
-                    -> We want to upgrade every website using this theme.
+            Upgrading a theme, by hand or through a version migration, reloads
+            it on every website using it, so none of them is left on an outdated
+            version of its templates. Only the templates are reloaded: the theme
+            configuration is chosen when the theme is applied on a website, see
+            ``theme.engine._theme_apply``.
         """
-        ThemeEngine = self.env['theme.engine']
-        for module in self:
-            if module.name.startswith('theme_') and vals.get('state') == 'installed':
-                _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
+        if vals.get('state') == 'installed':
+            themes = self.filtered(lambda m: m.name.startswith('theme_') and m.state in ('to install', 'to upgrade'))
+            for module in themes:
+                _logger.info('Module %s has been loaded as theme template (%s)', module.name, module.state)
+                for website in module._theme_get_stream_website_ids():
+                    self.env['theme.engine']._theme_load(module, website)
 
-                if module.state in ['to install', 'to upgrade']:
-                    websites_to_update = module._theme_get_stream_website_ids()
-                    if module.state == 'to upgrade' and (website_restriction := int(self.env['ir.config_parameter'].sudo().get_int('website.apply_new_theme', 0))):
-                        if website_restriction in websites_to_update.ids:
-                            websites_to_update = websites_to_update.browse(website_restriction)
-                        else:
-                            websites_to_update = websites_to_update.browse()
-
-                    for website in websites_to_update:
-                        ThemeEngine._theme_load(module, website)
-
-        return super(IrModuleModule, self).write(vals)
+        return super().write(vals)
 
     def _theme_get_upstream(self):
         """
@@ -119,8 +89,9 @@ class IrModuleModule(models.Model):
             :return: recordset of themes ``ir.module.module``
         """
         self.ensure_one()
-        all_mods = self + self._theme_get_downstream()
-        for down_mod in self._theme_get_downstream() + self:
+        downstream = self._theme_get_downstream()
+        all_mods = self + downstream
+        for down_mod in downstream + self:
             for up_mod in down_mod._theme_get_upstream():
                 all_mods = up_mod | all_mods
         return all_mods
@@ -138,28 +109,14 @@ class IrModuleModule(models.Model):
                 websites |= website
         return websites
 
-    def _theme_upgrade_upstream(self):
-        """ Upgrade the upstream dependencies of a theme, and install it if necessary. """
-        if not self.env.user.has_group('website.group_website_restricted_editor'):
-            raise werkzeug.exceptions.Forbidden()
-
-        def install_or_upgrade(theme):
-            if theme.state != 'installed':
-                theme.button_install()
-            themes = theme + theme._theme_get_upstream()
-            themes.filtered(lambda m: m.state == 'installed').button_upgrade()
-
-        self.sudo()._button_immediate_function(install_or_upgrade)
-
     def button_choose_theme(self):
         """
-            Remove any existing theme on the current website and install the theme ``self`` instead.
+            Remove any existing theme on the current website and apply the theme
+            ``self`` instead.
 
-            The actual loading of the theme on the current website will be done
-            automatically on ``write`` thanks to the upgrade and/or install.
-
-            When installating a new theme, upgrade the upstream chain first to make sure
-            we have the latest version of the dependencies to prevent inconsistencies.
+            The theme is installed first if it is not on the database yet. That
+            module operation knows nothing about websites: applying the theme on
+            the current website is a separate step, done by ``theme.engine``.
 
             :return: dict with the next action to execute
         """
@@ -167,17 +124,18 @@ class IrModuleModule(models.Model):
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
 
-        self.env['theme.engine']._theme_remove(website)
+        theme = self
+        if self.state != 'installed':
+            if not self.env.user.has_group('website.group_website_restricted_editor'):
+                raise AccessError(self.env._("You don't have the necessary access rights to manage website themes."))
+            self.sudo().button_immediate_install()
+            # The registry has been reloaded, rebind the records to the new one.
+            theme = self.env['ir.module.module'].browse(self.id)
+            website = self.env['website'].browse(website.id)
 
-        # website.theme_id must be set before upgrade/install to trigger the load in ``write``
-        website.theme_id = self
+        self.env['theme.engine']._theme_apply(theme, website)
 
-        # this will install 'self' if it is not installed yet
-        self._theme_upgrade_upstream()
-        self.env['theme.utils'].with_context(website_id=website.id)._post_copy(self)
-
-        result = website.button_go_website()
-        return result
+        return website.button_go_website()
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
@@ -186,13 +144,11 @@ class IrModuleModule(models.Model):
 
     def button_refresh_theme(self):
         """
-            Refresh the current theme of the current website.
-
-            To refresh it, we only need to upgrade the modules.
-            Indeed the (re)loading of the theme will be done automatically on ``write``.
+            Re-apply the current theme of the current website, to bring it back
+            in sync with its (possibly upgraded) theme templates.
         """
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        website.theme_id._theme_upgrade_upstream()
+        self.env['theme.engine']._theme_apply(website.theme_id, website)
 
     @api.model
     def update_list(self):
