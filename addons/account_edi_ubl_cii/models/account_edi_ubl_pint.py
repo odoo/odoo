@@ -52,7 +52,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         ubl_values = vals['_ubl_values']
         ubl_values['tax_withholding_amount'] = 0.0
         for grouping_key, values in values_per_grouping_key.items():
-            if not grouping_key:
+            if not grouping_key or (isinstance(grouping_key, dict) and grouping_key.get('is_allowance_charge')):
                 continue
 
             tax_amount = values['tax_amount_currency']
