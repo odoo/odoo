@@ -152,7 +152,7 @@
             </div>
             <t t-call="website_sale.address_list"
                 addresses="delivery_addresses"
-                selected_address="order.partner_shipping_id"/>
+                selected_address="order.partner_shipping_id if order.partner_shipping_id in delivery_addresses else order.partner_id"/>
         </div>
     </template>
 
