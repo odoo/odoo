@@ -474,7 +474,7 @@ def _read_head(conn: Connection, limits: TransportLimits) -> tuple[int, int] | N
             )
         conn.sock.settimeout(min(limits.socket_timeout, remaining))
         try:
-            if not conn.source.fill():
+            if not conn.source.receive_into_buffer():
                 return None
         except TimeoutError:
             # A pause inside the head is bounded by head_timeout, not by the
