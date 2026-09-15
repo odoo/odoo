@@ -530,3 +530,45 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             '08/28/2026 06:15:00 PM',
             "a pickup on another day needs its date spelled out",
         )
+
+    def test_change_receipt_customer_info_with_preset_and_partner(self):
+        """
+        A delivery/takeout preset order's preparation ticket carries the customer's
+        address, phone and email so kitchen/delivery staff have what they need.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53')
+        order.partner_id = self.example_partner
+        order.mobile = '+1 555-123-4567'
+
+        customer = self._get_preparation_extra_data(order)['customer']
+
+        self.assertEqual(customer, {
+            'email': self.example_partner.email,
+            'phone': order.mobile,
+            'address': '123 Example St, Example City, 12345',
+        })
+
+    def test_change_receipt_no_customer_info_without_preset(self):
+        """
+        Regular counter orders (no preset) never show a customer section on the prep ticket,
+        even when a partner is set on the order.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
+        })
+        order.partner_id = self.example_partner
+
+        self.assertFalse(self._get_preparation_extra_data(order)['customer'])
+
+    def test_change_receipt_no_customer_info_when_preset_partner_has_no_details(self):
+        """
+        A preset order without any contact details on file must not show an empty
+        customer section on the prep ticket.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53')
+
+        self.assertFalse(self._get_preparation_extra_data(order)['customer'])

@@ -60,9 +60,14 @@ class PosSelfOrderController(http.Controller):
     def _generate_return_values(self, order, config):
         orders = self.env['pos.order']._load_pos_self_data_read(order, config)
 
-        for o in orders:
-            del o['email']
-            del o['mobile']
+        if config.self_ordering_mode != 'kiosk':
+            # In mobile, several devices can share the same order (e.g. a table), so we
+            # don't want to echo back the email/phone one customer entered to another
+            # customer syncing the same order. Kiosk orders are never shared, and the
+            # kiosk needs this data locally to print its own preparation ticket.
+            for o in orders:
+                del o['email']
+                del o['mobile']
 
         result = {
             'pos.order': orders,
@@ -131,7 +136,7 @@ class PosSelfOrderController(http.Controller):
                 if error:
                     return {'error': error}
             return {
-                'res.partner': existing_partner.read(['id'], load=False),
+                "res.partner": existing_partner._load_pos_self_data_read(existing_partner, pos_config),
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -153,7 +158,7 @@ class PosSelfOrderController(http.Controller):
                 return {'error': error}
 
         return {
-            'res.partner': partner_sudo.read(['id'], load=False),
+            "res.partner": partner_sudo._load_pos_self_data_read(partner_sudo, pos_config),
         }
 
     def _check_delivery_address_for_partner(self, preset, partner):

@@ -154,11 +154,9 @@ export class PresetInfoPopup extends Component {
                 }
                 const connectedData = this.selfOrder.models.connectNewData(result);
                 this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
-                this.setPartnerAndOrderName(connectedData["res.partner"][0]);
                 this.selfOrder.currentOrder.partner_id = connectedData["res.partner"][0];
-            } else {
-                this.selfOrder.currentOrder.floating_order_name = this.state.name;
             }
+            this.selfOrder.currentOrder.floating_order_name = this.state.name;
 
             this.props.getPayload({ ...this.state, phone: this.getFullPhone() });
             this.props.close();
@@ -173,15 +171,6 @@ export class PresetInfoPopup extends Component {
             return true;
         }
         return false;
-    }
-
-    setPartnerAndOrderName(partner) {
-        if (this.preset.needsPartner) {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
-        } else {
-            this.selfOrder.currentOrder.floating_order_name = this.state.name;
-        }
-        this.selfOrder.currentOrder.partner_id = partner;
     }
 
     makeAddressRecord() {
