@@ -488,6 +488,14 @@ class IrModel(models.Model):
         self.env["ir.model.data"]._update_xmlids(data_list)
 
     @api.model
+    def _get_manual_model_data(self) -> list[dict[str, Any]]:
+        self.env.cr.execute(
+            "SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'",
+            prepare=False,
+        )
+        return self.env.cr.dictfetchall()
+
+    @api.model
     def _prepare_class_attrs(self, model_data: dict[str, Any]) -> dict[str, Any]:
         return {
             "_name": model_data["model"],

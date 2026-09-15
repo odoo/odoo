@@ -28,7 +28,6 @@ BASE_MODEL_REACHES = {
     "models/mixins/load.py": 1,  # ir.fields.converter
     "models/mixins/read_group/sql.py": 1,  # res.currency.rate, sum_currency
     "model_test_env.py": 2,  # ir.model, ir.model.fields: the in-memory reflection
-    "registration.py": 1,  # ir.model.fields, manual fields at class build
 }
 
 # statements the models, fields and domain layers still execute themselves;
@@ -39,7 +38,9 @@ EXECUTED_STATEMENTS = {
     "models/mixins/read_group/mixin.py": 2,
 }
 
-_REACH = re.compile(r'env\["(?:ir|res|base|decimal)[a-z._]*"\]')
+# either quote: the one site that spelled env['ir.model'] inside an f-string
+# escaped the double-quoted form of this pattern until 2026-09-15
+_REACH = re.compile(r"""env\[["'](?:ir|res|base|decimal)[a-z._]*["']\]""")
 _EXECUTE = re.compile(r"\bcr\.execute\(|\bexecute_query\(")
 
 

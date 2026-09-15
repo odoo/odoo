@@ -75,11 +75,20 @@ class MetaSchema:
 
     # -- manual models and fields
 
+    def manual_model_data(self, env: Environment) -> list[dict]:
+        return env["ir.model"]._get_manual_model_data()
+
     def manual_class_attrs(self, env: Environment, model_data: dict) -> dict:
         return env["ir.model"]._prepare_class_attrs(model_data)
 
     def manual_field_data(self, env: Environment, model_name: str) -> dict:
         return env["ir.model.fields"]._get_manual_field_data(model_name)
+
+    def manual_field_ready(self, env: Environment, field_data: dict) -> bool:
+        return env["ir.model.fields"]._is_field_ready(field_data)
+
+    def manual_field_attrs(self, env: Environment, field_data: dict) -> dict:
+        return env["ir.model.fields"]._prepare_field_attrs(field_data)
 
     def field_ids_by_name(self, env: Environment, model_name: str) -> dict[str, int]:
         return env["ir.model.fields"]._get_ids_by_name(model_name)

@@ -1261,7 +1261,7 @@ class DomainCondition(Domain):
                 field_label=self._get_field(model).get_description(
                     model.env, ["string"]
                 )["string"],
-                model_label=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
+                model_label=f"{model.env.registry.metaschema.model_description(model.env, model._name)!r} ({model._name})",
             )
         )
 

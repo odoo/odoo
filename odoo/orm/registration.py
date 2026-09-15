@@ -604,18 +604,15 @@ def _add_manual_models(env: Environment):
     if removed_fields:
         env.registry.discard_fields(list(removed_fields))
 
-    env.cr.execute(
-        "SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'",
-        prepare=False,
-    )
-    manual_models = env.cr.dictfetchall()
+    metaschema = env.registry.metaschema
+    manual_models = metaschema.manual_model_data(env)
     _debug.pipeline(
         "registration.manual_models",
         removed_fields=len(removed_fields),
         manual=len(manual_models),
     )
     for model_data in manual_models:
-        attrs = env.registry.metaschema.manual_class_attrs(env, model_data)
+        attrs = metaschema.manual_class_attrs(env, model_data)
 
         table_name = model_data["model"].replace(".", "_")
         table_kind = sql.get_table_kind(env.cr, table_name)
@@ -635,9 +632,8 @@ def _add_manual_models(env: Environment):
 
 
 def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
-    IrModelFields = env["ir.model.fields"]
-
-    fields_data = env.registry.metaschema.manual_field_data(env, model_cls._name)
+    metaschema = env.registry.metaschema
+    fields_data = metaschema.manual_field_data(env, model_cls._name)
     if _debug.pipeline.enabled and fields_data:
         _debug.pipeline(
             "registration.manual_fields",
@@ -647,14 +643,14 @@ def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
     for name, field_data in fields_data.items():
         if name not in model_cls._fields and field_data["state"] == "manual":
             try:
-                if not IrModelFields._is_field_ready(field_data):
+                if not metaschema.manual_field_ready(env, field_data):
                     _debug.logic(
                         "registration.manual_field_not_ready",
                         model=model_cls._name,
                         field=name,
                     )
                     continue
-                attrs = IrModelFields._prepare_field_attrs(field_data)
+                attrs = metaschema.manual_field_attrs(env, field_data)
                 field = fields.Field._by_type__[field_data["ttype"]](**attrs)
                 add_field(model_cls, name, field)
             except Exception:
