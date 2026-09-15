@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_compliance_report_search" model="ir.ui.view">
+        <field name="name">document.compliance.report.search</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <search string="Entity Compliance Search">
+                <field name="entity_name" string="Entity" />
+                <field name="entity_type" string="Entity Type" />
+                <filter
+                    name="compliant"
+                    string="Compliant"
+                    domain="[('compliance_state', '=', 'compliant')]" />
+                <filter
+                    name="partial"
+                    string="Partial Compliance"
+                    domain="[('compliance_state', '=', 'partial')]" />
+                <filter
+                    name="non_compliant"
+                    string="Non-Compliant"
+                    domain="[('compliance_state', '=', 'non_compliant')]" />
+                <separator />
+                <filter
+                    name="has_expired"
+                    string="Has Expired Types"
+                    domain="[('total_expired', '&gt;', 0)]" />
+                <filter
+                    name="has_expiring"
+                    string="Has Expiring Types"
+                    domain="[('total_expiring', '&gt;', 0)]" />
+                <filter
+                    name="has_missing"
+                    string="Has Missing Types"
+                    domain="[('total_missing', '&gt;', 0)]" />
+                <separator />
+                <filter
+                    name="low_compliance"
+                    string="Below 50% Compliance"
+                    domain="[('compliance_percentage', '&lt;', 50)]" />
+                <filter
+                    name="medium_compliance"
+                    string="Below 80% Compliance"
+                    domain="[('compliance_percentage', '&lt;', 80)]" />
+                <group>
+                    <filter
+                        name="group_entity_type"
+                        string="Entity Type"
+                        context="{'group_by': 'entity_type'}" />
+                    <filter
+                        name="group_status"
+                        string="Compliance Status"
+                        context="{'group_by': 'compliance_state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_document_compliance_report_list" model="ir.ui.view">
+        <field name="name">document.compliance.report.list</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <list string="Entity Compliance Dashboard" create="false" delete="false">
+                <field name="entity_name" string="Entity" />
+                <field name="entity_type" optional="show" />
+                <field name="total_required" string="Required Types" optional="show" />
+                <field
+                    name="total_valid"
+                    string="Valid Types"
+                    optional="show"
+                    decoration-success="total_valid == total_required" />
+                <field
+                    name="total_missing"
+                    string="Missing Types"
+                    optional="show"
+                    decoration-danger="total_missing &gt; 0" />
+                <field
+                    name="total_expired"
+                    string="Expired Types"
+                    optional="show"
+                    decoration-danger="total_expired &gt; 0" />
+                <field
+                    name="total_expiring"
+                    string="Expiring Soon"
+                    optional="show"
+                    decoration-warning="total_expiring &gt; 0" />
+                <field
+                    name="compliance_percentage"
+                    widget="progressbar"
+                    optional="show" />
+                <field
+                    name="compliance_state"
+                    decoration-danger="compliance_state == 'non_compliant'"
+                    decoration-success="compliance_state == 'compliant'"
+                    decoration-warning="compliance_state == 'partial'" />
+                <field name="earliest_expiry" optional="hide" />
+                <field name="last_verification" optional="hide" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    string="View Documents"
+                    icon="fa-regular fa-file-lines" />
+                <button
+                    name="action_view_entity"
+                    type="object"
+                    string="View Entity"
+                    icon="fa-solid fa-up-right-from-square" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_document_compliance_report_pivot" model="ir.ui.view">
+        <field name="name">document.compliance.report.pivot</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Compliance Analysis" sample="1" disable_linking="true">
+                <field name="entity_type" type="row" />
+                <field name="compliance_state" type="col" />
+                <field
+                    name="compliance_percentage"
+                    type="measure"
+                    widget="percentage" />
+                <field name="total_required" type="measure" />
+                <field name="total_valid" type="measure" />
+                <field name="total_expired" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_document_compliance_report_graph" model="ir.ui.view">
+        <field name="name">document.compliance.report.graph</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Entity Compliance Overview" sample="1">
+                <field name="entity_type" />
+                <field name="compliance_percentage" type="measure" />
+                <field name="total_required" type="measure" />
+                <field name="total_valid" type="measure" />
+                <field name="total_missing" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_document_compliance_dashboard" model="ir.actions.act_window">
+        <field name="name">Entity Compliance Dashboard</field>
+        <field name="res_model">document.compliance.report</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_document_compliance_report_search" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Entity Compliance Dashboard
+            </p>
+            <p>
+                Monitor document compliance for all entities in your organization.
+            </p>
+            <p>
+                This dashboard tracks which partners, employees, vehicles, and other entities
+                are missing required documents or have expired/expiring documents.
+            </p>
+            <p>
+                Each entity shows its compliance status based on mandatory document types configured
+                in the system.
+            </p>
+            <p>
+                This dashboard is precomputed and refreshed every 30 minutes, so a document filed
+                or edited in the last few minutes may not be reflected yet.
+            </p>
+        </field>
+    </record>
+
+</odoo>

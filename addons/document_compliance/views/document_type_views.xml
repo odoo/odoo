@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_type_search_compliance" model="ir.ui.view">
+        <field name="name">document.type.search.compliance</field>
+        <field name="model">document.type</field>
+        <field name="inherit_id" ref="document.view_document_type_search" />
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <filter name="has_expiration" position="before">
+                <filter
+                    name="mandatory"
+                    string="Mandatory"
+                    domain="[('is_mandatory', '=', True)]" />
+            </filter>
+            <filter name="group_has_expiration" position="before">
+                <filter
+                    name="group_mandatory"
+                    string="Mandatory"
+                    context="{'group_by': 'is_mandatory'}" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_document_type_list_compliance" model="ir.ui.view">
+        <field name="name">document.type.list.compliance</field>
+        <field name="model">document.type</field>
+        <field name="inherit_id" ref="document.view_document_type_list" />
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <field name="has_expiration" position="before">
+                <field name="is_mandatory" string="Compliance Req." />
+                <field name="applies_to" optional="show" />
+                <field name="requires_original" string="Orig. Required" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_document_type_form_compliance" model="ir.ui.view">
+        <field name="name">document.type.form.compliance</field>
+        <field name="model">document.type</field>
+        <field name="inherit_id" ref="document.view_document_type_form" />
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <group name="validity" position="before">
+                <group name="compliance" string="Compliance">
+                    <field name="is_mandatory" />
+                    <field name="applies_to" />
+                    <field name="is_renewable" />
+                    <field name="requires_original" />
+                </group>
+            </group>
+            <group name="validity" position="after">
+                <group name="notifications" string="Notifications">
+                    <field name="notification_days" placeholder="30,7,1" />
+                    <field name="notification_partner_ids" widget="many2many_tags" />
+                </group>
+            </group>
+            <page name="description" position="before">
+                <page name="instructions" string="Instructions">
+                    <field name="instructions" nolabel="1" />
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

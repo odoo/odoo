@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-inherit="document.DocumentsDetailsPanel" t-inherit-mode="extension">
+        <xpath
+            expr="//div[hasclass('o_documents_details_panel_fields')]"
+            position="inside"
+        >
+            <t t-if="hasComplianceFields">
+                <i class="fa-solid fa-stamp mx-1 my-2" title="Document Type" />
+                <div class="o_field_widget o_field_many2one">
+                    <DocumentsDetailsMany2OneField
+                        name="'document_type_id'"
+                        readonly="userPermissionViewOnly"
+                        record="record"
+                        canOpen="false"
+                        canCreate="false"
+                        canQuickCreate="false"
+                        canCreateEdit="false"
+                        placeholder.translate="No document type"
+                    />
+                </div>
+
+                <t t-if="complianceDocumentSelected">
+                    <i class="fa-solid fa-landmark mx-1 my-2" title="Issuer" />
+                    <div class="o_field_widget o_field_many2one">
+                        <DocumentsDetailsMany2OneField
+                            name="'issuer_id'"
+                            readonly="userPermissionViewOnly"
+                            record="record"
+                            canOpen="false"
+                            canCreate="false"
+                            canQuickCreate="false"
+                            canCreateEdit="false"
+                            placeholder.translate="No issuer"
+                        />
+                    </div>
+
+                    <i class="fa-solid fa-hashtag mx-1 my-2" title="Legal Number" />
+                    <div class="o_field_widget">
+                        <Field
+                            name="'legal_number'"
+                            record="record"
+                            readonly="userPermissionViewOnly"
+                        />
+                    </div>
+
+                    <i class="fa-regular fa-calendar-plus mx-1 my-2" title="Date Issued" />
+                    <div class="o_field_widget">
+                        <Field
+                            name="'date_issued'"
+                            record="record"
+                            readonly="userPermissionViewOnly"
+                        />
+                    </div>
+
+                    <i class="fa-regular fa-calendar-xmark mx-1 my-2" title="Date Expiration" />
+                    <div class="o_field_widget">
+                        <Field
+                            name="'date_expiration'"
+                            record="record"
+                            readonly="userPermissionViewOnly"
+                        />
+                    </div>
+
+                    <t t-if="record.data.expiration_state">
+                        <i class="fa-regular fa-hourglass-half mx-1 my-2" title="Expiration State" />
+                        <div class="o_field_widget">
+                            <span t-att-class="expirationStateClass" t-out="expirationStateLabel" />
+                        </div>
+                    </t>
+
+                    <i class="fa-solid fa-shield-halved mx-1 my-2" title="Compliance State" />
+                    <div class="o_field_widget">
+                        <span t-att-class="complianceStateClass" t-out="complianceStateLabel" />
+                    </div>
+
+                    <div class="o_documents_compliance_actions d-flex w-100 gap-2 my-2">
+                        <button
+                            class="btn btn-secondary btn-sm"
+                            t-att-disabled="userPermissionViewOnly"
+                            t-on-click="onVerifyDocument"
+                        >
+                            <i class="fa-solid fa-check me-1" />
+                            <t t-if="record.data.date_verification">Verified <t t-out="record.data.date_verification.toLocaleString({ month: 'short', day: 'numeric', year: 'numeric' })" /></t>
+                            <t t-else="">Verify</t>
+                        </button>
+                        <button
+                            t-if="canRenew"
+                            class="btn btn-secondary btn-sm"
+                            t-on-click="onRenewDocument"
+                        >
+                            <i class="fa-solid fa-rotate me-1" />Renew
+                        </button>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

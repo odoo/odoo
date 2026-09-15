@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="document_view_search" model="ir.ui.view">
+        <field name="name">document.document.search.compliance</field>
+        <field name="model">document.document</field>
+        <field name="inherit_id" ref="document.document_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='expiration_missing']" position="after">
+                <separator />
+                <filter
+                    name="mandatory"
+                    string="Mandatory Documents"
+                    domain="[('is_mandatory', '=', True)]" />
+                <filter
+                    name="non_compliant"
+                    string="Non-Compliant"
+                    domain="[('compliance_state', '=', 'non_compliant')]" />
+                <separator />
+                <filter
+                    name="verified"
+                    string="Verified"
+                    domain="[('date_verification', '!=', False)]" />
+                <filter
+                    name="not_verified"
+                    string="Not Verified"
+                    domain="[('date_verification', '=', False), ('document_type_id', '!=', False)]" />
+            </xpath>
+
+            <filter name="filter_expiration_state" position="after">
+                <filter
+                    name="group_compliance_state"
+                    string="Compliance Status"
+                    context="{'group_by': 'compliance_state'}" />
+                <filter
+                    name="group_mandatory"
+                    string="Mandatory"
+                    context="{'group_by': 'is_mandatory'}" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="document_view_kanban_compliance" model="ir.ui.view">
+        <field name="name">document.document.kanban.compliance</field>
+        <field name="model">document.document</field>
+        <field name="inherit_id" ref="document.document_view_kanban" />
+        <field name="arch" type="xml">
+            <field name="expiration_state" position="after">
+                <field name="compliance_state" />
+                <field name="is_mandatory" />
+                <field name="date_verification" />
+            </field>
+        </field>
+    </record>
+
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">document.document.list.compliance</field>
+        <field name="model">document.document</field>
+        <field name="inherit_id" ref="document.documents_view_list" />
+        <field name="arch" type="xml">
+            <field name="expiration_state" position="after">
+                <field name="date_verification" optional="hide" />
+                <field
+                    name="compliance_state"
+                    widget="badge"
+                    optional="hide"
+                    invisible="not document_type_id"
+                    decoration-danger="compliance_state == 'non_compliant'"
+                    decoration-success="compliance_state == 'compliant'" />
+                <field
+                    name="is_mandatory"
+                    string="Required"
+                    widget="boolean_toggle"
+                    optional="hide"
+                    invisible="not document_type_id"
+                    readonly="1" />
+            </field>
+        </field>
+    </record>
+
+    <!--
+        The Documents app has no general-purpose form view: every form on
+        document.document in core is a special-purpose primary dialog (upload
+        url priority 5, new folder 16, folder deletion 20, rename 32). So there
+        is nothing to inherit, and an action asking for "list,form" falls
+        through to the lowest-priority one, the upload-url dialog. This is that
+        missing form, referenced explicitly by action_view_documents below so it
+        never displaces a core dialog.
+    -->
+    <record id="documents_view_form_compliance" model="ir.ui.view">
+        <field name="name">document.document.form.compliance</field>
+        <field name="model">document.document</field>
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <form string="Compliance Document">
+                <header>
+                    <button
+                        name="action_verify_document"
+                        type="object"
+                        string="Verify"
+                        invisible="not document_type_id"
+                        class="btn-primary" />
+                    <button
+                        name="action_renew_document"
+                        type="object"
+                        string="Renew"
+                        invisible="not document_type_id or not is_renewable or renewed_by_document_id" />
+                    <field
+                        name="compliance_state"
+                        widget="statusbar"
+                        invisible="not document_type_id" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Document" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="identification" string="Identification">
+                            <field name="document_type_id" />
+                            <field name="legal_number" />
+                            <field name="issuer_id" />
+                            <field name="folder_id" />
+                        </group>
+                        <group name="validity" string="Validity">
+                            <field name="date_issued" />
+                            <field name="date_expiration" />
+                            <field name="days_left" invisible="not date_expiration" />
+                            <field
+                                name="expiration_state"
+                                invisible="not date_expiration"
+                                readonly="1" />
+                            <field name="is_mandatory" readonly="1" />
+                            <field name="is_renewable" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook invisible="not document_type_id">
+                        <page name="verification" string="Verification">
+                            <group>
+                                <field name="date_verification" readonly="1" />
+                                <field name="verified_by_user_id" readonly="1" />
+                            </group>
+                            <field
+                                name="verification_notes"
+                                placeholder="Observations from the verification" />
+                        </page>
+                        <page
+                            name="renewal"
+                            string="Renewal"
+                            invisible="not renewal_document_id and not renewed_by_document_id">
+                            <group>
+                                <field name="renewal_document_id" readonly="1" />
+                                <field name="renewed_by_document_id" readonly="1" />
+                                <field name="renewal_count" readonly="1" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

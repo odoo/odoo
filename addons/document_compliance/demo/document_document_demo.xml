@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="demo_doc_type_vehicle_registration" model="document.type">
+        <field name="name">Vehicle Registration</field>
+        <field name="code">VEH_REG</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="10" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="365" />
+        <field name="notification_days">60,30,7,1</field>
+        <field
+            name="description">Annual vehicle registration documents required by law for all company vehicles.</field>
+        <field
+            name="instructions">&lt;p&gt;&lt;strong&gt;Renewal Process:&lt;/strong&gt;&lt;/p&gt;
+            &lt;ol&gt;
+                &lt;li&gt;Contact DMV 45 days before expiration&lt;/li&gt;
+                &lt;li&gt;Submit vehicle inspection certificate&lt;/li&gt;
+                &lt;li&gt;Pay renewal fee&lt;/li&gt;
+                &lt;li&gt;Upload new registration document&lt;/li&gt;
+            &lt;/ol&gt;</field>
+    </record>
+
+    <record id="demo_doc_type_vehicle_insurance" model="document.type">
+        <field name="name">Vehicle Insurance Policy</field>
+        <field name="code">VEH_INS</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="11" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="365" />
+        <field name="notification_days">90,60,30,7</field>
+        <field
+            name="description">Comprehensive vehicle insurance coverage for company fleet.</field>
+        <field
+            name="instructions">&lt;p&gt;Contact insurance broker at least 60 days before expiration to review coverage and rates.&lt;/p&gt;</field>
+    </record>
+
+    <record id="demo_doc_type_vehicle_inspection" model="document.type">
+        <field name="name">Vehicle Safety Inspection</field>
+        <field name="code">VEH_INSP</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="12" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="180" />
+        <field name="notification_days">30,14,7</field>
+        <field
+            name="description">Semi-annual safety inspection certificate for commercial vehicles.</field>
+    </record>
+
+    <record id="demo_doc_type_safety_training" model="document.type">
+        <field name="name">Safety Training Certificate</field>
+        <field name="code">EMP_SAFETY</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="20" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="180" />
+        <field name="notification_days">30,14,7,1</field>
+        <field
+            name="description">Mandatory workplace safety training for all warehouse and production employees.</field>
+        <field
+            name="instructions">&lt;p&gt;Employees must attend 4-hour safety refresher course. Contact HR to schedule.&lt;/p&gt;</field>
+    </record>
+
+    <record id="demo_doc_type_forklift_license" model="document.type">
+        <field name="name">Forklift Operator License</field>
+        <field name="code">EMP_FORKLIFT</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="21" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="1095" />
+        <field name="notification_days">90,60,30,7</field>
+        <field
+            name="description">Certified forklift operator license for warehouse personnel.</field>
+    </record>
+
+    <record id="demo_doc_type_first_aid" model="document.type">
+        <field name="name">First Aid Certification</field>
+        <field name="code">EMP_FIRSTAID</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="22" />
+        <field name="is_mandatory" eval="False" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="730" />
+        <field name="notification_days">60,30,7</field>
+        <field
+            name="description">Red Cross first aid and CPR certification (optional but recommended).</field>
+    </record>
+
+    <record id="demo_doc_type_employment_contract" model="document.type">
+        <field name="name">Employment Contract</field>
+        <field name="code">EMP_CONTRACT</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="23" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="1095" />
+        <field name="notification_days">90,30,7</field>
+        <field name="requires_original" eval="True" />
+        <field name="description">Employee contract with terms of employment.</field>
+    </record>
+
+    <record id="demo_doc_type_iso9001" model="document.type">
+        <field name="name">ISO 9001 Certification</field>
+        <field name="code">SUP_ISO9001</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="30" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="1095" />
+        <field name="notification_days">180,90,30</field>
+        <field
+            name="description">ISO 9001 Quality Management System certification for suppliers.</field>
+    </record>
+
+    <record id="demo_doc_type_product_safety" model="document.type">
+        <field name="name">Product Safety Certificate</field>
+        <field name="code">SUP_SAFETY</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="31" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="730" />
+        <field name="notification_days">90,30,7</field>
+        <field
+            name="description">Product safety certification and compliance documentation.</field>
+    </record>
+
+    <record id="demo_doc_type_supplier_insurance" model="document.type">
+        <field name="name">Supplier Liability Insurance</field>
+        <field name="code">SUP_INS</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="32" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="365" />
+        <field name="notification_days">60,30,14,7</field>
+        <field
+            name="description">General liability insurance certificate for approved suppliers.</field>
+    </record>
+
+    <record id="demo_doc_type_business_license" model="document.type">
+        <field name="name">Business Operating License</field>
+        <field name="code">BUS_LICENSE</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="40" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="365" />
+        <field name="notification_days">90,60,30,7</field>
+        <field name="requires_original" eval="True" />
+        <field
+            name="description">Annual business operating license from local authorities.</field>
+    </record>
+
+    <record id="demo_doc_type_tax_certificate" model="document.type">
+        <field name="name">Tax Compliance Certificate</field>
+        <field name="code">BUS_TAX</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="41" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="365" />
+        <field name="notification_days">60,30,14,7,1</field>
+        <field
+            name="description">Annual tax compliance certificate from tax authorities.</field>
+    </record>
+
+    <record id="demo_doc_type_lease_agreement" model="document.type">
+        <field name="name">Facility Lease Agreement</field>
+        <field name="code">BUS_LEASE</field>
+        <field name="applies_to">res.partner</field>
+        <field name="sequence" eval="42" />
+        <field name="is_mandatory" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="default_validity_days" eval="1095" />
+        <field name="notification_days">180,90,60,30</field>
+        <field name="requires_original" eval="True" />
+        <field name="description">Commercial property lease agreement.</field>
+    </record>
+
+    <record id="demo_doc_vehicle_001_reg" model="document.document">
+        <field name="name">Truck TRK-001 - Registration 2024</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_registration" />
+        <field name="legal_number">REG-2024-TRK001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=60)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=305)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_1" />
+        <field name="partner_id" ref="base.res_partner_1" />
+    </record>
+
+    <record id="demo_doc_vehicle_001_ins" model="document.document">
+        <field name="name">Truck TRK-001 - Insurance Policy</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_insurance" />
+        <field name="legal_number">INS-2024-TRK001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=90)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=275)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=85)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+        <field
+            name="verification_notes">Policy verified - Full coverage including liability and collision.</field>
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_1" />
+        <field name="partner_id" ref="base.res_partner_1" />
+    </record>
+
+    <record id="demo_doc_vehicle_002_insp" model="document.document">
+        <field name="name">Van VAN-002 - Safety Inspection</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_inspection" />
+        <field name="legal_number">INSP-2024-VAN002</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=160)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_2" />
+        <field name="partner_id" ref="base.res_partner_2" />
+    </record>
+
+    <record id="demo_doc_vehicle_003_reg" model="document.document">
+        <field name="name">Car CAR-003 - Registration 2024</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_registration" />
+        <field name="legal_number">REG-2024-CAR003</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=340)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=25)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_2" />
+        <field name="partner_id" ref="base.res_partner_2" />
+    </record>
+
+    <record id="demo_doc_vehicle_004_ins" model="document.document">
+        <field name="name">Truck TRK-004 - Insurance Policy EXPIRED</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_insurance" />
+        <field name="legal_number">INS-2023-TRK004</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=380)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=15)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="1" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_vehicle_005_insp" model="document.document">
+        <field name="name">Van VAN-005 - Safety Inspection EXPIRED</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_inspection" />
+        <field name="legal_number">INSP-2024-VAN005</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=200)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=20)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_employee_001_safety" model="document.document">
+        <field name="name">John Smith - Safety Training Certificate</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2024-JS001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=135)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=40)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+    </record>
+
+    <record id="demo_doc_employee_001_forklift" model="document.document">
+        <field name="name">John Smith - Forklift Operator License</field>
+        <field name="document_type_id" ref="demo_doc_type_forklift_license" />
+        <field name="legal_number">FORK-2023-JS001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=730)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=365)).strftime('%Y-%m-%d')" />
+    </record>
+
+    <record id="demo_doc_employee_002_contract" model="document.document">
+        <field name="name">Maria Garcia - Employment Contract</field>
+        <field name="document_type_id" ref="demo_doc_type_employment_contract" />
+        <field name="legal_number">EMP-2023-MG002</field>
+        <field name="issuer_id" ref="base.main_company" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=365)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=730)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=360)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+        <field
+            name="verification_notes">Contract reviewed and approved by HR and Legal.</field>
+    </record>
+
+    <record id="demo_doc_employee_003_safety" model="document.document">
+        <field name="name">Robert Lee - Safety Training Certificate</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2024-RL003</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=167)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=13)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+    </record>
+
+    <record id="demo_doc_employee_004_firstaid" model="document.document">
+        <field name="name">Sarah Johnson - First Aid Certification</field>
+        <field name="document_type_id" ref="demo_doc_type_first_aid" />
+        <field name="legal_number">FA-2023-SJ004</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=710)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+    </record>
+
+    <record id="demo_doc_employee_005_safety" model="document.document">
+        <field name="name">Michael Brown - Safety Training EXPIRED</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2024-MB005</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=190)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=10)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="1" />
+        <field name="notification_sent_expired" eval="True" />
+    </record>
+
+    <record id="demo_doc_supplier_001_iso" model="document.document">
+        <field name="name">ABC Manufacturing - ISO 9001 Certificate</field>
+        <field name="document_type_id" ref="demo_doc_type_iso9001" />
+        <field name="legal_number">ISO9001-2023-ABC</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=400)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=695)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=380)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_supplier_002_safety" model="document.document">
+        <field name="name">XYZ Supplies - Product Safety Certificate</field>
+        <field name="document_type_id" ref="demo_doc_type_product_safety" />
+        <field name="legal_number">PROD-SAFE-2023-XYZ</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=200)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=530)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_2" />
+        <field name="partner_id" ref="base.res_partner_2" />
+    </record>
+
+    <record id="demo_doc_supplier_003_insurance" model="document.document">
+        <field name="name">Tech Solutions Inc - Liability Insurance</field>
+        <field name="document_type_id" ref="demo_doc_type_supplier_insurance" />
+        <field name="legal_number">INS-2024-TSI</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=358)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=7)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_supplier_004_insurance" model="document.document">
+        <field name="name">Global Parts Ltd - Liability Insurance EXPIRED</field>
+        <field name="document_type_id" ref="demo_doc_type_supplier_insurance" />
+        <field name="legal_number">INS-2023-GPL</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=400)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=35)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_supplier_005_safety" model="document.document">
+        <field name="name">Quality Components - Product Safety EXPIRED</field>
+        <field name="document_type_id" ref="demo_doc_type_product_safety" />
+        <field name="legal_number">PROD-SAFE-2022-QC</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=760)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=30)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_p5_veh_reg" model="document.document">
+        <field name="name">Partner 5 - Vehicle Registration (Valid)</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_registration" />
+        <field name="legal_number">REG-P5-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=30)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=335)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_1" />
+        <field name="partner_id" ref="base.res_partner_1" />
+    </record>
+
+    <record id="demo_doc_p5_veh_ins" model="document.document">
+        <field name="name">Partner 5 - Vehicle Insurance (Valid)</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_insurance" />
+        <field name="legal_number">INS-P5-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=15)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=350)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_1" />
+        <field name="partner_id" ref="base.res_partner_1" />
+    </record>
+
+    <record id="demo_doc_p5_veh_insp" model="document.document">
+        <field name="name">Partner 5 - Vehicle Inspection (Valid)</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_inspection" />
+        <field name="legal_number">INSP-P5-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=135)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_1" />
+        <field name="partner_id" ref="base.res_partner_1" />
+    </record>
+
+    <record id="demo_doc_p7_reg_expired" model="document.document">
+        <field name="name">Partner 7 - Old Registration (EXPIRED)</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_registration" />
+        <field name="legal_number">REG-P7-OLD</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=400)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=35)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_2" />
+        <field name="partner_id" ref="base.res_partner_2" />
+    </record>
+
+    <record id="demo_doc_p7_reg_valid" model="document.document">
+        <field name="name">Partner 7 - New Registration (VALID)</field>
+        <field name="document_type_id" ref="demo_doc_type_vehicle_registration" />
+        <field name="legal_number">REG-P7-NEW</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=10)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=355)).strftime('%Y-%m-%d')" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_2" />
+        <field name="partner_id" ref="base.res_partner_2" />
+    </record>
+
+    <record id="demo_doc_p8_safety" model="document.document">
+        <field name="name">Partner 8 - Safety Training (Expiring in 15 days)</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-P8-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=165)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_p8_forklift" model="document.document">
+        <field name="name">Partner 8 - Forklift License (Expiring in 25 days)</field>
+        <field name="document_type_id" ref="demo_doc_type_forklift_license" />
+        <field name="legal_number">FORK-P8-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=1070)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=25)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_p8_contract" model="document.document">
+        <field name="name">Partner 8 - Employment Contract (Expiring in 10 days)</field>
+        <field name="document_type_id" ref="demo_doc_type_employment_contract" />
+        <field name="legal_number">EMP-P8-001</field>
+        <field name="issuer_id" ref="base.main_company" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=1085)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_3" />
+        <field name="partner_id" ref="base.res_partner_3" />
+    </record>
+
+    <record id="demo_doc_p9_iso_expired" model="document.document">
+        <field name="name">Partner 9 - ISO 9001 (EXPIRED)</field>
+        <field name="document_type_id" ref="demo_doc_type_iso9001" />
+        <field name="legal_number">ISO-P9-EXPIRED</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=1150)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=55)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_p9_safety_expired" model="document.document">
+        <field name="name">Partner 9 - Product Safety (EXPIRED)</field>
+        <field name="document_type_id" ref="demo_doc_type_product_safety" />
+        <field name="legal_number">SAFE-P9-EXPIRED</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=800)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=70)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_p9_ins_expired" model="document.document">
+        <field name="name">Partner 9 - Liability Insurance (EXPIRED)</field>
+        <field name="document_type_id" ref="demo_doc_type_supplier_insurance" />
+        <field name="legal_number">INS-P9-EXPIRED</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=395)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=30)).strftime('%Y-%m-%d')" />
+        <field name="notification_sent_expired" eval="True" />
+        <field name="res_model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_4" />
+        <field name="partner_id" ref="base.res_partner_4" />
+    </record>
+
+    <record id="demo_doc_business_license" model="document.document">
+        <field name="name">Business Operating License 2024</field>
+        <field name="document_type_id" ref="demo_doc_type_business_license" />
+        <field name="legal_number">BUS-LIC-2024-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=100)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=265)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=95)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+    </record>
+
+    <record id="demo_doc_tax_certificate" model="document.document">
+        <field name="name">Tax Compliance Certificate 2024</field>
+        <field name="document_type_id" ref="demo_doc_type_tax_certificate" />
+        <field name="legal_number">TAX-CERT-2024-001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=351)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=14)).strftime('%Y-%m-%d')" />
+        <field name="notification_last_days" eval="30" />
+    </record>
+
+    <record id="demo_doc_lease_agreement" model="document.document">
+        <field name="name">Warehouse Facility Lease Agreement</field>
+        <field name="document_type_id" ref="demo_doc_type_lease_agreement" />
+        <field name="legal_number">LEASE-2022-WH001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=1035)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=60)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_verification"
+            eval="(DateTime.today() - timedelta(days=1000)).strftime('%Y-%m-%d')" />
+        <field name="verified_by_user_id" ref="base.user_admin" />
+        <field
+            name="verification_notes">3-year lease agreement. Renewal negotiations should begin 120 days before expiration.</field>
+    </record>
+
+    <record id="demo_doc_renewal_original" model="document.document">
+        <field name="name">Safety Certificate - Original (2022)</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2022-CHAIN001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=730)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=550)).strftime('%Y-%m-%d')" />
+    </record>
+
+    <record id="demo_doc_renewal_first" model="document.document">
+        <field name="name">Safety Certificate - First Renewal (2023)</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2023-CHAIN001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=545)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=365)).strftime('%Y-%m-%d')" />
+        <field name="renewal_document_id" ref="demo_doc_renewal_original" />
+    </record>
+
+    <record id="demo_doc_renewal_second" model="document.document">
+        <field name="name">Safety Certificate - Second Renewal (2023-2024)</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2024-CHAIN001</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=360)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() - timedelta(days=180)).strftime('%Y-%m-%d')" />
+        <field name="renewal_document_id" ref="demo_doc_renewal_first" />
+    </record>
+
+    <record id="demo_doc_renewal_current" model="document.document">
+        <field name="name">Safety Certificate - Current (2024)</field>
+        <field name="document_type_id" ref="demo_doc_type_safety_training" />
+        <field name="legal_number">SAFE-2024-CHAIN001-CURRENT</field>
+        <field name="issuer_id" ref="base.res_partner_12" />
+        <field
+            name="date_issued"
+            eval="(DateTime.today() - timedelta(days=175)).strftime('%Y-%m-%d')" />
+        <field
+            name="date_expiration"
+            eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')" />
+        <field name="renewal_document_id" ref="demo_doc_renewal_second" />
+    </record>
+
+    <function
+        model="document.document"
+        name="write"
+        eval="[[ref('demo_doc_renewal_original')], {'renewed_by_document_id': ref('demo_doc_renewal_first')}]" />
+
+    <function
+        model="document.document"
+        name="write"
+        eval="[[ref('demo_doc_renewal_first')], {'renewed_by_document_id': ref('demo_doc_renewal_second')}]" />
+
+    <function
+        model="document.document"
+        name="write"
+        eval="[[ref('demo_doc_renewal_second')], {'renewed_by_document_id': ref('demo_doc_renewal_current')}]" />
+
+</odoo>
