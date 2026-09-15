@@ -65,6 +65,17 @@ def get_cache_miss_from_storage(
     field_cache = field._get_cache(env)
     value = field_cache.get(record_id, SENTINEL)
     if value is SENTINEL:
+        value = field._value_after_delegated_fetch(env, record_id)
+    if value is SENTINEL:
+        _debug.logic(
+            "field.cache_miss.record_missing_after_fetch",
+            model=record._name,
+            field=field.name,
+            record=record_id,
+            prefetched=len(recs),
+            su=env.su,
+            uid=env.uid,
+        )
         raise missing_record_error(env, record) from None
     return value
 

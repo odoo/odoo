@@ -7,7 +7,7 @@ from collections.abc import Collection, Mapping, MutableMapping
 from psycopg import ProgrammingError
 
 from odoo.db import BaseCursor
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.libs.accel import rows_to_dicts as _rows_to_dicts
 from odoo.libs.datetime import timezone as get_timezone
 from odoo.libs.datetime import utc
@@ -393,6 +393,23 @@ class Environment(Mapping[str, "BaseModel"]):
             user_company_ids.insert(0, current)
         return self["res.company"].browse(user_company_ids)
 
+    def _access_scope(self) -> typing.Any:
+        if self.su:
+            return True
+        if company_ids := self._get_allowed_company_ids():
+            return (self.uid, tuple(sorted(company_ids)))
+        try:
+            scope = (self.uid, tuple(sorted(self.user._get_company_ids())))
+        except MissingError:
+            _debug.logic("environment.access_scope.user_missing", uid=self.uid)
+            return (self.uid, None)
+        _debug.logic(
+            "environment.access_scope.from_user",
+            uid=self.uid,
+            companies=len(scope[1]),
+        )
+        return scope
+
     @functools.cached_property
     def tz(self) -> tzinfo:
         tz_name = self.context.get("tz") or self.user.tz
@@ -512,6 +529,8 @@ class Environment(Mapping[str, "BaseModel"]):
                 return self.company.id
             elif key == "uid":
                 return self.uid if field.compute_sudo else (self.uid, self.su)
+            elif key == "access":
+                return None if field.compute else self._access_scope()
             elif key == "lang":
                 return get_context("lang") or "en_US"
             elif key == "active_test":

@@ -169,6 +169,7 @@ class Many2many(_RelationalMulti):
 
     @override
     def read(self, records: BaseModel) -> None:
+        self._log_scope_handover(records)
         comodel = records.env[self.comodel_name].with_context(
             **self._prepare_read_context()
         )
@@ -233,9 +234,10 @@ class Many2many(_RelationalMulti):
         new_relation: dict,
         *,
         store: bool,
+        created: bool = False,
     ) -> None:
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]))
+            self._update_cache(record, tuple(new_relation[record.id]), created=created)
 
         modified_corecord_ids = set()
 
@@ -251,6 +253,7 @@ class Many2many(_RelationalMulti):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
+                invf = typing.cast("_RelationalMulti", invf)
                 domain = invf.get_comodel_domain(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
@@ -258,15 +261,15 @@ class Many2many(_RelationalMulti):
                 inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse((y,))
+                    linked = tuple(x for x in xs if x in valid_ids)
+                    invf._sync_other_scopes(comodel.env, y, added=linked)
                     ids0 = inv_cache.get(corecord.id, SENTINEL)
                     if ids0 is SENTINEL:
                         if corecord.id:
                             continue
                         ids0 = ()
-                    ids1 = tuple(
-                        unique(itertools.chain(ids0, (x for x in xs if x in valid_ids)))
-                    )
-                    invf._update_cache(corecord, ids1)
+                    ids1 = tuple(unique(itertools.chain(ids0, linked)))
+                    invf._update_cache(corecord, ids1, keep_other_scopes=True)
 
         unlink_pairs = [
             (x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]
@@ -293,13 +296,15 @@ class Many2many(_RelationalMulti):
                 )
 
             for invf in records.pool.field_inverses[self]:
+                invf = typing.cast("_RelationalMulti", invf)
                 inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse((y,))
+                    invf._sync_other_scopes(comodel.env, y, removed=xs)
                     try:
                         ids0 = inv_cache[corecord.id]
                         ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        invf._update_cache(corecord, ids1)
+                        invf._update_cache(corecord, ids1, keep_other_scopes=True)
                     except KeyError:
                         pass
 
@@ -413,7 +418,12 @@ class Many2many(_RelationalMulti):
             self._check_new_relation_access(model, comodel, old_relation, new_relation)
 
         self._apply_relation_delta(
-            records, comodel, old_relation, new_relation, store=self.store
+            records,
+            comodel,
+            old_relation,
+            new_relation,
+            store=self.store,
+            created=create,
         )
 
     def _read_missing_with_batch(

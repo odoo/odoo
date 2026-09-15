@@ -16,6 +16,7 @@ from .selection import Selection
 if typing.TYPE_CHECKING:
     from .._typing import ModelLike
     from ..models import BaseModel
+    from .relational._base import _RelationalMulti
 
 REFERENCE_VERIFIED_CACHE_KEY = "reference.verified_pairs"
 
@@ -299,10 +300,12 @@ class Many2oneReference(Integer):
             recs = recs.filtered_domain(invf.get_comodel_domain(corecord))
             if not recs:
                 continue
+            invf = typing.cast("_RelationalMulti", invf)
+            invf._sync_other_scopes(corecord.env, corecord.id, added=recs._ids)
             ids0 = invf._get_cache(corecord.env).get(corecord.id)
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + recs._ids))
-                invf._update_cache(corecord, ids1)
+                invf._update_cache(corecord, ids1, keep_other_scopes=True)
 
     def _get_record_ids_per_res_model(
         self, records: BaseModel

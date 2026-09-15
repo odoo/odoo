@@ -284,6 +284,48 @@ under a second list would get a fresh virtual id there and come back
 duplicated on the next round-trip. `odoo/orm/tests/test_new_record_sibling_one2many.py`
 pins both halves.
 
+**An x2many cache slot belongs to the access scope that filled it.** The field
+cache keys a context-dependent field's slot by the values `Field.depends_context`
+names (`lang`, `active_test`, `company`, `uid`); every x2many adds `access`
+(`Environment._access_scope`: `True` under sudo, else the uid with the allowed
+company ids sorted), because `One2many.read` / `Many2many.read` cache what the
+*reading* environment's search returned — with the record rules applied — and one
+shared slot let a sudo read hand a user every company's rules, and a user read
+starve sudo of the rows the rules had hidden. What keeps the scopes coherent
+without a fetch mid-write (`Many2one._update_inverses` documents why there must
+be none) is the inverse-side maintenance in `_RelationalMulti`: a full value set
+evicts the other scopes' entries for those records (a value still holding
+pending lines is mirrored instead — a pending mutation is one for everyone), a
+value set at create is mirrored into the superuser slot (for a new record the
+given value is the truth), an inverse-side removal is applied to every scope,
+an inverse-side addition goes into the superuser scope and into a user scope
+whose rules, evaluated in memory, admit the added records — else that entry is
+evicted and the scope's next search decides. Three shapes are structural, not
+special cases: a *pending* record (`NewId`) has no search to decide anything, so
+`_ScopedSlot` routes it to one slot shared by every scope (and `RecordCache`
+peeks there too); a *computed* x2many is what its compute produced (under sudo
+for `compute_sudo`), so its slot is scope-less; and a model that *delegates its
+fetch to sudo* after its own access check (`mail.message.fetch`) fills the
+superuser slot, so a read that finds no value after such a fetch is served from
+there once (`_value_after_delegated_fetch`). The events `field.x2many.scope_sync`,
+`scope_evict`, `scope_mirror_pending`, `scope_handover` and
+`delegated_fetch_served` on the `orm.fields.relational._base` channels show each
+decision; the plan that weighed the alternative (one slot holding the truth,
+visibility applied on the way out) is
+`agromarin-knowledge/plans/2026-09-14-x2many-cache-access-scope.md`.
+
+**A per-transaction memo is `TransactionMemo`** (`odoo/tools/cache.py`): a
+container in `cr.cache` that `BaseModel.create`, `write` and `unlink` discard
+for the models it names (`invalidated_by`, a list of models or a mapping model →
+fields for write). Addons memoize configuration lookups with it — routes' rule
+kinds, rule candidates per selection domain, orderpoints by scope, the default
+warehouse, boms by product, invoice-template reports, currency rate history,
+analytic plans, approval escalation targets, the last sequence of a journal —
+and never hand-roll the three overrides that pop a key. A savepoint rollback
+clears `cr.cache` as before; a memo whose truth is changed by a path that
+bypasses `write()` (a direct column write, `_locked_increment`) discards itself
+there.
+
 Row I/O at the bottom goes through `env.backend`, the persistence port described
 under **Seams** in [`module.md`](module.md#seams-that-keep-the-layers-decoupled)
 — which is what lets the whole ORM run against `InMemoryBackend` with no

@@ -273,8 +273,10 @@ def test_acl_preamble_bypassed_for_superuser_even_when_grouped():
 def test_acl_preamble_allows_when_has_field_access_true():
     with model_test_env(GHost, GChild, GCurrency) as env:
         host, *_ = _seed(env)
+        child_ids = host.child_ids._ids
         host = host.with_env(env(user=2, su=False))
         assert host.env.su is False
+        host._fields["child_ids"]._update_cache(host, child_ids)
         spy = _AclSpy(type(host))
         spy.allow = True
         try:

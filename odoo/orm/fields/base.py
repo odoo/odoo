@@ -560,6 +560,12 @@ class Field[T](
             return core.get_context_data(self, env.get_cache_key(self))
         return core.get_field_data(self)
 
+    def _peek_cache(self, env: Environment) -> Mapping[IdType, typing.Any] | None:
+        core = env.core
+        if self._is_context_dependent(env):
+            return core.get_context_data_or_none(self, env.get_cache_key(self))
+        return core.get_field_data_or_none(self)
+
     def _invalidate_cache(
         self,
         env: Environment,
@@ -766,6 +772,11 @@ class Field[T](
         record_id: IdType,
     ) -> T:
         return _cache_miss.get_cache_miss(self, record, env, record_id)
+
+    def _value_after_delegated_fetch(
+        self, env: Environment, record_id: IdType
+    ) -> typing.Any:
+        return SENTINEL
 
     def __set__(self, records: BaseModel, value: typing.Any) -> None:
         record_ids = records._ids

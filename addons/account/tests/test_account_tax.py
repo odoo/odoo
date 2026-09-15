@@ -166,7 +166,11 @@ class TestAccountTax(AccountTestInvoicingCommon):
                         last_invoice_rep_line.id,
                         {
                             "factor_percent": -100,
-                            "tag_ids": [Command.create({"name": "TaxTag12345"})],
+                            "tag_ids": [
+                                Command.create(
+                                    {"name": "TaxTag12345", "applicability": "taxes"}
+                                )
+                            ],
                         },
                     ),
                 ],

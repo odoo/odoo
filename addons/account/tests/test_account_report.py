@@ -714,7 +714,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         report.flush_recordset()
         report.copy()
 
-        with self.assertQueryCount(default=6, accountman=6):
+        with self.assertQueryCount(default=7, accountman=7):
             copied = report.copy()
             copied.flush_recordset()
 

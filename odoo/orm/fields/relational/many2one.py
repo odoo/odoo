@@ -15,7 +15,7 @@ from ...domain import Domain
 from ...domain.ast import DomainCondition, OptimizationLevel
 from ...primitives import Command, NewId
 from .. import _field_ddl as _ddl
-from ._base import _Relational
+from ._base import _is_cache_order_stable, _Relational, _RelationalMulti
 
 if typing.TYPE_CHECKING:
     from ..._typing import ModelClass, ModelLike
@@ -374,12 +374,14 @@ class Many2one(_Relational):
         )
 
         for invf in inverse_fields:
+            invf = typing.cast("_RelationalMulti", invf)
             inv_cache = invf._get_cache(corecords.env)
             for corecord in corecords:
+                invf._sync_other_scopes(corecords.env, corecord.id, removed=record_ids)
                 ids0 = inv_cache.get(corecord.id)
                 if ids0 is not None:
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
-                    invf._update_cache(corecord, ids1)
+                    invf._update_cache(corecord, ids1, keep_other_scopes=True)
 
     def _resort_inverses(self, records: BaseModel) -> None:
         env = records.env
@@ -421,9 +423,11 @@ class Many2one(_Relational):
             return
         corecord = self.convert_to_record(value, records)
         for invf in records.pool.field_inverses[self]:
+            invf = typing.cast("_RelationalMulti", invf)
             valid_records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not valid_records:
                 continue
+            invf._sync_other_scopes(corecord.env, corecord.id, added=valid_records._ids)
             ids0 = invf._get_cache(corecord.env).get(corecord.id)
             if ids0 is None and corecord.id:
                 continue
@@ -442,7 +446,7 @@ class Many2one(_Relational):
                         inverse=f"{invf.model_name}.{invf.name}",
                         corecord=corecord.id,
                     )
-            invf._update_cache(corecord, ids1)
+            invf._update_cache(corecord, ids1, keep_other_scopes=True)
 
     @override
     def to_sql(self, model: ModelLike, alias: str) -> SQL:
@@ -601,12 +605,3 @@ class PrefetchMany2one(Reversible):
             for id_ in reversed(self.record._prefetch_ids)
             if (coid := field_cache.get(id_)) is not None and coid is not _pending
         )
-
-
-def _is_cache_order_stable(records: BaseModel, ids: tuple) -> bool:
-    # A new record cannot be read back from the database, so its id stays in the cache.
-    if not all(isinstance(id_, int) for id_ in ids):
-        return True
-    return records._order.replace(" ", "").lower() in ("id", "idasc") and list(
-        ids
-    ) == sorted(ids)

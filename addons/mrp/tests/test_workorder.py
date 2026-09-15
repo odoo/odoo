@@ -114,7 +114,10 @@ class TestWorkorderAudit(TransactionCase):
             {
                 "name": "Audit Other",
                 "login": "audit_other_user",
-                "group_ids": [Command.link(self.env.ref("base.group_user").id)],
+                "group_ids": [
+                    Command.link(self.env.ref("base.group_user").id),
+                    Command.link(self.env.ref("mrp.group_mrp_user").id),
+                ],
             }
         )
         self.assertTrue(wo.is_user_working)

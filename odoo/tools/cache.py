@@ -65,6 +65,7 @@ class TransactionMemo:
             return cr_cache[self.key]
         except KeyError:
             value = cr_cache[self.key] = self.factory()
+            _debug.lifecycle("memo.created", key=self.key)
             return value
 
     def peek(self, env: Any) -> Any:
@@ -86,7 +87,15 @@ class TransactionMemo:
                     or field_names is None
                     or not field_names.isdisjoint(written)
                 ):
-                    cr_cache.pop(memo.key, None)
+                    if cr_cache.pop(memo.key, None) is not None:
+                        _debug.lifecycle(
+                            "memo.discarded",
+                            key=memo.key,
+                            model=model_name,
+                            operation="write"
+                            if written is not None
+                            else "create_or_unlink",
+                        )
 
 
 class ormcache_counter:

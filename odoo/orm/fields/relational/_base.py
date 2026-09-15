@@ -5,6 +5,8 @@ from collections.abc import (
     Collection,
     Iterable,
     Iterator,
+    Mapping,
+    MutableMapping,
     Reversible,
     Sequence,
 )
@@ -345,6 +347,64 @@ class _Relational(Field["BaseModel"]):
         return lambda rec: not ids.isdisjoint(getter(rec)._ids)
 
 
+PENDING_SCOPE_KEY = ("__pending__",)
+
+
+def _is_cache_order_stable(records: BaseModel, ids: tuple) -> bool:
+    # A new record cannot be read back from the database, so its id stays in the cache.
+    if not all(isinstance(id_, int) for id_ in ids):
+        return True
+    return records._order.replace(" ", "").lower() in ("id", "idasc") and list(
+        ids
+    ) == sorted(ids)
+
+
+class _ScopedSlot(MutableMapping):
+    __slots__ = ("pending", "scoped")
+
+    def __init__(self, scoped: dict, pending: dict) -> None:
+        self.scoped = scoped
+        self.pending = pending
+
+    def _pick(self, key: typing.Any) -> dict:
+        return self.scoped if isinstance(key, int) else self.pending
+
+    def __getitem__(self, key: typing.Any) -> typing.Any:
+        return self._pick(key)[key]
+
+    def __setitem__(self, key: typing.Any, value: typing.Any) -> None:
+        self._pick(key)[key] = value
+
+    def __delitem__(self, key: typing.Any) -> None:
+        del self._pick(key)[key]
+
+    def __contains__(self, key: object) -> bool:
+        return key in self._pick(key)
+
+    def __iter__(self) -> Iterator:
+        yield from self.scoped
+        yield from self.pending
+
+    def __len__(self) -> int:
+        return len(self.scoped) + len(self.pending)
+
+    def __bool__(self) -> bool:
+        return bool(self.scoped) or bool(self.pending)
+
+    def get(self, key: typing.Any, default: typing.Any = None) -> typing.Any:
+        return self._pick(key).get(key, default)
+
+    def pop(self, key: typing.Any, *default: typing.Any) -> typing.Any:
+        return self._pick(key).pop(key, *default)
+
+    def setdefault(self, key: typing.Any, default: typing.Any = None) -> typing.Any:
+        return self._pick(key).setdefault(key, default)
+
+    def clear(self) -> None:
+        self.scoped.clear()
+        self.pending.clear()
+
+
 class _RelationalMulti(_Relational):
     write_sequence = 20
     is_x2many = True
@@ -386,9 +446,211 @@ class _RelationalMulti(_Relational):
                 field_cache[record_id] = tuple(unique(cache_value + (new_id,)))
 
     @override
-    def _update_cache(
-        self, records: ModelLike, cache_value: typing.Any, dirty: bool = False
+    def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+        core = env.core
+        return _ScopedSlot(
+            core.get_context_data(self, env.get_cache_key(self)),
+            core.get_context_data(self, PENDING_SCOPE_KEY),
+        )
+
+    @override
+    def _peek_cache(self, env: Environment) -> Mapping[IdType, typing.Any] | None:
+        core = env.core
+        scoped = core.get_context_data_or_none(self, env.get_cache_key(self))
+        pending = core.get_context_data_or_none(self, PENDING_SCOPE_KEY)
+        if scoped is None and pending is None:
+            return None
+        return _ScopedSlot(scoped if scoped is not None else {}, pending or {})
+
+    @override
+    def _value_after_delegated_fetch(
+        self, env: Environment, record_id: IdType
+    ) -> typing.Any:
+        if env.su or not isinstance(record_id, int):
+            return SENTINEL
+        sudo_slot = env.core.get_context_data_or_none(
+            self, self._superuser_scope_key(env)
+        )
+        if sudo_slot is None:
+            return SENTINEL
+        value = sudo_slot.get(record_id, SENTINEL)
+        if value is SENTINEL or value is PENDING:
+            return SENTINEL
+        self._get_cache(env)[record_id] = value
+        _debug.logic(
+            "field.x2many.delegated_fetch_served",
+            model=self.model_name,
+            field=self.name,
+            record=record_id,
+            uid=env.uid,
+        )
+        return value
+
+    def _is_superuser_scope(self, env: Environment, key: tuple) -> bool:
+        index = env._field_depends_context[self].index("access")
+        return key[index] is True or key[index] is None
+
+    def _scope_can_read(
+        self, env: Environment, key: tuple, comodel_ids: Collection[IdType]
+    ) -> bool:
+        index = env._field_depends_context[self].index("access")
+        uid, company_ids = key[index]
+        context = dict(env.context)
+        if company_ids:
+            context["allowed_company_ids"] = list(company_ids)
+        else:
+            context.pop("allowed_company_ids", None)
+        try:
+            scope_env = env(user=uid, context=context, su=False)
+            records = scope_env[self.comodel_name].browse(comodel_ids)
+            return len(records._filtered_access("read")) == len(records)
+        except (AccessError, NotImplementedError):
+            return False
+
+    def _superuser_scope_key(self, env: Environment) -> tuple:
+        own = env.get_cache_key(self)
+        index = env._field_depends_context[self].index("access")
+        return (*own[:index], True, *own[index + 1 :])
+
+    def _mirror_to_other_scopes(
+        self, env: Environment, ids: Collection[IdType], cache_value: typing.Any
     ) -> None:
+        own = env.get_cache_key(self)
+        stored_ids = [id_ for id_ in ids if isinstance(id_, int)]
+        mirrored = 0
+        for key, slot in list(env.core.iter_context_caches(self)):
+            if key in (own, PENDING_SCOPE_KEY):
+                continue
+            for id_ in stored_ids:
+                if id_ in slot:
+                    slot[id_] = cache_value
+                    mirrored += 1
+        if mirrored and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.scope_mirror_pending",
+                model=self.model_name,
+                field=self.name,
+                records=len(stored_ids),
+                mirrored=mirrored,
+                writer_su=env.su,
+            )
+
+    def _mirror_to_superuser_scope(
+        self, env: Environment, ids: Collection[IdType], cache_value: typing.Any
+    ) -> None:
+        if env.su:
+            return
+        slot = env.core.get_context_data(self, self._superuser_scope_key(env))
+        for id_ in ids:
+            if isinstance(id_, int):
+                slot[id_] = cache_value
+
+    def _sync_other_scopes(
+        self,
+        env: Environment,
+        record_id: IdType,
+        added: Collection[IdType] = (),
+        removed: Collection[IdType] = (),
+    ) -> None:
+        if not isinstance(record_id, int):
+            return
+        own = env.get_cache_key(self)
+        synced = evicted = 0
+        for key, slot in list(env.core.iter_context_caches(self)):
+            if key in (own, PENDING_SCOPE_KEY) or record_id not in slot:
+                continue
+            ids = slot[record_id]
+            if ids is PENDING:
+                continue
+            if removed:
+                ids = tuple(id_ for id_ in ids if id_ not in removed)
+            if added:
+                if not self._is_superuser_scope(env, key) and not self._scope_can_read(
+                    env, key, added
+                ):
+                    del slot[record_id]
+                    evicted += 1
+                    continue
+                ids = tuple(unique(itertools.chain(ids, added)))
+                comodel = env[self.comodel_name]
+                if not _is_cache_order_stable(comodel, ids):
+                    sorted_ids = comodel.browse(ids)._sorted_by_ids(
+                        comodel._order, False
+                    )
+                    if sorted_ids is not None:
+                        ids = sorted_ids
+            slot[record_id] = ids
+            synced += 1
+        if _debug.logic.enabled and (synced or evicted):
+            _debug.logic(
+                "field.x2many.scope_sync",
+                model=self.model_name,
+                field=self.name,
+                record=record_id,
+                added=len(added),
+                removed=len(removed),
+                synced=synced,
+                evicted=evicted,
+            )
+
+    def _log_scope_handover(self, records: ModelLike) -> None:
+        if not _debug.perf.enabled:
+            return
+        env = records.env
+        own = env.get_cache_key(self)
+        held = 0
+        for key, slot in env.core.iter_context_caches(self):
+            if key not in (own, PENDING_SCOPE_KEY):
+                held += sum(1 for id_ in records._ids if id_ in slot)
+        if held:
+            _debug.perf.count(
+                "field.x2many.scope_handover",
+                model=self.model_name,
+                field=self.name,
+                records=len(records),
+                held_elsewhere=held,
+                reader_su=env.su,
+            )
+
+    def _evict_other_scopes(self, env: Environment, ids: Collection[IdType]) -> None:
+        stored_ids = [id_ for id_ in ids if isinstance(id_, int)]
+        if not stored_ids:
+            return
+        own = env.get_cache_key(self)
+        evicted = 0
+        for key, slot in list(env.core.iter_context_caches(self)):
+            if key in (own, PENDING_SCOPE_KEY):
+                continue
+            for id_ in stored_ids:
+                if slot.pop(id_, None) is not None:
+                    evicted += 1
+        if evicted and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.scope_evict",
+                model=self.model_name,
+                field=self.name,
+                records=len(stored_ids),
+                evicted=evicted,
+                writer_su=env.su,
+            )
+
+    @override
+    def _update_cache(
+        self,
+        records: ModelLike,
+        cache_value: typing.Any,
+        dirty: bool = False,
+        *,
+        keep_other_scopes: bool = False,
+        created: bool = False,
+    ) -> None:
+        if not keep_other_scopes:
+            if cache_value and not all(isinstance(id_, int) for id_ in cache_value):
+                self._mirror_to_other_scopes(records.env, records._ids, cache_value)
+            else:
+                self._evict_other_scopes(records.env, records._ids)
+        if created:
+            self._mirror_to_superuser_scope(records.env, records._ids, cache_value)
         field_patches = records.env.core.get_patches(self)
         if field_patches and not field_patches.keys().isdisjoint(records._ids):
             _debug.logic(
@@ -594,6 +856,7 @@ class _RelationalMulti(_Relational):
     @override
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         depends, depends_context = super().get_depends(model)
+        depends_context = unique(itertools.chain(depends_context, ("access",)))
         if not self.compute and isinstance(domain := self.domain, (list, Domain)):
             domain = Domain(domain)
             domain_paths = list(_iter_domain_depend_paths(domain))

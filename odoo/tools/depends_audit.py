@@ -168,7 +168,10 @@ def audit_registry(
                 continue
             if only_without_dependencies and (
                 registry.field_depends.get(field)
-                or registry.field_depends_context.get(field)
+                or any(
+                    key != "access"
+                    for key in registry.field_depends_context.get(field, ())
+                )
             ):
                 continue
             audited += 1  # debuglog

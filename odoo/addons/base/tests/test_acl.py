@@ -269,7 +269,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         # batch's rows: every later write checks the rule on its one record,
         # which keeps the batch's prefetch ids, so no row is fetched alone
         as_demo[0].write({"comment": "note 0"})
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             for index, partner in enumerate(as_demo[1:], start=1):
                 partner.write({"comment": f"note {index}"})
             self.env.flush_all()
