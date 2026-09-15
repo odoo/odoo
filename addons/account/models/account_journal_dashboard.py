@@ -107,7 +107,7 @@ class AccountJournal(models.Model):
         bank_cash_journals = self.filtered(
             lambda journal: journal.type in BANK_CASH_TYPES
         )
-        bank_cash_graph_datas = bank_cash_journals._get_bank_cash_graph_data()
+        bank_cash_graph_datas = bank_cash_journals._prepare_bank_cash_graph_data()
         for journal in bank_cash_journals:
             journal.kanban_dashboard_graph = json.dumps(
                 bank_cash_graph_datas[journal.id]
@@ -117,7 +117,7 @@ class AccountJournal(models.Model):
             lambda journal: journal.type in SALE_PURCHASE_TYPES
         )
         sale_purchase_graph_datas = (
-            sale_purchase_journals._get_sale_purchase_graph_data()
+            sale_purchase_journals._prepare_sale_purchase_graph_data()
         )
         for journal in sale_purchase_journals:
             journal.kanban_dashboard_graph = json.dumps(
@@ -290,7 +290,7 @@ class AccountJournal(models.Model):
         return ["", ""]
 
     @_debug.perf.timed
-    def _get_bank_cash_graph_data(self):
+    def _prepare_bank_cash_graph_data(self):
         def prepare_graph_point(date, amount, currency):
             name = format_date(date, "d LLLL Y", locale=locale)
             short_name = format_date(date, "d MMM", locale=locale)
@@ -374,7 +374,7 @@ class AccountJournal(models.Model):
         return result
 
     @_debug.perf.timed
-    def _get_sale_purchase_graph_data(self):
+    def _prepare_sale_purchase_graph_data(self):
         today = fields.Date.context_today(self)
         lang_code = get_lang(self.env).code
         day_of_week = int(format_datetime(today, "e", locale=lang_code))
@@ -1143,7 +1143,7 @@ class AccountJournal(models.Model):
             group_by_journal(self.env.cr.dictfetchall())
         )
 
-    def _get_move_action_context(self):
+    def _prepare_move_action_context(self):
         ctx = self.env.context.copy()
         journal = self
         if not ctx.get("default_journal_id"):
@@ -1178,7 +1178,7 @@ class AccountJournal(models.Model):
             "view_mode": "form",
             "res_model": "account.move",
             "view_id": self.env.ref("account.view_move_form").id,
-            "context": self._get_move_action_context(),
+            "context": self._prepare_move_action_context(),
         }
 
     def _select_action_to_open(self):
@@ -1407,7 +1407,7 @@ class AccountJournal(models.Model):
             for journal_id, prefix in has_sequence_holes
         )
         action = self._show_sequence_holes(domain)
-        action["context"] = {**self._get_move_action_context(), **action["context"]}
+        action["context"] = {**self._prepare_move_action_context(), **action["context"]}
         return action
 
     def show_unhashed_entries(self):
