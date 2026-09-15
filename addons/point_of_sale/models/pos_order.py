@@ -128,6 +128,7 @@ class PosOrder(models.Model):
                     order[field] = []
 
             del order['uuid']
+<<<<<<< 8c7f04364bc86acf9fb4bf563d38d6bdcda73f8e
             if "access_token" in order:
                 # From self access_token is no longer present in the data
                 del order['access_token']
@@ -135,6 +136,13 @@ class PosOrder(models.Model):
             if order.get('state') == 'paid':
                 # The "paid" state will be assigned later by `_process_saved_order`
                 order['state'] = pos_order.state
+||||||| 87872ab5f99a5ef94202b29c3be6c073f92e2d0d
+            del order['access_token']
+=======
+            if 'access_token' in order:
+                del order['access_token']
+
+>>>>>>> 18d10c811e7e1554eaf5245a1c60d116d8c533cd
             pos_order.write(order)
 
         for model_name, mapping in record_uuid_mapping.items():
