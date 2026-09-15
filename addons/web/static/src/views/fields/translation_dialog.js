@@ -87,7 +87,7 @@ export class TranslationDialog extends Component {
         const translations = {};
 
         this.terms.map((term) => {
-            const updatedTermValue = this.updatedTerms[term.id];
+            const updatedTermValue = (this.updatedTerms[term.id] || '').trim();
             if (term.id in this.updatedTerms && term.value !== updatedTermValue) {
                 if (this.props.showSource) {
                     if (!translations[term.lang]) {
