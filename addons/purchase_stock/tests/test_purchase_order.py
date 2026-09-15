@@ -258,11 +258,12 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
     def test_05_multi_company(self):
         company_a = self.env.user.company_id
         company_b = self.env['res.company'].create({
-            "name": "Test Company",
+            "name": "Test Company b",
             "currency_id": self.env['res.currency'].with_context(active_test=False).search([
                 ('id', '!=', company_a.currency_id.id),
             ], limit=1).id
         })
+        self.assertNotEqual(company_a.currency_id.name, company_b.currency_id.name)
         self.env.user.write({
             'company_id': company_b.id,
             'company_ids': [(4, company_b.id), (4, company_a.id)],
@@ -276,12 +277,12 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
     def test_06_on_time_rate(self):
         company_a = self.env.user.company_id
         company_b = self.env['res.company'].create({
-            "name": "Test Company",
+            "name": "Test Companyb",
             "currency_id": self.env['res.currency'].with_context(active_test=False).search([
                 ('id', '!=', company_a.currency_id.id),
             ], limit=1).id
         })
-
+        self.assertNotEqual(company_a.currency_id.name, company_b.currency_id.name)
         # Create a purchase order with 90% qty received for company A
         self.env.user.write({
             'company_id': company_a.id,
@@ -516,7 +517,10 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, 10.0)
-        outgoing_picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing')])
+        outgoing_picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'outgoing'),
+            ('company_id', '=', self.env.company.id),
+        ])
         duplicated_picking = po.picking_ids.copy()
         duplicated_picking.picking_type_id = outgoing_picking_type[0]
         duplicated_picking.button_validate()

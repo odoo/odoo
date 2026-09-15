@@ -128,8 +128,12 @@ class BaseCommon(TransactionCase):
         })
         return currency
 
+    _test_independent_company_xmlid = None
+
     @classmethod
     def setup_independent_company(cls):
+        if cls._test_independent_company_xmlid:
+            return cls.env.ref(cls._test_independent_company_xmlid)
         cls.setup_main_company()
         return cls.env.company
 
@@ -176,17 +180,26 @@ class BaseCommon(TransactionCase):
     _force_new_company = False
 
     @classmethod
-    def _create_company(cls, company_xmlid='base.test_company_template', **create_values):
-        template_company = cls.env.ref(company_xmlid)
-        if cls._force_new_company or template_company in cls.env.user.company_ids:
-            if not cls._force_new_company:
-                _logger.debug("Cannot use %s, company is already in the companies of user %s", company_xmlid, cls.env.user.name)
-            company = cls.env['res.company'].create({
-                'name': "Secondary Test Company",
-                **create_values,
-            })
+    def _create_company(cls, company_xmlid=None, candidate_xmlids=None, name="Secondary Test Company", **create_values):
+        if company_xmlid:
+            template_company = cls.env.ref(company_xmlid)
         else:
-            _logger.debug('Using %s to create a company', company_xmlid)
+            if candidate_xmlids is None:
+                candidate_xmlids = ('base.test_company', 'base.test_company_with_branch', 'base.test_company_template', 'base.test_company_template2')
+            for xmlid in candidate_xmlids:
+                template_company = cls.env.ref(xmlid)
+                if template_company not in cls.env.user.company_ids:
+                    company_xmlid = xmlid
+                    break
+        force_create = cls._force_new_company or 'parent_id' in create_values
+        create_values['name'] = name
+        if force_create or template_company in cls.env.user.company_ids:
+            if not force_create:
+                _logger.info("Cannot use %s, already in the companies of user %s", company_xmlid or "any template company", cls.env.user.name)
+            company = cls.env['res.company'].create(create_values)
+        else:
+            if company_xmlid:
+                _logger.info('Using %s to create company %s', company_xmlid, name)
             template_company.write(create_values)
             company = template_company
         cls.env.user.company_ids = [Command.link(company.id)]

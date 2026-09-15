@@ -12,6 +12,10 @@ class TestGroupsOdoo(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # remove group_multi_currency, auto-granted since 2+ currencies are active
+        group_user = cls.env.ref('base.group_user')
+        group_mc = cls.env.ref('base.group_multi_currency')
+        group_user.sudo()._remove_group(group_mc)
         cls.test_group = cls.env['res.groups'].create({
             'name': 'test with implied user',
             'implied_ids': [Command.link(cls.env.ref('base.group_user').id)]

@@ -12,14 +12,13 @@ from odoo.exceptions import UserError
 
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
         # Creates 1 test company and a calendar for employees that
         # work part time. Then creates an employee per calendar (one
         # for the standard calendar and one for the one we created)
-        self.test_company = self.env['res.company'].create({
-            'name': 'My Test Company',
-        })
+        self.test_company = self.env.ref('base.test_company')
 
         attendance_ids = [
             (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 12}),
@@ -66,7 +65,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         ])
 
         # Create a 2nd company
-        self.test_company_2 = self.env['res.company'].create({
+        self.test_company_2 = self.env.ref('base.test_company_with_branch')
+        self.test_company_2.write({
             'name': 'My Test Company 2',
         })
 
