@@ -29,7 +29,7 @@ class CalendarProviderConfig(models.TransientModel):
     )
     cal_client_secret = fields.Char(
         string="Google Client_key",
-        default=lambda self: self.env["ir.config_parameter"].get_param(
+        default=lambda self: self.env["credential.credential"]._get_system_secret(
             "google_calendar_client_secret"
         ),
     )
@@ -48,7 +48,7 @@ class CalendarProviderConfig(models.TransientModel):
     )
     microsoft_outlook_client_secret = fields.Char(
         string="Outlook Client Secret",
-        default=lambda self: self.env["ir.config_parameter"].get_param(
+        default=lambda self: self.env["credential.credential"]._get_system_secret(
             "microsoft_calendar_client_secret"
         ),
     )
@@ -95,7 +95,7 @@ class CalendarProviderConfig(models.TransientModel):
             self.env["ir.config_parameter"].set_param(
                 "google_calendar_client_id", self.cal_client_id
             )
-            self.env["ir.config_parameter"].set_param(
+            self.env["credential.credential"]._set_system_secret(
                 "google_calendar_client_secret", self.cal_client_secret
             )
             self.env["ir.config_parameter"].set_param(
@@ -105,7 +105,7 @@ class CalendarProviderConfig(models.TransientModel):
             self.env["ir.config_parameter"].set_param(
                 "microsoft_calendar_client_id", self.microsoft_outlook_client_identifier
             )
-            self.env["ir.config_parameter"].set_param(
+            self.env["credential.credential"]._set_system_secret(
                 "microsoft_calendar_client_secret", self.microsoft_outlook_client_secret
             )
             self.env["ir.config_parameter"].set_param(

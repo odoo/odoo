@@ -110,3 +110,34 @@ class TestGoogleCredentials(TransactionCase):
         self.assertEqual(sent.call_args.kwargs["data"]["refresh_token"], "the-refresh")
         self.assertTrue(self.settings._is_google_calendar_valid())
         self.assertEqual(self.settings.google_calendar_rtoken, "the-refresh")
+
+
+@tagged("post_install", "-at_install")
+class TestCalendarProviderWizardCredentials(TransactionCase):
+    def test_the_setup_wizard_stores_the_client_secret_where_google_reads_it(self):
+        wizard = self.env["calendar.provider.config"].create(
+            {
+                "external_calendar_provider": "google",
+                "cal_client_id": "wizard-client",
+                "cal_client_secret": "wizard-secret",
+            }
+        )
+
+        wizard.action_calendar_prepare_external_provider_sync()
+
+        Credential = self.env["credential.credential"]
+        self.assertEqual(
+            Credential._get_system_secret("google_calendar_client_secret"),
+            "wizard-secret",
+        )
+        self.assertFalse(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("google_calendar_client_secret")
+        )
+        self.assertEqual(
+            self.env["calendar.provider.config"].default_get(["cal_client_secret"])[
+                "cal_client_secret"
+            ],
+            "wizard-secret",
+        )
