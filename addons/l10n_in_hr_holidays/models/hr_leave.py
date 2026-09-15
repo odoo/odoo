@@ -245,8 +245,68 @@ class HrLeave(models.Model):
             )
         return total_leaves
 
+    def _l10n_in_apply_exceptional_days(self, leave_days, exceptional_days):
+        self.ensure_one()
+
+        date_from = self.request_date_from
+        date_to = self.request_date_to
+        calendar = self.resource_calendar_id
+        timezone = ZoneInfo(self.company_id.tz or self.env.user.tz or "UTC")
+
+        def get_local_date(value):
+            return value.replace(tzinfo=UTC).astimezone(timezone).date()
+
+        exceptional_dates = set()
+        compensatory_dates = set()
+
+        for holiday in exceptional_days:
+            if holiday.date_from and holiday.date_to:
+                start = get_local_date(holiday.date_from)
+                end = get_local_date(holiday.date_to)
+                exceptional_dates.update(
+                    start + timedelta(days=i) for i in range((end - start).days + 1)
+                )
+            if holiday.working_start_date and holiday.working_end_date:
+                compensatory_start = get_local_date(holiday.working_start_date)
+                compensatory_end = get_local_date(holiday.working_end_date)
+                compensatory_dates.update(
+                    compensatory_start + timedelta(days=i)
+                    for i in range((compensatory_end - compensatory_start).days + 1)
+                )
+
+        for current_date in (
+            date_from + timedelta(days=i) for i in range((date_to - date_from).days + 1)
+        ):
+            if current_date in exceptional_dates:
+                leave_days += 1
+            elif current_date in compensatory_dates and calendar._works_on_date(current_date):
+                leave_days -= 1
+
+        return leave_days
+
+    def _get_exceptional_holidays(self, date_from, date_to):
+        return self.env['resource.calendar.leaves'].search([
+            ('resource_id', '=', False),
+            ('holiday_id', '=', False),
+            ('is_exceptional_days', '=', True),
+            '|',
+                '&', ('date_from', '<=', date_to), ('date_to', '>=', date_from),
+                '&', ('working_start_date', '<=', date_to), ('working_end_date', '>=', date_from),
+        ])
+
     def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
         result = super()._get_durations(check_work_entry_type=check_work_entry_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
+
+        indian_leaves = self.filtered(lambda l: l.company_id.country_id.code == "IN")
+        for leave in indian_leaves:
+            exceptional_holidays = self._get_exceptional_holidays(leave.request_date_from, leave.request_date_to)
+            if exceptional_holidays:
+                leave_days, hours = result[leave.id]
+                updated_days = leave._l10n_in_apply_exceptional_days(
+                    leave_days, exceptional_holidays
+                )
+                if updated_days != leave_days:
+                    result[leave.id] = (updated_days, hours)
 
         indian_leaves, leaves_dates_by_employee, public_holidays_date_by_company = self._l10n_in_prepare_sandwich_context()
         if not indian_leaves:
