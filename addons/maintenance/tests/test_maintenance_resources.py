@@ -155,32 +155,31 @@ class TestMaintenanceResources(TransactionCase):
         self.assertEqual(self.press.maintenance_open_count, 1)
         self.assertFalse(self._bookings(), "an unscheduled order blocks nothing")
 
-    def test_the_asset_outranks_the_equipment_for_team_and_technician(self):
-        """The bridge used to set the asset's team, then let the base compute
-        overwrite it with the equipment's."""
-        other_team = self.env["team.team"].create(
+    def test_the_kind_stands_in_for_an_asset_without_team_or_technician(self):
+        electricians = self.env["team.team"].create(
             {"use_maintenance": True, "name": "Electricians"}
         )
         technician = self.env["res.users"].create(
-            {"name": "Asset tech", "login": "asset_tech"}
+            {"name": "Kind tech", "login": "kind_tech"}
         )
-        equipment = self.env["maintenance.equipment"].create(
-            {"name": "Old press", "maintenance_team_id": other_team.id}
-        )
-        self.press.write(
-            {"maintenance_team_id": self.team.id, "technician_user_id": technician.id}
-        )
-        order = self.env["maintenance.order"].create(
+        kind = self.env["resource.asset.kind"].create(
             {
-                "name": "Check",
-                "equipment_id": equipment.id,
-                "resource_ids": [(6, 0, self.press.resource_id.ids)],
+                "name": "Panels",
+                "code": "panels_probe",
+                "maintenance_team_id": electricians.id,
+                "technician_user_id": technician.id,
             }
         )
-        self.assertEqual(order.maintenance_team_id, self.team)
+        panel = self.env["resource.asset"].create({"name": "Panel", "kind_id": kind.id})
+        self.assertEqual(panel.maintenance_team_id, electricians)
+        panel.resource_id.write(
+            {"maintenance_team_id": False, "technician_user_id": False}
+        )
+        order = self.env["maintenance.order"].create(
+            {"name": "Check", "resource_ids": [(6, 0, panel.resource_id.ids)]}
+        )
+        self.assertEqual(order.maintenance_team_id, electricians)
         self.assertEqual(order.user_id, technician)
-        order.resource_ids = False
-        self.assertEqual(order.maintenance_team_id, other_team)
 
     def test_an_asset_only_order_plans_an_activity_on_the_asset(self):
         order = self._order()

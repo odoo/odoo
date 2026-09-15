@@ -20,11 +20,6 @@ class TeamTeam(models.Model):
         inverse_name="maintenance_team_id",
         copy=False,
     )
-    maintenance_equipment_ids = fields.One2many(
-        comodel_name="maintenance.equipment",
-        inverse_name="maintenance_team_id",
-        copy=False,
-    )
     maintenance_todo_order_count = fields.Integer(
         string="Number of Orders",
         compute="_compute_maintenance_todo_orders",

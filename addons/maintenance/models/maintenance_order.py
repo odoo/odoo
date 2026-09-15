@@ -73,14 +73,6 @@ class MaintenanceOrder(models.Model):
         string="Created by User",
         default=lambda s: s.env.uid,
     )
-    category_id = fields.Many2one(
-        comodel_name="maintenance.equipment.category",
-        related="equipment_id.category_id",
-        string="Category",
-        store=True,
-        index="btree_not_null",
-        readonly=True,
-    )
     locked = fields.Boolean(tracking=True)
     resource_ids = fields.Many2many(
         comodel_name="resource.resource",
@@ -101,12 +93,6 @@ class MaintenanceOrder(models.Model):
     block_resource = fields.Boolean(
         default=True,
         help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
-    )
-    equipment_id = fields.Many2one(
-        comodel_name="maintenance.equipment",
-        index=True,
-        ondelete="restrict",
-        check_company=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -234,16 +220,16 @@ class MaintenanceOrder(models.Model):
         ]
 
     def _get_fields_approval_protected(self):
-        return ["equipment_id", "resource_ids", "maintenance_type"]
+        return ["resource_ids", "maintenance_type"]
 
     @api.depends("resource_ids")
     def _compute_asset_ids(self):
         assets = self.env["resource.asset"].search(
-            [("resource_id", "in", self.resource_ids.ids)]
+            [("resource_id", "in", self.resource_ids._origin.ids)]
         )
         for order in self:
             order.asset_ids = assets.filtered(
-                lambda asset, resources=order.resource_ids: (
+                lambda asset, resources=order.resource_ids._origin: (
                     asset.resource_id in resources
                 )
             )
@@ -297,7 +283,11 @@ class MaintenanceOrder(models.Model):
                     order.schedule_end - order.schedule_date
                 ).total_seconds() / 3600
 
-    @api.depends("company_id", "equipment_id", "resource_ids.maintenance_team_id")
+    @api.depends(
+        "company_id",
+        "resource_ids.maintenance_team_id",
+        "asset_ids.kind_id.maintenance_team_id",
+    )
     def _compute_maintenance_team_id(self):
         default_teams = {}
         for order in self:
@@ -305,14 +295,14 @@ class MaintenanceOrder(models.Model):
                 order.resource_ids.maintenance_team_id.filtered(
                     lambda t, c=order.company_id: not t.company_id or t.company_id == c
                 )[:1]
-                or order.equipment_id.maintenance_team_id
+                or order.asset_ids.kind_id.maintenance_team_id[:1]
                 or order.maintenance_team_id
             )
             if team.company_id and team.company_id != order.company_id:
                 team = team.browse()
             # The company default is the last resort of this precomputed field, not a field
             # default: a field default is filled before the compute, so a create never took the
-            # equipment's (or an override's) team.
+            # resource's (or an override's) team.
             if not team:
                 company = order.company_id
                 if company not in default_teams:
@@ -337,17 +327,19 @@ class MaintenanceOrder(models.Model):
             )
         )
 
-    @api.depends("company_id", "equipment_id", "resource_ids.technician_user_id")
+    @api.depends(
+        "company_id",
+        "resource_ids.technician_user_id",
+        "asset_ids.kind_id.technician_user_id",
+    )
     def _compute_user_id(self):
         for order in self:
-            technician = order.resource_ids.technician_user_id[:1]
+            technician = (
+                order.resource_ids.technician_user_id[:1]
+                or order.asset_ids.kind_id.technician_user_id[:1]
+            )
             if technician:
                 order.user_id = technician
-            elif order.equipment_id:
-                order.user_id = (
-                    order.equipment_id.technician_user_id
-                    or order.equipment_id.category_id.technician_user_id
-                )
             if (
                 order.user_id
                 and order.company_id.id not in order.user_id.company_ids.ids
@@ -446,7 +438,7 @@ class MaintenanceOrder(models.Model):
         return res
 
     def _is_new_activity_required(self, vals):
-        return vals.get("equipment_id") or vals.get("resource_ids")
+        return vals.get("resource_ids")
 
     def _get_activity_note(self):
         self.check_singleton()
@@ -455,8 +447,6 @@ class MaintenanceOrder(models.Model):
                 "Order planned for %s",
                 ", ".join(asset._get_html_link() for asset in self.asset_ids),
             )
-        if self.equipment_id:
-            return _("Order planned for %s", self.equipment_id._get_html_link())
         return False
 
     def _get_fields_reservation_date(self):

@@ -1,11 +1,9 @@
-import time
-
 from odoo import fields
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 
 
-class TestEquipmentCommon(TransactionCase):
+class TestMaintenanceCommon(TransactionCase):
     def setUp(self):
         super().setUp()
         self.env["approval.category"].search(
@@ -17,7 +15,7 @@ class TestEquipmentCommon(TransactionCase):
                 )
             ]
         ).action_archive()
-        self.equipment = self.env["maintenance.equipment"]
+        self.asset = self.env["resource.asset"]
         self.maintenance_order = self.env["maintenance.order"]
         self.res_users = self.env["res.users"]
         self.maintenance_team = self.env["team.team"]
@@ -45,32 +43,22 @@ class TestEquipmentCommon(TransactionCase):
             }
         )
 
-        self.equipment_monitor = self.env["maintenance.equipment.category"].create(
-            {
-                "name": "Monitors - Test",
-            }
+        self.monitor_kind = self.env["resource.asset.kind"].create(
+            {"name": "Monitors - Test", "code": "monitor_test"}
         )
 
 
-class TestEquipment(TestEquipmentCommon):
-    def test_10_equipment_order_category(self):
-
-        # Create a new equipment
-        equipment_01 = self.equipment.with_user(self.manager).create(
+class TestMaintenance(TestMaintenanceCommon):
+    def test_10_asset_order(self):
+        monitor = self.asset.with_user(self.manager).create(
             {
                 "name": 'Samsung Monitor "15',
-                "category_id": self.equipment_monitor.id,
+                "kind_id": self.monitor_kind.id,
                 "technician_user_id": self.ref("base.user_root"),
-                "owner_user_id": self.user.id,
-                "assign_date": time.strftime("%Y-%m-%d"),
-                "serial_no": "MT/127/18291015",
                 "model": "NP355E5X",
                 "color": 3,
             }
         )
-
-        # Check that equipment is created or not
-        assert equipment_01, "Equipment not created"
 
         # Create new maintenance order
         maintenance_order_01 = self.maintenance_order.with_user(self.user).create(
@@ -78,7 +66,7 @@ class TestEquipment(TestEquipmentCommon):
                 "name": "Resolution is bad",
                 "user_id": self.user.id,
                 "owner_user_id": self.user.id,
-                "equipment_id": equipment_01.id,
+                "resource_ids": monitor.resource_id.ids,
                 "color": 7,
                 "maintenance_team_id": self.ref(
                     "maintenance.equipment_team_maintenance"
@@ -137,43 +125,33 @@ class TestEquipment(TestEquipmentCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestEquipmentPostInstall(TestEquipmentCommon):
-    def test_basic_access_and_new_equipment(self):
-        """
-        Ensure that
-        - a maintenance manager can create an equipment and assign it to a
-        specific user
-        - the user can open it
-        """
-        equipment_name = "Super Equipment"
-
+class TestMaintenancePostInstall(TestMaintenanceCommon):
+    def test_a_maintenance_manager_creates_an_asset_an_employee_opens(self):
         with self.with_user("hm"):
-            form = Form(self.env["maintenance.equipment"])
-            form.name = equipment_name
-            equipment = form.save()
-
-        self.assertTrue(equipment)
-        equipment.owner_user_id = self.user
+            form = Form(self.env["resource.asset"])
+            form.name = "Super Equipment"
+            form.kind_id = self.monitor_kind
+            asset = form.save()
 
         with self.with_user("emp"):
-            # Using browse to avoid the env of record `equipment`
-            form = Form(self.env["maintenance.equipment"].browse(equipment.id))
-            self.assertEqual(form.name, equipment_name)
+            form = Form(self.env["resource.asset"].browse(asset.id))
+            self.assertEqual(form.name, "Super Equipment")
 
     def test_done_maintenance_no_close_or_date_order(self):
         """
-        Ensure equipment with done maintenance orders that have
+        Ensure an asset with done maintenance orders that have
         `close_date` or `date_order` set to False can still be opened.
         In theory this should never happen, but we should fail gracefully
         in case these dates are forced set to False.
         """
 
-        form = Form(self.env["maintenance.equipment"].with_user(self.manager))
+        form = Form(self.env["resource.asset"].with_user(self.manager))
         form.name = "brain"
+        form.kind_id = self.monitor_kind
         equipment = form.save()
         form = Form(self.env["maintenance.order"].with_user(self.manager))
         form.name = "improve efficiency"
-        form.equipment_id = equipment
+        form.resource_ids.add(equipment.resource_id)
         form.maintenance_type = "corrective"
         maintenance = form.save()
         self.assertTrue(maintenance.date_order)

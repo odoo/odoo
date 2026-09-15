@@ -174,60 +174,55 @@ class TestMaintenanceDefaultTeam(TransactionCase):
         )
 
 
-class TestMaintenanceEquipmentAndDashboards(TransactionCase):
+class TestMaintenanceKindsAndDashboards(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.technician = cls.env["res.users"].create(
-            {"name": "Category Technician", "login": "category_technician"}
+            {"name": "Kind Technician", "login": "kind_technician"}
         )
-        cls.category = cls.env["maintenance.equipment.category"].create(
-            {"name": "Probe category", "technician_user_id": cls.technician.id}
+        cls.kind = cls.env["resource.asset.kind"].create(
+            {
+                "name": "Probe kind",
+                "code": "probe_kind",
+                "technician_user_id": cls.technician.id,
+            }
         )
 
-    def test_an_equipment_created_in_code_takes_its_category_technician(self):
-        equipment = self.env["maintenance.equipment"].create(
-            {"name": "Probe equipment", "category_id": self.category.id}
-        )
-        self.assertEqual(equipment.technician_user_id, self.technician)
+    def test_an_asset_takes_its_kind_technician_unless_given_one(self):
+        Asset = self.env["resource.asset"]
+        asset = Asset.create({"name": "Probe asset", "kind_id": self.kind.id})
+        self.assertEqual(asset.technician_user_id, self.technician)
         other = self.env.ref("base.user_admin")
-        explicit = self.env["maintenance.equipment"].create(
+        explicit = Asset.create(
             {
                 "name": "Explicit technician",
-                "category_id": self.category.id,
+                "kind_id": self.kind.id,
                 "technician_user_id": other.id,
             }
         )
         self.assertEqual(explicit.technician_user_id, other)
-        with Form(self.env["maintenance.equipment"]) as form:
-            form.name = "Form equipment"
-            form.category_id = self.category
-            self.assertEqual(form.technician_user_id, self.technician)
+        with Form(Asset) as form:
+            form.name = "Form asset"
+            form.kind_id = self.kind
+        self.assertEqual(form.record.technician_user_id, self.technician)
 
-    def test_the_category_fold_and_counts_follow_its_equipment(self):
-        self.assertTrue(self.category.fold)
-        equipment = self.env["maintenance.equipment"].create(
-            {"name": "Probe equipment", "category_id": self.category.id}
+    def test_the_asset_counts_its_orders(self):
+        asset = self.env["resource.asset"].create(
+            {"name": "Probe asset", "kind_id": self.kind.id}
         )
-        self.assertFalse(self.category.fold)
         self.env["maintenance.order"].create(
             [
                 {
                     "name": "Done",
-                    "equipment_id": equipment.id,
+                    "resource_ids": asset.resource_id.ids,
                     "state": "done",
                 },
-                {"name": "Open", "equipment_id": equipment.id},
+                {"name": "Open", "resource_ids": asset.resource_id.ids},
             ]
         )
-        self.category.invalidate_recordset()
-        self.assertEqual(self.category.maintenance_count, 2)
-        self.assertEqual(self.category.maintenance_open_count, 1)
-        self.assertEqual(
-            self.category.maintenance_open_count, equipment.maintenance_open_count
-        )
-        equipment.action_archive()
-        self.assertTrue(self.category.fold)
+        self.assertEqual(asset.maintenance_count, 2)
+        self.assertEqual(asset.maintenance_open_count, 1)
 
     def test_a_shared_team_offers_every_internal_user_as_member(self):
         shared = self.env["team.team"].new({"use_maintenance": True, "name": "Shared"})
@@ -257,15 +252,11 @@ class TestMaintenanceSchedule(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.equipment = cls.env["maintenance.equipment"].create(
-            {"name": "Schedule probe equipment"}
-        )
 
     def _order(self, **vals):
         return self.env["maintenance.order"].create(
             {
                 "name": "Schedule probe",
-                "equipment_id": self.equipment.id,
                 "schedule_date": datetime(2026, 9, 20, 10),
                 "schedule_end": datetime(2026, 9, 20, 14),
                 **vals,
@@ -303,39 +294,41 @@ class TestMaintenanceSchedule(TransactionCase):
 
 
 class TestMaintenanceReliabilityFigures(TransactionCase):
-    def _equipment_with_failures(self, date_effective, failures):
-        equipment = self.env["maintenance.equipment"].create(
-            {"name": "Reliability probe", "date_effective": date_effective}
+    def _asset_with_failures(self, date_effective, failures):
+        asset = self.env["resource.asset"].create(
+            {
+                "name": "Reliability probe",
+                "kind_id": self.env.ref("resource_asset.kind_equipment").id,
+                "date_effective": date_effective,
+            }
         )
         for date_order, close_date in failures:
             self.env["maintenance.order"].create(
                 {
                     "name": "Failure",
-                    "equipment_id": equipment.id,
+                    "resource_ids": asset.resource_id.ids,
                     "maintenance_type": "corrective",
                     "date_order": date_order,
                     "state": "done",
                     "close_date": close_date,
                 }
             )
-        return equipment
+        return asset
 
     def test_failures_before_the_effective_date_give_no_negative_mtbf(self):
-        equipment = self._equipment_with_failures(
+        asset = self._asset_with_failures(
             date(2026, 9, 10), [(date(2026, 9, 1), date(2026, 9, 3))]
         )
-        self.assertEqual(equipment.mtbf, 0)
-        self.assertFalse(equipment.estimated_next_failure)
+        self.assertEqual(asset.mtbf, 0)
+        self.assertFalse(asset.estimated_next_failure)
 
     def test_mttr_averages_only_the_repairs_with_both_dates(self):
-        equipment = self._equipment_with_failures(
+        asset = self._asset_with_failures(
             date(2026, 1, 1),
             [(date(2026, 3, 1), date(2026, 3, 5)), (date(2026, 4, 1), False)],
         )
-        self.assertEqual(equipment.mttr, 4)
-        self.assertEqual(
-            equipment.mtbf, (date(2026, 4, 1) - date(2026, 1, 1)).days // 2
-        )
+        self.assertEqual(asset.mttr, 4)
+        self.assertEqual(asset.mtbf, (date(2026, 4, 1) - date(2026, 1, 1)).days // 2)
 
 
 class TestMaintenanceTeamAlias(TransactionCase):
@@ -367,54 +360,57 @@ class TestMaintenanceTeamAlias(TransactionCase):
         )
 
 
-class TestMaintenanceEquipmentAccess(TransactionCase):
+class TestMaintenanceAssetAccess(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         group_user = cls.env.ref("base.group_user")
-        cls.technician, cls.category_technician = cls.env["res.users"].create(
+        cls.technician, cls.kind_technician = cls.env["res.users"].create(
             [
                 {
-                    "name": "Equipment technician",
-                    "login": "equipment_technician",
+                    "name": "Asset technician",
+                    "login": "asset_technician",
                     "group_ids": [(6, 0, [group_user.id])],
                 },
                 {
-                    "name": "Category technician",
-                    "login": "equipment_category_technician",
+                    "name": "Kind technician",
+                    "login": "asset_kind_technician",
                     "group_ids": [(6, 0, [group_user.id])],
                 },
             ]
         )
+        cls.machinery = cls.env.ref("resource_asset.kind_machinery")
 
-    def _visible_to(self, user, equipment):
-        return bool(
-            self.env["maintenance.equipment"]
-            .with_user(user)
-            .search_count([("id", "=", equipment.id)])
+    def test_the_technician_reads_the_asset_they_maintain(self):
+        asset = self.env["resource.asset"].create(
+            {
+                "name": "Compressor",
+                "kind_id": self.machinery.id,
+                "technician_user_id": self.technician.id,
+            }
         )
-
-    def test_the_technician_can_read_the_equipment_they_maintain(self):
-        equipment = self.env["maintenance.equipment"].create(
-            {"name": "Compressor", "technician_user_id": self.technician.id}
-        )
-        self.assertTrue(self._visible_to(self.technician, equipment))
         order = self.env["maintenance.order"].create(
-            {"name": "Noise", "equipment_id": equipment.id}
+            {"name": "Noise", "resource_ids": asset.resource_id.ids}
         )
+        self.assertEqual(order.user_id, self.technician)
         read = order.with_user(self.technician).web_read(
-            {"equipment_id": {"fields": {"display_name": {}}}}
+            {"asset_ids": {"fields": {"display_name": {}}}}
         )
-        self.assertEqual(read[0]["equipment_id"]["display_name"], "Compressor")
+        self.assertEqual(read[0]["asset_ids"][0]["display_name"], "Compressor")
 
-    def test_a_technician_from_a_new_category_follows_the_equipment(self):
-        equipment = self.env["maintenance.equipment"].create({"name": "Lathe"})
-        category = self.env["maintenance.equipment.category"].create(
-            {"name": "Machines", "technician_user_id": self.category_technician.id}
+    def test_a_new_kind_brings_its_technician(self):
+        asset = self.env["resource.asset"].create(
+            {"name": "Lathe", "kind_id": self.machinery.id}
         )
-        equipment.category_id = category
-        self.assertEqual(equipment.technician_user_id, self.category_technician)
-        self.assertTrue(self._visible_to(self.category_technician, equipment))
+        kind = self.env["resource.asset.kind"].create(
+            {
+                "name": "Machines",
+                "code": "machines_probe",
+                "technician_user_id": self.kind_technician.id,
+            }
+        )
+        asset.kind_id = kind
+        self.assertEqual(asset.technician_user_id, self.kind_technician)
 
 
 class TestMaintenanceOrderApproval(TransactionCase):

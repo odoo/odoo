@@ -47,13 +47,6 @@ class MaintenancePlan(models.Model):
         default=lambda self: self.env.company,
         required=True,
     )
-    equipment_id = fields.Many2one(
-        comodel_name="maintenance.equipment",
-        index="btree_not_null",
-        ondelete="restrict",
-        check_company=True,
-        tracking=True,
-    )
     resource_ids = fields.Many2many(
         comodel_name="resource.resource",
         relation="maintenance_plan_resource_rel",
@@ -250,7 +243,7 @@ class MaintenancePlan(models.Model):
         for fname in ("description", "priority"):
             if self[fname]:
                 vals[fname] = self[fname]
-        for fname in ("equipment_id", "maintenance_team_id", "user_id"):
+        for fname in ("maintenance_team_id", "user_id"):
             if self[fname]:
                 vals[fname] = self[fname].id
         vals["resource_ids"] = [Command.set(self.resource_ids.ids)]

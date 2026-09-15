@@ -8,11 +8,9 @@
         <field name="arch" type="xml">
             <search string="Maintenance Order Search">
                 <field name="name" string="Order" />
-                <field name="category_id" />
                 <field name="user_id" />
                 <field name="resource_ids" />
                 <field name="asset_ids" />
-                <field name="equipment_id" />
                 <field name="owner_user_id" />
                 <field name="state" />
                 <field name="maintenance_team_id" />
@@ -101,10 +99,6 @@
                         string="Assigned to"
                         context="{'group_by': 'user_id'}" />
                     <filter
-                        name="category"
-                        string="Category"
-                        context="{'group_by' : 'category_id'}" />
-                    <filter
                         name="states"
                         string="Status"
                         context="{'group_by' : 'state'}" />
@@ -137,8 +131,8 @@
                                     class="o_text_block o_text_bold" />
                             </div>
                             <field
-                                name="equipment_id"
-                                display="full"
+                                name="resource_ids"
+                                widget="many2many_tags"
                                 class="o_text_block"
                                 muted="1" />
                         </div>
@@ -154,7 +148,6 @@
         <field name="arch" type="xml">
             <form string="Maintenance Order">
                 <field name="company_id" invisible="1" />
-                <field name="category_id" invisible="1" />
                 <header>
                     <button
                         name="action_confirm"
@@ -214,14 +207,6 @@
                             <field
                                 name="schedule_overlap_count"
                                 invisible="not resource_ids or not schedule_overlap_count" />
-                            <field
-                                name="equipment_id"
-                                context="{'default_company_id':company_id, 'default_category_id':category_id}" />
-                            <field
-                                name="category_id"
-                                context="{'default_company_id':company_id}"
-                                groups="maintenance.group_equipment_manager"
-                                invisible="not equipment_id" />
                             <field name="date_order" readonly="True" />
                             <field
                                 name="close_date"
@@ -311,7 +296,6 @@
                         <field name="name" class="fw-bold fs-5" />
                         <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id" /></span>
                         <field name="resource_ids" widget="many2many_tags" />
-                        <span t-if="record.equipment_id.raw_value"><field name="equipment_id" /><span t-if="record.category_id.raw_value"> (<field name="category_id" />)</span></span>
                         <field name="schedule_date" />
                         <footer>
                             <div class="d-flex">
@@ -353,10 +337,7 @@
                 <field name="date_order" groups="base.group_no_one" />
                 <field name="owner_user_id" />
                 <field name="user_id" />
-                <field
-                    name="category_id"
-                    groups="maintenance.group_equipment_manager"
-                    readonly="1" />
+                <field name="resource_ids" widget="many2many_tags" optional="show" />
                 <field name="state" />
                 <field
                     name="company_id"
@@ -435,47 +416,6 @@
         </field>
     </record>
 
-    <record id="maintenance_order_action_link" model="ir.actions.act_window">
-        <field name="name">Maintenance Orders</field>
-        <field name="res_model">maintenance.order</field>
-        <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="maintenance_order_view_kanban" />
-        <field name="search_view_id" ref="maintenance_order_view_search" />
-        <field
-            name="context">{
-            'search_default_category_id': [active_id],
-            'search_default_active': True,
-            'default_category_id': active_id,
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance order
-            </p><p>
-                Follow the process of the order and communicate with the collaborator.
-            </p>
-        </field>
-    </record>
-
-    <record id="maintenance_order_action_from_equipment" model="ir.actions.act_window">
-        <field name="name">Maintenance Orders</field>
-        <field name="res_model">maintenance.order</field>
-        <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
-        <field name="domain">[('equipment_id', '=', active_id)]</field>
-        <field
-            name="context">{
-            'search_default_active': True,
-            'default_equipment_id': active_id,
-        }</field>
-        <field name="binding_model_id" ref="maintenance.model_maintenance_equipment" />
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance order
-            </p><p>
-                Follow the process of the order and communicate with the collaborator.
-            </p>
-        </field>
-    </record>
-
     <record id="maintenance_order_action_from_dashboard" model="ir.actions.act_window">
         <field name="name">Maintenance Orders</field>
         <field name="res_model">maintenance.order</field>
@@ -531,434 +471,6 @@
                 Add a new maintenance order
             </p><p>
                 Follow the process of the order and communicate with the collaborator.
-            </p>
-        </field>
-    </record>
-
-    <!-- equiment: views -->
-    <record id="hr_equipment_view_form" model="ir.ui.view">
-        <field name="name">equipment.form</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="arch" type="xml">
-            <form string="Equipment">
-                <sheet>
-                    <field name="company_id" invisible="1" />
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            name="%(maintenance_order_action_from_equipment)d"
-                            type="action"
-                            icon="fa-wrench"
-                            context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
-                            class="oe_stat_button">
-                            <field
-                                name="maintenance_open_count"
-                                string="Maintenance"
-                                widget="statinfo" />
-                        </button>
-                    </div>
-                    <widget
-                        name="web_ribbon"
-                        title="Archived"
-                        invisible="active"
-                        bg_color="text-bg-danger" />
-                    <div class="oe_title">
-                        <label for="name" />
-                        <h1><field name="name" string="Name" placeholder="e.g. LED Monitor" /></h1>
-                    </div>
-                    <group name="service_info_group">
-                        <group>
-                            <field name="active" invisible="1" />
-                            <field
-                                name="category_id"
-                                context="{'default_company_id':company_id}"
-                                options="{&quot;no_open&quot;: True}" />
-                            <field
-                                name="company_id"
-                                placeholder="Visible to all"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company" />
-                            <field name="owner_user_id" string="Owner" />
-                        </group>
-                        <group>
-                            <field
-                                name="maintenance_team_id"
-                                context="{'default_company_id':company_id}" />
-                            <field
-                                name="technician_user_id"
-                                domain="[('share', '=', False)]" />
-                            <field name="assign_date" groups="base.group_no_one" />
-                            <field name="scrap_date" groups="base.group_no_one" />
-                        </group>
-                    </group>
-                    <field name="equipment_properties" columns="2" />
-                    <notebook>
-                        <page name="description" string="Description">
-                            <field name="note" />
-                        </page>
-                        <page name="product_information" string="Product Information">
-                            <group>
-                                <group>
-                                    <field name="partner_id" />
-                                    <field name="partner_ref" />
-                                    <field name="model" />
-                                    <field name="serial_no" />
-                                </group><group>
-                                    <field name="date_effective" />
-                                    <field
-                                        name="cost"
-                                        groups="maintenance.group_equipment_manager" />
-                                    <field name="warranty_date" />
-                                </group>
-                            </group>
-                        </page>
-                        <page name="maintenance" string="Maintenance">
-                            <group>
-                                <group name="statistics">
-                                    <label
-                                        for="expected_mtbf"
-                                        string="Expected Mean Time Between Failure" />
-                                    <div class="o_row">
-                                        <field name="expected_mtbf" /> days
-                                    </div>
-                                    <label
-                                        for="mtbf"
-                                        string="Mean Time Between Failure" />
-                                    <div class="o_row">
-                                        <field name="mtbf" /> days
-                                    </div>
-                                    <label
-                                        for="estimated_next_failure"
-                                        string="Estimated Next Failure" />
-                                    <div class="o_row">
-                                        <field name="estimated_next_failure" />
-                                    </div>
-                                    <field
-                                        name="latest_failure_date"
-                                        string="Latest Failure" />
-                                    <label for="mttr" string="Mean Time To Repair" />
-                                    <div class="o_row">
-                                        <field name="mttr" /> days
-                                    </div>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
-                <chatter />
-            </form>
-        </field>
-    </record>
-
-    <record id="hr_equipment_view_kanban" model="ir.ui.view">
-        <field name="name">equipment.kanban</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="arch" type="xml">
-            <kanban sample="1" highlight_color="color">
-                <progressbar
-                    field="activity_state"
-                    colors="{&quot;planned&quot;: &quot;success&quot;, &quot;today&quot;: &quot;warning&quot;, &quot;overdue&quot;: &quot;danger&quot;}" />
-                <templates>
-                    <t t-name="menu">
-                        <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
-                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                        <div role="separator" class="dropdown-divider" />
-                        <div role="separator" class="dropdown-header">Record Colour</div>
-                        <field name="color" widget="kanban_color_picker" />
-                    </t>
-                    <t t-name="card">
-                        <div>
-                            <field name="name" class="fw-bold fs-5" />
-                            <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model" />)</span>
-                        </div>
-                        <field name="serial_no" t-if="record.serial_no.raw_value" />
-                        <footer>
-                            <div
-                                class="badge text-bg-danger"
-                                t-if="record.maintenance_open_count.raw_value">
-                                <field name="maintenance_open_count" /> Order
-                            </div>
-                            <div class="d-flex ms-auto align-items-center">
-                                <field name="activity_ids" widget="kanban_activity" />
-                                <field
-                                    name="owner_user_id"
-                                    widget="many2one_avatar_user"
-                                    class="ms-1" />
-                            </div>
-                        </footer>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
-    <record id="hr_equipment_view_tree" model="ir.ui.view">
-        <field name="name">equipment.list</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="arch" type="xml">
-            <list string="Assign To User" sample="1">
-                <field name="message_needaction" column_invisible="True" />
-                <field name="name" />
-                <!-- <field name="active" invisible="1"/> -->
-                <field name="owner_user_id" string="Owner" />
-                <field name="assign_date" groups="base.group_no_one" />
-                <field name="serial_no" />
-                <field name="technician_user_id" />
-                <field name="category_id" />
-                <field name="partner_id" column_invisible="True" />
-                <field name="company_id" groups="base.group_multi_company" />
-                <field
-                    name="activity_exception_decoration"
-                    widget="activity_exception" />
-            </list>
-        </field>
-    </record>
-
-    <record id="hr_equipment_view_search" model="ir.ui.view">
-        <field name="name">equipment.search</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="arch" type="xml">
-            <search string="Search">
-                <field
-                    name="name"
-                    string="Equipment"
-                    filter_domain="[                     '|', '|', '|',                     ('name', 'ilike', self), ('model', 'ilike', self), ('serial_no', 'ilike', self), ('partner_ref', 'ilike', self)]" />
-                <field name="category_id" string="Category" />
-                <field name="owner_user_id" />
-                <filter
-                    name="my"
-                    string="My Equipment"
-                    domain="[('owner_user_id', '=', uid)]" />
-                <filter
-                    name="assigned"
-                    string="Assigned"
-                    domain="[('owner_user_id', '!=', False)]" />
-                <filter
-                    name="available"
-                    string="Unassigned"
-                    domain="[('owner_user_id', '=', False)]" />
-                <separator />
-                <filter
-                    name="under_maintenance"
-                    string="Under Maintenance"
-                    domain="[('maintenance_open_count', '&gt;', 0)]" />
-                <separator />
-                <filter
-                    name="message_needaction"
-                    string="Unread Messages"
-                    domain="[('message_needaction','=',True)]"
-                    groups="mail.group_mail_notification_type_inbox" />
-                <separator />
-                <filter
-                    name="filter_activities_my"
-                    string="My Activities"
-                    domain="[('activity_user_id', '=', uid)]"
-                    invisible="1" />
-                <separator invisible="1" />
-                <filter
-                    name="activities_overdue"
-                    string="Late Activities"
-                    help="Show all records whose next activity date is past"
-                    domain="[('my_activity_date_deadline', '&lt;', 'today')]"
-                    invisible="1" />
-                <filter
-                    name="activities_today"
-                    string="Today Activities"
-                    domain="[('my_activity_date_deadline', '=', 'today')]"
-                    invisible="1" />
-                <filter
-                    name="activities_upcoming_all"
-                    string="Future Activities"
-                    domain="[('my_activity_date_deadline', '&gt;', 'today')]"
-                    invisible="1" />
-                <separator />
-                <filter
-                    name="inactive"
-                    string="Archived"
-                    domain="[('active','=',False)]" />
-                <group>
-                    <filter
-                        name="technicians"
-                        string="Technician"
-                        context="{'group_by': 'technician_user_id'}" />
-                    <filter
-                        name="category"
-                        string="Category"
-                        context="{'group_by': 'category_id'}" />
-                    <filter
-                        name="owner"
-                        string="Owner"
-                        context="{'group_by': 'owner_user_id'}" />
-                    <filter
-                        name="vendor"
-                        string="Vendor"
-                        context="{'group_by': 'partner_id'}" />
-                    <filter
-                        name="group_by_equipment_properties"
-                        string="Properties"
-                        context="{'group_by': 'equipment_properties'}" />
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <record id="hr_equipment_action" model="ir.actions.act_window">
-        <field name="name">Equipment</field>
-        <field name="res_model">maintenance.equipment</field>
-        <field name="path">equipments</field>
-        <field name="view_mode">kanban,list,form</field>
-        <field name="view_id" ref="hr_equipment_view_kanban" />
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new equipment
-            </p><p>
-                Track equipment and link it to an employee or department.
-                You will be able to manage allocations, issues and maintenance of your equipment.
-            </p>
-        </field>
-    </record>
-
-    <!-- equiment: actions -->
-    <record id="hr_equipment_action_from_category_form" model="ir.actions.act_window">
-        <field name="name">Equipment</field>
-        <field name="res_model">maintenance.equipment</field>
-        <field name="view_mode">kanban,list,form</field>
-        <field name="view_id" ref="hr_equipment_view_kanban" />
-        <field name="search_view_id" ref="hr_equipment_view_search" />
-        <field
-            name="context">{
-            'search_default_category_id': [active_id],
-            'default_category_id': active_id,
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new equipment
-            </p><p>
-                Track equipment and link it to an employee or department.
-                You will be able to manage allocations, issues and maintenance of your equipment.
-            </p>
-        </field>
-    </record>
-
-    <!-- equipment.category: views -->
-    <record id="hr_equipment_category_view_form" model="ir.ui.view">
-        <field name="name">equipment.category.form</field>
-        <field name="model">maintenance.equipment.category</field>
-        <field name="arch" type="xml">
-            <form string="Equipment Categories">
-                <sheet>
-                <div class="oe_button_box" name="button_box">
-                    <button
-                        name="%(hr_equipment_action_from_category_form)d"
-                        type="action"
-                        icon="fa-cubes"
-                        class="oe_stat_button">
-                        <field
-                            name="equipment_count"
-                            string="Equipment"
-                            widget="statinfo" />
-                    </button>
-                    <button
-                        name="%(maintenance_order_action_link)d"
-                        type="action"
-                        icon="fa-wrench"
-                        class="oe_stat_button">
-                        <field
-                            name="maintenance_open_count"
-                            string="Maintenance"
-                            widget="statinfo" />
-                    </button>
-                </div>
-                <div class="oe_title">
-                    <label for="name" string="Category Name" />
-                    <h1>
-                        <field name="name" placeholder="e.g. Monitors" />
-                    </h1>
-                </div>
-                <group>
-                    <field
-                        name="technician_user_id"
-                        domain="[('share', '=', False)]"
-                        class="oe_inline" />
-                    <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        options="{'no_create': True}"
-                        groups="base.group_multi_company"
-                        class="oe_inline" />
-                </group>
-                <group>
-                    <field name="note" />
-                </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="hr_equipment_category_view_tree" model="ir.ui.view">
-        <field name="name">equipment.category.list</field>
-        <field name="model">maintenance.equipment.category</field>
-        <field name="arch" type="xml">
-            <list string="Assign To User">
-                <field name="name" string="Name" />
-                <field name="technician_user_id" />
-                <field name="company_id" groups="base.group_multi_company" />
-            </list>
-        </field>
-    </record>
-
-    <record id="hr_equipment_category_view_search" model="ir.ui.view">
-        <field name="name">equipment.category.search</field>
-        <field name="model">maintenance.equipment.category</field>
-        <field name="arch" type="xml">
-            <search string="Search">
-                <field
-                    name="name"
-                    string="Category Name"
-                    filter_domain="[('name','ilike',self)]" />
-                <group>
-                    <filter
-                        name="responsible"
-                        string="Responsible"
-                        context="{'group_by' : 'technician_user_id'}" />
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <record id="view_maintenance_equipment_category_kanban" model="ir.ui.view">
-        <field name="name">maintenance.equipment.category.kanban</field>
-        <field name="model">maintenance.equipment.category</field>
-        <field name="arch" type="xml">
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="name" class="fw-bolder mb-1" />
-                        <div class="d-flex mt-1 align-items-center smaller">
-                            <strong>Equipment:</strong><field name="equipment_count" class="ms-1" />
-                            <div class="d-flex ms-auto align-items-center">
-                                <strong>Maintenance: </strong><field name="maintenance_open_count" class="ms-1" />
-                                <field
-                                    name="technician_user_id"
-                                    widget="many2one_avatar_user"
-                                    class="ms-2 small" />
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
-    <!-- equipment.category: actions -->
-    <record id="hr_equipment_category_action" model="ir.actions.act_window">
-        <field name="name">Equipment Categories</field>
-        <field name="res_model">maintenance.equipment.category</field>
-        <field name="path">equipement-categories</field>
-        <field name="view_mode">list,kanban,form</field>
-        <field name="view_id" ref="hr_equipment_category_view_tree" />
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new equipment category
             </p>
         </field>
     </record>

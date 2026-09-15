@@ -167,7 +167,10 @@
                                     <field name="date_disposal" />
                                 </group>
                                 <group>
-                                    <field name="resource_id" readonly="1" />
+                                    <field
+                                        name="resource_id"
+                                        invisible="not id"
+                                        readonly="1" />
                                     <field
                                         name="child_ids"
                                         widget="many2many_tags"

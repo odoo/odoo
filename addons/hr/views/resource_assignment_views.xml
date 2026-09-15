@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_assignment_view_form" model="ir.ui.view">
+        <field name="name">resource.assignment.form.hr</field>
+        <field name="model">resource.assignment</field>
+        <field name="inherit_id" ref="resource.resource_assignment_view_form" />
+        <field name="arch" type="xml">
+            <field name="assignee_id" position="attributes">
+                <attribute name="required">not department_id</attribute>
+                <attribute name="invisible">department_id</attribute>
+            </field>
+            <field name="assignee_id" position="after">
+                <field name="department_id" invisible="assignee_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_assignment_view_list" model="ir.ui.view">
+        <field name="name">resource.assignment.list.hr</field>
+        <field name="model">resource.assignment</field>
+        <field name="inherit_id" ref="resource.resource_assignment_view_list" />
+        <field name="arch" type="xml">
+            <field name="assignee_id" position="after">
+                <field name="department_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

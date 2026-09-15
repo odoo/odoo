@@ -11,101 +11,173 @@
             <field name="use_maintenance" eval="True" />
             <field name="name">Subcontractor</field>
         </record>
-        <!-- Equipment categories -->
-        <record id="equipment_computer" model="maintenance.equipment.category">
+        <!-- Asset kinds -->
+        <record id="equipment_computer" model="resource.asset.kind">
             <field name="name">Computers</field>
+            <field name="code">computer</field>
         </record>
-        <record id="equipment_software" model="maintenance.equipment.category">
+        <record id="equipment_software" model="resource.asset.kind">
             <field name="name">Software</field>
+            <field name="code">software</field>
         </record>
-        <record id="equipment_printer" model="maintenance.equipment.category">
+        <record id="equipment_printer" model="resource.asset.kind">
             <field name="name">Printers</field>
+            <field name="code">printer</field>
         </record>
-        <record id="equipment_monitor" model="maintenance.equipment.category">
+        <record id="equipment_monitor" model="resource.asset.kind">
             <field name="name">Monitors</field>
+            <field name="code">monitor</field>
             <field name="technician_user_id" ref="base.user_admin" />
-            <field name="color">3</field>
         </record>
-        <record id="equipment_phone" model="maintenance.equipment.category">
+        <record id="equipment_phone" model="resource.asset.kind">
             <field name="name">Phones</field>
+            <field name="code">phone</field>
             <field name="technician_user_id" ref="base.user_admin" />
         </record>
-        <!-- Equipment -->
-        <record id="equipment_monitor1" model="maintenance.equipment">
+        <!-- Assets -->
+        <record id="equipment_monitor1_resource" model="resource.resource">
             <field name="name">Samsung Monitor 15"</field>
-            <field name="category_id" ref="equipment_monitor" />
-            <field name="owner_user_id" ref="base.user_admin" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_monitor1" model="resource.asset">
+            <field name="resource_id" ref="equipment_monitor1_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_monitor" />
             <field name="technician_user_id" ref="base.user_admin" />
-            <field name="assign_date" eval="time.strftime('%Y-%m-10')" />
-            <field name="serial_no">MT/122/11112222</field>
             <field name="model">NP300E5X</field>
         </record>
-        <record id="equipment_monitor4" model="maintenance.equipment">
+        <record id="equipment_monitor1_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_monitor1" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">MT/122/11112222</field>
+        </record>
+        <record id="equipment_monitor4_resource" model="resource.resource">
             <field name="name">Samsung Monitor 15"</field>
-            <field name="category_id" ref="equipment_monitor" />
-            <field name="owner_user_id" ref="base.user_admin" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_monitor4" model="resource.asset">
+            <field name="resource_id" ref="equipment_monitor4_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_monitor" />
             <field name="technician_user_id" ref="base.user_admin" />
-            <field name="assign_date" eval="time.strftime('%Y-01-01')" />
-            <field name="serial_no">MT/125/22778837</field>
             <field name="model">NP355E5X</field>
         </record>
-        <record id="equipment_monitor6" model="maintenance.equipment">
+        <record id="equipment_monitor4_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_monitor4" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">MT/125/22778837</field>
+        </record>
+        <record id="equipment_monitor6_resource" model="resource.resource">
             <field name="name">Samsung Monitor 15"</field>
-            <field name="category_id" ref="equipment_monitor" />
-            <field name="owner_user_id" ref="base.user_demo" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_monitor6" model="resource.asset">
+            <field name="resource_id" ref="equipment_monitor6_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_monitor" />
             <field name="technician_user_id" ref="base.user_demo" />
-            <field name="assign_date" eval="time.strftime('%Y-02-01')" />
-            <field name="serial_no">MT/127/18291018</field>
             <field name="model">NP355E5X</field>
             <field name="color">3</field>
         </record>
-        <record id="equipment_computer3" model="maintenance.equipment">
+        <record id="equipment_monitor6_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_monitor6" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">MT/127/18291018</field>
+        </record>
+        <record id="equipment_computer3_resource" model="resource.resource">
             <field name="name">Acer Laptop</field>
-            <field name="category_id" ref="equipment_computer" />
-            <field name="owner_user_id" ref="base.user_demo" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_computer3" model="resource.asset">
+            <field name="resource_id" ref="equipment_computer3_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_computer" />
             <field name="technician_user_id" ref="base.user_admin" />
-            <field name="assign_date" eval="time.strftime('%Y-03-08')" />
-            <field name="serial_no">LP/203/19281928</field>
             <field name="model">NE56R</field>
         </record>
-        <record id="equipment_computer5" model="maintenance.equipment">
+        <record id="equipment_computer3_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_computer3" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">LP/203/19281928</field>
+        </record>
+        <record id="equipment_computer5_resource" model="resource.resource">
             <field name="name">Acer Laptop</field>
-            <field name="category_id" ref="equipment_computer" />
-            <field name="owner_user_id" ref="base.user_admin" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_computer5" model="resource.asset">
+            <field name="resource_id" ref="equipment_computer5_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_computer" />
             <field name="technician_user_id" ref="base.user_demo" />
-            <field name="assign_date" eval="time.strftime('%Y-04-08')" />
-            <field name="serial_no">LP/205/12928291</field>
             <field name="model">V5131</field>
         </record>
-        <record id="equipment_computer9" model="maintenance.equipment">
+        <record id="equipment_computer5_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_computer5" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">LP/205/12928291</field>
+        </record>
+        <record id="equipment_computer9_resource" model="resource.resource">
             <field name="name">HP Laptop</field>
-            <field name="category_id" ref="equipment_computer" />
-            <field name="owner_user_id" ref="base.user_admin" />
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_computer9" model="resource.asset">
+            <field name="resource_id" ref="equipment_computer9_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_computer" />
             <field name="technician_user_id" ref="base.user_demo" />
-            <field name="assign_date" eval="time.strftime('%Y-%m-11')" />
-            <field name="serial_no">LP/303/28292090</field>
             <field name="model">17-j059nr</field>
         </record>
-        <record id="equipment_computer11" model="maintenance.equipment">
-            <field name="name">HP Laptop</field>
-            <field name="category_id" ref="equipment_computer" />
-            <field name="owner_user_id" ref="base.user_demo" />
-            <field name="technician_user_id" ref="base.user_demo" />
-            <field name="assign_date" eval="time.strftime('%Y-05-01')" />
-            <field name="serial_no">LP/305/17281718</field>
+        <record id="equipment_computer9_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_computer9" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">LP/303/28292090</field>
         </record>
-        <record id="equipment_printer1" model="maintenance.equipment">
-            <field name="name">HP Inkjet printer</field>
-            <field name="category_id" ref="equipment_printer" />
+        <record id="equipment_computer11_resource" model="resource.resource">
+            <field name="name">HP Laptop</field>
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_computer11" model="resource.asset">
+            <field name="resource_id" ref="equipment_computer11_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_computer" />
             <field name="technician_user_id" ref="base.user_demo" />
-            <field name="serial_no">PR/011/2928191889</field>
+        </record>
+        <record id="equipment_computer11_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_computer11" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">LP/305/17281718</field>
+        </record>
+        <record id="equipment_printer1_resource" model="resource.resource">
+            <field name="name">HP Inkjet printer</field>
+            <field name="resource_type">material</field>
+            <field name="calendar_id" eval="False" />
+        </record>
+        <record id="equipment_printer1" model="resource.asset">
+            <field name="resource_id" ref="equipment_printer1_resource" />
+            <field name="state">in_service</field>
+            <field name="kind_id" ref="equipment_printer" />
+            <field name="technician_user_id" ref="base.user_demo" />
+        </record>
+        <record id="equipment_printer1_serial" model="resource.asset.identifier">
+            <field name="asset_id" ref="equipment_printer1" />
+            <field name="type_id" ref="resource_asset.identifier_type_serial" />
+            <field name="value">PR/011/2928191889</field>
         </record>
         <!--Maintenance Order-->
         <record id="m_order_3" model="maintenance.order">
             <field name="name">Resolution is bad</field>
             <field name="user_id" ref="base.user_demo" />
             <field name="owner_user_id" ref="base.user_admin" />
-            <field name="equipment_id" ref="equipment_monitor6" />
+            <field
+                name="resource_ids"
+                eval="[Command.link(ref('equipment_monitor6_resource'))]" />
             <field name="color">7</field>
             <field name="state">done</field>
             <field name="maintenance_team_id" ref="equipment_team_maintenance" />
@@ -114,7 +186,9 @@
             <field name="name">Some keys are not working</field>
             <field name="user_id" ref="base.user_admin" />
             <field name="owner_user_id" ref="base.user_admin" />
-            <field name="equipment_id" ref="equipment_computer3" />
+            <field
+                name="resource_ids"
+                eval="[Command.link(ref('equipment_computer3_resource'))]" />
             <field name="state">draft</field>
             <field name="maintenance_team_id" ref="equipment_team_maintenance" />
         </record>
@@ -122,7 +196,9 @@
             <field name="name">Motherboard failed</field>
             <field name="user_id" ref="base.user_demo" />
             <field name="owner_user_id" ref="base.user_admin" />
-            <field name="equipment_id" ref="equipment_computer5" />
+            <field
+                name="resource_ids"
+                eval="[Command.link(ref('equipment_computer5_resource'))]" />
             <field name="state">cancel</field>
             <field name="maintenance_team_id" ref="equipment_team_maintenance" />
         </record>
@@ -130,7 +206,9 @@
             <field name="name">Battery drains fast</field>
             <field name="user_id" ref="base.user_demo" />
             <field name="owner_user_id" ref="base.user_demo" />
-            <field name="equipment_id" ref="equipment_computer9" />
+            <field
+                name="resource_ids"
+                eval="[Command.link(ref('equipment_computer9_resource'))]" />
             <field name="state">in_progress</field>
             <field name="maintenance_team_id" ref="equipment_team_maintenance" />
         </record>
@@ -138,7 +216,9 @@
             <field name="name">Touchpad not working</field>
             <field name="user_id" ref="base.user_demo" />
             <field name="owner_user_id" ref="base.user_demo" />
-            <field name="equipment_id" ref="equipment_computer11" />
+            <field
+                name="resource_ids"
+                eval="[Command.link(ref('equipment_computer11_resource'))]" />
             <field name="state">in_progress</field>
             <field name="maintenance_team_id" ref="equipment_team_maintenance" />
         </record>

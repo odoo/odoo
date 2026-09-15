@@ -1,9 +1,9 @@
 {
     "name": "Maintenance - HR",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Human Resources",
     "sequence": 125,
-    "summary": "Equipment, Assets, Internal Hardware, Allocation Tracking",
+    "summary": "Asset custody for employees and departments, maintenance requesters",
     "description": """
 Bridge between HR and Maintenance.""",
     "author": "Odoo S.A.",

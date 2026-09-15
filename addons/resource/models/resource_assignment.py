@@ -26,7 +26,6 @@ class ResourceAssignment(models.Model):
     assignee_id = fields.Many2one(
         comodel_name="resource.resource",
         index=True,
-        required=True,
         domain="[('resource_type', '=', 'user')]",
         ondelete="restrict",
         check_company=True,
@@ -79,7 +78,7 @@ class ResourceAssignment(models.Model):
         for record in self:
             record.name = self.env._(
                 "%(assignee)s, %(role)s of %(resource)s",
-                assignee=record.assignee_id.name or "?",
+                assignee=record._get_holder_name() or "?",
                 role=roles.get(record.role, record.role),
                 resource=record.resource_id.name or "?",
             )
@@ -114,9 +113,26 @@ class ResourceAssignment(models.Model):
             domain = ~domain
         return domain
 
+    def _get_holder_name(self):
+        self.check_singleton()
+        return self.assignee_id.name
+
+    def _has_holder(self):
+        self.check_singleton()
+        return bool(self.assignee_id)
+
     @api.constrains("resource_id", "assignee_id")
     def _check_parties(self):
         for record in self:
+            if not record._has_holder():
+                raise ValidationError(
+                    self.env._(
+                        "%(resource)s is assigned to nobody: name who holds it.",
+                        resource=record.resource_id.name,
+                    )
+                )
+            if not record.assignee_id:
+                continue
             if record.resource_id == record.assignee_id:
                 raise ValidationError(
                     self.env._("A resource cannot be assigned to itself.")

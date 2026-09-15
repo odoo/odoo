@@ -14,13 +14,14 @@ def migrate(cr, version):
     _link_resources(cr, "maintenance_order", "order_id", "block_asset")
     _link_resources(cr, "maintenance_plan", "plan_id", "block_asset")
     _move_reliability(cr, "resource_asset", "resource_id")
-    cr.execute(
-        """
-        UPDATE resource_reservation
-           SET booking_key = NULL
-         WHERE res_model = 'maintenance.order' AND booking_key = 'asset'
-        """
-    )
+    if column_exists(cr, "resource_reservation", "booking_key"):
+        cr.execute(
+            """
+            UPDATE resource_reservation
+               SET booking_key = NULL
+             WHERE res_model = 'maintenance.order' AND booking_key = 'asset'
+            """
+        )
     for table in ("maintenance_order", "maintenance_plan"):
         for column in ("asset_id", "block_asset"):
             if column_exists(cr, table, column):

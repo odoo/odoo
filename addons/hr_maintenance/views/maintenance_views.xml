@@ -61,78 +61,15 @@
         </field>
     </record>
 
-    <record id="maintenance_equipment_view_search_inherit_hr" model="ir.ui.view">
-        <field name="name">maintenance.equipment.view.search.inherit.hr</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_view_search" />
+    <record id="resource_asset_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">resource.asset.form.inherit.hr</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
         <field name="arch" type="xml">
-            <filter name="assigned" position="attributes">
-                <attribute name="domain">['|', ('employee_id', '!=', False), ('department_id', '!=', False)]</attribute>
-            </filter>
-            <filter name="available" position="attributes">
-                <attribute name="domain">[('employee_id', '=', False), ('department_id', '=', False)]</attribute>
-            </filter>
-            <field name="owner_user_id" position="after">
-                <field name="employee_id" />
-                <field name="department_id" />
-            </field>
-            <group position="inside">
-                <filter
-                    name="employee"
-                    string="Employee"
-                    context="{'group_by': 'employee_id'}" />
-                <filter
-                    name="department"
-                    string="Department"
-                    context="{'group_by': 'department_id'}" />
-            </group>
-        </field>
-    </record>
-
-    <record id="maintenance_equipment_view_form_inherit_hr" model="ir.ui.view">
-        <field name="name">maintenance.equipment.view.form.inherit.hr</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_view_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position="replace">
-                <field name="equipment_assign_to" widget="radio" />
-                <field
-                    name="employee_id"
-                    string="Employee"
-                    widget="many2one_avatar_employee"
-                    invisible="equipment_assign_to == 'department' or not equipment_assign_to" />
-                <field
-                    name="department_id"
-                    string="Department"
-                    invisible="equipment_assign_to == 'employee' or not equipment_assign_to" />
-            </xpath>
-        </field>
-    </record>
-
-    <record id="maintenance_equipment_view_kanban_inherit_hr" model="ir.ui.view">
-        <field name="name">maintenance.equipment.view.kanban.inherit.hr</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position="replace">
-                <field name="employee_id" widget="many2one_avatar_employee" />
-            </xpath>
-            <xpath expr="//field[@name='serial_no']" position="after">
-                <div t-if="!record.employee_id.raw_value">Unassigned</div>
-                <field name="employee_id" />
-                <field name="department_id" />
-            </xpath>
-        </field>
-    </record>
-
-    <record id="maintenance_equipment_view_tree_inherit_hr" model="ir.ui.view">
-        <field name="name">maintenance.equipment.view.list.inherit.hr</field>
-        <field name="model">maintenance.equipment</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position="replace">
-                <field name="employee_id" string="Employee" />
-                <field name="department_id" string="Department" />
+            <xpath
+                expr="//page[@name='custody']/field[@name='assignment_ids']/list/field[@name='assignee_id']"
+                position="after">
+                <field name="department_id" optional="show" />
             </xpath>
         </field>
     </record>

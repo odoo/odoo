@@ -15,7 +15,6 @@ class TestCalendarWithRecurrence(HttpCase):
                 "name": "the boys",
             }
         )
-        equipment = self.env["maintenance.equipment"].create({"name": "room"})
         self.env["maintenance.order"].create(
             [
                 {
@@ -28,13 +27,10 @@ class TestCalendarWithRecurrence(HttpCase):
                 },
             ]
         )
-        plan = self.env[
-            "maintenance.plan"
-        ].create(
+        plan = self.env["maintenance.plan"].create(
             {
                 "name": "clean the room",
                 "date_start": datetime.now(),
-                "equipment_id": equipment.id,  # necessary for the tour to work with mrp_maintenance installed
                 "repeat_type": "until",
                 "repeat_until": datetime.now() + relativedelta(days=+8),
                 "repeat_interval": 1,

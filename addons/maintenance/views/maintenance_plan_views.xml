@@ -8,7 +8,6 @@
             <search>
                 <field name="name" />
                 <field name="resource_ids" />
-                <field name="equipment_id" />
                 <field name="maintenance_team_id" />
                 <field name="user_id" />
                 <filter
@@ -26,10 +25,6 @@
                     domain="[('active', '=', False)]" />
                 <group>
                     <filter
-                        name="groupby_equipment"
-                        string="Equipment"
-                        context="{'group_by': 'equipment_id'}" />
-                    <filter
                         name="groupby_team"
                         string="Team"
                         context="{'group_by': 'maintenance_team_id'}" />
@@ -45,7 +40,6 @@
             <list>
                 <field name="name" />
                 <field name="resource_ids" widget="many2many_tags" optional="show" />
-                <field name="equipment_id" optional="show" />
                 <field name="repeat_interval" string="Every" />
                 <field name="repeat_unit" nolabel="1" />
                 <field name="repeat_anchor" optional="show" />
@@ -103,7 +97,6 @@
                             <field
                                 name="book_ahead_count"
                                 invisible="not resource_ids or not block_resource or repeat_anchor != 'fixed'" />
-                            <field name="equipment_id" />
                             <field
                                 name="maintenance_team_id"
                                 options="{'no_create': True, 'no_open': True}" />

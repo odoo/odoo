@@ -9,16 +9,13 @@
         <field name="arch" type="xml">
             <button name="action_view_versions" position="before">
                 <button
-                    name="%(maintenance.hr_equipment_action)d"
-                    type="action"
+                    name="action_view_assets"
+                    type="object"
                     icon="fa-cubes"
-                    context="{'search_default_employee_id': id, 'default_employee_id': id}"
                     groups="maintenance.group_equipment_manager"
+                    invisible="not asset_count"
                     class="o_stat_button">
-                    <field
-                        name="equipment_count"
-                        string="Equipment"
-                        widget="statinfo" />
+                    <field name="asset_count" string="Assets" widget="statinfo" />
                 </button>
             </button>
         </field>

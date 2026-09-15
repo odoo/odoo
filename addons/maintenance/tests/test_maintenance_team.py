@@ -20,10 +20,10 @@ class TestMaintenanceOrderTeam(TransactionCase):
                 "company_id": cls.company.id,
             }
         )
-        cls.equipment_team = Team.create(
+        cls.asset_team = Team.create(
             {
                 "use_maintenance": True,
-                "name": "Probe Equipment Team",
+                "name": "Probe Asset Team",
                 "company_id": cls.company.id,
             }
         )
@@ -34,17 +34,21 @@ class TestMaintenanceOrderTeam(TransactionCase):
                 "company_id": cls.other_company.id,
             }
         )
-        cls.equipment = cls.env["maintenance.equipment"].create(
-            {"name": "Probe Equipment", "maintenance_team_id": cls.equipment_team.id}
+        cls.asset = cls.env["resource.asset"].create(
+            {
+                "name": "Probe Asset",
+                "kind_id": cls.env.ref("resource_asset.kind_equipment").id,
+                "maintenance_team_id": cls.asset_team.id,
+            }
         )
 
-    def test_a_code_path_create_takes_the_equipment_team(self):
+    def test_a_code_path_create_takes_the_asset_team(self):
         order = self.env["maintenance.order"].create(
-            {"name": "Probe order", "equipment_id": self.equipment.id}
+            {"name": "Probe order", "resource_ids": self.asset.resource_id.ids}
         )
-        self.assertEqual(order.maintenance_team_id, self.equipment_team)
+        self.assertEqual(order.maintenance_team_id, self.asset_team)
 
-    def test_a_create_without_equipment_takes_the_default_team(self):
+    def test_a_create_without_resources_takes_the_default_team(self):
         order = self.env["maintenance.order"].create({"name": "Probe order"})
         self.assertEqual(order.maintenance_team_id, self.default_team)
 
@@ -52,17 +56,17 @@ class TestMaintenanceOrderTeam(TransactionCase):
         order = self.env["maintenance.order"].create(
             {
                 "name": "Probe order",
-                "equipment_id": self.equipment.id,
+                "resource_ids": self.asset.resource_id.ids,
                 "maintenance_team_id": self.default_team.id,
             }
         )
         self.assertEqual(order.maintenance_team_id, self.default_team)
 
-    def test_the_form_path_still_takes_the_equipment_team(self):
+    def test_the_form_path_still_takes_the_asset_team(self):
         form = Form(self.env["maintenance.order"])
         form.name = "Probe order"
-        form.equipment_id = self.equipment
-        self.assertEqual(form.save().maintenance_team_id, self.equipment_team)
+        form.resource_ids.add(self.asset.resource_id)
+        self.assertEqual(form.save().maintenance_team_id, self.asset_team)
 
     def test_the_default_team_is_the_order_company_s(self):
         order = (

@@ -48,6 +48,17 @@
             <field
                 name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
+        <record id="resource_resource_rule_asset_user" model="ir.rule">
+            <field
+                name="name">resource.resource: asset users write the resources of material things</field>
+            <field name="model_id" ref="resource.model_resource_resource" />
+            <field name="domain_force">[('resource_type', '=', 'material')]</field>
+            <field name="groups" eval="[Command.link(ref('group_asset_user'))]" />
+            <field name="perm_read" eval="False" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="False" />
+        </record>
         <record id="resource_assignment_rule_asset_user" model="ir.rule">
             <field
                 name="name">resource.assignment: asset users manage the custody of material resources</field>

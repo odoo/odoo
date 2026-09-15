@@ -1,10 +1,10 @@
 {
     "name": "Maintenance",
-    "version": "1.5",
+    "version": "1.6",
     "category": "Supply Chain/Maintenance",
-    "summary": "Track equipment and manage maintenance orders",
+    "summary": "Maintain assets and resources with orders and plans",
     "description": """
-Track equipment and maintenance orders""",
+Maintenance orders and plans on assets and resources""",
     "author": "Odoo S.A.",
     "website": "https://www.odoo.com/app/maintenance",
     "license": "LGPL-3",

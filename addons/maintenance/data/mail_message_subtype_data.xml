@@ -16,27 +16,6 @@
             <field name="res_model">maintenance.order</field>
             <field name="default" eval="True" />
         </record>
-        <!-- Equipment-related subtypes for messaging / Chatter -->
-        <record id="mt_mat_assign" model="mail.message.subtype">
-            <field name="name">Equipment Assigned</field>
-            <field name="description">Equipment Assigned</field>
-            <field name="res_model">maintenance.equipment</field>
-        </record>
-        <!-- Equipment Category-related subtypes for messaging / Chatter -->
-        <record id="mt_cat_order_created" model="mail.message.subtype">
-            <field name="name">Maintenance Order Created</field>
-            <field name="res_model">maintenance.equipment.category</field>
-            <field name="relation_field">category_id</field>
-            <field name="parent_id" ref="mt_order_created" />
-            <field name="default" eval="True" />
-        </record>
-        <record id="mt_cat_mat_assign" model="mail.message.subtype">
-            <field name="name">Equipment Assigned</field>
-            <field name="res_model">maintenance.equipment.category</field>
-            <field name="relation_field">category_id</field>
-            <field name="parent_id" ref="mt_mat_assign" />
-            <field name="default" eval="True" />
-        </record>
         <record id="equipment_team_maintenance" model="team.team">
             <field name="use_maintenance" eval="True" />
             <field name="name">Internal Maintenance</field>

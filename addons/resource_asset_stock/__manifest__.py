@@ -12,6 +12,7 @@
     "data": [
         "views/stock_lot_views.xml",
         "views/resource_asset_views.xml",
+        "views/stock_location_views.xml",
     ],
     "auto_install": True,
 }

@@ -1,4 +1,6 @@
-from odoo import fields, models
+from odoo import api, fields, models
+
+KIND_DEFAULTS = ("technician_user_id", "maintenance_team_id")
 
 
 class ResourceAsset(models.Model):
@@ -33,6 +35,31 @@ class ResourceAsset(models.Model):
     mttr = fields.Integer(related="resource_id.mttr")
     estimated_next_failure = fields.Date(related="resource_id.estimated_next_failure")
     latest_failure_date = fields.Date(related="resource_id.latest_failure_date")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        assets = super().create(vals_list)
+        for asset, vals in zip(assets, vals_list, strict=True):
+            asset._take_kind_defaults(vals)
+        return assets
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "kind_id" in vals:
+            for asset in self:
+                asset._take_kind_defaults(vals)
+        return res
+
+    def _take_kind_defaults(self, given):
+        self.check_singleton()
+        kind = self.kind_id
+        resource_vals = {
+            fname: kind[fname].id
+            for fname in KIND_DEFAULTS
+            if not given.get(fname) and kind[fname]
+        }
+        if resource_vals:
+            self.resource_id.write(resource_vals)
 
     def _get_maintenance_action(self, xmlid):
         self.check_singleton()

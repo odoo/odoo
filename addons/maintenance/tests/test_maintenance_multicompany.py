@@ -1,17 +1,15 @@
-import time
-
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 
 
-class TestEquipmentMulticompany(TransactionCase):
-    def test_00_equipment_multicompany_user(self):
-        """Test Check maintenance with equipment manager and user in multi company environment"""
+class TestMaintenanceMulticompany(TransactionCase):
+    def test_00_maintenance_multicompany_user(self):
+        """Test Check maintenance with maintenance manager and user in multi company environment"""
 
         # Use full models
-        Equipment = self.env["maintenance.equipment"]
+        Asset = self.env["resource.asset"]
         MaintenanceOrder = self.env["maintenance.order"]
-        Category = self.env["maintenance.equipment.category"]
+        Kind = self.env["resource.asset.kind"]
         ResUsers = self.env["res.users"]
         ResCompany = self.env["res.company"]
         MaintenanceTeam = self.env["team.team"]
@@ -82,104 +80,38 @@ class TestEquipmentMulticompany(TransactionCase):
             )
         )
 
-        # User should not able to create equipment category.
         with self.assertRaises(AccessError):
-            Category.with_user(user).create(
-                {
-                    "name": "Software",
-                    "company_id": company_b.id,
-                    "technician_user_id": user.id,
-                }
-            )
-
-        # create equipment category for equipment manager
-        category_1 = (
-            Category.with_user(equipment_manager)
-            .with_context(allowed_company_ids=cids)
-            .create(
-                {
-                    "name": "Monitors - Test",
-                    "company_id": company_b.id,
-                    "technician_user_id": equipment_manager.id,
-                }
-            )
-        )
-
-        # create equipment category for equipment manager
-        Category.with_user(equipment_manager).with_context(
-            allowed_company_ids=cids
-        ).create(
+            Kind.with_user(user).create({"name": "Software", "code": "software_test"})
+        kind = Kind.with_user(equipment_manager).create(
             {
-                "name": "Computers - Test",
-                "company_id": company_b.id,
+                "name": "Monitors - Test",
+                "code": "monitor_test",
                 "technician_user_id": equipment_manager.id,
             }
         )
 
-        # create equipment category for equipment user
-        Category.with_user(equipment_manager).create(
-            {
-                "name": "Phones - Test",
-                "company_id": company_a.id,
-                "technician_user_id": equipment_manager.id,
-            }
-        )
-
-        # Check category for user equipment_manager and user
-        self.assertEqual(
-            Category.with_user(equipment_manager)
-            .with_context(allowed_company_ids=cids)
-            .search_count([]),
-            3,
-        )
-        self.assertEqual(Category.with_user(user).search_count([]), 2)
-
-        # User should not able to create equipment.
         with self.assertRaises(AccessError):
-            Equipment.with_user(user).create(
+            Asset.with_user(user).create(
                 {
                     "name": "Samsung Monitor 15",
-                    "category_id": category_1.id,
-                    "assign_date": time.strftime("%Y-%m-%d"),
+                    "kind_id": kind.id,
                     "company_id": company_b.id,
-                    "owner_user_id": user.id,
                 }
             )
-
-        Equipment.with_user(equipment_manager).with_context(
+        ManagerAsset = Asset.with_user(equipment_manager).with_context(
             allowed_company_ids=cids
-        ).create(
-            {
-                "name": "Acer Laptop",
-                "category_id": category_1.id,
-                "assign_date": time.strftime("%Y-%m-%d"),
-                "company_id": company_b.id,
-                "owner_user_id": user.id,
-            }
         )
-
-        # create an equipment for user
-        Equipment.with_user(equipment_manager).with_context(
-            allowed_company_ids=cids
-        ).create(
-            {
-                "name": "HP Laptop",
-                "category_id": category_1.id,
-                "assign_date": time.strftime("%Y-%m-%d"),
-                "company_id": company_b.id,
-                "owner_user_id": equipment_manager.id,
-            }
+        laptop = ManagerAsset.create(
+            {"name": "Acer Laptop", "kind_id": kind.id, "company_id": company_b.id}
         )
-        # Now there are total 2 equipment created and can view by equipment_manager user
+        ManagerAsset.create(
+            {"name": "HP Laptop", "kind_id": kind.id, "company_id": company_a.id}
+        )
+        self.assertEqual(laptop.technician_user_id, equipment_manager)
+        self.assertEqual(ManagerAsset.search_count([("kind_id", "=", kind.id)]), 2)
         self.assertEqual(
-            Equipment.with_user(equipment_manager)
-            .with_context(allowed_company_ids=cids)
-            .search_count([]),
-            2,
+            Asset.with_user(user).search([("kind_id", "=", kind.id)]), laptop
         )
-
-        # And there is total 1 equipment can be view by Normal User ( Which user is followers)
-        self.assertEqual(Equipment.with_user(user).search_count([]), 1)
 
         # create an equipment team BY user
         with self.assertRaises(AccessError):
@@ -188,16 +120,6 @@ class TestEquipmentMulticompany(TransactionCase):
                     "use_maintenance": True,
                     "name": "Subcontractor",
                     "company_id": company_b.id,
-                }
-            )
-
-        # create an equipment category BY user
-        with self.assertRaises(AccessError):
-            Category.with_user(user).create(
-                {
-                    "name": "Computers",
-                    "company_id": company_b.id,
-                    "technician_user_id": user.id,
                 }
             )
 

@@ -20,20 +20,13 @@ class MaintenanceOrder(models.Model):
         store=True,
         readonly=False,
     )
-    equipment_id = fields.Many2one(
-        domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]"
-    )
 
-    @api.depends("employee_id", "equipment_id.equipment_assign_to")
+    @api.depends("employee_id")
     def _compute_owner_user_id(self):
         for order in self:
-            if (
-                order.equipment_id.equipment_assign_to == "employee"
-                and order.employee_id.user_id
-            ):
-                order.owner_user_id = order.employee_id.user_id
-            else:
-                order.owner_user_id = order.owner_user_id or self.env.user
+            order.owner_user_id = (
+                order.employee_id.user_id or order.owner_user_id or self.env.user
+            )
 
     @api.model_create_multi
     def create(self, vals_list):

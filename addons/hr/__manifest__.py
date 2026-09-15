@@ -39,6 +39,7 @@
         "views/hr_employee_views.xml",
         "views/hr_employee_change_request_views.xml",
         "views/hr_department_views.xml",
+        "views/resource_assignment_views.xml",
         "views/hr_work_location_views.xml",
         "views/res_config_settings_views.xml",
         "views/hr_menus.xml",
