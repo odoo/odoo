@@ -2,7 +2,7 @@ import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
@@ -1135,4 +1135,16 @@ test("should only target fully selected nodes when applying color", async () => 
         contentAfter:
             '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
     });
+});
+
+test("should color underline and strikethrough when applying color", async () => {
+    const { el, editor } = await setupEditor(`<p><s><u>ab</u></s></p>`);
+    const ab = el.querySelector("u").firstChild;
+    const cd = document.createTextNode("cd");
+    ab.after(cd);
+    setSelection({ anchorNode: ab, anchorOffset: 0, focusNode: cd, focusOffset: 2 });
+    await animationFrame();
+    setColor("red", "color")(editor);
+    await animationFrame();
+    expect(el).toHaveInnerHTML(`<p><font style="color: red;"><s><u>abcd</u></s></font></p>`);
 });

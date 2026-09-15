@@ -6,7 +6,13 @@ import {
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
+import {
+    fillEmpty,
+    mergeAdjacentTextNodes,
+    removeClass,
+    removeStyle,
+    unwrapContents,
+} from "@html_editor/utils/dom";
 import {
     isElement,
     isEmptyBlock,
@@ -186,6 +192,12 @@ export class ColorPlugin extends Plugin {
             cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = [zws];
         } else {
+            cursors = this.dependencies.selection.preserveSelection();
+            mergeAdjacentTextNodes(
+                this.dependencies.selection.getEditableSelection().commonAncestorContainer,
+                cursors
+            );
+            cursors.restore();
             this.dependencies.split.splitSelection();
             cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = this.dependencies.selection
