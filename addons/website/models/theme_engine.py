@@ -430,16 +430,17 @@ class ThemeEngine(models.AbstractModel):
         # as `website_sale` are already installed.
         add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
 
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        theme = website.theme_id
-        if theme and theme.name != module.name:
-            # Another module is being installed after the theme was selected.
-            # Only include the theme addon snippets targeting this module.
-            theme_manifest = Manifest.for_addon(theme.name)
-            if theme_manifest:
-                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
-                addons = {module.name: theme_addons.get(module.name, {})}
-                add_addons_snippets(addons)
+        IrModuleModule = self.env['ir.module.module']
+        themes = IrModuleModule.search(IrModuleModule.get_themes_domain())
+        if module not in themes:
+            # An addon module is being installed, and the themes declare which
+            # of its snippets they need. Which theme a website ends up using is
+            # unknown here, and applying one is not a module operation, so
+            # cover every installed theme.
+            for theme in themes.filtered(lambda t: t.state == 'installed'):
+                if theme_manifest := Manifest.for_addon(theme.name):
+                    theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                    add_addons_snippets({module.name: theme_addons.get(module.name, {})})
 
         # Generate general configurator snippet templates
         create_values = []
