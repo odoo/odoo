@@ -35,8 +35,8 @@ class Event extends models.Model {
     datetime_end = fields.Datetime();
     type = fields.Many2one({ relation: "event.type" });
     allowed_type_ids = fields.Many2many({ relation: "event.type" });
-    user_id = fields.Many2one({ relation: "calendar.user" });
-    user_ids = fields.Many2many({ relation: "calendar.user" });
+    user_id = fields.Many2one({ relation: "event.user" });
+    user_ids = fields.Many2many({ relation: "event.user" });
 
     _records = [
         {
@@ -182,7 +182,7 @@ class EventType extends models.Model {
     ];
 }
 
-class CalendarUser extends models.Model {
+class EventUser extends models.Model {
     name = fields.Char();
 
     _records = [
@@ -194,8 +194,8 @@ class CalendarUser extends models.Model {
 }
 
 class FilterUser extends models.Model {
-    filter_user_id = fields.Many2one({ relation: "calendar.user" });
-    user_id = fields.Many2one({ relation: "calendar.user" });
+    filter_user_id = fields.Many2one({ relation: "event.user" });
+    user_id = fields.Many2one({ relation: "event.user" });
     is_checked = fields.Boolean();
 
     _records = [
@@ -204,7 +204,7 @@ class FilterUser extends models.Model {
     ];
 }
 
-defineModels([Event, EventType, CalendarUser, FilterUser]);
+defineModels([Event, EventType, EventUser, FilterUser]);
 
 preloadBundle("web.fullcalendar_lib");
 

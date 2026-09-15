@@ -4,8 +4,8 @@ from odoo import models
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 
 
-class GoogleSync(models.AbstractModel):
-    _inherit = 'google.calendar.sync'
+class GoogleEventSync(models.AbstractModel):
+    _inherit = 'google.event.sync'
 
     def _pre_process_google_events(self, gevents):
         """ Update Employee locations based on Google events. """

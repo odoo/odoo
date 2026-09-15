@@ -5,7 +5,7 @@ from requests import HTTPError
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 from odoo.addons.calendar.controllers.main import CalendarController
 
 _logger = logging.getLogger(__name__)
@@ -48,7 +48,11 @@ class GoogleCalendarController(CalendarController):
                 }
             # If App authorized, and user access accepted, We launch the synchronization
             try:
-                need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
+                new_calendars = request.env.user.sudo()._sync_google_calendars(GoogleCal)
+                # Commit calendar changes so that the @after_commit calls to the Google API are performed before
+                # continuing with event sync.
+                request.env.cr.commit()
+                need_refresh = request.env.user.sudo()._sync_google_events(GoogleCal)
             except HTTPError as e:
                 _logger.error("Google Calendar synchronization failed. %s", e)
                 return {"status": "sync_failed"}
@@ -62,6 +66,7 @@ class GoogleCalendarController(CalendarController):
                 }
             return {
                 "status": "need_refresh" if need_refresh else "no_new_event_from_google",
+                "new_calendars": bool(new_calendars),
                 "url": ''
             }
 
