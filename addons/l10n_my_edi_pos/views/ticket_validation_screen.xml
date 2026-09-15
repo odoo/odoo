@@ -3,7 +3,7 @@
 
     <template id="ticket_validation_screen" inherit_id="point_of_sale.ticket_validation_screen">
 
-        <xpath expr="//div[@id='get_info_div']/parent::div" position="after">
+        <xpath expr="//div[@id='get_info_div']" position="before">
             <t t-if="pos_order.company_id.account_fiscal_country_id.code == 'MY'">
                 <div class="form-check form-check-inline">
                     <input type="radio" class="form-check-input"
