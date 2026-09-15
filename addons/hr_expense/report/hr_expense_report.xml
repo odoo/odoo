@@ -41,7 +41,7 @@
                         <tbody>
                             <tr t-foreach="docs" t-as="line">
                                 <td class="text-start"><span t-out="line.date">01/01/2000</span></td>
-                                <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
+                                <td t-att-class="'text-start' + (' o_overflow' if len(line.name or '') > 30 else '')">
                                     <span t-field="line.name">Flight Ticket</span>
                                 </td>
                                 <td class="text-end"><span t-field="line.price_unit">$100.00</span></td>
@@ -108,7 +108,7 @@
         <field name="model">hr.expense</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_expense.report_expense</field>
-        <field name="print_report_name">'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))</field>
+        <field name="print_report_name">'Expense - %s - %s' % (object.employee_id.name, (object.name or '').replace('/', ''))</field>
         <field name="binding_model_id" ref="model_hr_expense"/>
         <field name="binding_type">report</field>
     </record>
