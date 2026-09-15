@@ -76,7 +76,7 @@
 | `core/utils/` | shared | 28 | Cross-cutting utilities: reactivity (`SignalStore`, `effect`, `derived`), `patch`, concurrency, hooks, timing, IndexedDB, URLs, macros, PDF.js loader, render instrumentation |
 | `core/utils/collections/` | shared | 3 | Array/object helpers: groupBy, sortBy, unique, intersection, cartesian, zip |
 | `core/utils/dnd/` | shared | 11 | Drag-and-drop hook builders (`useDraggable`, `useSortable`, nested sortable) and the `sortable` service. The builder is split by what each part must know: `drag_session.js` holds the pointer state machine, `drag_geometry.js` the pure rect/pointer maths, `draggable_hook_params.js` parameter validation and context construction; only `draggable_hook_builder.js` touches OWL |
-| `core/utils/dom/` | shared | 9 | DOM helpers: autoresize, class names, click-away, viewport units, events, HTML/Markup sanitisation, scrolling, XML |
+| `core/utils/dom/` | shared | 10 | DOM helpers: autoresize, class names, click-away, viewport units, events, HTML/Markup sanitisation, scrolling, XML, and the layout read/write batch mount hooks measure through |
 | `core/utils/format/` | shared | 5 | Value formatting primitives: binary sizes, colours, digit precision, numbers, strings |
 | `fields/` | features | 19 | Field infrastructure: `registerField()` / `registerFallbackField()`, the `Field` component, standard props, widths, tooltips, dirty signal, translation button/dialog, input hooks |
 | `fields/basic/` | features | 5 | Shared bases for the basic widgets: numeric, text, trimming inputs, plus the `boolean_toggle` face |
