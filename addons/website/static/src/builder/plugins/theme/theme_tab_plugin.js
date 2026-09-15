@@ -19,6 +19,7 @@ import {
     ThemeRoundnessOption,
     toFixedPixel,
 } from "./theme_roundness_option";
+import { useDomState } from "@html_builder/core/utils";
 import { getNumericAndUnit, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -184,6 +185,18 @@ export class ThemeTabPlugin extends Plugin {
                     _t("Input Fields"),
                     class ThemeInputOption extends BaseOptionComponent {
                         static template = "website.ThemeInputOption";
+
+                        setup() {
+                            super.setup();
+                            const htmlStyle = this.env.editor.document.defaultView.getComputedStyle(
+                                this.env.getEditingElement()
+                            );
+                            this.state = useDomState(() => ({
+                                isRadiusSpecified: (variable) =>
+                                    getCSSVariableValue(variable, htmlStyle) !==
+                                    getCSSVariableValue(variable.replace("input-", ""), htmlStyle),
+                            }));
+                        }
                     }
                 )
             ),
@@ -194,6 +207,18 @@ export class ThemeTabPlugin extends Plugin {
                     _t("Card"),
                     class ThemeCardOption extends BaseOptionComponent {
                         static template = "website.ThemeCardOption";
+
+                        setup() {
+                            super.setup();
+                            const htmlStyle = this.env.editor.document.defaultView.getComputedStyle(
+                                this.env.getEditingElement()
+                            );
+                            this.state = useDomState(() => ({
+                                isRadiusSpecified:
+                                    getCSSVariableValue("card-border-radius", htmlStyle) !==
+                                    getCSSVariableValue("border-radius", htmlStyle),
+                            }));
+                        }
                     }
                 )
             ),
