@@ -77,6 +77,21 @@ class TestPeppolAccountMove(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "sent via Peppol / PDP"):
             sent_move.button_draft()
 
+    def test_unlink_sent_peppol(self):
+        move = self._peppol_invoice(post=True)
+        move.button_cancel()
+        move.peppol_move_state = 'done'
+
+        with self.assertRaisesRegex(UserError, "sent via Peppol / PDP"):
+            move.unlink()
+
+    def test_unlink_not_sent_peppol(self):
+        move = self._peppol_invoice()
+
+        move.unlink()
+
+        self.assertFalse(move.exists())
+
     def test_reset_documents_cancelled_peppol_untouched(self):
         move = self._peppol_invoice()
         move.button_cancel()
