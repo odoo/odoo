@@ -4,7 +4,6 @@
 import re
 
 from odoo import models
-from odoo.exceptions import AccessDenied
 
 
 class IrWebsocket(models.AbstractModel):
@@ -24,7 +23,7 @@ class IrWebsocket(models.AbstractModel):
 
                         # Verify access to the edition channel.
                         if self.env.user._is_public():
-                            raise AccessDenied()
+                            continue
 
                         document = self.env[model_name].browse([res_id])
                         if not document.exists():
