@@ -871,6 +871,7 @@ patch(PosStore.prototype, {
         course.fired = true;
         order.deselectCourse();
         await this.printCourseTicket(course);
+        await this.syncAllOrders({ orders: [order] });
         return true;
     },
     async printCourseTicket(course) {
