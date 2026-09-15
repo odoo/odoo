@@ -124,6 +124,24 @@ test("can quick search emoji from quick reaction", async () => {
     await contains(".o-mail-MessageReaction", { text: "🥦1" });
 });
 
+test("shift-clicking on an emoji keeps the emoji picker open", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await click("[title='Add a Reaction']");
+    const defaultEmoji = QuickReactionMenu.DEFAULT_EMOJIS[0];
+    await click(`.o-mail-QuickReactionMenu-emoji:text(${defaultEmoji})`, { shiftKey: true });
+    await contains(".o-mail-MessageReaction", { text: `${defaultEmoji}1` });
+    await contains(".o-mail-QuickReactionMenu");
+    await click(".o-mail-QuickReactionMenu-emojiPicker");
+    await click(".o-EmojiPicker-content .o-Emoji:text(👺)", { shiftKey: true });
+    await contains(".o-mail-MessageReaction", { text: "👺1" });
+    await contains(".o-EmojiPicker");
+});
+
 test.tags("focus required");
 test("return focus to thread composer on close", async () => {
     const pyEnv = await startServer();
