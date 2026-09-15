@@ -18,7 +18,13 @@
                 </t>
                 <div class="o_calendar_container d-grid h-100 bg-view">
                     <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
                         <div t-if="!this.env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
+||||||| 4b1c5ec12a2716ec6fbd273af435ac5279b9e272
+                        <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
+=======
+                        <div t-if="!ui.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
+>>>>>>> 868ff515fc64b8d8d1960ace7d18dd962e85794c
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
                                 title="Previous"
@@ -35,8 +41,20 @@
                         <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
                         <button
                             class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-lg-0"
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
                             t-on-click.stop="() => this.setDate('today')">
                             Today
+||||||| 4b1c5ec12a2716ec6fbd273af435ac5279b9e272
+                            t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
+                            t-on-click.stop="() => this.setDate('today')"
+                        >   <span t-if="env.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"></i></span>
+                            <t t-else="">Today</t>
+=======
+                            t-att-class="ui.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
+                            t-on-click.stop="() => this.setDate('today')"
+                        >   <span t-if="ui.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"></i></span>
+                            <t t-else="">Today</t>
+>>>>>>> 868ff515fc64b8d8d1960ace7d18dd962e85794c
                         </button>
                         <h5 class="d-inline-flex ps-lg-2 ps-print-0 mb-0">
                             <t t-if="this.model.meta.scale === 'year'">
@@ -54,7 +72,13 @@
                         </h5>
                         <MultiSelectionButtons reactive="this.multiSelectionButtonsReactive" />
                     </div>
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
                     <MobileFilterPanel t-if="this.env.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
+||||||| 4b1c5ec12a2716ec6fbd273af435ac5279b9e272
+                    <MobileFilterPanel t-if="env.isSmall and hasSidePanel" t-props="mobileFilterPanelProps" />
+=======
+                    <MobileFilterPanel t-if="ui.isSmall and hasSidePanel" t-props="mobileFilterPanelProps" />
+>>>>>>> 868ff515fc64b8d8d1960ace7d18dd962e85794c
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
                         <t t-if="this.showCalendar" t-component="this.props.Renderer" t-props="this.rendererProps"/>
                         <CalendarSidePanel t-if="this.hasSidePanel" t-props="this.sidePanelProps"/>

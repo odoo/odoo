@@ -69,6 +69,7 @@ export class CalendarController extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.ui = useService("ui");
         this.displayDialog = useUniqueDialog();
 
         this.model = useModelWithSampleData(this.props.Model, this.modelParams);
@@ -83,9 +84,10 @@ export class CalendarController extends Component {
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            sidePanelExpanded:
-                !this.env.isSmall &&
-                Boolean(localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true),
+            sidePanelExpanded: Boolean(
+                localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true
+            ),
+            mobilePanelOpen: false,
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -119,7 +121,7 @@ export class CalendarController extends Component {
     get currentDate() {
         const meta = this.model.meta;
         const scale = meta.scale;
-        if (this.env.isSmall && ["week", "month"].includes(scale)) {
+        if (this.ui.isSmall && ["week", "month"].includes(scale)) {
             const date = meta.date || DateTime.now();
             let text = "";
             if (scale === "week") {
@@ -184,9 +186,9 @@ export class CalendarController extends Component {
     get mobileFilterPanelProps() {
         return {
             model: this.model,
-            sidePanelShown: this.state.sidePanelExpanded,
+            sidePanelShown: this.state.mobilePanelOpen,
             toggleSidePanel: () => {
-                this.state.sidePanelExpanded = !this.state.sidePanelExpanded;
+                this.state.mobilePanelOpen = !this.state.mobilePanelOpen;
             },
         };
     }
@@ -195,7 +197,7 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             editRecord: this.editRecord.bind(this),
-            sidePanelExpanded: this.state.sidePanelExpanded,
+            sidePanelExpanded: this.sidePanelExpanded,
             toggleSidePanel: this.toggleSidePanel.bind(this),
         };
     }
@@ -206,7 +208,7 @@ export class CalendarController extends Component {
     }
 
     get showCalendar() {
-        return !this.env.isSmall || !this.state.sidePanelExpanded;
+        return !this.ui.isSmall || !this.sidePanelExpanded;
     }
 
     get hasSidePanel() {
@@ -214,7 +216,7 @@ export class CalendarController extends Component {
     }
 
     get sidePanelExpanded() {
-        return this.state.sidePanelExpanded;
+        return this.ui.isSmall ? this.state.mobilePanelOpen : this.state.sidePanelExpanded;
     }
 
     get className() {
