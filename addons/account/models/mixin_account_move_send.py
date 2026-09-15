@@ -791,7 +791,7 @@ class MixinAccountMoveSend(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_mail_params(self, move, move_data):
+    def _prepare_mail_params(self, move, move_data):
         mail_attachments_widget = move_data.get("mail_attachments_widget")
         seen_attachment_ids = set()
         to_exclude = {x["name"] for x in mail_attachments_widget if x.get("skip")}
@@ -925,7 +925,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         ]:
             mail_template = move_data["mail_template"]
             mail_lang = move_data["mail_lang"]
-            mail_params = self._get_mail_params(move, move_data)
+            mail_params = self._prepare_mail_params(move, move_data)
             if not mail_params:
                 _debug.logic("send_no_mail_params_mail", move=move)
                 continue
