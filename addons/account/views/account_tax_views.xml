@@ -255,10 +255,10 @@
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"
                                            groups="base.group_no_one"/>
-                                    <field name="active" widget="boolean_toggle"/>
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'"/>
+                                    <field name="active" widget="boolean_toggle"/>
                                 </group>
                             </group>
                             <group>
