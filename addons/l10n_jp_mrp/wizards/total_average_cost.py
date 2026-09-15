@@ -8,8 +8,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
     _inherit = 'l10n_jp_stock.total.average.cost.wizard'
 
     def _get_move_domain(self, products, period_start, period_end):
-        # unbuilding returns components an order consumed, and reversing an issue
-        # is not an acquisition (施行令28条1項1号ハ)
+        # an unbuild reverses an issue, it does not acquire (施行令28条1項1号ハ)
         return super()._get_move_domain(products, period_start, period_end) + [
             ('unbuild_id', '=', False),
         ]
@@ -37,9 +36,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         def depth(product):
             if product not in depths:
                 if product in walked:
-                    # orders that come out of each other have no level to start from,
-                    # and core only forbids a loop through the components of a BoM,
-                    # never one closed by a by-product
+                    # no level to start from, and core only forbids a loop through a
+                    # BoM's components, never one closed by a by-product
                     loop = walked[walked.index(product):] + [product]
                     raise UserError(self.env._(
                         'The orders of the period make these products out of each other, '
@@ -85,8 +83,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     )
 
         for production in moves.production_id:
-            # the shares come from the order, so they do not depend on which of its
-            # outputs the evaluation happens to cover
+            # the shares come from the order, not from which outputs are evaluated
             byproducts = production.move_byproduct_ids.filtered(lambda m: m.state == 'done')
             byproducts_by_product = byproducts.grouped('product_id')
             finished_moves = production.move_finished_ids.filtered(

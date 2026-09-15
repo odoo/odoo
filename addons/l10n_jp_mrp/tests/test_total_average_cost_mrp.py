@@ -232,6 +232,4 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         unbuild.action_unbuild()
         unbuild.produce_line_ids.date = fields.Datetime.to_datetime(self.today)
         self._run_category_wizard()
-        # the components come back because an issue was reversed, not because they
-        # were acquired, so they must not dilute the average
         self.assertAlmostEqual(component.standard_price, 250 / 10, places=2)

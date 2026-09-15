@@ -281,8 +281,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 125) / 110, places=2)
 
     def test_dropship_return_prior_ignored(self):
-        # the drop-ship it cancels was averaged into an earlier period, so removing
-        # it here would distort a pool it never entered
         dropship = self._create_move(10, 125, self.today - timedelta(days=5), self.supplier_loc, self.customer_loc)
         self._add_opening_stock()
         return_move = self._create_move(5, 0, self.today, self.customer_loc, self.supplier_loc)
@@ -298,8 +296,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertAlmostEqual(self.product.standard_price, 100, places=2)
 
     def test_manufacturing_consumption_ignored(self):
-        # consuming a component is an issue, not a negative acquisition, and
-        # 施行令28条1項1号ハ averages acquisitions only
         production_loc = self.product.property_stock_production
         self.product.standard_price = 5
         self._create_move(10, 10, self.today, self.supplier_loc, self.stock_loc)
