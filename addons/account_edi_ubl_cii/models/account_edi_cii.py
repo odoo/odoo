@@ -1091,6 +1091,16 @@ class AccountEdiCii(models.AbstractModel):
             else:
                 allowances.append(allowance_charge_values)
 
+            if reason_code == 'AEO':
+                allowance_charge_values['attempt_tax_values'] = tax_values = {
+                    'name': reason,
+                    'amount_type': 'fixed',
+                    'type_tax_use': collected_values['odoo_document_type'],
+                    'amount': amount,
+                    'tax_amount_currency': amount,
+                }
+                collected_values.setdefault('taxes_values', []).append(tax_values)
+
     def _import_cii_invoice_add_invoice_line_values(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values'] = []
         tree = collected_values['tree']
