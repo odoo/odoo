@@ -38,8 +38,18 @@ export class VersionsTimeline extends StatusBarField {
     /** @override **/
     getFieldNames(props) {
         const fieldNames = super.getFieldNames(props);
+<<<<<<< 5eeee4a7e81a0e54fe6c6934b45188b549be24e6
         fieldNames.push("employee_type_id", "contract_date_start", "contract_date_end");
         return fieldNames.filter((fName) => fName in props.record.fields);
+||||||| 606e0fdbf1e376d0da394255092931ddd2668231
+        fieldNames.push("contract_type_id", "contract_date_start", "contract_date_end");
+        return fieldNames.filter((fName) => fName in props.record.fields);
+=======
+        const contractFieldNames = ["contract_type_id", "contract_date_start", "contract_date_end"].filter(
+            (fName) => fName in props.record.fields
+        );
+        return [...fieldNames, ...contractFieldNames];
+>>>>>>> 2c975b9220a4f435d94e30daeae83d003f081c1b
     }
 
     displayContractLines() {
