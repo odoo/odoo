@@ -1,6 +1,10 @@
 import { selfClosingHtmlTags } from "@html_editor/utils/dom_info";
 import { manuallyDispatchProgrammaticEvent, animationFrame } from "@odoo/hoot-dom";
-import { closestElement, getCommonAncestor } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    getCommonAncestor,
+    getTextNodesIterator,
+} from "@html_editor/utils/dom_traversal";
 
 /**
  * @param {Node} node
@@ -88,17 +92,6 @@ function getElemContent(el, selection, options) {
     return selfClosingHtmlTags.includes(el.tagName)
         ? `<${tag + attrStr}>`
         : `<${tag + attrStr}>${_getElemContent(el, selection, options)}</${tag}>`;
-}
-
-function getTextNodesIterator(el) {
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    walker[Symbol.iterator] = () => ({
-        next() {
-            const value = walker.nextNode();
-            return { value, done: !value };
-        },
-    });
-    return walker;
 }
 
 export function setContent(el, content) {

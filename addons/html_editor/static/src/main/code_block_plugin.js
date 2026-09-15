@@ -146,12 +146,10 @@ export class CodeBlockPlugin extends Plugin {
         fragment = this.processThrough("fragment_to_insert_within_pre_processors", fragment);
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
-        let linebreak;
         const processNode = (node) => {
             const children = childNodes(node);
             if (isDeepestBlock(node) && node.nextSibling) {
-                linebreak = this.document.createTextNode("\n");
-                node.append(linebreak);
+                node.append(this.document.createTextNode("\n"));
             }
             if (node.nodeType === Node.ELEMENT_NODE) {
                 unwrapContents(node);

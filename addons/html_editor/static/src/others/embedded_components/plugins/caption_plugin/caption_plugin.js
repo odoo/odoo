@@ -19,7 +19,7 @@ const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
-    static dependencies = ["image", "split", "history", "selection", "baseContainer", "clipboard"];
+    static dependencies = ["image", "split", "history", "selection", "baseContainer", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -155,7 +155,7 @@ export class CaptionPlugin extends Plugin {
 
     onDrop(selection, text) {
         if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            this.dependencies.clipboard.pasteText(text.replace(/\r?\n|\r/g, ""));
+            this.dependencies.dom.insert(text.replace(/\r?\n|\r/g, ""));
             return true;
         }
     }
@@ -163,7 +163,7 @@ export class CaptionPlugin extends Plugin {
     onPaste(selection, clipboardRoot) {
         if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
             const pastedTextContent = clipboardRoot.textContent;
-            this.dependencies.clipboard.pasteText(pastedTextContent.replace(/\r?\n|\r/g, ""));
+            this.dependencies.dom.insert(pastedTextContent.replace(/\r?\n|\r/g, ""));
             return true;
         }
     }
