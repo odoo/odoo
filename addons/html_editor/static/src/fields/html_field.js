@@ -512,7 +512,9 @@ const pendingAttachmentsService = {
             if (!pendingAttachmentIds[recordId]) {
                 pendingAttachmentIds[recordId] = [];
             }
-            pendingAttachmentIds[recordId].push(...ids);
+            if (ids) {
+                pendingAttachmentIds[recordId].push(...ids);
+            }
         }
         function clearPendingAttachments(recordId) {
             delete pendingAttachmentIds[recordId];
