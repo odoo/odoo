@@ -1,4 +1,4 @@
-"id","name","description","invoice_label","tax_scope","type_tax_use","amount","amount_type","tax_group_id","fiscal_position_ids","original_tax_ids","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/factor","repartition_line_ids/account_id","repartition_line_ids/tag_ids","name@cs","description@cs","invoice_label@cs","invoice_legal_notes"
+"id","name","description","invoice_label","tax_scope","type_tax_use","amount","amount_type","tax_group_id","fiscal_position_ids","original_tax_ids","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/factor","repartition_line_ids/account_id","repartition_line_ids/tag_ids","name@cs","description@cs","invoice_label@cs","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "l10n_cz_other_transaction_deduction","0% Exempt","Other Taxable Fulfillment With Applicable Tax-exemption","Tax exemption according to VAT Law no. 235/2004","","sale","0","percent","tax_group_vat_0","fiscal_position_domestic_cz,fiscal_position_eu_private_cz","","100","base","invoice","1","","VAT 26","0 % Osvobozeno","Ostatní uskutečněná plnění s nárokem na odpočet daně","Osvobozeno od daně podle zákona o DPH č. 235/2004",""
 "","","","","","","","","","","","100","tax","invoice","1","","","","","",""
 "","","","","","","","","","","","100","base","refund","1","","VAT 26","","","",""
@@ -147,3 +147,7 @@
 "","","","","","","","","","","","100","tax","invoice","1","","","","","",""
 "","","","","","","","","","","","100","base","refund","1","","VAT 42 Base||VAT 42 Total","","","",""
 "","","","","","","","","","","","100","tax","refund","1","","","","","",""
+"l10n_cz_sale_not_subject_vat","0% NS","Not Subject to VAT","0%","","sale","0.0","percent","tax_group_vat_0","","","100","base","invoice","","","","","","","","O","VATEX-EU-O"
+"","","","","","","","","","","","100","tax","invoice","","","","","","","","",""
+"","","","","","","","","","","","100","base","refund","","","","","","","","",""
+"","","","","","","","","","","","100","tax","refund","","","","","","","","",""

@@ -1,4 +1,4 @@
-"id","sequence","invoice_label","description","name","amount","amount_type","type_tax_use","tax_group_id","active","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@sl","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","sequence","invoice_label","description","name","amount","amount_type","type_tax_use","tax_group_id","active","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@sl","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "gd_taxr_1","30","0%","0% output VAT - deductible","0% D","0.00","percent","sale","tax_group_0","","100.00","base","invoice","11||ir_7","","Izstopni DDV 0% - s pravico do odbitka","gd_fp_do,gd_fp_do_no_vat,gd_fp_do1","",""
 "","","","","","","","","","","100.00","tax","invoice","","","","","",""
 "","","","","","","","","","","100.00","base","refund","11||ir_7","","","","",""
@@ -255,3 +255,7 @@
 "","","","","","","","","","","100.00","tax","invoice","42a||pr_19a","gd_acc_160000","","","",""
 "","","","","","","","","","","100.00","base","refund","31||35||pr_8a||pr_13","","","","",""
 "","","","","","","","","","","100.00","tax","refund","42a||pr_19a","gd_acc_160000","","","",""
+"l10n_si_vat_sale_not_subject","999","0%","Not Subject to VAT","0% NS","0.0","percent","sale","tax_group_0","True","100","base","invoice","","","","","","","O","VATEX-EU-O"
+"","","","","","","","","","","100","tax","invoice","","","","","","","",""
+"","","","","","","","","","","100","base","refund","","","","","","","",""
+"","","","","","","","","","","100","tax","refund","","","","","","","",""

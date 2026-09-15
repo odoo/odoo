@@ -1,4 +1,4 @@
-"id","tax_group_id","name","l10n_lt_tax_code","type_tax_use","amount","amount_type","tax_scope","sequence","description","invoice_label","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@lt","fiscal_position_ids","original_tax_ids"
+"id","tax_group_id","name","l10n_lt_tax_code","type_tax_use","amount","amount_type","tax_scope","sequence","description","invoice_label","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@lt","fiscal_position_ids","original_tax_ids","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "account_tax_template_sales_0_vat5","tax_group_vat_0","0% EXEMPT","PVM5","sale","0.0","percent","","10","Sale 0% (VAT5) Tax Exempt in LT","","base","invoice","13_base","","","Pardavimo 0% (PVM5) neapmokestinamas LT","account_fiscal_position_template_lt,account_fiscal_position_template_b2c_eu",""
 "","","","","","","","","","","","tax","invoice","","account_account_template_4492","","","",""
 "","","","","","","","","","","","base","refund","13_base","","","","",""
@@ -259,3 +259,7 @@
 "","","","","","","","","","","","base","refund","23_base||24_base","","","","",""
 "","","","","","","","","","","","tax","refund","25_tax","account_account_template_2441","","","",""
 "","","","","","","","","","","","tax","refund","32_tax","account_account_template_4492","-100","","",""
+"account_tax_template_sales_not_subject","tax_group_vat_0","0% NS","","sale","0.0","percent","","999","Not Subject to VAT","0%","base","invoice","","","100","","","","O","VATEX-EU-O"
+"","","","","","","","","","","","tax","invoice","","","100","","","","",""
+"","","","","","","","","","","","base","refund","","","100","","","","",""
+"","","","","","","","","","","","tax","refund","","","100","","","","",""

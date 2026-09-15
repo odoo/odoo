@@ -1,4 +1,4 @@
-"id","sequence","description","invoice_label","name","amount","amount_type","type_tax_use","tax_group_id","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","fiscal_position_ids","original_tax_ids"
+"id","sequence","description","invoice_label","name","amount","amount_type","type_tax_use","tax_group_id","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","fiscal_position_ids","original_tax_ids","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "VAT_S_IN_MT_18_G","1","Sale 18% in country Goods","18% G","18% G","18.0","percent","sale","tax_group_mt_18","100","base","invoice","III.1_base","","fiscal_position_mt_national,fiscal_position_mt_person_private",""
 "","","","","","","","","","100","tax","invoice","III.1_tax","mt_3203","",""
 "","","","","","","","","","100","base","refund","III.1_base","","",""
@@ -87,3 +87,7 @@
 "","","","","","","","","","100","tax","invoice","I.4_tax","","",""
 "","","","","","","","","","100","base","refund","I.4_base","","",""
 "","","","","","","","","","100","tax","refund","I.4_tax","","",""
+"VAT_S_NOT_SUBJECT_MT","999","Not Subject to VAT","0%","0% NS","0.0","percent","sale","tax_group_mt_0","100","base","invoice","","","","","O","VATEX-EU-O"
+"","","","","","","","","","100","tax","invoice","","","","","",""
+"","","","","","","","","","100","base","refund","","","","","",""
+"","","","","","","","","","100","tax","refund","","","","","",""

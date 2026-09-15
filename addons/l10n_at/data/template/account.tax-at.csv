@@ -1,4 +1,4 @@
-"id","name","description","invoice_label","sequence","type_tax_use","tax_scope","amount","amount_type","active","tax_group_id","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@de","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","name","description","invoice_label","sequence","type_tax_use","tax_scope","amount","amount_type","active","tax_group_id","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@de","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "account_tax_template_sales_rev_charge_0_code021","0% Ust L","UST_021 Section 19 (1) second sentence (Tax liability concerns service recipient)","0%","400","sale","","0.0","percent","","tax_group_0","base","invoice","KZ 000||KZ 021","","","UST_021 § 19 Abs. 1 zweiter Satz (Steuerschuld betrifft Leistungsempfänger)","fiscal_position_template_national_w_uid,fiscal_position_template_national","",""
 "","","","","","","","","","","","tax","invoice","KZ 021","chart_at_template_3505","","","","",""
 "","","","","","","","","","","","base","refund","KZ 000||KZ 021","","","","","",""
@@ -259,3 +259,7 @@
 "","","","","","","","","","","","tax","invoice","","chart_at_template_2505","","","","",""
 "","","","","","","","","","","","base","refund","","","","","","",""
 "","","","","","","","","","","","tax","refund","","chart_at_template_2505","","","","",""
+"account_tax_template_sales_not_subject_to_vat","0% NS","Not Subject to VAT","0%","999","sale","","0.0","percent","True","tax_group_0","base","invoice","","","100","","","","","O","VATEX-EU-O"
+"","","","","","","","","","","","tax","invoice","","","100","","","","","",""
+"","","","","","","","","","","","base","refund","","","100","","","","","",""
+"","","","","","","","","","","","tax","refund","","","100","","","","","",""

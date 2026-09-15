@@ -58,3 +58,15 @@ class ResCompany(models.Model):
             national_steuer_nummer = self.l10n_de_stnr
 
         return national_steuer_nummer
+
+    def _get_default_vat_disabled_tax(self):
+        self.ensure_one()
+        if self.account_fiscal_country_id.code != 'DE':
+            return super()._get_default_vat_disabled_tax()
+        tax_xmlid = {
+            'de_skr03': 'tax_not_taxable_skr03',
+            'de_skr04': 'tax_not_taxable_skr04',
+        }.get(self.chart_template)
+        if not tax_xmlid:
+            return super()._get_default_vat_disabled_tax()
+        return self._get_or_create_chart_template_tax(tax_xmlid)

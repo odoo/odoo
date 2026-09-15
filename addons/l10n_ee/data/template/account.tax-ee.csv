@@ -1,4 +1,4 @@
-"id","sequence","name","type_tax_use","amount","amount_type","description","tax_group_id","active","l10n_ee_kmd_inf_code","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","name@et","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","sequence","name","type_tax_use","amount","amount_type","description","tax_group_id","active","l10n_ee_kmd_inf_code","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","name@et","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "l10n_ee_vat_out_20_g","10","20% G","sale","20.0","percent","20%","tax_group_vat_20","False","","base","invoice","1_1_base","","","20% K","afpt_eu_private,afpt_national","",""
 "","","","","","","","","","","tax","invoice","1_1_tax","l10n_ee_201204","","","","",""
 "","","","","","","","","","","base","refund","1_1_base","","","","","",""
@@ -289,3 +289,7 @@
 "","","","","","","","","","","base","refund","1_base_24_rc||7_1","","","","","",""
 "","","","","","","","","","","tax","refund","5_tax","l10n_ee_201201","100","","","",""
 "","","","","","","","","","","tax","refund","1_tax_24","l10n_ee_201204","-100","","","",""
+"l10n_ee_vat_out_not_subject","999","0% NS","sale","0.0","percent","Not Subject to VAT","tax_group_vat_0","True","","base","invoice","","","100","","","","","O","VATEX-EU-O"
+"","","","","","","","","","","tax","invoice","","","100","","","","","",""
+"","","","","","","","","","","base","refund","","","100","","","","","",""
+"","","","","","","","","","","tax","refund","","","100","","","","","",""

@@ -1,4 +1,4 @@
-"id","name","description","invoice_label","type_tax_use","amount_type","amount","tax_group_id","active","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/factor_percent","repartition_line_ids/account_id","repartition_line_ids/tag_ids","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","name","description","invoice_label","type_tax_use","amount_type","amount","tax_group_id","active","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/factor_percent","repartition_line_ids/account_id","repartition_line_ids/tag_ids","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "ie_tax_sale_goods_23","23% G","23% Standard rate - Goods","23%","sale","percent","23","ie_tax_group_vat_23","True","base","invoice","","","","ie_fp_eu_private,ie_fp_domestic","",""
 "","","","","","","","","","tax","invoice","","l10n_ie_account_3803","T1","","",""
 "","","","","","","","","","base","refund","","","","","",""
@@ -189,3 +189,7 @@
 "","","","","","","","","","base","refund","","","PA1","","",""
 "","","","","","","","","","tax","refund","-100","","T1","","",""
 "","","","","","","","","","tax","refund","","","T2","","",""
+"ie_tax_sale_not_subject","0% NS","Not Subject to VAT","0%","sale","percent","0.0","ie_tax_group_vat_0","True","base","invoice","100","","","","","","O","VATEX-EU-O"
+"","","","","","","","","","tax","invoice","100","","","","","","",""
+"","","","","","","","","","base","refund","100","","","","","","",""
+"","","","","","","","","","tax","refund","100","","","","","","",""

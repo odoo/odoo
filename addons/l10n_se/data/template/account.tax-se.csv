@@ -1,4 +1,4 @@
-"id","name","description","invoice_label","amount","type_tax_use","tax_group_id","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@sv_SE","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","name","description","invoice_label","amount","type_tax_use","tax_group_id","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","repartition_line_ids/factor_percent","description@sv_SE","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "sale_tax_25_goods","25% G","VAT Sale of goods 25%","25%","25.0","sale","tax_group_25","base","invoice","se_05","","","Utgående moms 25%","fp_sweden,fp_euro_b2c","",""
 "","","","","","","","tax","invoice","se_10","a2611","","","","",""
 "","","","","","","","base","refund","se_05","","","","","",""
@@ -175,3 +175,7 @@
 "","","","","","","","tax","invoice","","","","","","",""
 "","","","","","","","base","refund","se_37||se_38","","","","","",""
 "","","","","","","","tax","refund","","","","","","",""
+"sale_tax_not_subject","0% NS","Not Subject to VAT","0%","0.0","sale","tax_group_0","base","invoice","","","100","","","","","O","VATEX-EU-O"
+"","","","","","","","tax","invoice","","","100","","","","","",""
+"","","","","","","","base","refund","","","100","","","","","",""
+"","","","","","","","tax","refund","","","100","","","","","",""

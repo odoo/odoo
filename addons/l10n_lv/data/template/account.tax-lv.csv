@@ -1,4 +1,4 @@
-"id","description","name","type_tax_use","amount","sequence","tax_group_id","amount_type","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@lv","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","description","name","type_tax_use","amount","sequence","tax_group_id","amount_type","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@lv","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "VAT_S_G_21_LV","Sale 21% in country Goods","21% G","sale","21.0","100","tax_group_vat_21","percent","100","base","invoice","41","","Pārdod 21% valstī - Preces","fiscal_position_lv_domestic,fiscal_position_lv_eu_private","",""
 "","","","","","","","","100","tax","invoice","52","a5721","","","",""
 "","","","","","","","","100","base","refund","41","","","","",""
@@ -141,3 +141,7 @@
 "","","","","","","","","100","base","refund","I","","","","",""
 "","","","","","","","","100","tax","refund","","a5721","","","",""
 "","","","","","","","","-100","tax","refund","I","a5721","","","",""
+"VAT_S_NOT_SUBJECT_LV","Not Subject to VAT","0% NS","sale","0.0","999","tax_group_vat_0","percent","100","base","invoice","","","","","","","O","VATEX-EU-O"
+"","","","","","","","","100","tax","invoice","","","","","","","",""
+"","","","","","","","","100","base","refund","","","","","","","",""
+"","","","","","","","","100","tax","refund","","","","","","","",""

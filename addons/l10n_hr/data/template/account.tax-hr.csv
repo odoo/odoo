@@ -1,4 +1,4 @@
-"id","sequence","description","invoice_label","name","amount","amount_type","type_tax_use","tax_group_id","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@hr","fiscal_position_ids","original_tax_ids","invoice_legal_notes"
+"id","sequence","description","invoice_label","name","amount","amount_type","type_tax_use","tax_group_id","repartition_line_ids/factor_percent","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@hr","fiscal_position_ids","original_tax_ids","invoice_legal_notes","ubl_cii_tax_category_code","ubl_cii_tax_exemption_reason_code"
 "VAT_S_IN_ROC_25","1","Sale 25% in country","Sale 25% in country","25%","25.0","percent","sale","tax_group_pdv_25","100","base","invoice","II.3_base","","Rasprodaja 25% u zemlji","fiscal_position_hr_national,fiscal_position_hr_person_private","",""
 "","","","","","","","","","100","tax","invoice","II.3_tax","hr_240000","","","",""
 "","","","","","","","","","100","base","refund","II.3_base","","","","",""
@@ -141,3 +141,7 @@
 "","","","","","","","","","100","tax","invoice","","","","","",""
 "","","","","","","","","","100","base","refund","I.8_base","","","","",""
 "","","","","","","","","","100","tax","refund","","","","","",""
+"VAT_S_NOT_SUBJECT_HR","999","Not Subject to VAT","0%","0% NS","0.0","percent","sale","tax_group_pdv_0","100","base","invoice","","","","","","","O","VATEX-EU-O"
+"","","","","","","","","","100","tax","invoice","","","","","","","",""
+"","","","","","","","","","100","base","refund","","","","","","","",""
+"","","","","","","","","","100","tax","refund","","","","","","","",""
