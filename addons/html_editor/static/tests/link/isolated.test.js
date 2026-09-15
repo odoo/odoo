@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { click, describe, expect, press, test, waitFor } from "@odoo/hoot";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { descendants } from "@html_editor/utils/dom_traversal";
@@ -467,4 +467,13 @@ test("Should highlight link if editable focused", async () => {
     expect(getContent(el)).toBe(
         '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">[]\ufeffabc\ufeff</a>\ufeff</p>'
     );
+});
+
+test("link creation should not produce empty inline elements", async () => {
+    const { el } = await setupEditor("<p><font>[a</font>b]c</p>");
+    await waitFor(".o-we-toolbar");
+    await click(`.o-we-toolbar button[name="link"]`);
+    await waitFor(`.o_we_href_input_link`);
+    await press("a");
+    expect(getContent(el)).toBe(`<p><a href="a"><font>a</font>b</a>c</p>`);
 });
