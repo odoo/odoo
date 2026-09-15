@@ -11,4 +11,16 @@
 .transfo-container {
     z-index: $zindex-modal + 1;
     touch-action: none;
+    .transfo-dragger {
+        position: absolute;
+        pointer-events: auto;
+    }
+
+    .transfo-controls {
+        pointer-events: none;
+
+        > * {
+            pointer-events: auto;
+        }
+    }
 }
