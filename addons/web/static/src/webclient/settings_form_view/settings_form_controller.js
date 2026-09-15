@@ -1,5 +1,5 @@
 import { onMounted, onPatched, proxy, signal } from "@odoo/owl";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -25,7 +25,6 @@ export class SettingsFormController extends formView.Controller {
         this.handleViewButton = useViewButtonHandler();
         // only force the focus on touch devices on small screens
         this.inputRef = useAutofocus({ ref: this.autofocusRef, mobile: this.ui.isSmall });
-        this.state = proxy({ displayNoContent: false });
         this.searchState = proxy({
             value: "",
             clearSearch: () => {
@@ -37,25 +36,6 @@ export class SettingsFormController extends formView.Controller {
         });
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
-        useLayoutEffect(
-            () => {
-                if (this.searchState.value) {
-                    if (
-                        this.rootRef().querySelector(".o_settings_container:not(.d-none)") ||
-                        this.rootRef().querySelector(
-                            ".settings .o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
-                        )
-                    ) {
-                        this.state.displayNoContent = false;
-                    } else {
-                        this.state.displayNoContent = true;
-                    }
-                } else {
-                    this.state.displayNoContent = false;
-                }
-            },
-            () => [this.searchState.value]
-        );
         const removeLocalStateGetter = () => {
             if (this.env.__getLocalState__) {
                 this.env.__getLocalState__.remove(this);

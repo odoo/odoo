@@ -1,8 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import {
     defineModels,
+    editSearch,
     fields,
     getMockEnv,
     models,
@@ -151,4 +152,43 @@ test("Activate the developer modeddd (with tests assets)", async () => {
     await tick();
     expect(router.current).toEqual({ debug: 0 });
     expect.verifySteps(["location reload"]);
+});
+
+test("Developer Tools block is hidden when the search matches nothing in it", async () => {
+    onRpc("/base_setup/demo_active", () => true);
+    redirect("/odoo");
+    await mountView({
+        type: "form",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="MyApp" name="my_app">
+                    <widget name='res_config_dev_tool'/>
+                    <block title="Other block">
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
+        resModel: "res.config.settings",
+    });
+    expect(queryAllTexts`#developer_tool h2:not(.d-none)`).toEqual(["Developer Tools"]);
+
+    // This block is the one case that nothing else re-renders on a search: it
+    // holds no SearchableSetting, so nothing inside it reads the search value,
+    // and it is instantiated by a widget template rather than by the settings
+    // compiler, so no parent re-renders it either. It hides only because
+    // `useLayoutEffect` reads its dependencies from a render, which subscribes
+    // the block itself — see the comment in `settings_block.js`.
+    await editSearch("bar");
+    await runAllTimers();
+    await animationFrame();
+    expect(queryAllTexts`#developer_tool h2:not(.d-none)`).toEqual([]);
+    expect("#developer_tool .o_settings_container").toHaveClass("d-none");
+    expect(queryAllTexts`.settings h2:not(.d-none)`).toEqual(["Other block"]);
+
+    await editSearch("");
+    await runAllTimers();
+    await animationFrame();
+    expect(queryAllTexts`#developer_tool h2:not(.d-none)`).toEqual(["Developer Tools"]);
 });
