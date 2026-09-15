@@ -1144,7 +1144,7 @@ class PaymentProvider(models.Model):
         :return: None
         """
         providers = self.search(self._get_domain_provider(provider_code, **kwargs))
-        providers.write(self._get_removal_values())
+        providers.write(self._prepare_removal_values())
 
     @api.model
     def _get_domain_provider(self, provider_code, **kwargs):
@@ -1157,7 +1157,7 @@ class PaymentProvider(models.Model):
         """
         return [("code", "=", provider_code)]
 
-    def _get_removal_values(self):
+    def _prepare_removal_values(self):
         """Return the values to update a provider with when its module is uninstalled.
 
         For a module to specify additional removal values, it must override this method and complete

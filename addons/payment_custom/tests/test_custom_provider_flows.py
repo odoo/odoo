@@ -66,7 +66,7 @@ class TestCustomProviderFlows(PaymentCustomCommon):
     def test_removal_values_nullify_custom_mode(self):
         """Uninstall cleanup nullifies custom_mode alongside payment's own."""
         self.assertIsNone(
-            self.env["payment.provider"]._get_removal_values()["custom_mode"]
+            self.env["payment.provider"]._prepare_removal_values()["custom_mode"]
         )
 
     def test_custom_mode_required_for_custom_provider(self):

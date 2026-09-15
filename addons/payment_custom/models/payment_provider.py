@@ -93,9 +93,9 @@ class PaymentProvider(models.Model):
         return res
 
     @api.model
-    def _get_removal_values(self):
+    def _prepare_removal_values(self):
         """Override of `payment` to nullify the `custom_mode` field."""
-        res = super()._get_removal_values()
+        res = super()._prepare_removal_values()
         res["custom_mode"] = None
         return res
 
