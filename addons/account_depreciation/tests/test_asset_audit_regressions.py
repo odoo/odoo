@@ -284,10 +284,17 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             msg="the tax value must follow the amount it is derived from",
         )
 
-    def test_board_is_ordered_chronologically(self):
+    def test_board_values_accumulate_chronologically_whatever_the_cached_order(self):
         asset = self._running_asset()
-        dates = asset.depreciation_move_ids.mapped("date")
-        self.assertEqual(dates, sorted(dates))
+        board = asset.depreciation_move_ids._sorted_by_date()
+        self.assertEqual(board.mapped("date"), sorted(board.mapped("date")))
+        remaining = board.mapped("asset_remaining_value")
+        self.assertEqual(remaining, sorted(remaining, reverse=True))
+        cached = [(move.id, move.asset_remaining_value) for move in board]
+        self.env.invalidate_all()
+        self.assertEqual(
+            [(move.id, move.asset_remaining_value) for move in board], cached
+        )
 
     def test_report_groups_are_ordered_by_name(self):
         report = self.env.ref("account_depreciation.assets_report")

@@ -1071,19 +1071,30 @@ class TestAccountAsset(TestAccountReportsCommon):
         Hashed_car.journal_id.restrict_mode_hash_table = True
         Hashed_car.validate()
         self.assertTrue(
-            False not in Hashed_car.depreciation_move_ids[:3].mapped("inalterable_hash")
+            False
+            not in Hashed_car.depreciation_move_ids._sorted_by_date()[:3].mapped(
+                "inalterable_hash"
+            )
         )
 
         for i in range(4):
-            self.assertFalse(Hashed_car.depreciation_move_ids[i].reversal_move_ids)
+            self.assertFalse(
+                Hashed_car.depreciation_move_ids._sorted_by_date()[i].reversal_move_ids
+            )
 
         Hashed_car.set_to_cancelled()
 
         self.assertEqual(Hashed_car.state, "cancelled")
         for i in range(2):
             self.assertTrue(
-                Hashed_car.depreciation_move_ids[i].reversal_move_ids.id > 0
-                or Hashed_car.depreciation_move_ids[i].reversed_entry_id.id > 0
+                Hashed_car.depreciation_move_ids._sorted_by_date()[
+                    i
+                ].reversal_move_ids.id
+                > 0
+                or Hashed_car.depreciation_move_ids._sorted_by_date()[
+                    i
+                ].reversed_entry_id.id
+                > 0
             )
 
         report = self.env.ref("account_depreciation.assets_report")
@@ -1187,7 +1198,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.update_form_values(asset_form)
 
         self.assertRecordValues(
-            asset.depreciation_move_ids[0].line_ids,
+            asset.depreciation_move_ids._sorted_by_date()[-1].line_ids,
             [
                 {"account_id": asset_account, "balance": 1000.0},
                 {"account_id": expense_account, "balance": -1000.0},
@@ -1195,7 +1206,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
         self.assertRecordValues(
-            asset.depreciation_move_ids[1].line_ids,
+            asset.depreciation_move_ids._sorted_by_date()[-2].line_ids,
             [
                 {"account_id": asset_account, "balance": 3000.0},
                 {"account_id": expense_account, "balance": -3000.0},
@@ -4353,7 +4364,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         asset.validate()
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 {
                     "depreciation_value": 4000,
@@ -4575,7 +4586,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
 
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 {
                     "depreciation_value": 1000,

@@ -24,7 +24,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 36000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -71,7 +71,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 36000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -119,7 +119,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.book_value, 36400)
         self.assertEqual(self.car.value_residual, 35400)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -171,7 +171,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 42000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -230,7 +230,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 41960.57)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -289,7 +289,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 29400)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -342,7 +342,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 29400)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -396,7 +396,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.book_value, 29910)
         self.assertEqual(self.car.value_residual, 28910)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -448,7 +448,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "open")
         self.assertEqual(asset.book_value, 29400)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -500,7 +500,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "open")
         self.assertEqual(asset.book_value, -29400)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -553,7 +553,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "open")
         self.assertEqual(asset.book_value, 29400)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -608,7 +608,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "open")
         self.assertEqual(asset.book_value, -29400)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -662,7 +662,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.value_residual, 28910)
         self.assertEqual(asset.book_value, 28910 + 1000)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -713,7 +713,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         asset.validate()
         self.assertEqual(asset.state, "open")
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -969,7 +969,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
         asset.validate()
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2021-12-31",
@@ -1021,7 +1021,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
         asset.validate()
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2021-07-31",
@@ -1240,7 +1240,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 30000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -1677,7 +1677,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 30000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-02-29",
@@ -2109,7 +2109,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.book_value, 31000)
         self.assertEqual(self.car.value_residual, 29000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -2547,7 +2547,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 36000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-07-31",
@@ -2986,7 +2986,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.book_value, 36013.14)
 
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-07-31",
@@ -3424,7 +3424,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 24500)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -3863,7 +3863,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "draft")
         self.assertEqual(asset.book_value, 100000)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -4305,7 +4305,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "draft")
         self.assertEqual(asset.book_value, 100000)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -4744,7 +4744,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 24500)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-02-29",
@@ -5177,7 +5177,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.book_value, 25683.33)
         self.assertEqual(self.car.value_residual, 23683.33)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -5616,7 +5616,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "draft")
         self.assertEqual(asset.book_value, 100000)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2022-12-31",
@@ -5670,7 +5670,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(asset.state, "draft")
         self.assertEqual(asset.book_value, 100000)
         self.assertRecordValues(
-            asset.depreciation_move_ids,
+            asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2022-12-31",
@@ -5736,7 +5736,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         (book + shelf + screw).compute_depreciation_board()
 
         self.assertRecordValues(
-            book.depreciation_move_ids,
+            book.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -5756,7 +5756,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            shelf.depreciation_move_ids,
+            shelf.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -5818,7 +5818,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            screw.depreciation_move_ids,
+            screw.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-01-31",
@@ -5849,7 +5849,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             old_car_asset.prorata_date, fields.Date.from_string("2020-01-01")
         )
         self.assertRecordValues(
-            old_car_asset.depreciation_move_ids,
+            old_car_asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -5902,7 +5902,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             new_car_asset.prorata_date, fields.Date.from_string("2020-01-01")
         )
         self.assertRecordValues(
-            new_car_asset.depreciation_move_ids,
+            new_car_asset.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -5949,7 +5949,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "draft")
         self.assertEqual(self.car.book_value, 60000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -6043,7 +6043,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "draft")
         self.assertEqual(self.car.book_value, 60000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2020-12-31",
@@ -6088,7 +6088,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.assertEqual(self.car.state, "open")
         self.assertEqual(self.car.book_value, 36000)
         self.assertRecordValues(
-            self.car.depreciation_move_ids,
+            self.car.depreciation_move_ids._sorted_by_date(),
             [
                 self._get_depreciation_move_values(
                     date="2021-07-31",
@@ -6159,7 +6159,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
                 asset.compute_depreciation_board()
                 self.assertEqual(asset.state, "draft")
                 self.assertRecordValues(
-                    asset.depreciation_move_ids,
+                    asset.depreciation_move_ids._sorted_by_date(),
                     [
                         self._get_depreciation_move_values(
                             date=end_depreciation_date,
