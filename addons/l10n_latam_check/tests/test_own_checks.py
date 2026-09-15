@@ -99,14 +99,10 @@ class TestOwnChecks(L10nLatamCheckTest):
         self.assertEqual(len(payment.move_id.line_ids), 4)
 
     def test_invoice_status_after_voided_check(self):
-        self.ensure_installed('l10n_ar')
         invoice = self._create_invoice(
-            company_id=self.company_data_3['company'].id,
             partner_id=self.partner_a.id,
             invoice_line_ids=[self._prepare_invoice_line(price_unit=100, product_id=self.product_a)],
             move_type='in_invoice',
-            l10n_latam_document_type_id=self.env.ref('l10n_ar.dc_liq_uci_a'),
-            l10n_latam_document_number="001-00001",
             post=True
         )
 
@@ -141,16 +137,12 @@ class TestOwnChecks(L10nLatamCheckTest):
         self.assertTrue(payment_line.reconciled, "Original payment line should be reconciled with the void move")
 
     def test_create_payment_without_checks_raises(self):
-        invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'company_id': self.bank_journal.company_id.id,
-            'partner_id': self.partner_a.id,
-            'invoice_date': '2023-01-01',
-            'l10n_latam_document_type_id': self.env.ref('l10n_ar.dc_liq_uci_a').id,
-            'l10n_latam_document_number': '001-00001',
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 100.0})],
-        })
-        invoice.action_post()
+        invoice = self._create_invoice(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=100, product_id=self.product_a)],
+            move_type='in_invoice',
+            post=True
+        )
         own_check_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered(
             lambda line: line.code == 'own_checks'
         )[0]
