@@ -1704,7 +1704,7 @@ class HrExpense(models.Model):
         if False in self.mapped('payment_mode'):
             raise UserError(self.env._("Please specify if the expenses were paid by the company, reimbursed to the employee directly, or in a payslip."))
 
-    def _do_approve(self, check=True):
+    def _do_approve(self):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
         for expense in expenses_to_approve:
             expense.write({
