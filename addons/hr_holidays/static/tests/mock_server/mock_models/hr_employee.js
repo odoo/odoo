@@ -5,6 +5,23 @@ export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
     leave_date_to = fields.Date();
+    leave_date_from = fields.Datetime();
+    leave_request_date_from_period = fields.Selection({
+        selection: [
+            ["am", "Morning"],
+            ["pm", "Afternoon"],
+        ],
+    });
+    next_working_day_on_leave = fields.Date();
+    leave_request_duration = fields.Selection({
+        selection: [
+            ["full", "Full Day"],
+            ["am", "Morning"],
+            ["pm", "Afternoon"],
+            ["specific", "Specific"],
+        ],
+    });
+    user_id = fields.Many2one({ relation: "res.users" });
 
     _records = [
         {
@@ -23,10 +40,18 @@ export class HrEmployee extends hrModels.HrEmployee {
     _store_avatar_card_fields(res) {
         super._store_avatar_card_fields(res);
         res.attr("leave_date_to");
+        res.attr("leave_date_from");
+        res.attr("leave_request_date_from_period");
+        res.attr("next_working_day_on_leave");
+        res.attr("leave_request_duration");
     }
 
     _store_im_status_fields(res) {
         super._store_im_status_fields(res);
         res.attr("leave_date_to");
+        res.attr("leave_date_from");
+        res.attr("leave_request_date_from_period");
+        res.attr("next_working_day_on_leave");
+        res.attr("leave_request_duration");
     }
 }
