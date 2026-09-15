@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.fields import Date
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale_collect.models.website import CLICK_AND_COLLECT_SESSION_CACHE_KEY
 
 
 class WebsiteSaleCollect(WebsiteSale):
@@ -16,9 +19,15 @@ class WebsiteSaleCollect(WebsiteSale):
 
         in_store_dm_sudo = self.env.website.sudo().in_store_dm_id
         order_sudo = request.cart
+        pending_selection = (
+            {} if order_sudo else request.session.get(CLICK_AND_COLLECT_SESSION_CACHE_KEY, {})
+        )
         selected_location_data = {}
         single_location = len(in_store_dm_sudo.warehouse_ids) == 1
-        is_in_store_selected = order_sudo.carrier_id.delivery_type == "in_store"
+        is_in_store_selected = (
+            order_sudo.carrier_id.delivery_type == "in_store"
+            or pending_selection.get("type") == "in_store"
+        )
         estimated_dates = [
             Date.from_string(date) for date in in_store_dm_sudo._get_estimate_delivery_days()
         ]
@@ -28,6 +37,18 @@ class WebsiteSaleCollect(WebsiteSale):
             selected_location_data.update(
                 **order_sudo.warehouse_id._prepare_pickup_availability_data(estimated_dates=estimated_dates)
             )
+        elif pending_selection.get("type") == "in_store":
+            pickup_location_data = json.loads(pending_selection["pickup_location_data"])
+            warehouse_sudo = (
+                self.env["stock.warehouse"].sudo().browse(pickup_location_data.get("id")).exists()
+            )
+            if warehouse_sudo:
+                selected_location_data = pickup_location_data
+                selected_location_data.update(
+                    **warehouse_sudo._prepare_pickup_availability_data(
+                        estimated_dates=estimated_dates,
+                    ),
+                )
         elif single_location:
             warehouse_sudo = in_store_dm_sudo.warehouse_ids[0]
             selected_location_data = warehouse_sudo._prepare_pickup_location_data(
