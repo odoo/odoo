@@ -2800,6 +2800,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'percentage': percentage,
             })
             allowance_charge_values['attempt_tax_values'] = tax_values = {
+                'name': reason,
                 'amount_type': 'percent',
                 'type_tax_use': odoo_document_type,
                 'ubl_cii_tax_category_code': category_code,
