@@ -906,12 +906,11 @@ class ProductTemplate(models.Model):
             if variant_specific_pricings:
                 def get_combination_key(variant, attribute_line_ids):
                     return frozenset(
-                        variant.product_template_variant_value_ids.mapped(
-                            lambda v: (
-                                attribute_line_ids.index(v.attribute_line_id.id),
-                                v.product_attribute_value_id.id,
-                            )
+                        (
+                            attribute_line_ids.index(ptav.attribute_line_id.id),
+                            ptav.product_attribute_value_id.id,
                         )
+                        for ptav in variant.product_template_variant_value_ids
                     )
 
                 template_copy_line_ids = template_copy.attribute_line_ids.ids
