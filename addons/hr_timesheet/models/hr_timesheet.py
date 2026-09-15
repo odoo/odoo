@@ -15,12 +15,17 @@ class AccountAnalyticLine(models.Model):
 
     def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
-        return [
-            ('employee_id', '=', employee_id),
-            ('project_id', '!=', False),
-            ('project_id.active', '=', True),
-            ('project_id.allow_timesheets', '=', True)
-        ]
+        return Domain.AND([
+            self._get_effective_timesheets_domain(),
+            [
+                ('employee_id', '=', employee_id),
+                ('project_id.active', '=', True),
+                ('project_id.allow_timesheets', '=', True),
+            ],
+        ])
+
+    def _get_effective_timesheets_domain(self):
+        return Domain('project_id', '!=', False)
 
     @api.model
     def _get_favorite_project_id(self, employee_id=False):

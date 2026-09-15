@@ -12,6 +12,23 @@
             <xpath expr="//field[@name='timesheet_ids']" position="attributes">
                 <attribute name="readonly">not analytic_account_active or is_timeoff_task</attribute>
             </xpath>
+            <xpath expr="//group[@name='project_hours']" position="attributes">
+                <attribute name="invisible">is_timeoff_task</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_kanban_inherited_holidays" model="ir.ui.view">
+        <field name="name">project.task.kanban.inherited.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_kanban_inherited_progress"/>
+        <field name="arch" type="xml">
+            <templates position="before">
+                <field name="is_timeoff_task"/>
+            </templates>
+            <xpath expr="//t[@name='allocated_hours']" position="attributes">
+                <attribute name="t-if">record.allocated_hours.raw_value > 0 and record.allow_timesheets.raw_value and not record.is_timeoff_task.raw_value</attribute>
+            </xpath>
         </field>
     </record>
 
