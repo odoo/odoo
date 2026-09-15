@@ -1792,7 +1792,9 @@ class CrmLead(models.Model):
         opportunities = self._sort_by_confidence_level(reverse=True)
 
         opportunities_head = opportunities[0]
-        opportunities_tail = opportunities[1:]
+        opportunities_tail = opportunities[1:].with_prefetch(
+            opportunities._prefetch_ids
+        )
 
         merged_data = opportunities._merge_data(self._merge_get_fields())
 
@@ -2170,7 +2172,7 @@ class CrmLead(models.Model):
                 dup_ids.update(ids_by_partner.get(lead.partner_id.id, ()))
             duplicates_by_lead[lead] = candidates.browse(
                 sorted(dup_ids, key=rank.__getitem__)
-            )
+            ).with_prefetch(candidates._prefetch_ids)
         return duplicates_by_lead
 
     def _sort_by_confidence_level(self, reverse=False):

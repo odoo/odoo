@@ -63,3 +63,32 @@ class TestX2manyCacheScope(TransactionCase):
         self.assertEqual(self._as_user().child_ids, self.visible | added)
         added.sudo().write({"parent_id": False})
         self.assertEqual(self._as_user().child_ids, self.visible)
+
+    def test_a_user_write_serves_the_superuser_when_no_rule_filters_the_comodel(self):
+        tag = self.env["res.partner.tag"].create({"name": "scope tag"})
+        self.visible.with_user(self.user).write({"tag_ids": [Command.set(tag.ids)]})
+        with self.assertQueryCount(0):
+            self.assertEqual(self.visible.sudo().tag_ids, tag)
+
+    def test_a_user_write_leaves_the_superuser_to_fetch_when_a_rule_filters(self):
+        self.assertEqual(self.parent.sudo().child_ids, self.visible | self.hidden)
+        self._as_user().write({"child_ids": [Command.unlink(self.visible.id)]})
+        self.assertEqual(self._as_user().child_ids, self.env["res.partner"])
+        self.assertEqual(self.parent.sudo().child_ids, self.hidden)
+
+    def test_a_user_read_serves_the_superuser_when_no_rule_filters_the_comodel(self):
+        tag = self.env["res.partner.tag"].create({"name": "scope read tag"})
+        self.visible.write({"tag_ids": [Command.set(tag.ids)]})
+        self.env.invalidate_all()
+        self.assertEqual(self.visible.with_user(self.user).tag_ids, tag)
+        with self.assertQueryCount(0):
+            self.assertEqual(self.visible.sudo().tag_ids, tag)
+
+    def test_a_record_created_by_a_user_serves_the_superuser_its_empty_x2many(self):
+        created = (
+            self.env["res.partner"]
+            .with_user(self.user)
+            .create({"name": "scope created"})
+        )
+        with self.assertQueryCount(0):
+            self.assertFalse(created.sudo().child_ids)

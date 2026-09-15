@@ -18,7 +18,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet, Query, partition, unique
 from odoo.tools.misc import PENDING, SENTINEL, unquote
 
-from ..._recordset import is_recordset
+from ..._recordset import is_recordset, is_search_overridden
 from ...constants import READ_GROUP_NUMBER_GRANULARITY
 from ...domain import Domain
 from ...domain.ast import DomainCondition, OptimizationLevel
@@ -507,6 +507,17 @@ class _RelationalMulti(_Relational):
         except AccessError, NotImplementedError:
             return False
 
+    def _reads_as_superuser(self, env: Environment) -> bool:
+        comodel = env[self.comodel_name]
+        if callable(self.domain) or is_search_overridden(type(comodel)):
+            return False
+        try:
+            return not env.registry.access_policy.record_domain(
+                env, self.comodel_name, "read"
+            )
+        except NotImplementedError:
+            return False
+
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
         index = env._field_depends_context[self].index("access")
@@ -534,6 +545,16 @@ class _RelationalMulti(_Relational):
                 mirrored=mirrored,
                 writer_su=env.su,
             )
+
+    def _get_created_caches(
+        self, env: Environment
+    ) -> list[MutableMapping[IdType, typing.Any]]:
+        caches = [self._get_cache(env)]
+        if not env.su:
+            caches.append(
+                env.core.get_context_data(self, self._superuser_scope_key(env))
+            )
+        return caches
 
     def _mirror_to_superuser_scope(
         self, env: Environment, ids: Collection[IdType], cache_value: typing.Any
@@ -616,6 +637,19 @@ class _RelationalMulti(_Relational):
             )
 
     @override
+    def _insert_cache(self, records: ModelLike, values: Iterable) -> None:
+        env = records.env
+        if env.su or not self._reads_as_superuser(env):
+            super()._insert_cache(records, values)
+            return
+        values = list(values)
+        super()._insert_cache(records, values)
+        slot = env.core.get_context_data(self, self._superuser_scope_key(env))
+        for id_, value in zip(records._ids, values, strict=True):
+            if isinstance(id_, int):
+                slot.setdefault(id_, value)
+
+    @override
     def _update_cache(
         self,
         records: ModelLike,
@@ -630,6 +664,10 @@ class _RelationalMulti(_Relational):
                 self._mirror_to_other_scopes(records.env, records._ids, cache_value)
             else:
                 self._evict_other_scopes(records.env, records._ids)
+                if not records.env.su and self._reads_as_superuser(records.env):
+                    self._mirror_to_superuser_scope(
+                        records.env, records._ids, cache_value
+                    )
         if created:
             self._mirror_to_superuser_scope(records.env, records._ids, cache_value)
         field_patches = records.env.core.get_patches(self)

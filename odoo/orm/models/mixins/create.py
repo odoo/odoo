@@ -600,7 +600,9 @@ class CreateMixin(_ModelStubs):
             if not field.store:
                 continue
             if field.is_x2many:
-                _stored_x2m_caches.append((field, field._get_cache(env)))
+                _stored_x2m_caches.extend(
+                    (field, cache) for cache in field._get_created_caches(env)
+                )
             else:
                 default = PENDING if field.is_stored_computed else None
                 _stored_scalar_caches.append(

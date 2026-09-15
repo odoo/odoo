@@ -39,13 +39,11 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         with self.with_user("user_sales_manager"):
             self.env.user._is_internal()
-            # Pinned against a fresh `-i crm --test-enable` run, which is how
-            # CLAUDE.md documents running a module's suite and is the stricter of
-            # the two paths: the same assertion measures twelve fewer queries after
-            # `-u crm`, deterministically, and the previous pins sat between the two
-            # so they were reachable on neither. `assertQueryCount` only fails on an
+            # Pinned against a fresh `-i sale_team,crm --test-enable` run with demo
+            # data, the heaviest install path measured: a fresh `-i crm` without
+            # demo data reads fewer. `assertQueryCount` only fails on an
             # over-count, so the ceiling belongs on the heavier path.
-            with self.assertQueryCount(user_sales_manager=499):
+            with self.assertQueryCount(user_sales_manager=500):
                 self.env["team.team"].browse(
                     self.sales_teams.ids
                 )._action_assign_leads()
@@ -88,7 +86,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=246):
+            with self.assertQueryCount(user_sales_manager=245):
                 self.env["team.team"].browse(
                     self.sales_teams.ids
                 )._action_assign_leads()
@@ -179,7 +177,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=2441):
+            with self.assertQueryCount(user_sales_manager=2299):
                 self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
