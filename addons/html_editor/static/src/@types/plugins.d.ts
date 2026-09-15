@@ -233,6 +233,7 @@ declare module "plugins" {
         is_valid_contenteditable_predicates: is_valid_contenteditable_predicates;
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
+        should_process_text_for_insertion: should_process_text_for_insertion;
         should_show_power_buttons_predicates: should_show_power_buttons_predicates;
         would_feff_be_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;

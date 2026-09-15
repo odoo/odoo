@@ -89,7 +89,11 @@ export class CaptionPlugin extends Plugin {
             }
         }),
         html_drop_overrides: this.onDrop.bind(this),
-        paste_text_overrides: this.onPaste.bind(this),
+        should_process_text_for_insertion: ([focusNode]) => {
+            if (closestElement(focusNode, CAPTION_SPAN_SELECTOR)) {
+                return false;
+            }
+        },
         paste_html_overrides: this.onPaste.bind(this),
         paste_odoo_editor_html_overrides: this.onPaste.bind(this),
         normalize_processors: (root) => {
