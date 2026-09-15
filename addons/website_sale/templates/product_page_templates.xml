@@ -1127,6 +1127,7 @@
         />
         <t t-set="bg_color" t-value="ribbon.bg_color"/>
         <t t-set="text_color" t-value="ribbon.text_color"/>
+        <t t-set="ribbon_price_vals" t-value="combination_info"/>
         <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
     </template>
 
@@ -1563,7 +1564,7 @@
         <span
             t-attf-class="o_ribbons #{ribbon._get_css_classes()} z-1"
             t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-            t-out="ribbon.name or ''"
+            t-out="ribbon._get_display_name(ribbon_price_vals)"
             t-att-data-ribbon-id="ribbon.id"
             t-att-data-template-ribbon-id="product.sudo().website_ribbon_id.id"
         />
