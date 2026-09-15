@@ -173,6 +173,12 @@ patch(PosStore.prototype, {
                     continue;
                 }
 
+                if (line.is_downpayment) {
+                    newLineValues.extra_tax_data =
+                        accountTaxHelpers.reverse_quantity_base_line_extra_tax_data(
+                            line.extra_tax_data
+                        );
+                }
                 const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
                 previousProductLine = newLine;
                 await this.updateSOLines(line, converted_line, newLine, newLineValues, state);
