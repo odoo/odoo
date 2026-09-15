@@ -25,6 +25,7 @@ import {
     addGlobalFilter,
     deleteColumns,
     editGlobalFilter,
+    lockSheet,
     moveGlobalFilter,
     removeGlobalFilter,
     setCellContent,
@@ -3468,4 +3469,31 @@ test("Default value of boolean filter", () => {
         label: "Default value is empty",
     });
     expect(result.isSuccessful).toBe(true);
+});
+
+test("Can update a filter from a locked sheet", async () => {
+    const { model } = await createSpreadsheetWithPivot();
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "numeric",
+        label: "Numeric Filter",
+        defaultValue: { operator: "=", targetValue: 1998 },
+    });
+    const [filter] = model.getters.getGlobalFilters();
+    lockSheet(model);
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: filter.id,
+        value: { operator: "=", targetValue: 0 },
+    });
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual({
+        operator: "=",
+        targetValue: 0,
+    });
+    model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
+        filters: [{ filterId: "42", value: { operator: "=", targetValue: 1 } }],
+    });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "=",
+        targetValue: 1,
+    });
 });
