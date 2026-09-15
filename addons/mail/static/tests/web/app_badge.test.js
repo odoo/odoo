@@ -47,7 +47,7 @@ test("Retries when closed", async () => {
     });
     store.updateAppBadge();
     await expect.waitForSteps(["set:closed", "set:open"]);
-    expect(await unreadCounter()).toBe(store.globalCounter);
+    expect(await unreadCounter()).toBe(store.messagingMenu.globalCounter);
 });
 
 test("Retries only once (ignored if failed again)", async () => {
@@ -72,7 +72,7 @@ test("Retries only once (ignored if failed again)", async () => {
     open = true;
     store.updateAppBadge();
     await expect.waitForSteps(["set:open"]);
-    expect(await unreadCounter()).toBe(store.globalCounter);
+    expect(await unreadCounter()).toBe(store.messagingMenu.globalCounter);
 });
 
 test("No crash on idb unavailable", async () => {
