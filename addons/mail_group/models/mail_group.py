@@ -302,7 +302,7 @@ class MailGroup(models.Model):
         values = super()._alias_get_creation_values()
         values["alias_model_id"] = self.env["ir.model"]._get("mail.group").id
         values["alias_force_thread_id"] = self.id
-        values["alias_defaults"] = self._get_alias_defaults()
+        values["alias_defaults"] = self._prepare_alias_defaults()
         return values
 
     def action_close(self):

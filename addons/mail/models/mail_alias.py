@@ -271,7 +271,7 @@ class MailAlias(models.Model):
     def _check_alias_defaults(self) -> None:
         for alias in self:
             try:
-                defaults = alias._get_alias_defaults()
+                defaults = alias._prepare_alias_defaults()
             except Exception as e:
                 raise ValidationError(
                     _(
@@ -309,7 +309,7 @@ class MailAlias(models.Model):
                     )
                 )
 
-    def _get_alias_defaults(self) -> dict:
+    def _prepare_alias_defaults(self) -> dict:
         self.check_singleton()
         defaults = ast.literal_eval(self.alias_defaults or "{}")
         if not isinstance(defaults, dict):

@@ -123,7 +123,7 @@ class DocumentsDocument(models.Model):
         values = super()._alias_get_creation_values()
         values["alias_model_id"] = self.env["ir.model"]._get("document.document").id
         if self.id:
-            values["alias_defaults"] = self._get_alias_defaults()
+            values["alias_defaults"] = self._prepare_alias_defaults()
             values["alias_defaults"] |= {"folder_id": self.id}
         return values
 

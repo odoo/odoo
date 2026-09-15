@@ -382,7 +382,7 @@ class HrJob(models.Model):
         values = super()._alias_get_creation_values()
         values["alias_model_id"] = self.env["ir.model"]._get("hr.applicant").id
         if self.id:
-            values["alias_defaults"] = defaults = self._get_alias_defaults()
+            values["alias_defaults"] = defaults = self._prepare_alias_defaults()
             defaults.update(
                 {
                     "job_id": self.id,

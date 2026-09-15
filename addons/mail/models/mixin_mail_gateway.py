@@ -1108,7 +1108,7 @@ class MixinMailGateway(models.AbstractModel):
                 or self.env.uid
             )
             try:
-                defaults = alias._get_alias_defaults()
+                defaults = alias._prepare_alias_defaults()
             except (ValueError, SyntaxError) as error:
                 _debug.logic(
                     "alias_defaults_invalid", alias=alias.id, error=type(error).__name__

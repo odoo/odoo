@@ -305,7 +305,7 @@ class MailTestContainer(models.Model):
         values["alias_model_id"] = self.env["ir.model"]._get("mail.test.ticket").id
         values["alias_force_thread_id"] = False
         if self.id:
-            values["alias_defaults"] = defaults = self._get_alias_defaults()
+            values["alias_defaults"] = defaults = self._prepare_alias_defaults()
             defaults["container_id"] = self.id
         return values
 

@@ -352,7 +352,7 @@ class TestMaintenanceTeamAlias(TransactionCase):
                 "body": "<p>It leaks.</p>",
                 "message_id": "<maintenance-team-alias@example.com>",
             },
-            custom_values=team.maintenance_alias_id.alias_id._get_alias_defaults(),
+            custom_values=team.maintenance_alias_id.alias_id._prepare_alias_defaults(),
         )
         self.assertRecordValues(
             order,

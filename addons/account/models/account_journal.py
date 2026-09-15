@@ -1424,7 +1424,7 @@ class AccountJournal(models.Model):
             values["alias_name"] = self._alias_prepare_alias_name(
                 self.alias_name, self.name, self.code, self.type, self.company_id
             )
-            values["alias_defaults"] = defaults = self._get_alias_defaults()
+            values["alias_defaults"] = defaults = self._prepare_alias_defaults()
             defaults["company_id"] = self.company_id.id
             defaults["move_type"] = JOURNAL_TYPES.get(self.type, {}).get(
                 "alias_move_type", "entry"

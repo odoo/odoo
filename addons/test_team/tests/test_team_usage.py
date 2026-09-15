@@ -147,7 +147,7 @@ class TestTeamUsage(MailCommon):
         self.assertEqual(alias.alias_parent_model_id.model, "team.team")
         self.assertEqual(alias.alias_parent_thread_id, self.team_alpha_1.id)
         self.assertEqual(
-            alias.alias_id._get_alias_defaults(),
+            alias.alias_id._prepare_alias_defaults(),
             {"team_id": self.team_alpha_1.id, "kind": "incoming"},
         )
         self.assertFalse(self.team_beta.alias_ids)

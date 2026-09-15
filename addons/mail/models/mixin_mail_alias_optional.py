@@ -215,11 +215,11 @@ class MixinMailAliasMixinOptional(models.AbstractModel):
             )
         return alias_domain_values
 
-    def _get_alias_defaults(self) -> dict:
+    def _prepare_alias_defaults(self) -> dict:
         if not self:
             return {}
         self.check_singleton()
-        return self.alias_id._get_alias_defaults() if self.alias_id else {}
+        return self.alias_id._prepare_alias_defaults() if self.alias_id else {}
 
     def _alias_get_creation_values(self) -> dict:
         values = {

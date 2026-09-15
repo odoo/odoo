@@ -102,7 +102,7 @@ class TeamAlias(models.Model):
                 values["alias_domain_id"] = alias.alias_domain_id.id
             values["alias_defaults"] = str(
                 {
-                    **alias.alias_id._get_alias_defaults(),
+                    **alias.alias_id._prepare_alias_defaults(),
                     **alias.team_id._prepare_usage_alias_defaults(alias.usage),
                 }
             )

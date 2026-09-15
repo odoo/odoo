@@ -710,7 +710,7 @@ class TestMailAlias(TestMailAliasCommon):
         with self.assertRaises(exceptions.ValidationError):
             alias.write({"alias_defaults": "{'custom_field': brokendict"})
         alias.write({"alias_defaults": "{'name': 'validdict'}"})
-        self.assertEqual(alias._get_alias_defaults(), {"name": "validdict"})
+        self.assertEqual(alias._prepare_alias_defaults(), {"name": "validdict"})
 
         # the gateway hands these to create() on the aliased model, so a key that is
         # not a field of it must be refused here rather than at delivery time, where
@@ -723,7 +723,7 @@ class TestMailAlias(TestMailAliasCommon):
         # silence when a message actually arrived
         with self.assertRaises(exceptions.ValidationError):
             alias.write({"alias_defaults": "[('name', 'from pairs')]"})
-        self.assertEqual(alias._get_alias_defaults(), {"name": "validdict"})
+        self.assertEqual(alias._prepare_alias_defaults(), {"name": "validdict"})
 
 
 @tagged("mail_alias", "multi_company")
@@ -1854,7 +1854,7 @@ class TestMailAliasMixinModelOverride(TestMailAliasCommon):
         )
         self.assertEqual(record.alias_id.alias_model_id.id, narrow)
         self.assertEqual(
-            record.alias_id._get_alias_defaults(),
+            record.alias_id._prepare_alias_defaults(),
             {"container_id": record.id, "state": "new"},
             "the mixin's own defaults still merge in, they just stop clobbering",
         )
@@ -2098,7 +2098,7 @@ class TestMailAliasDefaultsValidation(TestMailAliasCommon):
                 defaults = repr({fname: value})
                 if survives:
                     alias.write({"alias_defaults": defaults})
-                    self.assertEqual(alias._get_alias_defaults(), {fname: value})
+                    self.assertEqual(alias._prepare_alias_defaults(), {fname: value})
                 else:
                     with self.assertRaises(exceptions.ValidationError):
                         alias.write({"alias_defaults": defaults})
@@ -2114,7 +2114,7 @@ class TestMailAliasDefaultsValidation(TestMailAliasCommon):
             }
         )
         alias.write({"alias_defaults": "{'alias_name': 'sub.alias'}"})
-        self.assertEqual(alias._get_alias_defaults(), {"alias_name": "sub.alias"})
+        self.assertEqual(alias._prepare_alias_defaults(), {"alias_name": "sub.alias"})
 
     @users("admin")
     def test_precompute_readonly_is_inside_the_refused_set(self):
@@ -3324,14 +3324,14 @@ class TestMailAliasMixinDomainPrecedence(TestMailAliasCommon):
         )
         self.assertEqual(record.alias_id.alias_model_id.id, narrow)
         self.assertEqual(
-            record.alias_id._get_alias_defaults(),
+            record.alias_id._prepare_alias_defaults(),
             {"container_id": record.id, "state": "new"},
         )
 
 
 @tagged("mail_alias")
 class TestMailAliasDefaultsShape(TestMailAliasCommon):
-    """`_get_alias_defaults` owns the whole shape, not half of it."""
+    """`_prepare_alias_defaults` owns the whole shape, not half of it."""
 
     def _make(self, defaults):
         return self.env["mail.alias"].create(
@@ -3375,7 +3375,7 @@ class TestMailAliasDefaultsShape(TestMailAliasCommon):
     @users("admin")
     def test_a_valid_mapping_is_still_accepted(self):
         alias = self._make("{'name': 'ok'}")
-        self.assertEqual(alias._get_alias_defaults(), {"name": "ok"})
+        self.assertEqual(alias._prepare_alias_defaults(), {"name": "ok"})
 
 
 @tagged("mail_alias")

@@ -5684,7 +5684,7 @@ class TestMailGatewayBounceCompany(MailGatewayCommon):
 class TestMailGatewayRouteVerdicts(MailGatewayCommon):
     @mute_logger("odoo.addons.mail.models.mixin_mail_gateway")
     def test_unparsable_alias_defaults_are_a_configuration_error(self):
-        """`_get_alias_defaults` ran outside the per-alias `try`, so a stored
+        """`_prepare_alias_defaults` ran outside the per-alias `try`, so a stored
         value the constraint never saw crashed routing for every addressee
         instead of bouncing the one broken alias."""
         self.env.cr.execute(
