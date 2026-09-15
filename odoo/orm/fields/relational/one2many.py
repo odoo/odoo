@@ -151,7 +151,6 @@ class One2many(_RelationalMulti):
 
     @override
     def read(self, records: BaseModel) -> None:
-        self._log_scope_handover(records)
         comodel = records.env[self.comodel_name].with_context(
             **self._prepare_read_context()
         )

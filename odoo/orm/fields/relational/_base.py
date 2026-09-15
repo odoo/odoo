@@ -593,25 +593,6 @@ class _RelationalMulti(_Relational):
                 evicted=evicted,
             )
 
-    def _log_scope_handover(self, records: ModelLike) -> None:
-        if not _debug.perf.enabled:
-            return
-        env = records.env
-        own = env.get_cache_key(self)
-        held = 0
-        for key, slot in env.core.iter_context_caches(self):
-            if key not in (own, PENDING_SCOPE_KEY):
-                held += sum(1 for id_ in records._ids if id_ in slot)
-        if _debug.perf.enabled and held:
-            _debug.perf.count(
-                "field.x2many.scope_handover",
-                model=self.model_name,
-                field=self.name,
-                records=len(records),
-                held_elsewhere=held,
-                reader_su=env.su,
-            )
-
     def _evict_other_scopes(self, env: Environment, ids: Collection[IdType]) -> None:
         stored_ids = [id_ for id_ in ids if isinstance(id_, int)]
         if not stored_ids:
