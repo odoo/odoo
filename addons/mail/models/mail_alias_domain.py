@@ -207,7 +207,7 @@ class MailAliasDomain(models.Model):
         :param email_list: list of normalized emails; normalization / removing
             wrong emails is considered as being caller's job
         """
-        filtered_emails = [e for e in email_list if e and '@' in e]
+        filtered_emails = [e for e in email_list if e and 0 < e.find('@') < len(e) - 1]
         if not filtered_emails:
             return filtered_emails
         all_domains = self.search([])
