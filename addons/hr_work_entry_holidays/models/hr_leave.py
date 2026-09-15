@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
+import pytz
+
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
@@ -43,9 +46,17 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    work_entries_vals_list += contracts._get_work_entries_values(
-                        datetime.combine(leave.date_from, time.min),
-                        datetime.combine(leave.date_to, time.max),
+                    contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id or contract.employee_id).tz
+                    tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+                    contract_start = tz.localize(fields.Datetime.to_datetime(contract.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
+                    contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()), time.max)
+                    if contract.date_end:
+                        contract_stop = tz.localize(contract_stop).astimezone(pytz.utc).replace(tzinfo=None)
+                    work_entry_start = max(leave.date_from, contract_start)
+                    work_entry_end = min(leave.date_to, contract_stop)
+                    work_entries_vals_list += contract._get_work_entries_values(
+                        datetime.combine(work_entry_start, time.min),
+                        datetime.combine(work_entry_end, time.max),
                     )
 
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
