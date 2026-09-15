@@ -17,6 +17,12 @@ export const MO_OVERVIEW_SUMMARY_SHAPE = {
 
 export const moOverviewBaseBlockProps = {
     unfoldAll: t.boolean().optional(false),
+<<<<<<< 28ac90563f7239aef8fea6f20494adbcdd104236
+||||||| 03376c2da45482fca868aec6a6359cdff53bf223
+    operations: t.array(),
+=======
+    operations: t.array().optional(),
+>>>>>>> df731955f70012c96315fbf06a2f8cff5f03afae
     summary: t.object(MO_OVERVIEW_SUMMARY_SHAPE),
     showOptions: SHOW_OPTIONS,
 };
