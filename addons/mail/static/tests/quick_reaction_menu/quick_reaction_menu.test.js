@@ -24,9 +24,11 @@ test("can toggle reaction from quick reaction menu", async () => {
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('👍')");
     await contains(".o-mail-MessageReaction:text('👍 1')");
+    await contains(".o-mail-QuickReactionMenu", { count: 0 });
     await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('👍')");
     await contains(".o-mail-MessageReaction:text('👍 1')", { count: 0 });
+    await contains(".o-mail-QuickReactionMenu", { count: 0 });
 });
 
 test("toggle emoji picker from quick reaction menu", async () => {
@@ -124,6 +126,32 @@ test("can quick search emoji from quick reaction", async () => {
     await animationFrame();
     await press("Enter");
     await contains(".o-mail-MessageReaction:text('🥦 1')");
+});
+
+test("shift-clicking on an emoji keeps the emoji picker open", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await click("[title='Add a Reaction']");
+    const defaultEmoji = QuickReactionMenu.DEFAULT_EMOJIS[0];
+    await click(`.o-mail-QuickReactionMenu-emoji:text(${defaultEmoji})`, { shiftKey: true });
+    await contains(`.o-mail-MessageReaction:text(${defaultEmoji} 1)`);
+    await contains(".o-mail-QuickReactionMenu");
+    await click(`.o-mail-QuickReactionMenu-emoji:text(${defaultEmoji})`);
+    await contains(`.o-mail-MessageReaction:text(${defaultEmoji} 1)`, { count: 0 });
+    await contains(".o-mail-QuickReactionMenu", { count: 0 });
+    await click("[title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu-emojiPicker");
+    await click(".o-EmojiPicker-content .o-Emoji:text(👺)", { shiftKey: true });
+    await contains(".o-mail-MessageReaction:text(👺 1)");
+    await contains(".o-EmojiPicker");
+    await click(".o-EmojiPicker-content .o-Emoji:text(👺)");
+    await contains(".o-mail-MessageReaction:text(👺 1)", { count: 0 });
+    await contains(".o-EmojiPicker", { count: 0 });
+    await contains(".o-mail-QuickReactionMenu", { count: 0 });
 });
 
 test.tags("focus required");
