@@ -457,6 +457,9 @@ export async function mountComponent(component, target, appConfig = {}) {
     );
     if (isRoot) {
         Component.env = app.env;
+        if (!(/** @type {any} */ (app).dev)) {
+            /** @type {any} */ (env).services.template_compile_cache?.install(app);
+        }
     }
     await beforeMount?.(/** @type {OdooEnv} */ (app.env));
     componentLog("mount", component.name || "anon", "isRoot=", isRoot);

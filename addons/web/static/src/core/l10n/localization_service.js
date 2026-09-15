@@ -115,6 +115,7 @@ function updateTranslations(result) {
     const timeFormat = strftimeToLuxonFormat(userLocalization.time_format);
 
     Object.assign(localization, {
+        translationsHash: result.hash,
         dateFormat,
         timeFormat,
         dateTimeFormat: `${dateFormat} ${timeFormat}`,

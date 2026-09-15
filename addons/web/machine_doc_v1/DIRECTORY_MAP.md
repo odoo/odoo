@@ -53,7 +53,7 @@
 | `components/time_picker/` | features | 1 | Time input with dropdown hour/minute selection and configurable rounding |
 | `components/tree_editor/` | features | 5 | UI-layer tree editor components. Data-only tree manipulation lives in `core/tree/` |
 | `components/user_switch/` | features | 1 | Login-page component for switching between recently connected accounts |
-| `core/` | shared | 32 | Namespace-root primitives: registry, domain, context, parsers/formatters, templates, events, asset loading, translation, feature flags, user, currency, and the `field` / `name` / `allowed_qweb_expressions` / `multi_company_recovery` services |
+| `core/` | shared | 33 | Namespace-root primitives: registry, domain, context, parsers/formatters, templates, events, asset loading, translation, feature flags, user, currency, the compiled-template cache, and the `field` / `name` / `allowed_qweb_expressions` / `multi_company_recovery` services |
 | `core/avatar/` | shared | 0 | Avatar component styles (SCSS only) |
 | `core/badge/` | shared | 1 | Badge colour helpers plus component styles |
 | `core/browser/` | shared | 8 | Browser abstraction: the `browser` indirection object, cookies, storage, router, hotkey key normalisation, anchor-scroll suppression, feature detection, and the `title` service |

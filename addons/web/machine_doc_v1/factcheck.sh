@@ -494,8 +494,10 @@ assert_eq ".innerHTML = usages (gated: isMarkup() in html.js, instanceof Markup 
     "$(grep -rhE "\.innerHTML[[:space:]]*=[^=]" "$WEB/static/src" --include="*.js" 2>/dev/null | wc -l)" "2"
 assert_eq ".outerHTML = usages" \
     "$(grep -rhE "\.outerHTML[[:space:]]*=[^=]" "$WEB/static/src" --include="*.js" 2>/dev/null | wc -l)" "0"
-assert_eq "eval()/new Function() usages" \
-    "$(grep -rE "\beval\(|new Function\(" "$WEB/static/src" --include="*.js" 2>/dev/null | wc -l)" "0"
+assert_eq "eval()/new Function() usages (gated: template_compile_cache.js rehydrates OWL's own compiler output from the origin's IndexedDB)" \
+    "$(grep -rE "\beval\(|new Function\(" "$WEB/static/src" --include="*.js" 2>/dev/null | wc -l)" "1"
+assert_eq "the one new Function() is the compile cache's" \
+    "$(grep -rlE "\beval\(|new Function\(" "$WEB/static/src" --include="*.js" 2>/dev/null)" "$WEB/static/src/core/template_compile_cache.js"
 markup_importers=$("$VENV_PY" - "$WEB/static/src" <<'PYEOF' 2>/dev/null
 import re, pathlib, sys
 imp = re.compile(r'import\s*\{([^}]*)\}\s*from\s*["\']([^"\']+)["\']', re.S)

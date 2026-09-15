@@ -74,6 +74,15 @@ export class IndexedDB {
         });
     }
 
+    /**
+     * @param {string} table
+     * @returns {Promise<Record<string, any>>} every value of the table by key
+     */
+    async readAll(table) {
+        this._tables.add(table);
+        return this.execute((db) => (db ? this._readAll(db, table) : {}));
+    }
+
     /** @param {string|string[]|null} [tables=null] */
     async invalidate(tables = null) {
         return this.execute((db) => {
@@ -388,6 +397,23 @@ export class IndexedDB {
             const objectStore = transaction.objectStore(table);
             const r = objectStore.get(key);
             r.onsuccess = () => resolve(r.result);
+            transaction.onerror = () => reject(transaction.error);
+            transaction.onabort = () => reject(transaction.error);
+        });
+    }
+
+    async _readAll(/** @type {IDBDatabase} */ db, /** @type {string} */ table) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(table, "readonly");
+            const objectStore = transaction.objectStore(table);
+            const keys = objectStore.getAllKeys();
+            const values = objectStore.getAll();
+            transaction.oncomplete = () =>
+                resolve(
+                    Object.fromEntries(
+                        keys.result.map((key, index) => [key, values.result[index]]),
+                    ),
+                );
             transaction.onerror = () => reject(transaction.error);
             transaction.onabort = () => reject(transaction.error);
         });

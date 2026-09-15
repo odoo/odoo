@@ -13,6 +13,7 @@
  * @property {string | false} thousandsSep
  * @property {number} weekStart
  * @property {string} code
+ * @property {string} translationsHash
  */
 
 const ALLOWED_PROTOCOL_KEYS = new Set([

@@ -78,9 +78,9 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 |------|----------|-----|
 | `controllers/` | 24 `.py` — HTTP endpoints (22 Controller classes, 76 route handlers) | `ROUTE_MAP.md` |
 | `models/` | 28 `.py` — ORM extensions (27 model files: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
-| `static/src/` | 871 JavaScript/OWL source files across 249 directories (FSD layers) | `DIRECTORY_MAP.md` |
+| `static/src/` | 872 JavaScript/OWL source files across 249 directories (FSD layers) | `DIRECTORY_MAP.md` |
 | `static/lib/` | 18 directories (17 vendored libraries + generated `popper_compat/`) — DO NOT MODIFY | `static/lib/versions.json` |
-| `static/tests/` | 810 `.js` (incl. 744 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
+| `static/tests/` | 811 `.js` (incl. 745 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
 | `tests/` | 68 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
 | `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
@@ -94,7 +94,7 @@ Layered organization under `static/src/`:
 | Layer | Directory | Purpose | Files |
 |-------|-----------|---------|-------|
 | **Boot** | `boot/` | Backend entry points: `main.js`, `start.js` (`env.js`, `session.js`, `module_loader.js`, `service_worker.js` sit at `src/` root) | 2 JS |
-| **Primitives** | `core/` | Registry, utils, reactivity, browser abstraction, l10n, network + ORM, errors, py_js, tree, debug, hotkeys, navigation, `lib/` lazy ESM loaders | 191 JS |
+| **Primitives** | `core/` | Registry, utils, reactivity, browser abstraction, l10n, network + ORM, errors, py_js, tree, debug, hotkeys, navigation, `lib/` lazy ESM loaders | 192 JS |
 | **Components** | `components/` | Reusable OWL UI components (dropdown, pickers, editors, file handling) | 111 JS |
 | **UI** | `ui/` | Overlay layer and its services: dialog, popover, tooltip, notification, overlay, effects, block, alert, carousel, collapse, offcanvas, bottom sheet, command palette, PWA prompt | 47 JS |
 | **Fields** | `fields/` | 68 widget directories in 7 subcategories (basic, display, media, relational, selection, specialized, temporal); 116 fork-wide `registerField` / `registerFallbackField` sites | 129 JS |
@@ -335,6 +335,7 @@ Falsy results are valid. Malformed successful responses are non-retryable
 | `enterprise_subscription` | `webclient/home_menu/enterprise_subscription_service.js` | `SubscriptionManager` over `session.expiration_date` / `expiration_reason` / `warning` / `sysadmin_message` (set by `ir_http._get_expiration_info`): drives the `ExpirationPanel` banner and `SysAdminPanel` on the home menu, blocks the UI once `daysLeft <= 0`, and talks to `publisher_warranty.contract` to register or recheck a subscription code |
 | `color_scheme` | `webclient/color_scheme/color_scheme_service.js` | Resolves the active light/dark scheme from the user's `res.users.settings` preference and the `(prefers-color-scheme:dark)` media query; drives the `dark_mode_toggle` systray item |
 | `lazy_session` | `webclient/session_service.js` | Lazy-loaded session info (profile_session, profile_collectors, etc.). Consumed by `profiling` service — refactoring this breaks profiling startup. |
+| `template_compile_cache` | `core/template_compile_cache.js` | OWL's compiled templates cached in the browser (deps: `localization`): the root app's `_compileTemplate` is routed through a content-addressed store of the compiler's output (IndexedDB versioned by the registry hash; key = OWL version / lang / translations hash / template text hash), read once at boot, written behind on a miss; off in dev and test mode. `seed(key, code)` is the seam a server-side compiler would fill. |
 | `multi_company_recovery` | `core/multi_company_recovery_service.js` | Recovers from `AccessError` when the server context carries `suggested_company`. `recoverFromLifecycleError` reloads after activating; `recoverFromSaveError` mutates the model context and activates with `reload:false` to preserve input. Used by FormController's onError paths. |
 | `form_dialog_stack` | `views/form/form_dialog_stack_service.js` | Single global counter of open form-in-dialog instances, mutated by direct `push()`/`pop()` calls from `useFormViewInDialog`; exposes `count`/`isEmpty` getters (`pop()` floors at 0 and warns in debug on an unbalanced call). Read by `beforeVisibilityChange` to suppress tab-switch auto-save while a child form dialog is active. |
 | `result_set_cache_invalidator` | `core/network/result_set_cache_invalidator_service.js` | Emits `CLEAR-CACHES` on `unlink`/`action_archive`/`action_unarchive` and on `action_install_lang` (see `STATE_MANAGEMENT.md`) |
@@ -486,8 +487,8 @@ an in-tree fork; only `hoot` and `hoot-dom` are internal, versioned with the for
 | Python (controllers) | 24 (22 Controller classes across 20 route-bearing files + `__init__.py`, `export_writers.py`, `json_helpers.py`, `utils.py`) |
 | Python (models) | 28 (27 model files + `__init__.py`) |
 | Python (tests) | 68 (`test_*.py`; 69 files incl. `__init__.py`) |
-| JavaScript (src) | 871 (869 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
-| JavaScript (tests) | 810 (incl. 744 `*.test.js` Hoot suites) |
+| JavaScript (src) | 872 (870 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
+| JavaScript (tests) | 811 (incl. 745 `*.test.js` Hoot suites) |
 | JavaScript (vendored libs) | 94 |
 | SCSS/CSS | 213 (34 in `static/src/scss/` shared base; remaining 179 co-located with JS components) |
 | XML (views/ + data/ + static/src OWL templates) | 293 (14 views + 5 data + 274 OWL templates) |
