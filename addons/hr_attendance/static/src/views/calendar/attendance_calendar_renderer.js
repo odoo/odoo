@@ -1,5 +1,6 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
+import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendanceCalendarOverview } from "../../components/attendance_calendar/attendance_calendar_overview";
 
 export class AttendanceCalendarRenderer extends CalendarRenderer {
@@ -7,6 +8,9 @@ export class AttendanceCalendarRenderer extends CalendarRenderer {
     static components = {
         ...CalendarRenderer.components,
         AttendanceCalendarOverview,
+        day: CalendarCommonRenderer,
+        week: CalendarCommonRenderer,
+        month: CalendarCommonRenderer,
     };
 
     get dateRange() {

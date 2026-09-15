@@ -2,6 +2,7 @@ import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
 import { Component, onWillStart, proxy, types as t, usePlugin, useProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { TimeOffPlugin } from "../views/time_off_plugin";
 import { TimeOffCard } from "./time_off_card";
 
@@ -62,6 +63,18 @@ export class TimeOffDashboard extends Component {
     openNewAllocation() {
         this.newAllocRequest({
             employeeId: this.props.employeeId,
+        });
+    }
+
+    openPendingAllocations() {
+        const context = this.getContext();
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: _t("Pending Allocations"),
+            res_model: "hr.leave.allocation",
+            views: [[false, "list"], [false, "form"]],
+            domain: [["state", "in", ["confirm", "validate1"]]],
+            context,
         });
     }
 }

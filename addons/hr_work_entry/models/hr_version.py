@@ -374,6 +374,14 @@ class HrVersion(models.Model):
         """
         return []
 
+    def _enrich_work_entry_val(self, val):
+        """Hook called per-val after duration/date are set, before the merge step.
+
+        At this point leave_ids (if present) is still a singleton, so field access is safe.
+        Override to tag extra float sub-totals on the val (e.g. trimmed_duration).
+        Default is a no-op.
+        """
+
     @api.model
     def _get_work_entry_merge_key(self, vals):
         """
@@ -503,6 +511,7 @@ class HrVersion(models.Model):
                 vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar or hours_per_week or hours_per_day else 0.0
             vals.pop('date_start', False)
             vals.pop('date_stop', False)
+            self._enrich_work_entry_val(vals)
 
         # Now merge similar work entries on the same day
         merged_vals = {}
@@ -516,6 +525,11 @@ class HrVersion(models.Model):
                 for field in source_fields:
                     if field in merged_vals[key] and field in vals:
                         merged_vals[key][field] |= vals[field]
+                # sum any float sub-totals tagged by _enrich_work_entry_val
+                if 'trimmed_duration' in vals:
+                    merged_vals[key]['trimmed_duration'] = (
+                        merged_vals[key].get('trimmed_duration', 0.0) + vals['trimmed_duration']
+                    )
             else:
                 merged_vals[key] = vals.copy()
         return list(merged_vals.values())
