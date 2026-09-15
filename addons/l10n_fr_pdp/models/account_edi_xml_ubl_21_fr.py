@@ -3,7 +3,7 @@ from odoo.tools.misc import formatLang
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
-PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'  # Not accepted by SuperPDP due to missing validator
+PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017'  # Not accepted by SuperPDP due to missing validator
 
 CPRO_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'
 CPRO_INVOICE_IDENTIFIER = f'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##{CPRO_CUSTOMIZATION_ID}::2.1'
@@ -114,7 +114,6 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                     'cac:InvoiceDocumentReference': {
                         'cbc:ID': {'_text': downpayment_move.name},
                         'cbc:IssueDate': {'_text': downpayment_move.invoice_date},
-                        'cbc:DocumentTypeCode': {'_text': 386 if downpayment_move.move_type == 'out_invoice' else 503},  # downpayment invoice or downpayment credit note
                     },
                 })
 
