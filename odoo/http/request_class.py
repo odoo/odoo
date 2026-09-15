@@ -71,6 +71,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._json_memo: tuple[HTTPRequest, Any] | None = None
         self._session_transaction_cursor: Any = None
         self._session_snapshot: Session | None = None
+        self._session_written_in_transaction = False
         self._session_response: Response | None = None
         self._session_save_pending = False
         self._session_uses_transactions = False
@@ -351,6 +352,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._session_save_pending = False
         self._session_response = None
         self._session_snapshot = self.session.snapshot()
+        self._session_written_in_transaction = False
         cr.postcommit.add(self._flush_session)
         cr.postrollback.add(self._restore_session_snapshot)
         _debug.lifecycle("http.session.transaction_bound", uid=self.session.uid)
@@ -360,21 +362,32 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         if snapshot is None:
             _debug.lifecycle("http.session.restore_skipped", reason="no_snapshot")
             return
-        self._session_snapshot = None
-        snapshot.can_save &= self.session.can_save
-        self.session = snapshot
+        current = self.session
+        if self._session_written_in_transaction:
+            # An explicit-environment save persisted the session during the
+            # attempt (a rotation may have replaced its file): the disk copy is
+            # the identity the cookie must carry, the snapshot's file may be gone.
+            restored = self._select_session_and_dbname(sid=current.sid)[0]
+            source = "disk"  # debuglog
+        else:
+            restored = snapshot.snapshot()
+            source = "snapshot"  # debuglog
+        restored.can_save &= current.can_save
+        self.session = restored
         self._session_save_pending = False
         self._session_transaction_cursor = None
         self._session_response = None
         _debug.lifecycle(
             "http.session.restored_on_rollback",
-            uid=snapshot.uid,
-            can_save=snapshot.can_save,
+            source=source,
+            uid=restored.uid,
+            can_save=restored.can_save,
         )
 
     def _flush_session(self) -> None:
         self._session_transaction_cursor = None
         self._session_snapshot = None
+        self._session_written_in_transaction = False
         _debug.pipeline(
             "http.session.flush",
             pending=self._session_save_pending,
@@ -517,6 +530,8 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             _debug.logic("http.session.save_failed", sid=sess.sid[:8])
             return
 
+        if written and self._session_snapshot is not None:
+            self._session_written_in_transaction = True
         on_disk = written or not sess.is_new
         cookie_sid = self.httprequest.session_id
         _debug.logic(

@@ -253,7 +253,7 @@ def test_an_internal_rollback_does_not_disable_post_commit_persistence(store):
     assert response.headers.getlist("Set-Cookie")
 
 
-def test_rollback_restore_is_idempotent_between_the_participant_and_the_cursor(
+def test_rollback_restore_is_deterministic_between_the_participant_and_the_cursor(
     store,
 ):
     from odoo.http._retry import RequestRetryParticipant
@@ -262,19 +262,47 @@ def test_rollback_restore_is_idempotent_between_the_participant_and_the_cursor(
     sid = req.session.sid
     req.session["effect"] = 1
     req.session.can_save = False
-    snapshot = req._session_snapshot
 
     RequestRetryParticipant(req).on_rollback(Exception("promoted"))
-    assert req.session is snapshot
     assert "effect" not in req.session
     assert not req.session.can_save, "a refusal to save survives the restore"
-    assert req._session_snapshot is None
+    assert req._session_snapshot is not None, "armed until commit or a rebind"
 
     req.session["late"] = 2
     cursor.postrollback.run()
-    assert req.session is snapshot
-    assert req.session["late"] == 2, "a second restore must not undo later work"
+    assert "late" not in req.session, "every restore lands on the bound state"
     assert req.session.sid == sid
+
+
+def test_a_handler_rollback_then_a_retry_still_restores_the_bound_state(store):
+    from odoo.http._retry import RequestRetryParticipant
+
+    req, cursor = transaction_request(store)
+    cursor.postrollback.run()
+    req.session["after_internal_rollback"] = 1
+    RequestRetryParticipant(req).on_rollback(Exception("serialization"))
+    assert "after_internal_rollback" not in req.session
+
+
+def test_a_rotation_persisted_through_an_explicit_env_survives_the_rollback(store):
+    from odoo.http._retry import RequestRetryParticipant
+
+    req, cursor = transaction_request(store)
+    req.session["login"] = "alice"
+    cookie_sid = req.session.sid
+    foreign_env = SimpleNamespace(cr=SimpleNamespace(closed=False))
+
+    req.session.should_rotate = True
+    req._save_session(foreign_env)
+    rotated_sid = req.session.sid
+    assert rotated_sid != cookie_sid
+    assert store.get(cookie_sid).is_new, "a hard rotation removed the old file"
+
+    cursor.postrollback.run()
+    RequestRetryParticipant(req).on_rollback(Exception("serialization"))
+    assert req.session.sid == rotated_sid
+    assert not store.get(req.session.sid).is_new, "the replay can still save"
+    assert req.session["login"] == "alice"
 
 
 def test_a_committed_session_can_no_longer_be_restored(store):

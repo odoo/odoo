@@ -9,7 +9,6 @@ import pytest
 from odoo.http.constants import STORED_SESSION_BYTES, prepare_default_session
 from odoo.http.request_class import Request
 from odoo.http.session import FilesystemSessionStore, Session, _coerce_session_value
-from odoo.http.wrappers import FutureResponse
 
 
 @pytest.fixture
@@ -254,13 +253,14 @@ class _RotationRequest(Request):
     httprequest: Any
 
     def __init__(self, store, session, sid_on_cookie):
-        self.app = SimpleNamespace(session_store=store)
-        self.session = session
-        self.env = None
-        self.future_response = FutureResponse()
-        self.httprequest = SimpleNamespace(
-            session_id=sid_on_cookie, path="/web/login", is_secure=False
+        httprequest: Any = SimpleNamespace(
+            session_id=sid_on_cookie,
+            path="/web/login",
+            is_secure=False,
+            remote_addr=None,
         )
+        super().__init__(httprequest, SimpleNamespace(session_store=store))
+        self.session = session
 
 
 def test_pending_rotation_survives_a_request_with_no_live_env(store):

@@ -141,12 +141,16 @@ RPC-only client stays alive without ever loading a page.
 snapshot. `_flush_session` is idempotent: the postcommit callback invokes it,
 and the successful return from `retrying` also invokes it for cursor adapters
 such as `TestCursor` that suppress transaction callbacks.
-`_restore_session_snapshot` is its rollback twin, and just as idempotent: the
-postrollback callback invokes it, and so does `RequestRetryParticipant.on_rollback`
-— whichever runs first restores, the other finds nothing to do. There is no
-disk reload on rollback: nothing was written during the attempt, so the
-snapshot is the session as it was. A handler's own rollback clears the
-binding; a later save binds the new transaction again.
+`_restore_session_snapshot` is its rollback twin: the postrollback callback
+invokes it, and so does `RequestRetryParticipant.on_rollback`; every call lands on
+the same state, so the order does not matter. The snapshot stays armed until the
+commit or the next bind, so a handler's own rollback followed by a retry still
+restores. The one case that reads the disk: an explicit-environment save
+(`request._save_session(env)` against another database) persisted the session
+during the attempt, possibly rotating its file away — then the live copy under
+the current sid is the identity the cookie must carry, and the snapshot's file
+may no longer exist. A handler's own rollback clears the binding; a later save
+binds the new transaction again.
 Database-free requests and saves explicitly bound to another database keep
 their immediate persistence path.
 Read-only promotion is allowed only before commit, while the original cursor
