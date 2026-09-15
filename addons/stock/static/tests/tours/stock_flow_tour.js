@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("test_basic_stock_flow_with_minimal_acce
         },
         {
             content: "check that at least one picking is present in the view",
-            trigger: ".o_stock_list_view_view .o_data_row",
+            trigger: ".o_view_controller.o_list_view .o_data_row",
         },
         {
             trigger: ".o_list_button_add",
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add("test_basic_stock_flow_with_minimal_acce
         },
         {
             content: "check that at least one picking is present in the view",
-            trigger: ".o_stock_list_view_view .o_data_row",
+            trigger: ".o_view_controller.o_list_view .o_data_row",
         },
         {
             trigger: "button:contains(New)",
