@@ -14,7 +14,9 @@ declare module "models" {
     export interface DiscussChannel {
         _playRtcSessionsSoundEffects: (rtcSessions: RtcSession[]) => Promise<void>;
         activeRtcSession: RtcSession;
+        activeSpeakers: RtcSession[];
         cancelRtcInvitationTimeout: number|undefined;
+        clearActiveSpeakers: () => void;
         focusAvailableVideo: () => void;
         focusStack: RtcSession[];
         hadSelfSession: boolean;
@@ -24,14 +26,14 @@ declare module "models" {
         lastSessionIds: Set<number>;
         pin: (session: RtcSession) => void;
         pinnedRtcSession: RtcSession;
-        promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
+        pruneSpeakersTimeout: number|undefined;
         rtc_session_ids: RtcSession[];
         showCallView: Readonly<boolean>;
         unpin: () => void;
+        updateActiveSpeakers: () => void;
         updateCallFocusStack: (session: RtcSession) => void;
         useCameraByDefault: null;
         videoCount: number;
-        videoCountNotSelf: Readonly<number>;
         visibleCards: import("@mail/discuss/call/common/call").CardData[];
     }
     export interface MailGuest {
