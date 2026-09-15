@@ -168,6 +168,13 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
             declaration.not_yet_invoiced = sum(
                 relevant_orders.mapped("l10n_it_edi_doi_not_yet_invoiced")
             )
+            _debug.logic(
+                "not_yet_invoiced_recomputed",
+                declaration=declaration,
+                linked_orders=declaration.sale_order_ids,
+                confirmed_orders=relevant_orders,
+                total=declaration.not_yet_invoiced,
+            )
 
     @api.depends("threshold", "not_yet_invoiced", "invoiced")
     def _compute_remaining(self):

@@ -349,6 +349,18 @@ class SaleOrder(models.Model):
                 # is what the invoiced quantity above is expressed in.
                 qty_to_invoice = line.product_qty - qty_invoiced
                 order_not_yet_invoiced += price_reduce * qty_to_invoice
+            _debug.logic(
+                "order_not_yet_invoiced",
+                order=order,
+                declaration=declaration,
+                lines=len(order_lines),
+                matched=order_lines,
+                amount=order_not_yet_invoiced,
+                counted=declaration.currency_id.compare_amounts(
+                    order_not_yet_invoiced, 0
+                )
+                > 0,
+            )
             if declaration.currency_id.compare_amounts(order_not_yet_invoiced, 0) > 0:
                 not_yet_invoiced += order_not_yet_invoiced
 
