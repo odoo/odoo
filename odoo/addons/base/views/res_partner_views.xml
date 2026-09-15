@@ -18,7 +18,15 @@
                 <list string="Contacts" sample="1" multi_edit="1">
                     <field name="create_date" optional="hide"/>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded border object-fit-contain'}" width="30" nolabel="1"/>
+<<<<<<< 2fc509bed66a6b66425ab35e1e9cfb13a72b9ddb
                     <field name="display_name" string="Name"/>
+||||||| 480527c1ec8770089b04b4f211cfad239664f102
+                    <field name="complete_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+                    <field name="display_name" string="Name"/>
+=======
+                    <field name="complete_name" string="Name"/>
+                    <field name="display_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+>>>>>>> 2f1f548f80483b3d4d3276ce2d01f8f3474804d1
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
