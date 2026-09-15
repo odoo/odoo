@@ -95,6 +95,14 @@ class AccountMove(models.Model):
             ))
         return super()._check_draftable()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_sent_peppol(self):
+        if self.filtered(lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent):
+            raise UserError(self.env._(
+                "You cannot delete invoices that were sent via Peppol / PDP. "
+                "If you need to modify them, you must issue a credit or debit note.",
+            ))
+
     @api.depends('state', 'peppol_response_ids.peppol_state')
     def _compute_peppol_move_state(self):
         for move in self:
