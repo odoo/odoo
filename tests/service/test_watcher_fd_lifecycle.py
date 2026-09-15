@@ -186,8 +186,12 @@ class TestOnlyDirectoriesThatCanChangeAreWatched:
             "mod/.git/objects",
             "mod/static/lib/node_modules/x",
             "mod/tests",
+            "mod/views",
         ):
             (root / name).mkdir(parents=True)
+        for name in ("mod/__init__.py", "mod/models/a.py", "mod/tests/test_a.py"):
+            (root / name).write_text("")
+        (root / "mod/views/v.xml").write_text("")
         return root
 
     def _arm(self, tree, monkeypatch, dev_mode):
@@ -208,7 +212,9 @@ class TestOnlyDirectoriesThatCanChangeAreWatched:
             finally:
                 watcher._release_watcher()
 
-    def test_reload_alone_skips_static_pycache_git_and_i18n(self, tree, monkeypatch):
+    def test_reload_alone_skips_static_pycache_git_i18n_and_views(
+        self, tree, monkeypatch
+    ):
         assert self._arm(tree, monkeypatch, ("reload",)) == {
             ".",
             "mod",
@@ -222,3 +228,4 @@ class TestOnlyDirectoriesThatCanChangeAreWatched:
         assert "mod/static/lib" in watched
         assert "mod/static/lib/node_modules" not in watched
         assert "mod/models/__pycache__" not in watched
+        assert "mod/views" in watched

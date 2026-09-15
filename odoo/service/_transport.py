@@ -201,9 +201,16 @@ def get_access_log_level(raw_path: str) -> int:
 
 
 def log_access(
-    conn: Connection, request_line: str, raw_path: str, status: int, size: int | str
+    conn: Connection,
+    request_line: str,
+    raw_path: str,
+    status: int,
+    size: int | str,
+    *,
+    level: int | None = None,
 ) -> None:
-    level = get_access_log_level(raw_path)
+    if level is None:
+        level = get_access_log_level(raw_path)
     if not _access_logger.isEnabledFor(level):
         return
     message = request_line
@@ -277,7 +284,7 @@ def prepare_wsgi_environ(
         "REQUEST_URI": head.target,
         "RAW_URI": head.target,
         "REMOTE_ADDR": conn.addr[0],
-        "REMOTE_PORT": conn.addr[1],
+        "REMOTE_PORT": str(conn.addr[1]),
         "SERVER_NAME": identity.name,
         "SERVER_PORT": str(identity.port),
         "SERVER_PROTOCOL": head.protocol,
@@ -638,7 +645,8 @@ def _run_exchange(
 
 def _log_exchange(exchange: Exchange) -> None:
     head = exchange.head
-    if not _access_logger.isEnabledFor(get_access_log_level(head.target)):
+    level = get_access_log_level(head.target)
+    if not _access_logger.isEnabledFor(level):
         return
     try:
         iri = uri_to_iri(head.target)
@@ -655,6 +663,7 @@ def _log_exchange(exchange: Exchange) -> None:
         head.target,
         response.code,
         size,
+        level=level,
     )
 
 

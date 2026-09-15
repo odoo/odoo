@@ -83,6 +83,43 @@ def iter_watch_dirs(root: str | os.PathLike[str]) -> Iterator[str]:
         stack.extend(reversed(children))
 
 
+def iter_python_watch_dirs(root: str | os.PathLike[str]) -> Iterator[str]:
+    # A reload-only watcher acts on `.py` edits alone, so a directory whose
+    # subtree holds no Python file can only ever report noise: views/, data/,
+    # security/, i18n/ and the like are two fifths of an addons tree, and
+    # every one of them was an inotify watch taken from a budget the editor
+    # and every other dev server on the box share.  The root is watched
+    # regardless, so a module created under it is seen and armed.
+    unwatched = get_unwatched_dirs()
+    root = os.fspath(root)
+    parent_of: dict[str, str] = {}
+    holds_python: dict[str, bool] = {}
+    order: list[str] = []
+    stack = [root]
+    while stack:
+        directory = stack.pop()
+        order.append(directory)
+        holds = False
+        try:
+            with os.scandir(directory) as entries:
+                for entry in entries:
+                    if entry.is_dir(follow_symlinks=False):
+                        if entry.name not in unwatched:
+                            parent_of[entry.path] = directory
+                            stack.append(entry.path)
+                    elif entry.name.endswith(".py"):
+                        holds = True
+        except OSError:
+            pass
+        holds_python[directory] = holds
+    for directory in reversed(order):
+        if holds_python[directory] and directory in parent_of:
+            holds_python[parent_of[directory]] = True
+    for directory in order:
+        if directory == root or holds_python[directory]:
+            yield directory
+
+
 OVERFLOW_PATH = "<inotify-overflow>"
 
 ASSET_BURST_PATH = "<asset-burst>"
@@ -324,16 +361,26 @@ class FSWatcherInotify(FSWatcherBase):
         self.thread: threading.Thread | None = None
         self.watcher: _inotify_lib.Inotify | None = None
         self.block_duration_s = block_duration_s
+        self._python_only = "assets" not in current().dev_mode
         paths = self.get_watch_paths()
         _logger.info("Watching %d folder(s) for changes", len(paths))
         self._arm_watcher(paths)
+
+    _python_only = False
+    """Whether only Python-bearing subtrees are armed: a reload-only watcher
+    acts on `.py` edits alone, while `--dev=assets` needs every static tree."""
+
+    def _iter_root(self, root: str) -> Iterator[str]:
+        if self._python_only:
+            return iter_python_watch_dirs(root)
+        return iter_watch_dirs(root)
 
     def _arm_watcher(self, paths: list[str]) -> None:
         self.roots = paths
         watcher = _inotify_lib.Inotify()
         try:
             for root in paths:
-                for directory in iter_watch_dirs(root):
+                for directory in self._iter_root(root):
                     watcher.add_watch(directory, INOTIFY_LISTEN_EVENTS)
         except Exception as exc:
             watcher.close()
@@ -363,7 +410,7 @@ class FSWatcherInotify(FSWatcherBase):
         for root in self.roots:
             if not Path(root).is_dir():
                 continue
-            for directory in iter_watch_dirs(root):
+            for directory in self._iter_root(root):
                 self._watch_directory(Path(directory))
         _debug.pipeline("watcher.overflow_resynced", roots=len(self.roots))
         self.on_asset_file_changed(OVERFLOW_PATH)
