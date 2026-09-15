@@ -8,6 +8,7 @@ from psycopg.types.json import Jsonb
 
 from odoo.db.bulk import (
     _JSON_OIDS,
+    _MAX_BIND_PARAMS,
     _NUMERIC_OID,
     _TEXT_OID,
     _BulkAccessMixin,
@@ -237,6 +238,35 @@ class TestExecuteValuesReachesTheSeamThroughItsEntryPoints(unittest.TestCase):
             )
         self.assertIs(ctx.exception, cursor.marked[0])
         self.assertEqual(len(cursor.executed), 2, "the remaining pages are not sent")
+
+    def test_a_page_never_carries_more_bind_parameters_than_the_wire_counts(self):
+        cursor = _FakeCursorForExecuteValues()
+        sent: list[int] = []
+        cursor.execute = lambda q, params=None, log_exceptions=True: sent.append(  # type: ignore[method-assign]
+            len(params)
+        )
+        rows = [(i, i, i) for i in range(30000)]
+        cursor.execute_values(  # type: ignore[misc]
+            "INSERT INTO t VALUES %s", rows, page_size=100000
+        )
+        self.assertEqual(sum(sent), 90000)
+        self.assertLessEqual(max(sent), _MAX_BIND_PARAMS)
+        self.assertEqual(
+            len(sent),
+            2,
+            "pages are packed to the ceiling, not to a page size derived from "
+            "the widest row and applied to every page",
+        )
+
+    def test_mixed_widths_pack_by_what_each_row_actually_binds(self):
+        cursor = _FakeCursorForExecuteValues()
+        sent: list[int] = []
+        cursor.execute = lambda q, params=None, log_exceptions=True: sent.append(  # type: ignore[method-assign]
+            len(params)
+        )
+        rows = [(1,) * 60000, (2,) * 6000, (3,)]
+        cursor.execute_values("INSERT INTO t VALUES %s", rows, page_size=10)  # type: ignore[misc]
+        self.assertEqual(sent, [60000, 6001])
 
     def test_fetch_never_pipelines(self):
         cursor = _FakeCursorForExecuteValues()

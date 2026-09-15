@@ -212,6 +212,24 @@ class TestResetConnection(unittest.TestCase):
         self.assertIsNotNone(getattr(conn, _IDLE_SINCE_ATTR, None))
 
 
+class TestProbeLiveness(unittest.TestCase):
+    def test_an_empty_query_answered_as_such_is_alive(self):
+        from odoo.db.lifecycle import _probe_liveness
+
+        conn = _FakeConn()
+        conn.pgconn = _FakePgconn(conn, status=ExecStatus.EMPTY_QUERY)
+        _probe_liveness(conn)
+        self.assertEqual(conn.executed, [""])
+
+    def test_anything_else_raises_so_the_pool_discards(self):
+        from odoo.db.lifecycle import _probe_liveness
+
+        conn = _FakeConn()
+        conn.pgconn = _FakePgconn(conn, status=ExecStatus.FATAL_ERROR)
+        with self.assertRaisesRegex(psycopg.OperationalError, "server said no"):
+            _probe_liveness(conn)
+
+
 class TestCheckConnection(unittest.TestCase):
     GRACE = 1.0
 
@@ -221,7 +239,7 @@ class TestCheckConnection(unittest.TestCase):
         def _record(conn):
             self.probed.append(conn)
 
-        patcher = patch("odoo.db.lifecycle._PsycopgPool.check_connection", _record)
+        patcher = patch("odoo.db.lifecycle._probe_liveness", _record)
         patcher.start()
         self.addCleanup(patcher.stop)
 

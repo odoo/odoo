@@ -278,7 +278,7 @@ class ConnectionPool:
                     max_idle=self._max_idle,
                     reconnect_timeout=15,
                     configure=self._configure_connection,
-                    reset=self._reset_connection,
+                    reset=None,
                     check=self._check_connection,
                     num_workers=self._pool_workers,
                     open=True,
@@ -702,6 +702,8 @@ class ConnectionPool:
         )
         mark_active(pool)
         try:
+            if keep_in_pool:
+                keep_in_pool = self._reset_returned_connection(connection)
             if not keep_in_pool:
                 self.stats.record_connection_discarded()
                 _debug.lifecycle(
@@ -720,6 +722,21 @@ class ConnectionPool:
         finally:
             self._budget.release()
         self._reap_idle_pools_safely()
+
+    # The session reset runs here, on the returning thread, not in psycopg_pool's
+    # worker: with `reset=` set, putconn hands every return to the pool's one
+    # worker, the next getconn finds nothing idle and grows the pool instead of
+    # waiting -- measured, 8 request threads held 63 backends -- and every
+    # return for a database queues behind that one thread. Reset first, and
+    # putconn files an idle connection synchronously.
+    def _reset_returned_connection(self, connection: psycopg.Connection) -> bool:
+        try:
+            self._reset_connection(connection)
+        except Exception as exc:
+            _debug.logic("pool.reset_on_return_failed", error=type(exc).__name__)
+            _logger.debug("Session reset on return failed", exc_info=True)
+            return False
+        return True
 
     def _reap_idle_pools_safely(self) -> None:
         try:

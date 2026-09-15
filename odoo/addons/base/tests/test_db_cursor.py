@@ -2749,7 +2749,7 @@ class TestHealthCheckGracePeriod(BaseCase):
     def test_fresh_connection_skips_probe(self):
         conn = self._Bare()
         setattr(conn, _IDLE_SINCE_ATTR, time.monotonic())
-        with patch("odoo.db.pool._PsycopgPool.check_connection") as probe:
+        with patch("odoo.db.lifecycle._probe_liveness") as probe:
             _check_connection(conn)
         probe.assert_not_called()
 
@@ -2762,15 +2762,44 @@ class TestHealthCheckGracePeriod(BaseCase):
             _IDLE_SINCE_ATTR,
             time.monotonic() - config["db_healthcheck_grace"] - 1,
         )
-        with patch("odoo.db.pool._PsycopgPool.check_connection") as probe:
+        with patch("odoo.db.lifecycle._probe_liveness") as probe:
             _check_connection(conn)
         probe.assert_called_once_with(conn)
 
     def test_unstamped_connection_fails_safe_to_probe(self):
         conn = self._Bare()
-        with patch("odoo.db.pool._PsycopgPool.check_connection") as probe:
+        with patch("odoo.db.lifecycle._probe_liveness") as probe:
             _check_connection(conn)
         probe.assert_called_once_with(conn)
+
+    def test_a_terminated_backend_fails_the_probe_and_the_pool_reconnects(self):
+        from odoo.db.lifecycle import _probe_liveness
+
+        dbname = common.get_db_name()
+        _, info = get_connection_info_for_database(dbname)
+        pool = ConnectionPool(maxconn=1, settings=pool_settings.current())
+        self.addCleanup(pool.close_all)
+        with contextlib.closing(Cursor(pool, dbname, info)) as cr:
+            cr.execute("SELECT pg_backend_pid()")
+            first = cr.fetchscalar()
+            _probe_liveness(cr._cnx)
+        with contextlib.closing(db_connect(dbname).cursor()) as admin:
+            admin.execute("SELECT pg_terminate_backend(%s)", (first,))
+            admin.commit()
+        time.sleep(0.2)
+        [psycopg_pool] = pool._pools.values()
+        idle = psycopg_pool._pool[0]
+        with self.assertRaises(psycopg.OperationalError):
+            _probe_liveness(idle)
+        setattr(idle, _IDLE_SINCE_ATTR, 0.0)
+        with contextlib.closing(Cursor(pool, dbname, info)) as cr:
+            cr.execute("SELECT pg_backend_pid()")
+            self.assertNotEqual(
+                cr.fetchscalar(),
+                first,
+                "the check callback must refuse the dead backend so the pool "
+                "hands out a fresh one",
+            )
 
     def test_configure_and_reset_stamp_freshness(self):
         conn = MagicMock()

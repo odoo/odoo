@@ -19,6 +19,15 @@ from odoo.db.utils import SYSTEM_DBS
 from ._source import _callees
 
 
+class _FakePgconn:
+    def __init__(self, conn):
+        self.conn = conn
+
+    def exec_(self, command):
+        self.conn.reset_sql.append(command)
+        return SimpleNamespace(status=int(psycopg.pq.ExecStatus.COMMAND_OK))
+
+
 class _FakeConn:
     def __init__(self, transaction_status=cursor._TX_IDLE):
         self.closed = False
@@ -26,6 +35,10 @@ class _FakeConn:
             transaction_status=transaction_status, dsn="dbname=x"
         )
         self._odoo_pool: object = None
+        self.isolation_level = None
+        self.read_only = None
+        self.reset_sql: list = []
+        self.pgconn = _FakePgconn(self)
 
     def close(self):
         self.closed = True
@@ -121,6 +134,33 @@ class TestPermitAccounting(unittest.TestCase):
         self.assertEqual(len(p._checkouts), 0)
         self.assertEqual(h.psycopg_pool.returned, [conn])
         self.assertFalse(conn.closed, "a clean connection goes back warm")
+        self.assertEqual(
+            len(conn.reset_sql),
+            1,
+            "the session reset ran on the returning thread, before putconn",
+        )
+
+    def test_a_connection_whose_reset_fails_is_discarded_not_pooled(self):
+        p = pool.ConnectionPool(maxconn=2)
+        with _PooledBorrow(p) as h:
+            conn = p.borrow({"dbname": "some_db"})
+        conn.pgconn.exec_ = mock.Mock(side_effect=psycopg.OperationalError("gone"))
+        p.give_back(conn)
+        self.assertTrue(conn.closed)
+        self.assertEqual(p.stats.connections_discarded, 1)
+        self.assertEqual(h.psycopg_pool.returned, [conn])
+        self.assertEqual(p._budget.in_use, 0)
+
+    def test_psycopg_pool_is_built_without_a_reset_callback(self):
+        src = inspect.getsource(pool.ConnectionPool._get_or_create_pool)
+        self.assertIn("reset=None", src)
+        self.assertIn(
+            "_reset_returned_connection",
+            _callees(pool.ConnectionPool.give_back),
+            "with reset= set, psycopg_pool hands every return to its one "
+            "worker and getconn grows the pool rather than wait for it: 8 "
+            "threads held 63 backends; reset on the returning thread instead",
+        )
 
     def test_a_pooled_borrow_that_fails_after_the_connection_arrived_releases_it(self):
         p = pool.ConnectionPool(maxconn=2)

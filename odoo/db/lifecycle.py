@@ -6,7 +6,6 @@ import psycopg
 from psycopg import IsolationLevel
 from psycopg.adapt import Loader
 from psycopg.pq import ExecStatus
-from psycopg_pool import ConnectionPool as _PsycopgPool
 
 from odoo.libs.debug_log import DebugLog
 
@@ -104,10 +103,21 @@ def _configure_connection(conn: psycopg.Connection, *, readonly: bool = False) -
 # BEGIN folded in (so no autocommit toggle around it) and none of the
 # per-statement machinery psycopg's execute() runs -- 14 us against 24 us,
 # on a path taken once per cursor cycle.
-def _run_session_reset(conn: psycopg.Connection, sql: str) -> None:
-    result = conn.pgconn.exec_(sql.encode())
-    if result.status != ExecStatus.COMMAND_OK:
+def _run_simple_query(conn: psycopg.Connection, sql: bytes, expected: int) -> None:
+    result = conn.pgconn.exec_(sql)
+    if result.status != expected:
         raise psycopg.OperationalError(result.get_error_message())
+
+
+def _run_session_reset(conn: psycopg.Connection, sql: str) -> None:
+    _run_simple_query(conn, sql.encode(), ExecStatus.COMMAND_OK)
+
+
+# The empty query is what psycopg_pool's own check sends, minus the autocommit
+# toggle it wraps around execute(): 8 us against 12.7. A terminated backend
+# answers FATAL_ERROR once and raises OperationalError after.
+def _probe_liveness(conn: psycopg.Connection) -> None:
+    _run_simple_query(conn, b"", ExecStatus.EMPTY_QUERY)
 
 
 def _reset_connection(
@@ -146,4 +156,4 @@ def _check_connection(conn: psycopg.Connection, *, grace: float | None = None) -
         "connection.healthcheck",
         idle_s=None if idle_since is None else monotonic() - idle_since,
     ):
-        _PsycopgPool.check_connection(conn)
+        _probe_liveness(conn)

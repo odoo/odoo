@@ -232,10 +232,23 @@ library.
   plus its scheduler thread is a per-*pool* figure, and this class holds one pool
   per database: measured, 12 databases in one process held 49 threads and 40 held
   161 — 4.0 each — for +135 KB RSS apiece and 0.35% of one core while completely
-  idle. The workers only run `AddConnection` and `ReturnConnection`, and psycopg
-  already runs returns off the caller's thread, so the extra two buy parallelism
-  between returns *of the same database*. The default is 1, which is 2.0 threads
-  per database.
+  idle. The workers now run `AddConnection` only (see the next entry), so the
+  extra two buy parallelism between connection *opens* of the same database.
+  The default is 1, which is 2.0 threads per database.
+- **The session reset runs on the returning thread, and the psycopg pool is
+  built with `reset=None`.** With a `reset=` callback, `putconn` hands every
+  return to the pool's worker and the next `getconn` finds nothing idle — so
+  psycopg_pool *grows* the pool rather than wait for the connection in flight.
+  Measured: a single-threaded open/`SELECT 1`/close loop held **14 backends**,
+  and 8 request threads held **63**, the `maxconn` ceiling, with every return
+  for the database queueing behind one worker thread. `give_back` resets
+  first (`_reset_returned_connection`; a reset that raises discards the
+  connection the way a failed rollback does) and `putconn` then files an idle
+  connection synchronously. Same loops afterwards: **1 backend**, and backends
+  equal to the thread count at 8/16/32 threads, with **+20% / +7% / +13%
+  throughput**. The one number that goes the other way is the serial loop,
+  **117 → 140 µs per cycle**: the returning thread now waits for the round
+  trip that seven spare backends used to hide.
 - **A pooled connection's transaction flags are set once, and the session
   reset goes through libpq's simple-query call.** `Cursor.__init__` used to
   set `isolation_level` and `read_only` on every borrow and `_reset_connection`
@@ -251,7 +264,12 @@ library.
   `int`, never the `ExecStatus` member: an identity comparison passed against a
   fake and failed every live reset (each return discarded the connection and
   the cycle read 2.2 ms), which is why `tests/test_lifecycle.py`'s fake returns
-  the `int`. Cycle (open, `SELECT 1`, close): **160 µs → 134 µs**. The
+  the `int`. The liveness `check` sends the same empty simple query
+  psycopg_pool's own `check_connection` does, minus the `autocommit` toggle it
+  wraps around `execute()` (8 µs against 12.7); a terminated backend answers
+  `FATAL_ERROR` once and raises after, and `_probe_liveness` raises on
+  anything but `EMPTY_QUERY` so the pool discards. Cycle (open, `SELECT 1`,
+  close) before the inline reset below: **160 µs → 134 µs**. The
   `__init__` guard also no longer re-reads `pool.readonly` for its own debug
   line — a pool attribute that raised there escaped before `give_back` ran.
 - **A cursor close only discards a DAMAGED connection**: `Cursor._close` asks

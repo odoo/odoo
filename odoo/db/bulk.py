@@ -283,20 +283,6 @@ class _BulkAccessMixin:
             return [] if fetch else None
         self._before_statement()
         results = []
-        width = max(
-            (len(row) if isinstance(row, (list, tuple)) else 1 for row in argslist),
-            default=1,
-        )
-        if page_size * width > _MAX_BIND_PARAMS:
-            clamped = max(1, _MAX_BIND_PARAMS // width)
-            _debug.logic(
-                "bulk.execute_values_page_clamped",
-                page_size=page_size,
-                width=width,
-                clamped=clamped,
-            )
-            page_size = clamped
-        batches = range(0, len(argslist), page_size)
         prefix, suffix = query[:marker_pos], query[marker_pos + 2 :]
         use_pipeline = len(argslist) > page_size and not fetch
         ctx = (
@@ -305,24 +291,32 @@ class _BulkAccessMixin:
             else _nullcontext()
         )
         ph_by_len: dict[int, str] = {}
+        batches = 0  # debuglog
+        clamped = 0  # debuglog
         with _debug.perf(
             "bulk.execute_values",
             cr=self,
             db=getattr(self, "dbname", None),
             rows=len(argslist),
             page_size=page_size,
-            batches=len(batches),
             pipelined=use_pipeline,
             fetch=fetch,
             template=template is not None,
         ) as span:
             with ctx:
-                for i in batches:
-                    batch = argslist[i : i + page_size]
+                i, n = 0, len(argslist)
+                while i < n:
                     placeholders = []
                     params: list[Any] = []
-                    for row in batch:
+                    # A page is `page_size` rows, or fewer when the widest rows
+                    # would push one statement past the uint16 bind-parameter
+                    # limit; decided per row here, so the rows are walked once.
+                    while i < n and len(placeholders) < page_size:
+                        row = argslist[i]
                         if isinstance(row, (list, tuple)):
+                            if len(params) + len(row) > _MAX_BIND_PARAMS and params:
+                                clamped += 1  # debuglog
+                                break
                             if template:
                                 placeholders.append(template)
                             elif (ph := ph_by_len.get(len(row))) is not None:
@@ -335,11 +329,13 @@ class _BulkAccessMixin:
                         else:
                             placeholders.append(template or "(%s)")
                             params.append(row)
+                        i += 1
                     full_query = f"{prefix}{', '.join(placeholders)}{suffix}"
                     self.execute(full_query, params, log_exceptions)
+                    batches += 1  # debuglog
                     if fetch:
                         results.extend(self.fetchall())
-            span.set(fetched=len(results))
+            span.set(fetched=len(results), batches=batches, clamped_pages=clamped)
         return results if fetch else None
 
     def copy_from(

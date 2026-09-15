@@ -593,3 +593,35 @@ class TestEnableLogging(unittest.TestCase):
             self.assertEqual(logger.level, logging.WARNING)
         finally:
             logger.setLevel(logging.NOTSET)
+
+
+class TestConnectionRecord(unittest.TestCase):
+    class _Pool:
+        readonly = False
+
+        def __init__(self):
+            self.borrowed: list = []
+
+        def borrow(self, dsn, key=None):
+            self.borrowed.append((dsn, key))
+            raise RuntimeError("stop before a real connection")
+
+    def test_dsn_strips_the_password_and_expands_a_uri(self):
+        from odoo.db.cursor import Connection
+
+        conn = Connection(self._Pool(), "dbz", {"dsn": "postgresql://u:s3cret@h/dbz"})
+        self.assertEqual(conn.dbname, "dbz")
+        self.assertEqual(conn.dsn, {"user": "u", "host": "h", "dbname": "dbz"})
+
+    def test_cursor_borrows_with_the_key_computed_once(self):
+        from odoo.db.cursor import Connection
+        from odoo.db.dsn import _get_dsn_key
+
+        pool = self._Pool()
+        info = {"dbname": "x", "host": "h", "password": "hunter2"}
+        conn = Connection(pool, "x", info)
+        for _ in range(2):
+            with self.assertRaisesRegex(RuntimeError, "stop before"):
+                conn.cursor()
+        self.assertEqual(pool.borrowed, [(info, _get_dsn_key(info))] * 2)
+        self.assertNotIn("hunter2", str(sorted(pool.borrowed[0][1])))
