@@ -330,13 +330,15 @@ class ResourceCalendar(models.Model):
         # Strictly speaking comparing start_dt < time or start_dt.astimezone(tz) < time
         # should always yield the same result. however while working with dates it is easier
         # if all dates have the same format
-        result_per_tz = {
-            tz: [(max(bounds_per_tz[tz][0], val[0].replace(tzinfo=tz)),
-                min(bounds_per_tz[tz][1], val[1].replace(tzinfo=tz)),
-                val[2])
-                    for val in base_result]
-            for tz in resources_per_tz
-        }
+        result_per_tz = {}
+        for tz, (lower_bound, upper_bound) in bounds_per_tz.items():
+            offsets = self._get_duration_based_offsets(base_result, lower_bound, upper_bound)
+            result_per_tz[tz] = [
+                (max(lower_bound, (val[0] + offsets[val[0].date()]).replace(tzinfo=tz)),
+                 min(upper_bound, (val[1] + offsets[val[0].date()]).replace(tzinfo=tz)),
+                 val[2])
+                for val in base_result
+            ]
         result_per_resource_id = dict()
         for tz, tz_resources in resources_per_tz.items():
             res = result_per_tz[tz]
@@ -425,6 +427,38 @@ class ResourceCalendar(models.Model):
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
+
+    def _get_duration_based_offsets(self, base_result, lower_bound, upper_bound):
+        """ Duration based attendances only define how many hours are worked on a day,
+        not when they are worked, so they are arbitrarily centered around midday. A
+        period requested outside of that centered block, e.g. 16:00 -> 20:00 for an
+        8 hours day, would therefore not overlap any working time at all.
+
+        Return, per day, the offset to apply to that day's attendances so they are
+        slid inside the day towards the requested period. Days already overlapping
+        the requested period keep their centered position.
+        """
+        intervals_per_day = defaultdict(list)
+        for day_from, day_to, attendance in base_result:
+            if attendance.duration_based:
+                intervals_per_day[day_from.date()].append((day_from, day_to))
+        # intervals are still expressed as wall clock time, compare the bounds as such
+        lower_bound = lower_bound.replace(tzinfo=None)
+        upper_bound = upper_bound.replace(tzinfo=None)
+        offsets = defaultdict(timedelta)
+        for date, intervals in intervals_per_day.items():
+            day_start = datetime.combine(date, time.min)
+            day_end = day_start + timedelta(days=1)
+            period_start = max(day_start, lower_bound)
+            period_end = min(day_end, upper_bound)
+            # the whole block is moved at once to keep consecutive attendances contiguous
+            block_start = min(start for start, _stop in intervals)
+            block_end = max(stop for _start, stop in intervals)
+            if block_end <= period_start:
+                offsets[date] = min(period_start - block_start, day_end - block_end)
+            elif block_start >= period_end:
+                offsets[date] = -min(block_end - period_end, block_start - day_start)
+        return offsets
 
     def _handle_flexible_leave_interval(self, dt0, dt1, leave):
         """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
