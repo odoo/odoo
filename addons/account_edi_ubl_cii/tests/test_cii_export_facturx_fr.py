@@ -27,6 +27,8 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             'email': 'mycompany@company.com',
             'phone': '+33 499 65 43 21',
             'additional_identifiers': False,
+            'routing_scheme': '9957',
+            'routing_endpoint': company.vat,
         })
         return company
 

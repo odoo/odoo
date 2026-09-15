@@ -42,3 +42,14 @@ class ResPartner(models.Model):
         identifier_fields = super()._get_identifier_fields()
         identifier_fields.extend(['FR_SIRET', 'FR_SIREN'])
         return identifier_fields
+
+    def _get_preferred_routing_identifier_vals(self, force_recompute=False):
+        identifier_vals = super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+        partner = self.commercial_partner_id or self
+        if (
+            partner.country_code == 'FR'
+            and identifier_vals.get('key') == 'FR_VAT'
+            and (siren := partner._l10n_fr_get_siren_from_vat())
+        ):
+            return {'scheme': '0225', 'value': siren, 'key': 'FR_CTC'}
+        return identifier_vals

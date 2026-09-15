@@ -47,7 +47,11 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'vat': 'FR23334175221',
             'invoice_edi_format': 'ubl_21_fr',
         })
-        self.assertFalse(partner_pdp.l10n_fr_is_pdp)
+        self.assertTrue(partner_pdp.l10n_fr_is_pdp)
+        self.assertEqual(partner_pdp._l10n_fr_pdp_get_siren(), '334175221')
+        self.assertEqual(partner_pdp.routing_identifier, '0225:334175221')
+        contact = self.env['res.partner'].create({'name': 'French contact', 'parent_id': partner_pdp.id})
+        self.assertEqual(contact._l10n_fr_pdp_get_siren(), '334175221')
         # Setting the endpoint explicitly routes the partner via PDP (EAS 0225).
         partner_pdp.routing_identifier = '0225:968515759_96851575905808'
         self.assertTrue(partner_pdp.l10n_fr_is_pdp)
