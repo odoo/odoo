@@ -34,7 +34,9 @@ export class DeviceSelect extends Component {
         this.rootRef = signal();
         this.userDevices = signal.Array([], { type: t.instanceOf(MediaDeviceInfo) });
         this.selectedDevice = computed(() =>
-            this.userDevices().find((device) => this.isSelected(device.deviceId))
+            this.userDevices().find(
+                (device) => device.kind === this.props.kind && this.isSelected(device.deviceId)
+            )
         );
         this.abortController = new AbortController();
         this.isBrowserChrome = isBrowserChrome();
