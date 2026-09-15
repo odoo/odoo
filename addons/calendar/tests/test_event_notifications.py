@@ -720,14 +720,13 @@ class TestEventNotifications(CalendarMailCommon):
             wizard.action_send_mail_and_delete()
         self.assertEqual(len(self._new_mails), 1)
 
-    def test_get_next_potential_limit_alarm(self):
+    def test_get_next_notif(self):
         """
-            Test that the next potential limit alarm is correctly computed for notification alarms.
+            Test that the next notifications are correctly computed for recurring events.
         """
-        now = fields.Datetime.now()
+        now = datetime(2024, 1, 10, 8, 0)
+        self.user.partner_id.calendar_last_notif_ack = now - relativedelta(days=2)
         start = now - relativedelta(days=1)
-        while start.weekday() > 4:
-            start -= relativedelta(days=1)
         stop = start + relativedelta(hours=1)
         next_month = now + relativedelta(days=30)
         weekday_flags = ['mon', 'tue', 'wed', 'thu', 'fri']
@@ -735,7 +734,6 @@ class TestEventNotifications(CalendarMailCommon):
         weekday_dict = {flag: False for flag in weekday_flags}
         weekday_dict[weekday_flag] = True
 
-        partner = self.user.partner_id
         # until_date event first alarm
         alarm = self.env['calendar.alarm'].create({
             'name': 'Alarm',
@@ -749,7 +747,7 @@ class TestEventNotifications(CalendarMailCommon):
             'stop': stop,
             'name': 'Weekly Sales Meeting',
             'alarm_ids': [[6, 0, [alarm.id]]],
-            'partner_ids': [(4, self.partner.id)],
+            'partner_ids': [(4, self.user.partner_id.id)],
         }
         self.event.write(event_vals)
         self.event._apply_recurrence_values({
@@ -761,10 +759,12 @@ class TestEventNotifications(CalendarMailCommon):
         })
         events = self.env['calendar.event'].search([('name', '=', 'Weekly Sales Meeting')])
         self.env.flush_all()
-        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
-        for alarm_data in result.values():
-            first_alarm = alarm_data.get('first_alarm')
-            self.assertLess(now, first_alarm)
+        # 2 hours before the next occurrence, so it enters the 24 hours notification window
+        with self.mock_datetime_and_now(start + relativedelta(days=7, hours=-2)):
+            result = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(len(result), 1)
+        first_alarm = fields.Datetime.from_string(result[0]['notify_at'])
+        self.assertEqual(first_alarm, start + relativedelta(days=7) - relativedelta(minutes=15))
         events.unlink()
 
         # count event last alarm
@@ -776,7 +776,7 @@ class TestEventNotifications(CalendarMailCommon):
             'stop': stop,
             'name': 'Daily Sales Meeting',
             'alarm_ids': [[6, 0, [alarm.id]]],
-            'partner_ids': [(4, self.partner.id)],
+            'partner_ids': [(4, self.user.partner_id.id)],
         }
         self.event = self.env['calendar.event'].create(event_vals)
         self.event._apply_recurrence_values({
@@ -786,9 +786,44 @@ class TestEventNotifications(CalendarMailCommon):
             'count': recurrence_count
         })
         self.env.flush_all()
-        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
-        expected_alarms = sorted([stop + relativedelta(days=offset) - relativedelta(minutes=15) for offset in range(1, recurrence_count)])
-        actual_alarms = sorted([data.get('last_alarm') for data in result.values()])
-
+        # during the second occurrence: its own alarm and the third occurrence's one are due
+        with self.mock_datetime_and_now(now + relativedelta(minutes=30)):
+            result = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(len(result), 2)
+        expected_alarms = sorted(start + relativedelta(days=offset) - relativedelta(minutes=15) for offset in range(1, recurrence_count))
+        actual_alarms = sorted(fields.Datetime.from_string(notif['notify_at']) for notif in result)
         for expected, actual in zip(expected_alarms, actual_alarms):
             self.assertEqual(actual, expected)
+
+    def test_get_next_potential_limit_alarm_cross_user_horizon(self):
+        # archive unrelated events (e.g. demo data) so they don't affect the horizon
+        self.env['calendar.event'].search([('alarm_ids', '!=', False)]).action_archive()
+        now = fields.Datetime.now()
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
+        my_event = self.env['calendar.event'].create({
+            'name': 'My Meeting',
+            'start': now + relativedelta(hours=2),
+            'stop': now + relativedelta(hours=3),
+            'alarm_ids': [(6, 0, alarm.ids)],
+            'partner_ids': [(4, self.user.partner_id.id)],
+        })
+
+        result_before = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual([r['event_id'] for r in result_before], my_event.ids, "The partner's upcoming alarm should be returned")
+
+        # another user's event, not attended by self.partner, with an earlier alarm
+        self.env['calendar.event'].create({
+            'name': 'Someone Else Meeting',
+            'start': now + relativedelta(minutes=30),
+            'stop': now + relativedelta(hours=1),
+            'alarm_ids': [(6, 0, alarm.ids)],
+            'partner_ids': [(4, self.user_employee_2.partner_id.id)],
+        })
+
+        result_after = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(result_after, result_before, "Another user's earlier alarm must not hide the partner's next alarm")
