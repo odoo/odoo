@@ -3,12 +3,24 @@ import logging
 from typing import Any, Self
 from urllib.parse import urlparse
 
+import requests
+
 from odoo import api, fields, models
+from odoo.db import get_or_create_row
 from odoo.exceptions import ValidationError
+from odoo.libs import redact
 
 from ..tools.api_client import is_private_host
+from ..tools.connection_gate import (
+    CONNECTION_CONTEXT_KEY,
+    ConnectionUnavailable,
+    breaker_for,
+    is_failure,
+)
 
 _logger = logging.getLogger(__name__)
+
+_CIRCUIT_PENDING_KEY = "integration.connection.circuit"
 
 SYNCED_FIELDS = {
     "company_id": "company_id",
@@ -82,6 +94,60 @@ class IntegrationConnection(models.Model):
         readonly=True,
         help="Kept in step with its credential's Outbound Endpoint, company, owner, "
         "environment and priority, for code that still binds credentials that way.",
+    )
+    res_model = fields.Char(
+        string="Serves Model",
+        index=True,
+        readonly=True,
+        help="The model of the record this connection belongs to: a payment "
+        "provider, a terminal, a carrier.",
+    )
+    res_id = fields.Many2oneReference(
+        model_field="res_model",
+        string="Serves Record",
+        readonly=True,
+    )
+    breaker_failure_threshold = fields.Integer(
+        string="Failures Before Pausing",
+        default=5,
+        help="Transport errors, timeouts and 5xx answers within the failure window "
+        "that pause the connection. A 4xx answer is the provider's reply and does "
+        "not count.",
+    )
+    breaker_failure_window = fields.Integer(
+        string="Failure Window (s)",
+        default=60,
+    )
+    breaker_max_cooldown = fields.Integer(
+        string="Longest Pause (s)",
+        default=300,
+        help="A paused connection lets one call through after its pause; each "
+        "failed probe doubles the pause up to this.",
+    )
+    budget_requests = fields.Integer(
+        string="Call Budget",
+        default=600,
+        help="Calls allowed per budget window, shared by every worker. 0 turns the "
+        "budget off.",
+    )
+    budget_window_seconds = fields.Integer(
+        string="Budget Window (s)",
+        default=60,
+    )
+    circuit_state = fields.Selection(
+        selection=[("closed", "Calling"), ("open", "Paused")],
+        default="closed",
+        readonly=True,
+        help="Paused after repeated failures: calls fail at once instead of "
+        "waiting for their timeout, until a probe succeeds.",
+    )
+    last_success_at = fields.Datetime(readonly=True)
+    last_failure_at = fields.Datetime(readonly=True)
+    last_error = fields.Char(readonly=True)
+
+    _record_unique = models.UniqueIndex(
+        "(res_model, res_id) WHERE res_model IS NOT NULL",
+        "A record has one connection.",
     )
 
     @api.depends("name", "service_id", "company_id", "environment", "user_id")
@@ -289,6 +355,165 @@ class IntegrationConnection(models.Model):
                     credential.custom_headers[:100],
                 )
         return headers
+
+    @api.model
+    def _for_record(self, record, service_code: str, service_name: str, category: str):
+        record.check_singleton()
+        connections = self.sudo().with_context(active_test=False)
+        domain = [("res_model", "=", record._name), ("res_id", "=", record.id)]
+        connection = connections.search(domain, limit=1)
+        if connection:
+            return connection
+        service = self.env["integration.service"]._get_per_record_service(
+            service_code, service_name, category
+        )
+        company = record["company_id"] if "company_id" in record._fields else None
+        connection, _created = get_or_create_row(
+            self.env.cr,
+            lambda: connections.create(
+                {
+                    "name": record.display_name,
+                    "service_id": service.id,
+                    "company_id": company.id if company else False,
+                    "environment": service.environment,
+                    "res_model": record._name,
+                    "res_id": record.id,
+                }
+            ),
+            lambda: connections.search(domain, limit=1),
+            conflict=f"integration.connection for {record._name},{record.id}",
+        )
+        return connection
+
+    def _egress_session(self, purpose: str, **session_options: Any):
+        self.check_singleton()
+        connection = self.sudo()
+        session = (
+            self.env["ir.egress"]
+            .with_context(**{CONNECTION_CONTEXT_KEY: connection.id})
+            .session(purpose=purpose, **session_options)
+        )
+        send = session.request
+
+        def request(method, url, *args, **kwargs):
+            connection._admit_call()
+            try:
+                response = send(method, url, *args, **kwargs)
+            except requests.RequestException as error:
+                connection._settle_call(error=error)
+                raise
+            connection._settle_call(response=response)
+            return response
+
+        session.request = request
+        return session
+
+    def _egress_request(self, method: str, url: str, *, purpose: str, **kwargs: Any):
+        session_options = {
+            name: kwargs.pop(name)
+            for name in ("policy", "max_bytes", "max_seconds", "max_redirects")
+            if name in kwargs
+        }
+        session = self._egress_session(purpose, **session_options)
+        if kwargs.get("stream"):
+            return session.request(method, url, **kwargs)
+        with session:
+            return session.request(method, url, **kwargs)
+
+    def _zeep_transport(self, purpose: str, timeout: float = 30.0):
+        from zeep.transports import Transport  # pylint: disable=import-outside-toplevel
+
+        return Transport(  # noqa: E8518 - zeep sends through the connection's ir.egress session
+            session=self._egress_session(purpose),
+            timeout=timeout,
+            operation_timeout=timeout,
+        )
+
+    def _admit_call(self) -> None:
+        self.check_singleton()
+        if not breaker_for(self.env, self).acquire_attempt():
+            raise ConnectionUnavailable(
+                self.env._(
+                    "%(connection)s is paused after repeated failures; it will be "
+                    "tried again shortly.",
+                    connection=self.display_name,
+                )
+            )
+        if self.budget_requests > 0 and not self.env[
+            "rate.limit.bucket"
+        ].consume_for_key(
+            f"integration.connection:{self.id}",
+            subject_model=self._name,
+            subject_id=self.id,
+            capacity=float(self.budget_requests),
+            window_seconds=max(self.budget_window_seconds, 1),
+            company_id=self.company_id.id or None,
+        ):
+            raise ConnectionUnavailable(
+                self.env._(
+                    "%(connection)s has used its call budget of %(budget)s calls per "
+                    "%(window)s seconds.",
+                    connection=self.display_name,
+                    budget=self.budget_requests,
+                    window=self.budget_window_seconds,
+                )
+            )
+
+    def _settle_call(self, response=None, error: BaseException | None = None) -> None:
+        self.check_singleton()
+        breaker = breaker_for(self.env, self)
+        was_closed = breaker.closed
+        if is_failure(response, error):
+            breaker.record_failure()
+            if was_closed and not breaker.closed:
+                self._queue_circuit_values(
+                    {
+                        "circuit_state": "open",
+                        "last_failure_at": fields.Datetime.now(),
+                        "last_error": redact.mask_text(
+                            str(error)
+                            if error is not None
+                            else f"HTTP {response.status_code}"
+                        )[:250],
+                    }
+                )
+            return
+        breaker.record_success()
+        if not was_closed:
+            self._queue_circuit_values(
+                {"circuit_state": "closed", "last_success_at": fields.Datetime.now()}
+            )
+
+    def _queue_circuit_values(self, vals: dict[str, Any]) -> None:
+        cr = self.env.cr
+        pending = cr.precommit.data.get(_CIRCUIT_PENDING_KEY)
+        if pending is None:
+            pending = cr.precommit.data[_CIRCUIT_PENDING_KEY] = {}
+            registry = self.env.registry
+            connections = self.sudo()
+
+            @cr.precommit.add
+            def write_circuit_states():
+                for connection_id, values in pending.items():
+                    connections.browse(connection_id).exists().write(values)
+
+            @cr.postrollback.add
+            def keep_circuit_states_of_rolled_back_transaction():
+                if not pending:
+                    return
+                try:
+                    with registry.cursor() as state_cr:
+                        env = api.Environment(state_cr, api.SUPERUSER_ID, {})
+                        for connection_id, values in pending.items():
+                            env[self._name].browse(connection_id).exists().write(values)
+                except Exception:
+                    _logger.warning(
+                        "Could not record the state of %s connection(s)",
+                        len(pending),
+                        exc_info=True,
+                    )
+
+        pending.setdefault(self.id, {}).update(vals)
 
     @api.model
     def _sync_from_credentials(self, credentials) -> None:

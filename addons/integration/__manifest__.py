@@ -1,6 +1,6 @@
 {
     "name": "Integration",
-    "version": "19.0.1.31.0",
+    "version": "19.0.1.32.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Inbound and outbound API transport with auth, rate limiting, retry and logging",

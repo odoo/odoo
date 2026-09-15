@@ -56,6 +56,13 @@ class IntegrationExchange(models.Model):
         ondelete="set null",
         help="Credential used for this communication",
     )
+    connection_id = fields.Many2one(
+        comodel_name="integration.connection",
+        index="btree_not_null",
+        ondelete="set null",
+        help="The record's connection the call went through: which provider, "
+        "terminal or carrier it was for.",
+    )
     display_name = fields.Char(
         compute="_compute_display_name",
         store=True,

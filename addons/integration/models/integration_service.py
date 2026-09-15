@@ -5,6 +5,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from odoo import api, fields, models
+from odoo.db import get_or_create_row
 from odoo.exceptions import ValidationError
 
 from ..tools.api_client import is_private_host
@@ -303,6 +304,30 @@ class IntegrationService(models.Model):
         "UNIQUE(code)",
         "Service code must be unique!",
     )
+
+    @api.model
+    def _get_per_record_service(self, code: str, name: str, category: str):
+        services = self.sudo().with_context(active_test=False)
+        service = services.search([("code", "=", code)], limit=1)
+        if service:
+            return service
+        service, _created = get_or_create_row(
+            self.env.cr,
+            lambda: services.create(
+                {
+                    "name": name,
+                    "code": code,
+                    "category": category,
+                    "per_record_connections": True,
+                    "auth_type": "none",
+                    "rate_limit_enabled": False,
+                    "health_check_enabled": False,
+                }
+            ),
+            lambda: services.search([("code", "=", code)], limit=1),
+            conflict=f"integration.service {code!r}",
+        )
+        return service
 
     @api.constrains("code")
     def _check_code_format(self):

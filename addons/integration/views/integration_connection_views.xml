@@ -15,6 +15,12 @@
                 <field name="credential_id" />
                 <field name="base_url" optional="show" />
                 <field name="synced_from_credential" optional="hide" />
+                <field
+                    name="circuit_state"
+                    widget="badge"
+                    optional="show"
+                    decoration-danger="circuit_state == 'open'" />
+                <field name="last_failure_at" optional="hide" />
                 <field name="service_environment" column_invisible="True" />
                 <field name="active" column_invisible="True" />
             </list>
@@ -54,6 +60,33 @@
                             <field name="synced_from_credential" />
                         </group>
                     </group>
+                    <notebook>
+                        <page name="protection" string="Protection">
+                            <group>
+                                <group string="Pause after failures">
+                                    <field name="breaker_failure_threshold" />
+                                    <field name="breaker_failure_window" />
+                                    <field name="breaker_max_cooldown" />
+                                </group>
+                                <group string="Call budget">
+                                    <field name="budget_requests" />
+                                    <field
+                                        name="budget_window_seconds"
+                                        invisible="not budget_requests" />
+                                </group>
+                                <group string="Health">
+                                    <field name="circuit_state" widget="badge" />
+                                    <field name="last_success_at" />
+                                    <field name="last_failure_at" />
+                                    <field name="last_error" />
+                                </group>
+                                <group string="Serves" invisible="not res_model">
+                                    <field name="res_model" />
+                                    <field name="res_id" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

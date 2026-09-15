@@ -6,6 +6,7 @@ import requests
 from odoo import api, fields, models
 from odoo.libs import redact
 
+from ..tools.connection_gate import CONNECTION_CONTEXT_KEY
 from ..tools.exchange_queue import queue_exchange_values
 
 UNRECORDED_PURPOSES = frozenset(
@@ -147,6 +148,7 @@ def _queue_egress(env, purpose, method, url, started, response, error):
         "duration_ms": (time.monotonic() - started) * 1000,
         "date_completed": fields.Datetime.now(),
         "tags": f"egress:{purpose}",
+        "connection_id": env.context.get(CONNECTION_CONTEXT_KEY) or False,
     }
     if response is not None:
         status = response.status_code
