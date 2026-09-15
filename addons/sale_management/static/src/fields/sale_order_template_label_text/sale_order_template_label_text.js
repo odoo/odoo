@@ -19,7 +19,8 @@ export class SaleOrderTemplateLabelTextField extends AccountLabelTextField {
     }
 
     get productDomain() {
-        return [["sale_ok", "=", true]];
+        // Combo products aren't supported on quotation template lines.
+        return [["sale_ok", "=", true], ["type", "!=", "combo"]];
     }
 
     get canEditProduct() {
