@@ -4,6 +4,8 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { loadEmoji, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
+/** @typedef {import("@web/core/emoji_picker/emoji_picker").EmojiPicker} EmojiPicker */
+
 /**
  * @typedef {Object} Props
  * @property {Object} action
@@ -92,7 +94,11 @@ export class QuickReactionMenu extends Component {
         }
     }
 
-    toggleReaction(emoji) {
+    /**
+     * @param {string} emoji
+     * @param {boolean} [resetOnSelect=true] {@link EmojiPicker.selectEmoji}
+     */
+    toggleReaction(emoji, resetOnSelect = true) {
         const reaction = this.props.message.reactions.find(
             (r) => r.content === emoji && this.props.message.effectiveSelf.in(r.personas)
         );
@@ -102,8 +108,10 @@ export class QuickReactionMenu extends Component {
             this.props.message.react(emoji);
             this.frequentEmojiService.incrementEmojiUsage(emoji);
         }
-        this.dropdown.close();
-        this.picker.close();
+        if (resetOnSelect) {
+            this.dropdown.close();
+            this.picker.close();
+        }
     }
 
     get attClass() {
