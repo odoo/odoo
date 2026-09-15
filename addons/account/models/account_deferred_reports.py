@@ -979,7 +979,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
                     )
                     deferred_lines.append(
                         Command.create(
-                            self.env["account.move.line"]._get_deferred_lines_values(
+                            self.env["account.move.line"]._prepare_deferred_lines_values(
                                 account_id=line["account_id"],
                                 balance=deferred_balance,
                                 ref=ref,
@@ -1008,7 +1008,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
                     )
             deferral_lines.append(
                 Command.create(
-                    self.env["account.move.line"]._get_deferred_lines_values(
+                    self.env["account.move.line"]._prepare_deferred_lines_values(
                         account_id=deferred_account.id,
                         balance=balance,
                         ref=ref,

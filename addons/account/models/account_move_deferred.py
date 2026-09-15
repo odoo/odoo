@@ -241,7 +241,7 @@ class AccountMove(models.Model):
                 {
                     **self.env[
                         "account.move.line"
-                    ]._get_deferred_amounts_by_line_values(line),
+                    ]._prepare_deferred_amounts_by_line_values(line),
                     **columns,
                 }
             )
@@ -361,7 +361,7 @@ class AccountMove(models.Model):
             lines_vals.append(
                 [
                     {
-                        **self.env["account.move.line"]._get_deferred_lines_values(
+                        **self.env["account.move.line"]._prepare_deferred_lines_values(
                             account.id,
                             coeff * balance,
                             move_vals["ref"],
@@ -425,7 +425,7 @@ class AccountMove(models.Model):
                 lines_vals_to_create.append(
                     [
                         {
-                            **self.env["account.move.line"]._get_deferred_lines_values(
+                            **self.env["account.move.line"]._prepare_deferred_lines_values(
                                 account.id,
                                 coeff * line.balance,
                                 ref,
@@ -709,7 +709,7 @@ class AccountMoveLine(models.Model):
             return periods
 
     @api.model
-    def _get_deferred_amounts_by_line_values(self, line):
+    def _prepare_deferred_amounts_by_line_values(self, line):
         return {
             "account_id": line["account_id"],
             "product_id": line["product_id"]
@@ -723,7 +723,7 @@ class AccountMoveLine(models.Model):
         }
 
     @api.model
-    def _get_deferred_lines_values(
+    def _prepare_deferred_lines_values(
         self, account_id, balance, ref, analytic_distribution, line=None
     ):
         return {
