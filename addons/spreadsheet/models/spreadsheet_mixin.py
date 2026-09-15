@@ -22,19 +22,37 @@ class SpreadsheetMixin(models.AbstractModel):
     _description = "Spreadsheet mixin"
     _auto = False
 
-    spreadsheet_binary_data = fields.Binary(
+    # Spreadsheet stored in the filestore
+    spreadsheet_binary_data_computed = fields.Binary(        
         string="Spreadsheet file",
+        compute="_compute_spreadsheet_binary_data",
+        inverse="_inverse_spreadsheet_binary_data"
+    )
+    spreadsheet_binary_data = fields.Binary()
+    spreadsheet_binary_text = fields.Binary(
         default=lambda self: BinaryBytes(self._empty_spreadsheet_data_bin()),
+        attachment=False
     )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
     spreadsheet_file_name = fields.Char(compute='_compute_spreadsheet_file_name')
     thumbnail = fields.Binary()
+    
+    @api.depends("spreadsheet_binary_data", "spreadsheet_binary_text")
+    def _compute_spreadsheet_binary_data(self):
+        for record in self:
+            record.spreadsheet_binary_data_computed = record.spreadsheet_binary_text or record.spreadsheet_binary_data
 
-    @api.constrains("spreadsheet_binary_data")
+    def _inverse_spreadsheet_binary_data(self):
+        for record in self:
+            record.spreadsheet_binary_text = record.spreadsheet_binary_data_computed
+            if record.spreadsheet_binary_data:
+                record.spreadsheet_binary_data = False
+
+    @api.constrains("spreadsheet_binary_data_computed")
     def _check_spreadsheet_data(self):
-        for spreadsheet in self.filtered("spreadsheet_binary_data"):
+        for spreadsheet in self.filtered("spreadsheet_binary_data_computed"):
             try:
-                data = json.loads(spreadsheet.spreadsheet_binary_data.content)
+                data = json.loads(spreadsheet.spreadsheet_binary_data_computed.content)
             except (json.JSONDecodeError, UnicodeDecodeError):
                 raise ValidationError(_("Uh-oh! Looks like the spreadsheet file contains invalid data."))
             if not (tools.config['test_enable'] or tools.config['test_file']):
@@ -75,24 +93,24 @@ class SpreadsheetMixin(models.AbstractModel):
                     ),
                 )
 
-    @api.depends("spreadsheet_binary_data")
+    @api.depends("spreadsheet_binary_data_computed")
     def _compute_spreadsheet_data(self):
         for spreadsheet in self:
-            spreadsheet.spreadsheet_data = spreadsheet.spreadsheet_binary_data.decode()
+            spreadsheet.spreadsheet_data = spreadsheet.spreadsheet_binary_data_computed.decode()
 
     def _inverse_spreadsheet_data(self):
         for spreadsheet in self:
             if not spreadsheet.spreadsheet_data:
-                spreadsheet.spreadsheet_binary_data = False
+                spreadsheet.spreadsheet_binary_data_computed = False
             else:
-                spreadsheet.spreadsheet_binary_data = BinaryBytes(spreadsheet.spreadsheet_data.encode())
+                spreadsheet.spreadsheet_binary_data_computed = BinaryBytes(spreadsheet.spreadsheet_data.encode())
 
     @api.depends('display_name')
     def _compute_spreadsheet_file_name(self):
         for spreadsheet in self:
             spreadsheet.spreadsheet_file_name = f"{spreadsheet.display_name}.osheet.json"
 
-    @api.onchange('spreadsheet_binary_data')
+    @api.onchange('spreadsheet_binary_data_computed')
     def _onchange_data_(self):
         self._check_spreadsheet_data()
 
@@ -169,3 +187,14 @@ class SpreadsheetMixin(models.AbstractModel):
             access_token=query_args.get('access_token', [])[0],
         )
         return self.env['ir.binary']._get_stream_from(file_record).read()
+    
+    def _migrate_to_sql(self, batch_size=20):
+        domain = [("spreadsheet_binary_data", "!=", False)]
+        spreadsheets = self.search(domain, limit=batch_size)
+        remaining = len(spreadsheets) if len(spreadsheets) < batch_size else self.search_count(domain)
+        self.env['ir.cron']._commit_progress(remaining=remaining)
+        
+        for spreadsheet in spreadsheets:
+            spreadsheet.spreadsheet_binary_text = spreadsheet.spreadsheet_binary_data
+            self.spreadsheet_binary_data = False
+            self.env['ir.cron']._commit_progress(1)
