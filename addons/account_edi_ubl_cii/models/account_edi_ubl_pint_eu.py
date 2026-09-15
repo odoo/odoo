@@ -11,16 +11,16 @@ class AccountEdiUBLPintEU(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         super()._ubl_add_customization_id_node(vals)
         if self._is_document(vals, 'invoice', 'credit_note'):
-            vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
+            vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
         elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
-            vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
+            vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
 
     def _ubl_add_profile_id_node(self, vals):
         super()._ubl_add_profile_id_node(vals)
         if self._is_document(vals, 'invoice', 'credit_note'):
-            vals['document_node']['cbc:ProfileID']['_text'] = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'
+            vals['document_node']['cbc:ProfileID'] = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'
         elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
-            vals['document_node']['cbc:ProfileID']['_text'] = 'urn:fdc:peppol.eu:2017:poacc:selfbilling:01:1.0'
+            vals['document_node']['cbc:ProfileID'] = 'urn:fdc:peppol.eu:2017:poacc:selfbilling:01:1.0'
 
     def _ubl_get_delivery_node_from_delivery_address(self, vals):
         # Intracom delivery inside European area.
@@ -35,7 +35,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
                 and supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
                 and supplier.country_id != customer.country_id
             ):
-                node['cbc:ActualDeliveryDate']['_text'] = invoice.invoice_date
+                node['cbc:ActualDeliveryDate'] = invoice.invoice_date
 
         return node
 
@@ -100,7 +100,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
             ):
                 nodes.append({
                     'cac:InvoiceDocumentReference': {
-                        'cbc:ID': {'_text': credit_note.ref},
+                        'cbc:ID': credit_note.ref,
                     }
                 })
 
@@ -119,7 +119,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
         if (
             self._is_document(vals, 'invoice', 'credit_note')
-            and document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text'] == 'NL'
+            and document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode'] == 'NL'
         ):
 
             # [NL-R-002] For suppliers in the Netherlands the supplier's address (cac:AccountingSupplierParty/cac:Party
@@ -140,7 +140,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
             if not document_node['cac:PaymentMeans']:
                 constraints['nl_r_007'] = self._check_required_fields(vals['invoice'], 'partner_bank_id')
 
-            if document_node['cac:AccountingCustomerParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text'] == 'NL':
+            if document_node['cac:AccountingCustomerParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode'] == 'NL':
                 # [NL-R-004] For suppliers in the Netherlands, if the customer is in the Netherlands, the customer
                 # address (cac:AccountingCustomerParty/cac:Party/cac:PostalAddress) MUST contain the street name
                 # (cbc:StreetName), the city (cbc:CityName) and post code (cbc:PostalZone)
@@ -157,7 +157,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
         if (
             self._is_document(vals, 'credit_note')
-            and document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text'] == 'NL'
+            and document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode'] == 'NL'
             and all(
                 dict_to_xml(bill_ref_node['cac:InvoiceDocumentReference']['cbc:ID'], nsmap=nsmap, tag='cbc:ID') is None
                 for bill_ref_node in document_node['cac:BillingReference']

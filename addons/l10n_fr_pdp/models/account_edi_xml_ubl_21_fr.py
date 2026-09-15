@@ -70,8 +70,8 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
 
         profile_id = self._l10n_fr_pdp_get_profile_id(vals)
         document_node.update({
-            'cbc:CustomizationID': {'_text': CPRO_CUSTOMIZATION_ID if b2g else PDP_CUSTOMIZATION_ID},
-            'cbc:ProfileID': {'_text': profile_id},
+            'cbc:CustomizationID': CPRO_CUSTOMIZATION_ID if b2g else PDP_CUSTOMIZATION_ID,
+            'cbc:ProfileID': profile_id,
         })
 
         # [BR-FR-05] Add mandatory notes with defaults if not already present
@@ -81,16 +81,14 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             document_node['cbc:Note'] = [existing_note] if existing_note else []
         # Add default notes
         for code, default_content in self._get_default_notes(vals).items():
-            document_node['cbc:Note'].append({
-                '_text': f"#{code}#{default_content}",
-            })
+            document_node['cbc:Note'].append(f"#{code}#{default_content}")
 
         # Règles de gestion G1.52
         if vals['document_type'] == 'credit_note':
             document_node['cac:BillingReference'] = {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': invoice.reversed_entry_id.name},
-                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
+                    'cbc:ID': invoice.reversed_entry_id.name,
+                    'cbc:IssueDate': invoice.reversed_entry_id.invoice_date,
                 }
             }
 
@@ -98,18 +96,18 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # For credit notes, this is handled in `_add_invoice_payment_means_nodes` instead, as `cac:PaymentMeans` is
         # not populated yet at this point.
         if profile_id in ('B2', 'S2', 'M2') and vals['document_type'] != 'credit_note':
-            document_node['cbc:DueDate'] = {'_text': invoice._pdp_get_payment_date() or invoice.invoice_date}
+            document_node['cbc:DueDate'] = invoice._pdp_get_payment_date() or invoice.invoice_date
 
         # B2G
         if not b2g:
             return
 
         if invoice.buyer_reference:
-            document_node['cbc:BuyerReference'] = {'_text': invoice.buyer_reference}
+            document_node['cbc:BuyerReference'] = invoice.buyer_reference
 
         if invoice.purchase_order_reference:
             document_node['cac:OrderReference'] = {
-                'cbc:ID': {'_text': invoice.purchase_order_reference}
+                'cbc:ID': invoice.purchase_order_reference
             }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
@@ -125,7 +123,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             invoice = vals['invoice']
             payment_due_date = invoice._pdp_get_payment_date() or invoice.invoice_date
             for node in document_node['cac:PaymentMeans']:
-                node['cbc:PaymentDueDate'] = {'_text': payment_due_date}
+                node['cbc:PaymentDueDate'] = payment_due_date
 
     def _ubl_add_party_identification_nodes(self, vals):
         super()._ubl_add_party_identification_nodes(vals)
@@ -145,7 +143,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
 
         vals['party_node']['cac:PartyLegalEntity'] = {
-            'cbc:RegistrationName': {'_text': commercial_partner.name},
+            'cbc:RegistrationName': commercial_partner.name,
             'cbc:CompanyID': {
                 '_text': commercial_partner._l10n_fr_pdp_get_siren(),
                 'schemeID': '0002',
@@ -159,7 +157,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
 
         if siret := commercial_partner._l10n_fr_pdp_get_siret():
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': siret,
                     'schemeID': '0009',
@@ -180,9 +178,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 'currencyID': currency.name,
             },
             'cac:AllowanceCharge': {
-                "cbc:ChargeIndicator": [{
-                    "_text": 'false',
-                }],
+                "cbc:ChargeIndicator": ['false'],
                 # Discount amount
                 "cbc:Amount": [{
                     "_text": FloatFmt(0, min_dp=1, max_dp=6),

@@ -2,6 +2,7 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestCiiFacturXCommon, T
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -80,6 +81,36 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_multiple_taxes')
+
+    def test_invoice_payment_totals(self):
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_fr,
+            product_id=self.product,
+            price_unit=100.0,
+            tax_ids=self.tax_20,
+            partner_bank_id=self.recipient_bank,
+            post=True,
+        )
+
+        for payment_amount, prepaid_amount, due_amount in [(0, 0, 120), (40, 40, 80), (80, 120, 0)]:
+            with self.subTest(prepaid_amount=prepaid_amount):
+                if payment_amount:
+                    self._register_payment(invoice, amount=payment_amount)
+                self.assertEqual(invoice.amount_residual, due_amount)
+
+                xml_content, errors = self.env['account.edi.xml.cii']._export_invoice(invoice)
+                self.assertFalse(errors)
+                tree = etree.fromstring(xml_content)
+                monetary_total = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation')
+                for tag, amount in {
+                    'LineTotalAmount': 100,
+                    'TaxTotalAmount': 20,
+                    'GrandTotalAmount': 120,
+                    'TotalPrepaidAmount': prepaid_amount,
+                    'DuePayableAmount': due_amount,
+                }.items():
+                    self.assertEqual(monetary_total.findtext(f'{{*}}{tag}'), f'{amount:.2f}')
+                self.assertEqual(monetary_total.find('{*}TaxTotalAmount').get('currencyID'), 'EUR')
 
     def test_invoice_price_amount_rounding_precision(self):
         """

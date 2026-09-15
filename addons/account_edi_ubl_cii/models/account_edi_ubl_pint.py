@@ -17,17 +17,17 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_invoice_type_code_node(vals)
 
         if self._is_document(vals, 'invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
+            vals['document_node']['cbc:InvoiceTypeCode'] = 380
         elif self._is_document(vals, 'self_invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
+            vals['document_node']['cbc:InvoiceTypeCode'] = 389
 
     def _ubl_add_credit_note_type_code_node(self, vals):
         super()._ubl_add_credit_note_type_code_node(vals)
 
         if self._is_document(vals, 'credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
+            vals['document_node']['cbc:CreditNoteTypeCode'] = 381
         elif self._is_document(vals, 'self_credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
+            vals['document_node']['cbc:CreditNoteTypeCode'] = 261
 
     def _ubl_add_notes_nodes_all_invoices(self, vals):
         invoice = vals['invoice']
@@ -68,7 +68,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         if terms_and_condition:
             notes.append(terms_and_condition)
 
-        vals['document_node']['cbc:Note'] = {'_text': ' '.join(notes) if notes else None}
+        vals['document_node']['cbc:Note'] = ' '.join(notes) if notes else None
 
     def _ubl_add_notes_nodes(self, vals):
         # [ibr-sr-51]-Note (ibt-022) MUST occur maximum once
@@ -93,7 +93,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         # [ibr-005]-An Invoice MUST have an Invoice currency code (ibt-005).
         # [ibr-cl-04]-Invoice currency code (ibt-005) MUST be coded using ISO code list 4217 alpha-3
         super()._ubl_add_document_currency_code_node(vals)
-        vals['document_node']['cbc:DocumentCurrencyCode']['_text'] = vals['currency'].name
+        vals['document_node']['cbc:DocumentCurrencyCode'] = vals['currency'].name
 
     def _ubl_add_tax_currency_code_node(self, vals):
         # The currency used for TAX accounting and reporting purposes as accepted or required in the country of the Seller.
@@ -101,15 +101,15 @@ class AccountEdiUBLPint(models.AbstractModel):
         # [ibr-cl-05]-Tax currency code (ibt-006) MUST be coded using ISO code list 4217 alpha-3
         super()._ubl_add_tax_currency_code_node(vals)
         company_currency = vals['company'].currency_id
-        if vals['document_node']['cbc:DocumentCurrencyCode']['_text'] != company_currency.name:
-            vals['document_node']['cbc:TaxCurrencyCode']['_text'] = company_currency.name
+        if vals['document_node']['cbc:DocumentCurrencyCode'] != company_currency.name:
+            vals['document_node']['cbc:TaxCurrencyCode'] = company_currency.name
 
     def _ubl_add_buyer_reference_node(self, vals):
         super()._ubl_add_buyer_reference_node(vals)
 
         customer = vals['customer']
         if customer_ref := customer.ref or customer.commercial_partner_id.ref:
-            vals['document_node']['cbc:BuyerReference']['_text'] = customer_ref
+            vals['document_node']['cbc:BuyerReference'] = customer_ref
 
     def _ubl_add_billing_reference_nodes(self, vals):
         # A group of business terms providing information on one or more preceding Invoices.
@@ -134,7 +134,7 @@ class AccountEdiUBLPint(models.AbstractModel):
             for preceding_invoice_name in preceding_invoice_names:
                 nodes.append({
                     'cac:InvoiceDocumentReference': {
-                        'cbc:ID': {'_text': preceding_invoice_name},
+                        'cbc:ID': preceding_invoice_name,
                     }
                 })
 
@@ -191,9 +191,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         if not nodes and commercial_partner.routing_scheme and commercial_partner.routing_endpoint:
             # TaxScheme based on partner's Scheme/Endpoint. (removed with multi-id)
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.routing_endpoint},
+                'cbc:CompanyID': commercial_partner.routing_endpoint,
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.routing_scheme},
+                    'cbc:ID': commercial_partner.routing_scheme,
                 },
             })
 
@@ -212,18 +212,18 @@ class AccountEdiUBLPint(models.AbstractModel):
             # [NO-R-002] For Norwegian suppliers, most invoice issuers are required to append
             # "Foretaksregisteret" to their invoice.
             nodes.append({
-                'cbc:CompanyID': {'_text': "Foretaksregisteret"},
+                'cbc:CompanyID': "Foretaksregisteret",
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': "TAX"},
+                    'cbc:ID': "TAX",
                 },
             })
         elif country_code == 'SE':
             # [SE-R-005] For Swedish suppliers, when using Seller tax registration identifier,
             # 'Godkänd för F-skatt' must be stated
             nodes.append({
-                'cbc:CompanyID': {'_text': "GODKÄND FÖR F-SKATT"},
+                'cbc:CompanyID': "GODKÄND FÖR F-SKATT",
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': "TAX"},
+                    'cbc:ID': "TAX",
                 },
             })
 
@@ -270,7 +270,7 @@ class AccountEdiUBLPint(models.AbstractModel):
                 '_text': payment_means_code,
                 'name': payment_means_name,
             },
-            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+            'cbc:PaymentID': invoice.payment_reference or invoice.name,
         }
 
         if partner_bank:
@@ -293,7 +293,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal)
 
         # Not allowed by PINT.
-        node['cbc:Percent']['_text'] = None
+        node['cbc:Percent'] = None
 
         # [BR-S-08]/[BR-E-08]/[BR-Z-08]/... cac:TaxSubtotal -> cbc:TaxableAmount should be
         # computed based on the cbc:LineExtensionAmount of each line linked to the tax.
@@ -307,30 +307,30 @@ class AccountEdiUBLPint(models.AbstractModel):
             for line_node in vals['document_node'].get(line_key, [])
             for line_node_tax_category_node in line_node['cac:Item']['cac:ClassifiedTaxCategory']
             if (
-                    line_node_tax_category_node['cbc:ID']['_text'] == tax_category_node['cbc:ID']['_text']
-                    and line_node_tax_category_node['cbc:Percent']['_text'] == tax_category_node['cbc:Percent']['_text']
+                    line_node_tax_category_node['cbc:ID'] == tax_category_node['cbc:ID']
+                    and line_node_tax_category_node['cbc:Percent'] == tax_category_node['cbc:Percent']
                     and line_node_tax_category_node['_currency'] == tax_category_node['_currency']
             )
             ] + [
             -allowance_node['cbc:Amount']['_text']
             for tax_category_node in node['cac:TaxCategory']
             for allowance_node in vals['document_node']['cac:AllowanceCharge']
-            if allowance_node['cbc:ChargeIndicator']['_text'] == 'false'
+            if allowance_node['cbc:ChargeIndicator'] == 'false'
             for allowance_node_tax_category_node in allowance_node['cac:TaxCategory']
             if (
-                    allowance_node_tax_category_node['cbc:ID']['_text'] == tax_category_node['cbc:ID']['_text']
-                    and allowance_node_tax_category_node['cbc:Percent']['_text'] == tax_category_node['cbc:Percent']['_text']
+                    allowance_node_tax_category_node['cbc:ID'] == tax_category_node['cbc:ID']
+                    and allowance_node_tax_category_node['cbc:Percent'] == tax_category_node['cbc:Percent']
                     and allowance_node_tax_category_node['_currency'] == tax_category_node['_currency']
             )
             ] + [
             allowance_node['cbc:Amount']['_text']
             for tax_category_node in node['cac:TaxCategory']
             for allowance_node in vals['document_node']['cac:AllowanceCharge']
-            if allowance_node['cbc:ChargeIndicator']['_text'] == 'true'
+            if allowance_node['cbc:ChargeIndicator'] == 'true'
             for allowance_node_tax_category_node in allowance_node['cac:TaxCategory']
             if (
-                    allowance_node_tax_category_node['cbc:ID']['_text'] == tax_category_node['cbc:ID']['_text']
-                    and allowance_node_tax_category_node['cbc:Percent']['_text'] == tax_category_node['cbc:Percent']['_text']
+                    allowance_node_tax_category_node['cbc:ID'] == tax_category_node['cbc:ID']
+                    and allowance_node_tax_category_node['cbc:Percent'] == tax_category_node['cbc:Percent']
                     and allowance_node_tax_category_node['_currency'] == tax_category_node['_currency']
             )
         ]
@@ -443,13 +443,13 @@ class AccountEdiUBLPint(models.AbstractModel):
         # 1. Specification, Process & Document Identification
         # -----------------------------------------------------------------
         # [IBR-003] - An Invoice MUST have an Invoice issue date (ibt-002).
-        if not document_node['cbc:IssueDate']['_text']:
+        if not document_node['cbc:IssueDate']:
             constraints['ibr_003_issue_date_required'] = self.env._(
                 "Invoice Issue Date is missing [IBR-003]."
             )
 
         # [IBR-005] - An Invoice MUST have an Invoice currency code (ibt-005).
-        if not document_node['cbc:DocumentCurrencyCode']['_text']:
+        if not document_node['cbc:DocumentCurrencyCode']:
             constraints['ibr_005_currency_code_required'] = self.env._(
                 "Currency Code is missing [IBR-005]."
             )
@@ -460,14 +460,14 @@ class AccountEdiUBLPint(models.AbstractModel):
         supplier_party = document_node['cac:AccountingSupplierParty']['cac:Party']
 
         # [IBR-006] - An Invoice MUST contain the Seller name (ibt-027).
-        if not supplier_party['cac:PartyName']['cbc:Name']['_text']:
+        if not supplier_party['cac:PartyName']['cbc:Name']:
             constraints['ibr_006_seller_name_required'] = self.env._(
                 "Seller Name is missing [IBR-006]."
             )
 
         # [IBR-008] - An Invoice MUST contain the Seller postal address (ibg-05).
         # [IBR-009] - The Seller postal address (ibg-05) MUST contain a Seller country code (ibt-040).
-        supplier_country = supplier_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text']
+        supplier_country = supplier_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']
         if not supplier_country:
             constraints['ibr_009_seller_country_required'] = self.env._(
                 "Seller Country Code is missing [IBR-009]."
@@ -491,14 +491,14 @@ class AccountEdiUBLPint(models.AbstractModel):
         customer_party = document_node['cac:AccountingCustomerParty']['cac:Party']
 
         # [IBR-007] - An Invoice MUST contain the Buyer name (ibt-044).
-        if not customer_party['cac:PartyName']['cbc:Name']['_text']:
+        if not customer_party['cac:PartyName']['cbc:Name']:
             constraints['ibr_007_buyer_name_required'] = self.env._(
                 "Buyer Name is missing [IBR-007]."
             )
 
         # [IBR-010] - An Invoice MUST contain the Buyer postal address (ibg-08).
         # [IBR-011] - The Buyer postal address (ibg-08) MUST contain a Buyer country code (ibt-055).
-        customer_country = customer_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text']
+        customer_country = customer_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']
         if not customer_country:
             constraints['ibr_011_buyer_country_required'] = self.env._(
                 "Buyer Country Code is missing [IBR-011]."
@@ -551,7 +551,7 @@ class AccountEdiUBLPint(models.AbstractModel):
 
             line_item = line['cac:Item']
             # [IBR-025] - Each Invoice line (ibg-25) MUST contain the Item name (ibt-153).
-            if not line_item['cbc:Name']['_text']:
+            if not line_item['cbc:Name']:
                 constraints[f'ibr_025_item_name_required_{line_idx}'] = self.env._(
                     "Line %s: Item name is missing [IBR-025].", line_idx
                 )
@@ -569,7 +569,7 @@ class AccountEdiUBLPint(models.AbstractModel):
                 )
 
             # [IBR-SR-58] - The Invoiced item TAX category code (ibt-151) MUST be present.
-            if not all(tax_category['cbc:ID']['_text'] for tax_category in line_item['cac:ClassifiedTaxCategory']):
+            if not all(tax_category['cbc:ID'] for tax_category in line_item['cac:ClassifiedTaxCategory']):
                 constraints[f'ibr_sr_58_line_tax_category_required_{line_idx}'] = self.env._(
                     "Line %s: Item tax category code is missing [IBR-SR-58].", line_idx
                 )
@@ -580,10 +580,10 @@ class AccountEdiUBLPint(models.AbstractModel):
             doc_allowances = line['cac:AllowanceCharge']
 
             for charge_idx, allow_node in enumerate(doc_allowances, start=1):
-                is_charge = allow_node['cbc:ChargeIndicator']['_text'] == 'true'
+                is_charge = allow_node['cbc:ChargeIndicator'] == 'true'
                 amount = allow_node['cbc:Amount']['_text']
-                reason_text = (allow_node.get('cbc:AllowanceChargeReason') or {}).get('_text')
-                reason_code = (allow_node.get('cbc:AllowanceChargeReasonCode') or {}).get('_text')
+                reason_text = allow_node.get('cbc:AllowanceChargeReason')
+                reason_code = allow_node.get('cbc:AllowanceChargeReasonCode')
 
                 if is_charge:
                     # [IBR-036] - Charge (ibg-21) MUST have a charge amount (ibt-099).

@@ -54,20 +54,20 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
 
     def _ubl_add_buyer_reference_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_buyer_reference_node(vals)
-        node = vals['document_node']['cbc:BuyerReference']
+        document_node = vals['document_node']
 
         customer = vals['customer'].commercial_partner_id
         if customer.routing_scheme == "0204":
             # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID
-            node['_text'] = customer.routing_endpoint
+            document_node['cbc:BuyerReference'] = customer.routing_endpoint
 
-        if not node['_text']:
-            node['_text'] = 'N/A'
+        if not document_node['cbc:BuyerReference']:
+            document_node['cbc:BuyerReference'] = 'N/A'
 
     def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -91,9 +91,9 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
             if identifier_vals:
                 nodes.append({
-                    'cbc:CompanyID': {'_text': None},
+                    'cbc:CompanyID': None,
                     'cac:TaxScheme': {
-                        'cbc:ID': {'_text': identifier_vals['scheme']},
+                        'cbc:ID': identifier_vals['scheme'],
                     },
                 })
 
@@ -109,7 +109,7 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             and commercial_partner.name
         ):
             nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': None,
                     'schemeID': None,

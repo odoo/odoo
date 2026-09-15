@@ -40,7 +40,7 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
             currency != company.currency_id
             and tax_subtotal['currency'] == company.currency_id
         ):
-            tax_subtotal_node['cbc:Percent']['_text'] = tax_subtotal['percent']
+            tax_subtotal_node['cbc:Percent'] = tax_subtotal['percent']
 
         return tax_subtotal_node
 
@@ -51,12 +51,12 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@jp-1'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:peppol:pint:billing-1@jp-1'
 
     def _ubl_add_profile_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_profile_id_node(vals)
-        vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
+        vals['document_node']['cbc:ProfileID'] = 'urn:peppol:bis:billing'
 
     def _ubl_add_invoice_period_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -67,8 +67,8 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # [aligned-ibrp-052] An Invoice MUST have an invoice period (ibg-14) or an Invoice line period (ibg-26).
         if invoice and not nodes:
             nodes.update({
-                'cbc:StartDate': {'_text': invoice.invoice_date},
-                'cbc:EndDate': {'_text': invoice.invoice_date},
+                'cbc:StartDate': invoice.invoice_date,
+                'cbc:EndDate': invoice.invoice_date,
             })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):

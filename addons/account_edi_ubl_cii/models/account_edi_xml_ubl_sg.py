@@ -72,7 +72,7 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0'
 
     def _ubl_add_payment_means_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

@@ -120,7 +120,7 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
 
         # [BR-25]-Each Invoice line (BG-25) shall contain the Item name (BT-153).
         for line_node in line_nodes:
-            if not (line_node['cac:Item']['cbc:Name'] or {}).get('_text'):
+            if not line_node['cac:Item']['cbc:Name']:
                 constraints['cen_en16931_item_name'] = _("Each invoice line should have a product or a label.")
                 break
 
@@ -128,7 +128,7 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             (
                 line_node,
                 [
-                    tax_category_node.get('cbc:ID', {}).get('_text')
+                    tax_category_node.get('cbc:ID')
                     for tax_category_node in line_node.get('cac:Item', {}).get('cac:ClassifiedTaxCategory', [])
                 ]
             )
@@ -166,8 +166,8 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix 'EL'.
             for tax_scheme_node in party_node['cac:Party']['cac:PartyTaxScheme']:
                 if (
-                    tax_scheme_node['cac:TaxScheme']['cbc:ID']['_text'] == 'VAT'
-                    and not tax_scheme_node['cbc:CompanyID']['_text'][:2].isalpha()
+                    tax_scheme_node['cac:TaxScheme']['cbc:ID'] == 'VAT'
+                    and not tax_scheme_node['cbc:CompanyID'][:2].isalpha()
                 ):
                     constraints[f'cen_en16931_{role}_vat_country_code'] = _("The VAT of the %s should be prefixed with its country code.", role)
 

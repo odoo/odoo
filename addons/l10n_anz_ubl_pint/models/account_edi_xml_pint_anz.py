@@ -60,7 +60,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         super()._add_invoice_header_nodes(document_node, vals)
 
         # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_identifying_the_a_nz_billing_specialisation
-        document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
+        document_node['cbc:ProfileID'] = 'urn:peppol:bis:billing'
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS
@@ -71,7 +71,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         if commercial_partner.country_code in ('AU', 'NZ'):
             if commercial_partner.has_vat:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
-                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:RegistrationName': commercial_partner.name,
                     'cbc:CompanyID': {
                         '_text': commercial_partner.vat,
                         'schemeID': '0151' if commercial_partner.country_code == 'AU' else '0088',
@@ -81,7 +81,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
                 identifier_vals = partner._get_preferred_routing_identifier_vals()
                 if identifier_vals:
                     vals['party_node']['cac:PartyLegalEntity'] = [{
-                        'cbc:RegistrationName': {'_text': commercial_partner.name},
+                        'cbc:RegistrationName': commercial_partner.name,
                         'cbc:CompanyID': {
                             '_text': identifier_vals['value'],
                             'schemeID': identifier_vals['scheme'],
@@ -91,7 +91,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@aunz-1'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:peppol:pint:billing-1@aunz-1'
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
@@ -104,13 +104,13 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # Tax category must be filled on the line, with a value from SG categories.
         tax_total_node = vals['document_node']['cac:TaxTotal'][0]
         for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
-            if any(tax_category_node['cbc:ID']['_text'] not in ANZ_TAX_CATEGORIES for tax_category_node in tax_subtotal_node['cac:TaxCategory']):
+            if any(tax_category_node['cbc:ID'] not in ANZ_TAX_CATEGORIES for tax_category_node in tax_subtotal_node['cac:TaxCategory']):
                 constraints['anz_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
 
         # Tax category of type "Not subject to tax" must have tax amount 0
         count_outside_of_scope_breakdown = 0
         for tax_subtotal in tax_total_node['cac:TaxSubtotal']:
-            if any(tax_category_node['cbc:ID']['_text'] != 'O' for tax_category_node in tax_subtotal['cac:TaxCategory']):
+            if any(tax_category_node['cbc:ID'] != 'O' for tax_category_node in tax_subtotal['cac:TaxCategory']):
                 continue
             count_outside_of_scope_breakdown += 1
 
