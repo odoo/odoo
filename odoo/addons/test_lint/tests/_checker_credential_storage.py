@@ -94,10 +94,10 @@ JUDGED_NOT_SECRET = frozenset(
 )
 
 
-# Parameter keys whose name says secret but whose value is not one: switches and
-# lifetimes, a publishable map token, a one-time pairing token that expires in
-# minutes, a demo-mode sentinel, and the database's own HMAC seed, which every
-# signed link derives from and which exists before any module could hold a key.
+# Parameter keys whose name says secret but whose value is not one kept in clear:
+# switches and lifetimes, a publishable map token, a one-time pairing token that
+# expires in minutes, a demo-mode sentinel, and the database's HMAC seed, which
+# ir.config_parameter itself seals at rest.
 JUDGED_PARAMETERS_NOT_SECRET = frozenset(
     {
         "auth_signup.reset_password",

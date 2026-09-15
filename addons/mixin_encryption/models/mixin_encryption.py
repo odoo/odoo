@@ -1,5 +1,4 @@
 import base64
-import hashlib
 import logging
 import os
 import threading
@@ -10,6 +9,7 @@ from cryptography.fernet import Fernet, InvalidToken
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs import sealing
 from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
@@ -24,9 +24,7 @@ _KEY_STATE: dict[str, Any] = {
     "missing_warning_last_at": 0.0,
 }
 
-TEST_RUN_KEY = base64.urlsafe_b64encode(
-    hashlib.sha256(b"odoo test run without ODOO_API_ENCRYPTION_KEY").digest()
-).decode()
+TEST_RUN_KEY = sealing.TEST_RUN_KEY
 
 
 def provide_test_run_key() -> bool:
@@ -381,19 +379,7 @@ class MixinEncryption(models.AbstractModel):
                 _KEY_STATE["version_cache_checked"] = True
                 return None
 
-            highest_old_version = 0
-            consecutive_misses = 0
-            max_consecutive_misses = 2
-            for i in range(1, 20):
-                if os.environ.get(f"ODOO_API_ENCRYPTION_KEY_V{i}"):
-                    highest_old_version = i
-                    consecutive_misses = 0
-                else:
-                    consecutive_misses += 1
-                    if consecutive_misses >= max_consecutive_misses:
-                        break
-
-            _KEY_STATE["version_cache"] = highest_old_version + 1
+            _KEY_STATE["version_cache"] = max(sealing.old_key_versions(), default=0) + 1
             _KEY_STATE["version_cache_checked"] = True
             return _KEY_STATE["version_cache"]
 

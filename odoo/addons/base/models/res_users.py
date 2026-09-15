@@ -1177,7 +1177,8 @@ class ResUsers(models.Model):
 
     def _prepare_session_token_query_params(self) -> dict[str, SQL]:
         database_secret = SQL(
-            "SELECT value FROM ir_config_parameter WHERE key='database.secret'"
+            "%s::text",
+            self.env["ir.config_parameter"].sudo().get_param("database.secret"),
         )
         fields = SQL(", ").join(
             SQL.identifier(self._table, fname)

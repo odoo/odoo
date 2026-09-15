@@ -1,11 +1,16 @@
+import os
 from unittest.mock import patch
+
+from cryptography.fernet import Fernet
 
 import odoo
 from odoo.exceptions import ConcurrencyError, ValidationError
+from odoo.libs import sealing
 from odoo.modules.registry import Registry
 from odoo.tests import common
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import mute_logger
+from odoo.tools.security import hmac
 
 from odoo.addons.base.models.ir_config_parameter import _default_parameters
 
@@ -22,6 +27,75 @@ class TestIrConfigParameter(TransactionCase):
             new_key = f"{key}_updated"
             with self.assertRaises(ValidationError):
                 config_parameter.write({"key": new_key})
+
+
+class TestSealedDatabaseSecret(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.ICP = self.env["ir.config_parameter"].sudo()
+        self.real_key = {sealing.ENV_KEY: Fernet.generate_key().decode()}
+
+    def _stored(self):
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT value FROM ir_config_parameter WHERE key = 'database.secret'"
+        )
+        return self.env.cr.fetchone()[0]
+
+    def _store_in_clear(self, value):
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE ir_config_parameter SET value = %s WHERE key = 'database.secret'",
+            [value],
+        )
+        self.env.invalidate_all()
+        self.env.registry.clear_cache("stable")
+
+    def test_with_a_key_the_secret_is_stored_sealed_and_read_in_clear(self):
+        with patch.dict(os.environ, self.real_key):
+            self.ICP.set_param("database.secret", "the-database-secret")
+
+            self.assertTrue(sealing.is_sealed(self._stored()))
+            self.assertNotIn("the-database-secret", self._stored())
+            self.assertEqual(
+                self.ICP.get_param("database.secret"), "the-database-secret"
+            )
+
+    def test_a_secret_left_in_clear_is_sealed_when_the_registry_loads(self):
+        self._store_in_clear("legacy-secret")
+        with patch.dict(os.environ, self.real_key):
+            self.ICP._seal_sealed_parameters()
+
+            self.assertTrue(sealing.is_sealed(self._stored()))
+            self.assertEqual(self.ICP.get_param("database.secret"), "legacy-secret")
+
+    def test_without_a_protecting_key_the_secret_stays_readable_in_clear(self):
+        for environ in ({sealing.ENV_KEY: sealing.TEST_RUN_KEY}, {sealing.ENV_KEY: ""}):
+            with self.subTest(key=bool(environ[sealing.ENV_KEY])):
+                with (
+                    patch.dict(os.environ, environ),
+                    mute_logger("odoo.addons.base.models.ir_config_parameter"),
+                ):
+                    self.ICP.set_param("database.secret", "clear-secret")
+                    self.ICP._seal_sealed_parameters()
+
+                    self.assertEqual(self._stored(), "clear-secret")
+                    self.assertEqual(
+                        self.ICP.get_param("database.secret"), "clear-secret"
+                    )
+
+    def test_sealing_changes_no_signature_and_no_session_token(self):
+        self._store_in_clear("signing-secret")
+        user = self.env.ref("base.user_admin")
+        digest = hmac(self.env, "scope", "message")
+        session_values = user._get_session_token_values()
+
+        with patch.dict(os.environ, self.real_key):
+            self.ICP._seal_sealed_parameters()
+            self.assertTrue(sealing.is_sealed(self._stored()))
+
+            self.assertEqual(hmac(self.env, "scope", "message"), digest)
+            self.assertEqual(user._get_session_token_values(), session_values)
 
 
 class TestTypedParams(TransactionCase):

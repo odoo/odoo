@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.api import ValuesType
 from odoo.db import get_or_create_row
 from odoo.exceptions import ValidationError
+from odoo.libs import sealing
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import config, mute_logger, ormcache
 
@@ -21,6 +22,8 @@ _default_parameters = {
     "base.login_cooldown_after": lambda: 10,
     "base.login_cooldown_duration": lambda: 60,
 }
+
+_SEALED_PARAMETERS = frozenset({"database.secret"})
 
 
 class IrConfig_Parameter(models.Model):
@@ -53,7 +56,14 @@ class IrConfig_Parameter(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         _debug.lifecycle("create", keys=[vals.get("key") for vals in vals_list])
         self.env.registry.clear_cache("stable")
-        return super().create(vals_list)
+        return super().create(
+            [
+                {**vals, "value": self._seal_value(vals["key"], vals["value"])}
+                if vals.get("key") in _SEALED_PARAMETERS and "value" in vals
+                else vals
+                for vals in vals_list
+            ]
+        )
 
     def write(self, vals: dict[str, Any]) -> bool:
         if "key" in vals:
@@ -67,6 +77,12 @@ class IrConfig_Parameter(models.Model):
                 )
         _debug.lifecycle("write", keys=self.mapped("key"), fields=list(vals))
         self.env.registry.clear_cache("stable")
+        sealed = self.filtered(lambda param: param.key in _SEALED_PARAMETERS)
+        if "value" in vals and sealed:
+            super(IrConfig_Parameter, sealed).write(
+                {**vals, "value": self._seal_value(sealed[:1].key, vals["value"])}
+            )
+            return super(IrConfig_Parameter, self - sealed).write(vals)
         return super().write(vals)
 
     def unlink(self) -> bool:
@@ -85,7 +101,54 @@ class IrConfig_Parameter(models.Model):
     def get_param(self, key: str, default: str | bool = False) -> str | bool:
         self.browse().check_access("read")
         value = self._get_param(key)
+        if key in _SEALED_PARAMETERS and sealing.is_sealed(value):
+            value = self._unseal_param(key, value)
         return default if value is None else value
+
+    @api.model
+    @ormcache("key", "sealed", cache="stable")
+    def _unseal_param(self, key: str, sealed: str) -> str:
+        try:
+            return sealing.unseal(sealed)
+        except sealing.SealError:
+            _logger.critical(
+                "The system parameter %s is sealed and cannot be opened: set the "
+                "ODOO_API_ENCRYPTION_KEY it was sealed with",
+                key,
+            )
+            raise
+
+    @api.model
+    def _seal_value(self, key: str, value: Any) -> Any:
+        if not value or sealing.is_sealed(value) or not sealing.protects():
+            return value
+        _debug.logic("param_sealed", key=key)
+        return sealing.seal(str(value))
+
+    def _register_hook(self) -> None:
+        super()._register_hook()
+        self._seal_sealed_parameters()
+
+    @api.model
+    def _seal_sealed_parameters(self) -> None:
+        params = self.sudo().search([("key", "in", list(_SEALED_PARAMETERS))])
+        for param in params:
+            if sealing.is_sealed(param.value):
+                if not sealing.is_configured():
+                    _logger.error(
+                        "The system parameter %s is sealed but "
+                        "ODOO_API_ENCRYPTION_KEY is not set: signed links, CSRF "
+                        "tokens and sessions cannot be verified",
+                        param.key,
+                    )
+            elif not sealing.is_configured():
+                _logger.warning(
+                    "The system parameter %s is stored in clear: set "
+                    "ODOO_API_ENCRYPTION_KEY so every backup stops carrying it",
+                    param.key,
+                )
+            elif sealing.protects() and not self.env.cr.readonly:
+                param.write({"value": param.value})
 
     @api.model
     def get_param_int(self, key: str, default: int) -> int:
