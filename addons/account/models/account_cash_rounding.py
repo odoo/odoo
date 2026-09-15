@@ -71,7 +71,11 @@ class AccountCashRounding(models.Model):
     # Conditions fields
     currency_ids = fields.Many2many(comodel_name='res.currency', string="Currency")
     partner_category_ids = fields.Many2many(comodel_name='res.partner.category', string="Partner Category")
-    payment_method_line_ids = fields.Many2many(comodel_name='account.payment.method.line', string="Payment Method")
+    payment_method_line_ids = fields.Many2many(
+        comodel_name='account.payment.method.line',
+        string="Payment Method",
+        domain="[('company_id', 'parent_of', company_id or allowed_company_ids)]",
+    )
     company_id = fields.Many2one('res.company', string="Company", ondelete='cascade')
 
     def _inverse_name(self):
