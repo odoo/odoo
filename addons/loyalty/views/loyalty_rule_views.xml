@@ -18,7 +18,7 @@
                             <separator string="Conditions" colspan="2"/>
                             <field name="minimum_qty"/>
                             <label for="minimum_amount" invisible="program_type == 'buy_x_get_y'"/>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row" invisible="program_type == 'buy_x_get_y'">
                                 <field name="minimum_amount" class="oe_inline me-1"/>
                                 <field name="minimum_amount_tax_mode" class="ms-1"/>
                             </div>
