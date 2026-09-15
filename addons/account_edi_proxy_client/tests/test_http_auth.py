@@ -259,6 +259,17 @@ class TestMakeHttpRequest(TransactionCase):
         self.assertEqual(cm.exception.code, 'connection_error')
         self.assertEqual(len(self.sent), 1)
 
+    def test_4xx_proxy_error_raises(self):
+        # A business-logic error (not an auth failure) can be carried on any non-2xx status, not just 401 —
+        # the client must still unpack and preserve the code/message rather than collapsing it into a generic
+        # connection_error.
+        type(self).responses = [make_response(400, {'proxy_error': {'code': 'invalid_request', 'message': 'bad'}})]
+        with self.assertRaises(AccountEdiProxyError) as cm:
+            self.user._make_http_request('http://proxy.test/api/x')
+        self.assertEqual(cm.exception.code, 'invalid_request')
+        self.assertEqual(cm.exception.message, 'bad')
+        self.assertEqual(len(self.sent), 1)
+
     def test_http_error_500(self):
         type(self).responses = [make_response(500)]
         with self.assertLogs(USER_LOGGER, level='WARNING'):

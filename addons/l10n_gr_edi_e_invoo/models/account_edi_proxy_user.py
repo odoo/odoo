@@ -1,3 +1,5 @@
+import json
+
 from stdnum.gr import vat as gr_vat
 
 from odoo import fields, models
@@ -7,7 +9,7 @@ from odoo.exceptions import RedirectWarning
 L10N_GR_EDI_DEFAULT_IAP_ENDPOINT = 'https://l10n-gr-edi.api.odoo.com'
 L10N_GR_EDI_DEFAULT_IAP_TEST_ENDPOINT = 'https://l10n-gr-edi.test.odoo.com'
 L10N_GR_EDI_IAP_ENDPOINT_PARAM = 'l10n_gr_edi.iap_endpoint'
-L10N_GR_EDI_IAP_ROUTE_PREFIX = '/api/l10n_gr_edi/1'
+L10N_GR_EDI_IAP_ROUTE_PREFIX = '/api/l10n_gr_edi/2'
 L10N_GR_EDI_PROXY_TYPE = 'l10n_gr_edi'
 
 
@@ -50,7 +52,10 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _l10n_gr_edi_proxy_request(self, route, params):
         self.ensure_one()
-        return self._make_request(
+        res = self._make_http_request(
             url=f"{self._get_server_url()}{L10N_GR_EDI_IAP_ROUTE_PREFIX}/{route}",
-            params={**params, 'lang': self.env.lang},
+            method='POST',
+            data=json.dumps({**params, 'lang': self.env.lang}).encode(),
+            headers={'content-type': 'application/json'},
         )
+        return res.json()

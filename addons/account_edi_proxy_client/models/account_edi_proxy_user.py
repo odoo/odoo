@@ -173,7 +173,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                                    auth=OdooEdiProxyAuth(user=self, auth_type=auth_type, routing_type='http'))
         except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout) as e:
             self._raise_connection_error(url, e)
-        if res.status_code == 401:
+        if not res.ok:
             try:
                 proxy_error = res.json().get('proxy_error')
             except ValueError:
