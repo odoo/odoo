@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 from typing import Any
 
@@ -8,7 +7,6 @@ from odoo.libs.debug_log import DebugLog
 
 from .settings import INHERIT_FROM_CRON, current
 
-_logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
 
 BACKOFF_CEILING_S = 60

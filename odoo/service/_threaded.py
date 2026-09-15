@@ -93,7 +93,7 @@ class ThreadedServer(CommonServer):
                 by_type[kind] = by_type.get(kind, 0) + 1
         return {
             "threads": {k: by_type.get(k, 0) for k in _REPORTED_THREAD_TYPES},
-            "http_threads_max": getattr(self.httpd, "max_http_threads", 0),
+            "http_threads_max": self.httpd.max_http_threads if self.httpd else 0,
             "limits_reached_threads": len(self.limits_reached_threads),
         }
 
@@ -130,12 +130,7 @@ class ThreadedServer(CommonServer):
                     thread_execution_time = now - start_time
                     watched += 1  # debuglog
                     longest_s = max(longest_s, thread_execution_time)  # debuglog
-                    if thread_type == "job":
-                        thread_limit_time_real = settings.job_real_time_budget
-                    elif thread_type == "cron":
-                        thread_limit_time_real = settings.cron_real_time_budget
-                    else:
-                        thread_limit_time_real = settings.limit_time_real
+                    thread_limit_time_real = settings.get_real_time_budget(thread_type)
                     if (
                         thread_limit_time_real > 0
                         and thread_execution_time > thread_limit_time_real
@@ -204,6 +199,7 @@ class ThreadedServer(CommonServer):
             channel=CRON_TRIGGER_CHANNEL,
             process_jobs=IrCron._process_jobs,
             label="cron",
+            max_age=self.settings.limit_time_worker_cron,
         )
 
     def run_job_thread(self, number: int) -> None:
@@ -214,6 +210,7 @@ class ThreadedServer(CommonServer):
             channel=JOB_QUEUE_CHANNEL,
             process_jobs=IrJob._process_jobs,
             label="job",
+            max_age=self.settings.job_max_age,
         )
 
     def _run_due_jobs(
@@ -229,8 +226,8 @@ class ThreadedServer(CommonServer):
             release=release,
             kind=getattr(process_jobs, "__qualname__", None),
         )
+        thread = current_worker_thread()
         for db_name in db_names:
-            thread = current_worker_thread()
             thread.start_time = time.monotonic()
             try:
                 with _debug.perf(
@@ -304,12 +301,8 @@ class ThreadedServer(CommonServer):
         channel: str,
         process_jobs: Any,
         label: str,
+        max_age: int,
     ) -> None:
-        settings = self.settings
-        max_age = (
-            settings.job_max_age if label == "job" else settings.limit_time_worker_cron
-        )
-
         cron_logger = self.logger.getChild(f"{label}{number}")
         cron_logger.info("Alive")
         _debug.lifecycle(
@@ -628,10 +621,10 @@ class ThreadedServer(CommonServer):
 
 class EventServer(CommonServer):
     flavor = "evented"
+    port_setting = "gevent_port"
 
     def __init__(self, app: Any) -> None:
         super().__init__(app)
-        self.port = self.settings.gevent_port
         self.httpd: ThreadedHTTPServer | None = None
         self.ppid = os.getppid()
 
@@ -719,16 +712,12 @@ class EventServer(CommonServer):
         super().stop()
 
     def run(self, preload: list[str] | None = None, stop: bool = False) -> int | None:
+        # `preload` is the master's db_name list, which its argv hands every
+        # subprocess; this server loads registries on demand, so it is not a
+        # mistake to report.
         _debug.pipeline(
             "server.evented.run", preload=len(preload or ()), stop=stop, pid=self.pid
         )
-        if preload:
-            self.logger.warning(
-                "Ignoring --init/--update/database preload (%s): the evented "
-                "server does not load registries at startup. Run the module "
-                "install through the main server.",
-                ",".join(preload),
-            )
         if stop:
             self.logger.warning(
                 "Ignoring --stop-after-init: the evented server has no "

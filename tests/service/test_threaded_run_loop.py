@@ -56,6 +56,7 @@ def listen(server):
                 channel="ch",
                 process_jobs=MagicMock(),
                 label="cron",
+                max_age=max_age,
             )
         return backoffs, connect, server.logger.getChild.return_value
 

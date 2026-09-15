@@ -148,6 +148,13 @@ class ServerSettings:
             0,
         )
 
+    def get_real_time_budget(self, kind: str) -> float:
+        if kind == "job":
+            return self.job_real_time_budget
+        if kind == "cron":
+            return self.cron_real_time_budget
+        return max(self.limit_time_real, 0)
+
     @property
     def update_module(self) -> bool:
         return bool(self.init or self.update or self.reinit)

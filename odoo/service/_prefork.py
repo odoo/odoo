@@ -30,7 +30,7 @@ from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
 from ._env import _IS_POSIX, get_env_float
-from ._limits import empty_pipe, get_cron_real_time_budget, get_job_real_time_budget
+from ._limits import empty_pipe
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
 from .settings import SD_LISTEN_FDS_START
@@ -58,6 +58,15 @@ EVENTED_STOP_TIMEOUT_S = 5.0
 SUPERVISION_BEAT_S = 4.0
 """How long the master sleeps between supervision passes; `stop_workers_gracefully`
 shortens it while draining and `reload` restores it."""
+
+RELOAD_TIMEOUT_S = 300.0
+"""How long a reload waits for the replacement to preload and report ready.
+
+The old generation keeps serving throughout, so the wait costs nothing but
+the delay before a hung candidate is declared dead; a registry with a few
+hundred modules routinely takes over a minute to load, which is why this is
+not 60.  `ODOO_RELOAD_TIMEOUT` overrides it.
+"""
 
 
 class PreforkServer(CommonServer):
@@ -91,13 +100,12 @@ class PreforkServer(CommonServer):
 
     def __init__(self, app: Any) -> None:
         super().__init__(app)
-        self.population = self.settings.workers
-        self.timeout = (
-            self.settings.limit_time_real if self.settings.limit_time_real > 0 else None
-        )
-        self.limit_request = self.settings.limit_request
-        self.cron_timeout = get_cron_real_time_budget() or None
-        self.job_timeout = get_job_real_time_budget() or None
+        settings = self.settings
+        self.population = settings.workers
+        self.timeout = settings.get_real_time_budget("http") or None
+        self.limit_request = settings.limit_request
+        self.cron_timeout = settings.get_real_time_budget("cron") or None
+        self.job_timeout = settings.get_real_time_budget("job") or None
         self.beat: float = SUPERVISION_BEAT_S
         self.pipe: tuple[int, int] | None = None
         self.socket: socket.socket | None = None
@@ -783,7 +791,7 @@ class PreforkServer(CommonServer):
             os.close(write_fd)
             write_fd = -1
             timeout = get_env_float(
-                "ODOO_RELOAD_TIMEOUT", 60.0, minimum=1.0, logger=self.logger
+                "ODOO_RELOAD_TIMEOUT", RELOAD_TIMEOUT_S, minimum=1.0, logger=self.logger
             )
             _debug.pipeline(
                 "prefork.reload.candidate_spawned",
@@ -791,8 +799,12 @@ class PreforkServer(CommonServer):
                 timeout=timeout,
             )
             if not self._await_candidate(self._candidate, read_fd, timeout):
+                exited = self._candidate.poll() is not None
                 self.logger.error(
-                    "Reload aborted: replacement not ready; keeping current workers"
+                    "Reload aborted: the replacement %s; keeping current workers",
+                    f"exited with {self._candidate.returncode} before it was ready"
+                    if exited
+                    else f"was not ready after {timeout:.0f}s (ODOO_RELOAD_TIMEOUT)",
                 )
                 _debug.logic(
                     "prefork.reload.aborted",
@@ -946,7 +958,6 @@ class PreforkServer(CommonServer):
             self.kill_worker(pid, signal.SIGINT)
 
         self.beat = 0.1
-        phoenix_decided = _process_state.server_phoenix
         stop_timeout = _get_graceful_stop_timeout(self.logger)
         deadline = time.monotonic() + stop_timeout
         escalated = False
@@ -954,7 +965,7 @@ class PreforkServer(CommonServer):
             "prefork.stop.workers_signalled",
             workers=len(self.workers),
             timeout=stop_timeout,
-            phoenix=phoenix_decided,
+            phoenix=_process_state.server_phoenix,
         )
         while self.workers:
             try:
@@ -989,7 +1000,6 @@ class PreforkServer(CommonServer):
             escalated=escalated,
             seconds=time.monotonic() - (deadline - stop_timeout),
         )
-        _process_state.set_phoenix(phoenix_decided)
 
     def stop(self, graceful: bool = True) -> None:
         _debug.lifecycle(

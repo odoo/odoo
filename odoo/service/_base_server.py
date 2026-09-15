@@ -75,11 +75,12 @@ class CommonServer:
     visible, where a name-keyed dict outside the class answers with the class
     name and is not.
     """
+    port_setting = "http_port"
 
     def __init__(self, app: Any) -> None:
         self.app = app
         self.interface: str = self.settings.http_interface or "0.0.0.0"
-        self.port: int = self.settings.http_port
+        self.port: int = getattr(self.settings, self.port_setting)
         self.pid: int = os.getpid()
         self.logger = _logger.getChild(self.__class__.__name__)
         self._process_handle = psutil.Process(self.pid)

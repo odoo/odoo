@@ -15,7 +15,7 @@ runbook — most of all in whether memory is shared.
 
 | Condition | Server | Concurrency | Shared memory |
 |---|---|---|---|
-| `odoo.evented` | `EventServer` | gevent greenlets | one process |
+| `odoo.evented` | `EventServer` | Python threads on the websocket port (`gevent_port`); no gevent anywhere in the fork | one process |
 | `workers > 0` | `PreforkServer` | forked OS processes | **none** |
 | otherwise (default) | `ThreadedServer` | Python threads | one process |
 
@@ -101,14 +101,14 @@ Defaults, from `odoo/tools/config.py`:
 
 **There is one memory limit, not one of four.** `limit_memory_soft` is enforced at
 three sites — `_worker.py`'s `check_limits`, and `_threaded.py` for the HTTP and
-gevent paths — each calling `get_memory_over_soft_limit()` (`_limits.py`) on the
+evented paths — each calling `get_memory_over_soft_limit()` (`_limits.py`) on the
 process's RSS and, above it, clearing `alive` so the worker stops after the
 current request. A fourth site reads the value for an unrelated purpose:
 `lifecycle.py::_limit_resident_registries` divides it by the average registry
 size to bound how many registries are held at once.
 
 `limit_memory_hard` is read **nowhere in `odoo/service/`**. There is no
-in-process `RLIMIT_AS`: the allocator and gevent reserve multi-GB of
+in-process `RLIMIT_AS`: the allocator and the thread stacks reserve multi-GB of
 never-resident virtual address space, which that rlimit counts and RSS does
 not. `config.py`'s help says "Deprecated/not enforced in-process" and directs
 the hard cap to a cgroup v2 limit on the systemd unit (`MemoryMax=` with

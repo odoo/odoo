@@ -263,6 +263,52 @@ class TestWorkerHttpAcceptErrors:
         worker.process_request.assert_called_once_with(client, addr)
 
 
+class TestAcceptWaitsForTheListenerToBeReadable:
+    """A beat that merely timed out, or a signal on the wakeup pipe, is not a
+    connection.  Before the gate every idle worker called `accept()` once per
+    beat and logged the EAGAIN as a lost race."""
+
+    def _worker(self, multi, ready_fds):
+        worker = object.__new__(_worker.WorkerHTTP)
+        worker.multi = multi
+        worker.wakeup_fd_r = 40
+        worker._selector = MagicMock()
+        worker._selector.select.return_value = [
+            (MagicMock(fd=fd), selectors.EVENT_READ) for fd in ready_fds
+        ]
+        multi.socket = MagicMock()
+        multi.socket.accept.return_value = (MagicMock(), ("127.0.0.1", 1))
+        worker.process_request = MagicMock()
+        return worker
+
+    def test_a_timed_out_beat_does_not_accept(self, multi):
+        worker = self._worker(multi, [])
+        with patch.object(_worker, "empty_pipe"):
+            worker.sleep()
+        worker.process_work()
+        multi.socket.accept.assert_not_called()
+
+    def test_a_wakeup_pipe_wake_does_not_accept(self, multi):
+        worker = self._worker(multi, [40])
+        with patch.object(_worker, "empty_pipe"):
+            worker.sleep()
+        worker.process_work()
+        multi.socket.accept.assert_not_called()
+
+    def test_a_readable_listener_accepts(self, multi):
+        worker = self._worker(multi, [40, 7])
+        with patch.object(_worker, "empty_pipe"):
+            worker.sleep()
+        worker.process_work()
+        multi.socket.accept.assert_called_once()
+        worker.process_request.assert_called_once()
+
+    def test_a_direct_call_still_accepts(self, multi):
+        worker = self._worker(multi, [])
+        worker.process_work()
+        multi.socket.accept.assert_called_once()
+
+
 class TestTheCursorIsReleasedAndTheConnectionIsLeftAlone:
     """Close the cursor.  Do not touch the connection under it.
 

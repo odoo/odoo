@@ -46,10 +46,10 @@ class WorkerCensus:
         now = time.monotonic()
         if now - self.written_at < CENSUS_WRITE_INTERVAL_S:
             return False
-        self.written_at = now
         path = self.path
         if path is None:
             return False
+        self.written_at = now
         tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
         try:
             tmp.write_text(json.dumps(payload()))

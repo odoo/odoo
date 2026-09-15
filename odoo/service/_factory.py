@@ -158,10 +158,6 @@ def _run_configured_server(
     settings: ServerSettings, preload: list[str] | None, stop: bool
 ) -> int:
     load_server_wide_modules()
-    _debug.pipeline(
-        "server.server_wide_modules_loaded",
-        modules=len(settings.server_wide_modules),
-    )
     import odoo.http
 
     app = _wrap_app_in_debugger(odoo.http.root, settings)

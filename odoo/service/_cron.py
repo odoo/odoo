@@ -320,6 +320,7 @@ class CronSchedule:
         self._clock = clock or time.monotonic
         self._known: OrderedSet[str] = OrderedSet()
         self._listed_at = float("-inf")
+        self._relisted_for_unknown = False
 
     @property
     def known(self) -> OrderedSet[str]:
@@ -333,19 +334,33 @@ class CronSchedule:
         """Bound listener sleep by the next sweep, including the first one."""
         return max(0.0, self._listed_at + self._refresh_interval - self._clock())
 
-    def reset_known_databases(self) -> OrderedSet[str]:
+    def _list_known_databases(self, reason: str) -> OrderedSet[str]:
         previous = self._known
         # Late-bound so a patch on `get_cron_databases` scopes every sweep.
         list_databases = self._list_databases or get_cron_databases
         self._known = OrderedSet(list_databases())
-        self._listed_at = self._clock()
         _debug.logic(
             "cron.schedule.databases_listed",
+            reason=reason,
             databases=len(self._known),
             added=len(set(self._known) - set(previous)),
             removed=len(set(previous) - set(self._known)),
         )
         return self._known
+
+    def reset_known_databases(self) -> OrderedSet[str]:
+        self._listed_at = self._clock()
+        self._relisted_for_unknown = False
+        return self._list_known_databases("sweep")
+
+    def _admit_unknown_databases(self, notified: Iterable[str]) -> None:
+        # A database created since the last sweep notifies under a name the
+        # list has never seen; one re-read per interval admits it now rather
+        # than on the next sweep, while a storm of unknown names stays one scan.
+        if self._relisted_for_unknown or all(n in self._known for n in notified):
+            return
+        self._relisted_for_unknown = True
+        self._list_known_databases("unknown_notified")
 
     def get_due_databases(self, notified: Iterable[str]) -> list[str]:
         if not isinstance(notified, Sized):
@@ -354,6 +369,7 @@ class CronSchedule:
         if stale:
             due = order_notified_first(notified, self.reset_known_databases())
         else:
+            self._admit_unknown_databases(notified)
             due = [name for name in notified if name in self._known]
         _debug.pipeline(
             "cron.schedule.due",

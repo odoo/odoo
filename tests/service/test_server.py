@@ -1820,7 +1820,11 @@ def _drive_listen_thread(listen_server, process_jobs, *, sleeps_before_stop=2):
     ):
         with pytest.raises(_StopHarness):
             listen_server._run_listener_thread(
-                0, channel="cron_trigger", process_jobs=process_jobs, label="cron"
+                0,
+                channel="cron_trigger",
+                process_jobs=process_jobs,
+                label="cron",
+                max_age=0,
             )
         calls["full_scans"] = db_list.call_count
     return calls
@@ -2017,7 +2021,11 @@ class TestListenThreadFirstPassIsImmediate:
         ):
             with pytest.raises(_StopHarness):
                 listen_server._run_listener_thread(
-                    0, channel="cron_trigger", process_jobs=MagicMock(), label="cron"
+                    0,
+                    channel="cron_trigger",
+                    process_jobs=MagicMock(),
+                    label="cron",
+                    max_age=0,
                 )
         return seen
 
@@ -2063,7 +2071,11 @@ class TestListenThreadFirstPassIsImmediate:
         ):
             with pytest.raises(_StopHarness):
                 listen_server._run_listener_thread(
-                    0, channel="cron_trigger", process_jobs=process_jobs, label="cron"
+                    0,
+                    channel="cron_trigger",
+                    process_jobs=process_jobs,
+                    label="cron",
+                    max_age=0,
                 )
         process_jobs.assert_called_once_with("db1")
 

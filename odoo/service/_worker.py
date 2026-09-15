@@ -81,6 +81,16 @@ def watch_accept(selector: selectors.BaseSelector, sock: socket.socket) -> bool:
 class Worker:
     _CPU_LIMIT_JOIN_GRACE_S = 1.0
 
+    _listener_ready = True
+    """Whether the last `sleep()` was woken by a watched fd other than its own
+    wakeup pipe.  True until a first `sleep()` says otherwise, so a direct
+    `process_work()` still does its work."""
+
+    _polls_wakeup_pipe = True
+    """Whether `start()` opens the selector `sleep()` waits on.  The cron
+    worker waits on its listener's selector instead, with the wakeup pipe
+    registered there."""
+
     def __init__(self, multi: PreforkServer) -> None:
         self.multi = multi
         self.watchdog_time = time.monotonic()
@@ -136,7 +146,8 @@ class Worker:
         )
 
     def sleep(self) -> None:
-        self._selector.select(timeout=self.multi.beat)
+        ready = self._selector.select(timeout=self.multi.beat)
+        self._listener_ready = any(key.fd != self.wakeup_fd_r for key, _ in ready)
         empty_pipe(self.wakeup_fd_r)
 
     def check_limits(self) -> None:
@@ -224,12 +235,14 @@ class Worker:
         signal.signal(signal.SIGTTOU, signal.SIG_DFL)
 
         signal.set_wakeup_fd(self.wakeup_fd_w)
-        self._selector = selectors.DefaultSelector()
-        self._selector.register(self.wakeup_fd_r, selectors.EVENT_READ)
+        if self._polls_wakeup_pipe:
+            self._selector = selectors.DefaultSelector()
+            self._selector.register(self.wakeup_fd_r, selectors.EVENT_READ)
 
     def stop(self) -> None:
-        if hasattr(self, "_selector"):
-            self._selector.close()
+        selector = getattr(self, "_selector", None)
+        if selector is not None:
+            selector.close()
 
     def run(self) -> None:
         self.start()
@@ -353,7 +366,9 @@ class WorkerHTTP(Worker):
         )
 
     def process_work(self) -> None:
-        if self.multi.socket is None:
+        # A beat that timed out has nothing to accept; only a wake on the
+        # listening socket does, and losing that one to a sibling is the race.
+        if self.multi.socket is None or not self._listener_ready:
             return
         try:
             client, addr = self.multi.socket.accept()
@@ -390,6 +405,7 @@ class WorkerHTTP(Worker):
 
 class WorkerCron(Worker):
     listen_channel = CRON_TRIGGER_CHANNEL
+    _polls_wakeup_pipe = False
 
     def __init__(self, multi: PreforkServer) -> None:
         super().__init__(multi)
@@ -550,8 +566,6 @@ class WorkerCron(Worker):
     def start(self) -> None:
         os.nice(10)
         Worker.start(self)
-        self._selector.close()
-        del self._selector
         if self.multi.socket:
             self.multi.socket.close()
         registries_size = get_env_int(

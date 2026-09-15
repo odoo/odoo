@@ -79,6 +79,29 @@ class TestANotifyStormIsNotAScanStorm:
         assert schedule.get_due_databases([]) == ["a", "d"]
         assert catalogue["calls"] == 2
 
+    def test_a_database_created_between_sweeps_is_due_on_its_first_notify(
+        self, schedule, catalogue, clock
+    ):
+        schedule.get_due_databases([])
+        clock.advance(1)
+        catalogue["names"] = ["a", "b", "c", "d"]
+        assert schedule.get_due_databases(["d"]) == ["d"]
+        assert catalogue["calls"] == 2
+
+    def test_unknown_names_re_read_the_list_once_per_interval(
+        self, schedule, catalogue, clock
+    ):
+        schedule.get_due_databases([])
+        for _ in range(50):
+            clock.advance(0.1)
+            assert schedule.get_due_databases(["nope"]) == []
+        assert catalogue["calls"] == 2
+        clock.advance(60)
+        schedule.get_due_databases([])
+        clock.advance(1)
+        schedule.get_due_databases(["nope"])
+        assert catalogue["calls"] == 4
+
     def test_a_database_that_disappeared_stops_being_due(
         self, schedule, catalogue, clock
     ):

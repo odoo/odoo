@@ -10,7 +10,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING
 
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.http1 import ProtocolError, find_head
@@ -28,6 +28,9 @@ from ._transport import (
 )
 from .settings import SD_LISTEN_FDS_START, current
 
+if TYPE_CHECKING:
+    from .settings import ServerSettings
+
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
 
@@ -38,7 +41,7 @@ _RESOURCE_WARNING_INTERVAL = 60.0
 _RESOURCE_ERRNOS = frozenset({errno.EMFILE, errno.ENFILE, errno.ENOBUFS, errno.ENOMEM})
 
 
-def compute_http_thread_limit(settings: Any) -> tuple[int, int]:
+def compute_http_thread_limit(settings: ServerSettings) -> tuple[int, int]:
     auto_limit = max(
         (settings.db_maxconn - settings.max_cron_threads - settings.job_workers) // 2, 1
     )
@@ -53,7 +56,9 @@ def compute_http_thread_limit(settings: Any) -> tuple[int, int]:
     return limit, auto_limit
 
 
-def announce_thread_budget(settings: Any, limit: int, auto_limit: int) -> None:
+def announce_thread_budget(
+    settings: ServerSettings, limit: int, auto_limit: int
+) -> None:
     if not limit:
         _logger.info(
             "HTTP concurrency is unbounded (ODOO_MAX_HTTP_THREADS=0); "

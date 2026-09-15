@@ -57,7 +57,7 @@ def _load_server_wide_modules() -> None:
             _logger.exception("Failed to load server-wide module `%s`.%s", m, msg)
 
 
-def _reexec_server(updated_modules: list[str] | None = None) -> None:
+def _reexec_server() -> None:
     if osutil.is_running_as_nt_service(nt_service_name):
         rc = subprocess.call(  # noqa: S602  fixed literal, no user input
             f"net stop {nt_service_name} && net start {nt_service_name}",
@@ -74,16 +74,9 @@ def _reexec_server(updated_modules: list[str] | None = None) -> None:
         _debug.logic("service.nt_service_restart_failed", rc=rc)
     exe = Path(sys.executable).name
     args = stripped_sys_argv()
-    if updated_modules:
-        args += ["-u", ",".join(updated_modules)]
     if not args or args[0] not in (sys.executable, exe):
         args.insert(0, sys.executable)
-    _debug.lifecycle(
-        "service.reexec",
-        pid=os.getpid(),
-        argv=len(args),
-        updated_modules=len(updated_modules or ()),
-    )
+    _debug.lifecycle("service.reexec", pid=os.getpid(), argv=len(args))
     os.execve(sys.executable, args, os.environ)  # noqa: S606  re-exec of ourselves IS the restart
 
 
