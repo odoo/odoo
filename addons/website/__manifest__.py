@@ -25,6 +25,9 @@
         'apt': {
             'geoip2': 'python3-geoip2',
         },
+        'dnf': {
+            'geoip2': 'python3-geoip2',
+        },
     },
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
