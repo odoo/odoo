@@ -181,6 +181,11 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         mock_media_library_search.routing_type = 'json'
         HTML_Editor.media_library_search = http.route(['/html_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
 
+        # The routing map is cached (the "routing" ormcache) with the controller endpoints
+        # baked in. When it was already built with the original method, the patch above
+        # is ignored.
+        self.env.transaction.invalidate_ormcache("routing")
+
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_media_dialog_undraw', login='admin')
 
     def test_dynamic_svg_theme_colors(self):
