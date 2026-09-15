@@ -6,6 +6,10 @@ $o-mail-ChatHub-bubblesMargin: 10px !default; // same value as BUBBLE_OUTER
 $o-mail-ChatBubble-size: 42px !default;
 $o-mail-ChatBubble-sizeBig: 50px !default;
 $o-mail-ChatBubble-zindex: 1001 !default;
+$o-mail-Composer-chatWindowVPadding: 7px !default;
+$o-mail-Composer-lineHeight: 1.42857143 !default; // 20px with the default 14px base font size.
+$o-mail-Composer-lineSize: $o-font-size-base * $o-mail-Composer-lineHeight !default; // Half the text line plus the 1px container border; vertical padding is added at use sites.
+$o-mail-Composer-pillRadiusBase: calc(#{$o-mail-Composer-lineSize / 2} + 1px) !default;
 // Needed because $border-radius variations are all set to 0 in enterprise.
 $o-RoundedRectangle-small: .2rem !default;
 $o-RoundedRectangle-large: 3 * $o-RoundedRectangle-small !default;
