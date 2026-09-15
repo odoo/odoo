@@ -46,6 +46,7 @@ import { whenReady } from "@odoo/owl";
 export const OPEN_DELAY = 400;
 export const CLOSE_DELAY = 200;
 export const SHOW_AFTER_DELAY = 250;
+export const TOUCH_MOVE_THRESHOLD = 5;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
@@ -55,6 +56,7 @@ export const tooltipService = {
         let openTooltipTimeout;
         let closeTooltip;
         let showTimer;
+        let touchStartPosition = null;
         let target = null;
 
         /**
@@ -334,10 +336,36 @@ export const tooltipService = {
          */
         function onTouchStart(ev) {
             cleanup();
+            const touch = ev.touches[0];
+            touchStartPosition = touch && { x: touch.clientX, y: touch.clientY };
             const timeoutDelay = isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
             showTimer = browser.setTimeout(() => {
                 openElementsTooltip(ev.target, true);
             }, timeoutDelay);
+        }
+
+        /**
+         * Cancels the tooltip if the touch moved further than a small threshold
+         * since the "touchstart" (e.g. the user is scrolling or dragging).
+         *
+         * @param {TouchEvent} ev a "touchmove" event
+         */
+        function onTouchMove(ev) {
+            const touch = ev.touches[0];
+            if (!touchStartPosition || !touch) {
+                return;
+            }
+            const distance = Math.hypot(
+                touch.clientX - touchStartPosition.x,
+                touch.clientY - touchStartPosition.y
+            );
+            if (distance < TOUCH_MOVE_THRESHOLD) {
+                return;
+            }
+            touchStartPosition = null;
+            browser.clearTimeout(showTimer);
+            showTimer = null;
+            cleanup();
         }
 
         function onTouchCancelEnd(ev) {
@@ -365,6 +393,7 @@ export const tooltipService = {
 
             if (hasTouch()) {
                 document.body.addEventListener("touchstart", onTouchStart);
+                document.body.addEventListener("touchmove", onTouchMove);
                 document.body.addEventListener("touchend", onTouchCancelEnd);
                 document.body.addEventListener("touchcancel", onTouchCancelEnd);
             }
