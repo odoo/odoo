@@ -1,4 +1,5 @@
 import os
+import re
 from PIL import Image
 from functools import partial
 
@@ -237,3 +238,36 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({'street2': 'street_2_detail'})
         doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
         self.assertTrue('street_2_detail' in doc_layout_2.company_details)
+
+    def _company_has_bubble_table_colors(self, styles, company, primary_color):
+        company_marker = f'.o_company_{company.id}_layout'
+        company_start = styles.find(company_marker)
+        if company_start == -1:
+            return False
+        company_styles = styles[company_start:]
+        next_company = re.search(
+            r'(?=\n\s*\.o_company_\d+_layout)',
+            company_styles[len(company_marker):],
+        )
+        if next_company:
+            company_styles = company_styles[:len(company_marker) + next_company.start()]
+        return (
+            'o_report_layout_bubble' in company_styles
+            and 'thead th' in company_styles
+            and primary_color in company_styles
+        )
+
+    def test_report_tables_id_change_updates_company_report_styles(self):
+        """Test that changing only the table design must refresh report table colors."""
+        primary_color = '#ff0080'
+        attachment = self.env.ref('web.asset_styles_company_report')
+        self.company.write({
+            'primary_color': primary_color,
+            'report_tables_id': 'light',
+        })
+        styles = (attachment.raw or b'').decode()
+        self.assertFalse(self._company_has_bubble_table_colors(styles, self.company, primary_color))
+
+        self.company.write({'report_tables_id': 'bubble'})
+        styles = (attachment.raw or b'').decode()
+        self.assertTrue(self._company_has_bubble_table_colors(styles, self.company, primary_color))
