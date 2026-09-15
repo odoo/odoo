@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from lxml import etree
+
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
@@ -311,6 +313,82 @@ class TestOrderSharedFeatures(TransactionCase):
                     invoice_line._related_analytic_distribution(),
                     distribution,
                 )
+
+    def test_a_salesman_without_purchase_rights_invoices_an_order(self):
+        salesman = self.env["res.users"].create(
+            {
+                "name": "Salesman without purchase",
+                "login": "shared_features_salesman",
+                "group_ids": [
+                    Command.set([self.env.ref("sale.group_sale_salesman").id])
+                ],
+            },
+        )
+        self.assertFalse(
+            self.env["purchase.order.line"].with_user(salesman).has_access("read")
+        )
+        order = self._orders()["sale.order"]
+        order.user_id = salesman
+        order.action_confirm()
+
+        invoice = order._create_invoices()
+        invoice_line = invoice.invoice_line_ids.filtered("product_id")[:1].with_user(
+            salesman
+        )
+        values = {}
+        invoice_line._copy_data_extend_business_fields(values)
+
+        self.assertEqual(invoice_line._related_analytic_distribution(), {})
+        self.assertEqual(values["sale_line_ids"][0][2], order.line_ids.ids)
+        self.assertEqual(values["purchase_line_ids"][0][2], [])
+
+    def _form_reader(self, group_xmlid):
+        return self.env["res.users"].create(
+            {
+                "name": f"Reader of {group_xmlid}",
+                "login": f"form_reader_{group_xmlid}",
+                "group_ids": [Command.set([self.env.ref(group_xmlid).id])],
+            },
+        )
+
+    def _read_the_invoice_form_as(self, user, move):
+        Move = self.env["account.move"].with_user(user)
+        views = Move.get_views([(False, "form")])
+        arch = etree.fromstring(views["views"]["form"]["arch"])
+        for node in arch.xpath("//field[not(ancestor::field)]"):
+            with self.subTest(user=user.login, field=node.get("name")):
+                Move.browse(move.id).invalidate_recordset()
+                Move.browse(move.id).web_read({node.get("name"): {}})
+
+    def test_an_invoice_form_opens_for_each_side_without_the_other_sides_rights(self):
+        salesman = self._form_reader("sale.group_sale_salesman")
+        buyer = self._form_reader("purchase.group_purchase_user")
+        orders = self._orders()
+        for order in orders.values():
+            order.action_confirm()
+        invoice = orders["sale.order"]._create_invoices()
+        invoice.invoice_user_id = salesman
+        bill = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": self.partner.id,
+                "invoice_user_id": buyer.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": self.product.id,
+                            "purchase_line_ids": [
+                                Command.set(orders["purchase.order"].line_ids.ids)
+                            ],
+                        }
+                    )
+                ],
+            },
+        )
+        self.assertTrue(invoice.with_user(salesman).has_access("read"))
+        self.assertTrue(bill.with_user(buyer).has_access("read"))
+        self._read_the_invoice_form_as(salesman, invoice)
+        self._read_the_invoice_form_as(buyer, bill)
 
     def test_invoice_line_carries_the_products_warning(self):
         for order_type, group in (

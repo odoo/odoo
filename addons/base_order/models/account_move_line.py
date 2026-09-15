@@ -15,13 +15,15 @@ class AccountMoveLine(models.Model):
 
     def _copy_data_extend_business_fields(self, values):
         super()._copy_data_extend_business_fields(values)
+        linked = self.sudo()
         for field_name in self._get_fields_order_line_link():
-            values[field_name] = [Command.set(self[field_name].ids)]
+            values[field_name] = [Command.set(linked[field_name].ids)]
 
     def _related_analytic_distribution(self):
         vals = super()._related_analytic_distribution()
+        linked = self.sudo()
         for field_name in self._get_fields_order_line_link():
-            if order_lines := self[field_name]:
+            if order_lines := linked[field_name]:
                 vals |= order_lines[0].analytic_distribution or {}
                 _debug.logic(
                     "analytic_from_order_line", line=self, order_line=order_lines[0]

@@ -55,6 +55,7 @@
                     name="action_view_source_sale_orders"
                     type="object"
                     icon="fa-regular fa-pen-to-square"
+                    groups="sale.group_sale_salesman"
                     invisible="sale_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
                     class="oe_stat_button">
                     <field
@@ -88,7 +89,10 @@
                 <attribute name="readonly">is_downpayment</attribute>
             </xpath>
             <header position="inside">
-                <field name="sale_order_count" invisible="1" />
+                <field
+                    name="sale_order_count"
+                    groups="sale.group_sale_salesman"
+                    invisible="1" />
                 <button
                     name="create_sale_order"
                     type="object"

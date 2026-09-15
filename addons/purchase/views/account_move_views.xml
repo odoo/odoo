@@ -83,11 +83,15 @@
                 </button>
             </xpath>
             <header position="inside">
-                <field name="purchase_order_count" invisible="1" />
+                <field
+                    name="purchase_order_count"
+                    groups="purchase.group_purchase_user"
+                    invisible="1" />
                 <button
                     name="create_purchase_order"
                     type="object"
                     string="Create Purchase"
+                    groups="purchase.group_purchase_user"
                     invisible="move_type != 'in_invoice' or state != 'posted' or purchase_order_count != 0"
                     class="oe_highlight" />
             </header>
