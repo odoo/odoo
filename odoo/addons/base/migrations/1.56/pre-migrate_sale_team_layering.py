@@ -104,6 +104,7 @@ def migrate(cr, version):
         _dissolve_sale_management(cr, module_ids[DISSOLVED], module_ids[SALE])
     if SALES_TEAM in module_ids and SALE in module_ids:
         adopt_xmlids(cr, SALES_TEAM, SALE, GROUPS)
+        _drop_views_inline_in(cr, SALE, SALES_TEAM, TEAM_RECORDS)
         adopt_xmlids(cr, SALE, SALES_TEAM, TEAM_RECORDS)
         _move_schema_rows(
             cr,
@@ -229,6 +230,42 @@ def _drop_superseded_views(cr):
         (DISSOLVED, names),
     )
     _logger.info("dropped %s superseded view(s), now inline in %s", deleted, SALE)
+
+
+def _drop_views_inline_in(cr, from_module, to_module, names):
+    # Upstream sale patched sales_team's views under the same xml id; that patch is
+    # inline in the view sales_team now owns, so the two ids would collide.
+    cr.execute(
+        """
+        SELECT patch.id, patched.id, d.name
+          FROM ir_model_data d
+          JOIN ir_ui_view patch ON patch.id = d.res_id
+          JOIN ir_model_data o ON o.module = %s AND o.name = d.name
+                              AND o.model = 'ir.ui.view'
+          JOIN ir_ui_view patched ON patched.id = o.res_id
+         WHERE d.module = %s AND d.model = 'ir.ui.view' AND d.name = ANY(%s)
+           AND patch.inherit_id = patched.id
+        """,
+        (to_module, from_module, list(names)),
+    )
+    inlined = cr.fetchall()
+    for patch_id, patched_id, name in inlined:
+        cr.execute(
+            "UPDATE ir_ui_view SET inherit_id = %s WHERE inherit_id = %s",
+            (patched_id, patch_id),
+        )
+        cr.execute("DELETE FROM ir_ui_view WHERE id = %s", (patch_id,))
+        cr.execute(
+            "DELETE FROM ir_model_data WHERE module = %s AND name = %s",
+            (from_module, name),
+        )
+    _logger.info(
+        "dropped %s %s view(s) now inline in %s: %s",
+        len(inlined),
+        from_module,
+        to_module,
+        [name for _patch, _patched, name in inlined],
+    )
 
 
 def _refuse_collisions(cr, from_module, to_module):

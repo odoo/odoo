@@ -19,6 +19,10 @@ def migrate(cr, version):
         "ADD COLUMN IF NOT EXISTS notify_pool_members boolean"
     )
     cr.execute(
+        "ALTER TABLE approval_category "
+        "ADD COLUMN IF NOT EXISTS notify_pool_members boolean"
+    )
+    cr.execute(
         "UPDATE approval_category SET notify_pool_members = TRUE "
         "WHERE group_approval = 'exclusive'"
     )
