@@ -198,6 +198,16 @@ class MailTestMultiCompany(models.Model):
     company_id = fields.Many2one('res.company')
 
 
+class MailTestMultiCompanyUIDDependent(models.Model):
+    _name = 'mail.test.multi.company.uid.dependent'
+    _description = "Test Multi Company Mail UID Dependent"
+    _inherit = 'mail.thread.main.attachment'
+
+    name = fields.Char(tracking=True)
+    company_id = fields.Many2one('res.company', tracking=True)
+    company_ids = fields.Many2many('res.company', depends_context=('uid',), tracking=True, string="Companies")
+
+
 class MailTestMultiCompanyRead(models.Model):
     """ Just mail.test.simple, but multi company and supporting posting
     even if the user has no write access. """
