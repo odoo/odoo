@@ -12,7 +12,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
-import { MeetingSideActions } from "./meeting_side_actions";
+import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
@@ -88,6 +88,19 @@ export class Meeting extends Component {
                 !this.rtc.isMeetingReadyBannerDismissed &&
                 this.channel.rtc_session_ids.length <= 1
         );
+    }
+
+    /** Handed to the call bar's "More" when this bar has no room for a cluster of its own. */
+    get sideActionGroups() {
+        // PiP has its own, much shorter list ({@link pipExtraActions}).
+        if (this.hasSideActions || this.rtc.isPipMode) {
+            return [];
+        }
+        return meetingMoreActionGroups(this.threadActions);
+    }
+
+    get hasSideActions() {
+        return !this.rtc.isPipMode && !this.ui.isSmall;
     }
 
     get pipExtraActions() {
