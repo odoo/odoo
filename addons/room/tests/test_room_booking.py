@@ -1,0 +1,103 @@
+from datetime import datetime
+
+from freezegun import freeze_time
+from psycopg import IntegrityError
+
+from odoo.exceptions import ValidationError
+from odoo.tests.common import tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.room.tests.common import RoomCommon
+
+
+@tagged("post_install", "-at_install")
+class TestRoomBooking(RoomCommon):
+    def test_a_room_is_a_bookable_asset_with_a_kiosk(self):
+        room = self.rooms[0]
+        profile = room.appointment_resource_id
+        self.assertEqual(profile.resource_id, room.resource_id)
+        self.assertIn(self.room_type, profile.appointment_type_ids)
+        self.assertTrue(profile.access_token)
+        self.assertTrue(self.profiles[1].short_code)
+        self.assertTrue(room.resource_id.enforce_booking_limit)
+        self.assertEqual(room.display_name, "Office 1 - Room 1")
+
+    def test_an_asset_that_becomes_a_room_gets_its_kiosk(self):
+        asset = self.env["resource.asset"].create(
+            {
+                "name": "Board room",
+                "kind_id": self.env.ref("resource_asset.kind_property").id,
+                "state": "in_service",
+            }
+        )
+        self.assertFalse(asset.appointment_resource_id)
+        asset.kind_id = self.env.ref("room.kind_room")
+        self.assertTrue(asset.appointment_resource_id.access_token)
+
+    def test_a_booking_holds_the_whole_room(self):
+        reservation = self.bookings[0].reservation_ids
+        self.assertEqual(reservation.resource_id, self.rooms[0].resource_id)
+        self.assertEqual(reservation.allocated_percentage, 100.0)
+
+    def test_overlapping_bookings_are_refused(self):
+        with self.assertRaises(ValidationError):
+            self.env["calendar.event"].create(
+                self._booking_vals("Meeting", self.profiles[0], 10, 11)
+            )
+        with self.assertRaises(ValidationError):
+            self.env["calendar.event"].create(
+                [
+                    self._booking_vals("Meeting 1", self.profiles[0], 13, 15),
+                    self._booking_vals("Meeting 2", self.profiles[0], 14, 16),
+                ]
+            )
+        self.env["calendar.event"].create(
+            self._booking_vals("Other room", self.profiles[1], 10, 11)
+        )
+
+    def test_a_reservation_from_elsewhere_blocks_the_room(self):
+        self.env["resource.reservation"].create(
+            {
+                "name": "Repainting",
+                "resource_id": self.rooms[0].resource_id.id,
+                "date_start": datetime(2023, 5, 16, 8, 0),
+                "date_end": datetime(2023, 5, 16, 18, 0),
+                "enforcement_mode": "hard",
+                "res_model": "maintenance.order",
+                "res_id": 1,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.env["calendar.event"].create(
+                self._booking_vals("Meeting", self.profiles[0], 9, 10, day=16)
+            )
+        blocks = self.profiles[0]._get_room_blocks(datetime(2023, 5, 16, 0, 0))
+        self.assertEqual(blocks.mapped("name"), ["Repainting"])
+
+    def test_a_room_out_of_service_refuses_bookings(self):
+        self.rooms[1].action_set_out_of_service()
+        with self.assertRaises(ValidationError):
+            self.env["calendar.event"].create(
+                self._booking_vals("Meeting", self.profiles[1], 9, 10)
+            )
+
+    def test_next_booking_start_and_availability_read_the_ledger(self):
+        profile = self.profiles[0]
+        with freeze_time("2023-05-15 09:00:00"):
+            profile.invalidate_recordset(["next_booking_start", "is_available"])
+            self.assertTrue(profile.is_available)
+            self.assertEqual(profile.next_booking_start, datetime(2023, 5, 15, 10, 0))
+        with freeze_time("2023-05-15 10:30:00"):
+            profile.invalidate_recordset(["next_booking_start", "is_available"])
+            self.assertFalse(profile.is_available)
+            self.assertEqual(profile.next_booking_start, datetime(2023, 5, 15, 11, 0))
+            self.assertFalse(self.rooms[0].room_is_available)
+
+    @mute_logger("odoo.db.cursor")
+    def test_kiosk_codes_are_unique(self):
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            self.profiles[1].short_code = self.profiles[0].short_code
+            self.profiles[1].flush_recordset()
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            self.profiles[1].access_token = self.profiles[0].access_token
+            self.profiles[1].flush_recordset()

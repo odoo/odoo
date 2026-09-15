@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="kind_room" model="resource.asset.kind">
+        <field name="name">Meeting Room</field>
+        <field name="code">room</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="appointment_type_room" model="appointment.type">
+        <field name="name">Meeting Rooms</field>
+        <field name="schedule_based_on">resources</field>
+        <field name="is_auto_assign">False</field>
+        <field name="is_published">False</field>
+        <field name="event_videocall_source" eval="False" />
+    </record>
+
+</odoo>

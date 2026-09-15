@@ -324,11 +324,11 @@ class TestResourceReservation(TransactionCase):
         )
         res2 = self.Reservation.create(
             {
-                "name": "From rooms",
+                "name": "From appointments",
                 "resource_id": self.resource_a.id,
                 "date_start": datetime(2025, 1, 6, 10, 0),
                 "date_end": datetime(2025, 1, 6, 14, 0),
-                "res_model": "room.booking",
+                "res_model": "calendar.event",
                 "res_id": 1,
             }
         )

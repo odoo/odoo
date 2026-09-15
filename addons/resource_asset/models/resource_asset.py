@@ -2,6 +2,7 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
+from odoo.tools.translate import html_translate
 
 
 class ResourceAsset(models.Model):
@@ -56,7 +57,7 @@ class ResourceAsset(models.Model):
     brand_new = fields.Boolean(default=True)
     model = fields.Char(string="Model Name")
     model_year = fields.Char()
-    description = fields.Html()
+    description = fields.Html(translate=html_translate)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Vendor",

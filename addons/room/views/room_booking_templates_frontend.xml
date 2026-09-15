@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="room_booking"
+        name="Room Booking"
+        inherit_id="web.layout"
+        primary="True">
+        <xpath expr="//html" position="before">
+            <t t-set="html_data" t-value="{'lang': lang}" />
+        </xpath>
+        <xpath expr="//head/meta[last()]" position="after">
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="mobile-web-app-capable" content="yes" />
+        </xpath>
+        <xpath expr="//head/link[last()]" position="after">
+            <t t-call-assets="room.assets_room_booking" t-js="false" />
+        </xpath>
+        <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
+            <script type="text/javascript">
+                odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())" />;
+                    if (!/(^|;\s)tz=/.test(document.cookie)) {
+                    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    document.cookie = `tz=${userTZ}; path=/`;
+                }
+            </script>
+            <t t-set="title" t-value="room.name" />
+            <t t-set="body_classname" t-value="'o_room_booking_frontend'" />
+            <!-- Order mirrors ``web.frontend_layout`` and is load-bearing twice
+                over.  ``web.assets_frontend_lazy`` must come first because only
+                the first ESM bundle's ``<script type=importmap>`` is honoured
+                per document, and it is the one carrying the ``web_tour.*``
+                dynamic-child entries a tour needs to resolve; leading with
+                ``web.assets_frontend_minimal`` published its 11-entry map
+                instead.  And ``web.assets_tests`` must come last because a
+                module script cannot import from a bundle that has not run yet:
+                rendered here, ahead of the app bundles, it could externalise
+                nothing and esbuild inlined a second copy of everything it
+                touched — the singleton split ``pos_assets_index.xml``
+                describes at length. -->
+            <t
+                t-call-assets="web.assets_frontend_lazy"
+                t-css="false"
+                defer_load="True" />
+            <t
+                t-call-assets="web.assets_frontend_minimal"
+                t-css="false"
+                defer_load="True" />
+            <t
+                t-call-assets="room.assets_room_booking"
+                t-css="false"
+                defer_load="True" />
+            <t t-call="web.conditional_assets_tests">
+                <t t-set="ignore_missing_deps" t-value="True" />
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-out='0']" position="replace">
+            <main>
+                <owl-component
+                    name="room.room_booking_view"
+                    t-att-props="json.dumps({                     'id': room.id,                     'description': room.asset_id.description or '',                     'name': room.name,                     'accessToken': room.access_token,                     'bookableBgColor': room.bookable_background_color,                     'bookedBgColor': room.booked_background_color,                     })" />
+            </main>
+        </xpath>
+    </template>
+
+</odoo>

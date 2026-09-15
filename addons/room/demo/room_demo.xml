@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="room_office_main_office" model="res.partner">
+        <field name="name">Main Office</field>
+        <field name="type">other</field>
+        <field name="parent_id" ref="base.main_partner" />
+        <field name="company_id" ref="base.main_company" />
+    </record>
+
+    <record id="room_office_head_office" model="res.partner">
+        <field name="name">Head Office</field>
+        <field name="type">other</field>
+        <field name="parent_id" ref="base.main_partner" />
+        <field name="company_id" ref="base.main_company" />
+    </record>
+
+    <record id="room_room_main_office_room_1_profile" model="appointment.resource">
+        <field name="name">Big Meeting Room</field>
+        <field name="short_code">room1</field>
+    </record>
+
+    <record id="room_room_main_office_room_1" model="resource.asset">
+        <field name="name">Big Meeting Room</field>
+        <field name="kind_id" ref="kind_room" />
+        <field name="state">in_service</field>
+        <field name="address_id" ref="room_office_main_office" />
+        <field name="description">Projector, whiteboard</field>
+        <field
+            name="appointment_resource_id"
+            ref="room_room_main_office_room_1_profile" />
+    </record>
+
+    <record id="room_room_main_office_room_2_profile" model="appointment.resource">
+        <field name="name">Medium Meeting Room</field>
+        <field name="short_code">room2</field>
+    </record>
+
+    <record id="room_room_main_office_room_2" model="resource.asset">
+        <field name="name">Medium Meeting Room</field>
+        <field name="kind_id" ref="kind_room" />
+        <field name="state">in_service</field>
+        <field name="address_id" ref="room_office_main_office" />
+        <field name="description">Projector</field>
+        <field
+            name="appointment_resource_id"
+            ref="room_room_main_office_room_2_profile" />
+    </record>
+
+    <record id="room_room_main_office_room_3_profile" model="appointment.resource">
+        <field name="name">Small Meeting Room</field>
+        <field name="short_code">room3</field>
+    </record>
+
+    <record id="room_room_main_office_room_3" model="resource.asset">
+        <field name="name">Small Meeting Room</field>
+        <field name="kind_id" ref="kind_room" />
+        <field name="state">in_service</field>
+        <field name="address_id" ref="room_office_main_office" />
+        <field name="description">Capacity: 6 people</field>
+        <field
+            name="appointment_resource_id"
+            ref="room_room_main_office_room_3_profile" />
+    </record>
+
+    <record id="room_room_head_office_room_1_profile" model="appointment.resource">
+        <field name="name">First Floor's Room</field>
+        <field name="short_code">floor1</field>
+    </record>
+
+    <record id="room_room_head_office_room_1" model="resource.asset">
+        <field name="name">First Floor's Room</field>
+        <field name="kind_id" ref="kind_room" />
+        <field name="state">in_service</field>
+        <field name="address_id" ref="room_office_head_office" />
+        <field
+            name="appointment_resource_id"
+            ref="room_room_head_office_room_1_profile" />
+    </record>
+
+    <record id="room_room_head_office_room_2_profile" model="appointment.resource">
+        <field name="name">Second Floor's Room</field>
+        <field name="short_code">floor2</field>
+    </record>
+
+    <record id="room_room_head_office_room_2" model="resource.asset">
+        <field name="name">Second Floor's Room</field>
+        <field name="kind_id" ref="kind_room" />
+        <field name="state">in_service</field>
+        <field name="address_id" ref="room_office_head_office" />
+        <field
+            name="appointment_resource_id"
+            ref="room_room_head_office_room_2_profile" />
+    </record>
+
+    <record id="room_booking_room_1_booking_1" model="calendar.event">
+        <field name="name">Daily Followup</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 09:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 10:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_1_booking_2" model="calendar.event">
+        <field name="name">Product Presentation</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 11:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 12:00:00')" />
+        <field name="user_id" ref="base.user_admin" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_1_booking_3" model="calendar.event">
+        <field name="name">Training</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 13:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 15:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_1_booking_4" model="calendar.event">
+        <field name="name">Meeting with clients</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 17:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 18:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_1_booking_5" model="calendar.event">
+        <field name="name">Daily Followup</field>
+        <field
+            name="start"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 09:00:00')" />
+        <field
+            name="stop"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 10:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_2_booking_1" model="calendar.event">
+        <field name="name">Team Building</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 09:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 17:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_2_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_3_booking_1" model="calendar.event">
+        <field name="name">Appraisals</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 09:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 12:00:00')" />
+        <field name="user_id" ref="base.user_admin" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_3_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_room_3_booking_2" model="calendar.event">
+        <field name="name">Job Interviews</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 14:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 16:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_3_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_floor_1_booking_1" model="calendar.event">
+        <field name="name">Welcoming Newcomers</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 09:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 10:30:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_head_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+    <record id="room_booking_floor_1_booking_2" model="calendar.event">
+        <field name="name">Newcomers Drink</field>
+        <field name="start" eval="time.strftime('%Y-%m-%d 15:00:00')" />
+        <field name="stop" eval="time.strftime('%Y-%m-%d 16:00:00')" />
+        <field name="user_id" ref="base.user_demo" />
+        <field name="appointment_type_id" ref="appointment_type_room" />
+        <field
+            name="booking_line_ids"
+            eval="[Command.create({'appointment_resource_id': ref('room_room_head_office_room_1_profile'), 'capacity_reserved': 1})]" />
+    </record>
+
+</odoo>

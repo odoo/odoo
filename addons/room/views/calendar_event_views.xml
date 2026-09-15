@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="calendar_event_view_search_room" model="ir.ui.view">
+        <field name="name">calendar.event.search.room</field>
+        <field name="model">calendar.event</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Booking">
+                <field name="name" string="Meeting name" />
+                <field name="user_id" string="Organizer" />
+                <field name="resource_ids" string="Room" />
+                <filter
+                    name="my_meetings"
+                    string="My Meetings"
+                    domain="[('user_id', '=', uid)]" />
+                <filter name="group_by_user_id" context="{'group_by': 'user_id'}" />
+                <filter
+                    name="group_by_resource_ids"
+                    string="Room"
+                    context="{'group_by': 'resource_ids'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_calendar_room" model="ir.ui.view">
+        <field name="name">calendar.event.calendar.room</field>
+        <field name="model">calendar.event</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <calendar
+                color="user_id"
+                date_start="start"
+                date_stop="stop"
+                event_open_popup="1"
+                quick_create="0">
+                <field name="resource_ids" string="Room" widget="many2many_tags" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_list_room" model="ir.ui.view">
+        <field name="name">calendar.event.list.room</field>
+        <field name="model">calendar.event</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list duplicate="0" sample="1">
+                <field name="start" />
+                <field name="stop" />
+                <field name="name" />
+                <field name="resource_ids" string="Room" widget="many2many_tags" />
+                <field
+                    name="user_id"
+                    string="Organizer"
+                    widget="many2one_avatar_user" />
+            </list>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_kanban_room" model="ir.ui.view">
+        <field name="name">calendar.event.kanban.room</field>
+        <field name="model">calendar.event</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder fs-5" />
+                        <div class="ps-1 mb-0">
+                            <strong>Room: </strong>
+                            <field name="resource_ids" widget="many2many_tags" />
+                        </div>
+                        <div class="ps-1">
+                            <strong>Date: </strong>
+                            <field name="start" />
+                            <i class="fa-solid fa-right-long mx-1" title="Until" />
+                            <field name="stop" />
+                        </div>
+                        <footer class="pt-0">
+                            <field
+                                name="user_id"
+                                widget="many2one_avatar_user"
+                                class="ms-auto" />
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_form_room" model="ir.ui.view">
+        <field name="name">calendar.event.form.room</field>
+        <field name="model">calendar.event</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <field name="appointment_type_id" invisible="1" />
+                    <div class="oe_title mb-3">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Team Meeting" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field
+                                name="resource_ids"
+                                string="Room"
+                                placeholder="Select a Room..."
+                                widget="many2many_tags"
+                                domain="[('asset_id.kind_id.code', '=', 'room')]"
+                                options="{'no_create': True}" />
+                            <field name="stop" invisible="1" />
+                            <field
+                                name="start"
+                                string="Date"
+                                widget="daterange"
+                                options="{'end_date_field': 'stop'}" />
+                        </group>
+                        <group>
+                            <field
+                                name="user_id"
+                                string="Organizer"
+                                widget="many2one_avatar_user" />
+                        </group>
+                    </group>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="room_booking_action" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="res_model">calendar.event</field>
+        <field name="path">rooms</field>
+        <field name="view_mode">calendar,list,kanban,form</field>
+        <field name="search_view_id" ref="calendar_event_view_search_room" />
+        <field
+            name="domain"
+            eval="[('appointment_type_id', '=', ref('room.appointment_type_room'))]" />
+        <field
+            name="context"
+            eval="{'default_appointment_type_id': ref('room.appointment_type_room'), 'no_mail_to_attendees': True}" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Bookings found. Let’s schedule one!
+            </p>
+            <p>
+                Make meeting room sharing easy by centralizing all meetings in this App
+            </p>
+        </field>
+        <field
+            name="view_ids"
+            eval="[                 Command.clear(),                 Command.create({'sequence': 10, 'view_mode': 'calendar', 'view_id': ref('calendar_event_view_calendar_room')}),                 Command.create({'sequence': 20, 'view_mode': 'list', 'view_id': ref('calendar_event_view_list_room')}),                 Command.create({'sequence': 30, 'view_mode': 'kanban', 'view_id': ref('calendar_event_view_kanban_room')}),                 Command.create({'sequence': 40, 'view_mode': 'form', 'view_id': ref('calendar_event_view_form_room')}),             ]" />
+    </record>
+
+</odoo>

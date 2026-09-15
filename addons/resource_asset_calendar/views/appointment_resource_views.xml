@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="appointment_resource_view_form_asset" model="ir.ui.view">
+        <field name="name">appointment.resource.form.asset</field>
+        <field name="model">appointment.resource</field>
+        <field name="inherit_id" ref="calendar.appointment_resource_view_form" />
+        <field name="arch" type="xml">
+            <field name="capacity" position="before">
+                <field name="asset_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
