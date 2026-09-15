@@ -25,6 +25,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     MESSAGE_UUID = '87b3d068-4da3-49c8-845c-ff2540e6b7d9'
 
     @classmethod
+    def _activate_multi_company(cls):
+        # Disable the MailCommon company creation that clashes with the accounting ones
+        return
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
