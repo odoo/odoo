@@ -82,6 +82,12 @@ export class ProjectTask extends projectModels.ProjectTask {
 }
 
 export class ProjectProject extends projectModels.ProjectProject {
+    allow_timesheets = fields.Boolean({ default: true });
+
+    _records = [
+        { id: 1, name: "Project 1", allow_timesheets: true, account_id: 101 },
+    ];
+
     get_create_edit_project_ids() {
         return [];
     }

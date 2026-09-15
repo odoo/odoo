@@ -10,9 +10,7 @@ from odoo.tools.translate import _
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean(
-        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
-        default=True)
+    allow_timesheets = fields.Boolean("Timesheets", default=True)
     account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -45,11 +43,6 @@ class ProjectProject(models.Model):
     def _compute_timesheet_encode_uom_id(self):
         for project in self:
             project.timesheet_encode_uom_id = project.company_id.timesheet_encode_uom_id or self.env.company.timesheet_encode_uom_id
-
-    @api.depends('account_id')
-    def _compute_allow_timesheets(self):
-        without_account = self.filtered(lambda t: t._origin and not t.account_id)
-        without_account.update({'allow_timesheets': False})
 
     @api.depends('company_id')
     def _compute_is_internal_project(self):
@@ -181,6 +174,8 @@ class ProjectProject(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'account_id' in vals and not vals.get('account_id') and 'allow_timesheets' not in vals:
+            vals['allow_timesheets'] = False
         # create the AA for project still allowing timesheet
         if vals.get('allow_timesheets') and not vals.get('account_id'):
             project_wo_account = self.filtered(lambda project: not project.account_id and not project.is_template)
