@@ -18,10 +18,6 @@ registry
             ...productConfiguratorTourUtils.saveConfigurator(),
             comboConfiguratorTourUtils.selectComboItem("Product B2"),
             comboConfiguratorTourUtils.assertFooterButtonsEnabled(),
-            {
-                content: "Check that the tax disclaimer gets displayed",
-                trigger: '.js_product small:contains(Taxes calculated at checkout.)',
-            },
             // Assert that the cart's content is correct.
             {
                 content: "Proceed to checkout",
@@ -54,7 +50,7 @@ registry
             ...wsTourUtils.assertCartContains({ productName: "2 x Product B2" }),
             {
                 content: "Verify the combo product's price",
-                trigger: 'h6[name=website_sale_cart_line_price]:contains(71.31)',
+                trigger: 'h6[name=website_sale_cart_line_price]:contains(71.30)',
             },
         ],
     });

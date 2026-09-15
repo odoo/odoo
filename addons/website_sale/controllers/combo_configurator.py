@@ -45,4 +45,33 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
             combo_item_image := combo_item.product_id.image_256
         ):
             data["product"]["image_src"] = image_data_uri(combo_item_image)
+
+        if not data["extra_price"]:
+            return data
+
+        pricelist_rule_id = kwargs.get("pricelist_rule_id")
+        if pricelist and pricelist_rule_id:
+            rule = self.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+            discount_percentage = 0.0
+            if rule.compute_price == "percentage":
+                discount_percentage = rule.percent_price
+            elif rule.compute_price == "formula":
+                discount_percentage = rule.price_discount
+
+            data["extra_price"] -= data["extra_price"] * (discount_percentage / 100.0)
+
+        website = self.env.website
+        if website and website.show_line_subtotals_tax_selection == "tax_included":
+            item_taxes = combo_item.product_id.taxes_id._filter_taxes_by_company(self.env.company)
+            taxes = request.fiscal_position.map_tax(item_taxes)
+            if taxes:
+                tax_res = taxes.compute_all(
+                    data["extra_price"],
+                    currency,
+                    1,
+                    combo_item.product_id,
+                    self.env.user.partner_id,
+                )
+                data["extra_price"] = tax_res["total_included"]
+
         return data
