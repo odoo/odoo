@@ -18,7 +18,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
 from odoo.http.dispatcher import serialize_exception
-from odoo.modules import Manifest
+from odoo.modules import Manifest, module as odoo_module
 from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.func import deprecated
@@ -349,6 +349,16 @@ class IrCron(models.Model):
         # everything BUT `KEY SHARE`.
         #
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
+
+        try:
+            # take registry lock to prevent updates of the registry while the cron is processed
+            if odoo_module.current_test:
+                _logger.info("skip acquiring 'registry_loading' shared lock while testing")
+            else:
+                cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading')) NOWAIT")
+        except psycopg2.OperationalError as e:
+            # the registry is being modified
+            raise BadModuleState() from e
 
         where_clause = SQL("id = %s", job_id)
         if not include_not_ready:
