@@ -12,6 +12,28 @@ class TestTheme(common.TransactionCase):
         self.env.ref('base.default_website').theme_id = theme_common_module.id
         self.env['ir.module.module']._theme_remove(self.env.ref('base.default_website'))
 
+    def test_theme_installed_on_current_website_via_host_id(self):
+        """ The themes kanban reads this field over a backend route, for which
+        `ir.http._match` moved `website_id` to `host_id`.
+        """
+        website = self.env.ref('base.default_website')
+        theme = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
+        website.theme_id = theme
+
+        self.assertTrue(theme.with_context(host_id=website.id).is_installed_on_current_website)
+        self.assertTrue(theme.with_context(website_id=website.id).is_installed_on_current_website)
+
+    def test_theme_installed_on_current_website_not_shared(self):
+        """ The field is context dependent, two websites must not share its value. """
+        website = self.env.ref('base.default_website')
+        other_website = self.env['website'].create({'name': 'Other Website'})
+        theme = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
+        website.theme_id = theme
+        other_website.theme_id = False
+
+        self.assertTrue(theme.with_context(host_id=website.id).is_installed_on_current_website)
+        self.assertFalse(theme.with_context(host_id=other_website.id).is_installed_on_current_website)
+
     def test_02_disable_view(self):
         """This test ensure only one template header can be active at a time."""
         website_id = self.env.ref('base.default_website')
