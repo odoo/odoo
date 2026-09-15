@@ -11,6 +11,11 @@
         "l10n_pl",
         "certificate",
     ],
+    "external_dependencies": {
+        "python": [
+            "defusedxml",
+        ],
+    },
     "data": [
         "views/account_move_views.xml",
         "views/report_invoice.xml",
@@ -21,7 +26,6 @@
     "demo": [
         "demo/account_invoice_demo.xml",
     ],
-    "external_dependencies": {"python": ["defusedxml"]},
     "auto_install": [
         "l10n_pl",
     ],
