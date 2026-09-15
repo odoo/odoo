@@ -243,18 +243,14 @@ class ConnectionPool:
                 # A surviving pool with nothing idle and its proof revoked is
                 # psycopg_pool still counting the connections it cannot open:
                 # getconn would wait the deadline out. Ask the probe first.
-                conninfo, kwargs, _idle_session_ms = self._prepare_connect_args(
-                    key, connection_info
-                )
+                conninfo, kwargs = self._prepare_connect_args(key, connection_info)
                 self._check_connectable_or_fail_fast(
                     key, conninfo, kwargs, deadline, fail_fast=True
                 )
             mark_active(pool)
             return pool
 
-        conninfo, kwargs, idle_session_ms = self._prepare_connect_args(
-            key, connection_info
-        )
+        conninfo, kwargs = self._prepare_connect_args(key, connection_info)
         self._check_connectable_or_fail_fast(
             key, conninfo, kwargs, deadline, fail_fast=fail_fast
         )
@@ -271,7 +267,7 @@ class ConnectionPool:
                 db=_get_key_dbname(key),
                 readonly=self._readonly,
                 min=self._minconn,
-                idle_session_ms=idle_session_ms,
+                idle_session_ms=self._get_idle_session_ms(),
                 rebuilt=pool is not None,
             ):
                 pool = _PsycopgPool(
@@ -338,21 +334,23 @@ class ConnectionPool:
             )
         return pool
 
+    def _get_idle_session_ms(self) -> int:
+        return max(900, int(self._max_idle * 1.5)) * 1000
+
     def _prepare_connect_args(
         self, key: frozenset, connection_info: dict
-    ) -> tuple[str, dict, int]:
+    ) -> tuple[str, dict]:
         kwargs = dict(connection_info)
         conninfo = kwargs.pop("dsn", "")
         kwargs["autocommit"] = False
-        idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
         kwargs["options"] = _prepare_connection_options(
             conninfo,
             kwargs,
-            idle_session_ms,
+            self._get_idle_session_ms(),
             session_gucs=self._settings.session_gucs,
             forced_gucs=_get_forced_gucs(_get_key_dbname(key), self._settings),
         )
-        return conninfo, kwargs, idle_session_ms
+        return conninfo, kwargs
 
     def _check_connectable_or_fail_fast(
         self,
