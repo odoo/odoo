@@ -171,21 +171,17 @@ export class RecipientsInput extends Component {
         ];
     }
 
-    get otherFollowersCount() {
-        return this.props.thread.selfFollower
-            ? this.props.thread.followersCount - 1
-            : this.props.thread.followersCount;
-    }
-
     get followersBadge() {
         const text =
-            this.otherFollowersCount === 1
+            this.props.thread.recipientsCount === 1
                 ? _t("1 Follower")
-                : _t("%(followersCount)s Followers", { followersCount: this.otherFollowersCount });
+                : _t("%(followersCount)s Followers", {
+                      followersCount: this.props.thread.recipientsCount,
+                  });
         return {
             color: 4,
             text,
-            tooltip: this.props.thread.followers
+            tooltip: this.props.thread.recipients
                 .map(
                     (f) =>
                         `${this.props.thread.getPersonaName(f.partner_id) || _t("Unnamed")} ${
