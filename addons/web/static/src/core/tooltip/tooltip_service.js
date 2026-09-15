@@ -227,7 +227,7 @@ export const tooltipService = {
             cleanup();
             const timeoutDelay = isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
             showTimer = browser.setTimeout(() => {
-                openElementsTooltip(ev.target, true);
+                openElementsTooltip(ev.target, !ev.target.closest(".o_no_touch_title_tooltip"));
             }, timeoutDelay);
         }
 
