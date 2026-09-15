@@ -708,11 +708,11 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:week'], False)
         self.assertEqual(result[1]['__count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:week'][1], 'W19 2077')
+        self.assertEqual(result[1]['attributes.mydate:week'][1], 'W19 2077 (May 2 – 8)')
         self.assertEqual(result[2]['__count'], 1)
-        self.assertEqual(result[2]['attributes.mydate:week'][1], 'W6 2023')
+        self.assertEqual(result[2]['attributes.mydate:week'][1], 'W6 2023 (Feb 5 – 11)')
         self.assertEqual(result[3]['__count'], 1)
-        self.assertEqual(result[3]['attributes.mydate:week'][1], 'W5 2023')
+        self.assertEqual(result[3]['attributes.mydate:week'][1], 'W5 2023 (Jan 29 – Feb 4)')
         self.assertEqual(result[4]['__count'], 2)
         # Babel issue mitigation
         # https://github.com/python-babel/babel/pull/621 -- introduced a new bug
@@ -721,9 +721,9 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         # so this ugly fix is made to have the test working in patched and non patched versions of Babel
         babel_year = babel.dates.format_date(datetime.datetime(2023, 1, 1), "YYYY", "en_US")  # non patched: '2022' patched: '2023'
         if babel_year == '2022':  # Broken unpatched babel
-            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2022')
+            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2022 (Jan 1 – 7)')
         else:  # Patched babel
-            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2023')
+            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2023 (Jan 1 – 7)')
         # check domain
         self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
         self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
