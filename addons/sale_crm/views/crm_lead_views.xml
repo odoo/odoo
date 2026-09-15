@@ -7,8 +7,15 @@
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
-                    <button string="New Quotation" name="action_sale_quotations_new" type="object" class="oe_highlight" data-hotkey="q"
-                        invisible="type == 'lead' or probability == 0 and not active"/>
+                    <widget
+                        name="new_quotation_button"
+                        action="action_sale_quotations_new"
+                        type="object"
+                        string="New Quotation"
+                        hotkey="q"
+                        title="Create new quotation"
+                        invisible="type == 'lead' or probability == 0 and not active"
+                    />
                 </xpath>
                 <button name="action_set_won_rainbowman" position="attributes">
                     <attribute name="class" remove="oe_highlight"/>
