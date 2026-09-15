@@ -10,18 +10,30 @@ class Compute:
     def __init__(self, unpack):
         super().__init__()
         self._result = None
+        self._manual_result = None
         self._unpack = unpack
 
     def is_set(self):
         return self._result is not None
 
+    def is_manually_set(self):
+        return self._manual_result is not None
+
+    def original_value(self):
+        return self._result
+
     def value(self):
         if not self.is_set():
             self._unpack()
+        if self.is_manually_set():
+            return self._manual_result
         return self._result
 
     def set(self, result):
         self._result = result
+
+    def set_manually(self, result):
+        self._manual_result = result
 
 
 def distribute_amount_to(amount, factors, rounding=None):
@@ -106,8 +118,8 @@ def sum_and_distribute_amounts_to(amounts, factors, rounding=None, round_distr=T
 
     len_amounts = len(amounts)
     if len_amounts == 1 and len_amounts != len(factors) and abs_sum_factor:
-        abs_amount = abs(amounts[0])
-        amounts = [abs_amount * sum_plus_factor / abs_sum_factor, abs_amount * sum_neg_factor / abs_sum_factor]
+        amount = amounts[0]
+        amounts = [amount * abs(sum_plus_factor) / abs_sum_factor, amount * abs(sum_neg_factor) / abs_sum_factor]
 
     sum_plus_amount = sum(x for x in amounts if x >= 0)
     sum_neg_amount = sum(x for x in amounts if x < 0)
@@ -120,13 +132,29 @@ def sum_and_distribute_amounts_to(amounts, factors, rounding=None, round_distr=T
     if not round_distr or not rounding:
         for factor in distribute_amount_to(sum_plus_amount, plus_factors, rounding=distr_rounding):
             factor['source']['amount'] += factor['amount']
+            sum_plus_amount -= factor['amount']
         for factor in distribute_amount_to(sum_neg_amount, neg_factors, rounding=distr_rounding):
             factor['source']['amount'] += factor['amount']
+            sum_neg_amount -= factor['amount']
+        for factor in distribute_amount_to(sum_plus_amount, neg_factors, rounding=distr_rounding):
+            factor['source']['amount'] += factor['amount']
+            sum_plus_amount -= factor['amount']
+        for factor in distribute_amount_to(sum_neg_amount, plus_factors, rounding=distr_rounding):
+            factor['source']['amount'] += factor['amount']
+            sum_neg_amount -= factor['amount']
         return factors
 
     round_sum_plus_amount, round_sum_neg_amount = distribute_amount_by_sign(sum_amount, sum_plus_amount, sum_neg_amount, rounding)
     for factor in distribute_amount_to(round_sum_plus_amount, plus_factors, rounding=distr_rounding):
         factor['source']['amount'] += factor['amount']
+        round_sum_plus_amount -= factor['amount']
     for factor in distribute_amount_to(round_sum_neg_amount, neg_factors, rounding=distr_rounding):
         factor['source']['amount'] += factor['amount']
+        round_sum_neg_amount -= factor['amount']
+    for factor in distribute_amount_to(round_sum_plus_amount, neg_factors, rounding=distr_rounding):
+        factor['source']['amount'] += factor['amount']
+        round_sum_plus_amount -= factor['amount']
+    for factor in distribute_amount_to(round_sum_neg_amount, plus_factors, rounding=distr_rounding):
+        factor['source']['amount'] += factor['amount']
+        round_sum_neg_amount -= factor['amount']
     return factors

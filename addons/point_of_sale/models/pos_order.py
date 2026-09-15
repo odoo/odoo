@@ -1252,6 +1252,7 @@ class PosOrder(models.Model):
         company = self.company_id
         aggregated = AccountTax._reduce_base_lines_with_grouping_function(
             base_lines,
+            company,
             grouping_function=self._grouping_function,
             aggregate_function=aggregate_function,
         )

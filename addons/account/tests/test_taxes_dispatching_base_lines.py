@@ -508,6 +508,7 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
             },
         )
 
+        taxes = tax1 + tax3
         taxes.price_include_override = 'tax_included'
 
         document = self.populate_document(self.init_document(
@@ -521,15 +522,15 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         AccountTax._add_tax_details(document['lines'], self.env.company)
 
         expected_values = {
-            'base_amount_currency': 23.59,
-            'tax_amount_currency': 19.47,
+            'base_amount_currency': 33.59,
+            'tax_amount_currency': 9.47,
             'total_amount_currency': 43.06,
         }
         self.assert_tax_totals_summary(document, expected_values, soft_checking=True)
 
         assert_tax_totals_summary_after_dispatching(
             document=document,
-            exclude_function=lambda base_line, tax_data: tax_data['tax'] in (tax1, tax2),
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax1,
             expected_values={
                 **expected_values,
                 'base_amount_currency': 35.59,
@@ -538,10 +539,10 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         )
         assert_tax_totals_summary_after_dispatching(
             document=document,
-            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax3,
+            exclude_function=lambda base_line, tax_data: True,
             expected_values={
                 **expected_values,
-                'base_amount_currency': 31.06,
-                'tax_amount_currency': 12.0,
+                'base_amount_currency': 43.06,
+                'tax_amount_currency': 0.0,
             },
         )

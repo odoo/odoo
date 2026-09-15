@@ -216,3 +216,102 @@ class TestTaxesComputationL10nMx(TestTaxesComputation):
         )
 
         self._run_js_tests()
+
+    def test_global_discount(self):
+        tax_16 = self.percent_tax(16.0)
+
+        document = self.populate_document(self.init_document([
+            {'price_unit': 61948.3, 'tax_ids': tax_16},
+            {'price_unit': 35974.15, 'tax_ids': tax_16},
+            {'price_unit': 8194.83, 'tax_ids': tax_16},
+        ]))
+        expected_base_line_tax_details_values_1 = {
+            'raw_total_excluded_currency': 61948.3,
+            'raw_total_included_currency': 71860.028,
+            'total_excluded_currency': 61948.3,
+            'delta_total_excluded_currency': 0.0,
+            'total_included_currency': 71860.03,
+            'taxes_data': [
+                {
+                    'tax_id': tax_16.id,
+                    'raw_base_amount_currency': 61948.3,
+                    'raw_tax_amount_currency': 9911.728,
+                    'base_amount_currency': 61948.3,
+                    'tax_amount_currency': 9911.73,
+                },
+            ],
+        }
+        expected_base_line_tax_details_values_2 = {
+            'raw_total_excluded_currency': 35974.15,
+            'raw_total_included_currency': 41730.014,
+            'total_excluded_currency': 35974.15,
+            'delta_total_excluded_currency': 0.0,
+            'total_included_currency': 41730.01,
+            'taxes_data': [
+                {
+                    'tax_id': tax_16.id,
+                    'raw_base_amount_currency': 35974.15,
+                    'raw_tax_amount_currency': 5755.864,
+                    'base_amount_currency': 35974.15,
+                    'tax_amount_currency': 5755.86,
+                },
+            ],
+        }
+        expected_base_line_tax_details_values_3 = {
+            'raw_total_excluded_currency': 8194.83,
+            'raw_total_included_currency': 9506.0028,
+            'total_excluded_currency': 8194.83,
+            'delta_total_excluded_currency': 0.0,
+            'total_included_currency': 9506.0,
+            'taxes_data': [
+                {
+                    'tax_id': tax_16.id,
+                    'raw_base_amount_currency': 8194.83,
+                    'raw_tax_amount_currency': 1311.1728,
+                    'base_amount_currency': 8194.83,
+                    'tax_amount_currency': 1311.17,
+                },
+            ],
+        }
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[
+                expected_base_line_tax_details_values_1,
+                expected_base_line_tax_details_values_2,
+                expected_base_line_tax_details_values_3,
+            ],
+            expected_base_amount=106117.28,
+            expected_tax_amount=16978.76,
+            expected_total_amount=123096.04,
+        )
+
+        expected_base_line_tax_details_global_discount = {
+            'raw_total_excluded_currency': -10611.718,
+            'raw_total_included_currency': -12309.59288,
+            'total_excluded_currency': -10611.72,
+            'delta_total_excluded_currency': 0.0,
+            'total_included_currency': -12309.6,
+            'taxes_data': [
+                {
+                    'tax_id': tax_16.id,
+                    'raw_base_amount_currency': -10611.718,
+                    'raw_tax_amount_currency': -1697.87488,
+                    'base_amount_currency': -10611.73,
+                    'tax_amount_currency': -1697.88,
+                },
+            ],
+        }
+        self.assert_global_discount_base_lines_tax_details(
+            document=document,
+            amount_type='percent',
+            amount=10,
+            expected_base_lines_tax_details=[
+                expected_base_line_tax_details_values_1,
+                expected_base_line_tax_details_values_2,
+                expected_base_line_tax_details_values_3,
+                expected_base_line_tax_details_global_discount,
+            ],
+            expected_base_amount=95505.56,
+            expected_tax_amount=15280.88,
+            expected_total_amount=110786.44,
+        )

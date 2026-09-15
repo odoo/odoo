@@ -1,6 +1,6 @@
 from . import res_currency_rate_consolidation_mixin
 from . import sequence_mixin
-from . import taxes_engine
+from . import taxes_helpers
 from . import account_document_import_mixin
 from . import partner
 from . import res_partner_bank
@@ -11,6 +11,7 @@ from . import account_root
 from . import account_journal
 from . import account_lock_exception
 from . import account_tax
+from . import account_tax__taxes_helpers
 from . import account_reconcile_model
 from . import account_payment_term
 from . import account_move
