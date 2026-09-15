@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import (
     account_edi_proxy_user,
+    account_journal,
     account_move,
     account_move_line,
     account_move_reversal,
