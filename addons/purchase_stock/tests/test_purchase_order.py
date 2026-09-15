@@ -1002,3 +1002,50 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
+
+    def test_po_expected_arrival(self):
+        """ Test that a PO generated from a Reordering Rule calculates the Expected Arrival from the correct vendor"""
+        self.env.company.po_lead = 0.0
+        self.env.company.days_to_purchase = 0.0
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+            'route_ids': [Command.link(self.env.ref('purchase_stock.route_warehouse0_buy').id)],
+        })
+        vendor_1 = self.env['res.partner'].create({'name': 'Slow Vendor'})
+        vendor_2 = self.env['res.partner'].create({'name': 'Fast Vendor'})
+        self.env['product.supplierinfo'].create({
+            'partner_id': vendor_1.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'min_qty': 1000.0,
+            'delay': 365.0,
+            'sequence': 1,
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': vendor_2.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'min_qty': 1.0,
+            'delay': 1,
+            'sequence': 2,
+        })
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Test Rulel',
+            'product_id': product.id,
+            'product_min_qty': 50.0,
+            'product_max_qty': 200.0,
+            'location_id': wh.lot_stock_id.id,
+        })
+        self.env['procurement.group'].run_scheduler()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', vendor_2.id),
+            ('order_line.product_id', '=', product.id)
+        ], limit=1)
+        self.assertTrue(po, "A Purchase Order should have been created for Vendor 2.")
+        po_line = po.order_line.filtered(lambda l: l.product_id == product)
+        expected_date = po.date_order + timedelta(days=1)
+        self.assertEqual(
+            po_line.date_planned,
+            expected_date,
+            "The PO line's expected arrival date should be calculated using the delay of the selected vendor (1 days), not the slower vendor (1 year)."
+        )
