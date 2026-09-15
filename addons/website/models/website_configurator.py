@@ -516,6 +516,42 @@ class Website(models.Model):
                 {"arch_db": etree.tostring(el)}
             )
 
+    def _configurator_apply_features(self, website, features, menu_company):
+        pages_views = {}
+        modules = self.env["ir.module.module"]
+        module_data = {}
+        for feature in features:
+            add_menu = bool(feature.menu_sequence)
+            if feature.module_id:
+                if feature.module_id.state != "installed":
+                    modules += feature.module_id
+                if add_menu:
+                    if feature.module_id.name != "website_blog":
+                        module_data[feature.feature_url] = {
+                            "sequence": feature.menu_sequence
+                        }
+                    else:
+                        blogs = module_data.setdefault("#blog", [])
+                        blogs.append(
+                            {"name": feature.name, "sequence": feature.menu_sequence}
+                        )
+            elif feature.page_view_id:
+                result = self.env["website"].new_page(
+                    name=feature.name,
+                    add_menu=add_menu,
+                    page_values={"url": feature.feature_url, "is_published": True},
+                    menu_values=add_menu
+                    and {
+                        "url": feature.feature_url,
+                        "sequence": feature.menu_sequence,
+                        "parent_id": (feature.menu_company and menu_company.id)
+                        or website.menu_id.id,
+                    },
+                    template=feature.page_view_id.key,
+                )
+                pages_views[feature.iap_page_code] = result["view_id"]
+        return pages_views, modules, module_data
+
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
@@ -599,39 +635,9 @@ class Website(models.Model):
                 }
             )
 
-        pages_views = {}
-        modules = self.env["ir.module.module"]
-        module_data = {}
-        for feature in features:
-            add_menu = bool(feature.menu_sequence)
-            if feature.module_id:
-                if feature.module_id.state != "installed":
-                    modules += feature.module_id
-                if add_menu:
-                    if feature.module_id.name != "website_blog":
-                        module_data[feature.feature_url] = {
-                            "sequence": feature.menu_sequence
-                        }
-                    else:
-                        blogs = module_data.setdefault("#blog", [])
-                        blogs.append(
-                            {"name": feature.name, "sequence": feature.menu_sequence}
-                        )
-            elif feature.page_view_id:
-                result = self.env["website"].new_page(
-                    name=feature.name,
-                    add_menu=add_menu,
-                    page_values={"url": feature.feature_url, "is_published": True},
-                    menu_values=add_menu
-                    and {
-                        "url": feature.feature_url,
-                        "sequence": feature.menu_sequence,
-                        "parent_id": (feature.menu_company and menu_company.id)
-                        or website.menu_id.id,
-                    },
-                    template=feature.page_view_id.key,
-                )
-                pages_views[feature.iap_page_code] = result["view_id"]
+        pages_views, modules, module_data = self._configurator_apply_features(
+            website, features, menu_company
+        )
 
         if modules:
             _debug.lifecycle("configurator_modules_installed", modules=modules)
