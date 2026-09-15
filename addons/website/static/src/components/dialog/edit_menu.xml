@@ -19,7 +19,7 @@
             <div class="col-md-9">
                 <div class="position-relative" t-att-class="{ 'o_page_not_found': state.pageNotFound }">
                     <input id="url_input" t-on-input="onUrlInput" t-ref="url-input" type="text"
-                        t-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }"/>
+                        t-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }" autocomplete="off"/>
                     <i t-if="state.pageNotFound and !state.invalidUrl"
                         class="fa fa-info-circle text-warning position-absolute top-50 end-0 translate-middle-y me-2"
                         data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0">

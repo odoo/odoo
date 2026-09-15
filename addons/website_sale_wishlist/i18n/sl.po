@@ -12,13 +12,15 @@
 # Tomaž Jug <tomaz@editor.si>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-01 05:40+0000\n"
-"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 07:28+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_wishlist/sl/>\n"
 "Language: sl\n"
@@ -31,6 +33,7 @@ msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.empty_wishlist_svg
+#, fuzzy
 msgid ""
 ".heartBeat {\n"
 "                        animation: heartBeat 1.3s ease-in-out forwards;\n"
@@ -85,52 +88,114 @@ msgid ""
 "                }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "1 Column"
-msgstr ""
+msgstr "1 stolpec"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "2 Columns"
-msgstr ""
+msgstr "2 stolpca"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "3 Columns"
-msgstr ""
+msgstr "3 stolpci"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "4 Columns"
-msgstr ""
+msgstr "4 Stolpci"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "5 Columns"
-msgstr ""
+msgstr "5 stolpcev"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "6 Columns"
-msgstr ""
+msgstr "6 stolpcev"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
 "wishlist\"/>"
 msgstr ""
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Dodaj na "
+"seznam želja\"/>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid ""
 "<span class=\"d-inline-flex align-items-baseline\">\n"
 "                                                        <i class=\"fa fa-fw "
@@ -141,9 +206,19 @@ msgid ""
 "                                                        </span>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-envelope o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Kontaktirajte "
+"nas\n"
+"                                                        </span>\n"
+"                                                    </span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid ""
 "<span class=\"d-inline-flex align-items-baseline\">\n"
 "                                                        <i class=\"fa fa-fw "
@@ -154,11 +229,21 @@ msgid ""
 "                                                        </span>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-shopping-cart o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Dodaj v "
+"košarico\n"
+"                                                        </span>\n"
+"                                                    </span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+#, fuzzy
 msgid "<span class=\"text-300\">|</span>"
-msgstr ""
+msgstr "<span class=\"text-300\">|</span>"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -179,8 +264,9 @@ msgstr "Dodaj na seznam želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
+#, fuzzy
 msgid "CSS class for wishlist page design"
-msgstr ""
+msgstr "Razred CSS za oblikovanje strani seznama želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -189,8 +275,9 @@ msgstr "Stik"
 
 #. module: website_sale_wishlist
 #: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Ustvari stranko"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
@@ -210,8 +297,9 @@ msgstr "Privzeta valuta"
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "Desktop"
-msgstr ""
+msgstr "Namizje"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
@@ -231,30 +319,35 @@ msgstr "Podvojen izdelek s seznami želja tega partnerja."
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Fixed"
-msgstr ""
+msgstr "Stalno"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "Fiksno - ob prehodu miške"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Gap"
-msgstr ""
+msgstr "Vrzel"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_gap
+#, fuzzy
 msgid "Gap between products on the wishlist page"
-msgstr ""
+msgstr "Razmik med izdelki na strani seznama želja"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#, fuzzy
 msgid "Handle your wishlist from the menu icon."
-msgstr ""
+msgstr "Upravljajte svoj seznam želja prek ikone menija."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
@@ -268,14 +361,16 @@ msgstr "ID"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#, fuzzy
 msgid "In your wishlist"
-msgstr ""
+msgstr "Na vašem seznamu želja"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Inline"
-msgstr ""
+msgstr "Inline"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -290,14 +385,16 @@ msgstr "Zadnjič posodobljeno"
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "Layout"
-msgstr ""
+msgstr "Postavitev"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilni telefon"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -306,24 +403,30 @@ msgstr "Moj seznam želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_mobile_columns
+#, fuzzy
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
 msgstr ""
+"Število stolpcev za prikaz na mobilnih napravah za stran seznama želja (1 "
+"ali 2)"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_grid_columns
+#, fuzzy
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "Število stolpcev za prikaz na strani seznama želja"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "On Hover"
-msgstr ""
+msgstr "Ob Hover (prekrivanje) učinku"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid "Original price"
-msgstr ""
+msgstr "Originalna cena"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -369,18 +472,21 @@ msgstr "Seznam želja izdelkov"
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+#, fuzzy
 msgid "Products Design"
-msgstr ""
+msgstr "Oblikovanje izdelkov"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid "Remove from wishlist"
-msgstr ""
+msgstr "Odstrani s seznama želja"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid "Sale price"
-msgstr ""
+msgstr "Prodajna cena"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
@@ -389,8 +495,9 @@ msgstr "Shranite za pozneje"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid "Shop"
-msgstr ""
+msgstr "Trgovina"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -422,34 +529,40 @@ msgstr "Seznam želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_grid_columns
+#, fuzzy
 msgid "Wishlist Grid Columns"
-msgstr ""
+msgstr "Stolpci mreže seznama želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_gap
+#, fuzzy
 msgid "Wishlist Grid Gap"
-msgstr ""
+msgstr "Razmik mreže seznama želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_mobile_columns
+#, fuzzy
 msgid "Wishlist Mobile Columns"
-msgstr ""
+msgstr "Stolpci seznama želja za mobilne naprave"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option_plugin.js:0
+#, fuzzy
 msgid "Wishlist Page"
-msgstr ""
+msgstr "Stran seznama želja"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
+#, fuzzy
 msgid "Wishlist Page Design Class"
-msgstr ""
+msgstr "Razred oblikovanja strani seznama želja"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#, fuzzy
 msgid "Your wishlist is empty!"
-msgstr ""
+msgstr "Vaš seznam želja je prazen!"
 
 #~ msgid "Contact Us"
 #~ msgstr "Kontakt"

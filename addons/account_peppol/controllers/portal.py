@@ -16,9 +16,14 @@ class PortalAccount(CustomerPortal):
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         if request.env.company.peppol_can_send:
+            partner = request.env.user.partner_id
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
+            peppol_eas_list = {
+                code: label for code, label in partner._fields['peppol_eas']._description_selection(request.env)
+                if code in (partner.available_peppol_eas or [])
+            }
             rendering_values.update({
-                'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas'].selection),
+                'peppol_eas_list': peppol_eas_list,
             })
         return rendering_values
 
@@ -46,10 +51,10 @@ class PortalAccount(CustomerPortal):
                 address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))
             if endpoint_error_message := request.env['res.partner']._build_error_peppol_endpoint(peppol_eas, peppol_endpoint):
-                invalid_fields.add('invalid_peppol_endpoint')
+                invalid_fields.add('peppol_endpoint')
                 error_messages.append(endpoint_error_message)
             if request.env['res.partner']._get_peppol_verification_state(peppol_endpoint, peppol_eas, edi_format) != 'valid':
-                invalid_fields.add('invalid_peppol_config')
+                invalid_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
                 error_messages.append(_("If you want to be invoiced by Peppol, your configuration must be valid."))
 
         return invalid_fields, missing_fields, error_messages

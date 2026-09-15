@@ -11,6 +11,10 @@ NEW_STATUSES = MappingProxyType({
     'made_available': _lt('Made Available'),  # required by Peppol
     'refused': _lt('Refused'),  # required by Peppol and PPF; used for PPF messages
     'cancelled': _lt('Cancelled'),
+    # Added for Chorus Pro:
+    'sent': _lt('Sent'),
+    'suspended': _lt('Suspended'),
+    'completed': _lt('Completed'),
 })
 
 PDP_STATUSES = MappingProxyType({
@@ -63,6 +67,13 @@ class AccountPeppolResponse(models.Model):
         string='PPF Status',
         store=True,
     )
+
+    # TODO: remove in master
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        for field_name in ['response_code', 'pdp_ref_response_code']:
+            self.env['res.config.settings']._pdp_ensure_selection_value('account.peppol.response', field_name, 'completed')
+        return super().fields_get(allfields, attributes)
 
     @api.depends('move_id.peppol_response_ids')
     def _compute_pdp_ppf_state(self):

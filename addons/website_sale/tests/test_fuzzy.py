@@ -3,10 +3,54 @@
 from odoo.tests import tagged
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
+from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('-at_install', 'post_install')
 class TestFuzzy(ProductVariantsCommon):
+    def test_shop_and_search_bar_use_same_search_fields(self):
+        website = self.env.ref('website.default_website')
+        product_tmpl = self.env['product.template']
+        expected_fields = [
+            'name', 'variants_default_code', 'description_sale', 'description_ecommerce',
+        ]
+        options = {
+            'displayImage': False, 'displayDescription': True, 'displayExtraLink': False,
+            'displayDetail': False, 'allowFuzzy': False,
+        }
+
+        search_detail = product_tmpl._search_get_detail(website, 'name asc', options)
+        self.assertEqual(search_detail['search_fields'], expected_fields)
+
+        with MockRequest(self.env, website=website):
+            shop_domain = WebsiteSale()._get_shop_domain('unique_term', None, {})
+
+        searched_products = product_tmpl
+        for field in ('name', 'description_sale', 'description_ecommerce'):
+            product = product_tmpl.create({
+                'name': f'Product searched by {field}',
+                field: 'unique_term',
+                'is_published': True,
+            })
+            searched_products |= product
+
+        product_by_reference = product_tmpl.create({
+            'name': 'Product searched by reference',
+            'is_published': True,
+        })
+        product_by_reference.product_variant_id.default_code = 'unique_term'
+        searched_products |= product_by_reference
+        self.assertEqual(searched_products.filtered_domain(shop_domain), searched_products)
+
+        for field in ('description', 'website_description'):
+            product = product_tmpl.create({
+                'name': f'Product not searched by {field}',
+                field: 'unique_term',
+                'is_published': True,
+            })
+            self.assertFalse(product.filtered_domain(shop_domain), f'Should not search in {field}')
+
     def test_variant_default_code(self):
         website = self.env.ref('website.default_website')
 

@@ -468,7 +468,7 @@ class TestAPI(ThreadRecipients):
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(14):
+        with self.assertQueryCount(18):
             defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
             defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
@@ -581,6 +581,61 @@ class TestAPI(ThreadRecipients):
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_archived.id]},
             # active based on archived user is ok, customer
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_employee_archived.id]},
+        ]
+        defaults = tickets._message_get_default_recipients()
+        for ticket, expected in zip(tickets, expected_all, strict=True):
+            with self.subTest(ticket_name=ticket.name):
+                self.assertDictEqual(defaults[ticket.id], expected)
+
+    def test_message_get_default_recipients_root(self):
+        """
+        By default, the root partner & its email should not be available
+        as default recipients.
+        However, if a non-root partner whose email matches root is active,
+        then this restriction should be lifted.
+        """
+        # by default: root partner unavailable
+        tickets = self.env['mail.test.ticket.mc'].create([
+            # no root partner
+            {
+                'customer_id': self.user_root.partner_id.id,
+                'name': 'Root',
+            },
+            # no root email
+            {
+                'email_from': self.user_root.partner_id.email,
+                'name': 'Root Email',
+            },
+        ])
+        expected_all = [
+            # Root shouldn't show uo
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # Root email shouldn't show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+        ]
+        defaults = tickets._message_get_default_recipients()
+        for ticket, expected in zip(tickets, expected_all, strict=True):
+            with self.subTest(ticket_name=ticket.name):
+                self.assertDictEqual(defaults[ticket.id], expected)
+
+        # We create a partner with an email matching root:
+        partner_matching_root = self.env['res.partner'].create({
+            'name': 'PartnerMatchingRoot',
+            'email': f'"PartnerMatchingRoot" <{self.user_root.partner_id.email_normalized}>',
+        })
+        tickets += self.env['mail.test.ticket.mc'].create({
+            'customer_id': partner_matching_root.id,
+            'name': 'EmailLikeRootTicket',
+        })
+
+        # We now expect root email to become available:
+        expected_all = [
+            # Root partner should show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': self.user_root.partner_id.ids},
+            # Email matching root should be allowed
+            {'email_cc': '', 'email_to': self.user_root.partner_id.email, 'partner_ids': []},
+            # Customer matching root should show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': partner_matching_root.ids},
         ]
         defaults = tickets._message_get_default_recipients()
         for ticket, expected in zip(tickets, expected_all, strict=True):

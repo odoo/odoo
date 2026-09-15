@@ -13,7 +13,7 @@ patch(PosStore.prototype, {
                     return;
                 }
 
-                const orderId = notification.data["pos.order"][0].id;
+                const orderId = notification.order_id;
                 if (document.visibilityState === "visible") {
                     this.printSelfOrderReceipt(orderId);
                 } else {

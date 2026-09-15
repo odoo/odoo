@@ -42,16 +42,19 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_what_is_peppol_alert(self, moves, moves_data, relevant_moves):
         any_moves_french = bool(relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()))
+        install_pdp_action = False  # Only set if we should install the PDP module
         if any_moves_french:
+            pdp_info = self.env['res.config.settings']._get_pdp_module_info()
             name = self.env._("Why should I use French E-Invoicing ?")
-            action_text = self.env._("France - E-Invoicing (Approved Platform)")
+            action_text = pdp_info['module_name']
+            if not pdp_info['is_installed']:
+                install_pdp_action = pdp_info['action']
         else:
             name = self.env._("Why should I use PEPPOL ?")
             action_text = self.env._("Why should you use it ?")
 
-        pdp_module = self.env['ir.module.module'].sudo()._get('l10n_fr_pdp')
-        if any_moves_french and pdp_module and pdp_module.state != 'installed':
-            action = pdp_module._get_records_action()
+        if install_pdp_action:
+            action = install_pdp_action
         else:
             action = {
                 'name': name,
@@ -218,6 +221,20 @@ class AccountMoveSend(models.AbstractModel):
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
             if partner.peppol_verification_state == 'not_verified':
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+            if partner.peppol_verification_state != 'valid' and partner.peppol_endpoint and partner.peppol_eas in ('0208', '9925'):
+                # only for BE participants
+                inverse_eas = '9925' if partner.peppol_eas == '0208' else '0208'
+                inverse_endpoint = f'BE{partner.peppol_endpoint}' if partner.peppol_eas == '0208' else partner.peppol_endpoint[2:]
+                if (
+                    not partner._build_error_peppol_endpoint(inverse_eas, inverse_endpoint)
+                    and partner._get_peppol_verification_state(inverse_endpoint, inverse_eas, invoice_edi_format) == 'valid'
+                ):
+                    partner.write({
+                        'peppol_eas': inverse_eas,
+                        'peppol_endpoint': inverse_endpoint,
+                    })
+                    partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+
             return all([
                 partner.country_code in PEPPOL_LIST,
                 self._is_applicable_to_company(method, move.company_id),

@@ -74,6 +74,14 @@ class HrAttendance(http.Controller):
 
         return response
 
+    @staticmethod
+    def _get_active_company(request):
+        cids = request.httprequest.cookies.get('cids')
+        if cids:
+            return int(cids.split("-")[0])
+
+        return request.env.company
+
     @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
     def kiosk_menu_item_action(self, company_id):
         if request.env.user.has_group("hr_attendance.group_hr_attendance_user"):
@@ -232,7 +240,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
-        employee = request.env.user.employee_id
+        employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
@@ -242,7 +250,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
     def user_attendance_data(self):
-        employee = request.env.user.employee_id
+        employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         return self._get_user_attendance_data(employee)
 
     def has_password(self):

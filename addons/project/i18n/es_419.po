@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-06-29 18:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-09-04 19:06+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/project/es_419/>\n"
 "Language: es_419\n"
@@ -20,12 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Todos los usuarios internos y los usuarios de portal invitados"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -284,16 +279,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/"
-"><br/>\n"
+"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hola,<br/><br/>\n"
@@ -302,9 +297,8 @@ msgstr ""
 "con la tarea <strong t-out=\"object.name or ''\">Planificación y "
 "presupuesto</strong> \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                asignada a <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                asignada a <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -367,23 +361,23 @@ msgstr ""
 "        </td></tr>\n"
 "        <tr><td><br/>Saludos,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">TuEmpresa</"
-"t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">TuEmpresa</t>"
+"\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@tuempresa.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@tuempresa.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -420,8 +414,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -467,8 +461,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -602,8 +596,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o pe-"
+"2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -891,6 +885,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Administrador: Puede gestionar proyectos y etapas, con acceso a reportes y "
+"configuración."
 
 #. module: project
 #. odoo-javascript
@@ -963,6 +959,11 @@ msgid "All internal users"
 msgstr "Todos los usuarios internos"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr "Todos los usuarios internos y los usuarios de portal invitados"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
@@ -993,8 +994,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
-"Analice el progreso de sus proyectos y el rendimiento de sus empleados."
+msgstr "Analice el progreso de sus proyectos y el rendimiento de sus empleados."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
@@ -1062,7 +1062,7 @@ msgstr "¿Está seguro de que quiere eliminar estas etapas?"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Are you sure you want to delete this record?"
-msgstr "¿Está seguro de que desea eliminar este registro?"
+msgstr "¿De verdad quieres eliminar este registro?"
 
 #. module: project
 #. odoo-javascript
@@ -2699,8 +2699,8 @@ msgid ""
 msgstr ""
 "Correo electrónico interno asociado a este proyecto. Los correos "
 "electrónicos entrantes se sincronizan en automático con las tareas (o, si lo "
-"desea, con los problemas si el módulo Rastreador de problemas está "
-"instalado)."
+"desea, con los problemas si el módulo Rastreador de problemas está instalado)"
+"."
 
 #. module: project
 #. odoo-javascript
@@ -3741,7 +3741,7 @@ msgstr "Progreso"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Project"
-msgstr "Proyecto"
+msgstr "Proyectos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__account_id
@@ -4431,7 +4431,7 @@ msgstr "Buscar en prioridad"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Project"
-msgstr "Buscar en proyecto"
+msgstr "Buscar en Proyectos"
 
 #. module: project
 #. odoo-python
@@ -5784,7 +5784,7 @@ msgstr "Ajustes de usuario"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
-msgstr ""
+msgstr "Usuario: Puede gestionar tareas en los proyectos que le comparten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5831,8 +5831,7 @@ msgstr "En espera"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
-"¿Busca mejorar la <b>gestión de sus proyectos</b>? <i>Empiece aquí.</i>"
+msgstr "¿Busca mejorar la <b>gestión de sus proyectos</b>? <i>Empiece aquí.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -6327,6 +6326,9 @@ msgstr "👤 Sin asignar"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Todos los usuarios internos y los usuarios de portal invitados"
 
 #~ msgid "Administrator can manage the employees' schedule"
 #~ msgstr "El administrador puede gestionar el horario de los empleados"

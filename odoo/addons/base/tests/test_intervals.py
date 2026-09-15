@@ -47,6 +47,29 @@ class TestIntervals(TransactionCase):
             [(10, 12), (13, 15), (22, 23), (24, 25), (30, 35)],
         )
 
+    def test_conflicting(self):
+        def check(a, b, c):
+            a, b, c = self.ints(a), self.ints(b), self.ints(c)
+            self.assertEqual(list(Intervals(a).conflicting(Intervals(b))), c)
+
+        check([(10, 20)], [(5, 8)], [])
+        check([(10, 20)], [(5, 10)], [])
+        check([(10, 20)], [(5, 15)], [(10, 20)])
+        check([(10, 20)], [(5, 20)], [(10, 20)])
+        check([(10, 20)], [(5, 25)], [(10, 20)])
+        check([(10, 20)], [(10, 15)], [(10, 20)])
+        check([(10, 20)], [(10, 20)], [(10, 20)])
+        check([(10, 20)], [(10, 25)], [(10, 20)])
+        check([(10, 20)], [(15, 18)], [(10, 20)])
+        check([(10, 20)], [(15, 20)], [(10, 20)])
+        check([(10, 20)], [(15, 25)], [(10, 20)])
+        check([(10, 20)], [(20, 25)], [])
+        check(
+            [(0, 5), (10, 15), (20, 25), (30, 35)],
+            [(6, 7), (9, 12), (13, 17), (22, 23), (24, 40)],
+            [(10, 15), (20, 25), (30, 35)],
+        )
+
     def test_difference(self):
         def check(a, b, c):
             a, b, c = self.ints(a), self.ints(b), self.ints(c)

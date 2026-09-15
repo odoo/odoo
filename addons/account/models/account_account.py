@@ -311,8 +311,9 @@ class AccountAccount(models.Model):
     def _check_account_code(self):
         for account in self:
             if account.code and not re.match(ACCOUNT_CODE_REGEX, account.code):
-                raise ValidationError(_(
-                    "The account code can only contain alphanumeric characters and dots."
+                raise ValidationError(self.env._(
+                    "The account code can only contain alphanumeric characters and dots. (account code: %s)",
+                    account.code,
                 ))
 
     @api.constrains('account_type')
@@ -744,10 +745,8 @@ class AccountAccount(models.Model):
             ('account_id.active', '=', True),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'expense'))
+        if allowed_account_types := self._get_name_search_account_types(move_type):
+            domain.append(('account_id.account_type', 'in', allowed_account_types))
 
         query = self.env['account.move.line']._search(domain, bypass_access=True)
         if not filter_never_user_accounts:

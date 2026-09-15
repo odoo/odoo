@@ -58,6 +58,7 @@ import {
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
 import { router } from "@web/core/browser/router";
+import { ValueHistoryPlugin } from "./plugins/value_history_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -92,6 +93,7 @@ const TRANSLATION_PLUGINS = [
     MonetaryFieldPlugin,
     DateTimeFieldPlugin,
     Many2OneOptionPlugin,
+    ValueHistoryPlugin,
     CustomizeTranslationTabPlugin,
     // Those plugin are depended by other Plugin but not used in translation
     // mode.

@@ -8,6 +8,7 @@ from urllib import parse
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
@@ -65,6 +66,7 @@ class ResPartner(models.Model):
                 partner.invoice_sending_method == "peppol"
                 and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
                 and partner.invoice_edi_format != "ubl_21_fr"
+                and self.env.company._get_peppol_proxy_type() == 'pdp'
             )
         ):
             ubl_21_fr_string = self.env._("France E-Invoicing (UBL 2.1)")
@@ -76,7 +78,7 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
-        return self.vat == '/' or not self.vat
+        return not self._l10n_fr_pdp_get_siren()
 
     def _l10n_fr_pdp_get_siren(self):
         self.ensure_one()
@@ -123,13 +125,16 @@ class ResPartner(models.Model):
     def _get_ubl_cii_formats_info(self):
         # EXTENDS 'account_edi_ubl_cii'
         formats_info = super()._get_ubl_cii_formats_info()
-        formats_info['ubl_21_fr'] = {'countries': ['FR'], 'on_peppol': False}
+        formats_info['ubl_21_fr'] = {'countries': ['FR'], 'on_peppol': self.env.company._get_peppol_proxy_type() == 'pdp', 'sequence': 300}
         return formats_info
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
-        if self.country_code == 'FR' and not self._l10n_fr_pdp_is_b2c():
-            return 'ubl_21_fr'
+        if self.country_code == 'FR':
+            if self.pdp_verification_display_state == 'peppol_valid':
+                return 'ubl_bis3'
+            elif self.pdp_verification_display_state == 'pdp_valid':
+                return 'ubl_21_fr'
         return super()._get_suggested_invoice_edi_format()
 
     def _get_pdp_display_verification_state(self, state=None):
@@ -205,9 +210,12 @@ class ResPartner(models.Model):
     @api.model
     @handle_demo
     def _pdp_annuaire_lookup_participant(self, edi_identification):
+        eas, _colon, pdp_identifier = edi_identification.partition(":")
+        if eas != '0225':
+            return None
+
         edi_mode = self.env.company._get_peppol_edi_mode()
         origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
-        pdp_identifier = edi_identification.partition(":")[2]
         query = parse.urlencode({'pdp_identifier': pdp_identifier})  # Note: the annuaire lookup is case-sensitive
         endpoint = f'{origin}/api/pdp/1/annuaire_lookup?{query}'
 
@@ -247,3 +255,20 @@ class ResPartner(models.Model):
     @handle_demo
     def button_account_peppol_check_partner_endpoint(self, company=None):
         return super().button_account_peppol_check_partner_endpoint(company=company)
+
+    def _peppol_fill_participant_supported_documents(self):
+        super()._peppol_fill_participant_supported_documents()
+
+        for partner in self:
+            edi_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}".lower()
+            annuaire_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
+            if not annuaire_info.get('b2g'):
+                continue
+
+            # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
+            # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.
+            # They just communicate with Chorus Pro which communicates with the other platforms (not via Peppol).
+            # So the `peppol_supported_documents` would be empty for them otherwise.
+            # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
+            # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
+            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]

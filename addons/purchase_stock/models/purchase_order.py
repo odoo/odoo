@@ -147,10 +147,12 @@ class PurchaseOrder(models.Model):
 
         po_lines_commands = []
         for product in products:
+            uom = product.seller_ids.filtered(lambda x: x.partner_id == self.partner_id)[:1].product_uom_id or product.uom_id
+            suggested_qty = product.uom_id._compute_quantity(product.suggested_qty, uom)
             suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
                 product,
-                product.suggested_qty,
-                product.uom_id,
+                suggested_qty,
+                uom,
                 self.company_id,
                 self.partner_id,
                 self
@@ -378,14 +380,18 @@ class PurchaseOrder(models.Model):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+                created_receipt = self.env['stock.picking']
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.with_user(SUPERUSER_ID).create(res)
                     pickings = picking
+                    created_receipt = picking
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))
+                moves.filtered(lambda m: m.product_uom.compare(m.product_uom_qty, 0) < 0).partner_id = order.partner_id
+                moves = moves._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
                     seq += 5
@@ -393,12 +399,16 @@ class PurchaseOrder(models.Model):
                 moves._action_assign()
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
+                if created_receipt and not created_receipt.move_ids:
+                    created_receipt.unlink()
+                    pickings -= created_receipt
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_source(
-                    'mail.message_origin_link',
-                    render_values={'self': picking, 'origin': order},
-                    subtype_xmlid='mail.mt_note',
-                )
+                if picking.exists():
+                    picking.message_post_with_source(
+                        'mail.message_origin_link',
+                        render_values={'self': picking, 'origin': order},
+                        subtype_xmlid='mail.mt_note',
+                    )
         return True
 
     def _add_picking_info(self, activity):

@@ -21,7 +21,8 @@ class AccountAnalyticLine(models.Model):
         string='Financial Account',
         ondelete='restrict',
         check_company=True,
-        compute='_compute_general_account_id', store=True, readonly=False
+        compute='_compute_general_account_id', store=True, readonly=False,
+        index='btree_not_null',
     )
     journal_id = fields.Many2one(
         'account.journal',

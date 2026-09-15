@@ -36,6 +36,10 @@ class AccountTax(models.Model):
         main_taxes = self.filtered(lambda tax: tax.l10n_es_type in main_tax_types)
         if not main_taxes:
             return '05'
+        # TODO should be removed in master
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
+        if oss_tag and oss_tag.id in main_taxes.repartition_line_ids.tag_ids.ids:
+            return '01'
         return main_taxes[0].l10n_es_applicability or '05'
 
     def _l10n_es_edi_verifactu_get_suggested_clave_regimen(self, special_regime, forced_tax_applicability=None):

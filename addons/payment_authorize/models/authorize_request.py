@@ -324,21 +324,34 @@ class AuthorizeAPI:
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        card = tx_details.get('transaction', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'refundTransaction',
-                'amount': str(amount),
-                'payment': {
-                    'creditCard': {
-                        'cardNumber': card,
-                        'expirationDate': 'XXXX',
-                    }
-                },
-                'refTransId': transaction_id,
+        tx_payment = tx_details.get("transaction", {}).get("payment", {})
+        if "bankAccount" in tx_payment:
+            payment_data = {
+                "bankAccount": {
+                    "routingNumber": tx_payment["bankAccount"].get("routingNumber"),
+                    "accountNumber": tx_payment["bankAccount"].get("accountNumber"),
+                    "nameOnAccount": tx_payment["bankAccount"].get("nameOnAccount"),
+                }
             }
-        })
-        return self._format_response(response, 'refund')
+        else:
+            payment_data = {
+                "creditCard": {
+                    "cardNumber": tx_payment.get("creditCard", {}).get("cardNumber"),
+                    "expirationDate": "XXXX",
+                }
+            }
+        response = self._make_request(
+            "createTransactionRequest",
+            {
+                "transactionRequest": {
+                    "transactionType": "refundTransaction",
+                    "amount": str(amount),
+                    "payment": payment_data,
+                    "refTransId": transaction_id,
+                }
+            },
+        )
+        return self._format_response(response, "refund")
 
     # Provider configuration: fetch authorize_client_key & currencies
     def merchant_details(self):

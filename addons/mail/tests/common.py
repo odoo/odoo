@@ -254,8 +254,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            return_path=return_path, extra=extra,
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
+        save_original = kwargs.pop('save_original', False)
         # In real use case, fetched mail processing is executed with administrative right.
-        self.env['mail.thread'].with_user(with_user or self.env.user).sudo().message_process(model, mail)
+        self.env['mail.thread'].with_user(with_user or self.env.user).sudo().message_process(model, mail, save_original=save_original)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def _gateway_mail_reply(self, template, mail=None, email=None,
@@ -626,14 +627,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           ``_find_mail_mail_wemail``);
         :param status: mail.mail state used to filter mails. If ``sent`` this method
           also check that emails have been sent trough gateway;
+        :param recipients_cc_list: an ``res.partner`` recordset or a list of
+            emails;
+        :param email_to_all: list of email addresses used in email_to, checking
+          all of them are in the same email. This is in addition to checking recipients
+          individually.;
         :param email_to_recipients: used for assertSentEmail to find email based
           on 'email_to' when doing the match directly based on recipients_list
           being partners it nos easy (e.g. multi emails, ...);
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
-        :param email_to_all: list of email addresses used in email_to, checking
-        all of them are in the same email. This is in addition to checking recipients
-        individually.;
         :param fields_values: if given, should be a dictionary of field names /
           values allowing to check ``mail.mail`` additional values (subject,
           reply_to, ...);
@@ -828,7 +831,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         a dict for fields. Allows to hide a lot of assertEqual under a simple
         call with a dictionary of expected values. """
         for fname, fvalue in fields_values.items():
-            with self.subTest(fname=fname, fvalue=fvalue):
+            with self.subTest(fname=fname, fvalue=str(fvalue)):
                 # email_{cc, to} are lists, hence order is not important
                 if fname in {'incoming_email_cc', 'incoming_email_to'}:
                     self.assertEqual(
@@ -1189,8 +1192,9 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             self._new_notifs += res.sudo()
             return res
 
-        with patch.object(MailMessage, 'create', autospec=True, wraps=MailMessage, side_effect=_mail_message_create) as _mail_message_create_mock, \
+        with patch.object(MailMessage, 'create', autospec=True, wraps=MailMessage, side_effect=_mail_message_create) as mail_message_create_mock, \
                 patch.object(MailNotification, 'create', autospec=True, wraps=MailNotification, side_effect=_mail_notification_create) as _mail_notification_create_mock:
+            self._mock_mail_message_create = mail_message_create_mock
             yield
 
     def _init_mock_mail(self):
@@ -2046,6 +2050,9 @@ class MailCommon(MailCase):
         """ Remove store partner data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
+        for data in partners_data:
+            if "hr.leave" not in self.env:
+                data.pop("employee_ids", None)
         return list(partners_data)
 
     def _filter_users_fields(self, /, *users_data):

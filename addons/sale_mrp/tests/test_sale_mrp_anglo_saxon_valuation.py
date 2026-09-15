@@ -18,6 +18,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
     @classmethod
     def _create_product(cls, **create_vals):
+        create_vals.setdefault('invoice_policy', 'order')
         if create_vals.get('is_storable'):
             create_vals['categ_id'] = cls.stock_account_product_categ.id
         return super()._create_product(**create_vals)
@@ -92,7 +93,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 })],
         })
         so.action_confirm()
-        so.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        for move in so.picking_ids.move_ids:
+            move.quantity = move.product_uom_qty
+        so.picking_ids.move_ids.picked = True
         so.picking_ids.button_validate()
 
         invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()

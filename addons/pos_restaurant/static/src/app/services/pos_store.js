@@ -113,7 +113,7 @@ patch(PosStore.prototype, {
         }
         const result = await super.sendOrderInPreparation(order, opts);
 
-        if (this.config.module_pos_restaurant && categoryCount.length) {
+        if (result && this.config.module_pos_restaurant && categoryCount.length) {
             const categorySummary = formatList(
                 categoryCount.map((cat) => `${cat.count} ${cat.name}`)
             );
@@ -564,7 +564,9 @@ patch(PosStore.prototype, {
     },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
-            let order = this.models["pos.order"].find((order) => order.isDirectSale);
+            let order = this.models["pos.order"].find(
+                (order) => order.isDirectSale && !order.isSynced
+            );
             if (!order) {
                 order = this.createNewOrder(data);
             }
@@ -603,9 +605,8 @@ patch(PosStore.prototype, {
     async submitOrder() {
         const order = this.getOrder();
         await this.ensureGuestCustomerCount(order);
+        this.sendOrderInPreparationUpdateLastChange(order);
         this.showDefault();
-        await this.sendOrderInPreparationUpdateLastChange(order);
-        this.addPendingOrder([order.id]);
     },
     async reprintOrder() {
         const order = this.getOrder();
@@ -674,6 +675,7 @@ patch(PosStore.prototype, {
                     !o.table_id &&
                     !o.finalized &&
                     o.lines.length === 0 &&
+                    !o.isSynced &&
                     !o.floating_order_name &&
                     !o.preset_time &&
                     (!o.preset_id || o.preset_id.id === this.config.default_preset_id?.id)
@@ -1027,7 +1029,6 @@ patch(PosStore.prototype, {
                 noteUpdateTitle: _t("Course %s fired", "" + course.index),
                 printNoteUpdateData: false,
             };
-            this.getOrder().uiState.lastPrints.push(changes);
             await this.printChanges(this.getOrder(), [changes], false);
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [

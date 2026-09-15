@@ -652,3 +652,74 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 0.0},
             {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 0.0},
         ])
+
+    def test_accrued_order_multiple_orders_name(self):
+        """ Ensure that when creating accrual entries for multiple sale orders,
+        the label of the stock variation lines contains the correct order name.
+        """
+        product_category = self.env['product.category'].create({
+            'name': 'Test Category Name',
+            'property_account_income_categ_id': self.account_revenue.id,
+            'property_account_expense_categ_id': self.account_expense.id,
+            'property_valuation': 'real_time',
+        })
+        account_variation = product_category.property_stock_valuation_account_id.account_stock_variation_id
+        anglo_saxon_product = self.env['product.product'].create({
+            'name': "Saxy Product 2",
+            'categ_id': product_category.id,
+            'invoice_policy': 'order',
+            'is_storable': True,
+            'list_price': 100,
+            'standard_price': 50,
+            'uom_id': self.uom_unit.id,
+        })
+
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': anglo_saxon_product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+        sale_order_1.action_confirm()
+        sale_order_1.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        sale_order_1.picking_ids.button_validate()
+
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': anglo_saxon_product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+        sale_order_2.action_confirm()
+        sale_order_2.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        sale_order_2.picking_ids.button_validate()
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': (sale_order_1 | sale_order_2).ids,
+        }).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+
+        account_move_domain = wizard.create_entries()['domain']
+        account_move = self.env['account.move'].search(account_move_domain)
+
+        # Check that we have variation lines with both order names
+        variation_lines = account_move.line_ids.filtered(lambda line: line.account_id == account_variation and line.debit > 0)
+
+        # There should be two reversal lines for stock variation, one for each order
+        self.assertEqual(len(variation_lines), 2)
+        names = variation_lines.mapped('name')
+        self.assertTrue(any(sale_order_1.name in name for name in names), "Label should contain SO1 name")
+        self.assertTrue(any(sale_order_2.name in name for name in names), "Label should contain SO2 name")

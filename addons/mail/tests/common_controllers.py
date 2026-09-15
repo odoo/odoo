@@ -135,6 +135,7 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                         self._delete_attachment(attachment, token)
 
     def _upload_attachment(self, document, route_kw):
+        cookies = route_kw.pop("cookies", None)
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             res = self.url_open(
                 url="/mail/attachment/upload",
@@ -146,6 +147,7 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     **route_kw,
                 },
                 files={"ufile": file},
+                **({"cookies": cookies} if cookies else {}),
             )
             res.raise_for_status()
             data = json.loads(res.content.decode("utf-8"))["data"]

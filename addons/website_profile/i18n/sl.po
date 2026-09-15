@@ -4,13 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:40+0000\n"
-"PO-Revision-Date: 2026-06-30 21:37+0000\n"
-"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 04:32+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "website_profile/sl/>\n"
 "Language: sl\n"
@@ -51,8 +53,9 @@ msgstr ". Poskusite z drugim iskanjem."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+#, fuzzy
 msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Pridobi značke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -61,8 +64,9 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>UREJANJE"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+#, fuzzy
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Uredi"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -71,13 +75,15 @@ msgstr "<i class=\"fa fa-pencil me-2\"/>UREJANJE PROFILA"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+#, fuzzy
 msgid "<i class=\"oi oi-arrow-right me-1\"/>All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Vse značke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+#, fuzzy
 msgid "<i class=\"oi oi-arrow-right\"/> All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Vse značke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -130,11 +136,13 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+#, fuzzy
 msgid "<strong class=\"mb-3 text-white me-2\">Rank by:</strong>"
-msgstr ""
+msgstr "<strong class=\"mb-3 text-white me-2\">Razvrsti po:</strong>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; color: #454748; width: 100%; border-"
@@ -263,6 +271,132 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; color: #454748; width: 100%; border-"
+"collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">"
+"\n"
+"                            <t t-out=\"object.company_id.name or ''\">"
+"YourCompany</t> Preverjanje profila\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td t-if=\"not user.company_id.uses_default_logo\" "
+"valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ "
+"user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: "
+"13px;\">\n"
+"                            Pozdravljeni <t t-out=\"object.name or ''\">Marc "
+"Demo</t>,<br/><br/>\n"
+"                            Vabljeni ste, da potrdite svoj e-poštni naslov, "
+"da boste lahko dostopali do spletnega mesta »<t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>«.\n"
+"                            Za potrditev e-poštnega naslova kliknite "
+"naslednjo povezavo:\n"
+"                            </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    Preveri moj račun\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            Hvala za sodelovanje!\n"
+"                        \n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-"
+"width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px "
+"8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         <t t-out=\"user.company_id.name or ''\">"
+"YourCompany</t>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: "
+"0.7;\">\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ "
+"user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                        </t>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            Poganja ga <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=forum\" t-attf-style=\"color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -287,8 +421,9 @@ msgstr "O bazi"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "All Courses"
-msgstr ""
+msgstr "Vse vsebine"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -310,8 +445,9 @@ msgstr "Priponke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+#, fuzzy
 msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
-msgstr ""
+msgstr "Značke so vaša zbirka dosežkov. Nosite jih s ponosom! <br/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -342,10 +478,13 @@ msgstr "Lahko objavite"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Sprememba države ni dovoljena, ko so dokumenti izdani za tvoj konto. Za to "
+"operacijo se obrni neposredno na nas."
 
 #. module: website_profile
 #. odoo-javascript
@@ -410,8 +549,9 @@ msgstr "E-pošta"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_profile
 #: model:mail.template,name:website_profile.validation_email
@@ -425,8 +565,9 @@ msgstr "Značka za igrifikacijo"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+#, fuzzy
 msgid "Get"
-msgstr ""
+msgstr "Pridobi"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -509,14 +650,16 @@ msgstr "Ni bil najden noben uporabnik za"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "Not have enough karma to view other users' profile."
-msgstr ""
+msgstr "Nimate dovolj karme za ogled profilov drugih uporabnikov."
 
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+#, fuzzy
 msgid "Public Profile"
-msgstr ""
+msgstr "Javni profil"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -526,8 +669,9 @@ msgstr "Ranki"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "Ranks and Badges"
-msgstr ""
+msgstr "Rangi in značke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
@@ -551,13 +695,16 @@ msgstr "Poslano obiskovalcem foruma za potrditev njihovega poštnega naslova"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_absolute_url
+#, fuzzy
 msgid "The full absolute URL to access the document through the website."
 msgstr ""
+"Polna absolutna URL povezava za dostop do dokumenta preko spletne strani."
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
+#, fuzzy
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "Celoten relativni URL za dostop do dokumenta prek spletnega mesta."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -590,8 +737,9 @@ msgstr "Posodobi"
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+#, fuzzy
 msgid "Update failed."
-msgstr ""
+msgstr "Posodobitev ni uspela."
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
@@ -601,8 +749,9 @@ msgstr "Uporabnik"
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "User Profiles"
-msgstr ""
+msgstr "Uporabniški profili"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -633,8 +782,9 @@ msgstr "Spletna stran"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_absolute_url
+#, fuzzy
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "Spletni absolutni URL"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -649,8 +799,9 @@ msgstr "Ko končate tečaj ali dosežete mejnike, prejmete značke."
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+#, fuzzy
 msgid "Write a few words about yourself..."
-msgstr ""
+msgstr "Napišite nekaj besed o sebi..."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -701,14 +852,16 @@ msgstr "točka"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+#, fuzzy
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
+#, fuzzy
 msgid "slides"
-msgstr ""
+msgstr "Diapozitivi"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -732,10 +885,13 @@ msgstr "xp"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+#, fuzzy
 msgid ""
 "xp\n"
 "                        to level up!"
 msgstr ""
+"xp\n"
+"                        do naslednje stopnje!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner

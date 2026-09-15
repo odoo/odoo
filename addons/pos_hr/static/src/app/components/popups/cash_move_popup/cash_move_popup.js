@@ -12,7 +12,7 @@ patch(CashMovePopup.prototype, {
     },
     get partnerId() {
         return this.pos.config.module_pos_hr
-            ? this.pos.cashier.work_contact_id?.id
+            ? this.pos.cashier.work_contact_id?.id ?? super.partnerId
             : super.partnerId;
     },
 });

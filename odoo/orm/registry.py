@@ -32,6 +32,7 @@ from odoo.tools import (
 from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
+from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
 
 from .utils import SUPERUSER_ID
 from . import model_classes
@@ -91,6 +92,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _lock: threading.RLock | DummyRLock = threading.RLock()
     _saved_lock: threading.RLock | DummyRLock | None = None
 
+    idle_timeout = 0
     registries = LRU[str, "Registry"](42)  # random default value
     """ A mapping from database names to registries. """
 
@@ -99,7 +101,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         assert db_name, "Missing database name"
         with cls._lock:
             try:
-                return cls.registries[db_name]
+                registry = cls.registries[db_name]
+                registry.last_used = time.monotonic()
+                return registry
             except KeyError:
                 return cls.new(db_name)
 
@@ -170,6 +174,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
                     if cr.rowcount:
                         update_module = True
+            from odoo.http import borrow_request  # noqa: PLC0415
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             exit_stack = ExitStack()
@@ -180,15 +185,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
-                load_modules(
-                    registry,
-                    update_module=update_module,
-                    upgrade_modules=upgrade_modules,
-                    install_modules=install_modules,
-                    reinit_modules=reinit_modules,
-                    new_db_demo=new_db_demo,
-                    models_to_check=models_to_check,
-                )
+                with borrow_request():
+                    load_modules(
+                        registry,
+                        update_module=update_module,
+                        upgrade_modules=upgrade_modules,
+                        install_modules=install_modules,
+                        reinit_modules=reinit_modules,
+                        new_db_demo=new_db_demo,
+                        models_to_check=models_to_check,
+                    )
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -207,17 +213,21 @@ class Registry(Mapping[str, type["BaseModel"]]):
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
         registry._init = False
+        reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
         registry.ready = True
+        registry.last_used = time.monotonic()
         registry.registry_invalidated = bool(update_module)
         registry.signal_changes()
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
+        cls._drop_idle()
         return registry
 
     def init(self, db_name: str) -> None:
         self._init = True
         self.loaded = False
         self.ready = False
+        self.last_used = time.monotonic()
 
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()  # type: ignore
@@ -301,6 +311,21 @@ class Registry(Mapping[str, type["BaseModel"]]):
     def delete_all(cls):
         """ Delete all the registries. """
         cls.registries.clear()
+
+    @classmethod
+    @locked
+    def _drop_idle(cls) -> None:
+        """ Drop registries that have not been used for a while. """
+        if cls.idle_timeout <= 0:
+            return
+        now = time.monotonic()
+        gc_list = []
+        for db_name, registry in cls.registries.items():
+            if now - registry.last_used > cls.idle_timeout:
+                gc_list.append(db_name)
+        for db_name in gc_list:
+            _logger.info("Drop idle registry for %s", db_name)
+            cls.delete(db_name)
 
     #
     # Mapping abstract methods implementation
@@ -501,6 +526,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model in env.values():
                 model._register_hook()
             env.flush_all()
+
+        reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
     @functools.cached_property
     def field_inverses(self) -> Collector[Field, Field]:

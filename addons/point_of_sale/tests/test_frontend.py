@@ -742,6 +742,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
 
+    def test_ticket_screen_search_suggestions(self):
+        """The search field suggestions must stay above the order list, on mobile too."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_ticket_screen_search_suggestions')
+
     def test_product_information_screen_admin(self):
         '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
         '''
@@ -2935,6 +2940,70 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_preset_timing_retail')
 
+    def test_pricelist_categ_rule_on_late_loaded_product(self):
+        """A product loaded through Search More must be priced by the rule set on its category,
+        whether the POS already knows that category or not."""
+        self.env['product.template'].search([]).write({'is_favorite': False})
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+        self.env['product.template'].create({
+            'name': 'Loaded Product',
+            'available_in_pos': True,
+            'is_favorite': True,
+            'list_price': 1.0,
+            'taxes_id': False,
+        })
+
+        pricelist = self.env['product.pricelist'].create({'name': 'Late Pricelist'})
+        categ = self.env['product.category'].create({'name': 'Late Categ'})
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': pricelist.id,
+            'applied_on': '2_product_category',
+            'categ_id': categ.id,
+            'compute_price': 'fixed',
+            'fixed_price': 500,
+        })
+        self.env['product.template'].create({
+            'name': 'Late Product',
+            'available_in_pos': True,
+            'categ_id': categ.id,
+            'list_price': 42.0,
+            'taxes_id': False,
+        })
+        self.main_pos_config.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        pos_session = self.env.registry.models['pos.session']
+        loaded = []
+
+        def load_data_patch(self, models_to_load):
+            res = super(pos_session, self).load_data(models_to_load)
+            # Created once the POS loaded its data: the client knows none of them.
+            if not loaded:
+                loaded.append(True)
+                newer_categ = self.env['product.category'].sudo().create({'name': 'Newer Categ'})
+                self.env['product.pricelist.item'].sudo().create({
+                    'pricelist_id': pricelist.id,
+                    'applied_on': '2_product_category',
+                    'categ_id': newer_categ.id,
+                    'compute_price': 'fixed',
+                    'fixed_price': 700,
+                })
+                self.env['product.template'].sudo().create({
+                    'name': 'Newer Product',
+                    'available_in_pos': True,
+                    'categ_id': newer_categ.id,
+                    'list_price': 88.0,
+                    'taxes_id': False,
+                })
+            return res
+
+        with patch.object(pos_session, "load_data", load_data_patch):
+            self.start_pos_tour('test_pricelist_categ_rule_on_late_loaded_product')
+
     def test_pricelists_in_pos(self):
         pos_limited_category = self.env['pos.category'].create({'name': 'Limited Category'})
         pos_category = self.env['pos.category'].create({'name': 'test_pricelists_in_pos'})
@@ -3084,13 +3153,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(load_product_from_pos_stats['count'], 7)
 
         # Length of loaded pricelist items should correspond to the number of items linked
-        # to the product template or product variant
+        # to the product template, to the product variant or to the product category
         # Global rules are loaded at starting of the PoS
         self.assertEqual(load_product_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
+        self.assertEqual(load_product_from_pos_stats['items']['apple'], 2, "Apple should have 2 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['orange'], 3, "Orange should have 3 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
     def test_available_children_categories(self):
@@ -3332,6 +3401,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         """ Test that deleting a line in the POS through the popup works correctly. """
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line')
+
+    def test_paid_order_payment_method_drilldown(self):
+        """ Opening the payment method form from a paid order's payment inside
+        the PoS UI must not crash on backend-only view widgets. """
+        # group_system: the payment method form reads payment.provider
+        # records (pos_online_payment) that only system users can access
+        self.pos_admin.group_ids = [Command.link(self.env.ref('base.group_system').id)]
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_paid_order_payment_method_drilldown', login='pos_admin')
 
     def test_order_invoice_search(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -3607,7 +3685,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         with patch.object(pos_order, "sync_from_ui", sync_from_ui_patch):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
-            self.assertEqual(sync_counter['count'], 6)
+            self.assertEqual(sync_counter['count'], 7)
 
     def test_lot_refund_lower_qty(self):
         product = self.env['product.product'].create({
@@ -4015,6 +4093,44 @@ class TestUi(TestPointOfSaleHttpCommon):
         """Test that active overlays (e.g., dropdown menus) are closed when the SaverScreen is triggered."""
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaverScreenCloseOverlaysTour')
+
+    def test_price_extra_pricelist_based_pricelist(self):
+        """
+        Tests that extra price is carried over when changing to a pricelist based pricelist
+        """
+        extra_attribute = self.env['product.attribute'].create({
+            'name': 'Extra attribute',
+            'create_variant': 'no_variant',
+        })
+        extra_value = self.env['product.attribute.value'].create({
+            'name': 'Extra value',
+            'attribute_id': extra_attribute.id,
+        })
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.whiteboard_pen.id,
+            'attribute_id': extra_attribute.id,
+            'value_ids': [Command.set(extra_value.ids)]
+        })
+        attribute_line.product_template_value_ids[0].price_extra = 100
+
+        pricelist_1 = self.env['product.pricelist'].create({'name': 'Pricelist 1'})
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'Pricelist 2',
+            'item_ids': [Command.create({
+                'compute_price': 'percentage',
+                'base': 'pricelist',
+                'base_pricelist_id': pricelist_1.id,
+                'percent_price': 50,
+                'applied_on': '3_global',
+            })],
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': pricelist_1.id,
+            'available_pricelist_ids': [Command.set([pricelist_1.id, pricelist_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_price_extra_pricelist_based_pricelist', login="pos_user")
 
 
 # This class just runs the same tests as above but with mobile emulation

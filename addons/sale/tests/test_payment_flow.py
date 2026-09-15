@@ -258,6 +258,45 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(len(self._new_mails), 2)
         self.assertTrue(self._new_mails.filtered(lambda x: 'Invoice' in x.subject))
 
+    def test_partial_payments_generate_invoices_for_the_payment_amount(self):
+        self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", "True")
+        self.sale_order.action_confirm()
+
+        first_tx = self._create_transaction(
+            flow="direct",
+            amount=200.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="First partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            first_tx._post_process()
+        self.assertEqual(first_tx.invoice_ids.amount_total, 200.0)
+
+        second_tx = self._create_transaction(
+            flow="direct",
+            amount=300.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="Second partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            second_tx._post_process()
+        self.assertEqual(second_tx.invoice_ids.amount_total, 300.0)
+
+        third_tx = self._create_transaction(
+            flow="direct",
+            amount=225.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="Third partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            third_tx._post_process()
+        self.assertEqual(third_tx.invoice_ids.amount_total, 225.0)
+
+        self.assertEqual(sum(self.sale_order.invoice_ids.mapped("amount_total")), 725.0)
+
     def test_auto_done_and_auto_invoice(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
@@ -289,6 +328,15 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(self.sale_order.state, 'draft')
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
+
+    def test_payment_does_not_confirm_order_pending_signature(self):
+        self.sale_order.require_payment = False
+        self.sale_order.require_signature = True
+        tx = self._create_transaction(
+            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+        )
+        confirmed_orders = tx._check_amount_and_confirm_order()
+        self.assertFalse(confirmed_orders)
 
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
@@ -533,6 +581,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
             'partner_id': portal_user.partner_id.id,
             'user_id': self.sale_user.id,
+            'require_signature': False,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'product_uom_qty': 1,

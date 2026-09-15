@@ -1,6 +1,14 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { contains, makeMockServer, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    makeMockServer,
+    MockServer,
+    mountView,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { AnalyticDistribution } from "@analytic/components/analytic_distribution/analytic_distribution";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
 defineAnalyticModels()
@@ -166,4 +174,83 @@ test("Analytic dynamic multi-edit", async () => {
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
     expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
     expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
+})
+
+
+test.tags("desktop");
+test("Analytic multi-edit: New Model dialog stays open", async () => {
+    await mountView({
+        type: "list",
+        resModel: "account.analytic.line",
+        arch: `
+            <list multi_edit="1" default_order="id DESC">
+                <field name="account_id"/>
+                <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
+                <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': True}"/>
+            </list>`,
+    });
+
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
+
+    // open the widget and set a valid distribution line so the "New Model" button appears
+    await contains(".o_list_table tbody tr:first .o_field_analytic_distribution").click();
+    await animationFrame();
+    await contains(".analytic_distribution_popup .o_list_table thead th:first a").click();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Brussels", { confirm: false });
+    await runAllTimers();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+
+    // click "New Model": opens the "Create Analytic Distribution Model" dialog
+    await contains(".analytic_distribution_popup .popover-header .btn-link").click();
+    await animationFrame();
+    await runAllTimers();
+
+    // the model dialog is the only dialog: New Model no longer saves the records, so no
+    // multi-edit confirmation is triggered and the widget is not closed/reloaded away
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog").toHaveCount(1);
+    expect(".analytic_distribution_popup").toHaveCount(1);
+})
+
+
+test.tags("desktop");
+test("Analytic readonly list: unknown accounts are left untouched", async () => {
+    // a distribution pointing to an analytic account that doesn't exist anymore
+    MockServer.env["account.analytic.line"].create({ analytic_distribution: { 9999: 100 }, amount: 7 });
+
+    patchWithCleanup(AnalyticDistribution.prototype, {
+        save() {
+            expect.step("save");
+            return super.save(...arguments);
+        },
+    });
+    onRpc("account.analytic.line", "web_save", () => expect.step("web_save"));
+    onRpc("account.analytic.line", "write", () => expect.step("write"));
+    onRpc("account.analytic.line", "web_search_read", () => expect.step("web_search_read"));
+
+    await mountView({
+        type: "list",
+        resModel: "account.analytic.line",
+        arch: `
+            <list multi_edit="1" default_order="id DESC">
+                <field name="account_id"/>
+                <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
+                <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': True}"/>
+            </list>`,
+    });
+    await runAllTimers();
+    await animationFrame();
+
+    // the rows are readonly: the invalid json is neither cleaned up nor written back,
+    // so there is no reload feeding the same invalid json back in
+    expect.verifySteps(["web_search_read"]);
+    expect(".o_data_row").toHaveCount(7);
+    // the row with the missing account is rendered without any tag instead of blocking the list
+    expect(".o_data_row:nth-child(1) .o_field_analytic_distribution .o_tag").toHaveCount(0);
+    // the other rows are unaffected
+    expect(".o_data_row:nth-child(2) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Los Angeles");
 })

@@ -151,7 +151,7 @@ class ResourceCalendar(models.Model):
 
     def _inverse_two_weeks_calendar(self):
         for calendar in self:
-            if not calendar.two_weeks_calendar:
+            if not calendar.two_weeks_calendar or self.env.context.get('resource_skip_inverse_two_weeks'):
                 continue
             calendar.attendance_ids = calendar.attendance_ids_1st_week + calendar.attendance_ids_2nd_week
 
@@ -282,6 +282,11 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Overrides
     # --------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(ResourceCalendar, self.with_context(resource_skip_inverse_two_weeks=True)).create(vals_list)
+        return res
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -557,6 +562,10 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources) + [self.env['resource.resource']]
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
+        attendance_intervals = {
+            r.id: Intervals((i for i in attendance_intervals[r.id] if any(a._is_work_period() for a in i[2].sudo())), keep_distinct=True)
+            for r in resources_list
+        }
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
             return {
@@ -734,17 +743,13 @@ class ResourceCalendar(models.Model):
 
     def _get_default_attendance_ids(self, company_id=None):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
-        if company_id and (attendances := company_id.resource_calendar_id.attendance_ids):
+        company_calendar = company_id.resource_calendar_id if company_id else self.env['resource.calendar']
+        if (
+            (attendances := company_calendar.attendance_ids)
+            and (not self or not (company_calendar.two_weeks_calendar and not self.two_weeks_calendar))
+        ):
             return [
-                Command.create({
-                    'name': attendance.name,
-                    'dayofweek': attendance.dayofweek,
-                    'week_type': attendance.week_type,
-                    'hour_from': attendance.hour_from,
-                    'hour_to': attendance.hour_to,
-                    'day_period': attendance.day_period,
-                    'display_type': attendance.display_type,
-                })
+                Command.create(attendance._copy_attendance_vals())
                 for attendance in attendances
             ]
         return [

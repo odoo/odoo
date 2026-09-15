@@ -244,7 +244,11 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+
+                regime_code = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+                if regime_code != '02' and com_partner.country_id.code == 'ES' and com_partner.state_id.code in ('TF', 'GC', 'CE', 'ME') and invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'no_sujeto_loc'):
+                    regime_code = '08'
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = regime_code
             else:
                 if invoice._l10n_es_is_dua():
                     partner_info = self._l10n_es_edi_get_partner_info(invoice.company_id.partner_id)
@@ -412,7 +416,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_edi_web_service_navarra_vals(self, invoices):
         wsdl = 'SuministroFactEmitidas' if invoices[0].is_sale_document() else 'SuministroFactRecibidas'
         return {
-            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/{wsdl}.wsdl',
+            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/{wsdl}.wsdl',
             'address': 'https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx',
             'test_url': 'https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx',
             'custom_navarra': True,

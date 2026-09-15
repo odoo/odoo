@@ -129,7 +129,10 @@ class StripeController(http.Controller):
                         has_more = additional_refunds['has_more']
 
                     # Process the refunds for which a refund transaction has not been created yet.
-                    processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
+                    # Include refunds of capture transactions, as they are grandchildren of the
+                    # source transaction found from the charge.
+                    child_txs = tx_sudo.child_transaction_ids
+                    processed_refund_ids = (child_txs | child_txs.child_transaction_ids).filtered(
                         lambda tx: tx.operation == 'refund'
                     ).mapped('provider_reference')
                     for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):

@@ -588,8 +588,8 @@ class ProjectProject(models.Model):
                     'to_invoice': -downpayment_amount_invoiced,
                 }
                 if with_action and (
-                    self.env.user.has_group('sales_team.group_sale_salesman_all_leads,')
-                    or self.env.user.has_group('account.group_account_invoice,')
+                    self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
+                    or self.env.user.has_group('account.group_account_invoice')
                     or self.env.user.has_group('account.group_account_readonly')
                 ):
                     invoices = self.env['account.move'].search([('line_ids.sale_line_ids', 'in', downpayment_sol_ids)])
@@ -706,7 +706,8 @@ class ProjectProject(models.Model):
             cogs_lines = []
             for move_line in invoices_move_lines:
                 if move_line['display_type'] == 'cogs':
-                    cogs_lines.append(move_line)
+                    if move_line.account_id.internal_group == 'expense':
+                        cogs_lines.append(move_line)
                 else:
                     revenues_lines.append(move_line)
             for move_lines, ml_type in ((revenues_lines, 'revenues'), (cogs_lines, 'costs')):

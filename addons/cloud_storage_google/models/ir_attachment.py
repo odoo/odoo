@@ -64,15 +64,16 @@ class IrAttachment(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('cloud_storage_provider') != 'google':
             return super()._generate_cloud_storage_download_info()
         info = self._get_cloud_storage_google_info()
+        time_to_expiry = self._get_cloud_storage_download_url_time_to_expiry()
         return {
             'url': self._generate_cloud_storage_google_signed_url(
                 info['bucket_name'], info['blob_name'],
                 method='GET',
-                expiration=self._cloud_storage_download_url_time_to_expiry,
+                expiration=time_to_expiry,
                 response_type=self.mimetype or None,
                 response_disposition=content_disposition(self.name) if self.env.context.get('download_attachments') else None,
             ),
-            'time_to_expiry': self._cloud_storage_download_url_time_to_expiry,
+            'time_to_expiry': time_to_expiry,
         }
 
     def _generate_cloud_storage_upload_info(self):

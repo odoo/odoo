@@ -472,6 +472,22 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                     }],
                 )
 
+    @freeze_time('2024-07-15 10:00:00')
+    def test_15_error_title_bucketing(self):
+        """ The submission-error popup title should be neutral and only distinguish "MyInvois said something"
+        from everything else (our own pre-checks, or a genuinely unexpected error), without assigning blame. """
+        with patch(CONTACT_PROXY_METHOD, new=self._test_15_mock_myinvois):
+            with self.assertRaisesRegex(UserError, 'MyInvois returned the following response'):
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_15_mock_odoo):
+            with self.assertRaisesRegex(UserError, 'This document could not be sent for the following reason'):
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_02_mock):
+            with self.assertRaisesRegex(UserError, 'This document could not be sent for the following reason'):
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -936,4 +952,26 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
             return res
+        raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_15_mock_myinvois(self, endpoint, params):
+        """ A whole-batch failure whose reference is MyInvois's own fault. """
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            return {
+                'error': {
+                    'reference': 'myinvois_error',
+                    'data': {},
+                },
+            }
+        raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_15_mock_odoo(self, endpoint, params):
+        """ A whole-batch failure caused by our own pre-submission check, not MyInvois. """
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            return {
+                'error': {
+                    'reference': 'document_tin_mismatch',
+                    'data': 'C2584563299',
+                },
+            }
         raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))

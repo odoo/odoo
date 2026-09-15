@@ -3,6 +3,7 @@
 
 from contextlib import contextmanager
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlsplit
 
 import odoo
 from odoo import http
@@ -100,6 +101,12 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id)._get_signup_url()
+
+        # Assert no token generated if no signup type
+        partner.signup_cancel()
+        signup_url = partner._get_signup_url()
+        signup_url_params = parse_qs(urlsplit(signup_url).query)
+        self.assertFalse(signup_url_params.get('token'))
 
     def test_copy_multiple_users(self):
         users = self.env['res.users'].create([

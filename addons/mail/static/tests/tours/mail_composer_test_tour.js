@@ -126,6 +126,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: '.o_field_html[name="body"] .o_channel_redirect:contains(general)',
         },
         {
+            // Wait for the mention popover to close, as the composer shows no
+            // dropzone while the popover owns the UI active element.
+            trigger: "body:not(:has(.o-mail-MentionList))",
+        },
+        {
             content: "Drop a file on the full composer",
             trigger: ".o_mail_composer_form_view",
             async run() {

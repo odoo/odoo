@@ -2,10 +2,11 @@ from lxml import etree
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import freeze_time, tagged
 from odoo.tools import misc
 
 
+@freeze_time('2024-01-01')
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestMyDATAInvoice(AccountTestInvoicingCommon):
 

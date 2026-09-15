@@ -16,6 +16,7 @@ from . import test_sale_combo_multicurrency
 from . import test_sale_flow
 from . import test_sale_early_payment_discount
 from . import test_sale_order
+from . import test_sale_order_onchange_combo
 from . import test_sale_order_product_catalog
 from . import test_sale_order_ui
 from . import test_sale_prices

@@ -262,3 +262,7 @@ class SaleOrder(models.Model):
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         super()._recompute_cart()
+
+    def _get_zero_priced_lines(self):
+        """Exclude reward lines from the prevented zero-priced rule."""
+        return super()._get_zero_priced_lines().filtered(lambda line: not line.is_reward_line)

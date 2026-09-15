@@ -276,7 +276,13 @@ class StockMove(models.Model):
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
                 if not values.get('location_final_id'):
-                    values['location_final_id'] = mo.location_dest_id.id
+                    warehouse = mo.location_dest_id.warehouse_id
+                    if warehouse.sam_loc_id and mo.location_dest_id._child_of(warehouse.sam_loc_id):
+                        # in 3 steps, the finished product is pushed afterwards
+                        sam_rule = warehouse.pbm_route_id.rule_ids.filtered(lambda r: r.picking_type_id == warehouse.sam_type_id)[:1]
+                        values['location_final_id'] = sam_rule.location_dest_id.id or mo.location_dest_id.id
+                    else:
+                        values['location_final_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -348,14 +354,6 @@ class StockMove(models.Model):
 
         if procurements:
             self.env['stock.rule'].run(procurements)
-
-    def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
-        for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
-            if move.move_line_ids:
-                move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
-                                               'workorder_id': move.workorder_id.id,})
-        return res
 
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         moves = self.action_explode()
@@ -561,7 +559,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.created_production_id,)
+        return keys + (self.created_production_id, self.production_group_id)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):

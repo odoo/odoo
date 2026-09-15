@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-06-30 19:24+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2026-09-08 02:23+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/base/"
 "ja/>\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -446,8 +446,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"メモ: これは複数の会社による問題の可能性があります。Odoo内で会社を変更するこ"
-"とで解決するかもしれません。"
+"メモ: マルチカンパニーの設定による問題かもしれません。Odoo内で会社を切り替え"
+"てみてください。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -580,8 +580,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"これは複数の会社による問題のようですが、いずれにせよレコードにアクセスするた"
-"めの適切な会社へのアクセス権がありません。"
+"これはマルチカンパニーに起因する問題のようですが、いずれにせよ、このレコード"
+"にアクセスするための適切な会社へのアクセス権がありません。"
 
 #. module: base
 #. odoo-python
@@ -594,8 +594,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"これは複数の会社による問題のようです。会社を切替えることでレコードにアクセス"
-"できるかもしれません: %s."
+"これはマルチカンパニーに起因する問題のようです。会社を「%s」に切り替えると、"
+"このレコードにアクセスできる可能性があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_imin
@@ -921,7 +921,7 @@ msgid ""
 "European Union."
 msgstr ""
 "\n"
-"統計内レポートに在庫管理を追加するモジュール。\n"
+"Intrastatレポートに在庫管理を追加するモジュール。\n"
 "================================================== ==========\n"
 "\n"
 "このモジュールは、欧州連合の国間で取引される商品の詳細を提供します。"
@@ -3220,7 +3220,7 @@ msgid ""
 "product of his wishlist gets back in stock.\n"
 msgstr ""
 "\n"
-"ウィッシュリストのプロダクトが再入荷した際にEメール通知を受け取るかどうかを"
+"ほしい物リストのプロダクトが再入荷した際にEメール通知を受け取るかどうかを"
 "ユーザが選択できるようにします。\n"
 
 #. module: base
@@ -3244,8 +3244,8 @@ msgid ""
 "the selected pickup location.\n"
 msgstr ""
 "\n"
-"選択されたピックアップロケーションで利用できないプロダクトの場合、ユーザが"
-"ウィッシュリストに追加できるようにします。\n"
+"選択されたピックアップロケーションで利用できないプロダクトの場合、ユーザがほ"
+"しい物リストに追加できるようにします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -8109,7 +8109,7 @@ msgid ""
 "It allows for comparing products from the wishlist\n"
 msgstr ""
 "\n"
-"ウィッシュリストのプロダクトを比較できます。\n"
+"ほしい物リストのプロダクトを比較できます。\n"
 
 #. module: base
 #. odoo-python
@@ -16984,12 +16984,12 @@ msgstr "AIライブチャット"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
 msgid "AI Text Draft - Accounting"
-msgstr "AIテキストドラフト - 会計"
+msgstr "AIテキスト下書き - 会計"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_knowledge
 msgid "AI Text Draft - Knowledge"
-msgstr "AIテキストドラフト - ナレッジ"
+msgstr "AIテキスト下書き - ナレッジ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_website
@@ -17019,12 +17019,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_account
 msgid "AI text draft integration with accounting"
-msgstr "AIテキストドラフト、会計との連携"
+msgstr "AIテキスト下書き、会計との連携"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_knowledge
 msgid "AI text draft integration with knowledge"
-msgstr "AIテキストドラフト、ナレッジとの連携"
+msgstr "AIテキスト下書き、ナレッジとの連携"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_website
@@ -18714,7 +18714,7 @@ msgstr "在庫可能品で定期オーダを作成することを許可する"
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_microsoft_calendar
 msgid "Allow to sync your Outlook Calendar from the Appointment App"
-msgstr "予約アプリからOutlookカレンダの同期を許可"
+msgstr "アポイントメントアプリからOutlookカレンダーの同期を許可"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_update_tax_tags
@@ -18850,7 +18850,7 @@ msgstr "会計小切手印刷で照合機能を使用できるようにします
 #: model:ir.module.module,summary:base.module_website_delivery_sendcloud
 #: model:ir.module.module,summary:base.module_website_sale_fedex
 msgid "Allows website customers to choose delivery pick-up points"
-msgstr "ウェブサイト顧客が配送ピックアップ地点を選択できるようにします。"
+msgstr "ウェブサイトの顧客が、配送の受取拠点を選択できるようにします。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
@@ -20039,7 +20039,7 @@ msgstr "予約リード生成"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_microsoft_calendar
 msgid "Appointment Microsoft Calendar"
-msgstr "予約Microsoftカレンダ"
+msgstr "アポイントメントMicrosoftカレンダー"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_sms
@@ -22511,7 +22511,7 @@ msgstr "AmazonコネクタとAvataxのブリッジモジュール"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_collect_wishlist
 msgid "Bridge module between Click & Collect and Wishlist"
-msgstr "クリック&コレクトとウィッシュリストのブリッジモジュール"
+msgstr "クリック&コレクトとほしい物リストのブリッジモジュール"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_margin
@@ -22569,7 +22569,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison_wishlist
 msgid "Bridge module for Website sale comparison and wishlist"
-msgstr "ウェブサイトの販売比較とウィッシュリストのためのブリッジモジュール"
+msgstr "ウェブサイトの販売比較とほしい物リストのためのブリッジモジュール"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk
@@ -23772,7 +23772,7 @@ msgstr "コホートビュー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect_wishlist
 msgid "Collect & Wishlist"
-msgstr "コレクト & ウィッシュリスト"
+msgstr "コレクト & ほしい物リスト"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -27454,9 +27454,11 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
-"MRPの企業版拡張*作業オーダ計画。製造指図/作業区ごとにグループ化された"
-"ガントビューによる計画の確認*トレーサビリティレポート*原価構造レポート"
-"(mrp_account)"
+"MRP用エンタープライズ拡張機能\n"
+"* 作業オーダの計画。製造オーダ/作業区ごとにグループ化された"
+"ガントチャートビューで計画を確認\n"
+"* トレーサビリティレポート\n"
+"* 原価構造レポート (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -28887,7 +28889,7 @@ msgstr "フィールドサービスレポート-販売"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
 msgid "Field Service Stock"
-msgstr "フィールドサービスストック"
+msgstr "フィールドサービス在庫"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_field_type
@@ -29388,7 +29390,9 @@ msgstr "使用言語でのOdooの翻訳の詳細については、次を参照�
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr "１対多項目のため、目的モデル上のその項目は正反対の多対１関係を実装します。"
+msgstr ""
+"One2many(1対多)フィールドの場合、対象モデル側で逆方向のMany2one(多対1)関係を"
+"実装しているフィールド"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
@@ -29426,7 +29430,7 @@ msgstr "archでの`__comp__` in の使用が禁止されています。"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Forgot password?"
-msgstr "パスワードを忘れましたか？"
+msgstr "パスワードをお忘れですか?"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.HUF
@@ -30267,7 +30271,7 @@ msgstr "グロープ (グループなし = グローバル)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
 msgid "Groups and implied groups"
-msgstr "グループおよび継承グループ"
+msgstr "グループと内包グループ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__group_ids
@@ -30543,7 +30547,7 @@ msgstr "便利屋サービス"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Happy to be Sponsor"
-msgstr "スポンサーになりたい"
+msgstr "スポンサーとして協賛しています"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot_drivers
@@ -31534,17 +31538,17 @@ msgstr "FPSファイナンスのガイドラインに準拠した登録済みの
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied"
-msgstr "継承元"
+msgstr "内包"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 msgid "Implied Groups"
-msgstr "継承元グループ"
+msgstr "内包グループ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_list
 msgid "Implied groups"
-msgstr "継承元グループ"
+msgstr "内包グループ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
@@ -32761,7 +32765,7 @@ msgstr "イスラエル- 会計レポート"
 #: code:addons/base/models/res_groups.py:0
 msgid ""
 "It is not possible to remove implied group %(group)s from users %(users)s"
-msgstr "他の設定から継承されたグループ%(group)sはユーザから%(users)s削除できません"
+msgstr "内包グループは%(group)sユーザから%(users)sから削除できません"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -38211,7 +38215,7 @@ msgstr ""
 "て適切な制御方法を選択してください。\n"
 "\n"
 "手間をかけずに仕入先の請求書を管理できます。\n"
-"購買オーダ、プロダクトの入荷に基づいてドラフト請求書を事前に生成し、手動で請"
+"購買オーダ、プロダクトの入荷に基づいて請求書(下書き)を事前に生成し、手動で請"
 "求書を作成し、オーダから明細をインポートするなど、必要に応じて適切な方法を選"
 "択しましょう。\n"
 "\n"
@@ -44844,7 +44848,7 @@ msgstr "Shopeeコネクタ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
 msgid "Shopper's Wishlist"
-msgstr "買い物客のウィッシュリスト"
+msgstr "買い物客のほしい物リスト"
 
 #. module: base
 #. odoo-python
@@ -47228,7 +47232,7 @@ msgstr "以下の変数が使用できます:"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__all_implied_ids
 msgid "The group itself with all its implied groups."
-msgstr "そのグループ自体と、そのグループに含まれるすべてのグループ。"
+msgstr "そのグループ自体と、そのグループに内包されるすべてのグループ。"
 
 #. module: base
 #. odoo-python
@@ -48049,8 +48053,8 @@ msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the FEDEX connector."
 msgstr ""
-"このモジュールにより、eコマースユーザはFEDEXコネクタのピックアップ地点への配"
-"送を選択することができます。"
+"このモジュールにより、eコマースユーザはFEDEXコネクタの受取拠点への配送を選択"
+"することができます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_delivery_sendcloud
@@ -48058,8 +48062,8 @@ msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the Sendcloud connector."
 msgstr ""
-"このモジュールにより、eコマースユーザはSendcloudコネクタのピックアップ地点へ"
-"の配送を選択できるようになります。"
+"このモジュールにより、eコマースユーザはSendcloudコネクタの受取拠点への配送を"
+"選択できるようになります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -48904,7 +48908,7 @@ msgstr "Transifexの連携機能"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_ids
 msgid "Transitively Implied Groups"
-msgstr "間接的に継承されるグループ"
+msgstr "連鎖的に内包されるグループ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_by_ids
@@ -49675,7 +49679,7 @@ msgstr "不明"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database error: '%s'"
-msgstr "未知のデータベースエラー: '%s'"
+msgstr "不明なデータベースエラー: '%s'"
 
 #. module: base
 #. odoo-python
@@ -50251,13 +50255,13 @@ msgstr "ユーザログ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_user_ids
 msgid "Users and implied users"
-msgstr "ユーザおよび継承ユーザ"
+msgstr "ユーザおよび内包ユーザ"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_groups.py:0
 msgid "Users and implied users of %(group)s"
-msgstr "%(group)sのユーザおよび継承ユーザ"
+msgstr "%(group)sのユーザおよび内包ユーザ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__user_ids
@@ -52135,7 +52139,7 @@ msgstr "例: フランス"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "e.g. John Doe"
-msgstr "例: 鈴木 一郎"
+msgstr "例: John Doe"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -52366,12 +52370,12 @@ msgstr "多対多"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
 msgid "many2one"
-msgstr "多対1"
+msgstr "many2one"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one_reference
 msgid "many2one_reference"
-msgstr "多対1_参照"
+msgstr "many2one_reference"
 
 #. module: base
 #. odoo-python

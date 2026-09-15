@@ -26,6 +26,7 @@ class ResCompany(models.Model):
         default=True,
         groups='base.group_user',
     )
+    # DEPRECATED - was for the pre-prod phase
     l10n_fr_pdp_pilot_phase = fields.Boolean(
         string="E-Invoicing Pilot Phase",
         help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
@@ -130,7 +131,7 @@ class ResCompany(models.Model):
             return
         account_ids = self.env['account.account'].search([
             ('account_type', 'in', ['asset_receivable', 'liability_payable']),
-            ('company_ids', 'in', companies.ids),
+            ('company_ids', 'parent_of', companies.ids),
         ]).ids
         date_company_conditions = SQL(
             '(%s)',
@@ -175,12 +176,11 @@ class ResCompany(models.Model):
     def _check_pdp_identifier(self, pdp_identifier, warning=False):
         return pdp_identifier and PDP_identifier_re.match(pdp_identifier)
 
-    def _reset_peppol_configuration(self):
+    def _reset_peppol_configuration(self, soft=False):
         # Extend `account_peppol` to reset PDP specific fields
         self.write({
             'l10n_fr_pdp_send_to_ppf': True,
             'l10n_fr_pdp_annuaire_start_date': False,
-            'l10n_fr_pdp_pilot_phase': False,
         })
         super()._reset_peppol_configuration()
 
@@ -201,25 +201,15 @@ class ResCompany(models.Model):
             'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::D22B': "UN/CEFACT EN16931 French CTC Extended",
         }
 
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return super()._peppol_allows_document_reception() and self.country_code != 'FR'
+
     @handle_demo
     def _l10n_fr_pdp_update_pilot_phase(self, value):
         self.ensure_one()
-        pdp_user = self.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'pdp')[:1]
-        if not pdp_user or self.account_peppol_proxy_state not in ('smp_registration', 'receiver'):
-            return
-
-        result = pdp_user._call_peppol_proxy(
-            "/api/pdp/1/pilot_phase",
-            params={
-                'pdp_pilot_phase': value,
-            },
-        )
-        if 'error' in result:
-            error_message = result['error'].get('message') or result['error'].get('data', {}).get('message')
-            _logger.error('Error while updating pilot phase: %s', error_message)
-            return
-
-        pdp_user._peppol_process_participant_status(result)
+        # DEPRECATED - was for the pre-prod phase
+        return
 
     def _pdp_get_flow_10_start_date(self):
         self.ensure_one()
@@ -247,14 +237,13 @@ class ResCompany(models.Model):
             else:
                 company.l10n_fr_pdp_flow_10_start_date = None
 
-    @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user', 'l10n_fr_pdp_pilot_phase')
+    @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user')
     def _compute_l10n_fr_f10_enable_reporting(self):
         changed_companies = self.browse()
         for company in self:
             previous_state = company.l10n_fr_f10_enable_reporting
             company.l10n_fr_f10_enable_reporting = (
                 company.l10n_fr_pdp_send_to_ppf
-                and company.l10n_fr_pdp_pilot_phase
                 and company.account_peppol_edi_user
                 and company.account_fiscal_country_id.code == 'FR'
                 and company.currency_id == self.env.ref('base.EUR')
@@ -274,7 +263,7 @@ class ResCompany(models.Model):
             'object_uuid': self.pdp_authentication_uuid,
         })
         kyc_status = response.get('kyc_status')
-        if kyc_status in {'success', 'fail'}:
+        if kyc_status == 'success':
             self.pdp_kyc_status = kyc_status
             if self.env['account.move']._can_commit():
                 self.env.cr.commit()

@@ -69,10 +69,13 @@ class SaleOrder(models.Model):
     def _search_tasks_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        task_domain = [
-            ('display_name' if isinstance(value, str) else 'id', operator, value),
-            ('sale_order_id', '!=', False),
-        ]
+        if operator in ('any', 'any!'):
+            task_domain = value
+        else:
+            task_domain = [
+                ('display_name' if isinstance(value, str) else 'id', operator, value),
+                ('sale_order_id', '!=', False),
+            ]
         query = self.env['project.task']._search(task_domain)
         return [('id', 'in', query.subselect('sale_order_id'))]
 

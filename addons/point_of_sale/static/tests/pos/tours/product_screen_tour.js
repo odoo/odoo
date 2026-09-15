@@ -945,11 +945,19 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.is(),
             {
                 content: "Check that VAT label is present in the product details popup",
-                trigger: ".section-financials .vat-label:contains('VAT')",
+                trigger: ".section-financials .vat-label:contains('Child Tax 1')",
+            },
+            {
+                content: "Check that VAT label is present in the product details popup",
+                trigger: ".section-financials .vat-label:contains('Child Tax 2')",
             },
             {
                 content: "Check that VAT value is correct in the product details popup",
-                trigger: ".section-financials .vat-value:contains('$ 15.00 (Parent Tax)')",
+                trigger: ".section-financials .vat-value:contains('$ 10.00')",
+            },
+            {
+                content: "Check that VAT value is correct in the product details popup",
+                trigger: ".section-financials .vat-value:contains('$ 5.00')",
             },
             Chrome.endTour(),
         ].flat(),
@@ -1104,17 +1112,15 @@ registry
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
                 FeedbackScreen.isShown(),
-                Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
                 ProductScreen.isShown(),
+                Dialog.confirm(),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
                 FeedbackScreen.isShown(),
-                Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
                 ProductScreen.isShown(),
+                Dialog.confirm(),
             ].flat(),
     });
 

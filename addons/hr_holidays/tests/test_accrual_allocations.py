@@ -394,6 +394,67 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 allocation._update_accrual()
                 self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
 
+    @freeze_time('2025-09-01')
+    def test_frequency_daily_worked_time_non_utc_timezone(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Brisbane 40 Hours',
+            'tz': 'Australia/Brisbane',
+            'hours_per_day': 8,
+            'attendance_ids': [
+                Command.create({
+                    'name': f'Weekday {weekday} Morning',
+                    'dayofweek': str(weekday),
+                    'hour_from': 8,
+                    'hour_to': 12,
+                    'day_period': 'morning',
+                })
+                for weekday in range(5)
+            ] + [
+                Command.create({
+                    'name': f'Weekday {weekday} Afternoon',
+                    'dayofweek': str(weekday),
+                    'hour_from': 13,
+                    'hour_to': 17,
+                    'day_period': 'afternoon',
+                })
+                for weekday in range(5)
+            ],
+        })
+        self.employee_emp.tz = 'Australia/Brisbane'
+        self.employee_emp.resource_calendar_id = calendar
+        self.user_hrmanager.tz = 'Australia/Brisbane'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Daily Worked Time Accrual',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'can_be_carryover': True,
+            'carryover_date': 'allocation',
+            'level_ids': [Command.create({
+                'milestone_date': 'creation',
+                'added_value': 5,
+                'added_value_type': 'hour',
+                'frequency': 'daily',
+                'action_with_unused_accruals': 'all',
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'name': 'Brisbane Daily Accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type_hour.id,
+            'date_from': date(2025, 9, 1),
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+        allocation.action_approve()
+
+        balances = []
+        for day in range(2, 9):
+            allocation._process_accrual_plans(date(2025, 9, day))
+            balances.append(allocation.number_of_hours_display)
+
+        self.assertEqual(balances, [5, 10, 15, 20, 25, 25, 25])
+
     def test_frequency_weekly(self):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -5146,3 +5207,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(test_date):
                 allocation._update_accrual()
                 self.assert_remaining_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_hr_leave_after_adding_accrual_plan_levels(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan 1 start',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'allocation',
+        })
+        accrual_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 10,
+            'allocation_type': 'accrual',
+            'date_from': '2026-08-01',
+        })
+        accrual_allocation.action_approve()
+        accrual_plan.level_ids = [Command.link(self.accrual_plan_start1.level_ids[0].id)]
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': '2026-08-10',
+            'request_date_to': '2026-08-15',
+        })
+        self.assertTrue(leave.action_approve())

@@ -36,6 +36,27 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_item_description_name')
 
+    def test_invoice_buyer_reference_uses_partner_ref(self):
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=100.0, taxes_id=tax_21)
+
+        customer_company = self.partner_be
+        customer_contact = self._create_partner(name='Customer contact 1', parent_id=customer_company.id, country_code='BE', ref='CONTACT-REF')
+        customer_company.ref = 'PARENT-REF'
+
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=customer_contact,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+        buyer_reference = xml_tree.find('.//{*}BuyerReference')
+        self.assertIsNotNone(buyer_reference)
+        self.assertEqual(buyer_reference.text, customer_contact.ref)
+
     def test_invoice_payee_financial_account(self):
         bank_kbc = self.env['res.bank'].create({
             'name': 'KBC',
@@ -412,6 +433,35 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_return_turned_as_extra_invoice_lines')
+
+    def test_invoice_with_discount_and_fixed_tax_emptying_return(self):
+        """ Ensure the emptying taxes (a.k.a 'vidange') works on line with negative quantity for when the clients return the 'vidange'."""
+        tax_emptying = self.fixed_tax(1.0, name="Vidange")
+        tax_21 = self.percent_tax(21.0)
+        tax_0 = self.percent_tax(0)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=5.0,
+                    quantity=2.0,
+                    discount=10.0,
+                    tax_ids=tax_emptying + tax_21,
+                ),
+                # line with price zero used for returning 'vidange'.
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=0.0,
+                    quantity=-2.0,
+                    tax_ids=tax_emptying + tax_0,
+                ),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_with_discount_and_fixed_tax_emptying_return')
 
     def test_invoice_manual_tax_amount(self):
         tax_12 = self.percent_tax(12.0)
@@ -903,6 +953,36 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_E_08_line_extension_amount')
+
+    def test_export_sections_as_invoice_lines(self):
+        """
+        A collapsed section should be exported as invoice lines grouped by tax.
+        The order of the cac:InvoiceLine elements should match the order of the lines on the generated PDF.
+        """
+        tax_12 = self.percent_tax(12.0)
+        tax_21 = self.percent_tax(21.0)
+        product_1 = self._create_product(lst_price=100, name="product_1")
+        product_2 = self._create_product(lst_price=50, name="product_2")
+        product_3 = self._create_product(lst_price=200, name="product_3")
+        product_4 = self._create_product(lst_price=500, name="product_4")
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                # This section should be ignored, the product line should be exported instead.
+                self._prepare_invoice_line(name="Section 2", display_type='line_section', collapse_composition=False, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_4, tax_ids=[tax_21.id]),
+                # This section should be exported twice : one for 12%, other for 21%.
+                self._prepare_invoice_line(name="Section 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=[tax_12.id]),
+                self._prepare_invoice_line(product_id=product_2, tax_ids=[tax_12.id]),
+                self._prepare_invoice_line(product_id=product_3, tax_ids=[tax_21.id]),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
 
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,

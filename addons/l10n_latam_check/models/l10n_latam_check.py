@@ -139,7 +139,9 @@ class L10n_LatamCheck(models.Model):
     def _compute_current_journal(self):
         for rec in self:
             last_operation = rec._get_last_operation()
-            if not last_operation:
+            incoming_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'inbound')
+            outgoing_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'outbound')
+            if not last_operation or len(incoming_operations) - len(outgoing_operations) < 1:
                 rec.current_journal_id = False
                 continue
             if last_operation.payment_type == 'inbound':

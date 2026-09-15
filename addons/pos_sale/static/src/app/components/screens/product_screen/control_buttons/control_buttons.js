@@ -21,6 +21,13 @@ patch(ControlButtons.prototype, {
                 ["partner_id", "any", [["id", "child_of", [this.pos.getOrder().getPartner().id]]]],
             ];
         }
+        const saleOrderIds = this.pos
+            .getOrder()
+            ?.lines?.map((l) => l.sale_order_origin_id?.id)
+            .filter(Boolean);
+        if (saleOrderIds?.length) {
+            domain = [...domain, ["id", "not in", saleOrderIds]];
+        }
 
         this.dialog.add(SelectCreateDialog, {
             resModel: "sale.order",

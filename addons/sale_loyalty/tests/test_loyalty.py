@@ -166,6 +166,31 @@ class TestLoyalty(TestSaleCouponCommon):
         order._action_cancel()
         self.assertFalse(order.coupon_point_ids)
 
+    def test_salesperson_can_cancel_order_with_coupons(self):
+        """Test that a salesperson can cancel an order with coupon points without access error."""
+        user_salesman = new_test_user(
+            self.env, login="user_salesman", groups="sales_team.group_sale_salesman"
+        )
+        self.env["loyalty.program"].create({
+            "name": "10% Discount",
+            "program_type": "coupons",
+            "trigger": "auto",
+            "reward_ids": [Command.create({"reward_type": "discount", "discount": 10})],
+        })
+        order = (
+            self
+            .env["sale.order"]
+            .with_user(user_salesman)
+            .create({
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product_a.id})],
+            })
+        )
+        order.action_confirm()
+        self.assertTrue(order.coupon_point_ids)
+        order._action_cancel()
+        self.assertFalse(order.coupon_point_ids)
+
     def test_distribution_amount_payment_programs(self):
         """
         Check how the amount of a payment reward is distributed.

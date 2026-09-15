@@ -27,8 +27,8 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
         return;
     }
 
-    if (!parent.matches('.js_main_product') || !combination.product_id) {
-        // if we're not on product page or the product is dynamic
+    if (!parent.matches('.js_main_product')) {
+        // if we're not on product page
         return;
     }
 

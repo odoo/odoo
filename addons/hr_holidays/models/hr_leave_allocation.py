@@ -4,6 +4,7 @@
 from calendar import monthrange
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 
 from odoo import api, fields, models, _
 from odoo.tools import format_date
@@ -204,7 +205,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         date_from = fields.Date.today()
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from, ignore_future=True)[0]
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from)[0]
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]
@@ -381,8 +382,10 @@ class HrLeaveAllocation(models.Model):
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
         self.ensure_one()
         datetime_min_time = datetime.min.time()
-        start_dt = datetime.combine(start_date, datetime_min_time)
-        end_dt = datetime.combine(end_date, datetime_min_time)
+        version = self.employee_id._get_version(start_date)
+        resource_tz = timezone(version._get_tz() or 'UTC')
+        start_dt = resource_tz.localize(datetime.combine(start_date, datetime_min_time))
+        end_dt = resource_tz.localize(datetime.combine(end_date, datetime_min_time))
         leaves_eligible = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
             calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
             domain=[('time_type', '=', 'leave'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
@@ -390,8 +393,10 @@ class HrLeaveAllocation(models.Model):
             calendar=self.employee_id.resource_calendar_id)[self.employee_id.id]['hours']
         worked += leaves_eligible
         if start_period != start_date or end_period != end_date:
-            start_dt = datetime.combine(start_period, datetime_min_time)
-            end_dt = datetime.combine(end_period, datetime_min_time)
+            version = self.employee_id._get_version(start_period)
+            resource_tz = timezone(version._get_tz() or 'UTC')
+            start_dt = resource_tz.localize(datetime.combine(start_period, datetime_min_time))
+            end_dt = resource_tz.localize(datetime.combine(end_period, datetime_min_time))
             leaves_eligible = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
                 calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
                 domain=[('time_type', '=', 'leave'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
@@ -483,7 +488,7 @@ class HrLeaveAllocation(models.Model):
                 # Accrual plan is not configured properly or has not started
                 if date_to < first_level_start_date:
                     continue
-                allocation.lastcall = max(allocation.lastcall, first_level_start_date)
+                allocation.lastcall = max(allocation.lastcall, first_level_start_date) if allocation.lastcall else first_level_start_date
                 allocation.actual_lastcall = allocation.lastcall
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
                 # adjust nextcall for carryover

@@ -1,5 +1,6 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import {
+    contains,
     getService,
     makeDialogMockEnv,
     mountWithCleanup,
@@ -11,7 +12,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 import { expect } from "@odoo/hoot";
-import { user } from "@web/core/user";
+import { Chrome } from "@point_of_sale/app/pos_app";
 
 const { DateTime } = luxon;
 
@@ -32,11 +33,13 @@ export const setupPosEnv = async (opts = { setupCashier: true }) => {
     if (opts.setupCashier) {
         store.setCashier(store.user);
     }
-    patchWithCleanup(user, {
-        // Needed for the allowProductCreation method
-        checkAccessRight: (model, operation) =>
-            operation === "create" && model === "product.product",
+    patchWithCleanup(store.router, {
+        navigate(routeName, routeParams = {}) {
+            this.state.current = routeName;
+            this.state.params = routeParams;
+        },
     });
+
     return store;
 };
 
@@ -186,3 +189,23 @@ export const dialogActions = async (action, steps = []) => {
     // Return the result of the action
     return await promise;
 };
+
+export async function mountPosApp(store) {
+    store.session.state = "opened";
+    await mountWithCleanup(Chrome, { props: { disableLoader: () => {} } });
+    await tick();
+    await animationFrame();
+}
+
+export async function setupAndMountPosApp(config = {}, opts = { openRegister: true }) {
+    const store = await setupPosEnv();
+    Object.assign(store.config, config);
+    await mountPosApp(store);
+
+    if (opts.openRegister) {
+        await contains(".screen-login .btn.open-register-btn").click();
+        await animationFrame();
+    }
+
+    return store;
+}

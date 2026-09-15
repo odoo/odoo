@@ -9,6 +9,7 @@ import os
 import platform
 import pprint
 import sys
+import time
 import threading
 import traceback
 import warnings
@@ -20,6 +21,10 @@ from . import sql_db
 from . import tools
 
 _logger = logging.getLogger(__name__)
+
+
+real_time = time.time.__call__  # ensure we have a non patched time when using freezegun
+
 
 def log(logger, level, prefix, msg, depth=None):
     warnings.warn(
@@ -175,6 +180,9 @@ class LogRecord(logging.LogRecord):
         self.perf_info = ""
         self.pid = os.getpid()
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        if time.time.__call__ != real_time:
+            self.faked_created = self.created
+            self.created = real_time()
 
 
 showwarning = None

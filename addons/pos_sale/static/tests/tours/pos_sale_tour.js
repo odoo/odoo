@@ -678,7 +678,7 @@ registry.category("web_tour.tours").add("test_settle_so_custom_attribute_value",
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            Order.hasLine({ productName: "Inscription: Custom: Value" }),
+            Order.hasLine({ productName: "Gift Wrap, Inscription: Custom: Value" }),
         ].flat(),
 });
 
@@ -732,5 +732,25 @@ registry.category("web_tour.tours").add("test_settle_so_archived_attribute", {
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             Order.hasLine({ productName: "Archived Attr Product" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_variant_popup_qty_free", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Color Product"),
+            {
+                content: "Click on Inventory",
+                trigger: 'button.accordion-header:contains("Inventory")',
+                run: "click",
+            },
+            {
+                content: "Check the variant's qty",
+                trigger:
+                    'div:not(:has(div)):contains("available,"):has(span.fw-bolder:contains("0"):not(:contains("50")))',
+            },
+            Dialog.confirm("Add"),
         ].flat(),
 });

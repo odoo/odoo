@@ -156,7 +156,6 @@ class ImageProcess:
         if output_format == 'GIF':
             opt['optimize'] = True
             opt['save_all'] = True
-
         if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
             output_image = output_image.convert("RGB")
 

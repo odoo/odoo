@@ -88,6 +88,9 @@ class HrLeave(models.Model):
         while not self.resource_calendar_id._works_on_date(date_target + relativedelta(days=1)):
             date_target += relativedelta(days=1)
 
+        if date_start > date_target:
+            return (date_from, date_to)
+
         # Undo the last day increment
         return (date_start, date_target)
 
@@ -126,6 +129,9 @@ class HrLeave(models.Model):
                     ('date_from', '<', max(fr_leaves.mapped('date_to')) + relativedelta(days=1)),
                     ('date_to', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
                 ])
+            standard_duration = super(HrLeave, fr_leaves)._get_durations(
+                resource_calendar=resource_calendar,
+            )
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id
                 holidays_days_list = []
@@ -172,7 +178,6 @@ class HrLeave(models.Model):
                             else:
                                 legal_days += 1.0
                         current += relativedelta(days=1)
-                    standard_duration = super()._get_durations(resource_calendar=resource_calendar)
                     _, hours = standard_duration.get(leave.id, (0.0, 0.0))
 
                     duration_by_leave_id[leave.id] = (legal_days, hours)

@@ -425,7 +425,7 @@ class Base(models.AbstractModel):
         # only active records will get returned in the default case
         domain = Domain(domain)
         if any(cond.field_expr == self._active_name for cond in domain.iter_conditions()):
-            domain &= Domain('active', 'in', [True, False])
+            domain &= Domain(self._active_name, 'in', [True, False])
         domain = domain.optimize(self)
 
         # dict to help creating order compatible with _read_group and for search
@@ -1969,6 +1969,19 @@ class Base(models.AbstractModel):
                 field_range.append(values)
 
             return { 'values': field_range, }
+
+    @api.model
+    def onchange_batch(self, values_list: list[dict], field_names: list[str], fields_spec: dict) -> list[dict]:
+        """
+        Apply onchange to a batch of new records.
+        This method only supports new records, so ``self`` must be empty.
+        """
+        assert not self, "self must be empty"
+
+        return [
+            self.onchange(values, field_names, fields_spec)
+            for values in values_list
+        ]
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """

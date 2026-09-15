@@ -21,7 +21,7 @@ const blogPostsSnippet = {
 registerWebsitePreviewTour(
     "blog_posts_dynamic_snippet_options",
     {
-        url: "/?debug=1",
+        url: "/",
         edition: true,
     },
     () => [

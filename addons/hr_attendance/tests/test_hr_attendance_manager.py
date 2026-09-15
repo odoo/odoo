@@ -87,5 +87,6 @@ class TestAttendanceManager(TransactionCase):
 
         # Attendance Officer
         self.ryan.group_ids = [Command.link(self.env.ref('hr_attendance.group_hr_attendance_officer').id)]
+        self.marc_employee.attendance_manager_id = self.ryan.id
         self.assertTrue(marc_public_employee.with_user(self.ryan).action_open_last_month_attendances())
         self.assertTrue(ryan_public_employee.with_user(self.ryan).action_open_last_month_attendances())

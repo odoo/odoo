@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
         self.coupon_point_ids.coupon_id.sudo().filtered(
             lambda c: not c.program_id.is_nominative and c.order_id in self and not c.use_count)\
             .unlink()
-        self.coupon_point_ids.unlink()
+        self.coupon_point_ids.sudo().unlink()
         return res
 
     def action_open_reward_wizard(self):
@@ -824,9 +824,18 @@ class SaleOrder(models.Model):
             ('order_model', '=', self._name),
             ('order_id', '=', self.id),
         ], limit=1)
-        order_coupon_history.update({
-            'used': order_coupon_history.used + points,
-        })
+        if order_coupon_history:
+            order_coupon_history.update({'used': order_coupon_history.used + points})
+        else:
+            issued = self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon_id).points
+            self.env['loyalty.history'].create({
+                'card_id': coupon_id.id,
+                'order_model': self._name,
+                'order_id': self.id,
+                'description': _("Order %s", self.display_name),
+                'issued': issued,
+                'used': points,
+            })
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()

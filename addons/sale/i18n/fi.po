@@ -43,16 +43,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-07-09 16:06+0000\n"
+"PO-Revision-Date: 2026-09-09 13:51+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/sale/fi/"
-">\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/sale/fi/>"
+"\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -208,14 +208,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        ja summalla\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or "
-"''\">10,00 €</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
 "        tilauksellesi\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            on käsiteltävänä.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -225,9 +224,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Vahvistuksen jälkeen,\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">10,00 €</span>\n"
 "                on vielä maksettavana.\n"
 "            </t>\n"
 "        </t>\n"
@@ -236,9 +235,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">10,00 €</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">10,00 "
+"€</span>\n"
 "                on vielä maksettavana.\n"
 "            </t>\n"
 "        </t>\n"
@@ -604,8 +603,8 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -639,8 +638,8 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
 "border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;"
-"\">Tuotteet</span></td>\n"
+"                <td style=\"width: 150px;\"><span style=\"font-"
+"weight:bold;\">Tuotteet</span></td>\n"
 "                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-"
 "weight:bold;\">Määrä</span></td>\n"
@@ -662,8 +661,8 @@ msgstr ""
 "            <t t-set=\"line_subtotal\" t-value=\"                     "
 "line.price_subtotal                     if hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'                     else line.price_total                 \"/"
-">\n"
+"'tax_excluded'                     else line.price_total                 \"/>"
+"\n"
 "            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
 "line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
@@ -686,8 +685,8 @@ msgstr ""
 "out=\"line.name or ''\">Puunhoidon kurssi</span>\n"
 "                                <t t-set=\"current_section\" t-"
 "value=\"line\"/>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"/"
-">\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>"
+"\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Puunhoidon "
@@ -708,9 +707,9 @@ msgstr ""
 "                        <t t-set=\"loop_cycle_number\" t-"
 "value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/"
-"{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
-"{{hasattr(object, 'website_id') and object.website_id and "
+"                            <img t-attf-src=\"/web/image/product.product/{{ "
+"line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: {"
+"{hasattr(object, 'website_id') and object.website_id and "
 "object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
 "cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
@@ -722,28 +721,24 @@ msgstr ""
 "weight:bold; white-space: nowrap;\">\n"
 "                        <t t-if=\"hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-"
-"out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or "
-"''\">10,00 €</t>\n"
+"                            <t t-out=\"format_amount"
+"(line.price_reduce_taxexcl, object.currency_id) or ''\">10,00 €</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-"
-"out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or "
-"''\">10,00 €</t>\n"
+"                            <t t-out=\"format_amount"
+"(line.price_reduce_taxinc, object.currency_id) or ''\">10,00 €</t>\n"
 "                        </t>\n"
 "                        </span></td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-if=\"current_section and "
-"(                     line_last                     or "
-"object.order_line[line_index+1].display_type in ('line_section', "
-"'line_subsection')                     or "
+"            <t t-if=\"current_section and (                     line_last"
+"                     or object.order_line[line_index+1].display_type in "
+"('line_section', 'line_subsection')                     or "
 "object.order_line[line_index+1].product_type == 'combo'                     "
 "or (                         line.combo_item_id                         and "
-"not "
-"object.order_line[line_index+1].combo_item_id                     )                 ) "
-"and not line.is_downpayment\">\n"
+"not object.order_line[line_index+1].combo_item_id                     )"
+"                 ) and not line.is_downpayment\">\n"
 "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: "
 "12px; border-collapse: collapse;\">\n"
@@ -792,8 +787,8 @@ msgstr ""
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><span style=\"font-weight:bold;\">Veroton summa:</span></"
-"td>\n"
+"align=\"right\"><span style=\"font-weight:bold;\">Veroton summa:</span></td>"
+"\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
 "align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
 "object.currency_id) or ''\">10,00 €</td>\n"
@@ -826,8 +821,8 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
-"                    <span style=\"font-weight:bold;\">Laskutusosoite:</"
-"span>\n"
+"                    <span style=\"font-weight:bold;\">Laskutusosoite:</span>"
+"\n"
 "                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 "
 "S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
@@ -847,8 +842,8 @@ msgstr ""
 "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/"
-">\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>"
+"\n"
 "                    </t>\n"
 "                    (<t t-out=\"format_amount(tx_sudo.amount, "
 "object.currency_id) or ''\">10,00 €</t>)\n"
@@ -863,10 +858,10 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <span style=\"font-weight:bold;\">Toimitusosoite:</"
-"span>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or "
-"''\">1201 S Figueroa St</t>\n"
+"                    <span style=\"font-weight:bold;\">Toimitusosoite:</span>"
+"\n"
+"                    <t t-out=\"object.partner_shipping_id.street or ''\">"
+"1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
 "Angeles</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.state_id.name or "
@@ -969,8 +964,8 @@ msgstr ""
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "10.00</span> on valmiina tarkastettavaksi.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -1039,14 +1034,14 @@ msgstr ""
 "        Hei,\n"
 "        <br/><br/>\n"
 "        Pro forma -laskusi <t t-out=\"doc_name or ''\">tarjoukselle</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>,\n"
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
+",\n"
 "        <t t-if=\"object.origin\">\n"
 "            (viite: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        summalla <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 "
-"€</span> on saatavilla.\n"
+"        summalla <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\"> 10,00 €</span> on "
+"saatavilla.\n"
 "        <br/><br/>\n"
 "        Olethan meihin yhteydessä, mikäli sinulla on kysyttävää.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -1198,8 +1193,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>Onneksi olkoon</b>, ensimmäinen tarjouksesi on lähetetty!"
-"<br>Tarkista sähköpostisi vahvistaaksesi tarjouksen.\n"
+"<span><b>Onneksi olkoon</b>, ensimmäinen tarjouksesi on lähetetty!<br>"
+"Tarkista sähköpostisi vahvistaaksesi tarjouksen.\n"
 "        </span>"
 
 #. module: sale
@@ -1533,7 +1528,7 @@ msgstr "Sallittu mittayksikkö"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Sallii pro forma -laskujen lähetyksen asiakkaille"
+msgstr "Sallii pro forma -laskun lähettämisen asiakkaille"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -1622,32 +1617,32 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analyyttinen jako"
+msgstr "Laskentakohteiden kohdistus"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Analyytiikka kustannuksista"
+msgstr "Kuluihin liittyvä laskenta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analyyttinen rivi"
+msgstr "Laskentakohderivi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analyysisuunnitelman sovellettavuus"
+msgstr "Laskentakohderyhmän sovellettavuudet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analyyttinen tarkkuus"
+msgstr "Laskennallinen tarkkuus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Analyyttiset rivit"
+msgstr "Laskentakohderivit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
@@ -2527,8 +2522,7 @@ msgstr "Alennus: %(percent)s%%"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
-"Alennus: %(percent)s%%- Tuotteista, joissa on seuraavat verot %(taxes)s"
+msgstr "Alennus: %(percent)s%%- Tuotteista, joissa on seuraavat verot %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2622,7 +2616,7 @@ msgstr "Näyttötyyppi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Jakelun kustannuspaikka"
+msgstr "Laskentakohteen kohdistus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3085,8 +3079,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"Jos myyntitilaus on lukittu, et voi enää muuttaa sitä. Voit silti vielä "
-"laskuttaa ja toimittaa tälle myyntitilaukselle."
+"Jos myynti on lukittu, et voi enää muokata sitä. Voit kuitenkin edelleen "
+"laskuttaa tai toimittaa."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -3325,7 +3319,7 @@ msgstr "Laskutuksen päiväkirja"
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Laskutus perustuu"
+msgstr "Laskutuskäytäntö"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
@@ -3531,10 +3525,10 @@ msgid ""
 "and track the work hours."
 msgstr ""
 "Aseta määrät manuaalisesti tilauksesta: Lasku perustuu manuaalisesti "
-"syötettyyn määrään luomatta kustannuspaikkaa.\n"
+"syötettyyn määrään luomatta laskentakohdetta.\n"
 "Työaikakirjaukset sopimuksessa: Lasku perustuu siihen liittyvän "
-"työaikakirjausten tunteihin.\n"
-"Luo tehtävä ja seuraa tunteja: Luo tehtävä myyntitilauksen vahvistukseen ja "
+"työaikakirjauksen seurattaviin tunteihin.\n"
+"Luo tehtävä ja seuraa tunteja: Luo tehtävä myyntitilauksen vahvistuttua ja "
 "seuraa työtunteja."
 
 #. module: sale
@@ -3563,7 +3557,7 @@ msgstr "Mediatyyppi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -3858,7 +3852,7 @@ msgstr "Vaihtoehto tuotteelle: %s"
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr "Lisätuotteet"
+msgstr "Valinnaiset tuotteet"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
@@ -3930,7 +3924,7 @@ msgstr "Tilausrivit"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__name
 msgid "Order Reference"
-msgstr "Tilauksen viite"
+msgstr "Tilausviite"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
@@ -3956,8 +3950,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Tilattu määrä: Laskun määrät, jotka asiakas on tilannut.\n"
-"Toimitettu määrä: Laskun määrät toimitetaan asiakkaalle."
+"Tilattu määrä: Asiakkaan tilaamat laskumäärät.\n"
+"Toimitettu määrä: Asiakkaalle toimitetut laskumäärät."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -4475,7 +4469,7 @@ msgstr "Tarkasteltavat tarjoukset"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4957,7 +4951,7 @@ msgstr "Myy ja osta tuotteita eri mittayksiköissä tai pakkauksissa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "Myy tuotevariantteja, käyttäen määritteitä (koko, väri, yms.)"
+msgstr "Myy tuotevariantteja käyttäen ominaisuuksia (koko, väri, jne.)"
 
 #. module: sale
 #. odoo-python
@@ -5352,7 +5346,7 @@ msgstr "Toimitusehdot: %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
-msgstr "Toimitusehdot"
+msgstr "Käyttöehdot"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -5507,8 +5501,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
-"Tilaus ei ole sellaisessa tilassa, että se edellyttää asiakkaan maksua."
+msgstr "Tilaus ei ole sellaisessa tilassa, että se edellyttää asiakkaan maksua."
 
 #. module: sale
 #. odoo-python
@@ -5552,8 +5545,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
-"Prosenttiosuus määrästä, joka on maksettava tarjousten vahvistamiseksi."
+msgstr "Prosenttiosuus määrästä, joka on maksettava tarjousten vahvistamiseksi."
 
 #. module: sale
 #. odoo-python
@@ -5749,9 +5741,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Lähettääksesi kutsuja B2B-tilassa, avaa kontakti tai valitse useita "
-"listanäkymässä, ja klikkaa \"Portaalin käyttöoikeuksien hallinta\" "
-"\"Toiminto\"-pudotusvalikosta."
+"Lähetä kutsuja B2B-tilassa avaamalla yhteystieto tai valitsemalla useita "
+"listanäkymässä. Klikkaa pudotusvalikossa \"Portaalin käyttöoikeuksien "
+"hallinta\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -6080,7 +6072,7 @@ msgstr "Verkkosivun ilmoitukset"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: sale
 #. odoo-python
@@ -6332,8 +6324,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Tilaus käsiteltävänä' or 'Tilaus' }} (Viite "
-"{{ object.name or 'n/a' }})"
+"== 'pending') and 'Tilaus käsiteltävänä' or 'Tilaus' }} (Viite {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma

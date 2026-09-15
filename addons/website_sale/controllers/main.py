@@ -158,16 +158,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_shop_domain(self, search, category, attribute_value_dict, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
+            search_fields = request.env['product.template']._get_website_sale_search_fields(
+                search_in_description
+            )
             for srch in search.split(" "):
-                subdomains = [
-                    Domain('name', 'ilike', srch),
-                    Domain('variants_default_code', 'ilike', srch),
-                ]
-                if search_in_description:
-                    subdomains.extend((
-                        Domain('website_description', 'ilike', srch),
-                        Domain('description_sale', 'ilike', srch),
-                    ))
+                subdomains = [Domain(field, 'ilike', srch) for field in search_fields]
                 extra_subdomain = self._add_search_subdomains_hook(srch)
                 if extra_subdomain:
                     subdomains.append(extra_subdomain)
@@ -841,7 +836,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                             and ptav.product_attribute_value_id.id in attribute_value_ids
                         )
                     )[:1]
-                ) or ptal.product_template_value_ids.filtered('ptav_active')[:1]
+                )
+                or (
+                    ptal.product_template_value_ids.filtered(
+                        lambda ptav: (
+                            ptav.ptav_active and ptal.attribute_id.display_type != "multi"
+                        )
+                    )[:1]
+                )
             )
             combination_info = product._get_combination_info(
                 combination=request.env['product.template.attribute.value'].concat(combination)
@@ -1761,6 +1763,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
             return request.redirect('/web/login?redirect=/shop/checkout')
 
+        # Check that the cart does not contain products priced at 0 while the
+        # website forbids the sale of zero-priced products
+        if zero_priced_lines := order_sudo._get_zero_priced_lines():
+            zero_priced_lines.shop_warning = request.env._(
+                "This product is not available for purchase in your country."
+            )
+            order_sudo.shop_warning = request.env._(
+                "Some products in your cart are not available for purchase in your"
+                " country. Please remove them or contact us."
+            )
+            return request.redirect('/shop/cart')
+
     def _check_addresses(self, order_sudo):
         """ Check whether the cart's addresses are complete and valid.
 
@@ -1881,7 +1895,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         for line in order_lines.filtered(lambda line: not line.is_delivery):
             product = line.product_id
             ret.append({
-                'item_id': product.barcode or product.id,
+                'item_id': product.default_code or product.id,
                 'item_name': product.name or '-',
                 'item_category': product.categ_id.name or '-',
                 'price': line.price_unit,

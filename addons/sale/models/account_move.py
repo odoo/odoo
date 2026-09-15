@@ -107,8 +107,13 @@ class AccountMove(models.Model):
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
-            lambda sol: not sol.display_type)._compute_name()
+        dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
+        dp_lines._compute_name()
+        downpayment_lines = dp_lines.filtered(lambda sol: not sol.order_id.locked)
+        other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
+        real_invoices = set(other_so_lines.invoice_lines.move_id)
+        for so_dpl in downpayment_lines:
+            so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
 
         return res
 

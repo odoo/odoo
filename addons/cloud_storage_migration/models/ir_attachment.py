@@ -71,12 +71,6 @@ class CloudStorageAttachmentMigration(models.Model):
             max_attachment_id = self.env['ir.attachment'].sudo().search_fetch([], ['id'], limit=1, order='id desc').id or 1
             ICP.set_param('cloud_storage_migration_max_attachment_id', max_attachment_id)
 
-        if request:
-            # Don't upload in HTTP server, if the method is called by ``Manually Run`` button from web client
-            # The cron job should be rescheduled asap in cron server
-            cron._trigger()
-            return
-
         def commit_min_attachment_id(attachment_id):
             # directly write data of ir_config_parameter to avoid invalidating ormcache
             self.env.cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'cloud_storage_migration_min_attachment_id'", (str(attachment_id),))
@@ -86,8 +80,9 @@ class CloudStorageAttachmentMigration(models.Model):
         # ``config['limit_time_real_cron'] == 0`` means unlimited time for cron worker,
         # but will fallback to ``config['limit_time_real']`` for cron thread
         # here we use ``config['limit_time_real']`` for simplicity
-        if config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0:
-            limit_time_real = config['limit_time_real_cron']
+        if not request:
+            if config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0:
+                limit_time_real = config['limit_time_real_cron']
         # use half of the time limit to mitigate the timeout problem
         log_msg = f'Starting cloud storage migration with timeout {limit_time_real // 2} seconds'
         if max_batch_file_size:
@@ -129,7 +124,7 @@ class CloudStorageAttachmentMigration(models.Model):
             AND ia.res_field IS NULL
             AND ia.store_fname IS NOT NULL
             AND (%(check_model)s)
-            AND ia.res_model NOT IN %(unsupported_models)s
+            AND ia.res_model != ALL(%(unsupported_models)s)
             AND ia.file_size BETWEEN %(min_file_size)s AND %(max_file_size)s
             AND ia.create_date < %(create_date)s
             %(check_documents)s
@@ -138,7 +133,7 @@ class CloudStorageAttachmentMigration(models.Model):
         """,
             max_attachment_id=max_attachment_id,
             check_model=check_model,
-            unsupported_models=self._get_cloud_storage_unsupported_models(),
+            unsupported_models=list(self._get_cloud_storage_unsupported_models()),
             # ignore if attachment is too small or too large
             min_file_size=min_file_size,
             max_file_size=max_file_size,

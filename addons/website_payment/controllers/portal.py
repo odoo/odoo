@@ -28,6 +28,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
         kwargs['is_donation'] = True
+
+        if request.httprequest.method == 'POST':
+            kwargs['donation_descriptions'] = request.httprequest.form.getlist('donation_descriptions')
+            request.session['donation_pay_values'] = {
+                key: kwargs[key]
+                for key in ('amount', 'currency_id', 'donation_options', 'donation_descriptions')
+                if key in kwargs
+            }
+            return request.redirect(request.httprequest.path, code=303)
+
+        for key, value in request.session.get('donation_pay_values', {}).items():
+            kwargs.setdefault(key, value)
+
         kwargs['currency_id'] = self._cast_as_int(kwargs.get('currency_id')) or request.env.company.currency_id.id
         kwargs['amount'] = self._cast_as_float(kwargs.get('amount')) or 25.0
         kwargs['donation_options'] = kwargs.get('donation_options', json_safe.dumps(dict(customAmount="freeAmount")))
@@ -115,7 +128,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 }
 
             countries = request.env['res.country'].sudo().search([])
-            descriptions = request.httprequest.form.getlist('donation_descriptions')
+            descriptions = donation_descriptions or []
 
             donation_options = json_safe.loads(donation_options) if donation_options else {}
             donation_amounts = json_safe.loads(donation_options.get('donationAmounts', '[]'))

@@ -79,7 +79,7 @@
     </record>
 
     <record id="uae_sick_leave_0_entry_type" model="hr.work.entry.type">
-        <field name="name">Sick Leave 0</field>
+        <field name="name">Sick Leave 1</field>
         <field name="code">AESICKLEAVE0</field>
         <field name="country_id" ref="base.ae"/>
     </record>
@@ -88,6 +88,30 @@
         <field name="name">Public Holiday</field>
         <field name="code">AEPUBLICH</field>
         <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="uae_work_entry_type_overtime_work_days_daytime" model="hr.work.entry.type">
+        <field name="name">Overtime Weekdays Daytime</field>
+        <field name="code">OVTWD</field>
+        <field name="is_extra_hours">True</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="amount_rate">1.25</field>
+    </record>
+
+    <record id="uae_work_entry_type_overtime_work_days_nighttime" model="hr.work.entry.type">
+        <field name="name">Overtime Weekdays Nighttime</field>
+        <field name="code">OVTWDN</field>
+        <field name="is_extra_hours">True</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="amount_rate">1.5</field>
+    </record>
+
+    <record id="uae_work_entry_type_overtime_off_days" model="hr.work.entry.type">
+        <field name="name">Overtime Off-days</field>
+        <field name="code">OVTOD</field>
+        <field name="is_extra_hours">True</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="amount_rate">1.5</field>
     </record>
 
 <!-- AU : Australia -->

@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.fields import Domain
 
@@ -22,6 +24,22 @@ class ProductPricelist(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'display_name', 'currency_id', 'item_ids']
 
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        # Bypass the item_ids field: its dotted active domain forces a slow
+        # ir.rule subquery. Search pricelist_id directly instead (indexed, no join).
+        fields_to_read = [name for name in self._load_pos_data_fields(config) if name != 'item_ids']
+        read_records = records._filtered_access("read").read(fields_to_read, load=False)
+
+        items = self.env['product.pricelist.item'].search([('pricelist_id', 'in', records.ids)])
+        item_ids_by_pricelist = defaultdict(list)
+        for item in items:
+            item_ids_by_pricelist[item.pricelist_id.id].append(item.id)
+        for record in read_records:
+            record['item_ids'] = item_ids_by_pricelist[record['id']]
+
+        return read_records or []
+
 
 class ProductPricelistItem(models.Model):
     _name = 'product.pricelist.item'
@@ -35,12 +53,10 @@ class ProductPricelistItem(models.Model):
         if not self._last_server_date_to_load():
             product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
             product_ids = [p['id'] for p in data['product.product']]
-            product_categ = [c['id'] for c in data['product.category']]
             now = fields.Datetime.now()
             domain += [
                 '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
                 '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-                '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
                 '|', ('date_start', '=', False), ('date_start', '<=', now),
                 '|', ('date_end', '=', False), ('date_end', '>', now),
             ]

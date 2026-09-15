@@ -496,9 +496,12 @@ class SaleOrderLine(models.Model):
         elif dp_state == 'cancel':
             name = _("Down Payment (Cancelled)")
         else:
-            invoice = self._get_invoice_lines().filtered(
+            invoices = self._get_invoice_lines().filtered(
                 lambda aml: aml.quantity >= 0
-            ).move_id.filtered(lambda move: move.move_type == 'out_invoice')
+            ).move_id.filtered(lambda move: move.move_type == "out_invoice")
+            # A reversed and re-issued down payment (Reverse and Create Invoice)
+            # links both invoices to this line; keep the active (non-reversed) one.
+            invoice = invoices.filtered(lambda move: move.payment_state != "reversed") or invoices
             if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
                 name = _(
                     "Down Payment (ref: %(reference)s on %(date)s)",
@@ -1004,7 +1007,16 @@ class SaleOrderLine(models.Model):
     def _prepare_qty_invoiced(self):
         invoiced_qties = defaultdict(float)
         for line in self:
-            for invoice_line in line._get_invoice_lines():
+            invoice_lines = line._get_invoice_lines()
+            for invoice_line in invoice_lines:
+                if line.is_downpayment:
+                    if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                        invoiced_qties[line] = 1
+                        line.qty_invoiced = 1
+                    else:
+                        invoiced_qties[line] = 0
+                        line.qty_invoiced = 0
+                    continue
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id, round=False)
                     if invoice_line.move_id.move_type == 'out_invoice':
@@ -1791,7 +1803,16 @@ class SaleOrderLine(models.Model):
         ) or self.env['sale.order.line']
 
     def _get_linked_lines(self):
-        """ Return the linked lines of this line, if any.
+        """ Return the linked lines of this line, if any."""
+        self.ensure_one()
+        return self.order_id.order_line._get_linked_lines_by_line().get(
+            self, self.env['sale.order.line']
+        )
+
+    def _get_linked_lines_by_line(self):
+        """Batched version of `_get_linked_lines`.
+
+        Return in a single pass a mapping ``{line: linked_lines}`` for each line in `self`.
 
         This method relies on either `linked_line_id` or `linked_virtual_id` to retrieve the linked
         lines, depending on whether this line is saved in the DB.
@@ -1799,16 +1820,24 @@ class SaleOrderLine(models.Model):
         Note: we can't rely on `linked_line_ids` as it will only be populated when both this line
         and its linked lines are saved in the DB, which we can't ensure.
         """
-        self.ensure_one()
-        return (
-            self._origin and self.order_id.order_line.filtered(
-                lambda line: line.linked_line_id._origin == self._origin
-            )
-        ) or (
-            self.virtual_id and self.order_id.order_line.filtered(
-                lambda line: line.linked_virtual_id == self.virtual_id
-            )
-        ) or self.env['sale.order.line']
+        lines_by_origin = defaultdict(lambda: self.env['sale.order.line'])
+        lines_by_virtual = defaultdict(lambda: self.env['sale.order.line'])
+        for line in self:
+            if line.linked_line_id._origin:
+                lines_by_origin[line.linked_line_id._origin] |= line
+            if line.linked_virtual_id:
+                lines_by_virtual[line.linked_virtual_id] |= line
+
+        SaleOrderLine = self.env['sale.order.line']
+        linked_lines_by_line = {}
+        for line in self:
+            linked_lines = SaleOrderLine
+            if line._origin:
+                linked_lines = lines_by_origin.get(line._origin, SaleOrderLine)
+            if not linked_lines and line.virtual_id:
+                linked_lines = lines_by_virtual.get(line.virtual_id, SaleOrderLine)
+            linked_lines_by_line[line] = linked_lines
+        return linked_lines_by_line
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids

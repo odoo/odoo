@@ -94,6 +94,7 @@ class TestContractCalendars(TestHrCommon):
 
     def test_change_resource_calendar_on_version_change(self):
         # When a new version/contract becomes active, ensure that `resource_id.calendar_id` is updated to the new working schedule
+        old_schedule = self.employee.resource_calendar_id
         new_schedule = self.env['resource.calendar'].create({'name': 'New Schedule'})
         with freeze_time('2016-01-01'):
             self.employee.create_version({
@@ -110,6 +111,11 @@ class TestContractCalendars(TestHrCommon):
             self.employee.resource_calendar_id,
             self.employee.resource_id.calendar_id,
             "The working schedule should match between the employee and resource records."
+        )
+        self.assertEqual(
+            self.employee.version_ids[0].resource_calendar_id,
+            old_schedule,
+            "The old schedule on previous version shouldn't be erased by the latter modification."
         )
 
     def test_employee_resource_contract_without_and_with_date_from(self):

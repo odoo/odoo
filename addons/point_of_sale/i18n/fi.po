@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-09 16:06+0000\n"
+"PO-Revision-Date: 2026-09-03 08:13+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fi/>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -299,13 +299,13 @@ msgstr ""
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hei <t t-"
-"out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hei <t t-out=\"client_name\">"
+"Asiakkaan nimi</t>,</t>\n"
 "                        <t t-else=\"\">Hei,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Kiitos ostoksestasi <t t-"
-"out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Kiitos ostoksestasi <t t-out=\"store_name\">"
+"Myymälän nimi</t>!</div>\n"
 "                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
 "out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
 "MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> <t "
@@ -1200,8 +1200,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr ""
-"Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
+msgstr "Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -1659,8 +1658,8 @@ msgstr "Tuotteen punnitseminen ei onnistu - IoT-box on kytketty pois päältä"
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Cannot weigh product - Scale is not connected to IoT Box"
 msgstr ""
-"Tuotteen punnitseminen ei onnistu - vaakaa ei ole yhdistetty IoT Box "
-"-laitteeseen"
+"Tuotteen punnitseminen ei onnistu - vaakaa ei ole yhdistetty IoT Box -"
+"laitteeseen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__slots_per_interval
@@ -5163,7 +5162,7 @@ msgstr "Erä-/sarjanumero(t) vaaditaan"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr "Erä/sarjanumero"
+msgstr "Erä-/sarjanumero"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5323,7 +5322,7 @@ msgstr "Viesti"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_error
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_ids
@@ -5766,7 +5765,7 @@ msgstr "Ei saatavilla"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Ei toteutettu"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -5905,7 +5904,7 @@ msgstr "Yhden klikkauksen maksu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr "Jatkuva"
+msgstr "Käynnissä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_appointment
@@ -5955,8 +5954,8 @@ msgstr "Sovelletaan pyöristämistä vain käteisvaroihin"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" "
-"-tyyppisiä päiväkirjoja."
+"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" -"
+"tyyppisiä päiväkirjoja."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6130,7 +6129,7 @@ msgstr "Toimintatyypit näkyvät varastoinnin koontinäytöllä."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 msgid "Optional Products"
-msgstr "Lisätuotteet"
+msgstr "Valinnaiset tuotteet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7623,7 +7622,7 @@ msgstr "Tuoteyksikkö"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Tuotteen yksikkö"
+msgstr "Tuotteen mittayksikkö"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -7768,7 +7767,7 @@ msgstr "HYVITETTY:"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8016,7 +8015,7 @@ msgstr "Jäljellä"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Poistostrategia"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8101,7 +8100,7 @@ msgstr "Rajoita hintojen muokkaaminen esimiehille"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Retail"
-msgstr "Jälleenmyynti"
+msgstr "Vähittäiskauppa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8610,7 +8609,7 @@ msgstr "Istunnon tilastot"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Istunto on jo päättynyt"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -8876,6 +8875,8 @@ msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
 msgstr ""
+"Joitakin maksettuja tilauksia ei ole vielä synkronoitu palvelimelle. "
+"Sulkeminen tai uudelleenlataaminen nyt voi aiheuttaa tietojen menetyksen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8965,7 +8966,7 @@ msgstr "Varastosiirto"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_rule
 msgid "Stock Rule"
-msgstr "Varaston sääntö"
+msgstr "Varastosääntö"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -9687,8 +9688,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
-"Valuutan kurssi suhteessa tilauspäivänä sovellettavaan valuuttakurssiin"
+msgstr "Valuutan kurssi suhteessa tilauspäivänä sovellettavaan valuuttakurssiin"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -10792,7 +10792,7 @@ msgstr "Verkkosivun ilmoitukset"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: point_of_sale
 #. odoo-javascript

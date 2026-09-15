@@ -27,7 +27,6 @@ import {
 } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
-import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -196,6 +195,7 @@ export class PosStore extends WithLazyGetterTrap {
         initLNA(this.notification, (type, message) => {
             this.lnaState = { type, message };
         });
+        this.checkAccessRight();
     }
 
     async posBackOnline() {
@@ -279,6 +279,8 @@ export class PosStore extends WithLazyGetterTrap {
         const orders = this.models["pos.order"].getAll();
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
+        sessionStorage.clear();
+        localStorage.clear();
         const url = new URL(window.location.href);
 
         if (fullReload) {
@@ -792,7 +794,14 @@ export class PosStore extends WithLazyGetterTrap {
                     : values.filter((value) => attrValueIds.has(value.id))
             );
         }
-        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+        if (
+            attributeLinesValues.some(
+                (values) =>
+                    values.length > 1 ||
+                    values[0].is_custom ||
+                    values[0].attribute_id.display_type === "multi"
+            )
+        ) {
             const forceVariantValue =
                 (opts.forceVariantValue
                     ? Object.fromEntries(opts.forceVariantValue.map((value) => [value.id, value]))
@@ -810,13 +819,16 @@ export class PosStore extends WithLazyGetterTrap {
                 hideAlwaysVariants: opts.hideAlwaysVariants,
                 forceVariantValue,
                 line: opts.line,
+                comboItem: opts.comboItem,
             });
         }
         return {
             attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
             attribute_custom_values: [],
+            // Only no_variant extras have to be carried by the line: the extras of
+            // variant-creating attributes are already part of the variant lst_price.
             price_extra: attributeLinesValues
-                .filter((attr) => attr[0].attribute_id.create_variant !== "always")
+                .filter((attr) => attr[0].attribute_id.create_variant === "no_variant")
                 .reduce((acc, values) => acc + values[0].price_extra, 0),
             quantity: 1,
         };
@@ -888,7 +900,7 @@ export class PosStore extends WithLazyGetterTrap {
             ...opts,
         };
 
-        if ("price_unit" in vals) {
+        if ("price_unit" in vals || opts.merge === false) {
             merge = false;
         }
 
@@ -1119,14 +1131,10 @@ export class PosStore extends WithLazyGetterTrap {
 
             // Product template of combo should not have more than 1 variant.
             const [childLineConf, comboExtraLines] = payload;
-            const comboPrices = computeComboItems(
-                values.product_tmpl_id.product_variant_ids[0],
+            const comboPrices = values.product_tmpl_id.getComboPrice(
                 childLineConf,
-                order.pricelist_id,
-                this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id"),
                 comboExtraLines,
-                this.currency
+                order.pricelist_id
             );
 
             values.combo_line_ids = comboPrices.map((comboItem) => [
@@ -1277,7 +1285,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (values.product_id.product_template_variant_value_ids.length > 0) {
                 // Verify price extra of variant products
                 const priceExtra = values.product_id.product_template_variant_value_ids
-                    .filter((attr) => attr.attribute_id.create_variant !== "always" && !opts.code)
+                    .filter((attr) => attr.attribute_id.create_variant === "no_variant")
                     .reduce((acc, attr) => acc + attr.price_extra, 0);
 
                 values.price_extra += priceExtra;
@@ -1317,7 +1325,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     setSelectedCategory(categoryId) {
         if (categoryId === this.selectedCategory?.id) {
-            if (this.selectedCategory.parent_id) {
+            const isParentAvailable = this.rootCategories.some(
+                (c) => c.id === this.selectedCategory.id
+            );
+            if (this.selectedCategory.parent_id && !isParentAvailable) {
                 this.selectedCategory = this.selectedCategory.parent_id;
             } else {
                 this.selectedCategory = this.models["pos.category"].get(0);
@@ -1441,6 +1452,7 @@ export class PosStore extends WithLazyGetterTrap {
             (order) =>
                 order.isEmpty() &&
                 !order.finalized &&
+                !order.isSynced &&
                 order.payment_ids.length === 0 &&
                 (!order.partner_id || order.partner_id.id === defaultPartnerId) &&
                 order.pricelist_id?.id === this.config.pricelist_id?.id &&
@@ -1722,12 +1734,23 @@ export class PosStore extends WithLazyGetterTrap {
             { context: { fiscal_position_id: order.fiscal_position_id?.id ?? false } }
         );
 
-        const productTaxDetails = productTemplate.getTaxDetails({
-            overridedValues: {
-                pricelist: order.pricelist_id,
-                fiscalPosition: order.fiscal_position_id,
-            },
-        });
+        let productTaxDetails = null;
+        if (productTemplate.type === "combo") {
+            productTaxDetails = productTemplate.getComboTaxDetails({
+                overridedValues: {
+                    pricelist: order.pricelist_id,
+                    fiscalPosition: order.fiscal_position_id,
+                },
+            });
+        } else {
+            productTaxDetails = productTemplate.getTaxDetails({
+                overridedValues: {
+                    pricelist: order.pricelist_id,
+                    fiscalPosition: order.fiscal_position_id,
+                },
+            });
+        }
+
         const priceWithoutTax = productTaxDetails.total_excluded;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
@@ -1771,6 +1794,7 @@ export class PosStore extends WithLazyGetterTrap {
             orderTaxTotalCurrency,
             orderPriceWithTaxCurrency,
             productInfo,
+            productTaxDetails,
         };
     }
     async getClosePosInfo() {
@@ -1992,6 +2016,7 @@ export class PosStore extends WithLazyGetterTrap {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
+        let hasChanges = false;
         try {
             this.syncingOrders.add(order.uuid);
             if (this.config.printerCategories.size && !opts.byPassPrint) {
@@ -2003,7 +2028,7 @@ export class PosStore extends WithLazyGetterTrap {
                         opts.cancelled
                     );
 
-                    const hasChanges =
+                    hasChanges =
                         orderChange.new.length ||
                         orderChange.cancelled.length ||
                         orderChange.noteUpdate.length ||
@@ -2019,7 +2044,6 @@ export class PosStore extends WithLazyGetterTrap {
                             shouldPrint = false;
                         }
                     } else {
-                        order.uiState.lastPrints.push(orderChange);
                         orderChange = [orderChange];
                     }
 
@@ -2029,6 +2053,9 @@ export class PosStore extends WithLazyGetterTrap {
 
                     if (shouldPrint) {
                         isPrinted = await this.printChanges(order, orderChange, reprint);
+                        if (isPrinted) {
+                            order.updateLastOrderChange();
+                        }
                     }
                 } catch (e) {
                     logPosMessage(
@@ -2040,15 +2067,24 @@ export class PosStore extends WithLazyGetterTrap {
                     );
                 }
             }
-            order.updateLastOrderChange();
+            this.updateLastOrderChangeIfNoDevice(order, opts);
         } finally {
             this.syncingOrders.delete(order.uuid);
         }
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
-        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+        if (!this.models["pos.prep.display"]?.length) {
             await this.syncAllOrders({ orders: [order] });
+        }
+        return isPrinted;
+    }
+    hasDevice(opts = {}) {
+        return this.config.printerCategories.size || opts.byPassPrint;
+    }
+    updateLastOrderChangeIfNoDevice(order, opts = {}) {
+        if (!this.hasDevice(opts)) {
+            order.updateLastOrderChange();
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, opts) {
@@ -2207,6 +2243,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
+        if (!reprint && isPrinted && orderChange.length) {
+            order.uiState.lastPrints.push(orderChange[0]);
+        }
+
         // printing errors
         if (unsuccessfulPrints.length) {
             const failedReceipts = unsuccessfulPrints.join("\n");
@@ -2340,9 +2380,9 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
-                    onSave: (record) => {
-                        this.data.read("product.template", [record.evalContext.id]);
-                        this.data.searchRead("product.product", [
+                    onSave: async (record) => {
+                        await this.data.read("product.template", [record.evalContext.id]);
+                        await this.data.searchRead("product.product", [
                             ["product_tmpl_id", "=", record.evalContext.id],
                         ]);
                         this.action.doAction({
@@ -2376,8 +2416,18 @@ export class PosStore extends WithLazyGetterTrap {
         await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
         await this.reloadData(true);
     }
+
+    async checkAccessRight() {
+        this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
+    }
+
+    get hasProductCreationAccess() {
+        return this.canUserCreateProduct;
+    }
+
+    // TODO: Remove in master. Use `hasProductCreationAccess` instead.
     async allowProductCreation() {
-        return await user.checkAccessRight("product.product", "create");
+        return this.hasProductCreationAccess;
     }
     orderDetailsProps(order) {
         return {
@@ -3106,6 +3156,21 @@ export class PosStore extends WithLazyGetterTrap {
 
     get isSmallProductScreen() {
         return this.ui.size < SIZES.MD;
+    }
+
+    getAvailableCategories() {
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        let availableCategories = this.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            availableCategories = iface_available_categ_ids;
+        }
+        return availableCategories;
+    }
+
+    get rootCategories() {
+        const available = this.getAvailableCategories();
+        const availableIds = new Set(available.map((c) => c.id));
+        return available.filter((c) => !c.parent_id || !availableIds.has(c.parent_id.id));
     }
 }
 

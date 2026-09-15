@@ -24,15 +24,20 @@ export class ResPartner extends hrModels.ResPartner {
     get _to_store_defaults() {
         return [
             ...super._to_store_defaults,
-            mailDataHelpers.Store.one(
-                "main_user_id",
+            mailDataHelpers.Store.many("employee_ids", [
+                "active",
+                "company_id",
+                "leave_date_to",
+                "user_id",
+            ]),
+            mailDataHelpers.Store.one("main_user_id", [
                 mailDataHelpers.Store.many("employee_ids", [
                     "active",
                     "company_id",
                     "leave_date_to",
                     "user_id",
-                ])
-            ),
+                ]),
+            ]),
         ];
     }
 }

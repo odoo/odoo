@@ -154,13 +154,17 @@ export class BoothRegistration extends Interaction {
      * Then the selection input will be filled with the fetched booth values.
      */
     async updateAvailableBoothsUI() {
-        if (this.boothCache[this.activeBoothCategoryId] === undefined) {
+        const boothCategoryId = this.activeBoothCategoryId;
+        if (this.boothCache[boothCategoryId] === undefined) {
             const data = await this.waitFor(rpc("/event/booth_category/get_available_booths", {
                 event_id: this.eventId,
-                booth_category_id: this.activeBoothCategoryId,
+                booth_category_id: boothCategoryId,
             }));
             if (data) {
-                this.boothCache[this.activeBoothCategoryId] = data;
+                this.boothCache[boothCategoryId] = data;
+            }
+            if (this.activeBoothCategoryId !== boothCategoryId) {
+                return;
             }
         }
         this.updateBoothsList();

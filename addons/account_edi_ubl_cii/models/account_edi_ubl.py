@@ -2,20 +2,25 @@ import io
 import logging
 import re
 
-from markupsafe import Markup
+from lxml import etree
 from stdnum.be import vat as be_vat
 
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import UserError
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
+from odoo.tools import formatLang, frozendict, groupby, html2plaintext, html_escape, pdf, str2bool, unique
+
+from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     EAS_MAPPING,
-    FloatFmt,
     GST_COUNTRY_CODES,
-    UOM_TO_UNECE_CODE,
+    FloatFmt,
 )
-from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
-from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
+from odoo.addons.account_edi_ubl_cii.tools import CreditNote, DebitNote, Invoice
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import (
+    PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS,
+    PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS,
+    PEPPOL_INVOICE_OPTIONAL_FIELDS,
+    PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -287,6 +292,12 @@ class AccountEdiUBL(models.AbstractModel):
             return tax.amount_type in ('fixed', 'code') and not tax.include_base_amount
 
         new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(base_lines, company, exclude_function)
+
+        # fixed tax are not affected by discount, so the removed_tax_data_base_lines should get their discount remove
+        # to have the total equal to the fixed tax
+        for new_base_line in new_base_lines:
+            for removed_taxes_data_base_line in new_base_line['removed_taxes_data_base_lines']:
+                removed_taxes_data_base_line['discount'] = 0
 
         def aggregate_function(target_base_line, base_line):
             target_base_line.setdefault('_aggregated_quantity', 0.0)
@@ -1225,7 +1236,7 @@ class AccountEdiUBL(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
             'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
-            'cbc:AllowanceChargeReason': {'_text': _("Discount")},
+            'cbc:AllowanceChargeReason': {'_text': _("Charge") if is_charge else _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -1313,6 +1324,7 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_line_period_nodes(self, vals):
+        # DEPRECATED
         nodes = vals['line_node']['cac:InvoicePeriod'] = []
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
@@ -1420,6 +1432,9 @@ class AccountEdiUBL(models.AbstractModel):
                     'cbc:ID': {'_text': tax_scheme_id},
                 },
             })
+
+    def _need_party_tax_scheme_nodes(self, vals):
+        return True
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         vals['party_node']['cac:PartyTaxScheme'] = []
@@ -1704,7 +1719,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_invoiced_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -1722,7 +1736,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_credited_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -1740,7 +1753,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_debited_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -2464,9 +2476,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_prepaid_payable_amount_node(sub_vals)
 
     def _fill_document_values_invoice(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = Invoice
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
@@ -2491,9 +2500,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_node(vals)
 
     def _fill_document_values_credit_note(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = CreditNote
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
@@ -2517,9 +2523,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_node(vals)
 
     def _fill_document_values_debit_note(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = DebitNote
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
@@ -2541,11 +2544,31 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_tax_totals_nodes(vals)
         self._ubl_add_requested_monetary_total_node(vals)
 
+    def _fill_template_values(self, vals):
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            vals['document_node']['_template'] = Invoice
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            vals['document_node']['_template'] = CreditNote
+        elif self._is_document(vals, 'debit_note'):
+            vals['document_node']['_template'] = DebitNote
+
+    def _fill_nsmap_values(self, vals):
+        nsmap = vals['document_node']['_nsmap']
+
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+        elif self._is_document(vals, 'debit_note'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+
+        nsmap['cac'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        nsmap['cbc'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        nsmap['ext'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+
     def _fill_document_values(self, vals):
-        document_node = vals['document_node']
-        document_node['_nsmap']['cac'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        document_node['_nsmap']['cbc'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-        document_node['_nsmap']['ext'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+        self._fill_template_values(vals)
+        self._fill_nsmap_values(vals)
 
         if self._is_document(vals, 'invoice', 'self_invoice'):
             self._fill_document_values_invoice(vals)
@@ -2585,6 +2608,91 @@ class AccountEdiUBL(models.AbstractModel):
 
         self._define_document_type(vals, document_type)
 
+    def _preprocess_base_lines(self, invoice, base_lines):
+        """Collapse the base_lines of sections/subsections flagged with 'collapse_composition'.
+
+        For each section or subsection with `collapse_composition` enabled, all of its
+        product base_lines are hidden and replaced by a single base_line per
+        tax group, whose amounts are the sum of the hidden lines it represents.
+
+        base_lines belonging to sections without `collapse_composition` are left untouched.
+        """
+        def _build_collapsed_base_line(group, section):
+            """Build a single base_line representing all lines of a tax group under a collapsed section"""
+            AccountTax = self.env['account.tax']
+            first_line = group[0]
+            total_excluded_currency = sum(bl['tax_details']['total_excluded_currency'] for bl in group)
+
+            collapsed_line = AccountTax._prepare_base_line_for_taxes_computation(
+                first_line['record'],
+                quantity=1.0,
+                price_unit=total_excluded_currency,
+                discount=0.0,
+                tax_ids=first_line['tax_ids'],
+                currency_id=first_line['currency_id'],
+            )
+            collapsed_line.update({
+                'name': section.name,
+                '_line_name': section.name,
+                'product_id': self.env['product.product'],
+            })
+            AccountTax._add_tax_details_in_base_lines([collapsed_line], invoice.company_id)
+            AccountTax._round_base_lines_tax_details([collapsed_line], invoice.company_id)
+            return collapsed_line
+
+        def _get_collapsed_section_line_ids(invoice, base_lines):
+            """Return collapse roots (sections/subsections), their subsections, and the hidden product lines."""
+
+            collapsed_roots = invoice.invoice_line_ids.filtered(
+                lambda line: line.display_type in ('line_section', 'line_subsection')
+                and all([line.collapse_composition, not line.parent_id.collapse_composition]),  # a collapsed subsection of a collapsed section shouldn't be considered as a root
+            )
+            hidden_lines = [
+                bl for bl in base_lines
+                if bl['record'].parent_id in collapsed_roots  # children of a collapsed section
+                or bl['record'].parent_id.parent_id in collapsed_roots  # children of a standalone collapsed subsection
+            ]
+            return collapsed_roots, hidden_lines
+
+        def _get_collapsed_section_base_lines(invoice, hidden_base_lines, collapsed_roots):
+            """For each collapsed (section/subsection), return one base_line per tax group."""
+
+            result = []
+            for section in collapsed_roots:
+                section_bls = [
+                    bl for bl in hidden_base_lines
+                    if section in (bl['record'].parent_id, bl['record'].parent_id.parent_id)
+                ]
+                if not section_bls:
+                    continue
+
+                for _taxes, lines in groupby(
+                    sorted(section_bls, key=lambda bl: bl['tax_ids'].ids),
+                    key=lambda bl: bl['tax_ids'],
+                ):
+                    result.append(_build_collapsed_base_line(list(lines), section))
+            return result
+
+        collapsed_roots, hidden_lines = _get_collapsed_section_line_ids(invoice, base_lines)
+        if not hidden_lines:
+            return base_lines
+
+        # Keep the original document order
+        # A hidden line is dropped, and its section's collapsed lines are inserted once, in place of its first hidden line.
+        preprocessed_base_lines = []
+        inserted_sections = set()
+        for bl in base_lines:
+            if bl not in hidden_lines:
+                preprocessed_base_lines.append(bl)
+                continue
+            record = bl['record']
+            section = record.parent_id if record.parent_id in collapsed_roots else record.parent_id.parent_id
+            if section not in inserted_sections:
+                preprocessed_base_lines += _get_collapsed_section_base_lines(invoice, hidden_lines, [section])
+                inserted_sections.add(section)
+
+        return preprocessed_base_lines
+
     def _init_invoice_export_values(self, invoice):
         vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
 
@@ -2604,37 +2712,45 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_customer(vals, customer)
         self._ubl_add_values_delivery(vals, delivery)
 
-        vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+        base_lines, vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+        vals['base_lines'] = self._preprocess_base_lines(invoice, base_lines)
         return vals
 
     def _export_invoice(self, invoice):
+        """ Generates an UBL 2.1 xml for a given invoice, using the new dict_to_xml helpers. """
+
+        # 1. Validate the structure of the taxes
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
+
+        # 2. Instantiate the XML builder
         vals = self._init_invoice_export_values(invoice)
-        return self._export_document(vals)
+        self._export_document(vals)
+
+        # 3. Run constraints
+        errors = [constraint for constraint in vals['constraints'].values() if constraint]
+
+        # 4. Render the XML
+        xml_content = dict_to_xml(
+            vals['document_node'],
+            nsmap=vals['document_node']['_nsmap'],
+            template=vals['document_node']['_template']
+        )
+
+        # 5. Format the XML
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT: INVOICE
     # -------------------------------------------------------------------------
 
+    def _import_ubl_init_collected_values(self, invoice, collected_values):
+        return self._import_init_collected_values(invoice, collected_values)
+
     def _import_ubl_invoice_document_sign(self, collected_values):
-        tree = collected_values['tree']
-        suffix_invoice_type, document_sign = self._get_import_document_amount_sign(tree)
-        collected_values['is_refund'] = suffix_invoice_type == 'refund'
-        collected_values['file_document_sign'] = document_sign
+        self._import_invoice_document_sign(collected_values)
 
     def _import_ubl_invoice_update_move_type(self, collected_values):
-        invoice = collected_values['invoice']
-        odoo_document_type = collected_values['odoo_document_type']
-        is_refund = collected_values['is_refund']
-        logs = collected_values['logs']
-
-        prefix = 'out' if odoo_document_type == 'sale' else 'in'
-        suffix = 'refund' if is_refund else 'invoice'
-        move_type = f'{prefix}_{suffix}'
-        if invoice.move_type != move_type:
-            invoice.move_type = move_type
-
-            if is_refund:
-                logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+        self._import_invoice_update_move_type(collected_values)
 
     def _import_ubl_invoice_add_customer_values(self, collected_values):
         customer_values = collected_values['customer_values'] = {}
@@ -2688,77 +2804,14 @@ class AccountEdiUBL(models.AbstractModel):
             ResPartner._import_retrieve_customer_from_name,
         ]
 
+    def _import_retrieve_customer_search_plan(self, collected_values):
+        return self._import_ubl_retrieve_customer_search_plan(collected_values)
+
     def _import_ubl_retrieve_customer(self, collected_values):
-        company = collected_values['company']
-        customer_values = collected_values['customer_values']
-        customer_values['account_numbers'] = collected_values.get('partner_bank_values', {}).get('account_numbers')
-        self.env['res.partner']._import_retrieve_customer(
-            search_plan=self._import_ubl_retrieve_customer_search_plan(collected_values),
-            company=company,
-            customer_values_list=[customer_values],
-        )
-        if partner := customer_values.get('customer'):
-            collected_values['to_write']['partner_id'] = partner.id
-
-    def _import_ubl_get_country(self, collected_values):
-        customer_values = collected_values['customer_values']
-        country_code = customer_values.get('country_code')
-        if not country_code:
-            return None
-
-        if country_code == 'GB':
-            # While the code is gb, the xml_id is uk
-            country_code = 'UK'
-        return self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
-
-    def _import_ubl_prepare_missing_customer_create_values(self, collected_values):
-        customer_values = collected_values['customer_values']
-        partner_create_values = {
-            'is_company': True,
-        }
-        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city'):
-            if value := customer_values.get(key):
-                partner_create_values[key] = value
-
-        if (peppol_eas := customer_values.get('peppol_eas')) and (peppol_endpoint := customer_values.get('peppol_endpoint')):
-            partner_create_values['peppol_eas'] = peppol_eas
-            partner_create_values['peppol_endpoint'] = peppol_endpoint
-
-        country = self._import_ubl_get_country(collected_values)
-        if country:
-            partner_create_values['country_id'] = country.id
-        if vat := customer_values.get('vat'):
-            partner_create_values['vat'], _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-        return partner_create_values
+        self._import_retrieve_customer(collected_values)
 
     def _import_ubl_create_missing_customer(self, collected_values):
-        customer_values = collected_values['customer_values']
-        logs = collected_values['logs']
-        customer = customer_values.get('customer')
-
-        name = customer_values.get('name')
-        vat = customer_values.get('vat')
-        if not name or not vat:
-            return
-
-        vat_mismatch = False
-        if customer:
-            if not customer.vat:
-                country = self._import_ubl_get_country(collected_values)
-                customer.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-                return
-            if customer.vat.replace(' ', '') == vat.replace(' ', '').replace('.', ''):
-                return
-            vat_mismatch = True
-
-        partner_create_values = self._import_ubl_prepare_missing_customer_create_values(collected_values)
-        customer = self.env['res.partner'].create(partner_create_values)
-        if vat_mismatch:
-            logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
-        else:
-            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
-        customer_values['customer'] = customer
-        collected_values['to_write']['partner_id'] = customer.id
+        self._import_create_missing_customer(collected_values)
 
     def _import_ubl_invoice_add_currency_values(self, collected_values):
         currency_values = collected_values['currency_values'] = {}
@@ -2766,35 +2819,7 @@ class AccountEdiUBL(models.AbstractModel):
         currency_values['currency_code'] = tree.findtext('.//{*}DocumentCurrencyCode')
 
     def _import_ubl_invoice_add_currency(self, collected_values):
-        currency_values = collected_values['currency_values']
-        logs = collected_values['logs']
-        company = collected_values['company']
-        currency = company.currency_id
-        if currency_code := currency_values['currency_code']:
-            currency = currency.with_context(active_test=False).search([('name', '=', currency_code)], limit=1)
-            if currency:
-                if not currency.active:
-                    logs.append(_("The currency '%s' is not active.", currency.name))
-            else:
-                logs.append(_(
-                    "Could not retrieve currency: %s. Did you enable the multicurrency option "
-                    "and activate the currency?",
-                    currency_code,
-                ))
-
-        currency_values['currency'] = currency
-        if invoice_date := collected_values['to_write'].get('invoice_date'):
-            currency_date = invoice_date
-        else:
-            currency_date = fields.Date.context_today(self)
-        currency_values['rate'] = currency._get_conversion_rate(
-            from_currency=company.currency_id,
-            to_currency=currency,
-            company=company,
-            date=currency_date,
-        )
-
-        collected_values['to_write']['currency_id'] = currency.id
+        self._import_invoice_add_currency(collected_values)
 
     def _import_ubl_invoice_add_issue_date(self, collected_values):
         tree = collected_values['tree']
@@ -2817,34 +2842,7 @@ class AccountEdiUBL(models.AbstractModel):
         partner_bank_values['account_numbers'] = {party_node.text for party_node in party_node_list}
 
     def _import_ubl_retrieve_partner_bank(self, collected_values):
-        company = collected_values['company']
-        move_type = collected_values['invoice'].move_type
-        if move_type in ('out_refund', 'in_invoice'):
-            partner = collected_values.get('customer_values', {}).get('customer')
-        elif move_type in ('out_invoice', 'in_refund'):
-            partner = company.partner_id
-        else:
-            return
-        if not partner:
-            return
-
-        partner_bank_values = collected_values['partner_bank_values']
-        account_numbers = partner_bank_values['account_numbers']
-        logs = collected_values['logs']
-        partner_banks = self.env['res.partner.bank']
-        for account_number in account_numbers:
-            try:
-                partner_banks += self.env['res.partner.bank']._find_or_create_bank_account(
-                    account_number=account_number,
-                    partner=partner,
-                    company=company,
-                )
-            except UserError as e:
-                logs.append(_("The bank account couldn't be fetched: %s", str(e)))
-
-        partner_bank_values['partner_banks'] = partner_banks
-        if partner_banks:
-            collected_values['to_write']['partner_bank_id'] = partner_banks[:1].id
+        self._import_retrieve_partner_bank(collected_values)
 
     def _import_ubl_invoice_add_ref(self, collected_values):
         tree = collected_values['tree']
@@ -2977,6 +2975,7 @@ class AccountEdiUBL(models.AbstractModel):
         allowances = collected_values['allowances'] = []
         charges = collected_values['charges'] = []
         taxes_values = collected_values['taxes_values'] = []
+        tax_total_values = collected_values['tax_total_values']
 
         for element in tree.iterfind('./{*}AllowanceCharge'):
             reason = element.findtext('./{*}AllowanceChargeReason')
@@ -3006,6 +3005,14 @@ class AccountEdiUBL(models.AbstractModel):
                 'tax_percentage': percentage,
                 'charge_indicator': charge_indicator,
             }
+
+            tax_category_tree = element.find('./{*}TaxCategory')
+            tax_values = self._import_ubl_invoice_line_prepare_classified_tax_category_tax_values(collected_values, tax_category_tree)
+            if tax_values:
+                allowance_charge_values['taxes_values'] = tax_values
+                global_tax_values = tax_total_values.get(tax_values['_tax_key'])
+                global_tax_values['related_taxes_values'].append(tax_values)
+
             if charge_indicator.lower() == 'true':
                 charges.append(allowance_charge_values)
             else:
@@ -3015,11 +3022,16 @@ class AccountEdiUBL(models.AbstractModel):
             if not category_code:
                 continue
 
+            tax_key = frozendict({
+                'category_code': category_code,
+                'percentage': percentage,
+            })
             allowance_charge_values['attempt_tax_values'] = tax_values = {
                 'amount_type': 'percent',
                 'type_tax_use': odoo_document_type,
                 'ubl_cii_tax_category_code': category_code,
                 'amount': percentage,
+                '_tax_key': tax_key,
             }
             taxes_values.append(tax_values)
 
@@ -3219,11 +3231,18 @@ class AccountEdiUBL(models.AbstractModel):
         line_tree = collected_values['line_tree']
         partner = collected_values.get('customer_values', {}).get('customer')
         name = collected_values['to_write'].get('name')
+        sellers_item_id = line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID')
+        buyers_item_id = line_tree.findtext('.//{*}Item/{*}BuyersItemIdentification/{*}ID')
+        standard_item_id = line_tree.findtext('.//{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID="0160"]')
 
         product_values = collected_values['product_values'] = {
-            'default_code': line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID'),
+            'barcode': standard_item_id,
+            'default_code': sellers_item_id or buyers_item_id,
             'name': line_tree.findtext('.//{*}Item/{*}Name'),
-            'barcode': line_tree.findtext('.//{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID="0160"]'),
+            'sellers_item_id': sellers_item_id,
+            'buyers_item_id': buyers_item_id,
+            'standard_item_id': standard_item_id,
+            'vendor_partner_id': partner.commercial_partner_id.id if partner else None,
             'invoice_predictive': {
                 'invoice': collected_values['invoice'],
                 'name': name,
@@ -3269,6 +3288,7 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _import_ubl_invoice_line_add_deferred_dates(self, collected_values):
+        # DEPRECATED
         if not self.module_installed('account_accountant'):
             return
 
@@ -3277,8 +3297,10 @@ class AccountEdiUBL(models.AbstractModel):
         end_date_str = line_tree.findtext('./{*}InvoicePeriod/{*}EndDate')
         if start_date_str and end_date_str:
             to_write = collected_values['to_write']
-            to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
-            to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
+            if "deferred_start_date" in self.env["account.move.line"]._fields:
+                # only checking the existence of the first of the enterprise fields
+                to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
+                to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
 
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
@@ -3355,6 +3377,9 @@ class AccountEdiUBL(models.AbstractModel):
             if tax_values:
                 taxes_values.append(tax_values)
 
+    def _import_invoice_line_add_optional_fields(self, collected_values):
+        return self._import_ubl_invoice_line_add_optional_fields(collected_values)
+
     def _import_ubl_invoice_line_add_optional_fields(self, collected_values):
         line_tree = collected_values['line_tree']
         invoice = collected_values['invoice']
@@ -3395,10 +3420,9 @@ class AccountEdiUBL(models.AbstractModel):
                 # Extract information about allowance / charges.
                 self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
 
-                # name / quantity / price_unit / discount / deferred_start_date / deferred_end_date
+                # name / quantity / price_unit / discount
                 self._import_ubl_invoice_line_add_name(line_collected_values)
                 self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
-                self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
 
                 # product / product_uom / taxes
                 self._import_ubl_invoice_line_add_product_values(line_collected_values)
@@ -3408,312 +3432,26 @@ class AccountEdiUBL(models.AbstractModel):
 
                 lines_collected_values.append(line_collected_values)
 
-    def _import_ubl_retrieve_taxes_search_plan(self, collected_values):
-        AccountTax = self.env['account.tax']
-        return [
-            AccountTax._import_retrieve_tax_from_invoice_predictive,
-            AccountTax._import_retrieve_tax_from_price_include_exclude,
-        ]
-
     def _import_ubl_invoice_retrieve_taxes(self, collected_values):
-        company = collected_values['company']
-        logs = collected_values['logs']
-        lines_collected_values = collected_values['lines_collected_values']
-        tax_values_list = list(collected_values['taxes_values'])
-        for line_collected_values in lines_collected_values:
-            tax_values_list += line_collected_values['taxes_values']
-            for charge in line_collected_values['charges']:
-                if tax_values := charge.get('attempt_tax_values'):
-                    tax_values_list.append(tax_values)
-
-        if customer := collected_values.get('customer_values', {}).get('customer'):
-            fiscal_position = self.env['account.move'].new({
-                'company_id': collected_values['company'].id,
-                'move_type': collected_values['invoice'].move_type,
-                'partner_id': customer.id,
-            }).fiscal_position_id
-            for tax_values in tax_values_list:
-                tax_values['fiscal_position'] = fiscal_position
-
-        self.env['account.tax']._import_retrieve_tax(
-            search_plan=self._import_ubl_retrieve_taxes_search_plan(collected_values),
-            company=company,
-            tax_values_list=tax_values_list,
-        )
-
-        # Taxes at the document line level.
-        for line_collected_values in lines_collected_values:
-            to_write = line_collected_values['to_write']
-            tax_ids_commands = to_write['tax_ids'] = [Command.set([])]
-            for tax_values in line_collected_values['taxes_values']:
-                if tax := tax_values.get('tax'):
-                    tax_ids_commands[0][2].append(tax.id)
-                elif reason := tax_values.get('name'):
-                    logs.append(_(
-                        "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
-                        tax_percentage=tax_values['amount'],
-                        line=reason,
-                    ))
-                else:
-                    logs.append(_(
-                        "Could not retrieve the tax: %s for the document level allowance/charge.",
-                        tax_values['amount'],
-                    ))
-
-        # Taxes at the document level.
-        for tax_values in collected_values['taxes_values']:
-            if tax_values.get('tax'):
-                continue
-
-            if reason := tax_values.get('name'):
-                logs.append(_(
-                    "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
-                    tax_percentage=tax_values['amount'],
-                    line=reason,
-                ))
-            else:
-                logs.append(_(
-                    "Could not retrieve the tax: %s for the document level allowance/charge.",
-                    tax_values['amount'],
-                ))
-
-    def _import_ubl_invoice_get_default_base_line_kwargs(self, collected_values):
-        invoice = collected_values['invoice']
-
-        taxes = self.env['account.tax']
-        for tax_values in collected_values['taxes_values']:
-            if tax := tax_values.get('tax'):
-                taxes |= tax
-
-        base_line_kwargs = {
-            'sign': invoice.direction_sign,
-            'is_refund': invoice.move_type in ('out_refund', 'in_refund'),
-            'currency_id': collected_values['currency_values']['currency'],
-            'rate': collected_values['currency_values']['rate'],
-            'special_mode': 'total_excluded',
-            '_create_values': {},
-        }
-        if partner := collected_values['customer_values'].get('partner'):
-            base_line_kwargs['partner_id'] = partner
-
-        return base_line_kwargs
-
-    def _import_ubl_invoice_line_get_product_base_line_kwargs(self, collected_values):
-        to_write = collected_values['to_write']
-
-        taxes = self.env['account.tax']
-        for tax_values in collected_values['taxes_values']:
-            if tax := tax_values.get('tax'):
-                taxes |= tax
-
-        base_line_kwargs = {
-            **self._import_ubl_invoice_get_default_base_line_kwargs(collected_values),
-            'quantity': to_write['quantity'],
-            'price_unit': to_write['price_unit'],
-            'discount': to_write['discount'],
-            'tax_ids': taxes,
-        }
-        if product := collected_values['product_values'].get('product'):
-            base_line_kwargs['product_id'] = product
-        if uom := collected_values['product_uom_values'].get('uom'):
-            base_line_kwargs['product_uom_id'] = uom
-        elif collected_values['product_uom_values'].get('force_empty'):
-            # Override the product_uom_id compute so the saved line keeps no UoM.
-            base_line_kwargs['_create_values']['product_uom_id'] = False
-        if account := collected_values['account_values'].get('account'):
-            base_line_kwargs['account_id'] = account
-
-        if name := to_write.get('name'):
-            base_line_kwargs['_create_values']['name'] = name
-        if deferred_start_date := to_write.get('deferred_start_date'):
-            base_line_kwargs['_create_values']['deferred_start_date'] = deferred_start_date
-        if deferred_end_date := to_write.get('deferred_end_date'):
-            base_line_kwargs['_create_values']['deferred_end_date'] = deferred_end_date
-
-        base_line_kwargs['_create_values'] = {
-            **base_line_kwargs['_create_values'],
-            **self._import_ubl_invoice_line_add_optional_fields(collected_values),
-        }
-        return base_line_kwargs
-
-    def _import_ubl_invoice_get_allowance_charge_line_kwargs(self, collected_values):
-        allowance_charge = collected_values['allowance_charge']
-        file_document_sign = collected_values['file_document_sign']
-        tax_values = allowance_charge.get('attempt_tax_values')
-        multiplier_factor_numeric = allowance_charge['multiplier_factor_numeric']
-        amount = allowance_charge['amount']
-        reason = allowance_charge['reason']
-
-        charge_indicator = allowance_charge['charge_indicator']
-        if charge_indicator.lower() == 'true':
-            charge_indicator_sign = 1
-        else:
-            charge_indicator_sign = -1
-
-        if base_amount := allowance_charge.get('base_amount'):
-            price_unit = base_amount * charge_indicator_sign * file_document_sign
-            quantity = multiplier_factor_numeric / 100
-        else:
-            price_unit = amount * charge_indicator_sign * file_document_sign
-            quantity = 1
-
-        base_line_kwargs = {
-            **self._import_ubl_invoice_get_default_base_line_kwargs(collected_values),
-            'quantity': quantity,
-            'price_unit': price_unit,
-            'tax_ids': tax_values.get('tax'),
-        }
-        base_line_kwargs['_create_values']['name'] = reason
-        return base_line_kwargs
-
-    def _import_ubl_retrieve_products_search_plan(self, collected_values):
-        ProductProduct = self.env['product.product']
-        search_plan = [method[1] for method in sorted(ProductProduct._get_retrieval_product_search_plan())]
-        search_plan.append(ProductProduct._import_retrieve_product_from_invoice_predictive)
-
-        return search_plan
+        self._import_invoice_retrieve_taxes(collected_values)
 
     def _import_ubl_invoice_retrieve_products(self, collected_values):
-        company = collected_values['company']
-        lines_collected_values = collected_values['lines_collected_values']
-        product_values_list = [
-            line_collected_values['product_values']
-            for line_collected_values in lines_collected_values
-        ]
-
-        self.env['product.product']._import_retrieve_product(
-            search_plan=self._import_ubl_retrieve_products_search_plan(collected_values),
-            company=company,
-            product_values_list=product_values_list,
-        )
-
-        for line_collected_values in lines_collected_values:
-            to_write = line_collected_values['to_write']
-            if product := line_collected_values['product_values'].get('product'):
-                to_write['product_id'] = product.id
-            else:
-                to_write['product_id'] = False
+        self._import_invoice_retrieve_products(collected_values)
 
     def _import_ubl_invoice_retrieve_product_uoms(self, collected_values):
-        lines_collected_values = collected_values['lines_collected_values']
-        logs = collected_values['logs']
-        cache = {}
-        for line_collected_values in lines_collected_values:
-            product_uom_values = line_collected_values['product_uom_values']
-            uom_code = product_uom_values.get('uom_code')
-            to_write = line_collected_values['to_write']
-
-            to_write['product_uom_id'] = False
-            if uom_code:
-                matched_uom_xmlid = {v: k for k, v in UOM_TO_UNECE_CODE.items()}.get(uom_code)
-                if matched_uom_xmlid:
-                    if matched_uom_xmlid in cache:
-                        uom = cache[matched_uom_xmlid]
-                    else:
-                        uom = cache[matched_uom_xmlid] = self.env.ref(matched_uom_xmlid, raise_if_not_found=False)
-                    if uom:
-                        product = line_collected_values['product_values'].get('product')
-                        product_uom = product.product_tmpl_id.uom_id if product else self.env['uom.uom']
-                        if product and not uom._has_common_reference(product_uom):
-                            logs.append(_(
-                                "The Unit of Measure '%(uom)s' (from unit code '%(code)s') was "
-                                "ignored on the line for product '%(product)s' because it is not "
-                                "compatible with the product's Unit of Measure '%(product_uom)s'. "
-                                "The UoM was left empty.",
-                                uom=uom.name,
-                                code=uom_code,
-                                product=product.display_name,
-                                product_uom=product_uom.name,
-                            ))
-                            product_uom_values['force_empty'] = True
-                            continue
-                        to_write['product_uom_id'] = uom.id
-                        product_uom_values['uom'] = uom
+        self._import_invoice_retrieve_product_uoms(collected_values)
 
     def _import_ubl_invoice_retrieve_accounts(self, collected_values):
-        if not self.module_installed('account_accountant'):
-            # _predict_specific_account is defined in account_accountant
-            return
-
-        accounts_map = {}
-        lines_collected_values = collected_values['lines_collected_values']
-        for line_collected_values in lines_collected_values:
-            account_values = line_collected_values['account_values']
-            if predictive := account_values.get('invoice_predictive'):
-                account_params = {'move': predictive['invoice'], 'name': predictive['name'], 'partner': predictive['partner']}
-                account_key = tuple(account_params.values())
-                if account_key not in accounts_map:
-                    accounts_map[account_key] = self.env['account.move.line']._predict_specific_account(**account_params)
-                account_id = accounts_map.get(account_key)
-                if account_id:
-                    account_values['account'] = self.env['account.account'].browse(account_id)
+        self._import_invoice_retrieve_accounts(collected_values)
 
     def _import_ubl_invoice_add_base_lines(self, collected_values):
-        AccountTax = self.env['account.tax']
-        base_lines = collected_values['base_lines'] = []
-        company = collected_values['company']
-        lines_collected_values = collected_values['lines_collected_values']
+        self._import_invoice_add_base_lines(collected_values)
 
-        # Allowances / charges lines at document level.
-        for allowance_charge in collected_values['charges'] + collected_values['allowances']:
-            base_line_kwargs = self._import_ubl_invoice_get_allowance_charge_line_kwargs({
-                **collected_values,
-                'allowance_charge': allowance_charge,
-            })
-            base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
-                record=None,
-                **base_line_kwargs,
-            ))
+    def _import_ubl_invoice_write_collected_values(self, collected_values):
+        self._import_invoice_write_collected_values(collected_values)
 
-        for line_collected_values in lines_collected_values:
-            to_write = line_collected_values['to_write']
-
-            # Extract charges matched with a fixed tax.
-            for charge in line_collected_values['charges']:
-                attempt_tax_values = charge.get('attempt_tax_values')
-                if not attempt_tax_values or not attempt_tax_values.get('tax'):
-                    continue
-
-                # Suppose price_unit = 19, quantity = 10, discount = 10%
-                # for a total of 190 (before discount) and 171 (after discount).
-                # A charge of 25 is already accounted in 190 and we retrieve a fixed tax of 50 / 10 = 5.
-                # We need now to extract 25 from 190 as:
-                # price_subtotal_before = 171
-                # price_subtotal_after = 171 - 50 = 121
-                # price_unit = 19 - 5 = 14
-                # new_price_subtotal_before_discount = 140
-                # discount = (1 - (121 / 140)) * 100 = 13.5714286%
-                # That way, 14 * 10 * (1 - 0.135714286) = 121.
-                # The fix tax is giving an amount of 50.
-                # 121 + 50 = the original 171 we had at the beginning!
-                price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
-                price_subtotal_after = price_subtotal_before - charge['amount']
-                to_write['price_unit'] -= charge['amount'] / to_write['quantity']
-                new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
-                to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
-
-            # Product line.
-            base_line_kwargs = self._import_ubl_invoice_line_get_product_base_line_kwargs(line_collected_values)
-            base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
-                record=None,
-                **base_line_kwargs,
-            ))
-
-        AccountTax._add_tax_details_in_base_lines(base_lines, company)
-        AccountTax._round_base_lines_tax_details(base_lines, company)
-
-        # Fix 'price_unit' if some price-included taxes are involved.
-        for base_line in base_lines:
-            for tax_data in base_line['tax_details']['taxes_data']:
-                if tax_data['tax'].price_include:
-                    base_line['price_unit'] += tax_data['raw_tax_amount_currency'] / (base_line['quantity'] if base_line['quantity'] else 1)
-
-        # Remove lines having a zero amount except 100% discounts
-        collected_values['base_lines'] = [
-            base_line
-            for base_line in collected_values['base_lines']
-            if (not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency']) or base_line.get('discount'))
-        ]
+    def _import_ubl_invoice_fix_taxes_amounts(self, collected_values):
+        self._import_invoice_fix_taxes_amounts(collected_values)
 
     def _import_ubl_invoice_optional_fields(self, collected_values):
         invoice = collected_values.get('invoice')
@@ -3738,117 +3476,6 @@ class AccountEdiUBL(models.AbstractModel):
             if not field or field.type not in config['supported_types'] or not node_value:
                 continue
             collected_values['to_write'][field_name] = node_value
-
-    def _import_ubl_invoice_write_collected_values(self, collected_values):
-        invoice = collected_values['invoice']
-        base_lines = collected_values['base_lines']
-
-        to_write = collected_values['to_write']
-        invoice_line_ids = to_write['invoice_line_ids'] = []
-        for base_line in base_lines:
-            create_values = {
-                **base_line['_create_values'],
-                'quantity': base_line['quantity'],
-                'price_unit': base_line['price_unit'],
-                'discount': base_line['discount'],
-                'tax_ids': [Command.set(base_line['tax_ids'].ids)]
-            }
-            # If the values were not initialized, we don't want to prevent compute by explicitly putting them empty
-            if base_line['product_id']:
-                create_values['product_id'] = base_line['product_id'].id
-            if base_line['product_uom_id']:
-                create_values['product_uom_id'] = base_line['product_uom_id'].id
-            if base_line['account_id']:
-                create_values['account_id'] = base_line['account_id'].id
-            invoice_line_ids.append(Command.create(create_values))
-
-        container = {'records': invoice}
-        with (
-            invoice._check_balanced(container),
-            invoice._disable_discount_precision(),
-            invoice._sync_dynamic_lines(container),
-        ):
-            invoice.write(to_write)
-
-    def _import_ubl_invoice_fix_taxes_amounts(self, collected_values):
-        AccountTax = self.env['account.tax']
-        invoice = collected_values['invoice']
-        tax_total_values = collected_values['tax_total_values']
-        tolerance = 0.03
-        total_tax_amount = sum(x['tax_amount_currency'] for x in tax_total_values.values())
-        currency = collected_values['currency_values']['currency']
-
-        tax_to_taxes = {}
-        taxes_to_tax_amount_currency = {}
-        is_complete = True
-        for tax_key, global_tax_values in tax_total_values.items():
-            taxes = self.env['account.tax']
-            for related_tax_values in global_tax_values['related_taxes_values']:
-                tax = related_tax_values.get('tax')
-                if tax:
-                    taxes |= tax
-                else:
-                    is_complete = False
-                    break
-
-            for tax in taxes:
-                tax_to_taxes[tax] = taxes
-            taxes_to_tax_amount_currency[taxes] = global_tax_values['tax_amount_currency']
-
-        # If we are too far away from the total retrieved in the xml, don't fix anything: the error is elsewhere.
-        collected_values['are_taxes_complete'] = is_complete
-        if (
-            not is_complete
-            or currency.compare_amounts(abs(invoice.amount_tax - total_tax_amount) - tolerance, 0.0) > 0
-        ):
-            return
-
-        # Fix the base lines.
-        def grouping_function(_base_line, tax_data):
-            return tax_data and tax_to_taxes.get(tax_data['tax'])
-
-        base_lines, tax_lines = invoice._get_rounded_base_and_tax_lines()
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
-        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for taxes, values in values_per_grouping_key.items():
-            if not taxes:
-                continue
-
-            target_tax_amount_currency = taxes_to_tax_amount_currency[taxes]
-            target_factors = [
-                {
-                    'factor': tax_data['raw_tax_amount_currency'],
-                    'tax_data': tax_data,
-                }
-                for _base_line, taxes_data in values['base_line_x_taxes_data']
-                for tax_data in taxes_data
-            ]
-            amounts_to_distribute = AccountTax._distribute_delta_amount_smoothly(
-                precision_digits=currency.decimal_places,
-                delta_amount=target_tax_amount_currency,
-                target_factors=target_factors,
-            )
-            for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                tax_data = target_factor['tax_data']
-                tax_data['tax_amount_currency'] = amount_to_distribute
-
-        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, invoice.company_id, include_caba_tags=invoice.always_tax_exigible)
-        tax_results = AccountTax._prepare_tax_lines(base_lines, invoice.company_id, tax_lines=tax_lines)
-
-        line_ids_commands = []
-        for tax_line_vals, grouping_key, to_update in tax_results['tax_lines_to_update']:
-            line_ids_commands.append(Command.update(tax_line_vals['record'].id, {
-                'amount_currency': to_update['amount_currency'],
-                'balance': to_update['balance'],
-            }))
-
-        container = {'records': invoice}
-        with (
-            invoice._check_balanced(container),
-            invoice._disable_discount_precision(),
-            invoice._sync_dynamic_lines(container),
-        ):
-            invoice.line_ids = line_ids_commands
 
     def _import_ubl_invoice_fix_untaxed_amount(self, collected_values):
         if not collected_values['are_taxes_complete']:
@@ -3942,42 +3569,11 @@ class AccountEdiUBL(models.AbstractModel):
         return additional_docs
 
     def _import_ubl_invoice_post_processing(self, collected_values):
-        # During the import, fill 'ubl_cii_xml_file' to be retrieved later if necessary.
-        invoice = collected_values['invoice']
-        if collected_values['file_data']['attachment'] and invoice.is_purchase_document(include_receipts=True):
-            collected_values['file_data']['attachment'].write({
-                'res_field': 'ubl_cii_xml_file',
-                'res_model': invoice._name,
-                'res_id': invoice.id,
-            })
-
-        # Collect the embedded documents.
-        invoice = collected_values['invoice']
-        source_attachment = collected_values['file_data']['attachment'] or self.env['ir.attachment']
-        attachments = source_attachment + self._import_attachments(invoice, collected_values['tree'])
-
-        # Chatter.
-        body = Markup("<strong>%s</strong>") % _(
-            "Format used to import the invoice: %s",
-            self.env['ir.model']._get(self._name).name,
-        )
-        if logs := dict.fromkeys(collected_values['logs']):
-            body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
-        invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
+        self._import_invoice_post_processing(collected_values)
 
     def _ubl_import_invoice(self, invoice, file_data, new=False):
-        tree = file_data['xml_tree']
-        company = invoice.company_id
 
-        collected_values = {
-            'invoice': invoice,
-            'company': company,
-            'odoo_document_type': 'sale' if invoice.journal_id.type == 'sale' else 'purchase',
-            'tree': tree,
-            'file_data': file_data,
-            'logs': [],
-            'to_write': {},
-        }
+        collected_values = self._import_ubl_init_collected_values(invoice, file_data)
 
         self._import_ubl_invoice_document_sign(collected_values)
         self._import_ubl_invoice_update_move_type(collected_values)

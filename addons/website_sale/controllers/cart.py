@@ -114,6 +114,14 @@ class Cart(PaymentPortal):
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         product = request.env['product.product'].browse(product_id).exists()
+        if product and no_variant_attribute_value_ids:
+            product = product.with_context(
+                **product._get_product_price_context(
+                    request.env["product.template.attribute.value"].browse(
+                        [int(v) for v in no_variant_attribute_value_ids]
+                    )
+                )
+            )
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(_(
                 "The given product does not exist therefore it cannot be added to cart."

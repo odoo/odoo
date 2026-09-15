@@ -16,6 +16,8 @@ class TestFECExport(AccountTestInvoicingCommon):
             ]
         })
         inv.action_post()
+        # Clear the label of the receivable line to test the fallback logic (partner_name - move_ref)
+        inv.line_ids.filtered(lambda l: l.display_type == 'payment_term').name = ''
         # Create a new FEC export
         fec_export = self.env['l10n_fr.fec.export.wizard'].create({
             'date_from': '2020-01-01',
@@ -25,11 +27,11 @@ class TestFECExport(AccountTestInvoicingCommon):
         self.assertEqual(
             b''.join(result['file_content']).decode(),
             'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
-            'OUV|Balance initiale|OUVERTURE/2020|20200101|999999|Profit or Loss Appropriation|||-|20200101|/|0,00| 000000000003000,00|||20200101||\r\n'
-            f'OUV|Balance initiale|OUVERTURE/2020|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|/| 000000000003000,00|0,00|||20200101||\r\n'
+            'OUV|Balance initiale|OUVERTURE/2020|20200101|999999|Profit or Loss Appropriation|||-|20200101|Balance initiale|0,00| 000000000003000,00|||20200101||\r\n'
+            f'OUV|Balance initiale|OUVERTURE/2020|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|Balance initiale| 000000000003000,00|0,00|||20200101||\r\n'
             'INV|Sales|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000001000,00|||20200101|-000000000001000,00|USD\r\n'
             'INV|Sales|INV/2020/00001|20200101|400000|Product Sales|||-|20200101|test line|0,00| 000000000002000,00|||20200101|-000000000002000,00|USD\r\n'
-            f'INV|Sales|INV/2020/00001|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|INV/2020/00001| 000000000003000,00|0,00|||20200101| 000000000003000,00|USD'
+            f'INV|Sales|INV/2020/00001|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|partner_a - INV/2020/00001| 000000000003000,00|0,00|||20200101| 000000000003000,00|USD'
         )
 
     def test_fec_sub_companies(self):
@@ -131,8 +133,8 @@ class TestFECExport(AccountTestInvoicingCommon):
         self.assertEqual(
             b''.join(result['file_content']).decode(),
             'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
-            f'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|{account.code}|{account.name}|||-|20200601|/| 000000000000050,00|0,00|||20200601| 000000000000050,00|USD\r\n'
-            'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|400000|Product Sales|||-|20200601|/|0,00| 000000000000050,00|||20200601|-000000000000050,00|USD'
+            f'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|{account.code}|{account.name}|||-|20200601|MISC/2020/06/0001| 000000000000050,00|0,00|||20200601| 000000000000050,00|USD\r\n'
+            'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|400000|Product Sales|||-|20200601|MISC/2020/06/0001|0,00| 000000000000050,00|||20200601|-000000000000050,00|USD'
         )
 
     def test_fec_initial_balance_skips_zero_net_partner_openings(self):
@@ -172,6 +174,6 @@ class TestFECExport(AccountTestInvoicingCommon):
         self.assertEqual(
             b''.join(result['file_content']).decode(),
             'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
-            f'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200601|/| 000000000000050,00|0,00|||20200601| 000000000000050,00|USD\r\n'
-            'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|400000|Product Sales|||-|20200601|/|0,00| 000000000000050,00|||20200601|-000000000000050,00|USD'
+            f'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200601|partner_a - MISC/2020/06/0001| 000000000000050,00|0,00|||20200601| 000000000000050,00|USD\r\n'
+            'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|400000|Product Sales|||-|20200601|MISC/2020/06/0001|0,00| 000000000000050,00|||20200601|-000000000000050,00|USD'
         )

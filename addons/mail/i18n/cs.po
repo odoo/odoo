@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-10 14:53+0000\n"
+"PO-Revision-Date: 2026-08-07 04:19+0000\n"
 "Last-Translator: Ondřej Klein <ondrej.klein@origamis.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/mail/cs/>\n"
 "Language: cs\n"
@@ -77,8 +77,8 @@ msgstr ""
 "            </p><p>\n"
 "                Abyste byli chráněni před spamem a smyčkami odpovědí, Odoo "
 "automaticky blokuje e-maily\n"
-"                přicházející do vaší brány po překročení prahové hodnoty  "
-"<b>%(threshold)i</b> e-mailů každé <b>%(minutes)i</b>\n"
+"                přicházející do vaší brány po překročení prahové hodnoty  <b>"
+"%(threshold)i</b> e-mailů každé <b>%(minutes)i</b>\n"
 "                minut.Pokud existují některé adresy, ze kterých potřebujete "
 "dostávat velmi často\n"
 "                aktualizace, můžete je však přidat níže a Odoo je nechá "
@@ -249,12 +249,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)s Zadejte %(bold_start)s@uživatel%(bold_end)s, abyste "
-"někoho zmínili a přitáhli jeho pozornost.%(new_line)sZadejte %"
-"(bold_start)s#kanál%(bold_end)s, abyste zmínili kanál.%(new_line)sZadejte %"
-"(bold_start)s/příkaz%(bold_end)s, abyste spustili příkaz.%(new_line)sZadejte "
-"%(bold_start)s::zkratka%(bold_end)s, abyste vložili hotovou odpověď ve "
-"zprávě.%(new_line)sZadejte %(bold_start)s:emoji:%(bold_end)s, abyste vložili "
-"emoji do své zprávy."
+"někoho zmínili a přitáhli jeho pozornost.%(new_line)sZadejte %(bold_start)"
+"s#kanál%(bold_end)s, abyste zmínili kanál.%(new_line)sZadejte %(bold_start)s/"
+"příkaz%(bold_end)s, abyste spustili příkaz.%(new_line)sZadejte %(bold_start)"
+"s::zkratka%(bold_end)s, abyste vložili hotovou odpověď ve zprávě.%(new_line)"
+"sZadejte %(bold_start)s:emoji:%(bold_end)s, abyste vložili emoji do své "
+"zprávy."
 
 #. module: mail
 #. odoo-javascript
@@ -271,8 +271,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)spro %(open_cancel)szrušení%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
-"(open_em)spro %(open_save)suložení%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
+"spro %(open_save)suložení%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -577,8 +577,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Chatujte s kolegy</b> v reálném čase pomocí přímých zpráv.</"
-"p><p><i>Nejprve musíte pozvat uživatele v nastavení aplikace.</i></p>"
+"<p><b>Chatujte s kolegy</b> v reálném čase pomocí přímých zpráv.</p><p><i>"
+"Nejprve musíte pozvat uživatele v nastavení aplikace.</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1433,9 +1433,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) je už propojen s %"
-"(alias_model_name)s (%(matching_id)s) a používán přes %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) je už propojen s %(alias_model_name)"
+"s (%(matching_id)s) a používán přes %(parent_name)s %(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1444,8 +1443,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) je už propojen s %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) je už propojen s %(alias_model_name)"
+"s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1661,15 +1660,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 msgid "Are you sure you want to unblacklist this Email Address?"
-msgstr ""
-"Jste si jistí, že chcete smazat tuto e-mailovou adresu z černé listiny?"
+msgstr "Jste si jistí, že chcete smazat tuto e-mailovou adresu z černé listiny?"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
-msgstr ""
-"Jste si jistí, že chcete smazat tuto e-mailovou adresu z černé listiny?"
+msgstr "Jste si jistí, že chcete smazat tuto e-mailovou adresu z černé listiny?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -2124,8 +2121,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' se již používá pro%"
-"(document_name)s. Použijte jiný alias nebo změňte jej na jiný dokument."
+"Bounce/Catchall '%(matching_alias_name)s' se již používá pro%(document_name)"
+"s. Použijte jiný alias nebo změňte jej na jiný dokument."
 
 #. module: mail
 #. odoo-python
@@ -3654,8 +3651,7 @@ msgstr "Chyba doručení"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr ""
-"Zastaralé použití 'default_res_id', mělo by používat 'default_res_ids'."
+msgstr "Zastaralé použití 'default_res_id', mělo by používat 'default_res_ids'."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5899,8 +5895,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"Neplatný výraz - musí se jednat o definici ze slovníku Pythonu, např. "
-"\"{'field': 'value'}\""
+"Neplatný výraz - musí se jednat o definici ze slovníku Pythonu, např. \""
+"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
@@ -5978,8 +5974,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
-msgstr ""
-"Neplatná hodnota pří vytváření kanálu s členy, povoleno pouze 4 nebo 6."
+msgstr "Neplatná hodnota pří vytváření kanálu s členy, povoleno pouze 4 nebo 6."
 
 #. module: mail
 #. odoo-python
@@ -8508,8 +8503,8 @@ msgid ""
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který se použije při odesílání e-"
 "mailu. Pokud není nastaven, použije se jazyk hlavního partnera. Obvykle by "
-"se mělo jednat o zástupný výraz, který poskytuje příslušný jazyk, např. "
-"{{ object.partner_id.lang }}."
+"se mělo jednat o zástupný výraz, který poskytuje příslušný jazyk, např. {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9661,8 +9656,7 @@ msgstr ""
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Rendering of %(field_name)s is not possible as not defined on template."
-msgstr ""
-"Zobrazení %(field_name)s není možné, protože není definováno v šabloně."
+msgstr "Zobrazení %(field_name)s není možné, protože není definováno v šabloně."
 
 #. module: mail
 #. odoo-javascript
@@ -11396,8 +11390,8 @@ msgid ""
 "contact us at %(default_email)s instead."
 msgstr ""
 "Zpráva níže nebyla přijata přes adresu %(alias_display_name)s.\n"
-"                 Pouze %(contact_description)s ji mohou kontaktovat.<br /"
-"><br />\n"
+"                 Pouze %(contact_description)s ji mohou kontaktovat.<br />"
+"<br />\n"
 "                 Ujistěte se prosím, že používáte správnou adresu, nebo "
 "kontaktujte nás na adrese %(default_email)s."
 
@@ -11694,8 +11688,8 @@ msgstr "Zda se, že tento rozvrh již neexistuje."
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
-"Tento potenciální zákazník je v této fázi již několik dní ( %"
-"(numberOfDays)s )."
+"Tento potenciální zákazník je v této fázi již několik dní ( %(numberOfDays)"
+"s )."
 
 #. module: mail
 #. odoo-javascript
@@ -11787,8 +11781,8 @@ msgstr ""
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Tyto hodnoty nejsou podporovány při zveřejňování a oznamování: %"
-"(param_names)s"
+"Tyto hodnoty nejsou podporovány při zveřejňování a oznamování: %(param_names)"
+"s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search

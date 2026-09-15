@@ -12,13 +12,15 @@
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-29 15:50+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 03:53+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "pos_sale/sl/>\n"
 "Language: sl\n"
@@ -32,53 +34,64 @@ msgstr ""
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Preklicano)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
+#, fuzzy
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Preklicano)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+#, fuzzy
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(z vključenim davkom)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+#, fuzzy
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
-msgstr ""
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "A new order has been created."
-msgstr ""
+msgstr "Ustvarjeno je bilo novo naročilo."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Znesek za plačilo na POS-u"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Znesek, ki ga je treba še plačati v POS-u, da se preprečita dvojno plačilo "
+"ali dvojno izdajanje računov."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Uporabi predplačilo (fiksni znesek)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Uporabi predplačilo (odstotek)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -87,13 +100,15 @@ msgstr "Uredi nastavitve"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Ustvari stranko"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -102,13 +117,15 @@ msgstr "Menjalni tečaj"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
+#, fuzzy
 msgid "Delivered from"
-msgstr ""
+msgstr "Dostavljeno iz"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+#, fuzzy
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Količina dostave"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -125,14 +142,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "Ali želite naložiti SN/serije, povezane s prodajnim nalogom?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -142,13 +161,15 @@ msgstr "Predplačilo"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
+#, fuzzy
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Predplačilo (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
+#, fuzzy
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Podrobnosti predplačila"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -160,16 +181,20 @@ msgstr "Proizvod za predplačilo"
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Predplačilo (sklic: %(order_reference)s dne \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Dolgovano stanje: %s"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -191,8 +216,9 @@ msgstr "Od"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -202,43 +228,52 @@ msgstr "Zaračunano"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Zdi se, da v svojem prodajnem mestu niste konfigurirali izdelka za "
+"predplačilo. V konfiguraciji svojega prodajnega mesta lahko izberete enega."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "Temeljnica"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Postavka"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Povezana POS-naročila"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
+#, fuzzy
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Povezani prodajni nalog"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
+#, fuzzy
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Povezani prodajni nalogi"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "No down payment product"
-msgstr ""
+msgstr "Ni izdelka za predplačilo"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -253,8 +288,9 @@ msgstr "Naroči"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
+#, fuzzy
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Vrstice naročila, prenesene na prodajno mesto"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
@@ -273,8 +309,9 @@ msgstr "Nastavitve POS-blagajne"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
+#, fuzzy
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Postavke naročila prodajnega mesta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -293,8 +330,9 @@ msgstr "Prodajna točka"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
+#, fuzzy
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Število POS naročil"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
@@ -303,26 +341,30 @@ msgstr "Knjiženo"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
+#, fuzzy
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+#, fuzzy
 msgid "Quotation/Order"
-msgstr ""
+msgstr "Predračun/Naročilo"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "Nalaganje serijskih številk/serij"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+#, fuzzy
 msgid "SO"
-msgstr ""
+msgstr "SO"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -360,8 +402,9 @@ msgstr "Prodajna ekipa"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
+#, fuzzy
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Prodajna ekipa (PoS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -371,19 +414,22 @@ msgstr "O prodaji se poroča naslednji prodajni ekipi"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+#, fuzzy
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Nastavi prodajno naročilo"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Settle the order"
-msgstr ""
+msgstr "Poravnaj naročilo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
+#, fuzzy
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Izvorna vrstica prodajnega naloga"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -392,10 +438,11 @@ msgstr "Status"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+#, fuzzy
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "Tečaj valute glede na valuto tečaja, ki velja na datum naročila"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -406,14 +453,16 @@ msgstr "Prodaja tega prodajnega mesta bo povezana s to prodajno ekipo."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+#, fuzzy
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Ta izdelek bo uporabljen ob plačilu predplačila"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
+#, fuzzy
 msgid "This product will be used as down payment on a sale order."
-msgstr ""
+msgstr "Ta izdelek bo uporabljen kot predplačilo na prodajnem nalogu."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
@@ -422,23 +471,30 @@ msgstr "Prenos"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+#, fuzzy
 msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Preneseno<br/>\n"
+"                                iz prodaje"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+#, fuzzy
 msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Preneseno<br/>\n"
+"                            na POS"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Warning for %s"
-msgstr ""
+msgstr "Opozorila za %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -450,15 +506,17 @@ msgstr "Kaj želite narediti?"
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "id"
-msgstr ""
+msgstr "identifikacija"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Back"
 #~ msgstr "Nazaj"

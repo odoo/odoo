@@ -50,8 +50,8 @@ else:
     raise ImportError("pypdf implementation not found") from error
 del error
 
-PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object =\
-    pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
+PageObject, PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object =\
+    pypdf.PageObject, pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
 # because they got re-exported
 ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject =\
     generic.ArrayObject, generic.BooleanObject, generic.ByteStringObject, generic.DecodedStreamObject, generic.DictionaryObject, generic.IndirectObject, generic.NameObject, generic.NumberObject
@@ -182,14 +182,11 @@ def fill_form_fields_pdf(writer, form_fields):
 
     if pypdf_version >= parse_version('3.13.0'):
         catalog = writer._root_object
-        if "/Fields" not in catalog.get('/AcroForm'):
-            catalog.update({
-                NameObject("/AcroForm"): writer._add_object(
-                    DictionaryObject({
-                        NameObject("/Fields"): ArrayObject()
-                    })
-                )
-            })
+        acroform = catalog.get("/AcroForm").get_object()
+        if "/Fields" not in acroform:
+            acroform[NameObject("/Fields")] = ArrayObject()
+        if "/DR" not in acroform:
+            acroform[NameObject("/DR")] = DictionaryObject()
 
     nbr_pages = len(writer.pages) if pypdf_version >= parse_version('1.28.0') else writer.getNumPages()
 
@@ -623,6 +620,42 @@ class OdooPdfFileWriter(PdfFileWriter):
 
                 font[NameObject('/W')] = ArrayObject([NumberObject(1), ArrayObject(glyph_widths)])
                 stream.close()
+
+        # Every annotation dictionary, except those whose subtype is Popup,
+        # must contain the /F key (annotation flags), as required by PDF/A (clause 6.3.2).
+        # - Print flag must be 1.
+        # - Hidden, Invisible, ToggleNoView and NoView flags must be 0.
+        # - For text annotations, NoZoom and NoRotate are recommended to be 1.
+        PDFA_ANNOT_FLAG_INVISIBLE = 1 << 0
+        PDFA_ANNOT_FLAG_HIDDEN = 1 << 1
+        PDFA_ANNOT_FLAG_PRINT = 1 << 2
+        PDFA_ANNOT_FLAG_NOZOOM = 1 << 3
+        PDFA_ANNOT_FLAG_NOROTATE = 1 << 4
+        PDFA_ANNOT_FLAG_NOVIEW = 1 << 5
+        PDFA_ANNOT_FLAG_TOGGLENOVIEW = 1 << 8
+
+        for page in pages:
+            page_obj = page.getObject()
+            annots = page_obj.get('/Annots', [])
+            if isinstance(annots, IndirectObject):
+                annots = annots.getObject()
+            for annot_ref in annots:
+                annot = annot_ref.getObject()
+                if annot.get('/Subtype') == '/Popup':
+                    continue
+
+                flags = annot.get('/F', 0)
+                flags |= PDFA_ANNOT_FLAG_PRINT
+                flags &= ~(
+                    PDFA_ANNOT_FLAG_HIDDEN
+                    | PDFA_ANNOT_FLAG_INVISIBLE
+                    | PDFA_ANNOT_FLAG_TOGGLENOVIEW
+                    | PDFA_ANNOT_FLAG_NOVIEW
+                )
+                if annot.get('/Subtype') == '/Text':
+                    flags |= PDFA_ANNOT_FLAG_NOZOOM | PDFA_ANNOT_FLAG_NOROTATE
+
+                annot[NameObject('/F')] = NumberObject(flags)
 
         outlines = self._root_object['/Outlines'].getObject()
         outlines[NameObject('/Count')] = NumberObject(1)

@@ -527,9 +527,14 @@ class StockWarehouseOrderpoint(models.Model):
         domain_state = Domain('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))
         domain_product = Domain('product_id', 'in', all_product_ids.ids)
 
+        domain_move_internal = domain_quant & ~domain_move_out_loc
         domain_quant = Domain.AND((domain_product, domain_quant))
-        domain_move_in = Domain.AND((domain_product, domain_state, domain_move_in_loc))
-        domain_move_out = Domain.AND((domain_product, domain_state, domain_move_out_loc))
+        domain_move_in = Domain.AND((
+            domain_product, domain_state, Domain.OR([domain_move_in_loc, domain_move_internal]),
+        ))
+        domain_move_out = Domain.AND((
+            domain_product, domain_state, Domain.OR([domain_move_out_loc, domain_move_internal]),
+        ))
 
         moves_in = defaultdict(list)
         for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
@@ -697,7 +702,7 @@ class StockWarehouseOrderpoint(models.Model):
             'date_order': dates_info['date_order'],
             'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
-            'orderpoint_id': self.trigger == 'auto' and self,
+            'orderpoint_id': self,
         }
         reference = self.env.context.get('origins')
         if reference:

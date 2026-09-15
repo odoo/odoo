@@ -73,7 +73,7 @@ WITH
         LEFT JOIN uom_uom uom_product ON uom_product.id = pt.uom_id
         WHERE pt.is_storable = true AND
             source.w_id IS DISTINCT FROM dest.w_id AND
-            m.product_qty != 0 AND
+            (m.product_qty != 0 OR m.quantity != 0) AND
             m.state NOT IN ('draft', 'cancel') AND
             (m.state != 'done' or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
@@ -186,7 +186,7 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
-        m.product_qty != 0) AS forecast_qty
+        m.product_qty != 0 OR (m.state = 'done' AND m.quantity != 0)) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """

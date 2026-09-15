@@ -10,13 +10,17 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-01 07:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-09-10 11:13+0000\n"
+"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "base_vat/sl/>\n"
 "Language: sl\n"
@@ -25,13 +29,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 ali 101850043"
 
 #. module: base_vat
 #. odoo-python
@@ -44,7 +48,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) ali 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -52,6 +56,13 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 ali UA12345678 (EDRPOU), 1234567890 (RNOPP) ali 123456789012 (IPN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
+msgstr "123456789 (TIN) ali 12345678901234 (PINFL)"
 
 #. module: base_vat
 #. odoo-python
@@ -75,7 +86,7 @@ msgstr "49-098-576 ali 49098576"
 #. module: base_vat
 #: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
 msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
+msgstr "Osnovni DDV: Sinhroniziraj posodobitve iz IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -150,7 +161,7 @@ msgstr "GB123456782 ali XI123456782"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GODE561231GR8"
-msgstr ""
+msgstr "GODE561231GR8"
 
 #. module: base_vat
 #. odoo-python
@@ -161,7 +172,7 @@ msgstr "HU12345676 ali 12345678-1-11 ali 8071592153"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr ""
+msgstr "Ima tuji davčni položaj"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__id
@@ -186,7 +197,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "If you are trying to input a European number, this is the expected format: "
-msgstr ""
+msgstr "Če poskušate vpisati evropsko številko, je pričakovani zapis: "
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -198,13 +209,13 @@ msgstr "Veljavno znotraj skupnosti"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Invalid IAP VIES endpoint"
-msgstr ""
+msgstr "Neveljavna končna točka IAP VIES"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
-msgstr ""
+msgstr "Opomba: pričakovana oblika je %(expected_format)s"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -226,6 +237,7 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
 msgstr ""
+"Številka %(vat_label)s [%(wrong_vat)s] ni videti veljavna. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -234,30 +246,32 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
+"Številka %(vat_label)s [%(wrong_vat)s] za %(record_label)s se ne zdi "
+"veljavna. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The Intra-Community validity has been updated to: %s."
-msgstr ""
+msgstr "Skupnostna veljavnost je bila posodobljena na: %s."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
-msgstr ""
+msgstr "Preverjanje VIES ni uspelo. Prosimo, ročno preverite davčno številko."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
+msgstr "Preverjanje VIES je v teku. Stanje bo kmalu posodobljeno."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
+msgstr "Za izrecno označitev, da ni (veljavnega) DDV, uporabite '/'. "
 
 #. module: base_vat
 #. odoo-python
@@ -279,12 +293,6 @@ msgstr "Preverjanje DDV številk preko evropske storitve VIES"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 številk] in mora upoštevati kontrolno vsoto Luhnovega algoritma"
@@ -293,13 +301,13 @@ msgstr ""
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "Za označitev, da stranka nima davčne številke, lahko uporabite »/«."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
-msgstr ""
+msgstr "bodisi 11 številk za CPF ali 14 znakov za CNPJ"
 
 #. module: base_vat
 #. odoo-python

@@ -11,7 +11,7 @@
     </BuilderRow>
     <t t-if="isActiveItem('tabs_opt') or isActiveItem('buttons_opt')">
         <BuilderRow label.translate="Background" level="1">
-            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" />
+            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
         </BuilderRow>
         <BuilderRow label.translate="Links Color" level="1">
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" enabledTabs="['solid', 'custom']"/>

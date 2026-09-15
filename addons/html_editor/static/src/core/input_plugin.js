@@ -26,7 +26,12 @@ export class InputPlugin extends Plugin {
         // To work around this, we snapshot the selection here in `keydown`
         // and store it as a cached selection so that the `beforeinput` handler
         // can use this snapshot instead of calling `getSelection()` itself.
-        if (selection?.rangeCount && selection.isCollapsed && ev.key === "Unidentified") {
+        if (
+            selection?.rangeCount &&
+            selection.isCollapsed &&
+            ev.key === "Unidentified" &&
+            selection.focusOffset === 0
+        ) {
             const range = selection.getRangeAt(0);
             this.dependencies.selection.setCachedSelection({
                 anchorNode: selection.anchorNode,

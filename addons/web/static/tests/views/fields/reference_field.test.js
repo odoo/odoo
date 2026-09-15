@@ -276,7 +276,7 @@ test("ReferenceField in modal write mode", async () => {
 });
 
 test("reference in form view", async () => {
-    expect.assertions(11);
+    expect.assertions(12);
 
     Product._views[["form", false]] = /* xml */ `
         <form>
@@ -346,6 +346,9 @@ test("reference in form view", async () => {
     });
     expect(".o_field_widget input").toHaveValue("xphone", {
         message: "widget should contain one input with the record",
+    });
+    expect(".o_field_widget input").toHaveAttribute("placeholder", "Search a record...", {
+        message: "the record search box should have a default placeholder",
     });
 
     expect(queryAllValues(".o_field_widget select > option")).toEqual(

@@ -6296,6 +6296,32 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(quant.reserved_quantity, 2)
         self.assertEqual(ml.quantity * self.uom_unit.factor, 2)
 
+    def test_decrease_move_quantity_with_move_line_in_different_uom(self):
+        """Check decreasing a move keeps move lines in sync when their UoM differs from the move's."""
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 24)
+        quant = self.env['stock.quant']._gather(self.productA, self.stock_location)
+        move = self.env['stock.move'].create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.uom_dozen.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(quant.reserved_quantity, 24)
+
+        ml = move.move_line_ids
+        ml.write({'quantity': 24, 'product_uom_id': self.uom_unit.id})
+        self.assertEqual(ml.quantity, 24)
+
+        move.quantity = 1
+
+        self.assertEqual(len(move.move_line_ids), 1)
+        self.assertEqual(move.move_line_ids.product_uom_id, self.uom_unit)
+        self.assertEqual(move.move_line_ids.quantity, 12)
+        self.assertEqual(quant.reserved_quantity, 12)
+
     def test_move_line_qty_with_quant_in_different_uom(self):
         """
         Check that the reserved_quantity of the quant is correctly calculated
@@ -6422,15 +6448,16 @@ class TestStockMove(TestStockCommon):
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5)
         # Create two moves using the all available quantity and reserve them
-        move_1, move_2 = self.env['stock.move'].create([{
-            'product_id': self.productA.id,
-            'product_uom_qty': qty,
-            'product_uom': self.productA.uom_id.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        } for qty in [2, 3]])
-        (move_1 | move_2)._action_confirm()
-        (move_1 | move_2)._action_assign()
+        with freeze_time(fields.Datetime.now()):
+            move_1, move_2 = self.env['stock.move'].create([{
+                'product_id': self.productA.id,
+                'product_uom_qty': qty,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            } for qty in [2, 3]])
+            (move_1 | move_2)._action_confirm()
+            (move_1 | move_2)._action_assign()
 
         self.assertEqual(move_1.date, move_2.date)
         self.assertEqual(move_1.state, 'assigned')
@@ -6848,6 +6875,47 @@ class TestStockMove(TestStockCommon):
                 'packaging_quantity': 5.0,
                 'packaging_qty_ordered': 5.0,
             })
+
+    def test_delivery_slip_quantity_aggregation_across_move_lines(self):
+        """ A receipt for a fractional quantity that is over-received in two operations should
+        report the expected and received quantities on a single line, both in the product's unit
+        and in the vendor's packaging unit.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 11.1,
+            })],
+        })
+        receipt.move_ids.packaging_uom_id = pack_of_6
+        receipt.action_confirm()
+        # Receiving more than expected adds a second move line for the excess.
+        receipt.move_ids.quantity = 13.9
+        self.assertEqual(len(receipt.move_ids.move_line_ids), 2)
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        aggregated_lines = receipt.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregated_lines), 1)
+        aggregate_val = next(iter(aggregated_lines.values()))
+        self.assertDictEqual({
+            'name': aggregate_val['name'],
+            'qty_ordered': aggregate_val['qty_ordered'],
+            'quantity': aggregate_val['quantity'],
+            'packaging_qty_ordered': aggregate_val['packaging_qty_ordered'],
+            'packaging_quantity': aggregate_val['packaging_quantity'],
+        }, {
+            'name': self.productA.name,
+            'qty_ordered': 11.1,
+            'quantity': 13.9,
+            'packaging_qty_ordered': 1.86,
+            'packaging_quantity': 2.32,
+        })
 
     def test_aggregated_quantities_partial_and_over_delivery(self):
         """

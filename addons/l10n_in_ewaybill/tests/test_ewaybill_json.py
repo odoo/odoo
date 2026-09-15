@@ -3,6 +3,7 @@
 from freezegun import freeze_time
 
 from odoo import _
+from odoo.fields import Command
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -271,7 +272,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "toAddr2": "",
             "toPlace": "Peebles",
             "toPincode": 999999,
-            "actToStateCode": 99,
+            "actToStateCode": 97,
             "toStateCode": 99,
             "itemList": [{
                 "productName": "product_a",
@@ -331,7 +332,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "fromPincode": 365220,
             "fromStateCode": 24,
             "actFromStateCode": 24,
-            "toGstin": "36AAAAA1234AAZA",
+            "toGstin": "URP",
             "toTrdName": "SEZ Partner",
             "toAddr1": "Block no. 402",
             "toAddr2": "",
@@ -457,3 +458,12 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         })
         expected_msg = _('- Transporter %s does not have a valid GST Number', self.partner_b.name)
         self.assertEqual(ewaybill_invoice_2._check_transporter(), [expected_msg])
+
+    def test_ewaybill_access_accounting_user(self):
+        self.env.user.group_ids = [Command.set([self.env.ref('account.group_account_invoice').id])]
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'account_move_id': self.invoice.id,
+            'mode': False,
+            'type_id': self.env.ref('l10n_in_ewaybill.type_tax_invoice_sub_type_supply').id,
+        })
+        self.assertTrue(ewaybill)

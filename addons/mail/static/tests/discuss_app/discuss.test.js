@@ -25,7 +25,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, runAllTimers, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, press, tick, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -2251,7 +2251,6 @@ test("restore thread scroll position", async () => {
 });
 
 test("Message shows up even if channel data is incomplete", async () => {
-    // Pass in only but not when bulk running tests
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
@@ -2272,9 +2271,9 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    const subscribePromise = waitUntilSubscribe();
     getService("bus_service").forceUpdateChannels();
-    await runAllTimers();
-    await waitUntilSubscribe();
+    await subscribePromise;
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
@@ -2539,4 +2538,29 @@ test("do not show control panel without breadcrumbs", async () => {
     await openDiscuss();
     await contains(".o-mail-Discuss");
     await contains(".o_control_panel .breadcrumb", { text: serverState.partnerName });
+});
+
+test("leaveChannel closed the channel on RPC success with simulated SH websocket traffic", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "SH leaveChannel test",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss();
+    // simulate websocket traffic failing to reach the browser 
+    onRpc("discuss.channel", "action_unfollow", () => {
+        asyncStep("action_unfollow_called");
+        return true; 
+    });
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('SH leaveChannel test'))");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click("button:contains(Leave Conversation)");
+    await waitForSteps(["action_unfollow_called"]);
+    // ensure the channel has been fully closed 
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "SH leaveChannel test" });
 });

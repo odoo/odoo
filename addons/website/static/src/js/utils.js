@@ -60,20 +60,21 @@ function loadAnchors(url, body) {
 }
 
 /**
- * Allows the given input to propose existing website URLs.
+ * Creates an Owl App for the given component, mounts it into a new container
+ * appended to the document body, and returns a cleanup function that destroys
+ * the app and removes the container.
  *
- * @param {HTMLInputElement} input
+ * @param {typeof Component} ComponentClass the OWL component to mount
+ * @param {Object} props
+ * @param {Object} [env] env to mount with
+ * @returns {Function} cleanup function
  */
-function autocompleteWithPages(input, options = {}, env = undefined) {
-    const owlApp = new App(UrlAutoComplete, {
+function mountAutocompleteComponent(ComponentClass, props, env = undefined) {
+    const owlApp = new App(ComponentClass, {
         env: env || Component.env,
         dev: env ? env.debug : Component.env.debug,
         getTemplate,
-        props: {
-            options,
-            loadAnchors,
-            targetDropdown: input,
-        },
+        props,
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
     });
@@ -137,6 +138,25 @@ async function loadOptionsSource(term, body, onSelect) {
     }
 
     return choices;
+}
+
+/**
+ * Allows the given input to propose existing website URLs.
+ *
+ * @param {HTMLInputElement} input
+ * @param {Object} [options]
+ * @param {Object} [env]
+ */
+function autocompleteWithPages(input, options = {}, env = undefined) {
+    return mountAutocompleteComponent(
+        UrlAutoComplete,
+        {
+            options,
+            loadAnchors,
+            targetDropdown: input,
+        },
+        env
+    );
 }
 
 /**
@@ -621,6 +641,7 @@ patch(urlUtils, {
 
 export default {
     loadAnchors: loadAnchors,
+    mountAutocompleteComponent: mountAutocompleteComponent,
     autocompleteWithPages: autocompleteWithPages,
     loadOptionsSource: loadOptionsSource,
     onceAllImagesLoaded: onceAllImagesLoaded,

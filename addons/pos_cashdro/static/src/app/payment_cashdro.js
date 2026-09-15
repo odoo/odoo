@@ -103,12 +103,7 @@ export class PaymentCashdro extends PaymentInterface {
             }
             return false;
         }
-        if (this.paymentLine.pos_order_id.remainingDue === 0 && this.paymentLine.amount > 0) {
-            // In this case, the POS will automatically add the 'Change' line
-            this.paymentLine.setAmount(moneyIn);
-        } else {
-            this.paymentLine.setAmount(netAmount);
-        }
+        this.paymentLine.setAmount(netAmount);
         this.paymentLine.transaction_id = operationid;
 
         return true;

@@ -1,7 +1,7 @@
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
-import { completeActiveFields } from "@web/model/relational_model/utils";
+import { completeActiveFields, getFieldsSpec } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 
@@ -922,27 +922,60 @@ export class StaticList extends DataPoint {
         this._savePoint = undefined;
     }
 
-    /**
-     * @fixme: this method is naive and ineffective (it triggers a lot of onchange rpcs)
-     */
     async _duplicateRecords(records, options) {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
         const copyFields = options.copyFields || [];
         let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
-        const newRecords = await Promise.all(
-            records.map(async () =>
-                this._createNewRecordDatapoint({
-                    mode: "readonly",
-                })
-            )
+
+        let parentChanges;
+        if (this.config.relationField) {
+            parentChanges = this._parent._getChanges();
+            if (!this._parent.isNew) {
+                parentChanges.id = this._parent.resId;
+            }
+        }
+
+        const changesList = records.map((record) => {
+            const changes = {
+                ...copyRecordData(record, copyFields),
+                [this.handleField]: sequence++,
+            };
+
+            if (parentChanges) {
+                changes[this.config.relationField] = { ...parentChanges };
+            }
+
+            return changes;
+        });
+
+        const fieldsSpec = getFieldsSpec(
+            this.activeFields,
+            this.fields,
+            this.evalContext,
+            { withInvisible: true }
         );
-        await Promise.all(
-            records.map((record, index) =>
-                newRecords[index]._update({
-                    ...copyRecordData(record, copyFields),
-                    [this.handleField]: sequence++,
-                })
-            )
+
+        const responses = await this.model.orm.call(
+            this.resModel,
+            "onchange_batch",
+            [changesList, [], fieldsSpec],
+            {
+                context: this.context,
+            }
+        );
+
+        const valuesList = responses.map(({ value, warning }) => {
+            if (warning) {
+                this.model._displayOnchangeWarning(warning);
+            }
+            return value;
+        });
+
+        const newRecords = valuesList.map((values) =>
+            this._createRecordDatapoint(values, {
+                mode: "readonly",
+                virtualId: getId("virtual"),
+            })
         );
 
         const localIncreaseLimit = this.records.length + records.length - this.limit;

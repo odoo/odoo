@@ -198,6 +198,8 @@ class ProductProduct(models.Model):
                 'ratingValue': self.sudo().rating_avg,
                 'reviewCount': self.rating_count,
             }
+        if self.default_code:
+            markup_data['sku'] = self.default_code
         if self.barcode:
             markup_data['gtin'] = self.barcode
         return markup_data
@@ -224,7 +226,7 @@ class ProductProduct(models.Model):
         return [
             self.env['website'].image_url(extra_image, 'image_1920')
             for extra_image in self.product_variant_image_ids + self.product_template_image_ids
-            if extra_image.image_128  # only images, no video urls
+            if not extra_image.video_url  # only images, no video thumbnails
         ]
 
     def write(self, vals):
@@ -236,3 +238,12 @@ class ProductProduct(models.Model):
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
         return super().write(vals)
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+        ):
+            return dict.fromkeys(self, 'write')
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)

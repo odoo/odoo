@@ -27,14 +27,7 @@ async function createDashboardLoader(params = {}) {
         serverData: params.serverData || getDashboardServerData(),
         mockRPC: params.mockRPC,
     });
-    return new DashboardLoader(env, env.services.orm, async (dashboardId) => {
-        const [record] = await env.services.orm.read(
-            "spreadsheet.dashboard",
-            [dashboardId],
-            ["spreadsheet_data"]
-        );
-        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
-    });
+    return new DashboardLoader(env, env.services.orm);
 }
 
 test("load all dashboards of all containers", async () => {

@@ -15,7 +15,7 @@ export function searchHighlight(searchTerm, target) {
         return target;
     }
     const htmlDoc = createDocumentFragmentFromContent(target);
-    for (const term of searchTerm.split(" ")) {
+    for (const term of searchTerm.split(" ").filter(Boolean)) {
         const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '
         // Note: browsers use XPath 1.0, so uses concat() rather than ||

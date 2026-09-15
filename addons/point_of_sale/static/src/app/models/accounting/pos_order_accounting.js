@@ -125,14 +125,20 @@ export class PosOrderAccounting extends Base {
     }
     get appliedRounding() {
         const total = this.prices.taxDetails.total_amount_no_rounding;
-        const isNegative = this.amountPaid > total;
         const remaining = this.currency.round(total - this.amountPaid);
-        const amount =
+        const signedRemaining = total < 0 ? -remaining : remaining;
+        const isDone =
             this.orderIsRounded &&
-            this.config.rounding_method.asymmetricRound(total < 0 ? -remaining : remaining) == 0
-                ? Math.abs(remaining)
-                : 0;
-        return isNegative ? this.currency.round(amount) : this.currency.round(-amount);
+            (signedRemaining <= 0 ||
+                this.config.rounding_method.asymmetricRound(signedRemaining) === 0);
+        if (!isDone) {
+            return 0;
+        }
+
+        const roundedRemaining = this.config.rounding_method.asymmetricRound(signedRemaining);
+        const diff =
+            total < 0 ? signedRemaining - roundedRemaining : roundedRemaining - signedRemaining;
+        return this.currency.round(diff);
     }
 
     /**
@@ -308,7 +314,10 @@ export class PosOrderAccounting extends Base {
 
         // Cash rounding is added only if the document needs to be globaly rounded.
         // See cash_rounding and only_round_cash_method config fields.
-        const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
+        const cashRounding =
+            this.config.cash_rounding && this.config.rounding_method
+                ? this.config.rounding_method
+                : null;
         const data = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
             cash_rounding: cashRounding,
         });

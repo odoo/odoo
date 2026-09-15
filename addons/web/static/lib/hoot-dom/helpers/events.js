@@ -1746,10 +1746,12 @@ async function _pointerDown(options) {
 
 /**
  * @param {PointerOptions} [options]
+ * @param {{ canBeLongTap?: boolean }} [params]
  */
-async function _pointerUp(options) {
+async function _pointerUp(options, { canBeLongTap } = {}) {
     const target = runTime.pointerTarget;
-    const isLongTap = globalThis.Date.now() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
+    const isLongTap =
+        canBeLongTap && globalThis.Date.now() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
     const pointerDownTarget = runTime.pointerDownTarget;
     const pointerUpTarget = getPointerTarget(target, options);
     const eventInit = {
@@ -2311,7 +2313,7 @@ export async function drag(target, options) {
 
             const finalizeEvents = setupEvents("drag & drop: drop", options);
 
-            await _pointerUp(options);
+            await _pointerUp(options, { canBeLongTap: true });
 
             dragEvents.push(...finalizeEvents());
 
@@ -2627,7 +2629,7 @@ export async function pointerUp(target, options) {
     const element = queryAny(await target, options);
 
     await _hover(element, options, { implicit: true, originalTarget: target });
-    await _pointerUp(options);
+    await _pointerUp(options, { canBeLongTap: true });
 
     return finalizeEvents();
 }

@@ -490,7 +490,7 @@ test("change background size", async () => {
 
     await contains(heightInput).edit("");
     expect(heightInput).toHaveValue("");
-    expect(section).toHaveStyle("background-size: 100px");
+    expect(section).toHaveStyle({ "background-size": /^100px/ });
 
     await contains(widthInput).edit("");
     expect(widthInput).toHaveValue("");
@@ -499,7 +499,7 @@ test("change background size", async () => {
 
     await contains(widthInput).edit("0");
     expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
-    expect(section).toHaveStyle("background-size: 1px");
+    expect(section).toHaveStyle({ "background-size": /^1px/ });
 });
 
 test("background shape detection is compatible with previous ones (web_editor)", async () => {

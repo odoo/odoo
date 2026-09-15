@@ -2,6 +2,8 @@
 
 from lxml import html
 from unittest.mock import patch
+from freezegun import freeze_time
+from datetime import date
 
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -244,6 +246,24 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
+    def test_open_website_url_default_website(self):
+        default_website = self.env.ref('website.default_website')
+        default_website.domain = 'https://mysite.odoo.com'
+        self.page_1.write({'website_id': default_website.id})
+        action = self.page_1.with_context(website_id=default_website.id).open_website_url()
+        self.assertNotEqual(action.get('type'), 'ir.actions.act_url',
+            "Page on default website should not redirect to real domain")
+
+        other_website = self.env['website'].create({
+            'name': 'Other Website',
+            'domain': 'https://example.com',
+            'sequence': 20,
+        })
+        self.page_1.write({'website_id': other_website.id})
+        action = self.page_1.with_context(website_id=default_website.id).open_website_url()
+        self.assertEqual(action.get('type'), 'ir.actions.act_url',
+            "Page on non-default website with domain should redirect to real domain")
+
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
@@ -279,6 +299,20 @@ class WithContext(HttpCase):
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 200, "Admin should see the specific unpublished page")
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
+
+    def test_unpublished_page_no_cache(self):
+        """Ensure that a previously-published page that is now unpublished will not be cached."""
+        self.authenticate(None, None)
+
+        with freeze_time(date(2025, 12, 30)):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200, "Restricted users should see the published page")
+
+        self.page.write({'is_published': False})
+
+        with freeze_time(date(2025, 12, 31)):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 404, "Restricted users should see a 404 as the page is unpublished")
 
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_search(self):

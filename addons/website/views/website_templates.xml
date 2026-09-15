@@ -173,6 +173,7 @@
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
+        <link rel="apple-touch-icon" t-att-href="x_icon"/>
     </xpath>
 
     <xpath expr="//head/script" position="before">
@@ -3097,7 +3098,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     </div>
                 </t>
                 <div t-if="results" class="table-responsive">
-                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" t-key="result_index"/>
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" />
                 </div>
                 <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
                     <t t-call="website.pager"/>

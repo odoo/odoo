@@ -4,13 +4,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Vlad Patenko <vlad.patenko@gmail.com>, 2026.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 05:21+0000\n"
-"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
+"PO-Revision-Date: 2026-08-08 03:38+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "auth_totp_mail/uk/>\n"
 "Language: uk\n"
@@ -58,6 +59,30 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> попросив вас активувати двофакторну "
+"автентифікацію для захисту вашого облікового запису.<br/><br/>\n"
+"        Двофакторна автентифікація («2FA») — це система подвійної "
+"автентифікації.\n"
+"        Перший робиться за допомогою пароля, а другий — за допомогою коду, "
+"який ви отримуєте зі спеціального мобільного додатку.\n"
+"        Популярні серед них Authy, Google Authenticator або Microsoft "
+"Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"\n"
+"                Активувати мою двофакторну автентифікацію\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
@@ -105,6 +130,50 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Хтось намагається увійти до вашого облікового запису за допомогою нового "
+"пристрою.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Розташування: <t t-out=\"ctx.get('location') or not_available\"/></"
+"li>\n"
+"    <li>Пристрій: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Браузер: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP адреса: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>Якщо це ви, будь ласка, введіть наступний код, щоб завершити вхід:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Зверніть увагу, що термін дії коду закінчується через <t t-"
+"out=\"expiration\"/>.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Якщо ви НЕ ініціювали цей вхід,\n"
+"    вам слід негайно змінити пароль, щоб забезпечити безпеку облікового "
+"запису.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Ми також наполегливо рекомендуємо ввімкнути двофакторну автентифікацію "
+"за допомогою програми-автентифікатора, щоб захистити свій обліковий запис.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Активувати мою двофакторну автентифікацію\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -131,13 +200,13 @@ msgstr ""
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "<span>Consider also</span>"
-msgstr ""
+msgstr "<span>Також розгляньте</span>"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "A new device was used to sign in to your account."
-msgstr ""
+msgstr "Для входу у ваш обліковий запис було використано новий пристрій."
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -167,7 +236,7 @@ msgstr ""
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Click to enable 2FA."
-msgstr ""
+msgstr "Натисніть, щоб увімкнути 2FA."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings

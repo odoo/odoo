@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="l10n_pl_edi_jst.fa3_xml_template" inherit_id="l10n_pl_edi.fa3_xml_template">
+    <xpath expr="//*[local-name()='Podmiot2']/*[local-name()='JST']" position="replace">
+      <t t-if="jst_subordinate">
+      <JST>1</JST>
+      </t>
+      <t t-else="">
+      <JST>2</JST>
+      </t>
+    </xpath>
+    <xpath expr="//*[local-name()='Podmiot2']" position="after">
+      <Podmiot3 t-if="jst_subordinate">
+        <DaneIdentyfikacyjne>
+        <t t-if="jst_subordinate.vat and (get_vat_country(jst_subordinate.vat) or jst_subordinate.country_code) == 'PL'">
+          <NIP t-out="get_vat_number(jst_subordinate.vat)"/>
+        </t>
+          <!-- Nazwa: The full legal name of the lgu subordinate. -->
+          <Nazwa t-out="jst_subordinate.name"/>
+        </DaneIdentyfikacyjne>
+        <t t-if="jst_subordinate.street or jst_subordinate.zip or jst_subordinate.city or jst_subordinate.country_id">
+        <Adres>
+          <!-- KodKraju: Two-letter ISO country code of the jst_subordinate. -->
+          <KodKraju t-out="jst_subordinate.country_code"/>
+          <!-- AdresL1: First line of the jst_subordinate's address. -->
+          <AdresL1 t-out="jst_subordinate_address"/>
+          <!-- AdresL2: Second line of the jst_subordinate's address (optional). -->
+          <AdresL2 t-if="jst_subordinate.street2" t-out="jst_subordinate.street2"/>
+        </Adres>
+        </t>
+        <t t-if="jst_subordinate.email or jst_subordinate.phone">
+        <DaneKontaktowe>
+          <Email t-out="jst_subordinate.email"/>
+          <Telefon t-out="jst_subordinate.phone"/>
+        </DaneKontaktowe>
+        </t>
+        <!-- Rola: Role of the lgu subordinate. 8 = Local government unit (LGU) - recipient-->
+        <Rola>8</Rola>
+      </Podmiot3>
+    </xpath>
+  </template>
+</odoo>

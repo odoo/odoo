@@ -267,7 +267,7 @@ export class AnalyticDistribution extends Component {
             })
         }
         this.state.formattedData = distribution;
-        if (accountNotFound) {
+        if (accountNotFound && this.editingRecord) {
             // Analytic accounts in the json were not found, save the json without them
             await this.save();
         }
@@ -500,7 +500,6 @@ export class AnalyticDistribution extends Component {
     }
 
     onSaveNew() {
-        this.closeAnalyticEditor();
         const { record, product_field, account_field } = this.props;
         this.openTemplate({ resId: false, context: {
             'default_analytic_distribution': this.dataToJson(),

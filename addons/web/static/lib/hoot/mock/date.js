@@ -20,29 +20,93 @@ import { ensureTest } from "../main_runner";
 //-----------------------------------------------------------------------------
 
 const { Date, Intl } = globalThis;
-const { now: $now, UTC: $UTC } = Date;
+const { now: $now } = Date;
 const { DateTimeFormat, Locale } = Intl;
+const { abs: $abs, floor: $floor } = Math;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
 /**
+ * Returns a list of offsets to add to each date parameter.
+ *
+ * These offsets are arranged in the same order as the Date constructor parameters;
+ * starting with the 'years' and ending with the 'milliseconds'.
+ *
+ * Note that the offset could simply be added to the 'milliseconds' part, and JavaScript
+ * would handle the diff itself, but the thing is we want to ignore this offset
+ * for arguments that are given explicitly.
+ *
+ * For example:
+ *  `new Date(2022, 0, 1)` -> we want the offset applied on the 'hours' part as
+ *      it was omitted, and thus will be filled with the corresponding {@link dateParams}
+ *      bit;
+ *  `new Date(2022, 0, 1, 8)` -> here the offset needs to be applied up until the
+ *      'minutes' part, as the hour is now fixed by a given parameter.
+ *
+ * @param {number[]} args
+ */
+function computeOffsetParams(args) {
+    if (args.length === 1 || args.length >= 7) {
+        // 1 argument = unique ms timestamp
+        // 7 arguments = no need to autofill/offset parameters
+        return args;
+    }
+
+    // Auto-fill remaining arguments with mock date parameters
+    for (let i = args.length; i < dateParams.length; i++) {
+        args[i] = dateParams[i];
+    }
+
+    // Warning: the actual offset needs to be acquired dynamically, as it may depend
+    // on the date (i.e. daylight savings). Note that it is also computed with auto-filled
+    // 'dateParams' as these could shift the date as well.
+    const realOffset = new Date(...args).getTimezoneOffset() * -60_000;
+
+    // The offset value is the sum of:
+    //  - the elapsed time from the beginning of the test;
+    //  - the artifical offset, affected by helpers such as 'advanceTime';
+    //  - the real TZ offset, as the 'dateParams' object holds UTC values.
+    let offset = getTimeStampDiff() + getTimeOffset() + realOffset;
+
+    // Add the offset to each part:
+    //  - starting from the 'milliseconds' part (index 6)
+    //  - stopping when there is no more offset to add
+    //  - for each part: add the offset and carry the overflow to the next
+    for (let i = 6; i >= 0 && offset > 0; i--) {
+        const maxValue = OFFSET_MAX_VALUES[$abs(i - 6)];
+        if (!maxValue) {
+            // Offset is beyoud the 'hours' part: no need to add it for each part
+            args[i] += offset;
+            break;
+        }
+        // Combine the current value to the offset
+        offset += args[i];
+        // Set the current value to the maximum available value
+        args[i] = offset % maxValue;
+        // Carry the remainder to the next part
+        offset = $floor(offset / maxValue);
+    }
+
+    return args;
+}
+
+/**
+ * Returns the timezone offset from a given date, in minutes.
+ *
  * @param {Date} baseDate
  */
 function computeTimeZoneOffset(baseDate) {
     const utcDate = new Date(baseDate.toLocaleString(DEFAULT_LOCALE, { timeZone: "UTC" }));
     const tzDate = new Date(baseDate.toLocaleString(DEFAULT_LOCALE, { timeZone: timeZoneName }));
-    return (utcDate - tzDate) / 60000; // in minutes
+    return (utcDate - tzDate) / 60_000;
 }
 
 /**
- * @param {number} id
+ * Returns the elapsed time from the beginning of a test (in milliseconds), or 0
+ * if time has been frozen (see {@link isTimeFrozen} for more info).
  */
-function getDateParams() {
-    return [...dateParams.slice(0, -1), dateParams.at(-1) + getTimeStampDiff() + getTimeOffset()];
-}
-
 function getTimeStampDiff() {
     return isTimeFrozen() ? 0 : $now() - dateTimeStamp;
 }
@@ -131,10 +195,26 @@ const DEFAULT_LOCALE = "en-US";
 const DEFAULT_TIMEZONE_NAME = "Europe/Brussels";
 const DEFAULT_TIMEZONE_OFFSET = -60;
 
+const OFFSET_MAX_VALUES = [
+    1000, // milliseconds
+    60, // seconds
+    60, // minutes
+    24, // hours
+];
+
 /** @type {((tz: string | number) => any)[]} */
 const timeZoneChangeCallbacks = [];
 
+/**
+ * Current UTC mocked date parameters; these are arranged in the same way as the
+ * arguments of the `Date` constructor: Y,M,D,h,m,s,ms
+ */
 let dateParams = DEFAULT_DATE;
+/**
+ * Start time registered at the beginning of a test.
+ * This is needed by {@link getTimeStampDiff} to get the current elapsed time (in
+ * milliseconds), or `0` if time has been frozen.
+ */
 let dateTimeStamp = $now();
 /** @type {string | null} */
 let locale = null;
@@ -229,22 +309,21 @@ export function onTimeZoneChange(callback) {
     timeZoneChangeCallbacks.push(callback);
 }
 
+/**
+ * Mocked version of the {@link Date} constructor, automatically adding any offset
+ * from elapsed time or added by test helpers.
+ *
+ * @see {@link computeOffsetParams} for more details about the offset processing.
+ */
 export class MockDate extends Date {
     constructor(...args) {
-        if (args.length === 1) {
-            super(args[0]);
-        } else {
-            const params = getDateParams();
-            for (let i = 0; i < params.length; i++) {
-                args[i] ??= params[i];
-            }
-            super($UTC(...args));
-        }
+        super(...computeOffsetParams(args));
     }
 
     getTimezoneOffset() {
-        const offset = timeZoneOffset ?? DEFAULT_TIMEZONE_OFFSET;
-        return typeof offset === "function" ? offset(this) : offset;
+        return typeof timeZoneOffset === "function"
+            ? timeZoneOffset(this)
+            : (timeZoneOffset ?? DEFAULT_TIMEZONE_OFFSET);
     }
 
     static now() {

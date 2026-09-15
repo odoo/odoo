@@ -100,6 +100,8 @@ class CalendarRecurrence(models.Model):
 
     def _write_from_microsoft(self, microsoft_event, vals):
         current_rrule = self.rrule
+        original_dtstart = self.dtstart
+        current_parsed_rrule = self._rrule_parse(current_rrule, original_dtstart)
         # event_tz is written on event in Microsoft but on recurrence in Odoo
         vals['event_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
@@ -123,7 +125,7 @@ class CalendarRecurrence(models.Model):
             base_event_id.with_context(dont_notify=True).write(dict(
                 new_event_values, microsoft_id=False, ms_universal_event_id=False, need_sync_m=False
             ))
-            if self.rrule == current_rrule:
+            if self._rrule_parse(self.rrule, original_dtstart) == current_parsed_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
                 self.with_context(dont_notify=True)._apply_recurrence()
@@ -141,7 +143,9 @@ class CalendarRecurrence(models.Model):
             )
         # We apply the rrule check after the time_field check because the microsoft ids are generated according
         # to base_event start datetime.
-        if self.rrule != current_rrule:
+        # compare only rrule, change in dtstart should be handled above
+        new_parsed_rrule = self._rrule_parse(self.rrule, original_dtstart)
+        if new_parsed_rrule != current_parsed_rrule:
             detached_events = self._apply_recurrence()
             detached_events.ms_universal_event_id = False
             detached_events.unlink()

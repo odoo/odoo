@@ -690,6 +690,22 @@ export class RelationalModel extends Model {
         return orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
 
+    _displayOnchangeWarning(warning) {
+        Promise.resolve(this.hooks.onWillDisplayOnchangeWarning(warning)).then(() => {
+            const { type, title, message, className, sticky } = warning;
+            if (type === "dialog") {
+                this.dialog.add(WarningDialog, { title, message });
+            } else {
+                this.notification.add(message, {
+                    className,
+                    sticky,
+                    title,
+                    type: "warning",
+                });
+            }
+        });
+    }
+
     /**
      * @param {RelationalModelConfig} config
      * @param {OnChangeParams} params
@@ -718,19 +734,7 @@ export class RelationalModel extends Model {
             throw e;
         }
         if (response.warning) {
-            Promise.resolve(this.hooks.onWillDisplayOnchangeWarning(response.warning)).then(() => {
-                const { type, title, message, className, sticky } = response.warning;
-                if (type === "dialog") {
-                    this.dialog.add(WarningDialog, { title, message });
-                } else {
-                    this.notification.add(message, {
-                        className,
-                        sticky,
-                        title,
-                        type: "warning",
-                    });
-                }
-            });
+            this._displayOnchangeWarning(response.warning);
         }
         return response.value;
     }
@@ -857,7 +861,7 @@ export class RelationalModel extends Model {
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
-            context: { read_group_expand: true, ...config.context },
+            context: { bin_size: true, read_group_expand: true, ...config.context },
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
         const result = await orm.webReadGroup(

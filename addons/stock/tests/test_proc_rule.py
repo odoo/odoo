@@ -920,6 +920,29 @@ class TestProcRule(TransactionCase):
         self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
+    def test_orderpoint_replenishment_view_internal_transfer(self):
+        """An internal transfer between replenishment locations creates a need at its source."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        replenish_loc = self.env['stock.location'].create({
+            'name': 'Replenish Location',
+            'location_id': warehouse.view_location_id.id,
+            'replenish_location': True,
+        })
+        self.product.is_storable = True
+        self.env['stock.move'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': replenish_loc.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 3,
+        })._action_confirm()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', self.product.id),
+        ])
+        self.assertRecordValues(replenishments, [
+            {'location_id': warehouse.lot_stock_id.id, 'qty_to_order': 3},
+        ])
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):

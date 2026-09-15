@@ -8,7 +8,11 @@ from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    peppol_message_uuid = fields.Char(string='PEPPOL message ID', copy=False)
+    peppol_message_uuid = fields.Char(
+        string='PEPPOL message ID',
+        index='btree_not_null',
+        copy=False,
+    )
     peppol_move_state = fields.Selection(
         selection=[
             ('ready', 'Ready to send'),
@@ -67,7 +71,13 @@ class AccountMove(models.Model):
     @api.depends('peppol_move_state')
     def _compute_peppol_is_sent(self):
         for move in self:
-            move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error'}
+            move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error', 'skipped'}
+
+    @api.depends('peppol_is_sent')
+    def _compute_show_reset_to_draft_button(self):
+        # EXTEND 'account' to hide the reset to draft button for sent Peppol invoices
+        super()._compute_show_reset_to_draft_button()
+        self.filtered(lambda move: move.peppol_is_sent and move.is_sale_document(include_receipts=True)).show_reset_to_draft_button = False
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,

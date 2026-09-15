@@ -275,14 +275,16 @@ class ProductProduct(models.Model):
         """
         if self.env.context.get('skip_qty_available_update', False):
             return
+        warehouse = None
         for product in self:
             if (
                 product.type == "consu" and product.is_storable and float_compare(product.qty_available,
                      0.0, precision_rounding=product.uom_id.rounding) >= 0
             ):
-                warehouse = self.env['stock.warehouse'].search(
-                    [('company_id', '=', self.env.company.id)], limit=1
-                )
+                if warehouse is None:
+                    warehouse = self.env['stock.warehouse'].search(
+                        [('company_id', '=', self.env.company.id)], limit=1
+                    )
                 self.env['stock.quant'].with_context(inventory_mode=True, from_inverse_qty=True).create({
                     'product_id': product.id,
                     'location_id': warehouse.lot_stock_id.id,
@@ -669,7 +671,7 @@ class ProductProduct(models.Model):
         )
 
         # If user have rights to write on quant, we define the view as editable.
-        if self.env.user.has_group('stock.group_stock_manager'):
+        if self.env.user.has_group('stock.group_stock_user'):
             self = self.with_context(inventory_mode=True)
             # Set default location id if multilocations is inactive
             if not self.env.user.has_group('stock.group_stock_multi_locations'):
@@ -913,7 +915,7 @@ class ProductTemplate(models.Model):
                 if template.serial_prefix_format in sequences_by_prefix:
                     template.lot_sequence_id = sequences_by_prefix[template.serial_prefix_format]
                 else:
-                    new_sequence = self.env['ir.sequence'].create({
+                    new_sequence = self.env['ir.sequence'].sudo().create({
                         'name': f'{template.name} Serial Sequence',
                         'code': 'stock.lot.serial',
                         'prefix': template.serial_prefix_format,

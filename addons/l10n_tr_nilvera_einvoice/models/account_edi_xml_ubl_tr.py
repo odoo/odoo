@@ -6,6 +6,9 @@ from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round, html2plaintext
 
+# InvoiceTypeCodes representing refunds in Nilvera documents.
+TR_REFUND_TYPE_CODES = {'IADE', 'TEVKIFATIADE'}
+
 
 class AccountEdiXmlUblTr(models.AbstractModel):
     _name = "account.edi.xml.ubl.tr"
@@ -100,11 +103,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
         sign = math.copysign(1.0, amount)
         amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
-        amount_decimal_part = int(amount_decimal_part * 100)
+        amount_decimal_part = round(amount_decimal_part * 100)
 
         text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
         text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
-        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
+        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.with_context(lang="tr_TR").currency_subunit_label}'.upper()
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         super()._add_invoice_delivery_nodes(document_node, vals)
@@ -321,6 +324,36 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         })
         return partner_vals
 
+    def _get_import_document_amount_sign(self, tree):
+        # EXTENDS account.edi.xml.ubl_20
+        move_type, qty_factor = super()._get_import_document_amount_sign(tree)
+
+        invoice_type_code = tree.findtext('.//{*}InvoiceTypeCode')
+        if invoice_type_code in TR_REFUND_TYPE_CODES:
+            return 'refund', qty_factor
+
+        return move_type, qty_factor
+
+    def _l10n_tr_match_refund_reversed_entry(self, invoice, tree):
+        if invoice.move_type not in {'in_refund', 'out_refund'}:
+            return
+
+        order_reference = tree.findtext('./{*}OrderReference/{*}ID')
+        if not order_reference:
+            return
+
+        invoice_type = 'in_invoice' if invoice.move_type == 'in_refund' else 'out_invoice'
+
+        # If more than one move has the same ref, avoid guessing and let the user link it manually.
+        original_moves = self.env['account.move'].search([
+            ('ref', '=', order_reference),
+            ('company_id', '=', invoice.company_id.id),
+            ('move_type', '=', invoice_type),
+        ], limit=2)
+
+        if len(original_moves) == 1:
+            invoice.reversed_entry_id = original_moves.id
+
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         # EXTENDS account.edi.xml.ubl_20
         logs = super()._import_fill_invoice(invoice, tree, qty_factor)
@@ -328,5 +361,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # ==== Nilvera UUID ====
         if uuid_node := tree.findtext('./{*}UUID'):
             invoice.l10n_tr_nilvera_uuid = uuid_node
+
+        self._l10n_tr_match_refund_reversed_entry(invoice, tree)
 
         return logs

@@ -373,6 +373,36 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo.with_company(self.other_company).button_mark_done()
         self.assertEqual(self.dining_table.total_value, PRICE + 10)
 
+    def test_kit_in_other_company_does_not_zero_valuation(self):
+        """
+        Check that a product's stock value and on-hand quantity in one company are
+        unaffected by a kit defined for the same product in another company.
+        """
+        company_1 = self.company
+        company_2 = self.other_company
+
+        super_product, component = self.env['product.product'].create([
+            {'name': 'Super product', 'is_storable': True, 'categ_id': self.category_standard.id},
+            {'name': 'Component', 'is_storable': True, 'categ_id': self.category_standard.id},
+        ])
+
+        super_product.with_company(company_1).standard_price = 50
+        self.env['stock.quant']._update_available_quantity(super_product, self.stock_location, 10)
+
+        self.env['mrp.bom'].with_company(company_2).create({
+            'product_id': super_product.id,
+            'product_tmpl_id': super_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'company_id': company_2.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        super_product.invalidate_recordset()
+
+        super_product = super_product.with_context(allowed_company_ids=(company_1 + company_2).ids)
+        self.assertEqual(super_product.total_value, 500)
+        self.assertEqual(super_product.qty_available, 10)
+
     def test_validate_branch_mo_with_main_company_component(self):
         """
         Check that an MRP user of a branch company can process an MO in a multi-company

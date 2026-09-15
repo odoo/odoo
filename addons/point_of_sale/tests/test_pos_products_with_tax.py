@@ -551,7 +551,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
         tax_pos = self.product1.taxes_id
         self.assertFalse(tax_pos.is_used)
         self.test_orders_no_invoiced()
-        tax_pos.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_pos.is_used)
 
     def test_pos_loaded_product_taxes_on_branch(self):

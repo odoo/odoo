@@ -172,13 +172,24 @@ class PurchaseBillLineMatch(models.Model):
         residual_account_move_lines = self.aml_id
 
         # Match all matchable POL-AML lines and remove them from the residual group
-        for product, po_line in pol_by_product.items():
-            po_line = po_line[0]  # in case of multiple POL with same product, only match the first one
+        po_lines_to_remove = self.env['purchase.order.line']
+        matching_bill_line_to_remove = self.env['account.move.line']
+        for product, po_lines in pol_by_product.items():
             matching_bill_lines = aml_by_product.get(product)
-            if matching_bill_lines:
-                matching_bill_lines.purchase_line_id = po_line.id
-                residual_purchase_order_lines -= po_line
-                residual_account_move_lines -= matching_bill_lines
+            if not matching_bill_lines:
+                continue
+            for po_line, matching_bill_line in zip(po_lines, matching_bill_lines):
+                matching_bill_line.purchase_line_id = po_line.id
+            lines_qty = min(len(po_lines), len(matching_bill_lines))
+            po_lines_to_remove |= po_lines[:lines_qty]
+            matching_bill_line_to_remove |= matching_bill_lines[:lines_qty]
+
+            if remaining_matching_bills := matching_bill_lines[lines_qty:]:
+                remaining_matching_bills.purchase_line_id = po_lines[-1].id
+                matching_bill_line_to_remove |= remaining_matching_bills
+
+        residual_purchase_order_lines -= po_lines_to_remove
+        residual_account_move_lines -= matching_bill_line_to_remove
 
         if len(residual_bill := self.aml_id.move_id) == 1:
             # Delete all unmatched selected AML

@@ -824,7 +824,8 @@ class SaleOrder(models.Model):
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
-        self.pickup_location_data = {}  # Reset the pickup location data.
+        if not self.env.context.get("keep_pickup_location"):
+            self.pickup_location_data = {}  # Reset the pickup location data.
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """ Get the preferred delivery method based on available delivery methods for the order.
@@ -904,12 +905,34 @@ class SaleOrder(models.Model):
             self.shop_warning = ''
         return warn
 
+    def _get_zero_priced_lines(self):
+        """ Return the cart lines priced at 0 while the website forbids the sale
+        of zero-priced products.
+
+        :rtype: sale.order.line
+        """
+        self.ensure_one()
+        if not self.website_id.prevent_zero_price_sale:
+            return self.env['sale.order.line']
+        allowed_types = set(self.env['product.template']._get_product_types_allow_zero_price())
+        return self.order_line.filtered(
+            lambda line:
+                line.product_id
+                and not line.display_type
+                and not line.is_delivery
+                # Combo products are priced through their combo item lines.
+                and line.product_template_id.type != 'combo'
+                and not line.combo_item_id
+                and line.price_unit == 0
+                and line.product_id.service_tracking not in allowed_types
+        )
+
     def _is_cart_ready(self):
         """ Whether the cart is valid and can be confirmed (and paid for)
 
         :rtype: bool
         """
-        return bool(self)
+        return bool(self.order_line) and not self._get_zero_priced_lines()
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Whether the cart is valid and the user can proceed to the payment
@@ -933,6 +956,8 @@ class SaleOrder(models.Model):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()
         self._recompute_prices()
+        if self.carrier_id:
+            self.with_context(keep_pickup_location=True)._set_delivery_method(self.carrier_id)
 
     def _allow_express_checkout(self):
         return True

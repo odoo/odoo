@@ -828,11 +828,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         tax_21 = self.percent_tax(21.0, type_tax_use='sale')
 
         # Set up the self-billing reception journal
-        sale_journal = self.env['account.journal'].search([
-            ('company_id', '=', self.env.company.id),
-            ('type', '=', 'sale'),
-        ], limit=1)
-        self.env.company.peppol_self_billing_reception_journal_id = sale_journal
+        self_billing_sale_journal = self.env['account.journal'].create({
+            'name': "Self-Billing sales journal",
+            'type': 'sale',
+            'is_self_billing': True,
+        })
         cls = self.__class__
         cls.mocked_incoming_invoice_fname = 'incoming_self_billed_invoice'
 
@@ -849,7 +849,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues(move, [{
             'peppol_move_state': 'done',
             'move_type': 'out_invoice',
-            'journal_id': self.env.company.peppol_self_billing_reception_journal_id.id,
+            'journal_id': self_billing_sale_journal.id,
         }])
 
         self.assertRecordValues(move.line_ids, [

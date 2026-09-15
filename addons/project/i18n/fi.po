@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-17 11:26+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-09-10 13:45+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/project/"
 "fi/>\n"
@@ -52,12 +52,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Kaikki sisäiset käyttäjät ja kutsutut portaalikäyttäjät"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -111,7 +106,7 @@ msgstr "%(name)s:n Burndown-kaavio"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Milestones"
-msgstr "%(name)s:n virstanpylväät"
+msgstr "%(name)s:n välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -315,16 +310,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hei <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/"
-"><br/>\n"
+"                Hei <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/>"
+"<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hei,<br/><br/>\n"
@@ -332,9 +327,8 @@ msgstr ""
 "            Käytä hetki arvioidaksesi palveluamme: <strong t-"
 "out=\"object.name or ''\">Suunnittelu ja budjetti</strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                jonka suoritti <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                jonka suoritti <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -345,8 +339,8 @@ msgstr ""
 "width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
 "table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Kerro, mitä mieltä olet palvelustamme</"
-"strong><br/>\n"
+"                    <strong>Kerro, mitä mieltä olet palvelustamme</strong>"
+"<br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(klikkaa yhtä näistä hymiöistä)</span>\n"
 "                </td></tr>\n"
@@ -399,17 +393,17 @@ msgstr ""
 "        </td></tr>\n"
 "        <tr><td><br/>Parhain terveisin,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or "
-"''\">YrityksesiNimi</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">"
+"YrityksesiNimi</t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yrityksesinimi.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yrityksesinimi.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
@@ -452,8 +446,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -499,8 +493,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -634,8 +628,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o pe-"
+"2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -675,7 +669,7 @@ msgstr "<strong>Määräaika:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr "<strong>Virstanpylväs:</strong>"
+msgstr "<strong>Välitavoite:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -690,7 +684,7 @@ msgstr "<strong>Projekti:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr "<u>Virstanpylväät</u>"
+msgstr "<u>Välitavoitteet</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -843,8 +837,8 @@ msgid ""
 msgstr ""
 "Toimintasuunnitelmien avulla voi määrittää luettelon toimenpiteistä vain "
 "muutamalla klikkauksella\n"
-"                    (esim. \"Edistymisraportti\", "
-"\"Pystytystapaaminen\", ...)"
+"                    (esim. \"Edistymisraportti\", \"Pystytystapaaminen\", "
+"...)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -877,8 +871,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Lisää sarakkeita, joilla voit järjestää tehtävät <b>vaiheisiin</b>, esim. "
-"<i>Uusi - Keskeneräinen - Valmis</i>."
+"Lisää sarakkeita, joilla voit järjestää tehtävät <b>vaiheisiin</b>, esim. <i>"
+"Uusi - Keskeneräinen - Valmis</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -923,6 +917,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Järjestelmänvalvoja: Voi hallinnoida projekteja ja vaiheita sekä käyttää "
+"raportointi- ja asetustoimintoja."
 
 #. module: project
 #. odoo-javascript
@@ -938,7 +934,7 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr "Aliaksen kontaktien tietoturva"
+msgstr "Alias-yhteystiedon suojaus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
@@ -995,6 +991,11 @@ msgid "All internal users"
 msgstr "Kaikki sisäiset käyttäjät"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr "Kaikki sisäiset käyttäjät ja kutsutut portaalikäyttäjät"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
@@ -1010,7 +1011,7 @@ msgstr "Varattu aika:"
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__auto_account_id
 msgid "Analytic Account"
-msgstr "Kustannuspaikka"
+msgstr "Laskentakohde"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -1274,7 +1275,7 @@ msgstr "Keskimääräinen arvostelu: Surullinen"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Backlog"
-msgstr "Kehitysjono"
+msgstr "Rästissä"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
@@ -1700,8 +1701,7 @@ msgstr "Luo tehtäviä lähettämällä sähköpostia osoitteeseen"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr ""
-"Luo tehtäviä lähettämällä sähköpostia projektin sähköpostiosoitteeseen."
+msgstr "Luo tehtäviä lähettämällä sähköpostia projektin sähköpostiosoitteeseen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1875,9 +1875,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
-"Päivämäärä, jolloin tämä tehtävä on viimeksi annettu (tai jätetty "
-"antamatta). Tämän perusteella voit saada tilastoja siitä, kuinka kauan "
-"tehtävien jakaminen yleensä kestää."
+"Päivämäärä, jolloin tämä tehtävä on viimeksi annettu (tai jätetty antamatta)"
+". Tämän perusteella voit saada tilastoja siitä, kuinka kauan tehtävien "
+"jakaminen yleensä kestää."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -2782,8 +2782,7 @@ msgstr "Tapauksen versio"
 #: model:ir.model.fields,help:project.field_project_project__duration_tracking
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
-"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+msgstr "JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2897,7 +2896,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr "Myöhässä olevat virstanpylväät"
+msgstr "Myöhässä olevat välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -3083,7 +3082,7 @@ msgstr "Viesti"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_ids
@@ -3102,7 +3101,7 @@ msgstr "Viestit"
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Milestone"
-msgstr "Virstanpylväs"
+msgstr "Välitavoite"
 
 #. module: project
 #. odoo-javascript
@@ -3304,7 +3303,7 @@ msgstr "Ei asiakasta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr "Ei virstanpylvästä"
+msgstr "Ei välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3779,7 +3778,7 @@ msgstr "Projektipäällikkö"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Projektin virstanpylväs"
+msgstr "Projektin välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
@@ -4097,7 +4096,7 @@ msgstr "Arvostelu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Luokitus (/5)"
+msgstr "Arvosana (/5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_graph
@@ -4108,7 +4107,7 @@ msgstr "Luokitus (1-5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Kekismääräisen luokituksen teksti"
+msgstr "Arvostelun keskimääräinen teksti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4144,7 +4143,7 @@ msgstr "Arvion tyytyväisyys"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr "Luokitusteksti"
+msgstr "Arvioinnin teksti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -4159,7 +4158,7 @@ msgstr "Arvioiden määrä"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model:ir.model.fields,field_description:project.field_project_update__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
@@ -4273,7 +4272,7 @@ msgstr "Poista yhteistyökumppani"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "Rename"
-msgstr "Uudelleennimeä"
+msgstr "Nimeä uudelleen"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_renovations
@@ -4635,10 +4634,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"Jotkin valituista laskentakohteista liittyvät projektiin:\n"
 "%(accountList)s\n"
 "\n"
-"Näiden tilien arkistointi poistaa mahdollisuuden lisätä työaikakirjauksia "
+"Näiden tilien arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia "
 "vastaaviin projekteihin.\n"
 "\n"
 "Haluatko varmasti jatkaa?"
@@ -4658,10 +4657,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Lajittele tehtävät sprinteittäin käyttämällä virstanpylväitä, tunnisteita "
-"tai omaa ominaisuutta. Kunkin sprintin lopussa voit vain poimia luettelosta "
+"Järjestä tehtäväsi sprinteittäin käyttämällä välitavoitteita, tunnisteita "
+"tai tiettyä ominaisuutta. Kunkin sprintin lopuksi voit poimia luettelosta "
 "jäljellä olevat tehtävät ja siirtää ne kaikki kerralla seuraavaan sprinttiin "
-"muokkaamalla virstanpylvästä, tagia tai ominaisuutta."
+"muokkaamalla välitavoitetta, tunnistetta tai ominaisuutta."
 
 #. module: project
 #. odoo-javascript
@@ -4952,7 +4951,7 @@ msgstr "Tehtävän vaiheet"
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 #: model_terms:ir.ui.view,arch_db:project.view_task_template_search_form
 msgid "Task Templates"
-msgstr "Tehtävämallipohjat"
+msgstr "Tehtäväpohjat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -5153,12 +5152,12 @@ msgstr "Loppupäivämäärän on oltava tulevaisuudessa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr "Seuraava virstanpylväs on lisätty:"
+msgstr "Seuraava välitavoite on lisätty:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr "Seuraavat virstanpylväät on lisätty:"
+msgstr "Seuraavat välitavoitteet on lisätty:"
 
 #. module: project
 #. odoo-python
@@ -5201,8 +5200,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
 msgstr ""
-"Projektin yritystä ei voi muuttaa, jos sen kustannuspaikalla on analyyttisiä "
-"rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
+"Projektin yritystä ei voi muuttaa, jos sen laskentakohteessa on "
+"laskentakohderivejä tai jos siihen on liitetty useampi kuin yksi projekti."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5226,8 +5225,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The task and the associated partner must be linked to the same company."
-msgstr ""
-"Tehtävän ja siihen liittyvän kumppanin on liityttävä samaan yritykseen."
+msgstr "Tehtävän ja siihen liittyvän kumppanin on liityttävä samaan yritykseen."
 
 #. module: project
 #. odoo-javascript
@@ -5309,13 +5307,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tämä kustannuspaikka liittyy seuraaviin hankkeisiin:\n"
+"Tämä laskentakohde liittyy seuraaviin projekteihin:\n"
 "%(projectList)s\n"
 "\n"
-"Tilin arkistoinnin jälkeen näiden projektien työaikakirjauksia ei enää voida "
-"kirjata.\n"
+"Tilin arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia näihin "
+"projekteihin.\n"
 "\n"
-"Oletko varma, että haluat jatkaa?"
+"Haluatko varmasti jatkaa?"
 
 #. module: project
 #. odoo-javascript
@@ -5584,8 +5582,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä kustannuspaikka asiaankuuluviin asiakirjoihin."
+"Seuraa projektin kustannuksia, tuloja ja katetta määrittämällä projektiin "
+"liittyvä laskentakohde asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5664,7 +5662,7 @@ msgstr "Surunaama"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Unknown Analytic Account"
-msgstr "Kustannuspaikka ei ole tiedossa"
+msgstr "Tuntematon laskentakohde"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5803,6 +5801,8 @@ msgstr "Käyttäjäasetukset"
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
+"Käyttäjä: Voi hallinnoida tehtäviä projekteissa, jotka on jaettu hänen "
+"kanssaan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5871,12 +5871,12 @@ msgstr "Verkkosivuston uudistaminen"
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__weekly
 msgid "Weekly"
-msgstr "Viikottainen"
+msgstr "Viikoittain"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
@@ -5966,7 +5966,7 @@ msgstr "Kirjoittaminen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__yearly
 msgid "Yearly"
-msgstr "Vuosittainen"
+msgstr "Vuosittain"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
@@ -6111,7 +6111,7 @@ msgstr "alias"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "analytic"
-msgstr "analyyttinen"
+msgstr "laskennallinen"
 
 #. module: project
 #. odoo-javascript
@@ -6346,6 +6346,9 @@ msgstr "👤 Ei määritetty"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Yksityinen"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Kaikki sisäiset käyttäjät ja kutsutut portaalikäyttäjät"
 
 #~ msgid "Administrator can manage the employees' schedule"
 #~ msgstr "Ylläpitäjä voi hallinnoida työntekijöiden työaikoja"

@@ -533,4 +533,41 @@ describe("pos.order - loyalty", () => {
         expect(line.price_unit).toBe(-50);
         expect(line.tax_ids).toHaveLength(0);
     });
+
+    test("_getRewardLineValuesDiscount - gift card reward keeps full amount when tax is forced exclusive", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const tax18Excl = models["account.tax"].create({
+            name: "18% (forced excl.)",
+            amount_type: "percent",
+            amount: 18,
+            price_include: false,
+            price_include_override: "tax_excluded",
+        });
+
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 10 });
+
+        const reward = models["loyalty.reward"].get(5);
+        expect(reward.program_id.program_type).toBe("gift_card");
+        const giftCard = models["loyalty.card"].get(3);
+
+        const discountProduct = models["product.product"].get(200);
+        discountProduct.taxes_id = [tax18Excl];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: giftCard.id });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-10);
+        expect(line.tax_ids).toHaveLength(1);
+
+        const applied = order._applyReward(reward, giftCard.id);
+        expect(applied).toBe(true);
+
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.prices.total_included).toBe(-10);
+    });
 });

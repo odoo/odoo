@@ -4,13 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-07-01 16:50+0000\n"
-"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 03:40+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/sl/>\n"
 "Language: sl\n"
@@ -24,6 +26,7 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
@@ -34,21 +37,31 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Mejniki niso bili najdeni. Ustvarimo enega!\n"
+"                </p><p>\n"
+"                    Spremljajte ključne točke napredka, ki jih je treba "
+"doseči za uspeh.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
+#, fuzzy
 msgid "%(name)s's %(action_name)s"
-msgstr ""
+msgstr "%(action_name)s za %(name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
+#, fuzzy
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "Postavke prodajnega naročila %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+#, fuzzy
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
 "order associated with this project has been cancelled. We recommend either "
@@ -56,9 +69,14 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Prodajno "
+"naročilo, povezano s tem projektom, je bilo preklicano. Priporočamo, da "
+"posodobite postavko prodajnega naročila ali prekličete ta projekt v skladu s "
+"preklicem prodajnega naročila.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, fuzzy
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
 "order associated with this task has been cancelled. We recommend either "
@@ -66,6 +84,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Prodajno "
+"naročilo, povezano s tem opravilom, je bilo preklicano. Priporočamo, da "
+"posodobite postavko prodajnega naročila ali prekličete to opravilo v skladu "
+"s preklicem prodajnega naročila.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -99,18 +122,21 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+#, fuzzy
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Projekti</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+#, fuzzy
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Naloge</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Predogled</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -121,6 +147,7 @@ msgstr "<span class=\"o_stat_text\">Prodajni nalog</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
+#, fuzzy
 msgid ""
 "<span name=\"rating_status_helper\">\n"
 "                    <span invisible=\"rating_status == 'periodic'\">A rating "
@@ -131,6 +158,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">Zahteva "
+"za oceno bo poslana takoj, ko opravilo doseže to stopnjo, če je projekt "
+"plačljiv.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">Zahteve za "
+"oceno bodo poslane, dokler opravilo ostane na tej stopnji, če je projekt "
+"plačljiv.</span>\n"
+"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -140,23 +175,34 @@ msgstr "<span>)</span>"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"Projekt mora biti določen na ponudbi %(order)s ali na obrazcu izdelkov, ki "
+"na naročilu ustvarjajo opravilo.\n"
+"Naslednji izdelek potrebuje projekt, v katerega se doda njegovo opravilo: %"
+"(product_name)s\n"
+"Lokacija: code:addons/sale_project/models/sale_order_line.py:0"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
+#, fuzzy
 msgid ""
 "A task will be created for the project upon sales order confirmation. The "
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"Ob potrditvi prodajnega naročila bo za projekt ustvarjeno opravilo. "
+"Analitična razporeditev tega projekta bo služila tudi kot sklic za na novo "
+"ustvarjene postavke prodajnega naročila."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
+#, fuzzy
 msgid ""
 "According to product configuration, the delivered quantity can be "
 "automatically computed by mechanism:\n"
@@ -167,12 +213,21 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Glede na konfiguracijo izdelka se lahko količina dostave samodejno izračuna "
+"s pomočjo mehanizma:\n"
+"  - Ročno: količina je ročno določena na vrstici\n"
+"  - Analitično iz stroškov: količina predstavlja vsoto količin iz že "
+"knjiženih stroškov\n"
+"  - Urnik: količina je vsota ur, zabeleženih na nalogah, povezanih z to "
+"prodajno vrstico\n"
+"  - Premiki zalog: količina izhaja iz potrjenih pobiranj"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Na podlagi dobavljene količine (ročno)"
 
 #. module: sale_project
 #. odoo-python
@@ -195,16 +250,20 @@ msgstr "Preklicano"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+#, fuzzy
 msgid "Confirm & Close"
-msgstr ""
+msgstr "Potrdi in zapri"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
+#, fuzzy
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"Pretvorba te predloge v običajen projekt bo prekinila njeno povezavo s "
+"povezanimi izdelki."
 
 #. module: sale_project
 #. odoo-python
@@ -215,30 +274,35 @@ msgstr "Strošek prodanega blaga"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
+#, fuzzy
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Postavke stroška prodanega blaga"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
+#, fuzzy
 msgid "Create Project"
-msgstr ""
+msgstr "Ustvari projekt"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
+#, fuzzy
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Ustvari prodajno naročilo"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid "Create a Project"
-msgstr ""
+msgstr "Ustvari projekt"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
+#, fuzzy
 msgid "Create a Task"
-msgstr ""
+msgstr "Ustvari nalogo"
 
 #. module: sale_project
 #. odoo-python
@@ -249,16 +313,21 @@ msgstr "Ustvari izdani račun"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"Ustvari projekt za naročilo z nalogo za vsako vrstico prodajnega naročila za "
+"spremljanje porabljenega časa."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"Ustvari opravilo v obstoječem projektu za spremljanje porabljenega časa."
 
 #. module: sale_project
 #. odoo-python
@@ -269,8 +338,9 @@ msgstr "Ustvari prejeti račun"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "Ustvarite prazen projekt za naročilo za spremljanje porabljenega časa."
 
 #. module: sale_project
 #. odoo-python
@@ -284,10 +354,13 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
+#, fuzzy
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"Ustvarite račune, registrirajte plačila in spremljajte pogovore s svojimi "
+"dobavitelji."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -298,10 +371,13 @@ msgstr "Ustvari na podlagi naročila"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"Ustvarite projekte ali opravila pozneje in jih povežite z naročilom za "
+"spremljanje porabljenega časa."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -318,8 +394,9 @@ msgstr "Izdani računi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+#, fuzzy
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Določeno na ponudbi"
 
 #. module: sale_project
 #. odoo-javascript
@@ -330,13 +407,15 @@ msgstr "Dostavljeno"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
+#, fuzzy
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Kampanja digitalnega trženja (projekt)"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Opusti"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -355,8 +434,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -377,13 +457,15 @@ msgstr "Predplačila"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+#, fuzzy
 msgid "Empty project"
-msgstr ""
+msgstr "Prazen projekt"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
+#, fuzzy
 msgid "Flooring Services"
-msgstr ""
+msgstr "Storitve polaganja talnih oblog"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__id
@@ -402,8 +484,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_project
 #. odoo-python
@@ -414,8 +497,9 @@ msgstr "V teku"
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#, fuzzy
 msgid "Internal link"
-msgstr ""
+msgstr "Notranja povezava"
 
 #. module: sale_project
 #. odoo-python
@@ -505,13 +589,15 @@ msgstr "Mejniki"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
+#, fuzzy
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Nova postavka prodajnega naročila"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
+#, fuzzy
 msgid "New project"
-msgstr ""
+msgstr "Nov projekt"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -527,8 +613,9 @@ msgstr "Ni zaračunano"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
+#, fuzzy
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "Komplet pisarniškega pohištva (opravilo)"
 
 #. module: sale_project
 #. odoo-python
@@ -538,13 +625,15 @@ msgstr "Druge storitve"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
+#, fuzzy
 msgid "Painting"
-msgstr ""
+msgstr "Slikanje"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -556,20 +645,23 @@ msgstr ""
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
+#, fuzzy
 msgid "Plumbing Services"
-msgstr ""
+msgstr "Vodovodne storitve"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
+#, fuzzy
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Prodajno naročilo portala"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Predplačilo/Fiksna cena"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -583,11 +675,15 @@ msgstr "Različica proizvoda"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
+#, fuzzy
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"Izdelki, dodani v skladiščne premike, katerih vrsta operacije je nastavljena "
+"tako, da ustvarja analitične stroške, bodo v tem prodajnem naročilu ponovno "
+"fakturirani, če so za to nastavljeni."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -601,8 +697,9 @@ msgstr "Projekt"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+#, fuzzy
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt in naloga"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
@@ -628,18 +725,21 @@ msgstr "Predloga projekta"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
+#, fuzzy
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "Čarovnik za ustvarjanje predloge projekta"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
+#, fuzzy
 msgid "Project Update"
-msgstr ""
+msgstr "Posodobitev projekta"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
+#, fuzzy
 msgid "Project's sale order"
-msgstr ""
+msgstr "Prodajno naročilo projekta"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -649,18 +749,21 @@ msgstr "Količina"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
+#, fuzzy
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Količina (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
+#, fuzzy
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Postavka predloge ponudbe"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
+#, fuzzy
 msgid "Role To Users"
-msgstr ""
+msgstr "Vloge uporabnikom"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -703,6 +806,7 @@ msgstr "Postavka prodajnega naloga, ki bo posodobljena, ko je mejnik dosežen."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
+#, fuzzy
 msgid ""
 "Sales Order Item to which the time spent on this task will be added in order "
 "to be invoiced to your customer.\n"
@@ -713,6 +817,14 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"Postavka prodajnega naloga, ki ji bo dodan čas, porabljen za to opravilo, da "
+"bo zaračunan vaši stranki.\n"
+"Privzeto bo izbrana postavka prodajnega naloga, nastavljena na projektu. Če "
+"je ni, bo uporabljena zadnja predplačana postavka prodajnega naloga, ki ima "
+"še preostali čas.\n"
+"Odstranite postavko prodajnega naloga, da opravilo ne bo obračunljivo. "
+"Postavko prodajnega naloga vsakega vnosa v časovnico lahko tudi spremenite "
+"ali odstranite."
 
 #. module: sale_project
 #. odoo-javascript
@@ -720,8 +832,9 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+#, fuzzy
 msgid "Sales Order Items"
-msgstr ""
+msgstr "Postavke prodajnega naročila"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -753,31 +866,36 @@ msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
+#, fuzzy
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Prodajno naročilo, s katerim je povezana naloga."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
+#, fuzzy
 msgid "Screw Driver"
-msgstr ""
+msgstr "Izvijač"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#, fuzzy
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Iskanje po računu"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#, fuzzy
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Iskanje v postavki prodajnega naročila"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
+#, fuzzy
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Izberite, komu zaračunati..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -806,8 +924,9 @@ msgstr "Opravilo"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
+#, fuzzy
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "Naloga ustvarjena (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -816,14 +935,16 @@ msgstr "Ponavljanje naloge"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
+#, fuzzy
 msgid "Task Stage"
-msgstr ""
+msgstr "Stopnja opravila"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
+#, fuzzy
 msgid "Task Template"
-msgstr ""
+msgstr "Predloga opravila"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -838,46 +959,58 @@ msgstr "Analiza opravil"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "Prodajni nalog mora vsebovati vsaj en storitveni izdelek."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr ""
+msgstr "Izdelek %s ne sme imeti globalnega projekta, saj bo ustvaril projekt."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Izdelek %s ne sme imeti projekta niti projektne predloge, saj ne bo ustvaril "
+"projekta."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Izdelek %s ne sme imeti projektne predloge, saj bo ustvaril opravilo v "
+"globalnem projektu."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"Projekta ni bilo mogoče ustvariti, saj mora biti prodajno naročilo potrjeno "
+"ali pa je že povezano s projektom."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
+#, fuzzy
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "Ta naloga je bila ustvarjena iz: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -898,6 +1031,7 @@ msgstr "Sledenje"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__display_name
+#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -911,6 +1045,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Uporabite te ključne besede v naslovu za nastavljanje novih opravil:\n"
+"\n"
+"        30h Dodeli 30 ur opravilu\n"
+"        #tags Nastavi oznake opravila\n"
+"        @user Dodeli opravilo uporabniku\n"
+"        ! Nastavi opravilo na srednjo prioriteto\n"
+"        !! Nastavi opravilo na visoko prioriteto\n"
+"        !!! Nastavi opravilo na nujno prioriteto\n"
+"\n"
+"        Prepričajte se, da uporabite pravi zapis in vrstni red, npr. "
+"Izboljšaj konfiguracijski zaslon 5h #feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python
@@ -927,39 +1072,47 @@ msgstr "Prikaži naročilo"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
+#, fuzzy
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Storitev prenove spletnega mesta (projekt in opravilo)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
+#, fuzzy
 msgid "Wiring Services"
-msgstr ""
+msgstr "Storitve ožičenja"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
+#, fuzzy
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Postavke naročila %(order_id)s - %(product_id)s ne morete povezati s to "
+"nalogo, ker gre za prefakturiran strošek."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[Projekt] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
+#, fuzzy
 msgid "delivered_manual"
-msgstr ""
+msgstr "ročno dostavljeno"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
+#, fuzzy
 msgid "sale_line_id"
-msgstr ""
+msgstr "sale_line_id"
 
 #~ msgid "Config Settings"
 #~ msgstr "Uredi nastavitve"

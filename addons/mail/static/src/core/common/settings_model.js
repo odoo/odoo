@@ -431,6 +431,15 @@ export class Settings extends Record {
         if (ev.key === USE_BLUR_LS) {
             this._recomputeUseBlur++;
         }
+        if (ev.key === "mail_user_setting_audio_input_device_id") {
+            this.audioInputDeviceId = ev.newValue;
+        }
+        if (ev.key === "mail_user_setting_audio_output_device_id") {
+            this.audioOutputDeviceId = ev.newValue;
+        }
+        if (ev.key === "mail_user_setting_camera_input_device_id") {
+            this.cameraInputDeviceId = ev.newValue;
+        }
     }
     /**
      * @private

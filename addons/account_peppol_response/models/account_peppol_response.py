@@ -5,7 +5,10 @@ class AccountPeppolResponse(models.Model):
     _name = 'account.peppol.response'
     _description = 'Business Level Responses for Peppol'
 
-    peppol_message_uuid = fields.Char('Peppol UUID')
+    peppol_message_uuid = fields.Char(
+        string='Peppol UUID',
+        index='btree_not_null',
+    )
     response_code = fields.Selection(
         selection=[
             ('AB', 'Acknowledgement'),

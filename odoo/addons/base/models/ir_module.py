@@ -779,6 +779,7 @@ class IrModuleModule(models.Model):
             'noupdate': True,
         } for module in modules]
         self.env['ir.model.data'].create(module_metadata_list)
+        self.env.registry.clear_cache('stable')
         return modules
 
     # update the list of available packages
