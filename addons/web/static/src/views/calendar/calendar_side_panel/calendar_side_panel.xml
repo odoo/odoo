@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CalendarSidePanel">
-        <div t-if="this.props.sidePanelExpanded" class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
-            <div t-if="this.props.model.meta.canScheduleEvents and this.state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
-                <b>Drop here to unschedule</b>
+        <t t-if="this.props.sidePanelExpanded">
+            <div class="o_calendar_sidepanel_resize h-100 px-2 opacity-0 opacity-100-hover d-print-none" t-on-click.stop.prevent="" t-ref="this.handleRef">
+                <span class="border-start border-2 border-primary h-100 d-block"/>
             </div>
-            <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
-                <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
-                <div class="o_calendar_sidepanel_content px-3">
-                    <t t-foreach="this.props.model.filterSections" t-as="section" t-key="section.fieldName">
-                        <FilterSection model="this.props.model" section="section"/>
+            <div class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto"
+                t-ref="this.rootRef">
+                <div t-if="this.props.model.meta.canScheduleEvents and this.state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
+                    <b>Drop here to unschedule</b>
+                </div>
+                <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
+                    <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
+                    <div class="o_calendar_sidepanel_content px-3">
+                        <t t-foreach="this.props.model.filterSections" t-as="section" t-key="section.fieldName">
+                            <FilterSection model="this.props.model" section="section"/>
+                        </t>
+                        <ScheduleSection
+                            t-if="this.props.model.meta.canScheduleEvents"
+                            model="this.props.model"
+                            editRecord="this.props.editRecord"
+                        />
+                    </div>
+                </div>
+            </div>
+        </t>
+        <div t-elif="!this.uiService.isSmall" class="h-100 o_calendar_sidebar cursor-pointer d-print-none" t-on-click="() => this.props.toggleSidePanel()">
+            <div class="d-flex">
+                <button class="btn btn-light btn-sm d-flex mb-2 p-2" title="Open Side Panel" aria-label="Open Side Panel">
+                    <i class="oi oi-flip-horizontal" data-icon="left_panel_open"/>
+                </button>
+                <div class="o_calendar_sidebar_current_selection d-flex align-items-center gap-1 mx-auto">
+                    <i t-if="this.filters.length" class="oi mb-2" data-icon="filter_alt"/>
+                    <t t-foreach="this.filters" t-as="filter" t-key="filter_index">
+                        <div class="d-flex align-items-center gap-1 badge bg-300 mb-2" t-att-class="{ 'text-muted': !filter.active }">
+                            <span class="text-truncate" t-out="filter.label"/>
+                        </div>
                     </t>
-                    <ScheduleSection
-                        t-if="this.props.model.meta.canScheduleEvents"
-                        model="this.props.model"
-                        editRecord="this.props.editRecord"
-                    />
+                    <span t-if="this.filters.length and this.props.model.meta.canScheduleEvents" class="mb-2">-</span>
+                    <div t-if="this.props.model.meta.canScheduleEvents" class="badge bg-info-light text-truncate mb-2" t-out="this.toScheduleString"/>
                 </div>
             </div>
         </div>

@@ -1,7 +1,9 @@
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Component, proxy, signal, useProps } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
+import { useResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
 
@@ -12,7 +14,17 @@ export class CalendarSidePanel extends Component {
         ScheduleSection: CalendarScheduleSection,
     };
     static template = "web.CalendarSidePanel";
-    props = useProps(["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"]);
+    props = useProps([
+        "model",
+        "editRecord",
+        "sidePanelExpanded",
+        "toggleSidePanel",
+        "width",
+        "onResize",
+    ]);
+
+    rootRef = signal.ref();
+    handleRef = signal.ref();
 
     setup() {
         this.state = proxy({ isDragging: false });
@@ -20,6 +32,20 @@ export class CalendarSidePanel extends Component {
             this.state.isDragging = detail.dragging;
         });
         this.uiService = useService("ui");
+        this.debouncedOnResize = useDebounced((width) => this.props.onResize(width), 100);
+
+        const { getCssWidth } = useResizablePanel({
+            containerRef: this.rootRef,
+            handleRef: this.handleRef,
+            initialWidth: this.props.width || undefined,
+            resizeOnMount: this.props.width != null,
+            getMaxWidth: () => 0.5 * window.innerWidth,
+            getFoldWidth: () => getCssWidth() / 2,
+            getHandlerSpacing: () => 0,
+            getResizeSide: () => "start",
+            onFold: () => this.props.toggleSidePanel(),
+            onResize: (width) => this.debouncedOnResize(width),
+        });
     }
 
     get datePickerProps() {

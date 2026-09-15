@@ -49,9 +49,10 @@ $o-cw-filter-avatar-size: 20px;
     --Avatar-size: #{$o-cw-filter-avatar-size};
 
     flex: 0 0 auto;
+    width: var(--CalendarSidePanel-width, #{$o-datetime-picker-reduced-width});
 
     .o_calendar_unschedule_zone {
-        width: $o-datetime-picker-reduced-width;
+        width: 100%;
         height: stretch;
         min-height: 200px; // Fallback for firefox < 146
         border: 1px solid rgba($o-enterprise-action-color, 0.4);
@@ -59,7 +60,7 @@ $o-cw-filter-avatar-size: 20px;
     }
 
     .o_calendar_sidepanel {
-        width: $o-datetime-picker-reduced-width;
+        width: 100%;
 
         // Inlined in the panel: it spans the full width, the panel handles the
         // horizontal spacing.
@@ -98,6 +99,15 @@ $o-cw-filter-avatar-size: 20px;
 .o_calendar_sidebar {
     writing-mode: vertical-rl;
     text-orientation: mixed;
+
+    & .btn {
+        writing-mode: initial;
+        text-orientation: initial;
+    }
+}
+
+.o_calendar_sidepanel_resize {
+    cursor: col-resize;
 }
 
 //  Print

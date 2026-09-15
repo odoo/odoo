@@ -56,12 +56,6 @@
     <div class="o_search_panel o_search_panel_wrap flex-grow-0 flex-shrink-0 pb-5 ps-3 overflow-auto position-relative"
          t-att-class="this.env.searchModel.searchPanelInfo.className"
          t-ref="this.root">
-        <div t-if="!this.uiService.isSmall" class="d-flex align-items-center">
-
-            <button class="btn btn-light btn-sm ms-auto p-2 lh-1" t-on-click="this.toggleSidebar">
-                <i class="oi" data-icon="left_panel_close"/>
-            </button>
-        </div>
         <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn mt-2 w-100 overflow-visible">
                 <div class="d-flex align-items-center me-2 ms-auto">All</div>
@@ -81,7 +75,7 @@
             <t t-call="web.SearchPanel.Section"/>
         </section>
     </div>
-    <div class="o_search_panel_resize h-100 px-2 opacity-0 opacity-100-hover" t-on-click.stop.prevent="" t-on-pointerdown.stop.prevent="this._onStartResize">
+    <div class="o_search_panel_resize h-100 px-2 opacity-0 opacity-100-hover" t-on-click.stop.prevent="" t-ref="this.handleRef">
         <span class="border-start border-2 border-primary h-100 d-block"/>
     </div>
 </t>

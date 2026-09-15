@@ -1,25 +1,39 @@
 import {
     Component,
     onMounted,
-    onWillUnmount,
     signal,
     t,
+    useEffect,
     useListener,
     useOnChange,
     useProps,
 } from "@odoo/owl";
 
-function useResizable({
+export function useResizablePanel({
     containerRef,
     handleRef,
     initialWidth = 400,
-    getMinWidth = () => 400,
+    getMinWidth,
+    getMaxWidth = () => Infinity,
+    getFoldWidth = () => null,
+    onFold = () => {},
     onResize = () => {},
     getResizeSide = () => "end",
+    resizeOnMount = true,
+    getHandlerSpacing = (handleEl) => (handleEl ? handleEl.offsetWidth / 2 : 10),
 }) {
     const resizeableProps = useProps(resizablePanelProps);
 
     let isChangingSize = false;
+
+    let cssWidth;
+    useEffect(() => {
+        const el = containerRef();
+        if (el && cssWidth === undefined) {
+            cssWidth = el.offsetWidth;
+        }
+    });
+    const resolveMinWidth = getMinWidth || (() => cssWidth ?? 0);
 
     useListener(document, "mouseup", () => onMouseUp());
     useListener(document, "mousemove", (ev) => onMouseMove(ev));
@@ -42,25 +56,27 @@ function useResizable({
     );
 
     onMounted(() => {
-        const handleEl = handleRef();
-        if (handleEl) {
-            resize(Math.max(initialWidth, getMinWidth(resizeableProps) || 0));
-            handleEl.addEventListener("mousedown", onMouseDown);
+        if (resizeOnMount && handleRef()) {
+            resize(Math.max(initialWidth, resolveMinWidth(resizeableProps) || 0));
         }
     });
 
-    onWillUnmount(() => {
-        handleRef()?.removeEventListener("mousedown", onMouseDown);
-    });
+    useListener(handleRef, "mousedown", onMouseDown);
 
     function onMouseDown() {
         isChangingSize = true;
         document.body.classList.add("pe-none", "user-select-none");
+        document.documentElement.style.cursor = "col-resize";
     }
 
     function onMouseUp() {
+        stopChangingSize();
+    }
+
+    function stopChangingSize() {
         isChangingSize = false;
         document.body.classList.remove("pe-none", "user-select-none");
+        document.documentElement.style.cursor = "";
     }
 
     function onMouseMove(ev) {
@@ -76,14 +92,19 @@ function useResizable({
         const fixedSide = direction === 1 ? "left" : "right";
         const containerRect = getContainerRect();
         const newWidth = (ev.clientX - containerRect[fixedSide]) * direction;
+        const foldWidth = getFoldWidth(resizeableProps);
+        if (foldWidth != null && newWidth <= foldWidth) {
+            stopChangingSize();
+            onFold();
+            return;
+        }
         resize(computeFinalWidth(newWidth));
     }
 
     function computeFinalWidth(targetContainerWidth) {
-        const handleEl = handleRef();
-        const handlerSpacing = handleEl ? handleEl.offsetWidth / 2 : 10;
-        const w = Math.max(getMinWidth(resizeableProps), targetContainerWidth + handlerSpacing);
-        const limit = getLimitWidth();
+        const handlerSpacing = getHandlerSpacing(handleRef());
+        const w = Math.max(resolveMinWidth(resizeableProps), targetContainerWidth + handlerSpacing);
+        const limit = Math.min(getLimitWidth(), getMaxWidth(resizeableProps));
         return Math.min(w, limit - handlerSpacing);
     }
 
@@ -110,6 +131,10 @@ function useResizable({
         containerRef().style.setProperty("width", `${width}px`);
         onResize(width);
     }
+
+    return {
+        getCssWidth: () => cssWidth,
+    };
 }
 
 export const resizablePanelProps = {
@@ -121,7 +146,7 @@ export const resizablePanelProps = {
 };
 
 export class ResizablePanel extends Component {
-    static template = "web_studio.ResizablePanel";
+    static template = "web.ResizablePanel";
 
     static components = {};
     props = useProps(resizablePanelProps);
@@ -130,7 +155,7 @@ export class ResizablePanel extends Component {
     handleRef = signal.ref();
 
     setup() {
-        useResizable({
+        useResizablePanel({
             containerRef: this.containerRef,
             handleRef: this.handleRef,
             onResize: this.props.onResize,
