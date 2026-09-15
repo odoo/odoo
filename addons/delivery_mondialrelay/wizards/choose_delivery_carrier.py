@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.json import scriptsafe as json_safe
+
+_debug = DebugLog(__name__)
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
@@ -46,6 +49,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         )
 
     def button_confirm(self):
+        _debug.lifecycle("mondialrelay_carrier_confirm", wizards=self)
         if self.carrier_id.is_mondialrelay:
             if not self.mondialrelay_last_selected:
                 raise ValidationError(_("Please, choose a Parcel Point"))

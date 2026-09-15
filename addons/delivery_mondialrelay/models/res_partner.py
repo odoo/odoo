@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -13,6 +16,7 @@ class ResPartner(models.Model):
             p.is_mondialrelay = p.ref and p.ref.startswith("MR#")
 
     def _mondialrelay_search_or_create(self, data):
+        _debug.pipeline("mondialrelay_partner_resolve", partners=self)
         self.check_singleton()
         country = self.env["res.country"].search(
             [("code", "=", data["country_code"].upper())],

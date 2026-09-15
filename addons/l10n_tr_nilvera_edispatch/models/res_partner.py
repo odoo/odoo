@@ -1,4 +1,7 @@
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -11,6 +14,9 @@ class ResPartner(models.Model):
     )
 
     def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False):
+        _debug.logic(
+            "edispatch_partner_validate", partners=self, delivery=is_delivery_partner
+        )
         error_messages = {}
 
         for record in self:

@@ -1,7 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.stock.models.stock_picking_type import GroupingCriterion
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingType(models.Model):
@@ -36,6 +39,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _get_batch_grouping_criteria(self):
+        _debug.logic("batch_grouping_criteria", picking_types=self)
         criteria = super()._get_batch_grouping_criteria()
         criteria["batch_group_by_carrier"] = GroupingCriterion(
             "picking_id.carrier_id", "name", "carrier_id", "wave_carrier_id"
@@ -44,6 +48,7 @@ class StockPickingType(models.Model):
 
     @api.constrains("batch_max_weight")
     def _check_batch_max_weight(self):
+        _debug.logic("batch_max_weight_check", picking_types=self)
         for picking_type in self:
             if picking_type.batch_max_weight < 0:
                 raise ValidationError(
@@ -57,11 +62,13 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     def _get_auto_merge_amounts(self):
+        _debug.logic("picking_auto_merge_amounts", pickings=self)
         amounts = super()._get_auto_merge_amounts()
         amounts["weight"] = self.weight
         return amounts
 
     def _is_auto_batchable(self, picking=None):
+        _debug.logic("picking_auto_batchable", pickings=self)
         res = super()._is_auto_batchable(picking)
         if not picking:
             picking = self.env["stock.picking"]

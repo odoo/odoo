@@ -2,6 +2,7 @@ import re
 from json import JSONDecodeError
 
 from odoo import _
+from odoo.libs.debug_log import DebugLog
 
 SCHEMATRON_ERROR_ID_PATTERN = r"BR-(?:CL-)?\d{3}"
 
@@ -26,8 +27,14 @@ def _cleanup_errors(errors: list[str]) -> list[str]:
     ]
 
 
+_debug = DebugLog(__name__)
+
+
 class ETransportAPI:
     def get_status(self, company_id, document_load_id, session=None):
+        _debug.pipeline(
+            "etransport_api_get_status", company=company_id, load=document_load_id
+        )
         return self._send_etransport_request(
             company=company_id,
             endpoint=f"stareMesaj/{document_load_id}",
@@ -36,6 +43,7 @@ class ETransportAPI:
         )
 
     def upload_data(self, company_id, data):
+        _debug.pipeline("etransport_api_upload", company=company_id)
         cif = company_id.vat.replace("RO", "")
         return self._send_etransport_request(
             company=company_id,
@@ -47,6 +55,7 @@ class ETransportAPI:
     def _send_etransport_request(
         self, company, endpoint: str, method: str, session=None, data=None
     ) -> dict:
+        _debug.perf.count("etransport_api_request")
         api_env = "test" if company.l10n_ro_edi_test_env else "prod"
         url = f"{ETRANSPORT_URLS[api_env]}/{endpoint}"
         headers = {

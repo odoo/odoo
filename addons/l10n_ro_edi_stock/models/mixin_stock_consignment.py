@@ -1,6 +1,7 @@
 from typing import Literal
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.l10n_ro_edi_stock.models.l10n_ro_edi_stock_document import (
     DOCUMENT_STATES,
@@ -275,6 +276,9 @@ def _document_depends(model):
     return depends
 
 
+_debug = DebugLog(__name__)
+
+
 class MixinStockConsignment(models.AbstractModel):
     _inherit = "mixin.stock.consignment"
 
@@ -376,6 +380,7 @@ class MixinStockConsignment(models.AbstractModel):
 
     @api.onchange("l10n_ro_edi_stock_operation_type")
     def _l10n_ro_edi_stock_reset_variable_selection_fields(self):
+        _debug.lifecycle("etransport_fields_reset", records=self)
         self.l10n_ro_edi_stock_operation_scope = False
 
         # the 'location' value is always valid, regardless of which operation type is chosen
@@ -446,6 +451,7 @@ class MixinStockConsignment(models.AbstractModel):
 
     @api.depends("company_id.account_fiscal_country_id.code")
     def _compute_l10n_ro_edi_stock_enable(self):
+        _debug.perf.count("etransport_enable_compute", records=self)
         for record in self:
             record.l10n_ro_edi_stock_enable = (
                 record.company_id.account_fiscal_country_id.code == "RO"

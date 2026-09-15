@@ -4,12 +4,15 @@ import markupsafe
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.l10n_ro_edi_stock.models.etransport_api import ETransportAPI
 from odoo.addons.l10n_ro_edi_stock.models.mixin_stock_consignment import (
     STATE_CODES,
     _eu_country_vat,
 )
+
+_debug = DebugLog(__name__)
 
 
 class Picking(models.Model):
@@ -35,6 +38,7 @@ class Picking(models.Model):
             )
 
     def _l10n_ro_edi_stock_is_shipped(self) -> bool:
+        _debug.logic("etransport_is_shipped", pickings=self)
         return self.state == "done"
 
     ################################################################################
@@ -45,11 +49,13 @@ class Picking(models.Model):
         # EXTENDS 'stock'
 
         # Validate the carrier first because it cannot be changed after the super call
+        _debug.pipeline("etransport_picking_validate", pickings=self)
         self._l10n_ro_edi_stock_validate_carrier()
 
         return super().button_validate()
 
     def _l10n_ro_edi_stock_validate_carrier(self):
+        _debug.logic("etransport_validate_carrier", pickings=self)
         for picking in self.filtered(self._l10n_ro_edi_stock_validate_carrier_filter):
             # validate carrier
             if not picking.carrier_id:
@@ -76,6 +82,7 @@ class Picking(models.Model):
 
     @api.model
     def _l10n_ro_edi_stock_validate_data(self, data: dict):
+        _debug.logic("etransport_validate_data", pickings=self)
         errors = []
 
         # API access token
@@ -255,6 +262,7 @@ class Picking(models.Model):
         return errors
 
     def _l10n_ro_edi_stock_validate_fetch_data(self, errors=None):
+        _debug.logic("etransport_validate_fetch", pickings=self)
         if errors is None:
             errors = []
         self.check_singleton()
@@ -293,12 +301,14 @@ class Picking(models.Model):
     ################################################################################
 
     def action_l10n_ro_edi_stock_send_etransport(self):
+        _debug.pipeline("etransport_send", pickings=self)
         self.check_singleton()
 
         send_type = self.env.context.get("l10n_ro_edi_stock_send_type", "send")
         self._l10n_ro_edi_stock_send_etransport_document(send_type=send_type)
 
     def action_l10n_ro_edi_stock_fetch_status(self):
+        _debug.pipeline("etransport_fetch_status", pickings=self)
         self._l10n_ro_edi_stock_fetch_document_status()
 
     ################################################################################
@@ -306,6 +316,7 @@ class Picking(models.Model):
     ################################################################################
 
     def _l10n_ro_edi_stock_create_document_stock_sent(self, values: dict[str, object]):
+        _debug.lifecycle("etransport_document_sent", pickings=self)
         self.check_singleton()
         return self.env["l10n_ro_edi.document"].create(
             {

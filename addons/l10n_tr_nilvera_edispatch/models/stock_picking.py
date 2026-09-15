@@ -5,10 +5,13 @@ from lxml import etree
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import cleanup_xml_node
 from odoo.tools.xml_utils import get_xml_value
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -105,6 +108,7 @@ class StockPicking(models.Model):
         "partner_id",
     )
     def _compute_edispatch_warnings(self):
+        _debug.perf.count("edispatch_warnings_compute", pickings=self)
         for picking in self:
             if (
                 picking.country_code == "TR"
@@ -118,6 +122,7 @@ class StockPicking(models.Model):
                 picking.l10n_tr_nilvera_edispatch_warnings = False
 
     def button_validate(self):
+        _debug.pipeline("edispatch_picking_validate", pickings=self)
         res = super().button_validate()
         for picking in self:
             if (
@@ -137,6 +142,7 @@ class StockPicking(models.Model):
         return res
 
     def _l10n_tr_validate_edispatch_on_done(self):
+        _debug.logic("edispatch_validate_on_done", pickings=self)
         partners = (
             self.company_id.partner_id
             | self.partner_id
@@ -225,6 +231,7 @@ class StockPicking(models.Model):
         return error_messages or False
 
     def _l10n_tr_validate_edispatch_fields(self):
+        _debug.logic("edispatch_validate_fields", pickings=self)
         self.check_singleton()
         if self.state not in {"assigned", "done"}:
             return {
@@ -246,6 +253,7 @@ class StockPicking(models.Model):
             return self._l10n_tr_validate_edispatch_on_done()
 
     def _l10n_tr_generate_edispatch_xml(self):
+        _debug.pipeline("edispatch_xml_generate", pickings=self)
         dispatch_uuid = str(uuid.uuid4())
         drivers = []
         for driver in self.l10n_tr_nilvera_driver_ids:
@@ -307,6 +315,7 @@ class StockPicking(models.Model):
         )
 
     def action_generate_l10n_tr_edispatch_xml(self, is_list=False):
+        _debug.pipeline("edispatch_xml_action", pickings=self, is_list=is_list)
         errors = []
         for picking in self:
             if picking.country_code == "TR" and picking.picking_type_code == "outgoing":
@@ -323,6 +332,7 @@ class StockPicking(models.Model):
             )
 
     def action_mark_l10n_tr_edispatch_status(self):
+        _debug.lifecycle("edispatch_status_marked", pickings=self)
         self.filtered(
             lambda p: p.country_code == "TR" and p.picking_type_code == "outgoing"
         ).l10n_tr_nilvera_dispatch_state = "sent"
