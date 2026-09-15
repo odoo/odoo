@@ -12,4 +12,4 @@ class AccountMoveLine(models.Model):
         super()._compute_cogs_move_ids()
         for aml in self:
             if aml.purchase_line_id:
-                aml.cogs_move_ids = aml.purchase_line_id.move_ids.filtered(lambda m: m.is_valued)
+                aml.cogs_move_ids = aml.purchase_line_id.move_ids.filtered(lambda m: m.is_valued or m.is_dropship)
