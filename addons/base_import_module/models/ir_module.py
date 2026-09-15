@@ -29,6 +29,7 @@ _logger = logging.getLogger(__name__)
 
 APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
+OTHER_TYPE_DOMAIN = [('module_type', 'not in', ['official', 'industries'])]
 
 
 class IrModuleModule(models.Model):
@@ -38,6 +39,7 @@ class IrModuleModule(models.Model):
     module_type = fields.Selection([
         ('official', 'Official Apps'),
         ('industries', 'Industries'),
+        ('others', 'Others'),
     ], default='official')
     total_lines_of_code = fields.Integer(
         string="Extra lines of Code",
@@ -126,8 +128,7 @@ class IrModuleModule(models.Model):
         except OSError:
             pass  # keep the default icon
         values['latest_version'] = terp.version
-        if self.env.context.get('data_module'):
-            values['module_type'] = 'industries'
+        values['module_type'] = 'industries' if self.env.context.get('data_module') else 'others'
         if with_demo:
             values['demo'] = True
 
@@ -411,15 +412,17 @@ class IrModuleModule(models.Model):
 
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
-        if _domain_asks_for_industries(domain):
+        module_type = _domain_module_type(domain)
+        if module_type == 'industries':
             fields_name = list(specification.keys())
             modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset)
             return {
                 'length': len(modules_list) + offset,
                 'records': modules_list[:(limit or 80)],
             }
-        else:
-            return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        if module_type != 'official':
+            domain = Domain(domain).map_conditions(lambda c: Domain(OTHER_TYPE_DOMAIN) if c.field_expr == 'module_type' else c).optimize(self)
+        return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
 
     def more_info(self):
         return {
@@ -435,10 +438,8 @@ class IrModuleModule(models.Model):
         fields = list(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
         if module_type == 'industries':
-            modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
-            return modules_list
-        else:
-            return super().web_read(specification)
+            return self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
+        return super().web_read(specification)
 
     @api.model
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
@@ -618,13 +619,27 @@ class IrModuleModule(models.Model):
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
-        if field_name == 'category_id' and _domain_asks_for_industries(kwargs.get('category_domain', [])):
-            categories = self._get_industry_categories_from_apps()
-            return {
-                'parent_field': 'parent_id',
-                'values': categories,
-            }
-        return super().search_panel_select_range(field_name, **kwargs)
+        if field_name == 'category_id':
+            category_domain = kwargs.get('category_domain', [])
+            module_type = _domain_module_type(category_domain)
+            if module_type != 'official':
+                if module_type == 'industries':
+                    categories = self._get_industry_categories_from_apps()
+                else:
+                    category_domain = Domain(category_domain) | Domain(OTHER_TYPE_DOMAIN)
+                    category_domain.optimize(self)
+                    category_ids = self._read_group(domain=category_domain, groupby=['category_id'], aggregates=['__count'])
+                    categories = [{'id': category.id, 'display_name': category.display_name, '__count': count} for category, count in category_ids]
+                return {
+                    'parent_field': 'parent_id',
+                    'values': categories,
+                }
+        result = super().search_panel_select_range(field_name, **kwargs)
+        if field_name == 'module_type':
+            result['values'] = [value for value in result['values'] if (
+                value['id'] in ('official', 'industries') or self.search_count(Domain(OTHER_TYPE_DOMAIN), limit=1)
+            )]
+        return result
 
     @api.model
     @api.ormcache('module', 'lang', cache='stable')
@@ -713,17 +728,14 @@ class IrModuleModule(models.Model):
                 _logger.exception("Failed to extract terms from attachment with url %s", attachment.url)
 
 
-def _domain_asks_for_industries(domain):
+def _domain_module_type(domain):
     for condition in Domain(domain).iter_conditions():
         if condition.field_expr == 'module_type':
             if condition.operator == '=':
-                if condition.value == 'industries':
-                    return True
-            elif condition.operator == 'in' and len(condition.value) == 1:
-                if 'industries' in condition.value:
-                    return True
-            else:
-                raise UserError(f'Unsupported domain condition {condition!r}')  # pylint: disable=missing-gettext
+                return condition.value
+            if condition.operator == 'in' and len(condition.value) <= 1:
+                return condition.value[0] if condition.value else False
+            raise UserError(f'Unsupported domain condition {condition!r}')  # pylint: disable=missing-gettext
     return False
 
 
