@@ -54,7 +54,13 @@ class ProductCommon(
         else:
             archive_context = nullcontext()
 
-        with archive_context:
+        point_of_sale = cls.env['ir.module.module']._get('point_of_sale')
+        if point_of_sale.state == 'installed':
+            pos_context = patch('odoo.addons.point_of_sale.models.product.ProductPricelist._check_active_pos')
+        else:
+            pos_context = nullcontext()
+
+        with archive_context, pos_context:
             cls.env['product.pricelist'].search([
                 ('id', '!=', cls.pricelist.id),
             ]).action_archive()
