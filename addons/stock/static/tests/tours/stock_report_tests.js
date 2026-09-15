@@ -20,6 +20,10 @@ import { registry } from "@web/core/registry";
         run: "click",
     },
     {
+        trigger: '.btn[name="print_report"]',
+        run: "click",
+    },
+    {
         trigger: ':iframe .o_report_stock_rule',
     },
     ],
