@@ -2,7 +2,7 @@ import base64
 import json
 import os
 from collections import Counter
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from werkzeug.exceptions import NotFound
 
@@ -551,6 +551,58 @@ class TestDiscussChannelInvariants(MailCommon):
                 GuardedSession,
                 "request",
                 side_effect=AssertionError("no SFU request without a key"),
+            ),
+            self.assertLogs(member_module, level="WARNING"),
+        ):
+            channel.self_member_id.sudo()._join_sfu(force=True)
+
+        self.assertFalse(channel.sudo().sfu_channel_uuid, "the call must stay p2p")
+
+    def _sfu_channel(self, login):
+        user = new_test_user(self.env, login, groups="base.group_user")
+        channel = self.Channel.with_user(user)._create_group(
+            partners_to=[user.partner_id.id], name="SFU"
+        )
+        params = self.env["ir.config_parameter"].sudo()
+        params.set_param("mail.use_sfu_server", True)
+        params.set_param("mail.sfu_server_url", "https://sfu.example.com")
+        self.env["credential.credential"]._set_system_secret(
+            "mail.sfu_server_key", "sfu-server-key"
+        )
+        return channel
+
+    def test_the_sfu_session_signing_key_is_a_system_secret(self):
+        channel = self._sfu_channel("inv_sfu_vault")
+        response = MagicMock(ok=True, status_code=200)
+        response.json.return_value = {
+            "uuid": "sfu-channel",
+            "url": "https://sfu.example.com",
+        }
+
+        with patch.object(GuardedSession, "request", return_value=response):
+            channel.self_member_id.sudo()._join_sfu(force=True)
+
+        self.assertEqual(channel.sudo().sfu_channel_uuid, "sfu-channel")
+        self.assertTrue(
+            self.env["credential.credential"]._get_system_secret("mail.sfu_local_key")
+        )
+        self.assertFalse(
+            self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
+        )
+
+    def test_join_sfu_without_a_vault_key_stays_p2p(self):
+        channel = self._sfu_channel("inv_sfu_no_vault")
+        Credential = type(self.env["credential.credential"])
+        member_module = "odoo.addons.mail.models.discuss.discuss_channel_member"
+
+        with (
+            patch.object(
+                Credential, "_is_encryption_key_configured", return_value=False
+            ),
+            patch.object(
+                GuardedSession,
+                "request",
+                side_effect=AssertionError("no SFU request without a vault key"),
             ),
             self.assertLogs(member_module, level="WARNING"),
         ):

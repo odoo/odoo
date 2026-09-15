@@ -619,14 +619,20 @@ class DiscussChannelMember(models.Model):
                 "An SFU server URL is configured without an SFU key, user will stay in p2p"
             )
             return
-        sfu_local_key = (
-            self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
-        )
+        credentials = self.env["credential.credential"]
+        sfu_local_key = credentials._get_system_secret("mail.sfu_local_key")
         if not sfu_local_key:
+            if not credentials._is_encryption_key_configured():
+                _debug.logic(
+                    "sfu_skipped", channel=self.channel_id.id, reason="no_vault_key"
+                )
+                _logger.warning(
+                    "An SFU server is configured but ODOO_API_ENCRYPTION_KEY is not "
+                    "set, so no session signing key can be stored: user will stay in p2p"
+                )
+                return
             sfu_local_key = str(uuid.uuid4())
-            self.env["ir.config_parameter"].sudo().set_param(
-                "mail.sfu_local_key", sfu_local_key
-            )
+            credentials._set_system_secret("mail.sfu_local_key", sfu_local_key)
         json_web_token = jwt.sign(
             {
                 "iss": f"{self.get_base_url()}:channel:{self.channel_id.id}",
@@ -689,7 +695,9 @@ class DiscussChannelMember(models.Model):
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
-            key = self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
+            key = self.env["credential.credential"]._get_system_secret(
+                "mail.sfu_local_key"
+            )
         claims = {
             "session_id": rtc_session.id,
             "ice_servers": ice_servers,
