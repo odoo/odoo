@@ -7,7 +7,7 @@ from odoo.http._retry import RequestRetryParticipant
 
 def _request(**kwargs):
     request = MagicMock(**kwargs)
-    request._select_session_and_dbname.return_value = (MagicMock(), "testdb")
+    request._load_session.return_value = MagicMock()
     return request
 
 
@@ -18,7 +18,7 @@ class TestOnRollback:
         RequestRetryParticipant(request).on_rollback(Exception("boom"))
 
         request._restore_session_snapshot.assert_called_once_with()
-        request._select_session_and_dbname.assert_not_called()
+        request._load_session.assert_not_called()
 
 
 class TestOnRetry:
@@ -50,9 +50,7 @@ class TestOnRetry:
         request._reset_for_replay.assert_called_once_with()
 
     def test_a_request_without_the_replay_hook_does_not_crash(self):
-        request = MagicMock(
-            spec=["_select_session_and_dbname", "httprequest", "session"]
-        )
+        request = MagicMock(spec=["_load_session", "httprequest", "session"])
         request.httprequest.files.items.return_value = []
         assert not hasattr(request, "_reset_for_replay")
         RequestRetryParticipant(request).on_retry(Exception("boom"))
@@ -68,9 +66,7 @@ class TestUncommittedWarningSuppression:
         assert not RequestRetryParticipant(request).is_uncommitted_warning_suppressed()
 
     def test_a_stand_in_request_without_the_attribute_does_not(self):
-        request = MagicMock(
-            spec=["_select_session_and_dbname", "httprequest", "session"]
-        )
+        request = MagicMock(spec=["_load_session", "httprequest", "session"])
         assert not RequestRetryParticipant(request).is_uncommitted_warning_suppressed()
 
 

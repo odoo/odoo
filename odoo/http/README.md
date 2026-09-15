@@ -137,10 +137,13 @@ and a fresh cookie — once that age passes half the inactivity budget
 session therefore costs at most two liveness writes per budget window, and an
 RPC-only client stays alive without ever loading a page.
 
-`_bind_session_transaction` registers cursor callbacks and captures the session
-snapshot. `_flush_session` is idempotent: the postcommit callback invokes it,
-and the successful return from `retrying` also invokes it for cursor adapters
-such as `TestCursor` that suppress transaction callbacks.
+`_save_session` decides: bound to the request's own live cursor it binds the
+transaction and stages; otherwise it calls `_persist_session`, the one place
+that writes the store and stages the cookie. `_bind_session_transaction`
+registers cursor callbacks and captures the session snapshot. `_flush_session`
+is idempotent: the postcommit callback invokes it, and the successful return
+from `retrying` also invokes it for cursor adapters such as `TestCursor` that
+suppress transaction callbacks; it persists through `_persist_session`.
 `_restore_session_snapshot` is its rollback twin: the postrollback callback
 invokes it, and so does `RequestRetryParticipant.on_rollback`; every call lands on
 the same state, so the order does not matter. The snapshot stays armed until the
@@ -149,8 +152,9 @@ restores. The one case that reads the disk: an explicit-environment save
 (`request._save_session(env)` against another database) persisted the session
 during the attempt, possibly rotating its file away — then the live copy under
 the current sid is the identity the cookie must carry, and the snapshot's file
-may no longer exist. A handler's own rollback clears the binding; a later save
-binds the new transaction again.
+may no longer exist; `_load_session` reloads it without re-selecting the
+database. A handler's own rollback clears the binding; a later save binds the
+new transaction again.
 Database-free requests and saves explicitly bound to another database keep
 their immediate persistence path.
 Read-only promotion is allowed only before commit, while the original cursor

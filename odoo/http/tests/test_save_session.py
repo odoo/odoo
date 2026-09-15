@@ -81,7 +81,7 @@ def _save(session, *, store=None, env="open", cookie_sid=None, path="/x"):
     this.session = session
     this.env = env
     this.future_response = future
-    this._save_session()
+    this._persist_session(env)
     return store, future
 
 
@@ -230,11 +230,11 @@ def test_an_error_response_keeps_the_budget_read_while_the_cursor_was_live():
     this.session = s
     this.future_response = future
     this.env = types.SimpleNamespace(cr=types.SimpleNamespace(closed=False))
-    this._save_session()
+    this._persist_session(this.env)
     assert future.set["session_id"][1]["max_age"] == MAX_INACTIVITY
 
     this.env = None
-    this._save_session()
+    this._persist_session(None)
     assert future.set["session_id"][1]["max_age"] == MAX_INACTIVITY, (
         "the error path has no environment; the cookie must not fall back to "
         "SESSION_LIFETIME once the real budget was read"

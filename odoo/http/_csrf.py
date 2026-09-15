@@ -74,7 +74,7 @@ class _RequestCsrfMixin(RequestState):
             _debug.logic("http.csrf.malformed", reason="non_ascii")
             return False
 
-        digest = _get_csrf_digest(secret, self.session.sid, max_ts)
-        if _debug.logic.enabled and not consteq(hm, digest):
+        valid = consteq(hm, _get_csrf_digest(secret, self.session.sid, max_ts))
+        if not valid:
             _debug.logic("http.csrf.mismatch", sid=self.session.sid[:8])
-        return consteq(hm, digest)
+        return valid

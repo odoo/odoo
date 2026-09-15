@@ -19,7 +19,7 @@ class TestHttpLifecycleOrder(TestHttpBase):
         events = self.events
         real_commit = odoo.db.cursor.Cursor.commit
         real_test_commit = odoo.tests.cursor.TestCursor.commit
-        real_save = odoo.http.request_class.Request._save_session
+        real_persist = odoo.http.request_class.Request._persist_session
 
         def commit(cr, *args, **kwargs):
             events.append((threading.get_ident(), "commit"))
@@ -29,16 +29,15 @@ class TestHttpLifecycleOrder(TestHttpBase):
             events.append((threading.get_ident(), "commit"))
             return real_test_commit(cr, *args, **kwargs)
 
-        def save_session(request, *args, **kwargs):
-            if request._session_flush_active or request.env is None:
-                events.append((threading.get_ident(), "save_session"))
-            return real_save(request, *args, **kwargs)
+        def persist_session(request, *args, **kwargs):
+            events.append((threading.get_ident(), "save_session"))
+            return real_persist(request, *args, **kwargs)
 
         return (
             patch.object(odoo.db.cursor.Cursor, "commit", commit),
             patch.object(odoo.tests.cursor.TestCursor, "commit", test_commit),
             patch.object(
-                odoo.http.request_class.Request, "_save_session", save_session
+                odoo.http.request_class.Request, "_persist_session", persist_session
             ),
         )
 

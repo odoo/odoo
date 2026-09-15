@@ -78,7 +78,6 @@ class Dispatcher(ABC):
 
     serializes_errors_in_dev_mode: bool = False
 
-    @classmethod
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         routing_type = getattr(cls, "routing_type", None)

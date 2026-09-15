@@ -31,7 +31,6 @@ class Controller:
         collections.defaultdict(list)
     )
 
-    @classmethod
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         if Controller in cls.__bases__:

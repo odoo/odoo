@@ -199,7 +199,7 @@ class _RequestServeMixin(RequestState):
                 with _debug.perf("http.registry.lookup", db=db):
                     with borrow_request():
                         registry = Registry(db)
-                with _debug.perf("http.registry.cursor", db=db, readonly=True):
+                with _debug.perf("http.registry.cursor", db=db):
                     cr = registry.cursor(readonly=True)
                 with _debug.perf("http.registry.signaling", cr=cr, db=db):
                     self.registry = registry.check_signaling(cr)
@@ -511,7 +511,6 @@ class _RequestServeMixin(RequestState):
 
         no_fallback = NotFound()
         no_fallback.__context__ = not_found
-        set_error_response(no_fallback, ir_http._handle_error(no_fallback))
         raise no_fallback
 
     def _serve_ir_http(self, rule: Any, args: dict[str, Any]) -> Response:

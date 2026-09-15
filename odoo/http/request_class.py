@@ -75,8 +75,6 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._session_max_age: int | None = None
         self._session_response: Response | None = None
         self._session_save_pending = False
-        self._session_uses_transactions = False
-        self._session_flush_active = False
 
     def detach_database(self) -> None:
         self.database_detached = True
@@ -97,8 +95,10 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
     def _select_session_and_dbname(
         self, sid: str | None = None
     ) -> tuple[Session, str | None]:
-        from odoo import http
+        session = self._load_session(sid)
+        return session, self._select_dbname(session)
 
+    def _load_session(self, sid: str | None = None) -> Session:
         root = self.app
 
         if sid is None:
@@ -118,6 +118,11 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             session.context["lang"] = self.get_default_lang()
         if session.pop("_rotate_pending", None):
             session.should_rotate = True
+        session.mark_clean()
+        return session
+
+    def _select_dbname(self, session: Session) -> str | None:
+        from odoo import http
 
         dbname = None
         source = "none"  # debuglog
@@ -167,8 +172,8 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
                 )
                 session.logout(keep_db=False)
             session.db = dbname
+            session.mark_clean()
 
-        session.mark_clean()
         _debug.logic(
             "http.session.selected",
             db=dbname,
@@ -177,7 +182,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             uid=session.uid,
             rotate=session.should_rotate,
         )
-        return session, dbname
+        return dbname
 
     @property
     def params(self) -> dict[str, Any]:
@@ -358,7 +363,6 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         if self._session_transaction_cursor is cr:
             return
         self._session_transaction_cursor = cr
-        self._session_uses_transactions = True
         self._session_save_pending = False
         self._session_response = None
         self._session_snapshot = self.session.snapshot()
@@ -377,7 +381,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             # An explicit-environment save persisted the session during the
             # attempt (a rotation may have replaced its file): the disk copy is
             # the identity the cookie must carry, the snapshot's file may be gone.
-            restored = self._select_session_and_dbname(sid=current.sid)[0]
+            restored = self._load_session(current.sid)
             source = "disk"  # debuglog
         else:
             restored = snapshot.snapshot()
@@ -406,11 +410,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         if not self._session_save_pending:
             return
         self._session_save_pending = False
-        self._session_flush_active = True
-        try:
-            self._save_session()
-        finally:
-            self._session_flush_active = False
+        self._persist_session(self.env)
         if self._session_response is not None:
             self._update_response_from_future(self._session_response)
 
@@ -480,8 +480,6 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         return response
 
     def _save_session(self, env: odoo.api.Environment | None = None) -> None:
-        root = self.app
-
         sess = self.session
         if env is None:
             env = self.env
@@ -494,13 +492,21 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             env is not None
             and self.env is not None
             and env.cr is self.env.cr
-            and self._session_uses_transactions
-            and not self._session_flush_active
             and not env.cr.closed
         ):
             self._bind_session_transaction(env.cr)
             self._stage_session_save(env)
             _debug.pipeline("http.session.save_deferred", uid=sess.uid)
+            return
+
+        self._persist_session(env)
+
+    def _persist_session(self, env: odoo.api.Environment | None) -> None:
+        root = self.app
+
+        sess = self.session
+        if not sess.can_save:
+            _debug.logic("http.session.save_skipped", reason="cannot_save")
             return
 
         max_age = self._get_session_max_age(env) if sess.uid else SESSION_LIFETIME

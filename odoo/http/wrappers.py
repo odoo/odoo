@@ -302,10 +302,8 @@ class _Response(werkzeug.wrappers.Response):
             raise result
 
         if isinstance(result, werkzeug.wrappers.Response):
-            response = cls.force_type(result)
-            response.update_qweb_state()
             _debug.logic("http.response.coerced", kind="werkzeug", endpoint=fname)
-            return Response(response)
+            return Response(result)
 
         if isinstance(result, (bytes, str, type(None))):
             _debug.logic(
