@@ -82,7 +82,7 @@ class Picking(models.Model):
 
     @api.model
     def _l10n_ro_edi_stock_validate_data(self, data: dict):
-        _debug.logic("etransport_validate_data", pickings=self)
+        _debug.logic("edi_delivery_validate", regime="ro", pickings=self)
         errors = []
 
         # API access token
@@ -301,14 +301,14 @@ class Picking(models.Model):
     ################################################################################
 
     def action_l10n_ro_edi_stock_send_etransport(self):
-        _debug.pipeline("etransport_send", pickings=self)
+        _debug.pipeline("edi_delivery_send", regime="ro", pickings=self)
         self.check_singleton()
 
         send_type = self.env.context.get("l10n_ro_edi_stock_send_type", "send")
         self._l10n_ro_edi_stock_send_etransport_document(send_type=send_type)
 
     def action_l10n_ro_edi_stock_fetch_status(self):
-        _debug.pipeline("etransport_fetch_status", pickings=self)
+        _debug.pipeline("edi_delivery_status", regime="ro", pickings=self)
         self._l10n_ro_edi_stock_fetch_document_status()
 
     ################################################################################

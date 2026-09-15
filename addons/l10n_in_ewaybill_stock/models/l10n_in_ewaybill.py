@@ -148,7 +148,7 @@ class L10nInEwaybill(models.Model):
         )
 
     def _check_printable(self):
-        _debug.logic("ewaybill_printable_check", ewaybills=self)
+        _debug.logic("edi_delivery_validate", regime="in", ewaybills=self)
         if self.filtered(
             lambda ewaybill: ewaybill.state not in ["generated", "challan"]
         ):

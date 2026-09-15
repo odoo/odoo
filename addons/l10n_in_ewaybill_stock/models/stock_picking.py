@@ -27,7 +27,7 @@ class StockPicking(models.Model):
         )._get_action_dict()
 
     def action_l10n_in_ewaybill_create(self):
-        _debug.pipeline("ewaybill_create", pickings=self)
+        _debug.pipeline("edi_delivery_send", regime="in", pickings=self)
         self.check_singleton()
         if product_with_no_hsn := self.move_ids.mapped("product_id").filtered(
             lambda p: not p.l10n_in_hsn_code

@@ -231,7 +231,7 @@ class StockPicking(models.Model):
         return error_messages or False
 
     def _l10n_tr_validate_edispatch_fields(self):
-        _debug.logic("edispatch_validate_fields", pickings=self)
+        _debug.logic("edi_delivery_validate", regime="tr", pickings=self)
         self.check_singleton()
         if self.state not in {"assigned", "done"}:
             return {
@@ -253,7 +253,7 @@ class StockPicking(models.Model):
             return self._l10n_tr_validate_edispatch_on_done()
 
     def _l10n_tr_generate_edispatch_xml(self):
-        _debug.pipeline("edispatch_xml_generate", pickings=self)
+        _debug.pipeline("edi_delivery_send", regime="tr", pickings=self)
         dispatch_uuid = str(uuid.uuid4())
         drivers = []
         for driver in self.l10n_tr_nilvera_driver_ids:
@@ -332,7 +332,7 @@ class StockPicking(models.Model):
             )
 
     def action_mark_l10n_tr_edispatch_status(self):
-        _debug.lifecycle("edispatch_status_marked", pickings=self)
+        _debug.lifecycle("edi_delivery_status", regime="tr", pickings=self)
         self.filtered(
             lambda p: p.country_code == "TR" and p.picking_type_code == "outgoing"
         ).l10n_tr_nilvera_dispatch_state = "sent"
