@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
+import json
 from uuid import uuid4
 
 from odoo import api, fields, models, _
@@ -86,7 +86,7 @@ class SendSMS(models.TransientModel):
     @api.depends('res_model', 'res_id', 'res_ids')
     def _compute_res_ids_count(self):
         for composer in self:
-            composer.res_ids_count = len(literal_eval(composer.res_ids)) if composer.res_ids else 0
+            composer.res_ids_count = len(json.loads(composer.res_ids)) if composer.res_ids else 0
 
     @api.depends('res_id', 'composition_mode')
     def _compute_comment_single_recipient(self):
@@ -373,7 +373,7 @@ class SendSMS(models.TransientModel):
         if not self.res_model:
             return None
         if self.res_ids:
-            records = self.env[self.res_model].browse(literal_eval(self.res_ids))
+            records = self.env[self.res_model].browse(json.loads(self.res_ids))
         elif self.res_id:
             records = self.env[self.res_model].browse(self.res_id)
         else:
