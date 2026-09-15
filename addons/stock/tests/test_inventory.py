@@ -3,14 +3,16 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestInventory(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestInventory, cls).setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True
@@ -24,6 +26,10 @@ class TestInventory(TransactionCase):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
+        })
+        cls.lot_sn2 = cls.env['stock.lot'].create({
+            'name': 'sn2',
+            'product_id': cls.product2.id,
         })
 
     def test_inventory_1(self):
@@ -61,10 +67,7 @@ class TestInventory(TransactionCase):
 
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
@@ -92,10 +95,7 @@ class TestInventory(TransactionCase):
         ])
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
@@ -119,10 +119,7 @@ class TestInventory(TransactionCase):
         ]
         inventory_quants = self.env['stock.quant'].search(quant_domain)
         self.assertEqual(len(inventory_quants), 0)
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,

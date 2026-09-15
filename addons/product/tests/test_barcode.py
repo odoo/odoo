@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
@@ -12,6 +13,7 @@ class TestProductBarcode(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.env['product.product'].create([
             {'name': 'BC1', 'barcode': '1'},
             {'name': 'BC2', 'barcode': '2'},
@@ -36,16 +38,15 @@ class TestProductBarcode(TransactionCase):
                 ],
             })]
         })
+        cls.company_b = cls.env['res.company'].create({'name': 'CB'})
 
     def test_blank_barcodes_allowed(self):
         """Makes sure duplicated blank barcodes are allowed."""
-        for i in range(2):
-            self.env['product.product'].create({'name': f'BC_{i}'})
+        self.env['product.product'].create([{'name': f'BC_{i}'} for i in range(2)])
 
     def test_false_barcodes_allowed(self):
         """Makes sure duplicated False barcodes are allowed."""
-        for i in range(2):
-            self.env['product.product'].create({'name': f'BC_{i}', 'barcode': False})
+        self.env['product.product'].create([{'name': f'BC_{i}', 'barcode': False} for i in range(2)])
 
     def test_duplicated_barcode(self):
         """Tests for simple duplication."""
@@ -105,7 +106,7 @@ class TestProductBarcode(TransactionCase):
     def test_duplicated_barcodes_are_allowed_for_different_companies(self):
         """Barcode needs to be unique only withing the same company"""
         company_a = self.env.company
-        company_b = self.env['res.company'].create({'name': 'CB'})
+        company_b = self.company_b
 
         allowed_products = [
             # Allowed, barcode doesn't exist yet
@@ -129,8 +130,7 @@ class TestProductBarcode(TransactionCase):
             {'name': 'F6', 'barcode': '3', 'company_id': False},
         ]
 
-        for product in allowed_products:
-            self.env['product.product'].create(product)
+        self.env['product.product'].create(allowed_products)
 
         for product in forbidden_products:
             with self.assertRaises(ValidationError):
@@ -143,7 +143,7 @@ class TestProductBarcode(TransactionCase):
         Barcode validation should be triggered and a duplicated barcode should be detected.
         """
         company_a = self.env.company
-        company_b = self.env['res.company'].create({'name': 'CB'})
+        company_b = self.company_b
 
         variant_1 = self.template.product_variant_ids[0]
         variant_2 = self.template.product_variant_ids[1]

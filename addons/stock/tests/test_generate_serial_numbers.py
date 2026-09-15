@@ -3,14 +3,16 @@
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, TransactionCase, new_test_user
+from odoo.tests import TransactionCase, new_test_user
 
 
 class StockGenerateCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
@@ -33,6 +35,12 @@ class StockGenerateCommon(TransactionCase):
         cls.location_dest = cls.env['stock.location'].create({
             'name': 'Room B',
             'location_id': cls.warehouse.lot_stock_id.id,
+        })
+        cls.receipt_picking = cls.env['stock.picking'].create({
+            'picking_type_id': cls.warehouse.in_type_id.id,
+            'location_id': cls.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': cls.warehouse.lot_stock_id.id,
+            'state': 'draft',
         })
 
     def get_new_move(self, nbre_of_lines=0, product=False):
@@ -321,12 +329,7 @@ class StockGenerateCommon(TransactionCase):
             'name': 'abc',
         })
         self.warehouse.in_type_id.use_existing_lots = True
-        receipt_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.warehouse.lot_stock_id.id,
-            'state': 'draft',
-        })
+        receipt_picking = self.receipt_picking
         self.env['stock.move'].create({
             'product_id': product_lot.id,
             'uom_id': product_lot.uom_id.id,
@@ -368,12 +371,7 @@ class StockGenerateCommon(TransactionCase):
         sn_t1_02 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-02'})
 
         self.warehouse.in_type_id.use_existing_lots = True
-        receipt_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.warehouse.lot_stock_id.id,
-            'state': 'draft',
-        })
+        receipt_picking = self.receipt_picking
         move = self.env['stock.move'].create({
             'product_id': product_lot.id,
             'uom_id': product_lot.uom_id.id,
