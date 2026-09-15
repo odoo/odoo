@@ -280,6 +280,8 @@ class PosSession(models.Model):
     def filter_local_data(self, models_to_filter):
         non_existent_and_inactive_ids = {}
         for model, ids in models_to_filter.items():
+            if model not in self.env:
+                continue
             ids = list(map(int, ids))
             try:
                 existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
