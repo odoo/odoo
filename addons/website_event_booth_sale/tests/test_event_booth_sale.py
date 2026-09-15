@@ -120,3 +120,91 @@ class TestWebsiteEventBoothSale(HttpCaseWithUserPortal, TestWebsiteEventSaleComm
         self.start_tour(
             "/odoo", "event_booth_sale_pricelists_different_currencies", login="admin"
         )
+
+
+@tagged("post_install", "-at_install")
+class TestBoothCartLineRegistrations(TestWebsiteEventSaleCommon):
+    """A cart line that already holds one booth must adopt the newly picked ones.
+
+    `_cart_find_product_line` matches a line sharing ANY pending booth, so the
+    second `_cart_add` is an UPDATE of the existing line rather than a new one,
+    and `_prepare_order_line_update_values` is what carries the registrations.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.booth_product = cls.env["product.product"].create(
+            {
+                "name": "Booth Product",
+                "list_price": 20.0,
+                "type": "service",
+                "service_tracking": "event_booth",
+            }
+        )
+        cls.booth_category = cls.env["event.booth.category"].create(
+            {
+                "name": "Standard",
+                "product_id": cls.booth_product.id,
+                "price": 100.0,
+            }
+        )
+        cls.event = cls.env["event.event"].create(
+            {
+                "name": "Booth Event",
+                "date_begin": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+                "event_booth_ids": [
+                    Command.create(
+                        {"name": "Booth A", "booth_category_id": cls.booth_category.id}
+                    ),
+                    Command.create(
+                        {"name": "Booth B", "booth_category_id": cls.booth_category.id}
+                    ),
+                ],
+            }
+        )
+        cls.booth_a, cls.booth_b = cls.event.event_booth_ids
+
+    def test_second_booth_reaches_the_existing_cart_line(self):
+        registration_values = {
+            "partner_id": self.partner.id,
+            "contact_name": self.partner.name,
+            "contact_email": "booth@example.com",
+        }
+        cart = self.empty_cart
+        cart._cart_add(
+            product_id=self.booth_product.id,
+            quantity=1,
+            event_booth_pending_ids=self.booth_a.ids,
+            registration_values=registration_values,
+        )
+        line = cart.line_ids
+        self.assertEqual(
+            line.event_booth_registration_ids.event_booth_id,
+            self.booth_a,
+            "the first add registers the booth it was given",
+        )
+
+        cart._cart_add(
+            product_id=self.booth_product.id,
+            quantity=1,
+            event_booth_pending_ids=(self.booth_a + self.booth_b).ids,
+            registration_values=registration_values,
+        )
+
+        self.assertEqual(
+            cart.line_ids,
+            line,
+            "a line sharing a pending booth is updated, not duplicated",
+        )
+        self.assertEqual(
+            line.event_booth_registration_ids.event_booth_id,
+            self.booth_a + self.booth_b,
+            "the update must carry the registrations -- returning nothing from "
+            "_prepare_order_line_update_values drops the newly picked booth silently",
+        )

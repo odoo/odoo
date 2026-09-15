@@ -40,7 +40,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
                 "product_id": self.event_booth_product.id,
             }
         )
-        self.assertEqual(so_line.price_reduce_taxexcl, 40)
+        self.assertEqual(so_line.price_unit_discounted_taxexc, 40)
 
         pl2 = self.pricelist.copy(
             {
@@ -64,7 +64,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
             self.assertEqual(req.pricelist, self.pricelist)
             self.WebsiteSaleController.pricelist_change(pl2)
             self.assertEqual(
-                so_line.price_reduce_taxexcl,
+                so_line.price_unit_discounted_taxexc,
                 360,
                 'Incorrect amount based on the pricelist "Without Discount" and its currency.',
             )

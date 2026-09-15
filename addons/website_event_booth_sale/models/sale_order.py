@@ -89,4 +89,4 @@ class SaleOrder(models.Model):
             )
             for booth in booths
         ]
-        return None
+        return values
