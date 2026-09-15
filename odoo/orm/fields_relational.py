@@ -21,6 +21,7 @@ from .query import FieldSQL, Query, TableSQL
 from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
+    from collections.abc import Callable
     from odoo.tools.misc import Collector
     from collections.abc import Iterable
     from .types import CommandValue, ContextType, DomainType, Environment, IdType, Registry
@@ -34,7 +35,8 @@ class _Relational[C](Field[BaseModel, C]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
     comodel_name: str = ''
-    domain: DomainType = []         # domain for searching values
+    domain: DomainType | Callable[[BaseModel], DomainType] = Domain.TRUE  # domain for searching values
+    ui_domain: str | DomainType | Callable[[BaseModel], str | DomainType] | None = None  # domain used in views
     context: ContextType = {}       # context for searching values
     bypass_search_access: bool = False  # whether access rights are bypassed on the comodel
     check_company: bool = False
@@ -85,6 +87,8 @@ class _Relational[C](Field[BaseModel, C]):
         super()._setup(model)
         if self.comodel_name not in model.pool:
             raise ValueError(f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}")
+        if isinstance(self.domain, str):
+            self._setup_warning("string is not accepted as domain, use ui_domain")
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
@@ -95,25 +99,33 @@ class _Relational[C](Field[BaseModel, C]):
         if callable(domain):
             # the callable can return either a list, Domain or a string
             domain = domain(model)
-        if not domain or isinstance(domain, str):
-            # if we don't have a domain or
+        if not domain:
+            return Domain.TRUE
+        if isinstance(domain, str):
             # domain=str is used only for the client-side
+            self._setup_warning("string is not accepted as domain, use ui_domain (compute)")
             return Domain.TRUE
         return Domain(domain)
 
     @property
     def _related_domain(self) -> DomainType | None:
+        domain = self.domain
+        if callable(domain):
+            return lambda recs: domain(recs.env[self.model_name])
+        return domain
+
+    @property
+    def _related_ui_domain(self) -> str | DomainType | None:
         def validated(domain):
             if isinstance(domain, str) and not self.inherited:
                 # string domains are expressions that are not valid for self's model
                 return None
             return domain
-
-        if callable(self.domain):
-            # will be called with another model than self's
-            return lambda recs: validated(self.domain(recs.env[self.model_name]))  # pylint: disable=not-callable
+        domain = self.ui_domain
+        if callable(domain):
+            return lambda recs: validated(domain(recs.env[self.model_name]))
         else:
-            return validated(self.domain)
+            return validated(domain)
 
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_context = property(attrgetter('context'))
@@ -157,7 +169,7 @@ class _Relational[C](Field[BaseModel, C]):
         return comodel._parent_name in comodel._fields
 
     def _internal_description_domain_raw(self, env) -> str | list:
-        domain = self.domain
+        domain = self.ui_domain or self.domain
         if callable(domain):
             domain = domain(env[self.model_name])
         if isinstance(domain, Domain):
@@ -210,7 +222,9 @@ class Many2one(_Relational['IdType']):
     :param str comodel_name: name of the target model
         ``Mandatory`` except for related or extended fields.
 
-    :param domain: an optional domain to set on candidate values on the
+    :param domain: no special effect, same as ``ui_domain``
+
+    :param ui_domain: an optional domain to set on candidate values on the
         client side (domain or a python expression that will be evaluated
         to provide domain)
 
@@ -908,7 +922,10 @@ class One2many(_RelationalMulti):
     :param str inverse_name: name of the inverse ``Many2one`` or reference field
         in ``comodel_name``
 
-    :param domain: an optional domain to set on candidate values on the
+    :param domain: an optional domain that the comodel records must match in
+        order to be linked or read through this relation
+
+    :param ui_domain: an optional domain to set on candidate values on the
         client side (domain or a python expression that will be evaluated
         to provide domain)
 
@@ -1271,7 +1288,10 @@ class Many2many(_RelationalMulti):
 
     - at least one field belongs to a model with ``_auto = False``.
 
-    :param domain: an optional domain to set on candidate values on the
+    :param domain: an optional domain that the comodel records must match in
+        order to be linked or read through this relation
+
+    :param ui_domain: an optional domain to set on candidate values on the
         client side (domain or a python expression that will be evaluated
         to provide domain)
 
