@@ -1770,7 +1770,7 @@ class AccountMove(models.Model):
             or self.env.company.currency_id
         )
 
-    def _get_payment_state_reconciliation_data(self, stored_ids):
+    def _prepare_payment_state_reconciliation_data(self, stored_ids):
         if not stored_ids:
             return {}
         self.env["account.partial.reconcile"].flush_model()
@@ -1883,7 +1883,7 @@ class AccountMove(models.Model):
                 group_sizes={k: len(v) for k, v in groups.items()},
             )
 
-        payment_data = self._get_payment_state_reconciliation_data(list(invoices.ids))
+        payment_data = self._prepare_payment_state_reconciliation_data(list(invoices.ids))
         for invoice in invoices:
             reconciliation_vals = [
                 row
