@@ -260,7 +260,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Yeah, crazy.
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
-        reset_classes_tp_versions_used(registry.values(), reset_above_ratio=0.3)  # cpython optimisation
+        reset_classes_tp_versions_used([*registry.values(), Registry], reset_above_ratio=0.3)  # cpython optimisation
         registry.ready = True
         registry.last_used = time.monotonic()
 
@@ -578,7 +578,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             env.cr.flush()
             env.transaction.clear()
             self.check_null_constraints(env.cr)
-        reset_classes_tp_versions_used(self.values())  # cpython optimisation
+        reset_classes_tp_versions_used([*self.values(), Registry])  # cpython optimisation
 
     @functools.cached_property
     def field_inverses(self) -> Collector[Field, Field]:
