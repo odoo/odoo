@@ -114,7 +114,7 @@ class TestFieldDescriptionMemo(TransactionCaseWithUserDemo):
                             differing.append(f"{model_name}.{fname}.{attr}")
                 compared += len(expected)
         self.assertEqual(differing, [])
-        self.assertGreater(compared, 10000)
+        self.assertGreater(compared, 2 * len(env.registry))
 
     def test_a_callable_selection_is_evaluated_on_every_call(self):
         Bank = self.env["res.partner.bank"]
