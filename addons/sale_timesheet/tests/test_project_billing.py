@@ -94,7 +94,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             name='Project Manager',
             login='project_manager',
             email='project_manager@example.com',
-            groups='project.group_project_manager,sales_team.group_sale_manager',
+            groups='project.group_project_manager,sales_team.group_sale_manager,hr_timesheet.group_hr_timesheet_approver',
         )
 
     def test_billing_employee_rate(self):
