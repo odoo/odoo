@@ -1787,6 +1787,7 @@ def load_modules(
         ) as span,
     ):
         assert isinstance(cr, odoo.db.Cursor), "Need a real Cursor to load modules"
+        cr.execute("SET idle_session_timeout = 0")
         loader = _ModuleLoader(
             registry,
             cr,
