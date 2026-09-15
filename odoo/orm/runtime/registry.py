@@ -17,9 +17,10 @@ from odoo.libs.func import locked, reset_cached_properties
 from odoo.libs.lru import LRU
 from odoo.libs.worker_thread import current_worker_thread
 from odoo.tools import OrderedSet, config
+from odoo.tools.cache import remove_counters
 from odoo.tools.constants import CACHES_BY_KEY
 
-from .. import registration
+from .. import models, registration
 from ..primitives import SUPERUSER_ID
 from ._registry_capabilities import (
     _RegistryCapabilitiesMixin,
@@ -104,9 +105,7 @@ class Registry(
         registry._get_field_triggers()
 
         if update_module:
-            from odoo.db import drain_all
-
-            drain_all()
+            db.drain_all()
         registry.signal_changes()
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
@@ -247,8 +246,6 @@ class Registry(
             del cls.registries[db_name]
             gc.thaw()
             _debug.lifecycle("registry.removed", db=db_name)
-        from odoo.tools.cache import remove_counters
-
         remove_counters(db_name)
 
     @classmethod
@@ -295,8 +292,6 @@ class Registry(
     __hash__ = object.__hash__
 
     def load(self, module: module_graph.ModuleNode) -> list[str]:
-        from .. import models
-
         model_defs = models.MetaModel._module_to_models__.get(module.name, [])
         if not model_defs:
             return []
@@ -619,9 +614,7 @@ class Registry(
                 db_sequence=db_registry_sequence,
             )
             return published
-        from odoo.db import drain_db
-
-        drain_db(self.db_name)
+        db.drain_db(self.db_name)
         return Registry.new(self.db_name)
 
     def signal_changes(self) -> None:

@@ -2,7 +2,8 @@ import typing
 
 from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, Query, ormcache
+from odoo.tools import SQL, Query, get_lang, ormcache
+from odoo.tools.translate import _
 
 from .... import decorators as api
 from ....constants import (
@@ -13,6 +14,7 @@ from ....constants import (
     SQL_ORDER_DIR,
     SQL_ORDER_NULLS,
 )
+from ....fields.temporal import Date
 from ....parsing import parse_read_group_spec, regex_order_part_read_group
 from ....primitives import SQL_OPERATORS
 from .._model_stubs import _ModelStubs
@@ -20,9 +22,6 @@ from .._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from ...._typing import BaseModel
     from ....fields import Field
-
-from odoo.tools import get_lang
-from odoo.tools.translate import _
 
 _debug = DebugLog(__name__)
 
@@ -35,8 +34,6 @@ class _ReadGroupSQLMixin(_ModelStubs):
             raise ValueError(
                 f'Aggregator "sum_currency" only works on currency field for {fname!r}'
             )
-
-        from ....fields.temporal import Date
 
         CurrencyRate = self.env["res.currency.rate"]
         rate_subquery_table = SQL(

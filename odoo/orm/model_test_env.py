@@ -19,11 +19,12 @@ from . import registration
 from .components.model_graph import ModelGraph
 from .components.storage import DictBackend
 from .fields import Boolean, Char, Many2one
-from .models import AbstractModel, Model
+from .models import AbstractModel, MetaModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
 from .runtime._registry_models import _RegistryModelsMixin
 from .runtime.access_policy import ACCESS_POLICY
+from .runtime.environment import Environment
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE, Locale
 from .runtime.metaschema import META_SCHEMA
@@ -34,7 +35,6 @@ from .runtime.xmlids import XMLIDS
 
 if TYPE_CHECKING:
     from .models.base import BaseModel
-    from .runtime.environment import Environment
     from .runtime.registry import Registry
 
 _logger = logging.getLogger("odoo.orm.model_test_env")
@@ -500,8 +500,6 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         model_defs: list[type[BaseModel]],
         isolated: bool = False,
     ) -> list[type[BaseModel]]:
-        from .models.metaclass import MetaModel
-
         # an isolated registry holds these classes and nothing else of their
         # module, so a test can pick real addon models without their neighbours
         modules = () if isolated else cls._modules_of(model_defs)
@@ -540,8 +538,6 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
             registration.add_model_to_registry(registry_self, model_def)
 
         cr = InMemoryCursor(registry_self)
-        from .runtime.environment import Environment
-
         env = Environment(cr, SUPERUSER_ID, {})
         env.transaction.default_env = env
 
@@ -657,8 +653,6 @@ def model_test_env(
     cr = InMemoryCursor(cast("Registry", registry), fixtures=fixtures)
 
     _create_fixtures(cr.storage, registry)
-
-    from .runtime.environment import Environment
 
     env = Environment(cr, SUPERUSER_ID, {})
     env.transaction.default_env = env
