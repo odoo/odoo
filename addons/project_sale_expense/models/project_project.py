@@ -2,6 +2,9 @@ import json
 from collections import defaultdict
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -18,6 +21,11 @@ class ProjectProject(models.Model):
             aggregates=["id:array_agg", "untaxed_amount_currency:sum"],
         )
         if not expenses_read_group:
+            _debug.logic(
+                "project_expense_profitability_empty",
+                reason="no_posted_expenses_on_this_account",
+                project=self,
+            )
             return {}
         expenses_per_so_id = {}
         expense_ids = []
@@ -37,6 +45,14 @@ class ProjectProject(models.Model):
                 expense_ids.extend(ids)
             dict_amount_per_currency[currency] += untaxed_amount_currency_sum
 
+        _debug.perf.count(
+            "project_expense_groups_read",
+            project=self,
+            groups=len(expenses_read_group),
+            sale_orders=len(expenses_per_so_id),
+            currencies=len(dict_amount_per_currency),
+            can_see_expense=can_see_expense,
+        )
         amount_billed = 0.0
         for currency, untaxed_amount_currency_sum in dict_amount_per_currency.items():
             amount_billed += currency._convert(
@@ -92,6 +108,15 @@ class ProjectProject(models.Model):
                 revenues["invoiced"], self.currency_id, self.company_id
             )
 
+        _debug.pipeline(
+            "project_expense_reinvoicing",
+            project=self,
+            sale_order_lines=len(sol_read_group),
+            reinvoiced_expenses=len(reinvoice_expense_ids),
+            billed=amount_billed,
+            invoiced=total_amount_expense_invoiced,
+            to_invoice=total_amount_expense_to_invoice,
+        )
         section_id = "expenses"
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
         expense_data = {
@@ -138,7 +163,18 @@ class ProjectProject(models.Model):
             aggregates=["__count"],
         )
         if not expenses_read_group:
+            _debug.logic(
+                "project_expense_invoice_lines_none",
+                reason="no_posted_expenses_on_this_account",
+                project=self,
+            )
             return move_line_ids
+        _debug.perf.count(
+            "project_expense_invoice_lines",
+            project=self,
+            sale_orders=len(expenses_read_group),
+            already_included=len(move_line_ids),
+        )
         for sale_order, _count in expenses_read_group:
             move_line_ids.extend(sale_order.invoice_ids.mapped("invoice_line_ids").ids)
         return move_line_ids

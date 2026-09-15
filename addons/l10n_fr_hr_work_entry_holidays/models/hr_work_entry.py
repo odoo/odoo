@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrWorkEntry(models.Model):
@@ -19,6 +22,12 @@ class HrWorkEntry(models.Model):
         if not french_part_time_work_entries:
             return super()._mark_leaves_outside_schedule()
         other_work_entries = self - french_part_time_work_entries
+        _debug.logic(
+            "fr_outside_schedule_marking",
+            entries=self,
+            french_part_time=french_part_time_work_entries,
+            delegated=other_work_entries,
+        )
         if other_work_entries:
             return other_work_entries._mark_leaves_outside_schedule()
         return False
