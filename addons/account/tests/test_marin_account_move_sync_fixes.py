@@ -400,7 +400,7 @@ class TestMarinAccountMoveSyncFixes(AccountTestInvoicingCommon):
             {1.0},
             "account.move.line reads a zero rate as 1.0",
         )
-        for vals in bill._get_non_deductible_line_vals(bill):
+        for vals in bill._prepare_non_deductible_line_vals(bill):
             self.assertEqual(
                 bool(vals["balance"]),
                 bool(vals["amount_currency"]),

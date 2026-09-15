@@ -58,7 +58,7 @@ class PosConfigStock(models.Model):
             return "warehouse_id", self.stock_warehouse_id.ids
         return None
 
-    def _get_stock_quantity_context(self):
+    def _prepare_stock_quantity_context(self):
         scope = self._get_stock_scope()
         return dict([scope]) if scope else {}
 

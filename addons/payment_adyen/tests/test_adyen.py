@@ -24,11 +24,11 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 new=self._generate_test_access_token,
             ),
         ):
-            processing_values = tx._get_processing_values()
+            processing_values = tx._prepare_processing_values()
 
         converted_amount = 111111
         self.assertEqual(
-            payment_utils.to_minor_currency_units(self.amount, self.currency),
+            payment_utils.major_to_minor_currency_units(self.amount, self.currency),
             converted_amount,
         )
         self.assertEqual(processing_values["converted_amount"], converted_amount)
@@ -99,7 +99,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     source_tx.amount, refund_tx.currency_id
                 ),
             },
@@ -120,7 +120,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     self.amount, source_tx.currency_id
                 ),
             },
@@ -151,7 +151,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     source_tx.amount - 10, capture_tx.currency_id
                 ),
             },
@@ -173,7 +173,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     self.amount - 10, source_tx.currency_id
                 ),
             },
@@ -204,7 +204,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     source_tx.amount - 10, cancel_tx.currency_id
                 ),
             },
@@ -226,7 +226,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             self.webhook_notification_payload,
             amount={
                 "currency": self.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     self.amount - 10, source_tx.currency_id
                 ),
             },
@@ -326,7 +326,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             ),
             patch(
                 "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-                return_value=dict(),
+                return_value={},
             ) as mock_make_request,
         ):
             self.call_jsonrpc(
@@ -360,7 +360,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction("token", token_id=self._create_token().id)
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-            return_value=dict(),
+            return_value={},
         ) as mock_make_request:
             tx._send_payment_request()
         application_info = mock_make_request.call_args.kwargs["json"].get(
@@ -409,7 +409,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                         self.webhook_notification_payload,
                         amount={
                             "currency": self.currency.name,
-                            "value": payment_utils.to_minor_currency_units(
+                            "value": payment_utils.major_to_minor_currency_units(
                                 9.99, tx.currency_id
                             ),
                         },
@@ -440,7 +440,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                         self.webhook_notification_payload,
                         amount={
                             "currency": self.currency.name,
-                            "value": payment_utils.to_minor_currency_units(
+                            "value": payment_utils.major_to_minor_currency_units(
                                 9.99, tx.currency_id
                             ),
                         },
@@ -468,7 +468,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                         self.webhook_notification_payload,
                         amount={
                             "currency": self.currency.name,
-                            "value": payment_utils.to_minor_currency_units(
+                            "value": payment_utils.major_to_minor_currency_units(
                                 self.amount, source_tx.currency_id
                             ),
                         },
@@ -567,7 +567,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                         self.webhook_notification_payload,
                         amount={
                             "currency": self.currency.name,
-                            "value": payment_utils.to_minor_currency_units(
+                            "value": payment_utils.major_to_minor_currency_units(
                                 self.amount, source_tx.currency_id
                             ),
                         },

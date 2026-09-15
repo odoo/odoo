@@ -8,10 +8,10 @@ from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.integration.tools.authentication import (
-    _is_custom_verification_valid,
+    _execute_custom_verification,
+    execute_signature_verification,
     is_bearer_token_valid,
     is_hmac_signature_valid,
-    is_signature_valid,
     is_timestamp_valid,
 )
 
@@ -76,13 +76,15 @@ class TestAuthenticationTools(TransactionCase):
 
     def test_verify_signature_bearer(self):
         self.assertTrue(
-            is_signature_valid("bearer", {"Authorization": "Bearer k"}, "", secret="k")
+            execute_signature_verification(
+                "bearer", {"Authorization": "Bearer k"}, "", secret="k"
+            )
         )
 
     def test_verify_signature_hmac_256_and_512(self):
         body = "abc"
         self.assertTrue(
-            is_signature_valid(
+            execute_signature_verification(
                 "hmac_sha256",
                 {"X-Hub-Signature-256": "sha256=" + self._hex("s", body)},
                 body,
@@ -90,7 +92,7 @@ class TestAuthenticationTools(TransactionCase):
             )
         )
         self.assertTrue(
-            is_signature_valid(
+            execute_signature_verification(
                 "hmac_sha512",
                 {
                     "X-Hub-Signature-512": "sha512="
@@ -102,8 +104,8 @@ class TestAuthenticationTools(TransactionCase):
         )
 
     def test_verify_signature_unknown_and_custom_without_method(self):
-        self.assertFalse(is_signature_valid("bogus", {}, ""))
-        self.assertFalse(is_signature_valid("custom", {}, ""))
+        self.assertFalse(execute_signature_verification("bogus", {}, ""))
+        self.assertFalse(execute_signature_verification("custom", {}, ""))
 
     def test_timestamp_valid_epoch_int_and_str(self):
         now = int(time.time())
@@ -134,14 +136,14 @@ class TestAuthenticationTools(TransactionCase):
 class TestVerifyCustomPrefixGate(TransactionCase):
     @mute_logger("odoo.addons.integration.tools.authentication")
     def test_non_verify_method_rejected(self):
-        result = _is_custom_verification_valid(
+        result = _execute_custom_verification(
             "res.partner.search_count", {}, "{}", env=self.env
         )
         self.assertFalse(result)
 
     @mute_logger("odoo.addons.integration.tools.authentication")
     def test_private_non_verify_method_rejected(self):
-        result = _is_custom_verification_valid(
+        result = _execute_custom_verification(
             "res.partner._compute_display_name", {}, "{}", env=self.env
         )
         self.assertFalse(result)
@@ -157,7 +159,7 @@ class TestVerifyCustomPrefixGate(TransactionCase):
         with patch.object(
             partner_cls, "verify_test_webhook", create=True, new=fake_verify
         ):
-            result = _is_custom_verification_valid(
+            result = _execute_custom_verification(
                 "res.partner.verify_test_webhook",
                 {"X-Test": "1"},
                 "body",

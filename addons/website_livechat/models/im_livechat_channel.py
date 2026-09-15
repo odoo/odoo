@@ -4,7 +4,7 @@ from odoo import api, models
 class Im_LivechatChannel(models.Model):
     _inherit = "im_livechat.channel"
 
-    def _get_livechat_discuss_channel_vals(
+    def _prepare_livechat_discuss_channel_vals(
         self,
         /,
         *,
@@ -14,7 +14,7 @@ class Im_LivechatChannel(models.Model):
         operator_model,
         **kwargs,
     ):
-        discuss_channel_vals = super()._get_livechat_discuss_channel_vals(
+        discuss_channel_vals = super()._prepare_livechat_discuss_channel_vals(
             agent=agent,
             chatbot_script=chatbot_script,
             operator_partner=operator_partner,

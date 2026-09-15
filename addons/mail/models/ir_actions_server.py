@@ -579,7 +579,7 @@ class IrActionsServer(models.Model):
             if not key.startswith("default_")
         }
 
-    def _get_mail_post_context(self) -> dict:
+    def _prepare_mail_post_context(self) -> dict:
         context = self._get_run_context()
         context["mail_post_autofollow_author_skip"] = True
         context["mail_post_autofollow"] = self.mail_post_autofollow
@@ -591,7 +591,7 @@ class IrActionsServer(models.Model):
         if not self.template_id or not records:
             return False
 
-        context = self._get_mail_post_context()
+        context = self._prepare_mail_post_context()
         _debug.pipeline(
             "mail_post_action",
             action=self.id,

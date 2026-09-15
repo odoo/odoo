@@ -30,7 +30,7 @@ class MixinProductCatalog(models.AbstractModel):
                 "name": name,
                 "display_type": "line_section",
                 "sequence": sequence,
-                **self._get_default_create_section_values(),
+                **self._prepare_default_create_section_values(),
             }
         )
 
@@ -112,7 +112,7 @@ class MixinProductCatalog(models.AbstractModel):
         )
         return sorted(sections.values(), key=lambda x: x["sequence"])
 
-    def _get_default_create_section_values(self):
+    def _prepare_default_create_section_values(self):
         return {}
 
     def _get_parent_field_on_child_model(self):

@@ -12,7 +12,7 @@ class MixinAccountMoveSend(models.AbstractModel):
             lambda move: move.l10n_es_edi_verifactu_required
         )
         waiting_moves = verifactu_moves.filtered(
-            lambda m: m.l10n_es_edi_verifactu_document_ids._filter_waiting()
+            lambda m: m.l10n_es_edi_verifactu_document_ids._filtered_waiting()
         )
         registered_moves = verifactu_moves.filtered(
             lambda m: (
@@ -157,7 +157,7 @@ class MixinAccountMoveSend(models.AbstractModel):
     def _hook_if_errors(self, moves_data, allow_raising=True):
         # EXTENDS 'account'
         if allow_raising:
-            for move, move_data in moves_data.items():
+            for move_data in moves_data.values():
                 error = move_data.get("error", {})
                 if isinstance(error, dict) and error.get("verifactu_redirect_action"):
                     raise RedirectWarning(

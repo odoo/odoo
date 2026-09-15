@@ -151,8 +151,8 @@ class TeamTeam(models.Model):
         usages["sale"] = dataclasses.replace(usages["sale"], alias_model="crm.lead")
         return usages
 
-    def _get_usage_alias_defaults(self, key):
-        defaults = super()._get_usage_alias_defaults(key)
+    def _prepare_usage_alias_defaults(self, key):
+        defaults = super()._prepare_usage_alias_defaults(key)
         if key == "sale":
             has_group_use_lead = self.env.user.has_group("crm.group_use_lead")
             defaults["type"] = (
@@ -178,7 +178,7 @@ class TeamTeam(models.Model):
                         "Assignment domain for team %(team)s is incorrectly formatted",
                         team=team.name,
                     )
-                )
+                ) from None
 
     def write(self, vals):
         result = super().write(vals)
@@ -216,7 +216,7 @@ class TeamTeam(models.Model):
                     continue
 
                 match = existing_noteam.filtered(
-                    lambda frequ_nt: (
+                    lambda frequ_nt, frequency=frequency: (
                         frequ_nt.variable == frequency.variable
                         and frequ_nt.value == frequency.value
                     )
@@ -307,7 +307,7 @@ class TeamTeam(models.Model):
             "Lead Assignment requested by %(user_name)s", user_name=self.env.user.name
         )
         log_message = Markup("<p>%s<br /><br />%s</p>") % (log_action, html_message)
-        self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
+        self._message_log_batch(bodies={team.id: log_message for team in self})
 
         return {
             "type": "ir.actions.client",
@@ -448,9 +448,9 @@ class TeamTeam(models.Model):
         auto_commit = not modules.module.current_test
 
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
-        duplicates_lead_cache = dict()
+        duplicates_lead_cache = {}
 
-        teams_data, population, weights = dict(), list(), list()
+        teams_data, population, weights = {}, [], []
         for team in self:
             if not team.lead_assignment_max:
                 continue
@@ -490,7 +490,7 @@ class TeamTeam(models.Model):
         if auto_commit:
             self.env.cr.commit()
 
-        global_data = dict(assigned=set(), merged=set(), duplicates=set())
+        global_data = {"assigned": set(), "merged": set(), "duplicates": set()}
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
         while population:
             counter += 1
@@ -545,11 +545,11 @@ class TeamTeam(models.Model):
 
     def _allocate_leads_deduplicate(self, leads, duplicates_cache=None):
         self.check_singleton()
-        duplicates_cache = duplicates_cache if duplicates_cache is not None else dict()
+        duplicates_cache = duplicates_cache if duplicates_cache is not None else {}
 
         leads_assigned = self.env["crm.lead"]
         leads_done_ids, leads_merged_ids, leads_dup_ids = set(), set(), set()
-        leads_dups_dict = dict()
+        leads_dups_dict = {}
         missing = leads.filtered(lambda lead: lead not in duplicates_cache)
         if missing:
             duplicates_cache.update(
@@ -567,7 +567,7 @@ class TeamTeam(models.Model):
                     leads_assigned += lead
                     leads_done_ids.add(lead.id)
 
-        dups_to_assign = [lead for lead in leads_dups_dict]
+        dups_to_assign = list(leads_dups_dict)
         leads_assigned.union(*dups_to_assign)._handle_salesmen_assignment(
             user_ids=None, team_id=self.id
         )
@@ -680,7 +680,7 @@ class TeamTeam(models.Model):
                 for member in members_to_assign_wpref
             }
             preferred_leads = self.env["crm.lead"].concat(
-                *[lead for lead in preferred_leads_per_member.values()]
+                *list(preferred_leads_per_member.values())
             )
             assigned_preferred_leads = self.env["crm.lead"]
 
@@ -700,7 +700,7 @@ class TeamTeam(models.Model):
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
 
-            to_assign = to_assign - assigned_preferred_leads
+            to_assign -= assigned_preferred_leads
             leads_per_member = {
                 member: to_assign.filtered_domain(
                     literal_eval(member.lead_assignment_domain or "[]")

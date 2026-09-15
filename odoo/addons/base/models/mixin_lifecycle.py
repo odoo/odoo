@@ -51,7 +51,7 @@ class MixinLifecycle(models.AbstractModel):
             f"{self._name} must implement _prepare_confirmation_values()"
         )
 
-    def _get_confirmation_context(self):
+    def _prepare_confirmation_context(self):
         return self.env.context
 
     def _action_confirm(self):
@@ -146,7 +146,7 @@ class MixinLifecycle(models.AbstractModel):
         self._check_confirm_allowed()
         with _debug.perf("action_confirm", cr=self.env.cr, records=self):
             self.write(self._prepare_confirmation_values())
-            self.with_context(self._get_confirmation_context())._action_confirm()
+            self.with_context(self._prepare_confirmation_context())._action_confirm()
             self.filtered(lambda r: r._is_lock_required()).action_lock()
         _debug.lifecycle("confirmed", records=self)
         return True

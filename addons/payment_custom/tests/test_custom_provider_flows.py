@@ -21,7 +21,7 @@ class TestCustomProviderFlows(PaymentCustomCommon):
         """Custom transactions render against the process URL and reference."""
         tx = self._create_transaction(flow="direct", reference="RENDER-REF")
 
-        values = tx._get_specific_rendering_values({})
+        values = tx._prepare_redirect_form_values({})
 
         self.assertEqual(values["api_url"], CustomController._process_url)
         self.assertEqual(values["reference"], "RENDER-REF")
@@ -104,7 +104,9 @@ class TestCustomProviderFlows(PaymentCustomCommon):
         """QR-code generation no-ops instead of crashing when `account` isn't
         installed, regardless of whether a bank account is configured."""
         if self.env["ir.module.module"]._get("account").state == "installed":
-            self.skipTest("account installed: prepare_qr_code_base64 would be available")
+            self.skipTest(
+                "account installed: prepare_qr_code_base64 would be available"
+            )
         self.provider.qr_code = True
         tx = self._create_transaction(flow="direct", reference="QR-REF")
 

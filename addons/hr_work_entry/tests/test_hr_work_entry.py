@@ -368,7 +368,7 @@ class TestHrWorkEntry(TransactionCase):
                 "work_entry_type_id": leave_type.id,
             }
         )
-        vals_list = self.employee_a.version_id._get_work_entries_values(
+        vals_list = self.employee_a.version_id._prepare_work_entries_values(
             datetime(2024, 1, 1, 0, 0), datetime(2024, 1, 5, 23, 59, 59)
         )
         january_third = [

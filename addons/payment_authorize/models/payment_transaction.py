@@ -13,17 +13,17 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return an access token as provider-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
         if self.provider_code != "authorize":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
         return {
             "access_token": payment_utils.generate_access_token(
@@ -68,6 +68,7 @@ class PaymentTransaction(models.Model):
                 pprint.pformat(res_content),
             )
         self._process("authorize", {"response": res_content})
+        return None
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Authorize."""
@@ -131,6 +132,7 @@ class PaymentTransaction(models.Model):
             )
             _logger.warning(err_msg)
             self._set_error(err_msg)
+        return None
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Authorize."""
@@ -148,6 +150,7 @@ class PaymentTransaction(models.Model):
             pprint.pformat(res_content),
         )
         self._process("authorize", {"response": res_content})
+        return None
 
     def _send_void_request(self):
         """Override of `payment` to send a void request to Authorize."""
@@ -162,6 +165,7 @@ class PaymentTransaction(models.Model):
             pprint.pformat(res_content),
         )
         self._process("authorize", {"response": res_content})
+        return None
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""
@@ -249,6 +253,7 @@ class PaymentTransaction(models.Model):
                     error=error_code,
                 )
             )
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

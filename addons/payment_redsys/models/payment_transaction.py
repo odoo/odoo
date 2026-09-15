@@ -50,23 +50,23 @@ class PaymentTransaction(models.Model):
             provider_code, prefix=prefix, separator="S", **kwargs
         )
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Redsys-specific rendering values.
 
-        Note: self.check_singleton() from `_get_processing_values`.
+        Note: self.check_singleton() from `_prepare_processing_values`.
 
         :param dict processing_values: The generic processing values of the transaction.
         :return: The dict of provider-specific rendering values.
         :rtype: dict
         """
         if self.provider_code != "redsys":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         merchant_parameters = self._redsys_prepare_merchant_parameters()
         encoded_merchant_parameters = base64.b64encode(
             json.dumps(merchant_parameters).encode()
         ).decode()
-        signature = self.provider_id._redsys_calculate_signature(
+        signature = self.provider_id._get_redsys_signature(
             encoded_merchant_parameters,
             self.reference,
             self.provider_id.redsys_secret_key,
@@ -84,13 +84,13 @@ class PaymentTransaction(models.Model):
         :return: The merchant parameters.
         :rtype: str
         """
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount, self.currency_id
         )
         base_url = self.provider_id.get_base_url()
         return_url = urljoin(base_url, RedsysController._return_url)
         webhook_url = urljoin(base_url, RedsysController._webhook_url)
-        merchant_parameters = {
+        return {
             "DS_MERCHANT_AMOUNT": str(converted_amount),
             "DS_MERCHANT_CURRENCY": self.currency_id.iso_numeric,
             "DS_MERCHANT_MERCHANTCODE": self.provider_id.redsys_merchant_code,
@@ -115,7 +115,6 @@ class PaymentTransaction(models.Model):
                 "email": self.partner_email,
             },
         }
-        return merchant_parameters
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -129,7 +128,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "redsys":
             return super()._extract_amount_data(payment_data)
 
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             float(payment_data.get("Ds_Amount", 0)), self.currency_id
         )
         currency = (
@@ -170,3 +169,4 @@ class PaymentTransaction(models.Model):
         else:
             _logger.warning("Received invalid payment status (%s).", status_code)
             self._set_error(_("Unknown status code: %s", status_code))
+        return None

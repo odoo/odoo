@@ -113,12 +113,12 @@ class BuckarooController(http.Controller):
         # Check for the received signature
         if not received_signature:
             _logger.warning("Received payment data with missing signature")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data
-        expected_signature = tx_sudo.provider_id._buckaroo_generate_digital_sign(
+        expected_signature = tx_sudo.provider_id._get_buckaroo_signature(
             payment_data, incoming=True
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature")
-            raise Forbidden()
+            raise Forbidden

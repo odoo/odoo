@@ -88,16 +88,11 @@ class StockMovePicking(models.Model):
         reference_set = set(first.reference_ids.ids)
         covered = None
 
-        def destination(move):
-            return (
-                move.location_dest_id or move.picking_type_id.default_location_dest_id
-            )
-
         for groups in wanted:
             lead = groups[0][0]
             if (
                 lead.location_id != first.location_id
-                or destination(lead) != destination(first)
+                or lead._get_picking_destination() != first._get_picking_destination()
                 or lead.picking_type_id != first.picking_type_id
             ):
                 continue
@@ -109,6 +104,9 @@ class StockMovePicking(models.Model):
             if covered is None and pending_set <= reference_set:
                 covered = groups
         return covered
+
+    def _get_picking_destination(self):
+        return self.location_dest_id or self.picking_type_id.default_location_dest_id
 
     def _prepare_picking_vals(self, picking):
         vals = {}

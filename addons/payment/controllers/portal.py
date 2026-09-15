@@ -190,7 +190,7 @@ class PaymentPortal(portal.CustomerPortal):
             **portal_page_values,
             **payment_form_values,
             **payment_context,
-            **self._get_extra_payment_form_values(
+            **self._prepare_extra_payment_form_context(
                 **payment_context, currency_id=currency.id, **kwargs
             ),  # Pass the payment context to allow overriding modules to check document access.
         }
@@ -285,11 +285,11 @@ class PaymentPortal(portal.CustomerPortal):
         rendering_context = {
             **payment_form_values,
             **payment_context,
-            **self._get_extra_payment_form_values(**kwargs),
+            **self._prepare_extra_payment_form_context(**kwargs),
         }
         return request.render("payment.payment_methods", rendering_context)
 
-    def _get_extra_payment_form_values(self, **kwargs):
+    def _prepare_extra_payment_form_context(self, **kwargs):
         """Return a dict of extra payment form values to include in the rendering context.
 
         :param dict kwargs: Optional data. This parameter is not used here.
@@ -333,7 +333,7 @@ class PaymentPortal(portal.CustomerPortal):
         self._update_landing_route(
             tx_sudo, access_token
         )  # Add the required params to the route.
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()
 
     def _create_transaction(
         self,

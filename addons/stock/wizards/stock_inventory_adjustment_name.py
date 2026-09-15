@@ -17,7 +17,7 @@ class StockInventoryAdjustmentName(models.TransientModel):
         help="Date at which the resulting moves will be dated.",
     )
 
-    def _get_quants_context(self):
+    def _prepare_quants_context(self):
         return {
             "inventory_name": self.inventory_adjustment_name,
             "counting_date": self.counting_date,
@@ -31,6 +31,6 @@ class StockInventoryAdjustmentName(models.TransientModel):
             dbg.rec(quants),
             len(self.quant_ids),
         )
-        return quants.with_context(self._get_quants_context()).action_apply_inventory(
+        return quants.with_context(self._prepare_quants_context()).action_apply_inventory(
             self.counting_date
         )

@@ -20,8 +20,8 @@ class AccountMove(models.Model):
         ]
         return res
 
-    def _get_action_add_from_catalog_extra_context(self):
-        res = super()._get_action_add_from_catalog_extra_context()
+    def _prepare_catalog_extra_context(self):
+        res = super()._prepare_catalog_extra_context()
         if self.is_purchase_document() and self.partner_id:
             res["search_default_seller_ids"] = self.partner_id.name
 

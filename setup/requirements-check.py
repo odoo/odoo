@@ -28,7 +28,6 @@ import argparse
 import gzip
 import itertools
 import json
-import os
 import re
 import shutil
 import tempfile
@@ -42,6 +41,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from sys import stderr, stdout
 from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 from urllib.request import HTTPError
 from urllib.request import urlopen as _urlopen
 
@@ -71,12 +71,14 @@ PLATFORM_NAMES = ("Linux", "Win", "OSX")
 
 
 def urlopen(url: str) -> io.BufferedReader:
+    if urlsplit(url).scheme not in ("http", "https"):
+        raise ValueError("Package metadata URLs must use HTTP or HTTPS")
     file_name = "".join(c if c.isalnum() else "_" for c in url)
     Path("/tmp/package_versions_cache/").mkdir(exist_ok=True, parents=True)
     file_path = f"/tmp/package_versions_cache/{file_name}"
     if not Path(file_path).is_file():
-        response = _urlopen(url)
-        Path(file_path).write_bytes(response.read())
+        with _urlopen(url) as response:  # noqa: S310 -- scheme checked above; metadata fetches use HTTP(S).
+            Path(file_path).write_bytes(response.read())
     return Path(file_path).open("rb")
 
 
@@ -114,7 +116,7 @@ class PipPackage:
         self.urls = infos["urls"]
         self.vulnerabilities = infos["vulnerabilities"]
 
-    def has_wheel_for(
+    def get_wheel_availability(
         self, version: str | None, python_version: str, platform: str
     ) -> tuple[bool, bool, bool]:
         if version is None:
@@ -215,7 +217,7 @@ class Distribution(ABC):
             return next(c for c in cls.__subclasses__() if c.__name__.lower() == name)
         except StopIteration:
             msg = f"Unknown distribution {name!r}"
-            raise ValueError(msg)
+            raise ValueError(msg) from None
 
 
 class Debian(Distribution):
@@ -263,18 +265,19 @@ class Ubuntu(Distribution):
         # ideally we should request the proper Content-Encoding but PUC
         # apparently does not care, and returns a somewhat funky
         # content-encoding (x-gzip) anyway
-        data = gzip.open(
+        with (
             urlopen(
                 f"https://packages.ubuntu.com/source/{release}/allpackages?format=txt.gz"
-            ),
-            mode="rt",
-            encoding="utf-8",
-        )
-        for line in itertools.islice(data, 6, None):  # first 6 lines is garbage header
-            # ignore the restricted, security, universe, multiverse tags
-            m = re.match(r"(\S+) \(([^)]+)\)", line.strip())
-            assert m, f"invalid line {line.strip()!r}"
-            self._packages[m[1]] = m[2]
+            ) as response,
+            gzip.open(response, mode="rt", encoding="utf-8") as data,
+        ):
+            for line in itertools.islice(
+                data, 6, None
+            ):  # first 6 lines is garbage header
+                # ignore the restricted, security, universe, multiverse tags
+                m = re.match(r"(\S+) \(([^)]+)\)", line.strip())
+                assert m, f"invalid line {line.strip()!r}"
+                self._packages[m[1]] = m[2]
 
     def get_version(self, package: str) -> Version | None:
         package = SPECIAL.get(package, package)
@@ -425,7 +428,9 @@ def main(args: argparse.Namespace) -> None:
                             has_wheel_for_version,
                             has_any_wheel,
                             has_wheel_in_another_version,
-                        ) = pip_infos.has_wheel_for(platform_version, pyver, platform)
+                        ) = pip_infos.get_wheel_availability(
+                            platform_version, pyver, platform
+                        )
                         if has_wheel_for_version:
                             deco = "ok"
                         elif has_wheel_in_another_version:

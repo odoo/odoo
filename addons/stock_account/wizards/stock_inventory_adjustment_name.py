@@ -21,7 +21,7 @@ class StockInventoryAdjustmentName(models.TransientModel):
                 for product in wizard.quant_ids.product_id
             )
 
-    def _get_quants_context(self):
-        res = super()._get_quants_context()
+    def _prepare_quants_context(self):
+        res = super()._prepare_quants_context()
         res["force_period_date"] = self.accounting_date
         return res

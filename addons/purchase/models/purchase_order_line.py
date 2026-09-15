@@ -103,8 +103,8 @@ class PurchaseOrderLine(models.Model):
     )
     qty_invoiced_at_date = fields.Float(string="Billed")
 
-    def _get_display_type_nullify_vals(self):
-        return {**super()._get_display_type_nullify_vals(), "date_commitment": False}
+    def _prepare_display_type_reset_vals(self):
+        return {**super()._prepare_display_type_reset_vals(), "date_commitment": False}
 
     def _get_count_id(self, query):
         return SQL("order_id")

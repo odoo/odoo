@@ -94,7 +94,7 @@ class AccountMove(models.Model):
         return lines[:1]
 
     @_debug.perf.timed
-    def _get_cash_rounding_line_vals(self, diff_balance, diff_amount_currency):
+    def _prepare_cash_rounding_line_vals(self, diff_balance, diff_amount_currency):
         self.check_singleton()
         vals = {
             "balance": diff_balance,
@@ -217,7 +217,7 @@ class AccountMove(models.Model):
             _debug.logic("cash_rounding_line_unchanged", move=self)
             return
 
-        vals = self._get_cash_rounding_line_vals(diff_balance, diff_amount_currency)
+        vals = self._prepare_cash_rounding_line_vals(diff_balance, diff_amount_currency)
         _debug.pipeline(
             "cash_rounding_line_vals_ready",
             move=self,
@@ -504,7 +504,7 @@ class AccountMove(models.Model):
         return SKIP
 
     @_debug.perf.timed
-    def _get_non_deductible_tax_line_vals(self, move, base_lines_values):
+    def _prepare_non_deductible_tax_line_vals(self, move, base_lines_values):
         non_deductible_lines_values = [
             line_values
             for line_values in base_lines_values
@@ -663,7 +663,7 @@ class AccountMove(models.Model):
                 lambda line: line.display_type == "non_deductible_tax"
             )
         )
-        non_deductible_vals = self._get_non_deductible_tax_line_vals(
+        non_deductible_vals = self._prepare_non_deductible_tax_line_vals(
             move, base_lines_values
         )
         _debug.logic(
@@ -716,7 +716,7 @@ class AccountMove(models.Model):
         return to_delete, to_create, to_update
 
     @_debug.perf.timed
-    def _get_non_deductible_line_vals(self, move):
+    def _prepare_non_deductible_line_vals(self, move):
         product_lines = move.line_ids.filtered(
             lambda line: line.display_type == "product"
         )
@@ -826,7 +826,7 @@ class AccountMove(models.Model):
                     lambda line: line.display_type in NON_DEDUCTIBLE_BASE_DISPLAY_TYPES
                 ).ids
                 if has_non_deductible_lines(move):
-                    to_create += self._get_non_deductible_line_vals(move)
+                    to_create += self._prepare_non_deductible_line_vals(move)
 
             _debug.pipeline(
                 "non_deductible_base_lines_planned",

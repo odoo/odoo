@@ -22,7 +22,7 @@ class TestSignupToken(TransactionCase):
         self.partner.signup_prepare()
         token = self.partner._generate_signup_token()
         self.assertEqual(
-            self.env["res.partner"]._signup_retrieve_partner(token), self.partner
+            self.env["res.partner"]._get_signup_partner(token), self.partner
         )
 
     def test_cancel_invalidates_token(self):
@@ -32,18 +32,18 @@ class TestSignupToken(TransactionCase):
         self.partner.signup_cancel()
         self.assertFalse(self.partner.signup_type)
         with self.assertRaises(exceptions.UserError):
-            self.env["res.partner"]._signup_retrieve_partner(token)
+            self.env["res.partner"]._get_signup_partner(token)
 
     def test_garbage_token_rejected(self):
         """An arbitrary token never resolves (negative)."""
         with self.assertRaises(exceptions.UserError):
-            self.env["res.partner"]._signup_retrieve_partner("not-a-real-token")
+            self.env["res.partner"]._get_signup_partner("not-a-real-token")
 
     def test_retrieve_info_without_user_offers_email(self):
         """For a partner with no user, the email doubles as proposed login."""
         self.partner.signup_prepare()
         token = self.partner._generate_signup_token()
-        info = self.env["res.partner"]._signup_retrieve_info(token)
+        info = self.env["res.partner"]._resolve_signup_info(token)
         self.assertEqual(info["name"], "Signup partner")
         self.assertEqual(info["login"], "signup.partner@example.com")
         self.assertEqual(info["email"], "signup.partner@example.com")
@@ -58,7 +58,7 @@ class TestSignupToken(TransactionCase):
         )
         user.partner_id.signup_prepare()
         token = user.partner_id._generate_signup_token()
-        info = self.env["res.partner"]._signup_retrieve_info(token)
+        info = self.env["res.partner"]._resolve_signup_info(token)
         self.assertEqual(info["login"], "signup_existing")
 
 

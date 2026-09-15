@@ -1272,10 +1272,10 @@ class Base_ImportImport(models.TransientModel):
         IrModelFieldsUs = self.with_context(lang="en_US").env["ir.model.fields"]
 
         @functools.cache
-        def lookup(model_name):
+        def get_field_string(model_name):
             return IrModelFieldsUs.get_field_string(model_name)
 
-        return lookup
+        return get_field_string
 
     def _mapping_path_exists(self, field_path, fields_tree):
         subtree = fields_tree

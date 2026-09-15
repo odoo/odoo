@@ -491,7 +491,7 @@ class IntegrationService(models.Model):
     def action_check_health(self) -> dict[str, Any]:
         for record in self:
             try:
-                record._perform_health_check()
+                record._probe_health()
             except Exception as e:
                 _logger.exception("Health check failed for service %s", record.code)
                 record.write(
@@ -546,11 +546,19 @@ class IntegrationService(models.Model):
 
         for service in due:
             try:
-                service._perform_health_check()
+                service._probe_health()
             except Exception as e:
                 _logger.error("Health check failed for %s: %s", service.code, e)
 
-    def _perform_health_check(self):
+    def _probe_health(self):
+        """Probe with an eligible connection and store this service's status.
+
+        A missing credential or failed request records unhealthy status. A
+        response is healthy for HTTP 2xx. This uses the normal GET request path,
+        including its configured cache and logging behavior.
+
+        :rtype: None
+        """
         self.check_singleton()
         connections = self.connection_ids.filtered(
             lambda c: c.active and (not c.credential_id or c.credential_id.active)

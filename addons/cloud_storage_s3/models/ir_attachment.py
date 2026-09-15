@@ -53,7 +53,7 @@ class IrAttachment(models.Model):
             and icp.get_param("cloud_storage_s3_storage_mode") == "hybrid"
         )
 
-    def _filter_s3_mirrorable(self):
+    def _filtered_s3_mirrorable(self):
         return self.filtered(
             lambda a: (
                 a.type == "binary" and (a.store_fname or a.db_datas) and a.res_model
@@ -65,7 +65,7 @@ class IrAttachment(models.Model):
         # ``_cron_mirror_pending_to_s3``. Uploading from a postcommit callback
         # runs it in the request thread, which keeps the main transaction
         # idle-in-transaction for as long as S3 takes to answer.
-        to_mirror = self._filter_s3_mirrorable()
+        to_mirror = self._filtered_s3_mirrorable()
         if to_mirror:
             to_mirror.s3_mirror_pending = True
 

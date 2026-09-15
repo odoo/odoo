@@ -2120,7 +2120,7 @@ class PosOrder(models.Model):
             "res_id": move.id,
         }
 
-    def _get_invoice_post_context(self):
+    def _prepare_invoice_post_context(self):
         return {"skip_invoice_sync": True}
 
     def _get_payments(self):
@@ -2166,7 +2166,7 @@ class PosOrder(models.Model):
         invoice = invoice_order._create_invoice(invoice_vals)
         with dbg.timer(self.env, "[order:%s] invoice post", dbg.names(self, "uuid")):
             invoice.sudo().with_company(company).with_context(
-                **self._get_invoice_post_context()
+                **self._prepare_invoice_post_context()
             )._post()
 
         payment_moves_from_closed_sessions = {}

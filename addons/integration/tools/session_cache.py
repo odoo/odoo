@@ -19,7 +19,7 @@ class SessionCache(BaseLRUCache):
 
 
 def get_session_cache(env, max_size: int = 100, ttl_hours: float = 1) -> SessionCache:
-    def build() -> SessionCache:
+    def prepare_session_cache() -> SessionCache:
         _logger.info(
             "Created new session cache for database '%s': max_size=%d, ttl=%.1fh",
             env.cr.dbname,
@@ -28,7 +28,7 @@ def get_session_cache(env, max_size: int = 100, ttl_hours: float = 1) -> Session
         )
         return SessionCache(max_size=max_size, ttl_hours=ttl_hours)
 
-    return registry_singleton(env, "_session_cache", build)
+    return registry_singleton(env, "_session_cache", prepare_session_cache)
 
 
 def invalidate_session_cache(env) -> None:

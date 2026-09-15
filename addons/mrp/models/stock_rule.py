@@ -21,9 +21,9 @@ class StockRule(models.Model):
         ondelete={"manufacture": "cascade"},
     )
 
-    def _get_message_dict(self):
-        message_dict = super()._get_message_dict()
-        source, destination, direct_destination, operation = self._get_message_values()
+    def _get_action_messages(self):
+        message_dict = super()._get_action_messages()
+        source, destination, direct_destination, operation = self._get_message_labels()
         manufacture_message = _(
             "When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.",
             destination,

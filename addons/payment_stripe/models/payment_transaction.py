@@ -16,17 +16,17 @@ _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return Stripe-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
         if self.provider_code != "stripe" or self.operation == "online_token":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
         intent = self._stripe_create_intent()
         base_url = self.provider_id.get_base_url()
@@ -55,6 +55,7 @@ class PaymentTransaction(models.Model):
             payment_intent, payment_data
         )
         self._process("stripe", payment_data)
+        return None
 
     def _stripe_create_intent(self):
         """Create and return a PaymentIntent or a SetupIntent object, depending on the operation.
@@ -118,7 +119,7 @@ class PaymentTransaction(models.Model):
         ppm_code = self.payment_method_id.primary_payment_method_id.code
         payment_method_type = ppm_code or self.payment_method_code
         payment_intent_payload = {
-            "amount": payment_utils.to_minor_currency_units(
+            "amount": payment_utils.major_to_minor_currency_units(
                 self.amount,
                 self.currency_id,
                 arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
@@ -166,7 +167,7 @@ class PaymentTransaction(models.Model):
         :return: The Customer
         :rtype: dict
         """
-        customer = self._send_api_request(
+        return self._send_api_request(
             "POST",
             "customers",
             data={
@@ -181,7 +182,6 @@ class PaymentTransaction(models.Model):
                 "phone": (self.partner_phone and self.partner_phone[:20]) or None,
             },
         )
-        return customer
 
     def _stripe_prepare_mandate_options(self):
         """Prepare the configuration options for setting up an eMandate along with an intent.
@@ -189,32 +189,30 @@ class PaymentTransaction(models.Model):
         :return: The Stripe-formatted payload for the mandate options.
         :rtype: dict
         """
-        mandate_values = self._get_mandate_values()
+        mandate_values = self._prepare_mandate_data()
 
         OPTION_PATH_PREFIX = "payment_method_options[card][mandate_options]"
         mandate_options = {
             f"{OPTION_PATH_PREFIX}[reference]": self.reference,
             f"{OPTION_PATH_PREFIX}[amount_type]": "maximum",
-            f"{OPTION_PATH_PREFIX}[amount]": payment_utils.to_minor_currency_units(
+            f"{OPTION_PATH_PREFIX}[amount]": payment_utils.major_to_minor_currency_units(
                 mandate_values.get("amount", 15000),
                 self.currency_id,
                 arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
                     self.currency_id.name
                 ),
             ),  # Use the specified amount, if any, or define the maximum amount of 15.000 INR.
-            f"{OPTION_PATH_PREFIX}[start_date]": int(
-                round(
-                    (
-                        mandate_values.get("start_datetime") or fields.Datetime.now()
-                    ).timestamp()
-                )
+            f"{OPTION_PATH_PREFIX}[start_date]": round(
+                (
+                    mandate_values.get("start_datetime") or fields.Datetime.now()
+                ).timestamp()
             ),
             f"{OPTION_PATH_PREFIX}[interval]": "sporadic",
             f"{OPTION_PATH_PREFIX}[supported_types][]": "india",
         }
         if mandate_values.get("end_datetime"):
-            mandate_options[f"{OPTION_PATH_PREFIX}[end_date]"] = int(
-                round(mandate_values["end_datetime"].timestamp())
+            mandate_options[f"{OPTION_PATH_PREFIX}[end_date]"] = round(
+                mandate_values["end_datetime"].timestamp()
             )
         if mandate_values.get("recurrence_unit") and mandate_values.get(
             "recurrence_duration"
@@ -252,7 +250,7 @@ class PaymentTransaction(models.Model):
             "refunds",
             data={
                 "payment_intent": self.source_transaction_id.provider_reference,
-                "amount": payment_utils.to_minor_currency_units(
+                "amount": payment_utils.major_to_minor_currency_units(
                     -self.amount,  # Refund transactions' amount is negative, inverse it.
                     self.currency_id,
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
@@ -266,6 +264,7 @@ class PaymentTransaction(models.Model):
         payment_data = {}
         StripeController._include_refund_in_payment_data(data, payment_data)
         self._process("stripe", payment_data)
+        return None
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Stripe."""
@@ -284,6 +283,7 @@ class PaymentTransaction(models.Model):
             payment_intent, payment_data
         )
         self._process("stripe", payment_data)
+        return None
 
     def _send_void_request(self):
         """Override of `payment` to send a void request to Stripe."""
@@ -302,6 +302,7 @@ class PaymentTransaction(models.Model):
             payment_intent, payment_data
         )
         self._process("stripe", payment_data)
+        return None
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -349,7 +350,7 @@ class PaymentTransaction(models.Model):
             payment_data = payment_data["refund"]
         else:  # 'online_direct', 'online_token', 'offline'
             payment_data = payment_data["payment_intent"]
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             payment_data.get("amount", 0),
             self.currency_id,
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -431,6 +432,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Received data with invalid intent status: %s.", status))
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Stripe data.

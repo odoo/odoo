@@ -343,7 +343,9 @@ class ColumnStore(typing.Protocol):
         value: dict[str, typing.Any],
     ) -> int: ...
 
-    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]: ...
+    def get_column_values(
+        self, model: BaseModel, column: str
+    ) -> list[tuple[int, typing.Any]]: ...
 
 
 class PostgresColumnStore:
@@ -451,7 +453,9 @@ class PostgresColumnStore:
         )
         return cr.rowcount
 
-    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
+    def get_column_values(
+        self, model: BaseModel, column: str
+    ) -> list[tuple[int, typing.Any]]:
         # every row holding a value in the column, by id, as stored
         return model.env.execute_query(
             SQL(
@@ -531,7 +535,9 @@ class InMemoryColumnStore:
         self.storage.update_rows(model._table, [(record_id, {column: merged or None})])
         return 1
 
-    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
+    def get_column_values(
+        self, model: BaseModel, column: str
+    ) -> list[tuple[int, typing.Any]]:
         storage = self.storage
         return [
             (row_id, _load(row[column]))
@@ -751,13 +757,13 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
     return query.where_clause if query._where_clauses else None
 
 
-def _fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
+def _get_fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
     # the memo is keyed by field alone: a _field_to_sql override that answers
     # the bare identifier under one environment and an expression under
     # another would be served the identifier from the second call on, so an
     # override customises a column in every environment or in none
     if field.translate:
-        return _fetch_translated_term(model, field, query)
+        return _get_translated_fetch_term(model, field, query)
     term = field._fetch_term
     if term is not None:
         model._check_field_access(field, "read")
@@ -777,7 +783,7 @@ def _fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
     return sql
 
 
-def _fetch_translated_term(model: BaseModel, field: Field, query: Query) -> SQL:
+def _get_translated_fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
     if model.env.context.get("prefetch_langs"):
         return model._field_to_sql(model._table, field.name, query)
     langs = field.get_translation_fallback_langs(model.env)
@@ -1077,7 +1083,7 @@ class PostgresBackend:
                         model._field_to_sql(model._table, field.name, query),
                     )
                 else:
-                    sql = _fetch_term(model, field, query)
+                    sql = _get_fetch_term(model, field, query)
                 sql_terms.append(sql)
 
             rows = env.execute_query(query.select(*sql_terms))
@@ -2275,7 +2281,7 @@ class _ForeignKeyPlan:
         self.nulls: dict[str, list[tuple[int, dict]]] = {}
         self.m2m_rows: dict[str, set[int]] = {}
 
-    def delete(self, model: BaseModel, ids: set[int]) -> None:
+    def add_removal(self, model: BaseModel, ids: set[int]) -> None:
         storage = self.backend.storage
         seen = self.rows.setdefault(model._table, set())
         ids = ids.difference(seen)
@@ -2284,13 +2290,13 @@ class _ForeignKeyPlan:
         seen.update(ids)
         for field in model._fields.values():
             if field.is_many2many and field.store and field.relation and field.column1:
-                self._drop_m2m_rows(field.relation, field.column1, ids)
+                self._add_relation_removal(field.relation, field.column1, ids)
         for field in self.registry.fields_by_comodel.get(model._name, ()):
             if not field.store:
                 continue
             if field.is_many2many:
                 if field.relation and field.column2:
-                    self._drop_m2m_rows(field.relation, field.column2, ids)
+                    self._add_relation_removal(field.relation, field.column2, ids)
                 continue
             if not field.is_many2one or field.company_dependent:
                 continue
@@ -2315,7 +2321,7 @@ class _ForeignKeyPlan:
                 rows=len(hit),
             )
             if field.ondelete == "cascade":
-                self.delete(referrer, set(hit))
+                self.add_removal(referrer, set(hit))
             elif field.ondelete == "restrict":
                 raise ForeignKeyViolation(
                     f"update or delete on table {model._table!r} violates foreign "
@@ -2327,7 +2333,7 @@ class _ForeignKeyPlan:
                     (row_id, {field.name: None}) for row_id in hit
                 )
 
-    def _drop_m2m_rows(self, relation: str, column: str, ids: set[int]) -> None:
+    def _add_relation_removal(self, relation: str, column: str, ids: set[int]) -> None:
         self.m2m_rows.setdefault(relation, set()).update(
             row_id
             for row_id, row in self.backend._iter_m2m_rows(relation)
@@ -2687,7 +2693,7 @@ class InMemoryBackend:
         # rows of every many2many relation table naming the ids -- planned
         # in full first, so a refusal deep in a cascade deletes nothing
         plan = _ForeignKeyPlan(self, env.registry)
-        plan.delete(model, wanted)
+        plan.add_removal(model, wanted)
 
         many2one_fields = env.registry.many2one_company_dependents[model._name]
         uninstalling = env.context.get(MODULE_UNINSTALL_FLAG)

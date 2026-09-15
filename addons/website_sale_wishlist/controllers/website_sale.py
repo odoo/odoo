@@ -4,8 +4,8 @@ from odoo.addons.website_sale.controllers import main
 
 
 class WebsiteSaleWishlist(main.WebsiteSale):
-    def _get_additional_shop_values(self, values, **kwargs):
-        vals = super()._get_additional_shop_values(values, **kwargs)
+    def _prepare_additional_shop_context(self, values, **kwargs):
+        vals = super()._prepare_additional_shop_context(values, **kwargs)
         vals["products_in_wishlist"] = (
             request.env["product.wishlist"].current().product_id.product_tmpl_id
         )

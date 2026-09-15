@@ -104,7 +104,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
                 )
             )
             rec.available_carrier_ids = (
-                carriers.available_carriers(
+                carriers._filtered_available_carriers(
                     rec.order_id.partner_shipping_id, rec.order_id
                 )
                 if rec.partner_id

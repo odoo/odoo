@@ -40,10 +40,10 @@ class PaymentTransaction(models.Model):
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Paymob-specific rendering values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the
                                        transaction.
@@ -51,7 +51,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         if self.provider_code != "paymob":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         payload = self._paymob_prepare_payment_request_payload()
         try:
@@ -103,7 +103,7 @@ class PaymentTransaction(models.Model):
 
         return {
             "special_reference": self.reference,
-            "amount": payment_utils.to_minor_currency_units(
+            "amount": payment_utils.major_to_minor_currency_units(
                 self.amount, self.currency_id
             ),
             "currency": self.currency_id.name,
@@ -134,7 +134,9 @@ class PaymentTransaction(models.Model):
             return super()._extract_amount_data(payment_data)
 
         amount_cents = float(payment_data.get("amount_cents"))
-        amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
+        amount = payment_utils.minor_to_major_currency_units(
+            amount_cents, self.currency_id
+        )
         currency_code = payment_data.get("currency")
         return {
             "amount": amount,
@@ -164,3 +166,4 @@ class PaymentTransaction(models.Model):
                     msg=message,
                 )
             )
+        return None

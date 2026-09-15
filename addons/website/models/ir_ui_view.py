@@ -524,7 +524,9 @@ class IrUiView(models.Model):
                 if (
                     pwd
                     and stored_password
-                    and self.env.user._get_crypt_context().verify(pwd, stored_password)
+                    and self.env.user._get_crypt_context().is_password_valid(
+                        pwd, stored_password
+                    )
                 ):
                     _debug.lifecycle("visibility_unlocked", view=self.id)
                     request.session["views_unlock"] = [

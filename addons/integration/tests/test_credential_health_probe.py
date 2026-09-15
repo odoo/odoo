@@ -10,8 +10,8 @@ from odoo.addons.integration.tools.api_client import OutboundAPIClient
 class TestCredentialHealthProbe(APITransportTestCase):
     def _probe(self, answered):
         self.credential_bearer.sudo().auto_validate_health = True
-        with patch.object(OutboundAPIClient, "health_check", return_value=answered):
-            return self.env["credential.credential"].cron_validate_credentials()
+        with patch.object(OutboundAPIClient, "probe_health", return_value=answered):
+            return self.env["credential.credential"]._cron_probe_credentials()
 
     def test_the_cron_probes_an_endpoint_bound_credential(self):
         result = self._probe(True)
@@ -32,8 +32,8 @@ class TestCredentialHealthProbe(APITransportTestCase):
         self.assertEqual(credential.failed_health_checks, 1)
 
     def test_the_form_button_answers_with_a_notification(self):
-        with patch.object(OutboundAPIClient, "health_check", return_value=True):
-            action = self.credential_bearer.action_validate_credential()
+        with patch.object(OutboundAPIClient, "probe_health", return_value=True):
+            action = self.credential_bearer.action_probe_health()
 
         self.assertEqual(action["type"], "ir.actions.client")
         self.assertEqual(action["params"]["type"], "success")

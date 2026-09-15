@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("cz")
-    def _get_cz_template_data(self):
+    def _prepare_cz_template_data(self):
         return {
             "code_digits": "6",
             "use_storno_accounting": True,
@@ -40,8 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_move(self, company=False):
-        data = super()._get_demo_data_move(company)
+    def _prepare_demo_data_move(self, company=False):
+        data = super()._prepare_demo_data_move(company)
         if company and company.account_fiscal_country_id.code == "CZ":
             for key in (
                 "demo_invoice_1",

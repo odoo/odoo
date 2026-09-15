@@ -43,7 +43,7 @@ class ExportMixin(_ModelStubs):
                 )
             )
 
-        xids = self.env.registry.xmlids.ensure(self, "__export__")
+        xids = self.env.registry.xmlids.get_or_create_for_records(self, "__export__")
         _debug.pipeline(
             "export.xmlids_resolved",
             model=self._name,

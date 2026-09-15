@@ -88,10 +88,12 @@ class StockWarehouse(models.Model):
         ).buy_pull_id.route_id
         return routes
 
-    def _get_rules_dict(self):
-        result = super()._get_rules_dict()
+    def _prepare_rule_routings(self):
+        result = super()._prepare_rule_routings()
         for warehouse in self:
-            result[warehouse.id].update(warehouse._get_receive_rules_dict())
+            result[warehouse.id].update(
+                warehouse._prepare_internal_reception_routings()
+            )
         return result
 
     def _prepare_route_vals(self):

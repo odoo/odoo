@@ -55,7 +55,7 @@ class ReadMixin(_ModelStubs):
             if not self._has_field_access(field, "read"):
                 continue
 
-            description = field._compose_description(self.env, *described[fname])
+            description = field._get_description_from_parts(self.env, *described[fname])
             if "readonly" in description:
                 description["readonly"] = description[
                     "readonly"

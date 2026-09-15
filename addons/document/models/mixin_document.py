@@ -9,7 +9,7 @@ class MixinDocuments(models.AbstractModel):
     _inherit = "mixin.documents.unlink"
     _description = "Documents creation mixin"
 
-    def _get_document_vals(self, attachment: models.Model) -> dict:
+    def _prepare_document_vals(self, attachment: models.Model) -> dict:
         self.check_singleton()
         document_vals = {}
         if self._check_create_documents():

@@ -979,9 +979,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
+    def _prepare_partner_import_params(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
-        partner_vals = super()._import_retrieve_partner_vals(tree, role)
+        partner_vals = super()._prepare_partner_import_params(tree, role)
         endpoint_node = tree.find(
             f".//cac:{role}Party/cac:Party/cbc:EndpointID", UBL_NAMESPACES
         )

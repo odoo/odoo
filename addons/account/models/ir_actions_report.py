@@ -200,8 +200,8 @@ class IrActionsReport(models.Model):
                     )
                 )
 
-    def _get_rendering_context(self, report, docids, data):
-        data = super()._get_rendering_context(report, docids, data)
+    def _prepare_rendering_context(self, report, docids, data):
+        data = super()._prepare_rendering_context(report, docids, data)
         if self.env.context.get("proforma_invoice"):
             data["proforma"] = True
         return data

@@ -15,8 +15,8 @@ class HrPayslip(models.Model):
                 'data/hr_salary_rule_data.xml',
             ])]
 
-    def _get_base_local_dict(self):
-        res = super()._get_base_local_dict()
+    def _prepare_salary_rule_base_context(self):
+        res = super()._prepare_salary_rule_base_context()
         res.update({
             'compute_some_property': compute_some_property,
         })

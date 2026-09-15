@@ -13,7 +13,7 @@ class StockValuationReport(models.AbstractModel):
         if not self._is_cost_of_production_included():
             return report_data
         production_locations_valuation_vals = (
-            self.env.company._get_location_valuation_vals(
+            self.env.company._prepare_location_valuation_vals(
                 location_domain=[("usage", "=", "production")]
             )
         )

@@ -34,7 +34,7 @@ class IntegrationHealthController(http.Controller):
             if not service:
                 return {"status": "error", "error": "unknown_service"}
             client = service._get_api_client()
-            is_healthy = client.health_check()
+            is_healthy = client.probe_health()
         except (CommError, UserError) as e:
             _logger.warning("Health check failed for service %s: %s", endpoint_code, e)
             return {

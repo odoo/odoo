@@ -165,8 +165,8 @@ class TestCertificateEncryption(TransactionCase):
 
         self.assertTrue(public.public, "a public key must still be flagged public")
         signature = private._sign(b"message", formatting="raw")
-        self.assertTrue(public._verify(b"message", signature))
-        self.assertFalse(public._verify(b"tampered", signature))
+        self.assertTrue(public._execute_signature_verification(b"message", signature))
+        self.assertFalse(public._execute_signature_verification(b"tampered", signature))
 
     def test_is_valid_search_survives(self):
         certificate = self.env["certificate.certificate"].create(

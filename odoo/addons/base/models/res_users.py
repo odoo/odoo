@@ -645,7 +645,7 @@ class ResUsers(models.Model):
 
             if self._password_store().stored_hash(self, self.id) is None:
                 raise AccessDenied
-            valid, replacement = self._password_store().verify(
+            valid, replacement = self._password_store().match_and_update(
                 self, self.id, credential["password"]
             )
             _debug.logic(

@@ -277,7 +277,7 @@ class AccountReportExpression(models.Model):
             for tag_name, country_id in sorted(
                 wanted_keys - existing_keys, key=lambda key: (key[0], key[1] or 0)
             )
-            for tag_vals in self._get_tags_create_vals(tag_name, country_id)
+            for tag_vals in self._prepare_tag_vals(tag_name, country_id)
         ]
         _debug.pipeline(
             "missing_tax_tags_resolved",
@@ -376,9 +376,7 @@ class AccountReportExpression(models.Model):
                         country=country,
                         shared_former_tags=former_tax_tags,
                     )
-                    tag_model.create(
-                        self._get_tags_create_vals(new_formula, country.id)
-                    )
+                    tag_model.create(self._prepare_tag_vals(new_formula, country.id))
                 new_tag_exists = True
 
         return result
@@ -616,7 +614,7 @@ class AccountReportExpression(models.Model):
         )
 
     @api.model
-    def _get_tags_create_vals(self, tag_name, country_id):
+    def _prepare_tag_vals(self, tag_name, country_id):
         return [
             {
                 "name": tag_name.lstrip("-"),

@@ -46,10 +46,10 @@ class AccountMove(models.Model):
         )
         return dict(ctx, move_is_downpayment=move_is_downpayment)
 
-    def _get_invoiced_lot_values(self):
+    def _prepare_invoice_lot_rows(self):
         self.check_singleton()
 
-        res = super()._get_invoiced_lot_values()
+        res = super()._prepare_invoice_lot_rows()
 
         if (
             self.state == "draft"
@@ -174,8 +174,8 @@ class AccountMove(models.Model):
 
         return res
 
-    def _get_protected_vals(self, vals, records):
-        res = super()._get_protected_vals(vals, records)
+    def _get_field_protections(self, vals, records):
+        res = super()._get_field_protections(vals, records)
         perma_protected = {self._fields["delivery_date"]}
 
         if records._name == self._name:

@@ -31,7 +31,7 @@ class ResUsers(models.Model):
             if matching:
                 matching._action_add_members(user.partner_id)
 
-    def get_gamification_redirection_data(self):
-        res = super().get_gamification_redirection_data()
+    def prepare_rank_email_links(self):
+        res = super().prepare_rank_email_links()
         res.append({"url": "/slides", "label": _("See our eLearning")})
         return res

@@ -305,13 +305,13 @@ class Cart(PaymentPortal):
         return values
 
     def _get_express_shop_payment_values(self, order, **kwargs):
-        payment_form_values = CustomerPortal._get_payment_values(
+        payment_form_values = CustomerPortal._prepare_payment_form_context(
             self, order, website_id=request.website.id, is_express_checkout=True
         )
         payment_form_values.update(
             {
                 "payment_access_token": payment_form_values.pop("access_token"),
-                "minor_amount": payment_utils.to_minor_currency_units(
+                "minor_amount": payment_utils.major_to_minor_currency_units(
                     order._get_amount_total_excluding_delivery(), order.currency_id
                 ),
                 "merchant_name": request.website.name,
@@ -322,7 +322,7 @@ class Cart(PaymentPortal):
                     "payment.payment_method_unknown"
                 ).id,
                 "shipping_info_required": order._has_deliverable_products(),
-                "delivery_amount": payment_utils.to_minor_currency_units(
+                "delivery_amount": payment_utils.major_to_minor_currency_units(
                     order.amount_total - order._compute_amount_total_without_delivery(),
                     order.currency_id,
                 ),
@@ -365,7 +365,7 @@ class Cart(PaymentPortal):
         values["amount"] = order_sudo.amount_total
         values["minor_amount"] = (
             order_sudo
-            and payment_utils.to_minor_currency_units(
+            and payment_utils.major_to_minor_currency_units(
                 order_sudo.amount_total, order_sudo.currency_id
             )
         ) or 0.0

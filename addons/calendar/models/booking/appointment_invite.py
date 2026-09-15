@@ -364,11 +364,11 @@ class AppointmentInvite(models.Model):
             else:
                 invite.staff_user_ids = False
 
-    def _get_url_params(self):
+    def _prepare_url_params(self):
         return {}
 
     def _compute_book_url_params(self):
-        params = self._get_url_params()
+        params = self._prepare_url_params()
         for invite in self:
             invite.book_url_params = f"?{url_encode(params)}" if params else ""
 

@@ -11,11 +11,11 @@ _debug = DebugLog(__name__)
 class HrVersion(models.Model):
     _inherit = "hr.version"
 
-    def _get_version_work_entries_values(self, date_start, date_stop):
+    def _prepare_version_work_entries_values(self, date_start, date_stop):
         # Add the work entries difference for french payroll
         # Work entries by default are not generated on days the employee does not work
         # So we have to fill the gaps with work entries for those periods
-        result = super()._get_version_work_entries_values(date_start, date_stop)
+        result = super()._prepare_version_work_entries_values(date_start, date_stop)
         fr_contracts = self.filtered(
             lambda c: (
                 c.company_id.country_id.code == "FR"

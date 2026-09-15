@@ -8,8 +8,8 @@ from odoo.libs import redact
 
 from ..tools.authentication import (
     CaseInsensitiveHeaders,
-    ip_in_allowlist,
-    is_signature_valid,
+    execute_signature_verification,
+    is_ip_in_allowlist,
     is_timestamp_valid,
 )
 from ..tools.exchange_queue import queue_exchange_values
@@ -233,7 +233,7 @@ class MixinInboundGate(models.AbstractModel):
         if self.auth_type in ("hmac_sha256", "hmac_sha512"):
             secret = self.credential_id._use_secret("inbound_gate:verify")
 
-        return is_signature_valid(
+        return execute_signature_verification(
             signature_type=self.auth_type,
             headers=headers,
             body=body or "",
@@ -246,7 +246,8 @@ class MixinInboundGate(models.AbstractModel):
 
     _INBOUND_PAYLOAD_LOG_BYTES = 64 * 1024
 
-    def _inbound_payload_log_bytes(self) -> int:
+    def _get_inbound_payload_log_bytes(self) -> int:
+        """Return the logged payload byte limit; zero disables truncation."""
         return self._INBOUND_PAYLOAD_LOG_BYTES
 
     def _record_inbound_exchange(
@@ -271,7 +272,7 @@ class MixinInboundGate(models.AbstractModel):
         vals = {
             "direction": "inbound",
             "channel_id": f"{self._name},{self.id}",
-            "company_id": self._inbound_company_id() or False,
+            "company_id": self._get_inbound_company_id() or False,
             "request_method": (method or "").upper() or False,
             "request_url": (path or "")[:2048] or False,
             "status_code": status_code,
@@ -284,13 +285,14 @@ class MixinInboundGate(models.AbstractModel):
             "state": "failed" if failed else "success",
             "date_completed": fields.Datetime.now(),
             "signature_verified": not failed and self.auth_type != "none",
-            **self._inbound_payload_values(body),
+            **self._prepare_inbound_payload_vals(body),
         }
         if error:
             vals["error_message"] = redact.mask_text(error)
         queue_exchange_values(self.env, vals)
 
-    def _inbound_payload_values(self, body: str | bytes | None) -> dict[str, Any]:
+    def _prepare_inbound_payload_vals(self, body: str | bytes | None) -> dict[str, Any]:
+        """Prepare redacted, size-limited payload fields for an exchange record."""
         if not body:
             return {}
         text = (
@@ -300,7 +302,7 @@ class MixinInboundGate(models.AbstractModel):
             text = json.dumps(redact.mask_data(json.loads(text)))
         except ValueError, TypeError:
             text = redact.mask_text(text)
-        limit = self._inbound_payload_log_bytes()
+        limit = self._get_inbound_payload_log_bytes()
         size = len(text.encode("utf-8"))
         if limit and size > limit:
             return {
@@ -389,7 +391,8 @@ class MixinInboundGate(models.AbstractModel):
     STANDING_WINDOW_PARAM = "credential.inbound_standing_window_seconds"
     STANDING_WINDOW_DEFAULT = 3600
 
-    def _inbound_coalesce_window(self, outcome: str) -> int:
+    def _get_inbound_coalesce_window(self, outcome: str) -> int:
+        """Return the caller-limit or standing-condition window in seconds."""
         if outcome == "caller_limited":
             return self.rate_limit_window_seconds or 60
         window = (
@@ -413,7 +416,7 @@ class MixinInboundGate(models.AbstractModel):
         now = fields.Datetime.now()
 
         if outcome in self._COALESCED_OUTCOMES:
-            window = self._inbound_coalesce_window(outcome)
+            window = self._get_inbound_coalesce_window(outcome)
             domain = [
                 ("gate_model", "=", self._name),
                 ("gate_id", "=", self.id),
@@ -438,7 +441,7 @@ class MixinInboundGate(models.AbstractModel):
                 "gate_model": self._name,
                 "gate_id": self.id,
                 "gate_name": self.display_name,
-                "company_id": self._inbound_company_id(),
+                "company_id": self._get_inbound_company_id(),
                 "timestamp": now,
                 "last_seen_at": now,
                 "allowed": allowed,
@@ -453,13 +456,14 @@ class MixinInboundGate(models.AbstractModel):
         )
         return True
 
-    def _inbound_company_id(self):
+    def _get_inbound_company_id(self):
+        """Return the gate's company ID, or False when no company is bound."""
         company = self._fields.get("company_id") and self.company_id
         return company.id if company else False
 
     def _check_inbound_caller(self, remote_addr) -> tuple[bool, int, str]:
         self.check_singleton()
-        if self.ip_whitelist and not ip_in_allowlist(remote_addr, self.ip_whitelist):
+        if self.ip_whitelist and not is_ip_in_allowlist(remote_addr, self.ip_whitelist):
             return False, 403, f"IP {remote_addr} not allowed for {self.display_name}"
 
         if self.rate_limit_enabled and not self._consume_caller_allowance(remote_addr):
@@ -518,8 +522,8 @@ class MixinInboundGate(models.AbstractModel):
         return result["allowed"]
 
     def _rate_limit_company_id(self):
-        return self._inbound_company_id()
+        return self._get_inbound_company_id()
 
     def is_ip_allowed(self, source_ip: str) -> bool:
         self.check_singleton()
-        return ip_in_allowlist(source_ip, self.ip_whitelist)
+        return is_ip_in_allowlist(source_ip, self.ip_whitelist)

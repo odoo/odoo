@@ -24,7 +24,7 @@ class WorldlineController(http.Controller):
         """Process the payment data sent by Worldline after redirection.
 
         :param dict data: The payment data, including the provider id appended to the URL in
-                          `_get_specific_rendering_values`.
+                          `_prepare_redirect_form_values`.
         """
         _logger.info(
             "Handling redirection from Worldline with data:\n%s", pprint.pformat(data)
@@ -36,7 +36,7 @@ class WorldlineController(http.Controller):
         )
         if not provider_sudo or provider_sudo.code != "worldline":
             _logger.warning("Received payment data with invalid provider id.")
-            raise Forbidden()
+            raise Forbidden
 
         try:
             # Fetch the checkout session data from Worldline.
@@ -97,7 +97,7 @@ class WorldlineController(http.Controller):
         # Retrieve the received signature from the payload.
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payload.
         webhook_secret = tx_sudo.provider_id.worldline_webhook_secret
@@ -106,4 +106,4 @@ class WorldlineController(http.Controller):
         )
         if not hmac.compare_digest(received_signature.encode(), expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

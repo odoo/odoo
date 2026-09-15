@@ -307,7 +307,7 @@ class ResPartnerBank(models.Model):
             return self._get_qr_code_base64(**vals)
         return None
 
-    def _get_qr_vals(
+    def _prepare_qr_payload(
         self,
         qr_method,
         amount,
@@ -318,7 +318,7 @@ class ResPartnerBank(models.Model):
     ):
         return None
 
-    def _get_qr_code_generation_params(
+    def _prepare_qr_rendering_params(
         self,
         qr_method,
         amount,
@@ -338,7 +338,7 @@ class ResPartnerBank(models.Model):
         free_communication,
         structured_communication,
     ):
-        params = self._get_qr_code_generation_params(
+        params = self._prepare_qr_rendering_params(
             qr_method,
             amount,
             currency,
@@ -357,7 +357,7 @@ class ResPartnerBank(models.Model):
         free_communication,
         structured_communication,
     ):
-        params = self._get_qr_code_generation_params(
+        params = self._prepare_qr_rendering_params(
             qr_method,
             amount,
             currency,

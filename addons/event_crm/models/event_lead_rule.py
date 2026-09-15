@@ -111,10 +111,10 @@ class EventLeadRule(models.Model):
             rule_to_existing_regs[lead.event_lead_rule_id] += lead.registration_ids
 
         new_registrations = self.env["event.registration"]
-        rule_to_new_regs = dict()
+        rule_to_new_regs = {}
         for rule in self:
             new_for_rule = registrations.filtered(
-                lambda reg: reg not in rule_to_existing_regs[rule]
+                lambda reg, rule=rule: reg not in rule_to_existing_regs[rule]
             )
             rule_registrations = rule._filter_registrations(new_for_rule)
             new_registrations |= rule_registrations
@@ -132,8 +132,10 @@ class EventLeadRule(models.Model):
         for rule in self:
             if rule.lead_creation_basis == "attendee":
                 matching_registrations = rule_to_new_regs[rule].sorted("id")
-                for registration in matching_registrations:
-                    lead_vals_list.append(registration._get_lead_values(rule))
+                lead_vals_list.extend(
+                    registration._prepare_lead_vals(rule)
+                    for registration in matching_registrations
+                )
             else:
                 for toupdate_leads, _group_key, group_registrations in rule_group_info[
                     rule
@@ -156,7 +158,7 @@ class EventLeadRule(models.Model):
                             )
                     elif group_registrations:
                         lead_vals_list.append(
-                            group_registrations._get_lead_values(rule)
+                            group_registrations._prepare_lead_vals(rule)
                         )
 
         return self.env["crm.lead"].create(lead_vals_list)
@@ -174,15 +176,18 @@ class EventLeadRule(models.Model):
                 literal_eval(self.event_registration_filter)
             )
 
-        company_ok = lambda registration: (
-            registration.company_id == self.company_id if self.company_id else True
-        )
-        event_or_event_type_ok = lambda registration: (
-            registration.event_id == self.event_id
-            or registration.event_id.event_type_id in self.event_type_ids
-            if (self.event_id or self.event_type_ids)
-            else True
-        )
+        def company_ok(registration):
+            return (
+                registration.company_id == self.company_id if self.company_id else True
+            )
+
+        def event_or_event_type_ok(registration):
+            return (
+                registration.event_id == self.event_id
+                or registration.event_id.event_type_id in self.event_type_ids
+                if (self.event_id or self.event_type_ids)
+                else True
+            )
 
         return registrations.filtered(
             lambda r: company_ok(r) and event_or_event_type_ok(r)

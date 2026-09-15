@@ -49,7 +49,7 @@ class ResUsers(models.Model):
         """
         if token:
             # signup with a token: find the corresponding partner id
-            partner = self.env["res.partner"]._signup_retrieve_partner(
+            partner = self.env["res.partner"]._get_signup_partner(
                 token, check_validity=True, raise_exception=True
             )
             # invalidate signup token

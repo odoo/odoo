@@ -289,7 +289,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
                 }
             )
         )
-        amount_without_delivery = payment_utils.to_minor_currency_units(
+        amount_without_delivery = payment_utils.major_to_minor_currency_units(
             self.cart.amount_total, self.cart.currency_id
         )
         self.cart.set_delivery_line(

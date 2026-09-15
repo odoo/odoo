@@ -209,7 +209,7 @@ class StockRule(models.Model):
         if self.picking_type_id.company_id != self.company_id:
             self.picking_type_id = False
 
-    def _get_message_values(self):
+    def _get_message_labels(self):
         source = (self.location_src_id and self.location_src_id.display_name) or _(
             "Source Location"
         )
@@ -226,9 +226,9 @@ class StockRule(models.Model):
         )
         return source, destination, direct_destination, operation
 
-    def _get_message_dict(self):
+    def _get_action_messages(self):
         message_dict = {}
-        source, destination, direct_destination, operation = self._get_message_values()
+        source, destination, direct_destination, operation = self._get_message_labels()
         if self.action in ("push", "pull", "pull_push"):
             suffix = ""
             if (
@@ -278,7 +278,7 @@ class StockRule(models.Model):
     )
     def _compute_rule_message(self):
         for rule in self:
-            message_dict = rule._get_message_dict()
+            message_dict = rule._get_action_messages()
             if rule.action == "pull_push":
                 rule.rule_message = (
                     message_dict["pull"] + "<br/><br/>" + message_dict["push"]

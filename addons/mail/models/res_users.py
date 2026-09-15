@@ -919,11 +919,11 @@ class ResUsers(models.Model):
             "smtp_port": PERSONAL_MAIL_SERVER_SMTP_PORT,
             "smtp_encryption": PERSONAL_MAIL_SERVER_SMTP_ENCRYPTION,
             "owner_user_id": user.id,
-            **self._get_mail_server_values(server_type),
+            **self._prepare_mail_server_vals(server_type),
         }
 
     @api.model
-    def _get_mail_server_values(self, server_type: str) -> dict:
+    def _prepare_mail_server_vals(self, server_type: str) -> dict:
         return {}
 
     @api.model

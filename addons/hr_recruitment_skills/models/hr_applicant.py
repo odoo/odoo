@@ -104,8 +104,8 @@ class HrApplicant(models.Model):
             applicant.missing_skill_ids = match["missing_skills"]
             applicant.matching_score = round(match["score"])
 
-    def _get_employee_create_vals(self):
-        vals = super()._get_employee_create_vals()
+    def _prepare_employee_vals(self):
+        vals = super()._prepare_employee_vals()
         _debug.pipeline(
             "skills_carried_to_employee",
             applicant=self,

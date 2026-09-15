@@ -177,11 +177,13 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
                 _("One of the formats chosen can not be exported in the DMS")
             )
 
-        return self.get_attachment_vals(
+        return self._prepare_attachment_vals(
             file_name, file_content, mimetype, report_options
         )
 
-    def get_attachment_vals(self, file_name, file_content, mimetype, log_options_dict):
+    def _prepare_attachment_vals(
+        self, file_name, file_content, mimetype, log_options_dict
+    ):
         self.check_singleton()
         return {
             "name": file_name,

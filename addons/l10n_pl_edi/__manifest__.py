@@ -1,6 +1,6 @@
 {
     "name": "Polish E-Invoicing FA(3)",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations",
     "summary": "Support for FA(3) electronic invoices in Poland via KSeF",
     "description": "Export FA(3) compliant XML invoices and prepare for integration with KSeF.",
@@ -21,6 +21,7 @@
     "demo": [
         "demo/account_invoice_demo.xml",
     ],
+    "external_dependencies": {"python": ["defusedxml"]},
     "auto_install": [
         "l10n_pl",
     ],

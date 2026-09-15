@@ -272,7 +272,7 @@ class ProductFeed(models.Model):
         }
 
     def _prepare_gmc_price_info(self, product):
-        price_context = product._get_product_price_context(
+        price_context = product._prepare_product_price_context(
             product.product_template_attribute_value_ids
         )
         combination_info = product.with_context(

@@ -51,7 +51,7 @@ export class LivechatChannel extends models.ServerModel {
         return users.filter((user) => user.im_status === "online");
     }
     /** @param {integer} id */
-    _get_livechat_discuss_channel_vals(id, operator_info) {
+    _prepare_livechat_discuss_channel_vals(id, operator_info) {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResUsers} */

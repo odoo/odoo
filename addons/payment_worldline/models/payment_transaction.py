@@ -42,13 +42,13 @@ class PaymentTransaction(models.Model):
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of `payment` to redirect failed token-flow transactions.
 
         If the financial institution insists on user authentication,
         this override will reset the transaction, and switch the flow to redirect.
 
-        Note: self.check_singleton() from `_get_processing_values`.
+        Note: self.check_singleton() from `_prepare_processing_values`.
 
         :param dict processing_values: The generic processing values of the transaction.
         :return: The dict of provider-specific processing values.
@@ -69,19 +69,19 @@ class PaymentTransaction(models.Model):
                 }
             )
             return {"force_flow": "redirect"}
-        return super()._get_specific_processing_values(processing_values)
+        return super()._prepare_provider_processing_values(processing_values)
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Worldline-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`.
+        Note: self.check_singleton() from `_prepare_processing_values`.
 
         :param dict processing_values: The generic processing values of the transaction.
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         if self.provider_code != "worldline":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         checkout_session_data = self._worldline_create_checkout_session()
         return {"api_url": checkout_session_data["redirectUrl"]}
@@ -107,7 +107,7 @@ class PaymentTransaction(models.Model):
             },
             "order": {
                 "amountOfMoney": {
-                    "amount": payment_utils.to_minor_currency_units(
+                    "amount": payment_utils.major_to_minor_currency_units(
                         self.amount, self.currency_id
                     ),
                     "currencyCode": self.currency_id.name,
@@ -169,11 +169,7 @@ class PaymentTransaction(models.Model):
                     },
                 }
 
-        checkout_session_data = self._send_api_request(
-            "POST", "hostedcheckouts", json=payload
-        )
-
-        return checkout_session_data
+        return self._send_api_request("POST", "hostedcheckouts", json=payload)
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Worldline."""
@@ -190,7 +186,7 @@ class PaymentTransaction(models.Model):
             },
             "order": {
                 "amountOfMoney": {
-                    "amount": payment_utils.to_minor_currency_units(
+                    "amount": payment_utils.major_to_minor_currency_units(
                         self.amount, self.currency_id
                     ),
                     "currencyCode": self.currency_id.name,
@@ -239,7 +235,7 @@ class PaymentTransaction(models.Model):
             .get("paymentOutput", {})
             .get("amountOfMoney", {})
         )
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             amount_of_money.get("amount", 0), self.currency_id
         )
         currency_code = amount_of_money.get("currencyCode")
@@ -327,6 +323,7 @@ class PaymentTransaction(models.Model):
                         error_code=error_code,
                     )
                 )
+        return None
 
     @staticmethod
     def _worldline_extract_payment_method_data(payment_data):

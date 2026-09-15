@@ -663,7 +663,7 @@ class HrLeaveAllocation(models.Model):
             period_prorata = min(1, call_days / period_days) if period_days else 1
         return added_value * period_prorata
 
-    def _seed_accrual_schedule(self, level_ids, date_to, log):
+    def _update_initial_accrual_schedule(self, level_ids, date_to, log):
         """Place the first accrual call of an allocation that has never run.
 
         Returns False when the plan has not started by `date_to`, which is the
@@ -961,8 +961,11 @@ class HrLeaveAllocation(models.Model):
                     / allocation.employee_id._get_hours_per_day(allocation.date_from)
                 )
             allocation.already_accrued = already_accrued[allocation.id]
-            if not allocation.nextcall and not allocation._seed_accrual_schedule(
-                level_ids, date_to, log
+            if (
+                not allocation.nextcall
+                and not allocation._update_initial_accrual_schedule(
+                    level_ids, date_to, log
+                )
             ):
                 _debug.logic(
                     "accrual_skipped",

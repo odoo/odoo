@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("es_canary_common")
-    def _get_es_canary_common_template_data(self):
+    def _prepare_es_canary_common_template_data(self):
         return {
             "name": "Common Canary Islands",
             "visible": 0,

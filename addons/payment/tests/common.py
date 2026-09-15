@@ -277,4 +277,4 @@ class PaymentCommon(BaseCommon):
     def _skip_if_account_payment_is_not_installed(self):
         """Skip current test if `account_payment_provider` module is not installed."""
         if not self.account_payment_installed:
-            self.skipTest("account_payment module is not installed")
+            self.skipTest("account_payment_provider module is not installed")

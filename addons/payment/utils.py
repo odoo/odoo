@@ -132,7 +132,9 @@ def singularize_reference_prefix(prefix="tx", separator="-", max_length=None):
     return f"{prefix}{separator}{fields.Datetime.now().strftime('%Y%m%d%H%M%S')}"
 
 
-def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=None):
+def minor_to_major_currency_units(
+    minor_amount, currency, arbitrary_decimal_number=None
+):
     """Return the amount converted to the major units of its currency.
 
     The conversion is done by dividing the amount by 10^k where k is the number of decimals of the
@@ -156,7 +158,9 @@ def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=Non
     return float_round(minor_amount, precision_digits=0) / (10**decimal_number)
 
 
-def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=None):
+def major_to_minor_currency_units(
+    major_amount, currency, arbitrary_decimal_number=None
+):
     """Return the amount converted to the minor units of its currency.
 
     The conversion is done by multiplying the amount by 10^k where k is the number of decimals of

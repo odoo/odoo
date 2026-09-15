@@ -120,16 +120,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
         comment = kwargs["donation_comment"]
         tx_sudo._send_donation_email(True, comment, recipient_email)
 
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()
 
-    def _get_extra_payment_form_values(
+    def _prepare_extra_payment_form_context(
         self,
         donation_options=None,
         donation_descriptions=None,
         is_donation=False,
         **kwargs,
     ):
-        rendering_context = super()._get_extra_payment_form_values(
+        rendering_context = super()._prepare_extra_payment_form_context(
             donation_options=donation_options,
             donation_descriptions=donation_descriptions,
             is_donation=is_donation,

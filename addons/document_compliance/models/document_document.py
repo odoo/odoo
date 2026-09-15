@@ -75,7 +75,7 @@ class DocumentDocument(models.Model):
             else:
                 doc.compliance_state = "compliant"
 
-    def action_verify_document(self) -> dict[str, Any]:
+    def action_record_verification(self) -> dict[str, Any]:
         self.check_singleton()
         _debug.lifecycle("document_verified", document=self, user=self.env.user)
         self.write(

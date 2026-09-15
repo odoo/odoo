@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-from .certificate_key import STR_TO_HASH, _get_formatted_value
+from .certificate_key import STR_TO_HASH, _get_formatted_bytes
 
 
 @lru_cache(maxsize=128)
@@ -17,7 +17,7 @@ def _parse_x509_certificate(pem_bytes):
 
     ``_get_der_certificate_bytes``/``_get_fingerprint_bytes``/
     ``_get_signature_bytes``/``_get_public_key_bytes`` each call
-    ``_load_certificate`` independently; a single signing flow that needs
+    ``_get_parsed_certificate`` independently; a single signing flow that needs
     several of them re-parsed the same certificate from scratch every
     time. The cache key is the certificate's own bytes, so a changed
     ``pem_certificate`` never returns a stale parse.
@@ -262,7 +262,9 @@ class CertificateCertificate(models.Model):
                             encryption_algorithm=serialization.NoEncryption(),
                         )
                     )
-                    key_id = self._get_key_holding(pem_key, certificate.company_id)
+                    key_id = self._get_private_key_by_content(
+                        pem_key, certificate.company_id
+                    )
                     if not key_id:
                         key_id = self.env["certificate.key"].create(
                             {
@@ -394,7 +396,11 @@ class CertificateCertificate(models.Model):
             ("loading_error", "=", ""),
         ]
 
-    def _get_key_holding(self, pem_key, company):
+    def _get_private_key_by_content(self, pem_key, company):
+        """Return a matching private key in the company, including inactive keys.
+
+        :return: ``certificate.key`` singleton, or an empty recordset
+        """
         candidates = (
             self.env["certificate.key"]
             .with_context(active_test=False)
@@ -406,7 +412,11 @@ class CertificateCertificate(models.Model):
             lambda key: key.with_context(bin_size=False).content == pem_key,
         )[:1]
 
-    def _load_certificate(self):
+    def _get_parsed_certificate(self):
+        """Return the parsed X.509 certificate using the byte-keyed parse cache.
+
+        :rtype: cryptography.x509.Certificate
+        """
         self.check_singleton()
         return _parse_x509_certificate(
             base64.b64decode(self.with_context(bin_size=False).pem_certificate)
@@ -414,8 +424,8 @@ class CertificateCertificate(models.Model):
 
     def _get_der_certificate_bytes(self, formatting="encodebytes"):
         self.check_singleton()
-        cert = self._load_certificate()
-        return _get_formatted_value(
+        cert = self._get_parsed_certificate()
+        return _get_formatted_bytes(
             cert.public_bytes(serialization.Encoding.DER), formatting=formatting
         )
 
@@ -423,19 +433,19 @@ class CertificateCertificate(models.Model):
         self, hashing_algorithm="sha256", formatting="encodebytes"
     ):
         self.check_singleton()
-        cert = self._load_certificate()
+        cert = self._get_parsed_certificate()
         if hashing_algorithm not in STR_TO_HASH:
             raise UserError(  # pylint: disable=missing-gettext
                 f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256."
             )
-        return _get_formatted_value(
+        return _get_formatted_bytes(
             cert.fingerprint(STR_TO_HASH[hashing_algorithm]), formatting=formatting
         )
 
     def _get_signature_bytes(self, formatting="encodebytes"):
         self.check_singleton()
-        cert = self._load_certificate()
-        return _get_formatted_value(cert.signature, formatting=formatting)
+        cert = self._get_parsed_certificate()
+        return _get_formatted_bytes(cert.signature, formatting=formatting)
 
     def _get_public_key_numbers_bytes(self, formatting="encodebytes"):
         self.check_singleton()
@@ -444,7 +454,7 @@ class CertificateCertificate(models.Model):
                 self.public_key_id or self.private_key_id
             )._get_public_key_numbers_bytes(formatting=formatting)
 
-        return self.env["certificate.key"]._numbers_public_key_bytes_with_key(
+        return self.env["certificate.key"]._get_public_key_numbers_bytes_with_key(
             self._get_public_key_bytes(encoding="pem"),
             formatting=formatting,
         )
@@ -457,7 +467,7 @@ class CertificateCertificate(models.Model):
             )
 
         try:
-            public_key = self._load_certificate().public_key()
+            public_key = self._get_parsed_certificate().public_key()
         except ValueError as e:
             raise UserError(
                 _("The public key from the certificate could not be loaded.")
@@ -468,7 +478,7 @@ class CertificateCertificate(models.Model):
             if encoding == "der"
             else serialization.Encoding.PEM
         )
-        return _get_formatted_value(
+        return _get_formatted_bytes(
             public_key.public_bytes(
                 encoding=encoding,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo,

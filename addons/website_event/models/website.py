@@ -82,8 +82,8 @@ class Website(models.Model):
         )
         return suggested_controllers
 
-    def get_cta_data(self, website_purpose, website_type):
-        cta_data = super().get_cta_data(website_purpose, website_type)
+    def prepare_configurator_cta_data(self, website_purpose, website_type):
+        cta_data = super().prepare_configurator_cta_data(website_purpose, website_type)
         if website_purpose == "sell_more" and website_type == "event":
             cta_btn_text = _("Next Events")
             return {"cta_btn_text": cta_btn_text, "cta_btn_href": "/event"}

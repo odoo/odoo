@@ -1,5 +1,3 @@
-import logging
-
 from odoo import api, models
 
 
@@ -7,8 +5,8 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
-        demo_data = super()._get_demo_data(company)
+    def _prepare_demo_data(self, company=False):
+        demo_data = super()._prepare_demo_data(company)
         if company in (
             self.env.ref("base.company_mono", raise_if_not_found=False),
             self.env.ref("base.company_exento", raise_if_not_found=False),
@@ -33,8 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
         return demo_data
 
     @api.model
-    def _get_demo_data_move(self, company=False):
-        data = super()._get_demo_data_move(company)
+    def _prepare_demo_data_move(self, company=False):
+        data = super()._prepare_demo_data_move(company)
         if company.account_fiscal_country_id.code == "AR":
             data[self.company_xmlid("demo_invoice_8")]["l10n_latam_document_number"] = (
                 "1-1"
@@ -58,3 +56,4 @@ class AccountChartTemplate(models.AbstractModel):
         ):
             # Do not load generic demo data on these companies
             return super()._post_load_demo_data(company)
+        return None

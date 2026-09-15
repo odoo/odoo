@@ -1062,6 +1062,6 @@ class TestCryptContextCopyKeepsEverySetting:
     def test_a_copy_still_hashes_and_verifies(self):
         copy = CryptContext(pbkdf2_sha512__rounds=1000).copy()
         hashed = copy.hash("secret")
-        assert copy.verify("secret", hashed)
-        assert not copy.verify("wrong", hashed)
+        assert copy.is_password_valid("secret", hashed)
+        assert not copy.is_password_valid("wrong", hashed)
         assert copy.match_and_update("secret", hashed) == (True, None)

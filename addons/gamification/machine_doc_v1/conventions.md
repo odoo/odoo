@@ -223,7 +223,7 @@ Other modules can extend gamification by:
 2. **Extending `_selection_origin_models()`** — add new models as karma
    sources if your module grants karma from a new origin.
 
-3. **Overriding `get_gamification_redirection_data()`** — add buttons to the
+3. **Overriding `prepare_rank_email_links()`** — add buttons to the
    rank-reached email (e.g., "Go to Forum").
 
 4. **Creating `gamification.streak.type` records** — define new streak types

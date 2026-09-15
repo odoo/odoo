@@ -7,15 +7,15 @@ class TestCryptContextRoundTrip(unittest.TestCase):
     def test_hash_and_verify_round_trip(self):
         ctx = CryptContext()
         hashed = ctx.hash("s3cret")
-        self.assertTrue(ctx.verify("s3cret", hashed))
-        self.assertFalse(ctx.verify("wrong", hashed))
+        self.assertTrue(ctx.is_password_valid("s3cret", hashed))
+        self.assertFalse(ctx.is_password_valid("wrong", hashed))
 
     def test_schemes_and_copy(self):
         ctx = CryptContext(schemes=["pbkdf2_sha512", "plaintext"])
         self.assertEqual(ctx.schemes(), ["pbkdf2_sha512", "plaintext"])
         clone = ctx.copy()
         self.assertEqual(clone.schemes(), ctx.schemes())
-        self.assertTrue(clone.verify("hunter2", "hunter2"))
+        self.assertTrue(clone.is_password_valid("hunter2", "hunter2"))
 
     def test_update_changes_schemes_deprecated_and_rounds(self):
         ctx = CryptContext()
@@ -49,7 +49,7 @@ class TestCryptContextVerifyRespectsSchemes(unittest.TestCase):
     def test_a_well_formed_hash_is_rejected_when_the_scheme_is_disabled(self):
         ctx = CryptContext(schemes=["plaintext"])
         hashed = pbkdf2_sha512_hash("s3cret")
-        self.assertFalse(ctx.verify("s3cret", hashed))
+        self.assertFalse(ctx.is_password_valid("s3cret", hashed))
 
 
 class TestCryptContextRoundsBoundEnforcement(unittest.TestCase):

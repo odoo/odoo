@@ -35,7 +35,7 @@ class Issue:
         return f"{self.severity} {self.code} at {self.kind}[{where}]: {self.detail}"
 
 
-def validate(
+def get_issues(
     node: Node, view_type: str | None = None, *, spec: Schema | None = None
 ) -> list[Issue]:
     spec = spec or schema()
@@ -43,7 +43,7 @@ def validate(
         view_type = spec.view_type_of(node.kind)
         _debug.logic("view_type_inferred", root=node.kind, view_type=view_type)
     with _debug.perf("validate", kind=node.kind, view_type=view_type) as span:
-        issues = list(_validate(node, view_type, spec, ()))
+        issues = list(_iter_node_issues(node, view_type, spec, ()))
         if _debug.perf.enabled:
             span.set(
                 nodes=sum(1 for _ in node.walk()),
@@ -63,7 +63,7 @@ def validate(
     return issues
 
 
-def _validate(
+def _iter_node_issues(
     node: Node, view_type: str | None, spec: Schema, path: tuple[int, ...]
 ) -> Iterator[Issue]:
     if node.is_markup:
@@ -84,7 +84,7 @@ def _validate(
         if attr_type is None:
             yield Issue("unknown-attr", path, node.kind, attr, "warning")
             continue
-        problem = _check_value(attr_type, value)
+        problem = _get_value_error(attr_type, value)
         if problem:
             yield Issue(f"bad-{problem}", path, node.kind, f"{attr}={value!r}")
     if node_spec is not None and node_spec.children is not None:
@@ -103,10 +103,10 @@ def _validate(
                     "warning",
                 )
     for index, child in enumerate(node.children):
-        yield from _validate(child, view_type, spec, (*path, index))
+        yield from _iter_node_issues(child, view_type, spec, (*path, index))
 
 
-def _check_value(attr_type: str | list[str], value: str) -> str | None:
+def _get_value_error(attr_type: str | list[str], value: str) -> str | None:
     if isinstance(attr_type, list):
         return None if value in attr_type else "enum"
     match attr_type:
@@ -115,12 +115,12 @@ def _check_value(attr_type: str | list[str], value: str) -> str | None:
         case "int":
             return None if value.lstrip("-").isdigit() else "int"
         case "pyexpr" | "domain" | "context" | "json":
-            return None if _parses(value) else attr_type
+            return None if _is_valid_expression(value) else attr_type
         case _:
             return None
 
 
-def _parses(expression: str) -> bool:
+def _is_valid_expression(expression: str) -> bool:
     try:
         ast.parse(XMLID_REF.sub("0", expression).strip() or "None", mode="eval")
     except SyntaxError:

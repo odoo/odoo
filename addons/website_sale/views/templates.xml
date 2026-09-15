@@ -2322,7 +2322,7 @@
                                                             t-foreach="single_value_attributes[attribute]"
                                                             t-as="ptal">
                                                             <span
-                                                                t-field="ptal.product_template_value_ids._only_active().name" />
+                                                                t-field="ptal.product_template_value_ids._filtered_active().name" />
                                                             <t t-if="not ptal_last">, </t>
                                                         </t>
                                                     </td>

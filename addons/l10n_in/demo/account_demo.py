@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
+    def _prepare_demo_data(self, company=False):
         demo_data = {}
         if company.account_fiscal_country_id.code == "IN":
             if company.state_id:
@@ -26,12 +26,14 @@ class AccountChartTemplate(models.AbstractModel):
                     }
                 )
                 demo_data = {
-                    "res.partner.tag": self._get_demo_data_res_partner_tag(company),
-                    "res.partner": self._get_demo_data_partner(),
-                    "account.move": self._get_demo_data_move(company),
-                    "res.config.settings": self._get_demo_data_config_settings(company),
-                    "ir.attachment": self._get_demo_data_attachment(company),
-                    "mail.message": self._get_demo_data_mail_message(company),
+                    "res.partner.tag": self._prepare_demo_data_res_partner_tag(company),
+                    "res.partner": self._prepare_demo_data_partner(),
+                    "account.move": self._prepare_demo_data_move(company),
+                    "res.config.settings": self._prepare_demo_data_config_settings(
+                        company
+                    ),
+                    "ir.attachment": self._prepare_demo_data_attachment(company),
+                    "mail.message": self._prepare_demo_data_mail_message(company),
                 }
             else:
                 _logger.warning(
@@ -39,11 +41,11 @@ class AccountChartTemplate(models.AbstractModel):
                     company.name,
                 )
         else:
-            demo_data = super()._get_demo_data(company)
+            demo_data = super()._prepare_demo_data(company)
         return demo_data
 
     @api.model
-    def _get_demo_data_config_settings(self, company=False):
+    def _prepare_demo_data_config_settings(self, company=False):
         return {
             "sales_credit_limit": {
                 "account_use_credit_limit": True,
@@ -52,7 +54,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_res_partner_tag(self, company=False):
+    def _prepare_demo_data_res_partner_tag(self, company=False):
         return {
             "res_partner_category_registered": {
                 "name": "Registered",
@@ -65,10 +67,10 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_partner(self):
+    def _prepare_demo_data_partner(self):
         company = self.env.company
         if company.account_fiscal_country_id.code != "IN" or not company.state_id:
-            return super()._get_demo_data_partner()
+            return super()._prepare_demo_data_partner()
         inter_state_ref = "base.state_in_ts"
         intra_state_ref = "base.state_in_gj"
         default_partner_dict = {
@@ -160,7 +162,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_move(self, company=False):
+    def _prepare_demo_data_move(self, company=False):
         cid = company.id or self.env.company.id
 
         def _get_tax_by_id(tax_id):
@@ -679,10 +681,10 @@ class AccountChartTemplate(models.AbstractModel):
                 },
             }
         else:
-            return super()._get_demo_data_move(company)
+            return super()._prepare_demo_data_move(company)
 
     @api.model
-    def _get_demo_data_attachment(self, company=False):
+    def _prepare_demo_data_attachment(self, company=False):
         if company.account_fiscal_country_id.code == "IN":
             return {
                 "ir_attachment_in_invoice_1": {
@@ -705,10 +707,10 @@ class AccountChartTemplate(models.AbstractModel):
                 },
             }
         else:
-            return super()._get_demo_data_attachment(company)
+            return super()._prepare_demo_data_attachment(company)
 
     @api.model
-    def _get_demo_data_mail_message(self, company=False):
+    def _prepare_demo_data_mail_message(self, company=False):
         if company.account_fiscal_country_id.code == "IN":
             return {
                 "mail_message_in_invoice_1": {
@@ -741,7 +743,7 @@ class AccountChartTemplate(models.AbstractModel):
                 },
             }
         else:
-            return super()._get_demo_data_mail_message(company)
+            return super()._prepare_demo_data_mail_message(company)
 
     def _post_load_demo_data(self, company=False):
         if company.account_fiscal_country_id.code == "IN":
@@ -771,3 +773,4 @@ class AccountChartTemplate(models.AbstractModel):
                         _logger.exception("Error while posting demo data")
         else:
             return super()._post_load_demo_data(company)
+        return None

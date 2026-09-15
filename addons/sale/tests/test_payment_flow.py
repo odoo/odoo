@@ -69,7 +69,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.sale_order.prepayment_percent = 0.5
         link_amount = self.sale_order.amount_total * 0.7
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order, is_down_payment=True, payment_amount=link_amount
             )
         self.assertEqual(tx_values["amount"], link_amount)
@@ -79,7 +79,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     ):
         self.sale_order.prepayment_percent = 0.5
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order,
                 is_down_payment=True,
                 payment_amount=self.sale_order.amount_total,
@@ -91,7 +91,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     def test_downpayment_amount_equals_prepayment_amount_when_no_link_amount(self):
         self.sale_order.prepayment_percent = 0.5
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order, is_down_payment=True, payment_amount=None
             )
         prepayment_amount = self.sale_order._get_prepayment_required_amount()
@@ -101,7 +101,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.sale_order.action_confirm()
         payment_amount = self.sale_order.amount_total * 0.5
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order, is_down_payment=False, payment_amount=payment_amount
             )
         self.assertEqual(tx_values["amount"], payment_amount)
@@ -111,7 +111,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     ):
         self.sale_order.action_confirm()
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order, is_down_payment=False, payment_amount=None
             )
         self.assertEqual(tx_values["amount"], self.sale_order.amount_total)
@@ -119,7 +119,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     def test_full_amount_equals_order_total(self):
         self.sale_order.prepayment_percent = 0.5
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
+            tx_values = CustomerPortal()._prepare_payment_form_context(
                 self.sale_order,
                 is_down_payment=False,
                 payment_amount=self.sale_order._get_prepayment_required_amount(),

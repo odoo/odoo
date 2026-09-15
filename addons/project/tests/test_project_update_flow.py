@@ -90,7 +90,7 @@ class TestProjectUpdate(TestProjectCommon):
             milestone_form.name = "Test 3"
             milestone_form.date_deadline = fields.Date.today() + relativedelta(years=2)
 
-        template_values = self.env["project.update"]._get_template_values(
+        template_values = self.env["project.update"]._prepare_update_rendering_context(
             self.project_pigs
         )
 
@@ -111,7 +111,7 @@ class TestProjectUpdate(TestProjectCommon):
 
         self.project_pigs.write({"allow_milestones": False})
 
-        template_values = self.env["project.update"]._get_template_values(
+        template_values = self.env["project.update"]._prepare_update_rendering_context(
             self.project_pigs
         )
 

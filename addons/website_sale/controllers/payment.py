@@ -76,4 +76,4 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if delay_token_charge:
             tx_sudo._charge_with_token()
 
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()

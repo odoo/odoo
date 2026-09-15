@@ -30,7 +30,7 @@ class TestHealthCheckInterval(TransactionCase):
 
         with patch.object(
             type(Endpoint),
-            "_perform_health_check",
+            "_probe_health",
             lambda self: checked.append(self.code),
         ):
             Endpoint.cron_health_check_all()

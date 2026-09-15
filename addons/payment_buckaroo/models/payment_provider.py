@@ -65,7 +65,7 @@ class PaymentProvider(models.Model):
         else:
             return "https://testcheckout.buckaroo.nl/html/"
 
-    def _buckaroo_generate_digital_sign(self, values, incoming=True):
+    def _get_buckaroo_signature(self, values, incoming=True):
         """Generate the shasign for incoming or outgoing communications.
 
         :param dict values: The values used to generate the signature

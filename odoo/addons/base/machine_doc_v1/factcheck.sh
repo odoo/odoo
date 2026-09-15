@@ -271,7 +271,7 @@ for label, expected in table.items():
         print(f"BAD|ARCHITECTURE.md File Counts row '{label}' should read {expected}, "
               f"reads {row.group(1) if row else 'nothing'}")
 
-t = inv.totals(inv.scan(mod / "tests"))
+t = inv.totals(inv.read_test_inventory(mod / "tests"))
 pct = round(100 * t["tagged"] / t["files"]) if t["files"] else 0
 for claim, pattern in (
     ("untagged share", rf"^- \*\*{100 - pct}% of test files have no `@tagged` decorator\*\*"),

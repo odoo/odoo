@@ -155,7 +155,7 @@ class IrModuleModule(models.Model):
             if force_website_id:
                 request.session["force_website_id"] = force_website_id
 
-    def _get_imported_module_vals(self, terp, with_demo):
+    def _prepare_imported_module_vals(self, terp, with_demo):
         values = self.get_values_from_terp(terp)
         try:
             icon_path = terp.get_raw_value("icon") or str(
@@ -409,7 +409,7 @@ class IrModuleModule(models.Model):
                 }
             )
 
-    def _get_manifest_asset_vals(self, module, terp):
+    def _prepare_manifest_asset_vals(self, module, terp):
         IrAsset = self.env["ir.asset"]
         assets_vals = []
         for bundle, commands in terp.get("assets", {}).items():
@@ -438,7 +438,7 @@ class IrModuleModule(models.Model):
 
     def _import_manifest_assets(self, module, terp):
         IrAsset = self.env["ir.asset"]
-        assets_vals = self._get_manifest_asset_vals(module, terp)
+        assets_vals = self._prepare_manifest_asset_vals(module, terp)
 
         existing_assets = {
             asset.name: asset
@@ -497,7 +497,7 @@ class IrModuleModule(models.Model):
             known_mods = self.search([])
             installed_mods = [m.name for m in known_mods if m.state == "installed"]
 
-            values = self._get_imported_module_vals(terp, with_demo)
+            values = self._prepare_imported_module_vals(terp, with_demo)
             self._install_manifest_dependencies(terp, path, known_mods, installed_mods)
             mod, mode = self._upsert_imported_module(
                 module, values, terp, known_mods, force

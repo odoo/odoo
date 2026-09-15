@@ -112,8 +112,8 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             )
         return super()._slide_mark_completed(slide)
 
-    def _get_valid_slide_post_values(self):
-        result = super()._get_valid_slide_post_values()
+    def _get_allowed_slide_post_fields(self):
+        result = super()._get_allowed_slide_post_fields()
         result.append("survey_id")
         return result
 

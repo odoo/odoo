@@ -45,7 +45,7 @@ class TestOrderMergeMixin(TransactionCase):
 
     def test_eligible_orders_are_draft(self):
         orders = self._order(self.partner_a) + self._order(self.partner_a)
-        self.assertEqual(orders._merge_get_eligible_orders(), orders)
+        self.assertEqual(orders._filtered_merge_eligible_orders(), orders)
 
     def test_merge_target_is_the_oldest_order(self):
         old = self._order(self.partner_a, date_order="2020-01-01 00:00:00")

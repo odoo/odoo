@@ -180,7 +180,7 @@ class ProductTemplateAttributeValue(models.Model):
         for value in self:
             value.display_name = f"{value.attribute_id.name}: {value.name}"
 
-    def _only_active(self):
+    def _filtered_active(self):
         return self.filtered(lambda ptav: ptav.ptav_active)
 
     def _without_no_variant_attributes(self):
@@ -206,5 +206,5 @@ class ProductTemplateAttributeValue(models.Model):
         self.check_singleton()
         all_values = self.attribute_line_id.product_template_value_ids
         if only_active:
-            all_values = all_values._only_active()
+            all_values = all_values._filtered_active()
         return len(all_values) == 1

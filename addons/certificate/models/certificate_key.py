@@ -18,7 +18,8 @@ STR_TO_CURVE = {
 }
 
 
-def _get_formatted_value(data, formatting="encodebytes"):
+def _get_formatted_bytes(data, formatting="encodebytes"):
+    """Return wrapped Base64, compact Base64, or unchanged bytes for other modes."""
     if formatting == "encodebytes":
         return base64.encodebytes(data)
     elif formatting == "base64":
@@ -145,7 +146,7 @@ class CertificateKey(models.Model):
     @api.depends("content", "password")
     def _compute_pem_key(self):
         for key in self:
-            pem_key, _public, _loading_error = self._load_pem_key(
+            pem_key, _public, _loading_error = self._get_pem_key_and_metadata(
                 key.with_context(bin_size=False).content,
                 key.password,
             )
@@ -154,7 +155,7 @@ class CertificateKey(models.Model):
     @api.depends("content", "password")
     def _compute_key_metadata(self):
         for key in self:
-            _pem_key, public, loading_error = self._load_pem_key(
+            _pem_key, public, loading_error = self._get_pem_key_and_metadata(
                 key.with_context(bin_size=False).content,
                 key.password,
             )
@@ -194,7 +195,16 @@ class CertificateKey(models.Model):
             formatting=formatting,
         )
 
-    def _verify(self, signed_message, signature, hashing_algorithm="sha256"):
+    def _execute_signature_verification(
+        self, signed_message, signature, hashing_algorithm="sha256"
+    ):
+        """Verify with this public-key record, returning false for a bad signature.
+
+        Invalid key configuration raises UserError; a signature mismatch does
+        not. The signature argument contains raw signature bytes.
+
+        :rtype: bool
+        """
         self.check_singleton()
 
         if not self.public:
@@ -206,7 +216,7 @@ class CertificateKey(models.Model):
         if self.loading_error:
             raise UserError(self.name + " - " + self.loading_error)
 
-        return self._check_with_key(
+        return self._execute_signature_verification_with_key(
             signed_message,
             signature,
             pem_key,
@@ -216,7 +226,7 @@ class CertificateKey(models.Model):
     def _get_public_key_numbers_bytes(self, formatting="encodebytes"):
         self.check_singleton()
 
-        return self._numbers_public_key_bytes_with_key(
+        return self._get_public_key_numbers_bytes_with_key(
             self._get_public_key_bytes(encoding="PEM"),
             formatting=formatting,
         )
@@ -242,7 +252,7 @@ class CertificateKey(models.Model):
             if encoding == "der"
             else serialization.Encoding.PEM
         )
-        return _get_formatted_value(
+        return _get_formatted_bytes(
             public_key.public_bytes(
                 encoding=encoding,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo,
@@ -262,7 +272,7 @@ class CertificateKey(models.Model):
             base64.b64decode(self.with_context(bin_size=False).pem_key),
             self.password.encode() if self.password else None,
         )
-        return _get_formatted_value(
+        return _get_formatted_bytes(
             private_key.private_bytes(
                 encoding=Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
@@ -272,7 +282,15 @@ class CertificateKey(models.Model):
         )
 
     @api.model
-    def _load_pem_key(self, content, password=None):
+    def _get_pem_key_and_metadata(self, content, password=None):
+        """Normalize encoded DER/PEM content and report its public/private kind.
+
+        :returns: Base64-encoded PEM bytes, public-key flag and error text;
+            missing or unloadable content returns None for the first two
+
+        Preserve private-key password protection in the normalized PEM. An
+        empty input has empty error text; rejected key formats have a message.
+        """
         if not content:
             return None, None, ""
 
@@ -416,12 +434,20 @@ class CertificateKey(models.Model):
                     )
                 )
 
-        return _get_formatted_value(signature, formatting=formatting)
+        return _get_formatted_bytes(signature, formatting=formatting)
 
     @api.model
-    def _check_with_key(
+    def _execute_signature_verification_with_key(
         self, signed_message, signature, pem_key, signature_algorithm="sha256"
     ):
+        """Verify raw signature bytes using a Base64-encoded public PEM key.
+
+        Return false for a signature mismatch. Unusable keys or unsupported
+        algorithms raise UserError. Ed25519 uses its own hash operation.
+
+        :rtype: bool
+        """
+
         def check_valid_signature_algorithm():
             if signature_algorithm not in STR_TO_HASH:
                 raise UserError(  # pylint: disable=missing-gettext
@@ -481,7 +507,14 @@ class CertificateKey(models.Model):
                 )
 
     @api.model
-    def _numbers_public_key_bytes_with_key(self, pem_key, formatting="encodebytes"):
+    def _get_public_key_numbers_bytes_with_key(self, pem_key, formatting="encodebytes"):
+        """Return RSA (exponent, modulus) or EC (x, y) as formatted byte strings.
+
+        ``pem_key`` is Base64-encoded public PEM. Unsupported key types raise
+        UserError; the selected formatting applies to each number separately.
+
+        :rtype: tuple[bytes, bytes]
+        """
         if not isinstance(pem_key, bytes):
             pem_key = pem_key.encode("utf-8")
 
@@ -507,8 +540,8 @@ class CertificateKey(models.Model):
             )
 
         return (
-            _get_formatted_value(_int_to_bytes(first), formatting=formatting),
-            _get_formatted_value(_int_to_bytes(second), formatting=formatting),
+            _get_formatted_bytes(_int_to_bytes(first), formatting=formatting),
+            _get_formatted_bytes(_int_to_bytes(second), formatting=formatting),
         )
 
     @api.model

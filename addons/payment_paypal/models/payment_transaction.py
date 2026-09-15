@@ -16,10 +16,10 @@ class PaymentTransaction(models.Model):
     # this field has no use in Odoo except for debugging
     paypal_type = fields.Char(string="PayPal Transaction Type")
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of `payment` to return the Paypal-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the
                                        transaction.
@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         if self.provider_code != "paypal":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
         payload = self._paypal_prepare_order_payload()
 
@@ -178,3 +178,4 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 _("Received data with invalid payment status: %s", payment_status)
             )
+        return None

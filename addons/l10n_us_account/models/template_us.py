@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("us")
-    def _get_us_template_data(self):
+    def _prepare_us_template_data(self):
         return {
             "property_account_receivable_id": "account_account_us_receivable",
             "property_account_payable_id": "account_account_us_payable",
@@ -97,10 +97,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _get_accounts_data_values(
+    def _prepare_utility_account_vals(
         self, company, template_data, bank_prefix="", code_digits=0
     ):
-        accounts_data = super()._get_accounts_data_values(
+        accounts_data = super()._prepare_utility_account_vals(
             company, template_data, bank_prefix=bank_prefix, code_digits=code_digits
         )
         if company.account_fiscal_country_id.code == "US":

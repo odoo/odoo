@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models, tools
@@ -109,26 +107,24 @@ class EventRegistration(models.Model):
             old_vals = lead_tracked_vals[registration.id]
             if "partner_id" in new_vals:
                 new_vals.update(
-                    **dict(
-                        (field, registration[field])
+                    **{
+                        field: registration[field]
                         for field in self._get_fields_lead_contact()
                         if field != "partner_id"
-                    )
+                    }
                 )
 
             lead_values = {}
             upd_contact_fields = [
-                field
-                for field in self._get_fields_lead_contact()
-                if field in new_vals.keys()
+                field for field in self._get_fields_lead_contact() if field in new_vals
             ]
             if any(new_vals[field] != old_vals[field] for field in upd_contact_fields):
-                lead_values = registration._get_lead_contact_values()
+                lead_values = registration._prepare_lead_contact_vals()
 
             upd_description_fields = [
                 field
                 for field in self._get_fields_lead_description()
-                if field in new_vals.keys()
+                if field in new_vals
             ]
             if any(
                 new_vals[field] != old_vals[field] for field in upd_description_fields
@@ -150,7 +146,7 @@ class EventRegistration(models.Model):
         for lead in leads_order:
             lead_values = {}
             if new_vals.get("partner_id"):
-                lead_values.update(lead.registration_ids._get_lead_contact_values())
+                lead_values.update(lead.registration_ids._prepare_lead_contact_vals())
                 if not lead.partner_id:
                     lead_values["description"] = (
                         lead.registration_ids._get_lead_description(
@@ -170,7 +166,7 @@ class EventRegistration(models.Model):
             if lead_values:
                 lead.write(lead_values)
 
-    def _get_lead_values(self, rule):
+    def _prepare_lead_vals(self, rule):
         sorted_self = self.sorted("id")
         lead_values = {
             "type": rule.lead_type,
@@ -185,13 +181,13 @@ class EventRegistration(models.Model):
             "source_id": sorted_self._find_first_notnull("utm_source_id"),
             "medium_id": sorted_self._find_first_notnull("utm_medium_id"),
         }
-        lead_values.update(sorted_self._get_lead_contact_values())
+        lead_values.update(sorted_self._prepare_lead_contact_vals())
         lead_values["description"] = sorted_self._get_lead_description(
             _("Participants"), line_counter=True
         )
         return lead_values
 
-    def _get_lead_contact_values(self):
+    def _prepare_lead_contact_vals(self):
         sorted_self = self.sorted("id")
         valid_partner = next(
             (
@@ -290,16 +286,13 @@ class EventRegistration(models.Model):
             set(self._get_fields_lead_contact())
             | set(self._get_fields_lead_description())
         )
-        return dict(
-            (
-                registration.id,
-                dict(
-                    (field, self._convert_value(registration[field], field))
-                    for field in tracked_fields
-                ),
-            )
+        return {
+            registration.id: {
+                field: self._convert_value(registration[field], field)
+                for field in tracked_fields
+            }
             for registration in self
-        )
+        }
 
     def _get_lead_grouping(self, rules, rule_to_new_regs):
         grouped_registrations = {
@@ -310,16 +303,13 @@ class EventRegistration(models.Model):
             ).items()
         }
 
-        return dict(
-            (
-                rule,
-                [
-                    (False, key, (registrations & rule_to_new_regs[rule]).sorted("id"))
-                    for key, registrations in grouped_registrations.items()
-                ],
-            )
+        return {
+            rule: [
+                (False, key, (registrations & rule_to_new_regs[rule]).sorted("id"))
+                for key, registrations in grouped_registrations.items()
+            ]
             for rule in rules
-        )
+        }
 
     @api.model
     def _get_fields_lead_contact(self):

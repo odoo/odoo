@@ -230,13 +230,13 @@ class AuthSignupHome(Home):
         if qcontext.get("token"):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
-                # `_signup_retrieve_info` returns None for an invalid/expired token, so the
+                # `_resolve_signup_info` returns None for an invalid/expired token, so the
                 # expected failure here is AttributeError on `.items()` - catch only that,
                 # not every exception, so an unrelated bug isn't masked as "Invalid signup token".
                 token_infos = (
                     request.env["res.partner"]
                     .sudo()
-                    ._signup_retrieve_info(qcontext.get("token"))
+                    ._resolve_signup_info(qcontext.get("token"))
                 )
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)

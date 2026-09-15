@@ -92,7 +92,7 @@ class TestVerification(ComplianceCase):
     def test_action_verify_document(self):
         doc = self._doc()
 
-        result = doc.action_verify_document()
+        result = doc.action_record_verification()
 
         self.assertEqual(doc.date_verification, date.today())
         self.assertEqual(doc.verified_by_user_id, self.env.user)

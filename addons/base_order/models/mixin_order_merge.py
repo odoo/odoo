@@ -17,7 +17,7 @@ class MixinOrderMerge(models.AbstractModel):
     _description = "Order Merge System"
 
     def action_merge(self):
-        orders_to_merge = self._merge_get_eligible_orders()
+        orders_to_merge = self._filtered_merge_eligible_orders()
         excluded = self - orders_to_merge
         if excluded:
             _logger.info(
@@ -43,9 +43,9 @@ class MixinOrderMerge(models.AbstractModel):
             groups=len(groups),
             merged=len(merged_ids),
         )
-        return self._merge_build_result_action(merged_ids)
+        return self._prepare_merge_result_action(merged_ids)
 
-    def _merge_get_eligible_orders(self):
+    def _filtered_merge_eligible_orders(self):
         return self.filtered(lambda r: r.state == "draft")
 
     def _merge_check_selection(self, orders):
@@ -89,7 +89,7 @@ class MixinOrderMerge(models.AbstractModel):
         sources = orders - target
         _debug.lifecycle("merge_group", target=target, sources=sources)
 
-        line_index = self._merge_build_line_index(target)
+        line_index = self._prepare_merge_line_index(target)
         self._merge_lines(target, sources, line_index)
         self._merge_metadata(target, sources)
         self._merge_post_messages(target, sources)
@@ -97,7 +97,7 @@ class MixinOrderMerge(models.AbstractModel):
 
         return target.id
 
-    def _merge_build_line_index(self, target):
+    def _prepare_merge_line_index(self, target):
         index = defaultdict(list)
         for line in target.line_ids:
             if line.display_type:
@@ -216,7 +216,7 @@ class MixinOrderMerge(models.AbstractModel):
         _debug.lifecycle("merge_sources_cancelled", target=target, sources=sources)
         sources.filtered(lambda r: r.state != "cancel").action_cancel()
 
-    def _merge_build_result_action(self, merged_ids):
+    def _prepare_merge_result_action(self, merged_ids):
         action = {
             "type": "ir.actions.act_window",
             "res_model": self._name,

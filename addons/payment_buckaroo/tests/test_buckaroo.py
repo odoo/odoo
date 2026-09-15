@@ -34,7 +34,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
         tx_sudo = self._create_transaction(flow="redirect")
         with mute_logger("odoo.addons.payment.models.payment_transaction"):
-            processing_values = tx_sudo._get_processing_values()
+            processing_values = tx_sudo._prepare_processing_values()
         form_info = self._extract_values_from_html_form(
             processing_values["redirect_form_html"]
         )
@@ -136,7 +136,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_signature_is_computed_based_on_lower_case_data_keys(self):
         """Test that lower case keys are used to execute the case-insensitive sort."""
-        computed_signature = self.provider._buckaroo_generate_digital_sign(
+        computed_signature = self.provider._get_buckaroo_signature(
             {
                 "brq_a": "1",
                 "brq_b": "2",

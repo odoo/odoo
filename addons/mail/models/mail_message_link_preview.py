@@ -46,7 +46,7 @@ class MessageMailLinkPreview(models.Model):
         _debug.lifecycle("hidden", previews=self.ids)
         self.is_hidden = True
         for message_link_preview in self:
-            Store(bus_channel=message_link_preview._bus_channel()).delete(
+            Store(bus_channel=message_link_preview._bus_channel()).add_deletion(
                 message_link_preview
             ).bus_send()
 
@@ -55,7 +55,7 @@ class MessageMailLinkPreview(models.Model):
             return
         _debug.lifecycle("unlinked", previews=self.ids)
         for message_link_preview in self:
-            Store(bus_channel=message_link_preview._bus_channel()).delete(
+            Store(bus_channel=message_link_preview._bus_channel()).add_deletion(
                 message_link_preview
             ).bus_send()
         self.unlink()

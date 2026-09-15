@@ -298,7 +298,7 @@ class RecomputeMixin(_ModelStubs):
         # constraint definitions, so the flush stays lazy for every computed
         # field no CHECK ties to a written column.
 
-        def build() -> dict[Field, tuple[Field, ...]]:
+        def get_check_coupled_fields_uncached() -> dict[Field, tuple[Field, ...]]:
             columns = {
                 name: field
                 for name, field in cls._fields.items()
@@ -324,7 +324,9 @@ class RecomputeMixin(_ModelStubs):
                     )
             return {field: tuple(others) for field, others in coupled.items() if others}
 
-        return get_or_create_class_memo(cls, "_check_coupled_fields__", build)
+        return get_or_create_class_memo(
+            cls, "_check_coupled_fields__", get_check_coupled_fields_uncached
+        )
 
     def _recompute_check_coupled_fields(self) -> None:
         coupled = self._get_check_coupled_fields()

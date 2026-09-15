@@ -279,7 +279,7 @@ class AccountSetupBankManualConfig(models.TransientModel):
                 selected_journal.bank_account_id = record.res_partner_bank_id.id
                 selected_journal.name = record.new_journal_name
 
-    def validate(self):
+    def action_finish_bank_setup(self):
         return {"type": "ir.actions.client", "tag": "soft_reload"}
 
     @api.depends_context("company")

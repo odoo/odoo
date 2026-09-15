@@ -72,8 +72,8 @@ class StockPutInPack(models.TransientModel):
             }
         return None
 
-    def _get_put_in_pack_context(self):
-        context = super()._get_put_in_pack_context()
+    def _prepare_put_in_pack_context(self):
+        context = super()._prepare_put_in_pack_context()
         return (
             {
                 **context,

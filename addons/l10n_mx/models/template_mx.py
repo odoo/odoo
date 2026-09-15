@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("mx")
-    def _get_mx_template_data(self):
+    def _prepare_mx_template_data(self):
         return {
             "code_digits": "9",
             "display_invoice_amount_total_words": True,
@@ -61,10 +61,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _get_accounts_data_values(
+    def _prepare_utility_account_vals(
         self, company, template_data, bank_prefix="", code_digits=0
     ):
-        accounts_data = super()._get_accounts_data_values(
+        accounts_data = super()._prepare_utility_account_vals(
             company, template_data, bank_prefix=bank_prefix, code_digits=code_digits
         )
         if company.account_fiscal_country_id.code == "MX":

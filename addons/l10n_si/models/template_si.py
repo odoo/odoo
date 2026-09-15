@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("si")
-    def _get_si_template_data(self):
+    def _prepare_si_template_data(self):
         return {
             "property_account_receivable_id": "gd_acc_120000",
             "property_account_payable_id": "gd_acc_220000",

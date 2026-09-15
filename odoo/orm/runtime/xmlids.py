@@ -80,7 +80,9 @@ class Xmlids:
     def remove(self, env: Environment, ids: typing.Iterable[int]) -> None:
         env["ir.model.data"].sudo().browse(ids).unlink()
 
-    def ensure(self, records: BaseModel, module: str) -> dict[IdType, str]:
+    def get_or_create_for_records(
+        self, records: BaseModel, module: str
+    ) -> dict[IdType, str]:
         xids: dict[IdType, str] = {
             res_id: names[0][0] for res_id, names in self.of_records(records).items()
         }

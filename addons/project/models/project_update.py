@@ -197,16 +197,16 @@ class ProjectUpdate(models.Model):
     def _prepare_description(self, project: Any) -> str:
         return self.env["ir.qweb"]._render(
             "project.project_update_default_description",
-            self._get_template_values(project),
+            self._prepare_update_rendering_context(project),
         )
 
     @dbg.timed
     @api.model
-    def _get_template_values(self, project: Any) -> dict:
+    def _prepare_update_rendering_context(self, project: Any) -> dict:
         milestones = self._get_milestone_values(project)
         profitability_values, show_profitability = project._get_profitability_values()
         dbg.logic.debug(
-            "project.update._get_template_values [project:%s]: milestones=%s "
+            "project.update._prepare_update_rendering_context [project:%s]: milestones=%s "
             "profitability=%s",
             project.id,
             milestones["show_section"],

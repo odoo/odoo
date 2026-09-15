@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("es_full")
-    def _get_es_full_template_data(self):
+    def _prepare_es_full_template_data(self):
         return {
             "name": _("Complete (2008)"),
             "parent": "es_common_mainland",

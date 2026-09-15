@@ -19,8 +19,8 @@ class StockMove(models.Model):
             res["category"] = "manufacturing_order"
         return res
 
-    def _prepare_analytic_lines(self):
-        res = super()._prepare_analytic_lines()
+    def _update_analytic_lines(self):
+        res = super()._update_analytic_lines()
         if res and self.raw_material_production_id:
             project = self.raw_material_production_id.project_id
             mandatory_plans = project._get_mandatory_plans(

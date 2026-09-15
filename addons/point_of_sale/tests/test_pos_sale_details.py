@@ -868,7 +868,7 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         data = (
             self.env["pos.daily.sales.reports.wizard"]
             .create({"pos_session_id": session.id})
-            ._get_report_data()
+            ._prepare_report_params()
         )
 
         report = self.report.get_sale_details(session_ids=session.ids)
@@ -1048,7 +1048,7 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         data = (
             self.env["pos.daily.sales.reports.wizard"]
             .create({"pos_session_id": session.id})
-            ._get_report_data()
+            ._prepare_report_params()
         )
 
         report = report_model.get_sale_details(session_ids=session.ids)

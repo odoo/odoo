@@ -126,11 +126,13 @@ class SlidingWindowLimiter:
 
 
 def get_caller_rate_limiter(env):
-    def build() -> SlidingWindowLimiter:
+    def prepare_caller_rate_limiter() -> SlidingWindowLimiter:
         _logger.info(
             "Created inbound caller rate limiter for worker (database '%s')",
             env.cr.dbname,
         )
         return SlidingWindowLimiter()
 
-    return registry_singleton(env, "_inbound_caller_rate_limiter", build)
+    return registry_singleton(
+        env, "_inbound_caller_rate_limiter", prepare_caller_rate_limiter
+    )

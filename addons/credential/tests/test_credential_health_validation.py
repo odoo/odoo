@@ -26,7 +26,7 @@ class TestActionValidateCredential(HealthValidationCommon):
     def test_category_without_probe_stays_unknown(self):
         credential = self._make_credential("Custom cred without probe")
 
-        result = credential._validate_health()
+        result = credential._probe_health()
 
         self.assertTrue(result["not_implemented"])
         self.assertFalse(result["success"])
@@ -41,7 +41,7 @@ class TestCronValidateCredentials(HealthValidationCommon):
         probed = self._make_credential("Cron probed", auto_validate_health=True)
         excluded = self._make_credential("Cron excluded")
 
-        result = self.env["credential.credential"].cron_validate_credentials()
+        result = self.env["credential.credential"]._cron_probe_credentials()
 
         self.assertEqual(result["total"], 1)
         self.assertEqual(result["errors"], 0)
@@ -58,10 +58,10 @@ class TestCronValidateCredentials(HealthValidationCommon):
 
         with patch.object(
             type(credential),
-            "_validate_health",
+            "_probe_health",
             side_effect=ValueError("boom"),
         ):
-            result = Credential.cron_validate_credentials()
+            result = Credential._cron_probe_credentials()
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result["errors"], 1)

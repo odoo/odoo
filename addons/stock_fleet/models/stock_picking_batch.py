@@ -169,9 +169,9 @@ class StockPickingBatch(models.Model):
             else:
                 batch.picking_ids.move_ids.write({"location_id": batch.dock_id.id})
 
-    def _get_merged_batch_vals(self):
+    def _prepare_merged_batch_vals(self):
         self.check_singleton()
-        vals = super()._get_merged_batch_vals()
+        vals = super()._prepare_merged_batch_vals()
         vals.update(
             {
                 "vehicle_id": self.vehicle_id.id,

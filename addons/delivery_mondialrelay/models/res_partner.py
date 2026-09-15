@@ -42,7 +42,7 @@ class ResPartner(models.Model):
             limit=1,
         )
         partner = partner or self.create(address_values)
-        if phone_values := partner._get_phone_replacement_values(
+        if phone_values := partner._prepare_phone_replacement_vals(
             self._phone_get_number()
         ):
             partner.write(phone_values)

@@ -16,10 +16,10 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Nuvei-specific rendering values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the
                                        transaction.
@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         if self.provider_code != "nuvei":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         if self.payment_method_code in const.FULL_NAME_METHODS and not (
@@ -97,15 +97,12 @@ class PaymentTransaction(models.Model):
             "success_url": return_url,
         }
 
-        checksum = self.provider_id._nuvei_calculate_signature(
-            url_params, incoming=False
-        )
-        rendering_values = {
+        checksum = self.provider_id._get_nuvei_signature(url_params, incoming=False)
+        return {
             "api_url": self.provider_id._nuvei_get_api_url(),
             "checksum": checksum,
             "url_params": url_params,
         }
-        return rendering_values
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -189,3 +186,4 @@ class PaymentTransaction(models.Model):
                     reason=status_description,
                 )
             )
+        return None

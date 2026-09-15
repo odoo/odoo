@@ -140,8 +140,8 @@ class StockWarehouse(models.Model):
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
         return super()._create_or_update_route()
 
-    def _get_rules_dict(self):
-        result = super()._get_rules_dict()
+    def _prepare_rule_routings(self):
+        result = super()._prepare_rule_routings()
         production_location_id = self._get_production_location()
         for warehouse in self:
             result[warehouse.id].update(
@@ -183,7 +183,9 @@ class StockWarehouse(models.Model):
                     ],
                 }
             )
-            result[warehouse.id].update(warehouse._get_receive_rules_dict())
+            result[warehouse.id].update(
+                warehouse._prepare_internal_reception_routings()
+            )
         return result
 
     def _prepare_route_vals(self):

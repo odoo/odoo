@@ -46,8 +46,8 @@ class EventRegistration(models.Model):
         res.append("registration_answer_ids")
         return res
 
-    def _get_lead_values(self, rule):
-        lead_values = super()._get_lead_values(rule)
+    def _prepare_lead_vals(self, rule):
+        lead_values = super()._prepare_lead_vals(rule)
         if self.visitor_id:
             lead_values["visitor_ids"] = self.visitor_id
         if self.visitor_id.lang_id:

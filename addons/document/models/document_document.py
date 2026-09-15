@@ -2175,7 +2175,7 @@ class DocumentsDocument(models.Model):
                 "shortcut_document_id" not in old_vals
                 and not opted_out_of_inheritance
                 and folder
-                and (inherited_access_ids := folder._get_inherited_access_ids_vals())
+                and (inherited_access_ids := folder._prepare_inherited_access_vals())
             ):
                 partner_ids = [
                     command[2]["partner_id"]

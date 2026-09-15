@@ -618,7 +618,7 @@ class PaymentTransaction(models.Model):
         """
         return ""
 
-    def _get_processing_values(self):
+    def _prepare_processing_values(self):
         """Return the values used to process the transaction.
 
         The values are returned as a dict containing entries with the following keys:
@@ -651,7 +651,7 @@ class PaymentTransaction(models.Model):
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(
-            self._get_specific_processing_values(processing_values)
+            self._prepare_provider_processing_values(processing_values)
         )
 
         # Render the HTML form for the redirect flow if available.
@@ -660,16 +660,14 @@ class PaymentTransaction(models.Model):
                 is_validation=self.operation == "validation"
             )
             if redirect_form_view:  # Some providers don't need a redirect form.
-                rendering_values = self._get_specific_rendering_values(
-                    processing_values
-                )
+                rendering_values = self._prepare_redirect_form_values(processing_values)
                 redirect_form_html = self.env["ir.qweb"]._render(
                     redirect_form_view.id, rendering_values
                 )
                 processing_values.update(redirect_form_html=redirect_form_html)
 
         # Include the state and state message only after they might have been updated by calling the
-        # `_get_specific_rendering/processing_values` methods (due to possible external requests).
+        # `_prepare_redirect_form_values / _prepare_provider_processing_values` methods (due to possible external requests).
         processing_values.update(
             {
                 "state": self.state,
@@ -679,7 +677,7 @@ class PaymentTransaction(models.Model):
 
         return processing_values
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Return a dict of provider-specific values used to process the transaction.
 
         For a provider to add its own processing values, it must overwrite this method and return a
@@ -693,7 +691,7 @@ class PaymentTransaction(models.Model):
         """
         return {}
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Return a dict of provider-specific values used to render the redirect form.
 
         For a provider to add its own rendering values, it must overwrite this method and return a
@@ -706,7 +704,7 @@ class PaymentTransaction(models.Model):
         """
         return {}
 
-    def _get_mandate_values(self):
+    def _prepare_mandate_data(self):
         """Return a dict of module-specific values used to create a mandate.
 
         For a module to add its own mandate values, it must overwrite this method and return a dict

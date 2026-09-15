@@ -477,7 +477,7 @@ class CheckActionExpressionTransformer(ast.NodeTransformer):
             return ast.Constant(self.evaluation_context[node.id])
         return node
 
-    def get_call_args(self, ast_arguments):
+    def prepare_call_args(self, ast_arguments):
         args = []
         args.extend(ast.literal_eval(self.visit(ast_arg)) for ast_arg in ast_arguments)
         return args
@@ -488,6 +488,6 @@ class CheckActionExpressionTransformer(ast.NodeTransformer):
             and not node.keywords
             and callable(helper := self.evaluation_context.get(node.func.id))
         ):
-            return ast.Constant(helper(*self.get_call_args(node.args)))
+            return ast.Constant(helper(*self.prepare_call_args(node.args)))
         # Preserve unsupported calls so literal_eval rejects them as invalid expressions.
         return node

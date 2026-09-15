@@ -509,12 +509,12 @@ class TestForumKarma(TestForumCommon):
         )
 
         with self.assertRaises(AccessError):
-            post.with_user(self.user_portal).validate()
+            post.with_user(self.user_portal).accept_post()
 
         self.user_portal.karma = KARMA["moderate"]
         post.state = "pending"
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal).accept_post()
         self.assertEqual(
             post.state,
             "active",
@@ -528,7 +528,7 @@ class TestForumKarma(TestForumCommon):
 
         self.user_portal.karma = KARMA["moderate"]
         post.state = "flagged"
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal).accept_post()
         self.assertEqual(
             post.state,
             "active",
@@ -538,7 +538,7 @@ class TestForumKarma(TestForumCommon):
         self.user_portal.karma = KARMA["moderate"]
         post.state = "offensive"
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal).accept_post()
         self.assertEqual(
             post.state,
             "active",

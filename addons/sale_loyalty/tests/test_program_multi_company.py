@@ -165,7 +165,9 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
         )
 
         LoyaltyProgram = self.env["loyalty.program"]
-        LoyaltyProgram.create(LoyaltyProgram._get_template_values()["loyalty"])
+        LoyaltyProgram.create(
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
+        )
 
         self.sale_user.write(
             {"company_ids": [Command.set((branch_a + self.company_a).ids)]}

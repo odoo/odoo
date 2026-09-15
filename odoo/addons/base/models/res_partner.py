@@ -1030,7 +1030,7 @@ class ResPartner(models.Model):
     def _phone_get_number(self, *types: str, fname=False):
         return self._phone_get_numbers(fname=fname)._primary(*types)
 
-    def _get_phone_replacement_values(self, number):
+    def _prepare_phone_replacement_vals(self, number):
         """Replace this contact's selected number, preserving other linked numbers."""
         current = self._phone_get_number()
         if current == number:

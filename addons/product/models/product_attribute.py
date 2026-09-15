@@ -99,7 +99,7 @@ class ProductAttribute(models.Model):
             self.env.invalidate_all()
         return res
 
-    def _used_records(self):
+    def _filtered_used(self):
         return self.filtered("count_product_tmpl")
 
     def _usage_label(self):

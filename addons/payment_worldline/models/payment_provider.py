@@ -106,7 +106,7 @@ class PaymentProvider(models.Model):
         dt = format_date_time(
             Datetime.now().timestamp()
         )  # Datetime in locale-independent RFC1123
-        signature = self._worldline_calculate_signature(
+        signature = self._get_worldline_signature(
             method, endpoint, content_type, dt, idempotency_key=idempotency_key
         )
         authorization_header = f"GCS v1HMAC:{self.worldline_api_key}:{signature}"
@@ -119,7 +119,7 @@ class PaymentProvider(models.Model):
             headers["X-GCS-Idempotence-Key"] = idempotency_key
         return headers
 
-    def _worldline_calculate_signature(
+    def _get_worldline_signature(
         self, method, endpoint, content_type, dt_rfc, idempotency_key=None
     ):
         """Compute the signature for the provided data.
@@ -129,7 +129,7 @@ class PaymentProvider(models.Model):
         :param str method: The HTTP method of the request
         :param str endpoint: The endpoint to be reached by the request.
         :param str content_type: The 'Content-Type' header of the request.
-        :param datetime.datetime dt_rfc: The timestamp of the request, in RFC1123 format.
+        :param str dt_rfc: The timestamp of the request, in RFC1123 format.
         :param str idempotency_key: The idempotency key to pass in the request.
         :return: The calculated signature.
         :rtype: str
@@ -150,7 +150,6 @@ class PaymentProvider(models.Model):
         """Override of `payment` to parse the error message."""
         if self.code != "worldline":
             return super()._parse_response_error(response)
-        msg = ", ".join(
+        return ", ".join(
             [error.get("message", "") for error in response.json().get("errors", [])]
         )
-        return msg

@@ -27,7 +27,7 @@ class TestMalformedHash(unittest.TestCase):
     def test_verify_answers_false_for_a_malformed_hash(self):
         for bad in (MALFORMED, NON_BASE64):
             with self.subTest(hash=bad):
-                self.assertFalse(self.ctx.verify("whatever", bad))
+                self.assertFalse(self.ctx.is_password_valid("whatever", bad))
 
     def test_verify_and_update_answers_false_for_a_malformed_hash(self):
         for bad in (MALFORMED, NON_BASE64):
@@ -37,20 +37,20 @@ class TestMalformedHash(unittest.TestCase):
                 )
 
     def test_a_malformed_hash_does_not_fall_through_to_plaintext(self):
-        self.assertFalse(self.ctx.verify(MALFORMED, MALFORMED))
-        self.assertFalse(self.ctx.verify(NON_BASE64, NON_BASE64))
+        self.assertFalse(self.ctx.is_password_valid(MALFORMED, MALFORMED))
+        self.assertFalse(self.ctx.is_password_valid(NON_BASE64, NON_BASE64))
 
     def test_plaintext_fallback_still_applies_to_non_mcf_values(self):
-        self.assertTrue(self.ctx.verify("legacy-plain", "legacy-plain"))
+        self.assertTrue(self.ctx.is_password_valid("legacy-plain", "legacy-plain"))
 
     def test_real_hashes_still_verify(self):
         hashed = pbkdf2_sha512_hash("s3cret", rounds=1000)
-        self.assertTrue(self.ctx.verify("s3cret", hashed))
-        self.assertFalse(self.ctx.verify("s3cre", hashed))
+        self.assertTrue(self.ctx.is_password_valid("s3cret", hashed))
+        self.assertFalse(self.ctx.is_password_valid("s3cre", hashed))
 
     def test_plaintext_scheme_is_unaffected(self):
-        self.assertTrue(self.ctx.verify("hunter2", "hunter2"))
-        self.assertFalse(self.ctx.verify("hunter2", "hunter3"))
+        self.assertTrue(self.ctx.is_password_valid("hunter2", "hunter2"))
+        self.assertFalse(self.ctx.is_password_valid("hunter2", "hunter3"))
 
 
 class TestAdaptedBase64Padding(unittest.TestCase):

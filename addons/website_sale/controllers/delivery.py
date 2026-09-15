@@ -20,12 +20,12 @@ class Delivery(WebsiteSale):
             "selected_dm_id": order_sudo.carrier_id.id,
             "order": order_sudo,
         }
-        values |= self._get_additional_delivery_context()
+        values |= self._prepare_additional_delivery_context()
         return request.env["ir.ui.view"]._render_template(
             "website_sale.delivery_form", values
         )
 
-    def _get_additional_delivery_context(self):
+    def _prepare_additional_delivery_context(self):
         return {}
 
     @route("/shop/set_delivery_method", type="jsonrpc", auth="public", website=True)
@@ -205,7 +205,7 @@ class Delivery(WebsiteSale):
                     "id": dm.id,
                     "name": dm.name,
                     "description": dm.website_description,
-                    "minorAmount": payment_utils.to_minor_currency_units(
+                    "minorAmount": payment_utils.major_to_minor_currency_units(
                         price, order_sudo.currency_id
                     ),
                 }

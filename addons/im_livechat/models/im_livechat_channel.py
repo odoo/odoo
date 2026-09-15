@@ -362,7 +362,7 @@ class Im_LivechatChannel(models.Model):
             action["domain"] = [("id", "in", chatbot_script_ids.ids)]
         return action
 
-    def _get_livechat_discuss_channel_vals(
+    def _prepare_livechat_discuss_channel_vals(
         self,
         /,
         *,
@@ -376,7 +376,7 @@ class Im_LivechatChannel(models.Model):
         last_interest_dt = now - timedelta(seconds=1)
         members_to_add = [
             Command.create(
-                self._get_agent_member_vals(
+                self._prepare_agent_member_vals(
                     last_interest_dt=last_interest_dt,
                     now=now,
                     chatbot_script=chatbot_script,
@@ -430,7 +430,7 @@ class Im_LivechatChannel(models.Model):
             "name": channel_name,
         }
 
-    def _get_agent_member_vals(
+    def _prepare_agent_member_vals(
         self,
         /,
         *,
@@ -598,12 +598,11 @@ class Im_LivechatChannel(models.Model):
                 or previous_operator_status["count"] < 2
                 or not previous_operator_status["in_call"]
             ):
-                previous_operator_user = next(
+                return next(
                     available_user
                     for available_user in users
                     if available_user.partner_id.id == previous_operator_id
                 )
-                return previous_operator_user
 
         agents_failing_buffer = {
             group[0]

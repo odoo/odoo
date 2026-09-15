@@ -23,9 +23,9 @@ class ProductPricelistExportController(Controller):
             raise BadRequest("Invalid report data") from None
         if not isinstance(json_data, dict):
             raise BadRequest("Invalid report data")
-        report_data = request.env["report.product.report_pricelist"]._get_report_data(
-            json_data
-        )
+        report_data = request.env[
+            "report.product.report_pricelist"
+        ]._prepare_pricelist_rendering_context(json_data)
         pricelist_name = report_data["pricelist"]["name"]
         quantities = report_data["quantities"]
         products = report_data["products"]

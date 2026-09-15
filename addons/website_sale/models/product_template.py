@@ -314,7 +314,7 @@ class ProductTemplate(models.Model):
         self.check_singleton()
         return any(
             v.is_custom
-            for v in self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active()
+            for v in self.valid_product_template_attribute_line_ids.product_template_value_ids._filtered_active()
         )
 
     def _get_possible_variants_sorted(self, parent_combination=None):
@@ -522,7 +522,7 @@ class ProductTemplate(models.Model):
             if combination_name:
                 display_name = f"{display_name} ({combination_name})"
 
-        price_context = product_or_template._get_product_price_context(combination)
+        price_context = product_or_template._prepare_product_price_context(combination)
         product_or_template = product_or_template.with_context(**price_context)
 
         combination_info = {

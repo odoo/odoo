@@ -47,7 +47,9 @@ class PasswordStore:
         stored = self.env.backend.columns.read(users.sudo(), "password", [uid])
         return stored.get(uid, None) if uid in stored else None
 
-    def verify(self, users, uid: int, password: str) -> tuple[bool, str | None]:
+    def match_and_update(
+        self, users, uid: int, password: str
+    ) -> tuple[bool, str | None]:
         hashed = self.stored_hash(users, uid)
         if hashed is None:
             return False, None

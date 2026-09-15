@@ -16,32 +16,32 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return Xendit-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
         if self.provider_code != "xendit":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
         return {
             "rounded_amount": self._get_rounded_amount(),
         }
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Xendit-specific rendering values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
+        res = super()._prepare_redirect_form_values(processing_values)
         if self.provider_code != "xendit" or self.payment_method_code == "card":
             return res
 

@@ -73,7 +73,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             ) + relativedelta(days=1)
         if (
             not self.env.context.get("revaluation_no_loop")
-            and not self.with_context(revaluation_no_loop=True)._get_move_vals()[
+            and not self.with_context(revaluation_no_loop=True)._prepare_move_vals()[
                 "line_ids"
             ]
         ):
@@ -127,7 +127,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
         for record in self:
             preview_vals = [
                 self.env["account.move"]._move_dict_to_preview_vals(
-                    self._get_move_vals(), record.company_id.currency_id
+                    self._prepare_move_vals(), record.company_id.currency_id
                 )
             ]
             record.preview_data = json.dumps(
@@ -166,7 +166,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_move_vals(self):
+    def _prepare_move_vals(self):
         def _get_model_id(parsed_line, selected_model):
             for _dummy, parsed_res_model, parsed_res_id in parsed_line:
                 if parsed_res_model == selected_model:
@@ -277,7 +277,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     @_debug.perf.timed
     def create_entries(self):
         self.check_singleton()
-        move_vals = self._get_move_vals()
+        move_vals = self._prepare_move_vals()
         _debug.pipeline(
             "create_entries_reversal",
             revaluation=self,

@@ -75,10 +75,10 @@ class MailCannedResponse(models.Model):
         return res
 
     def unlink(self) -> Literal[True]:
-        self._broadcast(delete=True)
+        self._broadcast(add_deletion=True)
         return super().unlink()
 
-    def _broadcast(self, /, *, delete: bool = False) -> None:
+    def _broadcast(self, /, *, add_deletion: bool = False) -> None:
         for canned_response in self:
             stores = [Store(bus_channel=group) for group in canned_response.group_ids]
             stores.extend(
@@ -89,12 +89,12 @@ class MailCannedResponse(models.Model):
             _debug.lifecycle(
                 "broadcast",
                 canned_response=canned_response.id,
-                delete=delete,
+                add_deletion=add_deletion,
                 targets=len(stores),
             )
             for store in stores:
-                if delete:
-                    store.delete(canned_response)
+                if add_deletion:
+                    store.add_deletion(canned_response)
                 else:
                     store.add(canned_response)
             for store in stores:

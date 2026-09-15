@@ -507,7 +507,7 @@
                                 <div style="margin: 16px 0px 16px 0px;">
                                     <t
                                         t-set="gamification_redirection_data"
-                                        t-value="object.get_gamification_redirection_data()" />
+                                        t-value="object.prepare_rank_email_links()" />
                                     <t
                                         t-foreach="gamification_redirection_data"
                                         t-as="data">

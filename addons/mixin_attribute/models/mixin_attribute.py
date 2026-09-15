@@ -69,7 +69,7 @@ class MixinAttribute(models.AbstractModel):
     # USAGE
     # ------------------------------------------------------------
 
-    def _used_records(self):
+    def _filtered_used(self):
         """Return the subset of ``self`` already bound to a subject.
 
         "Bound" means some attribute line references it. Consumers with a
@@ -120,7 +120,7 @@ class MixinAttribute(models.AbstractModel):
         Deleting it would cascade its values away and take the captured lines
         with them -- silent data loss that no later pass can reconstruct.
         """
-        used = self._used_records()
+        used = self._filtered_used()
         if not used:
             return
         names = ", ".join(used.mapped("display_name"))
@@ -145,7 +145,7 @@ class MixinAttribute(models.AbstractModel):
         Archiving hides it from the pickers while the lines holding it stay
         live, so the records keep a value the configuration no longer offers.
         """
-        used = self._used_records()
+        used = self._filtered_used()
         if used:
             names = ", ".join(used.mapped("display_name"))
             usage = used._usage_label()

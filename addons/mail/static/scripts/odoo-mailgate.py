@@ -52,7 +52,7 @@ def postfix_exit(
         sys.exit(exit_code)
 
 
-def build_parser() -> ArgumentParser:
+def prepare_mailgate_parser() -> ArgumentParser:
     parser = ArgumentParser(
         prog="odoo-mailgate.py", description="Pipe an incoming email into Odoo."
     )
@@ -141,7 +141,7 @@ def handle_fault(err: xmlrpclib.Fault, options: argparse.Namespace) -> NoReturn:
 
 
 def main() -> None:
-    options = build_parser().parse_args()
+    options = prepare_mailgate_parser().parse_args()
     password = read_password(options)
 
     msg = sys.stdin.buffer.read()

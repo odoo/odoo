@@ -234,13 +234,13 @@ class AccountMove(models.Model):
                         "You are modifying a journal entry for which a Veri*Factu document has been sent to the AEAT already."
                     )
                     warning_level = "warning"
-                elif last_document._filter_waiting():
+                elif last_document._filtered_waiting():
                     warning = _(
                         "You are modifying a journal entry for which a Veri*Factu document is waiting to be sent."
                     )
                     warning_level = "warning"
 
-            if last_document._filter_waiting():
+            if last_document._filtered_waiting():
                 warning = _(
                     "%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
                     existing_warning=(warning + "\n" if warning else ""),
@@ -276,7 +276,7 @@ class AccountMove(models.Model):
             if (
                 move.l10n_es_edi_verifactu_state
                 in ("registered_with_errors", "accepted", "cancelled")
-                or move.l10n_es_edi_verifactu_document_ids._filter_waiting()
+                or move.l10n_es_edi_verifactu_document_ids._filtered_waiting()
             ):
                 move.show_reset_to_draft_button = False
 

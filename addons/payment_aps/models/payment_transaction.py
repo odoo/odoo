@@ -36,19 +36,19 @@ class PaymentTransaction(models.Model):
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return APS-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction.
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         if self.provider_code != "aps":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount, self.currency_id
         )
         base_url = self.provider_id.get_base_url()
@@ -68,7 +68,7 @@ class PaymentTransaction(models.Model):
             rendering_values["payment_option"] = payment_option
         rendering_values.update(
             {
-                "signature": self.provider_id._aps_calculate_signature(
+                "signature": self.provider_id._get_aps_signature(
                     rendering_values, incoming=False
                 ),
                 "api_url": self.provider_id._aps_get_api_url(),
@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "aps":
             return super()._extract_amount_data(payment_data)
 
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             float(payment_data.get("amount", 0)), self.currency_id
         )
         return {
@@ -133,3 +133,4 @@ class PaymentTransaction(models.Model):
                     reason=status_description,
                 )
             )
+        return None

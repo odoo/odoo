@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("generic_coa")
-    def _get_generic_coa_template_data(self):
+    def _prepare_generic_coa_template_data(self):
         return {
             "name": _("Generic Chart of Accounts"),
             "country": None,

@@ -33,7 +33,7 @@ class TestPaymentTransaction(RazorpayCommon):
                 customer_id=self.customer_id
             )
             self.maxDiff = 10000  # Allow comparing large dicts.
-            converted_amount = payment_utils.to_minor_currency_units(
+            converted_amount = payment_utils.major_to_minor_currency_units(
                 tx.amount, tx.currency_id
             )
             expected_payload = {
@@ -90,7 +90,7 @@ class TestPaymentTransaction(RazorpayCommon):
         for state in all_states:
             tx1.state = state
             for other_tx in other_txs:
-                converted_amount = payment_utils.to_minor_currency_units(
+                converted_amount = payment_utils.major_to_minor_currency_units(
                     other_tx.amount, other_tx.currency_id
                 )
                 with patch(

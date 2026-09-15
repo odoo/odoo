@@ -83,7 +83,7 @@ class AccountAnalyticDistributionModel(models.Model):
         return res
 
     @api.model
-    def _get_default_search_domain_vals(self):
+    def _prepare_default_search_params(self):
         return {
             "company_id": False,
             "partner_id": False,
@@ -92,7 +92,7 @@ class AccountAnalyticDistributionModel(models.Model):
 
     @api.model
     def _get_applicable_models(self, vals):
-        vals = self._get_default_search_domain_vals() | vals
+        vals = self._prepare_default_search_params() | vals
         domain = Domain.AND(starmap(self._create_domain, vals.items()))
         return self._get_candidate_models().filtered_domain(domain)
 

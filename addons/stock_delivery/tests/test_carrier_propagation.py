@@ -151,9 +151,15 @@ class TestCarrierPropagation(TransactionCase):
 
     def test_carrier_propagation_with_all_pull_rules(self):
         delivery_route_rules = self.warehouse.delivery_route_id.rule_ids
-        delivery_route_rules[0].location_dest_id = self.rule_pack.location_src_id
+        pick_rule = delivery_route_rules.filtered(
+            lambda rule: rule.picking_type_id == self.warehouse.pick_type_id
+        )
+        ship_rule = delivery_route_rules.filtered(
+            lambda rule: rule.picking_type_id == self.warehouse.out_type_id
+        )
+        pick_rule.location_dest_id = self.rule_pack.location_src_id
         delivery_route_rules.action = "pull"
-        delivery_route_rules[2].propagate_carrier = False
+        ship_rule.propagate_carrier = False
         so = self.SaleOrder.create(
             {
                 "partner_id": self.partner_propagation.id,
@@ -162,19 +168,28 @@ class TestCarrierPropagation(TransactionCase):
         )
         so.action_confirm()
         pickings = so.picking_ids
+        pick = pickings.filtered(
+            lambda picking: picking.picking_type_id == self.warehouse.pick_type_id
+        )
+        pack = pickings.filtered(
+            lambda picking: picking.picking_type_id == self.warehouse.pack_type_id
+        )
+        ship = pickings.filtered(
+            lambda picking: picking.picking_type_id == self.warehouse.out_type_id
+        )
         self.assertTrue(
             all(not p.carrier_id for p in pickings),
             "No carrier is set on the sale order, so all pickings should have no carrier.",
         )
-        pickings[0].write(
+        pick.write(
             {
                 "carrier_id": self.normal_delivery.id,
                 "carrier_tracking_ref": "NORMALDELIVERYTRACK0001",
             }
         )
-        pickings[0].button_validate()
+        pick.button_validate()
         self.assertRecordValues(
-            pickings[1],
+            pack,
             [
                 {
                     "carrier_id": self.normal_delivery.id,
@@ -182,9 +197,9 @@ class TestCarrierPropagation(TransactionCase):
                 }
             ],
         )
-        pickings[1].button_validate()
+        pack.button_validate()
         self.assertRecordValues(
-            pickings[2], [{"carrier_id": False, "carrier_tracking_ref": False}]
+            ship, [{"carrier_id": False, "carrier_tracking_ref": False}]
         )
 
     def test_route_based_on_carrier_delivery(self):

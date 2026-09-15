@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.libs.documents import mimetype_for
 from odoo.libs.numbers import float_round
 from odoo.tools import float_is_zero, float_repr
-from odoo.tools.misc import clean_context, formatLang, html_escape
+from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.xml_utils import get_xml_value
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
@@ -309,6 +309,7 @@ class AccountEdiCommon(models.AbstractModel):
             val = get_xml_value(xpath, tree, nsmap)
             if val:
                 return val
+        return None
 
     def _can_export_selfbilling(self):
         return False
@@ -328,7 +329,7 @@ class AccountEdiCommon(models.AbstractModel):
                     tax_name=tax.name,
                     error_message=e.args[0],
                 )  # args[0] gives the error message
-                raise ValidationError(error_msg)
+                raise ValidationError(error_msg) from None
 
     def _get_tax_category_code(self, customer, supplier, tax):
         """
@@ -535,10 +536,7 @@ class AccountEdiCommon(models.AbstractModel):
             # contains move_type = 'out_invoice') then the attachment is decoded, if it represents a credit note,
             # the move type needs to be changed to 'out_refund'
             types = {move_type, invoice.move_type}
-            if types == {"out_invoice", "out_refund"} or types == {
-                "in_invoice",
-                "in_refund",
-            }:
+            if types in ({"out_invoice", "out_refund"}, {"in_invoice", "in_refund"}):
                 invoice.move_type = move_type
             else:
                 return None
@@ -547,23 +545,28 @@ class AccountEdiCommon(models.AbstractModel):
         invoice.move_type = move_type
         with invoice.with_context(
             disable_onchange_name_predictive=True
-        )._get_edi_creation() as invoice:
-            fill_invoice_logs = self._import_fill_invoice(invoice, tree, qty_factor)
+        )._get_edi_creation() as imported_invoice:
+            fill_invoice_logs = self._update_invoice_from_xml(
+                imported_invoice, tree, qty_factor
+            )
 
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
         # In order to support use case where the tax total is adapted for rounding purpose.
         # This has to be done after the first import in order to let Odoo compute the taxes before overriding if needed.
-        with invoice.with_context(
+        with imported_invoice.with_context(
             disable_onchange_name_predictive=True
-        )._get_edi_creation() as invoice:
-            self._correct_invoice_tax_amount(tree, invoice)
+        )._get_edi_creation() as corrected_invoice:
+            self._correct_invoice_tax_amount(tree, corrected_invoice)
 
         source_attachment = file_data["attachment"] or self.env["ir.attachment"]
-        attachments = source_attachment + self._import_attachments(invoice, tree)
+        attachments = source_attachment + self._import_attachments(
+            corrected_invoice, tree
+        )
 
         self._log_import_invoice_ubl_cii(
-            invoice, invoice_logs=fill_invoice_logs, attachments=attachments
+            corrected_invoice, invoice_logs=fill_invoice_logs, attachments=attachments
         )
+        return None
 
     def _add_logs_import_invoice_ubl_cii(self, invoice, invoice_logs=None):
         invoice.check_singleton()
@@ -646,10 +649,12 @@ class AccountEdiCommon(models.AbstractModel):
         *,
         peppol_eas=False,
         peppol_endpoint=False,
-        postal_address={},
+        postal_address=None,
         **kwargs,
     ):
         """Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)"""
+        if postal_address is None:
+            postal_address = {}
         logs = []
         if peppol_eas and peppol_endpoint:
             domain = [
@@ -822,7 +827,7 @@ class AccountEdiCommon(models.AbstractModel):
                     )
 
             line_vals.append([name, quantity, price_unit, tax_ids])
-        return record._get_line_vals_list(line_vals), logs
+        return record._prepare_edi_line_vals(line_vals), logs
 
     def _import_currency(self, tree, xpath):
         logs = []
@@ -1329,7 +1334,7 @@ class AccountEdiCommon(models.AbstractModel):
                     taxes,
                 ]
             )
-        return record._get_line_vals_list(charges_vals)
+        return record._prepare_edi_line_vals(charges_vals)
 
     def _get_document_allowance_charge_xpaths(self):
         # OVERRIDE

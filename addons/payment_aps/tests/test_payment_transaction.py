@@ -25,7 +25,7 @@ class TestPaymentTransaction(APSCommon):
 
         tx = self._create_transaction(flow="redirect")
 
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount, self.currency
         )
         expected_values = {
@@ -42,7 +42,7 @@ class TestPaymentTransaction(APSCommon):
             "signature": "c9b9f35a607606c045f8882e762a4a4a35572cf230fe1cd45fa18d7c8681aeb9",
             "api_url": self.provider._aps_get_api_url(),
         }
-        self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
+        self.assertEqual(tx._prepare_redirect_form_values(None), expected_values)
 
     @mute_logger("odoo.addons.payment.models.payment_transaction")
     def test_no_input_missing_from_redirect_form(self):
@@ -61,7 +61,7 @@ class TestPaymentTransaction(APSCommon):
             "payment_option",
             "return_url",
         ]
-        processing_values = tx._get_processing_values()
+        processing_values = tx._prepare_processing_values()
         form_info = self._extract_values_from_html_form(
             processing_values["redirect_form_html"]
         )

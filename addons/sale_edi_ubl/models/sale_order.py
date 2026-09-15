@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
         )
 
     @api.model
-    def _get_line_vals_list(self, lines_vals):
+    def _prepare_edi_line_vals(self, lines_vals):
 
         return [
             {

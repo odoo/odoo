@@ -26,7 +26,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def get_report_values(self, production_id):
         return {
             "data": self._get_report_data(production_id),
-            "context": self._get_display_context(),
+            "context": self._prepare_display_context(),
         }
 
     @api.model
@@ -80,7 +80,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         doc["get_color"] = get_color
         return doc
 
-    def _get_display_context(self):
+    def _prepare_display_context(self):
         return {
             "show_uom": self.env.user.has_group("uom.group_uom"),
         }

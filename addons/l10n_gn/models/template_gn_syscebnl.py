@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("gn_syscebnl")
-    def _get_gn_syscebnl_template_data(self):
+    def _prepare_gn_syscebnl_template_data(self):
         return {
             "name": _("SYSCEBNL for Associations"),
             "parent": "syscebnl",

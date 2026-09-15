@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("do")
-    def _get_do_template_data(self):
+    def _prepare_do_template_data(self):
         return {
             "code_digits": "8",
             "property_account_receivable_id": "l10n_do_11030201",

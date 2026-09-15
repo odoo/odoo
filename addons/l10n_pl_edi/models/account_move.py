@@ -4,9 +4,9 @@ import logging
 import re
 from decimal import Decimal
 from hashlib import sha256
-from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
+from defusedxml.minidom import parseString
 from lxml import etree
 from stdnum.pl.nip import compact
 
@@ -726,6 +726,7 @@ class AccountMove(models.Model):
                         tax_name,
                     )
                 )
+            return None
 
         def parse_fa3_bill_xml(xml_content):
             root = etree.fromstring(xml_content)
@@ -793,7 +794,7 @@ class AccountMove(models.Model):
                 "lines": lines,
             }
 
-        def get_ksef_bill_vals(data):
+        def prepare_ksef_bill_vals(data):
             nip = data["vendor_nip"]
             vat = f"PL{nip}"
             partner_vat_domain_vals = (nip, vat)
@@ -876,7 +877,7 @@ class AccountMove(models.Model):
 
             return move_vals
 
-        return get_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
+        return prepare_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
@@ -903,8 +904,7 @@ class AccountMove(models.Model):
                 *self._check_company_domain(self.env.company),
             ]
         )
-        blocking_error = blocking_error or self._get_bills_data(service, to_process)
-        return blocking_error
+        return blocking_error or self._get_bills_data(service, to_process)
 
     def _handle_download_bills_from_ksef_error(self, error):
         if not (delay := error.get("retry_after")):
@@ -1052,6 +1052,7 @@ class AccountMove(models.Model):
                             "res_model": bill._name,
                         }
                     )
+        return None
 
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get("content")

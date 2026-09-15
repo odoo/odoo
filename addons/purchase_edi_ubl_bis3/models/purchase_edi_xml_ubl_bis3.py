@@ -28,7 +28,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             product = base_line["product_id"]
             partner = base_line["partner_id"]
             supplier_info = product.variant_seller_ids.filtered(
-                lambda s: (
+                lambda s, partner=partner, product=product: (
                     s.partner_id == partner
                     and (
                         s.product_id == product
@@ -361,7 +361,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals, logs = super()._prepare_order_vals(order, tree)
         partner, partner_logs = self._import_partner(
             order.company_id,
-            **self._import_retrieve_partner_vals(tree, "SellerSupplier"),
+            **self._prepare_partner_import_params(tree, "SellerSupplier"),
         )
         if partner:
             order_vals["partner_id"] = partner.id
@@ -370,7 +370,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
 
         delivery_partner, delivery_logs = self._import_partner(
             order.company_id,
-            **self._import_retrieve_partner_vals(tree, "Delivery"),
+            **self._prepare_partner_import_params(tree, "Delivery"),
         )
         if delivery_partner:
             order_vals["dest_address_id"] = delivery_partner.id

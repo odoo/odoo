@@ -694,7 +694,7 @@ class IrModuleModule(models.Model):
         )
         return len(missing_records)
 
-    def _get_snippet_template_vals(self, name, snippet_key, parent_wrap, new_wrap):
+    def _prepare_snippet_template_vals(self, name, snippet_key, parent_wrap, new_wrap):
         module, xmlid = (
             snippet_key.split(".") if "." in snippet_key else ("website", snippet_key)
         )
@@ -718,7 +718,7 @@ class IrModuleModule(models.Model):
         }
 
     def _create_new_page_snippet_templates(self, templates, get_distinct_snippet_names):
-        get_create_vals = self._get_snippet_template_vals
+        get_create_vals = self._prepare_snippet_template_vals
         create_count = 0
 
         create_values = [
@@ -759,7 +759,7 @@ class IrModuleModule(models.Model):
         return create_count
 
     def _create_primary_snippet_templates(self):
-        get_create_vals = self._get_snippet_template_vals
+        get_create_vals = self._prepare_snippet_template_vals
         create_missing_views = self._create_missing_snippet_views
 
         def get_distinct_snippet_names(structure):

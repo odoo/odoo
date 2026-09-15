@@ -685,7 +685,7 @@ class StockPickingBatch(models.Model):
             )
         return mergeable
 
-    def _get_merged_batch_vals(self):
+    def _prepare_merged_batch_vals(self):
         self.check_singleton()
         return {"user_id": self.user_id.id, "description": self.description}
 

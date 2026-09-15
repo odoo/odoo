@@ -19,7 +19,7 @@ class TestPaymentTransaction(DPOCommon):
             "._dpo_create_token",
             return_value="dummy_token",
         ):
-            self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
+            self.assertEqual(tx._prepare_redirect_form_values(None), expected_values)
 
     def test_search_by_reference_returns_tx(self):
         """Test that the transaction is returned from the payment data."""

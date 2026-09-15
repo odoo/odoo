@@ -307,7 +307,7 @@ class DeliveryCarrier(models.Model):
 
         return True
 
-    def available_carriers(self, partner, source):
+    def _filtered_available_carriers(self, partner, source):
         _debug.pipeline(
             "carriers_filter_enter", carriers=self, partner=partner.id, source=source
         )

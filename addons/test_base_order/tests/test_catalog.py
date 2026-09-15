@@ -16,7 +16,7 @@ class TestCatalog(BaseOrderTestCase):
     def test_add_extra_context_has_common_keys(self):
         order = self._make_order()
 
-        ctx = order._get_action_add_from_catalog_extra_context()
+        ctx = order._prepare_catalog_extra_context()
 
         for key in (
             "product_catalog_currency_id",

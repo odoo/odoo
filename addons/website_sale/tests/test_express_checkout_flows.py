@@ -115,7 +115,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             )
 
     def test_express_checkout_takes_order_amount_without_delivery(self):
-        amount_without_delivery = payment_utils.to_minor_currency_units(
+        amount_without_delivery = payment_utils.major_to_minor_currency_units(
             self.cart.amount_total, self.cart.currency_id
         )
         self.carrier.fixed_price = 20

@@ -38,8 +38,8 @@ class LoyaltyProgram(models.Model):
         return res
 
     @api.model
-    def _get_template_values(self):
-        res = super()._get_template_values()
+    def _prepare_program_template_vals(self):
+        res = super()._prepare_program_template_vals()
         if "promotion" in res:
             res["promotion"]["reward_ids"] = [
                 (5, 0, 0),

@@ -116,14 +116,14 @@ class RazorpayController(http.Controller):
         # Check for the received signature.
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
+        expected_signature = tx_sudo.provider_id._get_razorpay_signature(
             payment_data, is_redirect=is_redirect
         )
         if expected_signature is None or not hmac.compare_digest(
             received_signature, expected_signature
         ):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

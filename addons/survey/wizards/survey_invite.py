@@ -267,11 +267,11 @@ class SurveyInvite(models.TransientModel):
 
         for new_partner in partners - partners_done:
             answers |= self.survey_id._create_answer(
-                partner=new_partner, check_attempts=False, **self._get_answers_values()
+                partner=new_partner, check_attempts=False, **self._prepare_answer_params()
             )
         for new_email in [email for email in emails if email not in emails_done]:
             answers |= self.survey_id._create_answer(
-                email=new_email, check_attempts=False, **self._get_answers_values()
+                email=new_email, check_attempts=False, **self._prepare_answer_params()
             )
 
         return answers
@@ -302,7 +302,7 @@ class SurveyInvite(models.TransientModel):
             )
         return (partners_done, emails_done, answers)
 
-    def _get_answers_values(self) -> dict[str, Any]:
+    def _prepare_answer_params(self) -> dict[str, Any]:
         return {
             "deadline": self.deadline,
         }

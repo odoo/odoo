@@ -91,7 +91,7 @@ class StockPicking(models.Model):
         for picking in self:
             carriers = carriers_by_company.get(picking.company_id, Carrier.browse())
             picking.allowed_carrier_ids = (
-                carriers.available_carriers(picking.partner_id, picking)
+                carriers._filtered_available_carriers(picking.partner_id, picking)
                 if picking.partner_id
                 else carriers
             )

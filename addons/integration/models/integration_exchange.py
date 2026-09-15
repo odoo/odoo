@@ -664,20 +664,27 @@ class IntegrationExchange(models.Model):
         overridden_refs = [f"integration.service,{e.id}" for e in overrides]
 
         for endpoint in overrides:
-            self._delete_logs_older_than(
+            self._remove_logs_past_retention(
                 endpoint.log_retention_days,
                 SQL("channel_id = %s", f"integration.service,{endpoint.id}"),
             )
 
         if default_retention > 0:
-            self._delete_logs_older_than(
+            self._remove_logs_past_retention(
                 default_retention,
                 SQL("NOT (channel_id = ANY(%s))", overridden_refs)
                 if overridden_refs
                 else SQL("TRUE"),
             )
 
-    def _delete_logs_older_than(self, days, scope):
+    def _remove_logs_past_retention(self, days, scope):
+        """Delete expired exchange rows within a supplied SQL scope predicate.
+
+        Settled rows use their completion date; pending/retry rows use their
+        creation date. Execute direct SQL without ORM unlink hooks.
+
+        :rtype: None
+        """
         cutoff = fields.Datetime.now() - timedelta(days=days)
         self.env.cr.execute(
             SQL(
@@ -711,13 +718,21 @@ class IntegrationExchange(models.Model):
             return {}
 
     @api.model
-    def check_duplicate_before_create(
+    def get_duplicate_info(
         self,
         channel_ref: str,
         payload_json: str,
         event_id_external: str | None = None,
         dedup_window_hours: int = 1,
     ) -> dict[str, Any]:
+        """Read duplicate metadata by external ID, then recent payload hash.
+
+        :returns: ``is_duplicate``, ``duplicate_event_id`` and ``reason``;
+            the latter two are None when no match is found
+
+        This read does not reserve an event or enforce uniqueness. Caught hash
+        lookup errors fall through to the no-match result.
+        """
         if event_id_external:
             existing_by_external_id = self.search(
                 [

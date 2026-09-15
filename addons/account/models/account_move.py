@@ -4381,7 +4381,7 @@ class AccountMove(models.Model):
                 line_ids.extend(command[2])
         return self.env["account.move.line"].browse(line_ids).move_id.ids
 
-    def _get_protected_vals(self, vals, records):
+    def _get_field_protections(self, vals, records):
         protected = set()
         for fname in vals:
             field = records._fields[fname]
@@ -4426,7 +4426,7 @@ class AccountMove(models.Model):
                         [
                             protected
                             for vals, move in zip(vals_list, moves, strict=True)
-                            for protected in self._get_protected_vals(vals, move)
+                            for protected in self._get_field_protections(vals, move)
                         ]
                     )
                 )
@@ -4627,7 +4627,7 @@ class AccountMove(models.Model):
         stolen_moves = self.browse(set(self._stolen_move(vals)))
         container = {"records": self | stolen_moves}
         with (
-            self.env.protecting(self._get_protected_vals(vals, self)),
+            self.env.protecting(self._get_field_protections(vals, self)),
             self._check_balanced(container),
         ):
             with self._sync_dynamic_lines(container):
@@ -5103,7 +5103,7 @@ class AccountMove(models.Model):
         return bases_details
 
     @_debug.perf.timed
-    def _get_early_payment_discount_tax_line_vals(
+    def _prepare_early_payment_discount_tax_line_vals(
         self, base_lines, tax_amounts, payment_term_line, percentage_paid
     ):
         tax_deltas_per_repartition_line = self._get_early_payment_discount_tax_deltas(
@@ -5165,7 +5165,7 @@ class AccountMove(models.Model):
             if self.amount_total
             else 0.0
         )
-        tax_line_vals_list = self._get_early_payment_discount_tax_line_vals(
+        tax_line_vals_list = self._prepare_early_payment_discount_tax_line_vals(
             base_lines, tax_amounts, payment_term_line, percentage_paid
         )
 

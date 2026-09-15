@@ -47,7 +47,7 @@ class SurveyInvite(models.TransientModel):
                             self.applicant_id.response_ids
                             | survey.sudo()._create_answer(
                                 partner=self.applicant_id.partner_id,
-                                **self._get_answers_values(),
+                                **self._prepare_answer_params(),
                             )
                         ).ids
                     }

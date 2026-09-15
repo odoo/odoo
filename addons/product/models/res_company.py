@@ -68,12 +68,12 @@ class ResCompany(models.Model):
             )
             ProductPricelist.create(
                 [
-                    company._get_default_pricelist_vals()
+                    company._prepare_default_pricelist_vals()
                     for company in companies_without_pricelist
                 ]
             )
 
-    def _get_default_pricelist_vals(self):
+    def _prepare_default_pricelist_vals(self):
         self.check_singleton()
         return {
             "name": _("Default"),

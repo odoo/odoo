@@ -11,17 +11,17 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
+    def _prepare_demo_data(self, company=False):
         if company.account_fiscal_country_id.code == "UY":
             return {
-                "res.partner": self._l10n_uy_get_demo_data_res_partner(company),
-                "account.move": self._l10n_uy_get_demo_data_move(company),
-                "account.move.reversal": self._l10n_uy_get_demo_data_move_reversal(
+                "res.partner": self._l10n_uy_prepare_demo_data_res_partner(company),
+                "account.move": self._l10n_uy_prepare_demo_data_move(company),
+                "account.move.reversal": self._l10n_uy_prepare_demo_data_move_reversal(
                     company
                 ),
             }
         else:
-            return super()._get_demo_data(company)
+            return super()._prepare_demo_data(company)
 
     def _post_load_demo_data(self, company=False):
         if company.account_fiscal_country_id.code != "UY":
@@ -67,9 +67,10 @@ class AccountChartTemplate(models.AbstractModel):
                 ).action_post()
             except UserError, ValidationError:
                 _logger.exception("Error while posting reversal moves")
+        return None
 
     @api.model
-    def _l10n_uy_get_demo_data_move(self, company=False):
+    def _l10n_uy_prepare_demo_data_move(self, company=False):
         cid = company.id or self.env.company.id
         sale_journal = self.env["account.journal"].search(
             domain=[
@@ -832,7 +833,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _l10n_uy_get_demo_data_move_reversal(self, company=False):
+    def _l10n_uy_prepare_demo_data_move_reversal(self, company=False):
         cid = company.id or self.env.company.id
         sale_journal = self.env["account.journal"].search(
             domain=[
@@ -907,7 +908,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _l10n_uy_get_demo_data_res_partner(self, company=False):
+    def _l10n_uy_prepare_demo_data_res_partner(self, company=False):
         return {
             self.company_xmlid("demo_partner_4"): {
                 "name": "Global Solutions Corp",

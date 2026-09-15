@@ -62,7 +62,7 @@ class TestPaymentTransaction(NuveiCommon):
                 "success_url": return_url,
             },
         }
-        checksum = self.provider._nuvei_calculate_signature(
+        checksum = self.provider._get_nuvei_signature(
             expected_values["url_params"], incoming=False
         )
         expected_values["checksum"] = checksum
@@ -76,7 +76,7 @@ class TestPaymentTransaction(NuveiCommon):
                 "odoo.addons.payment_nuvei.models.payment_transaction.uuid4", make_uuid
             ),
         ):
-            processing_values = tx._get_specific_rendering_values(None)
+            processing_values = tx._prepare_redirect_form_values(None)
         self.assertDictEqual(processing_values, expected_values)
 
     @mute_logger("odoo.addons.payment.models.payment_transaction")
@@ -120,7 +120,7 @@ class TestPaymentTransaction(NuveiCommon):
             "odoo.addons.payment.utils.generate_access_token",
             new=self._generate_test_access_token,
         ):
-            processing_values = tx._get_processing_values()
+            processing_values = tx._prepare_processing_values()
 
         form_info = self._extract_values_from_html_form(
             processing_values["redirect_form_html"]
@@ -179,5 +179,5 @@ class TestPaymentTransaction(NuveiCommon):
             "odoo.addons.payment.utils.generate_access_token",
             new=self._generate_test_access_token,
         ):
-            processing_values = tx._get_specific_rendering_values(None)
+            processing_values = tx._prepare_redirect_form_values(None)
         self.assertEqual(processing_values.get("url_params").get("total_amount"), 1000)

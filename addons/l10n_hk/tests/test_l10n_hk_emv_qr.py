@@ -93,7 +93,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "INV/TEST/0001"
-        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
+        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
@@ -112,7 +112,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals_with_non_integer_amount(self):
         self.emv_qr_invoice_with_non_integer_amount.qr_code_method = "emv_qr"
         unstruct_ref = "INV/TEST/0002"
-        emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.partner_bank_id._get_qr_vals(
+        emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.partner_bank_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice_with_non_integer_amount.qr_code_method,
             amount=self.emv_qr_invoice_with_non_integer_amount.amount_residual,
             currency=self.emv_qr_invoice_with_non_integer_amount.currency_id,

@@ -234,11 +234,11 @@ class MixinOrderInvoice(models.AbstractModel):
 
         context = {"default_move_type": f"{direction}_invoice"}
         if len(self) == 1:
-            context.update(self._get_invoice_action_context())
+            context.update(self._prepare_invoice_action_context())
         action["context"] = context
         return action
 
-    def _get_invoice_action_context(self):
+    def _prepare_invoice_action_context(self):
         self.check_singleton()
         pt_field = self._get_partner_payment_term_field()
         return {

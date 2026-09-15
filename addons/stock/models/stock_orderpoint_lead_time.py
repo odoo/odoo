@@ -347,7 +347,7 @@ class StockWarehouseOrderpointLeadTime(models.Model):
         orderpoints_to_compute = self.filtered(
             lambda orderpoint: orderpoint.product_id and orderpoint.location_id,
         )
-        values_by_orderpoint = orderpoints_to_compute._get_lead_days_values_map()
+        values_by_orderpoint = orderpoints_to_compute._prepare_lead_time_params_map()
         for orderpoint in orderpoints_to_compute.with_context(
             bypass_delay_description=True,
         ):

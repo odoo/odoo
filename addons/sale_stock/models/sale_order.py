@@ -407,9 +407,9 @@ class SaleOrder(models.Model):
 
         return super()._action_cancel()
 
-    def _get_action_add_from_catalog_extra_context(self):
+    def _prepare_catalog_extra_context(self):
         return {
-            **super()._get_action_add_from_catalog_extra_context(),
+            **super()._prepare_catalog_extra_context(),
             "warehouse_id": self.warehouse_id.id,
         }
 
@@ -427,7 +427,7 @@ class SaleOrder(models.Model):
             Command.link(stock_reference.id) for stock_reference in reference
         ]
 
-    def _get_action_view_picking_context(self, pickings):
+    def _prepare_picking_action_context(self, pickings):
         picking = (
             pickings.filtered(lambda p: p.picking_type_id.code == "outgoing")[:1]
             or pickings[:1]

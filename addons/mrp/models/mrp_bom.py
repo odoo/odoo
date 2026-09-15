@@ -241,7 +241,7 @@ class MrpBom(models.Model):
     )
     def _compute_possible_product_template_attribute_value_ids(self):
         for bom in self:
-            bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids._only_active()
+            bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids._filtered_active()
 
     def _remove_variant_values(self):
         self.check_singleton()
@@ -978,9 +978,9 @@ class MrpBom(models.Model):
             return production.product_id == bom.product_id
         return production.product_tmpl_id == bom.product_tmpl_id
 
-    def _get_action_add_from_catalog_extra_context(self):
+    def _prepare_catalog_extra_context(self):
         return {
-            **super()._get_action_add_from_catalog_extra_context(),
+            **super()._prepare_catalog_extra_context(),
             "product_catalog_currency_id": self.env.company.currency_id.id,
         }
 

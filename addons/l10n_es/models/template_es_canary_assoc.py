@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("es_canary_assoc")
-    def _get_es_canary_assoc_template_data(self):
+    def _prepare_es_canary_assoc_template_data(self):
         return {
             "name": _("Canary Islands - PGCE non-profit entities (2008)"),
             "parent": "es_canary_common",

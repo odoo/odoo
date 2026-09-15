@@ -21,7 +21,7 @@ class StripeCommon(PaymentCommon):
         cls.provider = cls.stripe
 
         cls.notification_amount_and_currency = {
-            "amount": payment_utils.to_minor_currency_units(
+            "amount": payment_utils.major_to_minor_currency_units(
                 cls.amount,
                 cls.currency,
                 arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(cls.currency.name),

@@ -17,9 +17,9 @@ class HrExpenseSplit(models.TransientModel):
         compute="_compute_can_be_reinvoiced",
     )
 
-    def _get_values(self):
+    def _prepare_expense_vals(self):
         self.check_singleton()
-        vals = super()._get_values()
+        vals = super()._prepare_expense_vals()
         vals["sale_order_id"] = self.sale_order_id.id
         return vals
 

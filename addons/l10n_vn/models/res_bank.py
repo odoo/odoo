@@ -82,7 +82,7 @@ class ResPartnerBank(models.Model):
             return self._serialize(8, re.sub(r"[^a-zA-Z0-9 _\\\-.]+", "", comment))
         return super()._get_additional_data_field(comment)
 
-    def _get_qr_code_vals_list(
+    def _prepare_emv_qr_fields(
         self,
         qr_method,
         amount,
@@ -91,7 +91,7 @@ class ResPartnerBank(models.Model):
         free_communication,
         structured_communication,
     ):
-        res = super()._get_qr_code_vals_list(
+        res = super()._prepare_emv_qr_fields(
             qr_method,
             amount,
             currency,
@@ -116,7 +116,7 @@ class ResPartnerBank(models.Model):
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == "emv_qr" and self.country_code == "VN":
-            if currency.name not in ["VND"]:
+            if currency.name != "VND":
                 return _(
                     "Can't generate a Vietnamese QR banking code with a currency other than VND."
                 )
@@ -166,3 +166,4 @@ class ResPartnerBank(models.Model):
             return _("Missing Proxy Value.")
         if not self._get_merchant_account_info():
             return _("Missing Merchant Account Information.")
+        return None

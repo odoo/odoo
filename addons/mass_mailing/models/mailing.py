@@ -1404,7 +1404,7 @@ class MailingMailing(models.Model):
     def _get_seen_list_extra(self):
         return ("", "")
 
-    def _get_mass_mailing_context(self):
+    def _prepare_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
         return {
             "post_convert_links": self._get_link_tracker_values(),
@@ -1554,7 +1554,7 @@ class MailingMailing(models.Model):
                 .with_context(
                     active_ids=mailing_res_ids,
                     default_composition_mode="mass_mail",
-                    **mailing._get_mass_mailing_context(),
+                    **mailing._prepare_mass_mailing_context(),
                 )
                 .create(composer_values)
             )

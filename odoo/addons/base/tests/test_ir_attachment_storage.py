@@ -290,7 +290,7 @@ class MemoryStorage(AttachmentStorage):
         data = type(self).blobs.get(key, b"")
         return data if size is None else data[:size]
 
-    def delete(self, key):
+    def remove(self, key):
         self.env.cr.execute(
             "SELECT 1 FROM ir_attachment WHERE store_fname = %s LIMIT 1", [key]
         )

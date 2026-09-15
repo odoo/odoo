@@ -237,14 +237,14 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(
             [
                 (rec["product_name"], rec["lot_id"])
-                for rec in invoice._get_invoiced_lot_values()
+                for rec in invoice._prepare_invoice_lot_rows()
             ],
             [(serial_dropship_product.name, serial1.id)],
         )
         self.assertEqual(
             [
                 (rec["product_name"], rec["lot_id"])
-                for rec in credit_note._get_invoiced_lot_values()
+                for rec in credit_note._prepare_invoice_lot_rows()
             ],
             [(serial_dropship_product.name, serial2.id)],
         )

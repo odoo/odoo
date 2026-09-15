@@ -9,7 +9,7 @@ from odoo.addons.account.tools import (
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
-    def _get_qr_vals(
+    def _prepare_qr_payload(
         self,
         qr_method,
         amount,
@@ -48,7 +48,7 @@ class ResPartnerBank(models.Model):
                 ],  # Remittance Information (Unstructured) (can't be set if there is a structured one)
                 "",  # Beneficiary to Originator Information
             ]
-        return super()._get_qr_vals(
+        return super()._prepare_qr_payload(
             qr_method,
             amount,
             currency,
@@ -57,7 +57,7 @@ class ResPartnerBank(models.Model):
             structured_communication,
         )
 
-    def _get_qr_code_generation_params(
+    def _prepare_qr_rendering_params(
         self,
         qr_method,
         amount,
@@ -74,7 +74,7 @@ class ResPartnerBank(models.Model):
                 "height": 128,
                 "humanreadable": 1,
                 "value": "\n".join(
-                    self._get_qr_vals(
+                    self._prepare_qr_payload(
                         qr_method,
                         amount,
                         currency,
@@ -84,7 +84,7 @@ class ResPartnerBank(models.Model):
                     )
                 ),
             }
-        return super()._get_qr_code_generation_params(
+        return super()._prepare_qr_rendering_params(
             qr_method,
             amount,
             currency,

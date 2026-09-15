@@ -195,8 +195,8 @@ class StockWarehouseOrderpoint(models.Model):
             )
         return self.env["product.supplierinfo"]
 
-    def _get_lead_days_values(self):
-        values = super()._get_lead_days_values()
+    def _prepare_lead_time_params(self):
+        values = super()._prepare_lead_time_params()
         if self.supplier_id:
             values["supplierinfo"] = self.supplier_id
         return values

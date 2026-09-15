@@ -67,7 +67,7 @@ class AccountMove(models.Model):
         res = super().action_draft()
 
         with self.env.protecting(
-            self.env["account.move"]._get_protected_vals({}, self)
+            self.env["account.move"]._get_field_protections({}, self)
         ):
             self.mapped("line_ids").filtered(
                 lambda line: line.display_type == "cogs"
@@ -170,5 +170,5 @@ class AccountMove(models.Model):
     def _stock_account_get_last_step_stock_moves(self):
         return self.env["stock.move"]
 
-    def _get_invoiced_lot_values(self):
+    def _prepare_invoice_lot_rows(self):
         return []

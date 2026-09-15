@@ -13,17 +13,17 @@ class ReportProductReport_Pricelist(models.AbstractModel):
     MAX_PRICE_COMPUTATIONS = 5000
 
     def _get_report_values(self, docids, data):
-        return self._get_report_data(data, "pdf")
+        return self._prepare_pricelist_rendering_context(data, "pdf")
 
     @api.readonly
     @api.model
     def get_html(self, data):
-        render_values = self._get_report_data(data, "html")
+        render_values = self._prepare_pricelist_rendering_context(data, "html")
         return self.env["ir.qweb"]._render(
             "product.report_pricelist_page", render_values
         )
 
-    def _get_report_data(self, data, report_type="html"):
+    def _prepare_pricelist_rendering_context(self, data, report_type="html"):
         quantities = self._parse_quantities(data.get("quantities"))
         try:
             data_pricelist_id = data.get("pricelist_id")
@@ -122,7 +122,7 @@ class ReportProductReport_Pricelist(models.AbstractModel):
                     all_variants, qty
                 )
 
-        def build(product, prices, tmpl_row):
+        def prepare_product_payload(product, prices, tmpl_row):
             return {
                 "id": product.id,
                 "name": (tmpl_row and product.name) or product.display_name,
@@ -132,11 +132,12 @@ class ReportProductReport_Pricelist(models.AbstractModel):
 
         products_data = []
         for product in products:
-            data = build(product, prices_by_qty, is_product_tmpl)
+            data = prepare_product_payload(product, prices_by_qty, is_product_tmpl)
             variants = variants_by_tmpl.get(product.id)
             if variants:
                 data["variants"] = [
-                    build(variant, variant_prices_by_qty, False) for variant in variants
+                    prepare_product_payload(variant, variant_prices_by_qty, False)
+                    for variant in variants
                 ]
             products_data.append(data)
         return products_data

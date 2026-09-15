@@ -12,7 +12,7 @@ class PosDailySalesReportsWizard(models.TransientModel):
         required=True,
     )
 
-    def _get_report_data(self):
+    def _prepare_report_params(self):
         self.check_singleton()
         return {
             "date_start": False,
@@ -27,5 +27,5 @@ class PosDailySalesReportsWizard(models.TransientModel):
             "[wizard:daily.report] print for %s", dbg.rec(self.pos_session_id)
         )
         return self.env.ref("point_of_sale.sale_details_report").report_action(
-            [], data=self._get_report_data()
+            [], data=self._prepare_report_params()
         )

@@ -957,13 +957,15 @@ class ProductTemplate(models.Model):
             current_variants_to_activate = Product
 
             single_value_lines = lines_without_no_variants.filtered(
-                lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1
+                lambda ptal: (
+                    len(ptal.product_template_value_ids._filtered_active()) == 1
+                )
             )
             if single_value_lines:
                 for variant in all_variants:
                     combination = (
                         variant.product_template_attribute_value_ids
-                        | single_value_lines.product_template_value_ids._only_active()
+                        | single_value_lines.product_template_value_ids._filtered_active()
                     )
                     if (
                         len(combination) == len(lines_without_no_variants)
@@ -980,7 +982,7 @@ class ProductTemplate(models.Model):
             if not tmpl_id.has_dynamic_attributes():
                 all_combinations = itertools.product(
                     *[
-                        ptal.product_template_value_ids._only_active()
+                        ptal.product_template_value_ids._filtered_active()
                         for ptal in lines_without_no_variants
                     ]
                 )
@@ -1051,7 +1053,7 @@ class ProductTemplate(models.Model):
         self.check_singleton()
         attribute_lines = self.valid_product_template_attribute_line_ids
         attribute_lines_active_values = (
-            attribute_lines.product_template_value_ids._only_active()
+            attribute_lines.product_template_value_ids._filtered_active()
         )
         if ignore_no_variant:
             attribute_lines = attribute_lines._without_no_variant_attributes()
@@ -1137,7 +1139,7 @@ class ProductTemplate(models.Model):
 
         return sum(self.env.context.get("current_attributes_price_extra", []))
 
-    def _get_product_price_context(self, combination):
+    def _prepare_product_price_context(self, combination):
         self.check_singleton()
         res = {}
 
@@ -1275,7 +1277,7 @@ class ProductTemplate(models.Model):
         product_template_attribute_values_per_line = []
         for ptal in attribute_lines:
             if ptal.attribute_id.display_type != "multi":
-                values_to_add = ptal.product_template_value_ids._only_active()
+                values_to_add = ptal.product_template_value_ids._filtered_active()
             else:
                 values_to_add = self.env["product.template.attribute.value"]
             product_template_attribute_values_per_line.append(values_to_add)

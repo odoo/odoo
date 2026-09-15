@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("cn_large_bis")
-    def _get_cn_large_bis_template_data(self):
+    def _prepare_cn_large_bis_template_data(self):
         return {
             "name": _("Accounting Standards for Business Enterprises"),
             "parent": "cn_common",

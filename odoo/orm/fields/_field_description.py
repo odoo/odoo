@@ -34,9 +34,9 @@ class _FieldDescriptionMixin(_FieldStubs):
         static, dynamic = env[self.model_name]._get_field_descriptions_static(
             key, (self.name,)
         )[self.name]
-        return self._compose_description(env, static, dynamic)
+        return self._get_description_from_parts(env, static, dynamic)
 
-    def _compose_description(
+    def _get_description_from_parts(
         self,
         env: Environment,
         static: Mapping[str, typing.Any],
@@ -60,7 +60,7 @@ class _FieldDescriptionMixin(_FieldStubs):
     ) -> tuple[ValuesType, tuple[str, ...]]:
         """The half of the description that is a function of the registry,
         the language and the superuser flag, and the names of the attributes
-        that are not — evaluated on every call by ``_compose_description``."""
+        that are not — evaluated on every call by ``_get_description_from_parts``."""
         dynamic = self._dynamic_description_attrs(env)
         desc = {}
         for attr, prop in self.description_attrs:

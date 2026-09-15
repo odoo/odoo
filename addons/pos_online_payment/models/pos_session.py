@@ -46,7 +46,7 @@ class PosSession(models.Model):
 
         for payment, amounts in split_receivables_online.items():
             split_receivable_line = MoveLine.create(
-                self._get_split_receivable_op_vals(
+                self._prepare_split_receivable_op_vals(
                     payment, amounts["amount"], amounts["amount_converted"]
                 )
             )
@@ -63,7 +63,7 @@ class PosSession(models.Model):
         data["online_payment_to_receivable_lines"] = online_payment_to_receivable_lines
         return data
 
-    def _get_split_receivable_op_vals(self, payment, amount, amount_converted):
+    def _prepare_split_receivable_op_vals(self, payment, amount, amount_converted):
         partner = payment.online_account_payment_id.partner_id
         accounting_partner = partner.commercial_partner_id
         if not accounting_partner:

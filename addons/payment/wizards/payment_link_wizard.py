@@ -16,9 +16,7 @@ class PaymentLinkWizard(models.TransientModel):
         res_model = self.env.context.get("active_model")
         if res_id and res_model:
             res.update({"res_model": res_model, "res_id": res_id})
-            res.update(
-                self.env[res_model].browse(res_id)._get_default_payment_link_values()
-            )
+            res.update(self.env[res_model].browse(res_id)._prepare_payment_link_vals())
         return res
 
     res_model = fields.Char(

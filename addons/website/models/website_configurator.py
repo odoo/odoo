@@ -101,7 +101,7 @@ class Website(models.Model):
             route, params, "website.olg_api_endpoint", DEFAULT_OLG_ENDPOINT, timeout=45
         )
 
-    def get_cta_data(self, website_purpose, website_type):
+    def prepare_configurator_cta_data(self, website_purpose, website_type):
         return {"cta_btn_text": False, "cta_btn_href": "/contactus"}
 
     def _get_snippet_defaults(self, snippet):
@@ -623,7 +623,7 @@ class Website(models.Model):
 
         self._configurator_write_palette(kwargs.get("selected_palette"))
 
-        cta_data = website.get_cta_data(
+        cta_data = website.prepare_configurator_cta_data(
             kwargs.get("website_purpose"), kwargs.get("website_type")
         )
         if cta_data["cta_btn_text"]:

@@ -1042,7 +1042,7 @@ class TestResUsersInitPasswordMigration(TransactionCase):
         )
         for (stored,) in self.env.cr.fetchall():
             self.assertTrue(stored.startswith("$"), "stored hash must be MCF")
-            self.assertTrue(ctx.verify("plaintext-secret", stored))
+            self.assertTrue(ctx.is_password_valid("plaintext-secret", stored))
 
 
 @tagged("post_install", "-at_install")
@@ -2018,7 +2018,7 @@ class TestCryptContextConfiguration(TransactionCase):
         context = self.env["res.users"]._get_crypt_context()
         hashed = context.hash("Ru!Rounds9999")
         self.assertTrue(
-            context.verify("Ru!Rounds9999", hashed),
+            context.is_password_valid("Ru!Rounds9999", hashed),
             "a rounds value above the backend cap must not lock users out",
         )
 

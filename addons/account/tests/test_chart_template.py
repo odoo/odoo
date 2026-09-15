@@ -1786,7 +1786,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
     def test_utility_account_codes_all_follow_code_digits(self):
         for code_digits in (4, 6, 9, 12):
             with self.subTest(code_digits=code_digits):
-                values = self.ChartTemplate._get_accounts_data_values(
+                values = self.ChartTemplate._prepare_utility_account_vals(
                     self.company, {"code_digits": code_digits}
                 )
                 explicit_codes = {
@@ -1803,7 +1803,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                         f"{code_digits}-digit chart",
                     )
         self.assertEqual(
-            self.ChartTemplate._get_accounts_data_values(
+            self.ChartTemplate._prepare_utility_account_vals(
                 self.company, {"code_digits": 6}
             )["account_journal_early_pay_discount_loss_account_id"]["code"],
             "999998",

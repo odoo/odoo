@@ -469,8 +469,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         for item in line_node["cac:Item"]["cac:ClassifiedTaxCategory"]:
             item.pop("hrextac:HRObracunPDVPoNaplati")
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
-        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+    def _update_invoice_from_xml(self, invoice, tree, qty_factor):
+        logs = super()._update_invoice_from_xml(invoice, tree, qty_factor)
         profile_id = tree.findtext("./{*}ProfileID")
         invoice_values = {
             "l10n_hr_process_type": profile_id[:3]

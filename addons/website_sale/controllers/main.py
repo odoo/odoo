@@ -251,10 +251,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attribute_values": attribute_values,
         }
 
-    def _get_additional_shop_values(self, values, **kwargs):
+    def _prepare_additional_shop_context(self, values, **kwargs):
         return {}
 
-    def _get_product_query_params(self, **kwargs):
+    def _prepare_product_query_params(self, **kwargs):
         return {}
 
     @route(
@@ -494,7 +494,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             layout_mode = "grid"
 
         products_prices = products._get_sales_prices(website)
-        product_query_params = self._get_product_query_params(**post)
+        product_query_params = self._prepare_product_query_params(**post)
 
         grouped_attributes_values = (
             request.env["product.attribute.value"]
@@ -548,7 +548,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({"all_tags": all_tags, "tags": tags})
         if category:
             values["main_object"] = category
-        values.update(self._get_additional_shop_values(values, **post))
+        values.update(self._prepare_additional_shop_context(values, **post))
         return request.render("website_sale.products", values)
 
     @route(
@@ -1513,7 +1513,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "submit_button_label": _("Pay now"),
         }
         payment_form_values = {
-            **sale_portal.CustomerPortal._get_payment_values(
+            **sale_portal.CustomerPortal._prepare_payment_form_context(
                 self, order, website_id=request.website.id
             ),
             "display_submit_button": False,
@@ -1534,7 +1534,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo = request.cart
         order_sudo._recompute_taxes()
 
-        return payment_utils.to_minor_currency_units(
+        return payment_utils.major_to_minor_currency_units(
             order_sudo.amount_total, order_sudo.currency_id
         )
 

@@ -144,7 +144,9 @@ class WebsiteSaleProductConfiguratorController(
             strikethrough_price = (
                 self._get_strikethrough_price(
                     product_or_template.with_context(
-                        **product_or_template._get_product_price_context(combination)
+                        **product_or_template._prepare_product_price_context(
+                            combination
+                        )
                     ),
                     currency,
                     date,

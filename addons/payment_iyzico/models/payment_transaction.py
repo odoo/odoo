@@ -16,16 +16,16 @@ class PaymentTransaction(models.Model):
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
-    def _get_specific_rendering_values(self, *args):
+    def _prepare_redirect_form_values(self, *args):
         """Override of `payment` to return Iyzico specific rendering values.
 
-         Note: `self.check_singleton()` from :meth:`_get_processing_values`
+         Note: `self.check_singleton()` from :meth:`_prepare_processing_values`
 
         :return: The provider-specific processing values.
         :rtype: dict
         """
         if self.provider_code != "iyzico":
-            return super()._get_specific_rendering_values(*args)
+            return super()._prepare_redirect_form_values(*args)
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._iyzico_prepare_cf_initialize_payload()
@@ -152,3 +152,4 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(self.env._("Unknown status code: %s", status))
+        return None

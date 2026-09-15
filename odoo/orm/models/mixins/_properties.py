@@ -48,7 +48,7 @@ class _PropertiesMixin(_ModelStubs):
         # still surfaces as the SQL scan surfaced it
         target_model.flush_model([definition_record_field])
         definition: dict = {}
-        for _holder_id, stored in self.env.backend.columns.scan(
+        for _holder_id, stored in self.env.backend.columns.get_column_values(
             target_model, definition_record_field
         ):
             definition = next(

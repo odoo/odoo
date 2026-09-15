@@ -70,7 +70,7 @@ Hooks a consumer can set
   Palette index for a new value. Defaults to a random 1-11 so values are
   visually distinguishable; ``0`` means "no colour" and is not drawn.
 
-``_used_records()`` (on the attribute and value mixins)
+``_filtered_used()`` (on the attribute and value mixins)
   Which of ``self`` is already bound to a subject. The default answers "some
   attribute line references it". Override to narrow it -- ``product`` counts
   only lines of *active* templates, so an attribute whose sole trace is an
@@ -95,7 +95,7 @@ stay live. Both are silent data loss, so the mixins refuse:
   a violation ``_check_values`` cannot see, because the write lands on the
   value).
 
-All of them resolve "in use" through ``_used_records()``, so a consumer tunes
+All of them resolve "in use" through ``_filtered_used()``, so a consumer tunes
 the policy in one place. ``_in_use_message()`` returns the same sentence
 without raising, for a UI that wants to grey out a button rather than fail the
 click; ``product`` exposes it over RPC as ``check_is_used_on_products``.

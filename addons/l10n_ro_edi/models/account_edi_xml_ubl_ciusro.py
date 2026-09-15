@@ -24,6 +24,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
         if invoice.move_type == "out_refund":
             return {"_text": "50"}
+        return None
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates
@@ -143,9 +144,9 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
+    def _prepare_partner_import_params(self, tree, role):
         # EXTENDS account.edi.xml.ubl_bis3
-        partner_vals = super()._import_retrieve_partner_vals(tree, role)
+        partner_vals = super()._prepare_partner_import_params(tree, role)
         if "peppol_endpoint" in partner_vals:
             # ANAF allows for endpoints to be an address mail, since we don't want to create a new
             # user with an address mail as a PEPPOL endpoint, we simply remove it in that case.

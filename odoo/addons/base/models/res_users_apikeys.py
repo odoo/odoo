@@ -141,7 +141,7 @@ class ResUsersApikeys(models.Model):
         )
         candidates = self.env.cr.fetchall()
         for user_id, current_key in candidates:
-            if KEY_CRYPT_CONTEXT.verify(key, current_key):
+            if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
                 _debug.logic("apikey_matched", scope=scope, uid=user_id)
                 return user_id
         _debug.logic("apikey_rejected", scope=scope, candidates=len(candidates))
@@ -164,7 +164,7 @@ class ResUsersApikeys(models.Model):
             )
         )
         for current_key, expiration_date in self.env.cr.fetchall():
-            if KEY_CRYPT_CONTEXT.verify(key, current_key):
+            if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
                 return expiration_date
         _debug.logic("apikey_expiration_unknown", scope=scope)
         return None

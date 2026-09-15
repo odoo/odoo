@@ -4,8 +4,8 @@ from odoo import models
 class LoyaltyReward(models.Model):
     _inherit = "loyalty.reward"
 
-    def _get_discount_product_values(self):
-        res = super()._get_discount_product_values()
+    def _prepare_discount_product_vals(self):
+        res = super()._prepare_discount_product_vals()
         for vals in res:
             vals.update(
                 {

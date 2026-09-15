@@ -121,8 +121,8 @@ class MixinOrderStock(models.AbstractModel):
             action["res_id"] = pickings.id
         else:
             action["domain"] = [("id", "in", pickings.ids)]
-        action["context"] = self._get_action_view_picking_context(pickings)
+        action["context"] = self._prepare_picking_action_context(pickings)
         return action
 
-    def _get_action_view_picking_context(self, pickings):
+    def _prepare_picking_action_context(self, pickings):
         return {}

@@ -91,18 +91,18 @@ class NuveiController(http.Controller):
             ref = tx_sudo.reference
             if not payment_utils.check_access_token(error_access_token, ref):
                 _logger.warning("Received cancel/error with invalid access token.")
-                raise Forbidden()
+                raise Forbidden
         else:  # The payment went through.
             received_signature = payment_data.get("advanceResponseChecksum")
             if not received_signature:
                 _logger.warning("Received payment data with missing signature")
-                raise Forbidden()
+                raise Forbidden
 
             # Compare the received signature with the expected signature computed from the data.
-            expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(
+            expected_signature = tx_sudo.provider_id._get_nuvei_signature(
                 payment_data,
                 incoming=True,
             )
             if not consteq(received_signature, expected_signature):
                 _logger.warning("Received payment data with invalid signature")
-                raise Forbidden()
+                raise Forbidden

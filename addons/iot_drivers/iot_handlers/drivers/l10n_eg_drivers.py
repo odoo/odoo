@@ -22,7 +22,7 @@ class EtaUsbController(http.Controller):
         if not stored_hash:
             # empty password/hash => authentication forbidden
             return False
-        return crypt_context.verify(access_token, stored_hash)
+        return crypt_context.is_password_valid(access_token, stored_hash)
 
     @route.iot_route(
         "/hw_l10n_eg_eta/certificate",
@@ -86,7 +86,7 @@ class EtaUsbController(http.Controller):
                 ]
             )[0]
 
-            invoice_dict = dict()
+            invoice_dict = {}
             invoices = json.loads(invoices)
             for invoice, eta_inv in invoices.items():
                 to_sign = base64.b64decode(eta_inv)

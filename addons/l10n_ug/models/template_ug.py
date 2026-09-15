@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("ug")
-    def _get_ug_template_data(self):
+    def _prepare_ug_template_data(self):
         return {
             "name": "Uganda Generic Chart of Accounts",
             "code_digits": 6,

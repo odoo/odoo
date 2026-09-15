@@ -56,7 +56,7 @@ class TeamAlias(models.Model):
                     .sudo()
                     .create(
                         {
-                            **team._get_usage_alias_creation_values(vals["usage"]),
+                            **team._prepare_usage_alias_vals(vals["usage"]),
                             **alias_vals,
                         }
                     )
@@ -96,14 +96,14 @@ class TeamAlias(models.Model):
 
     def _refresh_alias_values(self):
         for alias in self:
-            values = alias.team_id._get_usage_alias_creation_values(alias.usage)
+            values = alias.team_id._prepare_usage_alias_vals(alias.usage)
             if not alias.team_id.company_id.alias_domain_id and alias.alias_domain_id:
                 # a team without a company keeps the domain someone chose for it
                 values["alias_domain_id"] = alias.alias_domain_id.id
             values["alias_defaults"] = str(
                 {
                     **alias.alias_id._get_alias_defaults(),
-                    **alias.team_id._get_usage_alias_defaults(alias.usage),
+                    **alias.team_id._prepare_usage_alias_defaults(alias.usage),
                 }
             )
             alias.alias_id.sudo().write(values)

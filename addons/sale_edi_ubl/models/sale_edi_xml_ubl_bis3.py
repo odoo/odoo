@@ -330,7 +330,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals.pop("notes", False)
         partner, partner_logs = self._import_partner(
             order.company_id,
-            **self._import_retrieve_partner_vals(tree, "BuyerCustomer"),
+            **self._prepare_partner_import_params(tree, "BuyerCustomer"),
         )
         if partner:
             order_vals["partner_id"] = partner.id
@@ -339,7 +339,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
         delivery_partner, delivery_logs = self._import_partner(
             order.company_id,
-            **self._import_retrieve_partner_vals(tree, "Delivery"),
+            **self._prepare_partner_import_params(tree, "Delivery"),
         )
         if delivery_partner:
             order_vals["partner_shipping_id"] = delivery_partner.id

@@ -130,7 +130,7 @@ class LivechatController(http.Controller):
             .search([("id", "=", channel_id)])
         )
         if not livechat_channel:
-            raise NotFound()
+            raise NotFound
         if not request.env.user._is_public():
             country = request.env.user.country_id
         elif request.geoip.country_code:
@@ -189,7 +189,7 @@ class LivechatController(http.Controller):
                 )
                 livechat_channel = livechat_channel.with_context(guest=guest)
                 request.update_context(guest=guest)
-            channel_vals = livechat_channel._get_livechat_discuss_channel_vals(
+            channel_vals = livechat_channel._prepare_livechat_discuss_channel_vals(
                 **operator_info
             )
             channel_vals.update(**persisted_channel_params)
@@ -296,7 +296,7 @@ class LivechatController(http.Controller):
     @add_guest_to_context
     def email_livechat_transcript(self, channel_id, email):
         if not request.env.user._is_internal():
-            raise NotFound()
+            raise NotFound
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._email_livechat_transcript(email)
 
@@ -307,7 +307,7 @@ class LivechatController(http.Controller):
     def download_livechat_transcript(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
-            raise NotFound()
+            raise NotFound
         partner, guest = request.env["res.partner"]._get_current_persona()
         tz = timezone(partner.tz or guest.timezone or "UTC")
         pdf, _type = (

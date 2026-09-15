@@ -6,8 +6,8 @@ class ProjectUpdate(models.Model):
     _inherit = "project.update"
 
     @api.model
-    def _get_template_values(self, project):
-        template_values = super()._get_template_values(project)
+    def _prepare_update_rendering_context(self, project):
+        template_values = super()._prepare_update_rendering_context(project)
         profitability_values = template_values.get("profitability")
         if (
             profitability_values

@@ -5,7 +5,7 @@ from pathlib import Path
 from lxml import etree
 
 from odoo.tools import view_ir
-from odoo.tools.view_ir.validate import _check_value
+from odoo.tools.view_ir.validate import _get_value_error
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ADDON_ROOTS = (REPO_ROOT / "addons", REPO_ROOT / "odoo" / "addons")
@@ -109,7 +109,7 @@ class TestViewIrCorpus(unittest.TestCase):
             for fragment in fragments:
                 errors.extend(
                     f"{where}: {issue}"
-                    for issue in view_ir.validate(
+                    for issue in view_ir.get_issues(
                         view_ir.from_arch(fragment), view_type
                     )
                     if issue.severity == "error"
@@ -138,7 +138,7 @@ def _attribute_problems(spec, view_type, patch):
         if attribute.get("add") or attribute.get("remove") or not value:
             continue
         attr_type = spec.attr_type(view_type, target, attribute.get("name"))
-        if attr_type is not None and (problem := _check_value(attr_type, value)):
+        if attr_type is not None and (problem := _get_value_error(attr_type, value)):
             yield f"bad-{problem} at {target}: {attribute.get('name')}={value!r}"
 
 

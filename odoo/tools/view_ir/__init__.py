@@ -13,7 +13,7 @@ from .patch import Applied, AttrChange, Conflict, Move, Patch, PatchError
 from .patch import apply as apply_patches
 from .resolve import translate_specs
 from .schema import SCHEMA_PATH, NodeSpec, Schema, ViewTypeSpec, schema
-from .validate import Issue, validate
+from .validate import Issue, get_issues
 
 __all__ = [
     "COMMENT",
@@ -36,11 +36,11 @@ __all__ = [
     "from_arch",
     "from_json",
     "from_string",
+    "get_issues",
     "identify",
     "schema",
     "to_arch",
     "to_json",
     "to_string",
     "translate_specs",
-    "validate",
 ]

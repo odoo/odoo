@@ -177,13 +177,13 @@ class TestTemplateCopyPriceExtra(ProductCommon):
         )
 
         extras = {blue: 11.0, green: 22.0}
-        for ptav in line.product_template_value_ids._only_active():
+        for ptav in line.product_template_value_ids._filtered_active():
             ptav.price_extra = extras[ptav.product_attribute_value_id]
 
         copied = template.copy()
         copied_extras = {
             ptav.product_attribute_value_id: ptav.price_extra
-            for ptav in copied.attribute_line_ids.product_template_value_ids._only_active()
+            for ptav in copied.attribute_line_ids.product_template_value_ids._filtered_active()
         }
         self.assertEqual(
             copied_extras,

@@ -18,22 +18,24 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
+    def _prepare_demo_data(self, company=False):
         _debug.pipeline("demo_get_demo_data", company=company)
         return {
-            **self._get_demo_data_products(company),
-            "account.move": self._get_demo_data_move(company),
-            "account.bank.statement": self._get_demo_data_statement(company),
-            "account.bank.statement.line": self._get_demo_data_transactions(company),
-            "account.reconcile.model": self._get_demo_data_reconcile_model(company),
-            "ir.attachment": self._get_demo_data_attachment(company),
-            "mail.message": self._get_demo_data_mail_message(company),
-            "mail.activity": self._get_demo_data_mail_activity(company),
-            "product.product": self._get_demo_data_product(),
-            "res.partner.bank": self._get_demo_data_bank(company),
-            "res.partner": self._get_demo_data_partner(),
-            "res.users": self._get_demo_data_user(),
-            "account.journal": self._get_demo_data_journal(company),
+            **self._prepare_demo_data_products(company),
+            "account.move": self._prepare_demo_data_move(company),
+            "account.bank.statement": self._prepare_demo_data_statement(company),
+            "account.bank.statement.line": self._prepare_demo_data_transactions(
+                company
+            ),
+            "account.reconcile.model": self._prepare_demo_data_reconcile_model(company),
+            "ir.attachment": self._prepare_demo_data_attachment(company),
+            "mail.message": self._prepare_demo_data_mail_message(company),
+            "mail.activity": self._prepare_demo_data_mail_activity(company),
+            "product.product": self._prepare_demo_data_product(),
+            "res.partner.bank": self._prepare_demo_data_bank(company),
+            "res.partner": self._prepare_demo_data_partner(),
+            "res.users": self._prepare_demo_data_user(),
+            "account.journal": self._prepare_demo_data_journal(company),
         }
 
     def _get_demo_exception_product_template_xml_ids(self):
@@ -43,7 +45,7 @@ class AccountChartTemplate(models.AbstractModel):
         return ["product.office_combo"]
 
     @_debug.perf.timed
-    def _get_demo_data_products(self, company):
+    def _prepare_demo_data_products(self, company):
         if company != self.env.ref("base.main_company", raise_if_not_found=False):
             return {}
 
@@ -120,7 +122,7 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.exception("Error while posting demo data")
 
     @api.model
-    def _get_demo_data_bank(self, company=False):
+    def _prepare_demo_data_bank(self, company=False):
         if company.root_id.partner_id.bank_ids:
             return {}
         return {
@@ -133,7 +135,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_partner(self):
+    def _prepare_demo_data_partner(self):
         if self.env.ref("base.res_partner_2", raise_if_not_found=False):
             return {}
         return {
@@ -147,13 +149,13 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_user(self):
+    def _prepare_demo_data_user(self):
         if self.env.ref("base.user_demo", raise_if_not_found=False):
             return {}
         return {"base.user_demo": {"name": "Marc Demo", "login": "demo"}}
 
     @api.model
-    def _get_demo_data_product(self):
+    def _prepare_demo_data_product(self):
         if self.env.ref("product.product_delivery_01", raise_if_not_found=False):
             return {}
         return {
@@ -172,7 +174,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_journal(self, company=False):
+    def _prepare_demo_data_journal(self, company=False):
         if company.partner_id.bank_ids:
             return {
                 "bank": {
@@ -183,7 +185,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move(self, company=False):
+    def _prepare_demo_data_move(self, company=False):
         one_month_ago = fields.Date.today() + relativedelta(months=-1)
         cid = company.id or self.env.company.id
         misc_journal = self.env["account.journal"].search(
@@ -230,19 +232,19 @@ class AccountChartTemplate(models.AbstractModel):
             income_account=income_account,
         )
         return {
-            **self._get_demo_data_move_invoices_1_3(),
-            **self._get_demo_data_move_invoices_followup_6(),
-            **self._get_demo_data_move_invoices_7_equipment(),
-            **self._get_demo_data_move_invoices_9_10(),
-            **self._get_demo_data_move_auto_reconcile_1_4(one_month_ago),
-            **self._get_demo_data_move_auto_reconcile_5_7(
+            **self._prepare_demo_data_move_invoices_1_3(),
+            **self._prepare_demo_data_move_invoices_followup_6(),
+            **self._prepare_demo_data_move_invoices_7_equipment(),
+            **self._prepare_demo_data_move_invoices_9_10(),
+            **self._prepare_demo_data_move_auto_reconcile_1_4(one_month_ago),
+            **self._prepare_demo_data_move_auto_reconcile_5_7(
                 misc_journal, bank_journal, default_receivable, income_account
             ),
         }
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_invoices_1_3(self):
+    def _prepare_demo_data_move_invoices_1_3(self):
         return {
             self.company_xmlid("demo_invoice_1"): {
                 "move_type": "out_invoice",
@@ -302,7 +304,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_invoices_followup_6(self):
+    def _prepare_demo_data_move_invoices_followup_6(self):
         return {
             self.company_xmlid("demo_invoice_followup"): {
                 "move_type": "out_invoice",
@@ -370,7 +372,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_invoices_7_equipment(self):
+    def _prepare_demo_data_move_invoices_7_equipment(self):
         return {
             self.company_xmlid("demo_invoice_7"): {
                 "move_type": "out_invoice",
@@ -443,7 +445,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_invoices_9_10(self):
+    def _prepare_demo_data_move_invoices_9_10(self):
         return {
             self.company_xmlid("demo_invoice_9"): {
                 "move_type": "out_invoice",
@@ -485,7 +487,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_auto_reconcile_1_4(self, one_month_ago):
+    def _prepare_demo_data_move_auto_reconcile_1_4(self, one_month_ago):
         return {
             self.company_xmlid("demo_move_auto_reconcile_1"): {
                 "move_type": "out_refund",
@@ -554,7 +556,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_move_auto_reconcile_5_7(
+    def _prepare_demo_data_move_auto_reconcile_5_7(
         self, misc_journal, bank_journal, default_receivable, income_account
     ):
         return {
@@ -628,7 +630,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_statement(self, company=False):
+    def _prepare_demo_data_statement(self, company=False):
         cid = company.id or self.env.company.id
         bnk_journal = self.env["account.journal"].search(
             domain=[
@@ -703,7 +705,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_transactions(self, company=False):
+    def _prepare_demo_data_transactions(self, company=False):
         cid = company.id or self.env.company.id
         bnk_journal = self.env["account.journal"].search(
             domain=[
@@ -751,7 +753,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_reconcile_model(self, company=False):
+    def _prepare_demo_data_reconcile_model(self, company=False):
         return {
             "reconcile_from_label": {
                 "name": "Line with Bank Fees",
@@ -805,7 +807,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_attachment(self, company=False):
+    def _prepare_demo_data_attachment(self, company=False):
         return {
             "ir_attachment_in_invoice_1": {
                 "type": "binary",
@@ -849,7 +851,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_mail_message(self, company=False):
+    def _prepare_demo_data_mail_message(self, company=False):
         return {
             "mail_message_in_invoice_1": {
                 "model": "account.move",
@@ -911,7 +913,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     @_debug.perf.timed
-    def _get_demo_data_mail_activity(self, company=False):
+    def _prepare_demo_data_mail_activity(self, company=False):
         return {
             "invoice_activity_1": {
                 "res_id": "demo_invoice_3",

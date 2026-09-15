@@ -121,7 +121,7 @@ class TestSingleEmployeeSalesReport(TestPoSCommon):
         wizard = self.env["pos.daily.sales.reports.wizard"].create(
             {"pos_session_id": session.id}
         )
-        data = wizard._get_report_data()
+        data = wizard._prepare_report_params()
         self.assertIn(employee.id, data["employee_ids"])
 
         html = self.env["ir.actions.report"]._render_qweb_html(

@@ -61,12 +61,12 @@ class AsiaPayController(http.Controller):
         received_signature = payment_data.get("secureHash")
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data.
-        expected_signature = tx_sudo.provider_id._asiapay_calculate_signature(
+        expected_signature = tx_sudo.provider_id._get_asiapay_signature(
             payment_data, incoming=True
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

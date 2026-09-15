@@ -102,7 +102,7 @@ class PaymentProvider(models.Model):
         api_urls = const.API_URLS[environment]
         return api_urls.get(self.asiapay_brand, api_urls["paydollar"])
 
-    def _asiapay_calculate_signature(self, data, incoming=True):
+    def _get_asiapay_signature(self, data, incoming=True):
         """Compute the signature for the provided data according to the AsiaPay documentation.
 
         :param dict data: The data to sign.

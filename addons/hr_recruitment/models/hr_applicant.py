@@ -1171,7 +1171,7 @@ class HrApplicant(models.Model):
         employee = (
             self.env["hr.employee"]
             .with_context(clean_context(self.env.context))
-            .create(self._get_employee_create_vals())
+            .create(self._prepare_employee_vals())
         )
         action["res_id"] = employee.id
         _debug.lifecycle(
@@ -1183,7 +1183,7 @@ class HrApplicant(models.Model):
         self.attachment_ids.copy({"res_model": "hr.employee", "res_id": employee.id})
         return action
 
-    def _get_employee_create_vals(self):
+    def _prepare_employee_vals(self):
         self.check_singleton()
         address_id = self.partner_id.address_get(["contact"])["contact"]
         address_sudo = self.env["res.partner"].sudo().browse(address_id)

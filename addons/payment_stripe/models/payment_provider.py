@@ -355,7 +355,7 @@ class PaymentProvider(models.Model):
             "publishable_key": self._stripe_get_publishable_key(),
             "currency_name": currency_name,
             "minor_amount": amount
-            and payment_utils.to_minor_currency_units(
+            and payment_utils.major_to_minor_currency_units(
                 amount,
                 currency,
                 arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
@@ -459,7 +459,7 @@ class PaymentProvider(models.Model):
         base_url = self.company_id.get_base_url()
         return_url = OnboardingController._onboarding_return_url
         refresh_url = OnboardingController._onboarding_refresh_url
-        return_params = dict(provider_id=self.id, menu_id=menu_id)
+        return_params = {"provider_id": self.id, "menu_id": menu_id}
         refresh_params = dict(**return_params, account_id=connected_account_id)
 
         payload = {

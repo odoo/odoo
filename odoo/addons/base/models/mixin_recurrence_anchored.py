@@ -203,7 +203,7 @@ class MixinRecurrenceAnchored(models.AbstractModel):
         return first.replace(day=anchor.day)
 
     @staticmethod
-    def _build_day_anchor(day, month):
+    def _prepare_day_anchor(day, month):
         if day == LAST_DAY:
             return Anchor(month=month, last_day=True)
         return Anchor(day=int(day), month=month)
@@ -216,10 +216,12 @@ class MixinRecurrenceAnchored(models.AbstractModel):
         if unit == "week":
             return [Anchor(weekday=WEEKDAY_INDEX[self.repeat_weekday])]
         month = int(self.repeat_month) if unit == "year" else None
-        anchors = [self._build_day_anchor(self.repeat_day, month)]
+        anchors = [self._prepare_day_anchor(self.repeat_day, month)]
         if self.repeat_twice:
             second_month = int(self.repeat_second_month) if unit == "year" else None
-            anchors.append(self._build_day_anchor(self.repeat_second_day, second_month))
+            anchors.append(
+                self._prepare_day_anchor(self.repeat_second_day, second_month)
+            )
         return anchors
 
     def _get_next_anchor(self, after):

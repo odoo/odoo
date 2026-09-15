@@ -39,7 +39,7 @@ class HrLeave(models.Model):
                     leave.date_to >= contract.date_generated_from
                     and leave.date_from <= contract.date_generated_to
                 ):
-                    work_entries_vals_list += contract._get_work_entries_values(
+                    work_entries_vals_list += contract._prepare_work_entries_values(
                         datetime.combine(leave.date_from, time.min),
                         datetime.combine(leave.date_to, time.max),
                     )
@@ -195,7 +195,7 @@ class HrLeave(models.Model):
         work_entries.write({"active": False})
         vals_list = []
         for work_entry in work_entries:
-            vals_list += work_entry.version_id._get_work_entries_values(
+            vals_list += work_entry.version_id._prepare_work_entries_values(
                 datetime.combine(work_entry.date, time.min),
                 datetime.combine(work_entry.date, time.max),
             )

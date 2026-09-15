@@ -104,21 +104,21 @@ class CalendarEvent(models.Model):
         return any(key in synced_fields for key in values)
 
     @api.model
-    def _get_update_future_events_values(self):
+    def _prepare_update_future_events_values(self):
         """Add parameters for updating events within the _update_future_events function scope."""
-        update_future_events_values = super()._get_update_future_events_values()
+        update_future_events_values = super()._prepare_update_future_events_values()
         return {**update_future_events_values, "need_sync": False}
 
     @api.model
-    def _get_remove_sync_id_values(self):
+    def _prepare_remove_sync_id_values(self):
         """Add parameters for removing event synchronization while updating the events in super class."""
-        remove_sync_id_values = super()._get_remove_sync_id_values()
+        remove_sync_id_values = super()._prepare_remove_sync_id_values()
         return {**remove_sync_id_values, "google_id": False}
 
     @api.model
-    def _get_archive_values(self):
+    def _prepare_archive_values(self):
         """Return the parameters for archiving events. Do not synchronize events after archiving."""
-        archive_values = super()._get_archive_values()
+        archive_values = super()._prepare_archive_values()
         return {**archive_values, "need_sync": False}
 
     def write(self, vals):

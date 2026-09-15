@@ -95,7 +95,7 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
                     sorted(query),
                 )
                 self.assertEqual(url.path, "/web/signup")
-                resolved = self.env["res.partner"]._signup_retrieve_partner(
+                resolved = self.env["res.partner"]._get_signup_partner(
                     query["token"][0], check_validity=True
                 )
                 self.assertEqual(resolved, recipient)

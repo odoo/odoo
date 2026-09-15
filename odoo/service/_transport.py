@@ -255,7 +255,7 @@ class ServerIdentity:
     exposes_socket: bool
 
 
-def build_environ(
+def prepare_wsgi_environ(
     head: RequestHead,
     conn: Connection,
     reader: BodyReader,
@@ -573,7 +573,7 @@ def _run_exchange(
         keep_alive=head.keep_alive and allow_keep_alive and not head.must_close,
     )
     exchange.reader = _open_reader(conn, head, limits, exchange)
-    environ = build_environ(head, conn, exchange.reader, identity)
+    environ = prepare_wsgi_environ(head, conn, exchange.reader, identity)
     iterable: Iterable[bytes] | None = None
     try:
         iterable = app(environ, exchange.start_response)
@@ -744,11 +744,11 @@ __all__ = (
     "ServerIdentity",
     "TransportLimits",
     "WSGIApp",
-    "build_environ",
     "find_head",
     "get_access_log_level",
     "get_http_socket_timeout",
     "log_access",
+    "prepare_wsgi_environ",
     "serve_one",
     "serve_prefork_connection",
 )

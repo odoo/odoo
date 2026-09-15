@@ -50,7 +50,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         with patch(
             "odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider"
-            "._razorpay_calculate_signature",
+            "._get_razorpay_signature",
             return_value="valid_signature",
         ):
             self._assert_does_not_raise(
@@ -80,7 +80,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         with patch(
             "odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider"
-            "._razorpay_calculate_signature",
+            "._get_razorpay_signature",
             return_value="valid_signature",
         ):
             self.assertRaises(

@@ -21,7 +21,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
     # Business methods
     # ----------------
 
-    def _get_myinvois_document_vals(self):
+    def _prepare_myinvois_document_vals(self):
         """
         Prepare and return a list of dicts containing the values needed to create the consolidated invoices for the
         records inbetween the provided dates.
@@ -69,4 +69,4 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
                         }
                     )
             return consolidated_invoice_vals
-        return super()._get_myinvois_document_vals()
+        return super()._prepare_myinvois_document_vals()

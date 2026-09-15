@@ -52,7 +52,7 @@ class PaymentProvider(models.Model):
         else:  # 'test'
             return "https://sis-t.redsys.es:25443/sis/realizarPago"
 
-    def _redsys_calculate_signature(self, merchant_parameters, reference, secret_key):
+    def _get_redsys_signature(self, merchant_parameters, reference, secret_key):
         """Calculate the signature for the provided data.
 
         See https://pagosonline.redsys.es/desarrolladores-inicio/documentacion-operativa/firmar-una-operacion.
@@ -74,5 +74,4 @@ class PaymentProvider(models.Model):
         # 3. Create HMAC-SHA256 using the derived key and merchant parameters.
         hmac_obj = hmac.new(derived_key, merchant_parameters.encode(), hashlib.sha256)
         # 4. Encode the HMAC result in Base64.
-        signature = base64.urlsafe_b64encode(hmac_obj.digest()).decode()
-        return signature
+        return base64.urlsafe_b64encode(hmac_obj.digest()).decode()

@@ -491,7 +491,7 @@ class AccountBankStatementLine(models.Model):
                 "name": False,
             }
             with self.env.protecting(
-                self.env["account.move"]._get_protected_vals(line_vals, st_line)
+                self.env["account.move"]._get_field_protections(line_vals, st_line)
             ):
                 st_line.move_id.with_context(clear_sequence_mixin_cache=False).write(
                     to_write

@@ -232,10 +232,17 @@ class CredentialCredential(models.Model):
             "warning",
         )
 
-    def _validate_health(self) -> dict[str, Any]:
+    def _probe_health(self) -> dict[str, Any]:
+        """Probe the linked service and store credential health statistics.
+
+        Record latency, counters and the outcome; on success also record the
+        validation timestamp. Unlinked credentials delegate to the base probe.
+
+        :returns: ``success`` and ``message``, or the base probe's result
+        """
         self.check_singleton()
         if not self.endpoint_id:
-            return super()._validate_health()
+            return super()._probe_health()
 
         code = self.endpoint_id.code
         started = monotonic()
@@ -244,7 +251,7 @@ class CredentialCredential(models.Model):
             client = self.endpoint_id.with_company(self.company_id)._get_api_client(
                 self
             )
-            healthy = client.health_check()
+            healthy = client.probe_health()
         except Exception as e:
             _logger.warning(
                 "Health probe of credential %s (service %s) failed: %s",

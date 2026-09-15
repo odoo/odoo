@@ -495,7 +495,7 @@ class AccountReport(models.Model):
             [
                 tag_vals
                 for name in sorted(missing_names)
-                for tag_vals in expression_model._get_tags_create_vals(name, country_id)
+                for tag_vals in expression_model._prepare_tag_vals(name, country_id)
             ]
         )
 

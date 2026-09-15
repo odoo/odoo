@@ -101,7 +101,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
     def test_get_qr_vals_communication(self):
         """A communication is placed in the structured field only when it is a valid
         structured reference, and in the unstructured field otherwise."""
-        result = self.acc_sepa_iban._get_qr_vals(
+        result = self.acc_sepa_iban._prepare_qr_payload(
             qr_method="sct_qr",
             amount=100.0,
             currency=self.env.ref("base.EUR"),
@@ -127,7 +127,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             ],
         )
 
-        result = self.acc_sepa_iban._get_qr_vals(
+        result = self.acc_sepa_iban._prepare_qr_payload(
             qr_method="sct_qr",
             amount=100.0,
             currency=self.env.ref("base.EUR"),

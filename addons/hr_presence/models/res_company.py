@@ -11,12 +11,12 @@ class ResCompany(models.Model):
         return {part.strip() for part in raw.split(",") if part.strip()}
 
     def _get_cache_invalidation_fields(self):
-        # _hr_presence_any_ip_control is an ormcache, so nothing would notice a
+        # _is_presence_ip_tracking_enabled is an ormcache, so nothing would notice a
         # company switching IP control on until the next registry cache clear.
         return super()._get_cache_invalidation_fields() | {"hr_presence_control_ip"}
 
     @ormcache()
-    def _hr_presence_any_ip_control(self):
+    def _is_presence_ip_tracking_enabled(self):
         """Whether recording connection IPs can matter to anyone on this database.
 
         Read on every websocket presence update, so it must not reach the

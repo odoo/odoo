@@ -497,7 +497,7 @@ class TestProductAuditFixes(ProductCommon):
             "default_name": "SO0001",
             "allowed_company_ids": [self.env.company.id],
         }
-        forwarded = order.with_context(**context)._get_catalog_action_context()
+        forwarded = order.with_context(**context)._prepare_catalog_action_context()
         self.assertNotIn("default_partner_id", forwarded)
         self.assertNotIn("default_name", forwarded)
         self.assertIn(
@@ -507,7 +507,7 @@ class TestProductAuditFixes(ProductCommon):
     def test_pricelist_report_rejects_oversized_product_list(self):
         Report = self.env["report.product.report_pricelist"]
         with self.assertRaises(UserError):
-            Report._get_report_data(
+            Report._prepare_pricelist_rendering_context(
                 {
                     "active_model": "product.template",
                     "active_ids": list(range(Report.MAX_PRODUCTS + 1)),
@@ -537,7 +537,7 @@ class TestProductAuditFixes(ProductCommon):
         def query_count(products):
             self.env.invalidate_all()
             before = self.env.cr.sql_statement_count
-            Report._get_report_data(
+            Report._prepare_pricelist_rendering_context(
                 {
                     "active_model": "product.template",
                     "active_ids": products.ids,
@@ -577,7 +577,7 @@ class TestProductAuditFixes(ProductCommon):
         )
         self.env.flush_all()
 
-        data = Report._get_report_data(
+        data = Report._prepare_pricelist_rendering_context(
             {
                 "active_model": "product.template",
                 "active_ids": templates.ids,

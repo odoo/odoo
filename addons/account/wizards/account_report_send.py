@@ -104,10 +104,10 @@ class AccountReportSend(models.TransientModel):
             field, partner.ids, **kwargs
         )[partner._origin.id]
 
-    def _get_default_mail_attachments_widget(self, partner, mail_template):
-        return self._get_placeholder_mail_attachments_data(
+    def _prepare_mail_attachments_widget(self, partner, mail_template):
+        return self._prepare_mail_attachment_placeholders(
             partner
-        ) + self._get_mail_template_attachments_data(mail_template)
+        ) + self._prepare_template_attachment_entries(mail_template)
 
     def _get_wizard_values(self):
         self.check_singleton()
@@ -121,7 +121,7 @@ class AccountReportSend(models.TransientModel):
             "report_options": options,
         }
 
-    def _get_placeholder_mail_attachments_data(self, partner):
+    def _prepare_mail_attachment_placeholders(self, partner):
         """Return the placeholder attachment data of the report of a partner.
 
         Each dictionary holds:
@@ -149,7 +149,7 @@ class AccountReportSend(models.TransientModel):
         ]
 
     @api.model
-    def _get_mail_template_attachments_data(self, mail_template):
+    def _prepare_template_attachment_entries(self, mail_template):
         """Return the attachment data of a mail template."""
         return [
             {
@@ -251,7 +251,7 @@ class AccountReportSend(models.TransientModel):
         for wizard in self:
             if wizard.mode == "single":
                 wizard.mail_attachments_widget = (
-                    wizard._get_default_mail_attachments_widget(
+                    wizard._prepare_mail_attachments_widget(
                         wizard.mail_partner_ids, wizard.mail_template_id
                     )
                 )

@@ -119,16 +119,21 @@ class AutomationRule(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rules = super().create(vals_list)
-        rules._ensure_webhook_secret()
+        rules._create_missing_webhook_credentials()
         return rules
 
     def write(self, vals):
         result = super().write(vals)
         if {"trigger", "auth_type"} & set(vals):
-            self._ensure_webhook_secret()
+            self._create_missing_webhook_credentials()
         return result
 
-    def _ensure_webhook_secret(self):
+    def _create_missing_webhook_credentials(self):
+        """Create and attach credentials to secret-auth webhooks without one.
+
+        Leave existing credentials, including inactive ones, unchanged. Without
+        an encryption key, provision nothing. Return no value.
+        """
         if not self.env["credential.credential"]._is_encryption_key_configured():
             return
         category = self.env.ref(
@@ -141,9 +146,10 @@ class AutomationRule(models.Model):
                 and not rule.credential_id
             )
         ):
-            rule.credential_id = rule._new_webhook_secret(category)
+            rule.credential_id = rule._create_webhook_credential(category)
 
-    def _new_webhook_secret(self, category):
+    def _create_webhook_credential(self, category):
+        """Create and return a credential record containing a random secret."""
         self.check_singleton()
         return (
             self.env["credential.credential"]
@@ -162,10 +168,10 @@ class AutomationRule(models.Model):
             "credential.credential_category_custom", raise_if_not_found=False
         )
         for rule in self:
-            rule.credential_id = rule._new_webhook_secret(category)
+            rule.credential_id = rule._create_webhook_credential(category)
         return True
 
-    def _webhook_auth_mode(self):
+    def _get_webhook_auth_mode(self):
         self.check_singleton()
         if (
             self.webhook_enforce_from
@@ -188,7 +194,7 @@ class AutomationRule(models.Model):
             headers,
             body=body,
             remote_addr=remote_addr,
-            mode=self._webhook_auth_mode(),
+            mode=self._get_webhook_auth_mode(),
         )
 
     def _webhook_ip_allowed(self, remote_addr):

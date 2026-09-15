@@ -27,8 +27,8 @@ class AccountAnalyticDistributionModel(models.Model):
     )
     prefix_placeholder = fields.Char(compute="_compute_prefix_placeholder")
 
-    def _get_default_search_domain_vals(self):
-        return super()._get_default_search_domain_vals() | {
+    def _prepare_default_search_params(self):
+        return super()._prepare_default_search_params() | {
             "product_id": False,
             "product_categ_id": False,
         }

@@ -9,7 +9,7 @@ from odoo.tools.view_validation import ir_valid, valid_view
 def codes(arch, view_type=None):
     return [
         (i.code, i.kind, i.severity)
-        for i in view_ir.validate(view_ir.from_string(arch), view_type)
+        for i in view_ir.get_issues(view_ir.from_string(arch), view_type)
     ]
 
 
@@ -125,7 +125,7 @@ class TestViewIrValidate(unittest.TestCase):
         )
 
     def test_issue_renders_its_path(self):
-        (issue,) = view_ir.validate(
+        (issue,) = view_ir.get_issues(
             view_ir.from_string("<form><group><field/></group></form>")
         )
         self.assertEqual(

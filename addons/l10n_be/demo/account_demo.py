@@ -5,12 +5,12 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
+    def _prepare_demo_data(self, company=False):
         def link_tag(tag_xml_id):
             tag = self.env.ref(tag_xml_id, raise_if_not_found=False)
             return [Command.link(tag.id)] if tag else []
 
-        demo_data = super()._get_demo_data(company)
+        demo_data = super()._prepare_demo_data(company)
         if company.chart_template.startswith("be"):
             cid = company.id
             account_data = demo_data.setdefault("account.account", {})

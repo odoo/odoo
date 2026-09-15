@@ -18,7 +18,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
             return_value={"client_secret": "dummy_secret"},
         ):
-            rendering_values = tx._get_specific_rendering_values(None)
+            rendering_values = tx._prepare_redirect_form_values(None)
         paymob_url = self.paymob._paymob_get_api_url()
         paymob_pk = self.paymob.paymob_public_key
         self.assertEqual(rendering_values["api_url"], f"{paymob_url}/unifiedcheckout/")
@@ -32,7 +32,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
             return_value={"id": "dummy_id"},
         ):
-            tx._get_specific_rendering_values(None)  # Set provider reference here
+            tx._prepare_redirect_form_values(None)  # Set provider reference here
             self.assertEqual(tx.provider_reference, self.redirection_data["id"])
             self.assertEqual(tx.state, "draft")
             tx._process("paymob", self.redirection_data)

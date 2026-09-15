@@ -246,15 +246,15 @@ class StockWarehouseOrderpointReplenish(models.Model):
         self.check_singleton()
         return self._get_qty_to_order_map()[self.id]
 
-    def _get_lead_days_values(self):
+    def _prepare_lead_time_params(self):
         self.check_singleton()
         return {
             "days_to_order": self.days_to_order,
         }
 
-    def _get_lead_days_values_map(self):
+    def _prepare_lead_time_params_map(self):
         return {
-            orderpoint.id: orderpoint._get_lead_days_values() for orderpoint in self
+            orderpoint.id: orderpoint._prepare_lead_time_params() for orderpoint in self
         }
 
     def _get_product_context(self):

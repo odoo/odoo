@@ -873,7 +873,7 @@ class TestRepair(TestRepairCommon):
         sale_order.action_confirm()
         invoice = sale_order._create_invoices()
         invoice.action_post()
-        res = invoice._get_invoiced_lot_values()
+        res = invoice._prepare_invoice_lot_rows()
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(
             res[0]["product_name"],
@@ -1037,7 +1037,6 @@ class TestRepair(TestRepairCommon):
         self.env["stock.warehouse.orderpoint"].create(
             {
                 "name": "Cake RR",
-                "product_id": self.product_storable_no,
                 "route_id": route.id,
                 "location_id": self.stock_location_14.id,
                 "product_id": self.product_storable_no.id,

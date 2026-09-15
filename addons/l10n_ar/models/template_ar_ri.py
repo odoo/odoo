@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("ar_ri")
-    def _get_ar_ri_template_data(self):
+    def _prepare_ar_ri_template_data(self):
         return {
             "name": _("Argentine Generic Chart of Accounts for Registered Accountants"),
             "parent": "ar_ex",

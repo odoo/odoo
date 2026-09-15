@@ -65,7 +65,7 @@ class TestSaleOrder(SaleCommon):
         target = self.env["phone.number"].create(
             {"number": "+32000444013", "sequence": 200}
         )
-        self.partner.write(self.partner._get_phone_replacement_values(target))
+        self.partner.write(self.partner._prepare_phone_replacement_vals(target))
         second_order = self.env["sale.order"].create(
             {
                 "partner_id": self.partner.id,

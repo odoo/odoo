@@ -30,7 +30,7 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
             res["l10n_sa_otp"] = "123456" if self.l10n_sa_renewal else "123345"
         return res
 
-    def validate(self):
+    def action_submit_otp(self):
         if not self.l10n_sa_otp:
             raise UserError(
                 _("Please provide an OTP to complete the onboarding process")
@@ -38,3 +38,4 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
         if self.l10n_sa_renewal:
             return self.journal_id._l10n_sa_get_production_CSID(self.l10n_sa_otp)
         self.journal_id._l10n_sa_api_onboard_journal(self.l10n_sa_otp)
+        return None

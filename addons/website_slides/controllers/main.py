@@ -1852,7 +1852,7 @@ class WebsiteSlides(WebsiteProfile):
 
         values = {
             fname: post[fname]
-            for fname in self._get_valid_slide_post_values()
+            for fname in self._get_allowed_slide_post_fields()
             if post.get(fname)
         }
 
@@ -1923,7 +1923,7 @@ class WebsiteSlides(WebsiteProfile):
             "category_id": slide.category_id,
         }
 
-    def _get_valid_slide_post_values(self):
+    def _get_allowed_slide_post_fields(self):
         return [
             "name",
             "url",

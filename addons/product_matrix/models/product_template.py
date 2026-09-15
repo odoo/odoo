@@ -16,9 +16,9 @@ class ProductTemplate(models.Model):
         Attrib = self.env["product.template.attribute.value"]
         first_line_attributes = attribute_lines[
             0
-        ].product_template_value_ids._only_active()
+        ].product_template_value_ids._filtered_active()
         attribute_ids_by_line = [
-            line.product_template_value_ids._only_active().ids
+            line.product_template_value_ids._filtered_active().ids
             for line in attribute_lines
         ]
 

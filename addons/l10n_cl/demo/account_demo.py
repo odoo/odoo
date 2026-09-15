@@ -9,9 +9,9 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data_move(self, company=False):
+    def _prepare_demo_data_move(self, company=False):
         ref = self.env.ref
-        move_data = super()._get_demo_data_move(company)
+        move_data = super()._prepare_demo_data_move(company)
         if company.account_fiscal_country_id.code == "CL":
             foreign_invoice = ref("l10n_cl.dc_fe_dte").id
             foreign_credit_note = ref("l10n_cl.dc_ncex_dte").id

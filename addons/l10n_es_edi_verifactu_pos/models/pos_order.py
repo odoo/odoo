@@ -73,7 +73,7 @@ class PosOrder(models.Model):
                 warning = last_document.errors
                 warning_level = "danger"
 
-            if last_document._filter_waiting():
+            if last_document._filtered_waiting():
                 warning = _(
                     "%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
                     existing_warning=(warning + "\n" if warning else ""),
@@ -306,7 +306,7 @@ class PosOrder(models.Model):
             new_documents = False
 
             waiting_documents = (
-                order.l10n_es_edi_verifactu_document_ids._filter_waiting()
+                order.l10n_es_edi_verifactu_document_ids._filtered_waiting()
             )
             if waiting_documents:
                 raise UserError(

@@ -462,7 +462,7 @@ class TestReportFetcherOrigin(TransactionCase):
         fetcher._get_http_response = fake_http_response
         with patch.object(
             OdooURLFetcher,
-            "_fetch_external",
+            "_get_external_resource",
             lambda self, u, hostname, headers=None: MagicMock(),
         ):
             fetcher.fetch(url)

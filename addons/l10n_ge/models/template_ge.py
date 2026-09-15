@@ -51,7 +51,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @template("ge")
-    def _get_ge_template_data(self):
+    def _prepare_ge_template_data(self):
         return {
             "name": self.env._("Georgian Chart of Accounts (IFRS)"),
             "code_digits": 6,

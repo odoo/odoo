@@ -1269,10 +1269,10 @@ class AppointmentController(http.Controller):
             staff_user,
             asked_capacity,
             booking_line_values,
-            self._get_extra_calendar_event_params(**kwargs),
+            self._prepare_extra_calendar_event_vals(**kwargs),
         )
 
-    def _get_extra_calendar_event_params(self, **kwargs):
+    def _prepare_extra_calendar_event_vals(self, **kwargs):
         return {}
 
     def _handle_appointment_form_submission(

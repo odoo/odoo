@@ -34,7 +34,7 @@ class StockWarehouseRoute(models.Model):
         self.check_singleton()
         routes = []
         field_vals = {}
-        rules_dict = self._get_rules_dict()
+        rules_dict = self._prepare_rule_routings()
         for route_field, route_data in self._prepare_route_vals().items():
             dbg.lifecycle.debug(
                 "[warehouse:%s] route %s: %s",
@@ -60,9 +60,9 @@ class StockWarehouseRoute(models.Model):
             if routing_key not in rules_dict[self.id]:
                 raise ValueError(
                     "stock.warehouse route %r declares routing_key %r, which "
-                    "_get_rules_dict does not answer. Every entry of "
+                    "_prepare_rule_routings does not answer. Every entry of "
                     "_prepare_route_vals needs a routing_key that "
-                    "_get_rules_dict knows, and a module adding a route extends "
+                    "_prepare_rule_routings knows, and a module adding a route extends "
                     "both." % (route_field, routing_key)
                 )
             rules = rules_dict[self.id][routing_key]
@@ -230,7 +230,7 @@ class StockWarehouseRoute(models.Model):
         }
 
     def _prepare_global_route_rule_vals(self):
-        delivery_rules = self._get_rules_dict()[self.id][self.delivery_steps]
+        delivery_rules = self._prepare_rule_routings()[self.id][self.delivery_steps]
         rule = next(
             (r for r in delivery_rules if r.from_loc == self.lot_stock_id), None
         )
@@ -269,17 +269,17 @@ class StockWarehouseRoute(models.Model):
             }
         }
 
-    def _get_rules_dict(self):
+    def _prepare_rule_routings(self):
         customer_loc, supplier_loc = self._get_partner_locations()
         return {
             warehouse.id: {
-                **self._get_reception_routings(warehouse, supplier_loc),
-                **self._get_delivery_routings(warehouse, customer_loc),
+                **self._prepare_reception_routings(warehouse, supplier_loc),
+                **self._prepare_delivery_routings(warehouse, customer_loc),
             }
             for warehouse in self
         }
 
-    def _get_reception_routings(self, warehouse, supplier_loc):
+    def _prepare_reception_routings(self, warehouse, supplier_loc):
         return {
             "one_step": [
                 self.Routing(
@@ -325,7 +325,7 @@ class StockWarehouseRoute(models.Model):
             ],
         }
 
-    def _get_delivery_routings(self, warehouse, customer_loc):
+    def _prepare_delivery_routings(self, warehouse, customer_loc):
         return {
             "ship_only": [
                 self.Routing(
@@ -371,7 +371,7 @@ class StockWarehouseRoute(models.Model):
             ],
         }
 
-    def _get_receive_rules_dict(self):
+    def _prepare_internal_reception_routings(self):
         return {
             "one_step": [],
             "two_steps": [

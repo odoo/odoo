@@ -161,8 +161,8 @@ class ResUsers(models.Model):
                     _("Verification failed, please double-check the 6-digit code")
                 )
             _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
-            self._totp_rate_limit_purge("code_check")
-            self._totp_rate_limit_purge("send_email")
+            self._remove_totp_rate_limit_logs("code_check")
+            self._remove_totp_rate_limit_logs("send_email")
             return {
                 "uid": self.id,
                 "auth_method": "totp_mail",

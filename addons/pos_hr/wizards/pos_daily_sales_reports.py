@@ -13,9 +13,9 @@ class PosDailySalesReportsWizard(models.TransientModel):
         compute="_compute_employee_ids",
     )
 
-    def _get_report_data(self):
+    def _prepare_report_params(self):
         return {
-            **super()._get_report_data(),
+            **super()._prepare_report_params(),
             "employee_ids": self.employee_ids.ids
             if self.add_report_per_employee
             else [],

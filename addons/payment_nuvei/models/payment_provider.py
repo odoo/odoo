@@ -64,7 +64,7 @@ class PaymentProvider(models.Model):
         else:  # 'test'
             return "https://ppp-test.safecharge.com/ppp/purchase.do"
 
-    def _nuvei_calculate_signature(self, data, incoming=True):
+    def _get_nuvei_signature(self, data, incoming=True):
         """Compute the signature for the provided data according to the Nuvei documentation.
 
         :param dict data: The data to sign.

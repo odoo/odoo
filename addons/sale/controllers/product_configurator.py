@@ -41,7 +41,7 @@ class SaleProductConfiguratorController(Controller):
                 product_template.attribute_line_ids - combination.attribute_line_id
             ).filtered(lambda ptal: ptal.attribute_id.display_type != "multi")
             combination += unconfigured_ptals.mapped(
-                lambda ptal: ptal.product_template_value_ids._only_active()[:1],
+                lambda ptal: ptal.product_template_value_ids._filtered_active()[:1],
             )
         if not combination:
             combination = product_template._get_first_possible_combination()
@@ -327,7 +327,7 @@ class SaleProductConfiguratorController(Controller):
             "product.template"
         ]._get_configurator_display_price(
             product_or_template.with_context(
-                **product_or_template._get_product_price_context(combination),
+                **product_or_template._prepare_product_price_context(combination),
             ),
             pricelist=pricelist,
             **kwargs,

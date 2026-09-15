@@ -497,13 +497,13 @@ class L10nInEwaybill(models.Model):
                 )
             )
             return error_message
-        for line in invoice_lines:
-            if (
-                line.display_type == "product"
-                and not AccountMove._l10n_in_is_service_hsn(line.l10n_in_hsn_code)
-                and (hsn_error_message := line._l10n_in_check_invalid_hsn_code())
-            ):
-                error_message.append(hsn_error_message)
+        error_message.extend(
+            hsn_error_message
+            for line in invoice_lines
+            if line.display_type == "product"
+            and not AccountMove._l10n_in_is_service_hsn(line.l10n_in_hsn_code)
+            and (hsn_error_message := line._l10n_in_check_invalid_hsn_code())
+        )
         return error_message
 
     def _check_gst_treatment(self):
@@ -574,7 +574,7 @@ class L10nInEwaybill(models.Model):
 
     def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
         def _create_attachment_vals(name, raw_data, res_field=False):
-            vals = {
+            return {
                 "name": name,
                 "mimetype": "application/json",
                 "raw": json.dumps(raw_data, indent=4),
@@ -583,11 +583,10 @@ class L10nInEwaybill(models.Model):
                 "res_field": res_field,
                 "company_id": self.company_id.id,
             }
-            return vals
 
         attachment_vals_list = []
         request_json = (
-            self._get_cancellation_request_vals()
+            self._prepare_cancellation_payload()
             if is_cancel
             else self._ewaybill_generate_direct_json()
         )
@@ -612,16 +611,15 @@ class L10nInEwaybill(models.Model):
             ),
         )
 
-    def _get_cancellation_request_vals(self):
-        cancel_json_vals = {
+    def _prepare_cancellation_payload(self):
+        return {
             "ewbNo": int(self.name),
             "cancelRsnCode": int(self.cancel_reason),
             "cancelRmrk": self.cancel_remarks,
         }
-        return cancel_json_vals
 
     def _ewaybill_cancel(self):
-        cancel_json = self._get_cancellation_request_vals()
+        cancel_json = self._prepare_cancellation_payload()
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == "error":
             self.message_post(
@@ -641,6 +639,7 @@ class L10nInEwaybill(models.Model):
         )
         self._write_successfully_response({"state": "cancel"})
         self.env.cr.commit()
+        return None
 
     def _log_retry_message_on_generate(self):
         if self.error_message and self.blocking_level == "error":
@@ -678,6 +677,7 @@ class L10nInEwaybill(models.Model):
             }
         )
         self.env.cr.commit()
+        return None
 
     @api.model
     def _convert_str_datetime_to_date(self, str_datetime):
@@ -765,7 +765,7 @@ class L10nInEwaybill(models.Model):
                 for place, partner in partner_detail
             }
 
-        ewaybill_json = {
+        return {
             # document details
             "supplyType": self.supply_type,
             "subSupplyType": self.type_id.sub_type_code,
@@ -811,7 +811,6 @@ class L10nInEwaybill(models.Model):
             "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
             "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
         }
-        return ewaybill_json
 
     def _prepare_ewaybill_transportation_json_payload(self):
         # only pass transporter details when value is exist
@@ -922,6 +921,7 @@ class L10nInEwaybill(models.Model):
                     "ewaybill_expiry_date": ewb_validity,
                 }
             )
+        return None
 
     def _add_printed_pdf_attachment(self, pdf_content):
         self.check_singleton()

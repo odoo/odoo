@@ -113,7 +113,7 @@ class TestByteRangeDoesNotMoveThePlaceholder(unittest.TestCase):
 
     def test_contents_serialises_before_byte_range(self):
         signer, _value = self._prepared_signer()
-        data = signer._get_document_data()
+        data = signer._prepare_document_bytes()
         field = data.rfind(b"/FT /Sig")
         self.assertLess(
             data.find(b"/Contents", field),
@@ -123,7 +123,7 @@ class TestByteRangeDoesNotMoveThePlaceholder(unittest.TestCase):
 
     def test_writing_the_real_byte_range_leaves_the_placeholder_put(self):
         signer, value = self._prepared_signer()
-        data = signer._get_document_data()
+        data = signer._prepare_document_bytes()
         start, end = self._placeholder_span(data)
         self.assertEqual(data[start:end], self.PLACEHOLDER)
 
@@ -134,7 +134,7 @@ class TestByteRangeDoesNotMoveThePlaceholder(unittest.TestCase):
                 )
             }
         )
-        after = signer._get_document_data()
+        after = signer._prepare_document_bytes()
         self.assertGreater(len(after), len(data), "the fill-in should lengthen it")
         self.assertEqual(
             after[start:end],

@@ -94,7 +94,7 @@ class MixinAnalyticPlanFields(models.AbstractModel):
     def _get_domain_plan(self, plan):
         return [("plan_id", "child_of", plan.id)]
 
-    def _get_account_node_context(self, plan):
+    def _prepare_account_node_context(self, plan):
         return {"default_plan_id": plan.id}
 
     @api.constrains(lambda self: self._get_plan_fnames())
@@ -152,7 +152,7 @@ class MixinAnalyticPlanFields(models.AbstractModel):
             # If there is a main node, append the ones for other plans
             if account_node is not None:
                 account_node.set(
-                    "context", repr(self._get_account_node_context(project_plan))
+                    "context", repr(self._prepare_account_node_context(project_plan))
                 )
                 for plan in other_plans[::-1]:
                     fname = plan._column_name()
@@ -165,7 +165,7 @@ class MixinAnalyticPlanFields(models.AbstractModel):
                                     "name": fname,
                                     "domain": repr(self._get_domain_plan(plan)),
                                     "context": repr(
-                                        self._get_account_node_context(plan)
+                                        self._prepare_account_node_context(plan)
                                     ),
                                 }
                             )

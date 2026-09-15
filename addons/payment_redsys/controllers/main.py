@@ -83,14 +83,14 @@ class RedsysController(http.Controller):
         received_signature = payment_data.get("Ds_Signature")
         if not received_signature:
             _logger.warning("Received notification with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payment data.
-        expected_signature = tx_sudo.provider_id._redsys_calculate_signature(
+        expected_signature = tx_sudo.provider_id._get_redsys_signature(
             payment_data.get("Ds_MerchantParameters"),
             tx_sudo.reference,
             tx_sudo.provider_id.redsys_secret_key,
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

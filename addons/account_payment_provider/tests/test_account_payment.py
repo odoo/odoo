@@ -393,7 +393,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_generate_payment_link_with_no_invoice_line(self):
         invoice = self.misc_entry
         invoice.line_ids.unlink()
-        payment_values = invoice._get_default_payment_link_values()
+        payment_values = invoice._prepare_payment_link_vals()
 
         self.assertDictEqual(
             payment_values,

@@ -1064,7 +1064,7 @@ class ProductProduct(models.Model):
             matching_ids.append(seller.id)
         return self.env["product.supplierinfo"].browse(matching_ids)
 
-    def _get_product_price_context(self, combination):
+    def _prepare_product_price_context(self, combination):
         self.check_singleton()
         res = {}
 

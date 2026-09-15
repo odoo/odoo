@@ -884,11 +884,11 @@ class MixinOrder(models.AbstractModel):
     def _mark_as_sent(self):
         _debug.lifecycle("order_marked_sent", orders=self)
         for order in self:
-            order.with_context(**order._get_mark_as_sent_context()).write(
+            order.with_context(**order._prepare_mark_as_sent_context()).write(
                 {"sent": True, "count_sent": order.count_sent + 1},
             )
 
-    def _get_mark_as_sent_context(self):
+    def _prepare_mark_as_sent_context(self):
         return {}
 
     def message_post(self, **kwargs):
@@ -909,10 +909,10 @@ class MixinOrder(models.AbstractModel):
         return compose_form_id
 
     def _action_send_by_email(self):
-        ctx = self._get_mail_composer_context()
+        ctx = self._prepare_mail_composer_context()
         lang = self._get_mail_composer_lang(ctx)
         order = self.with_context(lang=lang) if lang else self
-        ctx.update(order._get_mail_composer_lang_context())
+        ctx.update(order._prepare_mail_composer_lang_context())
         if lang:
             ctx["lang"] = lang
         compose_form_id = self._get_mail_compose_form()
@@ -930,13 +930,13 @@ class MixinOrder(models.AbstractModel):
             "context": ctx,
         }
 
-    def _get_mail_composer_lang_context(self):
+    def _prepare_mail_composer_lang_context(self):
         return {}
 
     def _get_mail_composer_action_name(self):
         return _("Send")
 
-    def _get_mail_composer_context(self):
+    def _prepare_mail_composer_context(self):
         ctx = {
             "default_model": self._name,
             "default_res_ids": self.ids,
@@ -950,10 +950,10 @@ class MixinOrder(models.AbstractModel):
         if len(self) > 1:
             ctx["default_composition_mode"] = "mass_mail"
         else:
-            ctx.update(self._get_mail_composer_single_context())
+            ctx.update(self._prepare_single_mail_composer_context())
         return ctx
 
-    def _get_mail_composer_single_context(self):
+    def _prepare_single_mail_composer_context(self):
         self.check_singleton()
         ctx = {"force_email": True}
         if self.env.context.get("hide_default_template"):
@@ -1088,9 +1088,9 @@ class MixinOrder(models.AbstractModel):
         )
         return grouped_lines
 
-    def _get_action_add_from_catalog_extra_context(self):
+    def _prepare_catalog_extra_context(self):
         return {
-            **super()._get_action_add_from_catalog_extra_context(),
+            **super()._prepare_catalog_extra_context(),
             "product_catalog_currency_id": self.currency_id.id,
             "product_catalog_digits": self.line_ids._fields["price_unit"].get_digits(
                 self.env,

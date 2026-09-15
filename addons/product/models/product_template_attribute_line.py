@@ -121,7 +121,7 @@ class ProductTemplateAttributeLine(models.Model):
         return res
 
     def unlink(self):
-        self.product_template_value_ids._only_active().unlink()
+        self.product_template_value_ids._filtered_active().unlink()
         templates = self.product_tmpl_id
 
         self.env.flush_all()

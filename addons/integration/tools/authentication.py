@@ -12,7 +12,8 @@ _logger = logging.getLogger(__name__)
 _EPOCH_RE = re.compile(r"^\d+(\.\d+)?$")
 
 
-def _looks_like_epoch(value):
+def _is_epoch_string(value):
+    """Recognize unsigned decimal epoch syntax in a string, without range checks."""
     return bool(_EPOCH_RE.match(value.strip()))
 
 
@@ -50,7 +51,13 @@ def _get_future_tolerance(env=None):
     return 60
 
 
-def _handle_none_signature(env=None):
+def _admit_unsigned_request(env=None):
+    """Apply the configured unsigned-request policy and log the decision.
+
+    Preserve the legacy allowance when no environment is available.
+
+    :rtype: bool
+    """
     env = _resolve_env(env)
 
     if env:
@@ -109,7 +116,14 @@ def is_bearer_token_valid(headers, expected_token):
     return hmac.compare_digest(token, expected_token)
 
 
-def _is_custom_verification_valid(verification_method, headers, body, env=None):
+def _execute_custom_verification(verification_method, headers, body, env=None):
+    """Execute an allowed verification callback with sudo and return its verdict.
+
+    The callback may have side effects. Configuration or callback errors return
+    false after logging; the method-name prefix restriction applies unchanged.
+
+    :rtype: bool
+    """
     if not verification_method:
         return False
 
@@ -185,7 +199,16 @@ def is_hmac_signature_valid(
     return hmac.compare_digest(signature.lower(), expected.lower())
 
 
-def is_signature_valid(signature_type, headers, body, secret=None, **kwargs):
+def execute_signature_verification(
+    signature_type, headers, body, secret=None, **kwargs
+):
+    """Dispatch signature verification, including custom callback execution.
+
+    Return false for unsupported schemes or caught errors. The custom branch
+    may mutate state; the unsigned branch applies its configured admission rule.
+
+    :rtype: bool
+    """
     try:
         if signature_type == "hmac_sha256":
             return is_hmac_signature_valid(
@@ -212,11 +235,11 @@ def is_signature_valid(signature_type, headers, body, secret=None, **kwargs):
             if not verification_method:
                 _logger.error("Custom verification requires 'verification_method'")
                 return False
-            return _is_custom_verification_valid(
+            return _execute_custom_verification(
                 verification_method, headers, body, kwargs.get("env")
             )
         if signature_type == "none":
-            return _handle_none_signature(kwargs.get("env"))
+            return _admit_unsigned_request(kwargs.get("env"))
         _logger.warning("Unknown signature type: %s", signature_type)
         return False
 
@@ -243,7 +266,7 @@ def is_timestamp_valid(
                 timestamp_dt = datetime.strptime(timestamp_value, timestamp_format)
                 if timestamp_dt.tzinfo is None:
                     timestamp_dt = timestamp_dt.replace(tzinfo=UTC)
-            elif _looks_like_epoch(timestamp_value):
+            elif _is_epoch_string(timestamp_value):
                 epoch = float(timestamp_value.strip())
                 if epoch < 0 or epoch > 253402300799:
                     _logger.warning("Timestamp out of bounds: %s", timestamp_value)
@@ -278,7 +301,8 @@ def is_timestamp_valid(
         return False
 
 
-def ip_in_allowlist(remote_addr, allowlist):
+def is_ip_in_allowlist(remote_addr, allowlist):
+    """Match an IP against comma-separated addresses/networks, ignoring bad entries."""
     if not remote_addr:
         return False
     try:

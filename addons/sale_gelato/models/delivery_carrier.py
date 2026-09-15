@@ -29,8 +29,10 @@ class ProviderGelato(models.Model):
             return False
         return super()._is_available_for_order(order)
 
-    def available_carriers(self, partner, source):
-        available_delivery_methods = super().available_carriers(partner, source)
+    def _filtered_available_carriers(self, partner, source):
+        available_delivery_methods = super()._filtered_available_carriers(
+            partner, source
+        )
         if source._name == "sale.order":
             is_gelato_order = any(
                 source.line_ids.product_id.mapped("gelato_product_uid")

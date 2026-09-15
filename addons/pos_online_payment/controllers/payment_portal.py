@@ -147,7 +147,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             "landing_route": self._get_landing_route(
                 pos_order_sudo.id, access_token, exit_route=exit_route
             ),
-            **self._get_extra_payment_form_values(**kwargs),
+            **self._prepare_extra_payment_form_context(**kwargs),
         }
 
         currency_id = pos_order_sudo.currency_id
@@ -195,7 +195,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 "payment_methods_sudo": payment_methods_sudo,
                 "tokens_sudo": tokens_sudo,
                 "show_tokenize_input_mapping": show_tokenize_input_mapping,
-                **self._get_extra_payment_form_values(**kwargs),
+                **self._prepare_extra_payment_form_context(**kwargs),
             }
         )
         return self._render_pay(rendering_context)
@@ -313,7 +313,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             pos_order_sudo.id, access_token, exit_route=exit_route, tx_id=tx_sudo.id
         )
 
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()
 
     @http.route(
         "/pos/pay/confirmation/<int:pos_order_id>",

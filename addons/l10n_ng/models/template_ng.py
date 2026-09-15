@@ -45,13 +45,13 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @template("ng")
-    def _get_ng_template_data(self):
+    def _prepare_ng_template_data(self):
         """Copies the generic CoA template data.
         Changes to it will be reflected here as well.
         We remove the name and country to use the default values,
         whereas the generic CoA has to override these.
         """
-        res = self._get_generic_coa_template_data()
+        res = self._prepare_generic_coa_template_data()
         return {
             k: f"l10n_ng_{v}" for k, v in res.items() if k not in ("name", "country")
         }

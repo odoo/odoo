@@ -86,10 +86,10 @@ class AccountMove(models.Model):
             )
         return stock_moves
 
-    def _get_invoiced_lot_values(self):
+    def _prepare_invoice_lot_rows(self):
         self.check_singleton()
 
-        lot_values = super()._get_invoiced_lot_values()
+        lot_values = super()._prepare_invoice_lot_rows()
 
         if self.state == "draft":
             return lot_values

@@ -89,8 +89,8 @@ class StockValuationReport(models.AbstractModel):
 
         stock_valuation_account_vals = company.with_context(
             inventory_data=inventory_data
-        )._get_stock_valuation_account_vals(
-            accounts_by_product, date, company._get_location_valuation_vals(date)
+        )._prepare_stock_valuation_account_vals(
+            accounts_by_product, date, company._prepare_location_valuation_vals(date)
         )
 
         report_data = {
@@ -101,7 +101,7 @@ class StockValuationReport(models.AbstractModel):
         }
 
         if self._is_inventory_loss_included():
-            location_valuation_vals = company._get_location_valuation_vals(
+            location_valuation_vals = company._prepare_location_valuation_vals(
                 date,
                 location_domain=[("usage", "=", "inventory")],
             )

@@ -521,18 +521,18 @@ class Team(models.Model):
             return some | none
         return NotImplemented
 
-    def _get_usage_alias_defaults(self, key):
+    def _prepare_usage_alias_defaults(self, key):
         self.check_singleton()
         return {"team_id": self.id}
 
-    def _get_usage_alias_creation_values(self, key):
+    def _prepare_usage_alias_vals(self, key):
         self.check_singleton()
         IrModel = self.env["ir.model"]
         return {
             "alias_model_id": IrModel._get_id(self._get_usage(key).alias_model),
             "alias_parent_model_id": IrModel._get_id(self._name),
             "alias_parent_thread_id": self.id,
-            "alias_defaults": str(self._get_usage_alias_defaults(key)),
+            "alias_defaults": str(self._prepare_usage_alias_defaults(key)),
             "alias_domain_id": (
                 self.company_id.alias_domain_id or self.env.company.alias_domain_id
             ).id,

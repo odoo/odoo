@@ -422,7 +422,7 @@ class MixinOrderLinePriceHistoryLine(models.AbstractModel):
             record.divergence_pct = divergence
             record.divergence_favorable = divergence * wizard._get_price_direction() > 0
 
-    def _get_price_vals(self) -> dict:
+    def _prepare_price_update_vals(self) -> dict:
         target = self.wizard_id.line_id
         return {
             "price_unit": self.line_id.product_uom_id._compute_price(
@@ -438,5 +438,5 @@ class MixinOrderLinePriceHistoryLine(models.AbstractModel):
             target=self.wizard_id.line_id,
             source=self.line_id,
         )
-        self.wizard_id.line_id.write(self._get_price_vals())
+        self.wizard_id.line_id.write(self._prepare_price_update_vals())
         return {"type": "ir.actions.act_window_close"}

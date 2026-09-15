@@ -44,7 +44,7 @@ class ProductProduct(models.Model):
         products = (
             self.browse(product_ids)
             .exists()
-            .with_context(**config._get_stock_quantity_context())
+            .with_context(**config._prepare_stock_quantity_context())
         )
         quantities = dict.fromkeys(product_ids, 0.0)
         for product in products:

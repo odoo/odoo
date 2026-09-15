@@ -614,7 +614,7 @@ class DocumentsDocument(models.Model):
     def _get_unauthorized_root_document_owners_sudo(self) -> models.Model:
         return self.mapped("owner_id").sudo().filtered("share")
 
-    def _get_inherited_access_ids_vals(self) -> list[dict]:
+    def _prepare_inherited_access_vals(self) -> list[dict]:
         self.check_singleton()
         vals = [
             {

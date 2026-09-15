@@ -150,7 +150,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         if self._display_attachments_widget(
             vals["invoice_edi_format"], vals["sending_methods"]
         ):
-            mail_attachments_widget = self._get_default_mail_attachments_widget(
+            mail_attachments_widget = self._prepare_mail_attachments_widget(
                 move,
                 mail_template,
                 invoice_edi_format=vals["invoice_edi_format"],
@@ -317,7 +317,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         )
 
     @api.model
-    def _get_default_mail_attachments_widget(
+    def _prepare_mail_attachments_widget(
         self,
         move,
         mail_template,
@@ -326,21 +326,21 @@ class MixinAccountMoveSend(models.AbstractModel):
         pdf_report=None,
     ):
         return (
-            self._get_placeholder_mail_attachments_data(
+            self._prepare_mail_attachment_placeholders(
                 move,
                 invoice_edi_format=invoice_edi_format,
                 extra_edis=extra_edis,
                 pdf_report=pdf_report,
             )
-            + self._get_placeholder_mail_template_dynamic_attachments_data(
+            + self._prepare_dynamic_mail_attachment_placeholders(
                 move, mail_template, pdf_report=pdf_report
             )
-            + self._get_invoice_extra_attachments_data(move)
-            + self._get_mail_template_attachments_data(mail_template)
+            + self._prepare_invoice_attachment_entries(move)
+            + self._prepare_template_attachment_entries(mail_template)
         )
 
     @api.model
-    def _get_placeholder_mail_attachments_data(
+    def _prepare_mail_attachment_placeholders(
         self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None
     ):
         if move.invoice_pdf_report_id:
@@ -356,7 +356,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         ]
 
     @api.model
-    def _get_placeholder_mail_template_dynamic_attachments_data(
+    def _prepare_dynamic_mail_attachment_placeholders(
         self, move, mail_template, pdf_report=None
     ):
         pdf_report = pdf_report or self._get_default_pdf_report_id(move)
@@ -386,7 +386,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         return move.invoice_pdf_report_id
 
     @api.model
-    def _get_invoice_extra_attachments_data(self, move):
+    def _prepare_invoice_attachment_entries(self, move):
         return [
             {
                 "id": attachment.id,
@@ -399,7 +399,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         ]
 
     @api.model
-    def _get_mail_template_attachments_data(self, mail_template):
+    def _prepare_template_attachment_entries(self, mail_template):
         return [
             {
                 "id": attachment.id,
@@ -796,7 +796,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         seen_attachment_ids = set()
         to_exclude = {x["name"] for x in mail_attachments_widget if x.get("skip")}
         for attachment_data in (
-            self._get_invoice_extra_attachments_data(move) + mail_attachments_widget
+            self._prepare_invoice_attachment_entries(move) + mail_attachments_widget
         ):
             if attachment_data["name"] in to_exclude and not attachment_data.get(
                 "manual"

@@ -25,7 +25,7 @@ class ResPartner(models.Model):
             replacement = replacement.create(
                 {"number": number, "type": current.type or "mobile"}
             )
-        self.write(self._get_phone_replacement_values(replacement))
+        self.write(self._prepare_phone_replacement_vals(replacement))
         return None
 
     @property

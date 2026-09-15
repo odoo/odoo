@@ -248,7 +248,7 @@ class TestIntegrationExchange(TransactionCase):
         external_id = "ext-event-123"
         self._create_event_log(event_id_external=external_id)
 
-        result = self.env["integration.exchange"].check_duplicate_before_create(
+        result = self.env["integration.exchange"].get_duplicate_info(
             channel_ref=self.channel_ref,
             payload_json='{"any": "data"}',
             event_id_external=external_id,
@@ -261,7 +261,7 @@ class TestIntegrationExchange(TransactionCase):
         payload = '{"key": "value"}'
         self._create_event_log(request_payload=payload)
 
-        result = self.env["integration.exchange"].check_duplicate_before_create(
+        result = self.env["integration.exchange"].get_duplicate_info(
             channel_ref=self.channel_ref,
             payload_json=payload,
             dedup_window_hours=1,
@@ -271,7 +271,7 @@ class TestIntegrationExchange(TransactionCase):
         self.assertEqual(result["reason"], "payload_hash")
 
     def test_check_duplicate_before_create_no_duplicate(self):
-        result = self.env["integration.exchange"].check_duplicate_before_create(
+        result = self.env["integration.exchange"].get_duplicate_info(
             channel_ref=self.channel_ref,
             payload_json='{"unique": "payload"}',
         )

@@ -282,7 +282,7 @@ def ir_valid(arch: etree._Element) -> bool:
         return True
     errors = [
         issue
-        for issue in view_ir.validate(view_ir.from_arch(arch), view_type)
+        for issue in view_ir.get_issues(view_ir.from_arch(arch), view_type)
         if issue.severity == "error"
     ]
     for issue in errors:

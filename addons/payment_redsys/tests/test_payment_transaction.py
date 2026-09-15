@@ -24,7 +24,7 @@ class TestPaymentTransaction(RedsysCommon):
         """Test that all important items are present in the merchant parameters."""
         tx = self._create_transaction(flow="redirect")
         merchant_parameters = tx._redsys_prepare_merchant_parameters()
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             tx.amount, tx.currency_id
         )
         self.assertEqual(

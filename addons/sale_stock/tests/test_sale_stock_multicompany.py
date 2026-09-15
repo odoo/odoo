@@ -233,7 +233,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         self.assertEqual(
             [
                 (rec["product_name"], rec["lot_id"])
-                for rec in invoice._get_invoiced_lot_values()
+                for rec in invoice._prepare_invoice_lot_rows()
             ],
             [(self.product_a.name, sn.id)],
         )

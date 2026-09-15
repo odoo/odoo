@@ -1169,14 +1169,14 @@ class TestWebsocketGate(HrPresenceCase):
 
     def test_the_gate_follows_the_setting(self):
         Company = self.env["res.company"]
-        self.assertTrue(Company._hr_presence_any_ip_control())
+        self.assertTrue(Company._is_presence_ip_tracking_enabled())
         self.env["res.company"].search([]).hr_presence_control_ip = False
         self.assertFalse(
-            Company._hr_presence_any_ip_control(),
+            Company._is_presence_ip_tracking_enabled(),
             "the ormcache must be invalidated by the field it answers about",
         )
         self.company.hr_presence_control_ip = True
-        self.assertTrue(Company._hr_presence_any_ip_control())
+        self.assertTrue(Company._is_presence_ip_tracking_enabled())
 
     def test_the_valid_ip_list_tolerates_the_spacing_people_type(self):
         self.company.hr_presence_control_ip_list = " 10.0.0.1 ,10.0.0.2 ,, "

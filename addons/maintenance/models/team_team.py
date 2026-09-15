@@ -74,8 +74,8 @@ class TeamTeam(models.Model):
             ),
         }
 
-    def _get_usage_alias_defaults(self, key):
-        defaults = super()._get_usage_alias_defaults(key)
+    def _prepare_usage_alias_defaults(self, key):
+        defaults = super()._prepare_usage_alias_defaults(key)
         if key == "maintenance":
             defaults["maintenance_team_id"] = defaults.pop("team_id")
         return defaults

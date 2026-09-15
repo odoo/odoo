@@ -46,7 +46,7 @@ class PaymentTransaction(models.Model):
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to redirect pending token-flow transactions.
 
         If the financial institution insists on 3-D Secure authentication, this
@@ -54,8 +54,8 @@ class PaymentTransaction(models.Model):
 
         Note: `self.check_singleton()`
         """
-        if not self._flutterwave_is_authorization_pending():
-            return super()._get_specific_processing_values(processing_values)
+        if not self._filtered_flutterwave_pending_authorizations():
+            return super()._prepare_provider_processing_values(processing_values)
 
         return {
             "redirect_form_html": self.env["ir.qweb"]._render(
@@ -64,16 +64,16 @@ class PaymentTransaction(models.Model):
             )
         }
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of payment to return Flutterwave-specific rendering values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
+        res = super()._prepare_redirect_form_values(processing_values)
         if self.provider_code != "flutterwave":
             return res
 
@@ -204,6 +204,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Unknown payment status: %s", payment_status))
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""
@@ -219,7 +220,7 @@ class PaymentTransaction(models.Model):
             "flutterwave_customer_email": payment_data["customer"]["email"],
         }
 
-    def _flutterwave_is_authorization_pending(self):
+    def _filtered_flutterwave_pending_authorizations(self):
         """Filter Flutterwave token transactions that are awaiting external authorization.
 
         :return: Pending transactions awaiting authorization.

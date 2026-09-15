@@ -58,8 +58,8 @@ class StockWarehouse(models.Model):
             self._update_global_route_resupply_subcontractor()
         return res
 
-    def _get_rules_dict(self):
-        result = super()._get_rules_dict()
+    def _prepare_rule_routings(self):
+        result = super()._prepare_rule_routings()
         subcontract_location_id = self._get_subcontracting_location()
         for warehouse in self:
             result[warehouse.id].update(

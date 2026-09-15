@@ -163,10 +163,10 @@ class PaymentProvider(models.Model):
             "target": "self",
         }
 
-    def _get_reset_values(self):
+    def _prepare_credential_reset_vals(self):
         """Override of `payment` to supply the provider-specific credential values to reset."""
         if self.code != "razorpay":
-            return super()._get_reset_values()
+            return super()._prepare_credential_reset_vals()
 
         return {
             "razorpay_account_id": None,
@@ -225,16 +225,16 @@ class PaymentProvider(models.Model):
 
         return 1.0
 
-    def _razorpay_calculate_signature(self, data, is_redirect=True):
+    def _get_razorpay_signature(self, data, is_redirect=True):
         """Compute the signature for the request's data according to the Razorpay documentation.
 
         See https://razorpay.com/docs/webhooks/validate-test#validate-webhooks.
 
-        :param bytes data: The data to sign.
+        :param dict|bytes data: Redirect fields or the raw webhook body to sign.
         :param bool is_redirect: Whether the data should be treated as redirect data or as coming
                                  from a webhook notification.
-        :return: The calculated signature.
-        :rtype: str
+        :return: The signature, or None when the webhook secret is absent.
+        :rtype: str | None
         """
         if is_redirect:
             secret = self.razorpay_key_secret
@@ -328,7 +328,7 @@ class PaymentProvider(models.Model):
                 is_proxy_request=is_proxy_request, **kwargs
             )
 
-        auth = tuple()
+        auth = ()
         if not is_proxy_request and self.razorpay_key_id:
             auth = (self.razorpay_key_id, self.razorpay_key_secret)
         return auth

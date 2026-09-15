@@ -449,7 +449,7 @@ class CredentialCredential(models.Model):
                             "Cannot seed protected statistics fields at creation!\n\n"
                             "The following fields are managed internally: %(fields)s\n\n"
                             "Create the credential first, then use the dedicated "
-                            "methods (increment_usage, action_validate_credential, "
+                            "methods (increment_usage, action_probe_health, "
                             "mark_as_used) to update statistics.",
                         )
                         % {
@@ -551,7 +551,7 @@ class CredentialCredential(models.Model):
                         "The following fields are managed internally: %(fields)s\n\n"
                         "Use the appropriate methods:\n"
                         "- increment_usage() for usage statistics\n"
-                        "- action_validate_credential() for health checks\n"
+                        "- action_probe_health() for health checks\n"
                         "- mark_as_used() for last_used_at",
                     )
                     % {"fields": ", ".join(sorted(protected_being_modified))},
@@ -988,9 +988,9 @@ class CredentialCredential(models.Model):
 
         return results
 
-    def action_validate_credential(self) -> dict[str, Any]:
+    def action_probe_health(self) -> dict[str, Any]:
         self.check_singleton()
-        result = self._validate_health()
+        result = self._probe_health()
         if result.get("not_implemented"):
             kind, title = "warning", self.env._("Not Validated")
         elif result.get("success"):
@@ -1003,7 +1003,16 @@ class CredentialCredential(models.Model):
             "params": {"title": title, "message": result.get("message"), "type": kind},
         }
 
-    def _validate_health(self) -> dict[str, Any]:
+    def _probe_health(self) -> dict[str, Any]:
+        """Run the credential-specific probe and store its health result.
+
+        This fallback records unknown health and a check timestamp; extensions
+        provide the service probe. An unsuccessful probe is a returned outcome,
+        not a raising validation contract.
+
+        :returns: ``success`` and ``message``; this fallback also returns
+            ``not_implemented=True``
+        """
         self.check_singleton()
 
         _logger.info(
@@ -1017,7 +1026,7 @@ class CredentialCredential(models.Model):
             "not_implemented": True,
             "message": self.env._(
                 "No built-in validation for category '%s'. "
-                "Override _validate_health in an inheriting "
+                "Override _probe_health in an inheriting "
                 "module to add a service-specific probe."
             )
             % (self.category_code or "unknown"),
@@ -1035,7 +1044,7 @@ class CredentialCredential(models.Model):
         return result
 
     @api.model
-    def cron_validate_credentials(self):
+    def _cron_probe_credentials(self):
         credentials = self.search(
             [
                 ("auto_validate_health", "=", True),
@@ -1052,7 +1061,7 @@ class CredentialCredential(models.Model):
 
         for cred in credentials:
             try:
-                result = cred._validate_health()
+                result = cred._probe_health()
                 if result.get("not_implemented"):
                     skipped += 1
                 elif result.get("success"):

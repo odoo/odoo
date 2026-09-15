@@ -20,10 +20,10 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of `payment` to return razorpay-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the
                                        transaction.
@@ -31,7 +31,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         if self.provider_code != "razorpay":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
         if self.operation in ("online_token", "offline"):
             return {}
@@ -94,8 +94,8 @@ class PaymentTransaction(models.Model):
                 country=self.partner_country_id,
                 raise_exception=self.tokenize,
             )
-        except Exception:
-            raise ValidationError(_("The phone number is invalid."))
+        except Exception as error:
+            raise ValidationError(_("The phone number is invalid.")) from error
         return phone
 
     def _razorpay_create_order(self, customer_id=None):
@@ -122,7 +122,7 @@ class PaymentTransaction(models.Model):
         :return: The request payload.
         :rtype: dict
         """
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount, self.currency_id
         )
         pm_code = (
@@ -143,7 +143,7 @@ class PaymentTransaction(models.Model):
             )
             if self.tokenize:
                 payload["token"] = {
-                    "max_amount": payment_utils.to_minor_currency_units(
+                    "max_amount": payment_utils.major_to_minor_currency_units(
                         self._razorpay_get_mandate_max_amount(), self.currency_id
                     ),
                     "expire_at": time.mktime(
@@ -183,7 +183,7 @@ class PaymentTransaction(models.Model):
         pm_max_amount = self._razorpay_convert_inr_to_currency(
             pm_max_amount_INR, self.currency_id
         )
-        mandate_values = self._get_mandate_values()  # The linked document's values.
+        mandate_values = self._prepare_mandate_data()  # The linked document's values.
         if "amount" in mandate_values and "MRR" in mandate_values:
             max_amount = min(
                 pm_max_amount,
@@ -275,7 +275,7 @@ class PaymentTransaction(models.Model):
             return super()._send_refund_request()
 
         # Send the refund request to Razorpay.
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             -self.amount, self.currency_id
         )  # The amount is negative for refund transactions.
         payload = {
@@ -289,13 +289,14 @@ class PaymentTransaction(models.Model):
         )
         response_content.update(entity_type="refund")
         self._process("razorpay", response_content)
+        return None
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Razorpay."""
         if self.provider_code != "razorpay":
             return super()._send_capture_request()
 
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount, self.currency_id
         )
         payload = {"amount": converted_amount, "currency": self.currency_id.name}
@@ -305,6 +306,7 @@ class PaymentTransaction(models.Model):
 
         # Process the capture request response.
         self._process("razorpay", response_content)
+        return None
 
     def _send_void_request(self):
         """Override of `payment` to explain that it is impossible to void a Razorpay transaction."""
@@ -377,7 +379,7 @@ class PaymentTransaction(models.Model):
         if not refund_provider_reference or not amount_to_refund:
             raise ValidationError(_("Received incomplete refund data."))
 
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = payment_utils.minor_to_major_currency_units(
             amount_to_refund, source_tx.currency_id
         )
         return source_tx._create_child_transaction(
@@ -395,7 +397,7 @@ class PaymentTransaction(models.Model):
         if "amount" not in payment_data or "currency" not in payment_data:
             return None
 
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             payment_data["amount"], self.currency_id
         )
         return {
@@ -488,6 +490,7 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Razorpay: " + _("Received data with invalid status: %s", entity_status)
             )
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Razorpay data.

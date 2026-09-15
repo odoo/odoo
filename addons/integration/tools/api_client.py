@@ -1041,7 +1041,15 @@ class OutboundAPIClient:
         }
         return redact.mask_data(by_provenance)
 
-    def health_check(self):
+    def probe_health(self):
+        """Make an uncached health request without exchange logging.
+
+        A configured health endpoint must return HTTP 200. Otherwise send
+        OPTIONS to the root and report success if the request returns. Caught
+        request errors return false. Each request uses a five-second timeout.
+
+        :rtype: bool
+        """
         try:
             if self.service.health_check_endpoint:
                 response = self.get(

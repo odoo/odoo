@@ -1072,8 +1072,8 @@ class SaleOrder(models.Model):
             and request.env.context.get("catalog_skip_tracking")
         )
 
-    def _get_mark_as_sent_context(self):
-        return {**super()._get_mark_as_sent_context(), "tracking_disable": True}
+    def _prepare_mark_as_sent_context(self):
+        return {**super()._prepare_mark_as_sent_context(), "tracking_disable": True}
 
     def _get_mail_subtitles(self, render_context):
         lang_code = render_context.get("lang")
@@ -1161,7 +1161,7 @@ class SaleOrder(models.Model):
                 return "no"
         return "to do"
 
-    def _get_confirmation_context(self):
+    def _prepare_confirmation_context(self):
         context = self.env.context.copy()
         context.pop("default_name", None)
         context.pop("default_user_id", None)
@@ -1243,8 +1243,8 @@ class SaleOrder(models.Model):
             return super()._get_model_description(model_name)
         return self.type_name
 
-    def _get_invoice_action_context(self):
-        context = super()._get_invoice_action_context()
+    def _prepare_invoice_action_context(self):
+        context = super()._prepare_invoice_action_context()
         context["default_partner_shipping_id"] = self.partner_shipping_id.id
         return context
 
@@ -1497,7 +1497,7 @@ class SaleOrder(models.Model):
             if line.state == "done":
                 line.qty_to_invoice = line.product_qty - line.qty_invoiced
 
-    def _get_default_payment_link_values(self):
+    def _prepare_payment_link_vals(self):
         self.check_singleton()
 
         prepayment_amount = self._get_prepayment_required_amount()
@@ -1786,9 +1786,9 @@ class SaleOrder(models.Model):
     def _get_duplicate_ref_field(self):
         return "client_order_ref"
 
-    def _get_mail_composer_context(self):
+    def _prepare_mail_composer_context(self):
         return {
-            **super()._get_mail_composer_context(),
+            **super()._prepare_mail_composer_context(),
             "proforma": self.env.context.get("proforma", False),
         }
 

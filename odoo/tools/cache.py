@@ -230,7 +230,7 @@ class ormcache:
         )
 
         @functools.wraps(method)
-        def lookup(*args, **kwargs):
+        def get_cached_result(*args, **kwargs):
             model = args[0]
             pool = model.pool
             d = pool.ormcache_lrus[_cache_name]
@@ -303,8 +303,8 @@ class ormcache:
                 )
             return value
 
-        lookup.__cache__ = self  # type: ignore[attr-defined]
-        return typing.cast("C", lookup)
+        get_cached_result.__cache__ = self  # type: ignore[attr-defined]
+        return typing.cast("C", get_cached_result)
 
     def add_value(
         self,

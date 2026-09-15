@@ -57,14 +57,14 @@ class StockWarehouseOrderpoint(models.Model):
     def _compute_deadline_date(self):
         super()._compute_deadline_date()
 
-    def _get_lead_days_values(self):
-        values = super()._get_lead_days_values()
+    def _prepare_lead_time_params(self):
+        values = super()._prepare_lead_time_params()
         if self.bom_id:
             values["bom"] = self.bom_id
         return values
 
-    def _get_lead_days_values_map(self):
-        result = super()._get_lead_days_values_map()
+    def _prepare_lead_time_params_map(self):
+        result = super()._prepare_lead_time_params_map()
         orderpoints_by_lookup = defaultdict(
             lambda: self.env["stock.warehouse.orderpoint"],
         )

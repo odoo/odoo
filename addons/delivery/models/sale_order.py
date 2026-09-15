@@ -208,7 +208,7 @@ class SaleOrder(models.Model):
                     "active"
                 )
             )
-            carrier = carrier_property.available_carriers(
+            carrier = carrier_property._filtered_available_carriers(
                 self.partner_shipping_id, self
             )
         return {
@@ -278,7 +278,7 @@ class SaleOrder(models.Model):
                     "phone_ids": [Command.link(phone.id)] if phone else [],
                 }
             )
-            if phone_values := shipping_partner._get_phone_replacement_values(phone):
+            if phone_values := shipping_partner._prepare_phone_replacement_vals(phone):
                 shipping_partner.write(phone_values)
             order.with_context(update_delivery_shipping_partner=True).write(
                 {"partner_shipping_id": shipping_partner}

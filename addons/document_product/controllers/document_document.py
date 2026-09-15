@@ -46,7 +46,7 @@ class ProductDocumentsController(Controller):
                             "company_id": record.company_id.id,
                             "mimetype": file.content_type,
                             "raw": file.read(),
-                            **self.get_additional_create_params(**kwargs),
+                            **self._prepare_additional_document_vals(**kwargs),
                         }
                     )
             except Exception:
@@ -70,7 +70,7 @@ class ProductDocumentsController(Controller):
     def _error_response(self, message):
         return json.dumps(self._error_result(message))
 
-    def get_additional_create_params(self, **kwargs):
+    def _prepare_additional_document_vals(self, **kwargs):
         return {}
 
     def is_model_valid(self, res_model):

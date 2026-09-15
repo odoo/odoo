@@ -24,9 +24,11 @@ def _l10n_id_make_qris_request(endpoint, params):
                 "Communication with QRIS failed. QRIS returned with the following error: %s",
                 err,
             )
-        )
+        ) from None
     except requests.RequestException, ValueError:
-        raise ValidationError(_("Could not establish a connection to the QRIS API."))
+        raise ValidationError(
+            _("Could not establish a connection to the QRIS API.")
+        ) from None
 
     return response
 
@@ -57,7 +59,7 @@ class ResPartnerBank(models.Model):
                 return _(
                     "You cannot generate a QRIS QR code with a bank account that is not in Indonesia."
                 )
-            if currency.name not in ["IDR"]:
+            if currency.name != "IDR":
                 return _(
                     "You cannot generate a QRIS QR code with a currency other than IDR"
                 )
@@ -92,7 +94,7 @@ class ResPartnerBank(models.Model):
             structured_communication,
         )
 
-    def _get_qr_vals(
+    def _prepare_qr_payload(
         self,
         qr_method,
         amount,
@@ -163,7 +165,7 @@ class ResPartnerBank(models.Model):
 
             return data.get("qris_content")
 
-        return super()._get_qr_vals(
+        return super()._prepare_qr_payload(
             qr_method,
             amount,
             currency,
@@ -172,7 +174,7 @@ class ResPartnerBank(models.Model):
             structured_communication,
         )
 
-    def _get_qr_code_generation_params(
+    def _prepare_qr_rendering_params(
         self,
         qr_method,
         amount,
@@ -190,7 +192,7 @@ class ResPartnerBank(models.Model):
                 "quiet": 0,
                 "width": 120,
                 "height": 120,
-                "value": self._get_qr_vals(
+                "value": self._prepare_qr_payload(
                     qr_method,
                     amount,
                     currency,
@@ -199,7 +201,7 @@ class ResPartnerBank(models.Model):
                     structured_communication,
                 ),
             }
-        return super()._get_qr_code_generation_params(
+        return super()._prepare_qr_rendering_params(
             qr_method,
             amount,
             currency,

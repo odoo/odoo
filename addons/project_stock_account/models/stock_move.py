@@ -32,9 +32,9 @@ class StockMove(models.Model):
             ("picking_type_id.analytic_costs", "!=", False),
         ]
 
-    def _prepare_analytic_lines(self):
+    def _update_analytic_lines(self):
         _debug.pipeline("project_analytic_lines_prepare", moves=self)
-        res = super()._prepare_analytic_lines()
+        res = super()._update_analytic_lines()
         if res and self.picking_id:
             project = self.picking_id.project_id
             mandatory_plans = project._get_mandatory_plans(

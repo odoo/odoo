@@ -13,8 +13,8 @@ class ResUsers(models.Model):
     def open_website_url(self):
         return self.mapped("partner_id").open_website_url()
 
-    def get_gamification_redirection_data(self):
-        res = super().get_gamification_redirection_data()
+    def prepare_rank_email_links(self):
+        res = super().prepare_rank_email_links()
         res.append(
             {
                 "label": _("See our Forum"),

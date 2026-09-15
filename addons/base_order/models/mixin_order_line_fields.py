@@ -214,7 +214,7 @@ class MixinOrderLineFields(models.AbstractModel):
         return
 
     @api.model
-    def _get_display_type_nullify_vals(self):
+    def _prepare_display_type_reset_vals(self):
         return {
             "product_id": False,
             "price_unit": False,
@@ -225,7 +225,7 @@ class MixinOrderLineFields(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        nullify_vals = self._get_display_type_nullify_vals()
+        nullify_vals = self._prepare_display_type_reset_vals()
         for vals in vals_list:
             # Guard the caller's own values: nullifying a section line writes the
             # derived quantity itself, which the guard would otherwise refuse.

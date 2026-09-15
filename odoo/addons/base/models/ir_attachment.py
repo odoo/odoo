@@ -971,14 +971,14 @@ class IrAttachment(models.Model):
 
     @api.model
     def _remove_stored_file(self, fname: str) -> None:
-        self._get_storage_backend_for_key(fname).delete(fname)
+        self._get_storage_backend_for_key(fname).remove(fname)
 
     @api.model
     def _remove_stored_file_multi(self, fnames: Collection[str]) -> None:
         plain_fnames = []
         for fname in fnames:
             if "://" in fname:
-                self._get_storage_backend_for_key(fname).delete(fname)
+                self._get_storage_backend_for_key(fname).remove(fname)
             else:
                 plain_fnames.append(fname)
         if plain_fnames:

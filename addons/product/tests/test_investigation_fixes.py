@@ -131,9 +131,7 @@ class TestCompanyDefaultPricelistCurrency(TransactionCase):
 @tagged("post_install", "-at_install")
 class TestCatalogContextContract(TransactionCase):
     def test_catalog_action_carries_the_order_id_the_client_reads(self):
-        context = self.env[
-            "mixin.product.catalog"
-        ]._get_action_add_from_catalog_extra_context()
+        context = self.env["mixin.product.catalog"]._prepare_catalog_extra_context()
 
         self.assertIn("order_id", context)
         self.assertNotIn("product_catalog_order_id", context)

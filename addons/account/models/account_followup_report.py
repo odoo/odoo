@@ -221,10 +221,10 @@ class AccountFollowupCustomHandler(models.AbstractModel):
                     overdue_line_id = line_id
         return due_line_id, overdue_line_id
 
-    def _get_order_by_aml_values(self):
+    def _prepare_aml_order_by_sql(self):
         return SQL(
             "account_move_line.date_maturity, %(order_by)s",
-            order_by=super()._get_order_by_aml_values(),
+            order_by=super()._prepare_aml_order_by_sql(),
         )
 
     @_debug.perf.timed

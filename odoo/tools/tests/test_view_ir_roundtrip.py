@@ -137,6 +137,6 @@ class TestViewIrMarkup(unittest.TestCase):
     def test_the_validator_passes_over_markup(self):
         node = view_ir.from_arch(etree.fromstring(self.ARCH))
         self.assertEqual(
-            [issue.code for issue in view_ir.validate(node, "form")],
+            [issue.code for issue in view_ir.get_issues(node, "form")],
             [],
         )

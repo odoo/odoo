@@ -410,7 +410,7 @@ class OdooURLFetcher(URLFetcher):
 
         is_local = not parsed.hostname or self._is_same_origin(parsed)
         if not is_local:
-            return self._fetch_external(url, parsed.hostname, headers)
+            return self._get_external_resource(url, parsed.hostname, headers)
 
         path = parsed.path or ""
 
@@ -437,7 +437,7 @@ class OdooURLFetcher(URLFetcher):
         _debug.logic("fetch_via_http", path=path[:120])
         return self._get_via_http(url, path)
 
-    def _fetch_external(
+    def _get_external_resource(
         self, url: str, hostname: str | None, headers: dict[str, str] | None
     ) -> URLFetcherResponse:
         try:

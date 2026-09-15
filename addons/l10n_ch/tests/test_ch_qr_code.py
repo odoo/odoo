@@ -120,7 +120,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
             self.ch_qr_invoice.partner_id,
             self.ch_qr_invoice.qr_code_method,
         )
-        value_list = self.ch_qr_invoice.partner_bank_id._get_qr_vals(**vals)
+        value_list = self.ch_qr_invoice.partner_bank_id._prepare_qr_payload(**vals)
 
         self.assertEqual(
             "".join(value_list).count("\n"),

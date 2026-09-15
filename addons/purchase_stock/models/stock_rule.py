@@ -128,9 +128,9 @@ class StockRule(models.Model):
             lambda s: not s.company_id or s.company_id == company_id,
         )[:1]
 
-    def _get_message_dict(self):
-        message_dict = super()._get_message_dict()
-        __, destination, __, __ = self._get_message_values()
+    def _get_action_messages(self):
+        message_dict = super()._get_action_messages()
+        __, destination, __, __ = self._get_message_labels()
         message_dict.update(
             {
                 "buy": _(

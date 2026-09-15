@@ -15,8 +15,8 @@ from odoo.tools import Query
 from odoo.tools.misc import clean_context
 
 from odoo.addons.mail.tools.access_scan import (
-    fetch_columns,
     get_accessible_query,
+    prepare_column_fetcher,
     prepare_document_access_error,
 )
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
@@ -175,7 +175,7 @@ class MailScheduledMessage(models.Model):
             limit,
             order,
             super()._search,
-            fetch=fetch_columns(self, ("id", "model", "res_id")),
+            fetch=prepare_column_fetcher(self, ("id", "model", "res_id")),
             allowed=allowed,
             chunk_min=self._SEARCH_ACCESS_CHUNK_MIN,
             chunk_max=self._SEARCH_ACCESS_CHUNK_MAX,

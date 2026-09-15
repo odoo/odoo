@@ -595,11 +595,11 @@ class PaymentProvider(models.Model):
             {
                 "state": "disabled",
                 "is_published": False,
-                **self._get_reset_values(),
+                **self._prepare_credential_reset_vals(),
             }
         )
 
-    def _get_reset_values(self):
+    def _prepare_credential_reset_vals(self):
         """Return the values to reset the credentials of the provider.
 
         Providers can override this to supply their own credential fields to reset.

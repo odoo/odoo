@@ -6,7 +6,7 @@
         inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='right-elements']" position="after">
             <t groups="stock_account.group_lot_on_invoice">
-                <t t-set="lot_values" t-value="o._get_invoiced_lot_values()" />
+                <t t-set="lot_values" t-value="o._prepare_invoice_lot_rows()" />
                 <div t-if="not lot_values" class="oe_structure">​</div>
                 <table
                     t-else=""

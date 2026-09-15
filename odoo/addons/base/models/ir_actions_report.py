@@ -458,7 +458,7 @@ class IrActionsReport(models.Model):
     ) -> tuple[bytes, str]:
         docids, data = self._normalize_render_args(docids, data, "text")
         report = self._get_report(report_ref)
-        data = self._get_rendering_context(report, docids, data)
+        data = self._prepare_rendering_context(report, docids, data)
         return self._render_template(report.report_name, data), "text"
 
     @api.model
@@ -470,14 +470,14 @@ class IrActionsReport(models.Model):
     ) -> tuple[bytes, str]:
         docids, data = self._normalize_render_args(docids, data, "html")
         report = self._get_report(report_ref)
-        data = self._get_rendering_context(report, docids, data)
+        data = self._prepare_rendering_context(report, docids, data)
         return self._render_template(report.report_name, data), "html"
 
     def _get_rendering_context_model(self, report: Self) -> Any | None:
         report_model_name = f"report.{report.report_name}"
         return self.env.get(report_model_name)
 
-    def _get_rendering_context(
+    def _prepare_rendering_context(
         self, report: Self, docids: list[int] | None, data: dict[str, Any]
     ) -> dict[str, Any]:
         report_model = self._get_rendering_context_model(report)

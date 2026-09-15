@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("uk")
-    def _get_uk_template_data(self):
+    def _prepare_uk_template_data(self):
         return {
             "property_account_receivable_id": "110000",
             "property_account_payable_id": "210000",

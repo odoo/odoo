@@ -79,7 +79,7 @@ class TestL10nTHEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = "emv_qr"
         unstruct_ref = "INV/TEST/0001"
-        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
+        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,

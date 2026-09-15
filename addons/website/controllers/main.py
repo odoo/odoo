@@ -1570,7 +1570,7 @@ class Website(Home):
                 )
         return json.loads(metadata.raw)
 
-    def _get_customize_data(self, keys, is_view_data):
+    def _get_customization_records(self, keys, is_view_data):
         model = "ir.ui.view" if is_view_data else "ir.asset"
         Model = request.env[model].with_context(active_test=False)
         domain = Domain("key", "in", keys) & request.website.website_domain()
@@ -1584,7 +1584,7 @@ class Website(Home):
         readonly=True,
     )
     def theme_customize_data_get(self, keys, is_view_data):
-        records = self._get_customize_data(keys, is_view_data)
+        records = self._get_customization_records(keys, is_view_data)
         return records.filtered("active").mapped("key")
 
     @http.route(
@@ -1594,7 +1594,7 @@ class Website(Home):
         self, is_view_data, enable=None, disable=None, reset_view_arch=False
     ):
         if disable:
-            records = self._get_customize_data(disable, is_view_data).filtered("active")
+            records = self._get_customization_records(disable, is_view_data).filtered("active")
             _debug.lifecycle(
                 "theme_customize",
                 action="disable",
@@ -1607,7 +1607,7 @@ class Website(Home):
             records.write({"active": False})
 
         if enable:
-            records = self._get_customize_data(enable, is_view_data)
+            records = self._get_customization_records(enable, is_view_data)
             enabled = records.filtered(lambda x: not x.active)
             _debug.lifecycle(
                 "theme_customize", action="enable", views=is_view_data, records=enabled
@@ -1642,7 +1642,7 @@ class Website(Home):
             "o_container_small": "website.footer_copyright_content_width_small",
         }
 
-        new_template = self._get_customize_data([template_key], is_view_data=True)
+        new_template = self._get_customization_records([template_key], is_view_data=True)
         if not new_template or not new_template[0].arch:
             return
 

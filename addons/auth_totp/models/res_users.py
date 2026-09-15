@@ -107,7 +107,7 @@ class ResUsers(models.Model):
 
             sudo.totp_last_counter = match
             _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
-            self._totp_rate_limit_purge("code_check")
+            self._remove_totp_rate_limit_logs("code_check")
             return {
                 "uid": self.id,
                 "auth_method": "totp",
@@ -130,7 +130,7 @@ class ResUsers(models.Model):
 
         self.sudo().totp_secret = secret
         self.sudo().totp_last_counter = match
-        self._totp_rate_limit_purge("code_check")
+        self._remove_totp_rate_limit_logs("code_check")
         if request:
             self.env.flush_all()
             new_token = self.env.user._get_session_token(request.session.sid)
@@ -172,7 +172,7 @@ class ResUsers(models.Model):
             }
         )
 
-    def _totp_rate_limit_purge(self, limit_type):
+    def _remove_totp_rate_limit_logs(self, limit_type):
         self.check_singleton()
         assert request, (
             "A request is required to be able to rate limit TOTP related actions"

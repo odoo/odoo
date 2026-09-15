@@ -99,7 +99,7 @@ class ResUsers(models.Model):
         return {"error": "invalid_request"}
 
     @api.model
-    def _auth_oauth_validate(self, provider, access_token):
+    def _get_oauth_identity(self, provider, access_token):
         """return the validation data corresponding to the access token"""
         oauth_provider = self.env["auth.oauth.provider"].browse(provider)
         validation = self._auth_oauth_rpc(
@@ -197,7 +197,7 @@ class ResUsers(models.Model):
         # else:
         #   continue with the process
         access_token = params.get("access_token")
-        validation = self._auth_oauth_validate(provider, access_token)
+        validation = self._get_oauth_identity(provider, access_token)
 
         # retrieve and sign in user
         login = self._auth_oauth_signin(provider, validation, params)
@@ -218,7 +218,9 @@ class ResUsers(models.Model):
                 passwd_allowed
                 and self.active
                 and stored
-                and self._get_crypt_context().verify(credential["token"], stored)
+                and self._get_crypt_context().is_password_valid(
+                    credential["token"], stored
+                )
             ):
                 return {
                     "uid": self.id,

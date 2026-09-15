@@ -66,7 +66,7 @@ patch(DocumentsDetailsPanel.prototype, {
     async onVerifyDocument() {
         const action = await this.orm.call(
             "document.document",
-            "action_verify_document",
+            "action_record_verification",
             [this.record.resId],
         );
         await this.props.record.load();

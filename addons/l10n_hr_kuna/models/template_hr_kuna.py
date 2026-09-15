@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("hr_kuna")
-    def _get_hr_kuna_template_data(self):
+    def _prepare_hr_kuna_template_data(self):
         return {
             "name": "RRIF-ov računski plan za poduzetnike",
             "code_digits": "6",

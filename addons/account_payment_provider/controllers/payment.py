@@ -91,7 +91,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             **kwargs,
         )
 
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()
 
     # Payment overrides
 
@@ -144,7 +144,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             *args, amount=amount, access_token=access_token, **kwargs
         )
 
-    def _get_extra_payment_form_values(
+    def _prepare_extra_payment_form_context(
         self, invoice_id=None, access_token=None, **kwargs
     ):
         """Override of `payment` to reroute the payment flow to the portal view of the invoice.
@@ -155,7 +155,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :return: The extended rendering context values.
         :rtype: dict
         """
-        form_values = super()._get_extra_payment_form_values(
+        form_values = super()._prepare_extra_payment_form_context(
             invoice_id=invoice_id, access_token=access_token, **kwargs
         )
         if invoice_id:

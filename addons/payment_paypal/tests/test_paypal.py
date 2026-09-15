@@ -17,7 +17,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
             return_value={"id": self.order_id},
         ):
-            processing_values = tx._get_processing_values()
+            processing_values = tx._prepare_processing_values()
         self.assertEqual(processing_values["order_id"], self.order_id)
 
     def test_order_payload_values_for_public_user(self):

@@ -947,7 +947,7 @@ class LoyaltyProgram(models.Model):
 
         :return: an action opening the new program, or False for an unknown template.
         """
-        template_values = self._get_template_values()
+        template_values = self._prepare_program_template_vals()
         if template_id not in template_values:
             return False
         program = self.create(template_values[template_id])
@@ -968,7 +968,7 @@ class LoyaltyProgram(models.Model):
         return action
 
     @api.model
-    def _get_template_values(self):
+    def _prepare_program_template_vals(self):
         """Return the creation values of each `get_program_templates` key."""
         program_type_defaults = self._program_type_default_values()
         # For programs that require a product get the first sellable.

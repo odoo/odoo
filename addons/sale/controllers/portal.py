@@ -224,7 +224,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             payment_amount and not order_sudo.is_expired
         ):
             values.update(
-                self._get_payment_values(
+                self._prepare_payment_form_context(
                     order_sudo,
                     is_down_payment=self._is_down_payment(
                         order_sudo, amount_selection, payment_amount
@@ -264,7 +264,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
         )
         return is_down_payment
 
-    def _get_payment_values(
+    def _prepare_payment_form_context(
         self, order_sudo, is_down_payment=False, payment_amount=None, **kwargs
     ):
         company = order_sudo.company_id
@@ -350,7 +350,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             **portal_page_values,
             **payment_form_values,
             **payment_context,
-            **self._get_extra_payment_form_values(**kwargs),
+            **self._prepare_extra_payment_form_context(**kwargs),
         }
 
     @http.route(
@@ -631,4 +631,4 @@ class PaymentPortal(payment_portal.PaymentPortal):
             "portal_transaction_created", order=order_sudo, transaction=tx_sudo
         )
 
-        return tx_sudo._get_processing_values()
+        return tx_sudo._prepare_processing_values()

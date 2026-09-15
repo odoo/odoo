@@ -503,7 +503,7 @@ class LoyaltyReward(models.Model):
     def _create_missing_discount_line_products(self):
         rewards = self.filtered(lambda r: not r.discount_line_product_id)
         products = self.env["product.product"].create(
-            rewards._get_discount_product_values()
+            rewards._prepare_discount_product_vals()
         )
         for reward, product in zip(rewards, products, strict=True):
             reward.discount_line_product_id = product
@@ -535,7 +535,7 @@ class LoyaltyReward(models.Model):
         programs.exists()._check_reward_ids()
         return res
 
-    def _get_discount_product_values(self):
+    def _prepare_discount_product_vals(self):
         return [
             {
                 "name": reward.description,

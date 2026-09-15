@@ -85,7 +85,7 @@ class StockPickingType(models.Model):
 
     l10n_it_ddt_sequence_id = fields.Many2one(comodel_name="ir.sequence")
 
-    def _get_dtt_ir_seq_vals(self, warehouse_id, sequence_code):
+    def _get_ddt_sequence_name_prefix(self, warehouse_id, sequence_code):
         if warehouse_id:
             wh = self.env["stock.warehouse"].browse(warehouse_id)
             ir_seq_name = _(
@@ -112,7 +112,7 @@ class StockPickingType(models.Model):
                     or not vals["l10n_it_ddt_sequence_id"]
                 )
             ):
-                ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(
+                ir_seq_name, ir_seq_prefix = self._get_ddt_sequence_name_prefix(
                     vals.get("warehouse_id"), vals["sequence_code"]
                 )
                 vals["l10n_it_ddt_sequence_id"] = (
@@ -138,7 +138,7 @@ class StockPickingType(models.Model):
                     if "warehouse_id" not in vals
                     else vals["warehouse_ids"]
                 )
-                ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(
+                ir_seq_name, ir_seq_prefix = self._get_ddt_sequence_name_prefix(
                     warehouse, vals["sequence_code"]
                 )
                 picking_type.l10n_it_ddt_sequence_id.write(

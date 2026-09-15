@@ -2302,10 +2302,10 @@ class CalendarEvent(models.Model):
         """
         self.check_singleton()
         if recurrence_update_setting == "all":
-            self.recurrence_id.calendar_event_ids.write(self._get_archive_values())
+            self.recurrence_id.calendar_event_ids.write(self._prepare_archive_values())
         elif recurrence_update_setting == "subsequent":
             detached_events = self.recurrence_id._stop_at(self)
-            detached_events.write(self._get_archive_values())
+            detached_events.write(self._prepare_archive_values())
         elif recurrence_update_setting == "this":
             self.write({"active": False, "recurrence_update": "this"})
             if len(self.recurrence_id.calendar_event_ids) == 0:
@@ -2599,7 +2599,7 @@ class CalendarEvent(models.Model):
         return update_dict
 
     @api.model
-    def _get_archive_values(self):
+    def _prepare_archive_values(self):
         """Return parameters for archiving events in calendar module."""
         return {"active": False}
 
@@ -2609,12 +2609,12 @@ class CalendarEvent(models.Model):
         return False
 
     @api.model
-    def _get_update_future_events_values(self):
+    def _prepare_update_future_events_values(self):
         """Return parameters for updating future events within _update_future_events function scope."""
         return {}
 
     @api.model
-    def _get_remove_sync_id_values(self):
+    def _prepare_remove_sync_id_values(self):
         """Return parameters for removing event synchronization id within _update_future_events function scope."""
         return {}
 
@@ -2645,7 +2645,7 @@ class CalendarEvent(models.Model):
         # Trim previous recurrence at current event, deleting following events except for the updated event.
         detached_events_split = self.recurrence_id._stop_at(self)
         (detached_events_split - self).write(
-            {"active": False, **self._get_remove_sync_id_values()}
+            {"active": False, **self._prepare_remove_sync_id_values()}
         )
 
         # Update the current event with the new recurrence information.
@@ -2660,8 +2660,8 @@ class CalendarEvent(models.Model):
                 {
                     **time_values,
                     **values,
-                    **self._get_remove_sync_id_values(),
-                    **self._get_update_future_events_values(),
+                    **self._prepare_remove_sync_id_values(),
+                    **self._prepare_update_future_events_values(),
                 }
             )
             if time_values:

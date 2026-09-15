@@ -48,7 +48,7 @@ class StockPutInPack(models.TransientModel):
             self.result_package_id = False
 
     def action_put_in_pack(self):
-        context = self._get_put_in_pack_context()
+        context = self._prepare_put_in_pack_context()
         dbg.pipeline.debug(
             "put in pack wizard: packages %s lines %s -> package %s type %s",
             dbg.rec(self.package_ids),
@@ -66,7 +66,7 @@ class StockPutInPack(models.TransientModel):
             package_type_id=self.package_type_id.id,
         )
 
-    def _get_put_in_pack_context(self):
+    def _prepare_put_in_pack_context(self):
         return {
             **self.env.context,
             "from_package_wizard": True,

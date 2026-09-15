@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-
 _GATE = "odoo.addons.integration.models.mixin_inbound_gate"
 
 
@@ -296,7 +295,7 @@ class TestInboundAccessLog(TransactionCase):
         for value in ("not-a-number", "0", "-1"):
             params.set_param(endpoint.STANDING_WINDOW_PARAM, value)
             self.assertGreaterEqual(
-                endpoint._inbound_coalesce_window("audit_accepted"), 60
+                endpoint._get_inbound_coalesce_window("audit_accepted"), 60
             )
 
         for _ in range(5):
@@ -311,8 +310,8 @@ class TestInboundAccessLog(TransactionCase):
             endpoint.STANDING_WINDOW_PARAM, "7200"
         )
 
-        self.assertEqual(endpoint._inbound_coalesce_window("caller_limited"), 45)
-        self.assertEqual(endpoint._inbound_coalesce_window("audit_accepted"), 7200)
+        self.assertEqual(endpoint._get_inbound_coalesce_window("caller_limited"), 45)
+        self.assertEqual(endpoint._get_inbound_coalesce_window("audit_accepted"), 7200)
 
     @mute_logger(_GATE)
     def test_a_gate_with_no_credential_is_misconfigured_not_unauthenticated(self):

@@ -2412,7 +2412,7 @@ class AccountMoveLine(models.Model):
             moves._check_balanced(move_container),
             ExitStack() as exit_stack,
             self.env.protecting(
-                self.env["account.move"]._get_protected_vals({}, moves)
+                self.env["account.move"]._get_field_protections({}, moves)
             ),
             moves._sync_dynamic_lines(move_container),
             self._sync_invoice(container),
@@ -2423,9 +2423,9 @@ class AccountMoveLine(models.Model):
                     [
                         protected
                         for vals, line in zip(vals_list, lines, strict=True)
-                        for protected in self.env["account.move"]._get_protected_vals(
-                            vals, line
-                        )
+                        for protected in self.env[
+                            "account.move"
+                        ]._get_field_protections(vals, line)
                     ]
                 )
             )
@@ -2599,7 +2599,7 @@ class AccountMoveLine(models.Model):
         with (
             self.move_id._check_balanced(move_container),
             self.env.protecting(
-                self.env["account.move"]._get_protected_vals(vals, self)
+                self.env["account.move"]._get_field_protections(vals, self)
             ),
             self.move_id._sync_dynamic_lines(move_container),
             self._sync_invoice({"records": self}),

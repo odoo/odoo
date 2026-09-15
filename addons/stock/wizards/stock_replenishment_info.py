@@ -114,7 +114,7 @@ class StockReplenishmentInfo(models.TransientModel):
     def _get_lead_days_and_description(self):
         self.check_singleton()
         orderpoint = self.orderpoint_id
-        orderpoints_values = orderpoint._get_lead_days_values()
+        orderpoints_values = orderpoint._prepare_lead_time_params()
         return orderpoint.rule_ids.with_context(
             global_horizon_days=orderpoint._get_horizon_days(),
         )._get_lead_days(

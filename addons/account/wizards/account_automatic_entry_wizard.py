@@ -348,7 +348,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         return counterpart_balances, grouped_source_lines
 
     @_debug.perf.timed
-    def _get_change_account_counterpart_line_vals(self, counterpart_balances):
+    def _prepare_change_account_counterpart_line_vals(self, counterpart_balances):
         line_vals = []
         for (
             counterpart_partner,
@@ -411,7 +411,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         return line_vals
 
     @_debug.perf.timed
-    def _get_change_account_source_line_vals(self, grouped_source_lines):
+    def _prepare_change_account_source_line_vals(self, grouped_source_lines):
         line_vals = []
         for (
             partner,
@@ -461,8 +461,10 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         counterpart_balances, grouped_source_lines = (
             self._get_change_account_groupings()
         )
-        line_vals = self._get_change_account_counterpart_line_vals(counterpart_balances)
-        line_vals += self._get_change_account_source_line_vals(grouped_source_lines)
+        line_vals = self._prepare_change_account_counterpart_line_vals(
+            counterpart_balances
+        )
+        line_vals += self._prepare_change_account_source_line_vals(grouped_source_lines)
 
         accounts = self.env["account.account"].browse(
             [line["account_id"] for line in line_vals]

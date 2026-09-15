@@ -77,14 +77,14 @@ class HrExpenseSplitWizard(models.TransientModel):
             possible=self.split_possible,
         )
         if expense_split:
-            self.expense_id.write(expense_split._get_values())
+            self.expense_id.write(expense_split._prepare_expense_vals())
 
             self.expense_split_line_ids -= expense_split
             if self.expense_split_line_ids:
                 for split in self.expense_split_line_ids:
                     copied_expenses |= self.expense_id.with_context(
                         {"from_split_wizard": True}
-                    ).copy(split._get_values())
+                    ).copy(split._prepare_expense_vals())
 
                 attachment_ids = self.env["ir.attachment"].search(
                     [

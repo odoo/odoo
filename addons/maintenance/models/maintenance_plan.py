@@ -172,7 +172,7 @@ class MaintenancePlan(models.Model):
         quiet = self.with_context(skip_maintenance_reservations=True)
         res = super(MaintenancePlan, quiet).write(vals)
         if vals.get("active"):
-            self._ensure_open_order()
+            self._create_missing_open_orders()
         if vals.keys() & RESCHEDULING_FIELDS:
             for plan in quiet.filtered("active"):
                 plan._reschedule_open_order()
@@ -256,7 +256,7 @@ class MaintenancePlan(models.Model):
             self._prepare_order_vals(occurrence, previous)
         )
 
-    def _ensure_open_order(self):
+    def _create_missing_open_orders(self):
         for plan in self.filtered(
             lambda plan: plan.active and not plan._get_open_order()
         ):

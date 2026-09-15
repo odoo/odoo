@@ -201,7 +201,7 @@ class Store:
         self._add_values(values, model_name)
         return self
 
-    def delete(self, records: models.Model, as_thread: bool = False) -> Self:
+    def add_deletion(self, records: models.Model, as_thread: bool = False) -> Self:
         if not records:
             return self
         assert isinstance(records, models.Model)

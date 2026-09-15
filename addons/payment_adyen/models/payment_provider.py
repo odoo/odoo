@@ -1,7 +1,7 @@
 import json
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -137,7 +137,7 @@ class PaymentProvider(models.Model):
         converted_amount = (
             amount
             and currency_code
-            and payment_utils.to_minor_currency_units(
+            and payment_utils.major_to_minor_currency_units(
                 amount, currency, const.CURRENCY_DECIMALS.get(currency_code)
             )
         )

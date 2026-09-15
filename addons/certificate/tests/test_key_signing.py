@@ -46,19 +46,23 @@ class TestKeySigning(TransactionCase):
     def test_verify_accepts_a_genuine_rsa_signature(self):
         signature = self.Key._sign_with_key("m", self.pem_b64, formatting="raw")
         self.assertTrue(
-            self.Key._check_with_key("m", signature, self.pub_pem_b64),
+            self.Key._execute_signature_verification_with_key(
+                "m", signature, self.pub_pem_b64
+            ),
         )
 
     def test_verify_rejects_a_forged_rsa_signature(self):
         signature = self.Key._sign_with_key("m", self.pem_b64, formatting="raw")
         self.assertFalse(
-            self.Key._check_with_key("tampered", signature, self.pub_pem_b64),
+            self.Key._execute_signature_verification_with_key(
+                "tampered", signature, self.pub_pem_b64
+            ),
         )
 
     def test_verify_rejects_an_unsupported_hash(self):
         signature = self.Key._sign_with_key("m", self.pem_b64, formatting="raw")
         with self.assertRaises(UserError):
-            self.Key._check_with_key(
+            self.Key._execute_signature_verification_with_key(
                 "m",
                 signature,
                 self.pub_pem_b64,
@@ -139,14 +143,18 @@ class TestKeyCryptoOperations(TransactionCase):
 
     def test_verify_requires_public_key(self):
         with self.assertRaises(UserError):
-            self.ed_private._verify("payload", b"whatever")
+            self.ed_private._execute_signature_verification("payload", b"whatever")
 
     def test_ed25519_sign_verify_round_trip(self):
         signature = base64.b64decode(
             self.ed_private._sign("payload", formatting="base64")
         )
-        self.assertTrue(self.ed_public._verify("payload", signature))
-        self.assertFalse(self.ed_public._verify("tampered", signature))
+        self.assertTrue(
+            self.ed_public._execute_signature_verification("payload", signature)
+        )
+        self.assertFalse(
+            self.ed_public._execute_signature_verification("tampered", signature)
+        )
 
     def test_rsa_decrypt_round_trip(self):
         ciphertext = self.rsa_crypto_key.public_key().encrypt(
@@ -181,7 +189,7 @@ class TestKeyCryptoOperations(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestKeyDerLoading(TransactionCase):
-    """_load_pem_key's DER branches had zero test coverage: PEM- and
+    """_get_pem_key_and_metadata's DER branches had zero test coverage: PEM- and
     PKCS12-shaped fixtures exercised the loader everywhere else, but
     never a raw DER private or public key."""
 
@@ -247,4 +255,6 @@ class TestKeyDerLoading(TransactionCase):
             }
         )
         signature = base64.b64decode(private_key._sign("payload", formatting="base64"))
-        self.assertTrue(public_key._verify("payload", signature))
+        self.assertTrue(
+            public_key._execute_signature_verification("payload", signature)
+        )

@@ -91,13 +91,13 @@ class Schema:
             self.common_attrs,
             self.patch_attrs,
         ):
-            found = _lookup(table, attr)
+            found = _resolve_attribute_type(table, attr)
             if found is not None:
                 return found
         return None
 
 
-def _lookup(table: dict[str, AttrType], attr: str) -> AttrType | None:
+def _resolve_attribute_type(table: dict[str, AttrType], attr: str) -> AttrType | None:
     if attr in table:
         return table[attr]
     head, dash, _rest = attr.partition("-")

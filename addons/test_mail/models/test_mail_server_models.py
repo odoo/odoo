@@ -21,8 +21,8 @@ class ResUsers(models.Model):
     )
 
     @api.model
-    def _get_mail_server_values(self, server_type):
-        values = super()._get_mail_server_values(server_type)
+    def _prepare_mail_server_vals(self, server_type):
+        values = super()._prepare_mail_server_vals(server_type)
         if server_type == "test_provider":
             values |= {
                 "smtp_host": TEST_PROVIDER_SMTP_HOST,

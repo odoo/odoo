@@ -223,17 +223,17 @@ class ResCompany(models.Model):
         aml_vals_list = []
         accounts_by_product = self._get_accounts_by_product()
 
-        vals_list = self._get_location_valuation_vals(at_date)
+        vals_list = self._prepare_location_valuation_vals(at_date)
         if vals_list:
             aml_vals_list += vals_list
 
-        vals_list = self._get_stock_valuation_account_vals(
+        vals_list = self._prepare_stock_valuation_account_vals(
             accounts_by_product, at_date, aml_vals_list
         )
         if vals_list:
             aml_vals_list += vals_list
 
-        vals_list = self._get_continental_realtime_variation_vals(
+        vals_list = self._prepare_continental_realtime_variation_vals(
             accounts_by_product, at_date, aml_vals_list
         )
         if vals_list:
@@ -299,7 +299,7 @@ class ResCompany(models.Model):
             extra_balance[vals["account_id"]] += vals["debit"] - vals["credit"]
         return extra_balance
 
-    def _get_location_valuation_vals(self, at_date=None, location_domain=False):
+    def _prepare_location_valuation_vals(self, at_date=None, location_domain=False):
         _debug.perf.count("location_valuation_vals", company=self.id, at_date=at_date)
         location_domain = Domain.AND(
             [
@@ -381,7 +381,7 @@ class ResCompany(models.Model):
             amls_vals_list += amls_vals
         return amls_vals_list
 
-    def _get_stock_valuation_account_vals(
+    def _prepare_stock_valuation_account_vals(
         self, accounts_by_product, at_date=None, extra_aml_vals_list=None
     ):
         amls_vals_list = []
@@ -422,7 +422,7 @@ class ResCompany(models.Model):
 
         return amls_vals_list
 
-    def _get_continental_realtime_variation_vals(
+    def _prepare_continental_realtime_variation_vals(
         self, accounts_by_product, at_date=None, extra_aml_vals_list=None
     ):
         extra_balance = self._get_extra_balance(extra_aml_vals_list)

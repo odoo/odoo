@@ -203,7 +203,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             portal_page_values
             | payment_form_values
             | payment_context
-            | self._get_extra_payment_form_values(**kwargs)
+            | self._prepare_extra_payment_form_context(**kwargs)
         )
 
     @http.route()

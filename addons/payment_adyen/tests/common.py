@@ -29,7 +29,7 @@ class AdyenCommon(PaymentCommon):
             },
             "amount": {
                 "currency": cls.currency.name,
-                "value": payment_utils.to_minor_currency_units(
+                "value": payment_utils.major_to_minor_currency_units(
                     cls.amount, cls.currency
                 ),
             },

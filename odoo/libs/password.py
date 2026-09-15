@@ -83,7 +83,7 @@ class CryptContext:
     def hash(self, password: str) -> str:
         return pbkdf2_sha512_hash(password, self._rounds)
 
-    def verify(self, password: str, hash_str: str) -> bool:
+    def is_password_valid(self, password: str, hash_str: str) -> bool:
         parsed = _parse_hash(hash_str)
         if parsed:
             if "pbkdf2_sha512" not in self._schemes:
@@ -105,7 +105,7 @@ class CryptContext:
         return False
 
     def match_and_update(self, password: str, hash_str: str) -> tuple[bool, str | None]:
-        if not self.verify(password, hash_str):
+        if not self.is_password_valid(password, hash_str):
             return False, None
 
         needs_update = False

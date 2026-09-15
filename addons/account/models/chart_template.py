@@ -345,7 +345,7 @@ class AccountChartTemplate(models.AbstractModel):
         for company in companies:
             self.with_context(install_mode=True).sudo().with_context(
                 skip_pdf_attachment_generation=True
-            )._load_data(self._get_demo_data(company))
+            )._load_data(self._prepare_demo_data(company))
             self.with_context(install_mode=True)._post_load_demo_data(company)
 
     @_debug.perf.timed
@@ -1386,7 +1386,7 @@ class AccountChartTemplate(models.AbstractModel):
         return template_data
 
     @_debug.perf.timed
-    def _get_accounts_data_values(
+    def _prepare_utility_account_vals(
         self, company, template_data, bank_prefix="", code_digits=0
     ):
         bank_prefix = bank_prefix or company.bank_account_code_prefix
@@ -1440,7 +1440,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
         bank_prefix = company.bank_account_code_prefix
         code_digits = int(template_data.get("code_digits", 6))
-        accounts_data = self._get_accounts_data_values(company, template_data)
+        accounts_data = self._prepare_utility_account_vals(company, template_data)
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]

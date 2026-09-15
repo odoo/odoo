@@ -110,7 +110,7 @@ class TestFrenchWorkEntries(TransactionCase):
 
         # Get the create values for a week of work entries, it should only give us 4 entries ((am+pm) * 2)
         work_entry_create_vals = (
-            self.employee_contract._get_version_work_entries_values(
+            self.employee_contract._prepare_version_work_entries_values(
                 datetime(2021, 9, 6), datetime(2021, 9, 10, 23, 59, 59)
             )
         )
@@ -135,7 +135,7 @@ class TestFrenchWorkEntries(TransactionCase):
         with self.assertQueryCount(45):
             start_time = time.time()
             work_entry_create_vals = (
-                self.employee_contract._get_version_work_entries_values(
+                self.employee_contract._prepare_version_work_entries_values(
                     datetime(2021, 9, 6), datetime(2021, 9, 10, 23, 59, 59)
                 )
             )
@@ -150,7 +150,7 @@ class TestFrenchWorkEntries(TransactionCase):
 
         # Make sure that the gap filling does not go past the requested date
         work_entry_create_vals = (
-            self.employee_contract._get_version_work_entries_values(
+            self.employee_contract._prepare_version_work_entries_values(
                 datetime(2021, 9, 6), datetime(2021, 9, 9, 23, 59, 59)
             )
         )

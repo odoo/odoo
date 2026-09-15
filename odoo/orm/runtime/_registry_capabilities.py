@@ -54,10 +54,10 @@ def _get_text_transforms(
         cached = _TextTables.by_db.get(db_name)
         if cached is not None and cached.unaccent_enabled == unaccent_enabled:
             return cached
-        return _build_text_transforms(cr, db_name, unaccent_enabled)
+        return _reset_text_transforms(cr, db_name, unaccent_enabled)
 
 
-def _build_text_transforms(
+def _reset_text_transforms(
     cr: BaseCursor, db_name: str, unaccent_enabled: bool
 ) -> _TextTransforms:
     with _debug.perf(

@@ -52,7 +52,7 @@ class ProductAttributeValue(models.Model):
         compute="_compute_default_extra_price_changed"
     )
 
-    def _used_records(self):
+    def _filtered_used(self):
         return self.filtered("is_used_on_products")
 
     def _usage_label(self):

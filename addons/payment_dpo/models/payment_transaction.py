@@ -13,17 +13,17 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return DPO-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`.
+        Note: self.check_singleton() from `_prepare_processing_values`.
 
         :param dict processing_values: The generic processing values of the transaction.
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         if self.provider_code != "dpo":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         transaction_token = self._dpo_create_token()
         api_url = f"https://secure.3gdirectpay.com/payv2.php?ID={transaction_token}"
@@ -134,3 +134,4 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Unknown status code: %s", status_code))
+        return None

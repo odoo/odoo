@@ -56,7 +56,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @template()
-    def _get_stock_template_data(self, template_code):
+    def _prepare_stock_template_data(self, template_code):
         return {
             "stock_journal": "inventory_valuation",
         }

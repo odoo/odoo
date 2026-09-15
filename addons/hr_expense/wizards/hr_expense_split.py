@@ -142,7 +142,7 @@ class HrExpenseSplit(models.TransientModel):
                 )
             )
 
-    def _get_values(self):
+    def _prepare_expense_vals(self):
         self.check_singleton()
         vals = {
             "name": self.name,

@@ -454,7 +454,7 @@ class ResourceCalendar(models.Model):
                     + [
                         Command.create(vals)
                         for vals in self._single_week_attendance_vals(
-                            self._get_default_attendance_vals(self.company_id)
+                            self._prepare_default_attendance_vals(self.company_id)
                         )
                     ],
                 }
@@ -467,7 +467,7 @@ class ResourceCalendar(models.Model):
             self.attendance_ids.filtered(lambda att: att.day_period == "lunch").unlink()
             return
         default_vals = self._single_week_attendance_vals(
-            self._get_default_attendance_vals(self.company_id)
+            self._prepare_default_attendance_vals(self.company_id)
         )
         if self.two_weeks_calendar:
             commands = self._get_two_weeks_attendance(default_vals)
@@ -1122,10 +1122,10 @@ class ResourceCalendar(models.Model):
     def _get_default_attendance_ids(self, company_id=None):
         return [
             Command.create(vals)
-            for vals in self._get_default_attendance_vals(company_id)
+            for vals in self._prepare_default_attendance_vals(company_id)
         ]
 
-    def _get_default_attendance_vals(self, company_id=None):
+    def _prepare_default_attendance_vals(self, company_id=None):
         if company_id and (
             attendances := company_id.resource_calendar_id.attendance_ids
         ):

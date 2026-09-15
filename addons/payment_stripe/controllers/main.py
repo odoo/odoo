@@ -60,7 +60,7 @@ class StripeController(http.Controller):
         redirection to Stripe or to an external service (e.g., for strong authentication).
 
         :param dict data: The payment data, including the reference appended to the URL in
-                          `_get_specific_processing_values`.
+                          `_prepare_provider_processing_values`.
         """
         # Retrieve the transaction based on the reference included in the return url.
         tx_sudo = (
@@ -225,7 +225,7 @@ class StripeController(http.Controller):
         :rtype: recordset of `payment.transaction`
         """
         amount_to_refund = refund_object["amount"]
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = payment_utils.minor_to_major_currency_units(
             amount_to_refund,
             source_tx_sudo.currency_id,
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
@@ -251,32 +251,30 @@ class StripeController(http.Controller):
                 "refused a webhook event: provider %s has no webhook secret to check it",
                 tx_sudo.provider_id.name,
             )
-            raise Forbidden()
+            raise Forbidden
 
         notification_payload = request.httprequest.data.decode("utf-8")
         signature_entries = request.httprequest.headers["Stripe-Signature"].split(",")
-        signature_data = {
-            k: v for k, v in [entry.split("=") for entry in signature_entries]
-        }
+        signature_data = dict([entry.split("=") for entry in signature_entries])
 
         # Retrieve the timestamp from the data
         event_timestamp = int(signature_data.get("t", "0"))
         if not event_timestamp:
             _logger.warning("Received payment data with missing timestamp")
-            raise Forbidden()
+            raise Forbidden
 
         # Check if the timestamp is not too old
         if datetime.now(UTC).timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning(
                 "Received payment data with outdated timestamp: %s", event_timestamp
             )
-            raise Forbidden()
+            raise Forbidden
 
         # Retrieve the received signature from the data
         received_signature = signature_data.get("v1")
         if not received_signature:
             _logger.warning("Received payment data with missing signature")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data
         signed_payload = f"{event_timestamp}.{notification_payload}"
@@ -287,7 +285,7 @@ class StripeController(http.Controller):
         ).hexdigest()
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature")
-            raise Forbidden()
+            raise Forbidden
 
     @http.route(
         _apple_pay_domain_association_url, type="http", methods=["GET"], auth="public"

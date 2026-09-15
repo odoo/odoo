@@ -145,7 +145,7 @@ class TestMondialRelayShipping(WebsiteSaleCommon, HttpCase):
         target = self.env["phone.number"].create(
             {"number": "+32000444012", "sequence": 100}
         )
-        self.partner.write(self.partner._get_phone_replacement_values(target))
+        self.partner.write(self.partner._prepare_phone_replacement_vals(target))
         reused = self.partner._mondialrelay_search_or_create(self.relay_data)
         self.env.flush_all()
         self.env.invalidate_all()

@@ -44,7 +44,7 @@ def stable_order(order: str | None, tiebreak: str = "id ASC") -> str | None:
     return order
 
 
-def fetch_columns(
+def prepare_column_fetcher(
     model: models.BaseModel, fnames: Sequence[str]
 ) -> Callable[[Query], list[tuple]]:
     def fetch(query: Query) -> list[tuple]:

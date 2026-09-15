@@ -624,7 +624,7 @@ active ←──→ broken
 | `_send_gamification_notification()` | various | Bus notification to user's partner |
 | `get_gamification_dashboard_data()` | @api.model RPC | Aggregate all gamification data for dashboard |
 | `_get_next_rank()` | explicit call | Return next karma rank for this user |
-| `get_gamification_redirection_data()` | extension hook | Add redirect buttons to rank-reached email |
+| `prepare_rank_email_links()` | extension hook | Add redirect buttons to rank-reached email |
 | `action_karma_report()` | UI action | Open karma tracking list for this user |
 | `_get_tracking_karma_gain_position()` | explicit call | Ranked karma gain in date range (SQL) |
 | `_get_karma_position()` | explicit call | Absolute total-karma rank position (SQL) |

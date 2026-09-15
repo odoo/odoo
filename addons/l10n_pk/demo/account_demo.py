@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, api, fields, models
@@ -9,8 +7,8 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data_move(self, company=False):
-        moves = super()._get_demo_data_move(company)
+    def _prepare_demo_data_move(self, company=False):
+        moves = super()._prepare_demo_data_move(company)
         if company.account_fiscal_country_id.code == "PK":
             sale_journal = self.env["account.journal"].search(
                 domain=[

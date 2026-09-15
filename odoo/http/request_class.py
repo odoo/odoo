@@ -259,7 +259,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             werkzeug.datastructures.ImmutableMultiDict(value),
         )
 
-    def get_default_context(self) -> dict[str, Any]:
+    def prepare_default_context(self) -> dict[str, Any]:
         return {"lang": self.get_default_lang()}
 
     def get_default_lang(self) -> str:

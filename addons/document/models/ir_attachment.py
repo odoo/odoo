@@ -115,7 +115,7 @@ class IrAttachment(models.Model):
             document_vals
             for attachment in candidates
             if attachment.id not in already_documented
-            and (document_vals := record._get_document_vals(attachment))
+            and (document_vals := record._prepare_document_vals(attachment))
         ]
         if not vals_list:
             _debug.logic(

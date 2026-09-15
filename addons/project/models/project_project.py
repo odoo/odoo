@@ -2853,9 +2853,9 @@ class ProjectProject(models.Model):
             ]
         )
 
-    def _get_account_node_context(self, plan: Any) -> dict:
+    def _prepare_account_node_context(self, plan: Any) -> dict:
         return {
-            **super()._get_account_node_context(plan),
+            **super()._prepare_account_node_context(plan),
             "default_company_id": unquote("company_id"),
         }
 

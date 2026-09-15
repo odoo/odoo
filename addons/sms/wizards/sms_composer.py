@@ -430,7 +430,7 @@ class SmsComposer(models.TransientModel):
                 sms_record_values_filtered[record.id]["mail_message_id"] = (
                     mail_messages[idx].id
                 )
-        sms_all = self._prepare_mass_sms(records_filtered, sms_record_values_filtered)
+        sms_all = self._create_mass_sms(records_filtered, sms_record_values_filtered)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == "outgoing").send(
@@ -537,7 +537,7 @@ class SmsComposer(models.TransientModel):
             }
         return result
 
-    def _prepare_mass_sms(self, records, sms_record_values):
+    def _create_mass_sms(self, records, sms_record_values):
         sms_create_vals = [sms_record_values[record.id] for record in records]
         return self.env["sms.sms"].sudo().create(sms_create_vals)
 

@@ -304,7 +304,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # OVERRIDES account.edi.ubl_21
         grouping_key = vals["grouping_key"]
         is_withholding = grouping_key["tax_category_code"] == "9015"
-        tax_category_node = {
+        return {
             "cac:TaxScheme": {
                 "cbc:Name": {
                     "_text": "KDV Tevkifatı" if is_withholding else "Gerçek Usulde KDV"
@@ -312,7 +312,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 "cbc:TaxTypeCode": {"_text": grouping_key["tax_category_code"]},
             }
         }
-        return tax_category_node
 
     def _get_tax_subtotal_node(self, vals):
         # EXTENDS account.edi.xml.ubl_21
@@ -378,9 +377,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
+    def _prepare_partner_import_params(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
-        partner_vals = super()._import_retrieve_partner_vals(tree, role)
+        partner_vals = super()._prepare_partner_import_params(tree, role)
         partner_vals.update(
             {
                 "vat": self._find_value(
@@ -391,9 +390,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         )
         return partner_vals
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
+    def _update_invoice_from_xml(self, invoice, tree, qty_factor):
         # EXTENDS account.edi.xml.ubl_20
-        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+        logs = super()._update_invoice_from_xml(invoice, tree, qty_factor)
 
         # ==== Nilvera UUID ====
         if uuid_node := tree.findtext("./{*}UUID"):

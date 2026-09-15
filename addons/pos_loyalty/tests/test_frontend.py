@@ -3104,10 +3104,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_program_tag = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
 
         loyalty_program.reward_ids.write(
@@ -3826,7 +3826,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_program.write(
             {

@@ -34,7 +34,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             ),
             mute_logger("odoo.addons.payment.models.payment_transaction"),
         ):
-            processing_values = tx._get_processing_values()
+            processing_values = tx._prepare_processing_values()
 
         self.assertEqual(processing_values["client_secret"], dummy_client_secret)
 

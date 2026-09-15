@@ -50,7 +50,7 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/_query.py", "exists"): "equivalent",
     ("models/mixins/_properties.py", "get_property_definition"): (
         "equivalent: the definition column is scanned as stored through "
-        "backend.columns.scan -- every row holding one, by id -- and the first "
+        "backend.columns.get_column_values -- every row holding one, by id -- and the first "
         "entry naming the property answers, the raw jsonb on PostgreSQL and the "
         "row's dict in memory, an invalid comodel written to it included"
     ),

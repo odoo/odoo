@@ -186,10 +186,10 @@ class PaymentProvider(models.Model):
             "target": "self",
         }
 
-    def _get_reset_values(self):
+    def _prepare_credential_reset_vals(self):
         """Override of `payment` to supply the provider-specific credential values to reset."""
         if self.code != "mercado_pago":
-            return super()._get_reset_values()
+            return super()._prepare_credential_reset_vals()
 
         return {
             "mercado_pago_access_token": None,

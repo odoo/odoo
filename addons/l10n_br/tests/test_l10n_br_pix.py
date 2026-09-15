@@ -62,7 +62,7 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
         self.invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "NFe TÉST 0001"  # É and spaces should be removed
 
-        emv_qr_vals = self.invoice.partner_bank_id._get_qr_vals(
+        emv_qr_vals = self.invoice.partner_bank_id._prepare_qr_payload(
             qr_method=self.invoice.qr_code_method,
             amount=self.invoice.amount_residual,
             currency=self.invoice.currency_id,

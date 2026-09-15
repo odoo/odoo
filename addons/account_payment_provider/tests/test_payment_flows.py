@@ -58,7 +58,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         payment_portal_controller = PaymentPortal()
 
         with patch.object(CustomerPortal, "_document_check_access") as mock:
-            payment_portal_controller._get_extra_payment_form_values()
+            payment_portal_controller._prepare_extra_payment_form_context()
             self.assertEqual(
                 mock.call_count,
                 0,
@@ -67,7 +67,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
 
             mock.reset_mock()
 
-            payment_portal_controller._get_extra_payment_form_values(
+            payment_portal_controller._prepare_extra_payment_form_context(
                 invoice_id=self.misc_entry.id, access_token="whatever"
             )
             self.assertEqual(
@@ -94,7 +94,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
             ) as check_payment_access_token_mock,
         ):
             with self.assertRaises(AccessError):
-                payment_portal_controller._get_extra_payment_form_values(
+                payment_portal_controller._prepare_extra_payment_form_context(
                     invoice_id=self.misc_entry.id, access_token="whatever"
                 )
             self.assertEqual(

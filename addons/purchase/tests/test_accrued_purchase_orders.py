@@ -406,4 +406,4 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             UserError,
             msg="An error should be raised if two different currencies are used for Accrued Expense Entry.",
         ):
-            accrued_wizard._get_move_vals()
+            accrued_wizard._prepare_accrual_move_data()

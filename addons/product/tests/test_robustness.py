@@ -275,7 +275,7 @@ class TestCodeQualityFixes(ProductCommon):
 
     def test_q11_simplified_pricelist_vals(self):
         company = self.env.company
-        vals = company._get_default_pricelist_vals()
+        vals = company._prepare_default_pricelist_vals()
         self.assertIn("name", vals)
         self.assertIn("currency_id", vals)
         self.assertIn("company_id", vals)

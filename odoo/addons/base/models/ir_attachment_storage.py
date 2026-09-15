@@ -88,7 +88,7 @@ class AttachmentStorage:
     def read(self, key: str, size: int | None = None) -> bytes:
         raise NotImplementedError
 
-    def delete(self, key: str) -> None:
+    def remove(self, key: str) -> None:
         raise NotImplementedError
 
     def to_stream(self, attachment: Any, stream: Stream) -> Stream:
@@ -109,7 +109,7 @@ class UnknownSchemeStorage(AttachmentStorage):
         _debug.logic("unknown_scheme", op="read", key=key)
         return b""
 
-    def delete(self, key: str) -> None:
+    def remove(self, key: str) -> None:
         _logger.warning("No storage backend can delete %r; leaving it in place", key)
         _debug.logic("unknown_scheme", op="delete", key=key)
 
@@ -167,7 +167,7 @@ class FileStorage(AttachmentStorage):
     def read(self, key: str, size: int | None = None) -> bytes:
         return self._model()._read_file(key, size=size)
 
-    def delete(self, key: str) -> None:
+    def remove(self, key: str) -> None:
         _debug.lifecycle("file_marked_for_gc", key=key)
         self._model()._mark_for_gc(key)
 

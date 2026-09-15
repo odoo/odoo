@@ -45,7 +45,7 @@ def _base_names(node: ast.ClassDef) -> list[str]:
     return out
 
 
-def scan(tests_dir: pathlib.Path) -> list[FileFacts]:
+def read_test_inventory(tests_dir: pathlib.Path) -> list[FileFacts]:
     facts = []
     for path in sorted(tests_dir.glob("test_*.py")):
         entry = FileFacts(path.name)
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     mod = pathlib.Path(sys.argv[1])
     doc_path = mod / "machine_doc_v1" / "TEST_TAGS.md"
     current = doc_path.read_text()
-    rendered = render(current, scan(mod / "tests"))
+    rendered = render(current, read_test_inventory(mod / "tests"))
     if len(sys.argv) > 2 and sys.argv[2] == "--update":
         if rendered != current:
             doc_path.write_text(rendered)

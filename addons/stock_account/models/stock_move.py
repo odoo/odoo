@@ -364,7 +364,7 @@ class StockMove(models.Model):
                 )
             aml_vals_list = []
             for move in moves:
-                aml_vals_list += move._get_account_move_line_vals(
+                aml_vals_list += move._prepare_account_move_line_vals(
                     accounts=move._get_valuation_accounts(accounts_cache)
                 )
             if not aml_vals_list:
@@ -415,7 +415,7 @@ class StockMove(models.Model):
 
     def _create_analytic_move(self):
         for move in self:
-            analytic_line_vals = move._prepare_analytic_lines()
+            analytic_line_vals = move._update_analytic_lines()
             if analytic_line_vals:
                 move.analytic_account_line_ids += (
                     self.env["account.analytic.line"].sudo().create(analytic_line_vals)
@@ -426,7 +426,7 @@ class StockMove(models.Model):
                     lines=len(analytic_line_vals),
                 )
 
-    def _get_account_move_line_vals(self, accounts=None):
+    def _prepare_account_move_line_vals(self, accounts=None):
         if accounts is None:
             accounts = self._get_valuation_accounts()
         source_acc = self.location_id.valuation_account_id
@@ -881,7 +881,7 @@ class StockMove(models.Model):
     def _is_outgoing(self):
         return super()._is_outgoing() and not self._is_dropshipped_returned()
 
-    def _prepare_analytic_lines(self):
+    def _update_analytic_lines(self):
         self.check_singleton()
         if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
             return False

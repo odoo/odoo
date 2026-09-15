@@ -17,7 +17,7 @@
                 <t t-set="attribute" t-value="ptal.attribute_id" />
                 <t
                     t-set="ptavs"
-                    t-value="ptal.product_template_value_ids._only_active()" />
+                    t-value="ptal.product_template_value_ids._filtered_active()" />
                 <t t-set="single" t-value="len(ptavs) == 1" />
 
                 <li

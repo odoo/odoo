@@ -4,7 +4,10 @@ from odoo import api, models
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.mail.tools.access_scan import fetch_columns, get_accessible_query
+from odoo.addons.mail.tools.access_scan import (
+    get_accessible_query,
+    prepare_column_fetcher,
+)
 
 if typing.TYPE_CHECKING:
     from odoo.api import DomainType
@@ -60,7 +63,9 @@ class MailFollowers(models.Model):
             limit,
             order,
             super()._search,
-            fetch=fetch_columns(self, ("id", "res_model", "res_id", "partner_id")),
+            fetch=prepare_column_fetcher(
+                self, ("id", "res_model", "res_id", "partner_id")
+            ),
             allowed=allowed,
             chunk_min=self._SEARCH_ACCESS_CHUNK_MIN,
             chunk_max=self._SEARCH_ACCESS_CHUNK_MAX,

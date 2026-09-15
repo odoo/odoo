@@ -303,9 +303,9 @@ class PurchaseOrder(models.Model):
         ]
         return action
 
-    def _get_action_add_from_catalog_extra_context(self):
+    def _prepare_catalog_extra_context(self):
         return {
-            **super()._get_action_add_from_catalog_extra_context(),
+            **super()._prepare_catalog_extra_context(),
             "warehouse_id": (
                 self.picking_type_id.warehouse_id.id if self.picking_type_id else False
             ),
@@ -454,7 +454,7 @@ class PurchaseOrder(models.Model):
                     (order.company_id or self.env.company).id
                 )
 
-    def _get_action_view_picking_context(self, pickings):
+    def _prepare_picking_action_context(self, pickings):
         self.check_singleton()
         return {
             "default_partner_id": self.partner_id.id,

@@ -21,7 +21,9 @@ class WorldlineCommon(PaymentCommon):
         cls.provider = cls.worldline
         cls.currency = cls.currency_euro
         cls.notification_amount_and_currency = {
-            "amount": payment_utils.to_minor_currency_units(cls.amount, cls.currency),
+            "amount": payment_utils.major_to_minor_currency_units(
+                cls.amount, cls.currency
+            ),
             "currencyCode": cls.currency.name,
         }
 

@@ -151,7 +151,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         for record in self:
             preview_vals = [
                 self.env["account.move"]._move_dict_to_preview_vals(
-                    record._get_move_vals()[0],
+                    record._prepare_accrual_move_data()[0],
                     record.company_id.currency_id,
                 )
             ]
@@ -187,7 +187,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         else:
             return accounts["income"]
 
-    def _get_aml_vals(
+    def _prepare_aml_vals(
         self,
         order,
         balance,
@@ -243,9 +243,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             )
         return orders, lines, is_purchase
 
-    def _get_manual_accrual_aml_vals(self, order, order_line, is_purchase):
+    def _prepare_manual_accrual_aml_vals(self, order, order_line, is_purchase):
         account = self._get_computed_account(order, order_line.product_id, is_purchase)
-        return self._get_aml_vals(
+        return self._prepare_aml_vals(
             order,
             self.amount,
             0,
@@ -355,7 +355,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             )
         return amount, amount_currency, account, label
 
-    def _get_order_accrual_aml_vals(
+    def _prepare_order_accrual_aml_vals(
         self, order, lines, is_purchase, amounts_by_perpetual_account
     ):
         values = []
@@ -372,7 +372,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     )
                 )
             values.append(
-                self._get_aml_vals(
+                self._prepare_aml_vals(
                     order,
                     amount,
                     amount_currency,
@@ -398,7 +398,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 )
         return analytic_distribution
 
-    def _get_perpetual_valuation_aml_vals(
+    def _prepare_perpetual_valuation_aml_vals(
         self, orders, is_purchase, amounts_by_perpetual_account
     ):
         values = []
@@ -413,7 +413,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             else:
                 label = _("(*) Goods Invoiced not Delivered (perpetual valuation)")
             values.append(
-                self._get_aml_vals(
+                self._prepare_aml_vals(
                     orders,
                     amount,
                     0.0,
@@ -423,7 +423,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 )
             )
             values.append(
-                self._get_aml_vals(
+                self._prepare_aml_vals(
                     orders, -amount, 0.0, expense_account.id, is_purchase, label=label
                 )
             )
@@ -436,7 +436,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         return values
 
     @_debug.perf.timed
-    def _get_move_vals(self):
+    def _prepare_accrual_move_data(self):
         self.check_singleton()
         orders, lines, is_purchase = self._get_accrual_orders_and_lines()
         move_lines = []
@@ -458,14 +458,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 total_balance = self.amount
                 move_lines.append(
                     Command.create(
-                        self._get_manual_accrual_aml_vals(
+                        self._prepare_manual_accrual_aml_vals(
                             order, product_lines[0], is_purchase
                         )
                     )
                 )
                 orders_with_entries |= order
             else:
-                order_vals, order_balance = self._get_order_accrual_aml_vals(
+                order_vals, order_balance = self._prepare_order_accrual_aml_vals(
                     order, lines, is_purchase, amounts_by_perpetual_account
                 )
                 if order_vals:
@@ -484,7 +484,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         if not self.company_id.currency_id.is_zero(total_balance):
             move_lines.append(
                 Command.create(
-                    self._get_aml_vals(
+                    self._prepare_aml_vals(
                         orders,
                         -total_balance,
                         0.0,
@@ -500,7 +500,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         move_lines += [
             Command.create(vals)
-            for vals in self._get_perpetual_valuation_aml_vals(
+            for vals in self._prepare_perpetual_valuation_aml_vals(
                 orders, is_purchase, amounts_by_perpetual_account
             )
         ]
@@ -540,7 +540,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         if self.reversal_date <= self.date:
             raise UserError(_("Reversal date must be posterior to date."))
-        move_vals, orders_with_entries = self._get_move_vals()
+        move_vals, orders_with_entries = self._prepare_accrual_move_data()
         _debug.pipeline(
             "reversal",
             accrual=self,

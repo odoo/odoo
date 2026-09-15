@@ -945,12 +945,12 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
             and results_count == report.load_more_limit
         )
 
-    def _get_additional_column_aml_values(self):
+    def _prepare_additional_aml_columns_sql(self):
         """Hook returning the additional fields to select in the partner ledger query."""
         # Meant to be overridden by other modules, e.g. SQL("account_move_line.date AS date,").
         return SQL()
 
-    def _get_order_by_aml_values(self):
+    def _prepare_aml_order_by_sql(self):
         return SQL("account_move_line.date, account_move_line.id")
 
     @_debug.perf.timed
@@ -988,8 +988,8 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         queries = []
         journal_name = self.env["account.journal"]._field_to_sql("journal", "name")
         report = self.env.ref("account.partner_ledger_report")
-        additional_columns = self._get_additional_column_aml_values()
-        order_by = self._get_order_by_aml_values()
+        additional_columns = self._prepare_additional_aml_columns_sql()
+        order_by = self._prepare_aml_order_by_sql()
         for column_group_key, group_options in report._split_options_per_column_group(
             options
         ).items():

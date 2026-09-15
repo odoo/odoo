@@ -113,15 +113,17 @@ class AccountEdiXmlCii(models.AbstractModel):
                     "You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
                     "shall be categorized with an Invoiced item VAT category code (BT-151)."
                 )
+        return None
 
     def _check_non_0_rate_tax(self, vals):
         for line_vals in vals["tax_details"]["tax_details_per_record"]:
             tax_rate_list = line_vals.tax_ids.flatten_taxes_hierarchy().mapped("amount")
-            if not any([rate > 0 for rate in tax_rate_list]):
+            if not any(rate > 0 for rate in tax_rate_list):
                 return _(
                     "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
                     "each invoice line should be greater than 0."
                 )
+        return None
 
     def _get_scheduled_delivery_time(self, invoice):
         # don't create a bridge only to get line.sale_line_ids.order_id.picking_ids.date_done
@@ -133,7 +135,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         # don't create a bridge to get the date range from the timesheet_ids
         return [invoice.invoice_date]
 
-    def _get_exchanged_document_vals(self, invoice):
+    def _prepare_exchanged_document_data(self, invoice):
         return {
             "id": invoice.name,
             "type_code": "380" if invoice.move_type == "out_invoice" else "381",
@@ -208,7 +210,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             "is_html_empty": is_html_empty,
             "scheduled_delivery_time": self._get_scheduled_delivery_time(invoice),
             "intracom_delivery": False,
-            "ExchangedDocument_vals": self._get_exchanged_document_vals(invoice),
+            "ExchangedDocument_vals": self._prepare_exchanged_document_data(invoice),
             "seller_specified_legal_organization": invoice.company_id.company_registry,
             "buyer_specified_legal_organization": invoice.commercial_partner_id.company_registry,
             "ship_to_trade_party": invoice.partner_shipping_id
@@ -348,7 +350,7 @@ class AccountEdiXmlCii(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
+    def _prepare_partner_import_params(self, tree, role):
         return {
             "vat": self._find_value(
                 f".//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]",
@@ -384,7 +386,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             ),
         }
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
+    def _update_invoice_from_xml(self, invoice, tree, qty_factor):
         logs = []
         invoice_values = {}
         if qty_factor == -1:
@@ -399,7 +401,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             else "BuyerTradeParty"
         )
         partner, partner_logs = self._import_partner(
-            invoice.company_id, **self._import_retrieve_partner_vals(tree, role)
+            invoice.company_id, **self._prepare_partner_import_params(tree, role)
         )
         # Need to set partner before to compute bank and lines properly
         invoice.partner_id = partner.id

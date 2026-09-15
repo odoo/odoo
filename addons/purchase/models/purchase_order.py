@@ -382,12 +382,12 @@ class PurchaseOrder(models.Model):
     def _get_mail_composer_action_name(self):
         return _("Compose Email")
 
-    def _get_mail_composer_context(self):
-        return {**self.env.context, **super()._get_mail_composer_context()}
+    def _prepare_mail_composer_context(self):
+        return {**self.env.context, **super()._prepare_mail_composer_context()}
 
-    def _get_mail_composer_lang_context(self):
+    def _prepare_mail_composer_lang_context(self):
         return {
-            **super()._get_mail_composer_lang_context(),
+            **super()._prepare_mail_composer_lang_context(),
             "model_description": self.type_name,
         }
 
@@ -526,9 +526,9 @@ class PurchaseOrder(models.Model):
         res["context"]["partner_id"] = self.partner_id.id
         return res
 
-    def _get_action_add_from_catalog_extra_context(self):
+    def _prepare_catalog_extra_context(self):
         return {
-            **super()._get_action_add_from_catalog_extra_context(),
+            **super()._prepare_catalog_extra_context(),
             "precision": self.env["decimal.precision"].get_precision("Product Unit"),
             "product_catalog_currency_id": self.currency_id.id,
             "product_catalog_digits": self.line_ids._fields["price_unit"].get_digits(
@@ -681,7 +681,7 @@ class PurchaseOrder(models.Model):
             return self.get_acknowledge_url()
         return self.get_portal_url()
 
-    def _get_default_create_section_values(self):
+    def _prepare_default_create_section_values(self):
         return {"product_qty": 0}
 
     def get_localized_date_commitment(self, date_commitment=False):

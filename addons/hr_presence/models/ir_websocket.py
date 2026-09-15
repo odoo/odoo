@@ -14,7 +14,7 @@ class IrWebsocket(models.AbstractModel):
         super()._update_mail_presence(inactivity_period)
         if not self.env.user._is_internal():
             return
-        if not self.env["res.company"]._hr_presence_any_ip_control():
+        if not self.env["res.company"]._is_presence_ip_tracking_enabled():
             return
         employee = (
             self.env["hr.employee"]

@@ -451,7 +451,7 @@ class PdfSigner:
             _logger.warning("Cannot sign PDF: %s", msg)
             raise PdfSignatureError(msg)
 
-        pdf_data = self._get_document_data()
+        pdf_data = self._prepare_document_bytes()
 
         located = self._locate_contents_placeholder(pdf_data)
         if located is None:
@@ -477,7 +477,7 @@ class PdfSigner:
             {NameObject("/ByteRange"): self._create_number_array_object(byte_range)}
         )
 
-        pdf_data = self._get_document_data()
+        pdf_data = self._prepare_document_bytes()
 
         if pdf_data[placeholder_start:placeholder_end] != placeholder:
             msg = (
@@ -516,7 +516,7 @@ class PdfSigner:
         )
         return True
 
-    def _get_document_data(self) -> bytes:
+    def _prepare_document_bytes(self) -> bytes:
         output_stream = io.BytesIO()
         self.writer.write_stream(output_stream)
         return output_stream.getvalue()

@@ -14,19 +14,19 @@ class PaymentTransaction(models.Model):
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
-    def _get_specific_processing_values(self, processing_values):
+    def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return Adyen-specific processing values.
 
-        Note: self.check_singleton() from `_get_processing_values`
+        Note: self.check_singleton() from `_prepare_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
         if self.provider_code != "adyen":
-            return super()._get_specific_processing_values(processing_values)
+            return super()._prepare_provider_processing_values(processing_values)
 
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount,
             self.currency_id,
             const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -47,7 +47,7 @@ class PaymentTransaction(models.Model):
             return super()._send_payment_request()
 
         # Prepare the payment request to Adyen.
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount,
             self.currency_id,
             const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -112,6 +112,7 @@ class PaymentTransaction(models.Model):
             ),
         )
         self._process("adyen", response_content)
+        return None
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Adyen."""
@@ -119,7 +120,7 @@ class PaymentTransaction(models.Model):
             return super()._send_capture_request()
 
         # Send the capture request to Adyen.
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             self.amount,
             self.currency_id,
             const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -155,6 +156,7 @@ class PaymentTransaction(models.Model):
         # The PSP reference associated with this capture request is different from the PSP
         # reference associated with the original payment request.
         self.provider_reference = response_content.get("pspReference")
+        return None
 
     def _send_void_request(self):
         """Override of `payment` to send a void request to Adyen."""
@@ -185,6 +187,7 @@ class PaymentTransaction(models.Model):
         # The PSP reference associated with this void request is different from the PSP
         # reference associated with the original payment request.
         self.provider_reference = response_content.get("pspReference")
+        return None
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Adyen."""
@@ -192,7 +195,7 @@ class PaymentTransaction(models.Model):
             return super()._send_refund_request()
 
         # Send the refund request to Adyen.
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = payment_utils.major_to_minor_currency_units(
             -self.amount,  # The amount is negative for refund transactions
             self.currency_id,
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -219,6 +222,7 @@ class PaymentTransaction(models.Model):
             # The PSP reference associated with this /refunds request is different from the psp
             # reference associated with the original payment request.
             self.provider_reference = psp_reference
+        return None
 
     # === BUSINESS METHODS - PROCESSING === #
 
@@ -258,12 +262,14 @@ class PaymentTransaction(models.Model):
             )
             if source_tx:
                 payment_data_amount = payment_data.get("amount", {}).get("value")
-                converted_notification_amount = payment_utils.to_major_currency_units(
-                    payment_data_amount,
-                    source_tx.currency_id,
-                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
-                        self.currency_id.name
-                    ),
+                converted_notification_amount = (
+                    payment_utils.minor_to_major_currency_units(
+                        payment_data_amount,
+                        source_tx.currency_id,
+                        arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(
+                            self.currency_id.name
+                        ),
+                    )
                 )
                 if (
                     source_tx.amount == converted_notification_amount
@@ -344,7 +350,7 @@ class PaymentTransaction(models.Model):
             )
             return self.env["payment.transaction"]
 
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = payment_utils.minor_to_major_currency_units(
             amount,
             source_tx.currency_id,
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -368,7 +374,7 @@ class PaymentTransaction(models.Model):
             return None  # Skip the validation
 
         amount_data = payment_data.get("amount", {})
-        amount = payment_utils.to_major_currency_units(
+        amount = payment_utils.minor_to_major_currency_units(
             amount_data.get("value", 0),
             self.currency_id,
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
@@ -496,6 +502,7 @@ class PaymentTransaction(models.Model):
                 "Adyen: "
                 + _("Received data with invalid payment state: %s", payment_state)
             )
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

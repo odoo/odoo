@@ -26,7 +26,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
             options["comparison"]["hide_period_order_filter"] = True
 
         # Modify column headers and group structure
-        column_headers, column_groups, columns = self._get_column_values(
+        column_headers, column_groups, columns = self._prepare_trial_balance_columns(
             report, options
         )
 
@@ -53,7 +53,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
                 group_vals["forced_options"]["no_impact_on_currency_table"] = True
 
     @_debug.perf.timed
-    def _get_column_values(self, report, options):
+    def _prepare_trial_balance_columns(self, report, options):
         """Generate the column headers, column groups and columns of the trial balance report.
 
         :return: a (headers, groups, columns) tuple

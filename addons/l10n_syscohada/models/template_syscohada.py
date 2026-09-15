@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("syscohada")
-    def _get_syscohada_template_data(self):
+    def _prepare_syscohada_template_data(self):
         return {
             "visible": False,
             "property_account_receivable_id": "pcg_4111",

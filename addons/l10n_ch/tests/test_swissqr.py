@@ -56,7 +56,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         account = self.env["account.account"].search(
             [("account_type", "=", "asset_current")], limit=1
         )
-        invoice = self.env["account.move"].create(
+        return self.env["account.move"].create(
             {
                 "move_type": "out_invoice",
                 "partner_id": self.customer.id,
@@ -77,8 +77,6 @@ class TestSwissQR(AccountTestInvoicingCommon):
                 ],
             }
         )
-
-        return invoice
 
     def create_account(self, number):
         """Generates a test res.partner.bank."""
@@ -168,7 +166,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "value": payload,
         }
 
-        params = invoice.partner_bank_id._get_qr_code_generation_params(
+        params = invoice.partner_bank_id._prepare_qr_rendering_params(
             "ch_qr",
             42.0,
             invoice.currency_id,

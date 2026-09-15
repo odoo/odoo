@@ -581,6 +581,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 and tax_data["tax"].amount_type == "fixed"
             ):
                 return vals["total_grouping_function"](base_line, tax_data)
+            return None
 
         for currency_suffix in ["", "_currency"]:
             for key in ["total_allowance", "total_charge", "total_lines"]:
@@ -1036,6 +1037,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 and tax_data["tax"].amount_type == "fixed"
             ):
                 return vals["total_grouping_function"](base_line, tax_data)
+            return None
 
         aggregated_tax_details = self.env[
             "account.tax"
@@ -1075,7 +1077,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         discount_factor = 1 - (base_line["discount"] / 100.0)
 
-        if discount_factor != 0.0:
+        if discount_factor:
             gross_subtotal_currency = base_line["currency_id"].round(
                 raw_total_excluded_currency / discount_factor
             )
@@ -1090,7 +1092,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 gross_subtotal_currency / base_line["rate"]
             )
 
-        if base_line["quantity"] == 0.0 or discount_factor == 0.0:
+        if not base_line["quantity"] or not discount_factor:
             gross_price_unit_currency = base_line["price_unit"]
             gross_price_unit = company_currency.round(
                 base_line["price_unit"] / base_line["rate"]
@@ -1297,7 +1299,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
+    def _prepare_partner_import_params(self, tree, role):
         """Returns a dict of values that will be used to retrieve the partner"""
         return {
             "vat": self._find_value(
@@ -1337,7 +1339,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             ),
         }
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
+    def _update_invoice_from_xml(self, invoice, tree, qty_factor):
         logs = []
         invoice_values = {}
         if qty_factor == -1:
@@ -1352,7 +1354,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             else "AccountingSupplier"
         )
         partner, partner_logs = self._import_partner(
-            invoice.company_id, **self._import_retrieve_partner_vals(tree, role)
+            invoice.company_id, **self._prepare_partner_import_params(tree, role)
         )
         # Need to set partner before to compute bank and lines properly
         invoice.partner_id = partner.id
@@ -1550,14 +1552,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 # Compare the result with our tax total on the invoice, and apply correction if needed.
                 # First look for taxes matching the percentage in the xml.
                 taxes = invoice.line_ids.tax_line_id.filtered(
-                    lambda tax: tax.amount == tax_percent
+                    lambda tax, tax_percent=tax_percent: tax.amount == tax_percent
                 )
                 # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
                 if taxes:
                     tax_total = document_amount_sign * float(amount.text)
                     # Sometimes we have multiple lines for the same tax.
                     tax_lines = invoice.line_ids.filtered(
-                        lambda line: line.tax_line_id in taxes
+                        lambda line, taxes=taxes: line.tax_line_id in taxes
                     )
                     if tax_lines:
                         sign = -1 if invoice.is_inbound(include_receipts=True) else 1

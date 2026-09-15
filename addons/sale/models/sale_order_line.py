@@ -1233,7 +1233,9 @@ class SaleOrderLine(models.Model):
         self.product_id.check_singleton()
         _debug.perf.count("pricelist_price", line=self, rule=self.pricelist_item_id)
         return self.pricelist_item_id._get_price(
-            product=self.product_id.with_context(**self._get_product_price_context()),
+            product=self.product_id.with_context(
+                **self._prepare_product_price_context()
+            ),
             **self._get_pricelist_kwargs(),
         )
 
@@ -1245,7 +1247,9 @@ class SaleOrderLine(models.Model):
             "pricelist_price_before_discount", line=self, rule=self.pricelist_item_id
         )
         return self.pricelist_item_id._compute_price_before_discount(
-            product=self.product_id.with_context(**self._get_product_price_context()),
+            product=self.product_id.with_context(
+                **self._prepare_product_price_context()
+            ),
             **self._get_pricelist_kwargs(),
         )
 
@@ -1267,9 +1271,9 @@ class SaleOrderLine(models.Model):
         _debug.logic("pricelist_price_current", line=self)
         return line._get_price_display()
 
-    def _get_product_price_context(self):
+    def _prepare_product_price_context(self):
         self.check_singleton()
-        return self.product_id._get_product_price_context(
+        return self.product_id._prepare_product_price_context(
             self.product_no_variant_attribute_value_ids,
         )
 

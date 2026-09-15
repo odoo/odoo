@@ -96,11 +96,11 @@ class ResPartnerBank(models.Model):
             return self._serialize(5, re.sub(r"[^a-zA-Z0-9*]", "", comment))
         return super()._get_additional_data_field(comment)
 
-    def _get_qr_code_vals_list(self, *args, **kwargs):
+    def _prepare_emv_qr_fields(self, *args, **kwargs):
         """Override. Force the amount field to always have two decimals. Uppercase the merchant name and merchant city.
         Although not specified explicitly in the spec, not uppercasing causes errors when scanning the code. Also ensure
         there is always some comment set."""
-        res = super()._get_qr_code_vals_list(*args, **kwargs)
+        res = super()._prepare_emv_qr_fields(*args, **kwargs)
         if self.country_code == "BR":
             res[5] = (
                 res[5][0],

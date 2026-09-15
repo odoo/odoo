@@ -884,7 +884,7 @@ class CustomerPortal(Controller):
                     "type": current.type if current else "mobile",
                 }
             )
-        values.update(partner._get_phone_replacement_values(number))
+        values.update(partner._prepare_phone_replacement_vals(number))
         return values
 
     def _handle_extra_form_data(self, extra_form_data, address_values):

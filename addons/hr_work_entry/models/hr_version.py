@@ -177,14 +177,14 @@ class HrVersion(models.Model):
     def _get_whitelist_fields_from_template(self):
         return super()._get_whitelist_fields_from_template() + ["work_entry_source"]
 
-    def _get_real_attendance_work_entry_vals(self, intervals):
+    def _prepare_real_attendance_work_entry_vals(self, intervals):
         self.check_singleton()
         vals = []
         for interval in intervals:
             work_entry_type = self._get_interval_work_entry_type(interval)
             vals.append(
                 {
-                    **self._get_work_entry_vals(
+                    **self._prepare_work_entry_vals(
                         "%s: %s" % (work_entry_type.name, self.employee_id.name),
                         interval[0],
                         interval[1],
@@ -205,7 +205,7 @@ class HrVersion(models.Model):
                 split.append((start, stop, records))
         return split
 
-    def _get_work_entry_vals(
+    def _prepare_work_entry_vals(
         self, name, interval_start, interval_stop, work_entry_type
     ):
         self.check_singleton()
@@ -288,7 +288,7 @@ class HrVersion(models.Model):
             start_dt, end_dt, resources=resource, tz=start_dt.tzinfo
         )[resource.id]
 
-    def _get_worked_leave_work_entry_vals(
+    def _prepare_worked_leave_work_entry_vals(
         self, intervals, worked_leaves, bypassing_codes
     ):
         self.check_singleton()
@@ -299,7 +299,7 @@ class HrVersion(models.Model):
             )
             vals.append(
                 {
-                    **self._get_work_entry_vals(
+                    **self._prepare_work_entry_vals(
                         "%s: %s" % (work_entry_type.name, self.employee_id.name),
                         interval[0],
                         interval[1],
@@ -311,7 +311,7 @@ class HrVersion(models.Model):
             )
         return vals
 
-    def _get_leave_work_entry_vals(self, real_leaves, leaves, bypassing_codes):
+    def _prepare_leave_work_entry_vals(self, real_leaves, leaves, bypassing_codes):
         self.check_singleton()
         vals = []
         leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
@@ -337,7 +337,7 @@ class HrVersion(models.Model):
                     name = "%s: %s" % (leave_entry_type.name, name)
                 vals.append(
                     {
-                        **self._get_work_entry_vals(
+                        **self._prepare_work_entry_vals(
                             name, leave_interval[0], leave_interval[1], leave_entry_type
                         ),
                         **dict(
@@ -349,7 +349,7 @@ class HrVersion(models.Model):
                 )
         return vals
 
-    def _get_version_work_entries_values(self, date_start, date_stop):
+    def _prepare_version_work_entries_values(self, date_start, date_stop):
         start_dt = self._as_utc(date_start)
         end_dt = self._as_utc(date_stop)
         version_vals = []
@@ -385,13 +385,13 @@ class HrVersion(models.Model):
             leaves = self._split_intervals_per_record(leaves)
             real_worked_leaves = self._split_intervals_per_record(real_worked_leaves)
 
-            version_vals += version._get_real_attendance_work_entry_vals(
+            version_vals += version._prepare_real_attendance_work_entry_vals(
                 real_attendances
             )
-            version_vals += version._get_worked_leave_work_entry_vals(
+            version_vals += version._prepare_worked_leave_work_entry_vals(
                 real_worked_leaves, worked_leaves, bypassing_codes
             )
-            version_vals += version._get_leave_work_entry_vals(
+            version_vals += version._prepare_leave_work_entry_vals(
                 real_leaves, leaves, bypassing_codes
             )
         return version_vals
@@ -399,8 +399,8 @@ class HrVersion(models.Model):
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         return attendances - leaves - worked_leaves
 
-    def _get_work_entries_values(self, date_start, date_stop):
-        version_vals = self._get_version_work_entries_values(date_start, date_stop)
+    def _prepare_work_entries_values(self, date_start, date_stop):
+        version_vals = self._prepare_version_work_entries_values(date_start, date_stop)
         starts = defaultdict(list)
         stops = defaultdict(list)
         for vals in version_vals:
@@ -544,7 +544,9 @@ class HrVersion(models.Model):
         vals_list = []
         with _debug.perf("build_work_entry_vals", cr=self.env.cr) as span:
             for (date_from, date_to), versions in intervals_to_generate.items():
-                vals_list.extend(versions._get_work_entries_values(date_from, date_to))
+                vals_list.extend(
+                    versions._prepare_work_entries_values(date_from, date_to)
+                )
             span.set(rows=len(vals_list))
 
         if not domain_to_nullify.is_false():

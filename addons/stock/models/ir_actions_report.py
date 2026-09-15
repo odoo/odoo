@@ -15,8 +15,8 @@ class IrActionsReport(models.Model):
                 )
         return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
 
-    def _get_rendering_context(self, report, docids, data):
-        data = super()._get_rendering_context(report, docids, data)
+    def _prepare_rendering_context(self, report, docids, data):
+        data = super()._prepare_rendering_context(report, docids, data)
         if report.report_name == "stock.report_reception_report_label" and not docids:
             docids = data["docids"]
             dbg.logic.debug(

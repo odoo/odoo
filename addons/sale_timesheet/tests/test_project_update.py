@@ -7,7 +7,7 @@ from odoo.addons.project.tests.test_project_update_flow import TestProjectUpdate
 class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
     def test_project_update_description_profitability(self):
         self.project_pigs.allow_billable = True
-        template_values = self.env["project.update"]._get_template_values(
+        template_values = self.env["project.update"]._prepare_update_rendering_context(
             self.project_pigs
         )
 

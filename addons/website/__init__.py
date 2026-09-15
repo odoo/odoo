@@ -17,5 +17,5 @@ def uninstall_hook(env):
 
 def post_init_hook(env):
     if request:
-        env = env(context=request.get_default_context())
+        env = env(context=request.prepare_default_context())
         request.website_routing = env["website"].get_current_website().id

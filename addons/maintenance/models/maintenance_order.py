@@ -433,7 +433,7 @@ class MaintenanceOrder(models.Model):
         plans = self.filtered(lambda order: order.state in OPEN_STATES).plan_id
         assets = self.asset_ids
         res = super().unlink()
-        plans.exists().sudo()._ensure_open_order()
+        plans.exists().sudo()._create_missing_open_orders()
         assets.exists()._sync_state_from_maintenance()
         return res
 

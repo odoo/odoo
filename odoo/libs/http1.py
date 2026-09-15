@@ -294,7 +294,7 @@ class BufferedSource:
         self.buffer = buffer if buffer is not None else bytearray()
         self.eof = False
 
-    def fill(self, size: int = 65536) -> bool:
+    def receive_into_buffer(self, size: int = 65536) -> bool:
         if self.eof:
             return False
         data = self.recv(size)
@@ -313,7 +313,7 @@ class BufferedSource:
                 return line
             if len(self.buffer) > limit:
                 raise BodyError("chunk framing line too long")
-            if not self.fill():
+            if not self.receive_into_buffer():
                 raise BodyError("connection closed inside a chunked body")
 
 
@@ -414,7 +414,7 @@ class LengthReader(_BodyReader):
     def _ready(self, most: int) -> int:
         if self._remaining <= 0:
             return 0
-        if not self._source.buffer and not self._source.fill():
+        if not self._source.buffer and not self._source.receive_into_buffer():
             raise BodyError("connection closed before the declared Content-Length")
         return min(most, self._remaining, len(self._source.buffer))
 
@@ -467,7 +467,7 @@ class ChunkedReader(_BodyReader):
                 self._read_trailers()
                 self._done = True
                 return 0
-        if not self._source.buffer and not self._source.fill():
+        if not self._source.buffer and not self._source.receive_into_buffer():
             raise BodyError("connection closed inside a chunk")
         return min(most, self._chunk_left, len(self._source.buffer))
 

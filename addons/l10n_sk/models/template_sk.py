@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("sk")
-    def _get_sk_template_data(self):
+    def _prepare_sk_template_data(self):
         return {
             "code_digits": "6",
             "use_storno_accounting": True,

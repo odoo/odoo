@@ -5,9 +5,9 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data_move(self, company=False):
+    def _prepare_demo_data_move(self, company=False):
         """Set the l10n_latam_document_number on demo invoices"""
-        move_data = super()._get_demo_data_move(company)
+        move_data = super()._prepare_demo_data_move(company)
         if company.account_fiscal_country_id.code == "BR":
             number = 0
             for move in move_data.values():

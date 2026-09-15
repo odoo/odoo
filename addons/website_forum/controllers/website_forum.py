@@ -912,7 +912,7 @@ class WebsiteForum(WebsiteProfile):
             url = f"/forum/{slug(forum)}/closed_posts"
         else:
             url = f"/forum/{slug(forum)}/validation_queue"
-        post.validate()
+        post.accept_post()
         return request.redirect(url)
 
     @http.route(

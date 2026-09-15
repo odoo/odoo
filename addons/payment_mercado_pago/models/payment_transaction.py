@@ -18,17 +18,17 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _get_specific_rendering_values(self, processing_values):
+    def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Mercado Pago-specific rendering values.
 
-        Note: self.check_singleton() from `_get_rendering_values`.
+        Note: self.check_singleton() from `_prepare_processing_values`.
 
         :param dict processing_values: The generic and specific processing values of the transaction
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         if self.provider_code != "mercado_pago":
-            return super()._get_specific_rendering_values(processing_values)
+            return super()._prepare_redirect_form_values(processing_values)
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._mercado_pago_prepare_preference_request_payload()
@@ -49,11 +49,10 @@ class PaymentTransaction(models.Model):
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = url_parse(api_url)
         url_params = dict(parse_qsl(parsed_url.query))
-        rendering_values = {
+        return {
             "api_url": api_url,
             "url_params": url_params,  # Encore the params as inputs to preserve them.
         }
-        return rendering_values
 
     def _mercado_pago_prepare_preference_request_payload(self):
         """Create the payload for the preference request based on the transaction values.
@@ -282,6 +281,7 @@ class PaymentTransaction(models.Model):
                 payment_status,
             )
             self._set_error(_("Received data with invalid status: %s.", payment_status))
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on payment data."""

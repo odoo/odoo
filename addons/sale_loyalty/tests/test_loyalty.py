@@ -423,7 +423,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
     def test_points_awarded_global_discount_code_no_domain_program(self):
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
 
         loyalty_card = self.env["loyalty.card"].create(
@@ -551,7 +551,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
     def test_points_awarded_discount_code_no_domain_program(self):
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_card = self.env["loyalty.card"].create(
             {
@@ -597,7 +597,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
 
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_program.rule_ids.product_category_id = product_category_food.id
         loyalty_card = self.env["loyalty.card"].create(
@@ -650,7 +650,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
 
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_program.rule_ids.product_category_id = product_category_food.id
         loyalty_card = self.env["loyalty.card"].create(
@@ -711,7 +711,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
     def test_points_awarded_ewallet(self):
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_card = self.env["loyalty.card"].create(
             {
@@ -748,7 +748,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
     def test_points_awarded_giftcard(self):
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_card = self.env["loyalty.card"].create(
             {
@@ -1453,10 +1453,10 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
 
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
         loyalty_program_tag = LoyaltyProgram.create(
-            LoyaltyProgram._get_template_values()["loyalty"]
+            LoyaltyProgram._prepare_program_template_vals()["loyalty"]
         )
 
         free_product_tag = self.env["product.tag"].create({"name": "Free Product"})
@@ -1565,7 +1565,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
 
     def test_sol_free_product_description_equals_reward_description(self):
         loyalty_program = self.env["loyalty.program"].create(
-            self.env["loyalty.program"]._get_template_values()["buy_x_get_y"]
+            self.env["loyalty.program"]._prepare_program_template_vals()["buy_x_get_y"]
         )
         loyalty_program.rule_ids.product_ids = self.product_A
         reward = loyalty_program.reward_ids[0]

@@ -846,7 +846,7 @@ class ForumPost(models.Model):
         )
         return True
 
-    def validate(self):
+    def accept_post(self):
         for post in self:
             if not post.can_moderate:
                 _debug.logic(

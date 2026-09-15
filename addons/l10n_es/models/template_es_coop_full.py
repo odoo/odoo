@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("es_coop_full")
-    def _get_es_coop_full_template_data(self):
+    def _prepare_es_coop_full_template_data(self):
         return {
             "name": _("Cooperatives - Complete (2008)"),
             "parent": "es_coop_pymes",

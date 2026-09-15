@@ -1422,7 +1422,9 @@ class AccountPaymentRegister(models.TransientModel):
 
         return res
 
-    def _get_early_payment_write_off_vals(self, lines, currency, open_amount_currency):
+    def _prepare_early_payment_write_off_vals(
+        self, lines, currency, open_amount_currency
+    ):
         epd_aml_values_list = [
             {
                 "aml": aml,
@@ -1473,7 +1475,7 @@ class AccountPaymentRegister(models.TransientModel):
         if self.payment_difference_handling == "reconcile":
             if self.early_payment_discount_mode:
                 payment_vals["write_off_line_vals"] += (
-                    self._get_early_payment_write_off_vals(
+                    self._prepare_early_payment_write_off_vals(
                         batch_result["lines"],
                         self.currency_id,
                         self.payment_difference
@@ -1562,7 +1564,7 @@ class AccountPaymentRegister(models.TransientModel):
             payment_vals["amount"] = total_amount
 
             payment_vals["write_off_line_vals"] += (
-                self._get_early_payment_write_off_vals(
+                self._prepare_early_payment_write_off_vals(
                     batch_result["lines"],
                     currency,
                     (batch_values["source_amount_currency"] - total_amount)

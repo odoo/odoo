@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @template("in")
-    def _get_in_template_data(self):
+    def _prepare_in_template_data(self):
         return {
             "property_account_receivable_id": "p10040",
             "property_account_payable_id": "p11211",
@@ -64,7 +64,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 1,
                 "auto_apply": True,
                 "state_ids": state_ids,
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_intra_state"
                 ),
                 "country_id": country_in_id,
@@ -74,7 +74,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 2,
                 "auto_apply": True,
                 "country_group_id": "l10n_in.inter_state_group",
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_inter_state"
                 ),
             },
@@ -92,7 +92,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "note": _(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."
                 ),
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_inter_state"
                 ),
             },
@@ -103,7 +103,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "note": _(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."
                 ),
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_export_sez_in"
                 ),
             },
@@ -115,7 +115,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "note": _(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."
                 ),
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_lut_sez_1"
                 ),
             },
@@ -125,13 +125,13 @@ class AccountChartTemplate(models.AbstractModel):
                 "note": _(
                     "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."
                 ),
-                "tax_ids": self._get_l10n_in_fiscal_tax_vals(
+                "tax_ids": self._prepare_l10n_in_fiscal_tax_commands(
                     "fiscal_position_in_lut_sez"
                 ),
             },
         }
 
-    def _get_l10n_in_fiscal_tax_vals(self, fiscal_position_xml_ids):
+    def _prepare_l10n_in_fiscal_tax_commands(self, fiscal_position_xml_ids):
         rates = [1, 2, 5, 12, 18, 28, 40]
         taxes_xml_ids = []
 

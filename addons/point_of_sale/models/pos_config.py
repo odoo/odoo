@@ -482,7 +482,7 @@ class PosConfig(models.Model):
             records = {}
         self.check_singleton()
         static_records = {}
-        self._validate_trusted_configs()
+        self._check_trusted_config_compatibility()
 
         for model, ids in records.items():
             browsed = self.env[model].browse(ids).exists()
@@ -1115,9 +1115,9 @@ class PosConfig(models.Model):
     def _check_trusted_config_ids(self):
         configs = self.sudo().with_context(active_test=False)
         configs |= configs.search([("trusted_config_ids", "in", self.ids)])
-        configs._validate_trusted_configs()
+        configs._check_trusted_config_compatibility()
 
-    def _validate_trusted_configs(self):
+    def _check_trusted_config_compatibility(self):
         for config in self:
             for trusted_config in config.trusted_config_ids:
                 if trusted_config.company_id != config.company_id:
