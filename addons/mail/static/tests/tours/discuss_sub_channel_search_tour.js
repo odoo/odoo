@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-SearchInput input",
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o-mail-SearchInput input",
             run: "clear",
         },
         {
