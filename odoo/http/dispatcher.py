@@ -321,20 +321,21 @@ class HttpDispatcher(Dispatcher):
                     )
 
         if self.request.httprequest.method not in SAFE_HTTP_METHODS:
-            if not endpoint.routing.get("csrf", True):
+            csrf_required = endpoint.routing.get("csrf", True)
+            if _debug.logic.enabled:
                 _debug.logic(
-                    "http.csrf.skipped",
-                    reason="route_exempt",
+                    "http.csrf",
+                    by="route_exempt"
+                    if not csrf_required
+                    else "redirect_nodb"
+                    if not self.request.db
+                    else "checked",
                     method=self.request.httprequest.method,
                     path=getattr(self.request.httprequest, "path", None),
                 )
-            elif not self.request.db:
-                _debug.logic(
-                    "http.csrf.redirect_nodb",
-                    path=getattr(self.request.httprequest, "path", None),
-                )
-                return self.request.redirect("/web/database/selector")
-            else:
+            if csrf_required:
+                if not self.request.db:
+                    return self.request.redirect("/web/database/selector")
                 self._check_csrf_token()
 
         return self._call_endpoint(endpoint)

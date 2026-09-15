@@ -153,21 +153,19 @@ class ServerSettings:
         return bool(self.init or self.update or self.reinit)
 
 
-_last_seen: ServerSettings | None = None
+_last_seen: ServerSettings | None = None  # debuglog
 
 
 def _get_settings_from_live_config() -> ServerSettings:
-    global _last_seen
+    global _last_seen  # debuglog
 
     import odoo.tools
 
     settings = ServerSettings.from_config(odoo.tools.config)
     # Derived on every read, so a per-read event would only say "read"; the
     # event is the change, and it names the fields that moved.
-    if not _debug.lifecycle.enabled:
-        return settings
-    previous, _last_seen = _last_seen, settings
-    if settings != previous:
+    previous, _last_seen = _last_seen, settings  # debuglog
+    if _debug.lifecycle.enabled and settings != previous:
         _debug.lifecycle(
             "settings.changed",
             first=previous is None,

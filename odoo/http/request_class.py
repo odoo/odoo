@@ -137,11 +137,15 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
                 raise werkzeug.exceptions.Forbidden(e)
         elif header_dbname:
             session.can_save = False
-            if http.filter_dbs_served([header_dbname], host=host):
+            header_served = http.filter_dbs_served([header_dbname], host=host)
+            _debug.logic(
+                "http.session.header_db",
+                header_db=header_dbname,
+                accepted=bool(header_served),
+            )
+            if header_served:
                 dbname = header_dbname
                 source = "header"  # debuglog
-            else:
-                _debug.logic("http.session.header_db_rejected", header_db=header_dbname)
         else:
             all_dbs = http.get_dbs_served(force=True, host=host)
             if len(all_dbs) == 1:

@@ -195,7 +195,7 @@ class FSWatcherBase:
         self._flush_asset_invalidation()
         with self._burst_lock:
             was_active, self._burst_active = self._burst_active, False
-        if was_active:
+        if _debug.lifecycle.enabled and was_active:
             _debug.lifecycle("watcher.burst_ended")
 
     def _arm_burst_flush(self) -> None:

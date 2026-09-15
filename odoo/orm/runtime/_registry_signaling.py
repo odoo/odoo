@@ -92,7 +92,7 @@ class _RegistrySignalingMixin(_RegistryStubs):
         # a caller flipping the flag by hand says nothing about which models it
         # changed, so the scope is the whole registry until the flag is cleared
         self._invalidation_flags.models = None if value else set()
-        if value and _debug.logic.enabled:
+        if _debug.logic.enabled and value:
             _debug.logic(
                 "registry.invalidated_by_hand",
                 caller=format_frame(_get_calling_frame(depth=2)),

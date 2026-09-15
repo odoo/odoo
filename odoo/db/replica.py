@@ -135,7 +135,8 @@ class ReplicaRouter:
             measured = None
         was_allowed = self.lag.is_replica_usable()
         self.lag.record(measured)
-        if was_allowed != self.lag.is_replica_usable():
+        usability_changed = was_allowed != self.lag.is_replica_usable()  # debuglog
+        if _debug.lifecycle.enabled and usability_changed:
             _debug.lifecycle(
                 "replica.lag_state_changed",
                 usable=self.lag.is_replica_usable(),

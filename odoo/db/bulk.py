@@ -539,7 +539,7 @@ class _BulkAccessMixin:
             return False
         numeric = sum(1 for oid in oids if oid == _NUMERIC_OID)
         worthwhile = numeric <= len(oids) * _BINARY_NUMERIC_MAX_FRACTION
-        if not worthwhile:
+        if _debug.logic.enabled and not worthwhile:
             _debug.logic(
                 "bulk.copy.binary_refused",
                 reason="numeric_fraction",
@@ -566,7 +566,7 @@ class _BulkAccessMixin:
     ) -> list[int]:
         cache = self._schema_cache
         types = cache.get_column_types(table, columns)
-        if types is not None:
+        if _debug.perf.enabled and types is not None:
             _debug.perf.count(
                 "bulk.column_types_cached", table=table, columns=len(columns)
             )

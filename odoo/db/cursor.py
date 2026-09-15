@@ -712,7 +712,11 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         return query, params, prepare, qs, ddl_kw, rollback_to
 
     def invalidate_cached_plans(self) -> None:
-        if not clear_prepared_cache(self._cnx):
+        cleared = clear_prepared_cache(self._cnx)
+        _debug.lifecycle(
+            "cursor.prepared_cache", db=vars(self).get("dbname"), cleared=cleared
+        )
+        if not cleared:
             _logger.warning(
                 "psycopg no longer exposes Connection._prepared.clear(); "
                 "auto-prepare is off for the rest of this cursor's life "
@@ -721,11 +725,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             )
             self._cnx.prepare_threshold = None
             self.execute("DEALLOCATE ALL")
-            _debug.logic("cursor.prepared_cache_fallback", db=vars(self).get("dbname"))
-        else:
-            _debug.lifecycle(
-                "cursor.prepared_cache_cleared", db=vars(self).get("dbname")
-            )
         self._schema_cache.invalidate_catalog_facts()
 
     def _on_rollback_to_savepoint(self) -> None:
