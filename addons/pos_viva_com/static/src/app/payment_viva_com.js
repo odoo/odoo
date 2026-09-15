@@ -4,6 +4,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
+import { getPaymentMismatchErrorMessage } from "./utils/error_messages";
 
 // Due to consistency issues with the webhook, we also poll
 // the status of the payment periodically as a fallback.
@@ -79,7 +80,7 @@ export class PaymentVivaCom extends PaymentInterface {
         return this.waitForPaymentConfirmation(paymentLine);
     }
 
-    _viva_com_pay() {
+    async _viva_com_pay() {
         /**
          * Override
          */
@@ -107,6 +108,17 @@ export class PaymentVivaCom extends PaymentInterface {
             maxInstalments: 0,
             tipAmount: 0,
         };
+
+        try {
+            await this.pos.syncAllOrders({ orders: [order], throw: true });
+        } catch {
+            this._show_error(
+                _t(
+                    "Could not sync the order before starting the Viva.com payment. Please try again."
+                )
+            );
+            return false;
+        }
 
         const action =
             line.amount < 0 ? "viva_com_send_refund_request" : "viva_com_send_payment_request";
@@ -145,6 +157,9 @@ export class PaymentVivaCom extends PaymentInterface {
         const isPaymentSuccessful = this.isPaymentSuccessful(notification);
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(paymentLine, notification);
+        } else if (notification.mismatch) {
+            const err = getPaymentMismatchErrorMessage(notification.mismatch);
+            this._show_error(err, _t("Viva.com Payment Error"));
         } else {
             this._show_error(_t("Message from Viva.com: %s", notification.error));
         }
@@ -207,6 +222,10 @@ export class PaymentVivaCom extends PaymentInterface {
                     if (this.isPaymentSuccessful(result)) {
                         this.handleSuccessResponse(paymentLine, result);
                         resolve(true);
+                    } else if (result.mismatch) {
+                        const err = getPaymentMismatchErrorMessage(result.mismatch);
+                        this._show_error(err, _t("Viva.com Payment Error"));
+                        resolve(false);
                     } else {
                         this._show_error(_t("Message from Viva.com: %s", result.message));
                         resolve(false);
