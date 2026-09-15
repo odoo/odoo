@@ -15,12 +15,13 @@ from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 from markupsafe import Markup
 
-import odoo
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.modules.loading import _FORCED_MODULES
 from odoo.modules.module import Manifest, MissingDependency
+from odoo.modules.registry import Registry
 from odoo.tools import SQL, BinaryBytes, config
 from odoo.tools.business_data import get_flag
 from odoo.tools.misc import file_open, topological_sort
@@ -609,33 +610,44 @@ class IrModuleModule(models.Model):
                 "for help."
             )
 
-        self.env.cr.execute("SET LOCAL lock_timeout = '3s'")
-
+        if not Registry._lock.acquire(timeout=10):
+            raise UserError(_("Odoo is currently processing another module.\n"
+                               "Please try again later or contact your system administrator."))
         try:
+            self.env.cr.execute("SET LOCAL lock_timeout = '10s'")
             # raise error if database is updating for module operations
             # acquire the shared-lock for the current transaction only
-            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading')) NOWAIT")
+            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading'))")
             # raise error if another transaction is trying to schedule module operations concurrently
             self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
+            # check if cron jobs are running
+            self.env.cr.execute("LOCK ir_cron IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
             self.env.cr.rollback()
-            raise UserError(_("Odoo is currently processing another module operation.\n"
-                               "Please try again later or contact your system administrator."))
+            # find which crons are running
+            crons = self.env['ir.cron'].sudo().search([])
+            crons -= crons.try_lock_for_update(allow_referencing=True)
+            if crons:
+                actions = crons[:3].mapped('name')
+                if len(crons) > 3:
+                    actions.append('...')
+                raise UserError(self.env._(
+                    "Odoo is currently processing another module or scheduled action.\n"
+                    "Running scheduled actions: %(actions)s\n"
+                    "Please try again later or contact your system administrator.",
+                    actions=str(actions),
+                ))
+            raise UserError(self.env._(
+                "Odoo is currently processing another module.\n"
+                "Please try again later or contact your system administrator."
+            ))
+        finally:
+            Registry._lock.release()
 
-        try:
-            # This is done because the installation/uninstallation/upgrade can modify a currently
-            # running cron job and prevent it from finishing, and since the ir_cron table is locked
-            # during execution, the lock won't be released until timeout.
-            self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE")
-        except psycopg2.OperationalError:
-            self.env.cr.rollback()
-            raise UserError(_("Odoo is currently processing a scheduled action.\n"
-                              "Module operations are not possible at this time, "
-                              "please try again later or contact your system administrator."))
         function(self)
 
         self.env.cr.commit()
-        modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+        Registry.new(self.env.cr.dbname, update_module=True)
         self.env.cr.rollback()
         assert (self.env.transaction.default_env or self.env).registry is self.env.transaction.registry, "env is bound correctly to the transaction's registry"
         if request:
@@ -667,7 +679,7 @@ class IrModuleModule(models.Model):
     @assert_log_admin_access
     def button_uninstall(self):
         un_installable_modules = set(self.mapped('name')) & (
-            set(tools.config['server_wide_modules']) | set(odoo.modules.loading._FORCED_MODULES)
+            set(tools.config['server_wide_modules']) | set(_FORCED_MODULES)
         )
         if un_installable_modules:
             raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
