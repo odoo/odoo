@@ -69,10 +69,10 @@ export class PosPreset extends Base {
                 slot.isFull = slot.order_ids.size >= this.slots_per_interval;
             }
 
-            // Only keep non full slots for the date
-            this.uiState.availabilities[date] = Object.entries(slots)
-                .filter(([_, slot]) => !slot.isFull)
-                .map(([time, slot]) => ({ time, ...slot }));
+            this.uiState.availabilities[date] = Object.entries(slots).map(([time, slot]) => ({
+                time,
+                ...slot,
+            }));
         }
 
         return this.uiState.availabilities;

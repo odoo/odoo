@@ -22,7 +22,7 @@ const { DateTime } = luxon;
  *         [subCategoryId]: {
  *           id: string,
  *           name: string,
- *           options: Array<{ id: string, name: string }>
+ *           options: Array<{ id: string, name: string, disabled: boolean }>
  *         }
  *      }
  *   }

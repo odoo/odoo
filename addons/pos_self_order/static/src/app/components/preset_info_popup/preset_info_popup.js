@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -31,10 +31,6 @@ export class PresetInfoPopup extends Component {
             stateId: partner?.state_id?.id || companyStateId || null,
             city: partner?.city || "",
             zip: partner?.zip || "",
-        });
-
-        onWillStart(async () => {
-            await this.selfOrder.syncPresetSlotAvaibility(this.preset);
         });
     }
 
