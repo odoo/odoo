@@ -258,10 +258,18 @@ class HrEmployeePrivate(models.Model):
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
         for fname in field_names:
-            values = self.env.cache.get_values(public, public._fields[fname])
+            cached_ids = []
+            cached_values = []
+            for private_record, public_record in zip(self, public):
+                try:
+                    value = self.env.cache.get(public_record, public._fields[fname])
+                    cached_ids.append(private_record.id)
+                    cached_values.append(value)
+                except KeyError:
+                    continue
             if self._fields[fname].translate:
-                values = [(value.copy() if value else None) for value in values]
-            self.env.cache.update_raw(self, self._fields[fname], values)
+                cached_values = [(value.copy() if value else None) for value in cached_values]
+            self.env.cache.update_raw(self.browse(cached_ids), self._fields[fname], cached_values)
 
     @api.model
     def _cron_check_work_permit_validity(self):
