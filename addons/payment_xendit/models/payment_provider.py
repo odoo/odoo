@@ -4,8 +4,9 @@ import logging
 import pprint
 
 import requests
+from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_xendit import const
@@ -110,3 +111,53 @@ class PaymentProvider(models.Model):
         if self.code == 'xendit' and is_validation:
             return None
         return super()._get_redirect_form_view(is_validation)
+
+    # === BUSINESS METHODS - AUTOVACUUM ===#
+
+    @api.autovacuum
+    def _autovacuum_notify_xendit_webhook_migration(self):
+        """ Remind admins to update the Xendit webhook configuration for v3. """
+        admin_groups = self.env['res.groups']
+        for xmlid in ('base.group_system', 'account.group_account_manager', 'sales_team.group_sale_manager'):
+            group = self.env.ref(xmlid, raise_if_not_found=False)
+            if group:
+                admin_groups |= group
+
+        warning_type = self.env.ref('mail.mail_activity_data_warning')
+        summary = _("Update the Xendit webhook configuration")
+        dashboard_url = 'https://dashboard.xendit.co/settings/developers#webhooks'
+        doc_url = (
+            'https://www.odoo.com/documentation/master/applications/finance/payment_providers'
+            '/xendit.html?highlight=xendit#webhook-configuration'
+        )
+        webhook_link = Markup('<a href="%s" target="_blank">%s</a>') % (
+            doc_url, _("webhook configuration"),
+        )
+        dashboard_link = Markup('<a href="%s" target="_blank">%s</a>') % (
+            dashboard_url, _("Xendit Dashboard"),
+        )
+        for provider in self.search([('code', '=', 'xendit'), ('state', '!=', 'disabled')]):
+            admins = admin_groups.mapped('users').filtered(lambda u: provider.company_id in u.company_ids)
+            already_notified = self.env['mail.activity'].search([
+                ('res_model', '=', 'res.partner'),
+                ('res_id', '=', provider.company_id.partner_id.id),
+                ('activity_type_id', '=', warning_type.id),
+                ('summary', '=', summary),
+            ]).user_id
+            for user in admins - already_notified:
+                provider.company_id.partner_id.activity_schedule(
+                    act_type_xmlid='mail.mail_activity_data_warning',
+                    user_id=user.id,
+                    summary=summary,
+                    note=_(
+                        "Xendit replaced the single webhook field used by the "
+                        "%(provider)s payment provider with separate v3 event groups. "
+                        "Update the %(webhook_link)s on the %(dashboard_link)s before "
+                        "%(deadline)s to keep receiving payment and card token status "
+                        "updates.",
+                        provider=provider.display_name,
+                        webhook_link=webhook_link,
+                        dashboard_link=dashboard_link,
+                        deadline='October 1, 2026',
+                    ),
+                )
