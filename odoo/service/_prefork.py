@@ -1036,6 +1036,20 @@ class PreforkServer(CommonServer):
             phoenix=_process_state.server_phoenix,
         )
 
+    def _handle_reload_request(self) -> None:
+        # A SIGHUP reached this master.  A replacement generation asks the
+        # original supervisor to do the reload, so the chain never grows.
+        _process_state.set_phoenix(False)
+        _debug.lifecycle("prefork.reload_requested", supervisor=self._reload_supervisor)
+        if self._reload_supervisor:
+            os.kill(self._reload_supervisor, signal.SIGHUP)
+            return
+        try:
+            self.reload()
+        except Exception as exc:
+            self.logger.exception("Reload failed; keeping current generation")
+            _debug.logic("prefork.reload.failed", error=type(exc).__name__)
+
     def run(self, preload: list[str] | None = None, stop: bool = False) -> int | None:
         try:
             self.start()
@@ -1074,22 +1088,7 @@ class PreforkServer(CommonServer):
                 self.sleep()
             except KeyboardInterrupt:
                 if _process_state.server_phoenix:
-                    _process_state.set_phoenix(False)
-                    _debug.lifecycle(
-                        "prefork.reload_requested", supervisor=self._reload_supervisor
-                    )
-                    if self._reload_supervisor:
-                        os.kill(self._reload_supervisor, signal.SIGHUP)
-                    else:
-                        try:
-                            self.reload()
-                        except Exception as exc:
-                            self.logger.exception(
-                                "Reload failed; keeping current generation"
-                            )
-                            _debug.logic(
-                                "prefork.reload.failed", error=type(exc).__name__
-                            )
+                    self._handle_reload_request()
                     continue
                 self.logger.debug("clean stop")
                 self.stop()
