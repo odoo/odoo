@@ -25,7 +25,7 @@ class TestPropertiesMixin(TransactionCase):
 
         cls.test_user = cls.env['res.users'].create({
             'name': 'Test',
-            'login': 'test',
+            'login': 'test user',
             'company_id': cls.env.company.id,
         })
 

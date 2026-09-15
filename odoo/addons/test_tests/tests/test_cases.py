@@ -325,9 +325,7 @@ class TestEnv(TransactionCase):
         The main goal of the test is actually to check the values of the
         environment after this test execution (see test_env_company_part_02)
         """
-        company = self.env['res.company'].create({
-            "name": "Test Company",
-        })
+        company = self.env.ref('base.test_company')
         self.env.user.write({
             'company_id': company.id,
             'company_ids': [(4, company.id), (4, self.env.company.id)],

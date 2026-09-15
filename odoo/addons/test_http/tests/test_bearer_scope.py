@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
-from odoo.tests import new_test_user, tagged
+from odoo.tests import tagged
 
 from .test_common import TestHttpBase
 
@@ -14,7 +14,7 @@ class TestBearerScope(TestHttpBase):
     def setUpClass(cls):
         super().setUpClass()
         expiration = datetime.now() + timedelta(hours=12)
-        test_user = new_test_user(cls.env, 'test')
+        test_user = cls.env.ref('base.test_user')
         test_user = test_user.with_user(test_user)
         cls.rpc_key = test_user.env['res.users.apikeys']._generate('rpc', 'test rpc key', expiration)
         cls.other_key = test_user.env['res.users.apikeys']._generate('other_scope', 'test other key', expiration)
