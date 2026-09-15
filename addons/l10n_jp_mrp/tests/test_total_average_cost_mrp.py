@@ -233,3 +233,85 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         unbuild.produce_line_ids.date = fields.Datetime.to_datetime(self.today)
         self._run_category_wizard()
         self.assertAlmostEqual(component.standard_price, 250 / 10, places=2)
+
+    def _subcontract(self, qty=10, component_price=40, fee=30, component_qty=1):
+        """
+        Have a subcontractor make ``qty`` of the product out of ``component_qty`` each.
+
+        Returns the order line the fee is charged on, so the test can bill it.
+        """
+        self.ensure_installed('mrp_subcontracting_purchase')
+        subcontractor = self.env['res.partner'].create({'name': 'JP Subcontractor'})
+        component = self.env['product.product'].create({
+            'name': 'JP Subcontracted Component', 'categ_id': self.category.id,
+            'standard_price': 10, 'is_storable': True,
+        })
+        # the subcontractor consumes out of their own location, so that is where the components go
+        self._create_move(
+            qty * component_qty, component_price, self.today, self.supplier_loc,
+            self.env.company.subcontracting_location_id, product=component,
+        )
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id, 'product_qty': 1,
+            'type': 'subcontract', 'subcontractor_ids': [(6, 0, subcontractor.ids)],
+        })
+        self.env['mrp.bom.line'].create({
+            'bom_id': bom.id, 'product_id': component.id, 'product_qty': component_qty,
+        })
+        # a tax belongs to neither the fee nor the components, so keep it out of the arithmetic
+        self.product.supplier_taxes_id = False
+        order = self.env['purchase.order'].create({'partner_id': subcontractor.id})  # noqa: OLS03001
+        line = self.env['purchase.order.line'].create({  # noqa: OLS03001
+            'order_id': order.id, 'product_id': self.product.id,
+            'product_qty': qty, 'price_unit': fee,
+        })
+        order.button_confirm()
+        receipt = order.picking_ids
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+        production = receipt._get_subcontract_production()
+        moves = production.move_raw_ids | production.move_finished_ids | receipt.move_ids
+        moves.date = fields.Datetime.to_datetime(self.today)
+        return line
+
+    def _bill_subcontractor(self, line, price_unit, qty=None):
+        """Post what the subcontractor finally charged, the way it comes after the goods."""
+        line.order_id.action_create_invoice()
+        bill = line.order_id.invoice_ids
+        bill.invoice_date = self.today
+        bill.invoice_line_ids.price_unit = price_unit
+        if qty is not None:
+            bill.invoice_line_ids.quantity = qty
+        bill.action_post()
+        return bill
+
+    def test_subcontracting_fee_is_read_back_from_the_bill(self):
+        line = self._subcontract()
+        # the goods arrive before the bill, so the fee the order was marked done with is an estimate
+        self._bill_subcontractor(line, 45)
+        self._run_category_wizard()
+        # 外注加工費 is what the subcontractor charged, not what the order guessed
+        self.assertAlmostEqual(self.product.standard_price, (400 + 10 * 45) / 10, places=2)
+
+    def test_subcontracting_fee_falls_back_to_the_order(self):
+        self._subcontract()
+        self._run_category_wizard()
+        # nothing is billed yet, so what the order charges is the only price there is
+        self.assertAlmostEqual(self.product.standard_price, (400 + 10 * 30) / 10, places=2)
+
+    def test_partly_billed_subcontracting_fee_is_blended(self):
+        line = self._subcontract()
+        self._bill_subcontractor(line, 45, qty=4)
+        self._run_category_wizard()
+        # what is billed is priced at the bill and the rest at the order, as on any receipt
+        self.assertAlmostEqual(self.product.standard_price, (400 + 4 * 45 + 6 * 30) / 10, places=2)
+
+    def test_a_bill_reaches_a_period_already_evaluated(self):
+        """The scenario the PO reproduced: the fee is billed after the period was evaluated."""
+        line = self._subcontract(qty=1, component_qty=5, component_price=100, fee=550)
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, 5 * 100 + 550, places=2)
+        # the bill lands inside the period, days after the goods and the first evaluation
+        self._bill_subcontractor(line, 600)
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, 5 * 100 + 600, places=2)
