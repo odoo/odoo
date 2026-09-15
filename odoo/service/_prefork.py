@@ -419,17 +419,24 @@ class PreforkServer(CommonServer):
                     candidate=process is self._candidate,
                 )
                 return
+        policy_kill = False
         if pid == self.long_polling_pid:
             name = "Long-polling (evented) subprocess"
             lifetime = time.monotonic() - self.long_polling_spawn_time
             self._reconcile_long_polling_popen(os.waitstatus_to_exitcode(status))
         else:
+            killed_by_master = pid in self._killed_workers
             worker = self.workers.get(pid) or self._killed_workers.pop(pid, None)
             if worker is None:
                 _debug.logic("prefork.unknown_child_exited", pid=pid, status=status)
                 return
             name = worker.__class__.__name__
             lifetime = time.monotonic() - getattr(worker, "spawn_time", 0.0)
+            # The watchdog's SIGKILL of a worker that had reported ready is a
+            # policy the master applied to one long request, not a crash to
+            # back off from; the same kill on a worker that never got there
+            # is a worker that hangs at boot, which is what the back-off is for.
+            policy_kill = killed_by_master and bool(worker.ready)
         _debug.lifecycle(
             "prefork.worker_exited",
             kind=name,
@@ -450,7 +457,9 @@ class PreforkServer(CommonServer):
             return
         exited_nonzero = os.WIFEXITED(status) and os.WEXITSTATUS(status) != 0
         crashed_by_signal = (
-            os.WIFSIGNALED(status) and os.WTERMSIG(status) != signal.SIGTERM
+            os.WIFSIGNALED(status)
+            and os.WTERMSIG(status) != signal.SIGTERM
+            and not policy_kill
         )
         _debug.logic(
             "prefork.early_exit",
@@ -459,6 +468,7 @@ class PreforkServer(CommonServer):
             lifetime_s=lifetime,
             exited_nonzero=exited_nonzero,
             crashed_by_signal=crashed_by_signal,
+            policy_kill=policy_kill,
         )
         if exited_nonzero or crashed_by_signal:
             self._consecutive_fast_deaths += 1
