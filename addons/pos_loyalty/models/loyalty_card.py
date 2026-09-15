@@ -96,7 +96,7 @@ class LoyaltyCard(models.Model):
     def _send_creation_communication(self, force_send=False):
         """Override to log a sold gift card's email in its source pos.order's chatter."""
         mail_ids = super()._send_creation_communication(force_send=force_send)
-        for mail in self.env['mail.mail'].browse([mid for mid in mail_ids if mid]):
+        for mail in self.env['mail.mail'].browse([mid for mid in mail_ids if mid]).exists():
             if mail.model != 'loyalty.card' or mail.res_id not in self.ids:
                 continue
             card = self.browse(mail.res_id)
