@@ -98,10 +98,8 @@ const SERVER_STATE_VALUES_SCHEMA = {
 };
 
 const getServerStateValues = createJobScopedGetter(
-    (previousValues) => ({
-        ...JSON.parse(JSON.stringify(SERVER_STATE_VALUES)),
-        ...previousValues,
-    }),
+    (previousValues) =>
+        JSON.parse(JSON.stringify({ ...SERVER_STATE_VALUES, ...previousValues })),
     applyDefaults,
 );
 

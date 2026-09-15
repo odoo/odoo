@@ -5,6 +5,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { isInstanceOf, isIterable } from "@odoo/hoot-dom-utils";
 
 import {
+    createJobScopedGetter,
     deepCopy,
     deepEqual,
     formatHumanReadable,
@@ -24,6 +25,37 @@ const recursive = {};
 recursive.self = recursive;
 
 describe(parseUrl(import.meta.url), () => {
+    describe("createJobScopedGetter", () => {
+        // a suite's instance derives from its own ancestors' — two sibling
+        // suites both registered before either runs (the way test files are
+        // imported) must not read each other's mutations
+        const get = createJobScopedGetter((previous) => ({
+            value: previous ? previous.value : "root",
+        }));
+
+        describe("first sibling", () => {
+            get().value = "first";
+
+            test("a test reads its own suite's instance", () => {
+                expect(get().value).toBe("first");
+            });
+        });
+
+        describe("second sibling", () => {
+            get().value = "second";
+
+            test("a test reads its own suite's instance", () => {
+                expect(get().value).toBe("second");
+            });
+
+            describe("nested", () => {
+                test("a nested suite derives from its parent", () => {
+                    expect(get().value).toBe("second");
+                });
+            });
+        });
+    });
+
     test("deepCopy", () => {
         expect(deepCopy(true)).toEqual(true);
         expect(deepCopy(false)).toEqual(false);

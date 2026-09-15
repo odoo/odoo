@@ -660,7 +660,15 @@ export function createJobScopedGetter(instanceGetter, afterCallback) {
             ) {
                 return cleanedInstance.instance;
             }
-            const parentInstance = [...instances.values()].at(-1);
+            let parentInstance;
+            for (
+                let job = currentJob.parent;
+                job && !parentInstance;
+                job = job.parent
+            ) {
+                parentInstance = instances.get(job);
+            }
+            parentInstance ??= instances.get(runner);
             instances.set(currentJob, instanceGetter(parentInstance, ...args));
 
             if (canCallAfter) {
@@ -701,7 +709,7 @@ export function createJobScopedGetter(instanceGetter, afterCallback) {
     let memoizedCalled = false;
     let memoizedValue;
 
-    runner.after(() => instances.clear());
+    runner.afterAll(() => instances.clear());
 
     return getInstance;
 }

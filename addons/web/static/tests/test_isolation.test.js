@@ -1,6 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    mountWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 const seen = { win: 0, doc: 0, body: 0 };
 
@@ -44,4 +48,23 @@ test("a synthetic event handler fires in the first test that uses one", async ()
 test("and in every test after it", async () => {
     await clickSyntheticButton();
     expect(syntheticClicks).toEqual(["click", "click"]);
+});
+
+describe("server state", () => {
+    describe("a suite that edits a nested value", () => {
+        test("sees its edit", () => {
+            serverState.companies[0].currency_id = 2;
+            expect(serverState.companies[0].currency_id).toBe(2);
+        });
+
+        test("but not in its next test", () => {
+            expect(serverState.companies[0].currency_id).toBe(1);
+        });
+    });
+
+    describe("a sibling suite", () => {
+        test("starts from the defaults", () => {
+            expect(serverState.companies[0].currency_id).toBe(1);
+        });
+    });
 });
