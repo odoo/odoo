@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
-import { registerThreadAction } from "@mail/core/common/thread_actions";
+import { registerThreadAction, THREAD_ACTION_IDS } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
@@ -20,8 +20,8 @@ export const joinChannelAction = {
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
     tags: [ACTION_TAGS.PRIMARY],
 };
-registerThreadAction("join-channel", joinChannelAction);
-registerThreadAction("show-threads", {
+registerThreadAction(THREAD_ACTION_IDS.JOIN_CHANNEL, joinChannelAction);
+registerThreadAction(THREAD_ACTION_IDS.SHOW_THREADS, {
     actionPanelComponent: SubChannelList,
     actionPanelComponentProps: ({ channel }) => ({ channel: channel.parent_channel_id || channel }),
     actionPanelOpen({ rootRef }) {

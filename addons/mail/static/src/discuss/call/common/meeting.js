@@ -12,12 +12,12 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
-import { MeetingSideActions } from "./meeting_side_actions";
-import { useThreadActions } from "@mail/core/common/thread_actions";
+import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
+import { THREAD_ACTION_IDS, useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
 const { DateTime } = luxon;
-const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
+const PIP_EXTRA_ACTION_IDS = [THREAD_ACTION_IDS.COPY_INVITE_LINK, THREAD_ACTION_IDS.MEETING_CHAT];
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -33,6 +33,8 @@ export class Meeting extends Component {
         Thread,
     };
 
+    THREAD_ACTION_IDS = THREAD_ACTION_IDS;
+
     setup() {
         this.props = useProps({
             autoOpenAction: types.string().optional(),
@@ -46,7 +48,7 @@ export class Meeting extends Component {
             inMeetingView: {
                 openChat: () =>
                     this.threadActions.actions
-                        .find((action) => action.id === "meeting-chat")
+                        .find((action) => action.id === THREAD_ACTION_IDS.MEETING_CHAT)
                         ?.actionPanelOpen(),
             },
         });
@@ -88,6 +90,19 @@ export class Meeting extends Component {
                 !this.rtc.isMeetingReadyBannerDismissed &&
                 this.channel.rtc_session_ids.length <= 1
         );
+    }
+
+    /** Handed to the call bar's "More" when this bar has no room for a cluster of its own. */
+    get sideActionGroups() {
+        // PiP has its own, much shorter list ({@link pipExtraActions}).
+        if (this.hasSideActions || this.rtc.isPipMode) {
+            return [];
+        }
+        return meetingMoreActionGroups(this.threadActions);
+    }
+
+    get hasSideActions() {
+        return !this.rtc.isPipMode && !this.ui.isSmall;
     }
 
     get pipExtraActions() {
