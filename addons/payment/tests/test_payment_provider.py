@@ -475,6 +475,17 @@ class TestPaymentProvider(PaymentCommon):
         self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
 
     @mute_logger("odoo.addons.payment.models.payment_provider")
+    def test_a_provider_request_is_recorded_under_its_own_purpose(self):
+        response = requests.Response()
+        response.status_code = 200
+        response._content = b"{}"
+        IrEgress = type(self.env["ir.egress"])
+        with patch.object(IrEgress, "request", return_value=response) as sent:
+            self.provider._send_api_request("GET", "/dummy")
+
+        self.assertEqual(sent.call_args.kwargs["purpose"], "payment_none")
+
+    @mute_logger("odoo.addons.payment.models.payment_provider")
     def test_parsing_non_json_response_falls_back_to_text_response(self):
         """Test that a non-JSON response is smoothly parsed as a text response."""
         response = requests.Response()

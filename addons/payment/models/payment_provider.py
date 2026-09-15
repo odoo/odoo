@@ -910,7 +910,7 @@ class PaymentProvider(models.Model):
             response = self.env["ir.egress"].request(
                 method,
                 url,
-                purpose="payment_provider",
+                purpose=f"payment_{self.code}",
                 params=params,
                 data=data,
                 json=json,
