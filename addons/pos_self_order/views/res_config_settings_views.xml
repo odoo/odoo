@@ -21,7 +21,7 @@
                         </div>
                         <div class="content-group row mt-4" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
                             <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
-                            <field name="pos_self_ordering_service_mode" readonly="not pos_module_pos_restaurant and pos_self_ordering_mode != 'kiosk'" />
+                            <field name="pos_self_ordering_service_mode" widget="self_order_service_mode_selection" readonly="not pos_module_pos_restaurant and pos_self_ordering_mode != 'kiosk'" />
                         </div>
                         <div class="content-group row" groups="base.group_no_one" invisible="pos_self_ordering_mode == 'nothing'">
                             <label for="pos_self_ordering_default_user_id" class="col-lg-4" string="Default User"/>
