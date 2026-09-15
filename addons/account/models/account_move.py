@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import base64
 import calendar
 from collections import Counter, defaultdict
 from collections.abc import Mapping
@@ -13,6 +14,7 @@ import logging
 from markupsafe import Markup
 import re
 import os
+from io import BytesIO
 from lxml import etree, html
 from textwrap import shorten
 
@@ -4981,7 +4983,43 @@ class AccountMove(models.Model):
         if self._should_store_import_source_attachment(selected_file_data):
             self.import_source_attachment_id = self._get_import_source_attachment(selected_file_data)
 
+    def _extract_pdfs_from_xml(self, xml_file):
+        xml_root = etree.parse(BytesIO(xml_file.get('raw'))).getroot()
+        embedded_documents = [
+            {
+                'raw': base64.b64decode(doc.text),
+                **dict(zip(doc.keys(), doc.values()))
+            } for doc in xml_root.xpath("//*[contains(local-name(), 'EmbeddedDocumentBinaryObject')]")
+        ]
+        embedded_pdfs = filter(lambda doc: 'pdf' in doc.get('mimeCode') or '.pdf' in doc.get('filename'), embedded_documents)
+        for doc in embedded_pdfs:
+            # get embedded attachment if it already exists
+            pdf = self.env['ir.attachment'].search([
+                    ('name', '=', doc.get('filename')),
+                ])
+            if not pdf:
+                # create it if it doesn't
+                pdf = self.env['ir.attachment'].create({
+                    'name': doc.get('filename'),
+                    'mimetype': doc.get('mimeCode'),
+                    'raw': doc.get('raw'),
+                })
+            # update attachment to be used as `invoice_pdf_report_file`
+            pdf.write({
+                'res_model': self._name,
+                'res_id': self.id,
+                'res_field': 'invoice_pdf_report_file'
+            })
+
+
     def _extend_with_attachments(self, files_data, new=False):
+        for file in files_data:
+            # get imported xml/pdf and set it as the pdf report
+            if 'pdf' in file.get('mimetype') or '.pdf' in file.get('name'):
+                file.get('attachment').write({'res_field': 'invoice_pdf_report_file'})
+            if 'xml' in file.get('mimetype') or '.xml' in file.get('name'):
+                self._extract_pdfs_from_xml(file)
+        self._compute_linked_attachment_id('invoice_pdf_report_id', 'invoice_pdf_report_file')
         if new:
             # we force an early access token write to prevent edge-cases where the notification
             # email will fail because the OCR/IAP (async) callback triggers a concurrent update on the same
@@ -4991,6 +5029,7 @@ class AccountMove(models.Model):
 
         existing_lines = self.invoice_line_ids
         res = super()._extend_with_attachments(files_data, new)
+
 
         if res:
             self._set_import_source_attachment(files_data, new=new)
