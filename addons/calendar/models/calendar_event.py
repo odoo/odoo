@@ -372,6 +372,8 @@ class Meeting(models.Model):
             event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
+        # After stop was computed using the current duration, we can re-add the field to computation.
+        self.env.add_to_compute(duration_field, self)
 
     @api.onchange('start_date', 'stop_date')
     def _onchange_date(self):
