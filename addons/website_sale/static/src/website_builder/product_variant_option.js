@@ -9,11 +9,9 @@ export class ProductVariantOption extends ProductTemplateOption {
     setup() {
         super.setup();
         this.domState = useDomState(async (el) => {
-            const productProduct = el.querySelector("[data-product-variant-id]");
+            const productProduct = el.querySelector(".js_product [data-product-id]");
             const productTemplate = el.querySelector('[data-oe-model="product.template"]');
-            const variantId = productProduct
-                ? parseInt(productProduct.dataset.productVariantId)
-                : null;
+            const variantId = parseInt(productProduct?.dataset.productId) || null;
             const templateId = productTemplate ? parseInt(productTemplate.dataset.oeId) : null;
             const hasVariants = el.querySelector(".variant_attribute") || !templateId;
 
