@@ -339,7 +339,7 @@ registry
                 PaymentScreen.clickValidate(),
                 ReceiptScreen.clickNextOrder(),
                 ...PosSale.settleNthOrder(1),
-                Order.hasLine({ productName: "downpayment", price: "-20.00" }),
+                Order.hasLine({ productName: "downpayment", price: "-20.00", priceUnit: "20.00" }),
                 ProductScreen.checkTotalAmount("80.00"),
                 ...payAndInvoice("80.00"),
             ].flat(),
