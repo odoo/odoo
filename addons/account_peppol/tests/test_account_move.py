@@ -77,6 +77,14 @@ class TestPeppolAccountMove(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "sent via Peppol / PDP"):
             sent_move.button_draft()
 
+    def test_cancel_sent_peppol(self):
+        move = self._peppol_invoice(post=True)
+        move.peppol_move_state = 'done'
+
+        move.button_cancel()
+
+        self.assertEqual(move.state, 'cancel')
+
     def test_unlink_sent_peppol(self):
         move = self._peppol_invoice(post=True)
         move.button_cancel()
