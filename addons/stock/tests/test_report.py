@@ -1444,6 +1444,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 1)
         self.assertEqual(lines[0]['move_out']['id'], move_pick.id)
 
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
