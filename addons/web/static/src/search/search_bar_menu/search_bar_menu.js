@@ -18,6 +18,7 @@ import { _t } from "@web/core/l10n/translation";
 import { render } from "@web/owl2/utils";
 import { condition } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { constructDateRange } from "@web/search/utils/dates";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -98,8 +99,26 @@ export class SearchBarMenu extends Component {
     }
 
     /** Opens a domain editor dialog for the given item, default to "is in" "today" option */
-    onAddCustomDateFilterClick({ fieldName, fieldType }) {
-        const domain = domainFromTree(condition(fieldName, "in range", [fieldType, "today"]));
+    onAddCustomDateFilterClick(item) {
+        const { fieldName, fieldType, endFieldName, endFieldType } = item;
+        let domain;
+        if (endFieldName) {
+            // The value editors of the dialog cannot read smart dates back
+            // ("today +1d"), so the range is prefilled with the bounds of the
+            // current day instead of with the relative "today" option.
+            const range = constructDateRange({
+                referenceMoment: this.env.searchModel.referenceMoment,
+                fieldName,
+                fieldType,
+                endFieldName,
+                endFieldType,
+                granularity: "day",
+                setParam: {},
+            });
+            domain = range.domain.toString();
+        } else {
+            domain = domainFromTree(condition(fieldName, "in range", [fieldType, "today"]));
+        }
         this.env.searchModel.spawnCustomFilterDialog({ domain });
     }
 
