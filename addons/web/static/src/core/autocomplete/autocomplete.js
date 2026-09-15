@@ -3,7 +3,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, proxy, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -59,6 +59,7 @@ export class AutoComplete extends Component {
         this.inEdition = false;
         this.mouseSelectionActive = false;
         this.isOptionSelected = false;
+        this.forceValFromProp = signal(0);
 
         this.state = proxy({
             open: false,
@@ -95,15 +96,16 @@ export class AutoComplete extends Component {
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
 
-        onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value || this.forceValFromProp) {
-                this.forceValFromProp = false;
+        useOnChange(
+            () => [this.props.value, this.forceValFromProp()],
+            (value) => {
                 if (!this.inEdition) {
-                    this.state.value = nextProps.value;
-                    this.inputRef().value = nextProps.value;
+                    this.state.value = value;
+                    this.inputRef().value = value;
                 }
-            }
-        });
+            },
+            { initialRun: false }
+        );
 
         // position and size
         if (this.props.dropdown) {
@@ -257,7 +259,7 @@ export class AutoComplete extends Component {
             this.inputRef().value = "";
         }
         this.isOptionSelected = true;
-        this.forceValFromProp = true;
+        this.forceValFromProp.set(this.forceValFromProp() + 1);
         option.onSelect();
         this.close();
     }
