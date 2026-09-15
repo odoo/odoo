@@ -57,6 +57,37 @@ deployment whose preload genuinely needs longer raises `ODOO_RELOAD_TIMEOUT`.
 """
 
 
+class RespawnHold:
+    """How long one population's respawn waits after consecutive early deaths."""
+
+    __slots__ = ("fast_deaths", "not_before")
+
+    def __init__(self) -> None:
+        self.fast_deaths = 0
+        self.not_before = 0.0
+
+    def record(self, now: float) -> float:
+        self.fast_deaths += 1
+        delay = backoff.get_bound(
+            self.fast_deaths, base=2, cap=WORKER_RESPAWN_BACKOFF_CAP_S
+        )
+        self.not_before = now + delay
+        return delay
+
+    def clear(self) -> None:
+        self.fast_deaths = 0
+        self.not_before = 0.0
+
+    def remaining(self, now: float) -> float:
+        return max(self.not_before - now, 0.0)
+
+
+SPAWN_HOLD = "*"
+"""The hold a failed fork or pipe arms: process-wide, so it gates every kind."""
+
+LONG_POLLING_KIND = "Long-polling (evented) subprocess"
+
+
 class PreforkServer(CommonServer):
     flavor = "prefork"
 
@@ -108,8 +139,9 @@ class PreforkServer(CommonServer):
         self.long_polling_pid: int | None = None
         self.long_polling_popen: subprocess.Popen | None = None
         self.long_polling_spawn_time = 0.0
-        self._consecutive_fast_deaths = 0
-        self._respawn_not_before = 0.0
+        # One hold per population, so a crash loop in one kind does not delay
+        # the replacements of another; the spawn hold gates them all.
+        self._respawn_holds: dict[str, RespawnHold] = {}
         self._selector: selectors.BaseSelector | None = None
         self._watched: dict[int, Worker] = {}
         self._census = WorkerCensus(self.pid)
@@ -191,24 +223,31 @@ class PreforkServer(CommonServer):
             siblings=len(self.workers),
         )
 
+    def _get_respawn_hold(self, kind: str) -> RespawnHold:
+        hold = self._respawn_holds.get(kind)
+        if hold is None:
+            hold = self._respawn_holds[kind] = RespawnHold()
+        return hold
+
+    def _get_respawn_hold_remaining(self, kind: str) -> float:
+        now = time.monotonic()
+        return max(
+            self._get_respawn_hold(SPAWN_HOLD).remaining(now),
+            self._get_respawn_hold(kind).remaining(now),
+        )
+
     def _record_spawn_failure(self) -> None:
-        self._consecutive_fast_deaths += 1
-        delay = self._get_respawn_delay()
-        self._respawn_not_before = time.monotonic() + delay
+        hold = self._get_respawn_hold(SPAWN_HOLD)
+        delay = hold.record(time.monotonic())
         self.logger.warning(
             "worker spawn failed before fork (attempt %d); holding respawn for %.0fs",
-            self._consecutive_fast_deaths,
+            hold.fast_deaths,
             delay,
         )
         _debug.logic(
             "prefork.spawn_failed",
-            attempt=self._consecutive_fast_deaths,
+            attempt=hold.fast_deaths,
             backoff_s=delay,
-        )
-
-    def _get_respawn_delay(self) -> float:
-        return backoff.get_bound(
-            self._consecutive_fast_deaths, base=2, cap=WORKER_RESPAWN_BACKOFF_CAP_S
         )
 
     def spawn_worker(self, klass: type, workers_registry: dict) -> Worker | None:
@@ -421,7 +460,7 @@ class PreforkServer(CommonServer):
                 return
         policy_kill = False
         if pid == self.long_polling_pid:
-            name = "Long-polling (evented) subprocess"
+            name = LONG_POLLING_KIND
             lifetime = time.monotonic() - self.long_polling_spawn_time
             self._reconcile_long_polling_popen(os.waitstatus_to_exitcode(status))
         else:
@@ -444,16 +483,18 @@ class PreforkServer(CommonServer):
             lifetime_s=lifetime,
             status=status,
         )
+        hold = self._get_respawn_hold(name)
         if lifetime >= WORKER_MIN_HEALTHY_LIFETIME_S:
-            if _debug.logic.enabled and self._consecutive_fast_deaths:
+            if _debug.logic.enabled and hold.fast_deaths:
                 _debug.logic(
                     "prefork.fast_death_backoff_cleared",
                     kind=name,
                     pid=pid,
-                    fast_deaths=self._consecutive_fast_deaths,
+                    fast_deaths=hold.fast_deaths,
                 )
-            self._consecutive_fast_deaths = 0
-            self._respawn_not_before = 0.0
+            hold.clear()
+            # A child that lived proves the process can still fork one.
+            self._get_respawn_hold(SPAWN_HOLD).clear()
             return
         exited_nonzero = os.WIFEXITED(status) and os.WEXITSTATUS(status) != 0
         crashed_by_signal = (
@@ -471,12 +512,11 @@ class PreforkServer(CommonServer):
             policy_kill=policy_kill,
         )
         if exited_nonzero or crashed_by_signal:
-            self._consecutive_fast_deaths += 1
-            delay = self._get_respawn_delay()
-            self._respawn_not_before = time.monotonic() + delay
+            delay = hold.record(time.monotonic())
             _debug.logic(
                 "prefork.fast_death_backoff",
-                fast_deaths=self._consecutive_fast_deaths,
+                kind=name,
+                fast_deaths=hold.fast_deaths,
                 backoff_s=delay,
             )
             cause = (
@@ -492,7 +532,7 @@ class PreforkServer(CommonServer):
                 lifetime,
                 cause,
                 delay,
-                self._consecutive_fast_deaths,
+                hold.fast_deaths,
             )
 
     def kill_timed_out_workers(self) -> None:
@@ -517,15 +557,20 @@ class PreforkServer(CommonServer):
                 )
                 self.kill_worker(pid, signal.SIGKILL)
 
+    def _is_respawn_held(self, kind: str) -> bool:
+        remaining = self._get_respawn_hold_remaining(kind)
+        if remaining <= 0:
+            return False
+        _debug.logic(
+            "prefork.respawn_held",
+            kind=kind,
+            remaining_s=remaining,
+            fast_deaths=self._get_respawn_hold(kind).fast_deaths,
+        )
+        return True
+
     def spawn_missing_workers(self) -> None:
         self._retire_excess_workers()
-        if time.monotonic() < self._respawn_not_before:
-            _debug.logic(
-                "prefork.respawn_held",
-                remaining_s=self._respawn_not_before - time.monotonic(),
-                fast_deaths=self._consecutive_fast_deaths,
-            )
-            return
         registries = Registry.registries.snapshot
         checked = False
         if _debug.pipeline.enabled and (
@@ -569,20 +614,26 @@ class PreforkServer(CommonServer):
             db.close_all()
 
         if self.settings.http_enable:
-            while (
-                len(self.workers_http) - len(self._retiring_workers) < self.population
-            ):
+            while len(self.workers_http) - len(
+                self._retiring_workers
+            ) < self.population and not self._is_respawn_held(WorkerHTTP.__name__):
                 check_registries()
                 if self.spawn_worker(WorkerHTTP, self.workers_http) is None:
                     return
-            if not self.long_polling_pid:
+            if not self.long_polling_pid and not self._is_respawn_held(
+                LONG_POLLING_KIND
+            ):
                 check_registries()
                 self.spawn_long_polling_process()
-        while len(self.workers_cron) < self.settings.max_cron_threads:
+        while len(self.workers_cron) < self.settings.max_cron_threads and not (
+            self._is_respawn_held(WorkerCron.__name__)
+        ):
             check_registries()
             if self.spawn_worker(WorkerCron, self.workers_cron) is None:
                 return
-        while len(self.workers_job) < self.settings.job_workers:
+        while len(self.workers_job) < self.settings.job_workers and not (
+            self._is_respawn_held(WorkerJob.__name__)
+        ):
             check_registries()
             if self.spawn_worker(WorkerJob, self.workers_job) is None:
                 return

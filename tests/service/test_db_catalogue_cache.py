@@ -357,15 +357,17 @@ class TestTheScanUsesTheCallersConnection:
 def test_get_dbs_served_hands_the_request_cursor_down(monkeypatch):
     from types import SimpleNamespace
 
-    from odoo.http import helpers
+    from odoo.http import _dbfilter
 
     cr = object()
-    monkeypatch.setattr(helpers, "request", SimpleNamespace(env=SimpleNamespace(cr=cr)))
+    monkeypatch.setattr(
+        _dbfilter, "request", SimpleNamespace(env=SimpleNamespace(cr=cr))
+    )
     with (
         patch.object(
-            helpers.odoo.service.db, "list_dbs", return_value=["a"]
+            _dbfilter.odoo.service.db, "list_dbs", return_value=["a"]
         ) as list_dbs,
-        patch.object(helpers, "filter_dbs_served", side_effect=lambda dbs, host: dbs),
+        patch.object(_dbfilter, "filter_dbs_served", side_effect=lambda dbs, host: dbs),
     ):
-        assert helpers.get_dbs_served(True) == ["a"]
+        assert _dbfilter.get_dbs_served(True) == ["a"]
     list_dbs.assert_called_once_with(True, cr=cr)

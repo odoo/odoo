@@ -202,8 +202,7 @@ def prefork():
     obj.workers_cron = {}
     obj.workers_job = {}
     obj.long_polling_pid = None
-    obj._consecutive_fast_deaths = 0
-    obj._respawn_not_before = 0.0
+    obj._respawn_holds = {}
     obj.queue = []
     obj._selector = None
     obj._census = _census.WorkerCensus(obj.pid)
@@ -377,15 +376,24 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         )
         good.cursor.assert_called_once()
 
-    def test_the_backoff_window_suppresses_the_whole_cycle(self, prefork):
+    def test_the_spawn_hold_suppresses_the_whole_cycle(self, prefork):
         cfg = {"http_enable": True, "max_cron_threads": 2, "job_workers": 2}
         with patch.object(_prefork.time, "monotonic", return_value=100.0):
-            prefork._respawn_not_before = 200.0
+            prefork._get_respawn_hold(_prefork.SPAWN_HOLD).not_before = 200.0
             spawned, _ = self._run(prefork, {"db1": MagicMock()}, cfg)
         assert spawned == [], (
-            "spawn_missing_workers forked inside the respawn backoff window; a worker "
-            "crash-looping at boot would be respawned as fast as it dies"
+            "spawn_missing_workers forked inside the respawn backoff window; a "
+            "fork that failed would be retried as fast as it fails"
         )
+
+    def test_a_crash_loop_in_one_kind_holds_only_that_kind(self, prefork):
+        """One population's early deaths do not delay another's replacements."""
+        cfg = {"http_enable": True, "max_cron_threads": 1, "job_workers": 1}
+        with patch.object(_prefork.time, "monotonic", return_value=100.0):
+            prefork._get_respawn_hold("WorkerCron").not_before = 200.0
+            spawned, _ = self._run(prefork, {"db1": MagicMock()}, cfg)
+        assert "WorkerCron" not in spawned
+        assert "WorkerHTTP" in spawned and "WorkerJob" in spawned
 
     def test_a_failed_spawn_stops_the_cycle_instead_of_looping(self, prefork):
         cfg = {"http_enable": False, "max_cron_threads": 3, "job_workers": 2}

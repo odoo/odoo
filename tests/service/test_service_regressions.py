@@ -420,7 +420,7 @@ def test_respawn_delay_remains_bounded_after_thousands_of_failures(master):
     ):
         for _ in range(2048):
             master._record_spawn_failure()
-    assert master._respawn_not_before == 130
+    assert master._get_respawn_hold(_prefork.SPAWN_HOLD).not_before == 130
 
 
 def test_selector_allocation_failure_closes_the_acquired_cursor():
