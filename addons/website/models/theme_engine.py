@@ -52,20 +52,16 @@ class ThemeEngine(models.AbstractModel):
         if not self.env.user.has_group('website.group_website_restricted_editor'):
             raise AccessError(self.env._("You don't have the necessary access rights to manage website themes."))
 
-        themes_sudo = themes.sudo()
-
         theme_model_name = self._theme_model_names[model_name]
         IrModelData = self.env['ir.model.data'].sudo()
         records = self.env[theme_model_name].sudo()
 
-        for module in themes_sudo:
-            imd_ids = IrModelData.search([
-                ('module', '=', module.name),
-                ('model', '=', theme_model_name),
-                ('res_id', '!=', False),
-            ]).mapped('res_id')
-            records |= self.env[theme_model_name].sudo().with_context(active_test=False).browse(imd_ids)
-        return records
+        imd_ids = IrModelData.search([
+            ('module', 'in', themes.sudo().mapped('name')),
+            ('model', '=', theme_model_name),
+            ('res_id', '!=', False),
+        ]).mapped('res_id')
+        return records | records.with_context(active_test=False).browse(imd_ids)
 
     @api.model
     def _update_records(self, theme, model_name, website):
@@ -99,6 +95,26 @@ class ThemeEngine(models.AbstractModel):
         theme.ensure_one()
 
         remaining = self._get_module_data(theme, model_name)
+
+        existing = remaining.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+        attachments_by_key = {}
+        if model_name == 'ir.attachment':
+            # An attachment overriding one from a theme dependency has no
+            # `copy_ids` link to its template, and is matched by key instead.
+            fallbacks = existing.search([
+                ('key', 'in', remaining.mapped('key')),
+                ('website_id', '=', website.id),
+                ('original_id', '=', False),
+            ])
+            attachments_by_key = {attachment.key: attachment for attachment in fallbacks}
+            existing |= fallbacks
+
+        noupdate_ids = set(self.env['ir.model.data'].search([
+            ('model', '=', model_name),
+            ('res_id', 'in', existing.ids),
+            ('noupdate', '=', True),
+        ]).mapped('res_id'))
+
         last_len = -1
         while len(remaining) != last_len:
             last_len = len(remaining)
@@ -115,12 +131,11 @@ class ThemeEngine(models.AbstractModel):
                 if not find and model_name == 'ir.attachment':
                     # In master, a unique constraint over (theme_template_id, website_id)
                     # will be introduced, thus ensuring unicity of 'find'
-                    find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id), ("original_id", "=", False)])
+                    find = attachments_by_key.get(rec.key, find)
 
                 if find:
-                    imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])
-                    if imd and imd.noupdate:
-                        _logger.info('Noupdate set for %s (%s)', find, imd)
+                    if find.id in noupdate_ids:
+                        _logger.info('Noupdate set for %s', find)
                     else:
                         # at update, ignore active field
                         if 'active' in rec_data:
