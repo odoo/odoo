@@ -11,11 +11,13 @@ class MixinApprovalLifecycle(models.AbstractModel):
 
     def action_confirm(self):
         self._check_confirm_allowed()
+        return self._confirm_through_approval(lambda records: super().action_confirm())
+
+    def _confirm_through_approval(self, confirm):
         ready, need_approval = self._split_by_approval()
-        if ready:
-            super(MixinApprovalLifecycle, ready).action_confirm()
+        result = confirm(ready) if ready else True
         if not need_approval:
-            return True
+            return result
         trace.MIXIN.note(
             "confirm_needs_approval",
             records=need_approval,
@@ -44,23 +46,23 @@ class MixinApprovalLifecycle(models.AbstractModel):
         ready = self.browse()
         need_approval = self.browse()
         for record in self:
-            if not record.approval_request_id:
-                if record.approval_required:
-                    need_approval |= record
-                else:
-                    ready |= record
-                continue
-            state = record.approval_state
-            if state == "approved":
-                ready |= record
-            elif state in ("new", "pending"):
+            state = record.approval_request_id and record.approval_state
+            if state in ("new", "pending"):
+                trace.REFUSAL.event("confirm_approval_pending", record=record)
                 raise UserError(
                     self.env._(
-                        "%(name)s is waiting for approval.",
+                        "%(name)s is pending approval: wait for the decision, "
+                        "or ask an approver to refuse it so the document can change.",
                         name=record.display_name,
                     )
                 )
-            else:
+            if state == "approved":
+                record._check_approval_still_valid()
+                ready |= record
+            elif not record.approval_required:
+                ready |= record
+            elif state:
+                trace.REFUSAL.event("confirm_approval_refused", record=record)
                 raise UserError(
                     self.env._(
                         "The approval of %(name)s was refused or cancelled. "
@@ -68,14 +70,38 @@ class MixinApprovalLifecycle(models.AbstractModel):
                         name=record.display_name,
                     )
                 )
+            else:
+                need_approval |= record
         return ready, need_approval
+
+    def _check_approval_still_valid(self):
+        self.check_singleton()
 
     def _on_approval_approved(self):
         super()._on_approval_approved()
-        if self.state == "draft":
+        self._confirm_on_approval()
+
+    def _is_confirmed_on_approval(self):
+        self.check_singleton()
+        return self.state == "draft"
+
+    def _confirm_on_approval(self):
+        self.check_singleton()
+        if not self._is_confirmed_on_approval():
+            return
+        with self._approval_side_effect(
+            self.env._(
+                "Approval was granted, but the document could not be confirmed: "
+                "%(error)s"
+            )
+        ):
             self.sudo().action_confirm()
 
     def action_cancel(self):
+        self._refuse_pending_approval()
+        return super().action_cancel()
+
+    def _refuse_pending_approval(self):
         for record in self.filtered(
             lambda r: r.approval_request_id and r.approval_state in ("new", "pending")
         ):
@@ -86,7 +112,6 @@ class MixinApprovalLifecycle(models.AbstractModel):
                     ),
                     message_type="notification",
                 )
-        return super().action_cancel()
 
     def action_draft(self):
         result = super().action_draft()

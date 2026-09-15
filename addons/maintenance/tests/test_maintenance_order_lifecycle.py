@@ -466,6 +466,22 @@ class TestMaintenanceOrderApproval(TransactionCase):
         self.assertEqual(order.approval_state, "approved")
         self.assertEqual(order.state, "confirmed")
 
+    def test_a_refused_order_confirms_once_it_no_longer_needs_approval(self):
+        order = self.env["maintenance.order"].create(
+            {"name": "Corrective", "maintenance_type": "corrective"}
+        )
+        order.action_confirm()
+        order.approval_request_id.with_user(self.approver).with_context(
+            skip_wizard=True
+        ).action_refuse()
+        self.assertEqual(order.approval_state, "refused")
+        with self.assertRaises(UserError):
+            order.action_confirm()
+        order.maintenance_type = "preventive"
+        self.assertFalse(order.approval_required)
+        order.action_confirm()
+        self.assertEqual(order.state, "confirmed")
+
     def test_cancelling_an_order_waiting_for_approval_refuses_the_request(self):
         order = self.env["maintenance.order"].create(
             {"name": "Corrective", "maintenance_type": "corrective"}

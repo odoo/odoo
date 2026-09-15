@@ -739,12 +739,16 @@ For a document with a declared lifecycle whose confirmation is the approval gate
 
 | Method | What it does |
 |--------|--------------|
-| `action_confirm` | Runs the confirm checks, confirms the records that need no approval or already hold one, raises a request for the others (one record: returns that request's action), and refuses a record whose request is waiting, refused or cancelled |
-| `_on_approval_approved` | Confirms a draft, as superuser: the confirmation follows from the grant |
-| `action_cancel` | Refuses a new or pending request before cancelling |
+| `action_confirm` | Runs the confirm checks and `_confirm_through_approval` |
+| `_confirm_through_approval(confirm)` | Confirms, through `confirm(records)`, the records that hold an approved request or need none; raises a request for the others (one record: returns that request's action). Refuses a record whose request is waiting, and one whose refused or cancelled request it still needs |
+| `_check_approval_still_valid` | Hook run on an approved record before it confirms; raises when the grant no longer covers the document |
+| `_on_approval_approved` | Calls `_confirm_on_approval`: when `_is_confirmed_on_approval` (a draft, by default), confirms as superuser, and a failure is noted on the document instead of undoing the grant |
+| `action_cancel` | `_refuse_pending_approval`, then cancels |
 | `action_draft` | Clears a refused or cancelled request's link, so confirming asks again |
 
-Adopted by `maintenance.order`. Covered by `maintenance`'s `TestMaintenanceOrderApproval`.
+An adopter that gains the mixin after its model's own `action_confirm` (sale and purchase orders in `approval_product`) sits below that method in the MRO. It overrides `action_confirm` to call `_confirm_through_approval` with its own `super()`, so nothing the order does on confirmation runs before the gate.
+
+Adopted by `maintenance.order` and agromarin's `mixin.approval.document`. Covered by `maintenance`'s `TestMaintenanceOrderApproval`.
 
 ---
 
