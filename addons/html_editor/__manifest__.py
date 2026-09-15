@@ -47,6 +47,9 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/main/link/link_popover.xml',
             'html_editor/static/src/main/link/utils.js',
         ],
+        'web.report_assets_common': [
+            'html_editor/static/src/**/*.scss',
+        ]
     },
     'license': 'LGPL-3'
 }
