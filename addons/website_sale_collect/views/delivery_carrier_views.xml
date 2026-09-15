@@ -39,6 +39,9 @@
             <field name="enable_delivery_estimate" position="attributes">
                 <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
             </field>
+            <div name="estimated_delivery_fields" position="attributes">
+                <attribute name="invisible">not enable_delivery_estimate or delivery_type not in ['fixed', 'base_on_rule', 'in_store']</attribute>
+            </div>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
                     <field name="warehouse_ids">

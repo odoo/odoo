@@ -32,9 +32,15 @@ export class DeliveryDatePicker extends Interaction {
                         this.deliveryRadio.click();
                     },
                     onApply: async (deliveryDate) => {
-                        await this.waitFor(rpc('/website_sale/set_delivery_date', {
-                            delivery_date: formatDate(deliveryDate, { format: 'yyyy-MM-dd' }),
-                        }));
+                        if (this._isDateValid(deliveryDate)) {
+                            await this.waitFor(
+                                rpc("/website_sale/set_delivery_date", {
+                                    delivery_date: formatDate(deliveryDate, {
+                                        format: "yyyy-MM-dd",
+                                    }),
+                                }),
+                            );
+                        }
                     },
                     getInputs: () => [
                         this.el.querySelector('[name=estimated_delivery]'),
