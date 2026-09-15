@@ -640,7 +640,7 @@ class _RelationalMulti(_Relational):
         elif value is False or value is None:
             return ()
 
-        elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list)):  # [1,2,3]
+        elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list, dict)):  # [1,2,3]
             if records and not any(records._ids):
                 return tuple(it and NewId(it) for it in value)
             return tuple(value)
