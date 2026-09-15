@@ -279,6 +279,15 @@ test("should remove font tag if font-color and background-color both are removed
     });
 });
 
+test("should preserve color tag when removing font color if it has other styles", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="font-size: 36px; color: rgb(255, 0, 0);">[abcabc]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><span style="font-size: 36px;">[abcabc]</span></p>',
+    });
+});
+
 test("should apply a color to a slice of text containing a span", async () => {
     await testEditor({
         contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
@@ -464,6 +473,58 @@ test("should break gradient color on selected text", async () => {
             '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
     });
 });
+<<<<<<< 6ed40130e291baa0b1ba1e215dda631316e95354
+||||||| a60563cef7e2c1150a7ba8d30586da20e44318be
+test("should update the gradient color and remove the nested background color to make the gradient visible", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-color: rgb(255, 0, 0);">[abc]</font></font></p>',
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "backgroundColor"
+        ),
+        contentAfter:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abc]</font></p>',
+    });
+});
+test("should update the gradient text color and remove the nested text color to make the gradient visible", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="-webkit-text-fill-color: rgb(255, 0, 0); color: rgb(255, 0, 0);">[abc]</font></font></p>',
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abc]</font></p>',
+    });
+});
+=======
+test("should update the gradient color and remove the nested background color to make the gradient visible", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-color: rgb(255, 0, 0);">[abc]</font></font></p>',
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "backgroundColor"
+        ),
+        contentAfter:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abc]</font></p>',
+    });
+});
+test("should update the gradient text color and remove the nested text color to make the gradient visible", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="-webkit-text-fill-color: rgb(255, 0, 0); color: rgb(255, 0, 0);">[abc]</font></font></p>',
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abc]</font></p>',
+    });
+});
+>>>>>>> 9b1c15cd8ed4e91dbabdb3a96bfaca8428260ffe
 test("should apply gradient color when a when background color is applied on span", async () => {
     await testEditor({
         contentBefore: '<p><span style="background-color: rgb(255, 0, 0)">ab[ca]bc</span></p>',
@@ -700,7 +761,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: `<div style='background-image: url("https://example.com/image.png");' class="o_cc o_cc1">a</div>`,
+            contentAfter: `<div class="o_cc o_cc1" style='background-image: url("https://example.com/image.png");'>a</div>`,
         });
     });
     test("should not keep custom gradient when switching o_cc class", async () => {
@@ -775,7 +836,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};' class="o_cc o_cc1">a</div>`,
+                contentAfter: `<div class="o_cc o_cc1" style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};'>a</div>`,
             });
         });
         test("change o_cc1 (with gradient) with o_cc2 (without gradient)", async () => {
@@ -803,7 +864,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
             test("should write o_cc1 gradient when bg-900 is already present", async () => {
@@ -829,7 +890,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
         });
