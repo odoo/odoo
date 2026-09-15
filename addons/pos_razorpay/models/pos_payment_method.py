@@ -5,7 +5,13 @@ from .razorpay_pos_request import RazorpayPosRequest
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "razorpay":
+            return "pos_razorpay", self.env._("Point of Sale: Razorpay"), "payment"
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "razorpay_api_key": "razorpay_api_key",
     }

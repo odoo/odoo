@@ -19,6 +19,7 @@ following:
     "license": "LGPL-3",
     "depends": [
         "point_of_sale",
+        "integration",
     ],
     "data": [
         "views/pos_payment_method_views.xml",

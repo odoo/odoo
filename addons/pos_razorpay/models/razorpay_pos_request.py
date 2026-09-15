@@ -19,7 +19,6 @@ class RazorpayPosRequest:
             payment_method.razorpay_allowed_payment_modes
         )
         self.payment_method = payment_method
-        self.session = payment_method.env["ir.egress"].session(purpose="pos_razorpay")
 
     def _razorpay_get_endpoint(self, endpoint):
         if endpoint in ["unified/refund", "void"]:
@@ -40,7 +39,15 @@ class RazorpayPosRequest:
         """
         url = f"{self._razorpay_get_endpoint(endpoint)}{endpoint}"
         try:
-            response = self.session.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+            response = (
+                self.payment_method._get_integration_connection()._egress_request(
+                    "POST",
+                    url,
+                    purpose="pos_razorpay",
+                    json=payload,
+                    timeout=REQUEST_TIMEOUT,
+                )
+            )
             response.raise_for_status()
             res_json = response.json()
         except requests.exceptions.RequestException as error:

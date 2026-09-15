@@ -37,23 +37,23 @@ def call_pine_labs(payment_method: object, endpoint: str, payload: dict) -> dict
     pine_labs_url = _get_pine_labs_url(payment_method=payment_method)
     url = pine_labs_url + endpoint
     try:
-        response = payment_method.env["ir.egress"].request(
+        response = payment_method._get_integration_connection()._egress_request(
             "POST", url, purpose="pos_pine_labs", json=payload, timeout=REQUEST_TIMEOUT
         )
         response.raise_for_status()
         return response.json()
     except requests.exceptions.ConnectionError as error:
         _logger.warning("Connection Error: %r with the given URL %r", error, url)
-        return {"errorMessage": error}
+        return {"errorMessage": str(error)}
     except requests.exceptions.HTTPError as error:
         _logger.warning("HTTPError: %r", error)
-        return {"errorMessage": error}
+        return {"errorMessage": str(error)}
     except requests.exceptions.Timeout as error:
         _logger.warning("Timeout: %r", error)
-        return {"errorMessage": error}
+        return {"errorMessage": str(error)}
     except json.decoder.JSONDecodeError as error:
         _logger.warning("JSONDecodeError: %r", error)
-        return {"errorMessage": error}
+        return {"errorMessage": str(error)}
 
 
 def pine_labs_request_body(payment_mode: bool, payment_method: object) -> dict:

@@ -4,14 +4,19 @@ import requests
 
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, UserError
-from odoo.libs import guarded_http, netguard
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "viva_com":
+            return "pos_viva_com", self.env._("Point of Sale: Viva.com"), "payment"
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "viva_com_api_key": "viva_com_api_key",
         "viva_com_client_secret": "viva_com_client_secret",
@@ -115,10 +120,10 @@ class PosPaymentMethod(models.Model):
                 data=data,
                 timeout=TIMEOUT,
             )
-        except requests.exceptions.RequestException:
+            access_token = resp.json().get("access_token")
+        except requests.exceptions.RequestException, ValueError:
             _logger.exception("Failed to call viva_com_bearer_token endpoint")
-
-        access_token = resp.json().get("access_token")
+            access_token = False
         if access_token:
             self.viva_com_bearer_token = access_token
             return {"Authorization": f"Bearer {access_token}"}
@@ -131,7 +136,47 @@ class PosPaymentMethod(models.Model):
             )
 
     def _call_viva_com(self, endpoint, action, data=None, should_retry=True):
-        session = get_viva_com_session(should_retry)
+        with self._viva_com_session(should_retry) as session:
+            return self._call_viva_com_with(session, endpoint, action, data)
+
+    def _viva_com_session(self, should_retry=True):
+        options = {}
+        if should_retry:
+            options["max_retries"] = requests.adapters.Retry(
+                total=5,
+                backoff_factor=2,
+                status_forcelist=[202, 500, 502, 503, 504],
+            )
+        return self._get_integration_connection()._egress_session(
+            "pos_viva_com", **options
+        )
+
+    def _viva_com_verification_key(self):
+        """Get the key Viva.com signs its webhook notifications with.
+
+        Not called in tests: Viva.com answers only real merchant credentials.
+        """
+        self.check_singleton()
+        if modules.module.current_test:
+            return "viva_com_test"
+        endpoint = self._viva_com_webhook_get_endpoint()
+        try:
+            response = self._get_integration_connection()._egress_request(
+                "GET",
+                f"{endpoint}/api/messages/config/token",
+                purpose="pos_viva_com",
+                auth=(self.viva_com_merchant_id, self.viva_com_api_key),
+                timeout=TIMEOUT,
+            )
+            response.raise_for_status()
+            return response.json().get("Key")
+        except requests.exceptions.RequestException, ValueError:
+            _logger.exception(
+                "Failed to call https://%s/api/messages/config/token endpoint", endpoint
+            )
+            return None
+
+    def _call_viva_com_with(self, session, endpoint, action, data=None):
         session.headers.update(
             {"Authorization": f"Bearer {self.viva_com_bearer_token}"}
         )
@@ -266,11 +311,7 @@ class PosPaymentMethod(models.Model):
         record = super().write(vals)
 
         if vals.get("viva_com_merchant_id") and vals.get("viva_com_api_key"):
-            self.viva_com_webhook_verification_key = get_verification_key(
-                self._viva_com_webhook_get_endpoint(),
-                self.viva_com_merchant_id,
-                self.viva_com_api_key,
-            )
+            self.viva_com_webhook_verification_key = self._viva_com_verification_key()
             if not self.viva_com_webhook_verification_key:
                 raise UserError(
                     _(
@@ -286,10 +327,8 @@ class PosPaymentMethod(models.Model):
 
         for record in records:
             if record.viva_com_merchant_id and record.viva_com_api_key:
-                record.viva_com_webhook_verification_key = get_verification_key(
-                    record._viva_com_webhook_get_endpoint(),
-                    record.viva_com_merchant_id,
-                    record.viva_com_api_key,
+                record.viva_com_webhook_verification_key = (
+                    record._viva_com_verification_key()
                 )
                 if not record.viva_com_webhook_verification_key:
                     raise UserError(
@@ -320,44 +359,3 @@ class PosPaymentMethod(models.Model):
                 raise UserError(
                     _("It is essential to provide API key for the use of Viva.com")
                 )
-
-
-def get_viva_com_session(should_retry=True):
-    if not should_retry:
-        return guarded_http.guarded_session(netguard.PUBLIC_ONLY)
-    return guarded_http.guarded_session(
-        netguard.PUBLIC_ONLY,
-        max_retries=requests.adapters.Retry(
-            total=5,
-            backoff_factor=2,
-            status_forcelist=[202, 500, 502, 503, 504],
-        ),
-    )
-
-
-def get_verification_key(endpoint, viva_com_merchant_id, viva_com_api_key):
-    """Get a key to configure the webhook.
-    This key need to be the response when we receive a notification.
-    Do not execute this query in test mode.
-
-    :param endpoint: The endpoint to get the verification key from
-    :param viva_com_merchant_id: The merchant ID
-    :param viva_com_api_key: The API
-    :return: The verification key
-    """
-    if modules.module.current_test:
-        return "viva_com_test"
-
-    try:
-        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
-            response = session.get(
-                f"{endpoint}/api/messages/config/token",
-                auth=(viva_com_merchant_id, viva_com_api_key),
-                timeout=TIMEOUT,
-            )
-        response.raise_for_status()
-        return response.json().get("Key")
-    except requests.exceptions.RequestException:
-        _logger.exception(
-            "Failed to call https://%s/api/messages/config/token endpoint", endpoint
-        )

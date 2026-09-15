@@ -9,7 +9,17 @@ _logger = logging.getLogger(__name__)
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "mercado_pago":
+            return (
+                "pos_mercado_pago",
+                self.env._("Point of Sale: Mercado Pago"),
+                "payment",
+            )
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "mp_bearer_token": "mp_bearer_token",
         "mp_webhook_secret_key": "mp_webhook_secret_key",
@@ -53,7 +63,7 @@ class PosPaymentMethod(models.Model):
         """
         self._check_special_access()
 
-        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+        mercado_pago = MercadoPagoPosRequest(self, self.sudo().mp_bearer_token)
         _logger.info('Calling Mercado Pago to force the terminal mode to "PDV"')
 
         mode = {"operating_mode": "PDV"}
@@ -72,7 +82,7 @@ class PosPaymentMethod(models.Model):
         """
         self._check_special_access()
 
-        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+        mercado_pago = MercadoPagoPosRequest(self, self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend creation
         resp = mercado_pago.call_mercado_pago(
             "post",
@@ -90,7 +100,7 @@ class PosPaymentMethod(models.Model):
         """
         self._check_special_access()
 
-        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+        mercado_pago = MercadoPagoPosRequest(self, self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend status
         resp = mercado_pago.call_mercado_pago(
             "get", f"/point/integration-api/payment-intents/{payment_intent_id}", {}
@@ -104,7 +114,7 @@ class PosPaymentMethod(models.Model):
         """
         self._check_special_access()
 
-        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+        mercado_pago = MercadoPagoPosRequest(self, self.sudo().mp_bearer_token)
 
         resp = mercado_pago.call_mercado_pago("get", f"/v1/payments/{payment_id}", {})
         _logger.debug("mp_get_payment_status(), response from Mercado Pago: %s", resp)
@@ -116,7 +126,7 @@ class PosPaymentMethod(models.Model):
         """
         self._check_special_access()
 
-        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+        mercado_pago = MercadoPagoPosRequest(self, self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend cancelation
         resp = mercado_pago.call_mercado_pago(
             "delete",
@@ -129,7 +139,7 @@ class PosPaymentMethod(models.Model):
         return resp
 
     def _find_terminal(self, token, point_smart):
-        mercado_pago = MercadoPagoPosRequest(token)
+        mercado_pago = MercadoPagoPosRequest(self, token)
         data = mercado_pago.call_mercado_pago(
             "get", "/point/integration-api/devices", {}
         )

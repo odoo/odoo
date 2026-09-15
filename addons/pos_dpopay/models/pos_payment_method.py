@@ -12,7 +12,13 @@ DPOPAY_DEFAULT_TIMEOUT = 35
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "dpopay":
+            return "pos_dpopay", self.env._("Point of Sale: DPO Pay"), "payment"
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "dpopay_client_secret": "dpopay_client_secret",
         "dpopay_bearer_token": "dpopay_bearer_token",
@@ -105,7 +111,7 @@ class PosPaymentMethod(models.Model):
         url = f"{self._get_dpopay_base_url(is_token=True)}/tokenkc/generate"
 
         _logger.info("Sending request to %s to generate new token", url)
-        response = self.env["ir.egress"].request(
+        response = self._get_integration_connection()._egress_request(
             "GET", url, purpose="pos_dpopay", auth=auth, timeout=DPOPAY_DEFAULT_TIMEOUT
         )
         response_json = response.json()
@@ -146,7 +152,7 @@ class PosPaymentMethod(models.Model):
                     mode,
                     list(headers.keys()),
                 )
-                response = self.env["ir.egress"].request(
+                response = self._get_integration_connection()._egress_request(
                     "POST",
                     url,
                     purpose="pos_dpopay",

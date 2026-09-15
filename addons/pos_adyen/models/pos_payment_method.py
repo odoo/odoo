@@ -13,7 +13,13 @@ UNPREDICTABLE_ADYEN_DATA = object()  # sentinel
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "adyen":
+            return "pos_adyen", self.env._("Point of Sale: Adyen"), "payment"
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "adyen_api_key": "adyen_api_key",
     }
@@ -342,7 +348,7 @@ class PosPaymentMethod(models.Model):
         headers = {
             "x-api-key": self.sudo().adyen_api_key,
         }
-        req = self.env["ir.egress"].request(
+        req = self._get_integration_connection()._egress_request(
             "POST",
             endpoint,
             purpose="pos_adyen",

@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from requests import Response
 
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests.common import tagged
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -118,6 +119,12 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
             "errorMessage": "Endpoint not found",
         }
 
+    def _mock_request(self):
+        def request(_session, _method, url, **kwargs):
+            return self._mock_post(url, **kwargs)
+
+        return request
+
     def _mock_post(self, url, **kwargs):
         response = Response()
         response.status_code = 200
@@ -144,24 +151,15 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
         return response
 
     def test_razorpay_basic_order(self):
-        with patch(
-            "odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post",
-            self._mock_post,
-        ):
+        with patch.object(GuardedSession, "request", self._mock_request()):
             self.start_pos_tour("PosRazorpayTour")
 
     def test_razorpay_cancel_payment(self):
         self.is_cancel_payment_test = True
 
-        with patch(
-            "odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post",
-            self._mock_post,
-        ):
+        with patch.object(GuardedSession, "request", self._mock_request()):
             self.start_pos_tour("PosRazorpayCancelTour")
 
     def test_razorpay_refund_order(self):
-        with patch(
-            "odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post",
-            self._mock_post,
-        ):
+        with patch.object(GuardedSession, "request", self._mock_request()):
             self.start_pos_tour("PosRazorpayRefundTour")

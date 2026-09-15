@@ -5,7 +5,13 @@ from .pine_labs_pos_request import call_pine_labs
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    def _integration_connection_service(self):
+        if self.use_payment_terminal == "pine_labs":
+            return "pos_pine_labs", self.env._("Point of Sale: Pine Labs"), "payment"
+        return super()._integration_connection_service()
+
     _CREDENTIAL_FIELDS = {
         "pine_labs_security_token": "pine_labs_security_token",
     }
