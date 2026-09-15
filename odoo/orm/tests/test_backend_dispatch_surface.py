@@ -44,7 +44,9 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/write.py", "_update_parent_path_on_write"): "equivalent",
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
         "equivalent: both unlink_rows refuse a record a company-dependent "
-        "many2one with ondelete=restrict still names, clear the other "
+        "many2one with ondelete=restrict still names from a row that survives "
+        "the batch (PostgreSQL scans after its DELETE, memory skips the rows "
+        "its foreign-key plan deletes), clear the other "
         "company-dependent references and tell their dependents, and ask "
         "registry.metaschema about ir.default (the in-memory ir.default stub "
         "answers nothing); the foreign keys cascade, null or refuse through "

@@ -168,3 +168,30 @@ class TestAutovacuumTimeBudget(TransactionCase):
         ]._vacuum_transient_rows()
         self.assertIsInstance(done, int)
         self.assertIs(more, False)
+
+
+@tagged("post_install", "-at_install")
+class TestTransientVacuumOverCount(TransactionCase):
+    def test_the_backlog_probe_and_the_over_count_removal(self):
+        Wizard = self.env["base.partner.merge.automatic.wizard"]
+        rows = Wizard.create([{}, {}, {}])
+        rows.flush_recordset()
+        total = Wizard.search_count([])
+        self.assertTrue(self.env.backend.has_rows_beyond(Wizard, total - 1))
+        self.assertFalse(self.env.backend.has_rows_beyond(Wizard, total))
+
+        # under the count: nothing is touched, however old the rows
+        self.assertEqual(Wizard._remove_transient_rows_over_count(total), 0)
+        self.assertEqual(rows.exists(), rows)
+
+        # over the count: only the rows old enough go, the young one stays
+        self.env.cr.execute(
+            "UPDATE base_partner_merge_automatic_wizard"
+            " SET write_date = write_date - interval '1 day' WHERE id = ANY(%s)",
+            [rows[:2].ids],
+        )
+        rows.invalidate_recordset(["write_date"])
+        removed = Wizard._remove_transient_rows_over_count(total - 1)
+        self.assertGreaterEqual(removed, 2)
+        self.assertFalse(rows[:2].exists())
+        self.assertEqual(rows[2].exists(), rows[2])

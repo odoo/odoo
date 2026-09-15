@@ -1262,7 +1262,12 @@ class InMemoryBackend:
         clearing: list[tuple[Field, int, dict]] = []
         for field in many2one_fields:
             referrer = env[field.model_name]
+            # the SQL branch scans after its DELETE: a referrer the batch
+            # deletes, directly or through a foreign key, refuses nothing
+            doomed = plan.rows.get(referrer._table, ())
             for row_id in self.storage.get_table_ids(referrer._table):
+                if row_id in doomed:
+                    continue
                 row = self.storage.get_row(referrer._table, row_id)
                 values = row.get(field.name) if row else None
                 if not isinstance(values, dict):

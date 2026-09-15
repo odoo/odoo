@@ -1,6 +1,7 @@
 import pytest
 
 from odoo import fields, models
+from odoo.exceptions import UserError
 from odoo.orm.model_test_env import model_test_env
 
 
@@ -14,6 +15,15 @@ class Node(models.Model):
     peer_ids = fields.Many2many("r.node", "r_node_peer_rel", "left_id", "right_id")
     counter = fields.Integer()
     other = fields.Integer()
+
+
+class Boss(models.Model):
+    _name = "r.boss"
+    _module = "odoo.addons.test_backend_row_operations_harness"
+    _description = "a node whose boss is company-dependent and restricts"
+
+    name = fields.Char()
+    boss_id = fields.Many2one("r.boss", company_dependent=True, ondelete="restrict")
 
 
 class Scratch(models.TransientModel):
@@ -133,3 +143,24 @@ class TestTransientVacuum:
             old.invalidate_recordset(["write_date"])
             assert env["r.scratch"]._remove_transient_rows_over_count(1) == 2
             assert rows.exists() == rows[2]
+
+
+class TestUnlinkRestrictInMemory:
+    def test_a_referrer_outside_the_batch_refuses(self):
+        with model_test_env(Boss) as env:
+            a = env["r.boss"].create({"name": "a"})
+            b = env["r.boss"].create({"name": "b", "boss_id": a.id})
+            b.flush_recordset()
+            with pytest.raises(UserError, match="cannot delete"):
+                a.unlink()
+            assert (a + b).exists() == a + b
+
+    def test_a_referrer_the_batch_deletes_refuses_nothing(self):
+        # what PostgreSQL answers: the scan runs after the DELETE, so a
+        # referrer deleted in the same batch never names its target
+        with model_test_env(Boss) as env:
+            a = env["r.boss"].create({"name": "a"})
+            b = env["r.boss"].create({"name": "b", "boss_id": a.id})
+            b.flush_recordset()
+            (a + b).unlink()
+            assert not env["r.boss"].search([])
