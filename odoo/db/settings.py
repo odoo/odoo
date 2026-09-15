@@ -109,7 +109,7 @@ class PoolSettings:
         for name, replica_name in REPLICA_OVERRIDABLE:
             value = getattr(self, name)
             if readonly:
-                replica_value = getattr(self, replica_name)  # debuglog
+                replica_value = getattr(self, replica_name)
                 overrides += bool(replica_value)  # debuglog
                 value = replica_value or value
             if value:

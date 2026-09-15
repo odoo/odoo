@@ -121,7 +121,15 @@ def test_list_counts_one_site_per_channel_kind(tmp_path):
             "    if _debug.logic.enabled:\n        pass\n    else:\n        pass\n",
             "no else",
         ),
-        ("    if flag:\n        _debug.logic('x')\n", "only statement"),
+        ("    if flag:\n        _debug.logic('x')\n", "leave the block empty"),
+        (
+            (
+                "    if flag:\n"
+                "        seen = 1  # debuglog\n"
+                "        _debug.logic('x', seen=seen)\n"
+            ),
+            "leave the block empty",
+        ),
         ("    value = _debug.perf('x')\n", "outside the strippable shapes"),
         ("    other = DebugLog('x')\n", "module-level"),
         ("    if _debug.logic.enabled:\n        total = 1\n", "debug lines and"),
@@ -239,6 +247,131 @@ def test_a_positional_star_is_refused_even_where_it_would_work_today(tmp_path):
     )
     messages = _check(tmp_path, source)
     assert any("may not use a `*` expansion" in m for m in messages), messages
+
+
+def test_a_block_of_several_debug_statements_is_refused(tmp_path):
+    """Counting statements was the test, and three of them still empty a block.
+
+    Found by the round trip on 2026-09-14: an `if line_errors:` whose body was
+    two `# debuglog` counters and one `_debug.logic(...)` passed `--check`
+    (three statements, not one) and left a bare `if line_errors:` after
+    `--strip`, so the file no longer parsed.
+    """
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(rows):\n"
+        "    seen = 0  # debuglog\n"
+        "    for row in rows:\n"
+        "        if row:\n"
+        "            seen += 1  # debuglog\n"
+        "            _debug.logic('x', row=row, seen=seen)\n"
+        "    return 1\n"
+    )
+    messages = _check(tmp_path, source)
+    assert any("leave the block empty" in m for m in messages), messages
+
+
+def test_a_block_with_one_surviving_statement_is_allowed(tmp_path):
+    """The same block with real work in it strips to valid code."""
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(rows):\n"
+        "    seen = 0  # debuglog\n"
+        "    kept = []\n"
+        "    for row in rows:\n"
+        "        if row:\n"
+        "            seen += 1  # debuglog\n"
+        "            _debug.logic('x', row=row, seen=seen)\n"
+        "            kept.append(row)\n"
+        "    return kept\n"
+    )
+    assert _check(tmp_path, source) == []
+
+
+def test_a_span_body_may_empty_because_the_span_goes_with_it(tmp_path):
+    """The `with` line is removed too, so nothing is left needing a statement.
+
+    The first cut of the block rule did not except this and reported two
+    sites in `odoo/modules` and `odoo/tests` that strip perfectly well.
+    """
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(flag):\n"
+        "    if flag:\n"
+        "        with _debug.perf('x'):\n"
+        "            _debug.logic('y')\n"
+        "        return 2\n"
+        "    return 1\n"
+    )
+    assert _check(tmp_path, source) == []
+
+
+def test_a_marked_line_whose_name_survives_is_refused(tmp_path):
+    """`--check` called this clean and the strip produced an undefined name.
+
+    Measured 2026-09-14: `cached = name in sys.modules  # debuglog` followed
+    by `if cached:` read as four clean sites, and `--strip` left `if cached:`
+    with nothing binding it -- `F821`, out of a tree the checker had just
+    passed. Fifty sites in `odoo` were in that shape.
+    """
+    source = (
+        "import sys\n"
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(name):\n"
+        "    cached = name in sys.modules  # debuglog\n"
+        "    if cached:\n"
+        "        return 1\n"
+        "    _debug.logic('x', cached=cached)\n"
+        "    return 2\n"
+    )
+    messages = _check(tmp_path, source)
+    assert any("binds `cached`" in m for m in messages), messages
+
+
+def test_a_marked_line_read_only_by_debug_code_is_allowed(tmp_path):
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(rows):\n"
+        "    seen = 0  # debuglog\n"
+        "    for row in rows:\n"
+        "        seen += 1  # debuglog\n"
+        "        row.touch()\n"
+        "    _debug.logic('x', seen=seen)\n"
+        "    return 1\n"
+    )
+    assert _check(tmp_path, source) == []
+
+
+def test_an_attribute_target_binds_no_bare_name(tmp_path):
+    """`self._x = ...  # debuglog` must not read as binding `self`."""
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "class C:\n"
+        "    def f(self):\n"
+        "        self._pid = 1  # debuglog\n"
+        "        _debug.logic('x', pid=self._pid)\n"
+        "        return self\n"
+    )
+    assert _check(tmp_path, source) == []
+
+
+def test_a_span_with_real_work_in_it_keeps_its_block(tmp_path):
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(flag, cr):\n"
+        "    if flag:\n"
+        "        with _debug.perf('x'):\n"
+        "            cr.execute('SELECT 1')\n"
+        "    return 1\n"
+    )
+    assert _check(tmp_path, source) == []
 
 
 def test_a_module_without_debug_references_is_skipped(tmp_path):

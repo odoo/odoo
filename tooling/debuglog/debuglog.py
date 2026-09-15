@@ -56,7 +56,7 @@ import ast
 import re
 import sys
 from collections import Counter
-from collections.abc import Collection
+from collections.abc import Collection, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -167,12 +167,42 @@ def _line_channel(node: ast.Call) -> str | None:
     return None
 
 
+def _iter_function_scopes(tree: ast.Module) -> Iterator[ast.AST]:
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+            yield node
+
+
+def _bare_targets(target: ast.expr) -> Iterator[ast.Name]:
+    """The plain names an assignment target binds, unpacking included."""
+    if isinstance(target, ast.Name):
+        yield target
+    elif isinstance(target, ast.Tuple | ast.List | ast.Starred):
+        elements = [target.value] if isinstance(target, ast.Starred) else target.elts
+        for element in elements:
+            yield from _bare_targets(element)
+
+
+def _scope_nodes(scope: ast.AST) -> Iterator[ast.AST]:
+    """Every node lexically inside `scope` but not inside a nested scope."""
+    stack = list(ast.iter_child_nodes(scope))
+    while stack:
+        node = stack.pop()
+        yield node
+        if isinstance(
+            node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda | ast.ClassDef
+        ):
+            continue
+        stack.extend(ast.iter_child_nodes(node))
+
+
 class _Scanner(ast.NodeVisitor):
     def __init__(self, path: Path, source: str) -> None:
         self.path = path
         self.lines = source.splitlines()
         self.report = FileReport(path)
         self.spans: list[str] = []
+        self._in_span = False
 
     def _site(self, node: ast.AST, kind: str, channel: str | None = None) -> None:
         line = node.lineno  # type: ignore[attr-defined]  # every node here has a span
@@ -183,12 +213,58 @@ class _Scanner(ast.NodeVisitor):
         line = getattr(node, "lineno", 0)
         self.report.violations.append(Violation(self.path, line, message))
 
-    def _check_removable(self, node: ast.stmt, body: list[ast.stmt]) -> None:
-        if len(body) == 1:
+    def _is_removable(self, stmt: ast.stmt) -> bool:
+        """Would the strip pass delete this statement outright?"""
+        if _MARKER_RE.search(self.lines[stmt.lineno - 1]):
+            return True
+        if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call):
+            call = stmt.value
+            if _line_channel(call) is not None:
+                return True
+            return (
+                isinstance(call.func, ast.Attribute)
+                and call.func.attr == "set"
+                and isinstance(call.func.value, ast.Name)
+                and call.func.value.id in self.spans
+            )
+        if isinstance(stmt, ast.If):
+            return _guard_channel(stmt.test) is not None
+        if isinstance(stmt, ast.With):
+            # a span leaves its own body behind, dedented, so it disappears
+            # only when that body disappears too
+            return (
+                len(stmt.items) == 1
+                and _is_debug_call(stmt.items[0].context_expr, "perf")
+                and all(self._is_removable(inner) for inner in stmt.body)
+            )
+        if isinstance(stmt, ast.ImportFrom):
+            return _is_debug_import(stmt)
+        if isinstance(stmt, ast.Assign):
+            return _is_debug_assignment(stmt)
+        return False
+
+    def _check_removable(
+        self, node: ast.stmt, body: list[ast.stmt], *, inside_span: bool = False
+    ) -> None:
+        """Refuse a block the strip pass would empty.
+
+        A block of ONE debug statement is the obvious case, and it was the
+        only one this checked until 2026-09-14. A block of several, all of
+        them debug, empties just as completely -- and passed, because the
+        count was the test. Found by the round trip on a three-statement
+        `if line_errors:` whose body was two `# debuglog` counters and one
+        `_debug.logic(...)`: `--check` read three statements and said nothing,
+        `--strip` left a bare `if line_errors:` and the file stopped parsing.
+        """
+        if inside_span:
+            # a span's own body may empty: the `with` line is removed too, so
+            # nothing is left needing a statement
+            return
+        if all(self._is_removable(stmt) for stmt in body):
             self._violation(
                 node,
-                "debug site is the only statement of its block; stripping "
-                "it would leave the block empty",
+                "every statement of this block is a debug site; stripping "
+                "them would leave the block empty",
             )
 
     def _visit_body(self, body: list[ast.stmt]) -> None:
@@ -238,7 +314,7 @@ class _Scanner(ast.NodeVisitor):
             if channel is not None:
                 self._check_unpacking(call)
                 self._site(stmt, "line", channel)
-                self._check_removable(stmt, body)
+                self._check_removable(stmt, body, inside_span=self._in_span)
                 return
             if _is_debug_call(call, "perf"):
                 self._violation(
@@ -254,7 +330,7 @@ class _Scanner(ast.NodeVisitor):
                 and call.func.value.id in self.spans
             ):
                 self._site(stmt, "span_set", "perf")
-                self._check_removable(stmt, body)
+                self._check_removable(stmt, body, inside_span=self._in_span)
                 return
         if isinstance(stmt, ast.With) and any(
             _mentions_debug(item.context_expr) for item in stmt.items
@@ -304,7 +380,9 @@ class _Scanner(ast.NodeVisitor):
         self.report.dedent_ranges.append((first, stmt.end_lineno or first))
         if name is not None:
             self.spans.append(name)
+        was_in_span, self._in_span = self._in_span, True
         self._visit_body(stmt.body)
+        self._in_span = was_in_span
         if name is not None:
             self.spans.pop()
 
@@ -340,11 +418,72 @@ class _Scanner(ast.NodeVisitor):
         for case in getattr(stmt, "cases", ()):
             self._visit_body(case.body)
 
+    def _check_marked_assignments(self, tree: ast.Module) -> None:
+        """Refuse a `# debuglog` line whose name outlives it.
+
+        A marked line is deleted outright, so a name it binds must be read by
+        debug code and nothing else. Measured 2026-09-14: the old checker read
+
+            with _debug.perf("scan", modules=len(graph)) as span:
+                members = graph.cycles()  # debuglog
+                span.set(on_cycle=len(members))
+            for member in members:
+
+        as five clean sites, and the strip produced a file whose `for` loop
+        named an undefined `members` -- two `F821`, out of a tree `--check`
+        had just called clean.
+
+        Scoped per function, because the first cut compared names across the
+        whole file and read a sibling method's *parameter* as the surviving
+        use: 20 findings, every one of them a name collision.
+        """
+        covered = {
+            line
+            for site in self.report.sites
+            for line in range(site.line, (site.end or site.line) + 1)
+        }
+        for scope in [tree, *_iter_function_scopes(tree)]:
+            nodes = list(_scope_nodes(scope))
+            bound: dict[str, ast.stmt] = {}
+            for node in nodes:
+                if not isinstance(node, ast.Assign | ast.AugAssign | ast.AnnAssign):
+                    continue
+                if not _MARKER_RE.search(self.lines[node.lineno - 1]):
+                    continue
+                targets = (
+                    node.targets if isinstance(node, ast.Assign) else [node.target]
+                )
+                for target in targets:
+                    # only a bare name is bound; `self.x = ...` binds nothing
+                    # called `self`, and reading the name inside the attribute
+                    # target as a binding is how the first cut called
+                    # `db/cursor.py`'s `self._backend_pid` a finding
+                    for inner in _bare_targets(target):
+                        bound.setdefault(inner.id, node)
+            if not bound:
+                continue
+            for node in nodes:
+                if (
+                    isinstance(node, ast.Name)
+                    and isinstance(node.ctx, ast.Load)
+                    and node.id in bound
+                    and node.lineno not in covered
+                ):
+                    self._violation(
+                        bound.pop(node.id),
+                        f"a `{MARKER}` line binds `{node.id}`, which surviving "
+                        f"code reads at line {node.lineno}; stripping it leaves "
+                        "an undefined name",
+                    )
+                    if not bound:
+                        break
+
     def scan(self, tree: ast.Module) -> FileReport:
         self._visit_body(tree.body)
         for number, text in enumerate(self.lines, 1):
             if _MARKER_RE.search(text):
                 self.report.sites.append(Site(self.path, number, number, "marker"))
+        self._check_marked_assignments(tree)
         return self.report
 
 
