@@ -32,6 +32,7 @@ from ._cron import (
     drain_swept_database,
 )
 from ._env import _IS_POSIX, _IS_WINDOWS
+from ._limits import get_graceful_stop_timeout
 from .httpd import ThreadedHTTPServer
 from .lifecycle import preload_registries, restart
 
@@ -466,6 +467,7 @@ class ThreadedServer(CommonServer):
 
         if self.httpd:
             self.httpd.shutdown()
+            self._drain_http_requests(self.httpd)
             self.httpd.server_close()
 
         super().stop()
@@ -510,6 +512,45 @@ class ThreadedServer(CommonServer):
 
         self.logger.debug("--")
         logging.shutdown()
+
+    def _drain_http_requests(self, httpd: ThreadedHTTPServer) -> None:
+        # `shutdown()` stopped the listener and every idle connection; the
+        # pool's busy threads are answering real requests, and closing the
+        # socket under them is what a SIGTERM used to do to their clients.
+        # A thread over its time limit is what a reload is leaving behind,
+        # so it is not waited for.
+        def pending() -> int:
+            stuck = sum(
+                1
+                for thread in self.limits_reached_threads
+                if thread.is_alive() and getattr(thread, "type", None) == "http"
+            )
+            return max(httpd.busy_workers - stuck, 0)
+
+        busy = pending()
+        if not busy:
+            return
+        timeout = get_graceful_stop_timeout(self.logger)
+        deadline = time.monotonic() + timeout
+        self.logger.info(
+            "Waiting up to %.0fs for %d in-flight request(s) to finish", timeout, busy
+        )
+        _debug.lifecycle("server.threaded.draining", busy=busy, timeout=timeout)
+        while pending() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        remaining = pending()
+        if remaining:
+            self.logger.warning(
+                "%d request(s) still running %.0fs after the stop signal; "
+                "closing the listener under them (ODOO_GRACEFUL_STOP_TIMEOUT)",
+                remaining,
+                timeout,
+            )
+        _debug.lifecycle(
+            "server.threaded.drained",
+            remaining=remaining,
+            seconds=time.monotonic() - (deadline - timeout),
+        )
 
     def run(self, preload: list[str] | None = None, stop: bool = False) -> int | None:
         rc: int | None = None

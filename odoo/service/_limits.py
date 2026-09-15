@@ -1,13 +1,33 @@
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any
 
 from odoo.libs.debug_log import DebugLog
 
+from ._env import get_env_float
 from .settings import INHERIT_FROM_CRON, current
 
 _debug = DebugLog(__name__)
+
+GRACEFUL_STOP_TIMEOUT_S = 60.0
+"""How long a stopping server lets in-flight work finish before it escalates.
+
+One bound for both flavours: the prefork master waits this long for SIGINTed
+workers before SIGKILL, and the threaded server waits this long for its busy
+request threads before closing the listener under them.
+"""
+
+
+def get_graceful_stop_timeout(logger: logging.Logger) -> float:
+    return get_env_float(
+        "ODOO_GRACEFUL_STOP_TIMEOUT",
+        GRACEFUL_STOP_TIMEOUT_S,
+        minimum=1.0,
+        logger=logger,
+    )
+
 
 BACKOFF_CEILING_S = 60
 """Longest a reconnect back-off will wait.
@@ -66,9 +86,11 @@ def empty_pipe(fd: int) -> None:
 __all__ = (
     "BACKOFF_BASE_S",
     "BACKOFF_CEILING_S",
+    "GRACEFUL_STOP_TIMEOUT_S",
     "INHERIT_FROM_CRON",
     "empty_pipe",
     "get_cron_real_time_budget",
+    "get_graceful_stop_timeout",
     "get_job_real_time_budget",
     "get_memory_over_soft_limit",
     "get_memory_rss",

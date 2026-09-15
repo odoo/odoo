@@ -145,7 +145,7 @@ class TestGracefulStop:
     def stopped(self, server):
         def _run(**attrs):
             server.__dict__.update(attrs)
-            server.httpd = MagicMock()
+            server.httpd = MagicMock(busy_workers=0)
             with (
                 patch.object(_threaded.db, "close_all") as close_all,
                 patch.object(_threaded, "logging") as log_mod,
@@ -202,6 +202,48 @@ class TestGracefulStop:
             "the second-signal hint is the only place an operator learns the "
             "shutdown can be forced"
         )
+
+    def test_in_flight_requests_finish_before_the_listener_closes(self, server):
+        """A SIGTERM used to close the socket under every busy request thread."""
+        remaining = [2, 1, 0]
+        httpd = MagicMock()
+        type(httpd).busy_workers = property(lambda _self: remaining[0])
+        order = []
+        httpd.shutdown.side_effect = lambda: order.append("shutdown")
+        httpd.server_close.side_effect = lambda: order.append("server_close")
+
+        def tick(_seconds):
+            order.append(f"busy={remaining[0]}")
+            remaining.pop(0)
+
+        with patch.object(_threaded.time, "sleep", tick):
+            server._drain_http_requests(httpd)
+            httpd.shutdown()
+            httpd.server_close()
+        assert order == ["busy=2", "busy=1", "shutdown", "server_close"]
+
+    def test_a_request_over_its_time_limit_is_not_waited_for(self, server):
+        stuck = MagicMock()
+        stuck.type = "http"
+        stuck.is_alive.return_value = True
+        server.limits_reached_threads = {stuck}
+        httpd = MagicMock(busy_workers=1)
+        with patch.object(_threaded.time, "sleep") as sleep:
+            server._drain_http_requests(httpd)
+        sleep.assert_not_called()
+
+    def test_the_drain_is_bounded_and_says_so(self, server, monkeypatch):
+        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "1")
+        httpd = MagicMock(busy_workers=1)
+        clock = iter([0.0, 0.0, 0.5, 1.5, 1.5])
+        with (
+            patch.object(_threaded.time, "monotonic", lambda: next(clock)),
+            patch.object(_threaded.time, "sleep"),
+        ):
+            server._drain_http_requests(httpd)
+        message, remaining, timeout = server.logger.warning.call_args.args
+        assert (remaining, timeout) == (1, 1.0)
+        assert "ODOO_GRACEFUL_STOP_TIMEOUT" in message
 
     def test_a_hung_non_daemon_thread_cannot_stall_the_stop_forever(self, stopped):
         hung = MagicMock()

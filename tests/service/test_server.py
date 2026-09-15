@@ -1093,7 +1093,7 @@ class TestPreforkGracefulStopEscalation:
 
         prefork_server.reap_exited_workers = MagicMock(side_effect=fake_zombie)
         monkeypatch.setattr(os, "kill", lambda pid, sig: killed.append((pid, sig)))
-        monkeypatch.setattr(_prefork, "GRACEFUL_STOP_TIMEOUT_S", 0.0)
+        monkeypatch.setattr(_limits, "GRACEFUL_STOP_TIMEOUT_S", 0.0)
 
         prefork_server.stop_workers_gracefully()
 
@@ -1103,18 +1103,16 @@ class TestPreforkGracefulStopEscalation:
     def test_stop_timeout_env_override(self, monkeypatch):
         logger = MagicMock()
         monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "300")
-        assert _prefork._get_graceful_stop_timeout(logger) == 300.0
+        assert _limits.get_graceful_stop_timeout(logger) == 300.0
         monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "0")
-        assert _prefork._get_graceful_stop_timeout(logger) == 1.0
+        assert _limits.get_graceful_stop_timeout(logger) == 1.0
         monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "garbage")
         assert (
-            _prefork._get_graceful_stop_timeout(logger)
-            == _prefork.GRACEFUL_STOP_TIMEOUT_S
+            _limits.get_graceful_stop_timeout(logger) == _limits.GRACEFUL_STOP_TIMEOUT_S
         )
         monkeypatch.delenv("ODOO_GRACEFUL_STOP_TIMEOUT")
         assert (
-            _prefork._get_graceful_stop_timeout(logger)
-            == _prefork.GRACEFUL_STOP_TIMEOUT_S
+            _limits.get_graceful_stop_timeout(logger) == _limits.GRACEFUL_STOP_TIMEOUT_S
         )
 
 

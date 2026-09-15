@@ -183,7 +183,7 @@ def test_unready_candidate_cancellation_does_not_wait_for_graceful_shutdown(
     master, monkeypatch
 ):
     monkeypatch.setenv("ODOO_RELOAD_TIMEOUT", "1")
-    monkeypatch.setattr(_prefork, "_get_graceful_stop_timeout", lambda logger: 0)
+    monkeypatch.setattr(_prefork, "get_graceful_stop_timeout", lambda logger: 0)
     monkeypatch.setattr(
         _prefork,
         "stripped_sys_argv",

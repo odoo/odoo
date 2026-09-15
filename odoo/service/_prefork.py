@@ -30,25 +30,13 @@ from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
 from ._env import _IS_POSIX, get_env_float
-from ._limits import empty_pipe
+from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
 from .settings import SD_LISTEN_FDS_START
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
-
-GRACEFUL_STOP_TIMEOUT_S = 60.0
-
-
-def _get_graceful_stop_timeout(logger: logging.Logger) -> float:
-    return get_env_float(
-        "ODOO_GRACEFUL_STOP_TIMEOUT",
-        GRACEFUL_STOP_TIMEOUT_S,
-        minimum=1.0,
-        logger=logger,
-    )
-
 
 WORKER_MIN_HEALTHY_LIFETIME_S = 30.0
 WORKER_RESPAWN_BACKOFF_CAP_S = 30.0
@@ -858,7 +846,7 @@ class PreforkServer(CommonServer):
         with contextlib.suppress(ProcessLookupError):
             process.terminate()
         try:
-            process.wait(timeout=_get_graceful_stop_timeout(self.logger) + 10)
+            process.wait(timeout=get_graceful_stop_timeout(self.logger) + 10)
         except subprocess.TimeoutExpired:
             self.logger.warning(
                 "Generation %s did not stop; killing its process group", process.pid
@@ -958,7 +946,7 @@ class PreforkServer(CommonServer):
             self.kill_worker(pid, signal.SIGINT)
 
         self.beat = 0.1
-        stop_timeout = _get_graceful_stop_timeout(self.logger)
+        stop_timeout = get_graceful_stop_timeout(self.logger)
         deadline = time.monotonic() + stop_timeout
         escalated = False
         _debug.pipeline(
