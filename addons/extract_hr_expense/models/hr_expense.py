@@ -3,6 +3,9 @@ from __future__ import annotations
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrExpense(models.Model):
@@ -30,13 +33,33 @@ class HrExpense(models.Model):
         if merchant := values.get("merchant_name"):
             if self._extract_name_is_untouched():
                 writes["name"] = merchant
+            if _debug.logic.enabled and "name" not in writes:
+                _debug.logic(
+                    "receipt_field_kept",
+                    reason="name_edited_by_a_person",
+                    expense=self,
+                    field="name",
+                )
 
         if date := values.get("date"):
             if self._extract_date_is_untouched():
                 writes["date"] = date
+            if _debug.logic.enabled and "date" not in writes:
+                _debug.logic(
+                    "receipt_field_kept",
+                    reason="date_edited_by_a_person",
+                    expense=self,
+                    field="date",
+                )
 
         writes.update(self._get_extract_amount_values(values, writes.get("date")))
 
+        _debug.pipeline(
+            "receipt_applied",
+            expense=self,
+            read_fields=len(values),
+            written_fields=sorted(writes),
+        )
         if writes:
             self.write(writes)
 
@@ -56,6 +79,7 @@ class HrExpense(models.Model):
         self.check_singleton()
         total = values.get("total")
         if not total:
+            _debug.logic("receipt_amount_absent", reason="no_total_read", expense=self)
             return {}
 
         writes = {
@@ -66,6 +90,13 @@ class HrExpense(models.Model):
         }
 
         currency = self._get_extract_currency(values.get("currency"))
+        _debug.logic(
+            "receipt_currency",
+            expense=self,
+            read=values.get("currency"),
+            resolved=currency,
+            untouched=self._extract_currency_is_untouched(),
+        )
         if currency and self._extract_currency_is_untouched():
             writes["currency_id"] = currency.id
             if currency != self.company_currency_id:
@@ -97,16 +128,39 @@ class HrExpense(models.Model):
                 )
             )
             if len(matched) == 1:
+                _debug.logic(
+                    "receipt_currency_matched",
+                    name=name,
+                    operator=operator,
+                    currency=matched,
+                )
                 return matched
+        _debug.logic("receipt_currency_unmatched", reason="no_unique_match", name=name)
         return None
 
     def action_extract_document(self):
         self.check_singleton()
         if not self.extract_can_be_read:
+            _debug.logic(
+                "receipt_read_refused",
+                reason="expense_no_longer_draft",
+                expense=self,
+                state=self.state,
+                extract_state=self.extract_state,
+            )
             raise UserError(_("A receipt is read while the expense is still a draft."))
         result = self._extract_document()
         if result is None:
+            _debug.logic(
+                "receipt_read_absent", reason="no_extraction_result", expense=self
+            )
             return False
+        _debug.lifecycle(
+            "receipt_read",
+            expense=self,
+            satisfied=result.satisfied,
+            missing=len(result.missing),
+        )
         if result.satisfied:
             message = _("The receipt was read in full.")
         else:

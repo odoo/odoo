@@ -4,8 +4,10 @@ import logging
 
 from odoo import models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class HrApplicant(models.Model):
@@ -16,6 +18,7 @@ class HrApplicant(models.Model):
         super()._update_from_extraction(result)
 
         names = self._get_extract_skill_names(result.flat().get("skills"))
+        _debug.pipeline("cv_skills_read", applicant=self, names=len(names))
         if names:
             self._add_extracted_skills(names)
 
@@ -38,6 +41,12 @@ class HrApplicant(models.Model):
             if skill:
                 wanted |= skill
             else:
+                _debug.logic(
+                    "cv_skill_unknown",
+                    reason="not_in_the_catalogue",
+                    applicant=self,
+                    name=name,
+                )
                 _logger.info(
                     "CV names the skill %r, which the catalogue does not carry", name
                 )
@@ -48,6 +57,12 @@ class HrApplicant(models.Model):
             levels = skill.skill_type_id.skill_level_ids
             level = levels.filtered("default_level")[:1] or levels[:1]
             if not level:
+                _debug.logic(
+                    "cv_skill_dropped",
+                    reason="skill_type_has_no_level",
+                    applicant=self,
+                    skill=skill,
+                )
                 _logger.info(
                     "Skill %r has no level to assign; not attached", skill.name
                 )
@@ -60,5 +75,13 @@ class HrApplicant(models.Model):
                     "skill_level_id": level.id,
                 }
             )
+        _debug.pipeline(
+            "cv_skills_attached",
+            applicant=self,
+            named=len(names),
+            in_catalogue=wanted,
+            already_held=wanted & self.applicant_skill_ids.skill_id,
+            attached=len(vals),
+        )
         if vals:
             self.env["hr.applicant.skill"].create(vals)
