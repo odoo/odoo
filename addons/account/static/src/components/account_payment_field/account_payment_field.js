@@ -2,7 +2,6 @@ import { Component, useProps } from "@odoo/owl";
 import { deserializeDate, formatDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { popoverProps } from "@web/core/popover/popover";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -11,8 +10,6 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class AccountPaymentPopOver extends Component {
     static template = "account.AccountPaymentPopOver";
-
-    props = useProps(popoverProps);
 }
 
 export class AccountPaymentField extends Component {
