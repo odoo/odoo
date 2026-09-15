@@ -18,18 +18,6 @@ def _get_or_create_chart_template_record(company, model, xmlid, chart_template_d
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    def _get_default_vat_disabled_tax(self):
-        self.ensure_one()
-        if self.account_fiscal_country_id.code != 'BE':
-            return super()._get_default_vat_disabled_tax()
-        return _get_or_create_chart_template_record(self, 'account.tax', 'attn_VAT-OUT-00-NA-S', {})
-
-    def _get_default_vat_disabled_purchase_tax(self):
-        self.ensure_one()
-        if self.account_fiscal_country_id.code != 'BE':
-            return super()._get_default_vat_disabled_purchase_tax()
-        return _get_or_create_chart_template_record(self, 'account.tax', 'attn_VAT-IN-21-ND', {})
-
     def _inverse_vat_disabled(self):
         super()._inverse_vat_disabled()
         for company in self.filtered(lambda c: c.vat_disabled_available and c.account_fiscal_country_id.code == 'BE' and c.chart_template):

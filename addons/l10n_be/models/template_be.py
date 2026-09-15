@@ -10,6 +10,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('be')
     def _get_be_template_data(self):
         return {
+            'vat_disabled_tax_id': 'attn_VAT-OUT-00-NA-S',
+            'vat_disabled_purchase_tax_id': 'attn_VAT-IN-21-ND',
             'name': _('Base'),
             'visible': False,
             'code_digits': '6',

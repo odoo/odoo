@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_common_mainland')
     def _get_es_common_mainland_template_data(self):
         return {
+            'vat_disabled_tax_id': 'account_tax_template_s_iva_ns_b',
+            'vat_disabled_purchase_tax_id': 'account_tax_template_p_iva0_nd',
             'name': 'Common Mainland',
             'visible': 0,
             'parent': 'es_common',

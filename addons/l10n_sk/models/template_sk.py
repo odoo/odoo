@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('sk')
     def _get_sk_template_data(self):
         return {
+            'vat_disabled_tax_id': 'vy_not_subject',
+            'vat_disabled_purchase_tax_id': 'vp_vat_disabled_nd',
             'code_digits': '6',
         }
 

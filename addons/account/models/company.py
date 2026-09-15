@@ -597,12 +597,22 @@ class ResCompany(models.Model):
         ))
 
     def _get_default_vat_disabled_tax(self):
-        """Return the default tax to be used as sale tax when the company is `vat_disabled`. Needs to be overridden by localisations."""
-        return self.env['account.tax']
+        """Return the default tax to be used as sale tax when the company is `vat_disabled`."""
+        self.ensure_one()
+        if not self.chart_template:
+            return self.env['account.tax']
+        chart_template_data = self.env['account.chart.template'].with_company(self)._get_chart_template_data(self.chart_template)
+        tax_xmlid = chart_template_data.get('template_data', {}).get('vat_disabled_tax_id')
+        return self._get_or_create_chart_template_tax(tax_xmlid, chart_template_data) if tax_xmlid else self.env['account.tax']
 
     def _get_default_vat_disabled_purchase_tax(self):
-        """Return the default tax to be used as purchase tax when the company is `vat_disabled`. Needs to be overridden by localisations."""
-        return self.env['account.tax']
+        """Return the default tax to be used as purchase tax when the company is `vat_disabled`."""
+        self.ensure_one()
+        if not self.chart_template:
+            return self.env['account.tax']
+        chart_template_data = self.env['account.chart.template'].with_company(self)._get_chart_template_data(self.chart_template)
+        tax_xmlid = chart_template_data.get('template_data', {}).get('vat_disabled_purchase_tax_id')
+        return self._get_or_create_chart_template_tax(tax_xmlid, chart_template_data) if tax_xmlid else self.env['account.tax']
 
     def _get_or_create_chart_template_tax(self, xmlid, chart_template_data=None):
         self.ensure_one()

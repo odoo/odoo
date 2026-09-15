@@ -8,6 +8,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cy')
     def _get_cy_template_data(self):
         return {
+            'vat_disabled_tax_id': 'VAT_S_NOT_SUBJECT_CY',
+            'vat_disabled_purchase_tax_id': 'VAT_P_DISABLED_ND_CY',
             'code_digits': '4',
         }
 

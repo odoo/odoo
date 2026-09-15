@@ -90,19 +90,6 @@ class ResCompany(models.Model):
             else:
                 company.l10n_cz_relationship_person_authorized = None
 
-    def _get_default_vat_disabled_tax(self):
-        self.ensure_one()
-        if self.account_fiscal_country_id.code != 'CZ':
-            return super()._get_default_vat_disabled_tax()
-        return self._get_or_create_chart_template_tax('l10n_cz_sale_not_subject_vat')
-
-    def _get_default_vat_disabled_purchase_tax(self):
-        self.ensure_one()
-        if self.account_fiscal_country_id.code != 'CZ':
-            return super()._get_default_vat_disabled_purchase_tax()
-        return self._get_or_create_chart_template_tax('l10n_cz_21_other_supplies_chargeable')
-
-
 class BaseDocumentLayout(models.TransientModel):
     _inherit = 'base.document.layout'
 

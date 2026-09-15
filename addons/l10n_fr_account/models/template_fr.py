@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('fr')
     def _get_fr_template_data(self):
         return {
+            'vat_disabled_tax_id': 'tva_sale_service_0',
+            'vat_disabled_purchase_tax_id': 'tva_purchase_disabled_nd',
             'name': self.env._('General accounting plan'),
             'visible': False,
             'code_digits': 6,

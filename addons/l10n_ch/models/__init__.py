@@ -6,4 +6,3 @@ from . import res_bank
 from . import ir_actions_report
 from . import account_payment
 from . import account_move_send
-from . import res_company
