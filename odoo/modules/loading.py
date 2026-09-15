@@ -32,7 +32,7 @@ if typing.TYPE_CHECKING:
     from odoo.tests.result import OdooTestResult
     from .module_graph import ModuleNode
 
-    LoadKind = typing.Literal['data', 'demo']
+    LoadKind = typing.Literal['data', 'demo', 'test']
 
 _logger = logging.getLogger(__name__)
 
@@ -46,8 +46,15 @@ def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, pa
 
     :returns: Whether a file was loaded
     """
+    if kind == 'data':
+        key = 'data'
+    elif kind == 'test':
+        key = 'test_data'
+    else:
+        key = 'demo'
+
     files = set()
-    for filename in package.manifest[kind]:
+    for filename in package.manifest.get(key, []):
         if filename in files:
             _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
         files.add(filename)
@@ -117,6 +124,7 @@ def load_module_graph(
     update_module: bool = False,
     report: OdooTestResult | None = None,
     install_demo: bool = True,
+    install_test_data: bool = True,
 ) -> None:
     """ Load, upgrade and install not loaded module nodes in the ``graph`` for ``env.registry``
 
@@ -125,6 +133,7 @@ def load_module_graph(
        :param update_module: whether to update modules or not
        :param report:
        :param install_demo: whether to attempt installing demo data for newly installed modules
+       :param install_test_data: whether to load test data for installed or updated modules
     """
     registry = env.registry
     assert isinstance(env.cr, odoo.sql_db.Cursor), "Need for a real Cursor to load modules"
@@ -211,6 +220,7 @@ def load_module_graph(
                 load_data(env, idref, 'init', kind='data', package=package)
                 if install_demo and package.demo_installable:
                     package.demo = load_demo(env, package, idref, 'init')
+                mode = 'init'
             else:  # 'upgrade' or 'reinit'
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.manifest))
@@ -218,8 +228,15 @@ def load_module_graph(
                 load_data(env, idref, mode, kind='data', package=package)
                 if package.demo:
                     package.demo = load_demo(env, package, idref, mode)
-            env.cr.execute('UPDATE ir_module_module SET demo = %s WHERE id = %s', (package.demo, module_id))
-            module.invalidate_model(['demo'])
+
+            if install_test_data and all(p.test_data for p in package.depends):
+                load_data(env, idref, mode, kind='test', package=package)
+                package.test_data = True
+            env.cr.execute(
+                'UPDATE ir_module_module SET demo = %s, test_data = %s WHERE id = %s',
+                (package.demo, package.test_data, module_id),
+            )
+            module.invalidate_model(['demo', 'test_data'])
 
             migrations.migrate_module(package, 'post')
 
@@ -326,6 +343,7 @@ def load_modules(
     install_modules: Collection[str] = (),
     reinit_modules: Collection[str] = (),
     new_db_demo: bool = False,
+    new_db_test_data: bool = False,
 ) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
@@ -336,6 +354,7 @@ def load_modules(
         :param install_modules: A collection of module names to install.
         :param reinit_modules: A collection of module names to reinitialize.
         :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
+        :param new_db_test_data: Whether to install test data for new database. Defaults to ``False``
     """
 
     initialize_sys_path()
@@ -385,6 +404,7 @@ def load_modules(
         update_module=update_module,
         report=report,
         install_demo=new_db_demo,
+        install_test_data=new_db_test_data,
     )
 
     load_lang = tools.config._cli_options.pop('load_language', None)
