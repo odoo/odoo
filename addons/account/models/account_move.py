@@ -2517,7 +2517,7 @@ class AccountMove(models.Model):
 
     def _get_unbalanced_moves(self, container):
         moves = container['records'].filtered(lambda move: move.line_ids)
-        if not moves:
+        if not moves.ids:
             return
 
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields

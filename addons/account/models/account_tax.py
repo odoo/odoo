@@ -4586,6 +4586,8 @@ class AccountTax(models.Model):
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
                 tax_domain.append(('name', '=', name))
+            if tax_group_id := tax_values.get('tax_group_id'):
+                tax_domain.append(('tax_group_id', '=', tax_group_id))
             if tax_exigibility := tax_values.get('tax_exigibility'):
                 tax_domain.append(('tax_exigibility', '=', tax_exigibility))
             if (

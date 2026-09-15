@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_fr_octroi_de_mer_product_template_form" model="ir.ui.view">
+            <field name="name">l10n_fr_octroi_de_mer.product.template.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
+                    <group name="l10n_fr_octroi_de_mer_rates" string="Octroi de mer" invisible="'FR' not in fiscal_country_codes">
+                        <field name="l10n_fr_border_reference"/>
+                        <field name="l10n_fr_rate_id"/>
+                        <field name="l10n_fr_regional_rate_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

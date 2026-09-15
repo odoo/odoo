@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO: igbe - probably to remove, check with OLMA-->
+<odoo>
+    <data>
+        <template id="l10n_fr_octroi_de_mer_report_invoice" inherit_id="account.report_invoice_document">
+            <xpath expr="//th[@name='th_taxes']" position="before">
+                <th name="l10n_fr_octroi_de_mer" t-if="o.partner_id.country_code == 'FR'" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                    <span>Octroi de mer</span>
+                </th>
+            </xpath>
+
+            <xpath expr="//td[@name='td_taxes']" position="before">
+                <td name="l10n_fr_octroi_de_mer" t-if="o.partner_id.country_code == 'FR'" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                    <span id="line_octroi_de_mer_rate">OM <t t-out="line.l10n_fr_rate"/>%</span>
+                    <br/>
+                    <span id="line_octroi_de_mer_regional_rate">OMR <t t-out="line.l10n_fr_regional_rate"/>%</span>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>
