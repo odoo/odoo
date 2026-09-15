@@ -81,8 +81,8 @@ class Survey(models.Model):
         default=lambda self: self.env.user)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
-    page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
-    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
+    page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids", search='_search_page_ids')
+    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids", search='_search_question_ids')
     question_count = fields.Integer('# Questions', compute="_compute_page_and_question_ids")
     questions_layout = fields.Selection([
         ('page_per_question', 'One page per question'),
@@ -269,6 +269,26 @@ class Survey(models.Model):
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
             survey.question_count = len(survey.question_ids)
+
+    def _search_question_ids(self, operator, value):
+        # question_ids = question_and_page_ids where is_page=False.
+        # Combine two direct domain conditions: match the requested value on the
+        # stored O2M field, and restrict to non-page records only.
+        # The two conditions are evaluated independently (each as an EXISTS subquery),
+        # which is correct for typical usage (value contains non-page question IDs).
+        return ['&',
+                ('question_and_page_ids', operator, value),
+                ('question_and_page_ids.is_page', '=', False)]
+
+    def _search_page_ids(self, operator, value):
+        # page_ids = question_and_page_ids where is_page=True.
+        # Combine two direct domain conditions: match the requested value on the
+        # stored O2M field, and restrict to page records only.
+        # The two conditions are evaluated independently (each as an EXISTS subquery),
+        # which is correct for typical usage (value contains page question IDs).
+        return ['&',
+                ('question_and_page_ids', operator, value),
+                ('question_and_page_ids.is_page', '=', True)]
 
     @api.depends('question_and_page_ids.triggering_answer_ids', 'users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
