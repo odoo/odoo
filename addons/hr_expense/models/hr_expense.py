@@ -1321,6 +1321,21 @@ class HrExpense(models.Model):
         return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
 
     @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        if (
+            (form_toolbar := res['views'].get('form', {}).get('toolbar'))
+            and form_toolbar.get('print')
+            and (report := self.env.ref('hr_expense.action_report_hr_expense', raise_if_not_found=False))
+        ):
+            form_toolbar['print'] = [
+                dict(action, name=self.env._("Print"))
+                if action['id'] == report.id else action
+                for action in form_toolbar['print']
+            ]
+        return res
+
+    @api.model
     def message_new(self, msg_dict, custom_values=None):
         email_address = email_normalize(msg_dict.get('email_from'))
         employee = self._get_employee_from_email(email_address)
