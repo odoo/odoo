@@ -49,6 +49,8 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
         content: attr(data-icon);
         // Geometric precision necessary for WebKit to apply icon ligatures
         text-rendering: geometricPrecision;
+        // WebKit splits the run at `-`, breaking the ligature
+        word-break: keep-all;
     }
 
     &.oi-filled {
