@@ -2094,6 +2094,7 @@ class TestHrAttendanceOvertime(HttpCase):
         absent_employee = self.env['hr.employee'].create({
             'name': 'John Odoo',
             'resource_calendar_id': self.company.resource_calendar_id.id,
+            'date_version': date(2026, 7, 28),
             'contract_date_start': date(2026, 7, 28),
             'ruleset_id': self.ruleset.id
         })
