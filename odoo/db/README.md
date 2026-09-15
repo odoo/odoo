@@ -966,11 +966,17 @@ campaign ends; the recipe, the cost figures and the first findings are in
   keeps the pins that have no behavioural twin (the lock-discipline scanner, the
   seam's shape, the schema-cache call sites).
 
+- **Every DDL verb in `schema.py` is pinned to the statement it emits** —
+  `tests/test_schema_ddl.py` runs each one against a recording cursor that
+  renders the `SQL` it receives and answers scripted rows, so a quoting,
+  escaping or catalog-query change shows up as a diff of the statement, not as
+  a red module install somewhere. A DDL function without a pin there is the
+  omission to fix when touching it.
 - **Tier 2 real-import, no DB (ms)** — `odoo/db/tests/`, run from `odoo/` as
   `pytest odoo/db/tests` (it is in no `testpaths` and shares the Tier-2
   invocation of `pytest.ini`, because a handful of its tests reach state in the
   package `__init__.py` that the Tier-1 stubs replace; measured 2026-09-15,
-  594 passed + 188 subtests named alone). One class, `TestPipelineAccountsForTheSyncCost`,
+  640 passed + 203 subtests named alone). One class, `TestPipelineAccountsForTheSyncCost`,
   needs a local `createdb` and skips without it:
   pure modules (`ddl`, `dsn`, `errors`, `schema_cache` bookkeeping, `savepoint`
   depth accounting, `bulk`'s argument validation and encoding cost model,

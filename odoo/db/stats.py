@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import threading
+from bisect import bisect_left
 from time import monotonic
 
 from odoo.libs.debug_log import DebugLog
@@ -73,11 +74,7 @@ class PoolStats:
 
     def record_borrow(self, started_at: float) -> None:
         waited = monotonic() - started_at
-        bucket = len(_WAIT_BUCKETS)
-        for i, edge in enumerate(_WAIT_BUCKETS):
-            if waited <= edge:
-                bucket = i
-                break
+        bucket = bisect_left(_WAIT_BUCKETS, waited)
         with self._lock:
             self.borrows += 1
             self.borrow_wait_total += waited
