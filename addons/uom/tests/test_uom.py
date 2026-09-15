@@ -33,9 +33,10 @@ class TestUom(UomCommon):
         # Regression test for side-effect of commit 311c77bb - converting 1234 Grams
         # into Kilograms should work even if grams are rounded to 1.
         qty = self.uom_gram._compute_quantity(1234, self.uom_kgm)
-        self.assertEqual(qty, 1.24, "Converted quantity does not correspond.")
+        self.assertEqual(qty, 1.23, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
+        """ Check that a conversion rounds to the nearest representable quantity. """
         product_uom = self.env['uom.uom'].sudo().create({
             'name': 'Score',
             'relative_factor': 20,
@@ -44,7 +45,13 @@ class TestUom(UomCommon):
         self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
-        self.assertEqual(qty, 1, "Converted quantity should be rounded up.")
+        self.assertEqual(qty, 0, "0.1 Score is closer to 0 than to 1.")
+
+        qty = self.uom_unit._compute_quantity(12, product_uom)
+        self.assertEqual(qty, 1, "0.6 Score is closer to 1 than to 0.")
+
+        qty = self.uom_unit._compute_quantity(10, product_uom)
+        self.assertEqual(qty, 1, "0.5 Score is rounded away from zero.")
 
     def test_30_quantity(self):
         """ _check_qty rounds the available quantity of a product. To prevent rounding issue,
