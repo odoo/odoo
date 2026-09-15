@@ -245,8 +245,13 @@ library.
   first (`_reset_returned_connection`; a reset that raises discards the
   connection the way a failed rollback does) and `putconn` then files an idle
   connection synchronously. Same loops afterwards: **1 backend**, and backends
-  equal to the thread count at 8/16/32 threads, with **+20% / +7% / +13%
-  throughput**. The one number that goes the other way is the serial loop,
+  equal to the thread count at 8/16/32 threads, with +20% / +7% / +13% more
+  cycles per second in that loop. Against a running `odoo-bin` (16 and 32
+  client threads of `res.partner.search_count` over JSON-RPC, `pg_stat_activity`
+  sampled every 50 ms) the throughput is unchanged — 282 → 280 req/s, the
+  server is bound elsewhere — and the peak backend count goes **64 → 16** and
+  **64 → 31**: the old shape reached the `maxconn` ceiling with 16 request
+  threads. The one number that goes the other way is the serial loop,
   **117 → 140 µs per cycle**: the returning thread now waits for the round
   trip that seven spare backends used to hide.
 - **A pooled connection's transaction flags are set once, and the session
