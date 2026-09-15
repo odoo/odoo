@@ -17,6 +17,7 @@ class ResourceAsset(models.Model):
     )
     kind_id = fields.Many2one(
         compute="_compute_kind_id",
+        precompute=True,
         store=True,
         readonly=False,
     )

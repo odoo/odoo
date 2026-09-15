@@ -53,8 +53,31 @@ class ResourceAsset(models.Model):
     date_acquisition = fields.Date(tracking=True)
     date_disposal = fields.Date(tracking=True)
     brand_new = fields.Boolean(default=True)
+    model = fields.Char(string="Model Name")
     model_year = fields.Char()
     description = fields.Html()
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+        index="btree_not_null",
+        check_company=True,
+        tracking=True,
+    )
+    partner_ref = fields.Char(string="Vendor Reference")
+    warranty_date = fields.Date(string="Warranty Expiration Date")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        compute="_compute_currency_id",
+    )
+    value_original = fields.Monetary(
+        string="Original Value",
+        copy=False,
+        tracking=True,
+    )
+    asset_properties = fields.Properties(
+        definition="kind_id.asset_properties_definition",
+        copy=True,
+    )
 
     identifier_ids = fields.One2many(
         comodel_name="resource.asset.identifier",
@@ -95,6 +118,12 @@ class ResourceAsset(models.Model):
         "CHECK(date_disposal IS NULL OR date_acquisition IS NULL OR date_disposal >= date_acquisition)",
         "An asset cannot be disposed of before it was acquired.",
     )
+
+    @api.depends("company_id")
+    def _compute_currency_id(self):
+        fallback = self.env.company.currency_id
+        for asset in self:
+            asset.currency_id = asset.company_id.currency_id or fallback
 
     @api.depends("identifier_ids.type_id", "kind_id.identifier_type_ids")
     def _compute_missing_identifier_type_ids(self):

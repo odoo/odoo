@@ -19,6 +19,7 @@ class ResourceAssetKind(models.Model):
         column2="type_id",
         string="Required Identifiers",
     )
+    asset_properties_definition = fields.PropertiesDefinition(string="Asset Properties")
     asset_ids = fields.One2many(
         comodel_name="resource.asset",
         inverse_name="kind_id",

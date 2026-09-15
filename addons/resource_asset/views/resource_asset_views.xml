@@ -98,6 +98,7 @@
                             <field name="active" invisible="1" />
                             <field name="kind_id" />
                             <field name="parent_id" />
+                            <field name="model" />
                             <field name="model_year" />
                             <field name="brand_new" />
                         </group>
@@ -113,6 +114,7 @@
                             <field name="tz" />
                         </group>
                     </group>
+                    <field name="asset_properties" columns="2" />
                     <notebook>
                         <page name="identifiers" string="Identifiers">
                             <field name="identifier_ids">
@@ -155,8 +157,13 @@
                         </page>
                         <page name="lifecycle" string="Lifecycle">
                             <group>
-                                <group>
+                                <group name="purchase">
                                     <field name="date_acquisition" />
+                                    <field name="partner_id" />
+                                    <field name="partner_ref" />
+                                    <field name="currency_id" invisible="1" />
+                                    <field name="value_original" />
+                                    <field name="warranty_date" />
                                     <field name="date_disposal" />
                                 </group>
                                 <group>

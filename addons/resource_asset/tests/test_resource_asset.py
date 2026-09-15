@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 
 from lxml import etree
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
@@ -385,3 +385,48 @@ class TestResourceAsset(TransactionCase):
                             self.Asset._is_field_groupable(group_by.split(":")[0])
                         )
         self.assertGreater(checked, 0)
+
+    def test_an_asset_records_where_it_was_bought_and_for_how_much(self):
+        vendor = self.env["res.partner"].create({"name": "Tractor dealer"})
+        truck = self._truck(
+            partner_id=vendor.id,
+            partner_ref="PO-7781",
+            value_original=48000.0,
+            warranty_date="2028-06-30",
+            model="T7.245",
+            company_id=self.env.company.id,
+        )
+        self.assertEqual(truck.currency_id, self.env.company.currency_id)
+        self.assertRecordValues(
+            truck,
+            [
+                {
+                    "partner_id": vendor.id,
+                    "partner_ref": "PO-7781",
+                    "value_original": 48000.0,
+                    "model": "T7.245",
+                }
+            ],
+        )
+        self.assertFalse(truck.copy().value_original)
+
+    def test_a_shared_asset_counts_in_the_current_company_currency(self):
+        truck = self._truck(company_id=False)
+        self.assertEqual(truck.currency_id, self.env.company.currency_id)
+
+    def test_a_vendor_of_another_company_is_refused(self):
+        foreign = self.env["res.partner"].create(
+            {"name": "Foreign dealer", "company_id": self.company_b.id}
+        )
+        with self.assertRaises(UserError):
+            self._truck(partner_id=foreign.id, company_id=self.env.company.id)
+
+    def test_each_kind_defines_the_properties_its_assets_carry(self):
+        self.vehicle.asset_properties_definition = [
+            {"name": "axles", "string": "Axles", "type": "integer"}
+        ]
+        truck = self._truck()
+        truck.asset_properties = {"axles": 3}
+        self.assertEqual(truck.asset_properties, {"axles": 3})
+        press = self.Asset.create({"name": "Press", "kind_id": self.machinery.id})
+        self.assertFalse(press.asset_properties)

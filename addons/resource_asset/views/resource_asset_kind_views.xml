@@ -5,7 +5,7 @@
         <field name="name">resource.asset.kind.list</field>
         <field name="model">resource.asset.kind</field>
         <field name="arch" type="xml">
-            <list string="Asset Kinds" editable="bottom">
+            <list string="Asset Kinds" editable="bottom" open_form_view="True">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="code" />
@@ -16,10 +16,32 @@
         </field>
     </record>
 
+    <record id="resource_asset_kind_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.kind.form</field>
+        <field name="model">resource.asset.kind</field>
+        <field name="arch" type="xml">
+            <form string="Asset Kind">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="scheduled" />
+                        </group>
+                        <group>
+                            <field name="identifier_type_ids" widget="many2many_tags" />
+                        </group>
+                    </group>
+                    <field name="asset_properties_definition" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="action_resource_asset_kind" model="ir.actions.act_window">
         <field name="name">Asset Kinds</field>
         <field name="res_model">resource.asset.kind</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

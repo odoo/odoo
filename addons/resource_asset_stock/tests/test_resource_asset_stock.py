@@ -153,3 +153,35 @@ class TestResourceAssetStock(TransactionCase):
         )
         self.assertTrue(lot.asset_id)
         self.assertEqual(lot.asset_id.sudo().kind_id, self.vehicle)
+
+    def test_an_asset_follows_its_serial_to_another_location(self):
+        lot = self.env["stock.lot"].create(
+            {
+                "name": "PK-LOC",
+                "product_id": self.product.id,
+                "company_id": self.env.company.id,
+            }
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.product, self.stock_location, 1, lot_id=lot
+        )
+        self.assertEqual(lot.asset_id.location_id, self.stock_location)
+
+    def test_an_asset_without_a_serial_keeps_the_location_set_by_hand(self):
+        shelf = self.env["stock.location"].create(
+            {
+                "name": "Tool shelf",
+                "usage": "internal",
+                "location_id": self.stock_location.id,
+            }
+        )
+        drill = self.env["resource.asset"].create(
+            {
+                "name": "Drill",
+                "kind_id": self.env.ref("resource_asset.kind_tool").id,
+                "location_id": shelf.id,
+            }
+        )
+        self.assertEqual(drill.location_id, shelf)
+        drill.name = "Hammer drill"
+        self.assertEqual(drill.location_id, shelf)
