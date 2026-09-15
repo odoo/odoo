@@ -433,12 +433,14 @@ class HrLeave(models.Model):
         # same as stamping and converting, 20x cheaper -- runs for every request read
         return start - reader_tz.utcoffset(start), stop - reader_tz.utcoffset(stop)
 
-    @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
+    @api.depends('employee_id', 'state', 'work_entry_type_id.time_off_selectable',
+            'work_entry_type_id.allow_request_on_top', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
     def _compute_dashboard_warning_message(self):
         check_warning_leaves = self.filtered_domain([
             ('state', 'not in', ('refuse', 'cancel')),
             ('work_entry_type_id.allow_request_on_top', '=', False),
+            ('work_entry_type_id.time_off_selectable', '=', True),
         ])
         (self - check_warning_leaves).dashboard_warning_message = False
         if not check_warning_leaves:
