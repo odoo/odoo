@@ -120,6 +120,7 @@ class ResPartner(models.Model):
             self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
             self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
             self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '',
+            self._l10n_fr_get_siren_from_vat(),
         ]
         for identifier in candidates:
             if not identifier:
@@ -128,7 +129,6 @@ class ResPartner(models.Model):
                 return 'siren', identifier
             elif len(identifier) == 14:
                 return 'siret', identifier
-
         return None, None
 
     def _get_suggested_pdp_identifier(self):

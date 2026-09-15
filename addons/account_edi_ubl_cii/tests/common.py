@@ -111,6 +111,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'company_registry': None,
             'bank_ids': [Command.create({'account_number': 'FR15001559627230', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.fr').id,
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR05677404089',
             **kwargs,
         })
 
@@ -310,6 +312,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
             'additional_identifiers': {'FR_SIRET': '40678483500521'},
             'company_registry': '40678483500521',
             'country_id': cls.env.ref('base.fr').id,
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
         })
         return company
 
