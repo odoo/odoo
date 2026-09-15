@@ -14,6 +14,7 @@ The system is able to add and compute the shipping line.
         "sale",
         "payment_custom",
         "credential",
+        "integration",
     ],
     "data": [
         "data/delivery_data.xml",

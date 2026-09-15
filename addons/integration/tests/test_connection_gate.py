@@ -35,6 +35,17 @@ class TestConnectionGate(TransactionCase):
             except requests.RequestException as error:
                 return error, sent
 
+    def test_a_keyword_call_reaches_the_session_as_keywords(self):
+        with patch.object(
+            GuardedSession, "request", return_value=MagicMock(status_code=200)
+        ) as sent:
+            session = self.connection._egress_session("probe_gate")
+            session.request(method="POST", url=URL, json={})
+
+        self.assertEqual(
+            sent.call_args.kwargs, {"method": "POST", "url": URL, "json": {}}
+        )
+
     def test_a_record_gets_one_connection_on_a_per_record_service(self):
         again = self.env["integration.connection"]._for_record(
             self.partner, "probe_gate", "Probe gate", "other"
@@ -57,6 +68,29 @@ class TestConnectionGate(TransactionCase):
             [("tags", "=", "egress:probe_gate")], order="id desc", limit=1
         )
         self.assertEqual(row.connection_id, self.connection)
+
+    def test_a_call_whose_connection_was_rolled_back_is_still_recorded(self):
+        partner = self.env["res.partner"].create({"name": "Rolled Back Probe"})
+        with self.assertRaises(requests.ConnectionError):
+            with self.env.cr.savepoint():
+                connection = self.env["integration.connection"]._for_record(
+                    partner, "probe_gate", "Probe gate", "other"
+                )
+                with patch.object(
+                    GuardedSession,
+                    "request",
+                    side_effect=requests.ConnectionError("down"),
+                ):
+                    connection._egress_request("POST", URL, purpose="probe_rollback")
+
+        self.env.flush_all()
+        self.env.cr.precommit.run()
+
+        row = self.env["integration.exchange"].search(
+            [("tags", "=", "egress:probe_rollback")], order="id desc", limit=1
+        )
+        self.assertTrue(row)
+        self.assertFalse(row.connection_id)
 
     def test_repeated_failures_pause_the_connection_and_calls_stop_leaving(self):
         for _ in range(2):

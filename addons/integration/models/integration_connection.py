@@ -395,10 +395,10 @@ class IntegrationConnection(models.Model):
         )
         send = session.request
 
-        def request(method, url, *args, **kwargs):
+        def request(*args, **kwargs):
             connection._admit_call()
             try:
-                response = send(method, url, *args, **kwargs)
+                response = send(*args, **kwargs)
             except requests.RequestException as error:
                 connection._settle_call(error=error)
                 raise

@@ -25,7 +25,9 @@ def _register_flush_hooks(env: api.Environment) -> None:
     def batch_create_logs():
         logs = cr.precommit.data.pop(PENDING_KEY, pending)
         if logs:
-            env["integration.exchange"].sudo().create(logs)
+            env["integration.exchange"].sudo().create(
+                _without_vanished_connections(env, logs)
+            )
             _logger.debug("Batch created %d exchange rows", len(logs))
 
     # A caller that lets an error propagate rolls its transaction back, and the
@@ -38,9 +40,32 @@ def _register_flush_hooks(env: api.Environment) -> None:
         try:
             with registry.cursor() as log_cr:
                 log_env = api.Environment(log_cr, uid, {})
-                log_env["integration.exchange"].sudo().create(list(pending))
+                log_env["integration.exchange"].sudo().create(
+                    _without_vanished_connections(log_env, pending)
+                )
         except Exception:
             _logger.exception(
                 "Could not keep %d exchange row(s) of a rolled-back transaction",
                 len(pending),
             )
+
+
+def _without_vanished_connections(
+    env: api.Environment, logs: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Unlink rows from a connection that a rollback took away.
+
+    A record's connection is created lazily in the transaction of its first
+    call. When a savepoint or the transaction around that call rolls back, the
+    connection goes with it while the call's queued row survives.
+    """
+    ids = {vals["connection_id"] for vals in logs if vals.get("connection_id")}
+    if not ids:
+        return list(logs)
+    present = set(env["integration.connection"].sudo().browse(ids).exists().ids)
+    return [
+        {**vals, "connection_id": False}
+        if vals.get("connection_id") and vals["connection_id"] not in present
+        else vals
+        for vals in logs
+    ]

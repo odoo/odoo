@@ -19,7 +19,7 @@ class DeliveryCarrier(models.Model):
     """Shipping carrier: rate computation and delivery-method configuration."""
 
     _name = "delivery.carrier"
-    _inherit = ["mixin.credential.holder"]
+    _inherit = ["mixin.credential.holder", "mixin.integration.connected"]
     _description = "Shipping Methods"
     _order = "sequence, id"
     _credential_holder_field = "carrier_credential_id"
@@ -223,6 +223,17 @@ class DeliveryCarrier(models.Model):
     )
 
     @api.constrains("must_have_tag_ids", "excluded_tag_ids")
+    def _integration_connection_service(self) -> tuple[str, str, str]:
+        self.check_singleton()
+        label = dict(
+            self._fields["delivery_type"]._description_selection(self.env)
+        ).get(self.delivery_type, self.delivery_type)
+        return (
+            f"delivery_{self.delivery_type}",
+            self.env._("Delivery: %s", label),
+            "delivery",
+        )
+
     def _check_tags(self):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
