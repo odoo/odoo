@@ -6265,6 +6265,83 @@ class TestNoRedundantLockAfterDdl(BaseCase):
             cr.commit()
 
 
+class TestPermitsSurviveKilledBackendsUnderLoad(BaseCase):
+    # Cursors are taken from db_connect(), not registry(): every TestCursor
+    # serialises on one lock, and this test exists to race.
+    def test_budget_and_checkouts_read_zero_after_the_storm(self):
+        import gc
+        import random
+
+        dbname = common.get_db_name()
+        _, info = get_connection_info_for_database(dbname)
+        pool = ConnectionPool(maxconn=6, borrow_timeout=5)
+        self.addCleanup(pool.close_all)
+        stop = threading.Event()
+        pids: set[int] = set()
+        lock = threading.Lock()
+        outcomes = {"ok": 0, "killed": 0, "pool_error": 0, "other": 0}
+
+        def worker():
+            rnd = random.Random()
+            while not stop.is_set():
+                try:
+                    cr = Cursor(pool, dbname, info)
+                except PoolError:
+                    with lock:
+                        outcomes["pool_error"] += 1
+                    continue
+                except Exception:
+                    with lock:
+                        outcomes["other"] += 1
+                    continue
+                try:
+                    cr.execute("SELECT pg_backend_pid()")
+                    with lock:
+                        pids.add(cr.fetchscalar())
+                    if rnd.random() < 0.5:
+                        cr.commit()
+                    if rnd.random() < 0.1:
+                        del cr  # dropped without close: __del__ must release
+                        continue
+                    cr.close()
+                    with lock:
+                        outcomes["ok"] += 1
+                except (psycopg.OperationalError, psycopg.InterfaceError):
+                    with lock:
+                        outcomes["killed"] += 1
+                    cr.close()
+
+        def killer():
+            with contextlib.closing(db_connect(dbname).cursor()) as admin:
+                while not stop.is_set():
+                    time.sleep(0.05)
+                    with lock:
+                        victims = list(pids)[:2]
+                        pids.difference_update(victims)
+                    for pid in victims:
+                        admin.execute("SELECT pg_terminate_backend(%s)", (pid,))
+                    admin.commit()
+
+        threads = [threading.Thread(target=worker) for _ in range(8)]
+        threads.append(threading.Thread(target=killer))
+        for t in threads:
+            t.start()
+        time.sleep(2.0)
+        stop.set()
+        for t in threads:
+            t.join(10)
+        gc.collect()
+        time.sleep(0.2)
+        health = pool.get_health()["pool"]
+        self.assertGreater(outcomes["killed"], 0, "the killer must have hit someone")
+        self.assertEqual(outcomes["other"], 0, outcomes)
+        self.assertEqual(
+            (health["budget_in_use"], health["checked_out"]),
+            (0, 0),
+            f"a permit or a checkout outlived its borrow: {health} {outcomes}",
+        )
+
+
 class TestSaturatedPoolNamesItsHolders(BaseCase):
     def setUp(self):
         super().setUp()
