@@ -448,7 +448,7 @@ class MailTemplate(models.Model):
     @api.onchange("model")
     def _onchange_model(self) -> None:
         for template in self.filtered("model"):
-            if upd_values := self._get_model_template_defaults(template.model):
+            if upd_values := self._prepare_model_template_defaults(template.model):
                 template.update(upd_values)
 
     def _get_render_error_label(self) -> str:
@@ -1434,10 +1434,10 @@ class MailTemplate(models.Model):
     ) -> bool:
         if not fname or not model:
             return False
-        return source == self._get_model_template_defaults(model).get(fname)
+        return source == self._prepare_model_template_defaults(model).get(fname)
 
     @api.model
-    def _get_model_template_defaults(self, model: str) -> dict:
+    def _prepare_model_template_defaults(self, model: str) -> dict:
         if model not in self.env:
             return {}
         defaults = getattr(self.env[model], "_mail_template_default_values", None)
