@@ -53,7 +53,7 @@ const FORM_ARCH = `
         <field name="work_entry_type_id" widget="many2one_work_entry_type"/>
     </form>`;
 
-const AVATAR = ".o_field_widget[name=work_entry_type_id] .o_calendar_renderer span";
+const AVATAR = ".o_field_widget[name=work_entry_type_id] .o_work_entry_type_badge";
 
 test.tags("desktop");
 test("dropdown selection shows display_code and color", async () => {
@@ -92,8 +92,8 @@ test("search more selection refetches display_code and color", async () => {
         search: `<search/>`,
     };
 
-    onRpc("hr.work.entry.type", "read", ({ args }) => {
-        expect.step(`read:${args[0].join(",")}:${args[1].join(",")}`);
+    onRpc("hr.work.entry.type", "web_read", ({ args }) => {
+        expect.step(`web_read:${args[0].join(",")}`);
     });
 
     await mountView({
@@ -110,7 +110,7 @@ test("search more selection refetches display_code and color", async () => {
     ).click();
     await contains(".modal .o_data_row .o_data_cell:contains('Special')").click();
 
-    expect.verifySteps(["read:200:display_name,display_code,color"]);
+    expect.verifySteps(["web_read:200"]);
     expect(AVATAR).toHaveText("S");
     expect(AVATAR).toHaveClass("o_calendar_color_7");
 });
@@ -130,8 +130,8 @@ test("search more 'Create New' refetches display_code and color of the new recor
     onRpc("hr.work.entry.type", "web_save", () => {
         expect.step("web_save");
     });
-    onRpc("hr.work.entry.type", "read", ({ args }) => {
-        expect.step(`read:${args[1].join(",")}`);
+    onRpc("hr.work.entry.type", "web_read", () => {
+        expect.step("web_read");
     });
 
     await mountView({
@@ -154,7 +154,7 @@ test("search more 'Create New' refetches display_code and color of the new recor
     await contains(".modal .o_field_widget[name=color] input").edit("3");
     await contains(".modal .o_form_button_save").click();
 
-    expect.verifySteps(["web_save", "read:display_name,display_code,color"]);
+    expect.verifySteps(["web_save", "web_read"]);
     expect(AVATAR).toHaveText("N");
     expect(AVATAR).toHaveClass("o_calendar_color_3");
 });
