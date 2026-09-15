@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from odoo.http import request_class
+from odoo.http import _session_lifecycle, request_class
 from odoo.http.constants import SESSION_LIFETIME, SESSION_ROTATION_INTERVAL
 
 
@@ -61,7 +61,7 @@ MAX_INACTIVITY = 4242
 @pytest.fixture(autouse=True)
 def _fixed_inactivity(monkeypatch):
     monkeypatch.setattr(
-        request_class, "get_session_max_inactivity", lambda env: MAX_INACTIVITY
+        _session_lifecycle, "get_session_max_inactivity", lambda env: MAX_INACTIVITY
     )
 
 
@@ -125,7 +125,9 @@ def test_an_old_authenticated_session_rotates_softly():
 
 
 def test_the_periodic_rotation_skips_excluded_paths(monkeypatch):
-    monkeypatch.setattr(request_class, "SESSION_ROTATION_EXCLUDED_PATHS", {"/poll"})
+    monkeypatch.setattr(
+        _session_lifecycle, "SESSION_ROTATION_EXCLUDED_PATHS", {"/poll"}
+    )
     s = _Session(uid=2)
     s["create_time"] = time.time() - SESSION_ROTATION_INTERVAL - 1
     store, _ = _save(s, path="/poll")

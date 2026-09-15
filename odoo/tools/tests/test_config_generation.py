@@ -46,4 +46,6 @@ class TestConfigGeneration(unittest.TestCase):
         self.assertEqual(config.generation, stable)
         with patch.object(config, "options", {**config.options, "x_sendfile": True}):
             self.assertNotEqual(config.generation, config.generation)
-        self.assertEqual(config.generation, stable)
+        restored = config.generation
+        self.assertGreater(restored, stable)
+        self.assertEqual(config.generation, restored)

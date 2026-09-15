@@ -108,7 +108,7 @@ live process state through `from . import _process_state`.
 > (2026-09-13), is read by `[connectivity]` alone — it stays `[foundation]`
 > for what it imports, not for who reads it;
 > `http/helpers.py` imports `core` and is imported by
-> `dispatcher`/`_serve`/`request_class`/`_retry`, so it is `[serving]`, not
+> `dispatcher`/`_serve`/`_session_lifecycle`/`_retry`, so it is `[serving]`, not
 > `[features]`; `http/constants.py`, `exceptions.py` and `_protocols.py` import
 > nothing else in `http/` at runtime and are read by both tiers, so they are
 > `[foundation]`, and `http-features-below-serving` holds them below `[serving]`
@@ -333,7 +333,7 @@ multiple inheritance — 18 public (`CreateMixin` … `AccessMixin`) plus 8 priv
 | `BaseModel` (`orm/models/`) | 31 | no |
 | `Field` (`orm/fields/`) | 5 | **yes** |
 | `Registry` (`orm/runtime/`) | 7 | no |
-| `Request` (`http/request_class.py`) | 4 | no |
+| `Request` (`http/request_class.py`) | 5 | no |
 | `Cursor` (`db/cursor.py`) | 3 | **yes** |
 
 Units are **file-level** (2026-09-11): `BaseModel` counts 31 because

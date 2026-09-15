@@ -66,7 +66,7 @@ def _get_settings_from_live_config() -> HttpSettings:
     return settings
 
 
-def _get_live_config_generation() -> object:
+def _get_live_config_generation() -> int:
     import odoo.tools
 
     return odoo.tools.config.generation

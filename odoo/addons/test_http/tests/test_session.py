@@ -151,7 +151,7 @@ class TestHttpSession(TestHttpBase):
         session["geoip"] = {}
         odoo.http.root.session_store.save(session)
 
-        with self.assertLogs("odoo.http.request_class", level="WARNING") as (
+        with self.assertLogs("odoo.http._session_lifecycle", level="WARNING") as (
             _,
             warnings,
         ):
@@ -160,7 +160,7 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(
             warnings,
             [
-                "WARNING:odoo.http.request_class:Logged into database 'idontexist', but dbfilter rejects it; logging session out.",
+                "WARNING:odoo.http._session_lifecycle:Logged into database 'idontexist', but dbfilter rejects it; logging session out.",
             ],
         )
         self.assertTrue(root.session_store.get(session.sid).is_new)

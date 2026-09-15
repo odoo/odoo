@@ -63,23 +63,23 @@ def test_db_list_degrades_on_any_psycopg_error(fresh_monodb_cache):
 
 
 def test_resolution_goes_through_the_public_db_list():
-    import odoo.http.request_class as rc
+    import odoo.http._session_lifecycle as rc
 
     source = pathlib.Path(rc.__file__).read_text(encoding="utf-8")
     assert "http.get_dbs_served(force=True, host=host)" in source
     assert "\n    get_dbs_served,\n" not in source, (
-        "request_class must not bind get_dbs_served at import time, or patching "
+        "_session_lifecycle must not bind get_dbs_served at import time, or patching "
         "odoo.http.get_dbs_served stops reaching the mono-db resolution path"
     )
 
 
 def test_resolution_goes_through_the_public_db_filter():
-    import odoo.http.request_class as rc
+    import odoo.http._session_lifecycle as rc
 
     source = pathlib.Path(rc.__file__).read_text(encoding="utf-8")
     assert "http.filter_dbs_served(" in source
     assert "\n    filter_dbs_served,\n" not in source, (
-        "request_class must not bind filter_dbs_served at import time, or patching "
+        "_session_lifecycle must not bind filter_dbs_served at import time, or patching "
         "odoo.http.filter_dbs_served stops reaching the resolution path"
     )
 

@@ -34,6 +34,13 @@ if TYPE_CHECKING:
         registry: Registry | None
         session: Session
         _session_response: Response | None
+        _session_snapshot: Session | None
+        _session_transaction_cursor: Any
+        _session_written_in_transaction: bool
+        _session_max_age: int | None
+        _session_save_pending: bool
+
+        def get_default_lang(self) -> str: ...
 
         def _select_session_and_dbname(
             self, sid: str | None = None

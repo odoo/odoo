@@ -15,6 +15,7 @@ CLEAN_MODULES = (
     "odoo.http._protocols",
     "odoo.http._response",
     "odoo.http._serve",
+    "odoo.http._session_lifecycle",
     "odoo.http.application",
     "odoo.http.controller",
     "odoo.http.dispatcher",

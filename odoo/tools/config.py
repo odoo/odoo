@@ -2348,15 +2348,17 @@ class configmanager:
             sys.stderr.write(f"ERROR: couldn't create the config directory: {exc}\n")
 
     @property
-    def generation(self) -> object:
+    def generation(self) -> int:
         # A test that swaps `options` for a plain mapping (patch.object) writes
-        # past the counting layers; while that lasts nothing may be memoised.
+        # past the counting layers; while that lasts every read moves the
+        # counter, so nothing may be memoised.
         options = self.options
-        if isinstance(options, collections.ChainMap) and all(
-            isinstance(layer, _CountingDict) for layer in options.maps
+        if not (
+            isinstance(options, collections.ChainMap)
+            and all(isinstance(layer, _CountingDict) for layer in options.maps)
         ):
-            return self._generation
-        return object()
+            self._generation += 1
+        return self._generation
 
     def _bump_generation(self) -> None:
         self._generation += 1

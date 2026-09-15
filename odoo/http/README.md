@@ -207,7 +207,8 @@ review does.
 | `__init__.py` | — | Public API: re-exports every symbol of the package |
 | `application.py` | serving | `Application`: the WSGI callable, static/nodb/db routing decision, error logging and `_finalize_error_response` |
 | `_serve.py` | serving | `_RequestServeMixin`: `_serve_static`, `_serve_nodb`, `_serve_db`, `_serve_aborted`, `_serve_ir_http`, `_serve_ir_http_fallback` |
-| `request_class.py` | serving | `Request`, composed from the serve / response / CSRF mixins |
+| `request_class.py` | serving | `Request`, composed from the serve / response / CSRF / session mixins; what is left on the class itself is request identity (`params`, `cookies`, `best_lang`, `update_env`, the profiler hook, `_reset_for_replay`) |
+| `_session_lifecycle.py` | serving | `_RequestSessionMixin`: loading the session and choosing the database (`_load_session`, `_select_dbname`), then staging, persisting, flushing and restoring it around the transaction (`_save_session`, `_persist_session`, `_bind_session_transaction`, `_flush_session`, `_restore_session_snapshot`) and folding the staged headers into the response |
 | `_response.py` | serving | `_RequestResponseMixin`: `prepare_response`, `prepare_json_response`, redirects, `render` |
 | `_csrf.py` | serving | `_RequestCsrfMixin`: CSRF token generation and validation |
 | `dispatcher.py` | serving | `Dispatcher` and its three subclasses (`HttpDispatcher`, `JsonRPCDispatcher`, `Json2Dispatcher`), selected by `routing["type"]` |
