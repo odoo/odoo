@@ -214,6 +214,7 @@ class AccountAnalyticLine(models.Model):
             readonly_timesheets.readonly_timesheet = True
             (self - readonly_timesheets).readonly_timesheet = False
 
+    @api.depends("company_id.timesheet_encode_uom_id")
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = (
@@ -260,6 +261,12 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.department_id = line.employee_id.department_id
 
+    @api.depends(
+        "company_id.timesheet_encode_uom_id",
+        "display_name",
+        "project_id",
+        "unit_amount",
+    )
     def _compute_calendar_display_name(self):
         companies = self.company_id
         encoding_in_days_per_company = dict(

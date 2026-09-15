@@ -104,6 +104,7 @@ class SaleOrder(models.Model):
             field, validate=validate
         )
 
+    @api.depends("timesheet_count", "project_count", "line_ids.product_id")
     def _compute_show_hours_recorded_button(self):
         show_button_ids = self._get_order_with_valid_service_product()
         for order in self:

@@ -24,12 +24,14 @@ class ProjectUpdate(models.Model):
         readonly=True,
     )
 
+    @api.depends("allocated_time", "timesheet_time")
     def _compute_timesheet_percentage(self):
         for update in self:
             update.timesheet_percentage = update.allocated_time and round(
                 update.timesheet_time * 100 / update.allocated_time
             )
 
+    @api.depends("project_id.allow_timesheets")
     def _compute_display_timesheet_stats(self):
         for update in self:
             update.display_timesheet_stats = update.project_id.allow_timesheets
