@@ -344,6 +344,9 @@
             />
         </div>
     </t>
+    <BuilderRow label.translate="Visibility" t-if="!domState.elClassList.includes('s_website_form_field_hidden')">
+        <t t-call="website.DeviceVisibility"/>
+    </BuilderRow>
 </t>
 
 <t t-name="website.s_website_form_submit_option">
