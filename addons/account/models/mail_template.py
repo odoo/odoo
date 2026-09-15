@@ -9,7 +9,6 @@ class MailTemplate(models.Model):
     def _unlink_except_master_mail_template(self):
         master_xmlids = {
             "account.email_template_edi_invoice",
-            "account.email_template_edi_credit_note",
         }
         removed_xml_ids = set(self.get_external_id().values())
         if removed_xml_ids.intersection(master_xmlids):
