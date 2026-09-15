@@ -420,9 +420,9 @@ export class LinkPopover extends Component {
                     return {};
                 });
 
-            this.state.urlTitle = externalMetadata?.og_title || this.state.url;
-            this.state.urlDescription = externalMetadata?.og_description || "";
-            this.state.imgSrc = externalMetadata?.og_image || "";
+            this.state.urlTitle = externalMetadata?.og_title?.trim() || this.state.url;
+            this.state.urlDescription = externalMetadata?.og_description?.trim() || "";
+            this.state.imgSrc = externalMetadata?.og_image?.trim() || "";
             if (
                 externalMetadata?.og_image &&
                 this.state.label &&
