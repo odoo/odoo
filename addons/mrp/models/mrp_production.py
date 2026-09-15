@@ -2428,11 +2428,12 @@ class MrpProduction(models.Model):
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
         # want the move lines to be canceled.
         now = fields.Datetime.now()
-        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
-            'date': now,
+        finished_moves = productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids
+        finished_moves.filtered(lambda x: x.state not in ('done', 'cancel')).write({
             'state': 'done',
             'product_uom_qty': 0.0,
         })
+        finished_moves.filtered(lambda x: x.state == 'done').date = now
         for production in self:
             production.write({
                 'date_finished': now,
