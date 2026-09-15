@@ -328,14 +328,14 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         )
 
         return {
-            "initial_balances": self._get_initial_balance_values(
+            "initial_balances": self._prepare_initial_balance_values(
                 partner_ids_to_expand, options
             )
             if partner_ids_to_expand
             else {},
             # load_more_limit cannot be passed to this call, otherwise it won't be applied per partner but on the whole result.
             # We gain perf from batching, but load every result, even if the limit restricts them later.
-            "aml_values": self._get_aml_values(options, partner_ids_to_expand)
+            "aml_values": self._prepare_aml_values(options, partner_ids_to_expand)
             if partner_ids_to_expand
             else {},
         }
@@ -595,7 +595,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         return SQL(" UNION ALL ").join(queries)
 
     @_debug.perf.timed
-    def _get_initial_balance_values(self, partner_ids, options):
+    def _prepare_initial_balance_values(self, partner_ids, options):
         report = self.env["account.report"].browse(options["report_id"])
 
         _debug.logic(
@@ -838,7 +838,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
                     record_id
                 ]
             else:
-                init_balance_by_col_group = self._get_initial_balance_values(
+                init_balance_by_col_group = self._prepare_initial_balance_values(
                     [record_id], options
                 )[record_id]
             initial_balance_line = (
@@ -867,7 +867,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         if unfold_all_batch_data:
             aml_results = unfold_all_batch_data["aml_values"][record_id]
         else:
-            aml_results = self._get_aml_values(
+            aml_results = self._prepare_aml_values(
                 options, [record_id], offset=offset, limit=limit_to_load
             )[record_id]
 
@@ -954,7 +954,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         return SQL("account_move_line.date, account_move_line.id")
 
     @_debug.perf.timed
-    def _get_aml_values(self, options, partner_ids, offset=0, limit=None):
+    def _prepare_aml_values(self, options, partner_ids, offset=0, limit=None):
         rslt = {partner_id: [] for partner_id in partner_ids}
 
         partner_ids_wo_none = [x for x in partner_ids if x]
