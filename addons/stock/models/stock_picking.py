@@ -2099,4 +2099,4 @@ class StockPicking(models.Model):
             moves_count = len(set(self.move_ids.ids + picking.move_ids.ids))
             if moves_count > self.picking_type_id.batch_max_lines:
                 return False
-        return not self.picking_type_id.batch_max_pickings or self.picking_type_id.batch_max_pickings > 1
+        return True
