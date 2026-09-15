@@ -395,6 +395,31 @@ else:
         self.assertNotEqual(lead.deadline, False)
         self.assertEqual(len(lead.message_ids.mail_ids), 1)
 
+    def test_014_recompute_on_create(self):
+        """An automation runs once when its trigger field is computed during create."""
+        stage_field = self.env.ref("test_base_automation.field_base_automation_lead_test__stage_id")
+        create_automation(
+            self,
+            model_id=self.env['ir.model']._get_id('base.automation.lead.thread.test'),
+            trigger='on_create_or_write',
+            trigger_field_ids=[Command.link(stage_field.id)],
+            filter_domain="[('stage_id', '!=', False)]",
+            _actions={
+                'state': 'mail_post',
+                'template_id': self.test_mail_template_automation.id,
+            },
+        )
+
+        lead = self.env['base.automation.lead.thread.test'].with_context(
+            test_base_automation_read_stage_on_create=True,
+        ).create({
+            'name': "Lead Test",
+            'user_id': self.user_admin.id,
+        })
+        self.addCleanup(lead.unlink)
+        self.assertTrue(lead.stage_id)
+        self.assertEqual(len(lead.message_ids.mail_ids), 1)
+
     def test_020_recursive(self):
         """ Check that a rule is executed recursively by a secondary change. """
         create_automation(
