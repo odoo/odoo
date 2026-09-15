@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+from unittest import mock
 
 import pytest
 from werkzeug.test import EnvironBuilder
@@ -314,3 +315,30 @@ def test_a_committed_session_can_no_longer_be_restored(store):
 
     req._restore_session_snapshot()
     assert req.session["effect"] == 1
+
+
+def test_a_disk_reload_on_rollback_does_not_reselect_the_database(store):
+    from odoo import http
+
+    req, _cursor = transaction_request(store)
+    req.db = "served_db"
+    req.session.db = "served_db"
+    req.httprequest = SimpleNamespace(
+        session_id=req.session.sid,
+        remote_addr=None,
+        environ={"HTTP_HOST": "h"},
+        headers={"X-Odoo-Database": "other_db"},
+        accept_languages=SimpleNamespace(best=None),
+    )
+    store.save(req.session)
+    req._session_written_in_transaction = True
+
+    with (
+        mock.patch.object(http, "filter_dbs_served") as filtered,
+        mock.patch.object(http, "get_dbs_served") as listed,
+    ):
+        req._restore_session_snapshot()
+
+    assert req.session.db == "served_db"
+    assert filtered.call_count == 0, "the restore consulted the dbfilter"
+    assert listed.call_count == 0

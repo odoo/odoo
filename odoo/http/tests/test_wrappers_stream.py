@@ -110,3 +110,17 @@ def test_from_binary_field_accepts_a_str_field_value():
     stream = Stream.from_binary_field(_Record(), "f")
 
     assert stream.data == b"hello"
+
+
+def test_from_endpoint_result_keeps_a_bare_response_template():
+    raw = _Response(template="web.layout", qcontext={"k": 1})
+    out = Response.from_endpoint_result(raw)
+    assert out.template == "web.layout"
+    assert out.qcontext["k"] == 1
+
+
+def test_from_endpoint_result_gives_a_werkzeug_response_fresh_qweb_state():
+    out = Response.from_endpoint_result(werkzeug.wrappers.Response(b"x", status=201))
+    assert out.template is None
+    assert out.status_code == 201
+    assert out.data == b"x"
