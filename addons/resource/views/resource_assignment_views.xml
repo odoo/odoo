@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <list string="Assignments" decoration-muted="state == 'ended'">
                 <field name="resource_id" />
-                <field name="assignee_id" />
+                <field name="assignee_partner_id" />
                 <field name="role" />
                 <field name="date_start" />
                 <field name="date_end" />
@@ -44,7 +44,7 @@
                         <group name="parties">
                             <field name="active" invisible="1" />
                             <field name="resource_id" />
-                            <field name="assignee_id" required="1" />
+                            <field name="assignee_partner_id" required="1" />
                             <field name="role" />
                         </group>
                         <group name="period">
@@ -69,7 +69,7 @@
         <field name="arch" type="xml">
             <search string="Assignments">
                 <field name="resource_id" />
-                <field name="assignee_id" />
+                <field name="assignee_partner_id" />
                 <filter
                     name="active"
                     string="Active"
@@ -95,7 +95,7 @@
                 <filter
                     name="group_assignee"
                     string="Assignee"
-                    context="{'group_by': 'assignee_id'}" />
+                    context="{'group_by': 'assignee_partner_id'}" />
                 <filter
                     name="group_role"
                     string="Role"

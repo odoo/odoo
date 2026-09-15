@@ -6,12 +6,12 @@
         <field name="model">resource.assignment</field>
         <field name="inherit_id" ref="resource.resource_assignment_view_form" />
         <field name="arch" type="xml">
-            <field name="assignee_id" position="attributes">
+            <field name="assignee_partner_id" position="attributes">
                 <attribute name="required">not department_id</attribute>
                 <attribute name="invisible">department_id</attribute>
             </field>
-            <field name="assignee_id" position="after">
-                <field name="department_id" invisible="assignee_id" />
+            <field name="assignee_partner_id" position="after">
+                <field name="department_id" invisible="assignee_partner_id" />
             </field>
         </field>
     </record>
@@ -21,7 +21,7 @@
         <field name="model">resource.assignment</field>
         <field name="inherit_id" ref="resource.resource_assignment_view_list" />
         <field name="arch" type="xml">
-            <field name="assignee_id" position="after">
+            <field name="assignee_partner_id" position="after">
                 <field name="department_id" optional="show" />
             </field>
         </field>

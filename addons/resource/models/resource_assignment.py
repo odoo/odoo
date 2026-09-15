@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -32,8 +34,13 @@ class ResourceAssignment(models.Model):
         help="Who holds it.",
     )
     assignee_partner_id = fields.Many2one(
-        related="assignee_id.partner_id",
+        comodel_name="res.partner",
+        string="Holder",
+        compute="_compute_assignee_partner_id",
         store=True,
+        readonly=False,
+        domain="[('is_company', '=', False)]",
+        help="The person who holds it. Anyone can: picking a person gives them a human resource in the company of what they hold.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -70,6 +77,51 @@ class ResourceAssignment(models.Model):
         "An assignment cannot end before it starts.",
     )
     _resource_period_idx = models.Index("(resource_id, date_start, date_end)")
+
+    @api.depends("assignee_id.partner_id")
+    def _compute_assignee_partner_id(self):
+        for record in self:
+            record.assignee_partner_id = record.assignee_id.partner_id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._update_assignee_vals(vals_list)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "assignee_partner_id" not in vals:
+            return super().write(vals)
+        vals = dict(vals)
+        party = self.env["res.partner"].browse(vals.pop("assignee_partner_id"))
+        if not party:
+            return super().write({**vals, "assignee_id": False})
+        resource = self.env["resource.resource"].browse(vals.get("resource_id"))
+        by_company = self.grouped(
+            lambda record: (resource or record.resource_id).company_id
+        )
+        for company, records in by_company.items():
+            holder = party.sudo()._get_or_create_resources(company)
+            super(ResourceAssignment, records).write({**vals, "assignee_id": holder.id})
+        return True
+
+    def _update_assignee_vals(self, vals_list):
+        default_resource_id = self.env.context.get("default_resource_id")
+        pending = defaultdict(list)
+        for vals in vals_list:
+            party_id = vals.pop("assignee_partner_id", None)
+            if not party_id or vals.get("assignee_id"):
+                continue
+            resource = self.env["resource.resource"].browse(
+                vals.get("resource_id") or default_resource_id
+            )
+            pending[resource.company_id].append((vals, party_id))
+        for company, entries in pending.items():
+            parties = self.env["res.partner"].browse(
+                [party_id for _vals, party_id in entries]
+            )
+            holders = parties.sudo()._get_or_create_resources(company)
+            for (vals, _party_id), holder in zip(entries, holders, strict=True):
+                vals["assignee_id"] = holder.id
 
     @api.depends("resource_id.name", "assignee_id.name", "role")
     @api.depends_context("lang")

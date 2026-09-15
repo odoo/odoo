@@ -294,3 +294,49 @@ class TestResourceAssignment(TransactionCase):
         self.assertFalse(
             self.Reservation.search([("res_model", "=", "resource.assignment")])
         )
+
+    def test_anyone_can_hold_by_their_contact(self):
+        contractor = self.env["res.partner"].create({"name": "Outside Mechanic"})
+        assignment = self.Assignment.create(
+            {
+                "resource_id": self.truck.id,
+                "assignee_partner_id": contractor.id,
+                "role": "technician",
+            }
+        )
+        self.assertEqual(assignment.assignee_partner_id, contractor)
+        self.assertEqual(assignment.assignee_id.partner_id, contractor)
+        self.assertEqual(assignment.assignee_id.resource_type, "user")
+        self.assertEqual(assignment.assignee_id.company_id, self.truck.company_id)
+        self.assertEqual(self.truck.holder_id, assignment.assignee_id)
+
+    def test_a_contact_who_is_a_resource_holds_with_that_resource(self):
+        assignment = self.Assignment.create(
+            {
+                "resource_id": self.truck.id,
+                "assignee_partner_id": self.driver.partner_id.id,
+            }
+        )
+        self.assertEqual(assignment.assignee_id, self.driver)
+
+    def test_one_person_twice_in_a_batch_is_one_resource(self):
+        renter = self.env["res.partner"].create({"name": "Weekend Renter"})
+        van = self.env["resource.resource"].create(
+            {"name": "Van 3", "resource_type": "material", "tz": "UTC"}
+        )
+        first, second = self.Assignment.create(
+            [
+                {"resource_id": self.truck.id, "assignee_partner_id": renter.id},
+                {"resource_id": van.id, "assignee_partner_id": renter.id},
+            ]
+        )
+        self.assertEqual(first.assignee_id, second.assignee_id)
+        self.assertEqual(renter.resource_ids, first.assignee_id)
+
+    def test_changing_the_holder_by_contact(self):
+        assignment = self._assign()
+        assignment.assignee_partner_id = self.other_driver.partner_id
+        self.assertEqual(assignment.assignee_id, self.other_driver)
+        newcomer = self.env["res.partner"].create({"name": "Newcomer"})
+        assignment.assignee_partner_id = newcomer
+        self.assertEqual(assignment.assignee_id.partner_id, newcomer)

@@ -33,7 +33,9 @@ class ResPartner(models.Model):
         resource_by_party = {
             resource.partner_id: resource for resource in self._get_resources(company)
         }
-        missing = self.filtered(lambda party: party not in resource_by_party)
+        missing = self.browse(
+            list(dict.fromkeys(p.id for p in self if p not in resource_by_party))
+        )
         created = self.env["resource.resource"].create(
             [
                 {
