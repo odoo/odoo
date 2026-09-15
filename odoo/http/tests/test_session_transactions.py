@@ -251,3 +251,38 @@ def test_an_internal_rollback_does_not_disable_post_commit_persistence(store):
     cursor.postcommit.run()
     assert store.get(req.session.sid)["effect"] == 1
     assert response.headers.getlist("Set-Cookie")
+
+
+def test_rollback_restore_is_idempotent_between_the_participant_and_the_cursor(
+    store,
+):
+    from odoo.http._retry import RequestRetryParticipant
+
+    req, cursor = transaction_request(store)
+    sid = req.session.sid
+    req.session["effect"] = 1
+    req.session.can_save = False
+    snapshot = req._session_snapshot
+
+    RequestRetryParticipant(req).on_rollback(Exception("promoted"))
+    assert req.session is snapshot
+    assert "effect" not in req.session
+    assert not req.session.can_save, "a refusal to save survives the restore"
+    assert req._session_snapshot is None
+
+    req.session["late"] = 2
+    cursor.postrollback.run()
+    assert req.session is snapshot
+    assert req.session["late"] == 2, "a second restore must not undo later work"
+    assert req.session.sid == sid
+
+
+def test_a_committed_session_can_no_longer_be_restored(store):
+    req, cursor = transaction_request(store)
+    req.session["effect"] = 1
+    req.dispatcher.post_dispatch(Response("ok"))
+    cursor.postcommit.run()
+    assert req._session_snapshot is None
+
+    req._restore_session_snapshot()
+    assert req.session["effect"] == 1

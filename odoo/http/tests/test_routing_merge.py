@@ -314,3 +314,56 @@ def test_typed_specs_are_stable_across_repeated_map_builds():
         endpoint(**coerce_params({"n": raw}, endpoint._param_specs))
         assert seen["v"] == (want, "int")
     assert not hasattr(Parent.__dict__["hit"], "_param_specs")
+
+
+def test_a_plain_helper_method_is_neither_a_route_nor_a_warning(caplog):
+    from odoo.http.routing import _generate_routing_rules
+
+    class Base(Controller):
+        @route("/a", auth="none")
+        def a(self):
+            return self._helper()
+
+        def _helper(self):
+            return "base"
+
+    Base.__module__ = "odoo.addons.ma.controllers"
+
+    class Child(Base):
+        def _helper(self):
+            return "child"
+
+    Child.__module__ = "odoo.addons.mb.controllers"
+
+    Controller.children_classes.clear()
+    Controller.children_classes["ma"].append(Base)
+    with caplog.at_level(logging.WARNING, logger="odoo.http.routing"):
+        rules = dict(_generate_routing_rules(["ma", "mb"], False))
+    assert set(rules) == {"/a"}
+    assert "overridden without @route" not in caplog.text
+    assert rules["/a"]().data == b"child"
+
+
+def test_an_undecorated_override_of_a_route_warns_once_and_serves_the_parent(caplog):
+    from odoo.http.routing import _generate_routing_rules
+
+    class Base(Controller):
+        @route("/a", auth="none")
+        def a(self):
+            return "base"
+
+    Base.__module__ = "odoo.addons.ma.controllers"
+
+    class Child(Base):
+        def a(self):
+            return "child"
+
+    Child.__module__ = "odoo.addons.mb.controllers"
+
+    Controller.children_classes.clear()
+    Controller.children_classes["ma"].append(Base)
+    with caplog.at_level(logging.WARNING, logger="odoo.http.routing"):
+        rules = dict(_generate_routing_rules(["ma", "mb"], False))
+    assert set(rules) == {"/a"}
+    assert caplog.text.count("overridden without @route") == 1
+    assert rules["/a"]().data == b"base", "the undecorated override is skipped"

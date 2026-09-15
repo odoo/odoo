@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, NoReturn
 
+import werkzeug.exceptions
 from werkzeug.exceptions import (
     BadGateway,
     BadRequest,
@@ -20,7 +21,6 @@ from werkzeug.exceptions import (
     Unauthorized,
     UnprocessableEntity,
     UnsupportedMediaType,
-    abort,
 )
 
 from odoo.libs.debug_log import DebugLog
@@ -52,6 +52,14 @@ class SessionExpiredException(Exception):
     __module__ = "odoo.http"
 
     http_status: int = HTTPStatus.FORBIDDEN
+
+
+def abort(status: int | Response, *args: Any, **kwargs: Any) -> NoReturn:
+    # Resolved per call: `wrappers` installs the Odoo `abort` on werkzeug after
+    # this module is imported, so a name bound here at import time would be
+    # werkzeug's original for the life of the process.
+    werkzeug.exceptions.abort(status, *args, **kwargs)
+    raise AssertionError("werkzeug.exceptions.abort returned")
 
 
 def get_error_response(exc: BaseException) -> ErrorResponse | None:

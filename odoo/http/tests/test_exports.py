@@ -1,5 +1,7 @@
 import types
 
+import pytest
+
 import odoo.http
 
 
@@ -24,4 +26,18 @@ def test_every_public_name_is_declared_in_all():
     assert not undeclared, (
         f"reachable as odoo.http.<name> but absent from __all__: {undeclared}. "
         f"Declare them, or stop re-exporting them from __init__."
+    )
+
+
+def test_abort_reaches_the_patched_werkzeug_abort():
+    import werkzeug.exceptions
+
+    from odoo.http import wrappers
+
+    assert werkzeug.exceptions.abort is wrappers.abort
+    with pytest.raises(werkzeug.exceptions.HTTPException) as caught:
+        odoo.http.abort(odoo.http.Response("x", status=204))
+    assert caught.value.response is not None
+    assert not isinstance(caught.value.response, odoo.http.Response), (
+        "the patched abort unwraps the proxy before handing werkzeug the response"
     )

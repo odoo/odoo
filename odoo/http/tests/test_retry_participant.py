@@ -12,22 +12,13 @@ def _request(**kwargs):
 
 
 class TestOnRollback:
-    def test_the_session_is_refetched_by_its_sid(self):
+    def test_the_session_snapshot_is_restored_not_reloaded_from_disk(self):
         request = _request()
-        request.session.sid = "abc123"
-        new_session = MagicMock()
-        request._select_session_and_dbname.return_value = (new_session, "testdb")
 
         RequestRetryParticipant(request).on_rollback(Exception("boom"))
 
-        request._select_session_and_dbname.assert_called_once_with(sid="abc123")
-        assert request.session is new_session
-
-    def test_a_request_with_no_sid_still_refetches(self):
-        request = _request()
-        del request.session.sid
-        RequestRetryParticipant(request).on_rollback(Exception("boom"))
-        request._select_session_and_dbname.assert_called_once_with(sid=None)
+        request._restore_session_snapshot.assert_called_once_with()
+        request._select_session_and_dbname.assert_not_called()
 
 
 class TestOnRetry:

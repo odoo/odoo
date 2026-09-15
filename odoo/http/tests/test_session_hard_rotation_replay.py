@@ -47,28 +47,6 @@ def test_hard_rotation_unlinks_the_cookie_sid(store):
     assert store.get(sess.sid).get("login") == "alice", "the new sid does"
 
 
-def test_refresh_after_rotation_keys_on_the_current_sid(store):
-    from odoo.http._retry import RequestRetryParticipant
-
-    sess = _saved_session(store, "alice")
-    cookie_sid = sess.sid
-    store.rotate(sess, env=None, soft=False)
-
-    class _FakeRequest:
-        def __init__(self):
-            self.session = sess
-
-        def _select_session_and_dbname(self, sid=None):
-            key = sid if sid is not None else cookie_sid
-            return store.get(key), None
-
-    request = _FakeRequest()
-    RequestRetryParticipant(request).on_rollback(Exception("rolled back"))
-
-    assert not request.session.is_new, "the refresh minted an anonymous session"
-    assert request.session.get("login") == "alice", "the session was lost"
-
-
 def test_save_reraises_on_persistence_failure(store, monkeypatch):
     sess = store.new()
     sess["uid"] = None

@@ -16,7 +16,7 @@ replica if configured.
 `jsonrpc`), and `readonly` **defaults to `auth == "none"`**, *not* to `False`:
 
 ```python
-# odoo/http/routing.py — _merge_routing fragment
+# odoo/http/routing.py — _prepare_route_fragment
 default_mode = fragment.get("readonly", default_auth == "none")
 ```
 

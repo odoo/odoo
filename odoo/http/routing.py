@@ -7,9 +7,10 @@ import logging
 import warnings
 from collections.abc import Callable, Collection, Generator, Iterable
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
 import werkzeug.routing
+from werkzeug.exceptions import BadRequest
 
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import submap
@@ -119,11 +120,17 @@ def prepare_routing_map(
     return routing_map
 
 
-def _get_endpoint_param_acceptance(
-    endpoint: Callable,
-) -> tuple[bool, frozenset[str], str]:
+class _EndpointSignature(NamedTuple):
+    accepts_var_keyword: bool
+    accepted: frozenset[str]
+    required: frozenset[str]
+    bound_self_name: str
+
+
+def _get_endpoint_signature(endpoint: Callable) -> _EndpointSignature:
     accepts_var_keyword = False
     named: set[str] = set()
+    required: set[str] = set()
     params = list(
         inspect.signature(
             endpoint, annotation_format=annotationlib.Format.FORWARDREF
@@ -138,7 +145,11 @@ def _get_endpoint_param_acceptance(
             inspect.Parameter.KEYWORD_ONLY,
         ):
             named.add(param.name)
-    return accepts_var_keyword, frozenset(named), bound_self_name
+            if param.default is inspect.Parameter.empty:
+                required.add(param.name)
+    return _EndpointSignature(
+        accepts_var_keyword, frozenset(named), frozenset(required), bound_self_name
+    )
 
 
 def _apply_param_specs(endpoint: Endpoint, specs: dict[str, Any] | None) -> None:
@@ -148,10 +159,6 @@ def _apply_param_specs(endpoint: Endpoint, specs: dict[str, Any] | None) -> None
         if specs
         else None
     )
-
-
-def _get_original_endpoint(method: Any) -> Callable:
-    return method.original_endpoint
 
 
 def _check_cors_credentials(who: str, routing: Any) -> None:
@@ -226,12 +233,20 @@ def route(route: str | Iterable[str] | None = None, **routing: Any) -> Callable:
                 unknown=",".join(sorted(unknown)),
             )
 
-        accepts_var_keyword, accepted_params, bound_self_name = (
-            _get_endpoint_param_acceptance(endpoint)
+        accepts_var_keyword, accepted_params, required_params, bound_self_name = (
+            _get_endpoint_signature(endpoint)
         )
 
         @functools.wraps(endpoint)
         def route_wrapper(controller_self, /, *args, **params):
+            if not args and not params.keys() >= required_params:
+                missing = sorted(required_params - params.keys())
+                _debug.logic(
+                    "http.route.params_missing",
+                    endpoint=fname,
+                    missing=",".join(missing),
+                )
+                raise BadRequest(f"missing required parameter(s) {missing}")
             if accepts_var_keyword:
                 params_ok = params
                 params_ko = None
@@ -372,26 +387,24 @@ def _get_controllers(modules: Collection[str]) -> Generator[Controller]:
         yield Ctrl()
 
 
-def _is_route(ctrl: Controller, method_name: str) -> bool:
-    return any(
-        getattr(getattr(cls, method_name, None), "original_routing", None) is not None
-        for cls in type(ctrl).mro()
-    )
+class _ResolvedRoute(NamedTuple):
+    routing: dict[str, Any]
+    method: Any
+    param_specs: dict[str, ParamSpec] | None
 
 
-def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
-    merged_routing: dict[str, Any] = {"auth": "user", "methods": None, "routes": []}
-    ancestors = [
-        cls
+def _resolve_route(ctrl: Controller, method_name: str) -> _ResolvedRoute | None:
+    definitions = [
+        (cls, getattr(cls, method_name))
         for cls in reversed(type(ctrl).mro())
-        if cls is not Controller and cls is not object
+        if cls is not Controller and cls is not object and method_name in cls.__dict__
     ]
-    defining_cls = None
-    for cls in ancestors:
-        if method_name not in cls.__dict__:
-            continue
-        submethod = getattr(cls, method_name)
+    if not any(hasattr(submethod, "original_routing") for _, submethod in definitions):
+        return None
 
+    merged_routing: dict[str, Any] = {"auth": "user", "methods": None, "routes": []}
+    decorated: list[tuple[type, Any]] = []
+    for cls, submethod in definitions:
         if not hasattr(submethod, "original_routing"):
             _logger.warning(
                 "The endpoint %s is overridden without @route(); skipping this override.",
@@ -404,7 +417,7 @@ def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
             )
             continue
 
-        defining_cls = cls
+        decorated.append((cls, submethod))
         try:
             fragment = _prepare_route_fragment(cls, submethod, merged_routing)
         except RouteDefinitionError as exc:
@@ -415,8 +428,8 @@ def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
             return None
         merged_routing.update(fragment)
 
+    owner, implementation = decorated[-1]
     if not merged_routing["routes"]:
-        owner = defining_cls if defining_cls is not None else type(ctrl)
         _logger.warning(
             "%s is a controller endpoint without any route, skipping.",
             f"{owner.__module__}.{owner.__name__}.{method_name}",
@@ -426,7 +439,15 @@ def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
 
     _check_cors_credentials(f"{type(ctrl).__name__}.{method_name}", merged_routing)
     merged_routing.setdefault("save_session", merged_routing["auth"] != "bearer")
-    return merged_routing
+
+    specs: dict[str, ParamSpec] | None = None
+    if merged_routing.get("typed"):
+        specs = {}
+        for _cls, submethod in decorated:
+            specs = get_param_specs(submethod.original_endpoint, specs)
+    return _ResolvedRoute(
+        merged_routing, implementation.__get__(ctrl, type(ctrl)), specs
+    )
 
 
 def _generate_routing_rules(
@@ -435,21 +456,16 @@ def _generate_routing_rules(
     controllers = endpoints = rules = skipped_nodb = typed = 0  # debuglog
     for ctrl in _get_controllers(modules):
         controllers += 1  # debuglog
-        for method_name, method in inspect.getmembers(ctrl, inspect.ismethod):
-            if not _is_route(ctrl, method_name):
+        for method_name, _member in inspect.getmembers(ctrl, inspect.ismethod):
+            resolved = _resolve_route(ctrl, method_name)
+            if resolved is None:
                 continue
-
-            merged_routing = _merge_routing(ctrl, method_name)
-            if merged_routing is None:
-                continue
+            merged_routing, method, param_specs = resolved
             if nodb_only and merged_routing["auth"] != "none":
                 skipped_nodb += 1  # debuglog
                 continue
 
             frozen_routing = MappingProxyType(merged_routing)
-            method, param_specs = _get_routed_method(
-                ctrl, method_name, bool(merged_routing.get("typed"))
-            )
             endpoints += 1  # debuglog
             typed += bool(param_specs)  # debuglog
 
@@ -471,20 +487,6 @@ def _generate_routing_rules(
         typed=typed,
         skipped_nodb=skipped_nodb,
     )
-
-
-def _get_routed_method(ctrl: Controller, name: str, typed: bool) -> tuple[Any, Any]:
-    specs: dict[str, ParamSpec] | None = {} if typed else None
-    method = None
-    for cls in reversed(type(ctrl).mro()):
-        candidate = cls.__dict__.get(name)
-        if candidate is None or not hasattr(candidate, "original_routing"):
-            continue
-        method = candidate.__get__(ctrl, type(ctrl))
-        if typed:
-            specs = get_param_specs(_get_original_endpoint(candidate), specs)
-    assert method is not None, "a merged route has a decorated implementation"
-    return method, specs
 
 
 def _prepare_route_fragment(

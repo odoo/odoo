@@ -46,6 +46,8 @@ if TYPE_CHECKING:
 
         def _bind_session_transaction(self, cr: Any) -> None: ...
 
+        def _restore_session_snapshot(self) -> None: ...
+
         def _flush_session(self) -> None: ...
 
         def get_http_params(self) -> dict[str, Any]: ...
@@ -76,10 +78,6 @@ if TYPE_CHECKING:
 
 else:
     RequestState = object
-
-
-class HasHttpStatus(Protocol):
-    http_status: int
 
 
 class HasRouting(Protocol):

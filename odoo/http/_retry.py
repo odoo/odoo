@@ -17,10 +17,9 @@ class RequestRetryParticipant:
 
     def on_rollback(self, exc: BaseException) -> None:
         request = self._request
-        current_sid = getattr(request.session, "sid", None)
-        request.session = request._select_session_and_dbname(sid=current_sid)[0]
+        request._restore_session_snapshot()
         _debug.lifecycle(
-            "http.retry.session_reloaded",
+            "http.retry.session_restored",
             error=type(exc).__name__,
             uid=request.session.uid,
         )

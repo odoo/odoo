@@ -478,8 +478,8 @@ class _RequestServeMixin(RequestState):
             raise RequestEntityTooLarge
 
     def _serve_ir_http_fallback(self, not_found: NotFound) -> Response:
-        registry = self._get_bound_registry()
-        get_ir_http(registry)._apply_max_upload_size()
+        ir_http = get_ir_http(self._get_bound_registry())
+        ir_http._apply_max_upload_size()
         self._check_body_size()
         self._params_source = self.get_http_params
         with _debug.perf(
@@ -487,13 +487,13 @@ class _RequestServeMixin(RequestState):
             cr=self._debug_cr,
             auth="public",
         ):
-            get_ir_http(registry)._authenticate_explicit("public")
+            ir_http._authenticate_explicit("public")
         with _debug.perf(
             "http.serve.fallback_lookup",
             cr=self._debug_cr,
             path=getattr(self.httprequest, "path", None),
         ) as span:
-            response = get_ir_http(registry)._serve_fallback()
+            response = ir_http._serve_fallback()
             span.set(served=bool(response))
         _debug.pipeline(
             "http.serve.fallback",
@@ -506,24 +506,23 @@ class _RequestServeMixin(RequestState):
                 "http.serve.post_dispatch",
                 cr=self._debug_cr,
             ):
-                get_ir_http(registry)._post_dispatch(response)
+                ir_http._post_dispatch(response)
             return response
 
         no_fallback = NotFound()
         no_fallback.__context__ = not_found
-        set_error_response(
-            no_fallback, get_ir_http(registry)._handle_error(no_fallback)
-        )
+        set_error_response(no_fallback, ir_http._handle_error(no_fallback))
         raise no_fallback
 
     def _serve_ir_http(self, rule: Any, args: dict[str, Any]) -> Response:
         registry = self._get_bound_registry()
+        ir_http = get_ir_http(registry)
         with _debug.perf(
             "http.serve.authenticate",
             cr=self._debug_cr,
             auth=rule.endpoint.routing.get("auth"),
         ):
-            get_ir_http(registry)._authenticate(rule.endpoint)
+            ir_http._authenticate(rule.endpoint)
         _debug.pipeline(
             "http.serve.authenticated",
             endpoint=getattr(rule.endpoint, "__qualname__", None),
@@ -534,7 +533,7 @@ class _RequestServeMixin(RequestState):
             cr=self._debug_cr,
             endpoint=getattr(rule.endpoint, "__qualname__", None),
         ):
-            get_ir_http(registry)._pre_dispatch(rule, args)
+            ir_http._pre_dispatch(rule, args)
         with _debug.perf(
             "http.serve.handler",
             cr=self._debug_cr,
@@ -553,5 +552,5 @@ class _RequestServeMixin(RequestState):
             cr=self._debug_cr,
             status=getattr(response, "status_code", None),
         ):
-            get_ir_http(registry)._post_dispatch(response)
+            ir_http._post_dispatch(response)
         return response

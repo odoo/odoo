@@ -70,6 +70,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._cookies_memo: tuple[bool, Any] | None = None
         self._json_memo: tuple[HTTPRequest, Any] | None = None
         self._session_transaction_cursor: Any = None
+        self._session_snapshot: Session | None = None
         self._session_response: Response | None = None
         self._session_save_pending = False
         self._session_uses_transactions = False
@@ -349,27 +350,31 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._session_uses_transactions = True
         self._session_save_pending = False
         self._session_response = None
-        original = self.session.snapshot()
+        self._session_snapshot = self.session.snapshot()
         cr.postcommit.add(self._flush_session)
+        cr.postrollback.add(self._restore_session_snapshot)
         _debug.lifecycle("http.session.transaction_bound", uid=self.session.uid)
 
-        def restore_session() -> None:
-            can_save = self.session.can_save
-            self.session = original.snapshot()
-            self.session.can_save &= can_save
-            self._session_save_pending = False
-            self._session_transaction_cursor = None
-            self._session_response = None
-            _debug.lifecycle(
-                "http.session.restored_on_rollback",
-                uid=self.session.uid,
-                can_save=self.session.can_save,
-            )
-
-        cr.postrollback.add(restore_session)
+    def _restore_session_snapshot(self) -> None:
+        snapshot = self._session_snapshot
+        if snapshot is None:
+            _debug.lifecycle("http.session.restore_skipped", reason="no_snapshot")
+            return
+        self._session_snapshot = None
+        snapshot.can_save &= self.session.can_save
+        self.session = snapshot
+        self._session_save_pending = False
+        self._session_transaction_cursor = None
+        self._session_response = None
+        _debug.lifecycle(
+            "http.session.restored_on_rollback",
+            uid=snapshot.uid,
+            can_save=snapshot.can_save,
+        )
 
     def _flush_session(self) -> None:
         self._session_transaction_cursor = None
+        self._session_snapshot = None
         _debug.pipeline(
             "http.session.flush",
             pending=self._session_save_pending,

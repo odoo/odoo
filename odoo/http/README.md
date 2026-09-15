@@ -140,8 +140,13 @@ RPC-only client stays alive without ever loading a page.
 `_bind_session_transaction` registers cursor callbacks and captures the session
 snapshot. `_flush_session` is idempotent: the postcommit callback invokes it,
 and the successful return from `retrying` also invokes it for cursor adapters
-such as `TestCursor` that suppress transaction callbacks. A handler's own
-rollback clears the binding; a later save binds the new transaction again.
+such as `TestCursor` that suppress transaction callbacks.
+`_restore_session_snapshot` is its rollback twin, and just as idempotent: the
+postrollback callback invokes it, and so does `RequestRetryParticipant.on_rollback`
+— whichever runs first restores, the other finds nothing to do. There is no
+disk reload on rollback: nothing was written during the attempt, so the
+snapshot is the session as it was. A handler's own rollback clears the
+binding; a later save binds the new transaction again.
 Database-free requests and saves explicitly bound to another database keep
 their immediate persistence path.
 Read-only promotion is allowed only before commit, while the original cursor
@@ -184,9 +189,10 @@ save and no dispatcher state to publish; it gets the security headers alone.
 ## Module map
 
 `doc/architecture/module.md` groups these modules into `[foundation]`,
-`[serving]` and `[features]` tiers; the direction between them is enforced by
-the `http-features-below-serving` contract, which holds `[foundation]` below
-`[serving]` as well.
+`[serving]` and `[features]` tiers; the direction between them is the
+`http-features-below-serving` contract, which holds `[foundation]` below
+`[serving]` as well. Nothing checks it since `tooling/` went (2026-09-11);
+review does.
 
 | Module | Tier | Contents |
 |---|---|---|
@@ -211,7 +217,7 @@ the `http-features-below-serving` contract, which holds `[foundation]` below
 | `settings.py` | foundation | `HttpSettings`: the frozen snapshot of every option the serving tier reads (`dbfilter`, `db_name`, `dev_mode`, `x_sendfile`, `data_dir`, `server_wide_modules`, the GeoIP paths, `proxy_mode`/`proxy_hops`), `from_config` to build one, and the slot (`current`, `installed`, `override`) the package reads it through. The slot holds no snapshot in production: `current()` derives one from the live option dict per read, so a key written after boot — which is how the test harness configures a server — still reaches the serving tier, and a test that wants a fixed view installs its own |
 | `constants.py` | foundation | Package-wide constants, `prepare_allow_header`, and the session and select-db path registries with their `is_select_db_path` predicate |
 | `exceptions.py` | foundation | the HTTP exception vocabulary addon code raises — werkzeug's `NotFound`, `Forbidden`, `BadRequest`, `Unauthorized`, `HTTPException`, `abort` and the rest, re-exported so a controller never imports werkzeug — plus `RegistryError`, `SessionExpiredException`, and `get_error_response`/`set_error_response` — the only sanctioned way to read and write the `error_response` an exception carries |
-| `_protocols.py` | foundation | `HttpExtension` — the `Protocol` `ir.http` satisfies, pinned by `TestIrHttpImplementsProtocol`; `Endpoint`/`HasRouting`/`RoutedMethod` for the attributes `@route` stuffs onto a handler; `HasHttpStatus`. `RequestState` alone is `if TYPE_CHECKING:` — it is `object` at runtime |
+| `_protocols.py` | foundation | `HttpExtension` — the `Protocol` `ir.http` satisfies, pinned by `TestIrHttpImplementsProtocol`; `Endpoint`/`HasRouting`/`RoutedMethod` for the attributes `@route` stuffs onto a handler. `RequestState` alone is `if TYPE_CHECKING:` — it is `object` at runtime |
 
 ## Related
 
