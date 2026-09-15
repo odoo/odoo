@@ -11,8 +11,8 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     @api.model
-    def _get_valid_acquirer_data(self):
-        res = super()._get_valid_acquirer_data()
+    def _prepare_acquirer_data(self):
+        res = super()._prepare_acquirer_data()
         res["metadata.self_order_id"] = UNPREDICTABLE_ADYEN_DATA
         return res
 

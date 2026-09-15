@@ -209,7 +209,7 @@ class PosPaymentMethod(models.Model):
                     "SaleToAcquirerData"
                 ]
             )
-            valid_acquirer_data = self._get_valid_acquirer_data()
+            valid_acquirer_data = self._prepare_acquirer_data()
             is_payment_request_with_acquirer_data = len(
                 parsed_sale_to_acquirer_data.keys()
             ) <= len(valid_acquirer_data.keys())
@@ -324,7 +324,7 @@ class PosPaymentMethod(models.Model):
         return res
 
     @api.model
-    def _get_valid_acquirer_data(self):
+    def _prepare_acquirer_data(self):
         return {"tenderOption": "AskGratuity", "authorisationType": "PreAuth"}
 
     @api.model
