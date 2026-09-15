@@ -222,14 +222,59 @@ def _deduplicate_loggers(loggers: list[str]) -> Generator[str]:
     return (f"{logger}:{level}" for logger, level in seen.items())
 
 
+# An option layer that bumps the manager's generation on every write, so a
+# settings snapshot derived from the options is reusable until any layer
+# changes -- through __setitem__, patch(), parse_config() or a test poking
+# config.options[...] directly. Reads are dict's own.
+class _CountingDict(dict[str, Any]):
+    __slots__ = ("_bump",)
+
+    def __init__(self, bump: Callable[[], None]) -> None:
+        super().__init__()
+        self._bump = bump
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        super().__setitem__(key, value)
+        self._bump()
+
+    def __delitem__(self, key: str) -> None:
+        super().__delitem__(key)
+        self._bump()
+
+    def pop(self, *args: Any) -> Any:
+        result = super().pop(*args)
+        self._bump()
+        return result
+
+    def popitem(self) -> tuple[str, Any]:
+        result = super().popitem()
+        self._bump()
+        return result
+
+    def clear(self) -> None:
+        super().clear()
+        self._bump()
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        super().update(*args, **kwargs)
+        self._bump()
+
+    def setdefault(self, key: str, default: Any = None) -> Any:
+        result = super().setdefault(key, default)
+        self._bump()
+        return result
+
+
 class configmanager:
     def __init__(self) -> None:
-        self._default_options: dict[str, Any] = {}
-        self._file_options: dict[str, Any] = {}
-        self._env_options: dict[str, Any] = {}
-        self._cli_options: dict[str, Any] = {}
-        self._override_options: dict[str, Any] = {}
-        self._runtime_options: dict[str, Any] = {}
+        self._generation = 0
+        bump = self._bump_generation
+        self._default_options: dict[str, Any] = _CountingDict(bump)
+        self._file_options: dict[str, Any] = _CountingDict(bump)
+        self._env_options: dict[str, Any] = _CountingDict(bump)
+        self._cli_options: dict[str, Any] = _CountingDict(bump)
+        self._override_options: dict[str, Any] = _CountingDict(bump)
+        self._runtime_options: dict[str, Any] = _CountingDict(bump)
         self.options: collections.ChainMap[str, Any] = collections.ChainMap(
             self._override_options,
             self._runtime_options,
@@ -2301,6 +2346,20 @@ class configmanager:
 
         except OSError as exc:
             sys.stderr.write(f"ERROR: couldn't create the config directory: {exc}\n")
+
+    @property
+    def generation(self) -> object:
+        # A test that swaps `options` for a plain mapping (patch.object) writes
+        # past the counting layers; while that lasts nothing may be memoised.
+        options = self.options
+        if isinstance(options, collections.ChainMap) and all(
+            isinstance(layer, _CountingDict) for layer in options.maps
+        ):
+            return self._generation
+        return object()
+
+    def _bump_generation(self) -> None:
+        self._generation += 1
 
     def get(self, key: str, default: Any = None) -> Any:
         return self.options.get(key, default)

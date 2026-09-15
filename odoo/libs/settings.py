@@ -13,11 +13,19 @@ class OptionSource(Protocol):
 
 
 class SettingsSlot[T]:
-    __slots__ = ("_installed", "_name", "_source")
+    __slots__ = ("_installed", "_memo", "_name", "_source", "_version")
 
-    def __init__(self, name: str, source: Callable[[], T] | None = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        source: Callable[[], T] | None = None,
+        *,
+        version: Callable[[], object] | None = None,
+    ) -> None:
         self._name = name
         self._source = source
+        self._version = version
+        self._memo: tuple[object, T] | None = None
         self._installed: T | None = None
 
     def provide(self, source: Callable[[], T]) -> None:
@@ -35,7 +43,15 @@ class SettingsSlot[T]:
                 f"{self._name} has no settings source and nothing installed; "
                 f"the process bootstrap provides one before the first read"
             )
-        return self._source()
+        if self._version is None:
+            return self._source()
+        stamp = self._version()
+        memo = self._memo
+        if memo is not None and memo[0] == stamp:
+            return memo[1]
+        settings = self._source()
+        self._memo = (stamp, settings)
+        return settings
 
     @contextmanager
     def installed(self, settings: T) -> Iterator[T]:

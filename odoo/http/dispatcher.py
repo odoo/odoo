@@ -503,6 +503,7 @@ class JsonRPCDispatcher(Dispatcher):
 class Json2Dispatcher(Dispatcher):
     routing_type = "json2"
     mimetypes = ("application/json",)
+    serializes_errors_in_dev_mode = True
 
     def __init__(self, request: RequestState) -> None:
         super().__init__(request)

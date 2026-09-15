@@ -23,3 +23,13 @@ def test_a_serialising_dispatcher_is_exempt():
     req.dispatcher.serializes_errors_in_dev_mode = False
     with mock.patch.object(application, "debugger_attached", True):
         assert application._is_debugger_handover_required(req) is True
+
+
+def test_both_json_dispatchers_serialise_errors_under_the_debugger():
+    from odoo.http.dispatcher import HttpDispatcher, Json2Dispatcher, JsonRPCDispatcher
+
+    assert JsonRPCDispatcher.serializes_errors_in_dev_mode is True
+    assert Json2Dispatcher.serializes_errors_in_dev_mode is True, (
+        "a JSON client cannot use an HTML debugger page"
+    )
+    assert HttpDispatcher.serializes_errors_in_dev_mode is False

@@ -5,6 +5,7 @@ import werkzeug
 from psycopg.errors import SerializationFailure
 
 from odoo import http
+from odoo.db.replica import is_readonly_cursor_enabled
 from odoo.exceptions import AccessError, ConcurrencyError, UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions, str2bool
@@ -60,7 +61,9 @@ class TestHttp(http.Controller):
     )
     def greeting_public(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
-        assert self.env.cr.readonly == str2bool(readonly)
+        assert self.env.cr.readonly == (
+            str2bool(readonly) and is_readonly_cursor_enabled()
+        )
         return "Tek'ma'te"
 
     @http.route(
@@ -68,7 +71,9 @@ class TestHttp(http.Controller):
     )
     def greeting_user(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
-        assert self.env.cr.readonly == str2bool(readonly)
+        assert self.env.cr.readonly == (
+            str2bool(readonly) and is_readonly_cursor_enabled()
+        )
         return "Tek'ma'te"
 
     @http.route(
@@ -79,7 +84,9 @@ class TestHttp(http.Controller):
     )
     def greeting_bearer(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
-        assert self.env.cr.readonly == str2bool(readonly)
+        assert self.env.cr.readonly == (
+            str2bool(readonly) and is_readonly_cursor_enabled()
+        )
         return f"Tek'ma'te; user={self.env.user.login}"
 
     @http.route("/test_http/wsgi_environ", type="http", auth="none")
