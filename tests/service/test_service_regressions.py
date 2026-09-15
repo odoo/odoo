@@ -179,6 +179,24 @@ def test_exited_candidate_is_not_promoted_even_if_it_wrote_ready(master, monkeyp
     assert master._replacement is None
 
 
+def test_a_replacement_reaped_by_the_master_keeps_its_real_exit_code(master):
+    """`waitpid(-1)` in `reap_exited_workers` takes the replacement's status
+    before `Popen` can; on this interpreter a later `poll()` then answers 0,
+    not None, so without `_record_worker_exit` a crashed replacement would
+    end the supervisor with a success code."""
+    import subprocess
+
+    master._replacement = subprocess.Popen(
+        [sys.executable, "-c", "raise SystemExit(7)"]
+    )
+    deadline = time.monotonic() + 10
+    while master._replacement.returncode is None and time.monotonic() < deadline:
+        master.reap_exited_workers()
+        time.sleep(0.02)
+    assert master._replacement.poll() == 7
+    master._replacement = None
+
+
 def test_unready_candidate_cancellation_does_not_wait_for_graceful_shutdown(
     master, monkeypatch
 ):

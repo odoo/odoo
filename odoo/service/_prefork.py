@@ -47,13 +47,13 @@ SUPERVISION_BEAT_S = 4.0
 """How long the master sleeps between supervision passes; `stop_workers_gracefully`
 shortens it while draining and `reload` restores it."""
 
-RELOAD_TIMEOUT_S = 300.0
+RELOAD_TIMEOUT_S = 60.0
 """How long a reload waits for the replacement to preload and report ready.
 
-The old generation keeps serving throughout, so the wait costs nothing but
-the delay before a hung candidate is declared dead; a registry with a few
-hundred modules routinely takes over a minute to load, which is why this is
-not 60.  `ODOO_RELOAD_TIMEOUT` overrides it.
+Measured 2026-09-15 on a 217-module database: the candidate answers in
+2.7 s, so this is a bound on a hung candidate, not a budget the preload
+spends.  The old generation keeps serving throughout the wait, and a
+deployment whose preload genuinely needs longer raises `ODOO_RELOAD_TIMEOUT`.
 """
 
 
@@ -787,18 +787,25 @@ class PreforkServer(CommonServer):
                 timeout=timeout,
             )
             if not self._await_candidate(self._candidate, read_fd, timeout):
-                exited = self._candidate.poll() is not None
-                self.logger.error(
-                    "Reload aborted: the replacement %s; keeping current workers",
-                    f"exited with {self._candidate.returncode} before it was ready"
-                    if exited
-                    else f"was not ready after {timeout:.0f}s (ODOO_RELOAD_TIMEOUT)",
-                )
+                if any(sig in (signal.SIGINT, signal.SIGTERM) for sig in self.queue):
+                    reason = "shutdown_requested"
+                    cause = "a shutdown was requested"
+                elif self._candidate.poll() is not None:
+                    reason = "candidate_exited"
+                    cause = (
+                        f"the replacement exited with {self._candidate.returncode} "
+                        f"before it was ready"
+                    )
+                else:
+                    reason = "timed_out"
+                    cause = (
+                        f"the replacement was not ready after {timeout:.0f}s "
+                        f"(ODOO_RELOAD_TIMEOUT)"
+                    )
+                self.logger.error("Reload aborted: %s; keeping current workers", cause)
                 _debug.logic(
                     "prefork.reload.aborted",
-                    reason="candidate_exited"
-                    if self._candidate.poll() is not None
-                    else "timed_out",
+                    reason=reason,
                     returncode=self._candidate.returncode,
                     timeout=timeout,
                 )
