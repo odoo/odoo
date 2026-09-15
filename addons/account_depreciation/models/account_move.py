@@ -9,7 +9,7 @@ from odoo.tools.misc import clean_context, formatLang
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    asset_id = fields.Many2one(
+    depreciation_asset_id = fields.Many2one(
         comodel_name="account.asset",
         index=True,
         copy=False,
@@ -40,18 +40,18 @@ class AccountMove(models.Model):
         store=True,
     )
 
-    asset_ids = fields.One2many(
+    capitalised_asset_ids = fields.One2many(
         comodel_name="account.asset",
         string="Assets",
-        compute="_compute_asset_ids",
+        compute="_compute_capitalised_asset_ids",
         compute_sudo=True,
     )
-    count_asset = fields.Count(
-        count_of="asset_ids",
+    count_capitalised_asset = fields.Count(
+        count_of="capitalised_asset_ids",
         compute_sudo=True,
     )
     draft_asset_exists = fields.Boolean(
-        compute="_compute_asset_ids",
+        compute="_compute_capitalised_asset_ids",
         compute_sudo=True,
     )
     asset_move_type = fields.Selection(
@@ -69,10 +69,10 @@ class AccountMove(models.Model):
     )
 
     @api.depends(
-        "asset_id",
+        "depreciation_asset_id",
         "depreciation_value",
-        "asset_id.total_depreciable_value",
-        "asset_id.already_depreciated_amount_import",
+        "depreciation_asset_id.value_depreciable",
+        "depreciation_asset_id.value_depreciated_import",
         "state",
     )
     def _compute_depreciation_cumulative_value(self):
@@ -83,13 +83,12 @@ class AccountMove(models.Model):
             self._fields["asset_remaining_value"],
             self._fields["asset_depreciated_value"],
         ]
-        with self.env.protecting(fields, self.asset_id.depreciation_move_ids):
-            for asset in self.asset_id:
-                depreciated = asset.already_depreciated_amount_import
-                remaining = (
-                    asset.total_depreciable_value
-                    - asset.already_depreciated_amount_import
-                )
+        with self.env.protecting(
+            fields, self.depreciation_asset_id.depreciation_move_ids
+        ):
+            for asset in self.depreciation_asset_id:
+                depreciated = asset.value_depreciated_import
+                remaining = asset.value_depreciable - asset.value_depreciated_import
                 for move in asset.depreciation_move_ids._sorted_by_date():
                     if move.state != "cancel":
                         remaining -= move.depreciation_value
@@ -100,7 +99,10 @@ class AccountMove(models.Model):
     @api.depends("line_ids.balance")
     def _compute_depreciation_value(self):
         for move in self:
-            asset = move.asset_id or move.reversed_entry_id.asset_id
+            asset = (
+                move.depreciation_asset_id
+                or move.reversed_entry_id.depreciation_asset_id
+            )
             if asset:
                 depreciation_lines = move._get_asset_depreciation_line()
                 asset_depreciation = sum(depreciation_lines.mapped("balance"))
@@ -109,7 +111,7 @@ class AccountMove(models.Model):
                         line.account_id == asset.account_asset_id  # noqa: B023  the lambda runs inside this iteration
                         and float_compare(
                             -line.balance,
-                            asset.original_value,  # noqa: B023  the lambda runs inside this iteration
+                            asset.value_original,  # noqa: B023  the lambda runs inside this iteration
                             precision_rounding=asset.currency_id.rounding,  # noqa: B023  the lambda runs inside this iteration
                         )
                         == 0
@@ -120,23 +122,25 @@ class AccountMove(models.Model):
                         lambda line: line.account_id == asset.account_depreciation_id  # noqa: B023  the lambda runs inside this iteration
                     )[:1]
                     asset_depreciation = (
-                        asset.original_value
-                        - asset.salvage_value
+                        asset.value_original
+                        - asset.value_salvage
                         - abs(accumulated.balance)
-                        * (-1 if asset.original_value < 0 else 1)
+                        * (-1 if asset.value_original < 0 else 1)
                     )
             else:
                 asset_depreciation = 0
             move.depreciation_value = asset_depreciation
 
-    @api.depends("asset_id", "asset_ids")
+    @api.depends("depreciation_asset_id", "capitalised_asset_ids")
     def _compute_asset_move_type(self):
         for move in self:
-            if move.asset_ids:
+            if move.capitalised_asset_ids:
                 move.asset_move_type = (
-                    "positive_revaluation" if move.asset_ids.parent_id else "purchase"
+                    "positive_revaluation"
+                    if move.capitalised_asset_ids.parent_id
+                    else "purchase"
                 )
-            elif not (move.asset_move_type and move.asset_id):
+            elif not (move.asset_move_type and move.depreciation_asset_id):
                 move.asset_move_type = False
 
     def _inverse_depreciation_value(self):
@@ -164,11 +168,11 @@ class AccountMove(models.Model):
                 }
             )
 
-    @api.constrains("state", "asset_id")
+    @api.constrains("state", "depreciation_asset_id")
     def _constrains_check_asset_state(self):
-        for move in self.filtered(lambda mv: mv.asset_id):
-            asset_id = move.asset_id
-            if asset_id.state == "draft" and move.state == "posted":
+        for move in self.filtered(lambda mv: mv.depreciation_asset_id):
+            asset_id = move.depreciation_asset_id
+            if asset_id.depreciation_state == "draft" and move.state == "posted":
                 raise ValidationError(
                     _(
                         "You can't post an entry related to a draft asset. Please post the asset before."
@@ -188,9 +192,9 @@ class AccountMove(models.Model):
         if default_values_list is None:
             default_values_list = [{} for _i in self]
         for move, default_values in zip(self, default_values_list, strict=True):
-            if move.asset_id:
+            if move.depreciation_asset_id:
                 first_draft = min(
-                    move.asset_id.depreciation_move_ids.filtered(
+                    move.depreciation_asset_id.depreciation_move_ids.filtered(
                         lambda m: m.state == "draft"
                     ),
                     key=lambda m: m.date,
@@ -198,25 +202,27 @@ class AccountMove(models.Model):
                 )
                 if first_draft:
                     first_draft.depreciation_value += move.depreciation_value
-                elif move.asset_id.state != "close":
-                    last_date = max(move.asset_id.depreciation_move_ids.mapped("date"))
-                    method_period = move.asset_id.method_period
+                elif move.depreciation_asset_id.depreciation_state != "close":
+                    last_date = max(
+                        move.depreciation_asset_id.depreciation_move_ids.mapped("date")
+                    )
+                    depreciation_period = move.depreciation_asset_id.depreciation_period
 
                     self.create(
                         self._prepare_move_for_asset_depreciation(
                             {
-                                "asset_id": move.asset_id,
+                                "asset_id": move.depreciation_asset_id,
                                 "amount": move.depreciation_value,
                                 "depreciation_beginning_date": last_date
                                 + (
                                     relativedelta(months=1)
-                                    if method_period == "1"
+                                    if depreciation_period == "1"
                                     else relativedelta(years=1)
                                 ),
                                 "date": last_date
                                 + (
                                     relativedelta(months=1)
-                                    if method_period == "1"
+                                    if depreciation_period == "1"
                                     else relativedelta(years=1)
                                 ),
                                 "asset_number_days": 0,
@@ -233,8 +239,8 @@ class AccountMove(models.Model):
                         currency_obj=move.company_id.currency_id,
                     ),
                 )
-                move.asset_id.message_post(body=msg)
-                default_values["asset_id"] = move.asset_id.id
+                move.depreciation_asset_id.message_post(body=msg)
+                default_values["depreciation_asset_id"] = move.depreciation_asset_id.id
                 default_values["asset_number_days"] = -move.asset_number_days
                 default_values["asset_depreciation_beginning_date"] = (
                     default_values.get("date", move.date)
@@ -244,16 +250,21 @@ class AccountMove(models.Model):
 
     def action_draft(self):
         for move in self:
-            if any(asset_id.state != "draft" for asset_id in move.asset_ids):
+            if any(
+                asset_id.depreciation_state != "draft"
+                for asset_id in move.capitalised_asset_ids
+            ):
                 raise UserError(
                     _("You cannot reset to draft an entry related to a posted asset")
                 )
-            move.asset_ids.filtered(lambda x: x.state == "draft").unlink()
+            move.capitalised_asset_ids.filtered(
+                lambda x: x.depreciation_state == "draft"
+            ).unlink()
         return super().action_draft()
 
     def _log_depreciation_asset(self):
-        for move in self.filtered(lambda m: m.asset_id):
-            asset = move.asset_id
+        for move in self.filtered(lambda m: m.depreciation_asset_id):
+            asset = move.depreciation_asset_id
             msg = _(
                 "Depreciation entry %(name)s posted (%(value)s)",
                 name=move.name,
@@ -370,7 +381,7 @@ class AccountMove(models.Model):
         return {
             "partner_id": partner.id,
             "date": depreciation_date,
-            "journal_id": asset.journal_id.id,
+            "journal_id": asset.depreciation_journal_id.id,
             "line_ids": [
                 (0, 0, depreciation_line(asset.account_depreciation_id, False)),
                 (
@@ -379,7 +390,7 @@ class AccountMove(models.Model):
                     depreciation_line(asset.account_depreciation_expense_id, True),
                 ),
             ],
-            "asset_id": asset.id,
+            "depreciation_asset_id": asset.id,
             "ref": ref,
             "asset_depreciation_beginning_date": vals["depreciation_beginning_date"],
             "asset_number_days": vals["asset_number_days"],
@@ -402,7 +413,7 @@ class AccountMove(models.Model):
         )
 
     def _get_asset_depreciation_line(self):
-        asset = self.asset_id
+        asset = self.depreciation_asset_id
         expense_lines = self.line_ids.filtered(
             lambda line: line.account_id == asset.account_depreciation_expense_id
         )
@@ -421,25 +432,27 @@ class AccountMove(models.Model):
             )
         )
 
-    @api.depends("line_ids.asset_ids")
-    def _compute_asset_ids(self):
+    @api.depends("line_ids.capitalised_asset_ids")
+    def _compute_capitalised_asset_ids(self):
         for record in self:
-            record.asset_ids = record.line_ids.asset_ids
+            record.capitalised_asset_ids = record.line_ids.capitalised_asset_ids
             record.draft_asset_exists = bool(
-                record.asset_ids.filtered(lambda x: x.state == "draft")
+                record.capitalised_asset_ids.filtered(
+                    lambda x: x.depreciation_state == "draft"
+                )
             )
 
     def open_asset_view(self):
-        return self.asset_id.open_asset(["form"])
+        return self.depreciation_asset_id.open_asset(["form"])
 
-    def action_view_asset_ids(self):
-        return self.asset_ids.open_asset(["list", "form"])
+    def action_view_capitalised_asset_ids(self):
+        return self.capitalised_asset_ids.open_asset(["list", "form"])
 
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    asset_ids = fields.Many2many(
+    capitalised_asset_ids = fields.Many2many(
         comodel_name="account.asset",
         relation="asset_move_line_rel",
         column1="line_id",
@@ -461,7 +474,7 @@ class AccountMoveLine(models.Model):
             and account.can_create_asset
             and account.create_asset != "no"
             and not (self.currency_id or move.currency_id).is_zero(self.price_total)
-            and not self.asset_ids
+            and not self.capitalised_asset_ids
             and not self.tax_line_id
             and self.price_total > 0
             and not (
@@ -487,14 +500,14 @@ class AccountMoveLine(models.Model):
             "company_id": self.company_id.id,
             "analytic_distribution": self.analytic_distribution,
             "original_move_line_ids": [Command.set(self.ids)],
-            "state": "draft",
-            "acquisition_date": move.invoice_date
+            "depreciation_state": "draft",
+            "date_acquisition": move.invoice_date
             if not move.reversed_entry_id
             else move.reversed_entry_id.invoice_date,
         }
 
     def _get_computed_taxes(self):
-        if self.move_id.asset_id:
+        if self.move_id.depreciation_asset_id:
             return self.tax_ids
         return super()._get_computed_taxes()
 

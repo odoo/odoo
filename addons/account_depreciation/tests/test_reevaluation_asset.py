@@ -22,19 +22,19 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=60,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2020-07-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2020-07-01",
+            depreciation_prorata="constant_periods",
         )
         cls.degressive_then_linear_asset = cls.create_asset(
             value=7200,
             periodicity="monthly",
             periods=60,
-            method="degressive_then_linear",
-            method_progress_factor=0.35,
-            acquisition_date="2020-07-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive_then_linear",
+            depreciation_factor=0.35,
+            date_acquisition="2020-07-01",
+            depreciation_prorata="constant_periods",
         )
 
     def test_linear_start_beginning_month_reevaluation_beginning_month(self):
@@ -42,9 +42,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -158,9 +158,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -274,9 +274,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -383,9 +383,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-15",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-15",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -506,9 +506,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-15",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-15",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -629,9 +629,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-15",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-15",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -745,9 +745,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-28",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-28",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -868,9 +868,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-28",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-28",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -991,9 +991,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=7200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-02-28",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-28",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1107,9 +1107,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1118,7 +1118,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-30"),
-                "value_residual": 4000,
+                "value_depreciable_residual": 4000,
             }
         ).modify()
 
@@ -1224,9 +1224,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1236,7 +1236,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) - 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                - 8500,
             }
         ).modify()
 
@@ -1245,7 +1248,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-30"),
-                "value_residual": 18000,
+                "value_depreciable_residual": 18000,
             }
         ).modify()
 
@@ -1365,9 +1368,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1377,7 +1380,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_1,
-                "value_residual": asset._get_residual_value_at_date(date_modify_1)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_1
+                )
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -1389,7 +1394,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_2,
-                "value_residual": asset._get_residual_value_at_date(date_modify_2)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_2
+                )
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -1493,7 +1500,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -1564,7 +1571,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[1].depreciation_move_ids.sorted(
+            asset.child_ids[1].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -1618,9 +1625,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1630,7 +1637,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_1,
-                "value_residual": asset._get_residual_value_at_date(date_modify_1)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_1
+                )
                 - 8500,
             }
         ).modify()
@@ -1641,7 +1650,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_2,
-                "value_residual": asset._get_residual_value_at_date(date_modify_2)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_2
+                )
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -1752,9 +1763,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -1806,9 +1815,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=10000,
             periodicity="yearly",
             periods=5,
-            method="linear",
-            acquisition_date="2018-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2018-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1818,7 +1827,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_1,
-                "value_residual": asset._get_residual_value_at_date(date_modify_1)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_1
+                )
                 + 1000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -1830,10 +1841,12 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_2,
-                "value_residual": asset._get_residual_value_at_date(date_modify_2)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_2
+                )
                 - 200,
-                "method_period": "1",
-                "method_number": 60,
+                "depreciation_period": "1",
+                "depreciation_duration": 60,
             }
         ).modify()
 
@@ -1914,9 +1927,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-09-30",
@@ -1957,9 +1968,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -1969,7 +1980,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_1,
-                "value_residual": asset._get_residual_value_at_date(date_modify_1)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_1
+                )
                 - 8500,
             }
         ).modify()
@@ -1984,7 +1997,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_2,
-                "value_residual": asset._get_residual_value_at_date(date_modify_2)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_2
+                )
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -2095,9 +2110,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -2149,9 +2162,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -2161,7 +2174,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_1,
-                "value_residual": asset._get_residual_value_at_date(date_modify_1)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_1
+                )
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
@@ -2173,7 +2188,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify_2,
-                "value_residual": asset._get_residual_value_at_date(date_modify_2)
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify_2
+                )
                 - 6000,
             }
         ).modify()
@@ -2283,7 +2300,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -2358,9 +2375,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=60000,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
         self.loss_account_id = self.company_data["default_account_expense"].copy().id
@@ -2371,7 +2388,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) - 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                - 8500,
             }
         ).modify()
 
@@ -2458,9 +2478,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=36000,
             periodicity="yearly",
             periods=3,
-            method="linear",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
         self.loss_account_id = self.company_data["default_account_expense"].copy().id
@@ -2474,7 +2494,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id,
             }
         ).modify()
@@ -2516,9 +2539,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-06-30",
@@ -2579,7 +2600,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             }
         )
         bill.action_post()
-        asset = bill.asset_ids
+        asset = bill.capitalised_asset_ids
 
         self.env.company.loss_account_id = self.company_data[
             "default_account_expense"
@@ -2597,7 +2618,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id,
             }
         ).modify()
@@ -2607,7 +2631,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self.env.invalidate_all()
         self.assertEqual(asset.account_depreciation_id.current_balance, -3500)
 
-        gross_increase = asset.children_ids
+        gross_increase = asset.child_ids
         disposal_action = (
             self.env["asset.modify"]
             .create(
@@ -2689,8 +2713,8 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             asset,
             [
                 {
-                    "book_value": 0,
-                    "net_gain_on_sale": 1000,
+                    "value_book": 0,
+                    "value_gain_on_sale": 1000,
                 }
             ],
         )
@@ -2698,7 +2722,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             gross_increase,
             [
                 {
-                    "book_value": 0,
+                    "value_book": 0,
                 }
             ],
         )
@@ -2719,9 +2743,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2021-10-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2021-10-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -2732,7 +2756,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": date_modify,
                 "modify_action": "modify",
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 2100,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 2100,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_revenue"
                 ]
@@ -2839,9 +2866,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-01-31",
@@ -2914,9 +2939,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1200,
             periodicity="monthly",
             periods=12,
-            method="linear",
-            acquisition_date="2021-10-01",
-            prorata_computation_type="daily_computation",
+            depreciation_method="linear",
+            date_acquisition="2021-10-01",
+            depreciation_prorata="daily_computation",
         )
         asset.validate()
 
@@ -2926,7 +2951,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-01-15"),
                 "modify_action": "modify",
-                "value_residual": 2945.75,
+                "value_depreciable_residual": 2945.75,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_revenue"
                 ]
@@ -3033,9 +3058,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-01-31",
@@ -3108,9 +3131,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1200,
             periodicity="monthly",
             periods=10,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -3119,10 +3142,13 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             {
                 "asset_id": asset.id,
                 "name": "Test reason",
-                "method_number": 10 + 3,
+                "depreciation_duration": 10 + 3,
                 "date": date_modify,
                 "modify_action": "modify",
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 200,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 200,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_revenue"
                 ]
@@ -3229,9 +3255,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
-                lambda mv: (mv.date, mv.id)
-            ),
+            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -3297,9 +3321,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1200,
             periodicity="monthly",
             periods=10,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -3308,10 +3332,13 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             {
                 "asset_id": asset.id,
                 "name": "Test reason",
-                "method_number": 10 + 3,
+                "depreciation_duration": 10 + 3,
                 "date": date_modify,
                 "modify_action": "modify",
-                "value_residual": asset._get_residual_value_at_date(date_modify) - 200,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                - 200,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_revenue"
                 ]
@@ -3436,7 +3463,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -3875,7 +3905,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -4145,7 +4175,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self,
     ):
         asset = self.degressive_asset
-        asset.write({"acquisition_date": "2019-07-01"})
+        asset.write({"date_acquisition": "2019-07-01"})
         asset.validate()
 
         date_modify = fields.Date.to_date("2022-06-15")
@@ -4154,7 +4184,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -4593,7 +4626,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -4785,7 +4818,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) - 500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                - 500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -5242,7 +5278,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -5625,7 +5664,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -5931,7 +5970,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) + 8500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -6307,7 +6349,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -6522,7 +6564,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "name": "Test reason",
                 "date": date_modify,
-                "value_residual": asset._get_residual_value_at_date(date_modify) - 500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(
+                    date_modify
+                )
+                - 500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
         ).modify()
@@ -6895,9 +6940,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=10,
-            method="linear",
-            acquisition_date="2022-02-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-02-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -6905,10 +6950,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             {
                 "asset_id": asset.id,
                 "name": "Test reason",
-                "method_number": 4,
+                "depreciation_duration": 4,
                 "date": fields.Date.to_date("2022-06-24"),
                 "modify_action": "modify",
-                "value_residual": 0,
+                "value_depreciable_residual": 0,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_revenue"
                 ]
@@ -6971,9 +7016,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1000,
             periodicity="yearly",
             periods=5,
-            method="linear",
-            acquisition_date="2020-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2020-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -7083,9 +7128,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertEqual(
-            asset_modify.value_residual,
+            asset_modify.value_depreciable_residual,
             500,
-            "The computation of the value_residual in asset.modify shouldn't care about the reversal.",
+            "The computation of the value_depreciable_residual in asset.modify shouldn't care about the reversal.",
         )
 
     def test_asset_gain_or_loss_account(self):
@@ -7093,9 +7138,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=1000,
             periodicity="yearly",
             periods=5,
-            method="linear",
-            acquisition_date="2020-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2020-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -7144,11 +7189,11 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=3000,
             periodicity="monthly",
             periods=3,
-            method="linear",
-            acquisition_date="2022-05-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-05-01",
+            depreciation_prorata="constant_periods",
         )
-        asset.journal_id.restrict_mode_hash_table = True
+        asset.depreciation_journal_id.restrict_mode_hash_table = True
         asset.validate()
 
         self.env["asset.modify"].create(
@@ -7215,9 +7260,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=3000,
             periodicity="monthly",
             periods=3,
-            method="linear",
-            acquisition_date="2022-05-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="linear",
+            date_acquisition="2022-05-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -7283,9 +7328,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=10000,
             periodicity="yearly",
             periods=2,
-            method="degressive",
-            acquisition_date="2020-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            date_acquisition="2020-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
 
@@ -7307,9 +7352,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=12,
-            method="degressive",
-            acquisition_date="2022-01-01",
-            prorata_computation_type="daily_computation",
+            depreciation_method="degressive",
+            date_acquisition="2022-01-01",
+            depreciation_prorata="daily_computation",
         )
         asset.validate()
 

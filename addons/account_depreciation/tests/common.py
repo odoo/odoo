@@ -15,7 +15,7 @@ class TestAccountAssetCommon(AccountTestInvoicingCommon):
         **kwargs,
     ):
         if degressive_factor is not None:
-            kwargs["method_progress_factor"] = degressive_factor
+            kwargs["depreciation_factor"] = degressive_factor
         return cls.env["account.asset"].create(
             {
                 "name": "nice asset",
@@ -26,15 +26,15 @@ class TestAccountAssetCommon(AccountTestInvoicingCommon):
                 "account_depreciation_expense_id": cls.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": cls.company_data["default_journal_misc"].id,
-                "acquisition_date": "2020-02-01",
-                "prorata_computation_type": "none",
-                "original_value": value,
-                "salvage_value": 0,
-                "method_number": periods,
-                "method_period": "12" if periodicity == "yearly" else "1",
-                "method": "linear",
-                "already_depreciated_amount_import": import_depreciation,
+                "depreciation_journal_id": cls.company_data["default_journal_misc"].id,
+                "date_acquisition": "2020-02-01",
+                "depreciation_prorata": "none",
+                "value_original": value,
+                "value_salvage": 0,
+                "depreciation_duration": periods,
+                "depreciation_period": "12" if periodicity == "yearly" else "1",
+                "depreciation_method": "linear",
+                "value_depreciated_import": import_depreciation,
                 **kwargs,
             }
         )

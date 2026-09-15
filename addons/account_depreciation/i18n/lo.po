@@ -22,17 +22,17 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__total_depreciation_entries_count
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_depreciation
 msgid "# Depreciation Entries"
 msgstr "# ລາຍການຄ່າຫຼຸ້ຍຫ້ຽນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__gross_increase_count
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_increase
 msgid "# Gross Increases"
 msgstr "# ຈຳນວນການເພີ່ມມູນຄ່າລວມ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_entries_count
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_depreciation_posted
 msgid "# Posted Depreciation Entries"
 msgstr "# ລາຍການຄ່າຫຼຸ້ຍຫ້ຽນທີ່ລົງບັນຊີແລ້ວ"
 
@@ -247,7 +247,7 @@ msgstr "ການສົ່ງຄືນທາງບັນຊີ"
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
 #: model:account.report.column,name:account_depreciation.assets_report_acquisition_date
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__acquisition_date
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_acquisition
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Acquisition Date"
 msgstr "ວັນທີໄດ້ມາ"
@@ -313,7 +313,7 @@ msgid "All the lines should be posted"
 msgstr "ທຸກແຖວຄວນຖືກລົງບັນຊີແລ້ວ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__already_depreciated_amount_import
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciated_import
 msgid "Already Depreciated Amount Import"
 msgstr "ນຳເຂົ້າຈຳນວນທີ່ຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄປແລ້ວ"
 
@@ -364,7 +364,7 @@ msgstr "ຈັດເກັບແລ້ວ"
 #: code:addons/account_depreciation/models/account_asset.py:0
 #: code:addons/account_depreciation/models/account_move.py:0
 #: model:ir.model.fields,field_description:account_depreciation.field_account_bank_statement_line__asset_id
-#: model:ir.model.fields,field_description:account_depreciation.field_account_move__asset_id
+#: model:ir.model.fields,field_description:account_depreciation.field_account_move__depreciation_asset_id
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__asset_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_form
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_search
@@ -404,7 +404,7 @@ msgid "Asset Id Display Name"
 msgstr "ຊື່ສະແດງລະຫັດຊັບສິນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__asset_lifetime_days
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_lifetime_days
 msgid "Asset Lifetime Days"
 msgstr "ຈຳນວນມື້ອາຍຸການໃຊ້ງານຊັບສິນ"
 
@@ -443,7 +443,7 @@ msgid "Asset Name"
 msgstr "ຊື່ຊັບສິນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__asset_paused_days
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_paused_days
 msgid "Asset Paused Days"
 msgstr "ຈຳນວນມື້ທີ່ຊັບສິນຢຸດຊົ່ວຄາວ"
 
@@ -522,7 +522,7 @@ msgstr "ການຮັບຮູ້ຊັບສິນ/ລາຍຮັບ"
 #: code:addons/account_depreciation/models/account_assets_report.py:0
 #: model:ir.actions.act_window,name:account_depreciation.action_account_asset_form
 #: model:ir.model.fields,field_description:account_depreciation.field_account_bank_statement_line__asset_ids
-#: model:ir.model.fields,field_description:account_depreciation.field_account_move__asset_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_account_move__capitalised_asset_ids
 #: model:ir.ui.menu,name:account_depreciation.menu_action_account_asset_form
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_tree
 msgid "Assets"
@@ -572,7 +572,7 @@ msgid "Automation"
 msgstr "ລະບົບອັດຕະໂນມັດ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__prorata_computation_type__daily_computation
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_prorata__daily_computation
 msgid "Based on days per period"
 msgstr "ອີງຕາມຈຳນວນມື້ຕໍ່ຮອບວຽນ"
 
@@ -584,7 +584,7 @@ msgstr "ໃບບິນ"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/models/account_assets_report.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__book_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_book
 msgid "Book Value"
 msgstr "ມູນຄ່າຕາມບັນຊີ"
 
@@ -604,7 +604,7 @@ msgid "Cancel Asset"
 msgstr "ຍົກເລີກຊັບສິນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__cancelled
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__cancelled
 msgid "Cancelled"
 msgstr "ຍົກເລີກແລ້ວ"
 
@@ -624,12 +624,12 @@ msgstr ""
 "ປ່ຽນແປງໃນວິທີການທາງບັນຊີ."
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__children_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__child_ids
 msgid "Children"
 msgstr "ລູກ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__method
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_method
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Straight Line: Calculated on basis of: Gross Value / Duration\n"
@@ -643,7 +643,7 @@ msgstr ""
 "  * ແບບຫຼຸດລົງແລ້ວຈຶ່ງຊື່: ຄືກັບແບບຫຼຸດລົງ ແຕ່ມີມູນຄ່າຄ່າຫຼຸ້ຍຫ້ຽນຂັ້ນຕ່ຳເທົ່າກັບແບບເສັ້ນຊື່."
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__close
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__close
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_search
 msgid "Closed"
 msgstr "ປິດແລ້ວ"
@@ -665,7 +665,7 @@ msgstr "ບໍລິສັດ"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__prorata_computation_type
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_prorata
 msgid "Computation"
 msgstr "ການຄິດໄລ່"
 
@@ -682,13 +682,13 @@ msgid "Confirm"
 msgstr "ຢືນຢັນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__prorata_computation_type__constant_periods
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_prorata__constant_periods
 msgid "Constant Periods"
 msgstr "ໄລຍະເວລາຄົງທີ່"
 
 #. module: account_depreciation
 #: model:ir.model.fields,field_description:account_depreciation.field_account_bank_statement_line__count_asset
-#: model:ir.model.fields,field_description:account_depreciation.field_account_move__count_asset
+#: model:ir.model.fields,field_description:account_depreciation.field_account_move__count_capitalised_asset
 msgid "Count Asset"
 msgstr "ຈຳນວນຊັບສິນ"
 
@@ -791,19 +791,19 @@ msgstr "ຫຼຸດລົງແລ້ວຈຶ່ງຊື່"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/models/account_assets_report.py:0
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__method__degressive
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_method__degressive
 msgid "Declining"
 msgstr "ແບບຫຼຸດລົງ"
 
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__method_progress_factor
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_factor
 msgid "Declining Factor"
 msgstr "ຕົວຄູນແບບຫຼຸດລົງ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__method__degressive_then_linear
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_method__degressive_then_linear
 msgid "Declining then Straight Line"
 msgstr "ແບບຫຼຸດລົງແລ້ວຈຶ່ງເປັນແບບເສັ້ນຊື່"
 
@@ -813,7 +813,7 @@ msgid "Depreciable Amount"
 msgstr "ຈຳນວນທີ່ສາມາດຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄດ້"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_residual
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciable_residual
 #: model:ir.model.fields,field_description:account_depreciation.field_account_bank_statement_line__asset_remaining_value
 #: model:ir.model.fields,field_description:account_depreciation.field_account_move__asset_remaining_value
 msgid "Depreciable Value"
@@ -917,7 +917,7 @@ msgid "Disposal"
 msgstr "ການກຳຈັດ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__disposal_date
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_disposal
 msgid "Disposal Date"
 msgstr "ວັນທີກຳຈັດ"
 
@@ -951,7 +951,7 @@ msgid "Download Asset Import Template"
 msgstr "ດາວໂຫຼດແບບຟອມນຳເຂົ້າຊັບສິນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__draft
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__draft
 msgid "Draft"
 msgstr "ຮ່າງ"
 
@@ -964,7 +964,7 @@ msgstr "ມີຊັບສິນສະຖານະຮ່າງຢູ່"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__method_number
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_duration
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__method_number
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_form
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
@@ -1079,7 +1079,7 @@ msgid "Gross Increase Account"
 msgstr "ບັນຊີການເພີ່ມມູນຄ່າລວມ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__gross_increase_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_increase
 msgid "Gross Increase Value"
 msgstr "ມູນຄ່າການເພີ່ມມູນຄ່າລວມ"
 
@@ -1165,7 +1165,7 @@ msgid ""
 msgstr "ນຳເຂົ້າຂໍ້ມູນເດີມຂອງຊັບສິນຄົງທີ່ ແລະ ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມຂອງພວກມັນ."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__already_depreciated_amount_import
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_depreciated_import
 msgid ""
 "In case of an import from another software, you might need to use this field "
 "to have the right depreciation table report. This is the value that was "
@@ -1190,7 +1190,7 @@ msgid "Is Follower"
 msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__salvage_value
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_salvage
 #: model:ir.model.fields,help:account_depreciation.field_account_asset__salvage_value_pct
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr "ມັນແມ່ນຈຳນວນທີ່ທ່ານວາງແຜນຈະໃຫ້ເຫຼືອ ເຊິ່ງທ່ານບໍ່ສາມາດຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄດ້ (ມູນຄ່າຊາກ)."
@@ -1198,7 +1198,7 @@ msgstr "ມັນແມ່ນຈຳນວນທີ່ທ່ານວາງແຜ
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__journal_id
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_journal_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_model_search
 msgid "Journal"
 msgstr "ສະໝຸດບັນຊີ"
@@ -1301,13 +1301,13 @@ msgstr "ຂໍ້ຄວາມ"
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
 #: model:account.report.column,name:account_depreciation.assets_report_first_method
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__method
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_method
 msgid "Method"
 msgstr "ວິທີການ"
 
 #. module: account_depreciation
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset__model_id
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__model
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__model
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Model"
 msgstr "ແບບຈຳລອງ"
@@ -1341,7 +1341,7 @@ msgid "Monitoring of Depreciation "
 msgstr "ການຕິດຕາມຄ່າຫຼຸ້ຍຫ້ຽນ "
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__method_period__1
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_period__1
 #: model:ir.model.fields.selection,name:account_depreciation.selection__asset_modify__method_period__1
 msgid "Months"
 msgstr "ເດືອນ"
@@ -1393,12 +1393,12 @@ msgid "Negative revaluation"
 msgstr "ການປະເມີນມູນຄ່າໃໝ່ທາງລົບ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__net_gain_on_sale
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_gain_on_sale
 msgid "Net gain on sale"
 msgstr "ກຳໄລສຸດທິຈາກການຂາຍ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__net_gain_on_sale
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_gain_on_sale
 msgid "Net value of gain or loss on sale of an asset"
 msgstr "ມູນຄ່າສຸດທິຂອງກຳໄລ ຫຼື ຂາດທຶນຈາກການຂາຍຊັບສິນ"
 
@@ -1445,12 +1445,12 @@ msgid "No Grouping"
 msgstr "ບໍ່ມີການຈັດກຸ່ມ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__prorata_computation_type__none
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_prorata__none
 msgid "No Prorata"
 msgstr "ບໍ່ມີຕາມສ່ວນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__non_deductible_tax_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_non_deductible_tax
 #: model:ir.model.fields,field_description:account_depreciation.field_account_move_line__non_deductible_tax_value
 msgid "Non Deductible Tax Value"
 msgstr "ມູນຄ່າພາສີທີ່ຫັກບໍ່ໄດ້"
@@ -1463,7 +1463,7 @@ msgstr "ຈຳນວນທີ່ບໍ່ສາມາດຄິດໄລ່ຄ່
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__salvage_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_salvage
 msgid "Not Depreciable Value"
 msgstr "ມູນຄ່າທີ່ບໍ່ສາມາດຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄດ້"
 
@@ -1488,13 +1488,13 @@ msgid "Number of Depreciations"
 msgstr "ຈຳນວນຄັ້ງການຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__method_period
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_period
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__method_period
 msgid "Number of Months in a Period"
 msgstr "ຈຳນວນເດືອນໃນໜຶ່ງຮອບວຽນ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__gross_increase_count
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__count_increase
 msgid "Number of assets made to increase the value of the asset"
 msgstr "ຈຳນວນຊັບສິນທີ່ສ້າງຂຶ້ນເພື່ອເພີ່ມມູນຄ່າຂອງຊັບສິນ"
 
@@ -1505,7 +1505,7 @@ msgid "Number of days"
 msgstr "ຈຳນວນມື້"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__total_depreciation_entries_count
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__count_depreciation
 msgid "Number of depreciation entries (posted or not)"
 msgstr "ຈຳນວນລາຍການຄ່າຫຼຸ້ຍຫ້ຽນ (ທັງທີ່ລົງບັນຊີແລ້ວ ແລະ ຍັງບໍ່ໄດ້ລົງ)"
 
@@ -1536,7 +1536,7 @@ msgstr ""
 "ໄດ້ຖືກລົງທະບຽນຢ່າງຖືກຕ້ອງເພື່ອການຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນອັດຕະໂນມັດ."
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__paused
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__paused
 msgid "On Hold"
 msgstr "ຢຸດຊົ່ວຄາວ"
 
@@ -1568,7 +1568,7 @@ msgstr ""
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__original_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_original
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Original Value"
 msgstr "ມູນຄ່າເດີມ"
@@ -1593,7 +1593,7 @@ msgid "Pause"
 msgstr "ຢຸດຊົ່ວຄາວ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__paused_prorata_date
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_prorata_paused
 msgid "Paused Prorata Date"
 msgstr "ວັນທີຢຸດຕາມສ່ວນ"
 
@@ -1621,7 +1621,7 @@ msgstr "ຄຸນສົມບັດ"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__prorata_date
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_prorata
 msgid "Prorata Date"
 msgstr "ວັນທີຕາມສ່ວນ"
 
@@ -1643,13 +1643,13 @@ msgstr "ປະເມີນຄືນໃໝ່"
 
 #. module: account_depreciation
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__linked_asset_ids
-#: model:ir.model.fields,field_description:account_depreciation.field_account_move_line__asset_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_account_move_line__capitalised_asset_ids
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_move_line_form_asset_inherit
 msgid "Related Assets"
 msgstr "ຊັບສິນທີ່ກ່ຽວຂ້ອງ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__related_purchase_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_purchase
 msgid "Related Purchase Value"
 msgstr "ມູນຄ່າການຊື້ທີ່ກ່ຽວຂ້ອງ"
 
@@ -1690,7 +1690,7 @@ msgid "Review depreciation periods for new acquisitions"
 msgstr "ກວດກາຄືນຮອບວຽນຄ່າຫຼຸ້ຍຫ້ຽນສຳລັບການໄດ້ມາໃໝ່"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__state__open
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__open
 msgid "Running"
 msgstr "ກຳລັງໃຊ້ງານ"
 
@@ -1765,14 +1765,14 @@ msgstr ""
 "ຄ່າເລີ່ມຕົ້ນ."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__prorata_date
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__date_prorata
 msgid ""
 "Starting date of the period used in the prorata calculation of the first "
 "depreciation"
 msgstr "ວັນທີເລີ່ມຕົ້ນຂອງຮອບວຽນທີ່ໃຊ້ໃນການຄິດໄລ່ຕາມສ່ວນຂອງຄ່າຫຼຸ້ຍຫ້ຽນຄັ້ງທຳອິດ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__state
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_state
 msgid "Status"
 msgstr "ສະຖານະ"
 
@@ -1790,12 +1790,12 @@ msgstr ""
 "ວາງແຜນແລ້ວ: ກິດຈະກຳໃນອະນາຄົດ."
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__method__linear
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_method__linear
 msgid "Straight Line"
 msgstr "ແບບເສັ້ນຊື່"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__book_value
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_book
 msgid ""
 "Sum of the depreciable value, the salvage value and the book value of all "
 "value increase items"
@@ -1830,7 +1830,7 @@ msgstr ""
 "ສິນບໍ່ໝູນວຽນ\"."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__method_period
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_period
 #: model:ir.model.fields,help:account_depreciation.field_asset_modify__method_period
 msgid "The amount of time between two depreciations"
 msgstr "ໄລຍະເວລາລະຫວ່າງການຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນສອງຄັ້ງ"
@@ -1869,7 +1869,7 @@ msgstr ""
 "ະ ເປັນປະເພດ \"ຊັບສິນຄົງທີ່\" ຫຼື \"ຊັບສິນບໍ່ໝູນວຽນ\"."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__children_ids
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__child_ids
 msgid "The children are the gains in value of this asset"
 msgstr "ລາຍການລູກແມ່ນການເພີ່ມຂຶ້ນຂອງມູນຄ່າຂອງຊັບສິນນີ້"
 
@@ -1913,7 +1913,7 @@ msgstr ""
 "Odoo ແລະ ເປັນປະເພດ \"ຄ່າຫຼຸ້ຍຫ້ຽນ\" ຫຼື \"ລາຍຈ່າຍ\"."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__method_number
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_duration
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr "ຈຳນວນຄັ້ງທີ່ຕ້ອງການເພື່ອຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນຊັບສິນຂອງທ່ານຈົນໝົດ"
 
@@ -1964,7 +1964,7 @@ msgid "Total"
 msgstr "ລວມ"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__total_depreciable_value
+#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciable
 msgid "Total Depreciable Value"
 msgstr "ມູນຄ່າທີ່ຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄດ້ທັງໝົດ"
 
@@ -2028,7 +2028,7 @@ msgid "Website communication history"
 msgstr "ປະຫວັດການສື່ສານຜ່ານເວັບໄຊທ໌"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__state
+#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation "
@@ -2050,7 +2050,7 @@ msgid "With our template"
 msgstr "ດ້ວຍແບບຟອມຂອງພວກເຮົາ"
 
 #. module: account_depreciation
-#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__method_period__12
+#: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_period__12
 #: model:ir.model.fields.selection,name:account_depreciation.selection__asset_modify__method_period__12
 msgid "Years"
 msgstr "ປີ"

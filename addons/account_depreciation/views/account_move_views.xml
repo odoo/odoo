@@ -8,15 +8,15 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <field
-                    name="asset_id"
+                    name="depreciation_asset_id"
                     groups="account.group_account_readonly,account.group_account_invoice"
                     invisible="1" />
                 <field
-                    name="asset_ids"
+                    name="capitalised_asset_ids"
                     groups="account.group_account_readonly,account.group_account_invoice"
                     invisible="1" />
                 <field
-                    name="count_asset"
+                    name="count_capitalised_asset"
                     groups="account.group_account_readonly,account.group_account_invoice"
                     invisible="1" />
                 <field
@@ -29,25 +29,31 @@
                     string="Asset"
                     icon="fa-cube"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not asset_id"
+                    invisible="not depreciation_asset_id"
                     class="oe_stat_button" />
                 <button
-                    name="action_view_asset_ids"
+                    name="action_view_capitalised_asset_ids"
                     type="object"
                     icon="fa-id-card-o"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="count_asset == 0 or draft_asset_exists"
+                    invisible="count_capitalised_asset == 0 or draft_asset_exists"
                     class="oe_stat_button">
-                    <field name="count_asset" string="Asset(s)" widget="statinfo" />
+                    <field
+                        name="count_capitalised_asset"
+                        string="Asset(s)"
+                        widget="statinfo" />
                 </button>
                 <button
-                    name="action_view_asset_ids"
+                    name="action_view_capitalised_asset_ids"
                     type="object"
                     icon="fa-id-card-o"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="count_asset == 0 or not draft_asset_exists"
+                    invisible="count_capitalised_asset == 0 or not draft_asset_exists"
                     class="oe_stat_button text-danger">
-                    <field name="count_asset" string="Asset(s)" widget="statinfo" />
+                    <field
+                        name="count_capitalised_asset"
+                        string="Asset(s)"
+                        widget="statinfo" />
                 </button>
             </xpath>
             <xpath
@@ -56,7 +62,7 @@
                 <field
                     name="asset_move_type"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not asset_id and not asset_ids"
+                    invisible="not depreciation_asset_id and not capitalised_asset_ids"
                     readonly="0" />
             </xpath>
             <xpath
@@ -65,7 +71,7 @@
                 <field
                     name="asset_move_type"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not asset_id and not asset_ids"
+                    invisible="not depreciation_asset_id and not capitalised_asset_ids"
                     readonly="0" />
             </xpath>
         </field>
@@ -80,8 +86,8 @@
                 <group
                     string="Related Assets"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not asset_ids">
-                    <field name="asset_ids" nolabel="1" />
+                    invisible="not capitalised_asset_ids">
+                    <field name="capitalised_asset_ids" nolabel="1" />
                 </group>
             </field>
         </field>

@@ -227,7 +227,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             )
 
             columns_by_expr_label = {
-                "acquisition_date": (
+                "date_acquisition": (
                     al["asset_acquisition_date"]
                     and format_date(self.env, al["asset_acquisition_date"])
                 )
@@ -464,7 +464,8 @@ class AccountAssetReportHandler(models.AbstractModel):
             alias="move",
             table="account_move",
             condition=SQL(
-                "move.asset_id = asset.id AND move.state = ANY(%s)", list(move_states)
+                "move.depreciation_asset_id = asset.id AND move.state = ANY(%s)",
+                list(move_states),
             ),
         )
 
@@ -506,7 +507,9 @@ class AccountAssetReportHandler(models.AbstractModel):
             if journal["model"] == "account.journal" and journal["selected"]
         )
         if selected_journals:
-            query.add_where(SQL("asset.journal_id in %s", selected_journals))
+            query.add_where(
+                SQL("asset.depreciation_journal_id in %s", selected_journals)
+            )
 
         sql = SQL(
             """
@@ -514,33 +517,33 @@ class AccountAssetReportHandler(models.AbstractModel):
                    asset.parent_id AS parent_id,
                    asset.name AS asset_name,
                    asset.asset_group_id AS asset_group_id,
-                   asset.original_value AS asset_original_value,
+                   asset.value_original AS asset_original_value,
                    asset.currency_id AS asset_currency_id,
-                   COALESCE(asset.salvage_value, 0) as asset_salvage_value,
+                   COALESCE(asset.value_salvage, 0) as asset_salvage_value,
                    MIN(move.date) AS asset_date,
-                   asset.disposal_date AS asset_disposal_date,
-                   asset.acquisition_date AS asset_acquisition_date,
-                   asset.method AS asset_method,
-                   asset.method_number AS asset_method_number,
-                   asset.method_period AS asset_method_period,
-                   asset.method_progress_factor AS asset_method_progress_factor,
-                   asset.state AS asset_state,
+                   asset.date_disposal AS asset_disposal_date,
+                   asset.date_acquisition AS asset_acquisition_date,
+                   asset.depreciation_method AS asset_method,
+                   asset.depreciation_duration AS asset_method_number,
+                   asset.depreciation_period AS asset_method_period,
+                   asset.depreciation_factor AS asset_method_progress_factor,
+                   asset.depreciation_state AS asset_state,
                    asset.company_id AS company_id,
                    %(account_code)s AS account_code,
                    %(account_name)s AS account_name,
                    %(account_id)s AS account_id,
-                   COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date < %(date_from)s), 0) + COALESCE(asset.already_depreciated_amount_import, 0) AS depreciated_before,
+                   COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date < %(date_from)s), 0) + COALESCE(asset.value_depreciated_import, 0) AS depreciated_before,
                    COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date BETWEEN %(date_from)s AND %(date_to)s), 0) AS depreciated_during,
                    COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date BETWEEN %(date_from)s AND %(date_to)s AND move.asset_move_type IN ('disposal', 'sale')), 0) AS asset_disposal_value
               FROM %(from_clause)s
              WHERE %(where_clause)s
                AND asset.company_id in %(company_ids)s
-               AND (asset.acquisition_date <= %(date_to)s OR move.date <= %(date_to)s)
-               AND (asset.disposal_date >= %(date_from)s OR asset.disposal_date IS NULL)
-               AND (asset.state not in ('draft', 'cancelled') OR (asset.state = 'draft' AND %(include_draft)s))
+               AND (asset.date_acquisition <= %(date_to)s OR move.date <= %(date_to)s)
+               AND (asset.date_disposal >= %(date_from)s OR asset.date_disposal IS NULL)
+               AND (asset.depreciation_state not in ('draft', 'cancelled') OR (asset.depreciation_state = 'draft' AND %(include_draft)s))
                AND asset.active = 't'
           GROUP BY asset.id, account_id, account_code, account_name
-          ORDER BY account_code, asset.acquisition_date, asset.id;
+          ORDER BY account_code, asset.date_acquisition, asset.id;
             """,
             account_code=account_code,
             account_name=account_name,

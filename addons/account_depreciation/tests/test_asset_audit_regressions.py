@@ -86,7 +86,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
         self.assertAlmostEqual(
             disposal.depreciation_value,
-            asset.original_value - asset.salvage_value - abs(accumulated.balance),
+            asset.value_original - asset.value_salvage - abs(accumulated.balance),
         )
 
     def test_revaluation_down_keeps_the_caller_reference(self):
@@ -99,9 +99,12 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 "name": "cut",
             }
         )
-        self.assertGreater(wizard.value_residual, 0)
+        self.assertGreater(wizard.value_depreciable_residual, 0)
         wizard.write(
-            {"value_residual": wizard.value_residual / 2, "salvage_value": 0.0}
+            {
+                "value_depreciable_residual": wizard.value_depreciable_residual / 2,
+                "value_salvage": 0.0,
+            }
         )
         wizard.modify()
 
@@ -114,9 +117,10 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
     def test_board_computation_rejects_an_unknown_method(self):
         asset = self.create_asset(1200, "yearly", 4)
         self.env.cr.execute(
-            "UPDATE account_asset SET method = 'exotic' WHERE id = %s", (asset.id,)
+            "UPDATE account_asset SET depreciation_method = 'exotic' WHERE id = %s",
+            (asset.id,),
         )
-        asset.invalidate_recordset(["method"])
+        asset.invalidate_recordset(["depreciation_method"])
 
         with self.assertRaisesRegex(UserError, "no board computation"):
             asset._compute_board_amount(
@@ -153,15 +157,17 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                     "account_depreciation_expense_id": self.company_data[
                         "default_account_expense"
                     ].id,
-                    "journal_id": self.company_data["default_journal_misc"].id,
-                    "original_value": 500.0,
-                    "acquisition_date": "2024-01-01",
+                    "depreciation_journal_id": self.company_data[
+                        "default_journal_misc"
+                    ].id,
+                    "value_original": 500.0,
+                    "date_acquisition": "2024-01-01",
                 }
             )
         )
-        self.assertEqual(asset.original_value, 500.0)
+        self.assertEqual(asset.value_original, 500.0)
         with self.assertRaises(AccessError):
-            asset.with_user(user).write({"original_value": 600.0})
+            asset.with_user(user).write({"value_original": 600.0})
 
     def test_turn_as_asset_does_not_need_active_ids(self):
         move = self.env["account.move"].create(
@@ -406,7 +412,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         assets = self.env["account.asset"]
         for index in range(5):
             assets |= self.create_asset(
-                6000, "monthly", 24, name=f"batched {index}", state="draft"
+                6000, "monthly", 24, name=f"batched {index}", depreciation_state="draft"
             )
         company_model = type(self.env["res.company"])
         original = company_model.compute_fiscalyear_dates
@@ -450,16 +456,16 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                         "account_depreciation_expense_id": self.company_data[
                             "default_account_expense"
                         ].id,
-                        "original_value": 1000,
-                        "acquisition_date": "2020-02-01",
-                        "prorata_computation_type": "none",
+                        "value_original": 1000,
+                        "date_acquisition": "2020-02-01",
+                        "depreciation_prorata": "none",
                     }
                     for index in range(10)
                 ]
             )
-            assets.mapped("journal_id")
+            assets.mapped("depreciation_journal_id")
 
-        self.assertEqual(len(assets.journal_id), 1)
+        self.assertEqual(len(assets.depreciation_journal_id), 1)
         self.assertEqual(
             len(calls), 1, "one company needs one default-journal lookup, not ten"
         )
@@ -468,35 +474,39 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         other_journal = self.company_data["default_journal_misc"].copy(
             {"name": "Second misc", "code": "MSC2"}
         )
-        asset = self.create_asset(1200, "yearly", 4, journal_id=other_journal.id)
+        asset = self.create_asset(
+            1200, "yearly", 4, depreciation_journal_id=other_journal.id
+        )
         self.env.flush_all()
 
-        self.env.add_to_compute(asset._fields["journal_id"], asset)
+        self.env.add_to_compute(asset._fields["depreciation_journal_id"], asset)
         self.env.flush_all()
 
         self.assertEqual(
-            asset.journal_id,
+            asset.depreciation_journal_id,
             other_journal,
             "a journal that already matches the company must not be reset",
         )
 
     def test_writing_value_residual_on_an_asset_does_nothing(self):
         asset = self.create_asset(1000, "yearly", 4)
-        field = asset._fields["value_residual"]
+        field = asset._fields["value_depreciable_residual"]
         self.assertFalse(field.store)
         self.assertIsNone(field.inverse)
 
-        written = self.create_asset(1000, "yearly", 4, value_residual=999999.0)
+        written = self.create_asset(
+            1000, "yearly", 4, value_depreciable_residual=999999.0
+        )
         self.assertEqual(
-            written.value_residual,
+            written.value_depreciable_residual,
             1000.0,
             "create() drops the key outright -- it reaches neither column nor cache",
         )
 
-        asset.write({"value_residual": 123456.0})
+        asset.write({"value_depreciable_residual": 123456.0})
         self.env.flush_all()
         asset.invalidate_recordset()
-        self.assertEqual(asset.value_residual, 1000.0)
+        self.assertEqual(asset.value_depreciable_residual, 1000.0)
 
     def test_gross_increase_value_comes_from_the_original_value(self):
         asset = self._running_asset()
@@ -509,16 +519,16 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 ].id,
             }
         )
-        wizard.value_residual += 400
-        wizard.salvage_value += 100
+        wizard.value_depreciable_residual += 400
+        wizard.value_salvage += 100
         wizard.modify()
 
-        increase = asset.children_ids
+        increase = asset.child_ids
         self.assertEqual(len(increase), 1)
-        self.assertEqual(increase.original_value, 500)
-        self.assertEqual(increase.salvage_value, 100)
+        self.assertEqual(increase.value_original, 500)
+        self.assertEqual(increase.value_salvage, 100)
         self.assertEqual(
-            increase.total_depreciable_value,
+            increase.value_depreciable,
             400,
             "the amount to depreciate is original - salvage, not a written residual",
         )
@@ -526,10 +536,10 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_save_as_profile_produces_a_profile_matching_the_asset(self):
         asset = self._running_asset(
-            method="degressive",
-            method_progress_factor=0.25,
-            method_number=7,
-            method_period="1",
+            depreciation_method="degressive",
+            depreciation_factor=0.25,
+            depreciation_duration=7,
+            depreciation_period="1",
         )
         action = asset.action_save_profile()
 
@@ -554,11 +564,11 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 ].id,
             }
         )
-        wizard.value_residual += 600
+        wizard.value_depreciable_residual += 600
         wizard.modify()
-        increase = asset.children_ids
+        increase = asset.child_ids
         self.assertEqual(len(increase), 1)
-        self.assertEqual(increase.value_residual, 0.0)
+        self.assertEqual(increase.value_depreciable_residual, 0.0)
 
         self.env["asset.modify"].create(
             {
@@ -567,7 +577,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 "modify_action": "pause",
             }
         ).pause()
-        self.assertEqual(increase.state, "paused")
+        self.assertEqual(increase.depreciation_state, "paused")
 
         invoice = self.env["account.move"].create(
             {
@@ -600,7 +610,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         self.assertEqual(
             len(sale_moves), 1, "only the asset that was sold gets a sale entry"
         )
-        self.assertEqual(sale_moves.asset_id, asset)
+        self.assertEqual(sale_moves.depreciation_asset_id, asset)
         neutralised = sum(
             line.balance
             for line in sale_moves.line_ids
@@ -674,7 +684,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         wizard = self.env["asset.modify"].create(
             {"asset_id": asset.id, "date": datetime.date(2020, 12, 31)}
         )
-        self.assertEqual(wizard.value_residual, 6000.0)
+        self.assertEqual(wizard.value_depreciable_residual, 6000.0)
 
     def test_residual_of_a_negative_asset_stays_negative_before_the_board(self):
         asset = self.create_asset(-10000, "yearly", 5, import_depreciation=-4000)
@@ -756,7 +766,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         self.assertNotIn("value increase", plain.informational_text.lower())
 
         increasing = self._modify_wizard(asset, "modify")
-        increasing.value_residual += 500
+        increasing.value_depreciable_residual += 500
         self.assertTrue(increasing.gain_value)
         self.assertIn("value increase", increasing.informational_text.lower())
 
@@ -808,12 +818,12 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_deleting_every_asset_of_a_bill_untypes_it_too(self):
         bill, assets = self._bill_with_assets(2, "pair")
-        self.assertEqual(len(bill.asset_ids), 2)
+        self.assertEqual(len(bill.capitalised_asset_ids), 2)
 
         assets.unlink()
         self.env.flush_all()
 
-        self.assertFalse(bill.asset_ids)
+        self.assertFalse(bill.capitalised_asset_ids)
         self.assertFalse(bill.asset_move_type)
 
     def test_deleting_one_of_two_assets_leaves_the_bill_typed(self):
@@ -822,7 +832,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         assets[0].unlink()
         self.env.flush_all()
 
-        self.assertEqual(len(bill.asset_ids), 1)
+        self.assertEqual(len(bill.capitalised_asset_ids), 1)
         self.assertEqual(bill.asset_move_type, "purchase")
 
     def test_deleting_assets_logs_one_note_per_bill(self):

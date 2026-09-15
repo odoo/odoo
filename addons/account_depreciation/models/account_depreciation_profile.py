@@ -128,16 +128,16 @@ class AccountDepreciationProfile(models.Model):
     def _get_asset_defaults(self):
         self.check_singleton()
         return {
-            "method": self.depreciation_method,
-            "method_number": self.depreciation_duration,
-            "method_period": self.depreciation_period,
-            "method_progress_factor": self.depreciation_factor,
-            "prorata_computation_type": self.depreciation_prorata,
+            "depreciation_method": self.depreciation_method,
+            "depreciation_duration": self.depreciation_duration,
+            "depreciation_period": self.depreciation_period,
+            "depreciation_factor": self.depreciation_factor,
+            "depreciation_prorata": self.depreciation_prorata,
             "analytic_distribution": self.analytic_distribution,
             "account_asset_id": self.account_asset_id.id,
             "account_depreciation_id": self.account_depreciation_id.id,
             "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
-            "journal_id": self.depreciation_journal_id.id,
+            "depreciation_journal_id": self.depreciation_journal_id.id,
         }
 
     def action_view_assets(self):

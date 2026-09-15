@@ -23,14 +23,14 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": cls.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": cls.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": cls.company_data["default_journal_misc"].id,
                 "name": "truck",
-                "acquisition_date": today + relativedelta(years=-6, months=-6),
-                "original_value": 10000,
-                "salvage_value": 2500,
-                "method_number": 10,
-                "method_period": "12",
-                "method": "linear",
+                "date_acquisition": today + relativedelta(years=-6, months=-6),
+                "value_original": 10000,
+                "value_salvage": 2500,
+                "depreciation_duration": 10,
+                "depreciation_period": "12",
+                "depreciation_method": "linear",
             }
         )
         cls.truck.validate()
@@ -104,17 +104,17 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.prorata_computation_type = "constant_periods"
-        CEO_car.method_number = 5
+        CEO_car.depreciation_prorata = "constant_periods"
+        CEO_car.depreciation_duration = 5
 
         CEO_car.validate()
 
@@ -125,26 +125,28 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_00_account_asset(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.prorata_computation_type = "constant_periods"
-        CEO_car.method_number = 5
+        CEO_car.depreciation_prorata = "constant_periods"
+        CEO_car.depreciation_duration = 5
 
         CEO_car.validate()
 
         CEO_car.flush_recordset()
 
-        self.assertEqual(CEO_car.state, "open", "Asset should be in Open state")
+        self.assertEqual(
+            CEO_car.depreciation_state, "open", "Asset should be in Open state"
+        )
 
         self.assertEqual(
-            CEO_car.method_number + 1,
+            CEO_car.depreciation_duration + 1,
             len(CEO_car.depreciation_move_ids),
             "Depreciation lines not created correctly",
         )
@@ -157,15 +159,17 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         CEO_car.depreciation_move_ids.write({"auto_post": "no"})
         CEO_car.depreciation_move_ids.action_post()
-        self.assertEqual(CEO_car.state, "open", "State of asset should be runing")
+        self.assertEqual(
+            CEO_car.depreciation_state, "open", "State of asset should be runing"
+        )
         self.assertRecordValues(
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 2000,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 2000,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -205,10 +209,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 12000,
-                    "value_residual": 10000,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 12000,
+                    "value_depreciable_residual": 10000,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -310,10 +314,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 12000,
-                    "value_residual": 10000,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 12000,
+                    "value_depreciable_residual": 10000,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -420,10 +424,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -431,31 +435,33 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_00_account_asset_new(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.prorata_computation_type = "constant_periods"
-        CEO_car.method_number = 5
+        CEO_car.depreciation_prorata = "constant_periods"
+        CEO_car.depreciation_duration = 5
 
         CEO_car.validate()
 
         CEO_car.depreciation_move_ids.write({"auto_post": "no"})
         CEO_car.depreciation_move_ids.action_post()
-        self.assertEqual(CEO_car.state, "open", "State of the asset should be running")
+        self.assertEqual(
+            CEO_car.depreciation_state, "open", "State of the asset should be running"
+        )
         self.assertRecordValues(
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 2000,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 2000,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -497,10 +503,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 12000,
-                    "value_residual": 10000,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 12000,
+                    "value_depreciable_residual": 10000,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -559,11 +565,11 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
-                    "state": "close",
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
+                    "depreciation_state": "close",
                 }
             ],
         )
@@ -615,17 +621,19 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         invoice.action_post()
 
-        asset = invoice.asset_ids
+        asset = invoice.capitalised_asset_ids
         self.assertEqual(
             len(asset),
             1,
             "One and only one asset should have been created from invoice.",
         )
 
-        self.assertTrue(asset.state == "open", "Asset should be in Open state")
+        self.assertTrue(
+            asset.depreciation_state == "open", "Asset should be in Open state"
+        )
         first_invoice_line = invoice.invoice_line_ids[0]
         self.assertEqual(
-            asset.original_value,
+            asset.value_original,
             first_invoice_line.price_subtotal,
             "Asset value is not same as invoice line.",
         )
@@ -633,7 +641,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         first_depreciation_line = asset.depreciation_move_ids.sorted(lambda r: r.id)[0]
         self.assertAlmostEqual(
             first_depreciation_line.asset_remaining_value,
-            asset.original_value - first_depreciation_line.amount_total,
+            asset.value_original - first_depreciation_line.amount_total,
             msg="Remaining value is incorrect.",
         )
         self.assertAlmostEqual(
@@ -644,7 +652,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         last_depreciation_date = first_depreciation_line.date
         installment_date = last_depreciation_date + relativedelta(
-            months=+int(asset.method_period)
+            months=+int(asset.depreciation_period)
         )
         self.assertEqual(
             asset.depreciation_move_ids.sorted(lambda r: r.id)[1].date,
@@ -655,14 +663,14 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_02_account_asset(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": "2010-01-31",
-                "already_depreciated_amount_import": 10000.0,
+                "date_acquisition": "2010-01-31",
+                "value_depreciated_import": 10000.0,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
@@ -672,10 +680,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 2000,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 2000,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -685,10 +693,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 2000,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 2000,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -725,10 +733,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -736,14 +744,14 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_03_account_asset(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": "2010-01-31",
-                "already_depreciated_amount_import": 12000.0,
+                "date_acquisition": "2010-01-31",
+                "value_depreciated_import": 12000.0,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
@@ -753,10 +761,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 0,
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -766,10 +774,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 0,
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -806,10 +814,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 0,
+                    "value_original": 12000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -817,28 +825,28 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_04_account_asset(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 800.0,
+                "value_original": 800.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": "2021-01-01",
-                "already_depreciated_amount_import": 300.0,
+                "date_acquisition": "2021-01-01",
+                "value_depreciated_import": 300.0,
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.method_number = 5
+        CEO_car.depreciation_duration = 5
 
         CEO_car.validate()
         self.assertRecordValues(
             CEO_car,
             [
                 {
-                    "original_value": 800,
-                    "book_value": 500,
-                    "value_residual": 500,
-                    "salvage_value": 0,
+                    "value_original": 800,
+                    "value_book": 500,
+                    "value_depreciable_residual": 500,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -851,10 +859,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 800,
-                    "book_value": 500,
-                    "value_residual": 500,
-                    "salvage_value": 0,
+                    "value_original": 800,
+                    "value_book": 500,
+                    "value_depreciable_residual": 500,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -891,10 +899,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 800,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 0,
+                    "value_original": 800,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -902,17 +910,17 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_05_account_asset(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 1000.0,
+                "value_original": 1000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": "2020-01-01",
+                "date_acquisition": "2020-01-01",
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.method_number = 5
+        CEO_car.depreciation_duration = 5
         CEO_car.account_depreciation_id = CEO_car.account_asset_id
 
         CEO_car.validate()
@@ -920,10 +928,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 1000,
-                    "book_value": 800,
-                    "value_residual": 800,
-                    "salvage_value": 0,
+                    "value_original": 1000,
+                    "value_book": 800,
+                    "value_depreciable_residual": 800,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -936,10 +944,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 1000,
-                    "book_value": 700,
-                    "value_residual": 700,
-                    "salvage_value": 0,
+                    "value_original": 1000,
+                    "value_book": 700,
+                    "value_depreciable_residual": 700,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -971,10 +979,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 1000,
-                    "book_value": 0,
-                    "value_residual": 0,
-                    "salvage_value": 0,
+                    "value_original": 1000,
+                    "value_book": 0,
+                    "value_depreciable_residual": 0,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -992,20 +1000,20 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 0,
-                "state": "draft",
-                "method_period": "12",
-                "method_number": 4,
+                "value_salvage": 0,
+                "depreciation_state": "draft",
+                "depreciation_period": "12",
+                "depreciation_duration": 4,
                 "name": "CEO's Car",
-                "original_value": 1000.0,
-                "acquisition_date": fields.Date.today() - relativedelta(years=3),
+                "value_original": 1000.0,
+                "date_acquisition": fields.Date.today() - relativedelta(years=3),
                 "account_asset_id": asset_account.id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
                 .copy()
                 .id,
                 "account_depreciation_expense_id": asset_account.id,
-                "journal_id": self.company_data["default_journal_misc"].id,
-                "prorata_computation_type": "none",
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_prorata": "none",
             }
         )
 
@@ -1019,10 +1027,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             CEO_car,
             [
                 {
-                    "original_value": 1000,
-                    "book_value": 250,
-                    "value_residual": 250,
-                    "salvage_value": 0,
+                    "value_original": 1000,
+                    "value_book": 250,
+                    "value_depreciable_residual": 250,
+                    "value_salvage": 0,
                 }
             ],
         )
@@ -1031,46 +1039,46 @@ class TestAccountAsset(TestAccountReportsCommon):
         today = fields.Date.today()
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
+                "date_acquisition": today + relativedelta(years=-3, month=1, day=1),
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.method_number = 5
+        CEO_car.depreciation_duration = 5
         CEO_car.validate()
 
         self.assertRecordValues(
             CEO_car,
             [
                 {
-                    "original_value": 12000,
-                    "book_value": 6000,
-                    "value_residual": 4000,
-                    "salvage_value": 2000,
+                    "value_original": 12000,
+                    "value_book": 6000,
+                    "value_depreciable_residual": 4000,
+                    "value_salvage": 2000,
                 }
             ],
         )
         CEO_car.set_to_cancelled()
 
-        self.assertEqual(CEO_car.state, "cancelled")
+        self.assertEqual(CEO_car.depreciation_state, "cancelled")
         self.assertFalse(CEO_car.depreciation_move_ids)
 
         Hashed_car = CEO_car.copy()
         Hashed_car.write(
             {
-                "original_value": 12000.0,
-                "method_number": 5,
+                "value_original": 12000.0,
+                "depreciation_duration": 5,
                 "name": "Hashed Car",
-                "journal_id": CEO_car.journal_id.copy().id,
-                "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
+                "depreciation_journal_id": CEO_car.depreciation_journal_id.copy().id,
+                "date_acquisition": today + relativedelta(years=-3, month=1, day=1),
             }
         )
-        Hashed_car.journal_id.restrict_mode_hash_table = True
+        Hashed_car.depreciation_journal_id.restrict_mode_hash_table = True
         Hashed_car.validate()
         self.assertTrue(
             False
@@ -1086,7 +1094,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         Hashed_car.set_to_cancelled()
 
-        self.assertEqual(Hashed_car.state, "cancelled")
+        self.assertEqual(Hashed_car.depreciation_state, "cancelled")
         for i in range(2):
             self.assertTrue(
                 Hashed_car.depreciation_move_ids._sorted_by_date()[
@@ -1114,10 +1122,10 @@ class TestAccountAsset(TestAccountReportsCommon):
         Locked_car = CEO_car.copy()
         Locked_car.write(
             {
-                "original_value": 12000.0,
-                "method_number": 10,
+                "value_original": 12000.0,
+                "depreciation_duration": 10,
                 "name": "Locked Car",
-                "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
+                "date_acquisition": today + relativedelta(years=-3, month=1, day=1),
             }
         )
         Locked_car.validate()
@@ -1129,10 +1137,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             Locked_car,
             [
                 {
-                    "state": "cancelled",
-                    "book_value": 12000.0,
-                    "value_residual": 10000,
-                    "salvage_value": 2000,
+                    "depreciation_state": "cancelled",
+                    "value_book": 12000.0,
+                    "value_depreciable_residual": 10000,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -1145,13 +1153,13 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_form(self):
         asset_form = Form(self.env["account.asset"])
         asset_form.name = "Test Asset"
-        asset_form.original_value = 10000
+        asset_form.value_original = 10000
         asset_form.account_depreciation_id = self.company_data["default_account_assets"]
         asset_form.account_depreciation_expense_id = self.company_data[
             "default_account_expense"
         ]
-        asset_form.journal_id = self.company_data["default_journal_misc"]
-        asset_form.prorata_computation_type = "none"
+        asset_form.depreciation_journal_id = self.company_data["default_journal_misc"]
+        asset_form.depreciation_prorata = "none"
         asset = asset_form.save()
         asset.validate()
 
@@ -1179,11 +1187,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset = self.env["account.asset"].create(
             {
                 "name": "Test Asset",
-                "original_value": -10000,
+                "value_original": -10000,
                 "account_depreciation_id": asset_account,
                 "account_depreciation_expense_id": expense_account,
-                "journal_id": self.company_data["default_journal_misc"].id,
-                "prorata_computation_type": "none",
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_prorata": "none",
             }
         )
         asset.compute_depreciation_board()
@@ -1220,8 +1228,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset = self.env["account.asset"].create(
             {
                 "name": "Test asset",
-                "acquisition_date": "2011-07-01",
-                "original_value": 1000.0,
+                "date_acquisition": "2011-07-01",
+                "value_original": 1000.0,
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -1369,9 +1377,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         ]
 
         asset = asset_form.save()
-        self.assertEqual(asset.value_residual, 900.0)
+        self.assertEqual(asset.value_depreciable_residual, 900.0)
         self.assertIn(asset.name, ["Furniture", "Furniture too"])
-        self.assertEqual(asset.journal_id.type, "general")
+        self.assertEqual(asset.depreciation_journal_id.type, "general")
         self.assertEqual(
             asset.account_asset_id, self.company_data["default_account_expense"]
         )
@@ -1382,7 +1390,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             asset.account_depreciation_expense_id,
             self.company_data["default_account_expense"],
         )
-        self.assertEqual(asset.acquisition_date, min(move_ids.mapped("date")))
+        self.assertEqual(asset.date_acquisition, min(move_ids.mapped("date")))
 
     def test_asset_from_bill_move_line_form(self):
 
@@ -1442,7 +1450,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         ]
 
         asset = asset_form.save()
-        self.assertEqual(asset.value_residual, 900.0)
+        self.assertEqual(asset.value_depreciable_residual, 900.0)
         self.assertRecordValues(
             asset,
             [
@@ -1455,7 +1463,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "account_depreciation_expense_id": self.company_data[
                         "default_account_expense"
                     ].id,
-                    "acquisition_date": min(move_ids.mapped("invoice_date")),
+                    "date_acquisition": min(move_ids.mapped("invoice_date")),
                 }
             ],
         )
@@ -1558,19 +1566,19 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         new_assets = asset_form.save()
         self.assertEqual(len(new_assets), 1)
-        self.assertEqual(new_assets.original_value, 828.75)
-        self.assertEqual(new_assets.non_deductible_tax_value, 78.75)
+        self.assertEqual(new_assets.value_original, 828.75)
+        self.assertEqual(new_assets.value_non_deductible_tax, 78.75)
 
     def test_asset_modify_value_00(self):
-        self.assertEqual(self.truck.value_residual, 3000)
-        self.assertEqual(self.truck.salvage_value, 2500)
+        self.assertEqual(self.truck.value_depreciable_residual, 3000)
+        self.assertEqual(self.truck.value_salvage, 2500)
 
         self.env["asset.modify"].create(
             {
                 "name": "New beautiful sticker :D",
                 "asset_id": self.truck.id,
-                "value_residual": 4000,
-                "salvage_value": 3000,
+                "value_depreciable_residual": 4000,
+                "value_salvage": 3000,
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
                 "account_depreciation_id": self.company_data[
@@ -1578,10 +1586,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 ].id,
             }
         ).modify()
-        self.assertEqual(self.truck.value_residual, 3000)
-        self.assertEqual(self.truck.salvage_value, 2500)
-        self.assertEqual(self.truck.children_ids.value_residual, 1000)
-        self.assertEqual(self.truck.children_ids.salvage_value, 500)
+        self.assertEqual(self.truck.value_depreciable_residual, 3000)
+        self.assertEqual(self.truck.value_salvage, 2500)
+        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 1000)
+        self.assertEqual(self.truck.child_ids.value_salvage, 500)
         self.assertEqual(
             self.truck.account_depreciation_id.id,
             self.company_data["default_account_assets"].id,
@@ -1593,15 +1601,15 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "Accident :'(",
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "asset_id": self.truck.id,
-                "value_residual": 1000,
-                "salvage_value": 2000,
+                "value_depreciable_residual": 1000,
+                "value_salvage": 2000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
-        self.assertEqual(self.truck.value_residual, 1000)
-        self.assertEqual(self.truck.salvage_value, 2000)
-        self.assertEqual(self.truck.children_ids.value_residual, 0)
-        self.assertEqual(self.truck.children_ids.salvage_value, 0)
+        self.assertEqual(self.truck.value_depreciable_residual, 1000)
+        self.assertEqual(self.truck.value_salvage, 2000)
+        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.child_ids.value_salvage, 0)
         self.assertEqual(
             max(
                 self.truck.depreciation_move_ids.filtered(
@@ -1618,15 +1626,15 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "Don't wanna depreciate all of it",
                 "asset_id": self.truck.id,
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
-                "value_residual": 1000,
-                "salvage_value": 4500,
+                "value_depreciable_residual": 1000,
+                "value_salvage": 4500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
-        self.assertEqual(self.truck.value_residual, 1000)
-        self.assertEqual(self.truck.salvage_value, 4500)
-        self.assertEqual(self.truck.children_ids.value_residual, 0)
-        self.assertEqual(self.truck.children_ids.salvage_value, 0)
+        self.assertEqual(self.truck.value_depreciable_residual, 1000)
+        self.assertEqual(self.truck.value_salvage, 4500)
+        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.child_ids.value_salvage, 0)
 
     def test_asset_modify_value_03(self):
         self.env["asset.modify"].create(
@@ -1634,15 +1642,15 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "Some aliens did something to my truck",
                 "asset_id": self.truck.id,
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
-                "value_residual": 1000,
-                "salvage_value": 6000,
+                "value_depreciable_residual": 1000,
+                "value_salvage": 6000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
-        self.assertEqual(self.truck.value_residual, 1000)
-        self.assertEqual(self.truck.salvage_value, 4500)
-        self.assertEqual(self.truck.children_ids.value_residual, 0)
-        self.assertEqual(self.truck.children_ids.salvage_value, 1500)
+        self.assertEqual(self.truck.value_depreciable_residual, 1000)
+        self.assertEqual(self.truck.value_salvage, 4500)
+        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.child_ids.value_salvage, 1500)
 
     def test_asset_modify_value_04(self):
         self.env["asset.modify"].create(
@@ -1650,15 +1658,15 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "GODZILA IS REAL!",
                 "asset_id": self.truck.id,
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
-                "value_residual": 4000,
-                "salvage_value": 2000,
+                "value_depreciable_residual": 4000,
+                "value_salvage": 2000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
-        self.assertEqual(self.truck.value_residual, 3500)
-        self.assertEqual(self.truck.salvage_value, 2000)
-        self.assertEqual(self.truck.children_ids.value_residual, 500)
-        self.assertEqual(self.truck.children_ids.salvage_value, 0)
+        self.assertEqual(self.truck.value_depreciable_residual, 3500)
+        self.assertEqual(self.truck.value_salvage, 2000)
+        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 500)
+        self.assertEqual(self.truck.child_ids.value_salvage, 0)
 
     def test_asset_modify_report(self):
 
@@ -1700,28 +1708,28 @@ class TestAccountAsset(TestAccountReportsCommon):
             [x["no_format"] for x in lines[0]["columns"][3:]],
         )
 
-        self.assertEqual(self.truck.value_residual, 3000)
-        self.assertEqual(self.truck.salvage_value, 2500)
+        self.assertEqual(self.truck.value_depreciable_residual, 3000)
+        self.assertEqual(self.truck.value_salvage, 2500)
         self.env["asset.modify"].create(
             {
                 "name": "New beautiful sticker :D",
                 "asset_id": self.truck.id,
                 "date": fields.Date.today()
                 + relativedelta(years=-1, months=-6, days=-1),
-                "value_residual": 4750,
-                "salvage_value": 3000,
+                "value_depreciable_residual": 4750,
+                "value_salvage": 3000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
 
         self.assertEqual(
-            self.truck.value_residual
-            + sum(self.truck.children_ids.mapped("value_residual")),
+            self.truck.value_depreciable_residual
+            + sum(self.truck.child_ids.mapped("value_depreciable_residual")),
             3800,
         )
         self.assertEqual(
-            self.truck.salvage_value
-            + sum(self.truck.children_ids.mapped("salvage_value")),
+            self.truck.value_salvage
+            + sum(self.truck.child_ids.mapped("value_salvage")),
             3000,
         )
 
@@ -1754,9 +1762,9 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "name": "Huge scratch on beautiful sticker :'( It is ruined",
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
-                "asset_id": self.truck.children_ids.id,
-                "value_residual": 0,
-                "salvage_value": 500,
+                "asset_id": self.truck.child_ids.id,
+                "value_depreciable_residual": 0,
+                "value_salvage": 500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
@@ -1765,19 +1773,19 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "Huge scratch on beautiful sticker :'( It went through...",
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "asset_id": self.truck.id,
-                "value_residual": 1000,
-                "salvage_value": 2500,
+                "value_depreciable_residual": 1000,
+                "value_salvage": 2500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
         self.assertEqual(
-            self.truck.value_residual
-            + sum(self.truck.children_ids.mapped("value_residual")),
+            self.truck.value_depreciable_residual
+            + sum(self.truck.child_ids.mapped("value_depreciable_residual")),
             1000,
         )
         self.assertEqual(
-            self.truck.salvage_value
-            + sum(self.truck.children_ids.mapped("salvage_value")),
+            self.truck.value_salvage
+            + sum(self.truck.child_ids.mapped("value_salvage")),
             3000,
         )
 
@@ -1850,7 +1858,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "move_type": "out_invoice",
                 "invoice_line_ids": [
-                    (0, 0, {"price_unit": self.truck.book_value + 100})
+                    (0, 0, {"price_unit": self.truck.value_book + 100})
                 ],
             }
         )
@@ -1901,7 +1909,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "move_type": "out_invoice",
                 "invoice_line_ids": [
-                    (0, 0, {"price_unit": self.truck.book_value - 100})
+                    (0, 0, {"price_unit": self.truck.value_book - 100})
                 ],
             }
         )
@@ -1955,7 +1963,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     Command.create(
                         {
                             "account_id": self.truck.account_depreciation_id.id,
-                            "price_unit": self.truck.book_value - 100,
+                            "price_unit": self.truck.value_book - 100,
                         }
                     )
                 ],
@@ -2198,13 +2206,13 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
         invoice.action_post()
-        self.assertTrue(invoice.asset_ids)
+        self.assertTrue(invoice.capitalised_asset_ids)
 
         credit_note = invoice._reverse_moves([{"invoice_date": fields.Date.today()}])
         credit_note.action_post()
 
-        invoice_asset = invoice.asset_ids
-        credit_note_asset = credit_note.asset_ids
+        invoice_asset = invoice.capitalised_asset_ids
+        credit_note_asset = credit_note.capitalised_asset_ids
 
         self.assertTrue(invoice_asset)
         self.assertTrue(credit_note_asset)
@@ -2215,9 +2223,9 @@ class TestAccountAsset(TestAccountReportsCommon):
             credit_note_asset,
             [
                 {
-                    "acquisition_date": invoice_asset.acquisition_date,
-                    "book_value": -invoice_asset.book_value,
-                    "value_residual": -invoice_asset.value_residual,
+                    "date_acquisition": invoice_asset.date_acquisition,
+                    "value_book": -invoice_asset.value_book,
+                    "value_depreciable_residual": -invoice_asset.value_depreciable_residual,
                 }
             ],
         )
@@ -2272,11 +2280,11 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
         move.action_post()
-        assets = move.asset_ids
-        assets = sorted(assets, key=lambda i: i["original_value"], reverse=True)
+        assets = move.capitalised_asset_ids
+        assets = sorted(assets, key=lambda i: i["value_original"], reverse=True)
         self.assertEqual(len(assets), 2, "2 assets should have been created")
-        self.assertEqual(assets[0].original_value, 400.0)
-        self.assertEqual(assets[1].original_value, 400.0)
+        self.assertEqual(assets[0].value_original, 400.0)
+        self.assertEqual(assets[1].value_original, 400.0)
 
     def test_asset_multiple_assets_from_one_move_line_01(self):
 
@@ -2324,7 +2332,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         move.action_post()
         self.assertEqual(
-            sum(asset.original_value for asset in move.asset_ids),
+            sum(asset.value_original for asset in move.capitalised_asset_ids),
             move.line_ids[0].debit,
         )
 
@@ -2378,7 +2386,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         depreciation_lines = self.env["account.move.line"].search(
             [
                 ("account_id", "=", asset_model.account_depreciation_id.id),
-                ("move_id.asset_id", "=", invoice.asset_ids.id),
+                ("move_id.depreciation_asset_id", "=", invoice.capitalised_asset_ids.id),
                 ("debit", "=", 150),
             ]
         )
@@ -2503,10 +2511,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             lambda l: l.product_id == product_a and l.price_unit == 150.0
         )
         product_b_lines = invoice.line_ids.filtered(lambda l: l.product_id == product_b)
-        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.asset_ids)), 17)
-        self.assertEqual(len(product_b_lines.asset_ids), 4)
-        self.assertEqual(len(product_a_100_lines.asset_ids), 7)
-        self.assertEqual(len(product_a_150_lines.asset_ids), 6)
+        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17)
+        self.assertEqual(len(product_b_lines.capitalised_asset_ids), 4)
+        self.assertEqual(len(product_a_100_lines.capitalised_asset_ids), 7)
+        self.assertEqual(len(product_a_150_lines.capitalised_asset_ids), 6)
         credit_note = invoice._reverse_moves()
         with Form(credit_note) as move_form:
             move_form.invoice_date = move_form.date
@@ -2517,10 +2525,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             with move_form.invoice_line_ids.edit(1) as line_form:
                 line_form.quantity = 2
         credit_note.action_post()
-        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.asset_ids)), 17)
-        self.assertEqual(len(product_b_lines.asset_ids), 4)
-        self.assertEqual(len(product_a_100_lines.asset_ids), 7)
-        self.assertEqual(len(product_a_150_lines.asset_ids), 6)
+        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17)
+        self.assertEqual(len(product_b_lines.capitalised_asset_ids), 4)
+        self.assertEqual(len(product_a_100_lines.capitalised_asset_ids), 7)
+        self.assertEqual(len(product_a_150_lines.capitalised_asset_ids), 6)
 
     def test_asset_with_non_deductible_tax(self):
 
@@ -2593,11 +2601,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         vendor_bill_auto.action_post()
 
-        new_assets_auto = vendor_bill_auto.asset_ids
+        new_assets_auto = vendor_bill_auto.capitalised_asset_ids
         self.assertEqual(len(new_assets_auto), 2)
-        self.assertEqual(new_assets_auto.mapped("original_value"), [1105.0, 1105.0])
+        self.assertEqual(new_assets_auto.mapped("value_original"), [1105.0, 1105.0])
         self.assertEqual(
-            new_assets_auto.mapped("non_deductible_tax_value"), [105.0, 105.0]
+            new_assets_auto.mapped("value_non_deductible_tax"), [105.0, 105.0]
         )
 
         asset_account.create_asset = "no"
@@ -2650,8 +2658,8 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         new_assets_manu = asset_form.save()
         self.assertEqual(len(new_assets_manu), 1)
-        self.assertEqual(new_assets_manu.original_value, 3867.5)
-        self.assertEqual(new_assets_manu.non_deductible_tax_value, 367.5)
+        self.assertEqual(new_assets_manu.value_original, 3867.5)
+        self.assertEqual(new_assets_manu.value_non_deductible_tax, 367.5)
 
     def test_asset_degressive_01(self):
         asset = self.env["account.asset"].create(
@@ -2663,21 +2671,23 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Degressive",
-                "acquisition_date": "2021-07-01",
-                "prorata_computation_type": "constant_periods",
-                "original_value": 10000,
-                "method_number": 5,
-                "method_period": "12",
-                "method": "degressive",
-                "method_progress_factor": 0.5,
+                "date_acquisition": "2021-07-01",
+                "depreciation_prorata": "constant_periods",
+                "value_original": 10000,
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.5,
             }
         )
 
         asset.validate()
 
-        self.assertEqual(asset.method_number + 1, len(asset.depreciation_move_ids))
+        self.assertEqual(
+            asset.depreciation_duration + 1, len(asset.depreciation_move_ids)
+        )
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda l: (l.date, l.id)),
@@ -2719,20 +2729,20 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Degressive",
-                "acquisition_date": "2021-01-01",
-                "original_value": 10000,
-                "method_number": 5,
-                "method_period": "12",
-                "method": "degressive",
-                "method_progress_factor": 0.5,
+                "date_acquisition": "2021-01-01",
+                "value_original": 10000,
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.5,
             }
         )
 
         asset.validate()
 
-        self.assertEqual(asset.method_number, len(asset.depreciation_move_ids))
+        self.assertEqual(asset.depreciation_duration, len(asset.depreciation_move_ids))
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda l: (l.date, l.id)),
@@ -2770,16 +2780,16 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Degressive Linear",
-                "acquisition_date": "2021-07-01",
-                "original_value": -10000,
-                "method_number": 5,
-                "method_period": "12",
-                "method": "linear",
+                "date_acquisition": "2021-07-01",
+                "value_original": -10000,
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
+                "depreciation_method": "linear",
             }
         )
-        asset.prorata_computation_type = "constant_periods"
+        asset.depreciation_prorata = "constant_periods"
 
         asset.validate()
 
@@ -2823,14 +2833,14 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Degressive Linear",
-                "acquisition_date": "2021-07-01",
-                "prorata_computation_type": "daily_computation",
-                "original_value": 10000,
-                "method_number": 5,
-                "method_period": "12",
-                "method": "linear",
+                "date_acquisition": "2021-07-01",
+                "depreciation_prorata": "daily_computation",
+                "value_original": 10000,
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
+                "depreciation_method": "linear",
             }
         )
 
@@ -2910,31 +2920,31 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         refund.action_post()
 
-        self.assertTrue(refund.asset_ids)
+        self.assertTrue(refund.capitalised_asset_ids)
 
-        asset = refund.asset_ids
+        asset = refund.capitalised_asset_ids
 
-        self.assertEqual(asset.book_value, -refund.amount_total)
-        self.assertEqual(asset.value_residual, -refund.amount_total)
+        self.assertEqual(asset.value_book, -refund.amount_total)
+        self.assertEqual(asset.value_depreciable_residual, -refund.amount_total)
 
         asset.validate()
 
         self.assertEqual(
             len(asset.depreciation_move_ids.filtered(lambda m: m.state == "posted")), 1
         )
-        self.assertEqual(asset.book_value, -400.0)
-        self.assertEqual(asset.value_residual, -400.0)
+        self.assertEqual(asset.value_book, -400.0)
+        self.assertEqual(asset.value_depreciable_residual, -400.0)
 
     def test_depreciation_schedule_report_with_negative_asset(self):
         asset = self.env["account.asset"].create(
             {
                 "name": "test",
-                "original_value": -500,
-                "method": "linear",
-                "method_number": 5,
-                "method_period": "1",
-                "acquisition_date": fields.Date.today() + relativedelta(months=-1),
-                "prorata_computation_type": "none",
+                "value_original": -500,
+                "depreciation_method": "linear",
+                "depreciation_duration": 5,
+                "depreciation_period": "1",
+                "date_acquisition": fields.Date.today() + relativedelta(months=-1),
+                "depreciation_prorata": "none",
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -2942,7 +2952,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
 
@@ -3005,7 +3015,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 ("company_id", "=", self.env.company.id),
             ]
         )
-        assets.state = "draft"
+        assets.depreciation_state = "draft"
         assets.mapped("depreciation_move_ids").state = "draft"
         assets.unlink()
 
@@ -3070,14 +3080,16 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "account_depreciation_expense_id": self.company_data[
                         "default_account_expense"
                     ].id,
-                    "journal_id": self.company_data["default_journal_misc"].id,
+                    "depreciation_journal_id": self.company_data[
+                        "default_journal_misc"
+                    ].id,
                     "name": name,
-                    "acquisition_date": fields.Date.to_date("2020-07-01"),
-                    "original_value": original_value,
-                    "method": "linear",
-                    "prorata_computation_type": "none",
+                    "date_acquisition": fields.Date.to_date("2020-07-01"),
+                    "value_original": value_original,
+                    "depreciation_method": "linear",
+                    "depreciation_prorata": "none",
                 }
-                for account_id, name, original_value in [
+                for account_id, name, value_original in [
                     (account_a.id, "ZenBook", 1250),
                     (account_a.id, "ThinkBook", 1500),
                     (account_a1.id, "XPS", 1750),
@@ -3098,44 +3110,44 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "name": line["name"],
                 "level": line["level"],
-                "book_value": line["columns"][-1]["name"],
+                "value_book": line["columns"][-1]["name"],
             }
             for line in (report._get_lines(options))
         ]
 
         expected_values = [
-            {"name": "1 Group 1", "level": 1, "book_value": "$\xa06,920.00"},
-            {"name": "11 Group 11", "level": 2, "book_value": "$\xa03,600.00"},
-            {"name": "1100 Account A", "level": 3, "book_value": "$\xa02,200.00"},
-            {"name": "ZenBook", "level": 4, "book_value": "$\xa01,000.00"},
-            {"name": "ThinkBook", "level": 4, "book_value": "$\xa01,200.00"},
-            {"name": "Total 1100 Account A", "level": 3, "book_value": "$\xa02,200.00"},
-            {"name": "1110 Account A1", "level": 3, "book_value": "$\xa01,400.00"},
-            {"name": "XPS", "level": 4, "book_value": "$\xa01,400.00"},
+            {"name": "1 Group 1", "level": 1, "value_book": "$\xa06,920.00"},
+            {"name": "11 Group 11", "level": 2, "value_book": "$\xa03,600.00"},
+            {"name": "1100 Account A", "level": 3, "value_book": "$\xa02,200.00"},
+            {"name": "ZenBook", "level": 4, "value_book": "$\xa01,000.00"},
+            {"name": "ThinkBook", "level": 4, "value_book": "$\xa01,200.00"},
+            {"name": "Total 1100 Account A", "level": 3, "value_book": "$\xa02,200.00"},
+            {"name": "1110 Account A1", "level": 3, "value_book": "$\xa01,400.00"},
+            {"name": "XPS", "level": 4, "value_book": "$\xa01,400.00"},
             {
                 "name": "Total 1110 Account A1",
                 "level": 3,
-                "book_value": "$\xa01,400.00",
+                "value_book": "$\xa01,400.00",
             },
-            {"name": "Total 11 Group 11", "level": 2, "book_value": "$\xa03,600.00"},
-            {"name": "12 Group 12", "level": 2, "book_value": "$\xa01,600.00"},
-            {"name": "1200 Account B", "level": 3, "book_value": "$\xa01,600.00"},
-            {"name": "MacBook", "level": 4, "book_value": "$\xa01,600.00"},
-            {"name": "Total 1200 Account B", "level": 3, "book_value": "$\xa01,600.00"},
-            {"name": "Total 12 Group 12", "level": 2, "book_value": "$\xa01,600.00"},
-            {"name": "1300 Account C", "level": 2, "book_value": "$\xa01,280.00"},
-            {"name": "Aspire", "level": 3, "book_value": "$\xa01,280.00"},
-            {"name": "Total 1300 Account C", "level": 2, "book_value": "$\xa01,280.00"},
-            {"name": "1400 Account D", "level": 2, "book_value": "$\xa0440.00"},
-            {"name": "Playstation", "level": 3, "book_value": "$\xa0440.00"},
-            {"name": "Total 1400 Account D", "level": 2, "book_value": "$\xa0440.00"},
-            {"name": "Total 1 Group 1", "level": 1, "book_value": "$\xa06,920.00"},
-            {"name": "(No Group)", "level": 1, "book_value": "$\xa0400.00"},
-            {"name": "9999 Account E", "level": 2, "book_value": "$\xa0400.00"},
-            {"name": "Xbox", "level": 3, "book_value": "$\xa0400.00"},
-            {"name": "Total 9999 Account E", "level": 2, "book_value": "$\xa0400.00"},
-            {"name": "Total (No Group)", "level": 1, "book_value": "$\xa0400.00"},
-            {"name": "Total", "level": 1, "book_value": "$\xa07,320.00"},
+            {"name": "Total 11 Group 11", "level": 2, "value_book": "$\xa03,600.00"},
+            {"name": "12 Group 12", "level": 2, "value_book": "$\xa01,600.00"},
+            {"name": "1200 Account B", "level": 3, "value_book": "$\xa01,600.00"},
+            {"name": "MacBook", "level": 4, "value_book": "$\xa01,600.00"},
+            {"name": "Total 1200 Account B", "level": 3, "value_book": "$\xa01,600.00"},
+            {"name": "Total 12 Group 12", "level": 2, "value_book": "$\xa01,600.00"},
+            {"name": "1300 Account C", "level": 2, "value_book": "$\xa01,280.00"},
+            {"name": "Aspire", "level": 3, "value_book": "$\xa01,280.00"},
+            {"name": "Total 1300 Account C", "level": 2, "value_book": "$\xa01,280.00"},
+            {"name": "1400 Account D", "level": 2, "value_book": "$\xa0440.00"},
+            {"name": "Playstation", "level": 3, "value_book": "$\xa0440.00"},
+            {"name": "Total 1400 Account D", "level": 2, "value_book": "$\xa0440.00"},
+            {"name": "Total 1 Group 1", "level": 1, "value_book": "$\xa06,920.00"},
+            {"name": "(No Group)", "level": 1, "value_book": "$\xa0400.00"},
+            {"name": "9999 Account E", "level": 2, "value_book": "$\xa0400.00"},
+            {"name": "Xbox", "level": 3, "value_book": "$\xa0400.00"},
+            {"name": "Total 9999 Account E", "level": 2, "value_book": "$\xa0400.00"},
+            {"name": "Total (No Group)", "level": 1, "value_book": "$\xa0400.00"},
+            {"name": "Total", "level": 1, "value_book": "$\xa07,320.00"},
         ]
 
         self.assertEqual(len(lines), len(expected_values))
@@ -3145,11 +3157,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset = self.env["account.asset"].create(
             {
                 "name": "test asset",
-                "method": "linear",
-                "original_value": 1000,
-                "method_number": 5,
-                "method_period": "12",
-                "acquisition_date": fields.Date.today()
+                "depreciation_method": "linear",
+                "value_original": 1000,
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
+                "date_acquisition": fields.Date.today()
                 + relativedelta(years=-2, month=1, day=1),
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -3158,7 +3170,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
         asset.validate()
@@ -3213,12 +3225,12 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset = self.env["account.asset"].create(
             {
                 "name": "test asset",
-                "method": "linear",
-                "original_value": 10000,
-                "salvage_value": 8000,
-                "method_number": 24,
-                "method_period": "1",
-                "acquisition_date": fields.Date.today()
+                "depreciation_method": "linear",
+                "value_original": 10000,
+                "value_salvage": 8000,
+                "depreciation_duration": 24,
+                "depreciation_period": "1",
+                "date_acquisition": fields.Date.today()
                 + relativedelta(months=-1, day=1),
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -3227,7 +3239,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
         asset.validate()
@@ -3300,17 +3312,17 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_analytic_on_lines(self):
         CEO_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 5,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "CEO's Car",
-                "original_value": 12000.0,
+                "value_original": 12000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": "2020-01-01",
+                "date_acquisition": "2020-01-01",
             }
         )
         CEO_car._onchange_depreciation_profile_id()
-        CEO_car.method_number = 5
+        CEO_car.depreciation_duration = 5
         CEO_car.analytic_distribution = {self.analytic_account.id: 100}
 
         CEO_car.validate()
@@ -3362,7 +3374,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_asset_analytic_filter(self):
         truck_b = self.truck.copy()
-        truck_b.acquisition_date = self.truck.acquisition_date
+        truck_b.date_acquisition = self.truck.date_acquisition
         truck_b.validate()
         self.truck.analytic_distribution = {self.analytic_account.id: 100}
 
@@ -3459,7 +3471,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_asset_analytic_groupby(self):
         truck_b = self.truck.copy()
-        truck_b.acquisition_date = self.truck.acquisition_date
+        truck_b.date_acquisition = self.truck.date_acquisition
         truck_b.validate()
         self.truck.analytic_distribution = {self.analytic_account.id: 100}
         with self.enter_registry_test_mode():
@@ -3654,11 +3666,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         for i in range(1, 3):
             asset = self.env["account.asset"].create(
                 {
-                    "method_period": "12",
-                    "method_number": 4,
+                    "depreciation_period": "12",
+                    "depreciation_duration": 4,
                     "name": f"Asset {i}",
-                    "original_value": i * 100.0,
-                    "acquisition_date": fields.Date.today() - relativedelta(years=3),
+                    "value_original": i * 100.0,
+                    "date_acquisition": fields.Date.today() - relativedelta(years=3),
                     "account_asset_id": self.company_data["default_account_assets"].id,
                     "asset_group_id": asset_group.id,
                     "account_depreciation_id": self.company_data[
@@ -3669,8 +3681,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "account_depreciation_expense_id": self.company_data[
                         "default_account_expense"
                     ].id,
-                    "journal_id": self.company_data["default_journal_misc"].id,
-                    "prorata_computation_type": "none",
+                    "depreciation_journal_id": self.company_data[
+                        "default_journal_misc"
+                    ].id,
+                    "depreciation_prorata": "none",
                 }
             )
             asset.validate()
@@ -4032,11 +4046,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         for i in range(1, 3):
             asset = self.env["account.asset"].create(
                 {
-                    "method_period": "12",
-                    "method_number": 4,
+                    "depreciation_period": "12",
+                    "depreciation_duration": 4,
                     "name": f"Bldg {i}",
-                    "original_value": i * 100.0,
-                    "acquisition_date": fields.Date.from_string("2021-06-01"),
+                    "value_original": i * 100.0,
+                    "date_acquisition": fields.Date.from_string("2021-06-01"),
                     "account_asset_id": self.company_data["default_account_assets"].id,
                     "account_depreciation_id": self.company_data[
                         "default_account_assets"
@@ -4046,8 +4060,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "account_depreciation_expense_id": self.company_data[
                         "default_account_expense"
                     ].id,
-                    "journal_id": self.company_data["default_journal_misc"].id,
-                    "prorata_computation_type": "none",
+                    "depreciation_journal_id": self.company_data[
+                        "default_journal_misc"
+                    ].id,
+                    "depreciation_prorata": "none",
                 }
             )
             asset.validate()
@@ -4095,13 +4111,13 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Car",
-                "acquisition_date": fields.Date.today() + relativedelta(months=-6),
-                "original_value": 12000,
-                "method_number": 12,
-                "method_period": "1",
-                "method": "linear",
+                "date_acquisition": fields.Date.today() + relativedelta(months=-6),
+                "value_original": 12000,
+                "depreciation_duration": 12,
+                "depreciation_period": "1",
+                "depreciation_method": "linear",
             }
         )
 
@@ -4125,22 +4141,22 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
 
-        self.assertEqual(asset.book_value, 6000)
+        self.assertEqual(asset.value_book, 6000)
 
         self.env["asset.modify"].create(
             {
                 "asset_id": asset.id,
                 "name": "Test increase with lock date",
-                "value_residual": 8000.0,
+                "value_depreciable_residual": 8000.0,
                 "date": fields.Date.today() + relativedelta(days=-1),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
 
-        self.assertEqual(asset.book_value, 8000)
+        self.assertEqual(asset.value_book, 8000)
 
         self.assertRecordValues(
-            asset.children_ids.depreciation_move_ids.sorted(
+            asset.child_ids.depreciation_move_ids.sorted(
                 lambda dep: (dep.date, dep.id)
             ),
             [
@@ -4185,31 +4201,31 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Car",
-                "acquisition_date": fields.Date.today() + relativedelta(months=-6),
-                "original_value": 12000,
-                "method_number": 12,
-                "method_period": "1",
-                "method": "linear",
+                "date_acquisition": fields.Date.today() + relativedelta(months=-6),
+                "value_original": 12000,
+                "depreciation_duration": 12,
+                "depreciation_period": "1",
+                "depreciation_method": "linear",
             }
         )
 
         asset.validate()
 
-        self.assertEqual(asset.book_value, 6000)
+        self.assertEqual(asset.value_book, 6000)
 
         self.env["asset.modify"].create(
             {
                 "asset_id": asset.id,
                 "name": "Test decrease with lock date",
-                "value_residual": 4000.0,
+                "value_depreciable_residual": 4000.0,
                 "date": fields.Date.today() + relativedelta(days=-1),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
 
-        self.assertEqual(asset.book_value, 4000)
+        self.assertEqual(asset.value_book, 4000)
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda dep: (dep.date, dep.id)),
@@ -4289,7 +4305,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         asset_form = Form(self.env["account.asset"])
         asset_form.name = "Test Asset"
-        asset_form.original_value = 10000
+        asset_form.value_original = 10000
         asset_form.depreciation_profile_id = asset_model
 
         self.assertEqual(
@@ -4330,12 +4346,12 @@ class TestAccountAsset(TestAccountReportsCommon):
         invoice.action_post()
 
         self.assertEqual(
-            invoice.asset_ids.account_asset_id,
+            invoice.capitalised_asset_ids.account_asset_id,
             other_account_on_bill,
             "The account should be the one from the bill, not the model",
         )
 
-        asset_form = Form(invoice.asset_ids)
+        asset_form = Form(invoice.capitalised_asset_ids)
         asset_form.depreciation_profile_id = asset_model
 
         self.assertEqual(
@@ -4347,11 +4363,11 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_reevaluation_degressive_linear(self):
         asset = self.env["account.asset"].create(
             {
-                "method_period": "12",
-                "method_number": 5,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "Car with purple sticker",
-                "original_value": 10000.0,
-                "acquisition_date": fields.Date.today() - relativedelta(years=2),
+                "value_original": 10000.0,
+                "date_acquisition": fields.Date.today() - relativedelta(years=2),
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
                 .copy()
@@ -4359,10 +4375,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
-                "prorata_computation_type": "none",
-                "method": "degressive_then_linear",
-                "method_progress_factor": 0.4,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_prorata": "none",
+                "depreciation_method": "degressive_then_linear",
+                "depreciation_factor": 0.4,
             }
         )
         asset.validate()
@@ -4396,12 +4412,12 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "name": "Inflation made it take 20%!",
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "asset_id": asset.id,
-                "value_residual": 5600,
+                "value_depreciable_residual": 5600,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
         self.assertRecordValues(
-            asset.children_ids[0].depreciation_move_ids.sorted(
+            asset.child_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -4475,7 +4491,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "name": "Little scratch :(",
                 "asset_id": car.id,
-                "value_residual": car.book_value - 150,
+                "value_depreciable_residual": car.value_book - 150,
                 "date": fields.Date.today(),
             }
         ).modify()
@@ -4495,7 +4511,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "move_type": "out_invoice",
                 "invoice_line_ids": [
-                    Command.create({"price_unit": car.book_value + 100})
+                    Command.create({"price_unit": car.value_book + 100})
                 ],
             }
         )
@@ -4516,7 +4532,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             - added_move_on_revaluation
         )
         self.assertTrue(added_move_on_sale.asset_move_type == "sale")
-        self.assertEqual(car.net_gain_on_sale, 100)
+        self.assertEqual(car.value_gain_on_sale, 100)
 
         new_car = car.copy()
         new_car.validate()
@@ -4525,15 +4541,15 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "name": "New beautiful sticker :D",
                 "asset_id": new_car.id,
-                "value_residual": new_car.book_value + 50,
-                "salvage_value": 0,
+                "value_depreciable_residual": new_car.value_book + 50,
+                "value_salvage": 0,
                 "date": fields.Date.today(),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
         ).modify()
 
         self.assertEqual(
-            new_car.children_ids.original_move_line_ids.move_id.asset_move_type,
+            new_car.child_ids.original_move_line_ids.move_id.asset_move_type,
             "positive_revaluation",
             "the original move of the child asset is set as 'positive_revaluation'",
         )
@@ -4561,11 +4577,11 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_already_depreciated(self):
         asset = self.env["account.asset"].create(
             {
-                "method_period": "12",
-                "method_number": 5,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "Car with purple sticker",
-                "original_value": 10000.0,
-                "acquisition_date": fields.Date.today() - relativedelta(years=1),
+                "value_original": 10000.0,
+                "date_acquisition": fields.Date.today() - relativedelta(years=1),
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
                 .copy()
@@ -4573,9 +4589,9 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
-                "prorata_computation_type": "none",
-                "already_depreciated_amount_import": 3000,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_prorata": "none",
+                "value_depreciated_import": 3000,
             }
         )
         asset.validate()
@@ -4612,11 +4628,11 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         fully_depreciated_asset = self.env["account.asset"].create(
             {
-                "method_period": "12",
-                "method_number": 5,
+                "depreciation_period": "12",
+                "depreciation_duration": 5,
                 "name": "Car with purple sticker",
-                "original_value": 10000.0,
-                "acquisition_date": fields.Date.today() - relativedelta(years=2),
+                "value_original": 10000.0,
+                "date_acquisition": fields.Date.today() - relativedelta(years=2),
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
                 .copy()
@@ -4624,10 +4640,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
-                "prorata_computation_type": "none",
-                "salvage_value": 4000,
-                "already_depreciated_amount_import": 6000,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_prorata": "none",
+                "value_salvage": 4000,
+                "value_depreciated_import": 6000,
             }
         )
         fully_depreciated_asset.validate()
@@ -4676,8 +4692,8 @@ class TestAccountAsset(TestAccountReportsCommon):
             )
         )
         bill.action_post()
-        asset = bill.asset_ids
-        self.assertEqual(asset.acquisition_date, bill.invoice_date)
+        asset = bill.capitalised_asset_ids
+        self.assertEqual(asset.date_acquisition, bill.invoice_date)
 
     def test_asset_write_multi_company(self):
         assets = self.env["account.asset"].create(
@@ -4704,11 +4720,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
         asset_vals = {
-            "method_period": "12",
-            "method_number": 5,
+            "depreciation_period": "12",
+            "depreciation_duration": 5,
             "name": "Car with purple sticker",
-            "original_value": 10000.0,
-            "acquisition_date": fields.Date.today() - relativedelta(years=1),
+            "value_original": 10000.0,
+            "date_acquisition": fields.Date.today() - relativedelta(years=1),
             "account_asset_id": self.company_data["default_account_assets"].id,
             "account_depreciation_id": self.company_data["default_account_assets"]
             .copy()
@@ -4716,7 +4732,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             "account_depreciation_expense_id": self.company_data[
                 "default_account_expense"
             ].id,
-            "journal_id": self.company_data["default_journal_misc"].id,
+            "depreciation_journal_id": self.company_data["default_journal_misc"].id,
         }
 
         setup_list = [
@@ -4787,10 +4803,10 @@ class TestAccountAsset(TestAccountReportsCommon):
         vendor_bill.action_post()
 
         self.assertEqual(
-            len(vendor_bill.asset_ids), 1, "Only one asset should have been created."
+            len(vendor_bill.capitalised_asset_ids), 1, "Only one asset should have been created."
         )
         self.assertEqual(
-            vendor_bill.asset_ids.company_id,
+            vendor_bill.capitalised_asset_ids.company_id,
             branch_a["company"],
             f"The asset should have been created on company: {branch_a['company'].name}",
         )
@@ -4801,13 +4817,13 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         locked_car = self.env["account.asset"].create(
             {
-                "salvage_value": 2000.0,
-                "method_period": "12",
-                "method_number": 10,
+                "value_salvage": 2000.0,
+                "depreciation_period": "12",
+                "depreciation_duration": 10,
                 "name": "Locked Car",
-                "original_value": 14000.0,
+                "value_original": 14000.0,
                 "depreciation_profile_id": self.account_asset_model_fixedassets.id,
-                "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
+                "date_acquisition": today + relativedelta(years=-3, month=1, day=1),
             }
         )
         locked_car._onchange_depreciation_profile_id()
@@ -4821,10 +4837,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             locked_car,
             [
                 {
-                    "state": "cancelled",
-                    "book_value": 14000.0,
-                    "value_residual": 12000,
-                    "salvage_value": 2000,
+                    "depreciation_state": "cancelled",
+                    "value_book": 14000.0,
+                    "value_depreciable_residual": 12000,
+                    "value_salvage": 2000,
                 }
             ],
         )
@@ -4871,7 +4887,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "move_type": "out_invoice",
                 "invoice_line_ids": [
-                    Command.create({"price_unit": self.truck.book_value + 100})
+                    Command.create({"price_unit": self.truck.value_book + 100})
                 ],
             }
         )
@@ -4924,7 +4940,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "move_type": "out_invoice",
                 "invoice_line_ids": [
-                    Command.create({"price_unit": self.truck.book_value - 100})
+                    Command.create({"price_unit": self.truck.value_book - 100})
                 ],
             }
         )
@@ -5059,7 +5075,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
         invoice.action_post()
-        self.assertEqual(invoice.asset_ids.original_value, 204.2)
+        self.assertEqual(invoice.capitalised_asset_ids.value_original, 204.2)
 
     def test_non_deductible_tax_value_empty_ids(self):
         move = self.env["account.move"].create(

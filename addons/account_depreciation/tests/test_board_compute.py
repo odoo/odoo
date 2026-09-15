@@ -14,15 +14,15 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=60000,
             periodicity="yearly",
             periods=5,
-            method="linear",
-            salvage_value=0,
+            depreciation_method="linear",
+            value_salvage=0,
         )
 
     def test_linear_5_years_no_prorata_asset(self):
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -65,11 +65,11 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
     def test_linear_5_years_no_prorata_with_imported_amount_asset(self):
-        self.car.write({"already_depreciated_amount_import": 1000})
+        self.car.write({"value_depreciated_import": 1000})
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -112,12 +112,12 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
     def test_linear_5_years_no_prorata_with_salvage_value_asset(self):
-        self.car.write({"salvage_value": 1000})
+        self.car.write({"value_salvage": 1000})
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36400)
-        self.assertEqual(self.car.value_residual, 35400)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36400)
+        self.assertEqual(self.car.value_depreciable_residual, 35400)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -162,14 +162,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_5_years_constant_periods_asset(self):
         self.car.write(
             {
-                "prorata_computation_type": "constant_periods",
-                "prorata_date": "2020-07-01",
+                "depreciation_prorata": "constant_periods",
+                "date_prorata": "2020-07-01",
             }
         )
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 42000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 42000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -221,14 +221,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_5_years_daily_computation_asset(self):
         self.car.write(
             {
-                "prorata_computation_type": "daily_computation",
-                "prorata_date": "2020-07-01",
+                "depreciation_prorata": "daily_computation",
+                "date_prorata": "2020-07-01",
             }
         )
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 41960.57)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 41960.57)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -280,14 +280,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_5_years_no_prorata_asset(self):
         self.car.write(
             {
-                "method": "degressive",
-                "method_progress_factor": 0.3,
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
             }
         )
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 29400)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 29400)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -332,15 +332,15 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_5_years_no_prorata_with_imported_amount_asset(self):
         self.car.write(
             {
-                "method": "degressive",
-                "method_progress_factor": 0.3,
-                "already_depreciated_amount_import": 1000,
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
+                "value_depreciated_import": 1000,
             }
         )
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 29400)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 29400)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -385,16 +385,16 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_5_years_no_prorata_with_salvage_value_asset(self):
         self.car.write(
             {
-                "method": "degressive",
-                "method_progress_factor": 0.3,
-                "salvage_value": 1000,
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
+                "value_salvage": 1000,
             }
         )
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 29910)
-        self.assertEqual(self.car.value_residual, 28910)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 29910)
+        self.assertEqual(self.car.value_depreciable_residual, 28910)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -441,12 +441,12 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=60000,
             periodicity="yearly",
             periods=5,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
-        self.assertEqual(asset.book_value, 29400)
+        self.assertEqual(asset.depreciation_state, "open")
+        self.assertEqual(asset.value_book, 29400)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -493,12 +493,12 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=-60000,
             periodicity="yearly",
             periods=5,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
-        self.assertEqual(asset.book_value, -29400)
+        self.assertEqual(asset.depreciation_state, "open")
+        self.assertEqual(asset.value_book, -29400)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -545,13 +545,13 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=60000,
             periodicity="yearly",
             periods=5,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
             import_depreciation=1000,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
-        self.assertEqual(asset.book_value, 29400)
+        self.assertEqual(asset.depreciation_state, "open")
+        self.assertEqual(asset.value_book, 29400)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -600,13 +600,13 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=-60000,
             periodicity="yearly",
             periods=5,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
             import_depreciation=-1000,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
-        self.assertEqual(asset.book_value, -29400)
+        self.assertEqual(asset.depreciation_state, "open")
+        self.assertEqual(asset.value_book, -29400)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -653,14 +653,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=60000,
             periodicity="yearly",
             periods=5,
-            salvage_value=1000,
-            method="degressive_then_linear",
+            value_salvage=1000,
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
-        self.assertEqual(asset.value_residual, 28910)
-        self.assertEqual(asset.book_value, 28910 + 1000)
+        self.assertEqual(asset.depreciation_state, "open")
+        self.assertEqual(asset.value_depreciable_residual, 28910)
+        self.assertEqual(asset.value_book, 28910 + 1000)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -707,11 +707,11 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=36,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.4,
         )
         asset.validate()
-        self.assertEqual(asset.state, "open")
+        self.assertEqual(asset.depreciation_state, "open")
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -962,10 +962,10 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=10000,
             periodicity="yearly",
             periods=5,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.3,
-            acquisition_date="2021-07-01",
-            prorata_computation_type="constant_periods",
+            date_acquisition="2021-07-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
         self.assertRecordValues(
@@ -1014,10 +1014,10 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=36,
-            method="degressive_then_linear",
+            depreciation_method="degressive_then_linear",
             degressive_factor=0.6,
-            acquisition_date="2021-07-01",
-            prorata_computation_type="constant_periods",
+            date_acquisition="2021-07-01",
+            depreciation_prorata="constant_periods",
         )
         asset.validate()
         self.assertRecordValues(
@@ -1232,13 +1232,13 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_60_months_no_prorata_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 30000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 30000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -1668,14 +1668,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_60_months_no_prorata_with_imported_amount_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "already_depreciated_amount_import": 1500,
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "value_depreciated_import": 1500,
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 30000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 30000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -2098,16 +2098,16 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_60_months_no_prorata_with_salvage_value_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "method_progress_factor": 0.3,
-                "salvage_value": 2000,
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_factor": 0.3,
+                "value_salvage": 2000,
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 31000)
-        self.assertEqual(self.car.value_residual, 29000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 31000)
+        self.assertEqual(self.car.value_depreciable_residual, 29000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -2537,15 +2537,15 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_60_months_constant_periods_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "prorata_computation_type": "constant_periods",
-                "prorata_date": "2020-07-01",
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_prorata": "constant_periods",
+                "date_prorata": "2020-07-01",
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -2975,15 +2975,15 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_linear_60_months_daily_computation_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "prorata_computation_type": "daily_computation",
-                "prorata_date": "2020-07-01",
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_prorata": "daily_computation",
+                "date_prorata": "2020-07-01",
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36013.14)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36013.14)
 
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
@@ -3414,15 +3414,15 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_60_months_no_prorata_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "method": "degressive",
-                "method_progress_factor": 0.3,
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 24500)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 24500)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -3854,14 +3854,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=100000,
             periodicity="monthly",
             periods=60,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2022-07-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2022-07-01",
+            depreciation_prorata="constant_periods",
         )
         asset.compute_depreciation_board()
-        self.assertEqual(asset.state, "draft")
-        self.assertEqual(asset.book_value, 100000)
+        self.assertEqual(asset.depreciation_state, "draft")
+        self.assertEqual(asset.value_book, 100000)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -4296,14 +4296,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=100000,
             periodicity="monthly",
             periods=60,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2022-07-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2022-07-01",
+            depreciation_prorata="constant_periods",
         )
         asset.compute_depreciation_board()
-        self.assertEqual(asset.state, "draft")
-        self.assertEqual(asset.book_value, 100000)
+        self.assertEqual(asset.depreciation_state, "draft")
+        self.assertEqual(asset.value_book, 100000)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -4733,16 +4733,16 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_60_months_no_prorata_with_imported_amount_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "method": "degressive",
-                "method_progress_factor": 0.3,
-                "already_depreciated_amount_import": 2000,
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
+                "value_depreciated_import": 2000,
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 24500)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 24500)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -5165,17 +5165,17 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
     def test_degressive_60_months_no_prorata_with_salvage_value_asset(self):
         self.car.write(
             {
-                "method_number": 60,
-                "method_period": "1",
-                "method": "degressive",
-                "method_progress_factor": 0.3,
-                "salvage_value": 2000,
+                "depreciation_duration": 60,
+                "depreciation_period": "1",
+                "depreciation_method": "degressive",
+                "depreciation_factor": 0.3,
+                "value_salvage": 2000,
             }
         )
         self.car.validate()
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 25683.33)
-        self.assertEqual(self.car.value_residual, 23683.33)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 25683.33)
+        self.assertEqual(self.car.value_depreciable_residual, 23683.33)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -5607,14 +5607,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=100000,
             periodicity="yearly",
             periods=5,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2022-01-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2022-01-01",
+            depreciation_prorata="constant_periods",
         )
         asset.compute_depreciation_board()
-        self.assertEqual(asset.state, "draft")
-        self.assertEqual(asset.book_value, 100000)
+        self.assertEqual(asset.depreciation_state, "draft")
+        self.assertEqual(asset.value_book, 100000)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -5661,14 +5661,14 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=100000,
             periodicity="yearly",
             periods=5,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2022-07-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2022-07-01",
+            depreciation_prorata="constant_periods",
         )
         asset.compute_depreciation_board()
-        self.assertEqual(asset.state, "draft")
-        self.assertEqual(asset.book_value, 100000)
+        self.assertEqual(asset.depreciation_state, "draft")
+        self.assertEqual(asset.value_book, 100000)
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -5719,17 +5719,25 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
 
     def test_compute_board_in_mass(self):
         book = self.create_asset(
-            value=35, periodicity="monthly", periods=2, method="linear", salvage_value=0
+            value=35,
+            periodicity="monthly",
+            periods=2,
+            depreciation_method="linear",
+            value_salvage=0,
         )
         shelf = self.create_asset(
             value=250,
             periodicity="monthly",
             periods=8,
-            method="linear",
-            salvage_value=0,
+            depreciation_method="linear",
+            value_salvage=0,
         )
         screw = self.create_asset(
-            value=1, periodicity="monthly", periods=1, method="linear", salvage_value=0
+            value=1,
+            periodicity="monthly",
+            periods=1,
+            depreciation_method="linear",
+            value_salvage=0,
         )
 
         (book + screw).validate()
@@ -5835,18 +5843,18 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=60000,
             periodicity="yearly",
             periods=5,
-            method="linear",
-            salvage_value=0,
+            depreciation_method="linear",
+            value_salvage=0,
         )
         old_car_asset.validate()
 
-        self.assertEqual(old_car_asset.state, "open")
-        self.assertEqual(old_car_asset.book_value, 36000)
+        self.assertEqual(old_car_asset.depreciation_state, "open")
+        self.assertEqual(old_car_asset.value_book, 36000)
         self.assertEqual(
-            old_car_asset.acquisition_date, fields.Date.from_string("2020-02-01")
+            old_car_asset.date_acquisition, fields.Date.from_string("2020-02-01")
         )
         self.assertEqual(
-            old_car_asset.prorata_date, fields.Date.from_string("2020-01-01")
+            old_car_asset.date_prorata, fields.Date.from_string("2020-01-01")
         )
         self.assertRecordValues(
             old_car_asset.depreciation_move_ids._sorted_by_date(),
@@ -5890,16 +5898,16 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
         new_car_asset = old_car_asset.copy()
-        new_car_asset.original_value = 60000
+        new_car_asset.value_original = 60000
         new_car_asset.validate()
 
-        self.assertEqual(new_car_asset.state, "open")
-        self.assertEqual(new_car_asset.book_value, 36000)
+        self.assertEqual(new_car_asset.depreciation_state, "open")
+        self.assertEqual(new_car_asset.value_book, 36000)
         self.assertEqual(
-            new_car_asset.acquisition_date, fields.Date.from_string("2020-02-01")
+            new_car_asset.date_acquisition, fields.Date.from_string("2020-02-01")
         )
         self.assertEqual(
-            new_car_asset.prorata_date, fields.Date.from_string("2020-01-01")
+            new_car_asset.date_prorata, fields.Date.from_string("2020-01-01")
         )
         self.assertRecordValues(
             new_car_asset.depreciation_move_ids._sorted_by_date(),
@@ -5946,8 +5954,8 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.car.company_id.fiscalyear_lock_date = "2022-06-30"
         self.car.compute_depreciation_board()
 
-        self.assertEqual(self.car.state, "draft")
-        self.assertEqual(self.car.book_value, 60000)
+        self.assertEqual(self.car.depreciation_state, "draft")
+        self.assertEqual(self.car.value_book, 60000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -5989,12 +5997,12 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             ],
         )
 
-        self.car.prorata_computation_type = "constant_periods"
-        self.car.prorata_date = "2021-01-01"
+        self.car.depreciation_prorata = "constant_periods"
+        self.car.date_prorata = "2021-01-01"
         self.car.compute_depreciation_board()
 
-        self.assertEqual(self.car.state, "draft")
-        self.assertEqual(self.car.book_value, 60000)
+        self.assertEqual(self.car.depreciation_state, "draft")
+        self.assertEqual(self.car.value_book, 60000)
         self.assertRecordValues(
             self.car.depreciation_move_ids.sorted(lambda m: (m.date, m.id)),
             [
@@ -6040,8 +6048,8 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         self.car.company_id.fiscalyear_lock_date = "2021-06-30"
         self.car.compute_depreciation_board()
 
-        self.assertEqual(self.car.state, "draft")
-        self.assertEqual(self.car.book_value, 60000)
+        self.assertEqual(self.car.depreciation_state, "draft")
+        self.assertEqual(self.car.value_book, 60000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -6085,8 +6093,8 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
 
         self.car.validate()
 
-        self.assertEqual(self.car.state, "open")
-        self.assertEqual(self.car.book_value, 36000)
+        self.assertEqual(self.car.depreciation_state, "open")
+        self.assertEqual(self.car.value_book, 36000)
         self.assertRecordValues(
             self.car.depreciation_move_ids._sorted_by_date(),
             [
@@ -6147,17 +6155,17 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
                     value=1000,
                     periodicity=periodicity,
                     periods=1,
-                    method=method,
-                    acquisition_date="2022-01-01",
-                    prorata_date="2022-01-01",
-                    prorata_computation_type="constant_periods",
+                    depreciation_method=method,
+                    date_acquisition="2022-01-01",
+                    date_prorata="2022-01-01",
+                    depreciation_prorata="constant_periods",
                     account_depreciation_id=self.company_data[
                         "default_account_assets"
                     ].id,
                 )
 
                 asset.compute_depreciation_board()
-                self.assertEqual(asset.state, "draft")
+                self.assertEqual(asset.depreciation_state, "draft")
                 self.assertRecordValues(
                     asset.depreciation_move_ids._sorted_by_date(),
                     [
@@ -6171,7 +6179,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
                     ],
                 )
                 asset.validate()
-                self.assertEqual(asset.state, "open")
+                self.assertEqual(asset.depreciation_state, "open")
 
     def test_degressive_no_skipped_entries_at_fiscal_year_boundary(self):
         self.env["account.fiscal.year"].create(
@@ -6187,10 +6195,10 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
             value=10000,
             periodicity="monthly",
             periods=60,
-            method="degressive",
-            method_progress_factor=0.35,
-            acquisition_date="2025-12-01",
-            prorata_computation_type="constant_periods",
+            depreciation_method="degressive",
+            depreciation_factor=0.35,
+            date_acquisition="2025-12-01",
+            depreciation_prorata="constant_periods",
         )
         asset.compute_depreciation_board()
 

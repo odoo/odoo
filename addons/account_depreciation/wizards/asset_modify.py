@@ -20,23 +20,23 @@ class AssetModify(models.TransientModel):
         ondelete="cascade",
         help="The asset to be modified by this wizard",
     )
-    method_number = fields.Integer(
+    depreciation_duration = fields.Integer(
         string="Duration",
         required=True,
     )
-    method_period = fields.Selection(
+    depreciation_period = fields.Selection(
         selection=[("1", "Months"), ("12", "Years")],
         string="Number of Months in a Period",
         help="The amount of time between two depreciations",
     )
-    value_residual = fields.Monetary(
+    value_depreciable_residual = fields.Monetary(
         string="Depreciable Amount",
         compute="_compute_value_residual",
         store=True,
         readonly=False,
         help="New residual amount for the asset",
     )
-    salvage_value = fields.Monetary(
+    value_salvage = fields.Monetary(
         string="Not Depreciable Amount",
         help="New salvage amount for the asset",
     )
@@ -132,8 +132,8 @@ class AssetModify(models.TransientModel):
     @api.depends("date", "asset_id")
     def _compute_value_residual(self):
         for record in self:
-            record.value_residual = record.asset_id._get_residual_value_at_date(
-                record.date
+            record.value_depreciable_residual = (
+                record.asset_id._get_residual_value_at_date(record.date)
             )
 
     def _inverse_gain_account(self):
@@ -146,8 +146,11 @@ class AssetModify(models.TransientModel):
 
     @api.onchange("modify_action")
     def _onchange_action(self):
-        if self.modify_action == "sell" and self.asset_id.children_ids.filtered(
-            lambda a: a.state in ("draft", "open") or a.value_residual > 0
+        if self.modify_action == "sell" and self.asset_id.child_ids.filtered(
+            lambda a: (
+                a.depreciation_state in ("draft", "open")
+                or a.value_depreciable_residual > 0
+            )
         ):
             raise UserError(
                 _(
@@ -157,10 +160,10 @@ class AssetModify(models.TransientModel):
         if self.modify_action not in ("modify", "resume"):
             self.write(
                 {
-                    "value_residual": self.asset_id._get_residual_value_at_date(
+                    "value_depreciable_residual": self.asset_id._get_residual_value_at_date(
                         self.date
                     ),
-                    "salvage_value": self.asset_id.salvage_value,
+                    "value_salvage": self.asset_id.value_salvage,
                 }
             )
 
@@ -188,7 +191,7 @@ class AssetModify(models.TransientModel):
             else:
                 record.gain_or_loss = "no"
 
-    @api.depends("asset_id", "value_residual", "salvage_value")
+    @api.depends("asset_id", "value_depreciable_residual", "value_salvage")
     def _compute_gain_value(self):
         for record in self:
             record.gain_value = (
@@ -219,8 +222,8 @@ class AssetModify(models.TransientModel):
         "gain_or_loss",
         "modify_action",
         "date",
-        "value_residual",
-        "salvage_value",
+        "value_depreciable_residual",
+        "value_salvage",
     )
     def _compute_informational_text(self):
         for wizard in self:
@@ -272,9 +275,9 @@ class AssetModify(models.TransientModel):
             )
 
     INHERITED_FROM_ASSET = (
-        "method_number",
-        "method_period",
-        "salvage_value",
+        "depreciation_duration",
+        "depreciation_period",
+        "value_salvage",
         "account_asset_id",
         "account_depreciation_id",
         "account_depreciation_expense_id",
@@ -308,14 +311,14 @@ class AssetModify(models.TransientModel):
     def _check_can_modify(self):
         self.check_singleton()
         if self.date <= self.asset_id.company_id._get_user_fiscal_lock_date(
-            self.asset_id.journal_id
+            self.asset_id.depreciation_journal_id
         ):
             raise UserError(_("You can't re-evaluate the asset before the lock date."))
         if self.env.context.get("resume_after_pause"):
             return
         if self.env["account.move"].search_count(
             [
-                ("asset_id", "=", self.asset_id.id),
+                ("depreciation_asset_id", "=", self.asset_id.id),
                 ("state", "=", "draft"),
                 ("date", "<=", self.date),
             ],
@@ -332,7 +335,7 @@ class AssetModify(models.TransientModel):
         date_before_pause = (
             max(self.asset_id.depreciation_move_ids, key=lambda x: x.date).date
             if self.asset_id.depreciation_move_ids
-            else self.asset_id.acquisition_date
+            else self.asset_id.date_acquisition
         )
         number_days = self.asset_id._get_delta_days(date_before_pause, self.date) - 1
         if number_days < 0:
@@ -340,8 +343,9 @@ class AssetModify(models.TransientModel):
                 _("You cannot resume at a date equal to or before the pause date")
             )
         return {
-            "asset_paused_days": self.asset_id.asset_paused_days + number_days,
-            "state": "open",
+            "depreciation_paused_days": self.asset_id.depreciation_paused_days
+            + number_days,
+            "depreciation_state": "open",
         }
 
     def _create_gross_increase(self, residual_increase, salvage_increase):
@@ -350,7 +354,7 @@ class AssetModify(models.TransientModel):
         label = _("Value increase for: %(asset)s", asset=self.asset_id.name)
         move = self.env["account.move"].create(
             {
-                "journal_id": self.asset_id.journal_id.id,
+                "journal_id": self.asset_id.depreciation_journal_id.id,
                 "date": self.date + relativedelta(days=1),
                 "move_type": "entry",
                 "asset_move_type": "positive_revaluation",
@@ -381,23 +385,23 @@ class AssetModify(models.TransientModel):
                 if self.name
                 else self.asset_id.name,
                 "company_id": self.asset_id.company_id.id,
-                "method": self.asset_id.method,
-                "method_number": self.method_number,
-                "method_period": self.method_period,
-                "method_progress_factor": self.asset_id.method_progress_factor,
-                "acquisition_date": self.date + relativedelta(days=1),
-                "salvage_value": salvage_increase,
-                "prorata_date": self.date + relativedelta(days=1),
-                "prorata_computation_type": "daily_computation"
-                if self.asset_id.prorata_computation_type == "daily_computation"
+                "depreciation_method": self.asset_id.depreciation_method,
+                "depreciation_duration": self.depreciation_duration,
+                "depreciation_period": self.depreciation_period,
+                "depreciation_factor": self.asset_id.depreciation_factor,
+                "date_acquisition": self.date + relativedelta(days=1),
+                "value_salvage": salvage_increase,
+                "date_prorata": self.date + relativedelta(days=1),
+                "depreciation_prorata": "daily_computation"
+                if self.asset_id.depreciation_prorata == "daily_computation"
                 else "constant_periods",
-                "original_value": self._get_increase_original_value(
+                "value_original": self._get_increase_original_value(
                     residual_increase, salvage_increase
                 ),
                 "account_asset_id": self.account_asset_id.id,
                 "account_depreciation_id": self.account_depreciation_id.id,
                 "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
-                "journal_id": self.asset_id.journal_id.id,
+                "depreciation_journal_id": self.asset_id.depreciation_journal_id.id,
                 "parent_id": self.asset_id.id,
                 "original_move_line_ids": [
                     Command.set(
@@ -447,14 +451,14 @@ class AssetModify(models.TransientModel):
 
     def _propagate_to_children(self, asset_vals, restart_date):
         self.check_singleton()
-        children = self.asset_id.children_ids
+        children = self.asset_id.child_ids
         if not children:
             return
         children.write(
             {
-                "method_number": asset_vals["method_number"],
-                "method_period": asset_vals["method_period"],
-                "asset_paused_days": self.asset_id.asset_paused_days,
+                "depreciation_duration": asset_vals["depreciation_duration"],
+                "depreciation_period": asset_vals["depreciation_period"],
+                "depreciation_paused_days": self.asset_id.depreciation_paused_days,
             }
         )
         for child in children:
@@ -484,14 +488,14 @@ class AssetModify(models.TransientModel):
         resuming = bool(self.env.context.get("resume_after_pause"))
 
         old_values = {
-            "method_number": self.asset_id.method_number,
-            "method_period": self.asset_id.method_period,
-            "value_residual": self.asset_id.value_residual,
-            "salvage_value": self.asset_id.salvage_value,
+            "depreciation_duration": self.asset_id.depreciation_duration,
+            "depreciation_period": self.asset_id.depreciation_period,
+            "value_depreciable_residual": self.asset_id.value_depreciable_residual,
+            "value_salvage": self.asset_id.value_salvage,
         }
         asset_vals = {
-            "method_number": self.method_number,
-            "method_period": self.method_period,
+            "depreciation_duration": self.depreciation_duration,
+            "depreciation_period": self.depreciation_period,
             "account_asset_id": self.account_asset_id,
             "account_depreciation_id": self.account_depreciation_id,
             "account_depreciation_expense_id": self.account_depreciation_expense_id,
@@ -503,20 +507,22 @@ class AssetModify(models.TransientModel):
         current_asset_book = self.asset_id._get_own_book_value(self.date)
         increase = self._get_requested_book_value() - current_asset_book
         new_residual, new_salvage = self._get_new_asset_values(current_asset_book)
-        residual_increase = max(0, self.value_residual - new_residual)
-        salvage_increase = max(0, self.salvage_value - new_salvage)
+        residual_increase = max(0, self.value_depreciable_residual - new_residual)
+        salvage_increase = max(0, self.value_salvage - new_salvage)
 
         if not resuming:
             self.asset_id._create_move_before_date(self.date)
 
-        asset_vals["salvage_value"] = new_salvage
+        asset_vals["value_salvage"] = new_salvage
         computation_children_changed = (
-            asset_vals["method_number"] != self.asset_id.method_number
-            or asset_vals["method_period"] != self.asset_id.method_period
+            asset_vals["depreciation_duration"] != self.asset_id.depreciation_duration
+            or asset_vals["depreciation_period"] != self.asset_id.depreciation_period
             or (
-                asset_vals.get("asset_paused_days")
+                asset_vals.get("depreciation_paused_days")
                 and not float_is_zero(
-                    asset_vals["asset_paused_days"] - self.asset_id.asset_paused_days, 8
+                    asset_vals["depreciation_paused_days"]
+                    - self.asset_id.depreciation_paused_days,
+                    8,
                 )
             )
         )
@@ -565,7 +571,7 @@ class AssetModify(models.TransientModel):
         )
 
     def _get_requested_book_value(self):
-        return self.value_residual + self.salvage_value
+        return self.value_depreciable_residual + self.value_salvage
 
     def _get_increase_original_value(self, residual_increase, salvage_increase):
         return residual_increase + salvage_increase
@@ -573,8 +579,8 @@ class AssetModify(models.TransientModel):
     def _get_new_asset_values(self, current_asset_book):
         self.check_singleton()
         new_residual = min(
-            current_asset_book - min(self.salvage_value, self.asset_id.salvage_value),
-            self.value_residual,
+            current_asset_book - min(self.value_salvage, self.asset_id.value_salvage),
+            self.value_depreciable_residual,
         )
-        new_salvage = min(current_asset_book - new_residual, self.salvage_value)
+        new_salvage = min(current_asset_book - new_residual, self.value_salvage)
         return new_residual, new_salvage

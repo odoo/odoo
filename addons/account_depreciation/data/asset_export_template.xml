@@ -13,12 +13,12 @@
             <record
                 id="account_asset_export_template_line_original_value"
                 model="ir.exports.line">
-                <field name="name">original_value</field>
+                <field name="name">value_original</field>
             </record>
             <record
                 id="account_asset_export_template_line_acquisition_date"
                 model="ir.exports.line">
-                <field name="name">acquisition_date</field>
+                <field name="name">date_acquisition</field>
             </record>
             <record
                 id="account_asset_export_template_line_asset_group_id"
@@ -28,42 +28,42 @@
             <record
                 id="account_asset_export_template_line_method"
                 model="ir.exports.line">
-                <field name="name">method</field>
+                <field name="name">depreciation_method</field>
             </record>
             <record
                 id="account_asset_export_template_line_method_number"
                 model="ir.exports.line">
-                <field name="name">method_number</field>
+                <field name="name">depreciation_duration</field>
             </record>
             <record
                 id="account_asset_export_template_line_method_period"
                 model="ir.exports.line">
-                <field name="name">method_period</field>
+                <field name="name">depreciation_period</field>
             </record>
             <record
                 id="account_asset_export_template_line_method_progress_factor"
                 model="ir.exports.line">
-                <field name="name">method_progress_factor</field>
+                <field name="name">depreciation_factor</field>
             </record>
             <record
                 id="account_asset_export_template_line_prorata_computation_type"
                 model="ir.exports.line">
-                <field name="name">prorata_computation_type</field>
+                <field name="name">depreciation_prorata</field>
             </record>
             <record
                 id="account_asset_export_template_line_prorata_date"
                 model="ir.exports.line">
-                <field name="name">prorata_date</field>
+                <field name="name">date_prorata</field>
             </record>
             <record
                 id="account_asset_export_template_line_already_depreciated_amount_import"
                 model="ir.exports.line">
-                <field name="name">already_depreciated_amount_import</field>
+                <field name="name">value_depreciated_import</field>
             </record>
             <record
                 id="account_asset_export_template_line_salvage_value"
                 model="ir.exports.line">
-                <field name="name">salvage_value</field>
+                <field name="name">value_salvage</field>
             </record>
             <record
                 id="account_asset_export_template_line_company_id"
@@ -88,7 +88,7 @@
             <record
                 id="account_asset_export_template_line_journal_id"
                 model="ir.exports.line">
-                <field name="name">journal_id</field>
+                <field name="name">depreciation_journal_id</field>
             </record>
         </field>
     </record>

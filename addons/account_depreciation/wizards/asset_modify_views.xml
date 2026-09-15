@@ -23,13 +23,16 @@
                         <field name="date" />
 
                         <label
-                            for="method_number"
+                            for="depreciation_duration"
                             invisible="modify_action not in ('modify', 'resume')" />
                         <div
                             class="o_row"
                             invisible="modify_action not in ('modify', 'resume')">
-                            <field name="method_number" required="1" />
-                            <field name="method_period" nolabel="1" required="1" />
+                            <field name="depreciation_duration" required="1" />
+                            <field
+                                name="depreciation_period"
+                                nolabel="1"
+                                required="1" />
                         </div>
 
                         <field
@@ -59,10 +62,10 @@
                             required="gain_or_loss == 'loss'" />
 
                         <field
-                            name="value_residual"
+                            name="value_depreciable_residual"
                             invisible="modify_action not in ('modify', 'resume')" />
                         <field
-                            name="salvage_value"
+                            name="value_salvage"
                             invisible="modify_action not in ('modify', 'resume')" />
                         <field
                             name="account_asset_id"

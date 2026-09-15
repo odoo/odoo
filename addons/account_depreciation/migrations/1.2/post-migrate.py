@@ -31,6 +31,27 @@ TEMPLATE_COLUMNS = (
 OLD_ACCOUNT_RELATION = "account_account_account_asset_rel"
 
 
+RENAMED_BY_1_3 = {
+    "state": "depreciation_state",
+    "method": "depreciation_method",
+    "method_number": "depreciation_duration",
+    "method_period": "depreciation_period",
+    "method_progress_factor": "depreciation_factor",
+    "prorata_computation_type": "depreciation_prorata",
+    "journal_id": "depreciation_journal_id",
+}
+
+
+def _column(cr, column):
+    # 1.3's pre-migrate renames these columns, and every pre script of an upgrade
+    # runs before any post script, so a database jumping past 1.2 reaches this
+    # script with the new names already in place.
+    renamed = RENAMED_BY_1_3.get(column)
+    if renamed and column_exists(cr, "account_asset", renamed):
+        return renamed
+    return column
+
+
 def migrate(cr, version):
     if not version or not column_exists(cr, "account_asset", "model_id"):
         return
@@ -80,8 +101,16 @@ def _create_profiles(env):
     cr = env.cr
     cr.execute(
         SQL(
-            "SELECT %s FROM account_asset WHERE state = 'model' ORDER BY id",
-            SQL(", ").join(SQL.identifier(column) for column in TEMPLATE_COLUMNS),
+            "SELECT %s FROM account_asset WHERE %s = 'model' ORDER BY id",
+            SQL(", ").join(
+                SQL(
+                    "%s AS %s",
+                    SQL.identifier(_column(cr, column)),
+                    SQL.identifier(column),
+                )
+                for column in TEMPLATE_COLUMNS
+            ),
+            SQL.identifier(_column(cr, "state")),
         )
     )
     templates = cr.dictfetchall()

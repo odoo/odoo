@@ -43,7 +43,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
             "default_account_expense"
         ].copy()
         asset = self.create_asset(
-            value=1000, periodicity="yearly", periods=5, salvage_value=200
+            value=1000, periodicity="yearly", periods=5, value_salvage=200
         )
         asset.validate()
         asset.depreciation_move_ids.filtered(lambda m: m.state != "posted")._post()
@@ -52,14 +52,14 @@ class TestAssetIntegrity(TestAccountAssetCommon):
         )
         asset.depreciation_move_ids.filtered(lambda m: m.state == "draft")._post()
         self.env.invalidate_all()
-        self.assertEqual(asset.book_value, 0)
+        self.assertEqual(asset.value_book, 0)
 
         asset.set_to_running()
         self.env.invalidate_all()
         self.assertEqual(
-            asset.book_value,
-            asset.value_residual + asset.salvage_value,
-            "book_value must be recomputed when the state changes",
+            asset.value_book,
+            asset.value_depreciable_residual + asset.value_salvage,
+            "value_book must be recomputed when the state changes",
         )
 
     def test_gross_increase_is_named_even_without_a_note(self):
@@ -71,7 +71,8 @@ class TestAssetIntegrity(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "modify_action": "modify",
                 "date": date,
-                "value_residual": asset._get_residual_value_at_date(date) + 500,
+                "value_depreciable_residual": asset._get_residual_value_at_date(date)
+                + 500,
                 "account_asset_counterpart_id": self.company_data[
                     "default_account_expense"
                 ]
@@ -79,13 +80,15 @@ class TestAssetIntegrity(TestAccountAssetCommon):
                 .id,
             }
         ).modify()
-        increase = asset.children_ids
+        increase = asset.child_ids
         self.assertTrue(increase.name, "a gross increase must carry a name")
         self.assertTrue(increase.display_name)
 
     def test_an_asset_cannot_be_created_running(self):
         with self.assertRaises(UserError):
-            self.create_asset(value=1000, periodicity="yearly", periods=5, state="open")
+            self.create_asset(
+                value=1000, periodicity="yearly", periods=5, depreciation_state="open"
+            )
 
     def test_bill_lines_must_share_one_posted_account(self):
         move = self.env["account.move"].create(
