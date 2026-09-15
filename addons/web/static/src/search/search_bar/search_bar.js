@@ -13,6 +13,9 @@ import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 const parsers = registry.category("parsers");
 
+// methods a search issues to load the records of a view
+const SEARCH_METHODS = ["web_search_read", "web_read_group", "read_group", "search_read"];
+
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
 const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 
@@ -51,6 +54,19 @@ export class SearchBar extends Component {
         });
 
         useBus(this.env.searchModel, "update", this.render);
+
+        // see onSearchKeydown: repeated Enter must not stack identical searches
+        const { resModel } = this.env.searchModel;
+        this.pendingSearches = new Set();
+        useBus(this.env.bus, "RPC:REQUEST", ({ detail }) => {
+            const { model, method } = detail.data.params;
+            if (!detail.settings.silent && model === resModel && SEARCH_METHODS.includes(method)) {
+                this.pendingSearches.add(detail.data.id);
+            }
+        });
+        useBus(this.env.bus, "RPC:RESPONSE", ({ detail }) => {
+            this.pendingSearches.delete(detail.data.id);
+        });
 
         useExternalListener(window, "click", this.onWindowClick);
         useExternalListener(window, "keydown", this.onWindowKeydown);
@@ -523,7 +539,9 @@ export class SearchBar extends Component {
                 break;
             case "Enter":
                 if (!this.state.query.length) {
-                    this.env.searchModel.search(); /** @todo keep this thing ?*/
+                    if (!this.pendingSearches.size) {
+                        this.env.searchModel.search(); /** @todo keep this thing ?*/
+                    }
                     break;
                 } else if (focusedItem) {
                     ev.preventDefault(); // keep the focus inside the search bar
