@@ -151,9 +151,19 @@ class ResConfigSettings(models.TransientModel):
         """Reset the participant back to sender and deregister it from the SMP"""
         self.ensure_one()
 
+<<<<<<< 1221da575c3b5a03708e0f37b2584d61ec7add8a
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant_to_sender()
         return True
+||||||| 89081cc015d517880d3cadc2d61c278b4b379502
+    def action_open_peppol_form(self):
+        # There is no form / wizard for peppol registration in 17.0 (only in 18.0+)
+        return self.button_create_peppol_proxy_user()
+=======
+    def action_open_peppol_form(self):
+        # There is no form / wizard for peppol registration in 17.0 (only in 18.0+)
+        return self.button_register_with_kyc()
+>>>>>>> 6dddcc521d2a34671494d60fb0e86df121a21ce4
 
     def button_peppol_reregister(self):
         self.ensure_one()
@@ -162,6 +172,7 @@ class ResConfigSettings(models.TransientModel):
         self.button_deregister_peppol_participant()
         self.company_id._reset_peppol_configuration()
         return self.action_open_peppol_form()
+<<<<<<< 1221da575c3b5a03708e0f37b2584d61ec7add8a
 
     # Note: Deprecated; the button is permanently invisible.
     # Disabling services can lead to complicance issues and is not necessary
@@ -201,3 +212,46 @@ class ResConfigSettings(models.TransientModel):
             'action_name': action_name,
             'warning_message': warning,
         }
+||||||| 89081cc015d517880d3cadc2d61c278b4b379502
+=======
+
+    def button_register_with_kyc(self):
+        self.ensure_one()
+        self._ensure_pdp_not_sent_through_peppol()
+        company = self.company_id
+
+        if self.account_peppol_proxy_state != 'not_registered':
+            raise UserError(_('Cannot register a user with a %s application', self.account_peppol_proxy_state))
+
+        edi_proxy_client = self.env['account_edi_proxy_client.user']
+        blocking_proxy_types = set(edi_proxy_client._get_peppol_proxy_types()) - {'peppol'}
+        blocking_user = company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in blocking_proxy_types)
+        if blocking_user:
+            blocking_proxy_type = dict(blocking_user._fields['proxy_type']._description_selection(self.env))[blocking_user[:1].proxy_type]
+            raise UserError(_("A connection to '%s' already exists.", blocking_proxy_type))
+
+        self._check_mandatory_peppol_user_data()
+        company.partner_id._check_peppol_eas()
+
+        edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
+        recovered_edi_users = edi_proxy_client._try_recover_peppol_proxy_users(company, peppol_identifier=edi_identification)
+        if recovered_edi_users:
+            return None
+
+        # archive before can_connect because _get_peppol_edi_mode() reads the active user
+        edi_proxy_client.sudo().search([
+            ('company_id', '=', company.id),
+            ('proxy_type', '=', 'peppol'),
+        ]).active = False
+
+        authorization_url = self.env['res.company']._peppol_select_kyc_url(
+            company._peppol_can_connect(edi_identification.lower())
+        )
+
+        if authorization_url:
+            # redirect to IAP KYC link (that will redirect back to here thru callback)
+            return {'type': 'ir.actions.act_url', 'url': authorization_url, 'target': 'self'}
+
+        company._peppol_create_connection(edi_identification.lower())  # no auth, IAP will authorize connection directly
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+>>>>>>> 6dddcc521d2a34671494d60fb0e86df121a21ce4

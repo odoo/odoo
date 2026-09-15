@@ -15,8 +15,36 @@
                 </div>
             </div>
             <div class="d-flex" colspan="3">
+                <div class="mt-3" t-if="false">
+                    <button type="button"
+<<<<<<< 1221da575c3b5a03708e0f37b2584d61ec7add8a
+||||||| 89081cc015d517880d3cadc2d61c278b4b379502
+                            class="btn btn-primary"
+                            t-on-click="createUser"
+                            t-if="proxyState === 'not_registered'">
+                            <t t-out="createUserButtonLabel"/>
+                    </button>
+                </div>
                 <div class="mt-3">
                     <button type="button"
+=======
+                            class="btn btn-primary"
+                            t-on-click="createUser"
+                            t-if="proxyState === 'not_registered'">
+                            <t t-out="createUserButtonLabel"/>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary"
+                            t-on-click="registerWithKyc"
+                            t-if="proxyState === 'not_registered'">
+                            <t t-out="createUserButtonLabel"/>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+>>>>>>> 6dddcc521d2a34671494d60fb0e86df121a21ce4
                             class="btn btn-primary me-1"
                             t-on-click="createReceiver"
                             t-if="proxyState === 'sender' and (smpRegistration or this.state.isSettingsView)">

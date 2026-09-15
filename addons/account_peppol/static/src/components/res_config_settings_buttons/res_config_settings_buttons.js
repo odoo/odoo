@@ -155,6 +155,10 @@ class PeppolSettingsButtons extends Component {
         await this._callConfigMethod("button_peppol_smp_registration");
     }
 
+    async registerWithKyc() {
+        await this._callConfigMethod("button_register_with_kyc", true);
+    }
+
     async reregister() {
         await this._callConfigMethod("button_peppol_reregister");
     }
