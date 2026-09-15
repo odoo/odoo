@@ -29,6 +29,7 @@ import {
 import { EventBus } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";
 import { WebClient } from "@web/webclient/webclient";
+import { patch } from "@web/core/utils/patch";
 
 class Partner extends models.Model {
     name = fields.Char();
@@ -1260,4 +1261,50 @@ test("[adjust] statusbar with a lot of stages, click to change stage", async () 
         "Stage with very long name 5",
         "Stage with very long name 6",
     ]);
+});
+
+test.tags("desktop");
+test("statusbar ignores sub-pixel measurement noise", async () => {
+    // Some browser zoom/OS scaling combinations make the statusbar's
+    // measured height come out a fraction of a pixel taller than a
+    // genuine single line (rects are rounded to physical pixels). This
+    // must not be mistaken for real wrapping and collapse everything
+    // into a single dropdown.
+    class Stage extends models.Model {
+        name = fields.Char();
+        _records = [
+            { id: 1, name: "New" },
+            { id: 2, name: "Qualified" },
+            { id: 3, name: "Won" },
+        ];
+    }
+    defineModels([Stage]);
+    Partner._fields.stage_id = fields.Many2one({ relation: "stage" });
+    Partner._records[0].stage_id = 1;
+
+    patch(Element.prototype, {
+        getBoundingClientRect() {
+            const rect = super.getBoundingClientRect();
+            if (this.matches(".o_statusbar_status")) {
+                return { ...rect.toJSON(), height: rect.height + 0.4 };
+            }
+            return rect;
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+            </form>
+        `,
+    });
+
+    expect(".o_statusbar_status button:visible:not(.dropdown-toggle)").toHaveCount(3);
+    expect(".o_statusbar_status button.dropdown-toggle:visible").toHaveCount(0);
 });
