@@ -216,10 +216,13 @@ review does.
 | `controller.py` | serving | `Controller` and the controller registry |
 | `session.py` | serving | `Session`, `FilesystemSessionStore`, session rotation and GC |
 | `stream.py` | serving | `Stream`: file/attachment streaming and conditional responses |
-| `wrappers.py` | serving | `HTTPRequest`, `_Response`, `Headers`, `ResponseCacheControl`, `prepare_no_content_response` — the werkzeug wrappers, cookie defaults, and the `HTTPException.get_response` override that keeps a status-less exception from answering 200. **`HTTPRequest.environ` is a filtered copy**: every `werkzeug.*`, `wsgi.*` and `socket*` key is dropped except `wsgi.url_scheme` and `werkzeug.proxy_fix.orig`, so `environ["wsgi.input"]` raises `KeyError` — `raw_environ` is the unfiltered one |
+| `wrappers.py` | serving | `HTTPRequest`, `_Response`, `Headers`, `ResponseCacheControl`, `prepare_no_content_response`, `prepare_content_disposition_header` — the werkzeug wrappers, cookie defaults, and the `HTTPException.get_response` override that keeps a status-less exception from answering 200. **`HTTPRequest.environ` is a filtered copy**: every `werkzeug.*`, `wsgi.*` and `socket*` key is dropped except `wsgi.url_scheme` and `werkzeug.proxy_fix.orig`, so `environ["wsgi.input"]` raises `KeyError` — `raw_environ` is the unfiltered one |
 | `core.py` | serving | `_request_stack` (a werkzeug `LocalStack`), the `request` proxy bound to it, and `borrow_request` |
-| `helpers.py` | serving | `prepare_content_disposition_header`, `rewind_uploaded_files`, `get_dbs_served` — the package's one database-listing entry point, cached and read by both the selector and `Request._select_session_and_dbname` — and the `dbfilter` machinery |
-| `_retry.py` | serving | `RequestRetryParticipant`: restores the session and rewinds uploads when `retrying()` replays a handler; passed explicitly by the request |
+| `_dbfilter.py` | serving | `get_dbs_served` — the package's one database-listing entry point, cached and read by both the selector and `_RequestSessionMixin._select_dbname` — `filter_dbs_served` and the `dbfilter` machinery |
+| `_cors.py` | serving | `is_cors_preflight`, `resolve_cors_same_host` |
+| `_rpc.py` | serving | `dispatch_rpc` — the XML-RPC / JSON-RPC service dispatcher behind `/RPC2` and `/jsonrpc`, run with the request borrowed off the stack |
+| `_error_serialization.py` | serving | `serialize_exception` and the dev-mode rule for what an error body may reveal |
+| `_retry.py` | serving | `RequestRetryParticipant`: restores the session and rewinds uploads (`rewind_uploaded_files`) when `retrying()` replays a handler; passed explicitly by the request |
 | `openapi.py` | features | `prepare_openapi_document`: an OpenAPI `3.1.0` document generated from the routing map |
 | `_params.py` | features | `ParamSpec` and the annotation-driven coercion behind `@route(typed=True)` |
 | `geoip.py` | features | `GeoIP` lookup exposed on the request (`_GeoIPNull` when unavailable) |

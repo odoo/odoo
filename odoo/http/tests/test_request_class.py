@@ -8,24 +8,24 @@ import psycopg
 import pytest
 
 import odoo.http
-from odoo.http import helpers
+from odoo.http import _dbfilter
 from odoo.http.request_class import Request
 
 
 @pytest.fixture
 def fresh_monodb_cache():
-    helpers.invalidate_db_catalog_cache()
+    _dbfilter.invalidate_db_catalog_cache()
     yield
-    helpers.invalidate_db_catalog_cache()
+    _dbfilter.invalidate_db_catalog_cache()
 
 
 def _catalog(dbs):
-    return patch.object(helpers.odoo.service.db, "list_dbs", return_value=list(dbs))
+    return patch.object(_dbfilter.odoo.service.db, "list_dbs", return_value=list(dbs))
 
 
 def _passthrough_filter():
     return patch.object(
-        helpers, "filter_dbs_served", side_effect=lambda dbs, host=None: list(dbs)
+        _dbfilter, "filter_dbs_served", side_effect=lambda dbs, host=None: list(dbs)
     )
 
 
@@ -37,7 +37,7 @@ def test_monodb_dblist_filters_the_catalog(fresh_monodb_cache):
 
 def test_monodb_dblist_degrades_when_postgres_unreachable(fresh_monodb_cache):
     boom = psycopg.OperationalError("connection refused")
-    with patch.object(helpers.odoo.service.db, "list_dbs", side_effect=boom):
+    with patch.object(_dbfilter.odoo.service.db, "list_dbs", side_effect=boom):
         assert odoo.http.get_dbs_served(force=True, host="h") == []
 
     with _catalog(["only"]), _passthrough_filter():
@@ -50,16 +50,16 @@ def test_monodb_dblist_degrades_on_any_psycopg_error(fresh_monodb_cache):
         psycopg.OperationalError("refused"),
         psycopg.errors.InsufficientPrivilege("denied"),
     ):
-        helpers.invalidate_db_catalog_cache()
-        with patch.object(helpers.odoo.service.db, "list_dbs", side_effect=exc):
+        _dbfilter.invalidate_db_catalog_cache()
+        with patch.object(_dbfilter.odoo.service.db, "list_dbs", side_effect=exc):
             assert odoo.http.get_dbs_served(force=True, host="h") == []
 
 
 def test_db_list_degrades_on_any_psycopg_error(fresh_monodb_cache):
     with patch.object(
-        helpers.odoo.service.db, "list_dbs", side_effect=psycopg.Error("boom")
+        _dbfilter.odoo.service.db, "list_dbs", side_effect=psycopg.Error("boom")
     ):
-        assert helpers.get_dbs_served(force=True, host="h") == []
+        assert _dbfilter.get_dbs_served(force=True, host="h") == []
 
 
 def test_resolution_goes_through_the_public_db_list():
@@ -103,7 +103,7 @@ def test_each_host_gets_its_own_filtered_answer(fresh_monodb_cache):
     with (
         _catalog(["a_one", "b_two"]),
         patch.object(
-            helpers,
+            _dbfilter,
             "filter_dbs_served",
             side_effect=lambda dbs, host=None: [
                 db for db in dbs if db.startswith(host)
@@ -126,7 +126,7 @@ def test_invalidate_db_list_cache_drops_the_catalogue_service_db_holds():
     from odoo.service.db import listing
 
     listing._catalog_cache = (float("inf"), ["stale"])
-    helpers.invalidate_db_catalog_cache()
+    _dbfilter.invalidate_db_catalog_cache()
     assert listing._catalog_cache is None
 
 

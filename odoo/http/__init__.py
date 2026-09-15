@@ -49,18 +49,12 @@ from ._params import ParamSpec, coerce_params, get_param_specs
 
 from ._protocols import HttpExtension
 
-from .helpers import (
-    prepare_content_disposition_header,
-    invalidate_db_catalog_cache,
-    resolve_cors_same_host,
-    filter_dbs_served,
-    get_dbs_served,
-    dispatch_rpc,
-    get_session_max_inactivity,
-    is_cors_preflight,
-    rewind_uploaded_files,
-    serialize_exception,
-)
+from ._cors import is_cors_preflight, resolve_cors_same_host
+from ._dbfilter import filter_dbs_served, get_dbs_served, invalidate_db_catalog_cache
+from ._error_serialization import serialize_exception
+from ._rpc import dispatch_rpc
+from ._retry import rewind_uploaded_files
+from ._session_lifecycle import get_session_max_inactivity
 
 from .stream import Stream
 
@@ -104,6 +98,7 @@ from .core import (
 
 from .wrappers import (
     HTTPRequest,
+    prepare_content_disposition_header,
     Response,
     FutureResponse,
     Headers,

@@ -21,6 +21,8 @@ from werkzeug.exceptions import (
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
+from ._cors import is_cors_preflight
+from ._error_serialization import serialize_exception
 from ._params import coerce_params
 from ._protocols import get_ir_http
 from .constants import (
@@ -33,7 +35,6 @@ from .constants import (
     prepare_allow_header,
 )
 from .exceptions import ParameterError, SessionExpiredException
-from .helpers import is_cors_preflight, serialize_exception
 from .wrappers import Response, prepare_no_content_response
 
 if TYPE_CHECKING:

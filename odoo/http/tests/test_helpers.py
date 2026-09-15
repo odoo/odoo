@@ -4,13 +4,11 @@ from typing import Any
 
 import werkzeug.exceptions
 
-from odoo.http import helpers
-from odoo.http.helpers import (
-    _normalize_dbfilter_host,
-    _restore_thread_attr,
-    is_cors_preflight,
-    prepare_content_disposition_header,
-)
+from odoo.http import _cors, _dbfilter
+from odoo.http._cors import is_cors_preflight
+from odoo.http._dbfilter import _normalize_dbfilter_host
+from odoo.http._rpc import _restore_thread_attr
+from odoo.http.wrappers import prepare_content_disposition_header
 from odoo.tools import config
 
 
@@ -39,7 +37,7 @@ def test_normalize_dbfilter_host_strips_port_www_and_lowercases():
 
 
 def test_dbfilter_host_normalized_exactly_once():
-    from odoo.http.helpers import _compile_dbfilter, filter_dbs_served
+    from odoo.http._dbfilter import _compile_dbfilter, filter_dbs_served
     from odoo.tools import config
 
     saved = config["dbfilter"]
@@ -71,7 +69,7 @@ def test_is_cors_preflight_returns_real_bool():
 
 
 def test_db_filter_without_request_uses_empty_host():
-    from odoo.http.helpers import filter_dbs_served
+    from odoo.http._dbfilter import filter_dbs_served
     from odoo.tools import config
 
     saved = config["dbfilter"]
@@ -104,7 +102,7 @@ def test_serialize_exception_masks_infra_errors_for_clients_only():
     import psycopg
 
     from odoo.http import _request_stack
-    from odoo.http.helpers import serialize_exception
+    from odoo.http._error_serialization import serialize_exception
 
     secret_os = OSError("/srv/filestore/prod/.session/secret-layout")
     secret_pg = psycopg.OperationalError("UPDATE res_users SET password=...")
@@ -157,23 +155,23 @@ def test_no_registered_prefix_matches_nothing():
 
 
 def test_a_dbfilter_that_ignores_the_host_caches_one_regex_for_every_host():
-    helpers._compile_dbfilter.cache_clear()
+    _dbfilter._compile_dbfilter.cache_clear()
     with config.patch(dbfilter=".*", db_name=[]):
         for i in range(600):
-            helpers.filter_dbs_served(["somedb"], host=f"attacker-{i}.example.com")
+            _dbfilter.filter_dbs_served(["somedb"], host=f"attacker-{i}.example.com")
 
-    assert helpers._compile_dbfilter.cache_info().currsize == 1
+    assert _dbfilter._compile_dbfilter.cache_info().currsize == 1
 
 
 def test_a_dbfilter_that_reads_the_host_still_gets_a_regex_per_host():
-    helpers._compile_dbfilter.cache_clear()
+    _dbfilter._compile_dbfilter.cache_clear()
     with config.patch(dbfilter="^%d_", db_name=[]):
-        assert helpers.filter_dbs_served(["alpha_x"], host="alpha.example.com") == [
+        assert _dbfilter.filter_dbs_served(["alpha_x"], host="alpha.example.com") == [
             "alpha_x"
         ]
-        assert helpers.filter_dbs_served(["alpha_x"], host="beta.example.com") == []
+        assert _dbfilter.filter_dbs_served(["alpha_x"], host="beta.example.com") == []
 
-    assert helpers._compile_dbfilter.cache_info().currsize == 2
+    assert _dbfilter._compile_dbfilter.cache_info().currsize == 2
 
 
 def test_db_filter_orders_the_same_way_through_both_of_its_filters():
@@ -181,13 +179,13 @@ def test_db_filter_orders_the_same_way_through_both_of_its_filters():
 
     with config.patch(dbfilter=".*", db_name=[]):
         _reset_dbfilter_caches()
-        by_pattern = helpers.filter_dbs_served(catalogue, host="x.example")
+        by_pattern = _dbfilter.filter_dbs_served(catalogue, host="x.example")
     with config.patch(dbfilter="", db_name=list(catalogue)):
         _reset_dbfilter_caches()
-        by_name = helpers.filter_dbs_served(catalogue, host="x.example")
+        by_name = _dbfilter.filter_dbs_served(catalogue, host="x.example")
     with config.patch(dbfilter=".*", db_name=list(catalogue)):
         _reset_dbfilter_caches()
-        by_both = helpers.filter_dbs_served(catalogue, host="x.example")
+        by_both = _dbfilter.filter_dbs_served(catalogue, host="x.example")
 
     assert by_pattern == catalogue
     assert by_name == catalogue
@@ -197,14 +195,14 @@ def test_db_filter_orders_the_same_way_through_both_of_its_filters():
 def test_db_filter_applies_both_filters_when_both_are_set():
     with config.patch(dbfilter="a.*", db_name=["alpha", "zeta"]):
         _reset_dbfilter_caches()
-        assert helpers.filter_dbs_served(
+        assert _dbfilter.filter_dbs_served(
             ["zeta", "alpha", "abc"], host="x.example"
         ) == ["alpha"]
 
 
 def _reset_dbfilter_caches():
-    helpers._compile_dbfilter.cache_clear()
-    helpers._has_host_placeholder.cache_clear()
+    _dbfilter._compile_dbfilter.cache_clear()
+    _dbfilter._has_host_placeholder.cache_clear()
 
 
 HOSTILE_STRINGS = [
@@ -274,12 +272,14 @@ def _hostile_probe(fn):
 
 def test_no_hostile_host_header_escapes_the_dbfilter_path():
     assert _hostile_probe(_normalize_dbfilter_host) == []
-    assert _hostile_probe(lambda h: helpers.filter_dbs_served(["a", "b"], host=h)) == []
+    assert (
+        _hostile_probe(lambda h: _dbfilter.filter_dbs_served(["a", "b"], host=h)) == []
+    )
 
 
 def test_no_hostile_origin_escapes_cors_same_host():
     def resolve(origin):
-        return helpers.resolve_cors_same_host(
+        return _cors.resolve_cors_same_host(
             types.SimpleNamespace(
                 httprequest=types.SimpleNamespace(
                     headers={"Origin": origin},

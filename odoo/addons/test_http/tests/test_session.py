@@ -515,13 +515,13 @@ class TestSessionStore(HttpCaseWithUserDemo):
             "adminCantSetupThisValueLikeANormalPerson",
         )
 
-        with self.assertLogs("odoo.http.helpers", level="WARNING") as logs:
+        with self.assertLogs("odoo.http._session_lifecycle", level="WARNING") as logs:
             self.assertEqual(
                 odoo.http.get_session_max_inactivity(self.env), SESSION_LIFETIME
             )
             self.assertEqual(
                 logs.output[0],
-                "WARNING:odoo.http.helpers:Invalid value for 'sessions.max_inactivity_seconds', using default value.",
+                "WARNING:odoo.http._session_lifecycle:Invalid value for 'sessions.max_inactivity_seconds', using default value.",
             )
 
     @mute_logger("odoo.http")

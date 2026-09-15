@@ -40,7 +40,8 @@ odoo/
 │   │                  of the options the serving tier reads)
 │   ├── [serving]   application, dispatcher, routing, session, request_class,
 │   │               _serve, _response, wrappers, stream, _csrf, controller,
-│   │               core (the `request` proxy + its LocalStack), helpers,
+│   │               core (the `request` proxy + its LocalStack), _dbfilter, _cors, _rpc,
+│   │               _error_serialization, _session_lifecycle,
 │   │               _retry (the RetryParticipant handed to service/transaction)
 │   └── [features]  openapi (OpenAPI 3.1 from the routing map),
 │                   _params (annotation-driven @route(typed=True) coercion),
@@ -107,8 +108,9 @@ live process state through `from . import _process_state`.
 > `settings` and, since its statement-text scanners moved to `ddl.py`
 > (2026-09-13), is read by `[connectivity]` alone — it stays `[foundation]`
 > for what it imports, not for who reads it;
-> `http/helpers.py` imports `core` and is imported by
-> `dispatcher`/`_serve`/`_session_lifecycle`/`_retry`, so it is `[serving]`, not
+> `http/_dbfilter.py`, `_cors.py`, `_rpc.py` and `_error_serialization.py` (one
+> `helpers.py` until 2026-09-15) import `core` and are imported by
+> `dispatcher`/`_serve`/`_session_lifecycle`, so they are `[serving]`, not
 > `[features]`; `http/constants.py`, `exceptions.py` and `_protocols.py` import
 > nothing else in `http/` at runtime and are read by both tiers, so they are
 > `[foundation]`, and `http-features-below-serving` holds them below `[serving]`

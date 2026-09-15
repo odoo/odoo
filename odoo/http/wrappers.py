@@ -2,6 +2,7 @@ import logging
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING, Any, NoReturn, Self
+from urllib.parse import quote as url_quote
 
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -22,6 +23,15 @@ from .core import request
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+
+
+def prepare_content_disposition_header(
+    filename: str, disposition_type: str = "attachment"
+) -> str:
+    if disposition_type not in ("attachment", "inline"):
+        e = f"Invalid disposition_type: {disposition_type!r}"
+        raise ValueError(e)
+    return f"{disposition_type}; filename*=UTF-8''{url_quote(filename, safe='')}"
 
 
 def get_cookie_name(set_cookie_value: str) -> str:

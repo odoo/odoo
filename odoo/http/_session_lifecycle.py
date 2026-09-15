@@ -3,6 +3,7 @@ import time
 from collections.abc import Iterable
 from typing import Any
 
+import psycopg
 import werkzeug.exceptions
 
 import odoo.api
@@ -16,12 +17,49 @@ from .constants import (
     prepare_default_session,
 )
 from .exceptions import SessionExpiredException
-from .helpers import get_session_max_inactivity
 from .session import Session
 from .wrappers import Response, get_cookie_identity
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+
+
+def get_session_max_inactivity(env: Any) -> int:
+    if env is None or env.cr.closed:
+        _debug.logic(
+            "http.session.max_inactivity",
+            source="no_env" if env is None else "cursor_closed",
+        )
+        return SESSION_LIFETIME
+
+    ICP = env["ir.config_parameter"].sudo()
+
+    try:
+        value = int(ICP.get_param("sessions.max_inactivity_seconds", SESSION_LIFETIME))
+        if value <= 0:
+            _logger.warning(
+                "Non-positive value for 'sessions.max_inactivity_seconds' "
+                "(%r), using default value.",
+                value,
+            )
+            _debug.logic("http.session.max_inactivity", source="non_positive")
+            return SESSION_LIFETIME
+        _debug.logic("http.session.max_inactivity", source="param", value=value)
+        return value
+    except ValueError:
+        _logger.warning(
+            "Invalid value for 'sessions.max_inactivity_seconds', using default value."
+        )
+        _debug.logic("http.session.max_inactivity", source="invalid")
+        return SESSION_LIFETIME
+    except psycopg.Error:
+        _logger.debug(
+            "Could not read session max inactivity from DB, using default.",
+            exc_info=True,
+        )
+        _debug.logic("http.session.max_inactivity", source="db_error")
+        return SESSION_LIFETIME
+
 
 _UNIONED_HEADERS = frozenset({"vary"})
 

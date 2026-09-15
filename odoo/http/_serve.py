@@ -22,13 +22,13 @@ from odoo.modules.registry import Registry
 from odoo.service.db import list_dbs
 from odoo.service.transaction import retrying
 
+from ._cors import is_cors_preflight
 from ._protocols import RequestState, get_ir_http
-from ._retry import RequestRetryParticipant
+from ._retry import RequestRetryParticipant, rewind_uploaded_files
 from .constants import NOT_FOUND_NODB, NOT_FOUND_NODB_TEXT, STATIC_CACHE
 from .core import borrow_request
 from .dispatcher import _dispatchers, get_dispatcher_for_unmatched_route
 from .exceptions import RegistryError, get_error_response, set_error_response
-from .helpers import is_cors_preflight, rewind_uploaded_files
 from .settings import current as current_settings
 from .stream import Stream
 from .wrappers import Response

@@ -207,7 +207,7 @@ class _Sec:
 
 
 def _same_host(origin, host_url="http://app.example.com/", is_secure=False):
-    from odoo.http.helpers import resolve_cors_same_host
+    from odoo.http._cors import resolve_cors_same_host
 
     return resolve_cors_same_host(
         SimpleNamespace(httprequest=_Sec(origin, host_url, is_secure))
