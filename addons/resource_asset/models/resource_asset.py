@@ -237,10 +237,30 @@ class ResourceAsset(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        Resource = self.env["resource.resource"].sudo()
+        resource_vals_list = []
         for vals in vals_list:
             if vals.get("kind_id") and self._around_the_clock(vals):
                 vals["resource_calendar_id"] = False
-        return super().create(vals_list)
+            if not vals.get("resource_id"):
+                vals["resource_id"] = Resource.create(
+                    self._prepare_resource_values(vals, vals.pop("tz", False))
+                ).id
+            resource_vals_list.append(self._pop_resource_vals(vals))
+        assets = super().create(vals_list)
+        for asset, resource_vals in zip(assets, resource_vals_list, strict=True):
+            if resource_vals:
+                asset.resource_id.sudo().write(resource_vals)
+        return assets
+
+    def _pop_resource_vals(self, vals):
+        resource_vals = {}
+        for name in list(vals):
+            field = self._fields.get(name)
+            path = field.related.split(".") if field and field.related else ()
+            if len(path) == 2 and path[0] == "resource_id":
+                resource_vals[path[1]] = vals.pop(name)
+        return resource_vals
 
     def write(self, vals):
         if "active" in vals and not vals["active"]:
@@ -254,10 +274,20 @@ class ResourceAsset(models.Model):
         if vals.get("active") and "state" not in vals:
             disposed = self.filtered(lambda asset: asset.state == "disposed")
             if disposed:
-                super(ResourceAsset, disposed).write(
+                disposed._write_through_resource(
                     {**vals, "state": "out_of_service", "date_disposal": False}
                 )
-                return super(ResourceAsset, self - disposed).write(vals)
+                return (self - disposed)._write_through_resource(vals)
+        return self._write_through_resource(vals)
+
+    def _write_through_resource(self, vals):
+        vals = dict(vals)
+        resource_vals = self._pop_resource_vals(vals)
+        if resource_vals and self:
+            self.check_access("write")
+            self.resource_id.sudo().write(resource_vals)
+        if not vals:
+            return True
         return super().write(vals)
 
     @api.model

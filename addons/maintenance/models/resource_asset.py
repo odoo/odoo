@@ -38,16 +38,18 @@ class ResourceAsset(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        given = [dict(vals) for vals in vals_list]
         assets = super().create(vals_list)
-        for asset, vals in zip(assets, vals_list, strict=True):
+        for asset, vals in zip(assets, given, strict=True):
             asset._take_kind_defaults(vals)
         return assets
 
     def write(self, vals):
+        given = dict(vals)
         res = super().write(vals)
-        if "kind_id" in vals:
+        if "kind_id" in given:
             for asset in self:
-                asset._take_kind_defaults(vals)
+                asset._take_kind_defaults(given)
         return res
 
     def _take_kind_defaults(self, given):
@@ -59,7 +61,7 @@ class ResourceAsset(models.Model):
             if not given.get(fname) and kind[fname]
         }
         if resource_vals:
-            self.resource_id.write(resource_vals)
+            self.resource_id.sudo().write(resource_vals)
 
     def _get_maintenance_action(self, xmlid):
         self.check_singleton()
