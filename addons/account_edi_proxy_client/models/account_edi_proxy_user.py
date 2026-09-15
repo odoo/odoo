@@ -118,9 +118,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             res.raise_for_status()
             response = res.json()
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
-            _logger.warning('Connection error <%(url)s>: %(error)s', {'url': url, 'error': e})
-            raise AccountEdiProxyError('connection_error',
-                _('The url that this service requested returned an error. The url it tried to contact was %s', url))
+            self._raise_connection_error(url, e)
 
         if 'error' in response:
             if response['error']['code'] == 404:
@@ -136,24 +134,65 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         proxy_error = response['result'].pop('proxy_error', False)
         if proxy_error:
-            error_code = proxy_error['code']
-            if error_code == 'refresh_token_expired':
-                self._renew_token()
-                self.env.cr.commit()  # We do not want to lose it if in the _make_request below something goes wrong
-                return self._make_request(url, params, auth_type='hmac')
-            if error_code == 'no_such_user':
-                # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
-                self.sudo().active = False
-            if error_code == 'invalid_signature':
-                raise AccountEdiProxyError(
-                    error_code,
-                    _("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
-                      "server. It can occur if you have duplicated your database. \n\n"
-                      "If you are not sure how to fix this, please contact our support."),
-                )
-            raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
+            self._handle_proxy_error(proxy_error)
+            return self._make_request(url, params, auth_type='hmac')
 
         return response['result']
+
+    def _handle_proxy_error(self, proxy_error):
+        ''' Raise the AccountEdiProxyError matching a proxy_error payload.
+            Returns normally only for refresh_token_expired, after renewing the token: the caller retries once. '''
+        error_code = proxy_error['code']
+        if error_code == 'refresh_token_expired':
+            self._renew_token()
+            self.env.cr.commit()  # We do not want to lose it if in the _make_request below something goes wrong
+            return
+        if error_code == 'no_such_user':
+            # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
+            self.sudo().active = False
+        if error_code == 'invalid_signature':
+            raise AccountEdiProxyError(
+                error_code,
+                _("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
+                  "server. It can occur if you have duplicated your database. \n\n"
+                  "If you are not sure how to fix this, please contact our support."),
+            )
+        raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
+
+    def _make_http_request(self, url, *, method='GET', params=None, data=None, headers=None, timeout=DEFAULT_TIMEOUT,
+                           auth_type: Literal['hmac', 'asymmetric'] = 'hmac', _retry=True):
+        ''' Make a signed request to a type='http' proxy route and return the requests.Response.
+            :param params: query string dict (part of the signed message).
+            :param data: raw bytes body; form dicts/files are rejected by the proxy. '''
+        if self.edi_mode == 'demo':
+            raise AccountEdiProxyError("block_demo_mode", "Can't access the proxy in demo mode")
+        if data is not None and not isinstance(data, bytes):
+            raise AccountEdiProxyError('unsupported_content_type', "Only raw bytes bodies can be signed for http routes of the proxy")
+        try:
+            res = requests.request(method, url, params=params, data=data, headers=headers or {}, timeout=timeout,
+                                   auth=OdooEdiProxyAuth(user=self, auth_type=auth_type, routing_type='http'))
+        except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout) as e:
+            self._raise_connection_error(url, e)
+        if res.status_code == 401:
+            try:
+                proxy_error = res.json().get('proxy_error')
+            except ValueError:
+                proxy_error = None
+            if proxy_error:
+                self._handle_proxy_error(proxy_error)  # raises for every code but refresh_token_expired
+                if _retry:
+                    return self._make_http_request(url, method=method, params=params, data=data, headers=headers,
+                                                   timeout=timeout, auth_type='hmac', _retry=False)
+        try:
+            res.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            self._raise_connection_error(url, e)
+        return res
+
+    def _raise_connection_error(self, url, error):
+        _logger.warning('Connection error <%(url)s>: %(error)s', {'url': url, 'error': error})
+        raise AccountEdiProxyError('connection_error',
+            _('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
     def _get_iap_params(self, company, proxy_type, private_key_sudo):
         edi_identification = self._get_proxy_identification(company, proxy_type)
