@@ -593,7 +593,16 @@ class AccountMove(models.Model):
                         and tax.amount_type == 'percent'
                         and 0 <= tax.amount <= 100
                     )
-                    if tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate:
+                    is_valid_foreign_vat_rate = (
+                        move._l10n_fr_pdp_uses_foreign_vat()
+                        and tax.amount_type == 'percent'
+                        and 0 <= tax.amount <= 100
+                    )
+                    if (
+                        tax.amount not in VALID_PDP_TAX_RATES
+                        and not is_valid_oss_rate
+                        and not is_valid_foreign_vat_rate
+                    ):
                         yield _(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
@@ -635,6 +644,14 @@ class AccountMove(models.Model):
         if 'debit_origin_id' in self._fields:
             referenced += self.debit_origin_id
         return referenced
+
+    def _l10n_fr_pdp_uses_foreign_vat(self):
+        """Return whether this move uses the company's foreign tax registration."""
+        self.ensure_one()
+        return self._l10n_fr_pdp_is_sale() and bool(
+            self.fiscal_position_id.foreign_vat
+            and self.tax_country_id != self.company_id.account_fiscal_country_id
+        )
 
     def _l10n_fr_pdp_get_transaction_type(self):
         """Classify invoice for PDP reporting: b2c, b2bi, or False (domestic B2B)."""
