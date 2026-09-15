@@ -1514,7 +1514,7 @@ class AccountPayment(models.Model):
             ],
         }
 
-    def _get_payment_receipt_report_values(self):
+    def _prepare_payment_receipt_report_values(self):
         self.check_singleton()
         return {
             "display_invoices": True,
