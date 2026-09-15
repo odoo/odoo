@@ -47,7 +47,10 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
         if (node.matches(buttonSelector)) {
             return true;
         }
-        if (isImageTransformationOpen() && node.matches(".transfo-controls, .transfo-controls *")) {
+        if (
+            isImageTransformationOpen() &&
+            node.matches(".transfo-controls, .transfo-controls *, .transfo-dragger")
+        ) {
             return true;
         }
         return false;
