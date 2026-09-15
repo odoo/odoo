@@ -79,6 +79,9 @@ class HrLeave(models.Model):
         while not working_attendances._filter_by_date((date_target + relativedelta(days=1)).date()):
             date_target += relativedelta(days=1)
 
+        if date_start > date_target:
+            return (date_from, date_to)
+
         # Undo the last day increment
         return (date_start, date_target)
 
