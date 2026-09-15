@@ -8,6 +8,13 @@
         <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
     </record>
 
+    <record id="account_depreciation_profile_multi_company_rule" model="ir.rule">
+        <field name="name">Depreciation Profile multi-company</field>
+        <field name="model_id" ref="model_account_depreciation_profile" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
     <record id="account_asset_group_multi_company_rule" model="ir.rule">
         <field name="name">Account Asset Group multi-company</field>
         <field name="model_id" ref="model_account_asset_group" />

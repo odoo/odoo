@@ -64,7 +64,6 @@ class AccountAsset(models.Model):
     )
     state = fields.Selection(
         selection=[
-            ("model", "Model"),
             ("draft", "Draft"),
             ("open", "Running"),
             ("paused", "On Hold"),
@@ -193,10 +192,6 @@ class AccountAsset(models.Model):
         readonly=False,
         help="It is the amount you plan to have that you cannot depreciate.",
     )
-    salvage_value_pct = fields.Float(
-        string="Not Depreciable Value Percent",
-        help="It is the amount you plan to have that you cannot depreciate.",
-    )
     total_depreciable_value = fields.Monetary(
         compute="_compute_total_depreciable_value"
     )
@@ -225,9 +220,8 @@ class AccountAsset(models.Model):
         copy=False,
     )
 
-    asset_properties_definition = fields.PropertiesDefinition(string="Model Properties")
     asset_properties = fields.Properties(
-        definition="model_id.asset_properties_definition",
+        definition="depreciation_profile_id.asset_properties_definition",
         string="Properties",
         copy=True,
     )
@@ -245,10 +239,12 @@ class AccountAsset(models.Model):
         readonly=False,
     )
 
-    model_id = fields.Many2one(
-        comodel_name="account.asset",
+    depreciation_profile_id = fields.Many2one(
+        comodel_name="account.depreciation.profile",
+        string="Depreciation Profile",
         change_default=True,
-        domain="[('company_id', '=', company_id)]",
+        index="btree_not_null",
+        check_company=True,
     )
     account_type = fields.Selection(
         related="account_asset_id.account_type",
@@ -316,10 +312,10 @@ class AccountAsset(models.Model):
         for asset in self:
             asset.total_depreciable_value = asset.original_value - asset.salvage_value
 
-    @api.depends("original_value", "model_id")
+    @api.depends("original_value", "depreciation_profile_id")
     def _compute_salvage_value(self):
         for asset in self:
-            pct = asset.model_id.salvage_value_pct
+            pct = asset.depreciation_profile_id.value_salvage_pct
             if not float_is_zero(pct, precision_digits=6):
                 asset.salvage_value = asset.original_value * pct
 
@@ -347,19 +343,10 @@ class AccountAsset(models.Model):
             if record.non_deductible_tax_value:
                 record.original_value += record.non_deductible_tax_value
 
-    @api.depends("original_move_line_ids", "state")
-    @api.depends_context("form_view_ref", "uid")
+    @api.depends("original_move_line_ids")
     def _compute_display_account_asset_id(self):
-        debug_user = self.env.user.has_group("base.group_no_one")
         for record in self:
-            model_from_coa = (
-                self.env.context.get("form_view_ref") and record.state == "model"
-            )
-            record.display_account_asset_id = bool(
-                not record.original_move_line_ids
-                and not model_from_coa
-                and (record.state != "model" or debug_user)
-            )
+            record.display_account_asset_id = not record.original_move_line_ids
 
     @api.depends(
         "account_depreciation_id",
@@ -370,7 +357,7 @@ class AccountAsset(models.Model):
         for record in self:
             if record.original_move_line_ids:
                 record.account_asset_id = record.original_move_line_ids.account_id[:1]
-            elif not record.account_asset_id and record.state != "model":
+            elif not record.account_asset_id:
                 record.account_asset_id = record.account_depreciation_id
 
     @api.depends("original_move_line_ids")
@@ -646,14 +633,15 @@ class AccountAsset(models.Model):
             self.account_depreciation_id or self.account_asset_id
         )
 
-    @api.onchange("model_id")
-    def _onchange_model_id(self):
-        if self.model_id:
-            defaults = self.model_id._get_model_defaults()
+    @api.onchange("depreciation_profile_id")
+    def _onchange_depreciation_profile_id(self):
+        if self.depreciation_profile_id:
+            defaults = self.depreciation_profile_id._get_asset_defaults()
             defaults.pop("analytic_distribution", None)
             self.update(defaults)
             self.analytic_distribution = (
-                self.model_id.analytic_distribution or self.analytic_distribution
+                self.depreciation_profile_id.analytic_distribution
+                or self.analytic_distribution
             )
 
     @api.onchange(
@@ -674,7 +662,7 @@ class AccountAsset(models.Model):
     @api.constrains("active", "state")
     def _check_active(self):
         for record in self:
-            if not record.active and record.state not in ("close", "model"):
+            if not record.active and record.state != "close":
                 raise UserError(_("You cannot archive a record that is not closed"))
 
     @api.constrains("depreciation_move_ids")
@@ -710,7 +698,7 @@ class AccountAsset(models.Model):
                         "You cannot create an asset from lines containing credit and debit on the account or with a null amount"
                     )
                 )
-            if asset.state not in ("model", "draft"):
+            if asset.state != "draft":
                 raise UserError(
                     _(
                         "You cannot add or remove bills when the asset is already running or closed."
@@ -773,18 +761,15 @@ class AccountAsset(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
         for asset, vals in zip(self, vals_list, strict=True):
-            if asset.state == "model":
-                vals["state"] = "model"
             vals["name"] = _("%s (copy)", asset.name)
             vals["account_asset_id"] = asset.account_asset_id.id
         return vals_list
 
     @api.model_create_multi
     def create(self, vals_list):
-        model_context = self.env.context.get("default_state") == "model"
         for vals in vals_list:
             state = vals.get("state")
-            if state and state not in ("draft", "model"):
+            if state and state != "draft":
                 raise UserError(
                     _(
                         "An asset is created in draft and confirmed afterwards; it cannot "
@@ -794,8 +779,7 @@ class AccountAsset(models.Model):
                 )
             if not vals.get("name") and not vals.get("original_move_line_ids"):
                 raise UserError(_("An asset needs a name."))
-            if not model_context and state != "model":
-                vals["state"] = "draft"
+            vals["state"] = "draft"
         new_recs = super(
             AccountAsset, self.with_context(mail_create_nolog=True)
         ).create(vals_list)
@@ -805,11 +789,6 @@ class AccountAsset(models.Model):
                 record.original_value, requested
             ):
                 record.original_value = requested
-        if self.env.context.get("original_asset"):
-            original_asset = self.env["account.asset"].browse(
-                self.env.context.get("original_asset")
-            )
-            original_asset.model_id = new_recs
         return new_recs
 
     PROPAGATED_TO_MOVES = frozenset(
@@ -1240,26 +1219,18 @@ class AccountAsset(models.Model):
             "context": self.env.context,
         }
 
-    def action_save_model(self):
+    def action_save_profile(self):
+        self.check_singleton()
+        profile = self.env["account.depreciation.profile"].create(
+            self._get_profile_values()
+        )
+        self.depreciation_profile_id = profile
         return {
-            "name": _("Save model"),
-            "views": [
-                [
-                    self.env.ref("account_depreciation.view_account_asset_form").id,
-                    "form",
-                ]
-            ],
-            "res_model": "account.asset",
+            "name": _("Depreciation Profile"),
             "type": "ir.actions.act_window",
-            "context": {
-                **{
-                    f"default_{fname}": value
-                    for fname, value in self._get_model_defaults().items()
-                },
-                "default_state": "model",
-                "default_prorata_date": self.prorata_date,
-                "original_asset": self.id,
-            },
+            "res_model": "account.depreciation.profile",
+            "res_id": profile.id,
+            "views": [(False, "form")],
         }
 
     def open_entries(self):
@@ -1567,19 +1538,21 @@ class AccountAsset(models.Model):
             )
         )
 
-    def _get_model_defaults(self):
+    def _get_profile_values(self):
         self.check_singleton()
         return {
-            "method": self.method,
-            "method_number": self.method_number,
-            "method_period": self.method_period,
-            "method_progress_factor": self.method_progress_factor,
-            "prorata_computation_type": self.prorata_computation_type,
+            "name": self.name,
+            "company_id": self.company_id.id,
+            "depreciation_method": self.method,
+            "depreciation_duration": self.method_number,
+            "depreciation_period": self.method_period,
+            "depreciation_factor": self.method_progress_factor,
+            "depreciation_prorata": self.prorata_computation_type,
             "analytic_distribution": self.analytic_distribution,
             "account_asset_id": self.account_asset_id.id,
             "account_depreciation_id": self.account_depreciation_id.id,
             "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
-            "journal_id": self.journal_id.id,
+            "depreciation_journal_id": self.journal_id.id,
         }
 
     def _post_non_deductible_tax_value(self):

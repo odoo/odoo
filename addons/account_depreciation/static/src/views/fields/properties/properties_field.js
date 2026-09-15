@@ -8,7 +8,7 @@ patch(PropertiesField.prototype, {
     _getPropertyEditWarningText() {
         if (this.props.record.resModel === "account.asset") {
             return _t(
-                "You can add Property fields only on Assets with an Asset Model set.",
+                "You can add Property fields only on Assets with a Depreciation Profile set.",
             );
         }
         return super._getPropertyEditWarningText();

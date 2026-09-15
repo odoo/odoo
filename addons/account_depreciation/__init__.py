@@ -17,14 +17,14 @@ def post_init_hook(env):
                 filtered_vals := {
                     fname: value
                     for fname, value in vals.items()
-                    if fname in ["create_asset", "asset_model_ids"]
+                    if fname in ["create_asset", "depreciation_profile_ids"]
                 }
             )
             and ChartTemplate.ref(xmlid, raise_if_not_found=False)
         }
-        assets = {
+        profiles = {
             xmlid: filtered_vals
-            for xmlid, vals in ChartTemplate._get_account_asset(
+            for xmlid, vals in ChartTemplate._get_account_depreciation_profile(
                 company.chart_template
             ).items()
             if (
@@ -42,4 +42,6 @@ def post_init_hook(env):
                 }
             )
         }
-        ChartTemplate._load_data({"account.asset": assets, "account.account": accounts})
+        ChartTemplate._load_data(
+            {"account.depreciation.profile": profiles, "account.account": accounts}
+        )

@@ -537,7 +537,7 @@ class AccountAssetReportHandler(models.AbstractModel):
                AND asset.company_id in %(company_ids)s
                AND (asset.acquisition_date <= %(date_to)s OR move.date <= %(date_to)s)
                AND (asset.disposal_date >= %(date_from)s OR asset.disposal_date IS NULL)
-               AND (asset.state not in ('model', 'draft', 'cancelled') OR (asset.state = 'draft' AND %(include_draft)s))
+               AND (asset.state not in ('draft', 'cancelled') OR (asset.state = 'draft' AND %(include_draft)s))
                AND asset.active = 't'
           GROUP BY asset.id, account_id, account_code, account_name
           ORDER BY account_code, asset.acquisition_date, asset.id;

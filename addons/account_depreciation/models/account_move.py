@@ -281,20 +281,20 @@ class AccountMove(models.Model):
                 else:
                     units_quantity = 1
                 base_vals = move_line._get_asset_vals()
-                models = account.asset_model_ids.filtered(
-                    lambda model: (
-                        model.company_id in move_line.company_id.parent_ids  # noqa: B023  the lambda runs inside this iteration
+                profiles = account.depreciation_profile_ids.filtered(
+                    lambda profile: (
+                        profile.company_id in move_line.company_id.parent_ids  # noqa: B023  the lambda runs inside this iteration
                     )
                 )
-                for model in models or [None]:
-                    model_vals = dict(base_vals)
-                    if model:
-                        model_vals["model_id"] = model.id
-                        model_defaults = model._get_model_defaults()
-                        model_defaults.pop("account_asset_id", None)
-                        model_vals.update(model_defaults)
+                for profile in profiles or [None]:
+                    profile_vals = dict(base_vals)
+                    if profile:
+                        profile_vals["depreciation_profile_id"] = profile.id
+                        profile_defaults = profile._get_asset_defaults()
+                        profile_defaults.pop("account_asset_id", None)
+                        profile_vals.update(profile_defaults)
                     for index in range(1, units_quantity + 1):
-                        vals = dict(model_vals)
+                        vals = dict(profile_vals)
                         if units_quantity > 1:
                             vals["name"] = _(
                                 "%(move_line)s (%(current)s of %(total)s)",
@@ -315,7 +315,7 @@ class AccountMove(models.Model):
         for asset, vals, invoice, validate in zip(
             assets, create_list, invoice_list, auto_validate, strict=True
         ):
-            if "model_id" in vals and validate:
+            if "depreciation_profile_id" in vals and validate:
                 to_validate |= asset
             if invoice:
                 asset.message_post(

@@ -35,9 +35,11 @@ class AccountChartTemplate(models.AbstractModel):
 
         return res
 
-    @template("es_canary_assoc", "account.asset")
-    def _get_es_canary_assoc_account_asset(self):
+    @template("es_canary_assoc", "account.depreciation.profile")
+    def _get_es_canary_assoc_account_depreciation_profile(self):
         # account_depreciation is not auto-installed when l10n_es is installed
-        if "account.asset" not in self.env:
+        if "account.depreciation.profile" not in self.env:
             return {}
-        return self._prepare_csv_vals("es_assec", "account.asset", module="l10n_es")
+        return self._prepare_csv_vals(
+            "es_assec", "account.depreciation.profile", module="l10n_es"
+        )

@@ -328,7 +328,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
         self.assertEqual(names, ["Alpha", "Mike", "Zulu", "(No Asset Group)"])
 
-    def test_fixed_asset_account_is_developer_only_on_a_model(self):
+    def test_fixed_asset_account_shows_on_an_asset_without_bills(self):
         plain = self.env["res.users"].create(
             {
                 "name": "Plain accountant",
@@ -342,22 +342,8 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             }
         )
         asset = self.create_asset(1200, "yearly", 4)
-        model = self.create_asset(1200, "yearly", 4, state="model")
 
         self.assertTrue(asset.with_user(plain).display_account_asset_id)
-        self.assertFalse(model.with_user(plain).display_account_asset_id)
-
-        users = type(self.env["res.users"])
-        with patch.object(users, "has_group", lambda self, xmlid: True):
-            model.invalidate_recordset(["display_account_asset_id"])
-            self.assertTrue(model.with_user(plain).display_account_asset_id)
-            model.invalidate_recordset(["display_account_asset_id"])
-            self.assertFalse(
-                model.with_context(form_view_ref="x")
-                .with_user(plain)
-                .display_account_asset_id,
-                "still hidden when the model is created from the chart of accounts",
-            )
 
     def test_sibling_assets_stay_visible_when_computed_together(self):
         move = self.env["account.move"].create(
@@ -538,29 +524,23 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         )
         self.assertEqual(increase.currency_id, asset.currency_id)
 
-    def test_save_as_model_produces_a_model_matching_the_asset(self):
+    def test_save_as_profile_produces_a_profile_matching_the_asset(self):
         asset = self._running_asset(
             method="degressive",
             method_progress_factor=0.25,
             method_number=7,
             method_period="1",
         )
-        action = asset.action_save_model()
+        action = asset.action_save_profile()
 
-        model = (
-            self.env["account.asset"]
-            .with_context(**action["context"])
-            .create({"name": "saved model"})
-        )
-
-        self.assertEqual(model.state, "model")
-        for fname, value in asset._get_model_defaults().items():
+        profile = self.env["account.depreciation.profile"].browse(action["res_id"])
+        self.assertEqual(asset.depreciation_profile_id, profile)
+        for fname, value in profile._get_asset_defaults().items():
             self.assertEqual(
-                model[fname].id if model._fields[fname].relational else model[fname],
+                asset[fname].id if asset._fields[fname].relational else asset[fname],
                 value,
-                f"the saved model lost {fname}",
+                f"the saved profile lost {fname}",
             )
-        self.assertEqual(asset.model_id, model, "the source asset points at the model")
 
     def test_a_closed_gross_increase_is_not_re_credited_with_the_sale(self):
         asset = self.create_asset(4000, "yearly", 3)

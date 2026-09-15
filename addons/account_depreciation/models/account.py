@@ -4,11 +4,11 @@ from odoo import api, fields, models
 class AccountAccount(models.Model):
     _inherit = "account.account"
 
-    asset_model_ids = fields.Many2many(
-        comodel_name="account.asset",
-        domain=[("state", "=", "model")],
+    depreciation_profile_ids = fields.Many2many(
+        comodel_name="account.depreciation.profile",
+        string="Depreciation Profiles",
         tracking=True,
-        help="An asset will be created for each asset model when this account is used on a vendor bill or a refund",
+        help="An asset is created for each depreciation profile when this account is used on a vendor bill or a refund",
     )
     create_asset = fields.Selection(
         selection=[
@@ -45,8 +45,10 @@ class AccountAccount(models.Model):
             if record.create_asset == "no":
                 record.multiple_assets_per_line = False
 
-    @api.depends("asset_model_ids")
+    @api.depends("depreciation_profile_ids")
     def _compute_create_asset(self):
         for account in self:
             if not account.create_asset or account.create_asset == "no":
-                account.create_asset = "draft" if account.asset_model_ids else "no"
+                account.create_asset = (
+                    "draft" if account.depreciation_profile_ids else "no"
+                )

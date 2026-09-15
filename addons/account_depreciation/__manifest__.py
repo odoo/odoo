@@ -1,6 +1,6 @@
 {
     "name": "Assets Management",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Accounting",
     "sequence": 32,
     "description": """
@@ -22,6 +22,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
         "views/account_account_views.xml",
         "views/account_asset_views.xml",
         "views/account_asset_group_views.xml",
+        "views/account_depreciation_profile_views.xml",
         "views/account_move_views.xml",
         "data/asset_export_template.xml",
         "data/assets_report.xml",
@@ -40,7 +41,6 @@ Keeps track of depreciations, and creates corresponding journal entries.
             "account_depreciation/static/src/scss/account_asset.scss",
             "account_depreciation/static/src/components/**/*",
             "account_depreciation/static/src/views/**/*",
-            "account_depreciation/static/src/web/**/*",
         ],
     },
     "post_init_hook": "post_init_hook",

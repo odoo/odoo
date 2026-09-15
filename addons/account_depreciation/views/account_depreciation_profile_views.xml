@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_depreciation_profile_view_form" model="ir.ui.view">
+        <field name="name">account.depreciation.profile.form</field>
+        <field name="model">account.depreciation.profile</field>
+        <field name="arch" type="xml">
+            <form string="Depreciation Profile">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_assets"
+                            type="object"
+                            icon="fa-cubes"
+                            invisible="count_asset == 0"
+                            class="oe_stat_button">
+                            <field
+                                name="count_asset"
+                                string="Assets"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <field name="active" invisible="1" />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Computer Equipment" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="depreciation_method" string="Depreciation Method">
+                            <field name="depreciation_method" />
+                            <label
+                                for="depreciation_factor"
+                                invisible="depreciation_method == 'linear'" />
+                            <div
+                                class="o_row"
+                                invisible="depreciation_method == 'linear'">
+                                <field
+                                    name="depreciation_factor"
+                                    widget="percentage"
+                                    required="depreciation_method != 'linear'"
+                                    class="oe_inline" />
+                                <span> per year</span>
+                            </div>
+                            <label for="depreciation_duration" />
+                            <div class="o_row">
+                                <field
+                                    name="depreciation_duration"
+                                    required="1"
+                                    class="oe_inline" />
+                                <field name="depreciation_period" nolabel="1" />
+                            </div>
+                            <field name="depreciation_prorata" />
+                            <label for="value_salvage_pct" />
+                            <div>
+                                <field
+                                    name="value_salvage_pct"
+                                    widget="percentage"
+                                    class="oe_inline" />
+                            </div>
+                        </group>
+                        <group name="accounting" string="Accounting">
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company" />
+                            <field
+                                name="account_asset_id"
+                                domain="[                                     ('company_ids', 'parent_of', company_id),                                     ('account_type', 'in', (                                         'asset_fixed',                                         'asset_non_current',                                         'asset_current')                                     ),                                 ]"
+                                context="{'default_account_type': 'asset_fixed'}" />
+                            <field
+                                name="account_depreciation_id"
+                                domain="[                                     ('company_ids', 'parent_of', company_id),                                     ('account_type', 'in', (                                         'asset_fixed',                                         'asset_non_current',                                         'asset_current')                                     ),                                 ]"
+                                context="{'default_account_type': 'asset_non_current'}"
+                                required="1" />
+                            <field
+                                name="account_depreciation_expense_id"
+                                domain="[                                     ('company_ids', 'parent_of', company_id),                                     ('account_type', 'in', (                                         'expense_depreciation',                                         'expense')                                     ),                                 ]"
+                                context="{'default_account_type': 'expense_depreciation', 'default_tax_ids': []}"
+                                required="1" />
+                            <field name="depreciation_journal_id" required="1" />
+                            <field
+                                name="analytic_distribution"
+                                widget="analytic_distribution"
+                                options="{'account_field': 'account_depreciation_expense_id', 'business_domain': 'general'}"
+                                groups="analytic.group_analytic_accounting" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="asset_properties" string="Asset Properties">
+                            <field name="asset_properties_definition" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="account_depreciation_profile_view_list" model="ir.ui.view">
+        <field name="name">account.depreciation.profile.list</field>
+        <field name="model">account.depreciation.profile</field>
+        <field name="arch" type="xml">
+            <list string="Depreciation Profiles">
+                <field name="name" />
+                <field name="account_asset_id" />
+                <field name="account_depreciation_id" />
+                <field name="account_depreciation_expense_id" />
+                <field name="depreciation_method" />
+                <field name="depreciation_duration" string="Number of Depreciations" />
+                <field name="depreciation_period" string="Period length" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="account_depreciation_profile_view_search" model="ir.ui.view">
+        <field name="name">account.depreciation.profile.search</field>
+        <field name="model">account.depreciation.profile</field>
+        <field name="arch" type="xml">
+            <search string="Depreciation Profile">
+                <field name="name" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="account_asset_id"
+                        string="Fixed Asset Account"
+                        context="{'group_by': 'account_asset_id'}" />
+                    <filter
+                        name="account_depreciation_id"
+                        string="Depreciation Account"
+                        context="{'group_by': 'account_depreciation_id'}" />
+                    <filter
+                        name="account_depreciation_expense_id"
+                        string="Expense Account"
+                        context="{'group_by': 'account_depreciation_expense_id'}" />
+                    <filter
+                        name="depreciation_journal_id"
+                        string="Journal"
+                        context="{'group_by': 'depreciation_journal_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_depreciation_profile" model="ir.actions.act_window">
+        <field name="name">Depreciation Profiles</field>
+        <field name="res_model">account.depreciation.profile</field>
+        <field name="path">depreciation-profiles</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a depreciation profile
+            </p>
+            <p>
+                A profile holds the method, duration and accounts an asset depreciates
+                with. An account can create an asset from every bill line booked on it,
+                one per profile.
+            </p>
+        </field>
+    </record>
+
+</odoo>

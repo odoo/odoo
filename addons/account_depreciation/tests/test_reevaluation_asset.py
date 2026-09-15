@@ -2538,7 +2538,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
     def test_linear_reevaluation_increase_disposal_then_sale(self):
-        account_asset_model = self.env["account.asset"].create(
+        account_asset_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": self.company_data["default_account_assets"]
                 .copy()
@@ -2546,19 +2546,18 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Reevaluation asset - 3 Years",
-                "method_number": 3,
-                "method_period": "12",
-                "method": "linear",
-                "prorata_computation_type": "constant_periods",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
+                "depreciation_method": "linear",
+                "depreciation_prorata": "constant_periods",
             }
         )
         self.company_data["default_account_assets"].create_asset = "validate"
         self.company_data[
             "default_account_assets"
-        ].asset_model_ids = account_asset_model
+        ].depreciation_profile_ids = account_asset_model
 
         bill = self.env["account.move"].create(
             {

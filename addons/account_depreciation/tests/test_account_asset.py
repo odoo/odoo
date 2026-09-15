@@ -43,7 +43,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         moves_to_post._post()
 
-        cls.account_asset_model_fixedassets = cls.env["account.asset"].create(
+        cls.account_asset_model_fixedassets = cls.env[
+            "account.depreciation.profile"
+        ].create(
             {
                 "account_depreciation_id": cls.company_data["default_account_assets"]
                 .copy()
@@ -52,11 +54,12 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "default_account_expense"
                 ].id,
                 "account_asset_id": cls.company_data["default_account_assets"].id,
-                "journal_id": cls.company_data["default_journal_purchase"].id,
+                "depreciation_journal_id": cls.company_data[
+                    "default_journal_purchase"
+                ].id,
                 "name": "Hardware - 3 Years",
-                "method_number": 3,
-                "method_period": "12",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
             }
         )
 
@@ -106,10 +109,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.prorata_computation_type = "constant_periods"
         CEO_car.method_number = 5
 
@@ -127,10 +130,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.prorata_computation_type = "constant_periods"
         CEO_car.method_number = 5
 
@@ -433,10 +436,10 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.prorata_computation_type = "constant_periods"
         CEO_car.method_number = 5
 
@@ -566,7 +569,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_01_account_asset(self):
-        account_asset_model = self.env["account.asset"].create(
+        account_asset_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -574,19 +577,18 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Typical car - 3 Years",
-                "method_number": 3,
-                "method_period": "12",
-                "prorata_computation_type": "daily_computation",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
+                "depreciation_prorata": "daily_computation",
             }
         )
 
         self.company_data["default_account_assets"].create_asset = "validate"
         self.company_data[
             "default_account_assets"
-        ].asset_model_ids = account_asset_model
+        ].depreciation_profile_ids = account_asset_model
 
         invoice = self.env["account.move"].create(
             {
@@ -658,12 +660,12 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": "2010-01-31",
                 "already_depreciated_amount_import": 10000.0,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
 
         CEO_car.validate()
         self.assertRecordValues(
@@ -739,12 +741,12 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": "2010-01-31",
                 "already_depreciated_amount_import": 12000.0,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
 
         CEO_car.validate()
         self.assertRecordValues(
@@ -820,12 +822,12 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 800.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": "2021-01-01",
                 "already_depreciated_amount_import": 300.0,
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.method_number = 5
 
         CEO_car.validate()
@@ -905,11 +907,11 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 1000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": "2020-01-01",
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.method_number = 5
         CEO_car.account_depreciation_id = CEO_car.account_asset_id
 
@@ -1034,11 +1036,11 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.method_number = 5
         CEO_car.validate()
 
@@ -2157,22 +2159,21 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_credit_note_out_refund(self):
         depreciation_account = self.company_data["default_account_assets"].copy()
-        revenue_model = self.env["account.asset"].create(
+        revenue_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": depreciation_account.id,
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_revenue"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Hardware - 5 Years",
-                "method_number": 5,
-                "method_period": "12",
-                "state": "model",
+                "depreciation_duration": 5,
+                "depreciation_period": "12",
             }
         )
 
         depreciation_account.write(
-            {"create_asset": "draft", "asset_model_ids": revenue_model}
+            {"create_asset": "draft", "depreciation_profile_ids": revenue_model}
         )
 
         invoice = self.env["account.move"].create(
@@ -2328,7 +2329,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_credit_note(self):
-        asset_model = self.env["account.asset"].create(
+        asset_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -2337,16 +2338,19 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "default_account_expense"
                 ].id,
                 "account_asset_id": self.company_data["default_account_assets"].id,
-                "journal_id": self.company_data["default_journal_purchase"].id,
+                "depreciation_journal_id": self.company_data[
+                    "default_journal_purchase"
+                ].id,
                 "name": "Small car - 3 Years",
-                "method_number": 3,
-                "method_period": "12",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
             }
         )
 
         self.company_data["default_account_assets"].create_asset = "validate"
-        self.company_data["default_account_assets"].asset_model_ids = asset_model
+        self.company_data[
+            "default_account_assets"
+        ].depreciation_profile_ids = asset_model
 
         invoice = self.env["account.move"].create(
             {
@@ -2385,7 +2389,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_partial_credit_note(self):
-        asset_model = self.env["account.asset"].create(
+        asset_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -2393,16 +2397,17 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_sale"].id,
+                "depreciation_journal_id": self.company_data["default_journal_sale"].id,
                 "name": "Maintenance Contract - 3 Years",
-                "method_number": 3,
-                "method_period": "12",
-                "prorata_computation_type": "none",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
+                "depreciation_prorata": "none",
             }
         )
         self.company_data["default_account_assets"].create_asset = "draft"
-        self.company_data["default_account_assets"].asset_model_ids = asset_model
+        self.company_data[
+            "default_account_assets"
+        ].depreciation_profile_ids = asset_model
         account_assets_multiple = self.company_data["default_account_assets"].copy()
         account_assets_multiple.multiple_assets_per_line = True
 
@@ -2565,7 +2570,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset_account.tax_ids = non_deductible_tax
 
         asset_account.create_asset = "draft"
-        asset_account.asset_model_ids = self.account_asset_model_fixedassets
+        asset_account.depreciation_profile_ids = self.account_asset_model_fixedassets
         asset_account.multiple_assets_per_line = True
 
         vendor_bill_auto = self.env["account.move"].create(
@@ -2596,7 +2601,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
         asset_account.create_asset = "no"
-        asset_account.asset_model_ids = None
+        asset_account.depreciation_profile_ids = None
         asset_account.multiple_assets_per_line = False
 
         vendor_bill_manu = self.env["account.move"].create(
@@ -2863,27 +2868,28 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_decrement_book_value_with_negative_asset(self):
         depreciation_account = self.company_data["default_account_assets"].copy()
-        asset_model = self.env["account.asset"].create(
+        asset_model = self.env["account.depreciation.profile"].create(
             {
                 "name": "test",
-                "state": "model",
                 "active": True,
-                "method": "linear",
-                "method_number": 5,
-                "method_period": "1",
-                "prorata_computation_type": "constant_periods",
+                "depreciation_method": "linear",
+                "depreciation_duration": 5,
+                "depreciation_period": "1",
+                "depreciation_prorata": "constant_periods",
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": depreciation_account.id,
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_purchase"].id,
+                "depreciation_journal_id": self.company_data[
+                    "default_journal_purchase"
+                ].id,
             }
         )
 
         depreciation_account.can_create_asset = True
         depreciation_account.create_asset = "draft"
-        depreciation_account.asset_model_ids = asset_model
+        depreciation_account.depreciation_profile_ids = asset_model
 
         refund = self.env["account.move"].create(
             {
@@ -2997,7 +3003,6 @@ class TestAccountAsset(TestAccountReportsCommon):
         assets = self.env["account.asset"].search(
             [
                 ("company_id", "=", self.env.company.id),
-                ("state", "!=", "model"),
             ]
         )
         assets.state = "draft"
@@ -3300,11 +3305,11 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 5,
                 "name": "CEO's Car",
                 "original_value": 12000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": "2020-01-01",
             }
         )
-        CEO_car._onchange_model_id()
+        CEO_car._onchange_depreciation_profile_id()
         CEO_car.method_number = 5
         CEO_car.analytic_distribution = {self.analytic_account.id: 100}
 
@@ -4245,15 +4250,14 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_asset_onchange_model(self):
         account_asset = self.company_data["default_account_assets"].copy()
-        asset_model = self.env["account.asset"].create(
+        asset_model = self.env["account.depreciation.profile"].create(
             {
                 "name": "test model",
-                "state": "model",
                 "active": True,
-                "method": "linear",
-                "method_number": 5,
-                "method_period": "1",
-                "prorata_computation_type": "none",
+                "depreciation_method": "linear",
+                "depreciation_duration": 5,
+                "depreciation_period": "1",
+                "depreciation_prorata": "none",
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
                 ].id,
@@ -4261,33 +4265,32 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "default_account_expense"
                 ].id,
                 "account_asset_id": account_asset.id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
 
-        asset_model_with_account = self.env["account.asset"].create(
+        asset_model_with_account = self.env["account.depreciation.profile"].create(
             {
                 "name": "test model with account",
-                "state": "model",
                 "active": True,
-                "method": "linear",
-                "method_number": 5,
-                "method_period": "1",
-                "prorata_computation_type": "none",
+                "depreciation_method": "linear",
+                "depreciation_duration": 5,
+                "depreciation_period": "1",
+                "depreciation_prorata": "none",
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
                 ].id,
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
 
         asset_form = Form(self.env["account.asset"])
         asset_form.name = "Test Asset"
         asset_form.original_value = 10000
-        asset_form.model_id = asset_model
+        asset_form.depreciation_profile_id = asset_model
 
         self.assertEqual(
             asset_form.account_asset_id,
@@ -4295,7 +4298,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             "The account_asset_id should be the one from the model",
         )
 
-        asset_form.model_id = asset_model_with_account
+        asset_form.depreciation_profile_id = asset_model_with_account
         self.assertEqual(
             asset_form.account_asset_id,
             self.company_data["default_account_assets"],
@@ -4304,7 +4307,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         other_account_on_bill = self.company_data["default_account_assets"].copy()
         other_account_on_bill.create_asset = "draft"
-        other_account_on_bill.asset_model_ids = asset_model
+        other_account_on_bill.depreciation_profile_ids = asset_model
         invoice = self.env["account.move"].create(
             {
                 "move_type": "in_invoice",
@@ -4333,7 +4336,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
         asset_form = Form(invoice.asset_ids)
-        asset_form.model_id = asset_model
+        asset_form.depreciation_profile_id = asset_model
 
         self.assertEqual(
             asset_form.account_asset_id,
@@ -4646,7 +4649,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.company_data["default_account_assets"].create_asset = "draft"
         self.company_data[
             "default_account_assets"
-        ].asset_model_ids = self.account_asset_model_fixedassets
+        ].depreciation_profile_ids = self.account_asset_model_fixedassets
 
         bill = (
             self.env["account.move"]
@@ -4753,7 +4756,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset_model_b = self.account_asset_model_fixedassets.copy()
         asset_model_b.company_id = branch_b["company"]
 
-        self.company_data["default_account_assets"].sudo().asset_model_ids = (
+        self.company_data["default_account_assets"].sudo().depreciation_profile_ids = (
             asset_model_a + asset_model_b
         )
         self.company_data["default_account_assets"].create_asset = "draft"
@@ -4803,11 +4806,11 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "method_number": 10,
                 "name": "Locked Car",
                 "original_value": 14000.0,
-                "model_id": self.account_asset_model_fixedassets.id,
+                "depreciation_profile_id": self.account_asset_model_fixedassets.id,
                 "acquisition_date": today + relativedelta(years=-3, month=1, day=1),
             }
         )
-        locked_car._onchange_model_id()
+        locked_car._onchange_depreciation_profile_id()
         locked_car.validate()
 
         locked_car.company_id.fiscalyear_lock_date = today + relativedelta(years=-1)
@@ -5010,7 +5013,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 ],
             }
         )
-        account_asset_model = self.env["account.asset"].create(
+        account_asset_model = self.env["account.depreciation.profile"].create(
             {
                 "account_depreciation_id": self.company_data[
                     "default_account_assets"
@@ -5018,18 +5021,17 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account_depreciation_expense_id": self.company_data[
                     "default_account_expense"
                 ].id,
-                "journal_id": self.company_data["default_journal_misc"].id,
+                "depreciation_journal_id": self.company_data["default_journal_misc"].id,
                 "name": "Electronic devices",
-                "method_number": 3,
-                "method_period": "12",
-                "prorata_computation_type": "daily_computation",
-                "state": "model",
+                "depreciation_duration": 3,
+                "depreciation_period": "12",
+                "depreciation_prorata": "daily_computation",
             }
         )
         self.company_data["default_account_assets"].create_asset = "validate"
         self.company_data[
             "default_account_assets"
-        ].asset_model_ids = account_asset_model
+        ].depreciation_profile_ids = account_asset_model
 
         invoice = self.env["account.move"].create(
             {
