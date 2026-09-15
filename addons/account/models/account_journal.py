@@ -1299,6 +1299,20 @@ class AccountJournal(models.Model):
         if not recipients:
             return
 
+        removed_emails = set()
+
+        author_id = self.env.context.get('einvoice_notification_author_id')
+        sender_email = self.env['res.partner'].browse(author_id).email if author_id else self.env.user.email
+
+        if sender_email:
+            removed_emails.update(email_normalize_all(sender_email))
+        if assignee_email := invoice.invoice_user_id.email:
+            removed_emails.update(email_normalize_all(assignee_email))
+
+        recipients -= removed_emails
+        if not recipients:
+            return
+
         if not (template := self.env.ref('account.mail_template_invoice_subscriber', raise_if_not_found=False)):
             # we add the template in stable, thus this might happen if the module was not upgraded
             self._notify_einvoices_received(invoice)
