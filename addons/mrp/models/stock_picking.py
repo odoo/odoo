@@ -112,6 +112,7 @@ class StockPickingType(models.Model):
                     )
                 )
 
+    @api.depends("code")
     def _compute_mo_counts(self):
         mrp_picking_types = self.filtered(
             lambda picking: picking.code == "mrp_operation"

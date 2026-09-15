@@ -1,4 +1,4 @@
-from odoo import Command, _, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -89,6 +89,7 @@ class StockWarehouse(models.Model):
         check_company=True,
     )
 
+    @api.depends("manufacture_pull_id")
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id

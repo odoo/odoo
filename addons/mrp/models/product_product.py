@@ -41,6 +41,7 @@ class ProductProduct(models.Model):
     def _get_mrp_variants(self):
         return self
 
+    @api.depends("product_tmpl_id")
     def _compute_bom_count(self):
         bom_ids_by_product = collections.defaultdict(set)
         bom_ids_by_template = collections.defaultdict(set)
@@ -174,6 +175,7 @@ class ProductProduct(models.Model):
             )
         )
 
+    @api.depends("uom_id")
     def _compute_mrp_product_qty(self):
         date_from = fields.Datetime.to_string(
             fields.Datetime.now() - timedelta(days=365)

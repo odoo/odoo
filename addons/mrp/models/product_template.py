@@ -79,6 +79,7 @@ class ProductTemplate(models.Model):
     def _is_product_quants_open_required(self):
         return super()._is_product_quants_open_required() or self.is_kit
 
+    @api.depends("product_variant_ids.mrp_product_qty", "uom_id")
     def _compute_mrp_product_qty(self):
         for template in self:
             template.mrp_product_qty = template.uom_id.round(
