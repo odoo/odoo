@@ -5708,6 +5708,23 @@ class TestTourMrpOrder(HttpCase):
         self.start_tour(url, 'test_mrp_production_product_catalog', login='admin')
         self.assertEqual(len(mo.move_raw_ids), 1)
 
+    def test_mo_overview_no_byproducts(self):
+        """ The MO Overview must render for a production with no byproducts,
+        which is the default case since MoOverviewByproductsBlock is always
+        instantiated regardless of whether the BoM has byproduct lines. """
+        product = self.env['product.product'].create({
+            'name': 'MO Overview Test Product',
+            'is_storable': True,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
+        self.start_tour(url, 'mrp_mo_overview_no_byproducts_tour', login='admin')
+
     def test_manufacturing_and_byproduct_sm_to_sml_synchronization(self):
         """ Test the synchronization between stock moves and stock move lines within
             the detailed operation modal for manufacturings and by-products.
