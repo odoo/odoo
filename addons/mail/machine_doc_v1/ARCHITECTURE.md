@@ -178,7 +178,7 @@ every one as a literal, so re-run it rather than trusting this table.
 | Python controllers | 20 files · **64** routes across **84** URL strings |
 | Python wizards | 9 |
 | Python tests | 55 `test_*.py` |
-| JavaScript (`static/src/`) | 402 |
+| JavaScript (`static/src/`) | 404 |
 | JS model classes (registered with `.register()`) | 39 (+ the base `Record` itself → 40 calls) |
 | JS OWL services | 23 |
 | JS tests (`static/tests/`, `*.test.js`) | 143 |
