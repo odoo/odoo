@@ -247,7 +247,7 @@ class ResCompany(models.Model):
             ]
         )
         companies = self.env["res.company"].search(domain)
-        _debug.logic("cron_scope", periods=",".join(periods), companies=companies)
+        _debug.logic("cron_scope", periods=periods, companies=companies)
         for company in companies:
             try:
                 with self.env.cr.savepoint():
