@@ -3,6 +3,9 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class L10nInEwaybill(models.Model):
@@ -51,6 +54,7 @@ class L10nInEwaybill(models.Model):
         :return: {'document_number': document_number, 'document_date': document_date}
         :rtype: dict
         """
+        _debug.logic("ewaybill_document_details", ewaybills=self)
         self.check_singleton()
         if picking_id := self.picking_id:
             return {
@@ -60,6 +64,7 @@ class L10nInEwaybill(models.Model):
         return super()._get_ewaybill_document_details()
 
     def _get_seller_buyer_details(self):
+        _debug.logic("ewaybill_parties", ewaybills=self)
         self.check_singleton()
         if picking_id := self.picking_id:
             if self._is_incoming():
@@ -90,6 +95,7 @@ class L10nInEwaybill(models.Model):
         return super()._get_seller_buyer_details()
 
     def _is_incoming(self):
+        _debug.logic("ewaybill_is_incoming", ewaybills=self)
         self.check_singleton()
         if self.picking_id:
             return self.picking_id.picking_type_id.code == "incoming"
@@ -108,6 +114,7 @@ class L10nInEwaybill(models.Model):
                 )
 
     def action_reset_to_pending(self):
+        _debug.lifecycle("ewaybill_reset_to_pending", ewaybills=self)
         self.check_singleton()
         if self.picking_id:
             if self.state not in ("cancel", "challan"):
@@ -128,6 +135,7 @@ class L10nInEwaybill(models.Model):
             return super().action_reset_to_pending()
 
     def action_set_to_challan(self):
+        _debug.lifecycle("ewaybill_set_to_challan", ewaybills=self)
         self.check_singleton()
         if self.state != "pending":
             raise UserError(
@@ -140,6 +148,7 @@ class L10nInEwaybill(models.Model):
         )
 
     def _check_printable(self):
+        _debug.logic("ewaybill_printable_check", ewaybills=self)
         if self.filtered(
             lambda ewaybill: ewaybill.state not in ["generated", "challan"]
         ):

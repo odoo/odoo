@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -24,6 +27,7 @@ class StockPicking(models.Model):
         )._get_action_dict()
 
     def action_l10n_in_ewaybill_create(self):
+        _debug.pipeline("ewaybill_create", pickings=self)
         self.check_singleton()
         if product_with_no_hsn := self.move_ids.mapped("product_id").filtered(
             lambda p: not p.l10n_in_hsn_code
@@ -61,6 +65,7 @@ class StockPicking(models.Model):
 
     @api.depends("l10n_in_ewaybill_ids.state")
     def _compute_l10n_in_ewaybill_details(self):
+        _debug.perf.count("ewaybill_details_compute", pickings=self)
         for picking in self:
             ewaybill = picking.l10n_in_ewaybill_ids and picking.l10n_in_ewaybill_ids[0]
             if picking.country_code == "IN" and ewaybill.state in [
