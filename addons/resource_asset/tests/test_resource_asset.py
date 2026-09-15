@@ -199,6 +199,24 @@ class TestResourceAsset(TransactionCase):
         meter.invalidate_recordset()
         self.assertEqual(meter.value, 900)
 
+    def test_the_odometer_is_the_odometer_meter_latest_reading(self):
+        truck = self._truck()
+        self.assertFalse(truck.odometer_meter_id)
+        self.assertEqual(truck.odometer, 0.0)
+        self.env["resource.asset.meter"].create(
+            {"asset_id": truck.id, "name": "Hours", "kind": "hours"}
+        ).record(40)
+        meter = self.env["resource.asset.meter"].create(
+            {"asset_id": truck.id, "name": "Odometer", "kind": "odometer"}
+        )
+        meter.record(1200, date=datetime(2026, 1, 1, 8, 0))
+        meter.record(1350, date=datetime(2026, 1, 2, 8, 0))
+        self.assertEqual(truck.odometer_meter_id, meter)
+        self.assertEqual(truck.odometer, 1350)
+        self.assertEqual(
+            self.Asset.search([("id", "=", truck.id), ("odometer", ">", 1300)]), truck
+        )
+
     def test_custody_through_the_resource(self):
         truck = self._truck()
         self.assertFalse(truck.holder_id)

@@ -92,6 +92,20 @@ class ResourceAsset(models.Model):
         comodel_name="resource.asset.meter",
         inverse_name="asset_id",
     )
+    odometer_meter_id = fields.Many2one(
+        comodel_name="resource.asset.meter",
+        compute="_compute_odometer_meter_id",
+        store=True,
+    )
+    odometer = fields.Float(
+        compute="_compute_odometer",
+        store=True,
+    )
+    odometer_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        tracking=True,
+        help="Unit of measurement for the odometer readings",
+    )
     address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Location",
@@ -124,6 +138,18 @@ class ResourceAsset(models.Model):
         fallback = self.env.company.currency_id
         for asset in self:
             asset.currency_id = asset.company_id.currency_id or fallback
+
+    @api.depends("meter_ids.kind")
+    def _compute_odometer_meter_id(self):
+        for asset in self:
+            asset.odometer_meter_id = asset.meter_ids.filtered(
+                lambda m: m.kind == "odometer"
+            )[:1]
+
+    @api.depends("odometer_meter_id.last_reading_id.value")
+    def _compute_odometer(self):
+        for asset in self:
+            asset.odometer = asset.odometer_meter_id.value
 
     @api.depends("identifier_ids.type_id", "kind_id.identifier_type_ids")
     def _compute_missing_identifier_type_ids(self):
