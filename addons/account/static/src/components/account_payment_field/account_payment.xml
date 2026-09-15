@@ -21,7 +21,7 @@
                             <td style="max-width: 9rem;">
                                 <a t-att-title="(line.bank_label ? line.bank_label + ' - ' : '') + (line.move_ref ? line.move_ref : '')"
                                    role="button"
-                                   class="open_account_move oe_form_field btn btn-link w-100 text-start"
+                                   class="open_account_move oe_form_field btn btn-link text-truncate w-100 text-start"
                                    t-on-click="() => this.openMove(line.move_id)"
                                    data-bs-toggle="tooltip"
                                    t-att-payment-id="account_payment_id"
