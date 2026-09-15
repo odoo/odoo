@@ -264,6 +264,7 @@
         # Replaces a post_init_hook that should be run on upgrade too.
         'data/update_theme_images.xml',
         'views/website_templates_svg.xml',
+        'views/website_form_custom_log_template.xml',
         'security/ir.access.csv',
     ],
     'demo': [
