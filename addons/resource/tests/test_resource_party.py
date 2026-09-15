@@ -1,3 +1,5 @@
+from psycopg import IntegrityError
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -42,3 +44,81 @@ class TestResourceParty(TransactionCase):
             {"partner_id": partner.id, "tz": "Pacific/Apia"}
         )
         self.assertEqual(resource.tz, "Pacific/Apia")
+
+    def test_a_human_resource_without_a_party_becomes_one(self):
+        resource = self.env["resource.resource"].create(
+            {"name": "Walk-in Contractor", "tz": "America/Mexico_City"}
+        )
+        self.assertTrue(resource.partner_id)
+        self.assertEqual(resource.partner_id.name, "Walk-in Contractor")
+        self.assertEqual(resource.partner_id.tz, "America/Mexico_City")
+
+    def test_a_users_resource_is_the_users_party(self):
+        user = self.env["res.users"].create(
+            {"name": "Resource User", "login": "resource_party_user"}
+        )
+        resource = self.env["resource.resource"].create(
+            {"name": "ignored", "user_id": user.id}
+        )
+        self.assertEqual(resource.partner_id, user.partner_id)
+
+    def test_a_person_is_one_human_resource_per_company(self):
+        partner = self.env["res.partner"].create({"name": "Only Once"})
+        self.env["resource.resource"].create({"partner_id": partner.id})
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            self.env["resource.resource"].create({"partner_id": partner.id})
+        other_company = self.env["res.company"].create({"name": "Second Employer"})
+        elsewhere = self.env["resource.resource"].create(
+            {"partner_id": partner.id, "company_id": other_company.id}
+        )
+        self.assertEqual(elsewhere.partner_id, partner)
+
+    def test_a_human_resource_cannot_drop_its_party(self):
+        resource = self.env["resource.resource"].create({"name": "Keeps Party"})
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            resource.partner_id = False
+            resource.flush_recordset()
+
+    def test_a_copied_human_resource_is_a_new_person(self):
+        resource = self.env["resource.resource"].create({"name": "Original"})
+        copy = resource.copy()
+        self.assertTrue(copy.partner_id)
+        self.assertNotEqual(copy.partner_id, resource.partner_id)
+        self.assertEqual(copy.name, "Original (copy)")
+
+    def test_get_or_create_resources_reuses_and_creates_in_order(self):
+        company = self.env.company
+        held, archived, fresh = self.env["res.partner"].create(
+            [{"name": "Holds One"}, {"name": "Archived One"}, {"name": "Has None"}]
+        )
+        existing = self.env["resource.resource"].create(
+            [
+                {"partner_id": held.id, "company_id": company.id},
+                {"partner_id": archived.id, "company_id": company.id, "active": False},
+            ]
+        )
+        resources = (fresh | held | archived)._get_or_create_resources(company)
+        self.assertEqual(len(resources), 3)
+        self.assertEqual(resources[1:], existing)
+        self.assertEqual(resources[0].partner_id, fresh)
+        self.assertEqual(resources[0].resource_type, "user")
+        self.assertEqual(resources[0].company_id, company)
+        self.assertEqual(
+            (fresh | held | archived)._get_or_create_resources(company), resources
+        )
+
+    def test_a_derived_timezone_never_reaches_the_party(self):
+        user = self.env["res.users"].create(
+            {"name": "Zoneless User", "login": "zoneless_user"}
+        )
+        user.partner_id.tz = False
+        calendar = self.env["resource.calendar"].create(
+            {"name": "Tokyo Hours", "tz": "Asia/Tokyo"}
+        )
+        resource = self.env["resource.resource"].create(
+            {"name": "ignored", "user_id": user.id, "calendar_id": calendar.id}
+        )
+        self.assertEqual(resource.tz, "Asia/Tokyo")
+        self.assertFalse(user.partner_id.tz)
+        resource.tz = "Europe/Madrid"
+        self.assertEqual(user.partner_id.tz, "Europe/Madrid")

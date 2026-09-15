@@ -1,6 +1,6 @@
 {
     "name": "Employees",
-    "version": "1.22",
+    "version": "1.23",
     "category": "Human Resources/Employees",
     "sequence": 95,
     "summary": "Centralize employee information",

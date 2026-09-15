@@ -1,3 +1,5 @@
+from psycopg import IntegrityError
+
 from odoo.fields import Date, Datetime
 from odoo.tests import Form
 
@@ -131,34 +133,14 @@ class TestContractCalendars(TestHrCommon):
             self.employee.version_ids[0].resource_calendar_id, self.calendar_richard
         )
 
-    def test_calendar_sync_resource_shared_by_two_employees(self):
-        shared_resource = self.employee.resource_id
-        self.env["hr.employee"].create(
-            {
-                "name": "Second employee on Richard's resource",
-                "resource_id": shared_resource.id,
-            }
-        )
-        self.assertEqual(
-            len(shared_resource.employee_id),
-            2,
-            "Both employees should be linked to the same resource.",
-        )
-
-        leave = self.env["resource.calendar.leaves"].create(
-            {
-                "name": "leave name",
-                "date_from": Datetime.to_datetime("2015-11-17 07:00:00"),
-                "date_to": Datetime.to_datetime("2015-11-20 18:00:00"),
-                "resource_id": shared_resource.id,
-                "time_type": "leave",
-            }
-        )
-        self.assertEqual(
-            leave.calendar_id,
-            self.calendar_richard,
-            "It should not crash and pick one of the linked employees' calendar.",
-        )
+    def test_a_resource_is_never_shared_by_two_employees(self):
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            self.env["hr.employee"].create(
+                {
+                    "name": "Second employee on Richard's resource",
+                    "resource_id": self.employee.resource_id.id,
+                }
+            )
 
     def test_employee_resource_contract_without_and_with_date_from(self):
         leave_form = Form(self.env["resource.calendar.leaves"])

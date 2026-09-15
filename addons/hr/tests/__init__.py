@@ -8,6 +8,7 @@ from . import test_mail_activity_plan
 from . import test_mail_features
 from . import test_multi_company
 from . import test_payroll_fields_access
+from . import test_employee_resource_party
 from . import test_resource
 from . import test_ui
 from . import test_scenario

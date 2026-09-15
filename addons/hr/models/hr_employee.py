@@ -656,6 +656,10 @@ class HrEmployee(models.Model):
         "(user_id, company_id) WHERE user_id IS NOT NULL",
         "A user cannot be linked to multiple employees in the same company.",
     )
+    _partner_company_uniq = models.UniqueIndex(
+        "(partner_id, company_id)",
+        "A person cannot be two employees of the same company.",
+    )
 
     _EXPIRY_REQUIRES_ITS_DOCUMENT = {
         "visa_expire": "visa_no",
@@ -836,6 +840,8 @@ class HrEmployee(models.Model):
                 resource = self.env["resource.resource"].browse(vals["resource_id"])
                 if "user_id" not in vals and resource.user_id:
                     vals["user_id"] = resource.user_id.id
+                if not vals.get("partner_id") and resource.partner_id:
+                    vals["partner_id"] = resource.partner_id.id
                 if "name" not in vals and not vals.get("partner_id"):
                     vals["name"] = resource.name
                 dbg.logic.debug(
@@ -873,6 +879,7 @@ class HrEmployee(models.Model):
         )
         for company, company_vals_list in vals_per_company.items():
             idxs, company_vals_list = zip(*company_vals_list, strict=True)
+            self._update_party_vals(company, company_vals_list)
             self._follow_company_calendar(company, company_vals_list)
             with dbg.timer(
                 self.env, "hr.employee.create: super for company %s", company
@@ -1101,6 +1108,12 @@ class HrEmployee(models.Model):
             dbg.keys(address_vals),
         )
         former_parties = {employee: employee.partner_id for employee in self}
+        own_former_parties = {
+            employee: party
+            for employee, party in former_parties.items()
+            if "partner_id" in vals
+            and party.sudo().with_context(active_test=False).employee_ids == employee
+        }
         with dbg.timer(self.env, "hr.employee.write: super on %s", dbg.rec(self)):
             res = super().write(new_vals)
         if "partner_id" in vals:
@@ -1113,8 +1126,8 @@ class HrEmployee(models.Model):
             self._update_bank_account_contact(vals["partner_id"])
             self._reparent_private_address()
             self._bind_resource_to_party()
-            self._move_identifiers_to_party(former_parties)
-            self._retire_former_party(former_parties)
+            self._move_identifiers_to_party(own_former_parties)
+            self._retire_former_party(own_former_parties)
         if version_vals:
             version_vals["last_modified_date"] = fields.Datetime.now()
             version_vals["last_modified_uid"] = self.env.uid
@@ -3191,6 +3204,8 @@ class HrEmployee(models.Model):
         )
         for employee, partner in zip(squatters, fresh, strict=True):
             employee.partner_id = partner
+        self.env["hr.employee"].flush_model(["partner_id"])
+        self.env["resource.resource"].flush_model(["partner_id"])
 
     def _update_missing_avatars(self):
         if not self.env["ir.ui.view"].sudo(False).has_access("write"):
@@ -3223,8 +3238,43 @@ class HrEmployee(models.Model):
                 )
                 employee.resource_id.partner_id = employee.partner_id
 
+    def _update_party_vals(self, company_id, vals_list):
+        unbound = [
+            vals
+            for vals in vals_list
+            if not vals.get("resource_id") and not vals.get("partner_id")
+        ]
+        parties = (
+            self.env["res.partner"]
+            .sudo()
+            .create(
+                [
+                    {"name": vals.get("name"), "tz": vals.get("tz") or False}
+                    for vals in unbound
+                ]
+            )
+        )
+        for vals, party in zip(unbound, parties, strict=True):
+            vals["partner_id"] = party.id
+        pending = [vals for vals in vals_list if not vals.get("resource_id")]
+        resource_by_party = {
+            resource.partner_id.id: resource
+            for resource in self.env["res.partner"]
+            .browse([vals["partner_id"] for vals in pending])
+            ._get_resources(self.env["res.company"].browse(company_id))
+        }
+        for vals in pending:
+            if resource := resource_by_party.get(vals["partner_id"]):
+                dbg.pipeline.debug(
+                    "[party:%s] employee takes existing resource %s",
+                    vals["partner_id"],
+                    resource.id,
+                )
+                vals["resource_id"] = resource.id
+
     def _prepare_resource_values(self, vals, tz):
         resource_vals = super()._prepare_resource_values(vals, tz)
+        resource_vals["partner_id"] = vals.get("partner_id")
         user_id = vals.pop("user_id", None)
         if user_id:
             resource_vals["user_id"] = user_id
@@ -3370,10 +3420,26 @@ class HrEmployee(models.Model):
         ]
 
     def _reparent_private_address(self):
-        for employee in self.sudo():
+        employees = self.sudo()
+        other_residents = dict(
+            employees.with_context(active_test=False)._read_group(
+                [
+                    ("private_address_id", "in", employees.private_address_id.ids),
+                    ("id", "not in", employees.ids),
+                ],
+                ["private_address_id"],
+                ["__count"],
+            )
+        )
+        for employee in employees:
             home = employee.private_address_id
             contact = employee.partner_id
-            if home and contact and home.parent_id != contact:
+            if (
+                home
+                and contact
+                and home.parent_id != contact
+                and home not in other_residents
+            ):
                 dbg.pipeline.debug(
                     "[employee:%s] home %s reparented %s -> %s",
                     employee.id,

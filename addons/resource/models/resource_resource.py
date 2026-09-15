@@ -42,6 +42,7 @@ class ResourceResource(models.Model):
         comodel_name="res.partner",
         string="Party",
         index="btree_not_null",
+        copy=False,
         ondelete="restrict",
         help="The person this resource is. A material resource has none.",
     )
@@ -83,7 +84,6 @@ class ResourceResource(models.Model):
         compute="_compute_tz",
         inverse="_inverse_tz",
         precompute=True,
-        default=lambda self: self.env.context.get("tz") or self.env.user.tz or "UTC",
         store=True,
         readonly=False,
         required=True,
@@ -161,6 +161,14 @@ class ResourceResource(models.Model):
         "CHECK(capacity>0)",
         "Capacity must be strictly positive",
     )
+    _check_human_has_party = models.Constraint(
+        "CHECK(resource_type != 'user' OR partner_id IS NOT NULL)",
+        "A human resource is a person: it needs a party.",
+    )
+    _party_company_uniq = models.UniqueIndex(
+        "(partner_id, company_id) NULLS NOT DISTINCT WHERE resource_type = 'user'",
+        "A person is one human resource per company.",
+    )
 
     @api.depends("role_ids")
     def _compute_default_role_id(self):
@@ -226,10 +234,12 @@ class ResourceResource(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        self._update_party_vals(vals_list)
         for values in vals_list:
             if values.get("partner_id"):
-                party = self.env["res.partner"].browse(values["partner_id"])
-                values.pop("name", None)
+                party = self.env["res.partner"].sudo().browse(values["partner_id"])
+                if party.name:
+                    values.pop("name", None)
                 if party.tz:
                     values.pop("tz", None)
             if values.get("company_id") and "calendar_id" not in values:
@@ -238,17 +248,33 @@ class ResourceResource(models.Model):
                     .browse(values["company_id"])
                     .resource_calendar_id.id
                 )
-            if not values.get("tz"):
-                tz = (
-                    self.env["res.partner"].browse(values.get("partner_id")).tz
-                    or self.env["res.users"].browse(values.get("user_id")).tz
-                    or self.env["resource.calendar"]
-                    .browse(values.get("calendar_id"))
-                    .tz
-                )
-                if tz:
-                    values["tz"] = tz
         return super().create(vals_list)
+
+    def _update_party_vals(self, vals_list: list[ValuesType]) -> None:
+        default_type = self.default_get(["resource_type"]).get("resource_type")
+        unbound = []
+        for values in vals_list:
+            if (
+                values.get("partner_id")
+                or values.get("resource_type", default_type) != "user"
+            ):
+                continue
+            if user := self.env["res.users"].sudo().browse(values.get("user_id")):
+                values["partner_id"] = user.partner_id.id
+            elif values.get("name"):
+                unbound.append(values)
+        parties = (
+            self.env["res.partner"]
+            .sudo()
+            .create(
+                [
+                    {"name": values["name"], "tz": values.get("tz") or False}
+                    for values in unbound
+                ]
+            )
+        )
+        for values, party in zip(unbound, parties, strict=True):
+            values["partner_id"] = party.id
 
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
         vals_list = super().copy_data(default=default)
@@ -278,6 +304,12 @@ class ResourceResource(models.Model):
             }
         if not vals:
             return True
+        if vals.get("user_id") and "partner_id" not in vals:
+            humans = self.filtered(lambda resource: resource.resource_type == "user")
+            if humans:
+                party = self.env["res.users"].sudo().browse(vals["user_id"]).partner_id
+                humans.write({**vals, "partner_id": party.id})
+                return (self - humans).write(vals)
         result = super().write(vals)
         if {"capacity", "tz"} & vals.keys():
             reservations = (
@@ -324,13 +356,22 @@ class ResourceResource(models.Model):
 
     def _inverse_name(self):
         for resource in self.filtered("partner_id"):
-            if resource.partner_id.name != resource.name:
-                resource.partner_id.name = resource.name
+            party = resource.partner_id.sudo()
+            if party.name != resource.name:
+                party.name = resource.name
 
     @api.depends("partner_id.tz")
     def _compute_tz(self):
         for resource in self:
-            resource.tz = resource.partner_id.tz or resource.tz
+            resource.tz = (
+                resource.partner_id.sudo().tz
+                or resource.tz
+                or resource.user_id.sudo().tz
+                or resource.calendar_id.tz
+                or self.env.context.get("tz")
+                or self.env.user.tz
+                or "UTC"
+            )
 
     @api.constrains("tz")
     def _check_tz(self):
@@ -344,8 +385,9 @@ class ResourceResource(models.Model):
 
     def _inverse_tz(self):
         for resource in self.filtered("partner_id"):
-            if resource.partner_id.tz != resource.tz:
-                resource.partner_id.tz = resource.tz
+            party = resource.partner_id.sudo()
+            if party.tz != resource.tz:
+                party.tz = resource.tz
 
     @api.depends("partner_id.avatar_128", "user_id.avatar_128")
     def _compute_avatar_128(self):

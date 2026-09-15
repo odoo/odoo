@@ -49,23 +49,10 @@ class MixinResource(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         resources_vals_list = []
-        calendar_ids = [
-            vals["resource_calendar_id"]
-            for vals in vals_list
-            if vals.get("resource_calendar_id")
-        ]
-        calendars_tz = {
-            calendar.id: calendar.tz
-            for calendar in self.env["resource.calendar"].browse(calendar_ids)
-        }
         for vals in vals_list:
             if not vals.get("resource_id"):
                 resources_vals_list.append(  # noqa: PERF401 — vals.pop() side effect
-                    self._prepare_resource_values(
-                        vals,
-                        vals.pop("tz", False)
-                        or calendars_tz.get(vals.get("resource_calendar_id")),
-                    )
+                    self._prepare_resource_values(vals, vals.pop("tz", False))
                 )
         if resources_vals_list:
             resources = self.env["resource.resource"].create(resources_vals_list)
@@ -125,11 +112,7 @@ class MixinResource(models.AbstractModel):
             vals["resource_id"] = resource.id
             vals["company_id"] = resource.company_id.id
             vals["resource_calendar_id"] = resource.calendar_id.id
-            if not resource.partner_id and self._rec_name in default:
-                # Only an explicit rename of the host record follows onto
-                # its resource; otherwise resource.resource's own "(copy)"
-                # naming stands, and a partner-backed resource always
-                # follows its partner's name, never the host record's.
+            if self._rec_name in default:
                 resource.name = default[self._rec_name]
         return vals_list
 

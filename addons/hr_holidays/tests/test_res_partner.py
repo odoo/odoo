@@ -24,20 +24,20 @@ class TestPartner(TransactionCase):
             }
         )
         cls.partner = baseUser.partner_id
+        second_employer = cls.env["res.company"].create({"name": "Second Employer"})
         cls.users = baseUser + cls.env["res.users"].create(
             {
                 "name": "test1",
                 "login": "test1",
                 "email": "test1@example.com",
                 "partner_id": cls.partner.id,
+                "company_ids": [Command.set([cls.env.company.id, second_employer.id])],
             }
         )
         cls.employees = cls.env["hr.employee"].create(
             [
-                {
-                    "user_id": user.id,
-                }
-                for user in cls.users
+                {"user_id": cls.users[0].id},
+                {"user_id": cls.users[1].id, "company_id": second_employer.id},
             ]
         )
         cls.leave_type = cls.env["hr.leave.type"].create(
