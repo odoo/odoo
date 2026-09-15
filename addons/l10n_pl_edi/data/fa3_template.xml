@@ -247,7 +247,13 @@
             <DaneFaKorygowanej>
                 <DataWystFaKorygowanej t-out="correction_info['DataWystFaKorygowanej']"/>
                 <NrFaKorygowanej t-out="correction_info['NrFaKorygowanej']"/>
-                <NrKSeFN>1</NrKSeFN>
+                <t t-if="correction_info['NrKSeFFaKorygowanej']">
+                    <NrKSeF>1</NrKSeF>
+                    <NrKSeFFaKorygowanej t-out="correction_info['NrKSeFFaKorygowanej']"/>
+                </t>
+                <t t-else="">
+                    <NrKSeFN>1</NrKSeFN>
+                </t>
             </DaneFaKorygowanej>
         </t>
 
