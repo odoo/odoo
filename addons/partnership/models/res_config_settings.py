@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -16,4 +19,5 @@ class ResConfigSettings(models.TransientModel):
             "partnership.crm_menu_partners", raise_if_not_found=False
         )
         if crm_menu:
+            _debug.lifecycle("partnership_menu_renamed", label=self.partnership_label)
             crm_menu.name = self.partnership_label

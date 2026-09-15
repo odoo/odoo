@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -6,6 +9,9 @@ class SaleOrder(models.Model):
 
     def _get_name_portal_content_view(self):
         self.check_singleton()
+        _debug.logic(
+            "portal_content_view", order=self, country=self.company_id.country_code
+        )
         return (
             "l10n_br_sales.sale_order_portal_content_brazil"
             if self.company_id.country_code == "BR"

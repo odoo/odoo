@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -14,6 +17,9 @@ class SaleOrder(models.Model):
     def _constraint_unique_assigned_grade(self):
         for so in self:
             if len(set(so.line_ids.mapped("product_id.grade_id"))) > 1:
+                _debug.logic(
+                    "grade_conflict", order=so, grades=so.line_ids.product_id.grade_id
+                )
                 raise ValidationError(
                     so.env._(
                         "You cannot confirm Sale Order %(sale_order_name)s because there are products"
@@ -29,6 +35,13 @@ class SaleOrder(models.Model):
                 lambda l: l.service_tracking == "partnership"
             )
             so.assigned_grade_id = partnership_lines.mapped("product_id.grade_id")[:1]
+            if _debug.logic.enabled and partnership_lines:
+                _debug.logic(
+                    "partnership_grade_assigned",
+                    order=so,
+                    lines=partnership_lines,
+                    grade=so.assigned_grade_id,
+                )
 
     def action_confirm(self):
         res = super().action_confirm()
@@ -39,4 +52,10 @@ class SaleOrder(models.Model):
         for so in self:
             if not so.assigned_grade_id:
                 continue
+            _debug.lifecycle(
+                "partner_grade_set",
+                order=so,
+                partner=so.partner_id.commercial_partner_id,
+                grade=so.assigned_grade_id,
+            )
             so.partner_id.commercial_partner_id.grade_id = so.assigned_grade_id

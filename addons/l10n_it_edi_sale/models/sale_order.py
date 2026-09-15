@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -55,6 +58,13 @@ class SaleOrder(models.Model):
         has_cup_or_cig_fields_filled = self.l10n_it_cig or self.l10n_it_cup
         # If at least one of the origin_document fields is filled, we do not fill missing values with the sale order
         # values to avoid having mismatched origin_document information (e.g. user-entered doc name but SO date)
+        _debug.logic(
+            "it_origin_document",
+            order=self,
+            by="explicit"
+            if has_origin_document_fields_filled
+            else ("from_order" if has_cup_or_cig_fields_filled else "none"),
+        )
         if has_origin_document_fields_filled:
             res.update(
                 {

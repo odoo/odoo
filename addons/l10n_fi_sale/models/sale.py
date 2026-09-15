@@ -2,6 +2,9 @@ import re
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -13,12 +16,16 @@ class SaleOrder(models.Model):
         reference = vals.get("reference", False)
         if reference:
             vals["reference"] = self.compute_payment_reference_finnish(reference)
+            _debug.lifecycle(
+                "finnish_reference_computed", orders=self, reference=vals["reference"]
+            )
         return super().write(vals)
 
     @api.model
     def number2numeric(self, number):
         so_number = re.sub(r"\D", "", number)
         if so_number == "" or so_number is False:
+            _debug.logic("finnish_reference_rejected", reason="no_digits")
             raise UserError(_("Reference must contain numeric characters"))
 
         # Make sure the base number is 3...19 characters long

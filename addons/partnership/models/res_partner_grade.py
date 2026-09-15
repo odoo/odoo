@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartnerGrade(models.Model):
@@ -27,5 +30,8 @@ class ResPartnerGrade(models.Model):
             aggregates=["__count"],
         )
         mapped_data = {grade.id: count for grade, count in partners_data}
+        _debug.perf.count(
+            "grade_partner_count", grades=len(self), rows=len(mapped_data)
+        )
         for grade in self:
             grade.partners_count = mapped_data.get(grade.id, 0)

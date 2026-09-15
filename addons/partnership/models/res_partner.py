@@ -1,5 +1,8 @@
 from odoo import fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -20,12 +23,24 @@ class ResPartner(models.Model):
                     "property_product_pricelist"
                 )
                 if pricelist and pricelist != grade.default_pricelist_id.id:
+                    _debug.logic(
+                        "pricelist_conflict",
+                        partners=self,
+                        grade=grade,
+                        requested=pricelist,
+                    )
                     raise UserError(
                         self.env._(
                             "You are trying to assign two different pricelists (one directly and one from grade (%(grade_name)s)).",
                             grade_name=grade.name,
                         )
                     )
+                _debug.lifecycle(
+                    "pricelist_from_grade",
+                    partners=self,
+                    grade=grade,
+                    pricelist=grade.default_pricelist_id,
+                )
                 vals["specific_property_product_pricelist"] = (
                     grade.default_pricelist_id.id
                 )

@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductPricelist(models.Model):
@@ -14,5 +17,8 @@ class ProductPricelist(models.Model):
             aggregates=["__count"],
         )
         mapped_data = {pricelist.id: count for pricelist, count in partners_data}
+        _debug.perf.count(
+            "pricelist_partner_count", pricelists=len(self), rows=len(mapped_data)
+        )
         for pricelist in self:
             pricelist.partners_count = mapped_data.get(pricelist.id, 0)
