@@ -2692,6 +2692,73 @@ class TestViews(ViewCase):
             '''Invalid domain of <filter name="draft">: “['name', '=', 'dummy']”''',
         )
 
+    def test_date_in_filter(self):
+        arch = """
+            <search string="Search">
+                <field name="name"/>
+                <filter string="Dummy" name="dummy" %s/>
+            </search>
+        """
+        self.assertValid(arch % 'date="create_date" end_date="write_date"')
+        self.assertInvalid(
+            arch % 'end_date="write_date"',
+            'Attribute "end_date" requires a "date" attribute',
+        )
+        self.assertInvalid(
+            arch % 'date="invalid_field"',
+            'Field "invalid_field" does not exist in model "ir.ui.view"',
+        )
+        self.assertInvalid(
+            arch % 'date="name"',
+            'Field "name" in attribute "date" must be a date or datetime field',
+        )
+        self.assertInvalid(
+            arch % 'date="create_date" end_date="invalid_field"',
+            'Field "invalid_field" does not exist in model "ir.ui.view"',
+        )
+        self.assertInvalid(
+            arch % 'date="create_date" end_date="name"',
+            'Field "name" in attribute "end_date" must be a date or datetime field',
+        )
+        # a filter cannot be applied on a field that cannot be searched
+        self.assertInvalid(
+            arch % 'date="create_date" end_date="rate_date"',
+            'Unsearchable field "rate_date" in attribute "end_date"',
+            model='res.currency',
+        )
+
+    def test_date_in_filter_groups_behavior(self):
+        self.patch(self.env.registry['res.partner']._fields['write_date'], 'groups', 'base.group_system')
+        view = self.View.create({
+            'name': 'foo',
+            'model': 'res.partner',
+            'arch': """
+                <search>
+                    <field name="name"/>
+                    <filter name="creation" string="Creation" date="create_date"/>
+                    <filter name="modification" string="Modification" date="write_date"/>
+                    <filter name="period" string="Period" date="create_date" end_date="write_date"/>
+                </search>
+            """,
+        })
+        user_demo = self.user_demo
+        # Make sure demo doesn't have the base.group_system
+        self.assertFalse(user_demo.has_group('base.group_system'))
+        arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath('//filter[@name="creation"]'))
+        self.assertFalse(tree.xpath('//filter[@name="modification"]'))
+        self.assertFalse(tree.xpath('//filter[@name="period"]'))
+
+        user_admin = self.env.ref('base.user_admin')
+        # Make sure admin has the base.group_system
+        self.assertTrue(user_admin.has_group('base.group_system'))
+        arch = self.env['res.partner'].with_user(user_admin).get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath('//filter[@name="creation"]'))
+        self.assertTrue(tree.xpath('//filter[@name="modification"]'))
+        self.assertTrue(tree.xpath('//filter[@name="period"]'))
+
     def test_searchpanel(self):
         arch = """
             <search>

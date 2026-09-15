@@ -1757,6 +1757,13 @@ actual arch.
             group_definitions = self.env['res.groups']._get_group_definitions()
             node_info['model_groups'] &= group_definitions.parse(field.groups, raise_if_not_found=False)
 
+    def _postprocess_tag_filter(self, node, name_manager, node_info):
+        for attribute in ('date', 'end_date'):
+            field = name_manager.model._fields.get(node.get(attribute))
+            if field and field.groups:
+                group_definitions = self.env['res.groups']._get_group_definitions()
+                node_info['model_groups'] &= group_definitions.parse(field.groups, raise_if_not_found=False)
+
     def _postprocess_tag_search(self, node, name_manager, node_info):
         searchpanel = [child for child in node if child.tag == 'searchpanel']
         if searchpanel:
@@ -2017,6 +2024,32 @@ actual arch.
             name = node.get('name')
             desc = f'domain of <filter name="{name}">' if name else 'domain of <filter>'
             self._validate_domain_identifiers(node, name_manager, domain, desc, name_manager.model._name, node_info)
+        if node.get("end_date") and not node.get("date"):
+            self._raise_view_error(_('Attribute "end_date" requires a "date" attribute'), node)
+        for attribute in ("date", "end_date"):
+            field_name = node.get(attribute)
+            if not field_name:
+                continue
+            field = name_manager.model._fields.get(field_name)
+            if field:
+                if field.type not in ('date', 'datetime'):
+                    msg = _(
+                        'Field "%(field_name)s" in attribute "%(attribute)s" must be a date or datetime field',
+                        field_name=field_name, attribute=attribute,
+                    )
+                    self._raise_view_error(msg, node)
+                if not field._description_searchable:
+                    msg = _(
+                        'Unsearchable field "%(field_name)s" in attribute "%(attribute)s"',
+                        field_name=field_name, attribute=attribute,
+                    )
+                    self._raise_view_error(msg, node)
+            else:
+                msg = _(
+                    'Field "%(field_name)s" does not exist in model "%(model_name)s"',
+                    field_name=field_name, model_name=name_manager.model._name,
+                )
+                self._raise_view_error(msg, node)
         if node.get("date") and (default_periods := node.get("default_period")):
             custom_options = {f'custom_{child.attrib["name"]}' for child in node.getchildren()}
             for default_period in default_periods.split(","):

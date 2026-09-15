@@ -315,14 +315,14 @@ export function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fi
 }
 
 /**
- * Creates a domain range condition for a relative date (eg Last Week / in 2 weeks).
- * @param {string} path - Field name.
+ * Returns the bounds [lower, upper[ of the period located `diff` periods away
+ * from the current one, as smart dates or, for quarters, as expressions.
  * @param {number} diff - Magnitude of time shift (can be negative).
  * @param {string} smartUnit - 'day', 'week', 'month', 'quarter' or 'year'.
  * @param {'date'|'datetime'} fieldType - Field type for formatting/offset logic.
- * @returns {Condition} A combined domain condition (AND).
+ * @returns {[string|Expression, string|Expression]}
  */
-export function makeRelativeRange(path, diff, smartUnit, fieldType) {
+export function getRelativeRangeBounds(diff, smartUnit, fieldType) {
     if (smartUnit === "quarter") {
         // The smart date DSL has no quarter anchor, so unlike the units below
         // these bounds are a context_today() expression, resolved client side.
@@ -332,10 +332,7 @@ export function makeRelativeRange(path, diff, smartUnit, fieldType) {
                 fieldType,
                 months ? `${quarterStart}, months=${months}` : quarterStart
             );
-        return connector("&", [
-            condition(path, ">=", bound(3 * diff)),
-            condition(path, "<", bound(3 * (diff + 1))),
-        ]);
+        return [bound(3 * diff), bound(3 * (diff + 1))];
     }
 
     const unit = { week: "w", month: "m", year: "y" }[smartUnit] || "d";
@@ -343,10 +340,20 @@ export function makeRelativeRange(path, diff, smartUnit, fieldType) {
 
     const shift = (n) => (n === 0 ? anchor : `${anchor} ${n < 0 ? "-" : "+"}${Math.abs(n)}${unit}`);
 
-    return connector("&", [
-        condition(path, ">=", shift(diff)),
-        condition(path, "<", shift(diff + 1)),
-    ]);
+    return [shift(diff), shift(diff + 1)];
+}
+
+/**
+ * Creates a domain range condition for a relative date (eg Last Week / in 2 weeks).
+ * @param {string} path - Field name.
+ * @param {number} diff - Magnitude of time shift (can be negative).
+ * @param {string} smartUnit - 'day', 'week', 'month', 'quarter' or 'year'.
+ * @param {'date'|'datetime'} fieldType - Field type for formatting/offset logic.
+ * @returns {Condition} A combined domain condition (AND).
+ */
+export function makeRelativeRange(path, diff, smartUnit, fieldType) {
+    const [lower, upper] = getRelativeRangeBounds(diff, smartUnit, fieldType);
+    return connector("&", [condition(path, ">=", lower), condition(path, "<", upper)]);
 }
 
 /**
