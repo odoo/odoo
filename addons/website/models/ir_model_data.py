@@ -13,7 +13,7 @@ class IrModelData(models.Model):
     @api.model
     def _process_end_unlink_record(self, record):
         if record.env.context['module'].startswith('theme_'):
-            theme_records = self.env['ir.module.module']._theme_model_names.values()
+            theme_records = self.env['theme.engine']._theme_model_names.values()
             if record._name in theme_records:
                 # use active_test to also unlink archived models
                 copy_ids = record.with_context(active_test=False).copy_ids

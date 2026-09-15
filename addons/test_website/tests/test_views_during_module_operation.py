@@ -118,8 +118,8 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Install theme_default on website 1 and website 2
     (website_1 + website_2).theme_id = theme_default
-    env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_1)
-    env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_2)
+    env['theme.engine'].with_context(load_all_views=True)._theme_load(env['ir.module.module'], website_1)
+    env['theme.engine'].with_context(load_all_views=True)._theme_load(env['ir.module.module'], website_2)
 
     key = 'theme_default.theme_child_view'
     domain = [
