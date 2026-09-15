@@ -95,6 +95,22 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
                 'unit_of_measure': 'day',
             })
 
+    def test_a_country_that_ships_no_type_takes_the_countryless_ones(self):
+        country, empty_country = self.env['res.country'].create([
+            {'name': 'Typed Country', 'code': 'Q1'},
+            {'name': 'Untyped Country', 'code': 'Q2'},
+        ])
+        country_type = self.env['hr.work.entry.type'].create({
+            'name': 'Country Leave', 'code': 'COUNTRYTEST', 'country_id': country.id,
+        })
+        countryless_types = self.env['hr.work.entry.type'].search([('country_id', '=', False)])
+
+        types_by_country = self.env['hr.work.entry.type']._get_types_by_country(country | empty_country)
+
+        self.assertEqual(types_by_country[country], country_type)
+        self.assertEqual(types_by_country[empty_country], countryless_types)
+        self.assertEqual(types_by_country[self.env['res.country']], countryless_types)
+
     def test_users_tz_shift_back(self):
         """This test follows closely related bug report and simulates its situation.
         We're located in Saipan (GMT+10) and we allocate some employee a leave from 19Aug-20Aug.
