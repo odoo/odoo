@@ -342,6 +342,9 @@ export class Field extends Component {
         if (["many2one", "many2one_reference"].includes(fields[name].type)) {
             let relatedFields = fieldInfo.field.relatedFields;
             if (relatedFields) {
+                if (relatedFields instanceof Function) {
+                    relatedFields = relatedFields(fieldInfo);
+                }
                 relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
                 fieldInfo.viewMode = "default";
                 fieldInfo.views = {
