@@ -826,6 +826,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
     def test_b2bi_invoice_rejects_invalid_report_values(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
         self.company.partner_id.company_registry = False
+        self.company.partner_id.vat = False
         self.b2bi_customer.country_id.code = 'B1'
         self.b2bi_customer.with_context(no_vat_validation=True).vat = 'BE12345678901234567'
         self.b2c_customer.country_id = False
