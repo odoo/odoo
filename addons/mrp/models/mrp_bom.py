@@ -392,12 +392,22 @@ class MrpBom(models.Model):
             product_ids.add(product_id.id)
         update_product_boms()
         product_ids.clear()
+        visited_lines = set()
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
 
             if current_line._skip_bom_line(current_product):
                 continue
+
+            active_line = (current_line.id, current_product.id)
+            if active_line in visited_lines:
+                raise UserError(_(
+                    "Recursive Bill of Materials detected. "
+                    "The Bill of Materials for '%s' contains itself directly or indirectly.",
+                    current_product.display_name
+                ))
+            visited_lines.add(active_line)
 
             line_quantity = current_qty * current_line.product_qty
             if not current_line.product_id in product_boms:
