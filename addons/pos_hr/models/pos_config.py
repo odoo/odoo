@@ -53,7 +53,13 @@ class PosConfig(models.Model):
             "pos_config_employee_lists_written",
             configs=self,
             escalated_fields=len(sudo_vals),
-            managers_linked=len(vals["advanced_employee_ids"]),
+            # the key is `pop`ped into `sudo_vals` on the non-superuser path,
+            # so it is read from wherever it ended up
+            advanced_commands=len(
+                vals.get("advanced_employee_ids")
+                or sudo_vals.get("advanced_employee_ids")
+                or ()
+            ),
         )
         res = super().write(vals)
         if sudo_vals:
