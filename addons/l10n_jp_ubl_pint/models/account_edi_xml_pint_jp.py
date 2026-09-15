@@ -67,8 +67,8 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # [aligned-ibrp-052] An Invoice MUST have an invoice period (ibg-14) or an Invoice line period (ibg-26).
         if invoice and not nodes:
             nodes.update({
-                'cbc:StartDate': {'_text': invoice.invoice_date},
-                'cbc:EndDate': {'_text': invoice.invoice_date},
+                'cbc:StartDate': invoice.invoice_date,
+                'cbc:EndDate': invoice.invoice_date,
             })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):

@@ -91,9 +91,9 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
             if identifier_vals:
                 nodes.append({
-                    'cbc:CompanyID': {'_text': None},
+                    'cbc:CompanyID': None,
                     'cac:TaxScheme': {
-                        'cbc:ID': {'_text': identifier_vals['scheme']},
+                        'cbc:ID': identifier_vals['scheme'],
                     },
                 })
 
@@ -109,7 +109,7 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             and commercial_partner.name
         ):
             nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': None,
                     'schemeID': None,
