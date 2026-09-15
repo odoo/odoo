@@ -233,6 +233,30 @@ class TestPosDataLoading(CommonPosTest):
         self.assertNotIn(config_id, ids_to_remove,
             "Existing active record should not be returned by filter_local_data")
 
+    def test_filter_local_data_ignores_unknown_model(self):
+        """A model the client cached but that no longer exists must be skipped, not raise."""
+        session = self._get_session()
+
+        result = session.filter_local_data({
+            'pos.category': ['999999999'],
+            'pos.product.template.snooze': ['1'],
+        })
+        self.assertNotIn('pos.product.template.snooze', result,
+            "Unknown model should be absent from the result")
+        self.assertIn('pos.category', result,
+            "Known models must still be filtered when an unknown one is present")
+
+    def test_load_data_with_unknown_cached_model(self):
+        """load_data must not fail when the client reports records for a stale model."""
+        session = self._get_session()
+
+        data = session.load_data({
+            'records': {'pos.product.template.snooze': {'1': 0}},
+        })
+        self.assertIn('pos.config', data,
+            "Session must still load when the client cache holds a stale model")
+        self.assertNotIn('pos.product.template.snooze', data)
+
     # -------------------------------------------------------------------------
     # Pagination via search_params
     # -------------------------------------------------------------------------
