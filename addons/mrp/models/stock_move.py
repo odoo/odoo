@@ -3,7 +3,10 @@ from collections import defaultdict
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import OrderedSet, float_is_zero
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -421,6 +424,12 @@ class StockMove(models.Model):
                     values["location_dest_id"] = mo.location_dest_id.id
                 if not values.get("location_final_id"):
                     values["location_final_id"] = mo.warehouse_id.lot_stock_id.id
+        _debug.lifecycle(
+            "create",
+            count=len(vals_list),
+            productions=len(productions_by_id),
+            locations=len(locations_by_id),
+        )
         return super().create(vals_list)
 
     @api.model
@@ -456,6 +465,13 @@ class StockMove(models.Model):
             else {}
         )
         res = super().write(vals)
+        _debug.lifecycle(
+            "write",
+            moves=self,
+            fields=list(vals),
+            rereserve=len(moves_to_rereserve),
+            manual=len(moves_to_update) if moves_to_update else 0,
+        )
         if moves_to_rereserve:
             moves_to_rereserve._action_assign()
         if moves_to_update:
@@ -539,6 +555,13 @@ class StockMove(models.Model):
                     )
                 )
 
+        _debug.pipeline(
+            "move_reprocurement",
+            moves=self,
+            assigned=len(to_assign),
+            candidates=len(proc_move),
+            procurements=len(procurements),
+        )
         if procurements:
             self.env["stock.rule"].run(procurements)
 
@@ -550,6 +573,7 @@ class StockMove(models.Model):
                 key = (move.raw_material_production_id.id, move.workorder_id.id)
                 lines_by_owner[key].extend(move.move_line_ids.ids)
         move_lines = self.env["stock.move.line"]
+        _debug.pipeline("raw_move_lines_owned", moves=self, owners=len(lines_by_owner))
         for (production_id, workorder_id), line_ids in lines_by_owner.items():
             move_lines.browse(line_ids).write(
                 {"production_id": production_id, "workorder_id": workorder_id}
@@ -614,6 +638,12 @@ class StockMove(models.Model):
         )
         explodable = self.filtered(lambda move: move._is_explodable())
         kit_boms = explodable._get_kit_boms()
+        _debug.pipeline(
+            "move_explode",
+            moves=self,
+            explodable=len(explodable),
+            kits=len(kit_boms),
+        )
         for move in self:
             bom = kit_boms.get(move.product_id) if move in explodable else None
             if not bom:
@@ -639,6 +669,7 @@ class StockMove(models.Model):
 
         if phantom_moves_vals_list:
             phantom_moves = self.env["stock.move"].create(phantom_moves_vals_list)
+            _debug.lifecycle("phantom_moves_created", moves=phantom_moves)
             phantom_moves._update_procure_method()
             moves_ids_to_return |= phantom_moves.action_explode().ids
         move_to_unlink = self.env["stock.move"].browse(moves_ids_to_unlink).sudo()
@@ -689,6 +720,11 @@ class StockMove(models.Model):
                 lambda p: all(m.state == "cancel" for m in p.move_raw_ids)
             )
             if mo_to_cancel:
+                _debug.lifecycle(
+                    "production_cancelled_by_moves",
+                    moves=self,
+                    productions=mo_to_cancel,
+                )
                 mo_to_cancel._action_cancel()
         return res
 
@@ -894,6 +930,14 @@ class StockMove(models.Model):
                 )
             else:
                 return 0.0
+        _debug.logic(
+            "kit_quantity",
+            kit_bom=kit_bom.id,
+            product=product_id.id,
+            lines=len(bom_sub_lines),
+            ratios=len(qty_ratios),
+            qty=min(qty_ratios) // 1 if qty_ratios else 0.0,
+        )
         if qty_ratios:
             return min(qty_ratios) // 1
         else:

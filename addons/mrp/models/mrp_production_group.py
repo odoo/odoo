@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProductionGroup(models.Model):
@@ -38,4 +41,5 @@ class MrpProductionGroup(models.Model):
     @api.constrains("child_ids")
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle("child_ids"):
+            _debug.logic("production_group_cycle", groups=self)
             raise ValidationError(_("You cannot create cyclic dependency."))

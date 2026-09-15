@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from math import log10
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     float_compare,
     float_is_zero,
@@ -13,6 +14,8 @@ from odoo.tools import (
     format_date,
     get_lang,
 )
+
+_debug = DebugLog(__name__)
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
@@ -86,8 +89,15 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         production = self.env["mrp.production"].browse(production_id)
         production = production.with_context(warehouse_id=production.warehouse_id.id)
 
-        components = self._get_components_data(production, level=1, current_index="")
-        operations = self._get_operations_data(production, level=1, current_index="")
+        with _debug.perf(
+            "mo_overview_report", cr=self.env.cr, production=production_id
+        ):
+            components = self._get_components_data(
+                production, level=1, current_index=""
+            )
+            operations = self._get_operations_data(
+                production, level=1, current_index=""
+            )
         initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(
             components, operations
         )
@@ -109,6 +119,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 for bom_line in production.bom_id.operation_ids
                 if bom_line not in production.workorder_ids.operation_id
             )
+            _debug.logic("mo_overview_drift", missing=len(missing_components))
             for line in missing_components:
                 line_cost = (
                     line.product_id.uom_id._compute_price(
@@ -777,6 +788,12 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 "qty_reserved": {},
             }
         components = []
+        _debug.logic(
+            "mo_overview_replenish_source",
+            production=production.id,
+            by="moves" if production.state == "done" else "forecast",
+            level=level,
+        )
         if production.state == "done":
             replenish_data = self._get_replenishment_from_moves(
                 production, replenish_data
@@ -808,6 +825,13 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 }
             )
 
+        _debug.pipeline(
+            "mo_overview_components",
+            production=production.id,
+            raw_moves=len(production.move_raw_ids),
+            components=len(components),
+            level=level,
+        )
         return components
 
     def _format_component_move(

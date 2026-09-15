@@ -2,8 +2,11 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
+
+_debug = DebugLog(__name__)
 
 
 class MrpUnbuild(models.Model):
@@ -206,11 +209,13 @@ class MrpUnbuild(models.Model):
                 vals["name"] = self.env["ir.sequence"].next_by_code("mrp.unbuild") or _(
                     "New"
                 )
+        _debug.lifecycle("create", count=len(vals_list))
         return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if "done" in self.mapped("state"):
+            _debug.logic("unbuild_refused", reason="delete_done", unbuilds=self)
             raise UserError(
                 _("You cannot delete an unbuild order if the state is 'Done'.")
             )
@@ -242,17 +247,21 @@ class MrpUnbuild(models.Model):
         self._check_company()
         self = self.with_env(self.env(context=clean_context(self.env.context)))
         if self.product_id.tracking != "none" and not self.lot_id.id:
+            _debug.logic("unbuild_refused", reason="no_lot", unbuild=self.id)
             raise UserError(_("You should provide a lot number for the final product."))
 
         if self.mo_id and self.mo_id.state != "done":
+            _debug.logic("unbuild_refused", reason="mo_not_done", unbuild=self.id)
             raise UserError(_("You cannot unbuild a undone manufacturing order."))
 
         if self.mo_id and self.mo_id.product_uom_id.is_zero(self.mo_id.qty_produced):
+            _debug.logic("unbuild_refused", reason="nothing_produced", unbuild=self)
             raise UserError(
                 _("You cannot unbuild a manufacturing order that produced nothing.")
             )
 
         if not self.mo_id and not self.bom_id:
+            _debug.logic("unbuild_refused", reason="no_bom_no_mo", unbuild=self.id)
             raise UserError(
                 _(
                     "%(product)s has no bill of materials, so there is nothing to"
@@ -267,6 +276,7 @@ class MrpUnbuild(models.Model):
         produce_moves = self._create_produce_moves()
         produce_moves._action_confirm()
         produce_moves.quantity = 0
+        _debug.pipeline("unbuild", consume=consume_moves, produce=produce_moves)
 
         previously_unbuilt_lots = (
             (self.mo_id.unbuild_ids - self)
@@ -371,6 +381,7 @@ class MrpUnbuild(models.Model):
                 move.quantity += needed_quantity
 
         unbuild_lines._apply_putaway_strategy()
+        _debug.pipeline("unbuild_lines_built", unbuild=self.id, lines=unbuild_lines)
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()
@@ -382,6 +393,7 @@ class MrpUnbuild(models.Model):
         consume_moves.mapped("move_line_ids").write(
             {"produce_line_ids": [(6, 0, produced_move_line_ids.ids)]}
         )
+        _debug.lifecycle("unbuild_done", unbuild=self.id, mo=self.mo_id)
         if self.mo_id:
             unbuild_msg = _(
                 "%(qty)s %(measure)s unbuilt in %(order)s",
@@ -437,6 +449,7 @@ class MrpUnbuild(models.Model):
                         quantity,
                         byproduct_id=byproduct.id,
                     )
+        _debug.pipeline("unbuild_consume_moves", unbuilds=self, moves=moves)
         return moves
 
     def _create_produce_moves(self):
@@ -467,6 +480,7 @@ class MrpUnbuild(models.Model):
                         line_data["qty"],
                         bom_line_id=line.id,
                     )
+        _debug.pipeline("unbuild_produce_moves", unbuilds=self, moves=moves)
         return moves
 
     def _create_move_from_existing_move(
@@ -524,6 +538,12 @@ class MrpUnbuild(models.Model):
         )
         unbuild_qty = self.product_uom_id._compute_quantity(
             self.product_qty, self.product_id.uom_id
+        )
+        _debug.logic(
+            "unbuild_availability",
+            unbuild=self.id,
+            available=available_qty,
+            wanted=unbuild_qty,
         )
         if float_compare(available_qty, unbuild_qty, precision_digits=precision) >= 0:
             return self.action_unbuild()

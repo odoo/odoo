@@ -5,6 +5,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpAccountWipAccountingLine(models.TransientModel):
@@ -141,6 +144,12 @@ class MrpAccountWipAccounting(models.TransientModel):
             )
         )
         overhead_value = productions.workorder_ids._get_cost(date)
+        _debug.logic(
+            "wip_line_values",
+            productions=productions,
+            components=compo_value,
+            overhead=overhead_value,
+        )
         sval_acc = (
             self.env["product.category"]
             ._fields["property_stock_valuation_account_id"]
@@ -191,6 +200,7 @@ class MrpAccountWipAccounting(models.TransientModel):
     def action_confirm(self):
         self.check_singleton()
         if len(self.mo_ids.company_id) > 1:
+            _debug.logic("wip_refused", reason="multi_company", productions=self.mo_ids)
             raise UserError(
                 _(
                     "Post one WIP entry per company: the selected orders belong "
@@ -199,6 +209,7 @@ class MrpAccountWipAccounting(models.TransientModel):
                 )
             )
         if unaccounted := self.line_ids.filtered(lambda line: not line.account_id):
+            _debug.logic("wip_refused", reason="no_account", lines=len(unaccounted))
             raise UserError(
                 _(
                     "No account is configured for: %(labels)s. Set the WIP accounts "
@@ -213,12 +224,14 @@ class MrpAccountWipAccounting(models.TransientModel):
             )
             != 0
         ):
+            _debug.logic("wip_refused", reason="unbalanced", lines=len(self.line_ids))
             raise UserError(
                 _(
                     "Please make sure the total credit amount equals the total debit amount."
                 )
             )
         if self.reversal_date <= self.date:
+            _debug.logic("wip_refused", reason="reversal_before_posting")
             raise UserError(_("Reversal date must be after the posting date."))
         move = (
             self.env["account.move"]
@@ -243,6 +256,12 @@ class MrpAccountWipAccounting(models.TransientModel):
                     ],
                 }
             )
+        )
+        _debug.lifecycle(
+            "wip_entry_posted",
+            move=move.id,
+            productions=self.mo_ids,
+            lines=len(self.line_ids),
         )
         move._post()
         move._reverse_moves(

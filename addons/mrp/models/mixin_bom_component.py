@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinBomComponent(models.AbstractModel):
@@ -69,6 +72,12 @@ class MixinBomComponent(models.AbstractModel):
                 and product_uom
                 and not record.product_uom_id._has_common_reference(product_uom)
             ):
+                _debug.logic(
+                    "bom_component_refused",
+                    reason="uom_category_mismatch",
+                    record=record.id,
+                    model=record._name,
+                )
                 raise ValidationError(record._get_uom_mismatch_message())
 
     def _get_uom_mismatch_message(self):

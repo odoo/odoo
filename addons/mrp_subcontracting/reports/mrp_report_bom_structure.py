@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
@@ -61,6 +64,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     uom_id=bom.product_uom_id,
                     params={"subcontractor_ids": bom.subcontractor_ids},
                 )
+            _debug.logic(
+                "subcontract_report_seller",
+                bom=bom.id,
+                seller=seller.id if seller else False,
+                by="template_sellers" if not res["product"] else "select_seller",
+            )
             if seller:
                 res["subcontracting"] = self._get_subcontracting_line(
                     bom, seller, level + 1, res["quantity"]

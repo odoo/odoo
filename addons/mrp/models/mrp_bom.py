@@ -3,10 +3,13 @@ from collections import defaultdict, deque
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import TransactionMemo, float_compare
 from odoo.tools.misc import OrderedSet, clean_context
 
 BOM_BY_PRODUCT = TransactionMemo("mrp.bom.by_product", invalidated_by=("mrp.bom",))
+
+_debug = DebugLog(__name__)
 
 
 class ExplodeScratch(dict):
@@ -201,31 +204,35 @@ class MrpBom(models.Model):
         subcomponents_by_product = {}
         checked = self.browse()
         boms_to_check = self
-        while boms_to_check:
-            reached = self.env["product.product"]
-            for bom in boms_to_check:
-                if not bom.active:
-                    continue
-                reached |= bom.bom_line_ids.product_id
-                for components, finished in bom._get_cycle_seeds():
-                    self._check_no_cycle_from(
-                        components, finished, subcomponents_by_product
-                    )
-                    reached |= components
-            checked |= boms_to_check
-            reached |= self.env["product.product"].browse(
-                {
-                    product.id
-                    for components in subcomponents_by_product.values()
-                    for product in components
-                }
-            )
-            boms_to_check = (
-                self.search(Domain.OR(self._get_domain_bom(p) for p in reached))
-                - checked
-                if reached
-                else self.browse()
-            )
+        rounds = 0  # debuglog
+        with _debug.perf("bom_cycle_check", cr=self.env.cr, boms=self) as span:
+            while boms_to_check:
+                rounds += 1  # debuglog
+                reached = self.env["product.product"]
+                for bom in boms_to_check:
+                    if not bom.active:
+                        continue
+                    reached |= bom.bom_line_ids.product_id
+                    for components, finished in bom._get_cycle_seeds():
+                        self._check_no_cycle_from(
+                            components, finished, subcomponents_by_product
+                        )
+                        reached |= components
+                checked |= boms_to_check
+                reached |= self.env["product.product"].browse(
+                    {
+                        product.id
+                        for components in subcomponents_by_product.values()
+                        for product in components
+                    }
+                )
+                boms_to_check = (
+                    self.search(Domain.OR(self._get_domain_bom(p) for p in reached))
+                    - checked
+                    if reached
+                    else self.browse()
+                )
+            span.set(rounds=rounds, checked=len(checked))
 
     @api.depends(
         "product_tmpl_id.attribute_line_ids.value_ids",
@@ -271,6 +278,12 @@ class MrpBom(models.Model):
             self._add_missing_subcomponents(components, subcomponents)
             for component in components:
                 if component in finished_products:
+                    _debug.logic(
+                        "bom_cycle_detected",
+                        bom=self.id,
+                        component=component.id,
+                        finished=finished_products,
+                    )
                     raise ValidationError(
                         _(
                             "The current configuration is incorrect because it would create a cycle between these products: %s.",
@@ -292,6 +305,11 @@ class MrpBom(models.Model):
         unknown = products.filtered(lambda p: p not in subcomponents)
         if not unknown:
             return
+        _debug.pipeline(
+            "bom_subcomponents_resolved",
+            products=len(products),
+            unknown=len(unknown),
+        )
         bom_by_product = self._get_bom_by_product(unknown)
         for product in unknown:
             subcomponents[product] = (
@@ -454,6 +472,7 @@ class MrpBom(models.Model):
                 for values in vals_list
             ]
         res = super().create(vals_list)
+        _debug.lifecycle("create", count=len(res), boms=res)
         parent_production_id = self.env.context.get("parent_production_id")
         if parent_production_id:
             env = self.env(context=clean_context(self.env.context))
@@ -472,12 +491,14 @@ class MrpBom(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        _debug.lifecycle("write", boms=self, fields=list(vals))
         if any(field_name in vals for field_name in self._OUTDATING_FIELDS):
             self._update_outdated_bom_in_productions()
         return res
 
     def copy(self, default=None):
         new_boms = super().copy({**(default or {}), "operation_ids": []})
+        _debug.lifecycle("copy", source=self, copies=new_boms)
         for old_bom, new_bom in zip(self, new_boms, strict=True):
             operations = old_bom.operation_ids
             if not operations:
@@ -507,6 +528,7 @@ class MrpBom(models.Model):
 
     def action_archive(self):
         operations = self.operation_ids
+        _debug.lifecycle("archive", boms=self, operations=len(operations))
         operations.archived_with_bom = True
         operations.action_archive()
         return super().action_archive()
@@ -515,6 +537,7 @@ class MrpBom(models.Model):
         operations = self.with_context(active_test=False).operation_ids.filtered(
             "archived_with_bom"
         )
+        _debug.lifecycle("unarchive", boms=self, operations=len(operations))
         operations.action_unarchive()
         operations.archived_with_bom = False
         return super().action_unarchive()
@@ -550,17 +573,19 @@ class MrpBom(models.Model):
         )
         report = self.env["report.mrp.report_bom_structure"]
         incomplete = self.browse()
-        for bom in self:
-            bom_data = report.with_context(minimized=True)._get_bom_data(
-                bom, warehouse, bom.product_id, ignore_stock=True
-            )
-            bom.days_to_prepare_mo = report._get_max_component_delay(
-                bom_data["components"]
-            )
-            if bom_data.get("availability_state") == "unavailable" and not bom_data.get(
-                "components_available", True
-            ):
-                incomplete |= bom
+        with _debug.perf("bom_days_computed", cr=self.env.cr, boms=self) as span:
+            for bom in self:
+                bom_data = report.with_context(minimized=True)._get_bom_data(
+                    bom, warehouse, bom.product_id, ignore_stock=True
+                )
+                bom.days_to_prepare_mo = report._get_max_component_delay(
+                    bom_data["components"]
+                )
+                if bom_data.get(
+                    "availability_state"
+                ) == "unavailable" and not bom_data.get("components_available", True):
+                    incomplete |= bom
+            span.set(incomplete=len(incomplete))
         if not incomplete:
             return None
         return {
@@ -587,6 +612,12 @@ class MrpBom(models.Model):
         if self.env["stock.warehouse.orderpoint"].search_count(
             [("product_id", "in", product_ids)], limit=1
         ):
+            _debug.logic(
+                "bom_refused",
+                reason="kit_has_orderpoint",
+                boms=self,
+                products=len(product_ids),
+            )
             raise ValidationError(
                 _(
                     "You can not create a kit-type bill of materials for products that have at least one reordering rule."
@@ -600,6 +631,7 @@ class MrpBom(models.Model):
             and bom.product_uom_id.compare(bom.batch_size, 0.0) <= 0
             for bom in self
         ):
+            _debug.logic("bom_refused", reason="batch_size_not_positive", boms=self)
             raise ValidationError(self.env._("The batch size must be positive!"))
 
     @api.ondelete(at_uninstall=False)
@@ -608,6 +640,7 @@ class MrpBom(models.Model):
             [("bom_id", "in", self.ids), ("state", "not in", ["done", "cancel"])],
             limit=1,
         ):
+            _debug.logic("bom_refused", reason="running_production", boms=self)
             raise UserError(
                 _(
                     "You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first."
@@ -670,6 +703,12 @@ class MrpBom(models.Model):
                 unknown |= product
             elif bom_id:
                 bom_by_product[product] = self.browse(bom_id)
+        _debug.perf.count(
+            "bom_by_product_memo",
+            products=len(products),
+            hits=len(products) - len(unknown),
+            misses=len(unknown),
+        )
         if not unknown:
             return bom_by_product
         found = self._search_bom_by_product(unknown, picking_type, company_id, bom_type)
@@ -682,41 +721,55 @@ class MrpBom(models.Model):
 
     @api.model
     def _search_bom_by_product(self, products, picking_type, company_id, bom_type):
-        bom_by_product = defaultdict(lambda: self.env["mrp.bom"])
-        domain = self._get_domain_bom(
-            products,
-            picking_type=picking_type,
-            company_id=company_id,
-            bom_type=bom_type,
-        )
+        with _debug.perf(
+            "bom_search",
+            cr=self.env.cr,
+            products=len(products),
+            bom_type=bom_type or "any",
+        ) as span:
+            bom_by_product = defaultdict(lambda: self.env["mrp.bom"])
+            domain = self._get_domain_bom(
+                products,
+                picking_type=picking_type,
+                company_id=company_id,
+                bom_type=bom_type,
+            )
 
-        if len(products) == 1:
-            bom = self.search(domain, order="sequence, product_id, id", limit=1)
-            if bom:
-                bom_by_product[products] = bom
+            if len(products) == 1:
+                bom = self.search(domain, order="sequence, product_id, id", limit=1)
+                if bom:
+                    bom_by_product[products] = bom
+                span.set(boms=len(bom), matched=len(bom_by_product))
+                return bom_by_product
+
+            boms = self.search(domain, order="sequence, product_id, id")
+            span.set(boms=len(boms))
+
+            bom_by_product_tmpl = defaultdict(lambda: self.env["mrp.bom"])
+            for bom in boms:
+                if (
+                    bom.product_id
+                    and (bom.product_id.product_tmpl_id not in bom_by_product_tmpl)
+                    and (bom.product_id not in bom_by_product)
+                ):
+                    bom_by_product[bom.product_id] = bom
+                elif (
+                    not bom.product_id
+                    and bom.product_tmpl_id not in bom_by_product_tmpl
+                ):
+                    bom_by_product_tmpl[bom.product_tmpl_id] = bom
+
+            for product in products:
+                if (
+                    product.product_tmpl_id in bom_by_product_tmpl
+                    and product not in bom_by_product
+                ):
+                    bom_by_product[product] = bom_by_product_tmpl[
+                        product.product_tmpl_id
+                    ]
+
+            span.set(matched=len(bom_by_product), by_template=len(bom_by_product_tmpl))
             return bom_by_product
-
-        boms = self.search(domain, order="sequence, product_id, id")
-
-        bom_by_product_tmpl = defaultdict(lambda: self.env["mrp.bom"])
-        for bom in boms:
-            if (
-                bom.product_id
-                and (bom.product_id.product_tmpl_id not in bom_by_product_tmpl)
-                and (bom.product_id not in bom_by_product)
-            ):
-                bom_by_product[bom.product_id] = bom
-            elif not bom.product_id and bom.product_tmpl_id not in bom_by_product_tmpl:
-                bom_by_product_tmpl[bom.product_tmpl_id] = bom
-
-        for product in products:
-            if (
-                product.product_tmpl_id in bom_by_product_tmpl
-                and product not in bom_by_product
-            ):
-                bom_by_product[product] = bom_by_product_tmpl[product.product_tmpl_id]
-
-        return bom_by_product
 
     @api.model
     def _get_explosion_scratch(self):
@@ -726,81 +779,90 @@ class MrpBom(models.Model):
     def _explode(
         self, product, quantity, picking_type=False, never_attribute_values=False
     ):
-        self = self.with_context(bom_cost_share_cache=self._get_explosion_scratch())
-        product_boms = self._get_kit_closure(
-            product, picking_type, never_attribute_values
-        )
-
-        boms_done = [
-            (
-                self,
-                self.env["mrp.bom.line"]._prepare_bom_done_values(
-                    quantity, product, quantity, []
-                ),
+        with _debug.perf(
+            "bom_explode",
+            cr=self.env.cr,
+            bom=self.id,
+            product=product.id,
+            quantity=quantity,
+        ) as span:
+            self = self.with_context(bom_cost_share_cache=self._get_explosion_scratch())
+            product_boms = self._get_kit_closure(
+                product, picking_type, never_attribute_values
             )
-        ]
-        lines_done = []
-        bom_lines = deque(
-            (bom_line, product, quantity, False, frozenset((product.id,)))
-            for bom_line in self.bom_line_ids
-        )
-        while bom_lines:
-            current_line, current_product, current_qty, parent_line, ancestors = (
-                bom_lines.popleft()
-            )
+            span.set(kits=len(product_boms))
 
-            if current_line._is_bom_line_skipped(
-                current_product, never_attribute_values
-            ):
-                continue
-
-            line_quantity = current_qty * current_line.product_qty
-            bom = product_boms.get(current_line.product_id)
-            if bom:
-                child_ancestors = ancestors | {current_line.product_id.id}
-                converted_line_quantity = current_line._get_exploded_kit_quantity(
-                    bom, line_quantity, ancestors
+            boms_done = [
+                (
+                    self,
+                    self.env["mrp.bom.line"]._prepare_bom_done_values(
+                        quantity, product, quantity, []
+                    ),
                 )
-                bom_lines.extendleft(
-                    (
-                        line,
-                        current_line.product_id,
-                        converted_line_quantity,
-                        current_line,
-                        child_ancestors,
+            ]
+            lines_done = []
+            bom_lines = deque(
+                (bom_line, product, quantity, False, frozenset((product.id,)))
+                for bom_line in self.bom_line_ids
+            )
+            while bom_lines:
+                current_line, current_product, current_qty, parent_line, ancestors = (
+                    bom_lines.popleft()
+                )
+
+                if current_line._is_bom_line_skipped(
+                    current_product, never_attribute_values
+                ):
+                    continue
+
+                line_quantity = current_qty * current_line.product_qty
+                bom = product_boms.get(current_line.product_id)
+                if bom:
+                    child_ancestors = ancestors | {current_line.product_id.id}
+                    converted_line_quantity = current_line._get_exploded_kit_quantity(
+                        bom, line_quantity, ancestors
                     )
-                    for line in reversed(bom.bom_line_ids)
-                )
-                boms_done.append(
-                    (
-                        bom,
-                        current_line._prepare_bom_done_values(
+                    bom_lines.extendleft(
+                        (
+                            line,
+                            current_line.product_id,
                             converted_line_quantity,
-                            current_product,
-                            quantity,
-                            boms_done,
-                        ),
+                            current_line,
+                            child_ancestors,
+                        )
+                        for line in reversed(bom.bom_line_ids)
                     )
-                )
-            else:
-                line_quantity = current_line.product_uom_id.round(
-                    line_quantity, rounding_method="UP"
-                )
-                lines_done.append(
-                    (
-                        current_line,
-                        current_line._prepare_line_done_values(
-                            line_quantity,
-                            current_product,
-                            quantity,
-                            parent_line,
-                            boms_done,
-                        ),
+                    boms_done.append(
+                        (
+                            bom,
+                            current_line._prepare_bom_done_values(
+                                converted_line_quantity,
+                                current_product,
+                                quantity,
+                                boms_done,
+                            ),
+                        )
                     )
-                )
+                else:
+                    line_quantity = current_line.product_uom_id.round(
+                        line_quantity, rounding_method="UP"
+                    )
+                    lines_done.append(
+                        (
+                            current_line,
+                            current_line._prepare_line_done_values(
+                                line_quantity,
+                                current_product,
+                                quantity,
+                                parent_line,
+                                boms_done,
+                            ),
+                        )
+                    )
 
-        lines_done = self._round_last_line_done(lines_done)
-        return boms_done, lines_done
+            lines_done = self._round_last_line_done(lines_done)
+            span.set(boms=len(boms_done), lines=len(lines_done))
+            return boms_done, lines_done
 
     def _get_kit_component_qty(self, product):
         self.check_singleton()
@@ -829,12 +891,18 @@ class MrpBom(models.Model):
             self.company_id.id or self.env.context.get("company_id"),
         )
         if scratch is not None and (memoised := scratch.get(memo_key)) is not None:
+            _debug.perf.count(
+                "kit_closure_memo", hit=True, bom=self.id, kits=len(memoised)
+            )
             return {
                 product: bom.with_env(self.env) for product, bom in memoised.items()
             }
+        _debug.perf.count("kit_closure_memo", hit=False, bom=self.id)
         product_boms = {}
         frontier = [(line, product) for line in self.bom_line_ids]
+        depth = 0  # debuglog
         while frontier:
+            depth += 1  # debuglog
             products = self.env["product.product"].browse()
             for line, parent in frontier:
                 if (
@@ -857,6 +925,9 @@ class MrpBom(models.Model):
                 frontier += [(line, child_product) for line in bom.bom_line_ids]
         if scratch is not None:
             scratch[memo_key] = product_boms
+        _debug.pipeline(
+            "kit_closure_walked", bom=self.id, depth=depth, kits=len(product_boms)
+        )
         return product_boms
 
     @api.model
@@ -889,6 +960,14 @@ class MrpBom(models.Model):
                 outdated |= production
             else:
                 current |= production
+        _debug.pipeline(
+            "bom_outdating_scanned",
+            boms=self,
+            productions=len(productions),
+            outdated=len(outdated),
+            current=len(current),
+            skip_unmark=bool(skip_unmark),
+        )
         outdated.filtered(lambda p: not p.is_outdated_bom).is_outdated_bom = True
         if not skip_unmark:
             current.filtered("is_outdated_bom").is_outdated_bom = False
@@ -947,6 +1026,13 @@ class MrpBom(models.Model):
             all_products.update(product_ids)
             all_templates.update(template_ids)
         documents = self._search_extra_attachments(all_products, all_templates)
+        _debug.perf.count(
+            "bom_extra_attachments",
+            boms=len(targets_by_bom),
+            products=len(all_products),
+            templates=len(all_templates),
+            documents=len(documents),
+        )
         by_product = defaultdict(lambda: self.env["document.document"])
         by_template = defaultdict(lambda: self.env["document.document"])
         for document in documents:

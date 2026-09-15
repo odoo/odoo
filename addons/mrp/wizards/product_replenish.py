@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductReplenish(models.TransientModel):
@@ -49,6 +52,12 @@ class ProductReplenish(models.TransientModel):
                 product_tmpl_id.bom_ids[0].produce_delay
                 + product_tmpl_id.bom_ids[0].days_to_prepare_mo
             )
+        _debug.logic(
+            "replenish_date_planned",
+            template=product_tmpl_id.id,
+            route=route.id,
+            manufacture_delay=delay,
+        )
         return fields.Datetime.add(date, days=delay)
 
     def _get_domain_route(self, product_tmpl_id):
@@ -62,5 +71,10 @@ class ProductReplenish(models.TransientModel):
         if manufacture_route and product_tmpl_id.bom_ids.filtered(
             lambda b: b.type == "normal"
         ):
+            _debug.logic(
+                "replenish_route_widened",
+                template=product_tmpl_id.id,
+                route=manufacture_route.id,
+            )
             domain = Domain.OR([domain, Domain("id", "in", manufacture_route.ids)])
         return domain

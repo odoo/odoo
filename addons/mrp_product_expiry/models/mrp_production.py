@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProduction(models.Model):
@@ -12,8 +15,12 @@ class MrpProduction(models.Model):
 
     def _check_expired_lots(self):
         if self.env.context.get("skip_expired"):
+            _debug.logic("expiry_check_skipped", productions=self, by="context")
             return False
         expired_lot_ids = self.move_raw_ids.move_line_ids._filtered_expired().lot_id.ids
+        _debug.logic(
+            "expiry_checked", productions=self, expired_lots=len(expired_lot_ids)
+        )
         if expired_lot_ids:
             return {
                 "name": self.env._("Confirmation"),

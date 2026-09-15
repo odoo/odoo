@@ -5,6 +5,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -51,6 +54,11 @@ class StockPicking(models.Model):
         res = super()._action_done()
         for picking in self:
             productions_to_done = picking._get_subcontract_production().sudo()
+            _debug.pipeline(
+                "subcontract_pickings_done",
+                picking=picking.id,
+                productions=productions_to_done,
+            )
             productions_to_done.button_mark_done()
             production_moves = (
                 productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
@@ -187,6 +195,12 @@ class StockPicking(models.Model):
                         allow_more=True
                     )._split_productions(
                         {production_to_split: [original_qty, move.product_qty]}
+                    )
+                    _debug.lifecycle(
+                        "subcontract_production_split",
+                        source=production_to_split.id,
+                        backorder=new_mo.id,
+                        move=move.id,
                     )
                     new_mo.move_finished_ids.move_dest_ids = move
                     continue

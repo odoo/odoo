@@ -1,5 +1,8 @@
 from odoo import api, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinCatalogChildLines(models.AbstractModel):
@@ -35,12 +38,15 @@ class MixinCatalogChildLines(models.AbstractModel):
         line = self[child_field].filtered(
             lambda line: line.product_id.id == product_id
         )[:1]
+        by = "ignored"  # debuglog
         if line:
+            by = "updated" if quantity != 0 else "unlinked"  # debuglog
             if quantity != 0:
                 self._update_catalog_line_quantity(line, quantity, **kwargs)
             else:
                 line.unlink()
         elif quantity > 0:
+            by = "created"  # debuglog
             self.write(
                 {
                     child_field: [
@@ -59,4 +65,12 @@ class MixinCatalogChildLines(models.AbstractModel):
                 quantity,
                 **kwargs,
             )
+        _debug.logic(
+            "catalog_line",
+            record=self.id,
+            model=self._name,
+            product=product_id,
+            quantity=quantity,
+            by=by,
+        )
         return self._get_catalog_line_price(product_id)

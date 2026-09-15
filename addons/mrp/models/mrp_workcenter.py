@@ -9,10 +9,13 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_compare, float_is_zero, float_round
 from odoo.tools.date_utils import end_of, localized, start_of, to_timezone
 from odoo.tools.misc import get_lang
+
+_debug = DebugLog(__name__)
 
 
 class MrpWorkcenter(models.Model):
@@ -431,6 +434,7 @@ class MrpWorkcenter(models.Model):
     def action_unblock(self):
         self.check_singleton()
         if self.working_state != "blocked":
+            _debug.logic("workcenter_refused", reason="not_blocked", workcenter=self.id)
             raise UserError(_("It has already been unblocked."))
         blocking = self.env["mrp.workcenter.productivity"].search(
             [
@@ -446,6 +450,9 @@ class MrpWorkcenter(models.Model):
                     ),
                 ),
             ]
+        )
+        _debug.lifecycle(
+            "workcenter_unblocked", workcenter=self.id, entries=len(blocking)
         )
         blocking.write({"date_end": fields.Datetime.now()})
         return True
@@ -488,6 +495,9 @@ class MrpWorkcenter(models.Model):
         if not spans:
             return []
         resource = self.resource_id
+        _debug.perf.count(
+            "workcenter_working_minutes", workcenter=self.id, spans=len(spans)
+        )
         work_intervals = self.resource_calendar_id._work_intervals_batch(
             localized(min(start for start, _stop in spans)),
             localized(max(stop for _start, stop in spans)),
@@ -562,7 +572,22 @@ class MrpWorkcenter(models.Model):
         slot = walk(
             start_datetime, duration, iterations, step, blocked, reservations_to_ignore
         )
+        _debug.logic(
+            "workcenter_slot_walked",
+            workcenter=self.id,
+            duration=duration,
+            forward=forward,
+            iterations=iterations,
+            blocked=len(blocked),
+            found=slot is not None,
+        )
         if slot is None:
+            _debug.logic(
+                "workcenter_no_slot",
+                workcenter=self.id,
+                duration=duration,
+                horizon_days=iterations * step.days,
+            )
             return False, _(
                 "No available slot within %(days)s days of the planned start",
                 days=iterations * step.days,
@@ -581,21 +606,38 @@ class MrpWorkcenter(models.Model):
         extra_leaves_by_workcenter = extra_leaves_by_workcenter or {}
         for workcenter in self:
             if not workcenter.resource_calendar_id:
+                _debug.logic(
+                    "workcenter_refused",
+                    reason="no_calendar",
+                    workcenter=workcenter.id,
+                )
                 raise UserError(
                     _("There is no defined calendar on workcenter %s.", workcenter.name)
                 )
             duration = duration_by_workcenter[workcenter]
-            from_date, to_date = workcenter._get_first_available_slot(
-                date_start,
-                duration,
-                reservations_to_ignore=reservations_to_ignore,
-                extra_leaves_slots=extra_leaves_by_workcenter.get(workcenter),
-            )
+            with _debug.perf(
+                "workcenter_slot_search",
+                cr=self.env.cr,
+                workcenter=workcenter.id,
+                duration=duration,
+            ):
+                from_date, to_date = workcenter._get_first_available_slot(
+                    date_start,
+                    duration,
+                    reservations_to_ignore=reservations_to_ignore,
+                    extra_leaves_slots=extra_leaves_by_workcenter.get(workcenter),
+                )
             if not from_date:
                 reasons.append((workcenter, to_date))
                 continue
             if to_date and (best is None or to_date < best[2]):
                 best = (workcenter, from_date, to_date, duration)
+        _debug.logic(
+            "workcenter_earliest_slot",
+            candidates=self,
+            chosen=best[0].id if best else False,
+            refused=len(reasons),
+        )
         return best, reasons
 
     @api.model
@@ -773,7 +815,9 @@ class MrpWorkcenter(models.Model):
             (self.env["product.product"], product.uom_id),
             (product, unit),
         ]
+        rank = -1  # debuglog
         for wanted_product, wanted_unit in ranked:
+            rank += 1  # debuglog
             capacity = self.capacity_ids.filtered(
                 lambda c, p=wanted_product, u=wanted_unit: (
                     c.product_id == p and c.product_uom_id == u
@@ -784,12 +828,22 @@ class MrpWorkcenter(models.Model):
             if float_is_zero(
                 capacity.capacity, precision_rounding=capacity.product_uom_id.rounding
             ):
+                _debug.logic(
+                    "workcenter_capacity",
+                    workcenter=self.id,
+                    by="zero_capacity_default",
+                    rank=rank,
+                )
                 return (default_capacity, capacity.time_start, capacity.time_stop)
+            _debug.logic(
+                "workcenter_capacity", workcenter=self.id, by="matched", rank=rank
+            )
             return (
                 capacity.product_uom_id._compute_quantity(capacity.capacity, unit),
                 capacity.time_start,
                 capacity.time_stop,
             )
+        _debug.logic("workcenter_capacity", workcenter=self.id, by="default", rank=-1)
         return (default_capacity, self.time_start, self.time_stop)
 
 

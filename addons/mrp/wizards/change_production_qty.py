@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -48,6 +51,14 @@ class ChangeProductionQty(models.TransientModel):
             else:
                 move.write({"product_uom_qty": move.product_uom_qty + qty})
 
+        _debug.pipeline(
+            "finished_moves_rescaled",
+            production=production.id,
+            new_qty=new_qty,
+            old_qty=old_qty,
+            modified=len(modification),
+            pushed=len(push_moves),
+        )
         if push_moves:
             push_moves._action_confirm()
         production.move_finished_ids._action_assign()
@@ -66,6 +77,7 @@ class ChangeProductionQty(models.TransientModel):
             new_production_qty = wizard.product_qty
 
             if production.product_uom_id.is_zero(old_production_qty):
+                _debug.logic("qty_change_refused", mo=production)
                 raise UserError(
                     _(
                         "Cannot change the quantity of a manufacturing order whose "
@@ -73,6 +85,9 @@ class ChangeProductionQty(models.TransientModel):
                     )
                 )
             factor = new_production_qty / old_production_qty
+            _debug.lifecycle(
+                "qty_changed", mo=production, old=old_production_qty, factor=factor
+            )
             update_info = production._update_raw_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:

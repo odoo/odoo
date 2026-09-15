@@ -4,11 +4,14 @@ from datetime import date, datetime, time, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     float_repr,
     float_round,
     format_date,
 )
+
+_debug = DebugLog(__name__)
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
@@ -138,9 +141,17 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 else self.env["stock.warehouse"]
             )
 
-        lines = self._get_bom_data(
-            bom, warehouse, product=product, line_qty=bom_quantity, level=0
-        )
+        with _debug.perf(
+            "bom_structure_report",
+            cr=self.env.cr,
+            bom=bom_id,
+            quantity=bom_quantity,
+            warehouse=warehouse.id,
+            variant=bool(searchVariant),
+        ):
+            lines = self._get_bom_data(
+                bom, warehouse, product=product, line_qty=bom_quantity, level=0
+            )
         return {
             "lines": lines,
             "variants": bom_product_variants,
@@ -570,6 +581,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             bom_report_line["components_available"] = all(
                 c["stock_avail_state"] == "available" for c in components
             )
+        _debug.pipeline(
+            "bom_data_built", bom=bom.id, level=level, components=len(components)
+        )
         return bom_report_line
 
     @api.model
@@ -1099,12 +1113,23 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             and report_line
             and report_line["phantom_bom"]
         ):
+            _debug.logic(
+                "availability", product=product.id, by="phantom_last_component"
+            )
             return self._get_last_availability(report_line)
 
         base = {
             "resupply_avail_delay": resupply_delay,
             "stock_avail_state": stock_state,
         }
+        _debug.logic(
+            "availability",
+            product=product.id,
+            level=level,
+            by="stock" if level != 0 and stock_state != "unavailable" else "resupply",
+            stock_state=stock_state,
+            resupply_state=resupply_state,
+        )
         if level != 0 and stock_state != "unavailable":
             return {
                 **base,

@@ -7,9 +7,11 @@ from dateutil.relativedelta import relativedelta
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import OrderedSet
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class StockRule(models.Model):
@@ -122,8 +124,10 @@ class StockRule(models.Model):
     @api.model
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
+        _debug.pipeline("run_manufacture", procurements=len(procurements))
         for procurement, rule in procurements:
             if procurement.product_uom_id.compare(procurement.product_qty, 0) <= 0:
+                _debug.logic("procurement_skipped", product=procurement.product_id)
                 continue
             bom = rule._get_matching_bom(
                 procurement.product_id, procurement.company_id, procurement.values
@@ -134,6 +138,9 @@ class StockRule(models.Model):
                 domain = rule._get_domain_mo_for_procurement(procurement, bom)
                 mo = self.env["mrp.production"].sudo().search(domain, limit=1)  # noqa: E8507 - one probe per procurement: the domain is the procurement's own product, company and values
             is_batch_size = bom and bom.enable_batch_size
+            _debug.logic(
+                "procurement_routed", bom=bom, mo=mo, batch=bool(is_batch_size)
+            )
             if not mo or is_batch_size:
                 if not bom:
                     waiting_moves = procurement.values.get("move_dest_ids")
@@ -190,6 +197,9 @@ class StockRule(models.Model):
                         ),
                     }
                 ).change_prod_qty()
+                _debug.lifecycle(
+                    "production_qty_increased", mo=mo, qty=procurement_product_uom_qty
+                )
                 if procurement.values.get("move_dest_ids"):
                     mo.move_finished_ids.filtered(
                         lambda m, procurement=procurement: (
@@ -211,6 +221,7 @@ class StockRule(models.Model):
                 .with_company(company_id)
                 .create(productions_vals_list)
             )
+            _debug.lifecycle("productions_created", productions=productions)
             for mo in productions:
                 if self._is_mo_auto_confirm_required(mo):
                     mo.action_confirm()
@@ -231,8 +242,10 @@ class StockRule(models.Model):
 
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get("bom_id", False):
+            _debug.logic("rule_bom", by="values", product=product_id.id)
             return values["bom_id"]
         if values.get("orderpoint_id", False) and values["orderpoint_id"].bom_id:
+            _debug.logic("rule_bom", by="orderpoint", product=product_id.id)
             return values["orderpoint_id"].bom_id
         bom = self.env["mrp.bom"]._get_bom_by_product(
             product_id,
@@ -241,7 +254,11 @@ class StockRule(models.Model):
             company_id=company_id.id,
         )[product_id]
         if bom:
+            _debug.logic(
+                "rule_bom", by="picking_type", product=product_id.id, bom=bom.id
+            )
             return bom
+        _debug.logic("rule_bom", by="any_picking_type", product=product_id.id)
         return self.env["mrp.bom"]._get_bom_by_product(
             product_id, picking_type=False, bom_type="normal", company_id=company_id.id
         )[product_id]
@@ -368,6 +385,9 @@ class StockRule(models.Model):
                 company_id=manufacture_rule.company_id.id,
             )[product]
         if not bom:
+            _debug.logic(
+                "lead_days_no_bom", product=product.id, rule=manufacture_rule.id
+            )
             delays["total_delay"] += 365
             delays["no_bom_found_delay"] += 365
             if not bypass_delay_description:
@@ -396,6 +416,14 @@ class StockRule(models.Model):
                         delays[key] += value
                     delay_description += extra_delay_description
         days_to_order = values.get("days_to_order", bom.days_to_prepare_mo)
+        _debug.logic(
+            "lead_days_manufacture",
+            product=product.id,
+            bom=bom.id,
+            manufacture_delay=manufacture_delay,
+            days_to_order=days_to_order,
+            total=delays["total_delay"] + days_to_order,
+        )
         delays["total_delay"] += days_to_order
         if not bypass_delay_description:
             delay_description.append((_("Production Start Date"), days_to_order))

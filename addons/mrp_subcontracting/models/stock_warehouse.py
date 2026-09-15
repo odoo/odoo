@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockWarehouse(models.Model):

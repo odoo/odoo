@@ -4,6 +4,9 @@ from datetime import datetime, time
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -137,6 +140,7 @@ class StockWarehouseOrderpoint(models.Model):
                 ("company_id", "in", [*orderpoints.company_id.ids, False]),
             ]
         )
+        _debug.pipeline("orderpoint_route_from_bom", orderpoints=orderpoints)
         for orderpoint in orderpoints:
             manufacture_rule = next(
                 (
@@ -236,6 +240,13 @@ class StockWarehouseOrderpoint(models.Model):
                 company_id=company.id,
             )
             unmatched = products.filtered(lambda product, boms=boms: not boms[product])
+            _debug.logic(
+                "orderpoint_default_boms",
+                orderpoints=orderpoints,
+                products=len(products),
+                unmatched=len(unmatched),
+                rule=rule.id,
+            )
             if unmatched:
                 boms.update(
                     {
@@ -297,6 +308,12 @@ class StockWarehouseOrderpoint(models.Model):
         }
         orderpoints_without_kit = self - self.env["stock.warehouse.orderpoint"].concat(
             *bom_kit_orderpoints.keys()
+        )
+        _debug.pipeline(
+            "orderpoint_in_progress",
+            orderpoints=self,
+            kits=len(bom_kit_orderpoints),
+            plain=len(orderpoints_without_kit),
         )
         res = super(
             StockWarehouseOrderpoint, orderpoints_without_kit
@@ -393,6 +410,9 @@ class StockWarehouseOrderpoint(models.Model):
             )
         )
         if Bom.search_count(domain, limit=1):
+            _debug.logic(
+                "orderpoint_refused", reason="product_is_kit", orderpoints=self
+            )
             raise ValidationError(
                 _(
                     "A product with a kit-type bill of materials can not have a reordering rule."

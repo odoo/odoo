@@ -848,6 +848,12 @@ class MrpProduction(models.Model):
                     )
                 ):
                     bom = boms_by_product[production.product_id]
+                    _debug.logic(
+                        "production_bom_resolved",
+                        production=production.id,
+                        product=production.product_id.id,
+                        bom=bom.id or False,
+                    )
                     production.bom_id = bom.id or False
                     self.env.add_to_compute(
                         production._fields["picking_type_id"], production
@@ -1054,16 +1060,19 @@ class MrpProduction(models.Model):
     )
     def _compute_state(self):
         for production in self:
+            by = "stays_draft"  # debuglog
             if (
                 not production.state
                 or not production.product_uom_id
                 or not (production.id or production._origin.id)
             ):
+                by = "no_identity"  # debuglog
                 production.state = "draft"
             elif production.state == "cancel" or (
                 production.move_finished_ids
                 and all(move.state == "cancel" for move in production.move_finished_ids)
             ):
+                by = "all_finished_cancelled"  # debuglog
                 production.state = "cancel"
             elif production.state == "done" or (
                 (
@@ -1078,6 +1087,7 @@ class MrpProduction(models.Model):
                     for move in production.move_finished_ids
                 )
             ):
+                by = "all_moves_closed"  # debuglog
                 production.state = "done"
             elif (
                 production.workorder_ids
@@ -1092,6 +1102,7 @@ class MrpProduction(models.Model):
                 )
                 >= 0
             ):
+                by = "qty_reached_or_wo_closed"  # debuglog
                 production.state = "to_close"
             elif (
                 any(
@@ -1104,9 +1115,17 @@ class MrpProduction(models.Model):
                 )
                 or any(production.move_raw_ids.mapped("picked"))
             ):
+                by = "wo_started_or_qty_producing"  # debuglog
                 production.state = "progress"
             elif production.state != "draft":
+                by = "reopened_confirmed"  # debuglog
                 production.state = "confirmed"
+            _debug.logic(
+                "production_state",
+                production=production.id,
+                state=production.state,
+                by=by,
+            )
 
     @api.depends(
         "bom_id",
@@ -1770,12 +1789,24 @@ class MrpProduction(models.Model):
         if "product_id" in vals:
             editable = self.filtered(lambda production: production.state == "draft")
             if editable and editable != self:
+                _debug.logic(
+                    "production_write_split",
+                    reason="product_id_on_non_draft",
+                    productions=self,
+                    editable=editable,
+                )
                 frozen = {k: v for k, v in vals.items() if k != "product_id"}
                 result = editable.write(vals)
                 if frozen:
                     result = (self - editable).write(frozen) and result
                 return result
             if not editable:
+                _debug.logic(
+                    "production_write_dropped",
+                    field="product_id",
+                    reason="no_draft_order",
+                    productions=self,
+                )
                 del vals["product_id"]
         move_keys = [
             key for key in ("move_raw_ids", "move_finished_ids") if key in vals
@@ -1785,6 +1816,12 @@ class MrpProduction(models.Model):
                 lambda production: production.location_src_id.warehouse_id
             )
             if len(by_warehouse) > 1:
+                _debug.logic(
+                    "production_write_split",
+                    reason="moves_across_warehouses",
+                    productions=self,
+                    warehouses=len(by_warehouse),
+                )
                 result = True
                 for group in by_warehouse.values():
                     result = group.write(vals) and result
@@ -1797,6 +1834,13 @@ class MrpProduction(models.Model):
 
         res = super().write(vals)
 
+        _debug.lifecycle(
+            "write",
+            productions=self,
+            fields=list(vals),
+            to_replan=len(production_to_replan),
+            to_reassign=len(moves_to_reassign),
+        )
         self._post_write(vals, production_to_replan)
         self._post_write_reassign(moves_to_reassign)
         return res
@@ -1805,6 +1849,9 @@ class MrpProduction(models.Model):
         if "date_start" not in vals or self.env.context.get("force_date", False):
             return
         if any(production.state in ("done", "cancel") for production in self):
+            _debug.logic(
+                "production_refused", reason="date_start_on_closed", productions=self
+            )
             raise UserError(
                 _("You cannot move a manufacturing order once it is cancelled or done.")
             )
@@ -1903,6 +1950,12 @@ class MrpProduction(models.Model):
             for field in vals
         ):
             open_orders = self.filtered(lambda p: p.state != "draft")
+            _debug.pipeline(
+                "production_moves_rewritten",
+                productions=self,
+                open_orders=len(open_orders),
+                replan=len(open_orders & production_to_replan),
+            )
             if open_orders:
                 open_orders.with_context(
                     no_procurement=True
@@ -1965,6 +2018,12 @@ class MrpProduction(models.Model):
             for vals, group in zip(vals_needing_group, groups, strict=True):
                 vals["production_group_id"] = group.id
         res = super().create(vals_list)
+        _debug.lifecycle(
+            "create",
+            count=len(res),
+            productions=res,
+            new_groups=len(vals_needing_group),
+        )
         reference_vals_list = []
         for rec, vals in zip(res, vals_list, strict=True):
             if vals.get("move_dest_ids"):
@@ -2008,6 +2067,7 @@ class MrpProduction(models.Model):
             ):
                 rec.move_finished_ids.write({"date": rec.date_end})
         if reference_vals_list:
+            _debug.lifecycle("references_created", count=len(reference_vals_list))
             self.env["stock.reference"].sudo().create(reference_vals_list)
         return res
 
@@ -2016,6 +2076,9 @@ class MrpProduction(models.Model):
         workorders_to_delete = self.workorder_ids.filtered(
             lambda wo: wo.state != "done"
         )
+        _debug.lifecycle(
+            "unlink", productions=self, workorders=len(workorders_to_delete)
+        )
         if workorders_to_delete:
             workorders_to_delete.unlink()
         return super().unlink()
@@ -2023,6 +2086,7 @@ class MrpProduction(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_except_done_at_uninstall(self):
         if any(mo.state == "done" for mo in self):
+            _debug.logic("production_refused", reason="unlink_done", productions=self)
             raise UserError(
                 _("You cannot delete a manufacturing order that is already done.")
             )
@@ -2448,14 +2512,26 @@ class MrpProduction(models.Model):
                 update_info.append((move, old_qty, new_qty))
             if move.reference_ids != self.reference_ids:
                 move.reference_ids = self.reference_ids.ids
+        _debug.pipeline(
+            "raw_moves_rescaled",
+            production=self.id,
+            factor=factor,
+            updated=len(update_info),
+        )
         return update_info
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if any(production.state == "done" for production in self):
+            _debug.logic("production_refused", reason="delete_done", productions=self)
             raise UserError(_("Cannot delete a manufacturing order in done state."))
         not_cancel = self.filtered(lambda m: m.state != "cancel")
         if not_cancel:
+            _debug.logic(
+                "production_refused",
+                reason="delete_not_cancelled",
+                productions=not_cancel,
+            )
             productions_name = ", ".join([prod.display_name for prod in not_cancel])
             raise UserError(
                 _("%s cannot be deleted. Try to cancel them before.", productions_name)
@@ -2481,7 +2557,19 @@ class MrpProduction(models.Model):
         )
 
         if all(move.state == "assigned" for move in moves_in_first_operation):
+            _debug.logic(
+                "ready_state",
+                production=self.id,
+                state="assigned",
+                first_operation_moves=len(moves_in_first_operation),
+            )
             return "assigned"
+        _debug.logic(
+            "ready_state",
+            production=self.id,
+            state="confirmed",
+            first_operation_moves=len(moves_in_first_operation),
+        )
         return "confirmed"
 
     def _confirm_draft_moves_and_workorders(self):
@@ -2499,6 +2587,12 @@ class MrpProduction(models.Model):
             )
         )
 
+        _debug.pipeline(
+            "draft_moves_confirmed",
+            productions=self,
+            open_orders=len(open_productions),
+            moves=len(moves_to_confirm),
+        )
         if moves_to_confirm:
             moves_to_confirm = moves_to_confirm._action_confirm()
             moves_to_confirm._trigger_scheduler()
@@ -2587,7 +2681,11 @@ class MrpProduction(models.Model):
         self.check_singleton()
         if self.product_tracking == "lot":
             if self.lot_producing_ids:
+                _debug.logic(
+                    "production_refused", reason="lot_already_set", productions=self
+                )
                 raise UserError(_("You cannot set more than 1 lot per product"))
+            _debug.lifecycle("lot_generated", production=self.id, tracking="lot")
             self.lot_producing_ids = [Command.create(self._prepare_stock_lot_values())]
             if self.picking_type_id.auto_print_generated_mrp_lot:
                 return self._prepare_action_autoprint_generated_lot(
@@ -2598,6 +2696,9 @@ class MrpProduction(models.Model):
                 self.lot_producing_ids = [
                     Command.create(self._prepare_stock_lot_values())
                 ]
+                _debug.lifecycle(
+                    "lot_generated", production=self.id, tracking="serial", qty=1
+                )
                 self.qty_producing = 1
                 (workorder or self).set_qty_producing()
                 if self.picking_type_id.auto_print_generated_mrp_lot:
@@ -2605,6 +2706,12 @@ class MrpProduction(models.Model):
                         self.lot_producing_ids[-1]
                     )
                 return None
+            _debug.logic(
+                "serial_wizard_opened",
+                production=self.id,
+                qty=self.product_qty,
+                existing=len(self.lot_producing_ids),
+            )
             action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
                 "mrp.action_assign_serial_numbers"
             )
@@ -2668,6 +2775,13 @@ class MrpProduction(models.Model):
         )
 
         ignored_mo_ids = self.env.context.get("ignore_mo_ids", [])
+        _debug.pipeline(
+            "production_confirm",
+            productions=self,
+            raw_moves=len(move_raws_to_adjust),
+            moves=len(moves_to_confirm),
+            workorders=len(workorder_to_confirm),
+        )
         move_raws_to_adjust._update_procure_method()
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
@@ -2678,6 +2792,11 @@ class MrpProduction(models.Model):
         self.picking_ids.filtered(
             lambda p: p.state not in ["cancel", "done"]
         ).action_confirm()
+        _debug.lifecycle(
+            "production_confirmed",
+            productions=self,
+            from_draft=len(self.filtered(lambda mo: mo.state == "draft")),
+        )
         self.filtered(lambda mo: mo.state == "draft").state = "confirmed"
         return True
 
@@ -2690,6 +2809,12 @@ class MrpProduction(models.Model):
         }
         last_workorder_per_bom = defaultdict(lambda: self.env["mrp.workorder"])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
+        _debug.pipeline(
+            "workorders_linked",
+            production=self.id,
+            workorders=len(self.workorder_ids),
+            by="dependencies" if self.allow_workorder_dependencies else "sequence",
+        )
 
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids._sorted_by_routing():
@@ -2720,12 +2845,24 @@ class MrpProduction(models.Model):
                 )
 
     def action_assign(self):
-        self.move_raw_ids._action_assign()
+        with _debug.perf(
+            "production_assign",
+            cr=self.env.cr,
+            productions=self,
+            raw_moves=len(self.move_raw_ids),
+        ):
+            self.move_raw_ids._action_assign()
         return True
 
     def button_plan(self):
         orders_to_plan = self.filtered(lambda order: not order.is_planned)
         orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == "draft")
+        _debug.pipeline(
+            "production_plan_requested",
+            productions=self,
+            to_plan=len(orders_to_plan),
+            to_confirm=len(orders_to_confirm),
+        )
         orders_to_confirm.action_confirm()
         for order in orders_to_plan:
             order._plan_workorders()
@@ -2735,6 +2872,7 @@ class MrpProduction(models.Model):
         self.check_singleton()
 
         if not self.workorder_ids:
+            _debug.logic("production_planned", production=self.id, by="no_workorders")
             self.is_planned = True
             return
 
@@ -2744,13 +2882,24 @@ class MrpProduction(models.Model):
             lambda wo: not wo.needed_by_workorder_ids
         )
         planned = set()
-        for workorder in final_workorders:
-            workorder._plan_workorder(replan, planned)
+        with _debug.perf(
+            "workorders_planned",
+            cr=self.env.cr,
+            production=self.id,
+            replan=replan,
+            leaves=len(final_workorders),
+        ) as span:
+            for workorder in final_workorders:
+                workorder._plan_workorder(replan, planned)
+            span.set(planned=len(planned))
 
         workorders = self.workorder_ids.filtered(
             lambda w: w.state not in ["done", "cancel"]
         )
         if not workorders:
+            _debug.logic(
+                "production_plan_skipped", production=self.id, reason="all_closed"
+            )
             return
 
         self.with_context(force_date=True).write(
@@ -2768,6 +2917,9 @@ class MrpProduction(models.Model):
 
     def button_unplan(self):
         if any(wo.state == "done" for wo in self.workorder_ids):
+            _debug.logic(
+                "production_refused", reason="unplan_done_wo", productions=self
+            )
             raise UserError(
                 _(
                     "Some work orders are already done, so you cannot unplan this manufacturing order.\n\n"
@@ -2775,6 +2927,9 @@ class MrpProduction(models.Model):
                 )
             )
         if any(wo.state == "progress" for wo in self.workorder_ids):
+            _debug.logic(
+                "production_refused", reason="unplan_started_wo", productions=self
+            )
             raise UserError(
                 _(
                     "Some work orders have already started, so you cannot unplan this manufacturing order.\n\n"
@@ -2782,6 +2937,9 @@ class MrpProduction(models.Model):
                 )
             )
 
+        _debug.lifecycle(
+            "production_unplanned", productions=self, workorders=len(self.workorder_ids)
+        )
         self.workorder_ids.write(
             {
                 "date_start": False,
@@ -2793,6 +2951,7 @@ class MrpProduction(models.Model):
     def _get_consumption_issues(self):
         issues = []
         if self.env.context.get("skip_consumption", False):
+            _debug.logic("consumption_scan_skipped", productions=self, by="context")
             return issues
         orders = self.with_context(
             bom_cost_share_cache=self.env["mrp.bom"]._get_explosion_scratch()
@@ -2837,6 +2996,7 @@ class MrpProduction(models.Model):
                 if product.uom_id.compare(qty_to_consume, quantity) != 0:
                     issues.append((order, product, quantity, qty_to_consume))
 
+        _debug.pipeline("consumption_scanned", productions=self, issues=len(issues))
         return issues
 
     def _prepare_action_consumption_wizard(self, consumption_issues):
@@ -2901,6 +3061,7 @@ class MrpProduction(models.Model):
 
     def action_cancel(self):
         if any(mo.state == "done" for mo in self):
+            _debug.logic("production_refused", reason="cancel_done", productions=self)
             raise UserError(
                 _("You cannot cancel a manufacturing order that is already done.")
             )
@@ -2947,6 +3108,13 @@ class MrpProduction(models.Model):
         raw_moves = self.move_raw_ids.filtered(
             lambda x: x.state not in ("done", "cancel")
         )
+        _debug.pipeline(
+            "production_cancel",
+            productions=self,
+            finish_moves=len(finish_moves),
+            raw_moves=len(raw_moves),
+            documented=len(documents_by_production),
+        )
         (finish_moves | raw_moves).with_context(skip_mo_check=True)._action_cancel()
         picking_ids = self.picking_ids.filtered(
             lambda x: (
@@ -2957,6 +3125,7 @@ class MrpProduction(models.Model):
                 )
             )
         )
+        _debug.lifecycle("production_cancelled", productions=self, pickings=picking_ids)
         picking_ids.action_cancel()
 
         for production, documents in documents_by_production.items():
@@ -2990,12 +3159,20 @@ class MrpProduction(models.Model):
             elif move.state != "cancel":
                 moves_to_do.add(move.id)
 
-        self.with_context(skip_mo_check=True).env["stock.move"].browse(
-            moves_to_do
-        )._action_done(cancel_backorder=cancel_backorder)
-        self.with_context(skip_mo_check=True).env["stock.move"].browse(
-            moves_to_cancel
-        )._action_cancel()
+        with _debug.perf(
+            "production_consume_raw",
+            cr=self.env.cr,
+            productions=self,
+            to_do=len(moves_to_do),
+            done=len(moves_not_to_do),
+            to_cancel=len(moves_to_cancel),
+        ):
+            self.with_context(skip_mo_check=True).env["stock.move"].browse(
+                moves_to_do
+            )._action_done(cancel_backorder=cancel_backorder)
+            self.with_context(skip_mo_check=True).env["stock.move"].browse(
+                moves_to_cancel
+            )._action_cancel()
         moves_to_do = self.move_raw_ids.filtered(
             lambda x: x.state == "done"
         ) - self.env["stock.move"].browse(moves_not_to_do)
@@ -3041,9 +3218,16 @@ class MrpProduction(models.Model):
             lambda x: x.state not in ("done", "cancel")
         )
         moves_to_finish.picked = True
-        moves_to_finish = moves_to_finish._action_done(
-            cancel_backorder=cancel_backorder
-        )
+        with _debug.perf(
+            "production_produce_finished",
+            cr=self.env.cr,
+            productions=self,
+            moves=len(moves_to_finish),
+            cancel_backorder=cancel_backorder,
+        ):
+            moves_to_finish = moves_to_finish._action_done(
+                cancel_backorder=cancel_backorder
+            )
         for order in self:
             consume_move_lines = moves_to_do_by_order[order.id].mapped("move_line_ids")
             order.move_finished_ids.move_line_ids.consume_line_ids = [
@@ -3107,6 +3291,13 @@ class MrpProduction(models.Model):
         self._update_split_workorders(
             production_to_backorders, initial_qty_by_production
         )
+        _debug.pipeline(
+            "production_split",
+            productions=self,
+            backorders=backorders,
+            cancel_remaining=cancel_remaining_qty,
+            set_consumed_qty=set_consumed_qty,
+        )
         backorders._action_confirm_mo_backorders()
         return self.env["mrp.production"].browse(production_ids)
 
@@ -3133,6 +3324,13 @@ class MrpProduction(models.Model):
             elif not self.env.context.get("allow_more") and (
                 diff < 0 or production.state in ("done", "cancel")
             ):
+                _debug.logic(
+                    "split_refused",
+                    reason="more_than_producible",
+                    production=production.id,
+                    diff=diff,
+                    state=production.state,
+                )
                 raise UserError(
                     _("Unable to split with more than the quantity to produce.")
                 )
@@ -3183,6 +3381,7 @@ class MrpProduction(models.Model):
             .sudo()
             .create(backorder_vals_list)
         )
+        _debug.lifecycle("backorders_created", productions=self, backorders=backorders)
         return backorders, initial_qty_by_production
 
     def _get_split_backorder_map(self, amounts, backorders):
@@ -3437,6 +3636,11 @@ class MrpProduction(models.Model):
     def button_mark_done(self):
         res = self.pre_button_mark_done()
         if res is not True:
+            _debug.logic(
+                "mark_done_deferred",
+                productions=self,
+                action=res.get("res_model") if isinstance(res, dict) else None,
+            )
             return res
 
         if self.env.context.get("mo_ids_to_backorder"):
@@ -3449,6 +3653,13 @@ class MrpProduction(models.Model):
             productions_to_backorder = self.env["mrp.production"]
         productions_not_to_backorder = productions_not_to_backorder.with_context(
             no_procurement=True
+        )
+        _debug.pipeline(
+            "mark_done",
+            productions=self,
+            to_backorder=len(productions_to_backorder),
+            straight=len(productions_not_to_backorder),
+            workorders=len(self.workorder_ids),
         )
         self.workorder_ids.button_finish()
 
@@ -3484,6 +3695,7 @@ class MrpProduction(models.Model):
             }
         )
 
+        _debug.lifecycle("production_done", productions=self, backorders=backorders)
         backorders_to_assign = backorders.filtered(
             lambda order: order.picking_type_id.reservation_method == "at_confirm"
         )
@@ -3586,6 +3798,12 @@ class MrpProduction(models.Model):
             elif not production.lot_producing_ids:
                 production_missing_lot_ids.add(production.id)
 
+        _debug.pipeline(
+            "mark_done_preflight",
+            productions=self,
+            auto=len(production_auto_ids),
+            missing_lot=len(production_missing_lot_ids),
+        )
         if production_missing_lot_ids:
             if len(production_missing_lot_ids) > 1:
                 raise UserError(
@@ -3611,6 +3829,12 @@ class MrpProduction(models.Model):
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
+            _debug.logic(
+                "mark_done_blocked",
+                by="consumption_issues",
+                productions=self,
+                issues=len(consumption_issues),
+            )
             return self._prepare_action_consumption_wizard(consumption_issues)
 
         quantity_issues = self._get_quantity_produced_issues()
@@ -3622,6 +3846,13 @@ class MrpProduction(models.Model):
                     mo_ids_always.append(mo.id)
                 elif mo.picking_type_id.create_backorder == "ask":
                     mos_ask.append(mo)
+            _debug.logic(
+                "mark_done_blocked",
+                by="quantity_issues",
+                productions=self,
+                always=len(mo_ids_always),
+                ask=len(mos_ask),
+            )
             if mos_ask:
                 return self.with_context(
                     always_backorder_mo_ids=mo_ids_always
@@ -3947,6 +4178,13 @@ class MrpProduction(models.Model):
             if self.state == "draft":
                 moves_to_unlink = self.move_raw_ids
                 workorders_to_unlink = self.workorder_ids
+            _debug.pipeline(
+                "bom_linked",
+                production=self.id,
+                bom=bom.id,
+                by="wholesale_replace",
+                state=self.state,
+            )
             self.bom_id = bom
             moves_to_unlink.exists().unlink()
             workorders_to_unlink.exists().unlink()
@@ -3965,12 +4203,28 @@ class MrpProduction(models.Model):
             for operation in bom.operation_ids.filtered(self._is_bom_record_applicable)
         }
 
+        _debug.pipeline(
+            "bom_linked",
+            production=self.id,
+            bom=bom.id,
+            by="reconcile",
+            ratio=ratio,
+            lines=len(bom_lines_by_id),
+            byproducts=len(bom_byproducts_by_id),
+            operations=len(operations_by_id),
+        )
         workorders_to_unlink |= self._link_bom_operations(operations_by_id)
         moves_to_unlink |= self._link_bom_lines(bom, bom_lines_by_id, ratio)
         moves_to_unlink |= self._link_bom_byproducts(bom_byproducts_by_id, ratio)
 
         if self.warehouse_id.manufacture_steps in ("pbm", "pbm_sam"):
             moves_to_unlink.product_uom_qty = 0
+        _debug.lifecycle(
+            "bom_link_pruned",
+            production=self.id,
+            moves=len(moves_to_unlink),
+            workorders=len(workorders_to_unlink),
+        )
         moves_to_unlink._action_cancel()
         moves_to_unlink.unlink()
         workorders_to_unlink.unlink()
@@ -4341,6 +4595,13 @@ class MrpProduction(models.Model):
             return True
         ope_str = (merge and _("merged")) or _("split")
         if any(production.state not in ("draft", "confirmed") for production in self):
+            _debug.logic(
+                "split_merge_refused",
+                reason="state",
+                merge=merge,
+                split=split,
+                productions=self,
+            )
             raise UserError(
                 _(
                     "Only manufacturing orders in either a draft or confirmed state can be %s.",
@@ -4348,6 +4609,9 @@ class MrpProduction(models.Model):
                 )
             )
         if any(not production.bom_id for production in self):
+            _debug.logic(
+                "split_merge_refused", reason="no_bom", merge=merge, productions=self
+            )
             raise UserError(
                 _(
                     "Only manufacturing orders with a Bill of Materials can be %s.",
@@ -4358,6 +4622,7 @@ class MrpProduction(models.Model):
             return True
 
         if len(self) < 2:
+            _debug.logic("split_merge_refused", reason="too_few", productions=self)
             raise UserError(_("You need at least two production orders to merge them."))
         products = {(production.product_id, production.bom_id) for production in self}
         if len(products) > 1:
@@ -4673,6 +4938,12 @@ class MrpProduction(models.Model):
                 message_type="comment",
                 subtype_id=note_subtype_id,
             )
+        _debug.pipeline(
+            "post_run_manufacture",
+            productions=self,
+            from_report=len(from_report),
+            origins=len(origins),
+        )
         self._message_post_origin_links(origins, subtype_id=note_subtype_id)
         return True
 

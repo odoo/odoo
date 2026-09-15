@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpConsumptionWarning(models.TransientModel):
@@ -36,6 +39,12 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_confirm(self):
         ctx = dict(self.env.context)
         ctx.pop("default_mrp_production_ids", None)
+        _debug.logic(
+            "consumption_warning_confirmed",
+            productions=self.mrp_production_ids,
+            consumption=self.consumption,
+            lines=len(self.mrp_consumption_warning_line_ids),
+        )
         return self.mrp_production_ids.with_context(
             ctx, skip_consumption=True
         ).button_mark_done()
@@ -73,6 +82,11 @@ class MrpConsumptionWarning(models.TransientModel):
                         other.quantity = 0
                 matching.picked = True
                 line.product_expected_qty_uom = 0
+        _debug.pipeline(
+            "consumption_warning_qty_set",
+            productions=self.mrp_production_ids,
+            created=len(missing_move_vals),
+        )
         if missing_move_vals:
             self.env["stock.move"].create(missing_move_vals)
         return self.action_confirm()

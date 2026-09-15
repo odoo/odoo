@@ -7,9 +7,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.tools import float_round, format_datetime
 from odoo.tools.date_utils import get_intervals_hours
+
+_debug = DebugLog(__name__)
 
 
 class MrpWorkorder(models.Model):
@@ -370,11 +373,23 @@ class MrpWorkorder(models.Model):
                 workorder.product_uom_id.compare(workorder._get_qty_ready(), 0) > 0
             )
             workorder.state = "ready" if has_qty_ready else "blocked"
+            _debug.logic(
+                "workorder_state",
+                workorder=workorder.id,
+                state=workorder.state,
+                by="qty_ready" if has_qty_ready else "no_qty_ready",
+            )
 
     DERIVED_STATES = ("blocked",)
 
     def set_state(self, state):
         if state in self.DERIVED_STATES:
+            _debug.logic(
+                "workorder_refused",
+                reason="derived_state_set",
+                state=state,
+                workorders=self,
+            )
             raise UserError(
                 _(
                     "A work order is blocked when the work orders it waits on "
@@ -393,6 +408,12 @@ class MrpWorkorder(models.Model):
             ids_to_update.append(wo.id)
 
         wo_to_update = self.browse(ids_to_update)
+        _debug.pipeline(
+            "workorder_set_state",
+            requested=state,
+            workorders=self,
+            applied=len(wo_to_update),
+        )
         if state == "cancel":
             wo_to_update.action_cancel()
         elif state == "done":
@@ -612,6 +633,7 @@ class MrpWorkorder(models.Model):
                 for needed_by in workorder.needed_by_workorder_ids
             ]
 
+        _debug.lifecycle("unlink", workorders=self, reconfirm=mo_dirty)
         self.end_all()
         res = super().unlink()
         mo_dirty.workorder_ids._action_confirm()
@@ -868,6 +890,13 @@ class MrpWorkorder(models.Model):
             values, new_workcenter
         )
         res = self._write_grouped_by_derived_vals(values, derived_vals)
+        _debug.lifecycle(
+            "write",
+            workorders=self,
+            fields=list(values),
+            new_workcenter=new_workcenter.id if new_workcenter else False,
+            derived=len(derived_vals),
+        )
         self._post_write_qty_produced(values)
         self._post_write_workcenter(previous_workcenter_by_id, new_workcenter)
         return res
@@ -1038,6 +1067,9 @@ class MrpWorkorder(models.Model):
                 values["sequence"] = sequence
 
         res = super().create(vals_list)
+        _debug.lifecycle(
+            "create", count=len(res), workorders=res, operations=len(operations)
+        )
 
         for workorder in res:
             if workorder.date_start and not workorder.date_end:
@@ -1048,6 +1080,7 @@ class MrpWorkorder(models.Model):
                 mo._resequence_workorders()
 
         if self.env.context.get("skip_confirm"):
+            _debug.logic("workorder_confirm_skipped", by="context", workorders=res)
             return res
         to_confirm = res.filtered(
             lambda wo: wo.production_id.state in ("confirmed", "progress", "to_close")
@@ -1083,8 +1116,17 @@ class MrpWorkorder(models.Model):
             if workorder.date_end and workorder.date_end > date_start:
                 date_start = workorder.date_end
         if self.state not in ["blocked", "ready"]:
+            _debug.logic(
+                "workorder_plan_skipped",
+                workorder=self.id,
+                reason="state",
+                state=self.state,
+            )
             return
         if self.date_start and not replan:
+            _debug.logic(
+                "workorder_plan_skipped", workorder=self.id, reason="already_dated"
+            )
             return
         workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
         best, reasons = workcenters._get_earliest_slot_and_reasons(
@@ -1100,10 +1142,23 @@ class MrpWorkorder(models.Model):
             reservations_to_ignore=self.reservation_ids,
         )
         if best is None:
+            _debug.logic(
+                "workorder_unplannable",
+                workorder=self.id,
+                workcenters=workcenters,
+                reasons=len(reasons),
+            )
             raise UserError(
                 workcenters._prepare_unplannable_error(self.display_name, reasons)
             )
         workcenter, date_start, date_end, duration_expected = best
+        _debug.lifecycle(
+            "workorder_planned",
+            workorder=self.id,
+            workcenter=workcenter.id,
+            alternatives=len(workcenters),
+            duration=duration_expected,
+        )
         self.write(
             {
                 "workcenter_id": workcenter.id,
@@ -1136,6 +1191,9 @@ class MrpWorkorder(models.Model):
 
     def button_start(self, skip_invalid_state=False):
         if any(wo.working_state == "blocked" for wo in self):
+            _debug.logic(
+                "workorder_refused", reason="workcenter_blocked", workorders=self
+            )
             raise UserError(
                 _("Please unblock the work center to start the work order.")
             )
@@ -1150,6 +1208,12 @@ class MrpWorkorder(models.Model):
             if wo.state in ("done", "cancel"):
                 if skip_invalid_state:
                     continue
+                _debug.logic(
+                    "workorder_refused",
+                    reason="start_closed",
+                    workorder=wo.id,
+                    state=wo.state,
+                )
                 raise UserError(
                     _("You cannot start a work order that is already done or cancelled")
                 )
@@ -1171,6 +1235,14 @@ class MrpWorkorder(models.Model):
                 "state": "progress",
                 "date_start": date_start,
             }
+            _debug.lifecycle(
+                "workorder_started",
+                workorder=wo.id,
+                production=wo.production_id.id,
+                workcenter=wo.workcenter_id.id,
+                qty_producing=wo.qty_producing,
+                reserved=len(wo.reservation_ids),
+            )
             if not wo.reservation_ids:
                 vals["date_end"] = date_start + relativedelta(
                     minutes=wo.duration_expected
@@ -1206,6 +1278,12 @@ class MrpWorkorder(models.Model):
             new_qty = move.product_uom_id.round(qty_available * move.unit_factor)
             move._update_quantity_done(new_qty)
 
+        _debug.pipeline(
+            "workorder_finish",
+            workorders=self,
+            to_end=len(workorders_to_end),
+            moves_picked=len(moves_to_pick),
+        )
         moves_to_pick.picked = True
         workorders_to_end.end_all()
         workorders_to_end.flush_recordset(["duration_expected"])
@@ -1221,6 +1299,9 @@ class MrpWorkorder(models.Model):
             if not workorder.date_start or date_end < workorder.date_start:
                 vals["date_start"] = date_end
             all_vals_dict[frozenset(vals.items())] |= workorder
+        _debug.lifecycle(
+            "workorder_done", workorders=workorders_to_end, groups=len(all_vals_dict)
+        )
         for frozen_vals, workorders in all_vals_dict.items():
             workorders.with_context(bypass_duration_calculation=True).write(
                 dict(frozen_vals)

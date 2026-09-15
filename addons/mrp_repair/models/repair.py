@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class RepairOrder(models.Model):
@@ -38,6 +41,7 @@ class RepairOrder(models.Model):
                 )[op.product_id]
             )
             if not bom:
+                _debug.logic("repair_explode_skipped", move=op.id, reason="no_kit_bom")
                 continue
             factor = (
                 op.product_uom_id._compute_quantity(
@@ -55,6 +59,12 @@ class RepairOrder(models.Model):
                     )
             lines_to_unlink_ids.add(op.id)
 
+        _debug.pipeline(
+            "repair_exploded",
+            repairs=self,
+            replaced=len(lines_to_unlink_ids),
+            components=len(line_vals_list),
+        )
         self.env["stock.move"].browse(lines_to_unlink_ids).sudo().unlink()
         if line_vals_list:
             self.env["stock.move"].create(line_vals_list)

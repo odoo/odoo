@@ -3,6 +3,9 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProduction(models.Model):
@@ -74,6 +77,11 @@ class MrpProduction(models.Model):
                 self._get_writeable_fields_portal_user()
             )
             if unauthorized_fields:
+                _debug.logic(
+                    "portal_write_refused",
+                    productions=self,
+                    fields=sorted(unauthorized_fields),
+                )
                 raise AccessError(
                     _(
                         "You cannot write on fields %s in mrp.production.",
@@ -82,6 +90,9 @@ class MrpProduction(models.Model):
                 )
 
         if "date_start" in vals and self.env.context.get("from_subcontract"):
+            _debug.logic(
+                "subcontract_date_backdated", productions=self, by="produce_delay"
+            )
             date_start = fields.Datetime.to_datetime(vals["date_start"])
             date_start_map = {
                 prod: date_start - timedelta(days=prod.bom_id.produce_delay)
@@ -135,6 +146,7 @@ class MrpProduction(models.Model):
 
     def action_merge(self):
         if any(production._get_subcontract_move() for production in self):
+            _debug.logic("merge_refused", reason="subcontracted", productions=self)
             raise ValidationError(
                 _("Subcontracted manufacturing orders cannot be merged.")
             )

@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProductionBackorderLine(models.TransientModel):
@@ -47,6 +50,12 @@ class MrpProductionBackorder(models.TransientModel):
     def action_close_mo(self):
         ctx = dict(self.env.context)
         always_backorder_mo_ids = ctx.pop("always_backorder_mo_ids", [])
+        _debug.logic(
+            "backorder_wizard",
+            by="close_mo",
+            productions=self.mrp_production_ids,
+            always=len(always_backorder_mo_ids),
+        )
         return self.mrp_production_ids.with_context(
             ctx, skip_backorder=True, mo_ids_to_backorder=always_backorder_mo_ids
         ).button_mark_done()
@@ -60,6 +69,12 @@ class MrpProductionBackorder(models.TransientModel):
                 lambda l: l.to_backorder
             ).mrp_production_id.ids
             + always_backorder_mo_ids
+        )
+        _debug.logic(
+            "backorder_wizard",
+            by="backorder",
+            productions=self.mrp_production_ids,
+            to_backorder=len(mo_ids_to_backorder),
         )
         return self.mrp_production_ids.with_context(
             ctx, skip_backorder=True, mo_ids_to_backorder=mo_ids_to_backorder

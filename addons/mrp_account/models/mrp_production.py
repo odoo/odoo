@@ -1,6 +1,9 @@
 from collections import defaultdict
 
 from odoo import Command, _, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MrpProduction(models.Model):
@@ -71,6 +74,7 @@ class MrpProduction(models.Model):
             )
         )
         if not finished_move:
+            _debug.logic("finished_price_skipped", production=self.id, by="no_move")
             return True
 
         quantity = sum(
@@ -105,9 +109,25 @@ class MrpProduction(models.Model):
             )
 
         if self.product_id.cost_method not in ("fifo", "average"):
+            _debug.logic(
+                "finished_price",
+                production=self.id,
+                by="standard",
+                cost_method=self.product_id.cost_method,
+                total_cost=total_cost,
+            )
             finished_move.price_unit = self.product_id.standard_price
             return True
         finished_move.check_singleton()
+        _debug.logic(
+            "finished_price",
+            production=self.id,
+            by="shared_value",
+            total_cost=total_cost,
+            shared=shared_value,
+            quantity=quantity,
+            byproducts=len(byproduct_moves),
+        )
         finished_move.price_unit = shared_value / quantity
         return True
 
@@ -147,9 +167,11 @@ class MrpProduction(models.Model):
                 mo.product_id.valuation != "real_time"
                 or not production_location.valuation_account_id
             ):
+                _debug.logic("labour_skipped", mo=mo, reason="not_real_time")
                 continue
 
             if mo.workorder_ids.time_ids.account_move_line_id:
+                _debug.logic("labour_skipped", mo=mo, reason="already_posted")
                 continue
 
             product_accounts = mo.product_id.product_tmpl_id._get_product_accounts()
@@ -157,7 +179,15 @@ class MrpProduction(models.Model):
                 mo._get_labour_amounts_per_account(product_accounts)
             )
             if mo.company_id.currency_id.is_zero(workcenter_cost):
+                _debug.logic("labour_skipped", mo=mo, reason="zero_cost")
                 continue
+            _debug.lifecycle(
+                "labour_posted",
+                mo=mo,
+                cost=workcenter_cost,
+                accounts=len(labour_amounts),
+                workorders=len(workorders),
+            )
 
             desc = _("%s - Labour", mo.name)
             charged = list(labour_amounts.items())

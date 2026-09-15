@@ -2,7 +2,10 @@ from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_is_zero, float_round
+
+_debug = DebugLog(__name__)
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -190,6 +193,12 @@ class MrpRoutingWorkcenter(models.Model):
                 ids_by_operation[operation_id].append(workorder_id)
             for operation_id, workorder_ids in ids_by_operation.items():
                 result[operation_id] = Workorder.browse(workorder_ids)
+            _debug.perf.count(
+                "operation_history_ranked",
+                batch_size=batch_size,
+                operations=len(operations),
+                rows=len(rows),
+            )
         return result
 
     @api.depends(
@@ -229,6 +238,13 @@ class MrpRoutingWorkcenter(models.Model):
                 operation.time_cycle = total_duration / cycle_number
             else:
                 operation.time_cycle = operation.time_cycle_manual
+            _debug.logic(
+                "operation_time_cycle",
+                operation=operation.id,
+                by="history" if cycle_number else "manual_fallback",
+                samples=len(history[operation.id]),
+                cycles=cycle_number,
+            )
 
         for operation in self:
             workcenter = self.env.context.get("workcenter", operation.workcenter_id)
@@ -306,6 +322,7 @@ class MrpRoutingWorkcenter(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
+        _debug.lifecycle("create", operations=res, boms=res.bom_id)
         res.bom_id.with_context(
             skip_bom_outdated_unmark=True
         )._update_outdated_bom_in_productions()
@@ -324,6 +341,7 @@ class MrpRoutingWorkcenter(models.Model):
     )
 
     def write(self, vals):
+        _debug.lifecycle("write", operations=self, fields=list(vals))
         if any(field_name in vals for field_name in self._OUTDATING_FIELDS):
             self.bom_id.with_context(
                 skip_bom_outdated_unmark=True
@@ -351,6 +369,12 @@ class MrpRoutingWorkcenter(models.Model):
             op.archived_bom_line_ids = lines
         for op, lines in byproduct_lines.grouped("operation_id").items():
             op.archived_byproduct_ids = lines
+        _debug.lifecycle(
+            "operation_archived",
+            operations=self,
+            bom_lines=len(bom_lines),
+            byproducts=len(byproduct_lines),
+        )
         bom_lines.write({"operation_id": False})
         byproduct_lines.write({"operation_id": False})
         self.bom_id.with_context(
@@ -363,6 +387,7 @@ class MrpRoutingWorkcenter(models.Model):
         for op in self:
             op.archived_bom_line_ids.write({"operation_id": op.id})
             op.archived_byproduct_ids.write({"operation_id": op.id})
+        _debug.lifecycle("operation_unarchived", operations=self)
         self.archived_bom_line_ids = [Command.clear()]
         self.archived_byproduct_ids = [Command.clear()]
         self.bom_id.with_context(

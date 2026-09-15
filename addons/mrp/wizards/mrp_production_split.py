@@ -1,6 +1,9 @@
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
+
+_debug = DebugLog(__name__)
 
 
 class MrpProductionSplitMulti(models.TransientModel):
@@ -76,6 +79,13 @@ class MrpProductionSplit(models.TransientModel):
                 rounding_method="UP",
             )
             if num_splits > wizard.MAX_SPLITS:
+                _debug.logic(
+                    "split_refused",
+                    reason="too_many_splits",
+                    production=wizard.production_id.id,
+                    splits=num_splits,
+                    maximum=wizard.MAX_SPLITS,
+                )
                 raise ValidationError(
                     wizard.env._(
                         "A batch size of %(size)s would split this order into"
@@ -125,6 +135,11 @@ class MrpProductionSplit(models.TransientModel):
 
     def action_split(self):
         if not self.valid_details:
+            _debug.logic(
+                "split_refused",
+                reason="quantities_do_not_sum",
+                production=self.production_id.id,
+            )
             raise UserError(
                 _(
                     "The total quantity to split (%(total)s) does not match "
@@ -133,6 +148,11 @@ class MrpProductionSplit(models.TransientModel):
                     product_qty=self.product_qty,
                 )
             )
+        _debug.pipeline(
+            "split_wizard",
+            production=self.production_id.id,
+            parts=len(self.production_detailed_vals_ids),
+        )
         productions = self.production_id._split_productions(
             {
                 self.production_id: [

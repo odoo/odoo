@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockTraceabilityReport(models.TransientModel):
@@ -33,6 +36,12 @@ class StockTraceabilityReport(models.TransientModel):
             res_model = "mrp.unbuild"
             res_id = move_line.move_id.consume_unbuild_id.id
             ref = move_line.move_id.consume_unbuild_id.name
+        _debug.logic(
+            "traceability_reference",
+            move_line=move_line.id,
+            res_model=res_model,
+            res_id=res_id,
+        )
         return res_model, res_id, ref
 
     @api.model

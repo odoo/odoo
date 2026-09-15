@@ -4,6 +4,9 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingType(models.Model):
@@ -120,6 +123,7 @@ class StockPickingType(models.Model):
         remaining.count_mo_in_progress = remaining.count_mo_to_close = False
         if not mrp_picking_types:
             return
+        _debug.perf.count("mo_counts_computed", picking_types=mrp_picking_types)
         counts_by_state = defaultdict(lambda: defaultdict(int))
         for picking_type, state, count in self.env["mrp.production"]._read_group(
             [

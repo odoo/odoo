@@ -1,5 +1,8 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -82,6 +85,7 @@ class ProductProduct(models.Model):
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         self.check_singleton()
         if not bom:
+            _debug.logic("bom_price", product=self.id, by="no_bom")
             return 0
         if not boms_to_recompute:
             boms_to_recompute = []
@@ -123,6 +127,14 @@ class ProductProduct(models.Model):
                     line.product_qty, self.uom_id, round=False
                 )
             byproduct_cost_share = sum(byproduct_lines.mapped("cost_share"))
+            _debug.logic(
+                "bom_price",
+                product=self.id,
+                bom=bom.id,
+                by="byproduct_share",
+                total=total,
+                share=byproduct_cost_share,
+            )
             if byproduct_cost_share and product_uom_qty:
                 return total * byproduct_cost_share / 100 / product_uom_qty
         else:
@@ -131,6 +143,14 @@ class ProductProduct(models.Model):
                 total *= float_round(
                     1 - byproduct_cost_share / 100, precision_rounding=0.0001
                 )
+            _debug.logic(
+                "bom_price",
+                product=self.id,
+                bom=bom.id,
+                by="rolled_up",
+                total=total,
+                byproduct_share=byproduct_cost_share,
+            )
             return bom.product_uom_id._compute_price(
                 total / bom.product_qty, self.uom_id
             )

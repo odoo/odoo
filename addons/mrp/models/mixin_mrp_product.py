@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinMrpProduct(models.AbstractModel):
@@ -88,6 +91,12 @@ class MixinMrpProduct(models.AbstractModel):
             boms = self.filtered(
                 lambda record: record.active != vals["active"]
             ).with_context(active_test=False)[self._mrp_bom_field]
+            _debug.lifecycle(
+                "boms_follow_product_active",
+                records=self,
+                active=vals["active"],
+                boms=len(boms),
+            )
             if vals["active"]:
                 boms.filtered("archived_with_product").write(
                     {"active": True, "archived_with_product": False}

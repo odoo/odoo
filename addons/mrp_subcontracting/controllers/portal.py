@@ -5,9 +5,12 @@ import werkzeug
 from odoo import _, http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+
+_debug = DebugLog(__name__)
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -70,6 +73,14 @@ class CustomerPortal(portal.CustomerPortal):
         pickings = StockPicking.search(
             domain, order=order, limit=self._items_per_page, offset=pager["offset"]
         )
+        _debug.pipeline(
+            "portal_productions_listed",
+            partner=commercial_partner.id,
+            filterby=filterby,
+            sortby=sortby,
+            total=count,
+            shown=len(pickings),
+        )
 
         values = {
             "date": date_begin,
@@ -96,6 +107,7 @@ class CustomerPortal(portal.CustomerPortal):
         try:
             self._document_check_access("stock.picking", picking_id)
         except AccessError, MissingError:
+            _debug.logic("portal_refused", route="my_production", picking=picking_id)
             raise werkzeug.exceptions.NotFound from None
         picking = request.env["stock.picking"].browse(picking_id)
         return request.render(
@@ -112,6 +124,7 @@ class CustomerPortal(portal.CustomerPortal):
         try:
             picking = self._document_check_access("stock.picking", picking_id)
         except AccessError, MissingError:
+            _debug.logic("portal_refused", route="backend_view", picking=picking_id)
             raise werkzeug.exceptions.NotFound from None
         session_info = request.env["ir.http"].session_info()
         production_company = picking.company_id

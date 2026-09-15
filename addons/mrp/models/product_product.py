@@ -3,8 +3,11 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.stock.const import PY_OPERATORS, QUANTITY_FIELDS
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -84,6 +87,12 @@ class ProductProduct(models.Model):
                 kit_product_ids.add(product.id)
             else:
                 kit_template_ids.add(template.id)
+        _debug.perf.count(
+            "is_kit_computed",
+            products=self,
+            kit_products=len(kit_product_ids),
+            kit_templates=len(kit_template_ids),
+        )
         for product in self:
             product.is_kit = (
                 product.id in kit_product_ids
@@ -105,6 +114,7 @@ class ProductProduct(models.Model):
 
     def action_archive(self):
         still_used = self._get_still_used_bom_lines()
+        _debug.logic("product_archive", products=self, still_used=len(still_used))
         res = super().action_archive()
         return still_used._prepare_action_still_used_warning() or res
 
@@ -257,7 +267,20 @@ class ProductProduct(models.Model):
             for field in QUANTITY_FIELDS:
                 ratios[field].append(component_vals[field] / qty_per_bom)
         if not ratios:
+            _debug.logic(
+                "kit_quantities",
+                product=self.id,
+                bom=bom_kit.id,
+                by="no_storable_component",
+            )
             return dict.fromkeys(QUANTITY_FIELDS, 0)
+        _debug.logic(
+            "kit_quantities",
+            product=self.id,
+            bom=bom_kit.id,
+            by="min_ratio",
+            components=len(lines_by_component),
+        )
         return {
             field: self.uom_id.round(
                 min(values) * bom_kit.product_qty, rounding_method="DOWN"

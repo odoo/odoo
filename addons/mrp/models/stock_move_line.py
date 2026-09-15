@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMoveLine(models.Model):
@@ -45,6 +48,11 @@ class StockMoveLine(models.Model):
                     move.product_uom_qty, move.quantity, move.product_uom_id
                 ):
                     move.manual_consumption = True
+        _debug.lifecycle(
+            "create",
+            lines=res,
+            forced=bool(self.env.context.get("force_manual_consumption")),
+        )
         for line in res:
             if line.move_id.raw_material_production_id and line.state == "done":
                 mo = line.move_id.raw_material_production_id
@@ -52,6 +60,12 @@ class StockMoveLine(models.Model):
                 finished_lots |= mo.move_finished_ids.filtered(
                     lambda m, mo=mo: m.product_id != mo.product_id
                 ).move_line_ids.lot_id
+                _debug.logic(
+                    "consume_line_traced",
+                    line=line.id,
+                    production=mo.id,
+                    by="finished_lots" if finished_lots else "all_finished_lines",
+                )
                 if finished_lots:
                     produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(
                         lambda sml, finished_lots=finished_lots: (

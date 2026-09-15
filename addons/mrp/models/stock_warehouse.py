@@ -1,4 +1,7 @@
 from odoo import Command, _, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockWarehouse(models.Model):
@@ -114,7 +117,14 @@ class StockWarehouse(models.Model):
                     warehouse, self.env["stock.rule"]
                 ).route_id
             if not manufacture_route:
+                _debug.logic("manufacture_route_absent", warehouse=warehouse.id)
                 continue
+            _debug.lifecycle(
+                "manufacture_resupply_set",
+                warehouse=warehouse.id,
+                route=manufacture_route.id,
+                enabled=warehouse.manufacture_to_resupply,
+            )
             if warehouse.manufacture_to_resupply:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
@@ -421,6 +431,9 @@ class StockWarehouse(models.Model):
         if any(
             field in vals for field in ("manufacture_steps", "manufacture_to_resupply")
         ):
+            _debug.lifecycle(
+                "manufacture_steps_written", warehouses=self, fields=list(vals)
+            )
             for warehouse in self:
                 warehouse._update_location_manufacture(
                     vals.get("manufacture_steps", warehouse.manufacture_steps)
@@ -443,6 +456,11 @@ class StockWarehouse(models.Model):
         return routes
 
     def _update_location_manufacture(self, new_manufacture_step):
+        _debug.pipeline(
+            "manufacture_locations_toggled",
+            warehouses=self,
+            step=new_manufacture_step,
+        )
         self.mapped("pbm_loc_id").write(
             {"active": new_manufacture_step != "mrp_one_step"}
         )

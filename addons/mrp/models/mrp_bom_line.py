@@ -5,7 +5,10 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import formatLang
+
+_debug = DebugLog(__name__)
 
 
 class MrpBomLine(models.Model):
@@ -124,6 +127,7 @@ class MrpBomLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
+        _debug.lifecycle("create", lines=lines, boms=lines.bom_id)
         lines.bom_id.with_context(
             skip_bom_outdated_unmark=True
         )._update_outdated_bom_in_productions()
@@ -155,6 +159,7 @@ class MrpBomLine(models.Model):
             )._update_outdated_bom_in_productions()
 
         tracked = [name for name in self._CHATTER_TRACKED_FIELDS if name in vals]
+        _debug.lifecycle("write", lines=self, fields=list(vals), tracked=len(tracked))
         if not tracked or self._is_chatter_muted():
             return super().write(vals)
 
@@ -177,6 +182,7 @@ class MrpBomLine(models.Model):
             if changes:
                 changes_by_bom[line.bom_id].append((component, changes))
 
+        _debug.pipeline("bom_line_changes_posted", lines=self, boms=len(changes_by_bom))
         for bom, entries in changes_by_bom.items():
             bom.message_post(
                 body=Markup("{}<ul>{}</ul>").format(
@@ -197,6 +203,7 @@ class MrpBomLine(models.Model):
 
     def unlink(self):
         boms = self.bom_id
+        _debug.lifecycle("unlink", lines=self, boms=boms)
         result = self._unlink_and_notify_boms()
         boms.with_context(
             skip_bom_outdated_unmark=True
@@ -346,6 +353,13 @@ class MrpBomLine(models.Model):
     def _get_exploded_kit_quantity(self, bom, line_quantity, ancestors):
         self.check_singleton()
         if self.product_id.id in ancestors:
+            _debug.logic(
+                "bom_cycle_detected",
+                bom_line=self.id,
+                bom=bom.id,
+                product=self.product_id.id,
+                ancestors=len(ancestors),
+            )
             raise ValidationError(
                 _(
                     "The current configuration is incorrect because it would "

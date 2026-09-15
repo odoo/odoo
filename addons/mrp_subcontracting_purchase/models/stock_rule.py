@@ -1,4 +1,7 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockRule(models.Model):
@@ -11,6 +14,11 @@ class StockRule(models.Model):
             "supplierinfo" in values and values["supplierinfo"]
         ) or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule or not seller:
+            _debug.logic(
+                "subcontract_lead_days",
+                product=product.id,
+                by="no_buy_rule" if not buy_rule else "no_seller",
+            )
             return super()._get_lead_days(product, **values)
         seller = seller[0]
         bom = (
@@ -24,6 +32,9 @@ class StockRule(models.Model):
             )
         )
         if not bom:
+            _debug.logic(
+                "subcontract_lead_days", product=product.id, by="no_subcontract_bom"
+            )
             return super()._get_lead_days(product, **values)
 
         delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(
@@ -33,6 +44,17 @@ class StockRule(models.Model):
             StockRule,
             buy_rule.with_context(ignore_vendor_lead_time=True, global_horizon_days=0),
         )._get_lead_days(product, **values)
+        _debug.logic(
+            "subcontract_lead_days",
+            product=product.id,
+            bom=bom.id,
+            by="vendor_delay"
+            if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo
+            else "manufacture_delay",
+            seller_delay=seller.delay,
+            produce_delay=bom.produce_delay,
+            days_to_order=bom.days_to_prepare_mo,
+        )
         if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
             delays["total_delay"] += seller.delay
             delays["purchase_delay"] += seller.delay
