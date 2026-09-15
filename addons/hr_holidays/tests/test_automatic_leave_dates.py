@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from odoo.fields import Command
 from odoo.tests import tagged, Form
@@ -303,6 +303,50 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         })
 
         self.assertEqual(leave.number_of_days, 5)
+
+    def test_unavailability_of_two_half_days_on_a_duration_based_calendar(self):
+        self.env.user.tz = 'UTC'
+        attendance_ids = [
+            Command.create({
+                'dayofweek': dayofweek,
+                'duration_hours': 4.0,
+                'day_period': day_period,
+            })
+            for dayofweek in ['0', '1', '2', '3', '4']
+            for day_period in ['morning', 'afternoon']
+        ]
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based calendar',
+            'hours_per_day': 8.0,
+            'attendance_ids': attendance_ids,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration based employee',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'date_version': date(2026, 1, 1),
+            'contract_date_start': date(2026, 1, 1),
+        })
+        day = date(2026, 4, 20)
+        for period in ['am', 'pm']:
+            self.env['hr.leave'].create({
+                'name': 'Half of a duration based day',
+                'employee_id': employee.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'request_date_from': day,
+                'request_date_to': day,
+                'request_duration': period,
+            })
+
+        unavailabilities = employee._get_employee_unavailable_intervals(
+            datetime(2026, 4, 20, tzinfo=UTC), datetime(2026, 4, 21, tzinfo=UTC),
+        )
+
+        self.assertEqual(
+            [(interval['start'], interval['stop'])
+             for interval in unavailabilities[employee.id]],
+            [(datetime(2026, 4, 20, tzinfo=UTC), datetime(2026, 4, 21, tzinfo=UTC))],
+        )
 
     def test_attendance_next_day(self):
         self.env.user.tz = 'Europe/Brussels'
