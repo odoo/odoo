@@ -3503,6 +3503,45 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(ship.location_dest_id, final_location)
         self.assertEqual(ship.move_ids.location_dest_id, final_location)
 
+    def test_push_rule_move_already_in_final_location(self):
+        """ A push rule must not redirect its destination to final location
+        when the move already sits in it, otherwise it builds a no-op transfer
+        (source == destination) """
+        stock_location = self.warehouse_1.lot_stock_id
+        sub_location = self.env['stock.location'].create({
+            'name': 'A child location',
+            'location_id': stock_location.id,
+        })
+        route = self.env['stock.route'].create({
+            'name': 'Child -> Stock',
+            'rule_ids': [Command.create({
+                'name': 'push staging to stock',
+                'location_src_id': sub_location.id,
+                'location_dest_id': stock_location.id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': self.warehouse_1.int_type_id.id,
+            })],
+        })
+        move = self.env['stock.move'].create({
+            'name': 'receipt into the child location',
+            'location_id': self.supplier_location,
+            'location_dest_id': sub_location.id,
+            'location_final_id': sub_location.id,
+            'picking_type_id': self.warehouse_1.in_type_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 3.0,
+            'route_ids': [Command.link(route.id)],
+        })
+        move._action_confirm()
+        move.write({'quantity': 3.0, 'picked': True})
+        move._action_done()
+
+        pushed_move = move.move_dest_ids
+        self.assertEqual(pushed_move.location_id, sub_location)
+        self.assertEqual(pushed_move.location_dest_id, stock_location)
+
 
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
