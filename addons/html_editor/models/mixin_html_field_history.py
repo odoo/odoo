@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from .diff_utils import (
     apply_patch,
@@ -7,6 +8,8 @@ from .diff_utils import (
     generate_patch,
     generate_unified_diff,
 )
+
+_debug = DebugLog(__name__)
 
 
 class MixinHtmlFieldHistory(models.AbstractModel):
@@ -67,6 +70,12 @@ class MixinHtmlFieldHistory(models.AbstractModel):
 
         fields_data = self._fields
         if any(f in vals and not fields_data[f].sanitize for f in versioned_fields):
+            _debug.logic(
+                "history_refused",
+                reason="unsanitized_versioned_field",
+                model=self._name,
+                fields=sorted(versioned_fields),
+            )
             raise ValidationError(  # pylint: disable=missing-gettext
                 "Ensure all versioned fields ( %s ) in model %s are declared as sanitize=True"
                 % (str(versioned_fields), self._name)
@@ -118,6 +127,7 @@ class MixinHtmlFieldHistory(models.AbstractModel):
 
     def _check_versioned_field(self, field_name):
         if field_name not in self._get_fields_versioned():
+            _debug.logic("history_field_refused", model=self._name, field=field_name)
             raise UserError(
                 _(
                     'Field "%(field)s" is not versioned on model "%(model)s".',
@@ -128,6 +138,9 @@ class MixinHtmlFieldHistory(models.AbstractModel):
 
     def _check_revision_id(self, revision_id):
         if isinstance(revision_id, bool) or not isinstance(revision_id, int):
+            _debug.logic(
+                "history_revision_refused", reason="not_an_int", model=self._name
+            )
             raise UserError(
                 _(
                     'Invalid revision id "%(revision)s": expected an integer.',

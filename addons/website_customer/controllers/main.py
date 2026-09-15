@@ -2,10 +2,13 @@ from urllib.parse import urlencode
 
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -212,4 +215,5 @@ class WebsiteCustomer(GoogleMap):
                 values = {}
                 values["main_object"] = values["partner"] = partner
                 return request.render("website_customer.details", values)
+        _debug.logic("customer_page_refused", reason="not_published")
         raise request.prepare_not_found_error()

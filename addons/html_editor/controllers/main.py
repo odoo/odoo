@@ -14,6 +14,7 @@ from lxml import etree, html
 from odoo import SUPERUSER_ID, _, http, tools
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.filesystem import guess_mimetype
 from odoo.libs.guarded_http import RefusedDestination
 from odoo.tools.image import (
@@ -28,6 +29,8 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
+
+_debug = DebugLog(__name__)
 
 DEFAULT_LIBRARY_ENDPOINT = "https://media-api.odoo.com"
 LIBRARY_MEDIA_MAX_BYTES = 32 * 1024 * 1024
@@ -77,8 +80,10 @@ class HTML_Editor(http.Controller):
             with file_open(shape_path, "r", filter_ext=(".svg",)) as file:
                 return file.read()
         except FileNotFoundError:
+            _debug.logic("shape_refused", reason="missing", path=shape_path)
             raise werkzeug.exceptions.NotFound from None
         except ValueError:
+            _debug.logic("shape_refused", reason="outside_addons", path=shape_path)
             raise werkzeug.exceptions.NotFound from None
 
     _SVG_DEFAULT_PALETTE = {
@@ -120,6 +125,7 @@ class HTML_Editor(http.Controller):
                                 o_color_match.group(1)
                             ]
                     else:
+                        _debug.logic("shape_color_refused", key=str(key))
                         raise werkzeug.exceptions.BadRequest
                 user_colors.append(
                     [tools.html_escape(css_color_value), colorMatch.group(1)]
@@ -208,10 +214,16 @@ class HTML_Editor(http.Controller):
             )
 
             if views:
+                _debug.logic(
+                    "attachment_remove_blocked",
+                    attachment=attachment.id,
+                    views=len(views),
+                )
                 removal_blocked_by[attachment.id] = views.read(["name"])
             else:
                 attachments_to_remove += attachment
         if attachments_to_remove:
+            _debug.lifecycle("attachments_removed", attachments=attachments_to_remove)
             attachments_to_remove.unlink()
         return removal_blocked_by
 
@@ -264,14 +276,17 @@ class HTML_Editor(http.Controller):
                 requests.exceptions.MissingSchema,
                 requests.exceptions.InvalidURL,
             ):
+                _debug.logic("media_url_refused", reason="unfetchable", url=url)
                 raise UserError(_("The provided URL cannot be fetched.")) from None
             except requests.RequestException:
+                _debug.logic("media_url_probe_failed", url=url)
                 response = None
             if response is not None and response.status_code == 200:
                 mime_type = response.headers.get("content-type")
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:
                     attachment_data["mimetype"] = mime_type
         else:
+            _debug.logic("attachment_create_refused", reason="no_data_or_url")
             raise UserError(
                 _("You need to specify either data or url to create an attachment.")
             )

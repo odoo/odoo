@@ -1,5 +1,8 @@
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsitePartnerPage(http.Controller):
@@ -24,4 +27,5 @@ class WebsitePartnerPage(http.Controller):
                     "edit_page": False,
                 }
                 return request.render("website_partner.partner_page", values)
+        _debug.logic("partner_page_refused", reason="not_published")
         raise request.prepare_not_found_error()

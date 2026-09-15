@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class EventQuiz(models.Model):
@@ -78,6 +81,11 @@ class EventQuizQuestion(models.Model):
     def _check_answers_integrity(self):
         for question in self:
             if len(question.correct_answer_id) != 1:
+                _debug.logic(
+                    "quiz_question_refused",
+                    reason="not_exactly_one_correct_answer",
+                    question=question.id,
+                )
                 raise ValidationError(
                     _(
                         'Question "%s" must have 1 correct answer to be valid.',
@@ -85,6 +93,11 @@ class EventQuizQuestion(models.Model):
                     )
                 )
             if len(question.answer_ids) < 2:
+                _debug.logic(
+                    "quiz_question_refused",
+                    reason="too_few_answers",
+                    question=question.id,
+                )
                 raise ValidationError(
                     _(
                         'Question "%s" must have 1 correct answer and at least 1 incorrect answer to be valid.',

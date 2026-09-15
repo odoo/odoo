@@ -2,6 +2,7 @@ from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.translate import LazyTranslate
 
@@ -10,6 +11,8 @@ from odoo.addons.account_payment_provider.controllers import (
 )
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -54,6 +57,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs
     ):
         if float(amount) < float(minimum_amount):
+            _debug.logic(
+                "donation_refused",
+                reason="below_minimum",
+                amount=float(amount),
+                minimum=float(minimum_amount),
+            )
             raise ValidationError(
                 _("Donation amount must be at least %.2f.", float(minimum_amount))
             )
@@ -61,10 +70,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if use_public_partner:
             details = kwargs["partner_details"]
             if not details.get("name"):
+                _debug.logic("donation_refused", reason="no_name")
                 raise ValidationError(_("Name is required."))
             if not details.get("email"):
+                _debug.logic("donation_refused", reason="no_email")
                 raise ValidationError(_("Email is required."))
             if not details.get("country_id"):
+                _debug.logic("donation_refused", reason="no_country")
                 raise ValidationError(_("Country is required."))
             partner_id = request.website.user_id.partner_id.id
             del kwargs["partner_details"]

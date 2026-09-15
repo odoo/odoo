@@ -2,8 +2,11 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteEventTrackQuiz(EventTrackController):
@@ -48,6 +51,7 @@ class WebsiteEventTrackQuiz(EventTrackController):
             not request.env.user.has_group("event.group_event_manager")
             and not track.sudo().quiz_id.repeatable
         ):
+            _debug.logic("quiz_refused", reason="not_repeatable", track=track.id)
             raise Forbidden
 
         event_track_visitor = track._get_event_track_visitors(force_create=True)

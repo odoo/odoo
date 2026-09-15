@@ -8,9 +8,12 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_duration
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+_debug = DebugLog(__name__)
 
 
 class ExhibitorController(WebsiteEventController):
@@ -142,6 +145,7 @@ class ExhibitorController(WebsiteEventController):
     )
     def event_exhibitor(self, event, sponsor, **options):
         if not sponsor.has_access("read"):
+            _debug.logic("exhibitor_refused", reason="no_read", sponsor=sponsor.id)
             raise Forbidden
         sponsor = sponsor.sudo()
 

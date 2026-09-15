@@ -1,9 +1,12 @@
 from odoo import _, http
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_sale.controllers.delivery import Delivery
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
+_debug = DebugLog(__name__)
 
 
 class MondialRelay(http.Controller):
@@ -17,10 +20,16 @@ class MondialRelay(http.Controller):
         order_sudo = request.cart
 
         if not order_sudo or order_sudo._is_anonymous_cart():
+            _debug.logic("pickup_point_refused", reason="anonymous_cart")
             raise AccessDenied(
                 _("A customer is required before selecting a pickup point.")
             )
         if not order_sudo.carrier_id.is_mondialrelay:
+            _debug.logic(
+                "pickup_point_refused",
+                reason="not_mondialrelay",
+                carrier=order_sudo.carrier_id.id,
+            )
             raise UserError(_("Select a Mondial Relay delivery method first."))
         address_values = self._parse_relay_address(data)
 

@@ -2,8 +2,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_sale_collect import utils
+
+_debug = DebugLog(__name__)
 
 
 class DeliveryCarrier(models.Model):
@@ -29,6 +32,7 @@ class DeliveryCarrier(models.Model):
                 )
             )
         ):
+            _debug.logic("in_store_carrier_refused", reason="provider", carriers=self)
             raise ValidationError(
                 _(
                     "The delivery method must have at least one warehouse to be published."

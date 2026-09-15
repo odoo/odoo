@@ -7,10 +7,12 @@ from lxml import etree, html
 from odoo import _, api, models
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 EDITING_ATTRIBUTES = MOVABLE_BRANDING | {
     "data-oe-type",
@@ -69,6 +71,7 @@ class IrUiView(models.Model):
                     self._copy_custom_snippet_translations(record, field)
 
         except (ValueError, TypeError) as err:
+            _debug.logic("snippet_save_refused", reason="bad_values", view=self.id)
             raise ValidationError(
                 _(
                     "Invalid field value for %(field_name)s: %(value)s",

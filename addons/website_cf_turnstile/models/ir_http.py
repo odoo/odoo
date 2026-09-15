@@ -5,8 +5,10 @@ import requests
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrHttp(models.AbstractModel):
@@ -34,6 +36,7 @@ class IrHttp(models.AbstractModel):
         )
         if turnstile_result in ["is_human", "no_secret"]:
             return
+        _debug.logic("turnstile_refused", verdict=turnstile_result)
         if turnstile_result == "wrong_secret":
             raise ValidationError(_("The Cloudflare turnstile private key is invalid."))
         if turnstile_result == "wrong_token":

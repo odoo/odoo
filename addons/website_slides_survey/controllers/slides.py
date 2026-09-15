@@ -4,8 +4,11 @@ from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_slides.controllers.main import WebsiteSlides
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteSlidesSurvey(WebsiteSlides):
@@ -18,12 +21,18 @@ class WebsiteSlidesSurvey(WebsiteSlides):
     def slide_get_certification_url(self, slide_id, **kw):
         fetch_res = self._get_slide(slide_id)
         if fetch_res.get("error"):
+            _debug.logic(
+                "certification_url_refused",
+                reason=str(fetch_res["error"]),
+                slide=slide_id,
+            )
             raise werkzeug.exceptions.NotFound
         slide = fetch_res["slide"]
         if slide.channel_id.is_member:
             slide.action_set_viewed()
         certification_url = slide._generate_certification_url().get(slide.id)
         if not certification_url:
+            _debug.logic("certification_url_refused", reason="no_url", slide=slide.id)
             raise werkzeug.exceptions.NotFound
         return request.redirect(certification_url)
 
@@ -95,6 +104,9 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
     def _slide_mark_completed(self, slide):
         if slide.slide_category == "certification":
+            _debug.logic(
+                "slide_complete_refused", reason="certification", slide=slide.id
+            )
             raise werkzeug.exceptions.Forbidden(
                 _("Certification slides are completed when the survey is succeeded.")
             )

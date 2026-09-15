@@ -5,8 +5,11 @@ from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import Command, http, tools
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteEventBoothController(WebsiteEventController):
@@ -19,6 +22,7 @@ class WebsiteEventBoothController(WebsiteEventController):
     )
     def event_booth_main(self, event, booth_category_id=False, booth_ids=False):
         if not event.has_access("read"):
+            _debug.logic("booth_page_refused", reason="no_read", event=event.id)
             raise Forbidden
 
         booth_category_id = int(booth_category_id) if booth_category_id else False
@@ -61,6 +65,7 @@ class WebsiteEventBoothController(WebsiteEventController):
     )
     def event_booth_contact_form(self, event, booth_ids=None, booth_category_id=None):
         if not booth_ids or not booth_category_id:
+            _debug.logic("booth_form_refused", reason="no_selection", event=event.id)
             raise NotFound
 
         return request.render(
