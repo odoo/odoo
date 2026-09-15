@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import HttpCase, tagged
 
 
@@ -127,3 +128,49 @@ class TestTranslation(HttpCase):
         for website in self.env['website'].search([]):
             website.language_ids += lang_fr
         self._multi_language_en_user_en_fr_site()
+
+
+@tagged('post_install', '-at_install')
+class TestFieldTranslation(HttpCase):
+
+    def test_view_string_field_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        lang_fr = self.env.ref('base.lang_fr')
+        website = self.env['website'].create({
+            'name': 'Test Website',
+            'language_ids': [lang_fr.id],
+            'default_lang_id': lang_fr.id
+        })
+        record = self.env['test.model'].with_context(lang='fr_FR').create({
+            'name': 'En Français',
+        })
+        view = self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'arch_db': """
+                <div>
+                    <span t-field="record.name"/>
+                </div>
+            """,
+        })
+
+        def render_view_with_lang(lang):
+            return view.with_context(edit_translations=True)._render_template(
+                view.id, {'record': record.with_context(lang=lang), 'translatable': True}
+            )
+        with MockRequest(self.env, website=website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('to_translate', render_view_with_lang('en_US'))
+            self.assertIn('to_translate', render_view_with_lang('nl_NL'))
+
+        record.update_field_translations('name', {'en_US': 'In English'})
+        with MockRequest(self.env, website=website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('translated', render_view_with_lang('en_US'))
+            self.assertIn('to_translate', render_view_with_lang('nl_NL'))
+
+        record.update_field_translations('name', {'nl_NL': 'In het Nederlands'})
+        with MockRequest(self.env, website=website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('translated', render_view_with_lang('en_US'))
+            self.assertIn('translated', render_view_with_lang('nl_NL'))
