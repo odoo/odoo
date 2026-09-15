@@ -286,6 +286,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_to': datetime.today(),
             })
 
+    def test_overlapping_hourly_requests(self):
+        monday = date(2019, 12, 23)
+        self._create_leave(self.employee_emp, self.holidays_type_hours, monday, monday, 9, 11)
+        with self.assertRaises(ValidationError):
+            self._create_leave(self.employee_emp, self.holidays_type_hours, monday, monday, 10, 12)
+        following = self._create_leave(self.employee_emp, self.holidays_type_hours, monday, monday, 11, 13)
+        self.assertFalse(following.dashboard_warning_message)
+
     def test_limited_type_not_enough_days(self):
         with freeze_time('2022-01-05'):
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hruser_id).create({
