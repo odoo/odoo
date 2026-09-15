@@ -665,11 +665,12 @@ class TestTraceability(TestMrpCommon):
         mo.action_generate_serial()
         self.assertEqual(mo.lot_producing_ids[:1].name, "TEST/0000002")
 
-        p_final.lot_sequence_id.prefix = 'xx%(doy)sxx'
-        # generate serial lot_3 from the MO (next from sequence)
-        mo.lot_producing_ids = self.env['stock.lot']
-        mo.action_generate_serial()
-        self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_ids.name)
+        with freeze_time('2024-01-15'):
+            p_final.lot_sequence_id.prefix = 'xx%(doy)sxx'
+            # generate serial lot_3 from the MO (next from sequence)
+            mo.lot_producing_ids = self.env['stock.lot']
+            mo.action_generate_serial()
+            self.assertIn(datetime.now(self.env.tz).strftime('%j'), mo.lot_producing_ids.name)
 
     def test_use_customized_serial_sequence(self):
         """
