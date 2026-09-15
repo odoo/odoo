@@ -332,6 +332,7 @@
 
                 courseJoinWidget.appendTo($widgetLocation);
                 if (!this.publicUser && courseJoinWidget.channel.channelEnroll === 'public' && this.slide.sessionAnswers) {
+                    this._applySessionAnswers();
                     courseJoinWidget.joinChannel(this.channel.channelId);
                 }
             }
