@@ -21,7 +21,7 @@ class AccountReturn(models.Model):
                 ),
             ]
             fixed_assets_exist = (
-                self.env["account.asset"].sudo().search_count(domain, limit=1)
+                self.env["resource.asset"].sudo().search_count(domain, limit=1)
             )
             if not fixed_assets_exist:
                 checks.append(

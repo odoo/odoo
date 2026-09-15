@@ -1,5 +1,7 @@
 import logging
 
+import psycopg.types.json
+
 from odoo import SUPERUSER_ID, api
 from odoo.db.schema import column_exists, table_exists
 from odoo.tools import SQL
@@ -42,18 +44,26 @@ RENAMED_BY_1_3 = {
 }
 
 
+def _table(cr):
+    # 1.4's pre-migrate renames account_asset, and it too runs before this script
+    # on a database jumping past 1.2.
+    return (
+        "account_asset" if table_exists(cr, "account_asset") else "legacy_account_asset"
+    )
+
+
 def _column(cr, column):
     # 1.3's pre-migrate renames these columns, and every pre script of an upgrade
     # runs before any post script, so a database jumping past 1.2 reaches this
     # script with the new names already in place.
     renamed = RENAMED_BY_1_3.get(column)
-    if renamed and column_exists(cr, "account_asset", renamed):
+    if renamed and column_exists(cr, _table(cr), renamed):
         return renamed
     return column
 
 
 def migrate(cr, version):
-    if not version or not column_exists(cr, "account_asset", "model_id"):
+    if not version or not column_exists(cr, _table(cr), "model_id"):
         return
     env = api.Environment(cr, SUPERUSER_ID, {})
     profile_by_template = _create_profiles(env)
@@ -69,21 +79,28 @@ def migrate(cr, version):
     cr.execute(
         SQL(
             """
-            UPDATE account_asset asset
+            UPDATE %s asset
                SET depreciation_profile_id = map.profile_id
               FROM %s
              WHERE asset.model_id = map.template_id
             """,
+            SQL.identifier(_table(cr)),
             mapping,
         )
     )
     boards = cr.rowcount
     accounts = _move_account_links(env, mapping)
     moved = _repoint_generic_references(cr, mapping)
-    cr.execute("UPDATE account_asset SET model_id = NULL WHERE model_id IS NOT NULL")
     cr.execute(
         SQL(
-            "DELETE FROM account_asset WHERE id = ANY(%s)",
+            "UPDATE %s SET model_id = NULL WHERE model_id IS NOT NULL",
+            SQL.identifier(_table(cr)),
+        )
+    )
+    cr.execute(
+        SQL(
+            "DELETE FROM %s WHERE id = ANY(%s)",
+            SQL.identifier(_table(cr)),
             list(profile_by_template),
         )
     )
@@ -101,7 +118,7 @@ def _create_profiles(env):
     cr = env.cr
     cr.execute(
         SQL(
-            "SELECT %s FROM account_asset WHERE %s = 'model' ORDER BY id",
+            "SELECT %s FROM %s WHERE %s = 'model' ORDER BY id",
             SQL(", ").join(
                 SQL(
                     "%s AS %s",
@@ -110,6 +127,7 @@ def _create_profiles(env):
                 )
                 for column in TEMPLATE_COLUMNS
             ),
+            SQL.identifier(_table(cr)),
             SQL.identifier(_column(cr, "state")),
         )
     )
@@ -138,10 +156,10 @@ def _create_profiles(env):
                 ],
                 "depreciation_journal_id": template["journal_id"],
                 "analytic_distribution": template["analytic_distribution"],
-                "asset_properties_definition": template["asset_properties_definition"],
             }
         )
         profile_by_template[template["id"]] = profile.id
+        _stash_definition(env, profile, template["asset_properties_definition"])
     Profile.flush_model()
     for template in templates:
         cr.execute(
@@ -160,6 +178,26 @@ def _create_profiles(env):
             )
         )
     return profile_by_template
+
+
+def _stash_definition(env, profile, definition):
+    # A profile carried the properties definition until account_depreciation 1.4,
+    # which moves it onto the asset kind; keep it where 1.4 looks for it.
+    if not definition:
+        return
+    if "asset_properties_definition" in profile._fields:
+        profile.asset_properties_definition = definition
+        return
+    env.cr.execute(
+        """
+        CREATE TABLE IF NOT EXISTS account_depreciation_profile_definition_stash
+               (profile_id int PRIMARY KEY, definition jsonb)
+        """
+    )
+    env.cr.execute(
+        "INSERT INTO account_depreciation_profile_definition_stash VALUES (%s, %s)",
+        (profile.id, psycopg.types.json.Jsonb(definition)),
+    )
 
 
 def _move_account_links(env, mapping):

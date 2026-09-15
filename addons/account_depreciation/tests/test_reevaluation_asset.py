@@ -1500,7 +1500,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -1571,7 +1571,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[1].depreciation_move_ids.sorted(
+            asset.increase_ids[1].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -1763,7 +1763,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -1927,7 +1929,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-09-30",
@@ -2110,7 +2114,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -2300,7 +2306,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -2539,7 +2545,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-06-30",
@@ -2631,7 +2639,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self.env.invalidate_all()
         self.assertEqual(asset.account_depreciation_id.current_balance, -3500)
 
-        gross_increase = asset.child_ids
+        gross_increase = asset.increase_ids
         disposal_action = (
             self.env["asset.modify"]
             .create(
@@ -2866,7 +2874,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-01-31",
@@ -3058,7 +3068,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-01-31",
@@ -3255,7 +3267,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
+            asset.increase_ids.depreciation_move_ids.sorted(
+                lambda mv: (mv.date, mv.id)
+            ),
             [
                 self._get_depreciation_move_values(
                     date="2022-07-31",
@@ -3905,7 +3919,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -4626,7 +4640,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -5664,7 +5678,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -6349,7 +6363,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [

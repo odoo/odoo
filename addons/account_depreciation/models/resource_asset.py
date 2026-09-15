@@ -22,45 +22,42 @@ class LinearRecompute(NamedTuple):
     lifetime_left: float
 
 
-class AccountAsset(models.Model):
-    _name = "account.asset"
-    _description = "Asset/Revenue Recognition"
-    _inherit = ["mixin.mail.thread", "mixin.mail.activity", "mixin.analytic"]
-    _check_company_auto = True
+BOARD_FIELDS = frozenset(
+    {
+        "depreciation_profile_id",
+        "account_asset_id",
+        "account_depreciation_id",
+        "account_depreciation_expense_id",
+        "original_move_line_ids",
+        "depreciation_state",
+    }
+)
+
+
+class ResourceAsset(models.Model):
+    _inherit = ["resource.asset", "mixin.analytic"]
 
     count_depreciation_posted = fields.Integer(
         string="# Posted Depreciation Entries",
         compute="_compute_depreciation_entries_count",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     count_increase = fields.Count(
-        count_of="child_ids",
+        count_of="increase_ids",
         string="# Gross Increases",
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Number of assets made to increase the value of the asset",
     )
     count_depreciation = fields.Count(
         count_of="depreciation_move_ids",
         string="# Depreciation Entries",
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Number of depreciation entries (posted or not)",
     )
 
-    name = fields.Char(
-        string="Asset Name",
-        compute="_compute_name",
-        store=True,
-        readonly=False,
-        required=True,
-        tracking=True,
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        default=lambda self: self.env.company,
-        required=True,
-    )
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
-    currency_id = fields.Many2one(
-        comodel_name="res.currency",
-        related="company_id.currency_id",
-        store=True,
+    country_code = fields.Char(
+        related="company_id.account_fiscal_country_id.code",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     depreciation_state = fields.Selection(
         selection=[
@@ -70,8 +67,7 @@ class AccountAsset(models.Model):
             ("close", "Closed"),
             ("cancelled", "Cancelled"),
         ],
-        string="Status",
-        default="draft",
+        string="Depreciation Status",
         copy=False,
         readonly=True,
         help="When an asset is created, the status is 'Draft'.\n"
@@ -80,7 +76,6 @@ class AccountAsset(models.Model):
         "You can manually close an asset when the depreciation is over.\n"
         "By cancelling an asset, all depreciation entries will be reversed",
     )
-    active = fields.Boolean(default=True)
 
     depreciation_method = fields.Selection(
         selection=[
@@ -89,6 +84,7 @@ class AccountAsset(models.Model):
             ("degressive_then_linear", "Declining then Straight Line"),
         ],
         default="linear",
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Choose the method to use to compute the amount of depreciation lines.\n"
         "  * Straight Line: Calculated on basis of: Gross Value / Duration\n"
         "  * Declining: Calculated on basis of: Residual Value * Declining Factor, with a minimum depreciation value equal to the straight line value once that exceeds the declining amount.\n"
@@ -97,17 +93,20 @@ class AccountAsset(models.Model):
     depreciation_duration = fields.Integer(
         string="Duration",
         default=5,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="The number of depreciations needed to depreciate your asset",
     )
     depreciation_period = fields.Selection(
         selection=[("1", "Months"), ("12", "Years")],
         string="Number of Months in a Period",
         default="12",
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="The amount of time between two depreciations",
     )
     depreciation_factor = fields.Float(
         string="Declining Factor",
         default=0.3,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     depreciation_prorata = fields.Selection(
         selection=[
@@ -118,6 +117,7 @@ class AccountAsset(models.Model):
         string="Computation",
         default="constant_periods",
         required=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     date_prorata = fields.Date(
         compute="_compute_prorata_date",
@@ -125,10 +125,13 @@ class AccountAsset(models.Model):
         store=True,
         copy=True,
         readonly=False,
-        required=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Starting date of the period used in the prorata calculation of the first depreciation",
     )
-    date_prorata_paused = fields.Date(compute="_compute_paused_prorata_date")
+    date_prorata_paused = fields.Date(
+        compute="_compute_paused_prorata_date",
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
     account_asset_id = fields.Many2one(
         comodel_name="account.account",
         string="Fixed Asset Account",
@@ -137,6 +140,7 @@ class AccountAsset(models.Model):
         readonly=False,
         domain="[('account_type', '!=', 'off_balance')]",
         check_company=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Account used to record the purchase of the asset at its original price.",
     )
     asset_group_id = fields.Many2one(
@@ -144,12 +148,14 @@ class AccountAsset(models.Model):
         index=True,
         check_company=True,
         tracking=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     account_depreciation_id = fields.Many2one(
         comodel_name="account.account",
         string="Depreciation Account",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card', 'off_balance'))]",
         check_company=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Account used in the depreciation entries, to decrease the asset value.",
     )
     account_depreciation_expense_id = fields.Many2one(
@@ -157,6 +163,7 @@ class AccountAsset(models.Model):
         string="Expense Account",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card', 'off_balance'))]",
         check_company=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Account used in the periodical entries, to record a part of the asset as expense.",
     )
 
@@ -167,6 +174,7 @@ class AccountAsset(models.Model):
         readonly=False,
         domain="[('type', '=', 'general')]",
         check_company=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
 
     value_original = fields.Monetary(
@@ -179,30 +187,41 @@ class AccountAsset(models.Model):
         recursive=True,
         store=True,
         readonly=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Sum of the depreciable value, the salvage value and the book value of all value increase items",
     )
     value_depreciable_residual = fields.Monetary(
         string="Depreciable Value",
         compute="_compute_value_residual",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     value_salvage = fields.Monetary(
         string="Not Depreciable Value",
         compute="_compute_salvage_value",
         store=True,
         readonly=False,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="It is the amount you plan to have that you cannot depreciate.",
     )
-    value_depreciable = fields.Monetary(compute="_compute_total_depreciable_value")
+    value_depreciable = fields.Monetary(
+        compute="_compute_total_depreciable_value",
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
     value_increase = fields.Monetary(
         compute="_compute_gross_increase_value",
         compute_sudo=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     value_non_deductible_tax = fields.Monetary(
         compute="_compute_value_non_deductible_tax",
         store=True,
         readonly=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
-    value_purchase = fields.Monetary(compute="_compute_related_purchase_value")
+    value_purchase = fields.Monetary(
+        compute="_compute_related_purchase_value",
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
 
     depreciation_move_ids = fields.One2many(
         comodel_name="account.move",
@@ -216,12 +235,6 @@ class AccountAsset(models.Model):
         column2="line_id",
         string="Journal Items",
         copy=False,
-    )
-
-    asset_properties = fields.Properties(
-        definition="depreciation_profile_id.asset_properties_definition",
-        string="Properties",
-        copy=True,
     )
 
     date_acquisition = fields.Date(
@@ -243,55 +256,75 @@ class AccountAsset(models.Model):
         change_default=True,
         index="btree_not_null",
         check_company=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     account_type = fields.Selection(
         related="account_asset_id.account_type",
         string="Type of the account",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
     display_account_asset_id = fields.Boolean(
-        compute="_compute_display_account_asset_id"
+        compute="_compute_display_account_asset_id",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
 
-    parent_id = fields.Many2one(
-        comodel_name="account.asset",
-        index=True,
-        help="An asset has a parent when it is the result of gaining value",
+    increased_asset_id = fields.Many2one(
+        comodel_name="resource.asset",
+        string="Increases",
+        index="btree_not_null",
+        help="The asset whose value this one increases, and whose life caps its depreciation",
     )
-    child_ids = fields.One2many(
-        comodel_name="account.asset",
-        inverse_name="parent_id",
-        help="The children are the gains in value of this asset",
+    increase_ids = fields.One2many(
+        comodel_name="resource.asset",
+        inverse_name="increased_asset_id",
+        string="Gross Increases",
     )
 
     value_depreciated_import = fields.Monetary(
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="In case of an import from another software, you might need to use this field to have the right "
-        "depreciation table report. This is the value that was already depreciated with entries not computed from this model"
+        "depreciation table report. This is the value that was already depreciated with entries not computed from this model",
     )
 
     depreciation_lifetime_days = fields.Float(
         compute="_compute_lifetime_days",
         recursive=True,
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
-    depreciation_paused_days = fields.Float(copy=False)
+    depreciation_paused_days = fields.Float(
+        copy=False,
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
 
     value_gain_on_sale = fields.Monetary(
         string="Net gain on sale",
         copy=False,
+        groups="account.group_account_readonly,account.group_account_invoice",
         help="Net value of gain or loss on sale of an asset",
     )
 
     linked_assets_ids = fields.Many2many(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         compute="_compute_linked_assets",
+        groups="account.group_account_readonly,account.group_account_invoice",
     )
-    count_linked_asset = fields.Count(count_of="linked_assets_ids")
-    warning_count_assets = fields.Boolean(compute="_compute_linked_assets")
+    count_linked_asset = fields.Count(
+        count_of="linked_assets_ids",
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
+    warning_count_assets = fields.Boolean(
+        compute="_compute_linked_assets",
+        groups="account.group_account_readonly,account.group_account_invoice",
+    )
 
     @api.depends("company_id")
     def _compute_depreciation_journal_id(self):
         AccountJournal = self.env["account.journal"]
         needs_default = self.filtered(
-            lambda asset: asset.depreciation_journal_id.company_id != asset.company_id
+            lambda asset: (
+                asset.depreciation_state
+                and asset.depreciation_journal_id.company_id != asset.company_id
+            )
         )
         default_per_company = {}
         for company in needs_default.company_id:
@@ -324,9 +357,13 @@ class AccountAsset(models.Model):
                 dates = asset.depreciation_move_ids.filtered(
                     lambda m: m.date and m.state != "cancel"
                 ).mapped("date")
-                asset.date_disposal = dates and max(dates)
-            else:
+                asset.date_disposal = dates and max(
+                    [*dates, asset.date_acquisition or dates[0]]
+                )
+            elif asset.depreciation_state:
                 asset.date_disposal = False
+            else:
+                asset.date_disposal = asset.date_disposal
 
     @api.depends(
         "original_move_line_ids",
@@ -384,13 +421,15 @@ class AccountAsset(models.Model):
         "depreciation_period",
         "depreciation_prorata",
         "date_prorata",
-        "parent_id",
-        "parent_id.depreciation_lifetime_days",
-        "parent_id.date_prorata_paused",
+        "increased_asset_id",
+        "increased_asset_id.depreciation_lifetime_days",
+        "increased_asset_id.date_prorata_paused",
     )
     def _compute_lifetime_days(self):
         for asset in self:
-            if not asset.parent_id:
+            if not asset.depreciation_state or not asset.date_prorata:
+                asset.depreciation_lifetime_days = 0.0
+            elif not asset.increased_asset_id:
                 if asset.depreciation_prorata == "daily_computation":
                     asset.depreciation_lifetime_days = (
                         asset.date_prorata
@@ -409,21 +448,23 @@ class AccountAsset(models.Model):
             else:
                 if asset.depreciation_prorata == "daily_computation":
                     parent_end_date = (
-                        asset.parent_id.date_prorata_paused
+                        asset.increased_asset_id.date_prorata_paused
                         + relativedelta(
-                            days=int(asset.parent_id.depreciation_lifetime_days - 1)
+                            days=int(
+                                asset.increased_asset_id.depreciation_lifetime_days - 1
+                            )
                         )
                     )
                 else:
                     parent_end_date = (
-                        asset.parent_id.date_prorata_paused
+                        asset.increased_asset_id.date_prorata_paused
                         + relativedelta(
                             months=int(
-                                asset.parent_id.depreciation_lifetime_days
+                                asset.increased_asset_id.depreciation_lifetime_days
                                 / DAYS_PER_MONTH
                             ),
                             days=int(
-                                asset.parent_id.depreciation_lifetime_days
+                                asset.increased_asset_id.depreciation_lifetime_days
                                 % DAYS_PER_MONTH
                             )
                             - 1,
@@ -436,7 +477,9 @@ class AccountAsset(models.Model):
     @api.depends("date_acquisition", "company_id", "depreciation_prorata")
     def _compute_prorata_date(self):
         for asset in self:
-            if asset.depreciation_prorata == "none" and asset.date_acquisition:
+            if not asset.depreciation_state:
+                asset.date_prorata = asset.date_prorata
+            elif asset.depreciation_prorata == "none" and asset.date_acquisition:
                 fiscalyear_date = asset._get_fiscalyear_dates(
                     asset.date_acquisition
                 ).get("date_from")
@@ -447,7 +490,9 @@ class AccountAsset(models.Model):
     @api.depends("date_prorata", "depreciation_prorata", "depreciation_paused_days")
     def _compute_paused_prorata_date(self):
         for asset in self:
-            if asset.depreciation_prorata == "daily_computation":
+            if not asset.date_prorata:
+                asset.date_prorata_paused = False
+            elif asset.depreciation_prorata == "daily_computation":
                 asset.date_prorata_paused = asset.date_prorata + relativedelta(
                     days=asset.depreciation_paused_days
                 )
@@ -479,20 +524,12 @@ class AccountAsset(models.Model):
     @api.depends("original_move_line_ids")
     def _compute_acquisition_date(self):
         for asset in self:
+            if not asset.depreciation_state:
+                asset.date_acquisition = asset.date_acquisition
+                continue
             asset.date_acquisition = asset.date_acquisition or min(
                 [(aml.invoice_date or aml.date) for aml in asset.original_move_line_ids]
                 + [fields.Date.today()]
-            )
-
-    @api.depends("original_move_line_ids")
-    def _compute_name(self):
-        for record in self:
-            record.name = record.name or (
-                (
-                    record.original_move_line_ids
-                    and record.original_move_line_ids[0].name
-                )
-                or ""
             )
 
     @api.depends(
@@ -525,7 +562,7 @@ class AccountAsset(models.Model):
     @api.depends(
         "value_depreciable_residual",
         "value_salvage",
-        "child_ids.value_book",
+        "increase_ids.value_book",
         "depreciation_state",
         "depreciation_move_ids.state",
     )
@@ -534,17 +571,17 @@ class AccountAsset(models.Model):
             record.value_book = (
                 record.value_depreciable_residual
                 + record.value_salvage
-                + sum(record.child_ids.mapped("value_book"))
+                + sum(record.increase_ids.mapped("value_book"))
             )
             if record.depreciation_state == "close" and all(
                 move.state == "posted" for move in record.depreciation_move_ids
             ):
                 record.value_book -= record.value_salvage
 
-    @api.depends("child_ids.value_original")
+    @api.depends("increase_ids.value_original")
     def _compute_gross_increase_value(self):
         for record in self:
-            record.value_increase = sum(record.child_ids.mapped("value_original"))
+            record.value_increase = sum(record.increase_ids.mapped("value_original"))
 
     @api.depends(
         "original_move_line_ids",
@@ -630,6 +667,8 @@ class AccountAsset(models.Model):
     def _onchange_original_move_line_ids(self):
         self.date_acquisition = False
         self._compute_acquisition_date()
+        if not self.name and self.original_move_line_ids:
+            self.name = self.original_move_line_ids[0].name
 
     @api.onchange("account_asset_id")
     def _onchange_account_asset_id(self):
@@ -666,7 +705,11 @@ class AccountAsset(models.Model):
     @api.constrains("active", "depreciation_state")
     def _check_active(self):
         for record in self:
-            if not record.active and record.depreciation_state != "close":
+            if (
+                not record.active
+                and record.depreciation_state
+                and record.depreciation_state != "close"
+            ):
                 raise UserError(_("You cannot archive a record that is not closed"))
 
     @api.constrains("depreciation_move_ids")
@@ -683,6 +726,21 @@ class AccountAsset(models.Model):
             ):
                 raise UserError(
                     _("The remaining value on the last depreciation line must be 0")
+                )
+
+    @api.constrains("depreciation_state", "company_id", "date_prorata")
+    def _check_board_has_company_and_start(self):
+        for asset in self.filtered("depreciation_state"):
+            if not asset.company_id:
+                raise ValidationError(
+                    _("%(asset)s depreciates, so it needs a company.", asset=asset.name)
+                )
+            if not asset.date_prorata:
+                raise ValidationError(
+                    _(
+                        "%(asset)s depreciates, so it needs a prorata date.",
+                        asset=asset.name,
+                    )
                 )
 
     @api.constrains("original_move_line_ids")
@@ -702,7 +760,7 @@ class AccountAsset(models.Model):
                         "You cannot create an asset from lines containing credit and debit on the account or with a null amount"
                     )
                 )
-            if asset.depreciation_state != "draft":
+            if asset.depreciation_state not in (False, "draft"):
                 raise UserError(
                     _(
                         "You cannot add or remove bills when the asset is already running or closed."
@@ -767,13 +825,21 @@ class AccountAsset(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
         for asset, vals in zip(self, vals_list, strict=True):
+            if not asset.depreciation_state:
+                continue
             vals["name"] = _("%s (copy)", asset.name)
             vals["account_asset_id"] = asset.account_asset_id.id
+            vals["value_original"] = asset.value_original
         return vals_list
 
     @api.model_create_multi
     def create(self, vals_list):
+        vals_list = [dict(vals) for vals in vals_list]
+        board_context = self.env.context.get("default_depreciation_state")
+        fallback_kind = None
         for vals in vals_list:
+            if not (board_context or any(vals.get(field) for field in BOARD_FIELDS)):
+                continue
             state = vals.get("depreciation_state")
             if state and state != "draft":
                 raise UserError(
@@ -783,11 +849,22 @@ class AccountAsset(models.Model):
                         state=state,
                     )
                 )
-            if not vals.get("name") and not vals.get("original_move_line_ids"):
+            if not vals.get("name"):
+                vals["name"] = self._get_name_from_lines(vals)
+            if not vals.get("name"):
                 raise UserError(_("An asset needs a name."))
             vals["depreciation_state"] = "draft"
+            if not vals.get("kind_id"):
+                profile = self.env["account.depreciation.profile"].browse(
+                    vals.get("depreciation_profile_id")
+                )
+                if not profile.kind_id and fallback_kind is None:
+                    fallback_kind = self.env.ref(
+                        "account_depreciation.kind_fixed_asset"
+                    )
+                vals["kind_id"] = (profile.kind_id or fallback_kind).id
         new_recs = super(
-            AccountAsset, self.with_context(mail_create_nolog=True)
+            ResourceAsset, self.with_context(mail_create_nolog=True)
         ).create(vals_list)
         for record, vals in zip(new_recs, vals_list, strict=True):
             requested = vals.get("value_original")
@@ -796,6 +873,17 @@ class AccountAsset(models.Model):
             ):
                 record.value_original = requested
         return new_recs
+
+    @api.model
+    def _get_name_from_lines(self, vals):
+        line_ids = []
+        for command in vals.get("original_move_line_ids") or []:
+            if command[0] == Command.SET:
+                line_ids.extend(command[2])
+            elif command[0] == Command.LINK:
+                line_ids.append(command[1])
+        lines = self.env["account.move.line"].browse(line_ids)
+        return lines[:1].name or ""
 
     PROPAGATED_TO_MOVES = frozenset(
         {
@@ -961,25 +1049,25 @@ class AccountAsset(models.Model):
 
             amount = _get_max_between_linear_and_degressive(linear_amount)
         elif self.depreciation_method == "degressive_then_linear":
-            if not self.parent_id:
+            if not self.increased_asset_id:
                 linear_amount = self._get_linear_amount(
                     days_before_period,
                     days_until_period_end,
                     self.value_depreciable,
                 )
             else:
-                parent_moves = self.parent_id.depreciation_move_ids.filtered(
+                parent_moves = self.increased_asset_id.depreciation_move_ids.filtered(
                     lambda mv: mv.date <= self.date_prorata
                 )._sorted_by_date()
                 parent_cumulative_depreciation = (
                     parent_moves[-1].asset_depreciated_value
                     if parent_moves
-                    else self.parent_id.value_depreciated_import
+                    else self.increased_asset_id.value_depreciated_import
                 )
                 parent_depreciable_value = (
                     parent_moves[-1].asset_remaining_value
                     if parent_moves
-                    else self.parent_id.value_depreciable
+                    else self.increased_asset_id.value_depreciable
                 )
                 if self.currency_id.is_zero(parent_depreciable_value):
                     linear_amount = self._get_linear_amount(
@@ -996,7 +1084,7 @@ class AccountAsset(models.Model):
                             days_before_period, days_until_period_end, depreciable_value
                         )
                         * self.depreciation_lifetime_days
-                        / self.parent_id.depreciation_lifetime_days
+                        / self.increased_asset_id.depreciation_lifetime_days
                     )
 
             amount = _get_max_between_linear_and_degressive(linear_amount)
@@ -1203,7 +1291,7 @@ class AccountAsset(models.Model):
             )
 
     def _get_last_day_asset(self):
-        this = self.parent_id or self
+        this = self.increased_asset_id or self
         return this.date_prorata_paused + relativedelta(
             months=int(this.depreciation_period) * this.depreciation_duration, days=-1
         )
@@ -1277,26 +1365,26 @@ class AccountAsset(models.Model):
         result = {
             "name": _("Gross Increase"),
             "view_mode": "list,form",
-            "res_model": "account.asset",
+            "res_model": "resource.asset",
             "context": {**self.env.context, "create": False},
             "view_id": False,
             "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.child_ids.ids)],
-            "views": [(False, "list"), (False, "form")],
+            "domain": [("id", "in", self.increase_ids.ids)],
+            "views": self._get_depreciation_views(),
         }
-        if len(self.child_ids) == 1:
-            result["views"] = [(False, "form")]
-            result["res_id"] = self.child_ids.id
+        if len(self.increase_ids) == 1:
+            result["views"] = self._get_depreciation_views()[1:]
+            result["res_id"] = self.increase_ids.id
         return result
 
-    def open_parent_id(self):
+    def open_increased_asset(self):
         return {
             "name": _("Parent Asset"),
             "view_mode": "form",
-            "res_model": "account.asset",
+            "res_model": "resource.asset",
             "type": "ir.actions.act_window",
-            "res_id": self.parent_id.id,
-            "views": [(False, "form")],
+            "res_id": self.increased_asset_id.id,
+            "views": self._get_depreciation_views()[1:],
         }
 
     CREATION_TRACKED_FNAMES = (
@@ -1361,7 +1449,7 @@ class AccountAsset(models.Model):
             self.depreciation_journal_id
         ):
             raise UserError(_("You cannot dispose of an asset before the lock date."))
-        if invoice_line_ids and self.child_ids.filtered(
+        if invoice_line_ids and self.increase_ids.filtered(
             lambda a: (
                 a.depreciation_state in ("draft", "open")
                 or a.value_depreciable_residual > 0
@@ -1372,7 +1460,7 @@ class AccountAsset(models.Model):
                     "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
                 )
             )
-        full_asset = (self + self.child_ids).filtered(
+        full_asset = (self + self.increase_ids).filtered(
             lambda asset: asset.depreciation_state not in ("close", "cancelled")
         )
         full_asset.depreciation_state = "close"
@@ -1522,10 +1610,21 @@ class AccountAsset(models.Model):
         self.write({"depreciation_state": "paused"})
         self.message_post(body=_("Asset paused. %s", message or ""))
 
+    @api.model
+    def _get_depreciation_views(self):
+        return [
+            (self.env.ref("account_depreciation.view_account_asset_tree").id, "list"),
+            (self.env.ref("account_depreciation.view_account_asset_form").id, "form"),
+        ]
+
+    def action_open_depreciation(self):
+        self.check_singleton()
+        return self.open_asset(["form"])
+
     def open_asset(self, view_mode):
         if len(self) == 1:
             view_mode = ["form"]
-        views = [v for v in [(False, "list"), (False, "form")] if v[1] in view_mode]
+        views = [v for v in self._get_depreciation_views() if v[1] in view_mode]
         ctx = dict(self.env.context)
         ctx.pop("default_move_type", None)
         return {
@@ -1533,7 +1632,7 @@ class AccountAsset(models.Model):
             "view_mode": ",".join(view_mode),
             "type": "ir.actions.act_window",
             "res_id": self.id if len(self) == 1 else False,
-            "res_model": "account.asset",
+            "res_model": "resource.asset",
             "views": views,
             "domain": [("id", "in", self.ids)],
             "context": ctx,

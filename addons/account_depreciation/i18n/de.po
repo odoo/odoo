@@ -27,17 +27,17 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_depreciation
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__count_depreciation
 msgid "# Depreciation Entries"
 msgstr "Anzahl Abschreibungsbuchungen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_increase
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__count_increase
 msgid "# Gross Increases"
 msgstr "Bruttoerhöhungen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_depreciation_posted
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__count_depreciation_posted
 msgid "# Posted Depreciation Entries"
 msgstr "Anzahl gebuchter Abschreibungsposten"
 
@@ -191,7 +191,7 @@ msgid "Account Chart Template"
 msgstr "Kontenplanvorlage"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__account_type
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__account_type
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening "
@@ -202,14 +202,14 @@ msgstr ""
 "sowie die Erstellung von Eröffnungsbuchungen festzulegen."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__account_depreciation_id
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
 "Konto, das für Abschreibungsbuchungen verwendet wird, um den Wert des "
 "Vermögensgegenstands zu verringern."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__account_depreciation_expense_id
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__account_depreciation_expense_id
 msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
@@ -218,7 +218,7 @@ msgstr ""
 "Vermögensgegenstands als Aufwand zu erfassen."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__account_asset_id
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__account_asset_id
 msgid "Account used to record the purchase of the asset at its original price."
 msgstr ""
 "Konto, auf dem der Kauf des Vermögensgegenstands zu seinem ursprünglichen "
@@ -269,7 +269,7 @@ msgstr "Steuererklärung"
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
 #: model:account.report.column,name:account_depreciation.assets_report_acquisition_date
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_acquisition
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__date_acquisition
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Acquisition Date"
 msgstr "Kaufdatum"
@@ -280,32 +280,32 @@ msgid "Action"
 msgstr "Aktion"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_needaction
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_needaction
 msgid "Action Needed"
 msgstr "Aktion erforderlich"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__active
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__active
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_ids
 msgid "Activities"
 msgstr "Aktivitäten"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_exception_decoration
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_state
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_state
 msgid "Activity State"
 msgstr "Status der Aktivität"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_type_icon
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Symbol des Aktivitätstyps"
 
@@ -335,12 +335,12 @@ msgid "All the lines should be posted"
 msgstr "Alle Zeilen sollten gebucht werden"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciated_import
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_depreciated_import
 msgid "Already Depreciated Amount Import"
 msgstr "Import des bereits abgeschriebenen Betrags"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__parent_id
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__parent_id
 msgid "An asset has a parent when it is the result of gaining value"
 msgstr ""
 "Ein Vermögensgegenstand hat ein übergeordnetes Element, wenn er das Ergebnis "
@@ -370,12 +370,12 @@ msgstr ""
 "erstellt. <br/>"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__analytic_distribution
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Kostenverteilung"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__analytic_precision
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__analytic_precision
 msgid "Analytic Precision"
 msgstr "Genauigkeit der Kostenanalyse"
 
@@ -418,7 +418,7 @@ msgstr "Aktiva-Gegenkonto"
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
 #: model:ir.model,name:account_depreciation.model_account_asset_group
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__asset_group_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__asset_group_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.asset_group_form_view
 #: model_terms:ir.ui.view,arch_db:account_depreciation.asset_group_list_view
 msgid "Asset Group"
@@ -431,7 +431,7 @@ msgid "Asset Id Display Name"
 msgstr "Anzeigename der Vermögensgegenstand-ID"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_lifetime_days
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_lifetime_days
 msgid "Asset Lifetime Days"
 msgstr "Lebensdauertage des Vermögensgegenstands"
 
@@ -465,12 +465,12 @@ msgstr "Buchungsart des Vermögensgegenstands"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__name
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__name
 msgid "Asset Name"
 msgstr "Name des Vermögensgegenstands"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_paused_days
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_paused_days
 msgid "Asset Paused Days"
 msgstr "Pausierte Tage des Vermögensgegenstands"
 
@@ -586,7 +586,7 @@ msgstr ""
 "werden, weil ihm die erforderlichen Informationen fehlen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_attachment_count
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_attachment_count
 msgid "Attachment Count"
 msgstr "Anzahl Anhänge"
 
@@ -613,7 +613,7 @@ msgstr "Rechnungen"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/models/account_assets_report.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_book
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_book
 msgid "Book Value"
 msgstr "Buchwert"
 
@@ -654,12 +654,12 @@ msgstr ""
 "Dokumentieren Sie alle Änderungen der Buchhaltungsmethoden."
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__child_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__child_ids
 msgid "Children"
 msgstr "Kinder"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_method
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__depreciation_method
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Straight Line: Calculated on basis of: Gross Value / Duration\n"
@@ -687,7 +687,7 @@ msgstr "Unternehmen"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__company_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__company_id
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__company_id
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__company_id
 msgid "Company"
@@ -696,7 +696,7 @@ msgstr "Unternehmen"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_prorata
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_prorata
 msgid "Computation"
 msgstr "Berechnung"
 
@@ -724,7 +724,7 @@ msgid "Count Asset"
 msgstr "Anzahl Vermögensgegenstände"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__count_linked_asset
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__count_linked_asset
 msgid "Count Linked Asset"
 msgstr "Anzahl verknüpfter Vermögensgegenstände"
 
@@ -734,7 +734,7 @@ msgid "Count Linked Assets"
 msgstr "Anzahl verknüpfter Vermögensgegenstände"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__country_code
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__country_code
 msgid "Country Code"
 msgstr "Ländercode"
 
@@ -761,14 +761,14 @@ msgid "Create new asset model"
 msgstr "Neues Anlagenmodell erstellen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__create_uid
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__create_uid
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__create_uid
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__create_date
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__create_date
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__create_date
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__create_date
 msgid "Created on"
@@ -781,7 +781,7 @@ msgid "Cumulative Depreciation"
 msgstr "Kumulierte Abschreibung"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__currency_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__currency_id
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__currency_id
 msgid "Currency"
 msgstr "Währung"
@@ -829,7 +829,7 @@ msgstr "Degressiv"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_factor
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_factor
 msgid "Declining Factor"
 msgstr "Degressionsfaktor"
 
@@ -844,7 +844,7 @@ msgid "Depreciable Amount"
 msgstr "Abzuschreibender Betrag"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciable_residual
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_depreciable_residual
 #: model:ir.model.fields,field_description:account_depreciation.field_account_bank_statement_line__asset_remaining_value
 #: model:ir.model.fields,field_description:account_depreciation.field_account_move__asset_remaining_value
 msgid "Depreciable Value"
@@ -870,7 +870,7 @@ msgstr "Abschreibung"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__account_depreciation_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__account_depreciation_id
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__account_depreciation_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_model_search
 msgid "Depreciation Account"
@@ -887,7 +887,7 @@ msgid "Depreciation Date"
 msgstr "Abschreibungsdatum"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_move_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_move_ids
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_form
 msgid "Depreciation Lines"
 msgstr "Abschreibungszeilen"
@@ -923,13 +923,13 @@ msgid "Depreciation entry %(name)s reversed (%(value)s)"
 msgstr "Abschreibungsbuchung %(name)s storniert (%(value)s)"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__display_account_asset_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__display_account_asset_id
 msgid "Display Account Asset"
 msgstr "Aktivkonto anzeigen"
 
 #. module: account_depreciation
 #: model:ir.model.fields,field_description:account_depreciation.field_account_account__display_name
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__display_name
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__display_name
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__display_name
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_report_handler__display_name
 #: model:ir.model.fields,field_description:account_depreciation.field_account_chart_template__display_name
@@ -948,7 +948,7 @@ msgid "Disposal"
 msgstr "Abgang"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_disposal
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__date_disposal
 msgid "Disposal Date"
 msgstr "Abgangsdatum"
 
@@ -972,7 +972,7 @@ msgid "Dispose"
 msgstr "Abgang buchen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
 msgstr "Verteilung der Kostenstellen"
 
@@ -995,7 +995,7 @@ msgstr "Entwurfsvermögenswert existiert"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_duration
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_duration
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__method_number
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_form
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
@@ -1035,7 +1035,7 @@ msgstr ""
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__account_depreciation_expense_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__account_depreciation_expense_id
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__account_depreciation_expense_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_model_search
 msgid "Expense Account"
@@ -1044,7 +1044,7 @@ msgstr "Aufwandskonto"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__account_asset_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__account_asset_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_model_search
 msgid "Fixed Asset Account"
 msgstr "Konto für Sachanlagen"
@@ -1056,17 +1056,17 @@ msgid "Fixed Assets"
 msgstr "Sachanlagen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_follower_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_follower_ids
 msgid "Followers"
 msgstr "Follower"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_partner_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Follower (Partner)"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__activity_type_icon
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
@@ -1114,7 +1114,7 @@ msgid "Gross Increase Account"
 msgstr "Bruttoerhöhungskonto"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_increase
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_increase
 msgid "Gross Increase Value"
 msgstr "Bruttowertsteigerung"
 
@@ -1143,13 +1143,13 @@ msgid "Group by Asset Group"
 msgstr "Nach Vermögensgruppe gruppieren"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__has_message
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__has_message
 msgid "Has Message"
 msgstr "Hat eine Nachricht"
 
 #. module: account_depreciation
 #: model:ir.model.fields,field_description:account_depreciation.field_account_account__id
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__id
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__id
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_report_handler__id
 #: model:ir.model.fields,field_description:account_depreciation.field_account_chart_template__id
@@ -1163,12 +1163,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_exception_icon
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_exception_icon
 msgid "Icon"
 msgstr "Icon"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__activity_exception_icon
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
@@ -1183,13 +1183,13 @@ msgstr ""
 "von Veräußerungsgewinnen sicher."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__message_needaction
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__message_has_error
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__message_has_sms_error
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__message_has_error
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
@@ -1203,7 +1203,7 @@ msgstr ""
 "vorgenommenen Abschreibungen."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_depreciated_import
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__value_depreciated_import
 msgid ""
 "In case of an import from another software, you might need to use this field "
 "to have the right depreciation table report. This is the value that was "
@@ -1225,20 +1225,20 @@ msgid "Invoice Line"
 msgstr "Rechnungszeile"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_is_follower
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_is_follower
 msgid "Is Follower"
 msgstr "Ist Follower"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_salvage
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__salvage_value_pct
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__value_salvage
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__salvage_value_pct
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr "Das ist der geplante Wert, der nicht abgeschrieben werden kann."
 
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_journal_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_journal_id
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_model_search
 msgid "Journal"
 msgstr "Journal"
@@ -1263,7 +1263,7 @@ msgstr "Buchungszeile"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/models/account_asset.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__original_move_line_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__original_move_line_ids
 msgid "Journal Items"
 msgstr "Buchungszeilen"
 
@@ -1278,14 +1278,14 @@ msgstr ""
 "einen Vermögensgegenstand daraus zu generieren"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__write_uid
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__write_uid
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__write_uid
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert von"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__write_date
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__write_date
 #: model:ir.model.fields,field_description:account_depreciation.field_account_asset_group__write_date
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__write_date
 msgid "Last Updated on"
@@ -1303,7 +1303,7 @@ msgid "Linear"
 msgstr "Linear"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__linked_assets_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__linked_assets_ids
 msgid "Linked Assets"
 msgstr "Verknüpfte Vermögensgegenstände"
 
@@ -1330,12 +1330,12 @@ msgid "Mandatory column. This is the name of the asset."
 msgstr "Pflichtspalte. Dies ist der Name des Vermögensgegenstands."
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_has_error
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_has_error
 msgid "Message Delivery error"
 msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_ids
 msgid "Messages"
 msgstr "Nachrichten"
 
@@ -1343,19 +1343,19 @@ msgstr "Nachrichten"
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
 #: model:account.report.column,name:account_depreciation.assets_report_first_method
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_method
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_method
 msgid "Method"
 msgstr "Methode"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__model_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__model_id
 #: model:ir.model.fields.selection,name:account_depreciation.selection__account_asset__depreciation_state__model
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Model"
 msgstr "Modell"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__asset_properties_definition
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__asset_properties_definition
 msgid "Model Properties"
 msgstr "Modelleigenschaften"
 
@@ -1424,7 +1424,7 @@ msgid "My Activities"
 msgstr "Meine Aktivitäten"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Frist für meine Aktivitäten"
 
@@ -1439,12 +1439,12 @@ msgid "Negative revaluation"
 msgstr "Negative Neubewertung"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_gain_on_sale
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_gain_on_sale
 msgid "Net gain on sale"
 msgstr "Nettogewinn aus Verkauf"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_gain_on_sale
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__value_gain_on_sale
 msgid "Net value of gain or loss on sale of an asset"
 msgstr ""
 "Nettowert des Gewinns oder Verlusts aus dem Verkauf eines "
@@ -1461,22 +1461,22 @@ msgid "New salvage amount for the asset"
 msgstr "Neuer Veräußerungswert für den Vermögensgegenstand"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Nächstes Aktivitätskalenderereignis"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_date_deadline
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nächste Aktivitätsfrist"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_summary
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_summary
 msgid "Next Activity Summary"
 msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_type_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_type_id
 msgid "Next Activity Type"
 msgstr "Nächster Aktivitätstyp"
 
@@ -1498,7 +1498,7 @@ msgid "No Prorata"
 msgstr "Kein Pro-Rata"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_non_deductible_tax
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_non_deductible_tax
 #: model:ir.model.fields,field_description:account_depreciation.field_account_move_line__non_deductible_tax_value
 msgid "Non Deductible Tax Value"
 msgstr "Nichtabzugsfähiger Steuerwert"
@@ -1511,12 +1511,12 @@ msgstr "Nicht abzuschreibender Betrag"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_salvage
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_salvage
 msgid "Not Depreciable Value"
 msgstr "Nicht abzuschreibender Wert"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__salvage_value_pct
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__salvage_value_pct
 msgid "Not Depreciable Value Percent"
 msgstr "Nicht abzuschreibender Wertprozentsatz"
 
@@ -1526,7 +1526,7 @@ msgid "Note"
 msgstr "Notiz"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_needaction_counter
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Anzahl Aktionen"
 
@@ -1536,13 +1536,13 @@ msgid "Number of Depreciations"
 msgstr "Anzahl der Abschreibungen"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_period
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_period
 #: model:ir.model.fields,field_description:account_depreciation.field_asset_modify__method_period
 msgid "Number of Months in a Period"
 msgstr "Anzahl der Monate in einer Periode"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__count_increase
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__count_increase
 msgid "Number of assets made to increase the value of the asset"
 msgstr ""
 "Anzahl der Vermögensgegenstände, die den Wert des Vermögensgegenstands "
@@ -1555,22 +1555,22 @@ msgid "Number of days"
 msgstr "Anzahl der Tage"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__count_depreciation
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__count_depreciation
 msgid "Number of depreciation entries (posted or not)"
 msgstr "Anzahl Abschreibungsbuchungen (gebucht oder nicht)"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_has_error_counter
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_has_error_counter
 msgid "Number of errors"
 msgstr "Anzahl Fehler"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__message_needaction_counter
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__message_has_error_counter
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
@@ -1621,13 +1621,13 @@ msgstr ""
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_original
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_original
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_kanban
 msgid "Original Value"
 msgstr "Ursprünglicher Wert"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__parent_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__parent_id
 msgid "Parent"
 msgstr "Übergeordnet"
 
@@ -1646,7 +1646,7 @@ msgid "Pause"
 msgstr "Pause"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_prorata_paused
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__date_prorata_paused
 msgid "Paused Prorata Date"
 msgstr "Pausiertes Pro-Rata-Datum"
 
@@ -1666,7 +1666,7 @@ msgid "Posted Entries"
 msgstr "Gebuchte Posten"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__asset_properties
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__asset_properties
 #: model_terms:ir.ui.view,arch_db:account_depreciation.view_account_asset_search
 msgid "Properties"
 msgstr "Eigenschaften"
@@ -1674,7 +1674,7 @@ msgstr "Eigenschaften"
 #. module: account_depreciation
 #. odoo-python
 #: code:addons/account_depreciation/controller/asset_template_controller.py:0
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__date_prorata
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__date_prorata
 msgid "Prorata Date"
 msgstr "Pro-Rata-Datum"
 
@@ -1684,7 +1684,7 @@ msgid "Purchase"
 msgstr "Einkauf"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__rating_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__rating_ids
 msgid "Ratings"
 msgstr "Bewertungen"
 
@@ -1702,7 +1702,7 @@ msgid "Related Assets"
 msgstr "Verknüpfte Vermögensgegenstände"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_purchase
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_purchase
 msgid "Related Purchase Value"
 msgstr "Zugehöriger Einkaufswert"
 
@@ -1713,7 +1713,7 @@ msgid "Reset to running"
 msgstr "Reaktivieren"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__activity_user_id
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__activity_user_id
 msgid "Responsible User"
 msgstr "Verantwortlicher Benutzer"
 
@@ -1750,7 +1750,7 @@ msgid "Running"
 msgstr "Laufend"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__message_has_sms_error
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS-Zustellungsfehler"
 
@@ -1823,7 +1823,7 @@ msgstr ""
 "verwendet."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__date_prorata
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__date_prorata
 msgid ""
 "Starting date of the period used in the prorata calculation of the first "
 "depreciation"
@@ -1832,12 +1832,12 @@ msgstr ""
 "Abschreibung verwendet wird"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__depreciation_state
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__depreciation_state
 msgid "Status"
 msgstr "Status"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__activity_state
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -1855,7 +1855,7 @@ msgid "Straight Line"
 msgstr "Lineare Abschreibung"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__value_book
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__value_book
 msgid ""
 "Sum of the depreciable value, the salvage value and the book value of all "
 "value increase items"
@@ -1864,7 +1864,7 @@ msgstr ""
 "wertsteigenden Posten"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__country_code
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -1895,7 +1895,7 @@ msgstr ""
 "sein und vom Typ „Sachanlagen“ oder „Anlagevermögen“ sein."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_period
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__depreciation_period
 #: model:ir.model.fields,help:account_depreciation.field_asset_modify__method_period
 msgid "The amount of time between two depreciations"
 msgstr "Der Zeitwert zwischen zwei Abschreibungen"
@@ -1936,7 +1936,7 @@ msgstr ""
 "„Anlagevermögen“ sein."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__child_ids
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__child_ids
 msgid "The children are the gains in value of this asset"
 msgstr ""
 "Die abhängigen Elemente sind die Wertgewinne dieses Vermögensgegenstandes"
@@ -1985,7 +1985,7 @@ msgstr ""
 "„Abschreibung“ oder „Aufwand“ sein."
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_duration
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__depreciation_duration
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr ""
 "Die Anzahl der Abschreibungen, die erforderlich sind, um Ihren "
@@ -2043,7 +2043,7 @@ msgid "Total"
 msgstr "Gesamt"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__value_depreciable
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__value_depreciable
 msgid "Total Depreciable Value"
 msgstr "Insgesamt abzuschreibender Wert"
 
@@ -2054,12 +2054,12 @@ msgid "Turn as an asset"
 msgstr "In Vermögensgegenstand umwandeln"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__account_type
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__account_type
 msgid "Type of the account"
 msgstr "Kontotyp"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__activity_exception_decoration
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Typ der Ausnahmeaktivität im Datensatz."
 
@@ -2086,7 +2086,7 @@ msgid "Visible to all"
 msgstr "Für alle sichtbar"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__warning_count_assets
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__warning_count_assets
 msgid "Warning Count Assets"
 msgstr "Warnung für Anzahl Vermögensgegenstände"
 
@@ -2097,17 +2097,17 @@ msgid "Warning for the Original Value of %s"
 msgstr "Warnung für den ursprünglichen Wert von %s"
 
 #. module: account_depreciation
-#: model:ir.model.fields,field_description:account_depreciation.field_account_asset__website_message_ids
+#: model:ir.model.fields,field_description:account_depreciation.field_resource_asset__website_message_ids
 msgid "Website Messages"
 msgstr "Website-Nachrichten"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__website_message_ids
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__website_message_ids
 msgid "Website communication history"
 msgstr "Website-Kommunikationsverlauf"
 
 #. module: account_depreciation
-#: model:ir.model.fields,help:account_depreciation.field_account_asset__depreciation_state
+#: model:ir.model.fields,help:account_depreciation.field_resource_asset__depreciation_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation "

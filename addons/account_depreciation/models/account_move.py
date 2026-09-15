@@ -10,7 +10,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     depreciation_asset_id = fields.Many2one(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         index=True,
         copy=False,
         domain="[('company_id', '=', company_id)]",
@@ -41,7 +41,7 @@ class AccountMove(models.Model):
     )
 
     capitalised_asset_ids = fields.One2many(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         string="Assets",
         compute="_compute_capitalised_asset_ids",
         compute_sudo=True,
@@ -137,7 +137,7 @@ class AccountMove(models.Model):
             if move.capitalised_asset_ids:
                 move.asset_move_type = (
                     "positive_revaluation"
-                    if move.capitalised_asset_ids.parent_id
+                    if move.capitalised_asset_ids.increased_asset_id
                     else "purchase"
                 )
             elif not (move.asset_move_type and move.depreciation_asset_id):
@@ -318,11 +318,11 @@ class AccountMove(models.Model):
                         auto_validate.append(account.create_asset == "validate")
 
         assets = (
-            self.env["account.asset"]
+            self.env["resource.asset"]
             .with_context(clean_context(self.env.context))
             .create(create_list)
         )
-        to_validate = self.env["account.asset"]
+        to_validate = self.env["resource.asset"]
         for asset, vals, invoice, validate in zip(
             assets, create_list, invoice_list, auto_validate, strict=True
         ):
@@ -453,7 +453,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     capitalised_asset_ids = fields.Many2many(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         relation="asset_move_line_rel",
         column1="line_id",
         column2="asset_id",
@@ -528,7 +528,7 @@ class AccountMoveLine(models.Model):
         return {
             "name": _("Turn as an asset"),
             "type": "ir.actions.act_window",
-            "res_model": "account.asset",
+            "res_model": "resource.asset",
             "views": [[False, "form"]],
             "target": "current",
             "context": ctx,

@@ -1,6 +1,6 @@
 {
     "name": "Assets Management",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Accounting/Accounting",
     "sequence": 32,
     "description": """
@@ -14,10 +14,12 @@ Keeps track of depreciations, and creates corresponding journal entries.
     "license": "OEEL-1",
     "depends": [
         "account",
+        "resource_asset",
     ],
     "data": [
         "security/account_asset_security.xml",
         "security/ir.model.access.csv",
+        "data/resource_asset_kind_data.xml",
         "wizards/asset_modify_views.xml",
         "views/account_account_views.xml",
         "views/account_asset_views.xml",
@@ -40,7 +42,6 @@ Keeps track of depreciations, and creates corresponding journal entries.
         "web.assets_backend": [
             "account_depreciation/static/src/scss/account_asset.scss",
             "account_depreciation/static/src/components/**/*",
-            "account_depreciation/static/src/views/**/*",
         ],
     },
     "post_init_hook": "post_init_hook",

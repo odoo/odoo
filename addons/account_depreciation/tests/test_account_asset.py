@@ -14,7 +14,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def setUpClass(cls):
         super().setUpClass()
         today = fields.Date.today()
-        cls.truck = cls.env["account.asset"].create(
+        cls.truck = cls.env["resource.asset"].create(
             {
                 "account_asset_id": cls.company_data["default_account_assets"].id,
                 "account_depreciation_id": cls.company_data["default_account_assets"]
@@ -102,7 +102,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.account_asset_model_fixedassets.account_depreciation_expense_id.tax_ids = (
             self.tax_purchase_a
         )
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -123,7 +123,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_00_account_asset(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -433,7 +433,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_00_account_asset_new(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -661,7 +661,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_02_account_asset(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -742,7 +742,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_03_account_asset(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 0,
                 "depreciation_period": "12",
@@ -823,7 +823,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_04_account_asset(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 0,
                 "depreciation_period": "12",
@@ -908,7 +908,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_05_account_asset(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 0,
                 "depreciation_period": "12",
@@ -998,7 +998,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 0,
                 "depreciation_state": "draft",
@@ -1037,7 +1037,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_account_asset_cancel(self):
         today = fields.Date.today()
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -1151,7 +1151,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             )
 
     def test_asset_form(self):
-        asset_form = Form(self.env["account.asset"])
+        asset_form = Form(
+            self.env["resource.asset"].with_context(default_depreciation_state="draft"),
+            view="account_depreciation.view_account_asset_form",
+        )
         asset_form.name = "Test Asset"
         asset_form.value_original = 10000
         asset_form.account_depreciation_id = self.company_data["default_account_assets"]
@@ -1167,13 +1170,13 @@ class TestAccountAsset(TestAccountReportsCommon):
         for move in asset.depreciation_move_ids:
             self.assertEqual(move.amount_total, 2000)
 
-        asset_form = Form(asset)
+        asset_form = Form(asset, view="account_depreciation.view_account_asset_form")
         with self.assertRaises(UserError):
             with asset_form.depreciation_move_ids.edit(4) as line_edit:
                 line_edit.depreciation_value = 1000.0
             asset_form.save()
 
-        asset_form = Form(asset)
+        asset_form = Form(asset, view="account_depreciation.view_account_asset_form")
         with asset_form.depreciation_move_ids.edit(4) as line_edit:
             line_edit.depreciation_value = 1000.0
         with asset_form.depreciation_move_ids.edit(3) as line_edit:
@@ -1184,7 +1187,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_negative_asset_balance_inversion(self):
         asset_account = self.company_data["default_account_assets"].id
         expense_account = self.company_data["default_account_expense"].id
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": "Test Asset",
                 "value_original": -10000,
@@ -1200,7 +1203,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         for move in asset.depreciation_move_ids:
             self.assertEqual(move.depreciation_value, -2000)
 
-        with Form(asset) as asset_form:
+        with Form(
+            asset, view="account_depreciation.view_account_asset_form"
+        ) as asset_form:
             with asset_form.depreciation_move_ids.edit(4) as line_edit:
                 line_edit.depreciation_value = -1000.0
             with asset_form.depreciation_move_ids.edit(3) as line_edit:
@@ -1225,7 +1230,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_asset_change_depreciation_expense_account(self):
         self.env["account.move"].search([("state", "=", "draft")]).unlink()
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": "Test asset",
                 "date_acquisition": "2011-07-01",
@@ -1367,9 +1372,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         move_line_ids = move_ids.mapped("line_ids").filtered(lambda x: x.debit)
 
         asset_form = Form(
-            self.env["account.asset"].with_context(
-                default_original_move_line_ids=move_line_ids.ids
-            )
+            self.env["resource.asset"].with_context(
+                default_depreciation_state="draft",
+                default_original_move_line_ids=move_line_ids.ids,
+            ),
+            view="account_depreciation.view_account_asset_form",
         )
         asset_form.original_move_line_ids = move_line_ids
         asset_form.account_depreciation_expense_id = self.company_data[
@@ -1440,9 +1447,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         move_line_ids = move_ids.mapped("line_ids").filtered(lambda x: x.debit)
 
         asset_form = Form(
-            self.env["account.asset"].with_context(
-                default_original_move_line_ids=move_line_ids.ids
-            )
+            self.env["resource.asset"].with_context(
+                default_depreciation_state="draft",
+                default_original_move_line_ids=move_line_ids.ids,
+            ),
+            view="account_depreciation.view_account_asset_form",
         )
         asset_form.original_move_line_ids = move_line_ids
         asset_form.account_depreciation_expense_id = self.company_data[
@@ -1555,9 +1564,12 @@ class TestAccountAsset(TestAccountReportsCommon):
             lambda x: x.name and "Laptop" in x.name
         )
         asset_form = Form(
-            self.env["account.asset"].with_context(
-                default_original_move_line_ids=move_line_ids.ids, asset_type="purchase"
-            )
+            self.env["resource.asset"].with_context(
+                default_depreciation_state="draft",
+                default_original_move_line_ids=move_line_ids.ids,
+                asset_type="purchase",
+            ),
+            view="account_depreciation.view_account_asset_form",
         )
         asset_form.original_move_line_ids = move_line_ids
         asset_form.account_depreciation_expense_id = self.company_data[
@@ -1588,8 +1600,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(self.truck.value_depreciable_residual, 3000)
         self.assertEqual(self.truck.value_salvage, 2500)
-        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 1000)
-        self.assertEqual(self.truck.child_ids.value_salvage, 500)
+        self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 1000)
+        self.assertEqual(self.truck.increase_ids.value_salvage, 500)
         self.assertEqual(
             self.truck.account_depreciation_id.id,
             self.company_data["default_account_assets"].id,
@@ -1608,8 +1620,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 2000)
-        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
-        self.assertEqual(self.truck.child_ids.value_salvage, 0)
+        self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.increase_ids.value_salvage, 0)
         self.assertEqual(
             max(
                 self.truck.depreciation_move_ids.filtered(
@@ -1633,8 +1645,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 4500)
-        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
-        self.assertEqual(self.truck.child_ids.value_salvage, 0)
+        self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.increase_ids.value_salvage, 0)
 
     def test_asset_modify_value_03(self):
         self.env["asset.modify"].create(
@@ -1649,8 +1661,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 4500)
-        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 0)
-        self.assertEqual(self.truck.child_ids.value_salvage, 1500)
+        self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
+        self.assertEqual(self.truck.increase_ids.value_salvage, 1500)
 
     def test_asset_modify_value_04(self):
         self.env["asset.modify"].create(
@@ -1665,8 +1677,8 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(self.truck.value_depreciable_residual, 3500)
         self.assertEqual(self.truck.value_salvage, 2000)
-        self.assertEqual(self.truck.child_ids.value_depreciable_residual, 500)
-        self.assertEqual(self.truck.child_ids.value_salvage, 0)
+        self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 500)
+        self.assertEqual(self.truck.increase_ids.value_salvage, 0)
 
     def test_asset_modify_report(self):
 
@@ -1724,12 +1736,12 @@ class TestAccountAsset(TestAccountReportsCommon):
 
         self.assertEqual(
             self.truck.value_depreciable_residual
-            + sum(self.truck.child_ids.mapped("value_depreciable_residual")),
+            + sum(self.truck.increase_ids.mapped("value_depreciable_residual")),
             3800,
         )
         self.assertEqual(
             self.truck.value_salvage
-            + sum(self.truck.child_ids.mapped("value_salvage")),
+            + sum(self.truck.increase_ids.mapped("value_salvage")),
             3000,
         )
 
@@ -1762,7 +1774,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             {
                 "name": "Huge scratch on beautiful sticker :'( It is ruined",
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
-                "asset_id": self.truck.child_ids.id,
+                "asset_id": self.truck.increase_ids.id,
                 "value_depreciable_residual": 0,
                 "value_salvage": 500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
@@ -1780,12 +1792,12 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
         self.assertEqual(
             self.truck.value_depreciable_residual
-            + sum(self.truck.child_ids.mapped("value_depreciable_residual")),
+            + sum(self.truck.increase_ids.mapped("value_depreciable_residual")),
             1000,
         )
         self.assertEqual(
             self.truck.value_salvage
-            + sum(self.truck.child_ids.mapped("value_salvage")),
+            + sum(self.truck.increase_ids.mapped("value_salvage")),
             3000,
         )
 
@@ -2386,7 +2398,11 @@ class TestAccountAsset(TestAccountReportsCommon):
         depreciation_lines = self.env["account.move.line"].search(
             [
                 ("account_id", "=", asset_model.account_depreciation_id.id),
-                ("move_id.depreciation_asset_id", "=", invoice.capitalised_asset_ids.id),
+                (
+                    "move_id.depreciation_asset_id",
+                    "=",
+                    invoice.capitalised_asset_ids.id,
+                ),
                 ("debit", "=", 150),
             ]
         )
@@ -2511,7 +2527,9 @@ class TestAccountAsset(TestAccountReportsCommon):
             lambda l: l.product_id == product_a and l.price_unit == 150.0
         )
         product_b_lines = invoice.line_ids.filtered(lambda l: l.product_id == product_b)
-        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17)
+        self.assertEqual(
+            len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17
+        )
         self.assertEqual(len(product_b_lines.capitalised_asset_ids), 4)
         self.assertEqual(len(product_a_100_lines.capitalised_asset_ids), 7)
         self.assertEqual(len(product_a_150_lines.capitalised_asset_ids), 6)
@@ -2525,7 +2543,9 @@ class TestAccountAsset(TestAccountReportsCommon):
             with move_form.invoice_line_ids.edit(1) as line_form:
                 line_form.quantity = 2
         credit_note.action_post()
-        self.assertEqual(len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17)
+        self.assertEqual(
+            len(invoice.line_ids.mapped(lambda l: l.capitalised_asset_ids)), 17
+        )
         self.assertEqual(len(product_b_lines.capitalised_asset_ids), 4)
         self.assertEqual(len(product_a_100_lines.capitalised_asset_ids), 7)
         self.assertEqual(len(product_a_150_lines.capitalised_asset_ids), 6)
@@ -2647,9 +2667,11 @@ class TestAccountAsset(TestAccountReportsCommon):
             lambda x: x.name and "Laptop" in x.name
         )
         asset_form = Form(
-            self.env["account.asset"].with_context(
+            self.env["resource.asset"].with_context(
+                default_depreciation_state="draft",
                 default_original_move_line_ids=move_line_ids.ids,
-            )
+            ),
+            view="account_depreciation.view_account_asset_form",
         )
         asset_form.original_move_line_ids = move_line_ids
         asset_form.account_depreciation_expense_id = self.company_data[
@@ -2662,7 +2684,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(new_assets_manu.value_non_deductible_tax, 367.5)
 
     def test_asset_degressive_01(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -2720,7 +2742,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_degressive_02(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -2771,7 +2793,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_negative_01(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -2824,7 +2846,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_daily_computation_01(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data[
@@ -2936,7 +2958,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(asset.value_depreciable_residual, -400.0)
 
     def test_depreciation_schedule_report_with_negative_asset(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": "test",
                 "value_original": -500,
@@ -3010,7 +3032,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_depreciation_schedule_hierarchy(self):
-        assets = self.env["account.asset"].search(
+        assets = self.env["resource.asset"].search(
             [
                 ("company_id", "=", self.env.company.id),
             ]
@@ -3072,7 +3094,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ]
         )
 
-        self.env["account.asset"].create(
+        self.env["resource.asset"].create(
             [
                 {
                     "account_asset_id": account_id,
@@ -3154,7 +3176,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(lines, expected_values)
 
     def test_depreciation_schedule_disposal_move_unposted(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": "test asset",
                 "depreciation_method": "linear",
@@ -3222,7 +3244,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_depreciation_schedule_disposal_move_unposted_with_non_depreciable_value(
         self,
     ):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": "test asset",
                 "depreciation_method": "linear",
@@ -3310,7 +3332,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_analytic_on_lines(self):
-        CEO_car = self.env["account.asset"].create(
+        CEO_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",
@@ -3664,7 +3686,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_depreciation_schedule_prefix_groups(self):
         asset_group = self.env["account.asset.group"].create({"name": "Odoo Office"})
         for i in range(1, 3):
-            asset = self.env["account.asset"].create(
+            asset = self.env["resource.asset"].create(
                 {
                     "depreciation_period": "12",
                     "depreciation_duration": 4,
@@ -4044,7 +4066,7 @@ class TestAccountAsset(TestAccountReportsCommon):
 
     def test_depreciation_schedule_prefix_groups_with_comparison(self):
         for i in range(1, 3):
-            asset = self.env["account.asset"].create(
+            asset = self.env["resource.asset"].create(
                 {
                     "depreciation_period": "12",
                     "depreciation_duration": 4,
@@ -4102,7 +4124,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             "2021-03-01"
         )
 
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
@@ -4156,7 +4178,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(asset.value_book, 8000)
 
         self.assertRecordValues(
-            asset.child_ids.depreciation_move_ids.sorted(
+            asset.increase_ids.depreciation_move_ids.sorted(
                 lambda dep: (dep.date, dep.id)
             ),
             [
@@ -4192,7 +4214,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             "2021-03-01"
         )
 
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "account_asset_id": self.company_data["default_account_assets"].id,
                 "account_depreciation_id": self.company_data["default_account_assets"]
@@ -4303,7 +4325,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset_form = Form(self.env["account.asset"])
+        asset_form = Form(
+            self.env["resource.asset"].with_context(default_depreciation_state="draft"),
+            view="account_depreciation.view_account_asset_form",
+        )
         asset_form.name = "Test Asset"
         asset_form.value_original = 10000
         asset_form.depreciation_profile_id = asset_model
@@ -4351,7 +4376,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             "The account should be the one from the bill, not the model",
         )
 
-        asset_form = Form(invoice.capitalised_asset_ids)
+        asset_form = Form(
+            invoice.capitalised_asset_ids,
+            view="account_depreciation.view_account_asset_form",
+        )
         asset_form.depreciation_profile_id = asset_model
 
         self.assertEqual(
@@ -4361,7 +4389,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_reevaluation_degressive_linear(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "depreciation_period": "12",
                 "depreciation_duration": 5,
@@ -4417,7 +4445,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         ).modify()
         self.assertRecordValues(
-            asset.child_ids[0].depreciation_move_ids.sorted(
+            asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
             ),
             [
@@ -4468,9 +4496,11 @@ class TestAccountAsset(TestAccountReportsCommon):
             lambda x: x.account_id.id == asset_account_id
         )
         asset_form = Form(
-            self.env["account.asset"].with_context(
-                default_original_move_line_ids=asset_line.ids
-            )
+            self.env["resource.asset"].with_context(
+                default_depreciation_state="draft",
+                default_original_move_line_ids=asset_line.ids,
+            ),
+            view="account_depreciation.view_account_asset_form",
         )
         asset_form.original_move_line_ids = asset_line
         asset_form.account_depreciation_expense_id = self.company_data[
@@ -4549,7 +4579,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         ).modify()
 
         self.assertEqual(
-            new_car.child_ids.original_move_line_ids.move_id.asset_move_type,
+            new_car.increase_ids.original_move_line_ids.move_id.asset_move_type,
             "positive_revaluation",
             "the original move of the child asset is set as 'positive_revaluation'",
         )
@@ -4575,7 +4605,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_already_depreciated(self):
-        asset = self.env["account.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "depreciation_period": "12",
                 "depreciation_duration": 5,
@@ -4626,7 +4656,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
 
-        fully_depreciated_asset = self.env["account.asset"].create(
+        fully_depreciated_asset = self.env["resource.asset"].create(
             {
                 "depreciation_period": "12",
                 "depreciation_duration": 5,
@@ -4696,14 +4726,18 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(asset.date_acquisition, bill.invoice_date)
 
     def test_asset_write_multi_company(self):
-        assets = self.env["account.asset"].create(
-            [
-                {
-                    "company_id": company_data["company"].id,
-                    "name": "test asset",
-                }
-                for company_data in [self.company_data, self.company_data_2]
-            ]
+        assets = (
+            self.env["resource.asset"]
+            .with_context(default_depreciation_state="draft")
+            .create(
+                [
+                    {
+                        "company_id": company_data["company"].id,
+                        "name": "test asset",
+                    }
+                    for company_data in [self.company_data, self.company_data_2]
+                ]
+            )
         )
         self.assertEqual(assets[0].company_id, self.company_data["company"])
         self.assertEqual(assets[1].company_id, self.company_data_2["company"])
@@ -4752,7 +4786,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                         "company_id": setup["company_id"],
                     }
                 )
-                asset = self.env["account.asset"].create(asset_vals)
+                asset = self.env["resource.asset"].create(asset_vals)
                 asset.compute_depreciation_board()
                 self.assertEqual(
                     asset.depreciation_move_ids.mapped("company_id"), expected
@@ -4803,7 +4837,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         vendor_bill.action_post()
 
         self.assertEqual(
-            len(vendor_bill.capitalised_asset_ids), 1, "Only one asset should have been created."
+            len(vendor_bill.capitalised_asset_ids),
+            1,
+            "Only one asset should have been created.",
         )
         self.assertEqual(
             vendor_bill.capitalised_asset_ids.company_id,
@@ -4815,7 +4851,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.env.company.account_storno = True
         today = fields.Date.today()
 
-        locked_car = self.env["account.asset"].create(
+        locked_car = self.env["resource.asset"].create(
             {
                 "value_salvage": 2000.0,
                 "depreciation_period": "12",

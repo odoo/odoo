@@ -15,7 +15,7 @@ class AssetModify(models.TransientModel):
 
     name = fields.Text(string="Note")
     asset_id = fields.Many2one(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         required=True,
         ondelete="cascade",
         help="The asset to be modified by this wizard",
@@ -146,7 +146,7 @@ class AssetModify(models.TransientModel):
 
     @api.onchange("modify_action")
     def _onchange_action(self):
-        if self.modify_action == "sell" and self.asset_id.child_ids.filtered(
+        if self.modify_action == "sell" and self.asset_id.increase_ids.filtered(
             lambda a: (
                 a.depreciation_state in ("draft", "open")
                 or a.value_depreciable_residual > 0
@@ -285,7 +285,7 @@ class AssetModify(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        Asset = self.env["account.asset"]
+        Asset = self.env["resource.asset"]
         for vals in vals_list:
             if "asset_id" not in vals:
                 continue
@@ -379,7 +379,7 @@ class AssetModify(models.TransientModel):
             }
         )
         move._post()
-        asset_increase = self.env["account.asset"].create(
+        asset_increase = self.env["resource.asset"].create(
             {
                 "name": f"{self.asset_id.name}: {self.name}"
                 if self.name
@@ -403,6 +403,8 @@ class AssetModify(models.TransientModel):
                 "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
                 "depreciation_journal_id": self.asset_id.depreciation_journal_id.id,
                 "parent_id": self.asset_id.id,
+                "increased_asset_id": self.asset_id.id,
+                "kind_id": self.asset_id.kind_id.id,
                 "original_move_line_ids": [
                     Command.set(
                         move.line_ids.filtered(
@@ -451,7 +453,7 @@ class AssetModify(models.TransientModel):
 
     def _propagate_to_children(self, asset_vals, restart_date):
         self.check_singleton()
-        children = self.asset_id.child_ids
+        children = self.asset_id.increase_ids
         if not children:
             return
         children.write(

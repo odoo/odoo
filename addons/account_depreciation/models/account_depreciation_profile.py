@@ -97,9 +97,13 @@ class AccountDepreciationProfile(models.Model):
         check_company=True,
     )
 
-    asset_properties_definition = fields.PropertiesDefinition(string="Asset Properties")
+    kind_id = fields.Many2one(
+        comodel_name="resource.asset.kind",
+        string="Asset Kind",
+        help="The kind given to an asset this profile creates. Without one, the asset is a Fixed Asset.",
+    )
     asset_ids = fields.One2many(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         inverse_name="depreciation_profile_id",
         string="Assets",
     )

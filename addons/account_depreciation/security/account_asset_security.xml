@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="account_asset_multi_company_rule" model="ir.rule">
-        <field name="name">Account Asset multi-company</field>
-        <field name="model_id" ref="model_account_asset" />
-        <field name="global" eval="True" />
-        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
     <record id="account_depreciation_profile_multi_company_rule" model="ir.rule">
         <field name="name">Depreciation Profile multi-company</field>
         <field name="model_id" ref="model_account_depreciation_profile" />

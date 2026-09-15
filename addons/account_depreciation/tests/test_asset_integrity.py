@@ -80,7 +80,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
                 .id,
             }
         ).modify()
-        increase = asset.child_ids
+        increase = asset.increase_ids
         self.assertTrue(increase.name, "a gross increase must carry a name")
         self.assertTrue(increase.display_name)
 

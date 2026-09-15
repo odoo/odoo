@@ -117,7 +117,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
     def test_board_computation_rejects_an_unknown_method(self):
         asset = self.create_asset(1200, "yearly", 4)
         self.env.cr.execute(
-            "UPDATE account_asset SET depreciation_method = 'exotic' WHERE id = %s",
+            "UPDATE resource_asset SET depreciation_method = 'exotic' WHERE id = %s",
             (asset.id,),
         )
         asset.invalidate_recordset(["depreciation_method"])
@@ -146,7 +146,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             }
         )
         asset = (
-            self.env["account.asset"]
+            self.env["resource.asset"]
             .with_user(user)
             .create(
                 {
@@ -380,7 +380,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         )
         move.action_post()
         line = move.line_ids.filtered(lambda aml: aml.debit)
-        siblings = self.env["account.asset"]
+        siblings = self.env["resource.asset"]
         for index in range(3):
             siblings |= self.create_asset(
                 300,
@@ -390,7 +390,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 original_move_line_ids=[Command.set(line.ids)],
             )
 
-        Asset = self.env["account.asset"]
+        Asset = self.env["resource.asset"]
         siblings.invalidate_recordset()
         one_at_a_time = [
             len(Asset.browse(asset.id).linked_assets_ids) for asset in siblings
@@ -409,7 +409,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         self.assertTrue(siblings[1].warning_count_assets)
 
     def test_board_asks_each_fiscal_year_once_for_the_whole_batch(self):
-        assets = self.env["account.asset"]
+        assets = self.env["resource.asset"]
         for index in range(5):
             assets |= self.create_asset(
                 6000, "monthly", 24, name=f"batched {index}", depreciation_state="draft"
@@ -446,7 +446,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             return original(self, *args, **kwargs)
 
         with patch.object(AccountJournal, "search", counting):
-            assets = self.env["account.asset"].create(
+            assets = self.env["resource.asset"].create(
                 [
                     {
                         "name": f"journal batch {index}",
@@ -523,7 +523,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         wizard.value_salvage += 100
         wizard.modify()
 
-        increase = asset.child_ids
+        increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
         self.assertEqual(increase.value_original, 500)
         self.assertEqual(increase.value_salvage, 100)
@@ -566,7 +566,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         )
         wizard.value_depreciable_residual += 600
         wizard.modify()
-        increase = asset.child_ids
+        increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
         self.assertEqual(increase.value_depreciable_residual, 0.0)
 
@@ -795,7 +795,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         line = bill.line_ids.filtered(
             lambda aml: aml.account_id == self.company_data["default_account_assets"]
         )
-        assets = self.env["account.asset"]
+        assets = self.env["resource.asset"]
         for index in range(count):
             assets |= self.create_asset(
                 900,

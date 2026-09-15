@@ -16,7 +16,7 @@ class TestAccountAssetCommon(AccountTestInvoicingCommon):
     ):
         if degressive_factor is not None:
             kwargs["depreciation_factor"] = degressive_factor
-        return cls.env["account.asset"].create(
+        return cls.env["resource.asset"].create(
             {
                 "name": "nice asset",
                 "account_asset_id": cls.company_data["default_account_assets"].id,

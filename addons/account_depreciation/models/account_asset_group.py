@@ -17,7 +17,7 @@ class AccountAssetGroup(models.Model):
         default=lambda self: self.env.company,
     )
     linked_asset_ids = fields.One2many(
-        comodel_name="account.asset",
+        comodel_name="resource.asset",
         inverse_name="asset_group_id",
         string="Related Assets",
     )
@@ -28,7 +28,8 @@ class AccountAssetGroup(models.Model):
         return {
             "name": self.name,
             "view_mode": "list,form",
-            "res_model": "account.asset",
+            "res_model": "resource.asset",
             "type": "ir.actions.act_window",
+            "views": self.env["resource.asset"]._get_depreciation_views(),
             "domain": [("id", "in", self.linked_asset_ids.ids)],
         }

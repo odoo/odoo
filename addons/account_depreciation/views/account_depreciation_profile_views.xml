@@ -57,6 +57,7 @@
                                 <field name="depreciation_period" nolabel="1" />
                             </div>
                             <field name="depreciation_prorata" />
+                            <field name="kind_id" />
                             <label for="value_salvage_pct" />
                             <div>
                                 <field
@@ -92,11 +93,6 @@
                                 groups="analytic.group_analytic_accounting" />
                         </group>
                     </group>
-                    <notebook>
-                        <page name="asset_properties" string="Asset Properties">
-                            <field name="asset_properties_definition" />
-                        </page>
-                    </notebook>
                 </sheet>
                 <chatter />
             </form>

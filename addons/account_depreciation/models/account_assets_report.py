@@ -136,7 +136,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             name = name_per_line_id[line_id]
             line = {
                 "id": report._get_generic_line_id(
-                    "account.asset", asset_id, parent_line_id=parent_id
+                    "resource.asset", asset_id, parent_line_id=parent_id
                 ),
                 "level": 2,
                 "name": name,
@@ -370,7 +370,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             _model, res_id = report._get_model_info_from_id(line["id"])
 
             line["id"] = report._prepare_line_id(
-                [(None, parent_model, parent_id), (None, "account.asset", res_id)]
+                [(None, parent_model, parent_id), (None, "resource.asset", res_id)]
             )
 
             is_parent_in_unfolded_lines = any(
@@ -448,15 +448,21 @@ class AccountAssetReportHandler(models.AbstractModel):
     def _query_values(self, options, prefix_to_match=None, forced_account_id=None):
 
         self.env["account.move.line"].check_access("read")
-        self.env["account.asset"].check_access("read")
+        self.env["resource.asset"].check_access("read")
 
-        query = Query(self.env, alias="asset", table=SQL.identifier("account_asset"))
+        query = Query(self.env, alias="asset", table=SQL.identifier("resource_asset"))
         account_alias = query.join(
             lhs_alias="asset",
             lhs_column="account_asset_id",
             rhs_table="account_account",
             rhs_column="id",
             link="account_asset_id",
+        )
+        query.add_join(
+            "JOIN",
+            alias="asset_company",
+            table="res_company",
+            condition=SQL("asset_company.id = asset.company_id"),
         )
         move_states = ("draft", "posted") if options.get("all_entries") else ("posted",)
         query.add_join(
@@ -497,7 +503,7 @@ class AccountAssetReportHandler(models.AbstractModel):
                 SQL(
                     "%s && %s",
                     [analytic_account_ids],
-                    self.env["account.asset"]._query_analytic_accounts("asset"),
+                    self.env["resource.asset"]._query_analytic_accounts("asset"),
                 )
             )
 
@@ -514,11 +520,11 @@ class AccountAssetReportHandler(models.AbstractModel):
         sql = SQL(
             """
             SELECT asset.id AS asset_id,
-                   asset.parent_id AS parent_id,
+                   asset.increased_asset_id AS parent_id,
                    asset.name AS asset_name,
                    asset.asset_group_id AS asset_group_id,
-                   asset.value_original AS asset_original_value,
-                   asset.currency_id AS asset_currency_id,
+                   COALESCE(asset.value_original, 0) AS asset_original_value,
+                   asset_company.currency_id AS asset_currency_id,
                    COALESCE(asset.value_salvage, 0) as asset_salvage_value,
                    MIN(move.date) AS asset_date,
                    asset.date_disposal AS asset_disposal_date,
@@ -540,9 +546,10 @@ class AccountAssetReportHandler(models.AbstractModel):
                AND asset.company_id in %(company_ids)s
                AND (asset.date_acquisition <= %(date_to)s OR move.date <= %(date_to)s)
                AND (asset.date_disposal >= %(date_from)s OR asset.date_disposal IS NULL)
+               AND asset.depreciation_state IS NOT NULL
                AND (asset.depreciation_state not in ('draft', 'cancelled') OR (asset.depreciation_state = 'draft' AND %(include_draft)s))
                AND asset.active = 't'
-          GROUP BY asset.id, account_id, account_code, account_name
+          GROUP BY asset.id, asset_company.currency_id, account_id, account_code, account_name
           ORDER BY account_code, asset.date_acquisition, asset.id;
             """,
             account_code=account_code,
