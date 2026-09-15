@@ -361,6 +361,14 @@ class HrExpense(models.Model):
             if len(expense.account_move_id.origin_payment_id.expense_ids) > 1:
                 raise ValidationError(_("Only one expense can be linked to a particular payment"))
 
+    @api.constrains('existing_bill_id')
+    def _check_existing_bill_is_set(self):
+        # case where an expense has an existing bill, but it's not filled in. We cannot add this condition
+        # in can_approve as can_approve is used at submission (see action_submit)
+        for expense in self:
+            if not expense.existing_bill_id and expense.has_existing_bill and expense.state not in ['draft', 'submitted', 'refused']:
+                raise ValidationError(self.env._("The existing bill must be set."))
+
     # --------------------------------------------
     # Compute methods
     # --------------------------------------------
@@ -1401,7 +1409,11 @@ class HrExpense(models.Model):
     def _can_be_autovalidated(self):
         """ Check whether the given expenses can be auto-validated (no approver) """
         self.ensure_one()
-        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+        has_rights = (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+        # In case the expense is linked to an existing bill, the existing_bill_id must be set to be autovalidated
+        # If it's not linked to an existing bill, then the field is not required
+        existing_bill_is_set = self.existing_bill_id or not self.has_existing_bill
+        return has_rights and existing_bill_is_set
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1706,6 +1718,9 @@ class HrExpense(models.Model):
 
     def _do_approve(self):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
+        if any(expense.has_existing_bill and not expense.existing_bill_id for expense in expenses_to_approve):
+            raise UserError(self.env._("The existing bill must be set."))
+
         for expense in expenses_to_approve:
             expense.write({
                 'approval_state': 'approved',
