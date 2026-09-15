@@ -362,7 +362,8 @@ describe("throttleForAnimation", () => {
 
 describe("throttleForAnimationScrollEvent", () => {
     test("scroll loses target", async () => {
-        let throttled = new Deferred();
+        const throttled = new Deferred();
+        let callCount = 0;
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
             // event was handled, it is therefore null here.
@@ -373,26 +374,32 @@ describe("throttleForAnimationScrollEvent", () => {
             expect.step(
                 `throttled function called with ${nodeName} in event, but ${targetName} in parameter`
             );
-            throttled.resolve();
+            callCount++;
+            if (callCount === 2) {
+                throttled.resolve();
+            }
         });
 
         const el = document.createElement("div");
         el.style = "position: absolute; overflow: scroll; height: 100px; width: 100px;";
         const childEl = document.createElement("div");
         childEl.style = "height: 200px; width: 200px;";
-        let scrolled = new Deferred();
+        const scrolled = new Deferred();
         el.appendChild(childEl);
         el.addEventListener("scroll", (ev) => {
             expect.step("before scroll");
+            // Leading edge: called synchronously, while the event is still
+            // dispatching, so its currentTarget is still set.
+            throttledFn(ev, ev.currentTarget);
+            // Queued: only runs once the event has finished dispatching, on
+            // the next animation frame, so its currentTarget is lost by then.
             throttledFn(ev, ev.currentTarget);
             expect.step("after scroll");
             scrolled.resolve();
         });
         getFixture().appendChild(el);
         el.scrollBy(1, 1);
-        el.scrollBy(2, 2);
         await scrolled;
-        await throttled;
 
         expect.verifySteps([
             "before scroll",
@@ -400,15 +407,6 @@ describe("throttleForAnimationScrollEvent", () => {
             "after scroll",
         ]);
 
-        throttled = new Deferred();
-        scrolled = new Deferred();
-        el.scrollBy(3, 3);
-        await scrolled;
-        expect.verifySteps([
-            "before scroll",
-            // Further call is delayed.
-            "after scroll",
-        ]);
         await throttled;
         expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
         el.remove();
