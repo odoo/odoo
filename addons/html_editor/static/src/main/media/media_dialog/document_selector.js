@@ -111,6 +111,8 @@ export function renderStaticFileBox(
     rootSpan.classList.add("o_file_box", "o-contenteditable-false");
     rootSpan.contentEditable = false;
     rootSpan.dataset.attachmentId = id;
+    const parts = filename.split(".");
+    rootSpan.dataset.extension = parts.length > 1 ? parts.pop() : "";
     const bannerElement = renderToElement("html_editor.StaticFileBox", {
         fileModel: { filename, mimetype, downloadUrl },
     });
