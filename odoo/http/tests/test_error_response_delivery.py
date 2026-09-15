@@ -6,11 +6,12 @@ import pytest
 import werkzeug.exceptions
 import werkzeug.wrappers
 
+from odoo.http._session_store import FilesystemSessionStore
 from odoo.http.application import Application
 from odoo.http.constants import NOT_FOUND_NODB, NOT_FOUND_NODB_TEXT
 from odoo.http.dispatcher import Json2Dispatcher
 from odoo.http.routing import prepare_routing_map
-from odoo.http.session import FilesystemSessionStore, Session
+from odoo.http.session import Session
 from odoo.http.wrappers import Response
 
 

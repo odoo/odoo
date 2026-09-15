@@ -25,6 +25,7 @@ from odoo.tools import file_path
 from odoo.tools.misc import real_time
 
 from ._protocols import get_ir_http
+from ._session_store import FilesystemSessionStore, prepare_session_dir
 from .constants import (
     REJECTED_HTTP_METHODS,
     STATIC_ALLOWED_METHODS,
@@ -41,7 +42,7 @@ from .exceptions import (
 from .geoip import geoip2, maxminddb
 from .request_class import Request
 from .routing import _generate_routing_rules, prepare_routing_map
-from .session import FilesystemSessionStore, Session, prepare_session_dir
+from .session import Session
 from .settings import current as current_settings
 from .wrappers import HTTPRequest, Response, prepare_no_content_response
 

@@ -25,6 +25,7 @@ CLEAN_MODULES = (
     "odoo.http._rpc",
     "odoo.http.request_class",
     "odoo.http.routing",
+    "odoo.http._session_store",
     "odoo.http.session",
     "odoo.service.db",
     "odoo.service.server",

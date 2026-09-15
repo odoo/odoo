@@ -72,10 +72,8 @@ from .routing import (
     _prepare_route_fragment,
 )
 
-from .session import (
-    FilesystemSessionStore,
-    Session,
-)
+from ._session_store import FilesystemSessionStore
+from .session import Session
 
 from .geoip import (
     GEOIP_EMPTY_CITY,

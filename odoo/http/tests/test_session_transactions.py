@@ -9,10 +9,11 @@ from unittest import mock
 import pytest
 from werkzeug.test import EnvironBuilder
 
+from odoo.http._session_store import FilesystemSessionStore
 from odoo.http.constants import prepare_default_session
 from odoo.http.exceptions import SessionExpiredException
 from odoo.http.request_class import Request
-from odoo.http.session import FilesystemSessionStore, Session
+from odoo.http.session import Session
 from odoo.http.wrappers import HTTPRequest, Response
 from odoo.libs.func import Callbacks
 

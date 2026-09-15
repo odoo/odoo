@@ -2,7 +2,8 @@ import pathlib
 
 import pytest
 
-from odoo.http.session import FilesystemSessionStore, Session
+from odoo.http._session_store import FilesystemSessionStore
+from odoo.http.session import Session
 
 
 @pytest.fixture

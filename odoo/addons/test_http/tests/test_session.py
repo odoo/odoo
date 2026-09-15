@@ -18,7 +18,7 @@ from odoo.http import (
     Session,
     root,
 )
-from odoo.http.session import _session_identifier_re
+from odoo.http._session_store import _session_identifier_re
 from odoo.tests import get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
 
@@ -606,10 +606,10 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
         with (
             patch(
-                "odoo.http.session.Path.replace",
+                "odoo.http._session_store.Path.replace",
                 side_effect=OSError("synthetic rename failure"),
             ),
-            self.assertLogs("odoo.http.session", level="WARNING") as logs,
+            self.assertLogs("odoo.http._session_store", level="WARNING") as logs,
             self.assertRaises(OSError),
         ):
             odoo.http.root.session_store.save(session)

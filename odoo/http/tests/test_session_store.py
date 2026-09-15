@@ -6,9 +6,10 @@ from typing import Any
 
 import pytest
 
+from odoo.http._session_store import FilesystemSessionStore
 from odoo.http.constants import STORED_SESSION_BYTES, prepare_default_session
 from odoo.http.request_class import Request
-from odoo.http.session import FilesystemSessionStore, Session, _coerce_session_value
+from odoo.http.session import Session, _coerce_session_value
 
 
 @pytest.fixture
