@@ -7,6 +7,8 @@ from odoo.service import settings as server_settings
 from odoo.service._cron import ReconnectBackoff
 from odoo.service._limits import BACKOFF_BASE_S, BACKOFF_CEILING_S
 
+from .conftest import build_worker
+
 CURVES = {
     60: [2, 4, 8, 16, 32, 60, 60, 60, 60, 60, 60, 60],
     30: [2, 4, 8, 16, 30, 30, 30, 30, 30, 30, 30, 30],
@@ -103,37 +105,22 @@ class TestJobLimitsAreSeparableFromCron:
         assert "limit_time_worker_job" in config.options
         assert "limit_time_real_job" in config.options
 
-    def test_worker_job_overrides_the_cron_max_age(self):
+    def test_worker_job_overrides_the_cron_max_age(self, worker_multi):
         from odoo.service._worker import WorkerCron, WorkerJob
 
         assert WorkerJob.get_max_age is not WorkerCron.get_max_age
-        worker = WorkerJob.__new__(WorkerJob)
+        worker = build_worker(WorkerJob, worker_multi)
         with self._with(limit_time_worker_job=900):
             assert worker.get_max_age() == 900
         with self._with(limit_time_worker_job=-1):
             assert worker.get_max_age() == 300
 
-    def test_worker_job_arms_its_watchdog_from_the_job_timeout(self):
-        import os
-
+    def test_worker_job_arms_its_watchdog_from_the_job_timeout(self, worker_multi):
         from odoo.service._worker import WorkerCron, WorkerJob
 
-        pipes = []
-
-        def open_pipe():
-            pipes.append(os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC))
-            return pipes[-1]
-
-        multi = MagicMock(
-            open_pipe=open_pipe, timeout=120, cron_timeout=300, job_timeout=45
-        )
-        try:
-            assert WorkerCron(multi).watchdog_timeout == 300
-            assert WorkerJob(multi).watchdog_timeout == 45
-        finally:
-            for pipe in pipes:
-                for fd in pipe:
-                    os.close(fd)
+        worker_multi.cron_timeout, worker_multi.job_timeout = 300, 45
+        assert build_worker(WorkerCron, worker_multi).watchdog_timeout == 300
+        assert build_worker(WorkerJob, worker_multi).watchdog_timeout == 45
 
 
 CRON_BUDGET_CASES = [

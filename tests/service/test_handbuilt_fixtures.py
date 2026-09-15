@@ -67,15 +67,6 @@ def _handbuilt():
                     yield path, offset, cls, found.group(1)
 
 
-def test_the_suite_still_builds_instances_by_hand():
-    built = {(p, ln) for p, ln, _, _ in _handbuilt()}
-    assert len(built) > 40, (
-        f"only {len(built)} hand-built attribute assignments found; either the "
-        f"classes became constructible (delete this gate and say so) or the "
-        f"scan stopped matching"
-    )
-
-
 def test_no_fixture_sets_an_attribute_its_class_does_not_have():
     stale = []
     for path, line, cls, attribute in _handbuilt():

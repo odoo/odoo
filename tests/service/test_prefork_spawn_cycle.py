@@ -10,6 +10,8 @@ import pytest
 from odoo.service import _census, _prefork
 from odoo.service import settings as server_settings
 
+from .conftest import prefork_server
+
 
 class TestTheWorkerCensusCrossesTheFork:
     """`/web/metrics` is an HTTP route, so under prefork a CHILD always serves it.
@@ -112,8 +114,9 @@ class TestTheWorkerCensusCrossesTheFork:
         the loop took the whole master down. A server with no census object at
         all is the same shape of failure.
         """
-        bare = object.__new__(_prefork.PreforkServer)
-        bare.logger = MagicMock()
+        bare = prefork_server()
+        bare._census = MagicMock()
+        bare._census.publish.side_effect = OSError("no census")
 
         bare._publish_census()
 

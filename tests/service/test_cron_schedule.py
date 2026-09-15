@@ -1,10 +1,10 @@
-import threading
-from collections import deque
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from odoo.service._cron import CronSchedule
+
+from .conftest import build_worker, threaded_server
 
 
 class _Clock:
@@ -145,9 +145,7 @@ class TestBothLoopsUseIt:
     def test_the_threaded_loop_sweeps_what_the_schedule_returns(self):
         from odoo.service import _threaded
 
-        server = object.__new__(_threaded.ThreadedServer)
-        server.logger = MagicMock()
-        server._listener_stop = threading.Event()
+        server = threaded_server()
         schedule = self._spy_schedule(["z", "y"])
         listener = MagicMock()
         listener.wait.return_value = True
@@ -167,18 +165,13 @@ class TestBothLoopsUseIt:
         schedule.get_due_databases.assert_called_once_with({"y", "z", "unknown"})
         assert swept == ["z", "y"]
 
-    def test_the_prefork_worker_queues_what_the_schedule_returns(self):
+    def test_the_prefork_worker_queues_what_the_schedule_returns(self, worker_multi):
         from odoo.service import _worker
 
-        worker = object.__new__(_worker.WorkerCron)
-        worker.logger = MagicMock()
-        worker.db_queue = deque()
+        worker = build_worker(_worker.WorkerCron, worker_multi)
         worker.schedule = self._spy_schedule(["z", "y"])
         worker.listener = MagicMock(connected=True)
         worker.listener.drain.return_value = {"y", "z"}
-        worker.pid = 1
-        worker.request_count = 0
-        worker.request_max = 0
         with (
             patch.object(worker, "_run_jobs_for_database") as run_jobs,
             patch.object(worker, "setproctitle"),

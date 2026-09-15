@@ -9,6 +9,8 @@ import pytest
 from odoo.service import _process_state
 from odoo.service import settings as server_settings
 
+from .conftest import threaded_server
+
 
 @pytest.fixture(scope="module")
 def mod():
@@ -533,20 +535,14 @@ class TestRestartGuard:
         mock_kill.assert_called_once_with(12345, signal.SIGHUP)
 
     def test_threaded_server_reload_delegates_to_lifecycle(self, srv):
-        ts = object.__new__(srv.ThreadedServer)
-        ts._listener_threads = []
-        ts._listener_stop = threading.Event()
-        ts._listener_stop_pipe = None
+        ts = threaded_server()
         ts.pid = 12345
         with patch("odoo.service._threaded.restart") as mock_restart:
             ts.reload()
         mock_restart.assert_called_once_with()
 
     def test_threaded_server_reload_is_windows_safe(self, srv):
-        ts = object.__new__(srv.ThreadedServer)
-        ts._listener_threads = []
-        ts._listener_stop = threading.Event()
-        ts._listener_stop_pipe = None
+        ts = threaded_server()
         ts.pid = 12345
         from odoo.service import lifecycle
 

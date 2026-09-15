@@ -1,4 +1,3 @@
-import contextlib
 import errno
 import os
 import pathlib
@@ -6,13 +5,14 @@ import resource
 import select
 import selectors
 import socket
-from collections import deque
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from odoo.service import _cron, _worker
 from odoo.service import settings as server_settings
+
+from .conftest import build_worker
 
 
 def _open_fds() -> set[int]:
@@ -24,24 +24,8 @@ def _open_fds() -> set[int]:
 
 
 @pytest.fixture
-def multi():
-    made = []
-
-    def open_pipe():
-        pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
-        made.append(pipe)
-        return pipe
-
-    m = MagicMock()
-    m.open_pipe.side_effect = open_pipe
-    m.timeout = 60
-    m.beat = 4
-    m.socket = None
-    yield m
-    for pipe in made:
-        for fd in pipe:
-            with contextlib.suppress(OSError):
-                os.close(fd)
+def multi(worker_multi):
+    return worker_multi
 
 
 class TestWorkerConstructionIsAllOrNothing:
@@ -235,8 +219,7 @@ class TestWorkerStop:
 
 class TestWorkerHttpAcceptErrors:
     def _process(self, multi, exc):
-        worker = object.__new__(_worker.WorkerHTTP)
-        worker.multi = multi
+        worker = build_worker(_worker.WorkerHTTP, multi)
         multi.socket = MagicMock()
         multi.socket.accept.side_effect = exc
         worker.process_request = MagicMock()
@@ -254,8 +237,7 @@ class TestWorkerHttpAcceptErrors:
             worker.process_work()
 
     def test_a_successful_accept_is_handed_on(self, multi):
-        worker = object.__new__(_worker.WorkerHTTP)
-        worker.multi = multi
+        worker = build_worker(_worker.WorkerHTTP, multi)
         client, addr = MagicMock(), ("127.0.0.1", 5555)
         multi.socket = MagicMock()
         multi.socket.accept.return_value = (client, addr)
@@ -270,9 +252,7 @@ class TestAcceptWaitsForTheListenerToBeReadable:
     beat and logged the EAGAIN as a lost race."""
 
     def _worker(self, multi, ready_fds):
-        worker = object.__new__(_worker.WorkerHTTP)
-        worker.multi = multi
-        worker.wakeup_pipe = (40, 41)
+        worker = build_worker(_worker.WorkerHTTP, multi, wakeup_pipe=(40, 41))
         worker._selector = MagicMock()
         worker._selector.select.return_value = [
             (MagicMock(fd=fd), selectors.EVENT_READ) for fd in ready_fds
@@ -352,11 +332,9 @@ class TestTheCursorIsReleasedAndTheConnectionIsLeftAlone:
         _cron.close_cron_cursor(cursor)
         assert order == []
 
-    def test_worker_stop_releases_through_it(self):
+    def test_worker_stop_releases_through_it(self, multi):
         """The clean-teardown site: this is the one that printed on SIGTERM."""
-        worker = _worker.WorkerCron.__new__(_worker.WorkerCron)
-        worker.request_count = 0
-        worker.db_queue = deque()
+        worker = build_worker(_worker.WorkerCron, multi)
         cursor, order = self._recording_cursor()
         worker.listener = _cron.CronListener("ch", _cron._logger)
         worker.listener._cursor = cursor

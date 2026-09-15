@@ -10,25 +10,12 @@ import pytest
 from odoo.service import _process_state, _threaded
 from odoo.service import settings as server_settings
 
+from .conftest import threaded_server
+
 
 @pytest.fixture
 def server():
-    s = object.__new__(_threaded.ThreadedServer)
-    s._listener_threads = []
-    s._listener_stop = threading.Event()
-    s._listener_stop_pipe = None
-    s.pid = os.getpid()
-    s.quit_signals_received = 0
-    s.httpd = None
-    s.limits_reached_threads = set()
-    s._overrun_start_times = {}
-    s.limit_reached_time = None
-    s._stop_after_init = False
-    s._process_handle = MagicMock()
-    s.logger = MagicMock()
-    s.interface, s.port = "127.0.0.1", 8069
-    s.app = MagicMock()
-    return s
+    return threaded_server(_process_handle=MagicMock())
 
 
 class TestWindowsConsoleEventsAreSignals:
@@ -276,22 +263,3 @@ class TestGracefulStop:
         assert server._listener_stop_pipe is None
         for fd in pipe:
             os.close(fd)
-
-
-class TestTheFixtureMatchesTheConstructor:
-    def test_the_field_sets_agree(self, server):
-        with server_settings.override(
-            http_interface="", http_port=8069, limit_time_real=120
-        ):
-            real = _threaded.ThreadedServer(MagicMock())
-
-        missing = sorted(set(vars(real)) - set(vars(server)))
-        extra = sorted(set(vars(server)) - set(vars(real)))
-        assert not missing and not extra, (
-            "the `server` fixture has drifted from the constructor it stands in "
-            f"for.\n  set by __init__ but absent from the fixture: {missing}\n"
-            f"  in the fixture but never set by __init__:    {extra}\n"
-            "Either restate the field, or drop the parity claim from the "
-            "fixture's docstring and let it be a minimal stand-in like "
-            "test_server.py's prefork_server."
-        )

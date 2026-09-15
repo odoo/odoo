@@ -1,3 +1,4 @@
+import contextlib
 import functools
 import os
 import pathlib
@@ -173,3 +174,105 @@ def patch_target_sources() -> tuple[tuple[pathlib.Path, str], ...]:
             if any(needle in text for needle in _FACADE_NEEDLES):
                 out.append((path, text))
     return tuple(out)
+
+
+def threaded_server(**attrs):
+    """A real `ThreadedServer`, so a fixture cannot drift from the constructor.
+
+    The constructor binds nothing and spawns nothing: it reads the settings
+    and records the pid. `logger` is a mock unless the caller says otherwise.
+    """
+    from unittest.mock import MagicMock
+
+    from odoo.service import _threaded
+    from odoo.service import settings as server_settings
+
+    with server_settings.override(http_interface="127.0.0.1", http_port=8069):
+        server = _threaded.ThreadedServer(MagicMock())
+    server.logger = MagicMock()
+    for name, value in attrs.items():
+        setattr(server, name, value)
+    return server
+
+
+def event_server(**attrs):
+    from unittest.mock import MagicMock
+
+    from odoo.service import _threaded
+    from odoo.service import settings as server_settings
+
+    with server_settings.override(http_interface="127.0.0.1", gevent_port=8072):
+        server = _threaded.EventServer(MagicMock())
+    server.logger = MagicMock()
+    for name, value in attrs.items():
+        setattr(server, name, value)
+    return server
+
+
+def common_server(**attrs):
+    from unittest.mock import MagicMock
+
+    from odoo.service import _base_server
+    from odoo.service import settings as server_settings
+
+    with server_settings.override(http_interface="127.0.0.1", http_port=8069):
+        server = _base_server.CommonServer(MagicMock())
+    server.logger = MagicMock()
+    for name, value in attrs.items():
+        setattr(server, name, value)
+    return server
+
+
+def prefork_server(**attrs):
+    """A real `PreforkServer`; the constructor opens nothing."""
+    from unittest.mock import MagicMock
+
+    from odoo.service import _prefork
+    from odoo.service import settings as server_settings
+
+    with server_settings.override(
+        workers=2, http_interface="127.0.0.1", http_port=8069, max_cron_threads=1
+    ):
+        server = _prefork.PreforkServer(MagicMock())
+    server.logger = MagicMock()
+    for name, value in attrs.items():
+        setattr(server, name, value)
+    return server
+
+
+@pytest.fixture
+def worker_multi():
+    """The master a worker is built against: real pipes, closed afterwards."""
+    from unittest.mock import MagicMock
+
+    made = []
+
+    def open_pipe():
+        pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
+        made.append(pipe)
+        return pipe
+
+    m = MagicMock()
+    m.open_pipe.side_effect = open_pipe
+    m.timeout = 60
+    m.cron_timeout = 60
+    m.job_timeout = 60
+    m.limit_request = 0
+    m.beat = 4
+    m.socket = None
+    yield m
+    for pipe in made:
+        for fd in pipe:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+
+
+def build_worker(cls, multi, **attrs):
+    """A real worker of `cls` built against `multi`, before `start()`."""
+    from unittest.mock import MagicMock
+
+    worker = cls(multi)
+    worker.logger = MagicMock()
+    for name, value in attrs.items():
+        setattr(worker, name, value)
+    return worker

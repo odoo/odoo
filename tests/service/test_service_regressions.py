@@ -20,13 +20,14 @@ from odoo.service.settings import override
 from odoo.tools import frozendict, lazy
 from odoo.tools.misc import ReadonlyDict
 
+from .conftest import build_worker
+
 
 @pytest.mark.parametrize("operation", ["setblocking", "settimeout", "setsockopt"])
-def test_accepted_socket_setup_failure_still_releases_the_client(operation):
-    worker = _worker.WorkerHTTP.__new__(_worker.WorkerHTTP)
-    worker.sock_timeout = 5
-    worker.request_count = 0
-    worker.multi = MagicMock()
+def test_accepted_socket_setup_failure_still_releases_the_client(
+    operation, worker_multi
+):
+    worker = build_worker(_worker.WorkerHTTP, worker_multi, sock_timeout=5)
     client = MagicMock()
     getattr(client, operation).side_effect = OSError("socket setup failed")
     with (

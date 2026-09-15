@@ -6,6 +6,8 @@ import pytest
 
 from odoo.service import _process_state
 
+from .conftest import common_server, event_server, prefork_server, threaded_server
+
 
 @pytest.fixture(scope="module")
 def mod():
@@ -77,19 +79,18 @@ class TestServiceMetrics:
     def _prefork(pid):
         """A real PreforkServer, since it is the one that answers now."""
         from odoo.service._census import WorkerCensus
-        from odoo.service._prefork import PreforkServer
 
-        server = object.__new__(PreforkServer)
-        server.workers = {1: object(), 2: object()}
-        server.workers_http = {1: object(), 2: object()}
-        server.workers_cron = {3: object()}
-        server.workers_job = {}
-        server.population = 4
-        server.generation = 17
-        server.long_polling_pid = 999
-        server.pid = pid
-        server._census = WorkerCensus(pid)
-        return server
+        return prefork_server(
+            workers={1: object(), 2: object()},
+            workers_http={1: object(), 2: object()},
+            workers_cron={3: object()},
+            workers_job={},
+            population=4,
+            generation=17,
+            long_polling_pid=999,
+            pid=pid,
+            _census=WorkerCensus(pid),
+        )
 
     def test_prefork_reports_worker_counts(self, mod):
         server = self._prefork(os.getpid())
@@ -131,12 +132,7 @@ class TestServiceMetrics:
     def test_threaded_reports_thread_counts_and_slot_ceiling(self, mod, monkeypatch):
         import threading
 
-        from odoo.service._threaded import ThreadedServer
-
-        server = object.__new__(ThreadedServer)
-        server._listener_threads = []
-        server._listener_stop = threading.Event()
-        server._listener_stop_pipe = None
+        server = threaded_server()
         server.httpd = MagicMock(max_http_threads=31)
         server.limits_reached_threads = set()
         server._overrun_start_times = {}
@@ -175,9 +171,7 @@ class TestEveryServerAnswersForItself:
         )
 
     def test_a_flavour_that_declares_nothing_still_renders(self, mod):
-        from odoo.service._base_server import CommonServer
-
-        server = object.__new__(CommonServer)
+        server = common_server()
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
             text = mod.render_prometheus_exposition()
@@ -186,9 +180,8 @@ class TestEveryServerAnswersForItself:
         assert not errors, errors
 
     def test_the_evented_server_does_not_claim_thread_metrics(self, mod):
-        from odoo.service._threaded import EventServer
 
-        server = object.__new__(EventServer)
+        server = event_server()
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
         assert out["flavor"] == "evented"
@@ -281,15 +274,7 @@ class TestPrometheusExposition:
         )
 
     def test_booleans_render_as_one_and_zero(self, mod):
-        from odoo.service._prefork import PreforkServer
-
-        server = object.__new__(PreforkServer)
-        server.workers = {}
-        server.workers_http = server.workers_cron = server.workers_job = {}
-        server.population = 0
-        server.generation = 0
-        server.long_polling_pid = None
-        server.pid = os.getpid()
+        server = prefork_server(population=0)
 
         with patch.object(_process_state, "server", server):
             text = mod.render_prometheus_exposition()
@@ -415,12 +400,7 @@ class TestReportingAndRecyclingAreDifferentQuestions:
     def test_websocket_threads_are_counted(self, mod):
         import threading
 
-        from odoo.service._threaded import ThreadedServer
-
-        server = object.__new__(ThreadedServer)
-        server._listener_threads = []
-        server._listener_stop = threading.Event()
-        server._listener_stop_pipe = None
+        server = threaded_server()
         server.httpd = None
         server.limits_reached_threads = set()
         server._overrun_start_times = {}

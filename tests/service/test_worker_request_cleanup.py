@@ -7,16 +7,12 @@ import pytest
 from odoo.service import _worker
 from odoo.service._worker import WorkerHTTP
 
+from .conftest import build_worker
+
 
 @pytest.fixture
-def worker():
-    w = WorkerHTTP.__new__(WorkerHTTP)
-    w.sock_timeout = 5
-    w.request_count = 0
-    w.request_max = 0
-    w.multi = MagicMock()
-    w.limits = MagicMock()
-    return w
+def worker(worker_multi):
+    return build_worker(WorkerHTTP, worker_multi, sock_timeout=5, limits=MagicMock())
 
 
 def _socketpair():

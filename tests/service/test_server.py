@@ -24,6 +24,9 @@ from odoo.service import (
 from odoo.service import settings as server_settings
 from odoo.tools import SQL
 
+from .conftest import build_worker, common_server, threaded_server
+from .conftest import event_server as build_event_server
+
 
 @pytest.fixture(scope="module")
 def srv():
@@ -39,20 +42,10 @@ def stamp_rpc_model_method(monkeypatch, value=""):
 
 
 @pytest.fixture
-def multi():
-    m = MagicMock()
-    pipes = [os.pipe(), os.pipe()]
-    m.open_pipe.side_effect = list(pipes)
-    m.timeout = 60
-    m.cron_timeout = None
-    m.limit_request = 100
-    m.socket = None
-    m.beat = 4
-    yield m
-    for r, w in pipes:
-        for fd in (r, w):
-            with contextlib.suppress(OSError):
-                os.close(fd)
+def multi(worker_multi):
+    worker_multi.cron_timeout = None
+    worker_multi.limit_request = 100
+    return worker_multi
 
 
 @pytest.fixture
@@ -111,8 +104,7 @@ class TestEmptyPipe:
 
 class TestEventServerWatchdogSurvivesErrors:
     def test_transient_failure_does_not_retire_the_watchdog(self, srv):
-        server = srv.EventServer.__new__(srv.EventServer)
-        server.logger = logging.getLogger("test.evented.watchdog")
+        server = build_event_server(logger=logging.getLogger("test.evented.watchdog"))
         calls = []
 
         def flaky():
@@ -526,8 +518,8 @@ class TestWorkerStopReleasesResources:
         bare_worker.stop()
         bare_worker._selector.close.assert_called_once_with()
 
-    def test_stop_before_start_does_not_raise(self, srv):
-        w = object.__new__(srv.Worker)
+    def test_stop_before_start_does_not_raise(self, srv, multi):
+        w = build_worker(srv.Worker, multi)
         w.stop()
 
     def test_cron_worker_closes_the_selector_and_the_cursor_only(self, worker_cron):
@@ -619,16 +611,14 @@ def worker_check_limits_env(memory_bytes=0, config_override=None):
 
 
 @pytest.fixture
-def bare_worker(srv):
-    w = object.__new__(srv.Worker)
-    w.ppid = os.getppid()
-    w.pid = os.getpid()
-    w.alive = True
-    w.request_count = 0
-    w.request_max = 100
-    w.logger = MagicMock()
-    w._process_handle = MagicMock()
-    return w
+def bare_worker(srv, multi):
+    return build_worker(
+        srv.Worker,
+        multi,
+        ppid=os.getppid(),
+        pid=os.getpid(),
+        _process_handle=MagicMock(),
+    )
 
 
 class TestWorkerCheckLimits:
@@ -712,10 +702,7 @@ class TestIdleRegistryEvictionRunsOnEveryPulse:
         evict.assert_called_once_with()
 
     def test_threaded_check_limits_sweeps(self, srv):
-        ts = object.__new__(srv.ThreadedServer)
-        ts._listener_threads = []
-        ts._listener_stop = threading.Event()
-        ts._listener_stop_pipe = None
+        ts = threaded_server()
         ts.logger = MagicMock()
         ts.limits_reached_threads = set()
         ts._overrun_start_times = {}
@@ -730,10 +717,7 @@ class TestIdleRegistryEvictionRunsOnEveryPulse:
         evict.assert_called_once_with()
 
     def test_evented_check_limits_sweeps(self, srv):
-        es = object.__new__(srv.EventServer)
-        es.logger = MagicMock()
-        es.ppid = os.getppid()
-        es.pid = os.getpid()
+        es = build_event_server()
         with (
             patch.object(
                 srv.EventServer, "get_memory_over_soft_limit", return_value=None
@@ -745,22 +729,16 @@ class TestIdleRegistryEvictionRunsOnEveryPulse:
 
 
 class TestWorkerRunFaultExit:
-    def _make_worker(self, srv):
-        w = object.__new__(srv.Worker)
-        w.alive = True
-        w.pid = os.getpid()
-        w.request_count = 0
-        w.watchdog_pipe = os.pipe()
-        w.multi = MagicMock()
-        w.logger = MagicMock()
+    def _make_worker(self, srv, multi):
+        w = build_worker(srv.Worker, multi, pid=os.getpid())
         w.start = MagicMock()
-        w.stop = MagicMock(side_effect=lambda: [os.close(fd) for fd in w.watchdog_pipe])
+        w.stop = MagicMock()
         w.check_limits = MagicMock()
         w.sleep = MagicMock()
         return w
 
-    def test_work_fault_propagates_as_systemexit_1(self, srv):
-        w = self._make_worker(srv)
+    def test_work_fault_propagates_as_systemexit_1(self, srv, multi):
+        w = self._make_worker(srv, multi)
         w.process_work = MagicMock(side_effect=ValueError("boom"))
         with pytest.raises(SystemExit) as exc_info:
             w.run()
@@ -769,8 +747,8 @@ class TestWorkerRunFaultExit:
         logged = " ".join(str(c) for c in w.logger.info.call_args_list)
         assert "Exiting cleanly" not in logged, "crash mislabeled as clean exit"
 
-    def test_clean_exit_returns_none_and_logs(self, srv):
-        w = self._make_worker(srv)
+    def test_clean_exit_returns_none_and_logs(self, srv, multi):
+        w = self._make_worker(srv, multi)
 
         def stop_loop():
             w.alive = False
@@ -796,9 +774,7 @@ class TestCommonServerCallbacks:
         assert cb in _base_server._on_stop_hooks
 
     def test_stop_calls_all_registered_callbacks(self, srv):
-        server = object.__new__(srv.CommonServer)
-        server.pid = os.getpid()
-        server.logger = MagicMock()
+        server = common_server()
         cb1, cb2 = MagicMock(), MagicMock()
         _base_server._on_stop_hooks.extend([cb1, cb2])
         server.stop()
@@ -806,9 +782,7 @@ class TestCommonServerCallbacks:
         cb2.assert_called_once()
 
     def test_stop_continues_after_callback_exception(self, srv):
-        server = object.__new__(srv.CommonServer)
-        server.pid = os.getpid()
-        server.logger = MagicMock()
+        server = common_server()
         cb1 = MagicMock(side_effect=RuntimeError("boom"))
         cb1.__name__ = "cb1"
         cb2 = MagicMock()
@@ -820,9 +794,7 @@ class TestCommonServerCallbacks:
     def test_stop_survives_partial_hook_without_name(self, srv):
         import functools
 
-        server = object.__new__(srv.CommonServer)
-        server.pid = os.getpid()
-        server.logger = MagicMock()
+        server = common_server()
 
         def _boom(_tag):
             raise RuntimeError("cleanup failed")
@@ -1326,10 +1298,7 @@ class TestPreforkWorkerKill:
 
 @pytest.fixture
 def tserver(srv):
-    s = object.__new__(srv.ThreadedServer)
-    s._listener_threads = []
-    s._listener_stop = threading.Event()
-    s._listener_stop_pipe = None
+    s = threaded_server()
     s.limits_reached_threads = set()
     s._overrun_start_times = {}
     s.limit_reached_time = None
@@ -1587,9 +1556,7 @@ class TestOnStopFuncsModuleLevel:
         srv.CommonServer.register_on_stop_hook(cb)
         assert len(_base_server._on_stop_hooks) == before + 1
 
-        instance = object.__new__(srv.CommonServer)
-        instance.pid = os.getpid()
-        instance.logger = MagicMock()
+        instance = common_server()
         instance.stop()
         cb.assert_called_once()
 
@@ -1674,11 +1641,7 @@ class TestMemoryLogStrings:
 
 @pytest.fixture
 def event_server(srv):
-    obj = object.__new__(srv.EventServer)
-    obj.interface = "127.0.0.1"
-    obj.port = 0
-    obj.app = MagicMock()
-    obj.logger = MagicMock()
+    obj = build_event_server(port=0)
     obj.httpd = None
     obj.pid = os.getpid()
     return obj
@@ -1764,10 +1727,7 @@ class TestEventServerGracefulStop:
 
 class TestProcessLimitRealTimeLog:
     def test_overrun_logs_fractional_seconds(self, srv):
-        ts = object.__new__(srv.ThreadedServer)
-        ts._listener_threads = []
-        ts._listener_stop = threading.Event()
-        ts._listener_stop_pipe = None
+        ts = threaded_server()
         ts.logger = MagicMock()
         ts.limits_reached_threads = set()
         ts._overrun_start_times = {}
@@ -1806,10 +1766,7 @@ class _StopHarness(BaseException):
 @pytest.fixture
 def listen_server(srv, monkeypatch):
     monkeypatch.setattr(threading.current_thread(), "start_time", None, raising=False)
-    s = object.__new__(srv.ThreadedServer)
-    s._listener_threads = []
-    s._listener_stop = threading.Event()
-    s._listener_stop_pipe = None
+    s = threaded_server()
     s.logger = MagicMock()
     return s
 
