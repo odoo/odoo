@@ -1037,6 +1037,7 @@ class HrLeaveAllocation(models.Model):
             'number_of_days_display': 0.0,
             'number_of_hours_display': 0.0,
             'already_accrued': False,
+            'yearly_accrued_amount': 0,
             'carried_over_days_expiration_date': False,
             'expiring_carryover_days': 0
         }
