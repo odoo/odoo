@@ -516,6 +516,23 @@ class Website(models.Model):
                 {"arch_db": etree.tostring(el)}
             )
 
+    def _configurator_write_palette(self, selected_palette):
+        if not selected_palette:
+            return
+        Assets = self.env["website.assets"]
+        selected_palette_name = (
+            selected_palette if isinstance(selected_palette, str) else "base-1"
+        )
+        Assets.update_scss_customization(
+            "/website/static/src/scss/options/user_values.scss",
+            {"color-palettes-name": "'%s'" % selected_palette_name},
+        )
+        if isinstance(selected_palette, list):
+            Assets.update_scss_customization(
+                "/website/static/src/scss/options/colors/user_color_palette.scss",
+                {f"o-color-{i}": color for i, color in enumerate(selected_palette, 1)},
+            )
+
     def _configurator_write_logo(self, website, logo_attachment_id):
         company = website.company_id
         if logo_attachment_id:
@@ -589,24 +606,7 @@ class Website(models.Model):
 
         self._configurator_write_logo(website, kwargs.get("logo_attachment_id"))
 
-        selected_palette = kwargs.get("selected_palette")
-        if selected_palette:
-            Assets = self.env["website.assets"]
-            selected_palette_name = (
-                selected_palette if isinstance(selected_palette, str) else "base-1"
-            )
-            Assets.update_scss_customization(
-                "/website/static/src/scss/options/user_values.scss",
-                {"color-palettes-name": "'%s'" % selected_palette_name},
-            )
-            if isinstance(selected_palette, list):
-                Assets.update_scss_customization(
-                    "/website/static/src/scss/options/colors/user_color_palette.scss",
-                    {
-                        f"o-color-{i}": color
-                        for i, color in enumerate(selected_palette, 1)
-                    },
-                )
+        self._configurator_write_palette(kwargs.get("selected_palette"))
 
         cta_data = website.get_cta_data(
             kwargs.get("website_purpose"), kwargs.get("website_type")
