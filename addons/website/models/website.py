@@ -818,7 +818,7 @@ class Website(models.Model):
                     default_menu_values.update(menu_values)
                 menu = self.env["website.menu"].create(default_menu_values)
             result["menu_id"] = menu.id
-        _debug.lifecycle("new_page", url=page_url, key=key, **result)
+        _debug.lifecycle("new_page", url=page_url, key=key, keys=sorted(result))
         return result
 
     def get_unique_path(self, page_url):

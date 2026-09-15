@@ -374,12 +374,10 @@ class IrModuleModule(models.Model):
         themes = self.env["ir.module.module"].search(self.get_domain_themes())
         if self - themes:
             _debug.logic(
-                "theme_upgrade_refused",
-                reason="not_a_theme",
-                modules=(self - themes).mapped("name"),
+                "theme_upgrade_refused", reason="not_a_theme", modules=self - themes
             )
             raise werkzeug.exceptions.Forbidden
-        _debug.pipeline("theme_upgrade_upstream", modules=self.mapped("name"))
+        _debug.pipeline("theme_upgrade_upstream", modules=self)
 
         def install_or_upgrade(theme):
             if theme.state != "installed":

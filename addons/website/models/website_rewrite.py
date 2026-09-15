@@ -373,12 +373,13 @@ class WebsiteRewrite(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rewrites = super().create(vals_list)
-        _debug.lifecycle(
-            "create",
-            rewrites=rewrites,
-            count=len(rewrites),
-            types=sorted(set(rewrites.mapped("redirect_type"))),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                rewrites=rewrites,
+                count=len(rewrites),
+                types=sorted({t or "" for t in rewrites.mapped("redirect_type")}),
+            )
         if set(rewrites.mapped("redirect_type")) & {"308", "404"}:
             self._invalidate_routing()
         return rewrites

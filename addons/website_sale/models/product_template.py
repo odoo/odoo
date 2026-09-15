@@ -427,6 +427,12 @@ class ProductTemplate(models.Model):
                     currency=currency,
                 )
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
+                    _debug.logic(
+                        "shop_base_price",
+                        by="pricelist_discount",
+                        template=template.id,
+                        rule=pricelist_rule_id,
+                    )
                     base_price = pricelist_base_price
                     template_price_vals["base_price"] = self._apply_taxes_to_price(
                         base_price,
@@ -442,6 +448,9 @@ class ProductTemplate(models.Model):
                 and comparison_prices_enabled
                 and template.compare_list_price
             ):
+                _debug.logic(
+                    "shop_base_price", by="compare_list_price", template=template.id
+                )
                 template_price_vals["base_price"] = template.currency_id._convert(
                     template.compare_list_price,
                     currency,
@@ -452,6 +461,12 @@ class ProductTemplate(models.Model):
 
             res[template.id] = template_price_vals
 
+        _debug.perf.count(
+            "shop_prices_computed",
+            templates=len(self),
+            pricelist=pricelist.id,
+            comparison=comparison_prices_enabled,
+        )
         return res
 
     def _can_be_added_to_cart(self):
@@ -547,6 +562,27 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
+    def _add_compare_list_price(
+        self, combination_info, product_or_template, currency, date, has_discount
+    ):
+        if (
+            not has_discount
+            and product_or_template.compare_list_price
+            and self.env["res.groups"]._is_feature_enabled(
+                "website_sale.group_product_price_comparison"
+            )
+        ):
+            _debug.logic("combination_compare_price", product=product_or_template.id)
+            combination_info["compare_list_price"] = (
+                product_or_template.currency_id._convert(
+                    from_amount=product_or_template.compare_list_price,
+                    to_currency=currency,
+                    company=self.env.company,
+                    date=date,
+                    round=False,
+                )
+            )
+
     def _get_additionnal_combination_info(
         self, product_or_template, quantity, uom, date, website
     ):
@@ -574,6 +610,9 @@ class ProductTemplate(models.Model):
         has_discounted_price = (
             currency.compare_amounts(price_before_discount, pricelist_price) == 1
         )
+        _debug.logic(
+            "combination_price", rule=pricelist_rule_id, discounted=has_discounted_price
+        )
         combination_info = {
             "list_price": max(pricelist_price, price_before_discount),
             "price": pricelist_price,
@@ -582,22 +621,9 @@ class ProductTemplate(models.Model):
             "discount_end_date": pricelist_item.date_end,
         }
 
-        if (
-            not has_discounted_price
-            and product_or_template.compare_list_price
-            and self.env["res.groups"]._is_feature_enabled(
-                "website_sale.group_product_price_comparison"
-            )
-        ):
-            combination_info["compare_list_price"] = (
-                product_or_template.currency_id._convert(
-                    from_amount=product_or_template.compare_list_price,
-                    to_currency=currency,
-                    company=self.env.company,
-                    date=date,
-                    round=False,
-                )
-            )
+        self._add_compare_list_price(
+            combination_info, product_or_template, currency, date, has_discounted_price
+        )
 
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
             self.env.company

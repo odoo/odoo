@@ -11,11 +11,10 @@ from odoo.tools import lazy
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
 
-_debug = DebugLog(__name__)
-
 re_background_image = re.compile(
     r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)"
 )
+_debug = DebugLog(__name__)
 
 
 class IrQweb(models.AbstractModel):

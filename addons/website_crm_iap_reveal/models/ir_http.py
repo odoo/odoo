@@ -3,8 +3,10 @@ import time
 
 from odoo import models
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrHttp(models.AbstractModel):
@@ -65,4 +67,5 @@ class IrHttp(models.AbstractModel):
                             )
                     except Exception:
                         _logger.exception("Failed to process reveal rules")
+                        _debug.logic("reveal_failed", website=website_id)
         return response

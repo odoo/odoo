@@ -634,9 +634,7 @@ class Website(models.Model):
                 pages_views[feature.iap_page_code] = result["view_id"]
 
         if modules:
-            _debug.lifecycle(
-                "configurator_modules_installed", modules=modules.mapped("name")
-            )
+            _debug.lifecycle("configurator_modules_installed", modules=modules)
             modules.button_immediate_install()
 
         self.env["website"].browse(website.id).configurator_set_menu_links(

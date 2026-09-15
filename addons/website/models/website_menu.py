@@ -221,11 +221,9 @@ class WebsiteMenu(models.Model):
         if "group_ids" in vals and not self.env.context.get(
             "adding_designer_group_to_menu"
         ):
-            if _debug.lifecycle.enabled:
-                _debug.lifecycle(
-                    "menu_designer_group_added", menus=self.filtered("group_ids")
-                )
-            self.filtered("group_ids").with_context(
+            restricted = self.filtered("group_ids")
+            _debug.lifecycle("menu_designer_group_added", menus=restricted)
+            restricted.with_context(
                 adding_designer_group_to_menu=True
             ).group_ids += self.env.ref("website.group_website_designer")
         return res

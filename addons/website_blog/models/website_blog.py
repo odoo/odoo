@@ -353,16 +353,15 @@ class BlogPost(models.Model):
 
     def _check_for_publication(self, vals):
         if vals.get("is_published"):
-            for post in self.filtered(lambda p: p.active):
+            active_posts = self.filtered(lambda p: p.active)
+            for post in active_posts:
                 post.blog_id.message_post_with_source(
                     "website_blog.blog_post_template_new_post",
                     subject=post.name,
                     render_values={"post": post},
                     subtype_xmlid="website_blog.mt_blog_blog_published",
                 )
-            _debug.lifecycle(
-                "blog_posts_published", posts=self.filtered(lambda p: p.active)
-            )
+            _debug.lifecycle("blog_posts_published", posts=active_posts)
             return True
         return False
 

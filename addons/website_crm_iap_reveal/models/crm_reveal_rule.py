@@ -7,11 +7,13 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.crm.models import crm_stage
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 DEFAULT_ENDPOINT = "https://iap-services.odoo.com"
 DEFAULT_REVEAL_BATCH_LIMIT = 25
@@ -158,6 +160,7 @@ class CrmRevealRule(models.Model):
             if self.regex_url:
                 re.compile(self.regex_url)
         except Exception as error:
+            _debug.logic("reveal_rule_refused", reason="bad_regex", rule=self.id)
             raise ValidationError(_("Enter Valid Regex.")) from error
 
     @api.model_create_multi
@@ -379,6 +382,7 @@ class CrmRevealRule(models.Model):
                 views.flush_recordset()
 
         if result.get("credit_error"):
+            _debug.logic("reveal_refused", reason="no_credit")
             self.env["crm.iap.lead.helpers"]._notify_no_more_credit(
                 "reveal", self._name, "reveal.already_notified"
             )

@@ -74,17 +74,15 @@ class Cart(PaymentPortal):
             }
         )
         if order_sudo:
-            if _debug.lifecycle.enabled:
-                _debug.lifecycle(
-                    "cart_inactive_lines_dropped",
-                    order=order_sudo.id,
-                    lines=order_sudo.line_ids.filtered(
-                        lambda sol: sol.product_id and not sol.product_id.active
-                    ),
-                )
-            order_sudo.line_ids.filtered(
+            inactive_lines = order_sudo.line_ids.filtered(
                 lambda sol: sol.product_id and not sol.product_id.active
-            ).unlink()
+            )
+            _debug.lifecycle(
+                "cart_inactive_lines_dropped",
+                order=order_sudo.id,
+                lines=inactive_lines,
+            )
+            inactive_lines.unlink()
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 

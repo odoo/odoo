@@ -3,8 +3,10 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 DEFAULT_REVEAL_VIEW_WEEKS_VALID = 5
+_debug = DebugLog(__name__)
 
 
 class CrmRevealView(models.Model):
@@ -43,6 +45,7 @@ class CrmRevealView(models.Model):
         try:
             weeks_valid = int(weeks_valid)
         except ValueError:
+            _debug.logic("reveal_param_rejected", param="view_weeks_valid")
             weeks_valid = DEFAULT_REVEAL_VIEW_WEEKS_VALID
         domain = []
         domain.append(("reveal_state", "=", "not_found"))
