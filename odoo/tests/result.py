@@ -221,7 +221,7 @@ class OdooTestResult:
         self, test: case.TestCase, subtest: TestLike, err: tuple | None
     ) -> None:
         if err is not None:
-            is_failure = issubclass(err[0], test.failureException)  # debuglog
+            is_failure = issubclass(err[0], test.failureException)
             if _debug.logic.enabled:
                 _debug.logic(
                     "test.result.subtest_failed",

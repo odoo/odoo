@@ -186,7 +186,7 @@ class IrQweb(models.AbstractModel):
                 page_scoped=bool(page_scope),
             )
             return set()
-        shared = (set.union if page_scope else set.intersection)(*spec_sets)  # debuglog
+        shared = (set.union if page_scope else set.intersection)(*spec_sets)
         _debug.logic(
             "importmap.secondary_providers",
             bundle=bundle,

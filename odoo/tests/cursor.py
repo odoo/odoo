@@ -19,7 +19,7 @@ _debug = DebugLog(__name__)
 
 def _release_foreign_acquisition(lock: Any) -> None:
     if hasattr(lock, "_owner"):
-        foreign = lock._owner not in (None, threading.get_ident())  # debuglog
+        foreign = lock._owner not in (None, threading.get_ident())
         if foreign:
             lock._owner = threading.get_ident()
             lock._count = 1
@@ -155,7 +155,7 @@ class TestCursor(BaseCursor):
                 if not cursor._savepoint:
                     forced += 1  # debuglog
                 cursor._check_savepoint()
-        if forced:
+        if _debug.logic.enabled and forced:
             _debug.logic(
                 "test.cursor.outer_savepoints_forced",
                 forced=forced,
@@ -209,9 +209,7 @@ class TestCursor(BaseCursor):
         finally:
             self._closed = True
 
-            in_order = bool(
-                self._cursors_stack and self._cursors_stack[-1] is self
-            )  # debuglog
+            in_order = bool(self._cursors_stack and self._cursors_stack[-1] is self)
             if in_order:
                 self._cursors_stack.pop()
             else:

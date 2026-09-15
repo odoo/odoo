@@ -107,7 +107,7 @@ def release_test_lock() -> Generator[None]:
         yield
     finally:
         with _debug.perf("test.lock.reacquire", test=current_test_tag()) as span:
-            acquired = _registry_test_lock.acquire(timeout=60)  # debuglog
+            acquired = _registry_test_lock.acquire(timeout=60)
             span.set(acquired=acquired, held=_registry_test_lock.count)
         if not acquired:
             sys.exit(
@@ -286,7 +286,7 @@ class BaseCase(TestCase):
     def __init_subclass__(cls) -> None:
         super().__init_subclass__()
         if cls.__module__.startswith("odoo.addons."):
-            defaulted = cls.test_tags is None  # debuglog
+            defaulted = cls.test_tags is None
             if defaulted:
                 cls.test_tags = {"standard", "at_install"}
             cls.test_module = cls.__module__.split(".")[2]
@@ -314,7 +314,7 @@ class BaseCase(TestCase):
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
         if methodName != "runTest":
             test_method = getattr(self, methodName)
-            additional = self.get_method_additional_tags(test_method)  # debuglog
+            additional = self.get_method_additional_tags(test_method)
             test_tags = (self.test_tags or set()) | set(additional)
             test_tags |= getattr(test_method, "test_tags", set())
             test_tags -= getattr(test_method, "test_tags_exclude", set())
@@ -374,7 +374,7 @@ class BaseCase(TestCase):
             result.had_failure = False
             if retry:
                 _logger.log(RUNBOT, "Retrying a failed test: %s", self)
-            final = retry == tests_run_count - 1  # debuglog
+            final = retry == tests_run_count - 1
             _debug.pipeline(
                 "test.case.attempt",
                 test=self.canonical_tag,
@@ -481,9 +481,7 @@ class BaseCase(TestCase):
         if cls.freeze_time and not cls._starts_freeze_time_itself:
             cls.startClassPatcher(cls.freeze_time)
         class_tags = cls.test_tags or set()
-        requests_patched = (
-            "standard" in class_tags or "click_all" in class_tags
-        )  # debuglog
+        requests_patched = "standard" in class_tags or "click_all" in class_tags
         if requests_patched:
             patcher = patch.object(
                 requests.sessions.Session,
@@ -1120,7 +1118,7 @@ class BaseCase(TestCase):
             savepoint.rollback()
             savepoint.close(rollback=False)
             env.clear()
-            if skipped:
+            if _debug.logic.enabled and skipped:
                 _debug.logic(
                     "test.assert.depends_probe_skipped",
                     model=records._name,
@@ -1447,9 +1445,7 @@ class BaseCase(TestCase):
                 method=getattr(test_method, "__qualname__", None),
             )
             return []
-        found = [
-            tag for tag, needle in wanted.items() if needle in method_source
-        ]  # debuglog
+        found = [tag for tag, needle in wanted.items() if needle in method_source]
         _debug.logic(
             "test.tags.source_tags",
             method=getattr(test_method, "__qualname__", None),
@@ -1690,7 +1686,7 @@ class TransactionCase(BaseCase):
     @contextmanager
     def allow_pdf_render(self) -> Generator[None]:
         with ExitStack() as stack:
-            entered = not type(self)._registry_patched  # debuglog
+            entered = not type(self)._registry_patched
             _debug.logic(
                 "test.registry.pdf_render", test=self.canonical_tag, entered=entered
             )

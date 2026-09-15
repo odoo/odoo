@@ -25,7 +25,7 @@ def _is_rate_limited(key: str) -> bool:
     with _rate_lock:
         if len(_rate_state) > _RATE_LIMIT_MAX_KEYS:
             cutoff = now - _RATE_LIMIT_WINDOW_S
-            before = len(_rate_state)  # debuglog
+            before = len(_rate_state)
             for stale in [k for k, v in _rate_state.items() if v[0] < cutoff]:
                 del _rate_state[stale]
             dbg.performance.debug(

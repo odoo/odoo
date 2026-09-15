@@ -102,9 +102,7 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                 and record.repeat_day
                 and record.repeat_month
             ):
-                clamped = self._clamp_day(
-                    record.repeat_day, record.repeat_month
-                )  # debuglog
+                clamped = self._clamp_day(record.repeat_day, record.repeat_month)
                 if clamped != record.repeat_day:
                     _debug.logic(
                         "recurrence.anchor_day_clamped",
@@ -136,7 +134,7 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                     day=record.repeat_second_day,
                 )
             elif record.repeat_unit == "year" and record.repeat_second_month:
-                clamped = self._clamp_day(  # debuglog
+                clamped = self._clamp_day(
                     record.repeat_second_day, record.repeat_second_month
                 )
                 if clamped != record.repeat_second_day:

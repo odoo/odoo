@@ -441,7 +441,7 @@ def _mark_dirty_model_translation(
     field._update_cache(records, cache_value, dirty=True)
     en_us_mirrored = lang != "en_US" and not (
         records.env.registry.locale.is_lang_installed(records.env, "en_US")
-    )  # debuglog
+    )
     if en_us_mirrored:
         field._update_cache(records.with_context(lang="en_US"), cache_value, dirty=True)
     if _debug.logic.enabled and (mirrored_ids or en_us_mirrored):

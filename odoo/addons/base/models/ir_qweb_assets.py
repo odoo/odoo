@@ -1626,7 +1626,7 @@ class IrQweb(models.AbstractModel):
         )
         sidecars = esm_index.sidecar_urls(url)
         json_mimetype = mimetype_for("json")
-        sidecar_saved = []  # debuglog
+        sidecar_saved = []
         for name, text in (("metafile", metafile), ("sourcemap", sourcemap)):
             if text and self._plan_esm_row(
                 rows,

@@ -504,7 +504,7 @@ class _RelationalMulti(_Relational):
             scope_env = env(user=uid, context=context, su=False)
             records = scope_env[self.comodel_name].browse(comodel_ids)
             return len(records._filtered_access("read")) == len(records)
-        except (AccessError, NotImplementedError):
+        except AccessError, NotImplementedError:
             return False
 
     def _superuser_scope_key(self, env: Environment) -> tuple:
@@ -525,7 +525,7 @@ class _RelationalMulti(_Relational):
                 if id_ in slot:
                     slot[id_] = cache_value
                     mirrored += 1
-        if mirrored and _debug.logic.enabled:
+        if _debug.logic.enabled and mirrored:
             _debug.logic(
                 "field.x2many.scope_mirror_pending",
                 model=self.model_name,
@@ -602,7 +602,7 @@ class _RelationalMulti(_Relational):
         for key, slot in env.core.iter_context_caches(self):
             if key not in (own, PENDING_SCOPE_KEY):
                 held += sum(1 for id_ in records._ids if id_ in slot)
-        if held:
+        if _debug.perf.enabled and held:
             _debug.perf.count(
                 "field.x2many.scope_handover",
                 model=self.model_name,
@@ -624,7 +624,7 @@ class _RelationalMulti(_Relational):
             for id_ in stored_ids:
                 if slot.pop(id_, None) is not None:
                     evicted += 1
-        if evicted and _debug.logic.enabled:
+        if _debug.logic.enabled and evicted:
             _debug.logic(
                 "field.x2many.scope_evict",
                 model=self.model_name,

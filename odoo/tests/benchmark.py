@@ -43,7 +43,7 @@ def _inlier_indices(
         return list(range(len(data)))
     lower = percentile(data, percentile_cutoff)
     upper = percentile(data, 100 - percentile_cutoff)
-    kept = [i for i, x in enumerate(data) if lower <= x <= upper]  # debuglog
+    kept = [i for i, x in enumerate(data) if lower <= x <= upper]
     _debug.logic(
         "test.benchmark.outliers_trimmed",
         samples=len(data),

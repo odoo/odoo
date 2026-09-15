@@ -279,7 +279,7 @@ class TestCase(_TestCase):
         try:
             self._outcome = outcome
             with span:
-                queries_before = db.sql_counter  # debuglog
+                queries_before = db.sql_counter
                 with outcome.testPartExecutor(self):
                     self._callSetUp()
                 span.set(setup_ok=outcome.success)

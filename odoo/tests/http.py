@@ -606,7 +606,7 @@ class HttpCase(TransactionCase):
 
             browser.navigate_to(url, wait_stop=not bool(ready))
 
-            ready_ok = browser._wait_ready(ready, timeout)  # debuglog
+            ready_ok = browser._wait_ready(ready, timeout)
             span.set(ready=ready_ok)
             if not ready_ok:
                 _debug.logic("test.browser.ready_failed", test=_tag(self))

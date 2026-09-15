@@ -57,7 +57,7 @@ def get_test_modules(module: str) -> list[Any]:
     with _debug.perf("test.loader.import_tests", module=module) as span:
         results = _get_tests_modules(f"odoo.addons.{module}")
         upgrade = list(_get_upgrade_test_modules(module))  # debuglog
-        results += upgrade  # debuglog
+        results += upgrade
         span.set(modules=len(results), upgrade=len(upgrade))
 
     return results

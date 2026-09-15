@@ -42,7 +42,7 @@ class PatchImportHook:
 
     def add_hook(self, fullname: str) -> None:
         self.hooks.add(fullname)
-        already_imported = fullname in sys.modules  # debuglog
+        already_imported = fullname in sys.modules
         _debug.lifecycle(
             "monkeypatch.hook_registered",
             target=fullname,

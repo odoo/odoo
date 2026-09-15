@@ -26,10 +26,10 @@ class IrQweb(models.AbstractModel):
         return self.env["ir.config_parameter"].sudo()
 
     def _is_esbuild_fail_closed(self) -> bool:
-        default = bool(  # debuglog
+        default = bool(
             tools.config["test_enable"] or "assets" in tools.config["dev_mode"]
         )
-        fail_closed = self._get_esbuild_config().get_param_bool(  # debuglog
+        fail_closed = self._get_esbuild_config().get_param_bool(
             "web.esbuild.fail_closed", default
         )
         _debug.logic("esbuild.fail_closed", value=fail_closed, default=default)
@@ -45,7 +45,7 @@ class IrQweb(models.AbstractModel):
         return (self.env.cr.dbname, bundle)
 
     def _get_esbuild_circuit_state(self, bundle: str) -> tuple[bool, str]:
-        state = _esbuild_circuit.state(  # debuglog
+        state = _esbuild_circuit.state(
             self._get_esbuild_cooldown_key(bundle), now=time.monotonic()
         )
         _debug.logic(

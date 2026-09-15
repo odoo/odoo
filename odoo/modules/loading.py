@@ -917,7 +917,7 @@ def get_installed_not_yet_loaded(
 
 
 def _run_gc_cycle(registry: Registry, cycles: int) -> int:
-    young = gc.get_count()[0]  # debuglog
+    young = gc.get_count()[0]
     if young <= _GC_YOUNG_BACKLOG_LIMIT:
         return cycles
     registry.clear_all_caches()
@@ -1206,7 +1206,7 @@ class _ModuleLoader:
     def bootstrap(self) -> bool:
         cr = self.cr
         cr.execute("SET SESSION lock_timeout = '15s'")
-        initialized = modules_db.is_initialized(cr)  # debuglog
+        initialized = modules_db.is_initialized(cr)
         _debug.logic(
             "modules.bootstrap.decision",
             db=cr.dbname,
@@ -1256,7 +1256,7 @@ class _ModuleLoader:
     def run_pre_upgrade_scripts(self) -> None:
         if not (self.update_module and self.upgrade_modules):
             return
-        scripts = tools.config["pre_upgrade_scripts"]  # debuglog
+        scripts = tools.config["pre_upgrade_scripts"]
         _debug.pipeline(
             "modules.pre_upgrade_scripts",
             scripts=len(scripts),
@@ -1670,7 +1670,7 @@ class _ModuleLoader:
         self.cr.execute(
             """SELECT DISTINCT model FROM ir_model_fields WHERE state = 'manual'"""
         )
-        rows = self.cr.fetchall()  # debuglog
+        rows = self.cr.fetchall()
         before = len(self.models_to_check)  # debuglog
         self.models_to_check.update(
             model_name for (model_name,) in rows if model_name in self.registry

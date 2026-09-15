@@ -400,3 +400,54 @@ def test_a_test_suite_is_skipped_but_a_package_named_tests_is_scanned(tmp_path):
         for path in debuglog.iter_files([tmp_path])
     }
     assert scanned == {"odoo/tests/loader.py"}
+
+
+def test_a_marker_on_a_continuation_line_is_refused(tmp_path):
+    """`--check` passed this at 5 sites and `--strip` produced a SyntaxError.
+
+    Measured 2026-09-15. The strip removes the marked LINE, not the statement
+    it belongs to, so a marker on a continuation line leaves the rest of the
+    construct behind. Fourteen sites in `odoo` were in this shape, including
+    `)  # debuglog` on a closing bracket and `except Exception as err:` on a
+    handler.
+    """
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(a, b):\n"
+        "    first = (\n"
+        "        a or b\n"
+        "    ) and not a  # debuglog\n"
+        "    _debug.logic('x', first=first)\n"
+        "    return 1\n"
+    )
+    messages = _check(tmp_path, source)
+    assert any("whole statement" in m for m in messages), messages
+
+
+def test_a_marker_on_a_compound_header_is_refused(tmp_path):
+    """Removing the header orphans the block it opens."""
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(rows):\n"
+        "    seen = 0  # debuglog\n"
+        "    for row in rows:  # debuglog\n"
+        "        seen += 1  # debuglog\n"
+        "    _debug.logic('x', seen=seen)\n"
+        "    return 1\n"
+    )
+    messages = _check(tmp_path, source)
+    assert any("whole statement" in m for m in messages), messages
+
+
+def test_a_marker_on_a_one_line_statement_is_allowed(tmp_path):
+    source = (
+        "from odoo.libs.debug_log import DebugLog\n"
+        "_debug = DebugLog(__name__)\n"
+        "def f(a, b):\n"
+        "    first = bool(a or b) and not a  # debuglog\n"
+        "    _debug.logic('x', first=first)\n"
+        "    return 1\n"
+    )
+    assert _check(tmp_path, source) == []

@@ -151,7 +151,7 @@ class UpgradeHook(importlib.abc.MetaPathFinder, importlib.abc.Loader):
         canonical_name = module.__name__.replace(
             "odoo.addons.base.maintenance.migrations", "odoo.upgrade"
         )
-        cached = canonical_name in sys.modules  # debuglog
+        cached = canonical_name in sys.modules
         if cached:
             canonical = sys.modules[canonical_name]
         else:
@@ -200,7 +200,7 @@ def initialize_sys_path() -> None:
     sys.modules["odoo.addons.base.maintenance.migrations"] = odoo.upgrade
 
     current_addons_path = tuple(odoo.addons.__path__)
-    path_changed = _SysPathState.addons_path != current_addons_path  # debuglog
+    path_changed = _SysPathState.addons_path != current_addons_path
     if path_changed:
         Manifest.clear_caches()
         tools.files.clear_caches()

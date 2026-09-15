@@ -103,7 +103,7 @@ class TestSuite(BaseTestSuite):
     ) -> None:
         errorName = f"{method_name} ({parent})"
         error = _ErrorHolder(errorName)
-        skipped = isinstance(exception, case.SkipTest)  # debuglog
+        skipped = isinstance(exception, case.SkipTest)
         _debug.lifecycle(
             "test.suite.class_error",
             hook=method_name,

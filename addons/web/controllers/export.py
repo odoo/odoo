@@ -450,7 +450,7 @@ class ExportFormat:
     def _iter_export_rows(
         self, Model: Any, records: Any, field_names: list[str]
     ) -> typing.Iterator[list]:
-        batches = rows = 0  # debuglog
+        batches = rows = 0
         for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
             batch = Model.browse(batch_ids)
             with dbg.timer(

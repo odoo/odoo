@@ -321,7 +321,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._thread = threading.current_thread()
 
         self._cnx: psycopg.Connection = pool.borrow(dsn, key=key)
-        self._backend_pid = getattr(  # debuglog
+        self._backend_pid = getattr(
             getattr(self._cnx, "info", None), "backend_pid", None
         )
         try:

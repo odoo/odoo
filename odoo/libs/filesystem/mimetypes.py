@@ -272,7 +272,7 @@ def guess_mimetype(
             size=len(bin_data),
         )
         return mimetype
-    resolved = _resolve_structured_text_mimetype(bin_data)  # debuglog
+    resolved = _resolve_structured_text_mimetype(bin_data)
     _debug.logic(
         "mimetype.guessed",
         source="structured_text" if resolved else "fallback",

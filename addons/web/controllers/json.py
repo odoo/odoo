@@ -253,7 +253,7 @@ class WebJsonController(http.Controller):
         return date_domain, pinned
 
     def _update_json_activity_spec(self, model: Any, spec: dict[str, Any]) -> None:
-        added = 0  # debuglog
+        added = 0
         for field_name, field in model._fields.items():
             if (
                 field_name.startswith("activity_")

@@ -113,7 +113,7 @@ def is_barcode_encoding_valid(barcode: str, encoding: str) -> bool:
     if barcode_size is None:
         _debug.logic("barcode.encoding_unknown", encoding=encoding)
         return False
-    valid = bool(  # debuglog
+    valid = bool(
         len(barcode) == barcode_size
         and _ASCII_DIGITS_RE.match(barcode)
         and (encoding != "ean13" or barcode[0] != "0")

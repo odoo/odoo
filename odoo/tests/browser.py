@@ -552,7 +552,7 @@ class ChromeBrowser:
         version = self._json_command("version")
         self._logger.info("Browser version: %s", version["Browser"])
 
-        start = time.monotonic()  # debuglog
+        start = time.monotonic()
         polls = 0  # debuglog
         while (time.monotonic() - start) < 5.0:
             polls += 1  # debuglog
@@ -608,7 +608,7 @@ class ChromeBrowser:
             except websocket.WebSocketTimeoutException:
                 continue
             except websocket.WebSocketConnectionClosedException as e:
-                settled = self._result.done()  # debuglog
+                settled = self._result.done()
                 cancelled = 0  # debuglog
                 if not settled:
                     del self.ws
@@ -997,7 +997,7 @@ which leads to stray network requests and inconsistencies."""
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.monotonic()
         result = None
-        polls = 0  # debuglog
+        polls = 0
         span = _debug.perf("test.browser.wait_ready", timeout=timeout)
         with span:
             while True:
@@ -1005,7 +1005,7 @@ which leads to stray network requests and inconsistencies."""
                 if taken > timeout:
                     break
 
-                polls += 1  # debuglog
+                polls += 1
                 try:
                     result = self._websocket_requires_result(
                         "Runtime.evaluate",
@@ -1058,7 +1058,7 @@ which leads to stray network requests and inconsistencies."""
         timeout *= self.throttling_factor
         self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
-        start = time.monotonic()  # debuglog
+        start = time.monotonic()
         span = _debug.perf(
             "test.browser.wait_code",
             timeout=timeout,
@@ -1334,7 +1334,7 @@ def _get_browser_executable_path():
             "google-chrome-stable",
         ]:
             try:
-                path = get_executable_path(bin_)  # debuglog
+                path = get_executable_path(bin_)
             except OSError:
                 continue
             _debug.logic("test.browser.executable", source="linux", path=path)

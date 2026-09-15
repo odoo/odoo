@@ -79,9 +79,7 @@ class TagsSelector:
             if is_exclude:
                 self.exclude.add(test_filter)
 
-        implicit_standard = (
-            self.exclude or self.parameters
-        ) and not self.include  # debuglog
+        implicit_standard = (self.exclude or self.parameters) and not self.include
         if implicit_standard:
             self.include.add(("standard", None, None, None, None))
         _debug.pipeline(
@@ -95,7 +93,7 @@ class TagsSelector:
 
     def selects(self, test: Any) -> bool:
         matches = self._matcher(test)
-        selected = matches is not None and self._selects(matches)  # debuglog
+        selected = matches is not None and self._selects(matches)
         if _debug.logic.enabled:
             _debug.logic("test.tags.selects", test=test.id(), selected=selected)
         return selected

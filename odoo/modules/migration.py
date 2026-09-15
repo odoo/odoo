@@ -270,7 +270,7 @@ class MigrationManager:
         for version in versions:
             if not _is_migration_applicable(version, installed_version, target_version):
                 continue
-            files = _get_migration_files(pkg, version, stage)  # debuglog
+            files = _get_migration_files(pkg, version, stage)
             _debug.logic(
                 "migration.version_applicable",
                 module=pkg.name,

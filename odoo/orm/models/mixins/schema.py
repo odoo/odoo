@@ -200,7 +200,7 @@ class SchemaMixin(_ModelStubs):
                 if field.manual and not update_custom_fields:
                     continue
                 new = field.update_db(self, columns)
-                if new:  # debuglog
+                if _debug.perf.enabled and new:
                     new_columns += 1  # debuglog
                 if new and field.compute:
                     fields_to_compute.append(field)

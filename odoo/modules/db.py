@@ -338,7 +338,7 @@ def initialize_db(
                     from odoo.libs.datetime import country_timezones
 
                     tz_mapping = country_timezones()
-                    timezones = tz_mapping.get(normalized_country) or ()  # debuglog
+                    timezones = tz_mapping.get(normalized_country) or ()
                     _debug.logic(
                         "modules.db.initialize_db.timezone",
                         code=normalized_country,

@@ -142,7 +142,7 @@ _debug.lifecycle("test.lock.acquired_at_import", held=_registry_test_lock.count)
 def standalone(*tags: str) -> Callable[[Callable], Callable]:
 
     def register(func: Callable) -> Callable:
-        module = None  # debuglog
+        module = None
         if func.__module__.startswith("odoo.addons."):
             module = func.__module__.split(".")[2]
             standalone_tests[module].append(func)
@@ -228,7 +228,7 @@ def new_test_user(env, login="", groups="base.group_user", context=None, **kwarg
 
 
 def loaded_demo_data(env: api.Environment) -> bool:
-    loaded = bool(env.ref("base.user_demo", raise_if_not_found=False))  # debuglog
+    loaded = bool(env.ref("base.user_demo", raise_if_not_found=False))
     _debug.logic("test.env.demo_data", loaded=loaded)
     return loaded
 

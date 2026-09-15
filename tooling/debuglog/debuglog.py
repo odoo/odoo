@@ -435,7 +435,10 @@ class _Scanner(ast.NodeVisitor):
 
         Scoped per function, because the first cut compared names across the
         whole file and read a sibling method's *parameter* as the surviving
-        use: 20 findings, every one of them a name collision.
+        use: 20 findings, every one of them a name collision. And the marker
+        is looked for across the statement's whole SPAN: the first cut read
+        only its opening line, and so missed a marker on the closing bracket
+        of a multi-line assignment whose name the next line reads.
         """
         covered = {
             line
@@ -448,7 +451,10 @@ class _Scanner(ast.NodeVisitor):
             for node in nodes:
                 if not isinstance(node, ast.Assign | ast.AugAssign | ast.AnnAssign):
                     continue
-                if not _MARKER_RE.search(self.lines[node.lineno - 1]):
+                if not any(
+                    _MARKER_RE.search(self.lines[line - 1])
+                    for line in range(node.lineno, (node.end_lineno or node.lineno) + 1)
+                ):
                     continue
                 targets = (
                     node.targets if isinstance(node, ast.Assign) else [node.target]
@@ -478,12 +484,58 @@ class _Scanner(ast.NodeVisitor):
                     if not bound:
                         break
 
+    def _check_marker_lines(self, tree: ast.Module) -> None:
+        """Refuse a marker on a line that is not a whole statement.
+
+        The strip removes a marked line and nothing else, so a marker on a
+        continuation line -- or on a compound statement's header -- leaves the
+        rest of the construct behind and the file stops parsing. Measured
+        2026-09-15 on a probe the previous checker called clean at 5 sites:
+
+            first = (
+                a or b
+            ) and not a  # debuglog
+
+        stripped to `first = (` plus an orphaned `a or b`, a `SyntaxError` out
+        of a tree `--check` had just passed. Fourteen sites in `odoo` were in
+        that shape, including `)  # debuglog` on a closing bracket and
+        `except Exception as err:  # debuglog` on a handler.
+        """
+        statements = [node for node in ast.walk(tree) if isinstance(node, ast.stmt)]
+        for number, text in enumerate(self.lines, 1):
+            if not _MARKER_RE.search(text):
+                continue
+            innermost = None
+            for statement in statements:
+                start = statement.lineno
+                end = statement.end_lineno or start
+                if start <= number <= end and (
+                    innermost is None
+                    or (end - start)
+                    < ((innermost.end_lineno or innermost.lineno) - innermost.lineno)
+                ):
+                    innermost = statement
+            if innermost is None:
+                continue
+            if (innermost.end_lineno or innermost.lineno) > innermost.lineno:
+                self.report.violations.append(
+                    Violation(
+                        self.path,
+                        number,
+                        f"a `{MARKER}` marker must sit on a line that is a whole "
+                        f"statement; this one is inside a statement spanning "
+                        f"lines {innermost.lineno}-{innermost.end_lineno}, and "
+                        "the strip removes the line rather than the statement",
+                    )
+                )
+
     def scan(self, tree: ast.Module) -> FileReport:
         self._visit_body(tree.body)
         for number, text in enumerate(self.lines, 1):
             if _MARKER_RE.search(text):
                 self.report.sites.append(Site(self.path, number, number, "marker"))
         self._check_marked_assignments(tree)
+        self._check_marker_lines(tree)
         return self.report
 
 
