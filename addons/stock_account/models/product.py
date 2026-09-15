@@ -914,28 +914,28 @@ class ProductProduct(models.Model):
 
         remaining_qty_on_first_stack_move = 0
         current_offset = 0
-        while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
-            move = moves_in[0]
-            moves_in = moves_in[1:]
-            in_qty = move._get_valued_qty()
-            fifo_stack.append(move)
-            remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
-            fifo_stack_size -= in_qty
-            if self.uom_id.compare(fifo_stack_size, 0) > 0 and not moves_in:
-                current_offset += 1
-                moves_in = self.env["stock.move"].search(
-                    moves_domain,
-                    order="date desc, completion_sequence desc, id desc",
-                    offset=current_offset * initial_limit,
-                    limit=initial_limit,
-                )
-        _debug.perf.count(
+        with _debug.perf(
             "fifo_stack_built",
+            cr=self.env.cr,
             product=self.id,
-            moves=len(fifo_stack),
-            extra_pages=current_offset,
             page_size=initial_limit,
-        )
+        ) as span:
+            while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
+                move = moves_in[0]
+                moves_in = moves_in[1:]
+                in_qty = move._get_valued_qty()
+                fifo_stack.append(move)
+                remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
+                fifo_stack_size -= in_qty
+                if self.uom_id.compare(fifo_stack_size, 0) > 0 and not moves_in:
+                    current_offset += 1
+                    moves_in = self.env["stock.move"].search(
+                        moves_domain,
+                        order="date desc, completion_sequence desc, id desc",
+                        offset=current_offset * initial_limit,
+                        limit=initial_limit,
+                    )
+            span.set(moves=len(fifo_stack), extra_pages=current_offset)
         fifo_stack.reverse()
         return fifo_stack, remaining_qty_on_first_stack_move
 

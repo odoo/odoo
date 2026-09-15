@@ -131,9 +131,16 @@ class ResCompany(models.Model):
                     "It exists closing entries after the selected date. Cancel them before generate an entry prior to them"
                 )
             )
-        aml_vals_list = self.with_context(
-            allowed_company_ids=self.ids
-        )._action_close_stock_valuation(at_date=at_date)
+        with _debug.perf(
+            "valuation_closing_build",
+            cr=self.env.cr,
+            company=self.id,
+            at_date=at_date,
+        ) as span:
+            aml_vals_list = self.with_context(
+                allowed_company_ids=self.ids
+            )._action_close_stock_valuation(at_date=at_date)
+            span.set(aml_lines=len(aml_vals_list))
 
         if not aml_vals_list:
             return self.env["account.move"]

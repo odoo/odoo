@@ -136,11 +136,17 @@ class ProductProduct(models.Model):
                 self._get_domain_monthly_demand_moves_location(),
             ],
         )
-        move_qty_by_products = self.env["stock.move"]._read_group(
-            move_domain,
-            ["product_id"],
-            ["product_qty:sum"],
-        )
+        with _debug.perf(
+            "monthly_demand_aggregate",
+            cr=self.env.cr,
+            products=self,
+            based_on=based_on,
+        ):
+            move_qty_by_products = self.env["stock.move"]._read_group(
+                move_domain,
+                ["product_id"],
+                ["product_qty:sum"],
+            )
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
         factor = 1
 
