@@ -12,6 +12,23 @@ class TestThirdChecks(L10nLatamCheckTest):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.company_data_3 = cls.setup_other_company(name='company_3_data', country_id=cls.env.ref('base.ar').id)
+        cls.bank_journal = cls.company_data_3['default_journal_bank']
+        cls._setup_check_payment_methods(cls.bank_journal)
+
+        # enable use electronic/deferred checks on bank journal
+        third_party_checks_journals = cls.env['account.journal'].search([
+            ('inbound_payment_method_line_ids.code', '=', 'in_third_party_checks'),
+            ('inbound_payment_method_line_ids.code', '=', 'new_third_party_checks'),
+            ('outbound_payment_method_line_ids.code', 'in', ('out_third_party_checks', 'return_third_party_checks')),
+        ])
+        cls.third_party_check_journal = third_party_checks_journals[0]
+        cls.rejected_check_journal = third_party_checks_journals[1]
+
     def create_third_party_check(self, journal=False, check_numbers=['00000001', '00000002']):
         if not journal:
             journal = self.third_party_check_journal
