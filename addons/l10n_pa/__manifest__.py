@@ -18,6 +18,7 @@ Con la Colaboración de
     'depends': [
         'account',
         'base_address_extended',
+        'contacts',
         'l10n_latam_invoice_document',
     ],
     'auto_install': ['account'],
