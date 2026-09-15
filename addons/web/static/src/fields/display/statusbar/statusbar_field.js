@@ -13,6 +13,7 @@ import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/translation";
 import { groupBy } from "@web/core/utils/collections/arrays";
+import { measure, mutate } from "@web/core/utils/dom/layout_batch";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { registerField } from "@web/fields/_registry";
 import { FieldComponent } from "@web/fields/field_component";
@@ -86,14 +87,26 @@ function useOverflowAdjust(component) {
         if (status !== "shouldAdjust") {
             return;
         }
-        const width = component.rootRef.el?.getBoundingClientRect().width ?? null;
-        if (width === lastWidth && sameStatusBarItems(lastItems, component.allItems)) {
-            status = "idle";
-            return;
-        }
-        lastItems = component.allItems;
-        lastWidth = width;
-        adjust();
+        measure(() => {
+            if (status !== "shouldAdjust" || !component.rootRef.el?.isConnected) {
+                return;
+            }
+            const width = component.rootRef.el.getBoundingClientRect().width;
+            if (
+                width === lastWidth &&
+                sameStatusBarItems(lastItems, component.allItems)
+            ) {
+                status = "idle";
+                return;
+            }
+            lastItems = component.allItems;
+            lastWidth = width;
+            mutate(() => {
+                if (component.rootRef.el?.isConnected) {
+                    adjust();
+                }
+            });
+        });
     });
 
     onWillRender(() => {

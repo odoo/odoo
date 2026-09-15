@@ -11,6 +11,7 @@ import {
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
+import { measure, mutate } from "@web/core/utils/dom/layout_batch";
 import { useDebounced } from "@web/core/utils/timing";
 import { FIELD_WIDTHS } from "@web/fields/field_widths";
 
@@ -546,7 +547,13 @@ export function useMagicColumnWidths(tableRef, getState) {
     const widths = new MagicColumnWidths(tableRef, getState);
 
     if (/** @type {any} */ (renderer.constructor).useMagicColumnWidths) {
-        useEffect(() => widths.forceColumnWidths());
+        useEffect(() =>
+            mutate(() => {
+                if (tableRef.el?.isConnected) {
+                    widths.forceColumnWidths();
+                }
+            }),
+        );
         useExternalListener(window, "resize", () => widths.unsetWidths());
         const debouncedForceColumnWidths = useDebounced(
             () => {
@@ -564,10 +571,15 @@ export function useMagicColumnWidths(tableRef, getState) {
                 debouncedForceColumnWidths();
             }
         });
-        onMounted(() => {
-            widths.parentWidth = tableRef.el.parentNode.clientWidth;
-            resizeObserver.observe(tableRef.el.parentNode);
-        });
+        onMounted(() =>
+            measure(() => {
+                if (!tableRef.el?.isConnected) {
+                    return;
+                }
+                widths.parentWidth = tableRef.el.parentNode.clientWidth;
+                resizeObserver.observe(tableRef.el.parentNode);
+            }),
+        );
         onWillUnmount(() => resizeObserver.disconnect());
     }
 

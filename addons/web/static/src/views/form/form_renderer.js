@@ -18,6 +18,7 @@ import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { AppEvent } from "@web/core/events";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { mutate } from "@web/core/utils/dom/layout_batch";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useRenderCounter } from "@web/core/utils/render_instrumentation";
 import { Field } from "@web/fields/field";
@@ -115,13 +116,17 @@ export class FormRenderer extends Component {
                                     .join(", "),
                             );
                     }
-                    if (
-                        elementToFocus &&
-                        !rootEl
-                            .querySelector(".o_content")
-                            ?.contains(document.activeElement)
-                    ) {
-                        elementToFocus.focus();
+                    if (elementToFocus) {
+                        mutate(() => {
+                            if (
+                                elementToFocus.isConnected &&
+                                !rootEl
+                                    .querySelector(".o_content")
+                                    ?.contains(document.activeElement)
+                            ) {
+                                elementToFocus.focus();
+                            }
+                        });
                     }
                 },
                 () => [this.props.record.isNew, rootRef.el],

@@ -23,6 +23,7 @@ import { browser } from "@web/core/browser/browser";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { Transition } from "@web/core/transition";
+import { measure, mutate } from "@web/core/utils/dom/layout_batch";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
@@ -95,7 +96,7 @@ export class Thread extends Component {
         // a patch of this component can grow the scrollable past the window and Owl
         // may render again in the same flush, before the ResizeObserver below can
         // see the growth: the cache does not survive a patch
-        onPatched(() => (this._viewportEl = undefined));
+        onPatched(() => this.computeJumpPresentPosition());
         this.refByMessageId = reactive(new Map(), () => {
             this.scrollToHighlighted();
         });
@@ -106,6 +107,7 @@ export class Thread extends Component {
             () => [this.messageHighlight?.highlightedMessageId],
         );
         this.jumpPresentRef = useRef("jump-present");
+        this.presentThresholdRef = useRef("present-treshold");
         this.root = useRef("messages");
         this.visibleState = useVisible("messages", () => {
             this.updateShowJumpPresent();
@@ -162,7 +164,7 @@ export class Thread extends Component {
             () => {
                 this.computeJumpPresentPosition();
             },
-            () => [this.jumpPresentRef.el],
+            () => [this.jumpPresentRef.el, this.state.showJumpPresent],
         );
         useEffect(
             () => this.updateShowJumpPresent(),
@@ -304,25 +306,41 @@ export class Thread extends Component {
     }
 
     computeJumpPresentPosition() {
-        this._viewportEl = undefined;
-        const viewportEl = this.viewportEl;
-        if (!viewportEl || !this.jumpPresentRef.el) {
-            return;
-        }
-        const width = viewportEl.clientWidth;
-        const height = viewportEl.clientHeight;
-        const computedStyle = window.getComputedStyle(viewportEl);
-        const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
-        const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
-        const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
-        const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
-        this.jumpPresentRef.el.style.transform = `translate(${
-            this.env.inChatter ? 22 : width - ps - pe - 22
-        }px, ${
-            this.env.inChatter && !this.env.inChatter.aside
-                ? -22
-                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
-        }px)`;
+        measure(() => {
+            this._viewportEl = undefined;
+            const viewportEl = this.viewportEl;
+            const thresholdEl = this.presentThresholdRef.el;
+            const jumpPresentEl = this.jumpPresentRef.el;
+            if (!thresholdEl && !jumpPresentEl) {
+                return;
+            }
+            const threshold = this.PRESENT_THRESHOLD;
+            let transform;
+            if (viewportEl && jumpPresentEl) {
+                const width = viewportEl.clientWidth;
+                const height = viewportEl.clientHeight;
+                const computedStyle = window.getComputedStyle(viewportEl);
+                const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
+                const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
+                const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
+                const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
+                transform = `translate(${
+                    this.env.inChatter ? 22 : width - ps - pe - 22
+                }px, ${
+                    this.env.inChatter && !this.env.inChatter.aside
+                        ? -22
+                        : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+                }px)`;
+            }
+            mutate(() => {
+                if (thresholdEl?.isConnected) {
+                    thresholdEl.style.height = `Min(${threshold}px, 100%)`;
+                }
+                if (transform && jumpPresentEl?.isConnected) {
+                    jumpPresentEl.style.transform = transform;
+                }
+            });
+        });
     }
 
     /** @param {import("models").Thread} thread */
