@@ -27,13 +27,12 @@ class TestCrmMailActivity(TestCrmCommon):
             'summary': 'ACT 2 : I want to show you my ERP!',
             'res_model': 'crm.lead',
         })
-        for activity_type in cls.activity_type_1 + cls.activity_type_2:
-            cls.env['ir.model.data'].create({
-                'name': activity_type.name.lower().replace(' ', '_'),
-                'module': 'crm',
-                'model': activity_type._name,
-                'res_id': activity_type.id,
-            })
+        cls.env['ir.model.data'].create([{
+            'name': activity_type.name.lower().replace(' ', '_'),
+            'module': 'crm',
+            'model': activity_type._name,
+            'res_id': activity_type.id,
+        } for activity_type in cls.activity_type_1 + cls.activity_type_2])
 
     @users('user_sales_leads')
     def test_crm_activity_ordering(self):
