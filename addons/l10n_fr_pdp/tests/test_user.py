@@ -65,6 +65,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'peppol_endpoint': '123456789',
             'company_registry': False,
             'siret': False,
+            'vat': False,
         })
         self.assertFalse(self.env.company.partner_id._l10n_fr_pdp_get_siren())
         wizard = self.env['pdp.registration'].create({'contact_email': "test@pdp.example.com"})
