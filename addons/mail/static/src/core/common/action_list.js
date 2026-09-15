@@ -65,6 +65,14 @@ class Action extends Component {
         );
     }
 
+    /**
+     * The list then adds no rounding of its own: its segmented-control shape only rounds the outer
+     * corners, which would leave the rest lopsided.
+     */
+    get hasOwnRounding() {
+        return /(^|\s)rounded(-|\s|$)/.test(this.action.btnClass ?? "");
+    }
+
     get isInlineCircleButtonValue() {
         if (!this.props.inline || !this.action.icon) {
             return false;

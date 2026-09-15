@@ -1,4 +1,8 @@
-import { registerThreadAction, threadActionsRegistry } from "@mail/core/common/thread_actions";
+import {
+    registerThreadAction,
+    THREAD_ACTION_IDS,
+    threadActionsRegistry,
+} from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
@@ -18,7 +22,7 @@ registerThreadAction("restart", {
     sequenceQuick: 15,
 });
 
-const callSettingsAction = threadActionsRegistry.get("call-settings");
+const callSettingsAction = threadActionsRegistry.get(THREAD_ACTION_IDS.CALL_SETTINGS);
 patch(callSettingsAction, {
     condition({ channel, store }) {
         return channel?.channel_type === "livechat"

@@ -11,12 +11,8 @@ export class CallParticipantVideo extends Component {
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.props = useProps({
-            inset: t
-                .function([
-                    t.instanceOf(this.store["discuss.channel.rtc.session"]),
-                    t.selection(["camera", "screen"]),
-                ])
-                .optional(),
+            inset: t.boolean().optional(),
+            isCropped: t.boolean().optional(),
             session: t.instanceOf(this.store["discuss.channel.rtc.session"]),
             type: t.selection(["camera", "screen"]),
         });

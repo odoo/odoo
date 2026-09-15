@@ -1,6 +1,10 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { ACTION_GROUP_TAGS, ACTION_TAGS } from "@mail/core/common/action";
-import { describeThreadActionGroup, registerThreadAction } from "@mail/core/common/thread_actions";
+import {
+    describeThreadActionGroup,
+    registerThreadAction,
+    THREAD_ACTION_IDS,
+} from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
@@ -15,7 +19,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 
 describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.INLINE_SWITCHER_LOOK });
 
-registerThreadAction("pinned-messages", {
+registerThreadAction(THREAD_ACTION_IDS.PINNED_MESSAGES, {
     actionPanelComponent: PinnedMessagesPanel,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
@@ -41,7 +45,7 @@ registerThreadAction("pinned-messages", {
         });
     },
 });
-registerThreadAction("add-to-favorites", {
+registerThreadAction(THREAD_ACTION_IDS.ADD_TO_FAVORITES, {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -76,7 +80,7 @@ registerThreadAction("add-to-favorites", {
     sequence: 40,
     sequenceGroup: 20,
 });
-registerThreadAction("remove-from-favorites", {
+registerThreadAction(THREAD_ACTION_IDS.REMOVE_FROM_FAVORITES, {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -107,7 +111,7 @@ registerThreadAction("remove-from-favorites", {
     sequence: 40,
     sequenceGroup: 20,
 });
-registerThreadAction("notification-settings", {
+registerThreadAction(THREAD_ACTION_IDS.NOTIFICATION_SETTINGS, {
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ owner, rootRef }) {
@@ -143,7 +147,7 @@ registerThreadAction("notification-settings", {
     sequence: 10,
     sequenceGroup: 30,
 });
-registerThreadAction("attachments", {
+registerThreadAction(THREAD_ACTION_IDS.ATTACHMENTS, {
     actionPanelComponent: AttachmentPanel,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     btnAttrs: { "data-available-offline": true },
@@ -156,7 +160,7 @@ registerThreadAction("attachments", {
     sequence: 10,
     sequenceGroup: 10,
 });
-registerThreadAction("invite-people", {
+registerThreadAction(THREAD_ACTION_IDS.INVITE_PEOPLE, {
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ owner, store, channel, rootRef }) {
@@ -200,7 +204,7 @@ registerThreadAction("invite-people", {
         }
     },
 });
-registerThreadAction("copy-invite-link", {
+registerThreadAction(THREAD_ACTION_IDS.COPY_INVITE_LINK, {
     condition: ({ channel, owner }) => owner.env.pipWindow && channel?.invitationLink,
     icon: "person_add",
     name: _t("Copy Invite Link"),
@@ -211,7 +215,7 @@ registerThreadAction("copy-invite-link", {
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
 });
-registerThreadAction("member-list", {
+registerThreadAction(THREAD_ACTION_IDS.MEMBER_LIST, {
     actionPanelClose: ({ action, owner, store, nextActiveAction }) => {
         if (
             action.condition &&
@@ -239,7 +243,7 @@ registerThreadAction("member-list", {
     sequence: 30,
     sequenceGroup: 10,
 });
-registerThreadAction("meeting-to-chat", {
+registerThreadAction(THREAD_ACTION_IDS.MEETING_TO_CHAT, {
     condition: ({ channel, owner }) =>
         channel?.default_display_mode === "video_full_screen" &&
         !owner.isDiscussContent &&
@@ -256,7 +260,7 @@ registerThreadAction("meeting-to-chat", {
     sequence: 15,
     sequenceGroup: 30,
 });
-registerThreadAction("mark-read", {
+registerThreadAction(THREAD_ACTION_IDS.MARK_READ, {
     condition: ({ channel, owner }) =>
         channel?.self_member_id &&
         channel.self_member_id.message_unread_counter > 0 &&
@@ -268,7 +272,7 @@ registerThreadAction("mark-read", {
     sequence: 10,
     sequenceGroup: 20,
 });
-registerThreadAction("hide", {
+registerThreadAction(THREAD_ACTION_IDS.HIDE, {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -293,7 +297,7 @@ registerThreadAction("hide", {
     sequence: 10,
     sequenceGroup: 35,
 });
-registerThreadAction("leave", {
+registerThreadAction(THREAD_ACTION_IDS.LEAVE, {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -312,7 +316,7 @@ registerThreadAction("leave", {
     tags: ACTION_TAGS.DANGER,
 });
 
-registerThreadAction("delete-thread", {
+registerThreadAction(THREAD_ACTION_IDS.DELETE_THREAD, {
     actionPanelComponent: DeleteThreadDialog,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "bg-100",
