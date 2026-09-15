@@ -348,7 +348,18 @@
                     <span invisible="address_id" class="oe_read_only">Remote</span>
                     <field name="address_id" context="{'show_address': 1, 'default_parent_id': company_partner_id, 'default_type': 'other'}" placeholder="Remote"/>
                 </div>
-                <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+            </group>
+
+            <group name="contract" position="after">
+                <!-- The criteria of the matching score of the applicants: a criterion left empty is not used -->
+                <group name="matching_criteria" string="Matching Criteria">
+                    <xpath expr="//group[@name='job']/field[@name='current_job_skill_ids']" position="move"/>
+                    <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                    <label for="expected_experience" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                    <div class="o_row" groups="hr_recruitment.group_hr_recruitment_interviewer">
+                        <field name="expected_experience" class="oe_inline"/> Years minimum
+                    </div>
+                </group>
             </group>
 
             <xpath expr="//page[@name='recruitment_page']/group" position="after">
