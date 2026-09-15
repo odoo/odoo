@@ -1,11 +1,10 @@
 import logging
 import threading
-from collections import defaultdict, deque
+from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from contextlib import contextmanager, suppress
 from datetime import UTC, datetime
-from functools import cached_property, partial
-from operator import attrgetter
+from functools import partial
 from typing import TYPE_CHECKING, Any, NoReturn, Self, cast
 
 from odoo.db import BaseCursor, FunctionStatus
@@ -23,10 +22,7 @@ from .fields import Boolean, Char, Many2one
 from .models import AbstractModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
-from .runtime._registry_models import (
-    _RegistryModelsMixin,
-    index_model_names_by_inheritance_root,
-)
+from .runtime._registry_models import _RegistryModelsMixin
 from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE, Locale
@@ -37,7 +33,6 @@ from .runtime.transaction import Transaction
 from .runtime.xmlids import XMLIDS
 
 if TYPE_CHECKING:
-    from .fields import Field
     from .models.base import BaseModel
     from .runtime.environment import Environment
     from .runtime.registry import Registry
@@ -336,7 +331,7 @@ class InMemoryCursor(BaseCursor):
         pass
 
 
-class ModelRegistry(_RegistryFieldsMixin, Mapping):
+class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     _lock: threading.RLock = threading.RLock()
     metaschema = META_SCHEMA
     access_policy = ACCESS_POLICY
@@ -354,7 +349,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     ) -> None:
         self.db_name = db_name
         self._isolated = isolated
-        self.models: dict[str, type[BaseModel]] = {}
+        self._init_models_container()
 
         self.model_graph = ModelGraph()
 
@@ -388,7 +383,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
 
     def __getitem__(self, model_name: str) -> type[BaseModel]:
         try:
-            return self.models[model_name]
+            return super().__getitem__(model_name)
         except KeyError:
             if model_name == "ir.rule":
                 raise InMemoryRecordRulesNotSupported(
@@ -415,19 +410,9 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
             raise
 
     def __contains__(self, model_name: object) -> bool:
+        # Mapping's default asks __getitem__, whose miss on ir.rule and
+        # ir.model.access is a NotImplementedError, not a KeyError
         return model_name in self.models
-
-    def __iter__(self):
-        return iter(self.models)
-
-    def __len__(self):
-        return len(self.models)
-
-    def __setitem__(self, model_name: str, model: type[BaseModel]) -> None:
-        self.models[model_name] = model
-
-    def __delitem__(self, model_name: str) -> None:
-        del self.models[model_name]
 
     def record_xmlids_written(self, xml_ids) -> None:
         self.loaded_xmlids.update(xml_ids)
@@ -453,16 +438,6 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
             for container in CACHES_BY_KEY.get(cache_name, (cache_name,)):
                 self.ormcache_lrus[container].clear()
 
-    @cached_property
-    def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
-        return index_model_names_by_inheritance_root(self.models)
-
-    @cached_property
-    def _prefetch_fields_by_model(self) -> dict[tuple[str, Any], tuple[Field, ...]]:
-        return {}
-
-    prefetch_fields = _RegistryModelsMixin.prefetch_fields
-
     def is_an_ordinary_table(self, model) -> bool:
         return True
 
@@ -482,24 +457,6 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
             return "".join(char.lower()[0] for char in text)
 
         return normalize
-
-    def get_descendants(
-        self,
-        model_names: Iterable[str],
-        *kinds: str,
-    ) -> OrderedSet:
-        funcs = [attrgetter(kind + "_children") for kind in kinds]
-        result: OrderedSet[str] = OrderedSet()
-        queue = deque(model_names)
-        while queue:
-            name = queue.popleft()
-            model = self.models.get(name)
-            if model is None or model._name in result:
-                continue
-            result.add(model._name)
-            for func in funcs:
-                queue.extend(func(model))
-        return result
 
     def _collect_field_depends(self, env) -> None:
         for model_cls in self.models.values():

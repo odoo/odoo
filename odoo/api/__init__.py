@@ -1,3 +1,5 @@
+from typing import Self
+
 from odoo.orm._typing import DomainType
 from odoo.orm.primitives import (
     MODULE_UNINSTALL_FLAG,
@@ -5,7 +7,6 @@ from odoo.orm.primitives import (
     ContextType,
     IdType,
     NewId,
-    Self,
     ValuesType,
 )
 from odoo.orm.decorators import (

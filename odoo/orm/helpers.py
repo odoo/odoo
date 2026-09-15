@@ -3,6 +3,7 @@ from operator import itemgetter
 
 from odoo.libs.debug_log import DebugLog
 
+from ._recordset import is_recordset
 from .domain import Domain
 
 if typing.TYPE_CHECKING:
@@ -58,9 +59,7 @@ def get_tuple_itemgetter(items: list | tuple) -> typing.Callable[[typing.Any], t
 
 
 def to_record_ids(arg) -> list[int]:
-    from .models.base import BaseModel
-
-    if isinstance(arg, BaseModel):
+    if is_recordset(arg):
         return arg.ids
     elif isinstance(arg, bool):
         return []

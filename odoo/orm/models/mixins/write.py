@@ -355,9 +355,6 @@ class WriteMixin(_ModelStubs):
         self.env.backend.update_rows(self, fnames, rows)
 
     def _get_records_with_parent_changed(self, vals_list: list[ValuesType]) -> Self:
-        if not self._parent_store:
-            return self.browse()
-
         parent_to_ids = defaultdict(list)
         for id_, vals in zip(self._ids, vals_list, strict=True):
             if self._parent_name in vals:

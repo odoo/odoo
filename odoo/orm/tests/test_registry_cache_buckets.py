@@ -4,9 +4,9 @@ import re
 import pytest
 
 from odoo.orm.runtime._registry_signaling import (
-    _SIGNALING_TABLES,
     CACHES_BY_KEY,
     REGISTRY_CACHES,
+    SIGNALING_TABLES,
 )
 
 BUCKET_OWNERS: dict[str, str] = {
@@ -135,8 +135,8 @@ def test_every_group_clears_itself():
 
 def test_signaling_tables_derive_from_the_groups():
     expected = tuple(f"orm_signaling_{name}" for name in ["registry", *CACHES_BY_KEY])
-    assert expected == _SIGNALING_TABLES
-    assert len(set(_SIGNALING_TABLES)) == len(_SIGNALING_TABLES), "duplicate table"
+    assert expected == SIGNALING_TABLES
+    assert len(set(SIGNALING_TABLES)) == len(SIGNALING_TABLES), "duplicate table"
 
 
 def test_bucket_sizes_are_positive():

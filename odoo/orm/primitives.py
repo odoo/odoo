@@ -2,7 +2,6 @@ import enum
 import typing
 from collections.abc import Collection, Mapping
 from collections.abc import Set as AbstractSet
-from typing import Self
 
 from odoo.libs.sql import SQL
 
@@ -269,6 +268,5 @@ __all__ = [
     "ContextType",
     "IdType",
     "NewId",
-    "Self",
     "ValuesType",
 ]

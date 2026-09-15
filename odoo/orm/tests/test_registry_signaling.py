@@ -6,7 +6,7 @@ import pytest
 
 import odoo.db
 from odoo.orm.runtime import registry as registry_module
-from odoo.orm.runtime._registry_signaling import _SIGNALING_TABLES, _RegistryCaches
+from odoo.orm.runtime._registry_signaling import SIGNALING_TABLES, _RegistryCaches
 from odoo.orm.runtime.registry import CACHES_BY_KEY, Registry
 from odoo.tests import result as result_module
 
@@ -333,11 +333,11 @@ def test_get_sequences_reads_every_serial_once_and_coalesces_an_unused_one():
     reg = _make_registry("_seq_empty_db", -1, -1)
     registry_sequence, cache_sequences = reg.get_sequences(cur)
 
-    assert cur.sql.count("coalesce(pg_sequence_last_value(") == len(
-        _SIGNALING_TABLES
-    ), "one sequence read per watermark, guarded against a never-used serial"
+    assert cur.sql.count("coalesce(pg_sequence_last_value(") == len(SIGNALING_TABLES), (
+        "one sequence read per watermark, guarded against a never-used serial"
+    )
     assert "max(id)" not in cur.sql, "a max(id) subselect plans per call"
-    assert tuple(cur.params) == tuple(f"{table}_id_seq" for table in _SIGNALING_TABLES)
+    assert tuple(cur.params) == tuple(f"{table}_id_seq" for table in SIGNALING_TABLES)
     assert registry_sequence == 0
     assert cache_sequences == dict.fromkeys(CACHES_BY_KEY, 0)
 
@@ -378,16 +378,16 @@ def test_setup_signaling_creates_tables_if_not_exists(monkeypatch):
 
     creates = [q for q in cur.queries if q.startswith("CREATE")]
     inserts = [q for q in cur.queries if q.startswith("INSERT")]
-    assert len(creates) == len(_SIGNALING_TABLES)
+    assert len(creates) == len(SIGNALING_TABLES)
     assert all(q.startswith("CREATE TABLE IF NOT EXISTS") for q in creates)
-    assert len(inserts) == len(_SIGNALING_TABLES)
+    assert len(inserts) == len(SIGNALING_TABLES)
     assert reg.registry_sequence == 1
     assert reg.cache_sequences == dict.fromkeys(CACHES_BY_KEY, 1)
 
 
 def test_setup_signaling_does_not_reseed_existing_tables(monkeypatch):
     reg, cur = _run_setup_signaling(
-        monkeypatch, existing_tables=tuple(_SIGNALING_TABLES)
+        monkeypatch, existing_tables=tuple(SIGNALING_TABLES)
     )
 
     assert not [q for q in cur.queries if q.startswith(("CREATE", "INSERT"))]
@@ -395,9 +395,9 @@ def test_setup_signaling_does_not_reseed_existing_tables(monkeypatch):
 
 
 def test_setup_signaling_seeds_only_missing_tables(monkeypatch):
-    missing = _SIGNALING_TABLES[0]
+    missing = SIGNALING_TABLES[0]
     _reg, cur = _run_setup_signaling(
-        monkeypatch, existing_tables=tuple(_SIGNALING_TABLES[1:])
+        monkeypatch, existing_tables=tuple(SIGNALING_TABLES[1:])
     )
 
     creates = [q for q in cur.queries if q.startswith("CREATE")]

@@ -35,8 +35,6 @@ class LoadMixin(_ModelStubs):
     __slots__ = ()
 
     def _load_creatable_models(self, fields: FieldPaths) -> set[str]:
-        from ...fields.relational import One2many
-
         creatable_models = {self._name}
         for field_path in fields:
             if field_path[0] in (None, "id", ".id"):
@@ -46,7 +44,8 @@ class LoadMixin(_ModelStubs):
                 if field_name is None or field_name in ("id", ".id"):
                     break
 
-                if isinstance(o2m_field := model_fields.get(field_name), One2many):
+                o2m_field = model_fields.get(field_name)
+                if o2m_field is not None and o2m_field.is_one2many:
                     comodel = o2m_field.comodel_name
                     creatable_models.add(comodel)
                     model_fields = self.env[comodel]._fields

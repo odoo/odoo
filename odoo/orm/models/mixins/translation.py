@@ -4,11 +4,10 @@ from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
 
+from ._model_stubs import _ModelStubs
+
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
-
-
-from ._model_stubs import _ModelStubs
 
 _debug = DebugLog(__name__)
 

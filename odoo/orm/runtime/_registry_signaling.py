@@ -28,15 +28,13 @@ SIGNALING_TABLES = tuple(
     get_signaling_table_name(cache_name) for cache_name in ["registry", *CACHES_BY_KEY]
 )
 
-_SIGNALING_TABLES = SIGNALING_TABLES
-
 # every request reads the eleven watermarks; the serial's last value answers in
 # one sequence read each, where max(id) planned eleven subselects per call
 _SEQUENCES_QUERY = SQL(
     "SELECT %s",
     SQL(", ").join(
         SQL("coalesce(pg_sequence_last_value(%s::regclass), 0)", f"{table}_id_seq")
-        for table in _SIGNALING_TABLES
+        for table in SIGNALING_TABLES
     ),
 )
 
@@ -184,8 +182,8 @@ class _RegistrySignalingMixin(_RegistryStubs):
             self.cache_invalidated.clear()
 
     def _create_missing_signaling_tables(self, cr: BaseCursor) -> None:
-        existing_sig_tables = tuple(sql.get_tables_existing(cr, _SIGNALING_TABLES))
-        for table_name in _SIGNALING_TABLES:
+        existing_sig_tables = tuple(sql.get_tables_existing(cr, SIGNALING_TABLES))
+        for table_name in SIGNALING_TABLES:
             if table_name not in existing_sig_tables:
                 _debug.lifecycle("registry.signaling.table_created", table=table_name)
                 cr.execute(

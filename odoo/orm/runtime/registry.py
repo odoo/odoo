@@ -641,13 +641,12 @@ class Registry(
                 caches=sorted(self.cache_invalidated),
             )
 
-        if self.registry_invalidated:
+        if self.registry_invalidated or self.cache_invalidated:
             with self.cursor() as cr:
-                self._signal_registry_change(cr)
-
-        if self.cache_invalidated:
-            with self.cursor() as cr:
-                self._signal_cache_changes(cr)
+                if self.registry_invalidated:
+                    self._signal_registry_change(cr)
+                if self.cache_invalidated:
+                    self._signal_cache_changes(cr)
 
         self.registry_invalidated = False
         self.cache_invalidated.clear()

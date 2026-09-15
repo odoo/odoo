@@ -39,6 +39,11 @@ SQL_ORDER_NULLS: Final[dict[str, SQL]] = {
     "NULLS LAST": SQL("NULLS LAST"),
 }
 
+
+def _array_agg(table: str, expr: SQL) -> SQL:
+    return SQL("ARRAY_AGG(%s ORDER BY %s)", expr, SQL.identifier(table, "id"))
+
+
 READ_GROUP_AGGREGATE: Final[dict[str, Callable[[str, SQL], SQL]]] = {
     "sum": lambda table, expr: SQL("SUM(%s)", expr),
     "avg": lambda table, expr: SQL("AVG(%s)", expr),
@@ -46,16 +51,12 @@ READ_GROUP_AGGREGATE: Final[dict[str, Callable[[str, SQL], SQL]]] = {
     "min": lambda table, expr: SQL("MIN(%s)", expr),
     "bool_and": lambda table, expr: SQL("BOOL_AND(%s)", expr),
     "bool_or": lambda table, expr: SQL("BOOL_OR(%s)", expr),
-    "array_agg": lambda table, expr: SQL(
-        "ARRAY_AGG(%s ORDER BY %s)", expr, SQL.identifier(table, "id")
-    ),
+    "array_agg": _array_agg,
     "array_agg_distinct": lambda table, expr: SQL(
         "(SELECT array_agg(v ORDER BY v) FROM (SELECT DISTINCT unnest(array_agg(%s)) AS v) sub)",
         expr,
     ),
-    "recordset": lambda table, expr: SQL(
-        "ARRAY_AGG(%s ORDER BY %s)", expr, SQL.identifier(table, "id")
-    ),
+    "recordset": _array_agg,
     "count": lambda table, expr: SQL("COUNT(%s)", expr),
     "count_distinct": lambda table, expr: SQL("COUNT(DISTINCT %s)", expr),
     "any_value": lambda table, expr: SQL("ANY_VALUE(%s)", expr),

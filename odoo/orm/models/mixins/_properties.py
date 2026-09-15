@@ -3,6 +3,7 @@ import typing
 from odoo.libs.debug_log import DebugLog
 
 from ... import decorators as api
+from ...fields.properties import check_property_field_value_name
 from ...parsing import parse_field_expr
 from ._model_stubs import _ModelStubs
 
@@ -29,8 +30,6 @@ class _PropertiesMixin(_ModelStubs):
                 f"Field {field_name!r} on model {self._name!r} is not a "
                 f"properties field"
             )
-        from ...fields.properties import check_property_field_value_name
-
         check_property_field_value_name(property_name)
 
         definition_record = field.definition_record

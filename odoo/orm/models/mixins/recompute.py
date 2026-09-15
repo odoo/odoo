@@ -421,24 +421,20 @@ class RecomputeMixin(_ModelStubs):
             self._flush_table_inheritance_descendants(fnames)
 
     def _flush_model_own(self, fnames: Collection[str] | None) -> None:
-        fields = None if fnames is None else get_fields_by_name(self, fnames)
-        if fields is not None:
-            core = self.env.core
-            if not core.has_pending() and not core.is_any_dirty():
-                return
+        fields = self._resolve_recompute_fields(fnames)
+        core = self.env.core
+        if fnames is not None and not core.has_pending() and not core.is_any_dirty():
+            return
 
         prof = _OrmProfile(_orm_cache)
 
-        self._recompute_fields(
-            self._get_stored_computed_fields() if fields is None else fields, None
-        )
+        self._recompute_fields(fields, None)
         prof.mark("recompute")
-        core = self.env.core
-        if fields is None or any(map(core.has_dirty_field, fields)):
+        if fnames is None or any(map(core.has_dirty_field, fields)):
             _debug.pipeline(
                 "recompute.flush_model",
                 model=self._name,
-                fields=None if fields is None else len(fields),
+                fields=None if fnames is None else len(fields),
             )
             self._flush()
 
@@ -468,10 +464,13 @@ class RecomputeMixin(_ModelStubs):
         named_fields = None if fnames is None else get_fields_by_name(self, fnames)
         if not self:
             return
-        if named_fields is not None:
-            core = self.env.core
-            if not core.has_pending() and not core.is_any_dirty():
-                return
+        core = self.env.core
+        if (
+            named_fields is not None
+            and not core.has_pending()
+            and not core.is_any_dirty()
+        ):
+            return
         self._recompute_fields(
             self._get_stored_computed_fields()
             if named_fields is None
@@ -481,7 +480,6 @@ class RecomputeMixin(_ModelStubs):
         fields: Collection[Field] = (
             self._fields.values() if named_fields is None else named_fields
         )
-        core = self.env.core
         ids = self._ids
         if len(ids) == 1:
             id_ = ids[0]

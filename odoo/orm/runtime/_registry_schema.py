@@ -316,38 +316,27 @@ class _RegistrySchemaMixin(_RegistryStubs):
             table2, column2, ondelete, model, module = val
             deltype = sql._CONFDELTYPES[ondelete.upper()]
             spec = existing.get(key)
-            if spec is None:
-                _debug.logic(
-                    "registry.foreign_key.added",
-                    table=table1,
-                    column=column1,
-                    target=table2,
-                    ondelete=ondelete,
-                )
-                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
-                conname = sql.get_fk_constraint_names(
-                    cr, table1, column1, table2, column2, ondelete
-                )[0]
-                model.env.registry.metaschema.reflect_constraint(
-                    model, conname, "f", None, module
-                )
-            elif (spec[1], spec[2], spec[3]) != (table2, column2, deltype):
-                _debug.logic(
-                    "registry.foreign_key.replaced",
-                    table=table1,
-                    column=column1,
-                    target=table2,
-                    ondelete=ondelete,
-                    previous=spec[0],
-                )
+            if spec is not None:
+                if (spec[1], spec[2], spec[3]) == (table2, column2, deltype):
+                    continue
                 sql.drop_constraint(cr, table1, spec[0])
-                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
-                conname = sql.get_fk_constraint_names(
-                    cr, table1, column1, table2, column2, ondelete
-                )[0]
-                model.env.registry.metaschema.reflect_constraint(
-                    model, conname, "f", None, module
-                )
+            _debug.logic(
+                "registry.foreign_key.added"
+                if spec is None
+                else "registry.foreign_key.replaced",
+                table=table1,
+                column=column1,
+                target=table2,
+                ondelete=ondelete,
+                previous=None if spec is None else spec[0],
+            )
+            sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+            conname = sql.get_fk_constraint_names(
+                cr, table1, column1, table2, column2, ondelete
+            )[0]
+            model.env.registry.metaschema.reflect_constraint(
+                model, conname, "f", None, module
+            )
 
     def check_tables_exist(self, cr: Cursor) -> None:
         from .environment import Environment

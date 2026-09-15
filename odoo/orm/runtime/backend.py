@@ -1267,6 +1267,10 @@ class PostgresBackend:
         env = model.env
         cr = env.cr
         records = model.browse(sub_ids)
+        if not all(isinstance(id_, int) and id_ > 0 for id_ in sub_ids):
+            raise TypeError(
+                f"unlink_rows: sub_ids must be positive ints, got {sub_ids!r}"
+            )
 
         cr.execute(
             SQL(
@@ -1288,12 +1292,6 @@ class PostgresBackend:
         if many2one_fields and not uninstalling:
             self._unlink_default_guard(model, sub_ids, many2one_fields)
 
-        if many2one_fields and not all(
-            isinstance(id_, int) and id_ > 0 for id_ in sub_ids
-        ):
-            raise TypeError(
-                f"_unlink_process_batch: sub_ids must be positive ints, got {sub_ids!r}"
-            )
         for field in many2one_fields:
             referrer = env[field.model_name]
             if field.ondelete == "restrict" and not uninstalling:

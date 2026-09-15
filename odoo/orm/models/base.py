@@ -1,5 +1,4 @@
 import collections
-import logging
 import typing
 
 from .. import decorators as api
@@ -34,9 +33,6 @@ from .mixins._magic_fields import _MagicFieldsMixin
 from .mixins._metadata import _ModelMetadataMixin
 from .mixins._properties import _PropertiesMixin
 from .mixins._query import _QueryMixin
-
-_logger = logging.getLogger("odoo.models")
-_orm_crud = logging.getLogger("odoo.orm.crud")
 
 
 class BaseModel(
