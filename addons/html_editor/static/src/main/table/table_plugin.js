@@ -214,6 +214,7 @@ export class TablePlugin extends Plugin {
 
         /** Selectors */
         move_node_whitelist_selectors: "table",
+        selected_table_cell_selector: ".o_selected_td",
     };
 
     setup() {
