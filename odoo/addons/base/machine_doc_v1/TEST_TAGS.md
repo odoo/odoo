@@ -260,7 +260,7 @@ These run in **both** at_install and post_install phases by default.
 | Files without @tagged | 60 (44%) |
 | Classes using post_install | 242 |
 | Unique tags | 28 |
-| Largest test file | test_db_cursor.py (115 classes, 385 tests) |
+| Largest test file | test_db_cursor.py (115 classes, 386 tests) |
 
 Counted as unittest collects them: a method whose name starts with `test`, not
 `test_` — a `testCamelCase` method would run too, so it is counted. A class with
