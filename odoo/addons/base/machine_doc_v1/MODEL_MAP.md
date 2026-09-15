@@ -1672,6 +1672,27 @@ value would let two rows collide in `en_US` while differing in one translation.
 - `name_uniq_index(*scope, message=, nulls_distinct=, where=)` — Rebuild the index scoped to more columns (per company, per parent) or filtered
 - `no_name_uniq_index()` — Opt out entirely, for an inheritor whose names are not unique
 
+### models/mixin_lifecycle.py
+
+#### MixinLifecycle — `mixin.lifecycle` (AbstractModel)
+
+A document that moves through declared states: the part of an order's lifecycle
+that has nothing to do with lines, partners or invoices. The adopter declares its
+own `state` selection and `_STATE_TRANSITIONS`, and implements
+`_prepare_confirmation_values`.
+
+**Fields:** `locked` (Boolean, tracked)
+
+**Guards:** every `write` runs `_get_check_write_guards` — a locked record keeps
+all but `_LOCKED_WRITABLE_FIELDS`, `_get_fields_state_frozen` freezes fields per
+state, and a `state` outside `_STATE_TRANSITIONS` is refused. A record past draft
+and not cancelled is not deleted. `action_confirm` and `action_cancel` run their
+check registries (`_get_confirm_validation_methods`, `_get_cancel_validation_methods`)
+before writing; `action_draft`, `action_lock` and `action_unlock` write directly.
+
+Adopters: `mixin.order` (base_order), `maintenance.order` through
+`mixin.approval.lifecycle` (approval).
+
 ### models/mixin_color.py
 
 #### MixinColor — `mixin.color` (AbstractModel)
@@ -1974,6 +1995,7 @@ Quick lookup — file → model → primary role:
 | `mixin_avatar.py` | mixin.avatar | SVG avatar generation |
 | `mixin_band.py` | mixin.band | Numeric band / range mixin |
 | `mixin_catalog.py` | mixin.catalog | Unique translated name, archivable |
+| `mixin_lifecycle.py` | mixin.lifecycle | Declared state transitions, locking, confirm/cancel checks |
 | `mixin_color.py` | mixin.color | Shared color defaults, validation, and palette conversion |
 | `mixin_favorite.py` | mixin.favorite | Per-record favourite flag |
 | `mixin_user_favorite.py` | mixin.user.favorite | Per-user favourite flag |

@@ -79,6 +79,7 @@ from . import ir_profile
 from . import mixin_image
 from . import mixin_avatar
 from . import mixin_catalog
+from . import mixin_lifecycle
 from . import mixin_merge
 from . import mixin_favorite
 from . import mixin_user_favorite

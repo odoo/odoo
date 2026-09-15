@@ -5,8 +5,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.models import MAGIC_COLUMNS
 from odoo.tools import SQL, OrderedSet, format_list
+
+from odoo.addons.base.models.mixin_lifecycle import MixinLifecycle
 
 _debug = DebugLog(__name__)
 
@@ -15,6 +16,7 @@ class MixinOrder(models.AbstractModel):
     _name = "mixin.order"
     _description = "Order Management Base"
     _inherit = [
+        "mixin.lifecycle",
         "mixin.mail.thread",
         "mixin.mail.activity",
         "mixin.portal",
@@ -41,7 +43,7 @@ class MixinOrder(models.AbstractModel):
         "cancel": {"draft"},
     }
     _LOCKED_WRITABLE_FIELDS = {
-        "locked",
+        *MixinLifecycle._LOCKED_WRITABLE_FIELDS,
         "priority",
         "access_token",
         "acknowledged",
@@ -232,12 +234,6 @@ class MixinOrder(models.AbstractModel):
         "journal with the lowest sequence is used.",
     )
 
-    locked = fields.Boolean(
-        default=False,
-        copy=False,
-        tracking=True,
-        help="Locked orders cannot be modified.",
-    )
     acknowledged = fields.Boolean(
         copy=False,
         tracking=True,
@@ -397,7 +393,6 @@ class MixinOrder(models.AbstractModel):
         return super().create(vals_list)
 
     def write(self, vals):
-        self._check_write_guards(vals)
         _debug.lifecycle("write", orders=self, fields=list(vals))
         return super().write(vals)
 
@@ -421,19 +416,6 @@ class MixinOrder(models.AbstractModel):
 
     def _get_order_lines_copiable(self):
         return self.line_ids.filtered(lambda line: not line.is_downpayment)
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_draft_or_cancel(self):
-        confirmed = self.filtered(lambda o: o.state not in ("draft", "cancel"))
-        if confirmed:
-            _debug.logic("unlink_refused", orders=confirmed, reason="not_draft_cancel")
-            raise UserError(
-                _(
-                    "Cannot delete confirmed %(desc)s. Cancel them first:\n%(orders)s",
-                    desc=self._description,
-                    orders=", ".join(confirmed.mapped("name")),
-                ),
-            )
 
     @api.constrains("company_id", "line_ids")
     def _check_line_ids_company_id(self):
@@ -645,12 +627,6 @@ class MixinOrder(models.AbstractModel):
     def _prepare_confirmation_values(self):
         return {"state": "done"}
 
-    def _get_confirmation_context(self):
-        return self.env.context
-
-    def _action_confirm(self):
-        pass
-
     def _action_cancel(self):
         draft_invoices = self.invoice_ids.filtered(
             lambda invoice: invoice.state == "draft",
@@ -658,9 +634,7 @@ class MixinOrder(models.AbstractModel):
         if draft_invoices:
             _debug.lifecycle("draft_invoices_cancelled", invoices=draft_invoices)
             draft_invoices.action_cancel()
-        self.write({"state": "cancel"})
-        _debug.lifecycle("order_cancelled", orders=self)
-        return True
+        return super()._action_cancel()
 
     def _get_lock_setting_field(self):
         return self._lock_setting_field
@@ -678,58 +652,13 @@ class MixinOrder(models.AbstractModel):
         _debug.logic("lock_required_check", order=self, group=group or "none")
         return bool(group) and self._get_lock_setting_user().has_group(group)
 
-    def _is_readonly(self):
-        self.check_singleton()
-        return self.state == "cancel"
-
-    def _run_check_registry(self, method_names, *args):
-        for method_name in method_names:
-            getattr(self, method_name)(*args)
-
-    def _check_confirm_allowed(self):
-        self._run_check_registry(self._get_confirm_validation_methods())
-
     def _get_confirm_validation_methods(self):
         return [
-            "_check_confirm_state",
+            *super()._get_confirm_validation_methods(),
             "_check_confirm_has_lines",
             "_check_confirm_lines_have_product",
             "_check_confirm_analytic_distribution",
         ]
-
-    def _check_confirm_state(self):
-        orders_wrong_state = self.filtered(lambda order: order.state != "draft")
-        if not orders_wrong_state:
-            return
-        confirmed_orders = orders_wrong_state.filtered(lambda o: o.state == "done")
-        cancelled_orders = orders_wrong_state.filtered(lambda o: o.state == "cancel")
-        _debug.logic(
-            "confirm_refused",
-            confirmed=confirmed_orders,
-            cancelled=cancelled_orders,
-        )
-        error_parts = []
-        if confirmed_orders:
-            error_parts.append(
-                _(
-                    "• Already confirmed: %s",
-                    format_list(self.env, confirmed_orders.mapped("display_name")),
-                ),
-            )
-        if cancelled_orders:
-            error_parts.append(
-                _(
-                    "• Cancelled: %s",
-                    format_list(self.env, cancelled_orders.mapped("display_name")),
-                ),
-            )
-        raise UserError(
-            _(
-                "Cannot confirm %(desc)s that are not in draft state:\n\n%(details)s",
-                desc=self._description,
-                details="\n".join(error_parts),
-            ),
-        )
 
     def _requires_lines_to_confirm(self):
         self.check_singleton()
@@ -797,73 +726,6 @@ class MixinOrder(models.AbstractModel):
     def _check_confirm_analytic_distribution(self):
         pass
 
-    def _check_cancel_allowed(self):
-        self._run_check_registry(self._get_cancel_validation_methods())
-
-    def _get_cancel_validation_methods(self):
-        return [
-            "_check_cancel_state",
-            "_check_cancel_except_locked",
-        ]
-
-    def _check_cancel_state(self):
-        cancelled_orders = self.filtered(lambda order: order.state == "cancel")
-        if cancelled_orders:
-            _debug.logic(
-                "cancel_refused", orders=cancelled_orders, reason="already_cancelled"
-            )
-            raise UserError(
-                _(
-                    "The following %(desc)s are already cancelled: %(orders)s",
-                    desc=self._description,
-                    orders=format_list(
-                        self.env,
-                        cancelled_orders.mapped("display_name"),
-                    ),
-                ),
-            )
-
-    def _check_cancel_except_locked(self):
-        orders_locked = self.filtered(lambda order: order.locked)
-        if orders_locked:
-            _debug.logic("cancel_refused", orders=orders_locked, reason="locked")
-            raise UserError(
-                _(
-                    "Cannot cancel locked %(desc)s: %(orders)s. "
-                    "Please unlock them first using the 'Unlock' button.",
-                    desc=self._description,
-                    orders=format_list(self.env, orders_locked.mapped("display_name")),
-                ),
-            )
-
-    def action_confirm(self):
-        self._check_confirm_allowed()
-        with _debug.perf("action_confirm", cr=self.env.cr, orders=self):
-            self.write(self._prepare_confirmation_values())
-            self.with_context(self._get_confirmation_context())._action_confirm()
-            self.filtered(lambda order: order._is_lock_required()).action_lock()
-        _debug.lifecycle("order_confirmed", orders=self)
-        return True
-
-    def action_cancel(self):
-        self._check_cancel_allowed()
-        return self._action_cancel()
-
-    def action_draft(self):
-        _debug.lifecycle("order_reset_to_draft", orders=self)
-        self.write({"state": "draft"})
-        return True
-
-    def action_lock(self):
-        _debug.lifecycle("order_locked", orders=self)
-        self.write({"locked": True})
-        return True
-
-    def action_unlock(self):
-        _debug.lifecycle("order_unlocked", orders=self)
-        self.write({"locked": False})
-        return True
-
     def action_acknowledge(self):
         _debug.lifecycle("order_acknowledged", orders=self)
         self.write({"acknowledged": True})
@@ -905,139 +767,8 @@ class MixinOrder(models.AbstractModel):
             f"{self._name} must implement _get_import_template_path()"
         )
 
-    def _check_write_guards(self, vals):
-        self._run_check_registry(self._get_check_write_guards(), vals)
-
     def _get_check_write_guards(self):
-        return [
-            "_check_write_locked_order",
-            "_check_write_state_frozen_fields",
-            "_check_write_state_transition",
-            "_check_write_user_id",
-        ]
-
-    def _get_fields_state_frozen(self):
-        return {}
-
-    def _check_write_locked_order(self, vals):
-        if self.env.context.get("bypass_locked_check"):
-            return
-        locked = self.filtered("locked")
-        if not locked:
-            return
-        candidate = (
-            set(vals) & locked._get_fields_user_editable()
-        ) - self._LOCKED_WRITABLE_FIELDS
-        if not candidate:
-            return
-        for order in locked:
-            forbidden = {
-                name
-                for name in candidate
-                if order._is_locked_field_changed(name, vals[name])
-            }
-            if forbidden:
-                _debug.logic(
-                    "write_refused",
-                    order=order,
-                    reason="locked",
-                    fields=",".join(sorted(forbidden)),
-                )
-                raise UserError(
-                    _(
-                        "This order is locked and cannot be modified. "
-                        "Unlock it first to change: %s",
-                        order._get_field_labels(forbidden),
-                    ),
-                )
-
-    def _is_locked_field_changed(self, field_name, value):
-        self.check_singleton()
-        field = self._fields[field_name]
-        if field.type in ("many2many", "one2many"):
-            return set(self[field_name].ids) != set(
-                self.new({field_name: value})[field_name].ids,
-            )
-        return field.convert_to_cache(
-            value, self, validate=False
-        ) != field.convert_to_cache(self[field_name], self, validate=False)
-
-    def _get_fields_user_editable(self):
-        return {
-            name
-            for name, field in self._fields.items()
-            if field.store
-            and not field.related
-            and not field.readonly
-            and name not in MAGIC_COLUMNS
-        }
-
-    def _check_write_state_frozen_fields(self, vals):
-        frozen_map = self._get_fields_state_frozen()
-        changed = set(vals)
-        target_state = vals.get("state")
-        for order in self:
-            relevant_states = {order.state, target_state} - {None}
-            frozen = (
-                set().union(
-                    *(frozen_map.get(state, set()) for state in relevant_states),
-                )
-                & changed
-            )
-            if frozen:
-                _debug.logic(
-                    "write_refused",
-                    order=order,
-                    reason="state_frozen_field",
-                    fields=",".join(sorted(frozen)),
-                    state=target_state or order.state,
-                )
-                raise UserError(
-                    _(
-                        "You cannot modify %(fields)s on a %(state)s order.",
-                        fields=order._get_field_labels(frozen),
-                        state=target_state or order.state,
-                    ),
-                )
-
-    def _check_write_state_transition(self, vals):
-        if "state" not in vals:
-            return
-        target = vals["state"]
-        for order in self:
-            if order.state == target:
-                continue
-            if target not in self._STATE_TRANSITIONS.get(order.state, set()):
-                _debug.logic(
-                    "write_refused",
-                    order=order,
-                    reason="illegal_state_transition",
-                    src=order.state,
-                    dst=target,
-                )
-                raise UserError(
-                    _(
-                        "Cannot move order %(name)s from %(src)s to %(dst)s.",
-                        name=order.display_name,
-                        src=order.state,
-                        dst=target,
-                    ),
-                )
-
-    def _get_field_labels(self, field_names):
-        fields_info = (
-            self.env["ir.model.fields"]
-            .sudo()
-            .search(
-                [
-                    ("name", "in", list(field_names)),
-                    ("model", "=", self._name),
-                ],
-            )
-        )
-        return ", ".join(fields_info.mapped("field_description")) or ", ".join(
-            sorted(field_names),
-        )
+        return [*super()._get_check_write_guards(), "_check_write_user_id"]
 
     def _check_write_user_id(self, vals):
         if "user_id" not in vals or self.env.su:
