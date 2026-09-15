@@ -122,6 +122,9 @@ class Binary(Field[BinaryValue]):
             cache_value.size  # check if exists and raise if we have issues
         return super()._update_cache(records, cache_value, dirty)
 
+    def convert_to_export(self, value, record):
+        return value.to_base64()
+
     def convert_to_record(self, value, record):
         return value or EMPTY_BINARY
 
