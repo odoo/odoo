@@ -2,7 +2,7 @@ import json
 
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase, freeze_time, tagged
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tests.form import Form
 
 from odoo.addons.account_peppol.tests.common import (
@@ -18,7 +18,6 @@ from odoo.addons.account_peppol.tests.common import (
 )
 
 
-@freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolParticipant(TransactionCase):
 
