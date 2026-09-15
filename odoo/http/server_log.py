@@ -10,6 +10,7 @@ from wsgiref.handlers import format_date_time
 
 import h11
 
+import odoo
 from odoo.logging import (
     BOLD_SEQ,
     COLOR_PATTERN,
@@ -271,6 +272,6 @@ def _colorize_cursor_mode(cursor_mode: typing.Literal['ro', 'rw', 'ro->rw']) -> 
     return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
 
 
-_logger = logging.getLogger('odoo.http.server')
+_logger = logging.getLogger('longpolling' if odoo.evented else 'odoo.http.server')
 _logger_headers = _logger.getChild('headers')
 _logger_headers.setLevel(logging.WARNING)  # disabled by default

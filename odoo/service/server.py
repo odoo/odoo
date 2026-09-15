@@ -680,60 +680,21 @@ class GeventServer(CommonServer):
             self.process_limits()
             gevent.sleep(beat)
 
+    def http_client_greenlet(self, client, address, prelude=b''):
+        try:
+            HTTPSocket(client, address, prelude=prelude).process_request()
+        except Exception:  # noqa: BLE001
+            _logger.critical(
+                "Uncaught error in longpolling greenlet, processing request from %s:%s",
+                address[0], address[1], exc_info=True,
+            )
+        finally:
+            client.close()
+
     def start(self):
         import gevent  # noqa: PLC0415
         import gevent.pool  # noqa: PLC0415
-        try:
-            from gevent.pywsgi import WSGIHandler, WSGIServer  # noqa: PLC0415
-        except ImportError:
-            from gevent.wsgi import WSGIHandler, WSGIServer  # noqa: PLC0415
-
-        class ProxyHandler(WSGIHandler):
-            """ When logging requests, try to get the client address from
-            the environment so we get proxyfix's modifications (if any).
-
-            Derived from werzeug.serving.WSGIRequestHandler.log
-            / werzeug.serving.WSGIRequestHandler.address_string
-            """
-            def _connection_upgrade_requested(self):
-                if self.headers.get('Connection', '').lower() == 'upgrade':
-                    return True
-                if self.headers.get('Upgrade', '').lower() == 'websocket':  # noqa: SIM103
-                    return True
-                return False
-
-            def format_request(self):
-                old_address = self.client_address
-                if getattr(self, 'environ', None):
-                    self.client_address = self.environ['REMOTE_ADDR']
-                elif not self.client_address:
-                    self.client_address = '<local>'
-                # other cases are handled inside WSGIHandler
-                try:
-                    return super().format_request()
-                finally:
-                    self.client_address = old_address
-
-            def finalize_headers(self):
-                # We need to make gevent.pywsgi stop dealing with chunks when the connection
-                # Is being upgraded. see https://github.com/gevent/gevent/issues/1712
-                super().finalize_headers()
-                if self.code == 101:
-                    # Switching Protocols. Disable chunked writes.
-                    self.response_use_chunked = False
-
-            def get_environ(self):
-                # Add the TCP socket to environ in order for the websocket
-                # connections to use it.
-                environ = super().get_environ()
-                environ['socket'] = self.socket
-                # Disable support for HTTP chunking on reads which cause
-                # an issue when the connection is being upgraded, see
-                # https://github.com/gevent/gevent/issues/1712
-                if self._connection_upgrade_requested():
-                    environ['wsgi.input'] = self.rfile
-                    environ['wsgi.input_terminated'] = False
-                return environ
+        from gevent.server import StreamServer  # noqa: PLC0415
 
         # Set process memory limit as an extra safeguard
         set_limit_memory_hard()
@@ -761,15 +722,13 @@ class GeventServer(CommonServer):
         if self.port == 0:
             self.port = config['gevent_port'] = port
 
-        self.httpd = WSGIServer(
-            sock, self.app,
-            log=logging.getLogger('longpolling'),
-            error_log=logging.getLogger('longpolling'),
-            handler_class=ProxyHandler,
+        self.httpd = StreamServer(
+            sock,
+            self.http_client_greenlet,
             spawn=gevent.pool.Pool(),
         )
 
-        # override gevent.WSGIServer's `close` to end websocket connections
+        # override gevent.StreamServer's `close` to end websocket connections
         # before we wait for all greenlets to finish & kill remaining.
         original_httpd_close = self.httpd.close
         super_stop = super().stop
@@ -792,7 +751,7 @@ class GeventServer(CommonServer):
     def stop(self):
         if self.httpd:
             self.httpd._stop_event.set()
-            # will call super().stop() in WSGIServer.close
+            # will call super().stop() in StreamServer.close
         else:
             super().stop()
 
