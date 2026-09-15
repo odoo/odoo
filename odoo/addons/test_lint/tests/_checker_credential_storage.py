@@ -94,6 +94,28 @@ JUDGED_NOT_SECRET = frozenset(
 )
 
 
+# Parameter keys whose name says secret but whose value is not one: switches and
+# lifetimes, a publishable map token, a one-time pairing token that expires in
+# minutes, a demo-mode sentinel, and the database's own HMAC seed, which every
+# signed link derives from and which exists before any module could hold a key.
+JUDGED_PARAMETERS_NOT_SECRET = frozenset(
+    {
+        "auth_signup.reset_password",
+        "database.secret",
+        "hr_contract_salary.access_token_validity",
+        "iot.iot_token",
+        "mail.chat_from_token",
+        "portal.allow_api_keys",
+        "pos_tyro.api_key",
+        "pos_urban_piper.urbanpiper_apikey",
+        "social.twitter_consumer_key",
+        "web_map.token_map_box",
+    }
+)
+
+PARAMETER_ACCESSORS = frozenset({"get_param", "set_param"})
+
+
 @dataclass
 class Violation:
     lineno: int
@@ -156,11 +178,35 @@ def _looks_secret(module: str, name: str, hashed: set[str]) -> bool:
     )
 
 
+def _parameter_secrets(tree: ast.Module, hashed: set[str]) -> Iterator[Violation]:
+    for node in ast.walk(tree):
+        if not (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr in PARAMETER_ACCESSORS
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and isinstance(node.args[0].value, str)
+        ):
+            continue
+        key = node.args[0].value
+        if key in JUDGED_PARAMETERS_NOT_SECRET:
+            continue
+        if not _looks_secret("", key.rpartition(".")[2], hashed):
+            continue
+        yield Violation(
+            node.lineno,
+            node.col_offset,
+            f"{key} is read or written as an ir.config_parameter, in clear",
+        )
+
+
 def check(tree: ast.Module, path: str) -> Iterator[Violation]:
     module = module_of(path)
     if not module or module == VAULT_MODULE:
         return
     hashed = _hashed_names(tree)
+    yield from _parameter_secrets(tree, hashed)
     for node in ast.walk(tree):
         if not isinstance(node, ast.ClassDef):
             continue

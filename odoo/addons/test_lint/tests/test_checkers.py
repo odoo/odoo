@@ -1981,6 +1981,33 @@ class TestCredentialStorageLint(BaseCase):
             ["payment_x.x_client_secret"],
         )
 
+    def test_a_secret_parameter_read_or_written_by_key_is_flagged(self):
+        self.assertEqual(
+            self._fields("""
+            class Settings(models.TransientModel):
+                def _inverse_x_client_secret(self):
+                    ICP = self.env["ir.config_parameter"].sudo()
+                    ICP.set_param("x.client_secret", self.x_client_secret)
+
+                def _read(self):
+                    ICP = self.env["ir.config_parameter"].sudo()
+                    return ICP.get_param("x.private_key"), ICP.get_param("x.client_id")
+            """),
+            ["x.client_secret", "x.private_key"],
+        )
+
+    def test_a_judged_or_public_parameter_is_not_a_secret(self):
+        self.assertEqual(
+            self._fields("""
+            def _read(env):
+                ICP = env["ir.config_parameter"].sudo()
+                ICP.get_param("database.secret")
+                ICP.get_param("mail.web_push_vapid_public_key")
+                ICP.get_param("x.token_endpoint")
+            """),
+            [],
+        )
+
     def test_the_vault_itself_is_out_of_scope(self):
         self.assertEqual(
             self._fields(
