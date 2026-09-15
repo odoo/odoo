@@ -303,7 +303,7 @@ class HrEmployeeBase(models.AbstractModel):
         """
         calendar_periods_by_employee = {}
         for employee in self:
-            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+            calendar = employee.resource_calendar_id or False
             calendar_periods_by_employee[employee] = [(start, stop, calendar)]
         return calendar_periods_by_employee
 
