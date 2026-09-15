@@ -111,6 +111,10 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _get_scheduled_delivery_time(self, invoice):
         # don't create a bridge only to get line.sale_line_ids.order_id.picking_ids.date_done
         # line.sale_line_ids.order_id.picking_ids.scheduled_date or line.sale_line_ids.order_id.commitment_date
+        if self._cii_get_billing_dates(invoice)[0]:
+            # [BR-IC-11] the Actual delivery date (BT-72) and the Invoicing period (BG-14) are
+            # alternatives, so only report the delivery date when the lines define no period.
+            return None
         return invoice.delivery_date or invoice.invoice_date
 
     def _get_invoicing_period(self, invoice):
@@ -212,14 +216,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
-        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_start_dates += [line_vals['billing_start'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_start')]
-        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        billing_end_dates += [line_vals['billing_end'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_end')]
-        if billing_start_dates:
-            template_values['billing_start'] = min(billing_start_dates)
-        if billing_end_dates:
-            template_values['billing_end'] = max(billing_end_dates)
+        template_values['billing_start'], template_values['billing_end'] = self._cii_get_billing_dates(invoice)
 
         # data used for ApplicableHeaderTradeSettlement / ApplicableTradeTax (at the end of the xml)
         for tax_detail_vals in template_values['tax_details']['tax_details'].values():
