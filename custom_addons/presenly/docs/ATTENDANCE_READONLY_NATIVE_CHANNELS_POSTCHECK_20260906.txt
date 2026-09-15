@@ -1,0 +1,118 @@
+PRESENLY ATTENDANCE HISTORY, NATIVE CHANNEL DISABLEMENT, AND PHOTO ZOOM — POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.10.0.0
+
+IMPLEMENTED SCOPE
+- Kept the native Manage All Attendances/history menu and its native group assignment.
+- Removed the Presenly upgrade hook that revoked hr_attendance.group_hr_attendance_user.
+- Did not backfill or change any user role during this rollout.
+- Made the Attendance list and form history-only:
+  - create disabled
+  - edit disabled
+  - delete disabled
+  - duplicate disabled
+- Added server-side guards that reject manual/UI/RPC/import create, protected attendance writes, and deletion.
+- Added private server-only mobile methods for validated Presenly check-in and check-out. Leading-underscore methods cannot be called remotely through Odoo RPC.
+- Presenly mobile status/check-in/check-out routes remain active and session-authenticated.
+- Disabled native Odoo attendance mutation paths:
+  - Kiosk page/token entry
+  - Kiosk menu
+  - Kiosk onboarding
+  - Barcode/RFID scan
+  - Manual kiosk selection
+  - Kiosk employee enumeration and employee/badge mutation routes
+  - Native systray check-in/out
+- Added a central hr.employee._attendance_action_change guard as a second protection layer.
+- Native systray status always reports display_systray=False without changing company configuration.
+- No res.company attendance setting was changed.
+
+ATTENDANCE COLOR
+- Native Odoo marks out_mode=technical red.
+- Presenly mobile deliberately uses technical mode because timestamps are server-owned.
+- Mobile attendance now uses Presenly evidence semantics:
+  - valid active mobile session: green
+  - completed session with successful check-in/check-out evidence: green
+  - missing Work Location snapshot: red
+  - missing successful required event evidence: red
+  - completed duration over 16 hours: red
+  - open session older than one day: red
+- Non-Presenly Attendance retains native Odoo color behavior.
+- Existing Attendance IDs 1 and 2 now compute color=10 (green) while retaining out_mode=technical.
+
+PHOTO VIEW
+- Check-In and Check-Out selfie previews were increased from 240x240 to 360x360.
+- The Odoo image widget zoom option is enabled on both Attendance selfie fields.
+- Attendance Evidence form now displays a 480x480 selfie preview with zoom.
+- Selfie attachments remain private and read-only.
+- No selfie attachment or binary content was rewritten.
+
+EXISTING BUSINESS DATA PRESERVATION
+Business fingerprint before and after the main database upgrade was identical:
+- hr.attendance: 2 records
+- Attendance ID sum: 3
+- Latest Attendance write_date: 2026-09-06 02:27:30.624382
+- presenly.attendance.event: 7 records
+- Evidence ID sum: 28
+- Selfie attachments referenced by Attendance/evidence: 4 records
+- Selfie attachment ID sum: 670
+- Native Manage All Attendances direct users: 1
+- Native group user: maulanasetyawan9@gmail.com
+
+Existing Attendance details remained unchanged:
+- ID 1, Employee 3
+  - Check In: 2026-09-06 02:03:29
+  - Check Out: 2026-09-06 02:03:55
+  - Source: mobile
+  - Selfies: attachments 166 and 167
+- ID 2, Employee 3
+  - Check In: 2026-09-06 02:27:24
+  - Check Out: 2026-09-06 02:27:30
+  - Source: mobile
+  - Selfies: attachments 168 and 169
+
+MENU AND VIEW POST-CHECK
+- Manage All Attendances/history dashboard menu active: yes
+- Kiosk Mode menu active: no
+- Attendance Onboarding menu active: no
+- Attendance form create/edit/delete disabled: yes
+- Attendance list create/edit/delete disabled: yes
+- Attendance form photo zoom: yes
+- Attendance Evidence photo zoom: yes
+- Public Kiosk URL response: HTTP 404
+
+SECURITY AND API POST-CHECK
+- Anonymous Presenly attendance status still returns Odoo session error code 100.
+- Presenly mobile check-in/out integration tests passed.
+- Native Kiosk, barcode/RFID, manual selection, and systray tests proved that no Attendance was created.
+- Private mobile model entry points are inaccessible through Odoo RPC.
+- Server-side create/write/delete guards passed.
+
+TESTING
+- Tests ran only on isolated clone database:
+  odoo_presenly_readonly_test_20260906_025229
+- Filestore was copied to the clone namespace for attachment validation.
+- Final result: 34 test cases / 44 test stats.
+- Failures: 0.
+- Errors: 0.
+- The clone database and clone filestore were removed after validation.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 17 files passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-readonly-native-channel-disable-20260906-025229.dump
+- Backup size at rollout: approximately 4.3 MB.
+
+ROLLOUT
+- Before: presenly 19.0.9.0.0.
+- After: presenly 19.0.10.0.0.
+- Main server PID: 1921.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.
