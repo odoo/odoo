@@ -3950,6 +3950,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation = self._create_form_test_accrual_allocation(
             self.work_entry_type_day, '2024-01-01', self.employee_emp, self.accrual_plan_yearly_max_carriedover_days_start)
         allocation.action_approve()
+        # The amount accrued by the onchange must be saved, otherwise the yearly cap is bypassed
+        self.assertEqual(allocation.yearly_accrued_days, 21)
 
         # take 10 days in the past
         self._create_leave(self.employee_emp, self.work_entry_type_day, '2024-12-09', '2024-12-20', validate=True)
@@ -3995,6 +3997,39 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_refuse()
         self.env['hr.leave']._cancel_invalid_leaves()
         self.assertEqual(leave.state, 'cancel')
+
+    @freeze_time('2024-10-15')
+    def test_accrual_yearly_cap_onchange_rerun(self):
+        """ Assert the amount accrued by a previous run of the onchange is not kept when the start date
+            is edited several times in the form, otherwise it consumes the yearly cap of the final run
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Plan',
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'can_be_carryover': True,
+            'level_ids': [Command.create({
+                'milestone_date': 'creation',
+                'added_value': 2,
+                'frequency': 'monthly',
+                'cap_accrued_time_yearly': True,
+                'maximum_leave_yearly': 12,
+                'action_with_unused_accruals': 'lost',
+            })],
+        })
+        with Form(self.env['hr.leave.allocation'], 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
+            form.name = 'Test accrual allocation'
+            form.accrual_plan_id = accrual_plan
+            # The onchange runs a first time with the default start date (today)
+            form.employee_id = self.employee_emp
+            form.work_entry_type_id = self.work_entry_type_day
+            form.date_from = '2024-05-01'
+            form.date_from = '2024-03-01'
+        allocation = form.record
+        # 2 days per month from March to October is 16 days, capped to 12
+        self.assertEqual(allocation.number_of_days, 12)
+        self.assertEqual(allocation.yearly_accrued_days, 12)
 
     @freeze_time('2026-01-01')
     def test_department_accrual_allocation(self):
