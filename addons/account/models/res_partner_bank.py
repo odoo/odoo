@@ -22,6 +22,7 @@ class ResPartnerBank(models.Model):
     )
     partner_supplier_rank = fields.Integer(related='partner_id.supplier_rank')
     partner_customer_rank = fields.Integer(related='partner_id.customer_rank')
+    company_qr_code = fields.Boolean(related='company_id.qr_code')
     related_moves = fields.One2many('account.move', inverse_name='partner_bank_id')
     account_type = fields.Selection(selection_add=[('iban', 'IBAN'), ('clabe', 'CLABE')])
 
