@@ -28,7 +28,8 @@ class HrEmployeeBase(models.AbstractModel):
                     'work_location_id': employee[day].id,
                 }
 
-        exceptions_for_period = self.env['hr.employee.location'].search_read([
+        # sudo: for user without HR rights
+        exceptions_for_period = self.env['hr.employee.location'].sudo().search_read([
             ('employee_id', 'in', self.ids),
             ('date', '>=', start_date),
             ('date', '<=', end_date)

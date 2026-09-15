@@ -87,6 +87,7 @@ class ResPartner(models.Model):
     def action_signup_prepare(self):
         return self.signup_prepare()
 
+    @api.private
     def signup_get_auth_param(self):
         """ Get a signup token related to the partner if signup is enabled.
             If the partner already has a user, get the login parameter.
