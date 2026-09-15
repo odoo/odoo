@@ -33,7 +33,11 @@ class AccountMove(models.Model):
     peppol_can_send_response = fields.Boolean(compute='_compute_peppol_can_send_response')
 
     def button_cancel(self):
-        res = super().button_cancel()
+        # EXTENDS 'account'
+        # Cancelling a sent document is allowed: it notifies the customer (and the government
+        # for PDP) that the invoice is cancelled. It goes through `button_draft` as a shortcut,
+        # so `_check_draftable` is skipped here to not block it.
+        res = super(AccountMove, self.with_context(peppol_skip_draftable_check=True)).button_cancel()
         if action := self.action_peppol_open_rejection_wizard():
             action['context'] = {'cancel_res': res}
             return action
@@ -88,7 +92,9 @@ class AccountMove(models.Model):
 
     def _check_draftable(self):
         # EXTENDS 'account'
-        if self.filtered(lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent):
+        if not self.env.context.get('peppol_skip_draftable_check') and self.filtered(
+            lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent
+        ):
             raise UserError(self.env._(
                 "You cannot reset to draft invoices that were sent via Peppol / PDP. "
                 "If you need to modify them, you must issue a credit or debit note.",
