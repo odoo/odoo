@@ -1,6 +1,7 @@
 from collections import defaultdict
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class StockValuationReport(models.AbstractModel):
@@ -208,7 +209,10 @@ class StockValuationReport(models.AbstractModel):
             for line in lines_by_key.values()
             for account in line['valuation_amount_by_account']
         }
+
         account_ids |= {account.id for account in valuation_amount_by_account}
+        if not all(account_ids):
+            raise ValidationError(_('Accrual Accounts need to be configured in the settings.'))
         display_name_by_account_id = {
             account.id: account.display_name
             for account in self.env['account.account'].browse(account_ids)
