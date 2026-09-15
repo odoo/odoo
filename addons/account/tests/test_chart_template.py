@@ -387,8 +387,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         def local_get_data(self, template_code, demo=False):
             data = test_get_data(self, template_code)
             data['account.journal']['purchase']['color'] = 3
-            data['account.journal']['purchase']['default_account_id'] = 'test_account_expense_template'
-            data['account.journal']['purchase']['non_deductible_account_id'] = 'test_account_expense_template'
             data['account.journal']['new_general'] = {
                 'name': 'New General Journal',
                 'type': 'general',
@@ -417,6 +415,47 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
         self.assertFalse(purchase_journal.default_account_id)
+
+        def local_get_partial_journal_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['account.journal'] = {
+                'purchase': {
+                    'color': 4,
+                },
+            }
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_partial_journal_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertEqual(purchase_journal.color, 7)
+
+    def test_reload_journals_assigns_missing_account_fields(self):
+        """Reloading a chart should assign missing account fields on existing journals."""
+        purchase_journal = self.env['account.chart.template'].ref('purchase')
+        manual_default_account = self.env['account.chart.template'].ref('test_account_income_template')
+        template_account = self.env['account.chart.template'].ref('test_account_expense_template')
+
+        purchase_journal.write({
+            'default_account_id': manual_default_account.id,
+            'non_deductible_account_id': False,
+        })
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['account.journal'] = {
+                'purchase': {
+                    'default_account_id': 'test_account_expense_template',
+                    'non_deductible_account_id': 'test_account_expense_template',
+                },
+            }
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertEqual(purchase_journal.default_account_id, manual_default_account)
+        self.assertEqual(purchase_journal.non_deductible_account_id, template_account)
 
     def test_remove_fiscal_position_try_loading_force_create_false(self):
         """Test that removing a fiscal position and calling try_loading with force_create=False does not recreate it."""
