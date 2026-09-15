@@ -414,3 +414,55 @@ class TestNoSelfLockIsTakenTwice(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestThePackageImportsOnlyWhatItMayDependOn(unittest.TestCase):
+    # The `db-imports-only-libs` layer contract that went with tooling/ on
+    # 2026-09-11: the package may depend on the standard library, psycopg,
+    # odoo.libs, odoo.exceptions and odoo.release -- never on odoo.tools, the
+    # ORM, or anything that would drag the framework in behind a cursor.
+    _ALLOWED_ODOO = ("odoo.libs", "odoo.exceptions", "odoo.release", "odoo.db")
+
+    @staticmethod
+    def _imports_of(path: pathlib.Path) -> set[str]:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        guarded = {
+            id(child)
+            for node in ast.walk(tree)
+            if isinstance(node, ast.If)
+            and getattr(node.test, "id", None) == "TYPE_CHECKING"
+            for child in ast.walk(node)
+        }
+        found: set[str] = set()
+        for node in ast.walk(tree):
+            if id(node) in guarded:
+                continue
+            if isinstance(node, ast.Import):
+                found.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                found.add(node.module)
+        return found
+
+    def test_no_module_reaches_past_libs(self):
+        package = pathlib.Path(cursor.__file__).parent
+        offenders = {}
+        for path in sorted(package.glob("*.py")):
+            bad = sorted(
+                name
+                for name in self._imports_of(path)
+                if name.startswith("odoo") and not name.startswith(self._ALLOWED_ODOO)
+            )
+            if bad:
+                offenders[path.name] = bad
+        self.assertEqual(offenders, {})
+
+    def test_the_scan_sees_a_runtime_reach_and_spares_a_type_checking_one(self):
+        source = (
+            "from typing import TYPE_CHECKING\n"
+            "if TYPE_CHECKING:\n    from odoo.orm.runtime import Transaction\n"
+            "import odoo.tools\n"
+        )
+        path = pathlib.Path(self.id() + ".py")
+        path.write_text(source, encoding="utf-8")
+        self.addCleanup(path.unlink)
+        self.assertEqual(self._imports_of(path), {"typing", "odoo.tools"})

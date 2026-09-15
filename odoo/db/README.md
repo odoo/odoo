@@ -36,10 +36,12 @@ files here carry one, so this README is the only map.
 “Pure” = importable and testable without a database or the framework. No
 module here imports `odoo.tools`: the `db-imports-only-libs` contract holds the
 package to `odoo.libs`, `odoo.exceptions`, `odoo.release` and the standard
-library.
+library — re-armed in `tests/test_source_pins.py::TestThePackageImportsOnlyWhatItMayDependOn`
+after it went with `tooling/` (2026-09-11); a `TYPE_CHECKING` import is the
+one exception, and the scanner has a control showing it tells the two apart.
 
-> **Nothing enforces this table** since `tooling/` went (2026-09-11). Add the
-> row in the same commit as the module; a stale row is found by reading.
+> **Nothing enforces the rest of this table.** Add the row in the same commit
+> as the module; a stale row is found by reading.
 
 ## Load-bearing invariants (cross-module)
 
