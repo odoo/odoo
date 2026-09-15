@@ -90,19 +90,12 @@
 }
 
 .o-mail-ChatHub-optionsBtn {
-    font-size: 15px;
-    width: 24px !important;
-    height: 24px !important;
-    --border-opacity: var(--mail-ChatHub-optionsBtnUnfocusedBorderOpacity, .35);
-
-    &.o-bubblesHover i {
+    // Half-lit while only the bubbles stack is hovered.
+    &.o-bubblesHover:before {
         opacity: 50%;
     }
 
-    &:hover, &.show {
-        --border-opacity: .9;
-        i {
-            opacity: 100%;
-        }
+    &:hover:before, &.show:before {
+        opacity: 100%;
     }
 }

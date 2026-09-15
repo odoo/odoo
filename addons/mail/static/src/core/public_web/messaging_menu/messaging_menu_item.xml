@@ -26,13 +26,11 @@
                         noClasses="true"
                     >
                         <button
-                            class="btn btn-light rounded-circle d-flex h-100 w-100 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border border-dark"
+                            class="btn o-discuss-ellipsisButton h-100 w-100 o-mail-DiscussApp-sidebarBgColor"
                             t-att-class="this.actionsButtonClass"
                             t-att-title="this.actionsButtonTitle"
                             t-on-click.stop="() => this.actionsDropdownState.isOpen ? this.actionsDropdownState.close() : this.actionsDropdownState.open()"
-                        >
-                            <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
-                        </button>
+                        />
                         <t t-set-slot="content">
                             <ActionList actions="this.actionsList" dropdown="true"/>
                         </t>

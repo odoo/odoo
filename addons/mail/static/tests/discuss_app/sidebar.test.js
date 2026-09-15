@@ -629,10 +629,14 @@ test("add and remove channel from favorites updates sidebar", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem:has(:text('General')) button [data-icon='more_horiz']");
+    await click(
+        ".o-mail-NotificationItem:has(:text('General')) .o-mail-MessagingMenu-actions button"
+    );
     await click(".o-dropdown-item:contains('Add to Favorites')");
     await contains(".o-mail-MessagingMenuItem:has(:text('General')) [data-icon='star']");
-    await click(".o-mail-NotificationItem:has(:text('General')) button [data-icon='more_horiz']");
+    await click(
+        ".o-mail-NotificationItem:has(:text('General')) .o-mail-MessagingMenu-actions button"
+    );
     await click(".o-dropdown-item:contains('Remove from Favorites')");
     await contains(".o-mail-MessagingMenuItem:has(:text('General')) [data-icon='star']", {
         count: 0,

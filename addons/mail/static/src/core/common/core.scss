@@ -104,6 +104,29 @@ $o-bubble-colors: (
     }
 }
 
+.o-discuss-ellipsisButton {
+    @include material-icon-base;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    padding: 0;
+    border-radius: 50%;
+    --btn-border-color: #{rgba($dark, var(--o-discuss-ellipsisButton-mutedBorderOpacity, .5))};
+    --btn-hover-border-color: #{$dark};
+    --btn-active-border-color: #{$o-action};
+    --btn-hover-color: #{color-contrast($light)};
+    --btn-active-color: #{color-contrast($light)};
+
+    &::before {
+        content: "more_horiz" / ""; // empty alt text: keeps the ligature out of the accessible name
+        font-size: map-get($icon-sizes, 'lg'); // .oi-lg
+        width: #{$oi-fw-ratio}em; // .oi-fw
+        text-align: center;
+    }
+}
+
 .o-discuss-mobileContextMenu {
     top: auto !important;
 }
