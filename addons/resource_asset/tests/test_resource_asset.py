@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 from lxml import etree
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import TransactionCase, new_test_user, tagged
+from odoo.tests import Form, TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
 
@@ -34,6 +34,14 @@ class TestResourceAsset(TransactionCase):
         self.assertEqual(truck.resource_id.asset_id, truck)
         truck.name = "Truck 7"
         self.assertEqual(truck.resource_id.name, "Truck 7")
+
+    def test_an_asset_created_through_a_form_is_active(self):
+        form = Form(self.Asset)
+        form.name = "Form truck"
+        form.kind_id = self.vehicle
+        truck = form.save()
+        self.assertTrue(truck.active)
+        self.assertTrue(truck.resource_id.active)
 
     def test_an_unscheduled_kind_is_available_around_the_clock(self):
         truck = self._truck(company_id=self.env.company.id)

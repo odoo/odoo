@@ -23,6 +23,7 @@ class ResourceAsset(models.Model):
     )
     active = fields.Boolean(
         related="resource_id.active",
+        default=True,
         store=True,
         readonly=False,
     )
