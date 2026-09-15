@@ -197,6 +197,7 @@ class IrCron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
+                cls._lock_registry_changes(cron_cr)
                 cls._process_jobs_loop(cron_cr, job_ids=[job['id'] for job in jobs])
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
@@ -289,6 +290,14 @@ class IrCron(models.Model):
             cr.commit()
         # reset done or failed, in any case, raise to re-check other conditions
         raise BadModuleState()
+
+    @staticmethod
+    def _lock_registry_changes(cr):
+        """Acquire a shared session lock on the registry to prevent it from updating."""
+        try:
+            cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading')) NOWAIT", log_exceptions=False)
+        except psycopg2.OperationalError:
+            raise BadModuleState()
 
     @staticmethod
     def _get_ready_sql_condition(cr: BaseCursor) -> SQL:

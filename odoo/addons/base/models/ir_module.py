@@ -616,12 +616,10 @@ class IrModuleModule(models.Model):
         try:
             self.env.cr.execute("SET LOCAL lock_timeout = '10s'")
             # raise error if database is updating for module operations
-            # acquire the shared-lock for the current transaction only
-            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading'))")
+            # acquire the exclusive-lock for the current transaction only
+            self.env.cr.execute("SELECT pg_advisory_xact_lock(hashtext('registry_loading'))")
             # raise error if another transaction is trying to schedule module operations concurrently
             self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
-            # check if cron jobs are running
-            self.env.cr.execute("LOCK ir_cron IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
             self.env.cr.rollback()
             # find which crons are running
