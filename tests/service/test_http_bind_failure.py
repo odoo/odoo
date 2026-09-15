@@ -1,4 +1,5 @@
 import logging
+import threading
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -13,6 +14,9 @@ def failing_bind():
 @pytest.fixture
 def server():
     srv = _threaded.ThreadedServer.__new__(_threaded.ThreadedServer)
+    srv._listener_threads = []
+    srv._listener_stop = threading.Event()
+    srv._listener_stop_pipe = None
     srv.logger = logging.getLogger("odoo.service.server.ThreadedServer")
     srv.interface = "0.0.0.0"
     srv.port = 8069

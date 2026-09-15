@@ -23,7 +23,7 @@ from odoo.tools import profiler
 from odoo.tools.misc import stripped_sys_argv
 
 from . import _process_state
-from ._env import _IS_POSIX, _IS_WINDOWS, get_env_float, get_env_int
+from ._env import IS_POSIX, IS_WINDOWS, get_env_float, get_env_int
 from .settings import current
 
 if TYPE_CHECKING:
@@ -80,10 +80,14 @@ def _reexec_server() -> None:
     os.execve(sys.executable, args, os.environ)  # noqa: S606  re-exec of ourselves IS the restart
 
 
-def _get_assertion_report(dbname: str) -> OdooTestResult:
+def _find_assertion_report(dbname: str) -> OdooTestResult | None:
     from odoo.tests.result import assertion_report
 
-    report = assertion_report(dbname)
+    return assertion_report(dbname)
+
+
+def _get_assertion_report(dbname: str) -> OdooTestResult:
+    report = _find_assertion_report(dbname)
     if report is None:
         raise RuntimeError(
             f"no assertion report for {dbname!r}: test_enable is off in the "
@@ -205,7 +209,7 @@ def _limit_resident_registries(dbnames: list[str]) -> None:
     )
     source = "env"  # debuglog
     if not registries_size:
-        if _IS_POSIX:
+        if IS_POSIX:
             avgsz = 15 * 1024 * 1024
             configured_soft_limit = current().limit_memory_soft
             limit_memory_soft = (
@@ -294,9 +298,7 @@ def preload_registries(dbnames: list[str] | None) -> int:
             _logger.critical(
                 "Failed to initialize database `%s`.", dbname, exc_info=True
             )
-            from odoo.tests.result import assertion_report
-
-            if (report := assertion_report(dbname)) is not None:
+            if (report := _find_assertion_report(dbname)) is not None:
                 report.record_abort(f"{type(exc).__name__}: {exc}")
             _debug.logic("service.preload_failed", db=dbname)
             return -1
@@ -432,8 +434,8 @@ def restart() -> None:
         )
         _debug.logic("service.restart_ignored", reason="no_server")
         return
-    _debug.lifecycle("service.restart_requested", pid=server.pid, windows=_IS_WINDOWS)
-    if _IS_WINDOWS:
+    _debug.lifecycle("service.restart_requested", pid=server.pid, windows=IS_WINDOWS)
+    if IS_WINDOWS:
         threading.Thread(target=_reexec_server).start()
     else:
         import signal

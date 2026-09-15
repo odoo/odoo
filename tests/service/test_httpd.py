@@ -15,6 +15,8 @@ from odoo.service import _transport as transport
 from odoo.service import httpd
 from odoo.service import settings as server_settings
 
+_SLOW_GATE = threading.Event()
+
 
 def _app(environ, start_response):
     path = environ["PATH_INFO"]
@@ -40,6 +42,8 @@ def _app(environ, start_response):
         return Upgraded()
     if path == "/rpc":
         threading.current_thread().rpc_model_method = "res.users.read"
+    if path == "/slow":
+        _SLOW_GATE.wait(5)
     body = environ["wsgi.input"].read()
     out = json.dumps(
         {
@@ -872,3 +876,58 @@ def test_the_application_failing_on_a_head_request_gets_a_bodiless_500(server):
     head, _, body = raw.partition(b"\r\n\r\n")
     assert head.startswith(b"HTTP/1.1 500 Internal Server Error")
     assert body == b""
+
+
+class TestDrain:
+    """`drain()` waits for the busy pool threads `shutdown()` leaves running."""
+
+    def _slow_request(self, srv):
+        _SLOW_GATE.clear()
+        sock = socket.create_connection(("127.0.0.1", srv.server_port))
+        sock.sendall(b"GET /slow HTTP/1.1\r\nHost: x\r\n\r\n")
+        deadline = time.monotonic() + 3
+        while not srv.busy_workers and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert srv.busy_workers == 1
+        return sock
+
+    def test_a_request_in_flight_is_answered_before_the_listener_closes(self):
+        with _server() as srv:
+            sock = self._slow_request(srv)
+            srv.shutdown()
+            threading.Timer(0.3, _SLOW_GATE.set).start()
+            t0 = time.monotonic()
+            assert srv.drain(5.0) == 0
+            assert 0.2 < time.monotonic() - t0 < 3
+            sock.settimeout(3)
+            assert sock.recv(64).startswith(b"HTTP/1.1 200")
+            sock.close()
+
+    def test_a_thread_given_up_on_is_not_waited_for(self):
+        with _server() as srv:
+            sock = self._slow_request(srv)
+            srv.shutdown()
+            t0 = time.monotonic()
+            assert srv.drain(5.0, stuck=1) == 0
+            assert time.monotonic() - t0 < 0.5
+            _SLOW_GATE.set()
+            sock.close()
+
+    def test_the_bound_expires_with_a_warning_that_names_the_knob(self, caplog):
+        with _server() as srv, caplog.at_level(logging.WARNING, "odoo.service.server"):
+            sock = self._slow_request(srv)
+            srv.shutdown()
+            assert srv.drain(0.2) == 1
+            _SLOW_GATE.set()
+            sock.close()
+        assert any(
+            "ODOO_GRACEFUL_STOP_TIMEOUT" in r.getMessage() and r.args[0] == 1
+            for r in caplog.records
+        )
+
+    def test_nothing_in_flight_returns_at_once(self):
+        with _server() as srv:
+            srv.shutdown()
+            t0 = time.monotonic()
+            assert srv.drain(5.0) == 0
+            assert time.monotonic() - t0 < 0.1

@@ -715,3 +715,36 @@ class ThreadedHTTPServer:
     @property
     def busy_workers(self) -> int:
         return self._pool.busy
+
+    def drain(self, timeout: float, *, stuck: int = 0) -> int:
+        # `shutdown()` stopped the listener and every idle connection; the
+        # pool's busy threads are answering real requests, and closing the
+        # socket under them is what a stop used to do to their clients.  The
+        # caller names how many of the busy threads it has given up on.
+        def pending() -> int:
+            return max(self._pool.busy - stuck, 0)
+
+        busy = pending()
+        if not busy:
+            return 0
+        deadline = time.monotonic() + timeout
+        _logger.info(
+            "Waiting up to %.0fs for %d in-flight request(s) to finish", timeout, busy
+        )
+        _debug.lifecycle("httpd.draining", busy=busy, stuck=stuck, timeout=timeout)
+        while pending() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        remaining = pending()
+        if remaining:
+            _logger.warning(
+                "%d request(s) still running %.0fs after the stop signal; "
+                "closing the listener under them (ODOO_GRACEFUL_STOP_TIMEOUT)",
+                remaining,
+                timeout,
+            )
+        _debug.lifecycle(
+            "httpd.drained",
+            remaining=remaining,
+            seconds=time.monotonic() - (deadline - timeout),
+        )
+        return remaining

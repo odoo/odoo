@@ -23,7 +23,7 @@ from ._checks import check_db_management_enabled, check_db_name
 from .listing import check_db_exposed
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterator
 
     from odoo.db import BaseCursor
 else:
@@ -90,27 +90,6 @@ def _prepare_pg_dump_failed_error(returncode: int, stderr: bytes) -> RuntimeErro
     return RuntimeError(
         f"pg_dump failed (exit {returncode}): {stderr.decode(errors='replace').strip()}"
     )
-
-
-def _run_pg_dump_blocking(cmd: list[str], env: dict, *, stdout: Any) -> None:
-    timeout = _get_pg_dump_total_timeout()
-    try:
-        with _debug.perf("database.dump.pg_dump", mode="blocking", timeout=timeout):
-            result = subprocess.run(
-                cmd,
-                env=env,
-                stdin=subprocess.DEVNULL,
-                stdout=stdout,
-                stderr=subprocess.PIPE,
-                check=False,
-                timeout=timeout,
-            )
-    except subprocess.TimeoutExpired as e:
-        _debug.logic("database.dump.timed_out", mode="blocking", timeout=timeout)
-        raise _prepare_timeout_error(timeout) from e
-    if result.returncode != 0:
-        _debug.logic("database.dump.failed", returncode=result.returncode)
-        raise _prepare_pg_dump_failed_error(result.returncode, result.stderr)
 
 
 _STALL_SIGKILL_GRACE_S = 10.0
@@ -180,7 +159,7 @@ def _reap_pg_dump(proc: subprocess.Popen) -> None:
             proc.wait()
 
 
-def _run_pg_dump_streaming(cmd: list[str], env: dict, stream: IO[bytes]) -> None:
+def _run_pg_dump(cmd: list[str], env: dict, stream: IO[bytes]) -> None:
     proc = subprocess.Popen(
         cmd,
         env=env,
@@ -308,7 +287,7 @@ def _write_zip_dump(
         zipf.writestr("manifest.json", json.dumps(manifest, indent=4))
         _debug.pipeline("database.dump.zip.manifest_written", db=db_name)
         with zipf.open("dump.sql", "w", force_zip64=True) as sql_member:
-            _run_pg_dump_streaming(cmd, env, sql_member)
+            _run_pg_dump(cmd, env, sql_member)
         _debug.pipeline(
             "database.dump.zip.sql_written", db=db_name, filestore=with_filestore
         )
@@ -349,28 +328,28 @@ def dump_db(
         streaming=stream is not None,
     ):
         if backup_format == "zip":
-            if stream:
-                _write_zip_dump(db_name, stream, cmd, env, with_filestore)
-            else:
-                t = tempfile.TemporaryFile()  # noqa: SIM115  `t` IS the return value; the caller owns and closes it
-                try:
-                    _write_zip_dump(db_name, t, cmd, env, with_filestore)
-                    t.seek(0)
-                except BaseException:
-                    t.close()
-                    raise
-                return t
+
+            def write(target: IO[bytes]) -> None:
+                _write_zip_dump(db_name, target, cmd, env, with_filestore)
+
         else:
             cmd.insert(-1, "--format=c")
-            if stream:
-                _run_pg_dump_streaming(cmd, env, stream)
-            else:
-                t = tempfile.TemporaryFile()  # noqa: SIM115  returned to the caller, as above
-                try:
-                    _run_pg_dump_blocking(cmd, env, stdout=t)
-                    t.seek(0)
-                except BaseException:
-                    t.close()
-                    raise
-                return t
-    return None
+
+            def write(target: IO[bytes]) -> None:
+                _run_pg_dump(cmd, env, target)
+
+        if stream is not None:
+            write(stream)
+            return None
+        return _dump_into_tempfile(write)
+
+
+def _dump_into_tempfile(write: Callable[[IO[bytes]], None]) -> IO[bytes]:
+    t = tempfile.TemporaryFile()  # noqa: SIM115  the caller owns and closes it
+    try:
+        write(t)
+        t.seek(0)
+    except BaseException:
+        t.close()
+        raise
+    return t

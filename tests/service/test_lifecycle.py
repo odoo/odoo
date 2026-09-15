@@ -525,7 +525,7 @@ class TestRestartGuard:
 
         with (
             patch("odoo.service._process_state.server", fake_server),
-            patch("odoo.service.lifecycle._IS_WINDOWS", False),
+            patch("odoo.service.lifecycle.IS_WINDOWS", False),
             patch.object(os, "kill") as mock_kill,
         ):
             srv.restart()
@@ -534,6 +534,9 @@ class TestRestartGuard:
 
     def test_threaded_server_reload_delegates_to_lifecycle(self, srv):
         ts = object.__new__(srv.ThreadedServer)
+        ts._listener_threads = []
+        ts._listener_stop = threading.Event()
+        ts._listener_stop_pipe = None
         ts.pid = 12345
         with patch("odoo.service._threaded.restart") as mock_restart:
             ts.reload()
@@ -541,12 +544,15 @@ class TestRestartGuard:
 
     def test_threaded_server_reload_is_windows_safe(self, srv):
         ts = object.__new__(srv.ThreadedServer)
+        ts._listener_threads = []
+        ts._listener_stop = threading.Event()
+        ts._listener_stop_pipe = None
         ts.pid = 12345
         from odoo.service import lifecycle
 
         with (
             patch("odoo.service._process_state.server", ts),
-            patch.object(lifecycle, "_IS_WINDOWS", True),
+            patch.object(lifecycle, "IS_WINDOWS", True),
             patch.object(lifecycle, "_reexec_server") as mock_reexec,
             patch.object(lifecycle.threading, "Thread") as mock_thread,
         ):
@@ -565,8 +571,8 @@ class TestSigHupSentinel:
     def test_local_sentinel_exported(self):
         from odoo.service import _base_server
 
-        assert hasattr(_base_server, "_SIGHUP_AVAILABLE")
-        assert isinstance(_base_server._SIGHUP_AVAILABLE, bool)
+        assert hasattr(_base_server, "SIGHUP_AVAILABLE")
+        assert isinstance(_base_server.SIGHUP_AVAILABLE, bool)
 
     def test_on_posix_sentinel_is_true(self):
         import os
@@ -574,13 +580,13 @@ class TestSigHupSentinel:
         from odoo.service import _base_server
 
         if os.name == "posix":
-            assert _base_server._SIGHUP_AVAILABLE is True
+            assert _base_server.SIGHUP_AVAILABLE is True
 
     def test_the_facade_advertises_only_what_it_exports(self):
         """`server` is the public face; private module state lives at home."""
         from odoo.service import server
 
-        for private in ("_on_stop_hooks", "_SIGHUP_AVAILABLE", "FSWatcherBase"):
+        for private in ("_on_stop_hooks", "SIGHUP_AVAILABLE", "FSWatcherBase"):
             assert not hasattr(server, private), (
                 f"odoo.service.server re-exports {private}, which is in no "
                 f"__all__ and has no consumer outside this suite"

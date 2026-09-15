@@ -239,7 +239,7 @@ def dispatch(dispatch_method: str, params: Sequence) -> typing.Any:
             kw = {}
         else:
             if len(args) == 1:
-                args += ({},)
+                args.append({})
             elif len(args) != 2:
                 _debug.logic(
                     "rpc.dispatch.refused",

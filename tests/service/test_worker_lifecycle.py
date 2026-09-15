@@ -6,6 +6,7 @@ import resource
 import select
 import selectors
 import socket
+from collections import deque
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -69,8 +70,8 @@ class TestWorkerConstructionIsAllOrNothing:
 
     def test_a_successful_construction_keeps_both_pipes(self, multi):
         worker = _worker.Worker(multi)
-        assert len(set(worker.watchdog_pipe) | set(worker.eintr_pipe)) == 4
-        assert worker.wakeup_fd_r, worker.wakeup_fd_w == worker.eintr_pipe
+        assert len(set(worker.watchdog_pipe) | set(worker.wakeup_pipe)) == 4
+        assert worker.wakeup_pipe[0], worker.wakeup_pipe[1] == worker.wakeup_pipe
         worker.close()
 
     def test_close_releases_every_descriptor_it_took(self, multi):
@@ -188,12 +189,12 @@ class TestWorkerStart:
 
     def test_the_wakeup_fd_is_the_workers_own_eintr_pipe(self, started):
         worker, signal_mod, _, _ = started
-        signal_mod.set_wakeup_fd.assert_called_once_with(worker.wakeup_fd_w)
+        signal_mod.set_wakeup_fd.assert_called_once_with(worker.wakeup_pipe[1])
 
     def test_the_selector_watches_that_pipe(self, started):
         worker, _, selectors_mod, _ = started
         selector = selectors_mod.DefaultSelector.return_value
-        assert selector.register.call_args.args[0] == worker.wakeup_fd_r
+        assert selector.register.call_args.args[0] == worker.wakeup_pipe[0]
 
     def test_a_listening_socket_is_marked_cloexec_and_non_blocking(self, multi):
         sock = socket.socket()
@@ -271,7 +272,7 @@ class TestAcceptWaitsForTheListenerToBeReadable:
     def _worker(self, multi, ready_fds):
         worker = object.__new__(_worker.WorkerHTTP)
         worker.multi = multi
-        worker.wakeup_fd_r = 40
+        worker.wakeup_pipe = (40, 41)
         worker._selector = MagicMock()
         worker._selector.select.return_value = [
             (MagicMock(fd=fd), selectors.EVENT_READ) for fd in ready_fds
@@ -354,6 +355,8 @@ class TestTheCursorIsReleasedAndTheConnectionIsLeftAlone:
     def test_worker_stop_releases_through_it(self):
         """The clean-teardown site: this is the one that printed on SIGTERM."""
         worker = _worker.WorkerCron.__new__(_worker.WorkerCron)
+        worker.request_count = 0
+        worker.db_queue = deque()
         cursor, order = self._recording_cursor()
         worker.listener = _cron.CronListener("ch", _cron._logger)
         worker.listener._cursor = cursor

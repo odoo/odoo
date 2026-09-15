@@ -1,5 +1,6 @@
 import contextlib
 import socket
+import threading
 import time
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
@@ -19,6 +20,9 @@ class _Stop(SystemExit):
 @pytest.fixture
 def server():
     srv = object.__new__(_threaded.ThreadedServer)
+    srv._listener_threads = []
+    srv._listener_stop = threading.Event()
+    srv._listener_stop_pipe = None
     srv.logger = MagicMock()
     srv.quit_signals_received = 0
     srv.limit_reached_time = None
@@ -346,6 +350,9 @@ class TestStopAfterInitReportLevel:
 class TestHasOtherHttpRequests:
     def _ask(self, over_limit, threads):
         srv = object.__new__(_threaded.ThreadedServer)
+        srv._listener_threads = []
+        srv._listener_stop = threading.Event()
+        srv._listener_stop_pipe = None
         srv.limits_reached_threads = set(over_limit)
         with patch.object(_threaded.threading, "enumerate", return_value=threads):
             return srv._has_other_http_requests()

@@ -134,6 +134,9 @@ class TestServiceMetrics:
         from odoo.service._threaded import ThreadedServer
 
         server = object.__new__(ThreadedServer)
+        server._listener_threads = []
+        server._listener_stop = threading.Event()
+        server._listener_stop_pipe = None
         server.httpd = MagicMock(max_http_threads=31)
         server.limits_reached_threads = set()
         server._overrun_start_times = {}
@@ -415,6 +418,9 @@ class TestReportingAndRecyclingAreDifferentQuestions:
         from odoo.service._threaded import ThreadedServer
 
         server = object.__new__(ThreadedServer)
+        server._listener_threads = []
+        server._listener_stop = threading.Event()
+        server._listener_stop_pipe = None
         server.httpd = None
         server.limits_reached_threads = set()
         server._overrun_start_times = {}

@@ -30,7 +30,7 @@ def sizing(monkeypatch, registry_limits):
         Registry.registries.count = resident
         with (
             server_settings.override(**cfg),
-            patch.object(lifecycle, "_IS_POSIX", posix),
+            patch.object(lifecycle, "IS_POSIX", posix),
         ):
             lifecycle._limit_resident_registries(list(dbnames))
         return Registry.registries.count, Registry.idle_timeout

@@ -19,6 +19,7 @@ from .._env import get_env_float, get_env_int
 from ._checks import check_db_management_enabled, check_db_name
 from ._dump_scanner import _check_dump_sql_safe
 from .lifecycle import (
+    _announce_database,
     _check_filestore_dest_free,
     _create_empty_database,
     _rollback_new_database,
@@ -304,3 +305,4 @@ def restore_db(
         _debug.logic("database.restore.failed", db=db)
         _rollback_new_database(db, "RESTORE DB")
         raise
+    _announce_database(db)

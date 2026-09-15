@@ -82,7 +82,7 @@ class TestSubprocessPipeOwnership:
         try:
             assert not proc.stdout.closed, (
                 "a held traceback no longer keeps the frame's Popen alive; the "
-                "fd-retention rationale in _run_pg_dump_streaming is stale"
+                "fd-retention rationale in _run_pg_dump is stale"
             )
         finally:
             proc.stdout.close()

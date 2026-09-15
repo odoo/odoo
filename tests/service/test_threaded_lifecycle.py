@@ -14,8 +14,10 @@ from odoo.service import settings as server_settings
 @pytest.fixture
 def server():
     s = object.__new__(_threaded.ThreadedServer)
+    s._listener_threads = []
+    s._listener_stop = threading.Event()
+    s._listener_stop_pipe = None
     s.pid = os.getpid()
-    s.main_thread_id = threading.current_thread().ident
     s.quit_signals_received = 0
     s.httpd = None
     s.limits_reached_threads = set()
@@ -27,6 +29,29 @@ def server():
     s.interface, s.port = "127.0.0.1", 8069
     s.app = MagicMock()
     return s
+
+
+class TestWindowsConsoleEventsAreSignals:
+    @pytest.mark.parametrize(
+        ("event", "sig"),
+        [
+            (0, signal.SIGINT),
+            (1, signal.SIGINT),
+            (2, signal.SIGTERM),
+            (6, signal.SIGTERM),
+        ],
+    )
+    def test_a_known_event_reaches_the_signal_handler_as_a_signal(
+        self, server, event, sig
+    ):
+        with patch.object(server, "signal_handler") as handler:
+            assert server._handle_console_event(event) is True
+        handler.assert_called_once_with(sig, None)
+
+    def test_an_unknown_event_is_left_to_the_next_handler(self, server):
+        with patch.object(server, "signal_handler") as handler:
+            assert server._handle_console_event(99) is False
+        handler.assert_not_called()
 
 
 class TestSignalHandlerBehaviour:
@@ -77,14 +102,14 @@ class TestSignalHandlerOnAPlatformWithoutSighup:
     ):
         with (
             patch.object(_threaded, "signal", windows_signal),
-            patch.object(_threaded, "_SIGHUP_AVAILABLE", False),
+            patch.object(_threaded, "SIGHUP_AVAILABLE", False),
         ):
             server.signal_handler(signal.SIGUSR1, None)
 
     def test_quit_signals_still_work_without_sighup(self, server, windows_signal):
         with (
             patch.object(_threaded, "signal", windows_signal),
-            patch.object(_threaded, "_SIGHUP_AVAILABLE", False),
+            patch.object(_threaded, "SIGHUP_AVAILABLE", False),
         ):
             with pytest.raises(KeyboardInterrupt):
                 server.signal_handler(signal.SIGTERM, None)
@@ -99,7 +124,7 @@ class TestStartInstallsTheHandlers:
         with (
             server_settings.override(**cfg),
             patch.object(_threaded.signal, "signal", side_effect=seen.__setitem__),
-            patch.object(_threaded, "_IS_POSIX", True),
+            patch.object(_threaded, "IS_POSIX", True),
         ):
             server.start()
         return seen, server
@@ -203,57 +228,54 @@ class TestGracefulStop:
             "shutdown can be forced"
         )
 
-    def test_in_flight_requests_finish_before_the_listener_closes(self, server):
-        """A SIGTERM used to close the socket under every busy request thread."""
-        remaining = [2, 1, 0]
-        httpd = MagicMock()
-        type(httpd).busy_workers = property(lambda _self: remaining[0])
-        order = []
-        httpd.shutdown.side_effect = lambda: order.append("shutdown")
-        httpd.server_close.side_effect = lambda: order.append("server_close")
+    def test_stop_drains_the_http_server_before_closing_it(self, stopped):
+        server, _, _, _ = stopped()
+        names = [call[0] for call in server.httpd.mock_calls]
+        assert (
+            names.index("shutdown") < names.index("drain") < names.index("server_close")
+        )
 
-        def tick(_seconds):
-            order.append(f"busy={remaining[0]}")
-            remaining.pop(0)
-
-        with patch.object(_threaded.time, "sleep", tick):
-            server._drain_http_requests(httpd)
-            httpd.shutdown()
-            httpd.server_close()
-        assert order == ["busy=2", "busy=1", "shutdown", "server_close"]
-
-    def test_a_request_over_its_time_limit_is_not_waited_for(self, server):
+    def test_a_request_over_its_time_limit_is_given_up_on(self, stopped):
         stuck = MagicMock()
         stuck.type = "http"
         stuck.is_alive.return_value = True
-        server.limits_reached_threads = {stuck}
-        httpd = MagicMock(busy_workers=1)
-        with patch.object(_threaded.time, "sleep") as sleep:
-            server._drain_http_requests(httpd)
-        sleep.assert_not_called()
+        finished = MagicMock()
+        finished.type = "http_idle"
+        finished.is_alive.return_value = True
+        server, _, _, _ = stopped(limits_reached_threads={stuck, finished})
+        assert server.httpd.drain.call_args.kwargs == {"stuck": 1}
 
-    def test_the_drain_is_bounded_and_says_so(self, server, monkeypatch):
-        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "1")
-        httpd = MagicMock(busy_workers=1)
-        clock = iter([0.0, 0.0, 0.5, 1.5, 1.5])
-        with (
-            patch.object(_threaded.time, "monotonic", lambda: next(clock)),
-            patch.object(_threaded.time, "sleep"),
-        ):
-            server._drain_http_requests(httpd)
-        message, remaining, timeout = server.logger.warning.call_args.args
-        assert (remaining, timeout) == (1, 1.0)
-        assert "ODOO_GRACEFUL_STOP_TIMEOUT" in message
+    def test_the_drain_bound_is_the_graceful_stop_timeout(self, stopped, monkeypatch):
+        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "7")
+        server, _, _, _ = stopped()
+        assert server.httpd.drain.call_args.args == (7.0,)
 
-    def test_a_hung_non_daemon_thread_cannot_stall_the_stop_forever(self, stopped):
-        hung = MagicMock()
-        hung.daemon = False
-        hung.ident = -1
-        hung.is_alive.return_value = True
-        with patch.object(_threaded.threading, "enumerate", return_value=[hung]):
-            t0 = time.monotonic()
-            stopped()
-        assert time.monotonic() - t0 < 5, "stop() did not bound its join loop"
+    def test_a_listener_thread_mid_job_cannot_stall_the_stop(self, stopped):
+        busy = threading.Event()
+        released = threading.Event()
+        thread = threading.Thread(
+            target=lambda: (busy.set(), released.wait(5)), daemon=True
+        )
+        thread.start()
+        busy.wait(1)
+        t0 = time.monotonic()
+        server, _, _, _ = stopped(_listener_threads=[thread])
+        elapsed = time.monotonic() - t0
+        released.set()
+        assert server._listener_stop.is_set()
+        assert _threaded.LISTENER_JOIN_TIMEOUT_S <= elapsed < 3
+        said = " ".join(str(c) for c in server.logger.info.call_args_list)
+        assert "still busy at shutdown" in said
+
+    def test_the_listener_wakeup_pipe_is_written_and_closed(self, stopped):
+        pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
+        with patch.object(_threaded.os, "close") as close:
+            server, _, _, _ = stopped(_listener_stop_pipe=pipe)
+        assert os.read(pipe[0], 8) == b"."
+        assert sorted(c.args[0] for c in close.call_args_list) == sorted(pipe)
+        assert server._listener_stop_pipe is None
+        for fd in pipe:
+            os.close(fd)
 
 
 class TestTheFixtureMatchesTheConstructor:

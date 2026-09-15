@@ -481,7 +481,7 @@ class FSWatcherInotify(FSWatcherBase):
         _debug.lifecycle("watcher.stopped", backend="inotify", joined=True)
 
     def _release_watcher(self) -> None:
-        watcher, self.watcher = getattr(self, "watcher", None), None
+        watcher, self.watcher = self.watcher, None
         if watcher is not None:
             watcher.close()
             _debug.lifecycle("watcher.released", backend="inotify")

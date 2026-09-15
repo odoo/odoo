@@ -1498,12 +1498,16 @@ class TestABadMethodNameIsAClientErrorNotAServerFault:
             "a bad RPC method name is still reported as a server fault"
         )
 
-    def test_it_is_the_attribute_the_http_layer_reads(self) -> None:
+    def test_it_is_the_attribute_the_http_layer_reads(self, caplog) -> None:
         """Pin the seam, so renaming it on either side cannot pass silently."""
-        import inspect
+        import logging as _logging
 
         from odoo.http import application
 
-        src = inspect.getsource(application.Application._log_request_exception)
-        assert 'hasattr(exc, "loglevel")' in src
-        assert "exc.loglevel" in src
+        error = AttributeError("The method 'res.users.nope' does not exist")
+        error.loglevel = _logging.WARNING
+        with caplog.at_level(_logging.DEBUG, logger=application._logger.name):
+            application.Application._log_request_exception(MagicMock(), error)
+        (record,) = [r for r in caplog.records if r.name == application._logger.name]
+        assert record.levelno == _logging.WARNING
+        assert "res.users.nope" in record.getMessage()

@@ -713,6 +713,9 @@ class TestIdleRegistryEvictionRunsOnEveryPulse:
 
     def test_threaded_check_limits_sweeps(self, srv):
         ts = object.__new__(srv.ThreadedServer)
+        ts._listener_threads = []
+        ts._listener_stop = threading.Event()
+        ts._listener_stop_pipe = None
         ts.logger = MagicMock()
         ts.limits_reached_threads = set()
         ts._overrun_start_times = {}
@@ -794,6 +797,7 @@ class TestCommonServerCallbacks:
 
     def test_stop_calls_all_registered_callbacks(self, srv):
         server = object.__new__(srv.CommonServer)
+        server.pid = os.getpid()
         server.logger = MagicMock()
         cb1, cb2 = MagicMock(), MagicMock()
         _base_server._on_stop_hooks.extend([cb1, cb2])
@@ -803,6 +807,7 @@ class TestCommonServerCallbacks:
 
     def test_stop_continues_after_callback_exception(self, srv):
         server = object.__new__(srv.CommonServer)
+        server.pid = os.getpid()
         server.logger = MagicMock()
         cb1 = MagicMock(side_effect=RuntimeError("boom"))
         cb1.__name__ = "cb1"
@@ -816,6 +821,7 @@ class TestCommonServerCallbacks:
         import functools
 
         server = object.__new__(srv.CommonServer)
+        server.pid = os.getpid()
         server.logger = MagicMock()
 
         def _boom(_tag):
@@ -1321,6 +1327,9 @@ class TestPreforkWorkerKill:
 @pytest.fixture
 def tserver(srv):
     s = object.__new__(srv.ThreadedServer)
+    s._listener_threads = []
+    s._listener_stop = threading.Event()
+    s._listener_stop_pipe = None
     s.limits_reached_threads = set()
     s._overrun_start_times = {}
     s.limit_reached_time = None
@@ -1579,6 +1588,7 @@ class TestOnStopFuncsModuleLevel:
         assert len(_base_server._on_stop_hooks) == before + 1
 
         instance = object.__new__(srv.CommonServer)
+        instance.pid = os.getpid()
         instance.logger = MagicMock()
         instance.stop()
         cb.assert_called_once()
@@ -1755,6 +1765,9 @@ class TestEventServerGracefulStop:
 class TestProcessLimitRealTimeLog:
     def test_overrun_logs_fractional_seconds(self, srv):
         ts = object.__new__(srv.ThreadedServer)
+        ts._listener_threads = []
+        ts._listener_stop = threading.Event()
+        ts._listener_stop_pipe = None
         ts.logger = MagicMock()
         ts.limits_reached_threads = set()
         ts._overrun_start_times = {}
@@ -1794,6 +1807,9 @@ class _StopHarness(BaseException):
 def listen_server(srv, monkeypatch):
     monkeypatch.setattr(threading.current_thread(), "start_time", None, raising=False)
     s = object.__new__(srv.ThreadedServer)
+    s._listener_threads = []
+    s._listener_stop = threading.Event()
+    s._listener_stop_pipe = None
     s.logger = MagicMock()
     return s
 

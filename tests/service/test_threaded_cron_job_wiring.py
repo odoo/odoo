@@ -1,3 +1,4 @@
+import threading
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -10,6 +11,9 @@ from odoo.service._cron import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL
 @pytest.fixture
 def server():
     obj = object.__new__(_threaded.ThreadedServer)
+    obj._listener_threads = []
+    obj._listener_stop = threading.Event()
+    obj._listener_stop_pipe = None
     obj.logger = MagicMock()
     return obj
 

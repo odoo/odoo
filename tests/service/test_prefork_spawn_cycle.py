@@ -255,7 +255,7 @@ class TestSignalHandlerCoalescesSigchld:
 def _fake_worker():
     w = MagicMock()
     w.watchdog_pipe = os.pipe()
-    w.eintr_pipe = os.pipe()
+    w.wakeup_pipe = os.pipe()
     return w
 
 
@@ -273,12 +273,12 @@ class TestChildClosesInheritedFds:
         newborn = _fake_worker()
         prefork.workers = {111: sibling}
         prefork._close_inherited_pipe_fds_in_child(newborn)
-        sibling_fds = [*sibling.watchdog_pipe, *sibling.eintr_pipe]
+        sibling_fds = [*sibling.watchdog_pipe, *sibling.wakeup_pipe]
         assert not any(_is_open(fd) for fd in sibling_fds), (
             f"the child kept a sibling's pipe fds open {sibling_fds}: the "
             "sibling's reader never sees EOF when that worker dies"
         )
-        for fd in (*newborn.watchdog_pipe, *newborn.eintr_pipe):
+        for fd in (*newborn.watchdog_pipe, *newborn.wakeup_pipe):
             assert _is_open(fd), "the child closed its OWN watchdog/eintr pipe"
             os.close(fd)
 
@@ -291,7 +291,7 @@ class TestChildClosesInheritedFds:
             "delivered to the child would ping the master's select loop"
         )
         prefork.pipe = os.pipe2(os.O_NONBLOCK)
-        for fd in (*newborn.watchdog_pipe, *newborn.eintr_pipe):
+        for fd in (*newborn.watchdog_pipe, *newborn.wakeup_pipe):
             os.close(fd)
 
     def test_closing_an_already_closed_fd_is_tolerated(self, prefork):
@@ -300,7 +300,7 @@ class TestChildClosesInheritedFds:
         os.close(sibling.watchdog_pipe[0])
         newborn = _fake_worker()
         prefork._close_inherited_pipe_fds_in_child(newborn)
-        for fd in (*newborn.watchdog_pipe, *newborn.eintr_pipe):
+        for fd in (*newborn.watchdog_pipe, *newborn.wakeup_pipe):
             os.close(fd)
 
 
@@ -465,11 +465,11 @@ class TestTheWatchdogSelectorIsReused:
         assert prefork._selector is not None
         newborn = MagicMock()
         newborn.watchdog_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
-        newborn.eintr_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
+        newborn.wakeup_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
         try:
             prefork._close_inherited_pipe_fds_in_child(newborn)
         finally:
-            for fds in (newborn.watchdog_pipe, newborn.eintr_pipe):
+            for fds in (newborn.watchdog_pipe, newborn.wakeup_pipe):
                 for fd in fds:
                     with contextlib.suppress(OSError):
                         os.close(fd)
@@ -505,12 +505,12 @@ class TestARecycledFdIsRegisteredForItsNewOwner:
         def _spawn(pid):
             w = MagicMock()
             w.watchdog_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
-            w.eintr_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
+            w.wakeup_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
             w.watchdog_time = 0.0
             w.watchdog_timeout = None
             w.close = lambda w=w: [
                 os.close(fd)
-                for fd in (*w.watchdog_pipe, *w.eintr_pipe)
+                for fd in (*w.watchdog_pipe, *w.wakeup_pipe)
                 if _still_open(fd)
             ]
             prefork.workers[pid] = w
@@ -520,7 +520,7 @@ class TestARecycledFdIsRegisteredForItsNewOwner:
 
         yield prefork, _spawn
         for w in made:
-            for fd in (*w.watchdog_pipe, *w.eintr_pipe):
+            for fd in (*w.watchdog_pipe, *w.wakeup_pipe):
                 with contextlib.suppress(OSError):
                     os.close(fd)
 

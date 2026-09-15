@@ -91,21 +91,25 @@ class Worker:
     worker waits on its listener's selector instead, with the wakeup pipe
     registered there."""
 
+    _selector: selectors.BaseSelector | None = None
+
+    pid: int | None = None
+    """The child's pid: set by the master after `fork()` and by the child in
+    `start()`; None on an object no process has yet become."""
+
     def __init__(self, multi: PreforkServer) -> None:
         self.multi = multi
         self.watchdog_time = time.monotonic()
         self.watchdog_pipe = multi.open_pipe()
         try:
-            self.eintr_pipe = multi.open_pipe()
+            self.wakeup_pipe = multi.open_pipe()
         except BaseException:
             for fd in self.watchdog_pipe:
                 with contextlib.suppress(OSError):
                     os.close(fd)
             raise
-        self.wakeup_fd_r, self.wakeup_fd_w = self.eintr_pipe
         self.watchdog_timeout: float | None = multi.timeout
         self.ppid = os.getpid()
-        self.pid: int | None = None
         self.alive = True
         self.ready = False
         self.request_max = multi.limit_request
@@ -125,14 +129,14 @@ class Worker:
         _debug.lifecycle(
             "worker.closed",
             kind=self.__class__.__name__,
-            pid=getattr(self, "pid", None),
-            requests=getattr(self, "request_count", None),
+            pid=self.pid,
+            requests=self.request_count,
         )
         for fd in (
             self.watchdog_pipe[0],
             self.watchdog_pipe[1],
-            self.eintr_pipe[0],
-            self.eintr_pipe[1],
+            self.wakeup_pipe[0],
+            self.wakeup_pipe[1],
         ):
             with contextlib.suppress(OSError):
                 os.close(fd)
@@ -147,8 +151,8 @@ class Worker:
 
     def sleep(self) -> None:
         ready = self._selector.select(timeout=self.multi.beat)
-        self._listener_ready = any(key.fd != self.wakeup_fd_r for key, _ in ready)
-        empty_pipe(self.wakeup_fd_r)
+        self._listener_ready = any(key.fd != self.wakeup_pipe[0] for key, _ in ready)
+        empty_pipe(self.wakeup_pipe[0])
 
     def check_limits(self) -> None:
         Registry._evict_idle_registries()
@@ -234,15 +238,14 @@ class Worker:
         signal.signal(signal.SIGTTIN, signal.SIG_DFL)
         signal.signal(signal.SIGTTOU, signal.SIG_DFL)
 
-        signal.set_wakeup_fd(self.wakeup_fd_w)
+        signal.set_wakeup_fd(self.wakeup_pipe[1])
         if self._polls_wakeup_pipe:
             self._selector = selectors.DefaultSelector()
-            self._selector.register(self.wakeup_fd_r, selectors.EVENT_READ)
+            self._selector.register(self.wakeup_pipe[0], selectors.EVENT_READ)
 
     def stop(self) -> None:
-        selector = getattr(self, "_selector", None)
-        if selector is not None:
-            selector.close()
+        if self._selector is not None:
+            self._selector.close()
 
     def run(self) -> None:
         self.start()
@@ -346,10 +349,10 @@ class WorkerHTTP(Worker):
             with contextlib.suppress(BrokenPipeError):
                 with _debug.perf(
                     "worker.http.request",
-                    pid=getattr(self, "pid", None),
+                    pid=self.pid,
                     peer=addr[0] if isinstance(addr, tuple) else None,
-                    request=getattr(self, "request_count", 0) + 1,
-                    request_max=getattr(self, "request_max", None),
+                    request=self.request_count + 1,
+                    request_max=self.request_max,
                 ):
                     serve_prefork_connection(
                         client, addr, self.multi.app, identity, self.limits
@@ -377,14 +380,14 @@ class WorkerHTTP(Worker):
             if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 _debug.logic(
                     "worker.http.accept_failed",
-                    pid=getattr(self, "pid", None),
+                    pid=self.pid,
                     errno=e.errno,
                     error=type(e).__name__,
                 )
                 raise
             _debug.logic(
                 "worker.http.accept_lost",
-                pid=getattr(self, "pid", None),
+                pid=self.pid,
                 reason="raced" if e.errno == errno.EAGAIN else "aborted",
             )
 
@@ -415,7 +418,7 @@ class WorkerCron(Worker):
         self.db_count: int = 0
         self.schedule = CronSchedule()
         self.listener = CronListener(
-            self.listen_channel, self.logger, extra_read_fd=self.wakeup_fd_r
+            self.listen_channel, self.logger, extra_read_fd=self.wakeup_pipe[0]
         )
 
     def _sleep_with_watchdog(self, total_seconds: float) -> None:
@@ -466,7 +469,7 @@ class WorkerCron(Worker):
             )
             if self.listener.wait(interval):
                 time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
-            empty_pipe(self.wakeup_fd_r)
+            empty_pipe(self.wakeup_pipe[0])
 
     def get_max_age(self) -> int:
         return current().limit_time_worker_cron
@@ -602,9 +605,9 @@ class WorkerCron(Worker):
         _debug.lifecycle(
             "worker.cron.stopped",
             kind=self.__class__.__name__,
-            pid=getattr(self, "pid", None),
-            swept=getattr(self, "request_count", None),
-            queued=len(getattr(self, "db_queue", ())),
+            pid=self.pid,
+            swept=self.request_count,
+            queued=len(self.db_queue),
         )
 
 

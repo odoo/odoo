@@ -1,4 +1,3 @@
-import inspect
 import logging
 from unittest.mock import MagicMock, patch
 
@@ -115,10 +114,26 @@ class TestJobLimitsAreSeparableFromCron:
             assert worker.get_max_age() == 300
 
     def test_worker_job_arms_its_watchdog_from_the_job_timeout(self):
-        from odoo.service._worker import WorkerJob
+        import os
 
-        source = inspect.getsource(WorkerJob)
-        assert "multi.job_timeout" in source
+        from odoo.service._worker import WorkerCron, WorkerJob
+
+        pipes = []
+
+        def open_pipe():
+            pipes.append(os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC))
+            return pipes[-1]
+
+        multi = MagicMock(
+            open_pipe=open_pipe, timeout=120, cron_timeout=300, job_timeout=45
+        )
+        try:
+            assert WorkerCron(multi).watchdog_timeout == 300
+            assert WorkerJob(multi).watchdog_timeout == 45
+        finally:
+            for pipe in pipes:
+                for fd in pipe:
+                    os.close(fd)
 
 
 CRON_BUDGET_CASES = [

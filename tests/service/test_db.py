@@ -256,23 +256,23 @@ class TestDumpDbNameValidation:
         self, db_mod, bypass_db_mgmt, bad_name
     ):
         with (
-            patch("odoo.service.db.dump.subprocess.run") as mock_run,
+            patch("odoo.service.db.dump.subprocess.Popen") as mock_popen,
             patch.object(db_mod.dump, "get_pg_tool_path") as mock_tool,
         ):
             with pytest.raises(ValueError):
                 db_mod.dump_db(bad_name, None, backup_format="dump")
-        mock_run.assert_not_called()
+        mock_popen.assert_not_called()
         mock_tool.assert_not_called()
 
     def test_valid_name_reaches_pg_dump_argv(self, db_mod, bypass_db_mgmt):
         captured = {}
 
-        def fake_run(cmd, **kw):
+        def fake_popen(cmd, **kw):
             captured["cmd"] = cmd
-            return CompletedProcess(args=cmd, returncode=0, stderr=b"")
+            return _FakePgDumpPopen(returncode=0)
 
         with (
-            patch("odoo.service.db.dump.subprocess.run", side_effect=fake_run),
+            patch("odoo.service.db.dump.subprocess.Popen", side_effect=fake_popen),
             patch.object(db_mod.dump, "get_pg_tool_path", lambda n: f"/usr/bin/{n}"),
             patch.object(db_mod.dump, "exec_pg_environ", dict),
         ):
@@ -567,12 +567,24 @@ class TestDumpDbWallClockTimeout:
     def test_custom_nonstream_timeout_raises_runtime_error(
         self, db_mod, bypass_db_mgmt
     ):
-        timeout_exc = subprocess.TimeoutExpired(cmd=["pg_dump"], timeout=3600)
+        proc = _FakePgDumpPopen(returncode=-15, stderr=b"")
+
+        class _FiringTimer(threading.Timer):
+            def start(self):
+                self.function()
+
         with ExitStack() as stack:
-            for p in self._patches(db_mod, run_side_effect=timeout_exc):
+            for p in self._patches(db_mod, run_side_effect=None)[:-1]:
                 stack.enter_context(p)
+            stack.enter_context(
+                patch("odoo.service.db.dump.subprocess.Popen", return_value=proc)
+            )
+            stack.enter_context(
+                patch.object(db_mod.dump.threading, "Timer", _FiringTimer)
+            )
             with pytest.raises(RuntimeError, match="wall-clock timeout"):
                 db_mod.dump_db("testdb", None, "dump", with_filestore=False)
+        assert proc.terminated
 
     def test_malformed_timeout_env_falls_back_to_default(self, db_mod):
         with patch.dict(os.environ, {"ODOO_PG_DUMP_TOTAL_TIMEOUT": "not-a-number"}):
@@ -588,7 +600,7 @@ class TestDumpWaitTimeoutGuard:
         ]
         out = io.BytesIO()
         with patch.dict(os.environ, {"ODOO_PG_DUMP_WAIT_TIMEOUT": "not-a-number"}):
-            db_mod.dump._run_pg_dump_streaming(cmd, dict(os.environ), out)
+            db_mod.dump._run_pg_dump(cmd, dict(os.environ), out)
         assert out.getvalue() == b"dump-bytes"
 
     def test_malformed_wait_timeout_does_not_mask_copy_error(self, db_mod):
@@ -599,9 +611,7 @@ class TestDumpWaitTimeoutGuard:
         cmd = [sys.executable, "-c", "import sys; sys.stdout.buffer.write(b'x' * 1000)"]
         with patch.dict(os.environ, {"ODOO_PG_DUMP_WAIT_TIMEOUT": "garbage"}):
             with pytest.raises(RuntimeError, match="disk-full-during-copy"):
-                db_mod.dump._run_pg_dump_streaming(
-                    cmd, dict(os.environ), _ExplodingStream()
-                )
+                db_mod.dump._run_pg_dump(cmd, dict(os.environ), _ExplodingStream())
 
 
 class TestDumpStreamingClosesItsPipes:
@@ -623,7 +633,7 @@ class TestDumpStreamingClosesItsPipes:
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always", ResourceWarning)
             with patch.object(db_mod.dump.subprocess, "Popen", _tracking_popen):
-                db_mod.dump._run_pg_dump_streaming(cmd, dict(os.environ), out)
+                db_mod.dump._run_pg_dump(cmd, dict(os.environ), out)
 
         assert out.getvalue() == b"dump"
         assert len(opened) == 1
@@ -651,9 +661,7 @@ class TestDumpStreamingClosesItsPipes:
         before = open_fds()
         for _ in range(5):
             try:
-                db_mod.dump._run_pg_dump_streaming(
-                    cmd, dict(os.environ), _ExplodingStream()
-                )
+                db_mod.dump._run_pg_dump(cmd, dict(os.environ), _ExplodingStream())
             except RuntimeError as exc:
                 held.append(exc)
         retained = open_fds() - before
@@ -686,7 +694,7 @@ class TestDumpStderrDrainIsBounded:
 
         def _run():
             try:
-                db_mod.dump._run_pg_dump_streaming(cmd, dict(os.environ), out)
+                db_mod.dump._run_pg_dump(cmd, dict(os.environ), out)
                 result["ok"] = True
             except BaseException as exc:
                 result["exc"] = exc
@@ -724,7 +732,7 @@ class TestDumpStallSigkillEscalation:
 
         def _run() -> None:
             try:
-                db_mod.dump._run_pg_dump_streaming(cmd, dict(os.environ), out)
+                db_mod.dump._run_pg_dump(cmd, dict(os.environ), out)
                 result["ok"] = True
             except BaseException as exc:
                 result["exc"] = exc
@@ -793,10 +801,8 @@ class TestDumpDbDumpFormat:
             ),
             patch("odoo.service.db.dump.exec_pg_environ", return_value={}),
             patch(
-                "odoo.service.db.dump.subprocess.run",
-                return_value=CompletedProcess(
-                    args=[], returncode=1, stderr=b"pg error"
-                ),
+                "odoo.service.db.dump.subprocess.Popen",
+                return_value=_FakePgDumpPopen(returncode=1, stderr=b"pg error"),
             ),
         ):
             with pytest.raises(RuntimeError, match="pg_dump failed"):
@@ -809,8 +815,8 @@ class TestDumpDbDumpFormat:
             ),
             patch("odoo.service.db.dump.exec_pg_environ", return_value={}),
             patch(
-                "odoo.service.db.dump.subprocess.run",
-                return_value=CompletedProcess(args=[], returncode=0, stderr=b""),
+                "odoo.service.db.dump.subprocess.Popen",
+                return_value=_FakePgDumpPopen(returncode=0, stdout=b"PGDMP"),
             ),
         ):
             result = db_mod.dump_db("testdb", None, "dump")
@@ -1887,7 +1893,7 @@ class TestDispatchInvariants:
             with (
                 patch.object(db_mod.listing, "list_dbs", return_value=["visible_db"]),
                 patch.object(db_mod.lifecycle, "drop_database") as dropped,
-                patch("odoo.service.db.dump.subprocess.run") as ran,
+                patch("odoo.service.db.dump.subprocess.Popen") as ran,
             ):
                 with pytest.raises(Exception) as excinfo:
                     handler(*args)
@@ -2893,9 +2899,7 @@ class TestZipDumpDoesNotStageFilestore:
             patch.object(
                 db_mod.dump, "dump_db_manifest", return_value={"odoo_dump": "1"}
             ),
-            patch.object(
-                db_mod.dump, "_run_pg_dump_streaming", side_effect=fake_pg_dump
-            ),
+            patch.object(db_mod.dump, "_run_pg_dump", side_effect=fake_pg_dump),
             patch.object(odoo.db, "db_connect"),
             patch.object(db_mod.dump.shutil, "copytree") as copytree,
         ):
@@ -2964,9 +2968,7 @@ class TestZipDumpDoesNotStageFilestore:
             patch.object(
                 db_mod.dump, "dump_db_manifest", return_value={"odoo_dump": "1"}
             ),
-            patch.object(
-                db_mod.dump, "_run_pg_dump_streaming", side_effect=fake_pg_dump
-            ),
+            patch.object(db_mod.dump, "_run_pg_dump", side_effect=fake_pg_dump),
             patch.object(odoo.db, "db_connect"),
         ):
             fh = db_mod.dump_db("db", None, "zip")
@@ -3158,15 +3160,64 @@ class TestPgDumpFailurePolicyIsShared:
 
         assert "exit 1" in str(dump._prepare_pg_dump_failed_error(1, b"\xff\xfe bad"))
 
-    def test_neither_runner_spells_the_message_itself(self):
+    def test_the_runner_does_not_spell_the_message_itself(self):
         import inspect
 
         from odoo.service.db import dump
 
-        for runner in (dump._run_pg_dump_blocking, dump._run_pg_dump_streaming):
-            src = inspect.getsource(runner)
-            assert "ODOO_PG_DUMP_TOTAL_TIMEOUT" not in src, (
-                f"{runner.__name__} carries its own copy of the timeout text; "
-                f"the two drift the moment one is edited"
-            )
-            assert "pg_dump failed (exit" not in src
+        src = inspect.getsource(dump._run_pg_dump)
+        assert "ODOO_PG_DUMP_TOTAL_TIMEOUT" not in src
+        assert "pg_dump failed (exit" not in src
+
+
+class TestANewDatabaseIsAnnouncedToTheListeners:
+    """A catalogue-mode cron listener admits an unlisted name only on a notify
+    for it; nothing in a fresh database sends one until a job triggers."""
+
+    def test_both_channels_hear_the_name(self, db_mod):
+        mock_db, cr = fake_pg_connection()
+        with patch("odoo.db.db_connect", return_value=mock_db):
+            db_mod.lifecycle._announce_database("newborn")
+        assert [c.args for c in cr.execute.call_args_list] == [
+            ("SELECT pg_notify(%s, %s)", ("cron_trigger", "newborn")),
+            ("SELECT pg_notify(%s, %s)", ("job_queue", "newborn")),
+        ]
+        assert cr.connection.autocommit is True
+
+    def test_a_failed_announce_does_not_fail_the_creation(self, db_mod):
+        with patch("odoo.db.db_connect", side_effect=OSError("postgres away")):
+            db_mod.lifecycle._announce_database("newborn")
+
+    @pytest.mark.parametrize(
+        ("op", "target"),
+        [
+            ("exp_create_database", "newborn"),
+            ("duplicate_database", "copy"),
+            ("rename_database", "renamed"),
+        ],
+    )
+    def test_every_way_a_database_appears_announces_it(
+        self, db_mod, bypass_db_mgmt, op, target
+    ):
+        with (
+            patch.object(db_mod.lifecycle, "_announce_database") as announce,
+            patch.object(db_mod.lifecycle, "_create_empty_database"),
+            patch.object(db_mod.lifecycle, "_check_filestore_dest_free"),
+            patch.object(db_mod.lifecycle, "_retry_terminate_then_ddl"),
+            patch.object(db_mod.lifecycle, "invalidate_catalog_caches"),
+            patch.object(db_mod.lifecycle, "check_db_exposed"),
+            patch("odoo.db.close_db"),
+            patch("odoo.db.db_connect", return_value=fake_pg_connection()[0]),
+            patch("odoo.modules.db.initialize_db"),
+            patch("odoo.modules.registry.Registry.clear_database_state"),
+            patch("odoo.modules.registry.Registry.new"),
+            patch("odoo.api.Environment"),
+            patch.object(db_mod.lifecycle.Path, "exists", return_value=False),
+        ):
+            if op == "exp_create_database":
+                db_mod.lifecycle.exp_create_database(target, False, "en_US")
+            elif op == "duplicate_database":
+                db_mod.lifecycle.duplicate_database("source", target)
+            else:
+                db_mod.lifecycle.rename_database("source", target)
+        announce.assert_called_once_with(target)

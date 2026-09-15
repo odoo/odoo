@@ -19,6 +19,7 @@ import odoo.modules.registry
 import odoo.tools
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+from odoo.tools.constants import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL
 
 from ._checks import check_db_management_enabled, check_db_name
 from .listing import check_db_exposed, invalidate_catalog_caches
@@ -221,6 +222,23 @@ def _open_public_schema(cr: BaseCursor, name: str) -> None:
         _debug.logic("database.public_grant_failed", db=name, error=type(e).__name__)
 
 
+def _announce_database(db_name: str) -> None:
+    # A listener sweeping from the catalogue admits a name it has never
+    # listed only on a notify for it (`CronSchedule`); nothing in a fresh
+    # database sends one until a job triggers, so its scheduled crons would
+    # wait for the next periodic sweep.
+    try:
+        with closing(odoo.db.db_connect("postgres").cursor()) as cr:
+            cr.connection.autocommit = True
+            for channel in (CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL):
+                cr.execute("SELECT pg_notify(%s, %s)", (channel, db_name))
+    except Exception:
+        _logger.debug("Could not announce database %r to the listeners", db_name)
+        _debug.logic("database.announce_failed", db=db_name)
+        return
+    _debug.lifecycle("database.announced", db=db_name)
+
+
 def _rollback_new_database(db_name: str, what: str) -> None:
     _logger.info("%s: rolling back database %r after failure", what, db_name)
     _debug.lifecycle("database.rollback", db=db_name, what=what)
@@ -275,6 +293,7 @@ def exp_create_database(
     except Exception:
         _rollback_new_database(db_name, "CREATE DB")
         raise
+    _announce_database(db_name)
     return True
 
 
@@ -356,6 +375,7 @@ def duplicate_database(
         filestore=Path(to_fs).exists(),
     )
     invalidate_catalog_caches()
+    _announce_database(db_name)
     return True
 
 
@@ -574,6 +594,7 @@ def rename_database(old_name: str, new_name: str) -> Literal[True]:
         filestore=Path(new_fs).exists(),
     )
     invalidate_catalog_caches()
+    _announce_database(new_name)
     return True
 
 

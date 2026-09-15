@@ -29,7 +29,7 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
-from ._env import _IS_POSIX, get_env_float
+from ._env import IS_POSIX, get_env_float
 from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
@@ -134,7 +134,7 @@ class PreforkServer(CommonServer):
         return os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
 
     def _set_socket_cloexec(self) -> None:
-        if not _IS_POSIX or self.socket is None:
+        if not IS_POSIX or self.socket is None:
             return
         fd = self.socket.fileno()
         flags = fcntl.fcntl(fd, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
@@ -158,15 +158,15 @@ class PreforkServer(CommonServer):
         keep = {
             new_worker.watchdog_pipe[0],
             new_worker.watchdog_pipe[1],
-            new_worker.eintr_pipe[0],
-            new_worker.eintr_pipe[1],
+            new_worker.wakeup_pipe[0],
+            new_worker.wakeup_pipe[1],
         }
         for sibling in self.workers.values():
             for fd in (
                 sibling.watchdog_pipe[0],
                 sibling.watchdog_pipe[1],
-                sibling.eintr_pipe[0],
-                sibling.eintr_pipe[1],
+                sibling.wakeup_pipe[0],
+                sibling.wakeup_pipe[1],
             ):
                 if fd not in keep:
                     with contextlib.suppress(OSError):
@@ -591,7 +591,7 @@ class PreforkServer(CommonServer):
             self.kill_worker(pid, signal.SIGINT)
 
     def _close_watchdog_selector(self) -> None:
-        sel, self._selector = getattr(self, "_selector", None), None
+        sel, self._selector = self._selector, None
         self._watched = {}
         if sel is not None:
             with contextlib.suppress(Exception):
@@ -601,7 +601,7 @@ class PreforkServer(CommonServer):
         self,
     ) -> tuple[selectors.BaseSelector, dict[int, Worker]]:
         fds = {w.watchdog_pipe[0]: w for w in self.workers.values()}
-        sel = getattr(self, "_selector", None)
+        sel = self._selector
         if sel is None:
             sel = self._selector = selectors.DefaultSelector()
             self._watched = {}

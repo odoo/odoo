@@ -15,7 +15,7 @@ from .settings import ServerSettings, current
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-_SIGHUP_AVAILABLE = hasattr(signal, "SIGHUP")
+SIGHUP_AVAILABLE = hasattr(signal, "SIGHUP")
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -126,7 +126,5 @@ class CommonServer:
         register_on_stop_hook(func)
 
     def stop(self) -> None:
-        _debug.lifecycle(
-            "server.stopping", flavor=self.flavor, pid=getattr(self, "pid", None)
-        )
+        _debug.lifecycle("server.stopping", flavor=self.flavor, pid=self.pid)
         run_on_stop_hooks(self.logger)

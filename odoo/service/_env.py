@@ -5,8 +5,8 @@ import math
 import os
 from collections.abc import Callable
 
-_IS_POSIX = os.name == "posix"
-_IS_WINDOWS = os.name == "nt"
+IS_POSIX = os.name == "posix"
+IS_WINDOWS = os.name == "nt"
 
 
 def get_env_float(

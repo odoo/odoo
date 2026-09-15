@@ -305,7 +305,7 @@ def test_respawned_worker_closes_inherited_reload_reader(master):
             os.fstat(read_fd)
         assert error.value.errno == errno.EBADF
         assert selector.get_map() is None
-        for fd in (*worker.watchdog_pipe, *worker.eintr_pipe):
+        for fd in (*worker.watchdog_pipe, *worker.wakeup_pipe):
             os.fstat(fd)
     finally:
         # This exercises child cleanup in-process, so replace its closed pipe.

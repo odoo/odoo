@@ -13,6 +13,7 @@ def worker():
     w = WorkerHTTP.__new__(WorkerHTTP)
     w.sock_timeout = 5
     w.request_count = 0
+    w.request_max = 0
     w.multi = MagicMock()
     w.limits = MagicMock()
     return w

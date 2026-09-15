@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 import random
@@ -20,7 +21,7 @@ from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import dumpstacks
 
 from . import _process_state
-from ._base_server import _SIGHUP_AVAILABLE, CommonServer
+from ._base_server import SIGHUP_AVAILABLE, CommonServer
 from ._cron import (
     CRON_NOTIFY_JITTER_MAX_S,
     CRON_POLL_INTERVAL_S,
@@ -31,7 +32,7 @@ from ._cron import (
     ReconnectBackoff,
     drain_swept_database,
 )
-from ._env import _IS_POSIX, _IS_WINDOWS
+from ._env import IS_POSIX, IS_WINDOWS
 from ._limits import get_graceful_stop_timeout
 from .httpd import ThreadedHTTPServer
 from .lifecycle import preload_registries, restart
@@ -41,6 +42,11 @@ _debug = DebugLog(__name__)
 
 _RECYCLE_MAX_AGE = "get_max_age"
 _RECYCLE_CONN_LOST = "connection_lost"
+_RECYCLE_STOP = "stop"
+
+LISTENER_JOIN_TIMEOUT_S = 1.0
+"""How long `stop()` waits for the cron and job threads to close their
+listener sessions.  One mid-job is left to die with the process."""
 
 LIMIT_MONITOR_INTERVAL_S = 5.0
 
@@ -71,13 +77,20 @@ they were invisible while the two lists were one.
 
 _SIGXCPU_EXIT_CODE = 128 + getattr(signal, "SIGXCPU", 24)
 
+_CONSOLE_EVENT_SIGNALS = {
+    0: signal.SIGINT,  # CTRL_C_EVENT
+    1: signal.SIGINT,  # CTRL_BREAK_EVENT
+    2: signal.SIGTERM,  # CTRL_CLOSE_EVENT
+    5: signal.SIGTERM,  # CTRL_LOGOFF_EVENT
+    6: signal.SIGTERM,  # CTRL_SHUTDOWN_EVENT
+}
+
 
 class ThreadedServer(CommonServer):
     flavor = "threaded"
 
     def __init__(self, app: Any) -> None:
         super().__init__(app)
-        self.main_thread_id = threading.current_thread().ident
         self.quit_signals_received = 0
 
         self.httpd: ThreadedHTTPServer | None = None
@@ -85,6 +98,9 @@ class ThreadedServer(CommonServer):
         self._overrun_start_times: dict[threading.Thread, float] = {}
         self.limit_reached_time: float | None = None
         self._stop_after_init = False
+        self._listener_threads: list[threading.Thread] = []
+        self._listener_stop = threading.Event()
+        self._listener_stop_pipe: tuple[int, int] | None = None
 
     def get_metrics(self) -> dict[str, Any]:
         by_type: dict[str, int] = {}
@@ -108,12 +124,24 @@ class ThreadedServer(CommonServer):
         if hasattr(signal, "SIGXCPU") and sig == signal.SIGXCPU:
             os.write(2, b"CPU time limit exceeded! Shutting down immediately\n")
             os._exit(_SIGXCPU_EXIT_CODE)
-        elif _SIGHUP_AVAILABLE and sig == signal.SIGHUP:
+        elif SIGHUP_AVAILABLE and sig == signal.SIGHUP:
             if self.quit_signals_received:
                 return
             _process_state.set_phoenix(True)
             self.quit_signals_received += 1
             raise KeyboardInterrupt
+
+    def _handle_console_event(self, event: int) -> bool:
+        # A Windows console event is not a signal number: CTRL_C_EVENT is 0
+        # and CTRL_CLOSE_EVENT happens to be 2, SIGINT's value, which is the
+        # only reason the old `signal_handler(event, None)` ever stopped
+        # anything.  Handled means True, so the console does not go on to
+        # terminate the process before `stop()` runs.
+        sig = _CONSOLE_EVENT_SIGNALS.get(event)
+        if sig is None:
+            return False
+        self.signal_handler(sig, None)
+        return True
 
     def check_limits(self) -> None:
         Registry._evict_idle_registries()
@@ -267,6 +295,8 @@ class ThreadedServer(CommonServer):
         while max_age <= 0 or (time.monotonic() - alive_time) <= max_age:
             woken = listener.wait(0 if first_pass else CRON_POLL_INTERVAL_S + number)
             first_pass = False
+            if self._listener_stop.is_set():
+                return _RECYCLE_STOP
             if woken:
                 time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
             try:
@@ -316,8 +346,10 @@ class ThreadedServer(CommonServer):
         )
 
         backoff = ReconnectBackoff(cron_logger)
-        listener = CronListener(channel, cron_logger)
-        while True:
+        listener = CronListener(
+            channel, cron_logger, extra_read_fd=self._get_listener_stop_fd()
+        )
+        while not self._listener_stop.is_set():
             try:
                 listener.connect()
                 reason = self._poll_cron_channel(
@@ -333,7 +365,7 @@ class ThreadedServer(CommonServer):
                 )
                 if reason == _RECYCLE_CONN_LOST:
                     cron_logger.warning("Postgres connection lost, reconnecting...")
-                else:
+                elif reason == _RECYCLE_MAX_AGE:
                     cron_logger.info(
                         "Max age (%ss) reached, recycling pg connection",
                         max_age,
@@ -348,7 +380,9 @@ class ThreadedServer(CommonServer):
                     error=type(exc).__name__,
                     kind="pg_unavailable",
                 )
-                backoff.wait_after_failure("Postgres unavailable", exc)
+                backoff.wait_after_failure(
+                    "Postgres unavailable", exc, self._listener_stop.wait
+                )
             except Exception as exc:
                 cron_logger.critical("Uncaught error in cron main loop", exc_info=True)
                 _debug.logic(
@@ -358,9 +392,45 @@ class ThreadedServer(CommonServer):
                     error=type(exc).__name__,
                     kind="uncaught",
                 )
-                backoff.wait_after_failure("Cron main loop", exc)
+                backoff.wait_after_failure(
+                    "Cron main loop", exc, self._listener_stop.wait
+                )
             finally:
                 listener.close()
+        _debug.lifecycle("server.cron.thread_stopped", label=label, number=number)
+
+    def _get_listener_stop_fd(self) -> int:
+        # One pipe wakes every listener out of its LISTEN wait when the server
+        # stops, so each closes its own session instead of leaving it to the
+        # kernel at exit.
+        if self._listener_stop_pipe is None:
+            self._listener_stop_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
+        return self._listener_stop_pipe[0]
+
+    def _stop_listener_threads(self) -> None:
+        self._listener_stop.set()
+        if self._listener_stop_pipe is not None:
+            with contextlib.suppress(OSError):
+                os.write(self._listener_stop_pipe[1], b".")
+        deadline = time.monotonic() + LISTENER_JOIN_TIMEOUT_S
+        for thread in self._listener_threads:
+            thread.join(max(deadline - time.monotonic(), 0))
+        alive = [t.name for t in self._listener_threads if t.is_alive()]
+        if alive:
+            self.logger.info(
+                "%d listener thread(s) still busy at shutdown: %s",
+                len(alive),
+                ", ".join(alive),
+            )
+        _debug.lifecycle(
+            "server.threaded.listeners_stopped",
+            threads=len(self._listener_threads),
+            alive=len(alive),
+        )
+        pipe, self._listener_stop_pipe = self._listener_stop_pipe, None
+        for fd in pipe or ():
+            with contextlib.suppress(OSError):
+                os.close(fd)
 
     def spawn_cron_threads(self) -> None:
         for i in range(self.settings.max_cron_threads):
@@ -371,6 +441,7 @@ class ThreadedServer(CommonServer):
                 daemon=True,
             )
             as_worker_thread(t).type = "cron"
+            self._listener_threads.append(t)
             t.start()
         _debug.lifecycle(
             "server.threads_spawned", kind="cron", count=self.settings.max_cron_threads
@@ -385,6 +456,7 @@ class ThreadedServer(CommonServer):
                 daemon=True,
             )
             as_worker_thread(t).type = "job"
+            self._listener_threads.append(t)
             t.start()
         _debug.lifecycle(
             "server.threads_spawned", kind="job", count=self.settings.job_workers
@@ -419,7 +491,7 @@ class ThreadedServer(CommonServer):
 
     def start(self, stop: bool = False) -> None:
         self.logger.debug("Setting signal handlers")
-        if _IS_POSIX:
+        if IS_POSIX:
             signal.signal(signal.SIGINT, self.signal_handler)
             signal.signal(signal.SIGTERM, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
@@ -427,15 +499,13 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             signal.signal(signal.SIGUSR2, log_ormcache_stats)
-        elif _IS_WINDOWS:
+        elif IS_WINDOWS:
             import win32api
 
-            win32api.SetConsoleCtrlHandler(
-                lambda sig: self.signal_handler(sig, None), 1
-            )
+            win32api.SetConsoleCtrlHandler(self._handle_console_event, 1)
 
         settings = self.settings
-        if _IS_POSIX and settings.limit_time_cpu > 0:
+        if IS_POSIX and settings.limit_time_cpu > 0:
             self.logger.info(
                 "limit_time_cpu=%ss is not enforced with workers=0: the CPU "
                 "budget is armed per worker process (RLIMIT_CPU in "
@@ -465,39 +535,19 @@ class ThreadedServer(CommonServer):
                 "Hit CTRL-C again or send a second signal to force the shutdown."
             )
 
+        # Listeners are told first so their sessions close while the HTTP
+        # drain runs; they are joined after it.
+        self._listener_stop.set()
         if self.httpd:
             self.httpd.shutdown()
-            self._drain_http_requests(self.httpd)
+            self.httpd.drain(
+                get_graceful_stop_timeout(self.logger),
+                stuck=self._count_stuck_http_threads(),
+            )
             self.httpd.server_close()
 
         super().stop()
-
-        stop_time = time.monotonic()
-
-        me = threading.current_thread()
-        self.logger.debug("current thread: %r", me)
-        for thread in threading.enumerate():
-            self.logger.debug("process %r (%r)", thread, thread.daemon)
-            if (
-                thread != me
-                and not thread.daemon
-                and thread.ident != self.main_thread_id
-                and thread not in self.limits_reached_threads
-            ):
-                while thread.is_alive() and (time.monotonic() - stop_time) < 1:
-                    self.logger.debug("join")
-                    thread.join(0.05)
-                _debug.lifecycle(
-                    "server.threaded.thread_joined",
-                    thread=thread.name,
-                    type=getattr(thread, "type", None),
-                    alive=thread.is_alive(),
-                )
-        _debug.pipeline(
-            "server.threaded.threads_joined",
-            seconds=time.monotonic() - stop_time,
-            active=threading.active_count(),
-        )
+        self._stop_listener_threads()
 
         db.close_all()
 
@@ -513,43 +563,13 @@ class ThreadedServer(CommonServer):
         self.logger.debug("--")
         logging.shutdown()
 
-    def _drain_http_requests(self, httpd: ThreadedHTTPServer) -> None:
-        # `shutdown()` stopped the listener and every idle connection; the
-        # pool's busy threads are answering real requests, and closing the
-        # socket under them is what a SIGTERM used to do to their clients.
-        # A thread over its time limit is what a reload is leaving behind,
-        # so it is not waited for.
-        def pending() -> int:
-            stuck = sum(
-                1
-                for thread in self.limits_reached_threads
-                if thread.is_alive() and getattr(thread, "type", None) == "http"
-            )
-            return max(httpd.busy_workers - stuck, 0)
-
-        busy = pending()
-        if not busy:
-            return
-        timeout = get_graceful_stop_timeout(self.logger)
-        deadline = time.monotonic() + timeout
-        self.logger.info(
-            "Waiting up to %.0fs for %d in-flight request(s) to finish", timeout, busy
-        )
-        _debug.lifecycle("server.threaded.draining", busy=busy, timeout=timeout)
-        while pending() and time.monotonic() < deadline:
-            time.sleep(0.05)
-        remaining = pending()
-        if remaining:
-            self.logger.warning(
-                "%d request(s) still running %.0fs after the stop signal; "
-                "closing the listener under them (ODOO_GRACEFUL_STOP_TIMEOUT)",
-                remaining,
-                timeout,
-            )
-        _debug.lifecycle(
-            "server.threaded.drained",
-            remaining=remaining,
-            seconds=time.monotonic() - (deadline - timeout),
+    def _count_stuck_http_threads(self) -> int:
+        # A thread over its time limit is what a reload is leaving behind, so
+        # the drain does not wait for it.
+        return sum(
+            1
+            for thread in self.limits_reached_threads
+            if thread.is_alive() and getattr(thread, "type", None) == "http"
         )
 
     def run(self, preload: list[str] | None = None, stop: bool = False) -> int | None:
@@ -710,7 +730,7 @@ class EventServer(CommonServer):
         raise KeyboardInterrupt
 
     def start(self) -> None:
-        if _IS_POSIX:
+        if IS_POSIX:
             signal.signal(signal.SIGINT, self._quit_signal_handler)
             signal.signal(signal.SIGTERM, self._quit_signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
@@ -749,6 +769,7 @@ class EventServer(CommonServer):
     def stop(self) -> None:
         _debug.lifecycle("server.evented.stop", httpd=self.httpd is not None)
         if self.httpd:
+            self.httpd.drain(get_graceful_stop_timeout(self.logger))
             self.httpd.server_close()
         super().stop()
 
