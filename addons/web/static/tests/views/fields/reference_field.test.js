@@ -752,7 +752,7 @@ test("Reference field with default value in list view", async () => {
     await click('.o_list_char[name="name"] input');
     await edit("Blabla");
     await runAllTimers();
-    await click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main .o_list_button_save");
     await animationFrame();
 });
 
