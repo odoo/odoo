@@ -68,6 +68,7 @@ export class CalendarController extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.ui = useService("ui");
         this.displayDialog = useUniqueDialog();
 
         this.model = useModelWithSampleData(this.props.Model, this.modelParams);
@@ -82,9 +83,10 @@ export class CalendarController extends Component {
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            showSideBar:
-                !this.env.isSmall &&
-                Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
+            showSideBar: Boolean(
+                sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true
+            ),
+            mobilePanelOpen: false,
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -118,7 +120,7 @@ export class CalendarController extends Component {
     get currentDate() {
         const meta = this.model.meta;
         const scale = meta.scale;
-        if (this.env.isSmall && ["week", "month"].includes(scale)) {
+        if (this.ui.isSmall && ["week", "month"].includes(scale)) {
             const date = meta.date || DateTime.now();
             let text = "";
             if (scale === "week") {
@@ -183,9 +185,9 @@ export class CalendarController extends Component {
     get mobileFilterPanelProps() {
         return {
             model: this.model,
-            sideBarShown: this.state.showSideBar,
+            sideBarShown: this.state.mobilePanelOpen,
             toggleSideBar: () => {
-                this.state.showSideBar = !this.state.showSideBar;
+                this.state.mobilePanelOpen = !this.state.mobilePanelOpen;
             },
         };
     }
@@ -203,7 +205,7 @@ export class CalendarController extends Component {
     }
 
     get showCalendar() {
-        return !this.env.isSmall || !this.state.showSideBar;
+        return !this.ui.isSmall || !this.showSideBar;
     }
 
     get hasSideBar() {
@@ -211,7 +213,7 @@ export class CalendarController extends Component {
     }
 
     get showSideBar() {
-        return this.state.showSideBar;
+        return this.ui.isSmall ? this.state.mobilePanelOpen : this.state.showSideBar;
     }
 
     get className() {
