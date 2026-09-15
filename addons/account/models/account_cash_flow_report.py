@@ -17,7 +17,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         # Compute the cash flow report using the direct method: https://www.investopedia.com/terms/d/direct_method.asp
         lines = []
 
-        layout_data = self._get_layout_data()
+        layout_data = self._prepare_layout_data()
         report_data = self._get_report_data(report, options, layout_data)
         _debug.pipeline(
             "report_data_built",
@@ -142,7 +142,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
     def _add_report_data(self, layout_line_id, aml_data, layout_data, report_data):
         """Add or update the report_data dictionary with aml_data.
 
-        report_data keys are the keys returned by _get_layout_data() (used for mapping) and each value can
+        report_data keys are the keys returned by _prepare_layout_data() (used for mapping) and each value can
         contain 2 dictionaries:
             * (required) 'balance' where the key is the column_group_key and the value is the balance of the line
             * (optional) 'aml_groupby_account' where the key is an account_id and the values are the aml data
@@ -942,7 +942,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
     # COLUMNS / LINES
     # -------------------------------------------------------------------------
     @_debug.perf.timed
-    def _get_layout_data(self):
+    def _prepare_layout_data(self):
         # Indentation of the following dict reflects the structure of the report.
         return {
             "opening_balance": {
