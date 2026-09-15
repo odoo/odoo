@@ -566,6 +566,73 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # Overridden in `account_peppol_selfbilling`
         return False
 
+    def _ubl_add_invoice_type_code_node(self, vals):
+        super()._ubl_add_invoice_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if (
+            invoice
+            and invoice.partner_bank_id
+            and invoice.partner_bank_id.is_factoring
+            and self._is_document(vals, 'invoice')
+        ):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 393
+
+    def _ubl_add_credit_note_type_code_node(self, vals):
+        super()._ubl_add_credit_note_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if (
+            invoice
+            and invoice.partner_bank_id
+            and invoice.partner_bank_id.is_factoring
+            and self._is_document(vals, 'credit_note')
+        ):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 396
+
+    def _ubl_add_payment_means_nodes_all_invoices(self, vals):
+        super()._ubl_add_payment_means_nodes_all_invoices(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+        instruction_note = self._ubl_get_payment_means_instruction_note(invoice)
+        if instruction_note:
+            for node in vals['document_node']['cac:PaymentMeans']:
+                node['cbc:InstructionNote'] = {'_text': instruction_note}
+
+    def _ubl_add_payee_party_identification_nodes(self, vals):
+        super()._ubl_add_payee_party_identification_nodes(vals)
+        party_node = vals['party_node']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        siren = self._edi_get_partner_siren(partner)
+        siret = self._edi_get_partner_siret(partner)
+        if siren:
+            party_node['cac:PartyLegalEntity'] = {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': siren,
+                    'schemeID': '0002',
+                },
+            }
+        if siret:
+            party_node['cac:PartyIdentification'] = {
+                'cbc:ID': {
+                    '_text': siret,
+                    'schemeID': '0009',
+                },
+            }
+        if commercial_partner.vat and commercial_partner.vat != '/':
+            party_node['cac:PartyTaxScheme'] = {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cac:RegistrationAddress': self._get_address_node({
+                    **vals['party_vals'],
+                    'partner': commercial_partner,
+                }),
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'VAT'},
+                },
+            }
+
     def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
         # OVERRIDE
         sub_vals = {
