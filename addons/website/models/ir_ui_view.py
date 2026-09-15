@@ -435,6 +435,20 @@ class View(models.Model):
                 return False
         return True
 
+    def _can_be_branded(self):
+        """
+        Restricted editors may be allowed to save only some of the views, in
+        which case only those may be branded: the branding decision and the
+        save check may not diverge.
+        """
+        if self.env.context.get('inherit_branding_restricted_user'):
+            try:
+                # Check the permissions as the current user, `self` is sudoed.
+                self.env['website']._check_user_can_modify(self.sudo(False))
+            except AccessError:
+                return False
+        return super()._can_be_branded()
+
     def _render_template(self, template, values=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         view = self._get(template).sudo()
