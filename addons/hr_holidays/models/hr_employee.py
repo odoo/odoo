@@ -635,17 +635,15 @@ class HrEmployee(models.Model):
         )
 
     def _get_public_holidays(self, date_start, date_end):
-        domain = [
-            ("resource_id", "=", False),
-            ("company_id", "in", self.env.companies.ids),
-            ("date_from", "<=", date_end),
-            ("date_to", ">=", date_start),
-            "|",
-            ("calendar_id", "=", False),
-            ("calendar_id", "=", self.resource_calendar_id.id),
-        ]
-
-        return self.env["resource.calendar.leaves"].search(domain)
+        leaves = self.env["resource.calendar.leaves"]
+        return leaves.search(
+            leaves._get_domain_public_holidays(
+                date_start,
+                date_end,
+                companies=self.env.companies,
+                calendars=self.resource_calendar_id,
+            )
+        )
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):

@@ -954,14 +954,14 @@ Versions:
 
     def _flexible_duration(self, calendar):
         self.check_singleton()
-        public_holidays = self.env["resource.calendar.leaves"].search(  # noqa: E8507 - one lookup per flexible leave, on its own calendar and dates
-            [
-                ("resource_id", "=", False),
-                ("date_from", "<", self.date_to),
-                ("date_to", ">", self.date_from),
-                ("calendar_id", "in", [False, calendar.id]),
-                ("company_id", "=", self.company_id.id),
-            ]
+        leaves = self.env["resource.calendar.leaves"]
+        public_holidays = leaves.search(  # noqa: E8507 - one lookup per flexible leave, on its own calendar and dates
+            leaves._get_domain_public_holidays(
+                self.date_from,
+                self.date_to,
+                companies=self.company_id,
+                calendars=calendar,
+            )
         )
         if self.request_date_from != self.request_date_to:
             fractions = self._flexible_day_fractions()

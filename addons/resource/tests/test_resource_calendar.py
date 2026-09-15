@@ -1,6 +1,6 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.libs.datetime import timezone
 from odoo.tests.common import TransactionCase
 
@@ -347,3 +347,69 @@ class TestResourceCalendar(TransactionCase):
             "2019-05-31": False,
         }
         self.assertEqual(days, expected_res)
+
+    def test_public_holidays_domain_scopes_by_window_company_and_calendar(self):
+        company_a, company_b = self.env["res.company"].create(
+            [{"name": "Holidays A"}, {"name": "Holidays B"}]
+        )
+        calendar_a, calendar_other = self.env["resource.calendar"].create(
+            [
+                {"name": "A", "company_id": company_a.id},
+                {"name": "Other", "company_id": company_a.id},
+            ]
+        )
+        resource = self.env["resource.resource"].create(
+            {"name": "Someone", "company_id": company_a.id}
+        )
+        Leaves = self.env["resource.calendar.leaves"]
+
+        def holiday(company, day, **vals):
+            return Leaves.with_company(company).create(
+                {
+                    "name": f"{company.name} {day} {vals}",
+                    "date_from": datetime(2030, 5, day, 8),
+                    "date_to": datetime(2030, 5, day, 17),
+                    **vals,
+                }
+            )
+
+        every_calendar = holiday(company_a, 1)
+        own_calendar = holiday(company_a, 2, calendar_id=calendar_a.id)
+        other_calendar = holiday(company_a, 3, calendar_id=calendar_other.id)
+        other_company = holiday(company_b, 1)
+        personal = holiday(company_a, 1, resource_id=resource.id)
+        fixtures = (
+            every_calendar | own_calendar | other_calendar | other_company | personal
+        )
+
+        def found(date_from, date_to, **scope):
+            return Leaves.search(
+                Leaves._get_domain_public_holidays(date_from, date_to, **scope)
+                & Domain("id", "in", fixtures.ids)
+            )
+
+        window = (datetime(2030, 5, 1), datetime(2030, 5, 4))
+        self.assertEqual(
+            found(*window, companies=company_a, calendars=calendar_a),
+            every_calendar | own_calendar,
+        )
+        self.assertEqual(
+            found(*window, companies=company_a),
+            every_calendar | own_calendar | other_calendar,
+        )
+        self.assertEqual(
+            found(*window),
+            every_calendar | own_calendar | other_calendar | other_company,
+        )
+        self.assertEqual(
+            found(
+                datetime(2030, 5, 1, 17), datetime(2030, 5, 2, 8), companies=company_a
+            ),
+            every_calendar | own_calendar,
+            "a window touching a holiday's edge overlaps it",
+        )
+        self.assertEqual(
+            found(date(2030, 4, 30), date(2030, 5, 1), companies=company_a),
+            every_calendar,
+            "a date bound covers its whole day",
+        )

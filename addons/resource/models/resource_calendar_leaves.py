@@ -1,10 +1,11 @@
-from datetime import UTC, datetime, time
+from datetime import UTC, date, datetime, time
 from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.models import ValuesType
 
@@ -134,3 +135,26 @@ class ResourceCalendarLeaves(models.Model):
             "date_to": self.date_to,
             "time_type": self.time_type,
         }
+
+    @api.model
+    def _get_domain_public_holidays(
+        self,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        companies: models.BaseModel | None = None,
+        calendars: models.BaseModel | None = None,
+    ) -> Domain:
+        if isinstance(date_from, date) and not isinstance(date_from, datetime):
+            date_from = datetime.combine(date_from, time.min)
+        if isinstance(date_to, date) and not isinstance(date_to, datetime):
+            date_to = datetime.combine(date_to, time.max)
+        domain = Domain("resource_id", "=", False)
+        if date_to is not None:
+            domain &= Domain("date_from", "<=", date_to)
+        if date_from is not None:
+            domain &= Domain("date_to", ">=", date_from)
+        if companies is not None:
+            domain &= Domain("company_id", "in", companies.ids)
+        if calendars is not None:
+            domain &= Domain("calendar_id", "in", [False, *calendars.ids])
+        return domain

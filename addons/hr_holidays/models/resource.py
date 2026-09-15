@@ -24,13 +24,12 @@ class ResourceCalendarLeaves(models.Model):
         dated = self.filtered(lambda leave: leave.date_from and leave.date_to)
         if not dated:
             return
-        all_existing_leaves = self.env["resource.calendar.leaves"].search(
-            [
-                ("resource_id", "=", False),
-                ("company_id", "in", dated.company_id.ids),
-                ("date_from", "<=", max(dated.mapped("date_to"))),
-                ("date_to", ">=", min(dated.mapped("date_from"))),
-            ]
+        all_existing_leaves = self.search(
+            self._get_domain_public_holidays(
+                min(dated.mapped("date_from")),
+                max(dated.mapped("date_to")),
+                companies=dated.company_id,
+            )
         )
         for record in dated:
             if not record.resource_id:
@@ -225,7 +224,9 @@ class ResourceCalendar(models.Model):
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
-            [("resource_id", "=", False), ("calendar_id", "in", self.ids)],
+            self.env["resource.calendar.leaves"]._get_domain_public_holidays(
+                calendars=self
+            ),
             ["calendar_id"],
             ["__count"],
         )

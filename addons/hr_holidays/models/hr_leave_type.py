@@ -316,13 +316,13 @@ class HrLeaveType(models.Model):
             return
 
         companies = self.company_id | self.env.company
-        public_holidays = self.env["resource.calendar.leaves"].search(
-            [
-                ("resource_id", "=", False),
-                ("company_id", "in", companies.ids),
-                ("date_from", "<=", max(leaves.mapped("date_to"))),
-                ("date_to", ">=", min(leaves.mapped("date_from"))),
-            ]
+        public_holiday_leaves = self.env["resource.calendar.leaves"]
+        public_holidays = public_holiday_leaves.search(
+            public_holiday_leaves._get_domain_public_holidays(
+                min(leaves.mapped("date_from")),
+                max(leaves.mapped("date_to")),
+                companies=companies,
+            )
         )
         if not public_holidays:
             return

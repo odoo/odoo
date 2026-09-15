@@ -271,6 +271,13 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             }
         )
 
+    def test_calendar_time_off_count_includes_company_wide_holidays(self):
+        (self.calendar_1 | self.calendar_2).invalidate_recordset(
+            ["associated_leaves_count"]
+        )
+        self.assertEqual(self.calendar_1.associated_leaves_count, 2)
+        self.assertEqual(self.calendar_2.associated_leaves_count, 1)
+
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):
             self.env["resource.calendar.leaves"].create(

@@ -1,4 +1,5 @@
 from odoo import _, fields, models
+from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 
@@ -166,14 +167,11 @@ class HrLeave(models.Model):
         min_date = min(self.mapped("date_from"))
         max_date = max(self.mapped("date_to"))
 
-        global_leaves = self.env["resource.calendar.leaves"].search(
-            [
-                ("resource_id", "=", False),
-                ("date_to", ">=", min_date),
-                ("date_from", "<=", max_date),
-                ("company_id.internal_project_id", "!=", False),
-                ("company_id.leave_timesheet_task_id", "!=", False),
-            ]
+        leaves = self.env["resource.calendar.leaves"]
+        global_leaves = leaves.search(
+            leaves._get_domain_public_holidays(min_date, max_date)
+            & Domain("company_id.internal_project_id", "!=", False)
+            & Domain("company_id.leave_timesheet_task_id", "!=", False)
         )
         _debug.pipeline(
             "global_leave_backfill",

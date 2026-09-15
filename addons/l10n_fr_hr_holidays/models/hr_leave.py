@@ -241,21 +241,13 @@ class HrLeave(models.Model):
                 companies=len(fr_leaves_by_company),
             )
             if fr_leaves:
-                public_holidays = self.env["resource.calendar.leaves"].search(
-                    [
-                        ("resource_id", "=", False),
-                        ("company_id", "in", fr_leaves.company_id.ids + [False]),
-                        (
-                            "date_from",
-                            "<",
-                            max(fr_leaves.mapped("date_to")) + relativedelta(days=1),
-                        ),
-                        (
-                            "date_to",
-                            ">",
-                            min(fr_leaves.mapped("date_from")) - relativedelta(days=1),
-                        ),
-                    ]
+                leaves = self.env["resource.calendar.leaves"]
+                public_holidays = leaves.search(
+                    leaves._get_domain_public_holidays(
+                        min(fr_leaves.mapped("date_from")) - relativedelta(days=1),
+                        max(fr_leaves.mapped("date_to")) + relativedelta(days=1),
+                        companies=fr_leaves.company_id,
+                    )
                 )
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id

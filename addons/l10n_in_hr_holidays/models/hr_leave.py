@@ -262,10 +262,9 @@ class HrLeave(models.Model):
                 )
             }
             for company_id, recs in self.env["resource.calendar.leaves"]._read_group(
-                domain=[
-                    ("resource_id", "=", False),
-                    ("company_id", "in", indian_leaves.company_id.ids),
-                ],
+                domain=self.env["resource.calendar.leaves"]._get_domain_public_holidays(
+                    companies=indian_leaves.company_id
+                ),
                 groupby=["company_id"],
                 aggregates=["id:recordset"],
             )
