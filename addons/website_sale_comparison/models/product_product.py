@@ -1,6 +1,9 @@
 from collections import OrderedDict
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -28,6 +31,13 @@ class ProductProduct(models.Model):
                     for product in self
                 ]
             )
+        _debug.pipeline(
+            "comparison_categories",
+            products=self,
+            attributes=attributes,
+            categories=len(categories),
+            uncategorised=any(not pa.category_id for pa in attributes),
+        )
         return categories
 
     def _get_image_1024_url(self):

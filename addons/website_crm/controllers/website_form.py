@@ -1,8 +1,11 @@
 from odoo import Command, tools
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.website.controllers import form
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteForm(form.WebsiteForm):
@@ -13,14 +16,22 @@ class WebsiteForm(form.WebsiteForm):
         if visitor_partner:
             country = visitor_partner.country_id or request.env.company.country_id
             if country:
+                _debug.logic(
+                    "country_from_visitor",
+                    visitor_partner=visitor_partner,
+                    country=country,
+                    from_company=not visitor_partner.country_id,
+                )
                 return country
         country_code = request.geoip.country_code
         if country_code:
+            _debug.logic("country_from_geoip", code=country_code)
             return (
                 request.env["res.country"]
                 .sudo()
                 .search([("code", "=", country_code)], limit=1)
             )
+        _debug.logic("country_unresolved", had_visitor=bool(visitor_partner))
         return request.env["res.country"]
 
     def _handle_website_form(self, model_name, **kwargs):
@@ -52,6 +63,13 @@ class WebsiteForm(form.WebsiteForm):
                         force_format="INTERNATIONAL",
                         raise_exception=False,
                     )
+                    _debug.pipeline(
+                        "phone_formatted",
+                        model=model_name,
+                        field=phone_field,
+                        country=contact_country,
+                        formatted=bool(fmt_number),
+                    )
                     request.update_context(
                         **{f"website_form_{phone_field}": fmt_number or number}
                     )
@@ -69,6 +87,12 @@ class WebsiteForm(form.WebsiteForm):
                         ("code", "=", geoip_state_code),
                         ("country_id.code", "=", geoip_country_code),
                     ]
+                )
+                _debug.logic(
+                    "state_from_geoip",
+                    country_code=geoip_country_code,
+                    state_code=geoip_state_code,
+                    state=state,
                 )
                 if state:
                     request.params["state_id"] = state.id
@@ -102,9 +126,22 @@ class WebsiteForm(form.WebsiteForm):
                     sanitized = request.env["phone.number"]._sanitize_number(
                         values_phone, visitor_partner.country_id
                     )
+                    if _debug.logic.enabled:
+                        _debug.logic(
+                            "lead_partner_from_visitor_phone",
+                            visitor=visitor_sudo,
+                            partner=visitor_partner,
+                            matched=sanitized
+                            in visitor_partner.phone_ids.mapped("sanitized"),
+                        )
                     if sanitized in visitor_partner.phone_ids.mapped("sanitized"):
                         values["partner_id"] = visitor_partner.id
                 else:
+                    _debug.logic(
+                        "lead_partner_from_visitor_email",
+                        visitor=visitor_sudo,
+                        partner=visitor_partner,
+                    )
                     values["partner_id"] = visitor_partner.id
             if "company_id" not in values:
                 values["company_id"] = request.website.company_id.id
@@ -121,5 +158,11 @@ class WebsiteForm(form.WebsiteForm):
                 vals = {"lead_ids": [(4, result)]}
                 if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
                     vals["name"] = lead_sudo.contact_name
+                _debug.lifecycle(
+                    "lead_linked_to_visitor",
+                    lead=lead_sudo,
+                    visitor=visitor_sudo,
+                    named_visitor="name" in vals,
+                )
                 visitor_sudo.write(vals)
         return result

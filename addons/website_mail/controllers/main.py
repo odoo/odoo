@@ -4,8 +4,10 @@ from collections import defaultdict
 from odoo import http
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class WebsiteMail(http.Controller):
@@ -43,11 +45,23 @@ class WebsiteMail(http.Controller):
                 .ids
             )
             if not partner_ids:
+                _debug.logic(
+                    "follow_partner_unresolved",
+                    model=object,
+                    res_id=res_id,
+                    no_create=no_create,
+                )
                 return False
         if is_follower:
+            _debug.lifecycle(
+                "unsubscribed", model=object, res_id=res_id, partners=partner_ids
+            )
             record.sudo().message_unsubscribe(partner_ids)
             return False
         else:
+            _debug.lifecycle(
+                "subscribed", model=object, res_id=res_id, partners=partner_ids
+            )
             request.session["partner_id"] = partner_ids[0]
             record.sudo().message_subscribe(partner_ids)
             return True
@@ -72,6 +86,12 @@ class WebsiteMail(http.Controller):
                 .browse(request.session.get("partner_id"))
             )
 
+        _debug.logic(
+            "is_follower_identity",
+            is_user=user != public_user,
+            partner=partner,
+            models=len(records),
+        )
         res = defaultdict(list)
         if partner:
             for model in records:

@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -49,6 +52,13 @@ class SaleOrder(models.Model):
             if not order_line.event_ticket_id or new_qty < order_line.product_uom_qty:
                 return new_qty, warning
             else:
+                _debug.logic(
+                    "ticket_quantity_raise_refused",
+                    line=order_line,
+                    ticket=order_line.event_ticket_id,
+                    requested=new_qty,
+                    kept=order_line.product_uom_qty,
+                )
                 return order_line.product_uom_qty, _(
                     "You cannot raise manually the event ticket quantity in your cart"
                 )
@@ -69,6 +79,14 @@ class SaleOrder(models.Model):
             else ticket.seats_available
         )
         if ticket.seats_limited and qty_added > 0 and ticket_seats_available <= 0:
+            _debug.logic(
+                "ticket_sold_out",
+                ticket=ticket,
+                event=ticket.event_id,
+                slot=slot,
+                requested=new_qty,
+                kept=existing_qty,
+            )
             new_qty = existing_qty
             warning = _(
                 "Sorry, The %(ticket)s tickets for the %(event)s event are sold out.",
@@ -76,6 +94,15 @@ class SaleOrder(models.Model):
                 event=ticket.event_id.name,
             )
         elif ticket.seats_limited and qty_added > ticket_seats_available:
+            _debug.logic(
+                "ticket_quantity_clamped",
+                ticket=ticket,
+                event=ticket.event_id,
+                slot=slot,
+                requested=new_qty,
+                available=ticket_seats_available,
+                kept=existing_qty + ticket_seats_available,
+            )
             new_qty = existing_qty + ticket_seats_available
             warning = _(
                 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event%(slot)s.",
@@ -110,6 +137,12 @@ class SaleOrder(models.Model):
         values["event_id"] = ticket.event_id.id
         values["event_ticket_id"] = ticket.id
         values["event_slot_id"] = event_slot_id
+        _debug.pipeline(
+            "ticket_line_values",
+            ticket=ticket,
+            event=ticket.event_id,
+            slot=event_slot_id,
+        )
 
         return values
 
@@ -133,6 +166,14 @@ class SaleOrder(models.Model):
                 offset=updated_line.product_uom_qty,
                 limit=diff,
                 order="create_date asc",
+            )
+            _debug.lifecycle(
+                "attendees_cancelled_on_quantity_drop",
+                order=self,
+                line=updated_line,
+                ticket=updated_line.event_ticket_id,
+                removed=diff,
+                attendees=attendees,
             )
             attendees.action_cancel()
 

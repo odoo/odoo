@@ -1,7 +1,10 @@
 from odoo import http
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+
+_debug = DebugLog(__name__)
 
 
 class EventTrackLiveController(EventTrackController):
@@ -20,7 +23,14 @@ class EventTrackLiveController(EventTrackController):
             limit=1,
         )
         if not track_suggestion:
+            _debug.logic("no_live_track_suggestion", track=track, event=track.event_id)
             return False
+        _debug.pipeline(
+            "live_track_suggestion",
+            track=track,
+            suggestion=track_suggestion,
+            event=track.event_id,
+        )
         track_suggestion_sudo = track_suggestion.sudo()
         track_sudo = track.sudo()
         return self._prepare_track_suggestion_values(track_sudo, track_suggestion_sudo)

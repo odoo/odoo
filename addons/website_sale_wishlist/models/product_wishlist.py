@@ -2,6 +2,9 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductWishlist(models.Model):
@@ -61,6 +64,11 @@ class ProductWishlist(models.Model):
                 ]
             )
 
+        _debug.pipeline(
+            "wishlist_candidates",
+            candidates=wish,
+            anonymous=request.env.user._is_public(),
+        )
         return wish.filtered(
             lambda wish: (
                 wish.sudo().product_id.product_tmpl_id.website_published
@@ -96,24 +104,35 @@ class ProductWishlist(models.Model):
             lambda wish: wish.product_id <= partner_products
         )
         session_wishes -= duplicated_wishes
+        _debug.lifecycle(
+            "wishlist_session_merged",
+            partner=self.env.user.partner_id,
+            adopted=session_wishes,
+            dropped_as_duplicate=duplicated_wishes,
+            already_owned=len(partner_wishes),
+        )
         duplicated_wishes.unlink()
         session_wishes.write({"partner_id": self.env.user.partner_id.id})
         request.session.pop("wishlist_ids")
 
     @api.autovacuum
     def _gc_sessions(self, *args, **kwargs):
-        self.with_context(active_test=False).search(
-            [
-                (
-                    "create_date",
-                    "<",
-                    fields.Datetime.to_string(
-                        datetime.now() - timedelta(weeks=kwargs.get("wishlist_week", 5))
+        with _debug.perf(
+            "wishlist_gc", cr=self.env.cr, weeks=kwargs.get("wishlist_week", 5)
+        ):
+            self.with_context(active_test=False).search(
+                [
+                    (
+                        "create_date",
+                        "<",
+                        fields.Datetime.to_string(
+                            datetime.now()
+                            - timedelta(weeks=kwargs.get("wishlist_week", 5))
+                        ),
                     ),
-                ),
-                ("partner_id", "=", False),
-            ]
-        ).unlink()
+                    ("partner_id", "=", False),
+                ]
+            ).unlink()
 
 
 class ResPartner(models.Model):

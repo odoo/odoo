@@ -1,6 +1,9 @@
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteSaleSlides(WebsiteSale):
@@ -21,4 +24,10 @@ class WebsiteSaleSlides(WebsiteSale):
                 channel_partner.channel_id: channel_partner
                 for channel_partner in channel_partners
             }
+            _debug.pipeline(
+                "course_memberships_on_confirmation",
+                order=order,
+                channels=order.line_ids.product_id.channel_ids,
+                memberships=channel_partners,
+            )
         return values

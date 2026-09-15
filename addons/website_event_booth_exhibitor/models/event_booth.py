@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class EventBooth(models.Model):
@@ -58,6 +61,13 @@ class EventBooth(models.Model):
                 limit=1,
             )
         )
+        _debug.logic(
+            "sponsor_lookup",
+            booth=self,
+            sponsor=sponsor_id,
+            partner=self.partner_id,
+            event=self.event_id,
+        )
         if not sponsor_id:
             values = {
                 "event_id": self.event_id.id,
@@ -73,9 +83,25 @@ class EventBooth(models.Model):
             if not values.get("name"):
                 values["name"] = self.partner_id.name
             sponsor_id = self.env["event.sponsor"].sudo().create(values)
+            _debug.lifecycle(
+                "sponsor_created",
+                booth=self,
+                sponsor=sponsor_id,
+                partner=self.partner_id,
+                event=self.event_id,
+                named_from_partner=not vals.get("sponsor_name"),
+            )
         return sponsor_id.id
 
     def _action_post_confirm(self, write_vals):
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "booths_confirmed",
+                booths=self,
+                sponsoring=self.filtered(
+                    lambda booth: booth.use_sponsor and booth.partner_id
+                ),
+            )
         for booth in self:
             if booth.use_sponsor and booth.partner_id:
                 booth.sponsor_id = booth._get_or_create_sponsor(write_vals)

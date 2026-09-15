@@ -1,6 +1,9 @@
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteEventBoothController(WebsiteEventController):
@@ -16,6 +19,13 @@ class WebsiteEventBoothController(WebsiteEventController):
             booths, kwargs["contact_email"], booth_category=booth_category
         )
         if error_code:
+            _debug.logic(
+                "booth_registration_refused",
+                event=event,
+                booths=booths,
+                category=booth_category,
+                error=error_code,
+            )
             return request.prepare_json_response({"error": error_code})
 
         booth_values = self._prepare_booth_registration_values(event, kwargs)
@@ -28,9 +38,20 @@ class WebsiteEventBoothController(WebsiteEventController):
             event_booth_pending_ids=booths.ids,
             registration_values=booth_values,
         )
+        _debug.pipeline(
+            "booth_added_to_cart",
+            event=event,
+            order=order_sudo,
+            booths=booths,
+            category=booth_category,
+            amount_total=order_sudo.amount_total,
+        )
         if order_sudo.amount_total:
             return request.prepare_json_response({"redirect": "/shop/cart"})
         else:
+            _debug.lifecycle(
+                "free_booth_order_confirmed", order=order_sudo, event=event
+            )
             order_sudo.action_confirm()
             request.website.sale_reset()
 

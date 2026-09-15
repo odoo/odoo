@@ -1,8 +1,11 @@
 import base64
 
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import plaintext2html
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteEventBoothController(WebsiteEventController):
@@ -21,6 +24,13 @@ class WebsiteEventBoothController(WebsiteEventController):
             **self._prepare_booth_registration_sponsor_values(
                 event, booth_values, kwargs
             )
+        )
+        _debug.pipeline(
+            "booth_sponsor_values",
+            event=event,
+            from_sponsor_email=bool(kwargs.get("sponsor_email")),
+            from_sponsor_name=bool(kwargs.get("sponsor_name")),
+            has_image=bool(kwargs.get("sponsor_image")),
         )
         return booth_values
 

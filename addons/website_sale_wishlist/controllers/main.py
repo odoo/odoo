@@ -1,4 +1,7 @@
 from odoo.http import Controller, request, route
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteSaleWishlist(Controller):
@@ -29,6 +32,13 @@ class WebsiteSaleWishlist(Controller):
                 "wishlist_ids", []
             ) + [wish.id]
 
+        _debug.lifecycle(
+            "wishlist_add",
+            product=product,
+            wish=wish,
+            price=price,
+            anonymous=not partner_id,
+        )
         return wish
 
     @route("/shop/wishlist", type="http", auth="public", website=True, sitemap=False)
@@ -39,6 +49,7 @@ class WebsiteSaleWishlist(Controller):
             .current()
         )
 
+        _debug.pipeline("wishlist_page", wishes=wishes)
         return request.render(
             "website_sale_wishlist.product_wishlist",
             {
@@ -54,6 +65,9 @@ class WebsiteSaleWishlist(Controller):
     )
     def remove_from_wishlist(self, wish_id, **kw):
         wish = request.env["product.wishlist"].browse(wish_id)
+        _debug.lifecycle(
+            "wishlist_remove", wish=wish, anonymous=request.env.user._is_public()
+        )
         if request.env.user._is_public():
             wish_ids = request.session.get("wishlist_ids") or []
             if wish_id in wish_ids:

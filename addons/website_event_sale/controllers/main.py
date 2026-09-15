@@ -2,9 +2,12 @@ from collections import defaultdict
 
 from odoo import Command
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteEventSaleController(WebsiteEventController):
@@ -16,6 +19,11 @@ class WebsiteEventSaleController(WebsiteEventController):
 
     def _create_attendees_from_registration_post(self, event, registration_data):
         if not any(info.get("event_ticket_id") for info in registration_data):
+            _debug.logic(
+                "attendees_without_tickets",
+                event=event,
+                registrations=len(registration_data),
+            )
             return super()._create_attendees_from_registration_post(
                 event, registration_data
             )
@@ -36,6 +44,12 @@ class WebsiteEventSaleController(WebsiteEventController):
             all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values())
             and not request.cart.id
         ):
+            _debug.logic(
+                "free_tickets_no_cart",
+                event=event,
+                tickets=len(event_ticket_by_id),
+                registrations=len(registration_data),
+            )
             return super()._create_attendees_from_registration_post(
                 event, registration_data
             )
@@ -58,6 +72,14 @@ class WebsiteEventSaleController(WebsiteEventController):
                 event_slot_id=slot_id,
             )
             cart_data[slot_id, ticket_id] = cart_values["line_id"]
+            _debug.lifecycle(
+                "ticket_added_to_cart",
+                order=order_sudo,
+                ticket=ticket_sudo,
+                slot=slot_id,
+                quantity=count,
+                line=cart_values["line_id"],
+            )
 
         for data in registration_data:
             event_slot_id = data.get("event_slot_id", False)
@@ -87,9 +109,18 @@ class WebsiteEventSaleController(WebsiteEventController):
         registrations = self._process_attendees_form(event, post)
         order_sudo = request.cart
         if not any(line.event_ticket_id for line in order_sudo.line_ids):
+            _debug.logic("confirm_without_ticket_lines", event=event, order=order_sudo)
             return res
 
         if any(info["event_ticket_id"] for info in registrations):
+            _debug.pipeline(
+                "registration_confirm",
+                event=event,
+                order=order_sudo,
+                amount_total=order_sudo.amount_total,
+                registrations=len(registrations),
+                anonymous=order_sudo._is_anonymous_cart(),
+            )
             if order_sudo.amount_total:
                 if order_sudo._is_anonymous_cart():
                     booked_by_partner, feedback_dict = (
@@ -100,11 +131,18 @@ class WebsiteEventSaleController(WebsiteEventController):
                             **self._registration_address_values(registrations[0]),
                         )
                     )
+                    _debug.logic(
+                        "anonymous_cart_address",
+                        order=order_sudo,
+                        partner=booked_by_partner,
+                        invalid_fields=feedback_dict.get("invalid_fields") or (),
+                    )
                     if not feedback_dict.get("invalid_fields"):
                         order_sudo._update_address(booked_by_partner.id, ["partner_id"])
                 request.session["sale_last_order_id"] = order_sudo.id
                 return request.redirect("/shop/checkout?try_skip_step=true")
             else:
+                _debug.lifecycle("free_order_confirmed", order=order_sudo, event=event)
                 order_sudo.action_confirm()
                 request.website.sale_reset()
                 request.session["sale_last_order_id"] = order_sudo.id

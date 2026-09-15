@@ -1,12 +1,17 @@
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteUrl(http.Controller):
     @http.route("/website_links/new", type="jsonrpc", auth="user", methods=["POST"])
     def create_shorten_url(self, **post):
         if "url" not in post or post["url"] == "":
+            _debug.logic("shorten_url_refused", reason="empty_url")
             return {"error": "empty_url"}
+        _debug.lifecycle("shorten_url", campaign=post.get("campaign_id"))
         return (
             request.env["link.tracker"]
             .with_context(link_tracker_fetch_title=True)
@@ -40,7 +45,9 @@ class WebsiteUrl(http.Controller):
             [("code", "=", post["new_code"]), ("link_id", "=", link_id)], limit=1
         )
         if existing:
+            _debug.logic("link_code_reused", link=link_id, code=post.get("new_code"))
             return existing.read()
+        _debug.lifecycle("link_code_created", link=link_id, code=post.get("new_code"))
         return (
             request.env["link.tracker.code"]
             .create({"code": post["new_code"], "link_id": link_id})
@@ -66,4 +73,5 @@ class WebsiteUrl(http.Controller):
                 },
             )
         else:
+            _debug.logic("link_statistics_unknown_code")
             return request.redirect("/", code=301)

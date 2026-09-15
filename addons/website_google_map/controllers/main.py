@@ -2,7 +2,10 @@ import contextlib
 
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.json import scriptsafe
+
+_debug = DebugLog(__name__)
 
 
 class GoogleMap(http.Controller):
@@ -31,6 +34,13 @@ class GoogleMap(http.Controller):
             partners = PartnerSudo.search(domain, limit=limit)
         else:
             partners = PartnerSudo
+        _debug.pipeline(
+            "google_map_partners",
+            by_ids=bool(post.get("partner_ids")),
+            requested=len(clean_ids),
+            limit=limit,
+            partners=partners,
+        )
 
         partner_data = {"counter": len(partners), "partners": []}
         for partner in partners.with_context(show_address=True):
@@ -53,6 +63,11 @@ class GoogleMap(http.Controller):
             partner_url = "/partners/"
 
         google_maps_api_key = request.website.google_maps_api_key
+        _debug.logic(
+            "google_map_page",
+            partner_url=partner_url,
+            has_api_key=bool(google_maps_api_key),
+        )
         values = {
             "partner_url": partner_url,
             "partner_data": scriptsafe.dumps(partner_data),

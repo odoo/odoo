@@ -1,4 +1,7 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -12,6 +15,12 @@ class SaleOrder(models.Model):
             for line in self.line_ids.filtered(lambda l: l.product_id.type != "service")
         )
         if mixing_products:
+            _debug.logic(
+                "gelato_mixed_cart_refused",
+                order=self,
+                product=product,
+                gelato=bool(product.gelato_product_uid),
+            )
             return 0, _(
                 "The product %(product_name)s cannot be added to the cart as it requires separate"
                 " shipping. Please place your order for the current cart first.",

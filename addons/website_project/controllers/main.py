@@ -1,9 +1,12 @@
 from odoo import Command, _
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import nl2br, nl2br_enclose
 from odoo.tools import html2plaintext
 
 from odoo.addons.website.controllers import form
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteForm(form.WebsiteForm):
@@ -13,6 +16,11 @@ class WebsiteForm(form.WebsiteForm):
             visitor_sudo = request.env["website.visitor"]._get_visitor_from_request()
             visitor_partner = visitor_sudo.partner_id
             if visitor_partner:
+                _debug.logic(
+                    "task_partner_from_visitor",
+                    visitor=visitor_sudo,
+                    partner=visitor_partner,
+                )
                 values["partner_id"] = visitor_partner.id
             values.setdefault("user_ids", False)
 
@@ -36,6 +44,12 @@ class WebsiteForm(form.WebsiteForm):
         if default_field.name:
             if default_field.ttype == "html":
                 custom_content = nl2br(custom_content)
+            _debug.lifecycle(
+                "task_description_from_form",
+                task=task,
+                field=default_field.name,
+                ttype=default_field.ttype,
+            )
             task[default_field.name] = custom_content
             task._message_log(
                 body=custom_content,
@@ -54,6 +68,11 @@ class WebsiteForm(form.WebsiteForm):
                 )
             )
             data["record"]["email_from"] = values["email_from"]
+            _debug.logic(
+                "task_form_partner_lookup",
+                email=values["email_from"],
+                partner=partner,
+            )
             if partner:
                 data["record"]["partner_id"] = partner.id
                 custom = [

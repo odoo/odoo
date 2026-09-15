@@ -2,8 +2,11 @@ import json
 
 from odoo import _
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.website.controllers.form import WebsiteForm
+
+_debug = DebugLog(__name__)
 
 
 class WebsiteNewsletterForm(WebsiteForm):
@@ -19,6 +22,11 @@ class WebsiteNewsletterForm(WebsiteForm):
                 .search([("id", "in", list_ids), ("is_public", "=", False)])
             )
             if private_list_ids:
+                _debug.logic(
+                    "newsletter_private_lists_refused",
+                    requested=len(list_ids),
+                    private=private_list_ids,
+                )
                 return json.dumps(
                     {
                         "error": _(

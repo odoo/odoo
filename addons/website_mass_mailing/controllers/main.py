@@ -1,8 +1,11 @@
 from odoo import Command, _, tools
 from odoo.exceptions import UserError
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.mass_mailing.controllers import main
+
+_debug = DebugLog(__name__)
 
 
 class MassMailController(main.MassMailController):
@@ -31,6 +34,13 @@ class MassMailController(main.MassMailController):
             )
             is_subscriber = contacts_count > 0
 
+        _debug.logic(
+            "is_subscriber",
+            list_id=list_id,
+            subscription_type=subscription_type,
+            has_value=bool(value),
+            is_subscriber=is_subscriber,
+        )
         return {"is_subscriber": is_subscriber, "value": value}
 
     def _get_value(self, subscription_type):
@@ -63,6 +73,7 @@ class MassMailController(main.MassMailController):
                 "website_mass_mailing_subscribe"
             )
         except UserError as e:
+            _debug.logic("subscribe_recaptcha_refused", list_id=list_id, error=e)
             return {
                 "toast_type": "danger",
                 "toast_content": str(e),
@@ -102,9 +113,19 @@ class MassMailController(main.MassMailController):
             contact_id = Contacts.search([(search_fname, "=", value)], limit=1)
             if not contact_id:
                 contact_id = Contacts.create({"name": name, fname: create_value})
+                _debug.lifecycle(
+                    "mailing_contact_created",
+                    contact=contact_id,
+                    list_id=list_id,
+                    subscription_type=subscription_type,
+                )
             ContactSubscription.create(
                 {"contact_id": contact_id.id, "list_id": int(list_id)}
             )
+            _debug.lifecycle(
+                "subscription_created", contact=contact_id, list_id=list_id
+            )
         elif subscription.opt_out:
+            _debug.lifecycle("subscription_opt_in_restored", subscription=subscription)
             subscription.opt_out = False
         request.session[f"mass_mailing_{fname}"] = value

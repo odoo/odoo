@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -25,6 +28,12 @@ class SaleOrder(models.Model):
     def _get_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         product = self.env["product.product"].browse(product_id)
         if product.service_tracking == "event_booth" and new_qty > 1:
+            _debug.logic(
+                "booth_quantity_forced_to_one",
+                line=order_line,
+                product=product,
+                requested=new_qty,
+            )
             return 1, _(
                 "You cannot manually change the quantity of an Event Booth product."
             )
@@ -57,6 +66,7 @@ class SaleOrder(models.Model):
             )
             for booth in booths
         ]
+        _debug.pipeline("booth_line_values", event=booths.event_id, booths=booths)
 
         return values
 
@@ -77,6 +87,12 @@ class SaleOrder(models.Model):
             return values
 
         booths = self.env["event.booth"].browse(event_booth_pending_ids)
+        _debug.pipeline(
+            "booth_line_registrations_replaced",
+            line=order_line,
+            existing=order_line.event_booth_registration_ids,
+            booths=booths,
+        )
         values["event_booth_registration_ids"] = [
             Command.delete(registration.id)
             for registration in order_line.event_booth_registration_ids

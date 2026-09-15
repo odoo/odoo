@@ -1,5 +1,8 @@
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -19,6 +22,12 @@ class ProductTemplate(models.Model):
         image_count_before_sync = len(self.gelato_image_ids)
         res = super().action_sync_gelato_template_info()
         if image_count_before_sync < len(self.gelato_image_ids):
+            _debug.lifecycle(
+                "unpublished_after_gelato_sync",
+                product=self,
+                before=image_count_before_sync,
+                after=len(self.gelato_image_ids),
+            )
             self.is_published = False
         return res
 
