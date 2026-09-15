@@ -78,6 +78,20 @@ repeatedly on subsequent supervision passes. A failed initial preload also
 returns a failing exit status in serving mode, for both threaded and prefork
 servers, before starting cron and job workers.
 
+### Stopping a threaded server
+
+A first SIGINT/SIGTERM (or a SIGHUP, which re-execs afterwards) runs
+`ThreadedServer.stop()` in this order: the listener threads are told to stop
+(an event plus a wakeup pipe every `CronListener` watches), the HTTP server
+stops accepting and closes idle connections (`shutdown()`), then **waits for
+the busy request threads** (`ThreadedHTTPServer.drain()`, bounded by
+`ODOO_GRACEFUL_STOP_TIMEOUT`, 60 s; a request already over `limit_time_real`
+is not waited for), closes the listening socket, runs the stop hooks, joins
+the listener threads for up to 1 s so each closes its own PostgreSQL session,
+and closes the pools. A second signal forces an immediate exit. The evented
+process drains the same way. Before 2026-09-15 the socket closed under every
+in-flight request and the listener sessions were left to the kernel.
+
 ## The limits that end a request or a worker
 
 Defaults, from `odoo/tools/config.py`:
