@@ -386,3 +386,7 @@ export function addChartFigureToCarousel(
         sheetId,
     });
 }
+
+export function lockSheet(model, sheetId = model.getters.getActiveSheetId()) {
+    return model.dispatch("LOCK_SHEET", { sheetId });
+}
