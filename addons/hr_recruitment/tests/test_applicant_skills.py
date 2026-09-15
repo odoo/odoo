@@ -561,6 +561,33 @@ class TestApplicantSkills(TransactionCase):
         self.assertEqual(applicant.matching_score, 78)
         self.assertTrue(applicant.is_degree_score_matching)
 
+    def test_matching_score_with_expected_experience(self):
+        applicant = self.env["hr.applicant"].create({
+            "partner_name": "Experienced Applicant",
+            "job_id": self.t_job.id,
+            "experience": 2,
+        })
+        # Only the experience is expected: it is the whole score, all or nothing
+        self.t_job.expected_experience = 3
+        self.assertFalse(applicant.is_experience_score_matching)
+        self.assertEqual(applicant.matching_score, 0)
+        applicant.experience = 3
+        self.assertTrue(applicant.is_experience_score_matching)
+        self.assertEqual(applicant.experience_score, 100)
+        self.assertEqual(applicant.matching_score, 100)
+
+        # With a degree, the experience weighs as much as the degree
+        self.t_job.expected_degree = self.env["hr.recruitment.degree"].create({"name": "Master", "score": 1})
+        self.assertEqual(applicant.experience_score, 50)
+        self.assertEqual(applicant.degree_score, 0)
+        self.assertEqual(applicant.matching_score, 50)
+
+        # A criterion left empty on the job doesn't count
+        self.t_job.expected_experience = 0
+        self.assertFalse(applicant.is_experience_score_matching)
+        self.assertEqual(applicant.experience_score, 0)
+        self.assertEqual(applicant.matching_score, 0)
+
     def test_compute_matching_skill_ids_with_matching_job_context(self):
         source_job = self.env["hr.job"].create({"name": "Source Job"})
         target_job = self.env["hr.job"].create({"name": "Target Job"})

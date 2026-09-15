@@ -185,12 +185,21 @@ class HrApplicant(models.Model):
     matching_score = fields.Integer(string="Matching Score", compute="_compute_matching_score", store=True)
     degree_score = fields.Integer(string="Degree Score", compute="_compute_matching_score", store=True)
     skills_score = fields.Integer(string="Skills Score", compute="_compute_matching_score", store=True)
+    experience_score = fields.Integer(string="Experience Score", compute="_compute_matching_score", store=True)
     is_degree_score_matching = fields.Boolean(string="Degree Score Matching",
         compute="_compute_matching_skill_ids")
     job_expected_degree = fields.Many2one('hr.recruitment.degree', related='job_id.expected_degree',
         string='Job Degree', readonly=True)
+    experience = fields.Integer(string="Experience", help="Years of experience of the applicant")
+    is_experience_score_matching = fields.Boolean(string="Experience Score Matching",
+        compute="_compute_matching_skill_ids")
+    job_expected_experience = fields.Integer(related='job_id.expected_experience', string='Job Experience')
 
     _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
+    _experience_positive = models.Constraint(
+        'CHECK(experience >= 0)',
+        'The experience of an applicant cannot be negative.',
+    )
 
     @api.constrains("talent_pool_ids", "pool_applicant_id")
     def _check_talent_pool_required(self):
@@ -694,18 +703,22 @@ class HrApplicant(models.Model):
             applicant.skill_ids = applicant.applicant_skill_ids._filter_company_visible().skill_id
 
     @api.depends_context("matching_job_id")
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.company_id",
-                 "job_id.job_skill_ids.skill_type_id.company_id", "job_id.expected_degree")
+    @api.depends(
+        "current_applicant_skill_ids", "type_id", "experience",
+        "job_id", "job_id.job_skill_ids", "job_id.company_id", "job_id.job_skill_ids.skill_type_id.company_id",
+        "job_id.expected_degree", "job_id.expected_experience",
+    )
     def _compute_matching_skill_ids(self):
         matching_job_id = self.env.context.get("matching_job_id")
         matching_job = self.env["hr.job"].browse(matching_job_id)
         for applicant in self:
             job = matching_job or applicant.job_id
             job_skills = job.job_skill_ids._filter_company_visible()
-            if not job or not (job_skills or job.expected_degree):
+            if not job or not (job_skills or job.expected_degree or job.expected_experience):
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.is_degree_score_matching = False
+                applicant.is_experience_score_matching = False
                 continue
             job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
             matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
@@ -714,9 +727,13 @@ class HrApplicant(models.Model):
             applicant.matching_skill_ids = matching_applicant_skills.mapped("skill_id")
             applicant.missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
             applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
+            applicant.is_experience_score_matching = bool(job.expected_experience) and applicant.experience >= job.expected_experience
 
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.company_id",
-                 "job_id.job_skill_ids.skill_type_id.company_id", "job_id.expected_degree")
+    @api.depends(
+        "current_applicant_skill_ids", "type_id", "experience",
+        "job_id", "job_id.job_skill_ids", "job_id.company_id", "job_id.job_skill_ids.skill_type_id.company_id",
+        "job_id.expected_degree", "job_id.expected_experience",
+    )
     def _compute_matching_score(self):
         matching_job = self.env["hr.job"].browse(self.env.context.get('matching_job_id'))[:1]
         for applicant in self:
@@ -725,13 +742,15 @@ class HrApplicant(models.Model):
 
     def _get_matching_scores(self, job):
         self.ensure_one()
-        scores = dict.fromkeys(("degree_score", "skills_score", "matching_score"), 0)
+        scores = dict.fromkeys(("degree_score", "skills_score", "experience_score", "matching_score"), 0)
         job_skills = job.job_skill_ids._filter_company_visible()
-        if not job or not (job_skills or job.expected_degree):
+        if not job or not (job_skills or job.expected_degree or job.expected_experience):
             return scores
 
         job_degree = job.expected_degree.sudo().score * 100
-        job_total = sum(job_skills.mapped("level_progress")) + job_degree
+        # The expected experience weighs as much as a degree: all or nothing
+        job_experience = 100 if job.expected_experience else 0
+        job_total = sum(job_skills.mapped("level_progress")) + job_degree + job_experience
 
         if not job_total:
             return scores
@@ -746,9 +765,11 @@ class HrApplicant(models.Model):
             for skill in matching_skills
         )
 
+        applicant_experience = job_experience if self.experience >= job.expected_experience else 0
         scores["degree_score"] = round((100 * applicant_degree) / job_total)
         scores["skills_score"] = round((100 * skills_total) / job_total)
-        scores["matching_score"] = scores["degree_score"] + scores["skills_score"]
+        scores["experience_score"] = round((100 * applicant_experience) / job_total)
+        scores["matching_score"] = scores["degree_score"] + scores["skills_score"] + scores["experience_score"]
         return scores
 
     def copy_data(self, default=None):
