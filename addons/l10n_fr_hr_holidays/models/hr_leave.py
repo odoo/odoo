@@ -5,6 +5,9 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrLeave(models.Model):
@@ -18,6 +21,19 @@ class HrLeave(models.Model):
         # - the company is french
         # - the leave_type is the reference leave_type of that company
         self.check_singleton()
+        if _debug.logic.enabled:
+            # the three cheap conditions only: the fourth calls
+            # `_get_fr_reference_leave_type`, which RAISES when the company has
+            # not set one, and an argument is evaluated before the level check
+            _debug.logic(
+                "fr_leave_gate",
+                leave=self,
+                employee=self.employee_id,
+                country=self.company_id.country_id.code,
+                own_calendar=(
+                    self.resource_calendar_id != self.company_id.resource_calendar_id
+                ),
+            )
         return (
             self.employee_id
             and self.company_id.country_id.code == "FR"
@@ -33,6 +49,12 @@ class HrLeave(models.Model):
         # The following computation doesn't work for resource calendars in
         # which the employee works zero hours.
         if not (self.resource_calendar_id.attendance_ids):
+            _debug.logic(
+                "fr_leave_refused",
+                reason="calendar_has_no_attendance",
+                leave=self,
+                calendar=self.resource_calendar_id,
+            )
             raise UserError(
                 _(
                     "An employee can't take paid time off in a period without any work hours."
@@ -127,6 +149,13 @@ class HrLeave(models.Model):
             )
             if len(attendance_ids) == 2:
                 # The employee took the morning off on a day where he works the afternoon aswell
+                _debug.logic(
+                    "fr_leave_dates_unchanged",
+                    reason="half_day_morning_on_a_full_working_day",
+                    leave=self,
+                    date_from=date_from,
+                    date_to=date_to,
+                )
                 return (date_from, date_to)
 
         # Check calendars for working days until we find the right target, start at date_to + 1 day
@@ -145,6 +174,14 @@ class HrLeave(models.Model):
             date_target += relativedelta(days=1)
 
         # Undo the last day increment
+        _debug.logic(
+            "fr_leave_dates_extended",
+            leave=self,
+            requested_from=date_from,
+            requested_to=date_to,
+            legal_from=date_start,
+            legal_to=date_target,
+        )
         return (date_start, date_target)
 
     @api.depends(
@@ -164,6 +201,15 @@ class HrLeave(models.Model):
             if leave._l10n_fr_leave_applies():
                 new_date_from, new_date_to = leave._get_fr_date_from_to(
                     leave.date_from, leave.date_to
+                )
+                _debug.lifecycle(
+                    "fr_leave_dates_recomputed",
+                    leave=leave,
+                    was_from=leave.date_from,
+                    now_from=new_date_from,
+                    was_to=leave.date_to,
+                    now_to=new_date_to,
+                    pushed=new_date_to != leave.date_to,
                 )
                 if new_date_from != leave.date_from:
                     leave.date_from = new_date_from
@@ -188,6 +234,12 @@ class HrLeave(models.Model):
                 resource_calendar=resource_calendar
             )
             fr_leaves_by_company = fr_leaves.grouped("company_id")
+            _debug.pipeline(
+                "fr_durations_start",
+                leaves=self,
+                french=fr_leaves,
+                companies=len(fr_leaves_by_company),
+            )
             if fr_leaves:
                 public_holidays = self.env["resource.calendar.leaves"].search(
                     [
@@ -225,8 +277,21 @@ class HrLeave(models.Model):
                     while current <= holiday_date_to:
                         holidays_days_list.append(current)
                         current += relativedelta(days=1)
+                _debug.perf.count(
+                    "fr_public_holidays_expanded",
+                    company=company,
+                    leaves=leaves,
+                    public_holidays=public_holidays_filtered,
+                    holiday_days=len(holidays_days_list),
+                )
                 for leave in leaves:
                     if leave.request_unit_half:
+                        _debug.logic(
+                            "fr_duration_delegated",
+                            reason="half_day_request",
+                            leave=leave,
+                            calendar=company_cal,
+                        )
                         duration_by_leave_id.update(
                             leave._get_durations(resource_calendar=company_cal)
                         )
@@ -252,11 +317,26 @@ class HrLeave(models.Model):
                         if company_cal._works_on_date(current):
                             legal_days += 1.0
                         current += relativedelta(days=1)
+                    _debug.perf.count(
+                        "fr_duration_standard_recomputed",
+                        leave=leave,
+                        leaves_in_company=leaves,
+                    )
                     standard_duration = super()._get_durations(
                         resource_calendar=resource_calendar
                     )
                     _, hours = standard_duration.get(leave.id, (0.0, 0.0))
 
+                    _debug.logic(
+                        "fr_duration_legal",
+                        leave=leave,
+                        company=company,
+                        requested_to=date_end,
+                        extended_to=extended_date_end,
+                        legal_days=legal_days,
+                        standard_days=standard_duration.get(leave.id, (0.0, 0.0))[0],
+                        hours=hours,
+                    )
                     duration_by_leave_id[leave.id] = (legal_days, hours)
 
             return duration_by_leave_id
