@@ -136,3 +136,4 @@ from . import test_ir_actions_webhook
 from . import test_xml_utils
 from . import test_device_log_isolation
 from . import test_id_sequence_names
+from . import test_x2many_cache_scope
