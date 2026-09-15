@@ -123,33 +123,23 @@ class HrEmployee(models.Model):
                 calendars=len(work_hours_data),
             )
             for global_time_off in global_leaves:
-                if _debug.logic.enabled:
-                    # `_work_time_per_day` keys by calendar first, then by
-                    # leave, so `work_hours_data[global_time_off.id]` below
-                    # reads a leave id at the calendar level. Guarded because
-                    # reading a `defaultdict` inserts the missing key, and an
-                    # argument is evaluated before the channel's level check
-                    _debug.logic(
-                        "public_holiday_line_total_lookup",
-                        employee=employee,
-                        global_time_off=global_time_off,
-                        days_by_calendar=len(
-                            work_hours_data[employee.resource_calendar_id.id][
-                                global_time_off.id
-                            ]
-                        ),
-                        days_by_leave_key=len(work_hours_data[global_time_off.id]),
-                    )
-                for index, (day_date, work_hours_count) in enumerate(
-                    work_hours_data[employee.resource_calendar_id.id][
-                        global_time_off.id
-                    ]
-                ):
+                # `_work_time_per_day` keys by calendar first and by leave
+                # second; both reads below take the pair.
+                leave_days = work_hours_data[employee.resource_calendar_id.id][
+                    global_time_off.id
+                ]
+                _debug.logic(
+                    "public_holiday_line_total",
+                    employee=employee,
+                    global_time_off=global_time_off,
+                    days=len(leave_days),
+                )
+                for index, (day_date, work_hours_count) in enumerate(leave_days):
                     lines_vals.append(
                         global_time_off._timesheet_prepare_line_values(
                             index,
                             employee,
-                            work_hours_data[global_time_off.id],
+                            leave_days,
                             day_date,
                             work_hours_count,
                         )

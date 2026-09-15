@@ -295,6 +295,47 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         )
         self.assertEqual(len(timesheets_full_time_employee), 7)
 
+    def test_reactivation_names_lines_with_the_real_day_total(self):
+        """A regenerated public-holiday line is "Time Off (i/n)", never (i/0).
+
+        `_work_time_per_day` returns `{calendar_id: {leave_id: [(date, hours)]}}`.
+        `_create_future_public_holidays_timesheets` used to hand
+        `work_hours_data[global_time_off.id]` to the line-name builder as the
+        total -- a leave id read at the calendar level, which a `defaultdict`
+        answers with an empty mapping instead of raising. Every line the
+        reactivation path produced was therefore named "Time Off (1/0)".
+        Nothing failed, because no test asserted a name.
+        """
+        today = datetime.today()
+        leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)
+
+        self.env["resource.calendar.leaves"].create(
+            {
+                "name": "Test",
+                "calendar_id": self.test_company.resource_calendar_id.id,
+                "date_from": leave_start_datetime,
+                "date_to": leave_start_datetime + timedelta(days=5),
+            }
+        )
+
+        self.full_time_employee.active = False
+        self.full_time_employee.active = True
+
+        timesheets = self.env["account.analytic.line"].search(
+            [
+                ("employee_id", "=", self.full_time_employee.id),
+                ("global_leave_id", "!=", False),
+            ]
+        )
+        self.assertTrue(timesheets, "the reactivation must regenerate the lines")
+        for leave, lines in timesheets.grouped("global_leave_id").items():
+            totals = {int(line.name.rsplit("/", 1)[1].rstrip(")")) for line in lines}
+            self.assertEqual(
+                totals,
+                {len(lines)},
+                f"every line of {leave.name} must state the real day total",
+            )
+
     def test_no_timesheet_on_off_days(self):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)
