@@ -1234,6 +1234,55 @@ test("Delete record with side-effect compute to insert it should have resulting 
     expect(discussApp.state.thread).toBe(undefined);
 });
 
+test("side-effect of double deletion of record should work as expected with no crash'", async () => {
+    (class Channel extends Record {
+        static id = "name";
+        name;
+        correspondent = Record.one("Member", {
+            compute() {
+                return this.members[0];
+            },
+        });
+        members = Record.many("Member", {
+            onDelete: (r) => r.delete(),
+        });
+        parent = Record.one("Channel", {
+            onDelete() {
+                this.delete(); // important: triggers double-deletion when deleting sub-thread.
+            },
+        });
+        threads = Record.many("Channel", { inverse: "parent" });
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "partner";
+        partner = Record.one("Partner");
+        channel = Record.one("Channel", { inverse: "members" });
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Channel.insert("general");
+    const suggestions = store.Channel.insert("Suggestions");
+    suggestions.parent = general;
+    const mitchell = store.Partner.insert("Mitchell");
+    const marc = store.Partner.insert("Marc");
+    const joel = store.Partner.insert("Joel");
+    general.members.push({ partner: mitchell });
+    general.members.push({ partner: marc });
+    general.members.push({ partner: joel });
+    suggestions.members.push({ partner: mitchell });
+    const reactiveGeneral = reactive(general, render);
+    function render() {
+        // Important: observe computed field `correspondent` lazily to trigger internal onChange
+        void reactiveGeneral?.threads.forEach((t) => t.correspondent?.partner.name);
+    }
+    render();
+    suggestions.delete();
+    expect(suggestions.exists()).toBe(false);
+});
+
 test("Record exists is reactive", async () => {
     (class Thread extends Record {
         static id = "name";
