@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -105,6 +108,12 @@ class SaleOrder(models.Model):
 
             show_warning = declaration and order.state != "cancelled"
             if not show_warning:
+                _debug.logic(
+                    "doi_warning_skipped",
+                    order=order,
+                    declaration=declaration,
+                    state=order.state,
+                )
                 continue
 
             declaration_not_yet_invoiced = declaration.not_yet_invoiced
@@ -136,6 +145,14 @@ class SaleOrder(models.Model):
                 declaration.invoiced, declaration_not_yet_invoiced
             )
 
+            _debug.logic(
+                "doi_warning",
+                order=order,
+                declaration=declaration,
+                validity=len(validity_warnings),
+                threshold_shown=bool(threshold_warning),
+                not_yet_invoiced=declaration_not_yet_invoiced,
+            )
             order.l10n_it_edi_doi_warning = "{}\n\n{}".format(
                 "\n".join(validity_warnings), threshold_warning
             ).strip()
@@ -148,6 +165,11 @@ class SaleOrder(models.Model):
                 order.company_id.l10n_it_edi_doi_fiscal_position_id
             )
             if declaration_fiscal_position and order.l10n_it_edi_doi_id:
+                _debug.logic(
+                    "fiscal_position_from_declaration",
+                    order=order,
+                    fiscal_position=declaration_fiscal_position,
+                )
                 order.fiscal_position_id = declaration_fiscal_position
 
     def _prepare_invoice_vals(self):
@@ -225,6 +247,7 @@ class SaleOrder(models.Model):
                     )
                 )
         if errors:
+            _debug.logic("doi_configuration_refused", orders=self, errors=len(errors))
             raise UserError("\n".join(errors))
 
     def action_send_quotation(self):
@@ -255,6 +278,7 @@ class SaleOrder(models.Model):
                 sales_order=True,
             )
             if errors:
+                _debug.logic("doi_rejected", order=order, errors=len(errors))
                 raise ValidationError("\n".join(errors))
 
     def action_view_declaration_of_intent(self):

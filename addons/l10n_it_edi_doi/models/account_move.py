@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -207,6 +210,7 @@ class AccountMove(models.Model):
                 move.company_id, move.partner_id.commercial_partner_id, move.currency_id
             )
             if validity_errors:
+                _debug.logic("doi_rejected", move=move, errors=len(validity_errors))
                 raise UserError("\n".join(validity_errors))
 
     def _post_entries(self):
@@ -248,6 +252,7 @@ class AccountMove(models.Model):
                     )
                 )
         if errors:
+            _debug.logic("doi_post_refused", moves=self, errors=len(errors))
             raise UserError("\n".join(errors))
 
         return super()._post_entries()

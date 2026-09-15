@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import formatLang
+
+_debug = DebugLog(__name__)
 
 
 class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
@@ -184,6 +187,15 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         """
         self.check_singleton()
         updated_remaining = self.threshold - invoiced - not_yet_invoiced
+        _debug.logic(
+            "threshold_warning",
+            declaration=self,
+            threshold=self.threshold,
+            invoiced=invoiced,
+            not_yet_invoiced=not_yet_invoiced,
+            remaining=updated_remaining,
+            exceeded=self.currency_id.compare_amounts(updated_remaining, 0) < 0,
+        )
         if self.currency_id.compare_amounts(updated_remaining, 0) >= 0:
             return ""
         return _(
@@ -234,6 +246,8 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
                         partner=partner.commercial_partner_id.name,
                     )
                 )
+        if _debug.logic.enabled and errors:
+            _debug.logic("declaration_invalid", declarations=self, errors=len(errors))
         return errors
 
     def _get_validity_warnings(
@@ -279,6 +293,13 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
                             date=date,
                         )
                     )
+        _debug.logic(
+            "declaration_validity",
+            declarations=self,
+            warnings=len(errors),
+            sales_order=sales_order,
+            only_blocking=only_blocking,
+        )
         return errors
 
     @api.model
@@ -287,6 +308,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         Fetch a declaration of intent that is valid for the specified `company`, `partner`, `date` and `currency`
         and has not reached the threshold yet.
         """
+        _debug.perf.count("valid_declaration_lookup", company=company, partner=partner)
         return self.search(
             [
                 ("state", "=", "active"),
@@ -303,6 +325,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_document(self):
         if self.invoice_ids or self.sale_order_ids:
+            _debug.logic("declaration_unlink_refused", declarations=self)
             raise UserError(
                 _(
                     "You cannot delete Declarations of Intents that are already used on at least one Invoice or Sales Order."
