@@ -16,10 +16,20 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Contacts" sample="1" multi_edit="1">
+<<<<<<< 68e54ebfb1f9a258ff2d7ca986928d2d97455ed1
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded border object-fit-contain'}" width="30" nolabel="1"/>
                     <field name="complete_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
                     <field name="display_name" string="Name"/>
                     <field name="create_date" optional="hide"/>
+||||||| 18a960f0b4830e5b978ae5bc9de0577422db3fcf
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                    <field name="complete_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+                    <field name="display_name" string="Name"/>
+=======
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                    <field name="complete_name" string="Name"/>
+                    <field name="display_name" string="Name" column_invisible="True"/> <!-- Needed for customized views -->
+>>>>>>> 6bf0dc546d9faae22d67c9e01c9d8849288a75d5
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
@@ -393,6 +403,58 @@
                                     <field name="parent_id" class="w-100 m-0" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'w-100 rounded border object-fit-contain'}"/>
                                 </t>
                             </aside>
+<<<<<<< 68e54ebfb1f9a258ff2d7ca986928d2d97455ed1
+||||||| 18a960f0b4830e5b978ae5bc9de0577422db3fcf
+                            <main class="ps-2">
+                                <div class="mb-1" invisible="True">
+                                    <field name="complete_name" class="mb-0 fw-bold fs-5"/>
+                                </div>
+                                <div class="mb-1">
+                                    <field name="display_name" class="mb-0 fw-bold fs-5"/>
+                                </div>
+                                <div t-if="record.email.raw_value" class="text-truncate">
+                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.raw_value">
+                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                    <field name="phone"/>
+                                </div>
+                                <div t-if="record.city.raw_value or record.country_id.raw_value">
+                                    <i class="fa fa-fw me-1 fa-map-marker text-primary" title="Location"/>
+                                    <field name="city"/>
+                                    <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                                    <field name="country_id"/>
+                                </div>
+                                <field name="properties" widget="properties"/>
+                                <footer><field name="application_statistics" widget="contact_statistics"/></footer>
+                            </main>
+=======
+                            <main class="ps-2">
+                                <div class="mb-1">
+                                    <field name="complete_name" class="mb-0 fw-bold fs-5"/>
+                                </div>
+                                <div class="mb-1" invisible="True">
+                                    <field name="display_name" class="mb-0 fw-bold fs-5"/>
+                                </div>
+                                <div t-if="record.email.raw_value" class="text-truncate">
+                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.raw_value">
+                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                    <field name="phone"/>
+                                </div>
+                                <div t-if="record.city.raw_value or record.country_id.raw_value">
+                                    <i class="fa fa-fw me-1 fa-map-marker text-primary" title="Location"/>
+                                    <field name="city"/>
+                                    <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                                    <field name="country_id"/>
+                                </div>
+                                <field name="properties" widget="properties"/>
+                                <footer><field name="application_statistics" widget="contact_statistics"/></footer>
+                            </main>
+>>>>>>> 6bf0dc546d9faae22d67c9e01c9d8849288a75d5
                         </t>
                     </templates>
                 </kanban>
