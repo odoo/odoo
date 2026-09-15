@@ -120,6 +120,14 @@ class _RegistrySignalingMixin(_RegistryStubs):
             return names
 
     @property
+    def cache_invalidation_generation(self) -> dict[str, int]:
+        try:
+            return self._invalidation_flags.cache_generation
+        except AttributeError:
+            generation = self._invalidation_flags.cache_generation = {}
+            return generation
+
+    @property
     def ormcache_lrus(self) -> dict[str, LRU]:
         return self._caches.lrus
 
@@ -137,9 +145,11 @@ class _RegistrySignalingMixin(_RegistryStubs):
                     for cache in CACHES_BY_KEY[cache_name]
                 ),
             )
+        generation = self.cache_invalidation_generation
         for cache_name in cache_names:
             self._clear_cache_group(cache_name)
             self.cache_invalidated.add(cache_name)
+            generation[cache_name] = generation.get(cache_name, 0) + 1
 
     def _log_invalidation(self, cache_names: Collection[str], level: int) -> None:
         if not _logger.isEnabledFor(level):

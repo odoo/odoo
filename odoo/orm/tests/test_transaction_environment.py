@@ -178,11 +178,12 @@ def test_non_convergence_is_the_transactions_error(caplog):
 
 
 def test_a_savepoint_rollback_leaves_default_env_to_its_writer():
-    from odoo.db.savepoint import _FlushingSavepoint
     from odoo.orm.runtime.savepoint import _OrmFlushingSavepoint
 
-    assert _OrmFlushingSavepoint._save_orm_state is _FlushingSavepoint._save_orm_state
-    assert _OrmFlushingSavepoint.__slots__ == ()
+    assert _OrmFlushingSavepoint.__slots__ == ("_generation_before",), (
+        "the savepoint snapshots the registry's cache-invalidation generations "
+        "and nothing else"
+    )
     assert "default_env" not in inspect.getsource(_OrmFlushingSavepoint), (
         "the savepoint snapshots default_env again; whoever changes it inside a "
         "savepoint restores it, as http_routing._borrowed_public_env does"

@@ -3236,11 +3236,12 @@ class TestFlushingSavepointLayering(BaseCase):
             _OrmFlushingSavepoint._restore_orm_state,
             _FlushingSavepoint._restore_orm_state,
         )
-        self.assertIs(
-            _OrmFlushingSavepoint._save_orm_state,
-            _FlushingSavepoint._save_orm_state,
-            "the ORM savepoint snapshots nothing: default_env is set by the "
-            "transaction's opener, not by whoever constructs an Environment first",
+        self.assertEqual(
+            _OrmFlushingSavepoint.__slots__,
+            ("_generation_before",),
+            "the ORM savepoint snapshots the cache-invalidation generations and "
+            "nothing else: default_env is set by the transaction's opener, not by "
+            "whoever constructs an Environment first",
         )
 
     def test_savepoint_restores_orm_state_on_rollback(self):

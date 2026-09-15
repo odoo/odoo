@@ -145,11 +145,10 @@ class IrQweb(models.AbstractModel):
         return super()._compile_directive_out(el, compile_context, level)
 
     def _compile_to_str(self, expr: Any) -> str:
-        if self.env.context.get("mail_render_format_values"):
-            if isinstance(expr, models.BaseModel):
-                return expr.display_name or ""
-            if isinstance(expr, BINARY_TYPES):
-                return ""
+        if self.env.context.get("mail_render_format_values") and isinstance(
+            expr, models.BaseModel
+        ):
+            return expr.display_name or ""
         return super()._compile_to_str(expr)
 
     def _is_expression_allowed(self, expression: str, model: str) -> bool:

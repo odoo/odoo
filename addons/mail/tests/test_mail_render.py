@@ -1,3 +1,4 @@
+import base64
 from unittest.mock import patch
 
 from markupsafe import Markup
@@ -379,6 +380,26 @@ class TestMailRender(TestMailRenderCommon):
                 engine="qweb",
             )[partner.id]
             self.assertEqual(rendered, expected)
+
+    @users("employee")
+    def test_render_template_qweb_keeps_a_binary_in_a_data_uri(self):
+        partner = self.env["res.partner"].browse(self.render_object.ids)
+        partner.sudo().image_1920 = base64.b64encode(
+            b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff"
+            b"!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00"
+            b"\x00\x02\x02D\x01\x00;"
+        )
+        rendered = self.env["mixin.mail.render"]._render_template(
+            '<img t-attf-src="data:image/png;base64,{{object.image_128}}"/>',
+            partner._name,
+            partner.ids,
+            engine="qweb",
+        )[partner.id]
+        self.assertIn(
+            f'src="data:image/png;base64,{partner.image_128.decode()}"',
+            rendered,
+            "a base64 field inlined into a data URI is text, not a blob to hide",
+        )
 
     @users("employee")
     def test_render_template_qweb_view(self):

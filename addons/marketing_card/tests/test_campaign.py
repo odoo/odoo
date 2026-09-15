@@ -124,7 +124,11 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         # that can hold a placeholder, so `contact_list_ids` and the partner batch
         # are fetched where the send path actually needs them. Restoring the old
         # all-fields scan puts this back at 54 and costs 25 queries elsewhere.
-        with self.mock_mail_gateway(), self.assertQueryCount(56):
+        # 56 -> 53: the three assertRaises above roll back a savepoint each, and a
+        # rollback now re-clears only the cache groups its own span invalidated,
+        # so the xmlid, default and config-parameter lookups the warmup paid for
+        # stay warm into this window.
+        with self.mock_mail_gateway(), self.assertQueryCount(53):
             mailing._action_send_mail()
 
         cards = self.env["card.card"].search([("campaign_id", "=", campaign.id)])
