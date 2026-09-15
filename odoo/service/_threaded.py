@@ -733,11 +733,6 @@ class EventServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             signal.signal(signal.SIGUSR2, log_ormcache_stats)
-            threading.Thread(
-                target=self.run_watchdog,
-                daemon=True,
-                name="odoo.service.evented.watchdog",
-            ).start()
 
         try:
             self.httpd = ThreadedHTTPServer(
@@ -751,6 +746,15 @@ class EventServer(CommonServer):
             _debug.lifecycle(
                 "server.evented.start", interface=self.interface, port=self.port
             )
+            if IS_POSIX:
+                # The watchdog asks for a restart with a SIGTERM to this
+                # process; started here, that signal can only land inside
+                # `serve_forever()`, where it is a clean stop.
+                threading.Thread(
+                    target=self.run_watchdog,
+                    daemon=True,
+                    name="odoo.service.evented.watchdog",
+                ).start()
             self.httpd.serve_forever()
         except SystemExit:
             raise

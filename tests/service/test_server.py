@@ -1696,6 +1696,37 @@ class TestEventServerGracefulStop:
         assert wired[signal.SIGINT] == event_server._quit_signal_handler
         assert wired[signal.SIGTERM] == event_server._quit_signal_handler
 
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX signal handlers")
+    def test_the_watchdog_starts_only_once_the_server_is_serving(self, event_server):
+        """Measured 2026-09-15 under a memory limit the process was already
+        over at boot: the watchdog's SIGTERM landed while `start()` was still
+        creating the HTTP server, the KeyboardInterrupt escaped `run()` as an
+        uncaught traceback, and the master counted the evented child as
+        crashed by signal and backed off -- HTTP workers included."""
+        order = []
+        httpd = MagicMock()
+        httpd.serve_forever.side_effect = lambda: order.append("serve")
+
+        class _Thread:
+            def __init__(self, **kwargs):
+                self.target = kwargs["target"]
+
+            def start(self):
+                order.append(("watchdog", self.target.__name__))
+
+        with (
+            patch.object(signal, "signal"),
+            patch.object(
+                _threaded,
+                "ThreadedHTTPServer",
+                side_effect=lambda *a, **k: (order.append("httpd"), httpd)[1],
+            ),
+            patch.object(threading, "Thread", _Thread),
+        ):
+            event_server.start()
+        assert order == ["httpd", ("watchdog", "run_watchdog"), "serve"]
+        assert event_server.httpd is httpd
+
     def test_stop_tolerates_unstarted_httpd_and_runs_hooks(self, srv, event_server):
         sentinel = MagicMock()
         sentinel.__name__ = "sentinel"
