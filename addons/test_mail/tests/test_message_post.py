@@ -1648,6 +1648,30 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 )
 
     @users('employee')
+    def test_post_with_out_of_office_note(self):
+        """ Logging a note must not trigger OOO for the parent message author. """
+        self.test_record.with_user(self.user_employee_c2).message_post(
+            body='Can you have a look at this?',
+            message_type='comment',
+            partner_ids=self.partner_employee.ids,
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        self._setup_out_of_office(self.user_employee_c2)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.test_record.message_post(
+                body='Working on it.',
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_note').id,
+            )
+
+        self.assertEqual(len(self._new_msgs), 1, 'Only the note itself should be created')
+        self.assertFalse(
+            self._new_msgs.filtered(lambda m: m.message_type == 'out_of_office'),
+            'OOO must not fire when logging a note without addressing the OOO user',
+        )
+
+    @users('employee')
     def test_post_with_out_of_office(self):
         """ Test out of office support. Test setup :
          * record followers: user_employee_c2
