@@ -132,8 +132,11 @@ class ProjectProject(models.Model):
                 projects=self.filtered(
                     lambda p: (
                         p.sale_line_id
-                        and p.sale_line_id.partner_id.commercial_partner_id
-                        != p.partner_id.commercial_partner_id
+                        and (
+                            not p.partner_id
+                            or p.sale_line_id.partner_id.commercial_partner_id
+                            != p.partner_id.commercial_partner_id
+                        )
                     )
                 ),
             )
