@@ -790,7 +790,7 @@ class BaseAutomation(models.Model):
             return
 
         # mark the remaining records as done (to avoid recursive processing)
-        if self.env.context.get('__action_feedback'):
+        if records.env.context.get('__action_feedback'):
             # modify the context dict in place: this is useful when fields are
             # computed during the pre/post filtering, in order to know which
             # automations have already been run by the computation itself
