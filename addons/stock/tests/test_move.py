@@ -6898,12 +6898,85 @@ class TestStockMove(TestStockCommon):
                 'packaging_qty_ordered': 5.0,
             })
 
+<<<<<<< 96122f42ded68bfed2fbb3bfb2d46c7d83f8927a
     def test_scrap_unlink_behavior_on_discard_with_and_without_context(self):
         """Check scrap deletion behavior when insufficient warning is discarded."""
         scrap = self.env['stock.move'].create({
             'is_scrap': True,
             'product_id': self.productA.id,
             'quantity': 5,
+||||||| a5afe7036ca5784ff57d19604f485c7857ec2365
+    def test_aggregated_quantities_partial_and_over_delivery(self):
+        """
+        Test that aggregated product quantities preserve the original demand
+        and quantity done during a partial or over delivery.
+        """
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 10.0,
+            })],
+=======
+    def test_delivery_slip_quantity_aggregation_across_move_lines(self):
+        """ A receipt for a fractional quantity that is over-received in two operations should
+        report the expected and received quantities on a single line, both in the product's unit
+        and in the vendor's packaging unit.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 11.1,
+            })],
+        })
+        receipt.move_ids.packaging_uom_id = pack_of_6
+        receipt.action_confirm()
+        # Receiving more than expected adds a second move line for the excess.
+        receipt.move_ids.quantity = 13.9
+        self.assertEqual(len(receipt.move_ids.move_line_ids), 2)
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        aggregated_lines = receipt.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregated_lines), 1)
+        aggregate_val = next(iter(aggregated_lines.values()))
+        self.assertDictEqual({
+            'name': aggregate_val['name'],
+            'qty_ordered': aggregate_val['qty_ordered'],
+            'quantity': aggregate_val['quantity'],
+            'packaging_qty_ordered': aggregate_val['packaging_qty_ordered'],
+            'packaging_quantity': aggregate_val['packaging_quantity'],
+        }, {
+            'name': self.productA.name,
+            'qty_ordered': 11.1,
+            'quantity': 13.9,
+            'packaging_qty_ordered': 1.86,
+            'packaging_quantity': 2.32,
+        })
+
+    def test_aggregated_quantities_partial_and_over_delivery(self):
+        """
+        Test that aggregated product quantities preserve the original demand
+        and quantity done during a partial or over delivery.
+        """
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 10.0,
+            })],
+>>>>>>> a599f03940fe2f2966f9f142aa18d8c05ebe5627
         })
         Form.from_action(self.env, scrap.with_context(not_unlink_on_discard=True).action_scrap()).save().action_cancel()
         self.assertTrue(scrap.exists(), "The scrap move should not be deleted after discarding the warning.")
