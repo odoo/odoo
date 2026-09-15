@@ -2,6 +2,7 @@
 
 from odoo.http import request, route
 
+from odoo.addons.website_sale_collect.models.website import CLICK_AND_COLLECT_SESSION_CACHE_KEY
 from odoo.addons.website_sale_stock.controllers.location_selector import LocationSelector
 
 
@@ -25,8 +26,7 @@ class InStoreDelivery(LocationSelector):
 
     @route("/shop/set_click_and_collect_location", type="jsonrpc", auth="public", website=True)
     def shop_set_click_and_collect_location(self, pickup_location_data):
-        """Set the pickup location and the in-store delivery method on the current order or created
-        one.
+        """Set the pickup location and the in-store delivery method on the current order.
 
         This route is called from location selector on /product and is distinct from
         /website_sale_stock/set_pickup_location as the latter is only called from the checkout page
@@ -35,7 +35,13 @@ class InStoreDelivery(LocationSelector):
         :param str pickup_location_data: The JSON-formatted pickup location data.
         :return: None
         """
-        order_sudo = request.cart or self.env.website._create_cart()
+        order_sudo = request.cart
+        if not order_sudo:
+            request.session[CLICK_AND_COLLECT_SESSION_CACHE_KEY] = {
+                "type": "in_store",
+                "pickup_location_data": pickup_location_data,
+            }
+            return
         if order_sudo.carrier_id.delivery_type != "in_store":
             in_store_dm = self.env.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
@@ -43,9 +49,13 @@ class InStoreDelivery(LocationSelector):
 
     @route()
     def shop_set_delivery_method(self, dm_id=None, **kwargs):
-        """Override of `website_sale` to create the cart if called from product page."""
+        """Override of `website_sale` to keep the selection in the session"""
         if not request.cart:
-            self.env.website._create_cart()
+            request.session[CLICK_AND_COLLECT_SESSION_CACHE_KEY] = {
+                "type": "delivery",
+                "dm_id": int(dm_id),
+            }
+            return {}
         return super().shop_set_delivery_method(dm_id=dm_id, **kwargs)
 
     def _get_additional_delivery_context(self):
