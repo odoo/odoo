@@ -13,7 +13,7 @@ export class PopoverComponent extends Component {
     props = useProps({
         msg: t.string().optional(),
         popoverTemplate: t.string().optional(),
-        title: t.string(),
+        title: t.string().optional(),
     });
 }
 

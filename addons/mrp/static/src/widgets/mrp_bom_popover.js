@@ -12,15 +12,15 @@ class MrpBomPopover extends PopoverComponent {
     static template = "mrp.bomPopover";
 
     mrpProps = useProps({
-        final_product_name: t.string().optional(),
-        bom_id: t.any(),
-        component: t.any(),
-        component_id: t.any(),
-        route_name: t.any(),
-        route_detail: t.any(),
-        route_type: t.any(),
-        route_id: t.any(),
-        delay: t.any(),
+        final_product_name: t.string(),
+        bom_id: t.any().optional(),
+        component: t.any().optional(),
+        component_id: t.any().optional(),
+        route_name: t.any().optional(),
+        route_detail: t.any().optional(),
+        route_type: t.any().optional(),
+        route_id: t.any().optional(),
+        delay: t.any().optional(),
     });
 
     setup() {
