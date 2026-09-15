@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import OrderedSet
 from odoo.tools.date_utils import localized
 from odoo.tools.misc import format_date
@@ -24,6 +24,15 @@ class DeliveryCarrier(models.Model):
     delivery_estimate_lead_days = fields.Integer()
     delivery_estimate_range_days = fields.Integer()
     delivery_calendar_id = fields.Many2one(comodel_name="resource.calendar", check_company=True)
+
+    @api.onchange("delivery_type")
+    def _onchange_delivery_type(self):
+        """Reset estimated delivery settings if delivery type is incompatible."""
+        if self.delivery_type not in ["fixed", "base_on_rule"]:
+            self.enable_delivery_estimate = False
+            self.delivery_estimate_lead_days = 0
+            self.delivery_estimate_range_days = 0
+            self.delivery_calendar_id = None
 
     def _get_estimate_delivery_days(self):
         """Return the available days defined on the estimated delivery field based on the calendar.
