@@ -516,6 +516,20 @@ class Website(models.Model):
                 {"arch_db": etree.tostring(el)}
             )
 
+    def _configurator_write_logo(self, website, logo_attachment_id):
+        company = website.company_id
+        if logo_attachment_id:
+            attachment = self.env["ir.attachment"].browse(logo_attachment_id)
+            attachment.write(
+                {
+                    "res_model": "website",
+                    "res_field": "logo",
+                    "res_id": website.id,
+                }
+            )
+        elif not company.uses_default_logo:
+            website.logo = company.logo.decode("utf-8")
+
     def _configurator_apply_features(self, website, features, menu_company):
         pages_views = {}
         modules = self.env["ir.module.module"]
@@ -573,19 +587,7 @@ class Website(models.Model):
             {"key": tour_asset_id.key, "website_id": website.id, "active": True}
         )
 
-        logo_attachment_id = kwargs.get("logo_attachment_id")
-        company = website.company_id
-        if logo_attachment_id:
-            attachment = self.env["ir.attachment"].browse(logo_attachment_id)
-            attachment.write(
-                {
-                    "res_model": "website",
-                    "res_field": "logo",
-                    "res_id": website.id,
-                }
-            )
-        elif not logo_attachment_id and not company.uses_default_logo:
-            website.logo = company.logo.decode("utf-8")
+        self._configurator_write_logo(website, kwargs.get("logo_attachment_id"))
 
         selected_palette = kwargs.get("selected_palette")
         if selected_palette:
