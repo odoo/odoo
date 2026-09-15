@@ -166,6 +166,22 @@ class SaleOrder(models.Model):
                 free_qty -= ol.product_uom_id._compute_quantity(line_qty_in_uom, product.uom_id)
         return insufficient_stock_data
 
+    def _apply_pending_cac_selection(self, selection):
+        """Apply the pickup/delivery selection"""
+        self.ensure_one()
+        if selection.get("type") == "in_store":
+            in_store_dm = self.website_id.sudo().in_store_dm_id
+            if not in_store_dm:
+                return
+            self.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
+            self.set_pickup_location(selection["pickup_location_data"])
+        elif selection.get("type") == "delivery":
+            delivery_method = self.env["delivery.carrier"].sudo().browse(
+                selection.get("dm_id"),
+            ).exists()
+            if delivery_method and delivery_method.id in self._get_delivery_methods().ids:
+                self._set_delivery_method(delivery_method)
+
     def _can_be_delivered_with(self, delivery_method):
         """Determine whether the order can be delivered using the given delivery method.
 
