@@ -10,8 +10,9 @@ import {
 import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { condition, connector } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
-import { makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
+import { getRelativeRangeBounds, makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -100,6 +101,7 @@ function joinWithYear(description, year) {
  *      ['&', [fieldName, >=, leftBound_i], [fieldName, <=, rightBound_i]]
  * where leftBound_i and rightBound_i are date or datetime computed accordingly
  * to the given options and reference moment.
+ * @see constructDateRange for the form taken by a filter spanning two fields.
  */
 export function constructDateDomain(referenceMoment, searchItem, selectedOptionIds) {
     let plusParam;
@@ -115,12 +117,14 @@ export function constructDateDomain(referenceMoment, searchItem, selectedOptionI
     sortPeriodOptions(yearOptions);
     sortPeriodOptions(otherOptions);
     const ranges = [];
-    const { fieldName, fieldType } = searchItem;
+    const { fieldName, fieldType, endFieldName, endFieldType } = searchItem;
     for (const yearOption of yearOptions) {
         const constructRangeParams = {
             referenceMoment,
             fieldName,
             fieldType,
+            endFieldName,
+            endFieldType,
             plusParam,
         };
         if (otherOptions.length) {
@@ -157,11 +161,24 @@ export function constructDateDomain(referenceMoment, searchItem, selectedOptionI
  * Constructs the string representation of a domain and its description. The
  * domain is a time range of the form:
  *      ['&', [fieldName, >=, leftBound],[fieldName, <=, rightBound]]
+ * or, when the filter spans two fields, the range they describe must overlap it:
+ *      ['&', [fieldName, <=, rightBound],
+ *       '|', [endFieldName, >=, leftBound],
+ *       '&', [endFieldName, =, false], [fieldName, >=, leftBound]]
  * where leftBound and rightBound are some date or datetime determined by setParam,
  * plusParam, granularity and the reference moment.
  */
 export function constructDateRange(params) {
-    const { referenceMoment, fieldName, fieldType, granularity, setParam, plusParam } = params;
+    const {
+        referenceMoment,
+        fieldName,
+        fieldType,
+        endFieldName,
+        endFieldType,
+        granularity,
+        setParam,
+        plusParam,
+    } = params;
     if ("quarter" in setParam) {
         // Luxon does not consider quarter key in setParam (like moment did)
         setParam.month = QUARTERS[setParam.quarter].coveredMonths[0];
@@ -171,16 +188,28 @@ export function constructDateRange(params) {
     // compute domain
     const leftDate = date.startOf(granularity);
     const rightDate = date.endOf(granularity);
-    let leftBound;
-    let rightBound;
-    if (fieldType === "date") {
-        leftBound = serializeDate(leftDate);
-        rightBound = serializeDate(rightDate);
+    const serialize = (date, type) =>
+        type === "date" ? serializeDate(date) : serializeDateTime(date);
+    let domain;
+    if (endFieldName) {
+        // The filter spans two fields: match the records overlapping the period,
+        // a record without an end date ending when it starts.
+        domain = new Domain([
+            "&",
+            [fieldName, "<=", serialize(rightDate, fieldType)],
+            "|",
+            [endFieldName, ">=", serialize(leftDate, endFieldType)],
+            "&",
+            [endFieldName, "=", false],
+            [fieldName, ">=", serialize(leftDate, fieldType)],
+        ]);
     } else {
-        leftBound = serializeDateTime(leftDate);
-        rightBound = serializeDateTime(rightDate);
+        domain = new Domain([
+            "&",
+            [fieldName, ">=", serialize(leftDate, fieldType)],
+            [fieldName, "<=", serialize(rightDate, fieldType)],
+        ]);
     }
-    const domain = new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
     // compute description
     const year = date.toFormat("yyyy");
     let description = year;
@@ -376,8 +405,27 @@ export function getRelativeFilterOptions() {
 }
 
 export function constructRelativeDateDomain(searchItem, option, offset) {
-    const { fieldName, fieldType } = searchItem;
-    return domainFromTree(makeRelativeRange(fieldName, offset, option.granularity, fieldType));
+    const { fieldName, fieldType, endFieldName, endFieldType } = searchItem;
+    const { granularity } = option;
+    if (endFieldName) {
+        // The filter spans two fields: match the records overlapping the period,
+        // a record without an end date ending when it starts.
+        const [lower, upper] = getRelativeRangeBounds(offset, granularity, fieldType);
+        const [endLower] = getRelativeRangeBounds(offset, granularity, endFieldType);
+        return domainFromTree(
+            connector("&", [
+                condition(fieldName, "<", upper),
+                connector("|", [
+                    condition(endFieldName, ">=", endLower),
+                    connector("&", [
+                        condition(endFieldName, "=", false),
+                        condition(fieldName, ">=", lower),
+                    ]),
+                ]),
+            ])
+        );
+    }
+    return domainFromTree(makeRelativeRange(fieldName, offset, granularity, fieldType));
 }
 
 /**
