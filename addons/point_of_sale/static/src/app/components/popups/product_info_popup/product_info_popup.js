@@ -40,4 +40,7 @@ export class ProductInfoPopup extends Component {
     get totalVatLabel() {
         return _t("Total VAT:");
     }
+    get taxDetails() {
+        return this.props.info.productTaxDetails;
+    }
 }

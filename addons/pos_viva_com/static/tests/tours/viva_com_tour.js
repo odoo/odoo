@@ -7,6 +7,7 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
+import * as PaymentScreenViva from "./utils/payment_screen_viva_com_util";
 
 const mockVivaWebhook = () => ({
     content: "Waiting for Viva payment to be processed",
@@ -61,5 +62,19 @@ registry.category("web_tour.tours").add("VivaComTour", {
             },
             mockVivaWebhook(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("VivaComKioskTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "5.1", "5.1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
+            ...PaymentScreenViva.simulateKioskNamelessCashier(),
+            PaymentScreen.clickPaymentMethod("Viva"),
+            PaymentScreen.isShown(),
         ].flat(),
 });

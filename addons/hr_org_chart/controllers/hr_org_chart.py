@@ -32,7 +32,7 @@ class HrOrgChartController(http.Controller):
             job_name=job.name or '',
             direct_sub_count=len(employee.child_ids - employee),
             indirect_sub_count=employee.child_all_count,
-            write_date=int(employee.write_date.timestamp()) * 1000,  # to have it in milliseconds for js
+            write_date=int(employee.write_date.timestamp() * 1000) if employee.write_date else 0,  # ms for js; 0 when missing
         )
 
     @http.route('/hr/get_redirect_model', type='jsonrpc', auth='user')
@@ -57,7 +57,9 @@ class HrOrgChartController(http.Controller):
         max_level = (kw.get('context')['max_level'] or self._managers_level) + 1
         while current_parent and current != current_parent and employee.sudo() != current_parent and len(ancestors) < max_level:
             current = current_parent
-            current_parent = current.parent_id if current != employee or not new_parent else new_parent
+            current_parent = self._get_employee(
+                current.parent_id if current != employee or not new_parent else new_parent
+            )
             if current_parent in ancestors:
                 break
             ancestors += current

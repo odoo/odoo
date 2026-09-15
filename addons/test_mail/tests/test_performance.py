@@ -499,7 +499,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=67, employee=67), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=69, employee=69), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -954,7 +954,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients(self):
         record = self.test_records_recipients[0].with_env(self.env)
-        with self.assertQueryCount(employee=7):
+        with self.assertQueryCount(employee=9):
             defaults = record._message_get_default_recipients()
         self.assertDictEqual(defaults, {record.id: {
             'email_cc': '', 'email_to': 'only.email.1@test.example.com', 'partner_ids': [],
@@ -964,7 +964,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=9):
+        with self.assertQueryCount(employee=11):
             defaults = records._message_get_default_recipients()
         self.assertDictEqual(defaults, {
             records[0].id: {
@@ -1890,12 +1890,8 @@ class BaseMailPostPerformance(BaseMailPerformance):
             cls.user_admin.partner_id + cls.user_employee.partner_id +
             cls.user_follower_emp_email.partner_id +
             cls.user_follower_emp_inbox.partner_id +
-            cls.user_follower_portal.partner_id +
-            cls.partner_follower +
             cls.user_emp_inbox.partner_id +
-            cls.user_emp_email.partner_id +
-            cls.partner +
-            cls.customers
+            cls.user_emp_email.partner_id,
         )
 
         # be sure not to be annoyed by ocn / mobile
@@ -1961,7 +1957,11 @@ class TestPerformance(BaseMailPostPerformance):
         self.assertEqual(attachments.mapped('res_id'), [ticket.id for i in range(3)])
         self.assertTrue(new_message.body.startswith('<p>Test body <img src="/web/image/'))
         self.assertEqual(new_message.notified_partner_ids, recipients + followers)
-        self.assertEqual(self.push_to_end_point_mocked.call_count, 6, "Everyone has a device")
+        self.assertEqual(
+            self.push_to_end_point_mocked.call_count,
+            4,
+            "Mentioned/Subscribed internal users with a device",
+        )
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
@@ -2008,4 +2008,8 @@ class TestPerformance(BaseMailPostPerformance):
             self.assertEqual(attachments.mapped('res_id'), [ticket.id for i in range(3)])
             self.assertTrue(new_message.body.startswith('<p>Test body <img src="/web/image/'))
             self.assertEqual(new_message.notified_partner_ids, recipients + followers)
-        self.assertEqual(self.push_to_end_point_mocked.call_count, 6 * 10, "Everyone has a device * record count")
+        self.assertEqual(
+            self.push_to_end_point_mocked.call_count,
+            4 * 10,
+            "Mentioned/Subscribed internal users with a device * record count",
+        )

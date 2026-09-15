@@ -17,6 +17,28 @@ class TestTaxesGlobalDiscount(TestTaxCommon):
             for i in range(1, 6)
         ])
 
+    def test_global_discount_100_percent_cash_rounding_up(self):
+        """A 100% discount + round-up cash rounding must keep the total at 0: the base + tax
+        residue left by the discount must not be inflated into a full rounding step."""
+        tax = self.percent_tax(17)
+        document_params = self.init_document(
+            lines=[
+                {'price_unit': 11.752137, 'tax_ids': tax},
+                {'price_unit': 21.367521, 'tax_ids': tax},
+            ],
+            cash_rounding=self.cash_rounding_a,  # add_invoice_line, rounding 0.05, method 'UP'
+        )
+        expected_values = {
+            'base_amount_currency': 0.0,
+            'tax_amount_currency': 0.0,
+            'total_amount_currency': 0.0,
+        }
+        for rounding_method in ('round_per_line', 'round_globally'):
+            with self.with_tax_calculation_rounding_method(rounding_method):
+                document = self.populate_document(document_params)
+                self.assert_global_discount(document, 'percent', 100, expected_values, soft_checking=True)
+        self._run_js_tests()
+
     def _test_taxes_l10n_in(self):
         """ Test suite for the complex GST taxes in l10n_in. This case implies 3 percentage taxes:
         t1: % tax, include_base_amount

@@ -42,6 +42,13 @@ test("should open the Powerbox on type `/`", async () => {
     await expectElementCount(".o-we-powerbox", 1);
 });
 
+test("should not open powerbox inside code block", async () => {
+    const { editor } = await setupEditor(`<pre>abc[]</pre>`);
+    await insertText(editor, "/");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(0);
+});
+
 test.tags("iframe", "desktop");
 test("in iframe, desktop: should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });

@@ -5,22 +5,23 @@ import json
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
+from odoo.fields import Domain
 from odoo.http import Controller, request, route, content_disposition
 from odoo.tools import consteq, format_datetime
 
 
 class EventController(Controller):
 
-    @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
+    @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public", website=True, sitemap=False)
     def event_ics_file(self, event, **kwargs):
-        lang = request.env.context.get('lang', request.env.user.lang)
-        if request.env.user._is_public():
-            lang = request.cookies.get('frontend_lang')
-        event = event.with_context(lang=lang)
         slot_id = int(kwargs['slot_id']) if kwargs.get('slot_id') else False
-        files = event._get_ics_file(slot=request.env['event.slot'].sudo().browse(slot_id))
-        if not event.id in files:
-            return NotFound()
+        slot = request.env['event.slot'].sudo().search(
+            Domain('event_id', '=', event.id) & Domain('id', '=', slot_id)) if slot_id else False
+        if slot_id and not slot:
+            raise NotFound()
+        files = event._get_ics_file(slot=slot)
+        if event.id not in files:
+            raise NotFound()
         content = files[event.id]
         return request.make_response(content, [
             ('Content-Type', 'application/octet-stream'),

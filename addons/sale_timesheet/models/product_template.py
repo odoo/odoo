@@ -51,12 +51,20 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
+        hour_uom = self.env.ref('uom.product_uom_hour')
         for record in self:
+            default_uom_id = self.env['ir.default']._get_model_defaults('product.template').get('uom_id')
+            default_uom = self.env['uom.uom'].browse(default_uom_id)
             if record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
-                record.uom_id = self.env.ref('uom.product_uom_hour')
+                if default_uom and default_uom._has_common_reference(hour_uom):
+                    record.uom_id = default_uom
+                else:
+                    record.uom_id = hour_uom
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
+            elif default_uom:
+                record.uom_id = default_uom
             else:
                 record.uom_id = self.default_get(['uom_id']).get('uom_id')
 

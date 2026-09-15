@@ -24,6 +24,30 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should preserve color and background color when creating a list", async () => {
+            await testEditor({
+                contentBefore: `<p><font style="color: red; background-color: red;">[a]</font></p>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<ul><li style="color: red;"><font style="background-color: red;">[a]</font></li></ul>`,
+            });
+        });
+
+        test("should preserve color creating a list (1)", async () => {
+            await testEditor({
+                contentBefore: `<p><font class="text-o-color-1">[a]</font></p>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<ul><li><font class="text-o-color-1">[a]</font></li></ul>`,
+            });
+        });
+
+        test("should preserve color creating a list (2)", async () => {
+            await testEditor({
+                contentBefore: `<p><font style="color: red;">[a]</font></p>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<ul><li style="color: red;">[a]</li></ul>`,
+            });
+        });
+
         test("should turn a paragraph into a list", async () => {
             await testEditor({
                 contentBefore: "<p>ab[]cd</p>",

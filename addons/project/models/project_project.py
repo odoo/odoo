@@ -53,7 +53,10 @@ class ProjectProject(models.Model):
     def _compute_open_task_count(self):
         self.__compute_task_count(
             count_field='open_task_count',
-            additional_domain=[('state', 'in', self.env['project.task'].OPEN_STATES)],
+            additional_domain=Domain.AND([
+                [('state', 'in', self.env['project.task'].OPEN_STATES)],
+                ['|', ('parent_id.is_template', '=', False), ('parent_id', '=', False)],
+            ]),
         )
 
     def _compute_closed_task_count(self):
@@ -117,7 +120,7 @@ class ProjectProject(models.Model):
             ('followers', 'Invited internal users'),
             ('invited_users', 'Invited internal and portal users'),
             ('employees', 'All internal users'),
-            ('portal', ' All internal users and invited portal users'),
+            ('portal', 'All internal users and invited portal users'),
         ],
         string='Visibility', required=True,
         default='portal',
@@ -197,15 +200,11 @@ class ProjectProject(models.Model):
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_next_milestone_id(self):
-        milestones_per_project_id = {
-            project.id: milestones
-            for project, milestones in self.env['project.milestone']._read_group(
-                [('project_id', 'in', self.ids), ('is_reached', '=', False)],
-                ['project_id'],
-                ['id:recordset'],
-            )
-        }
-        milestones = self.env['project.milestone'].concat(*milestones_per_project_id.values())
+        milestones = self.env['project.milestone'].search([
+            ('project_id', 'in', self.ids),
+            ('is_reached', '=', False),
+        ])
+        milestones_per_project_id = milestones.grouped(lambda milestone: milestone.project_id.id)
         task_read_group = self.env['project.task']._read_group(
             [('milestone_id', 'in', milestones.ids)],
             ['milestone_id', 'state'],
@@ -474,10 +473,15 @@ class ProjectProject(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         copy_from_template = self.env.context.get('copy_from_template')
+        has_project_stage_feature = False
+        if copy_from_template and 'stage_id' not in default:
+            has_project_stage_feature = self.env.user.has_group('project.group_project_stages')
         for project, vals in zip(self, vals_list):
             if project.is_template and not copy_from_template:
                 vals['is_template'] = True
             if copy_from_template:
+                if has_project_stage_feature:
+                    vals['stage_id'] = project.stage_id.id
                 for field in self._get_template_field_blacklist():
                     if field in vals and field not in default:
                         del vals[field]
@@ -504,7 +508,7 @@ class ProjectProject(models.Model):
             for follower in old_project.message_follower_ids:
                 new_project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
             if old_project.allow_milestones:
-                new_project.milestone_ids = self.milestone_ids.copy().ids
+                new_project.milestone_ids = old_project.milestone_ids.copy().ids
             if 'tasks' not in default:
                 old_project.map_tasks(new_project.id)
             if not old_project.active:
@@ -690,7 +694,7 @@ class ProjectProject(models.Model):
             analytic_account_to_update = self.env['account.analytic.account'].browse([
                 analytic_account.id for [analytic_account] in projects_read_group
             ])
-            analytic_account_to_update.write({'name': self.name})
+            analytic_account_to_update.write({'name': vals['name']})
         return res
 
     def unlink(self):
@@ -1145,6 +1149,8 @@ class ProjectProject(models.Model):
             'costs': profitability_items['costs'],
             'revenues': profitability_items['revenues'],
             'expected_percentage': expected_percentage,
+            'to_bill_to_invoice': to_bill_to_invoice,
+            'billed_invoiced': billed_invoiced,
             'to_bill_to_invoice_percentage': to_bill_to_invoice_percentage,
             'billed_invoiced_percentage': billed_invoiced_percentage,
             'total': {
@@ -1222,9 +1228,9 @@ class ProjectProject(models.Model):
             elif project.privacy_visibility in ['invited_users', 'portal']:
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
-                project.tasks._unsubscribe_portal_users()
+                project.with_context(active_test=False).tasks._unsubscribe_portal_users()
                 # revoke access_token since the project and its tasks are no longer accessible for portal/public users
-                project.tasks.access_token = ''
+                project.with_context(active_test=False).tasks.access_token = ''
                 project.access_token = ''
 
     # ---------------------------------------------------
@@ -1354,7 +1360,9 @@ class ProjectProject(models.Model):
 
     def action_create_template_from_project(self):
         self.ensure_one()
-        template = self.copy(default={"is_template": True, "partner_id": False})
+        template = self.with_context(convert_to_template=True).copy(
+            default={"is_template": True, "partner_id": False, "date_start": self.date_start, "date": self.date,
+        })
         template._toggle_template_mode(True)
         template.message_post(body=self.env._("Template created from %s.", self.name))
         config = {
@@ -1368,6 +1376,14 @@ class ProjectProject(models.Model):
             config["params"]["callback_data"] = {
                 "method": "create_template_from_project_undo_callback",
                 "args": [self.id, callbacks],
+                "post_action": {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "type": "success",
+                        "message": self.env._("Template converted back to regular project."),
+                    },
+                },
             }
         return {
             "type": "ir.actions.client",
@@ -1382,6 +1398,7 @@ class ProjectProject(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
+                "type": "success",
                 "message": self.env._("Template converted back to regular project."),
                 "next": {
                     "type": "ir.actions.client",

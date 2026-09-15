@@ -29,6 +29,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             },
         ],
         is_unremovable_selector: ".js_subscribe_btn",
+        submit_button_selectors: [".js_subscribe_btn"],
     };
 }
 

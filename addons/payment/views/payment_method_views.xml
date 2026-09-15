@@ -13,7 +13,8 @@
                         <h1><field name="name" placeholder="Name"/></h1>
                     </div>
                     <group>
-                        <field name="code" readonly="id" groups="base.group_no_one"/>
+                        <field name="code" invisible="id"/>
+                        <field name="code" invisible="not id" readonly="id" groups="base.group_no_one"/>
                         <field name="primary_payment_method_id" invisible="is_primary"/>
                         <field name="active"/>
                         <label for="supported_country_ids"/>

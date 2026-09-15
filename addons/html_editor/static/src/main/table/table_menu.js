@@ -64,11 +64,11 @@ export class TableMenu extends Component {
     }
 
     get hasCustomTableSize() {
-        const table = closestElement(this.props.target, "table");
-        if (!table) {
+        const tBody = closestElement(this.props.target, "tbody");
+        if (!tBody) {
             return false;
         }
-        const rows = [...table.rows];
+        const rows = [...tBody.rows];
         const firstRowCells = [...rows[0].cells];
         const rowHasHeight = rows.some((row) => row.style.height);
         const cellHasWidth = firstRowCells.some((cell) => cell.style.width);
@@ -176,7 +176,7 @@ export class TableMenu extends Component {
                 name: "reset_table_size",
                 icon: "fa-table",
                 text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(target.closest("table")),
+                action: (target) => this.props.resetTableSize(target.closest("tbody")),
             },
             {
                 name: "clear_content",
@@ -243,7 +243,7 @@ export class TableMenu extends Component {
                 name: "reset_table_size",
                 icon: "fa-table",
                 text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(target.closest("table")),
+                action: (target) => this.props.resetTableSize(target.closest("tbody")),
             },
             {
                 name: "clear_content",

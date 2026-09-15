@@ -3,6 +3,8 @@ import { waitUntil } from "@odoo/hoot-dom";
 import { advanceTime, mockWebSocket } from "@odoo/hoot-mock";
 import { SocketIoService } from "@pos_glory_cash/utils/socket_io";
 
+describe.current.tags("headless");
+
 const websocketState = {
     instance: null,
     closed: true,

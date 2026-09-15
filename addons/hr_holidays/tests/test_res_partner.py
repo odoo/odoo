@@ -59,15 +59,45 @@ class TestPartner(TransactionCase):
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(
-            Store().add(self.partner).get_result()["hr.employee"][0]["leave_date_to"],
-            "2024-06-07",
-            "Return date is the return date of the main user of the partner",
+            Store().add(self.partner).get_result()["hr.employee"],
+            [
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[0].id,
+                    "leave_date_to": "2024-06-07",
+                    "user_id": self.users[0].id,
+                },
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[1].id,
+                    "leave_date_to": "2024-06-06",
+                    "user_id": self.users[1].id,
+                },
+            ],
+            "Each user of the partner gets the return date of its own employee",
         )
         self.leaves[0].action_refuse()
         self.assertEqual(
-            Store().add(self.partner).get_result()["hr.employee"][0]["leave_date_to"],
-            False,
-            "Partner is not considered out of office if their main user is not on holiday",
+            Store().add(self.partner).get_result()["hr.employee"],
+            [
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[0].id,
+                    "leave_date_to": False,
+                    "user_id": self.users[0].id,
+                },
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[1].id,
+                    "leave_date_to": "2024-06-06",
+                    "user_id": self.users[1].id,
+                },
+            ],
+            "A refused leave clears the return date of its own employee",
         )
 
     @freeze_time("2024-06-04")
@@ -76,8 +106,22 @@ class TestPartner(TransactionCase):
         self.leaves.write({"state": "validate"})
         data = Store().add(self.partner.with_user(self.user_no_hr_access)).get_result()
         self.assertEqual(
-            data["hr.employee"][0]["leave_date_to"],
-            "2024-06-07",
-            "Return date is the return date of the main user of the partner, "
-            "even if the user has no access to the company",
+            data["hr.employee"],
+            [
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[0].id,
+                    "leave_date_to": "2024-06-07",
+                    "user_id": self.users[0].id,
+                },
+                {
+                    "active": True,
+                    "company_id": self.env.company.id,
+                    "id": self.employees[1].id,
+                    "leave_date_to": "2024-06-06",
+                    "user_id": self.users[1].id,
+                },
+            ],
+            "Return dates are sent even to a user with no access to the company",
         )

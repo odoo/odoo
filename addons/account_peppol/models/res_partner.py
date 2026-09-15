@@ -8,8 +8,9 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+
 
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -64,13 +65,14 @@ class ResPartner(models.Model):
             else:
                 partner.available_peppol_edi_formats = list(dict(self._fields['invoice_edi_format'].selection))
 
+    @api.depends('peppol_eas')
     def _compute_available_peppol_eas(self):
         # EXTENDS 'account_edi_ubl_cii'
         super()._compute_available_peppol_eas()
-        eas_codes = set(self[:1].available_peppol_eas)
-        if self.env.company._get_peppol_edi_mode() != 'demo' and 'odemo' in eas_codes:
-            eas_codes.remove('odemo')
-            self.available_peppol_eas = list(eas_codes)
+        is_demo = self.env.company._get_peppol_edi_mode() == 'demo'
+        for partner in self:
+            if not is_demo and partner.available_peppol_eas and 'odemo' in partner.available_peppol_eas:
+                partner.available_peppol_eas = [eas for eas in partner.available_peppol_eas if eas != 'odemo']
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -147,12 +149,15 @@ class ResPartner(models.Model):
     @api.model
     def _peppol_lookup_participant(self, edi_identification):
         """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
-        if (edi_mode := self.env.company._get_peppol_edi_mode()) == 'demo':
+        company = self.env.company
+        if (edi_mode := company._get_peppol_edi_mode()) == 'demo':
             return
 
-        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol'][edi_mode]
+        proxy_type = company._get_peppol_proxy_type()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()[proxy_type][edi_mode]
         query = parse.urlencode({'peppol_identifier': edi_identification.lower()})
-        endpoint = f'{origin}/api/peppol/1/lookup?{query}'
+        api_endpoint = self.env['account_edi_proxy_client.user']._get_peppol_proxy_endpoint('1/lookup', proxy_type=proxy_type)
+        endpoint = f'{origin}{api_endpoint}?{query}'
 
         try:
             response = requests.get(endpoint, timeout=TIMEOUT)
@@ -260,7 +265,7 @@ class ResPartner(models.Model):
         if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
             return False
         old_value = self_partner.peppol_verification_state
-        new_value = self._get_peppol_verification_state(
+        new_value = self_partner._get_peppol_verification_state(
             self_partner.peppol_endpoint,
             self_partner.peppol_eas,
             self_partner._get_peppol_edi_format(),
@@ -301,3 +306,10 @@ class ResPartner(models.Model):
         return self.env['res.company'].search([
             ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
         ]).mapped('partner_id')
+
+    @api.model
+    def _get_peppol_proxy_identification_info(self, peppol_eas, peppol_endpoint):
+        # Return tuple `(proxy_type, peppol_identifier)` where `peppol_identifier` is in form "{scheme}:{identifier}"
+        if not peppol_eas or not peppol_endpoint:
+            return None, ""
+        return 'peppol', f"{peppol_eas}:{peppol_endpoint}"

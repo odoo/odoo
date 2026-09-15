@@ -2,15 +2,16 @@
 # This file contains the translation of the following modules:
 # * base_install_request
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-10-17 12:46+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-08-04 09:19+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "base_install_request/pl/>\n"
 "Language: pl\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_install_request
 #: model:mail.template,body_html:base_install_request.mail_template_base_install_request
@@ -63,21 +64,21 @@ msgstr ""
 "        Dzień dobry,\n"
 "        <br/><br/>\n"
 "        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
-"poprosił/a o aktywowanie <span style=\"font-weight: bold;\" t-"
-"out=\"object.module_id.shortdesc\"/> modułu.\n"
+"wysyła prośbę o aktywację modułu <span style=\"font-weight: bold;\" t-"
+"out=\"object.module_id.shortdesc\"/>.\n"
 "        <br/><br/>\n"
-"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
-"quote=\"1\">\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">"
+"\n"
 "            <t t-out=\"object.body_html\"/>\n"
 "        </blockquote>\n"
 "        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
-"        <a t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"padding:8px 16px 8px 16px; text-decoration:none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"        <a t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px "
+"16px 8px 16px; text-decoration:none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-"
-"base_install_request.action_base_module_install_review?"
-"menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"base_install_request.action_base_module_install_review?menu_id={{ "
+"ctx['menu_id'] }}\">Zobacz prośbę</a>\n"
 "        <br/><br/>\n"
 "        Dziękujemy,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -96,7 +97,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
 msgid "Activation Request of \"%s\""
-msgstr "Wniosek o aktywację \"%s\""
+msgstr "Prośba o aktywację \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -149,7 +150,7 @@ msgstr "Zainstaluj aplikację"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr "Ostatnio zaktualizowane przez"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
@@ -160,7 +161,7 @@ msgstr "Data ostatniej aktualizacji"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr "Poczta: żądanie instalacji"
+msgstr "Poczta: Prośba o instalację"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -172,17 +173,17 @@ msgstr "Moduł"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr "Wniosek o aktywację modułu"
+msgstr "Prośba o aktywację modułu"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr "Żądanie aktywacji modułu dla \"{{ object.module_id.shortdesc }}\""
+msgstr "Prośba o aktywację modułu dla \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr "Recenzja aktywacji modułu"
+msgstr "Kontrola aktywacji modułu"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
@@ -198,12 +199,12 @@ msgstr "Nie wybrano żadnego modułu."
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr "Żądanie dostępu"
+msgstr "Poproś o dostęp"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr "Żądanie aktywacji"
+msgstr "Prośba o aktywację"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
@@ -241,7 +242,7 @@ msgstr "Zamierzasz zainstalować dodatkową aplikację"
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 msgid "Your request has been successfully sent"
-msgstr "Twój wniosek został pomyślnie wysłany"
+msgstr "Twoja prośba została wysłana pomyślnie"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -249,6 +250,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
-"np. Chciałbym wykorzystać moduł SMS Marketing do organizacji promocji "
-"naszych wewnętrznych wydarzeń, oraz wystaw. Potrzebuję dostępu dla 3 osób z "
-"mojego zespołu."
+"np. Chcę wykorzystać moduł SMS Marketing do organizacji promocji naszych "
+"wewnętrznych wydarzeń, oraz wystaw. Potrzebuję dostępu dla 3 osób z mojego "
+"zespołu."

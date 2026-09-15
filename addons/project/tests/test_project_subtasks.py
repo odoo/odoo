@@ -157,6 +157,18 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertFalse(other_child_task.project_id, "The project should be removed as expected")
         self.assertFalse(other_child_task.parent_id, "The parent should be removed as expected")
 
+    def test_subtask_partner_follows_parent_not_project(self):
+        """ A subtask's customer follows its parent task, not its own project. """
+        project = self.env['project.project'].create({
+            'name': 'Project with partner',
+            'partner_id': self.partner_2.id,
+        })
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as child_form:
+                child_form.name = 'Subtask'
+                child_form.project_id = project
+        self.assertEqual(self.task_1.child_ids.partner_id, self.task_1.partner_id)
+
     def test_subtask_stage(self):
         """
             The stage of the new child must be the default one of the project
@@ -457,7 +469,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 }),
             ],
         })
-        child_1, child_2, child_3, child_4 = parent_task.child_ids
+        child_1, child_2, child_3, child_4 = parent_task.child_ids.sorted('id')
         self.assertEqual(9, len(parent_task._get_all_subtasks()), "Should have 9 subtasks")
         parent_task.action_archive()
         self.assertFalse(all((parent_task + child_1._get_all_subtasks() + child_2).mapped('active')),
@@ -549,7 +561,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 Command.create({'name': 'Sub-task 1', 'project_id': self.project_pigs.id}),
             ],
         })
-        subtask_1, subtask_2 = task.child_ids
+        subtask_1, subtask_2 = task.child_ids.sorted('id')
 
         self.assertFalse(subtask_1.display_in_project)
         self.assertTrue(subtask_2.display_in_project)

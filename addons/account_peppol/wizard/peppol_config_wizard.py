@@ -153,7 +153,7 @@ class PeppolConfigWizard(models.TransientModel):
                 }
             }
             self.account_peppol_edi_user._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
+                endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
                 params=params,
             )
 

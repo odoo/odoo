@@ -12,15 +12,19 @@
 # Tadej Lupšina <tadej@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-14 15:22+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-09-10 11:13+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/sl/>\n"
 "Language: sl\n"
@@ -29,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -77,19 +81,19 @@ msgstr "Časovnice osebe %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)sd)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sh)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -167,6 +171,9 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"has_timesheet\">\n"
+"                        Ali ste prepričani, da želite izbrisati te kadre?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -287,8 +294,8 @@ msgid ""
 "<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analizirajte projekte in naloge, na katerih vaši zaposleni porabijo svoj čas."
-"<br>\n"
+"Analizirajte projekte in naloge, na katerih vaši zaposleni porabijo svoj "
+"čas.<br>\n"
 "                Ocenite, kateri del je obračunljiv in kakšne stroške "
 "predstavlja."
 
@@ -336,7 +343,7 @@ msgstr "Pokličite stranko in se pogovorite o projektu"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "Izberite kadra, da ustvarite njegovo časovnico."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -539,6 +546,11 @@ msgid "Employee Termination"
 msgstr "Odpoved zaposlenega"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "Employee's image"
+msgstr "Slika zaposlenega"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
@@ -558,7 +570,7 @@ msgstr "Podaljšek"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
-msgstr "Ustvarite časovne liste za potrjene zahteve za prosti čas in praznike"
+msgstr "Ustvarite časovne liste za potrjene zahteve za odsotnost in praznike"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -573,7 +585,7 @@ msgstr "Ima dostop vodje oddelka"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "Ima časovnico"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
@@ -605,7 +617,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Import Template for Timesheets"
-msgstr ""
+msgstr "Predloga za uvoz časovnic"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -743,7 +755,7 @@ msgstr "Podatkov še ni!"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "No timesheets created: employees aren’t working on the selected days"
-msgstr ""
+msgstr "Časovnice niso bile ustvarjene: kadri ne delajo na izbranih dnevih"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -785,12 +797,12 @@ msgstr "Partner"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "Osebni filtri na kadrih za pogled koledarja"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Please first delete all of their timesheets."
-msgstr ""
+msgstr "Najprej izbrišite vse njihove časovnice."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -864,7 +876,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
 msgid "Remaining days"
-msgstr ""
+msgstr "Preostali dnevi"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -958,6 +970,8 @@ msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
 msgstr ""
+"Nekateri vnosi časovnic obremenjujejo ta opravila! Najprej jih odstranite, "
+"nato boste lahko izbrisali opravila!"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -966,6 +980,7 @@ msgid ""
 "Some timesheets were not created: employees aren’t working on the selected "
 "days"
 msgstr ""
+"Nekatere časovnice niso bile ustvarjene: kadri ne delajo na izbranih dneh"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1347,7 +1362,7 @@ msgstr "Časovnice od %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "Časovnice so bile uspešno ustvarjene"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1432,6 +1447,12 @@ msgid ""
 "those timesheets or consider archiving the employee instead.\n"
 "                        </span>"
 msgstr ""
+"Ups! Kader, ki ga poskušate izbrisati, še vedno ima nekaj časovnic in ga ni "
+"mogoče izbrisati.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Tukaj sta vaši dve možnosti: bodisi izbrišite te "
+"časovnice bodisi razmislite o arhiviranju kadra.\n"
+"                        </span>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1448,6 +1469,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Uporabite te ključne besede v naslovu za nastavljanje novih opravil:\n"
+"\n"
+"        30h Dodeli 30 ur opravilu\n"
+"        #tags Nastavi oznake opravila\n"
+"        @user Dodeli opravilo uporabniku\n"
+"        ! Nastavi opravilo na srednjo prioriteto\n"
+"        !! Nastavi opravilo na visoko prioriteto\n"
+"        !!! Nastavi opravilo na nujno prioriteto\n"
+"\n"
+"        Prepričajte se, da uporabite pravi zapis in vrstni red, npr. "
+"Izboljšaj konfiguracijski zaslon 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1536,7 +1568,7 @@ msgstr "datum"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "npr. Pošiljanje e-pošte"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

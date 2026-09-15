@@ -267,3 +267,54 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             .with_context({'active_ids': orders.ids})
         with self.assertRaises(UserError, msg="With Veri*Factu enabled, POS orders cannot be consolidated into one invoice."):
             wizard.action_create_invoices()
+
+    def test_invoice_later_sent(self):
+        with self.with_pos_session():
+            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [
+                        (self.product, 1.0),
+                    ],
+                    'customer': self.partner_b,
+                    'payments': [(self.bank_pm1, 121.0)],
+                    # Adjust the fields relevant for the record identifier to match the ones in the response
+                    'name': 'INV/2019/00026',
+                    'date_order': '2024-12-30 00:00:00',
+                })
+                order.l10n_es_edi_verifactu_document_ids.sudo().write({'state': 'accepted'})
+            with self._mock_zeep_registration_operation_certificate_issue():
+                order._generate_pos_order_invoice()
+                self.assertEqual(len(order.l10n_es_edi_verifactu_document_ids), 2)
+                self.assertEqual(len(order.account_move.l10n_es_edi_verifactu_document_ids), 1)
+                order_submission_document = order.l10n_es_edi_verifactu_document_ids[0]
+                order_cancellation_document = order.l10n_es_edi_verifactu_document_ids[1]
+                invoice_document = order.account_move.l10n_es_edi_verifactu_document_ids
+
+                self.assertRecordValues(order_submission_document, [
+                    {
+                        'pos_order_id': order.id,
+                        'move_id': False,
+                        'document_type': 'submission',
+                    }
+                ])
+
+                self.assertRecordValues((order_cancellation_document + invoice_document), [
+                    {
+                        'pos_order_id': order.id,
+                        'move_id': False,
+                        'document_type': 'cancellation',
+                        'errors': False,
+                    },
+                    {
+                        'pos_order_id': False,
+                        'move_id': order.account_move.id,
+                        'document_type': 'submission',
+                        'errors': False,
+                    }
+                ])
+                order_submission_invoice_number = order_submission_document._get_document_dict()['RegistroAlta']['IDFactura']['NumSerieFactura']
+                order_cancellation_invoice_number = order_cancellation_document._get_document_dict()['RegistroAnulacion']['IDFactura']['NumSerieFacturaAnulada']
+                invoice_invoice_number = invoice_document._get_document_dict()['RegistroAlta']['IDFactura']['NumSerieFactura']
+
+                self.assertEqual(order_submission_invoice_number, order_cancellation_invoice_number)
+                self.assertNotEqual(order_cancellation_invoice_number, invoice_invoice_number)

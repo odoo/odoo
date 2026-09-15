@@ -16,10 +16,16 @@ class TestMultiCompany(TransactionCase):
 
         cls.company_a = cls.env['res.company'].create({'name': 'Company A'})
         cls.company_b = cls.env['res.company'].create({'name': 'Company B'})
+        cls.branch_company_a = cls.env['res.company'].create({
+            'name': 'Branch of company A',
+            'parent_id': cls.company_a.id,
+        })
         cls.warehouse_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_a.id)], limit=1)
         cls.warehouse_b = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_b.id)], limit=1)
+        cls.warehouse_branch_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.branch_company_a.id)], limit=1)
         cls.stock_location_a = cls.warehouse_a.lot_stock_id
         cls.stock_location_b = cls.warehouse_b.lot_stock_id
+        cls.stock_location_branch_a = cls.warehouse_branch_a.lot_stock_id
 
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
@@ -699,6 +705,56 @@ class TestMultiCompany(TransactionCase):
                 })
             ]})
 
+    def test_intercompany_unpack(self):
+        """Packages are not multi-company: when 'stock.intercompany_auto_unpack' is enabled and
+        the user has access to packages, delivering a package to another company through the
+        inter-company transit location should unpack it so it doesn't carry over to the
+        receiving company.
+        """
+        self.user_a.group_ids += self.env.ref('stock.group_tracking_lot')
+        self.env['ir.config_parameter'].sudo().set_param('stock.intercompany_auto_unpack', True)
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
+        intercom_location.write({'active': True})
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+        })
+        package = self.env['stock.package'].create({'name': 'Transfer Package'})
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_a, 1, package_id=package)
+
+        picking = self.env['stock.picking'].with_user(self.user_a).create({
+            'company_id': self.company_a.id,
+            'partner_id': self.company_b.partner_id.id,
+            'picking_type_id': self.warehouse_a.out_type_id.id,
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': intercom_location.id,
+        })
+        self.env['stock.move'].create({
+            'picking_id': picking.id,
+            'company_id': self.company_a.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1.0,
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': intercom_location.id,
+        })
+        picking.with_user(self.user_a).action_confirm()
+        picking.with_user(self.user_a).action_assign()
+        move_line = picking.move_line_ids
+        move_line.result_package_id = package
+        move_line.quantity = 1.0
+        picking.move_ids.picked = True
+        picking.with_user(self.user_a).button_validate()
+
+        self.assertEqual(picking.state, 'done')
+        self.assertFalse(package.quant_ids, "The package should have been unpacked after the intercompany transfer")
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', product.id),
+            ('location_id', '=', intercom_location.id),
+        ])
+        self.assertRecordValues(quant, [{'quantity': 1, 'package_id': False}])
+
     def test_quants_visibility_with_multi_company_receipt(self):
         """Tests that validating a receipt with both companies selected
         doesn't leak the negative vendor quant to Company B's reports.
@@ -733,3 +789,24 @@ class TestMultiCompany(TransactionCase):
         quants_company_b = self.env['stock.quant'].with_company(self.company_b).search(domain_b)
         self.assertTrue(quants_company_a)
         self.assertFalse(quants_company_b)
+
+    def test_quants_visibility_in_branch_company(self):
+        '''
+        Ensure quants present in a branch company are visible in its' report, even when the product
+        is set for the parent company.
+        '''
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'type': 'consu',
+            'is_storable': True,
+            'company_id': self.company_a.id,
+        })
+        self.env['stock.quant'].create([{
+            'location_id': self.stock_location_branch_a.id,
+            'product_id': product.id,
+            'inventory_quantity': 10,
+        }])
+        base_domain = [('product_id', '=', product.id)]
+        domain = Domain.AND([base_domain, self.env['stock.quant'].with_company(self.branch_company_a)._get_quants_action()['domain']])
+        quants_branch = self.env['stock.quant'].with_company(self.branch_company_a).search(domain)
+        self.assertTrue(quants_branch)

@@ -6,14 +6,14 @@
 # lhmflexerp <lhm@flexerp.dk>, 2022
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:08+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-02 20:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/da/>\n"
@@ -22,18 +22,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid " and $1"
-msgstr ""
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "% discount"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
 msgstr ""
 
 #. module: pos_restaurant
@@ -65,7 +73,7 @@ msgid ""
 "sauce"
 msgstr ""
 "200 g irsk Black Angus-bøf, karamelliserede løg med paprika, hakket "
-"icebergsalat, røde løg, grillet bacon, tomatsauce, pickles og barbecuesauce."
+"icebergsalat, røde løg, grillet bacon, tomatsauce, pickles og barbecuesauce"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -188,6 +196,7 @@ msgstr "Arkiveret"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
 msgstr "Er du sikker?"
 
@@ -455,7 +464,7 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
@@ -483,7 +492,7 @@ msgstr "Redigér ordrenavn"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr "Redigér oversigt"
+msgstr "Redigér plantegning"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -722,6 +731,18 @@ msgstr "Sidst opdateret af"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table %(sourceTable)s with %(destinationTable)s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -982,7 +1003,7 @@ msgid ""
 msgstr ""
 "Luk og validér venligst følgende åbne kassesession, før du ændrer dette "
 "rum.\n"
-"Åben session: %s"
+"Åben session: %(session_names)s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -1073,6 +1094,12 @@ msgstr "Når et rum slettes, kan det ikke gendannes. Vil du stadig fjerne %s?"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
 msgstr "Når et rum bord, kan det ikke gendannes"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Removing floor %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1358,7 +1385,7 @@ msgstr "Bordnummeret som vist på rumoversigten"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr "Det overordnede bord, hvis dette bord indgår i en bordgruppe."
+msgstr "Det overordnede bord, hvis dette bord indgår i en bordgruppe"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids

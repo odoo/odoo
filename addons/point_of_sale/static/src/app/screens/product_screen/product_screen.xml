@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100">
-            <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'flex-shrink-0': !ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+            <div t-att-class="{'flex-grow-1 w-100 mw-100': this.pos.isSmallProductScreen, 'flex-shrink-0': !this.pos.isSmallProductScreen, 'd-none': this.pos.isSmallProductScreen and pos.mobile_pane !== 'left'}"
                 class="leftpane d-flex flex-column pb-2 border-end bg-view">
                 <OrderSummary />
                 <div class="pads px-2">
-                    <t t-if="!ui.isSmall">
+                    <t t-if="!this.pos.isSmallProductScreen">
                         <div class="control-buttons d-flex justify-content-between gap-2 w-100 pt-2">
                             <ControlButtons onClickMore.bind="displayAllControlPopup"/>
                         </div>
@@ -24,9 +24,9 @@
                     </div>
                 </div>
             </div>
-            <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!this.pos.isSmallProductScreen || pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
-                    <CategorySelector t-if="pos.productsToDisplay.length > 0 and (!ui.isSmall || !pos.scanning)" />
+                    <CategorySelector t-if="pos.productsToDisplay.length > 0 and (!this.pos.isSmallProductScreen || !pos.scanning)" />
                     <BarcodeVideoScanner t-if="pos.scanning" t-props="barcodeVideoScannerProps" />
                     <div t-elif="pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="onScroll">
                         <div t-foreach="pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 pt-0 pb-2">
@@ -67,7 +67,7 @@
                         <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
                     </div>
                 </div>
-                <t t-if="ui.isSmall">
+                <t t-if="this.pos.isSmallProductScreen">
                     <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
                         <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="d-block">Pay</span>

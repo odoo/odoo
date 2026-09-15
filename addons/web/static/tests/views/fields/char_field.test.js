@@ -91,6 +91,8 @@ class Partner extends models.Model {
 }
 
 class PartnerType extends models.Model {
+    _name = "partner.type";
+
     color = fields.Integer({ string: "Color index" });
     name = fields.Char({ string: "Partner Type" });
 
@@ -934,4 +936,221 @@ test("edit a char field should display the status indicator buttons without flic
         message: "form view is dirty",
     });
     expect.verifySteps(["onchange"]);
+});
+
+test("translating a char field inside one2many saves the parent record", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "move things", value: "move things" },
+            { lang: "fr_BE", source: "move things", value: "breakfast" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    onRpc("web_save", ({ model }) => {
+        expect.step(model);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_list_char").click();
+    await fieldInput("name").edit("move things", { confirm: false });
+    await contains(".o_selected_row .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["partner.type"]);
+});
+
+test("translate button not clickable for an unsaved record inside a one2many", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_list_char").click();
+    expect(".o_selected_row .btn.o_field_translate").toHaveCount(1);
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await fieldInput("name").edit("new line", { confirm: false });
+
+    expect(".o_selected_row .btn.o_field_translate").toHaveClass("text-muted");
+    expect(".o_selected_row .btn.o_field_translate").toHaveAttribute(
+        "data-tooltip",
+        "Save this record and its parent to translate"
+    );
+    await contains(".o_selected_row .btn.o_field_translate").click(); // nothing should happen
+});
+
+test("translating a char field inside a one2many form dialog saves the record", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => {
+        expect.step("get_field_translations");
+        return [
+            [
+                { lang: "en_US", source: "move things", value: "move things" },
+                { lang: "fr_BE", source: "move things", value: "breakfast" },
+            ],
+            {
+                translation_type: "char",
+                translation_show_source: false,
+            },
+        ];
+    });
+
+    onRpc("web_save", ({ model, args }) => {
+        expect.step(`web_save ${model}`);
+        expect(args[1]).toEqual({ name: "move things" });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list>
+                    <field name="name"/>
+                </list>
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".modal .o_field_widget[name='name'] input").edit("move things", {
+        confirm: false,
+    });
+    await contains(".modal .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["web_save res.partner", "get_field_translations"]);
+    expect(".o_translation_dialog").toHaveCount(1);
+});
+
+test("translation dialog opens in editable list when the required field is set", async () => {
+    Partner._fields.name.translate = true;
+    Partner._fields.name.required = true;
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "Hello", value: "Hello" },
+            { lang: "fr_BE", source: "Hello", value: "Hii" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `
+            <list editable="bottom">
+                <field name="name"/>
+            </list>`,
+    });
+
+    await contains(".o_list_button_add").click();
+
+    await fieldInput("name").edit("", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(0);
+    expect(".o_notification").toHaveCount(1);
+
+    await fieldInput("name").edit("Hello", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(1);
 });

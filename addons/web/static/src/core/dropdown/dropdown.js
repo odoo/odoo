@@ -361,11 +361,14 @@ export class Dropdown extends Component {
             this.target.classList.add("show");
         }
 
-        this.observer = new MutationObserver(() => this.navigation.update());
-        this.observer.observe(this.menuRef.el, {
-            childList: true,
-            subtree: true,
-        });
+        const menuEl = this.menuRef.el;
+        if (menuEl) {
+            this.observer = new MutationObserver(() => this.navigation.update());
+            this.observer.observe(menuEl, {
+                childList: true,
+                subtree: true,
+            });
+        }
     }
 
     onClosed() {

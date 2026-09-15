@@ -149,6 +149,57 @@ test("Pricelist: Nested Pricelists (Pricelist of Pricelist)", async () => {
     expect(product.getPrice(nestedPricelist, 1, 0, false, product)).toBe(95);
 });
 
+test("Pricelist: rule targeting a product missing from the PoS is not applied globally", async () => {
+    const store = await setupPosEnv();
+
+    // Rules whose product/template was archived are dropped from the local data by
+    // filter_local_data, but the rule itself is kept, so its raw id points to a
+    // record that is not in the store.
+    const archivedTmplId = 99999;
+    const archivedVariantId = 99998;
+    const [pricelist] = store.models.loadConnectedData({
+        "product.pricelist": [
+            {
+                id: 90,
+                name: "Orphan Rules Pricelist",
+                display_name: "Orphan Rules Pricelist",
+                currency_id: 1,
+                item_ids: [900, 901],
+            },
+        ],
+        "product.pricelist.item": [
+            {
+                id: 900,
+                pricelist_id: 90,
+                product_tmpl_id: archivedTmplId,
+                product_id: false,
+                categ_id: false,
+                base: "list_price",
+                compute_price: "fixed",
+                fixed_price: 5,
+                min_quantity: 0,
+            },
+            {
+                id: 901,
+                pricelist_id: 90,
+                product_tmpl_id: archivedTmplId,
+                product_id: archivedVariantId,
+                categ_id: false,
+                base: "list_price",
+                compute_price: "fixed",
+                fixed_price: 7,
+                min_quantity: 0,
+            },
+        ],
+    })["product.pricelist"];
+
+    expect(pricelist.getGlobalRulesIds()).toEqual([]);
+
+    const productTmpl = store.models["product.template"].get(5);
+    const product = productTmpl.product_variant_ids[0];
+    expect(productTmpl.getPrice(pricelist, 1, 0, false, product)).toBe(productTmpl.list_price);
+});
+
 test("Nested Pricelists with different currencies", async () => {
     const store = await setupPosEnv();
 

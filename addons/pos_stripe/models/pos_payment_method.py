@@ -80,6 +80,21 @@ class PosPaymentMethod(models.Model):
 
         return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', 'payment_intents', data=params)
 
+    def stripe_refund(self, payment_intent_id, amount):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Do not have access to refund Stripe payment"))
+
+        id_type = "payment_intent" if payment_intent_id.startswith("pi") else "charge"
+        params = [
+            (id_type, payment_intent_id),
+            ("amount", self._stripe_calculate_amount(abs(amount))),
+        ]
+
+        try:
+            return self.sudo()._get_stripe_payment_provider()._send_api_request("POST", "refunds", data=params)
+        except ValidationError as error:
+            return {"error": error}
+
     @api.model
     def stripe_capture_payment(self, paymentIntentId, amount=None):
         """Captures the payment identified by paymentIntentId.

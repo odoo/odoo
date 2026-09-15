@@ -20,12 +20,12 @@ class MrpProductionSerials(models.TransientModel):
         ])
         existing_lot_names = existing_lots.mapped('name')
         new_lots = []
-        sequence = self.production_id.product_id.lot_sequence_id
+        sequence_su = self.production_id.product_id.lot_sequence_id.sudo()
         for lot_name in sorted(lots):
             if lot_name in existing_lot_names:
                 continue
-            if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
-                sequence.sudo().number_next_actual += 1
+            if sequence_su and lot_name == sequence_su.get_next_char(sequence_su.number_next_actual):
+                sequence_su.number_next_actual += 1
             new_lots.append({
                 'name': lot_name,
                 'product_id': self.production_id.product_id.id

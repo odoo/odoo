@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_pdp_get_regulatory_documents" model="ir.cron">
+        <field name="name">PDP: Retrieve new regulatory documents</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_get_regulatory_documents()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_pdp_send_lifecycles" model="ir.cron">
+        <field name="name">PDP: Send lifecycles</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_send_lifecycles()</field>
+        <field name="state">code</field>
+    </record>
+
+    <data noupdate="1">
+        <record id="ir_cron_l10n_fr_pdp_generate_flows" model="ir.cron">
+            <field name="name">PDP Generate Flux 10 Flows</field>
+            <field name="model_id" ref="l10n_fr_pdp.model_l10n_fr_pdp_reports_flow"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_and_send_flows()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>

@@ -133,6 +133,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False,
         compute='_compute_destination_account_id',
         domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
+        index='btree_not_null',
         check_company=True)
 
     # == Stat buttons ==

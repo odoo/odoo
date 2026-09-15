@@ -193,12 +193,11 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _add_pos_order_accounting_customer_party_nodes(self, document_node, vals):
         super()._add_pos_order_accounting_customer_party_nodes(document_node, vals)
-        if not vals['is_refund']:
-            document_node['cac:AccountingCustomerParty'].update({
-                'cac:AccountingContact': {
-                    'cbc:Telephone': {'_text': self._sanitize_phone(vals['customer'].phone)}
-                },
-            })
+        document_node['cac:AccountingCustomerParty'].update({
+            'cac:AccountingContact': {
+                'cbc:Telephone': {'_text': self._sanitize_phone(vals['customer'].phone)}
+            },
+        })
 
     def _add_pos_order_seller_supplier_party_nodes(self, document_node, vals):
         document_node['cac:SellerSupplierParty'] = {
@@ -223,17 +222,17 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         return {
             'cac:PartyIdentification': {
                 'cbc:ID': {'_text': commercial_partner.vat, 'schemeID': 'TN' if partner.country_code == 'JO' else 'PN'},
-            } if not vals['is_refund'] and is_customer else None,
+            } if is_customer else None,
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:CompanyID': {'_text': commercial_partner.vat} if not vals['is_refund'] or not is_customer else None,
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT'}
+                    'cbc:ID': {'_text': 'VAT'},
                 },
             },
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
-            } if not vals['is_refund'] or not is_customer else None,
+            },
         }
 
     def _get_address_node(self, vals):
@@ -242,8 +241,8 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         state = partner['state_id']
 
         return {
-            'cbc:PostalZone': {'_text': partner.zip} if not vals['is_refund'] else None,
-            'cbc:CountrySubentityCode': {'_text': state.code} if not vals['is_refund'] else None,
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentityCode': {'_text': state.code},
             'cac:Country': {
                 'cbc:IdentificationCode': {'_text': country.code},
             },
@@ -338,16 +337,16 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         )
 
     def _get_tax_total_node(self, vals):
+        currency_suffix = vals['currency_suffix']
         aggregated_tax_details = vals['aggregated_tax_details']
         total_tax_amount = self._sum_tax_details(vals, 'raw_tax_amount')
-        rounding_amount = self._sum_tax_details(vals, 'raw_total_excluded') + self._sum_tax_details(vals, 'raw_tax_amount', True)
         return {
             'cbc:TaxAmount': {
                 '_text': self.format_float(total_tax_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name']
             },
             'cbc:RoundingAmount': {
-                '_text': self.format_float(rounding_amount, vals['currency_dp']),
+                '_text': self.format_float(vals['base_line']['tax_details'][f'raw_total_included{currency_suffix}'], vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             } if vals['role'] == 'line' else None,
             'cac:TaxSubtotal': [
@@ -364,9 +363,13 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
     def _get_tax_subtotal_node(self, vals):
         tax_details = vals['tax_details']
         currency_suffix = vals['currency_suffix']
+        if vals['role'] == 'line':
+            taxable_amount = vals['base_line']['tax_details'][f'raw_total_excluded{currency_suffix}']
+        else:
+            taxable_amount = tax_details[f'raw_total_excluded{currency_suffix}']
         return {
             'cbc:TaxableAmount': {
-                '_text': self.format_float(tax_details[f'raw_total_excluded{currency_suffix}'], vals['currency_dp']),
+                '_text': self.format_float(taxable_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name']
             },
             'cbc:TaxAmount': {
@@ -410,7 +413,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'false'},
             'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
             'cbc:Amount': {
-                '_text': self.format_float(vals[f'discount_amount{currency_suffix}'], vals['currency_dp']),
+                '_text': self.format_float(abs(vals[f'discount_amount{currency_suffix}']), vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
         }

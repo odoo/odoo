@@ -17,14 +17,14 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Mónica Pinheiro, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:13+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-07 20:23+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
 "project/pt/>\n"
@@ -34,12 +34,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr ""
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -319,15 +314,15 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    Olá <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
-"t>,<br/>\n"
+"    Olá <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
+",<br/>\n"
 "    Tenho o prazer de informar que concluímos o projeto \"<strong t-"
 "out=\"object.name or ''\">Renovações</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -373,8 +368,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -737,8 +732,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Adicione colunas para organizar suas tarefas dentro de <b>estágios</b> "
-"<i>ex.: novo – em andamento – concluído</i>."
+"Adicione colunas para organizar suas tarefas dentro de <b>estágios</b> <i>"
+"ex.: novo – em andamento – concluído</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -779,8 +774,10 @@ msgstr "Administrador"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "O administrador pode gerenciar a agenda dos funcionários"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -851,6 +848,11 @@ msgstr "Todas as tarefas"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Todos os usuários internos"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -4997,8 +4999,7 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
-"O projeto e o usuário associado devem estar vinculados à mesma empresa."
+msgstr "O projeto e o usuário associado devem estar vinculados à mesma empresa."
 
 #. module: project
 #. odoo-python
@@ -5598,8 +5599,8 @@ msgstr "Configurações do Utilizador"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "O usuário pode usar a agenda de seus funcionários"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6148,6 +6149,12 @@ msgstr "👤 Não atribuído"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "O administrador pode gerenciar a agenda dos funcionários"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "O usuário pode usar a agenda de seus funcionários"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Campos inválidos: "

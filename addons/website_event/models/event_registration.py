@@ -10,3 +10,8 @@ class EventRegistration(models.Model):
 
     def _get_website_registration_allowed_fields(self):
         return {'name', 'phone', 'email', 'company_name', 'event_id', 'partner_id', 'event_slot_id', 'event_ticket_id'}
+
+    def get_base_url(self):
+        if self.event_id:
+            return self.event_id.get_base_url()
+        return super().get_base_url()

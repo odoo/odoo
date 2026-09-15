@@ -1116,3 +1116,89 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         downpayment.create_invoices()
         invoice = sale_order.invoice_ids
         self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
+
+    def test_down_payment_invoice_manual_removing_of_tax_affecting_subsequent_taxes(self):
+        """
+        Test that removing a tax from a down payment invoice correctly recomputes remaining taxes.
+        This ensures that cached manual_tax_amounts are not reused when the tax set changes,
+        particularly for taxes with "Affect Base of Subsequent Taxes", and that dependent
+        taxes are recomputed using the updated base instead of stale values.
+        """
+        product = self.company_data['product_order_cost']
+        tax_10_a = self.percent_tax(10.0, include_base_amount=True)
+        tax_10_b = self.percent_tax(10.0)
+
+        product = self._create_product(list_price=100.0, taxes_id=tax_10_a + tax_10_b)
+        so = self._create_sale_order_one_line(product_id=product, confirm=True)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 21.0,
+            'amount_total': 121.0,
+        }])
+
+        dp_invoice = self._create_down_payment_invoice(so, 'percent', 50)
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 50.0,
+            'amount_tax': 10.5,
+            'amount_total': 60.5,
+        }])
+
+        dp_invoice.invoice_line_ids.tax_ids = [Command.set(tax_10_b.ids)]
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 50.0,
+            'amount_tax': 5.0,
+            'amount_total': 55.0,
+        }])
+
+    def test_downpayment_price_unit_after_credit_note_cancel(self):
+        """
+        Test that cancelling a credit note issued against a down payment
+        invoice resets the state, allowing invoicing the remaining amount
+        on the sale order to proceed successfully.
+        """
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 100,
+                })
+            ],
+        })
+        sale_order.action_confirm()
+
+        # Down payment invoice (50% of the order)
+        invoicing_wizard = self.env["sale.advance.payment.inv"].create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": sale_order.amount_total / 2.0,
+            "sale_order_ids": [Command.link(sale_order.id)],
+        })
+        action = invoicing_wizard.create_invoices()
+        dp_invoice = self.env["account.move"].browse(action["res_id"])
+        dp_invoice.action_post()
+
+        # Credit note against the down payment invoice
+        action = dp_invoice.action_reverse()
+        reversal_wizard = (
+            self
+            .env[action["res_model"]]
+            .with_context(active_ids=dp_invoice.ids, active_model="account.move")
+            .create({"journal_id": dp_invoice.journal_id.id})
+        )
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env["account.move"].browse(action["res_id"])
+        credit_note.action_post()
+
+        credit_note.button_draft()
+        credit_note.button_cancel()
+
+        # Invoice the remaining amount: should only be 50
+        invoicing_wizard = self.env["sale.advance.payment.inv"].create({
+            "advance_payment_method": "delivered",
+            "sale_order_ids": [Command.link(sale_order.id)],
+        })
+        action = invoicing_wizard.create_invoices()
+        final_invoice = self.env["account.move"].browse(action["res_id"])
+
+        self.assertEqual(final_invoice.amount_total, 50.0)

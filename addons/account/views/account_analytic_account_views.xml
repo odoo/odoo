@@ -28,11 +28,15 @@
             <field name="arch" type="xml">
                 <field name="debit" position="attributes">
                     <attribute name="column_invisible">False</attribute>
-                    <attribute name="groups">account.group_account_readonly</attribute>
+                    <attribute name="groups">account.group_account_readonly,account.group_account_invoice</attribute>
                 </field>
                 <field name="credit" position="attributes">
                     <attribute name="column_invisible">False</attribute>
-                    <attribute name="groups">account.group_account_readonly</attribute>
+                    <attribute name="groups">account.group_account_readonly,account.group_account_invoice</attribute>
+                </field>
+                <field name="balance" position="attributes">
+                    <attribute name="column_invisible">False</attribute>
+                    <attribute name="groups">account.group_account_readonly,account.group_account_invoice</attribute>
                 </field>
             </field>
         </record>

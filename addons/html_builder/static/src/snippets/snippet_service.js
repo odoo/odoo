@@ -354,6 +354,20 @@ export class SnippetModel extends Reactive {
     }
 
     /**
+     * Applies a callback function to all snippets in a given category.
+     *
+     * @param {String} category the category of snippets to update.
+     * @param {Function} callback the function to apply to each
+     * snippet's content.
+     */
+    async updateContent(category, callback) {
+        const snippets = this.snippetsByCategory[category] || [];
+        for (const snippet of snippets) {
+            await callback(snippet.content);
+        }
+    }
+
+    /**
      * Saves the given snippet as a custom one and reloads all the snippets
      * to have access to it directly.
      *
@@ -394,6 +408,8 @@ export class SnippetModel extends Reactive {
                             ? snippetCopyEl.firstElementChild
                             : snippetCopyEl;
                         cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
+
+                        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
 
                         const defaultSnippetName = isButton
                             ? _t("Custom Button")

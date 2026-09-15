@@ -8,7 +8,7 @@ from textwrap import dedent
 
 import astroid
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, no_retry
 from odoo.tools.which import which
 
 from . import _odoo_checker_sql_injection
@@ -43,6 +43,7 @@ class UnittestLinter(PyLinter):
 HERE = os.path.dirname(os.path.realpath(__file__))
 
 
+@no_retry
 class TestPylintChecks(TransactionCase):
     def check(self, test_content, plugins, rules):
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as f:

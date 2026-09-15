@@ -39,7 +39,13 @@ class ResUsers(models.Model):
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
         current_cm.filtered(
-            lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
+            lambda cm: (
+                cm.channel_id.channel_type == "channel"
+                and cm.channel_id.group_public_id
+                and not (
+                    cm.channel_id.group_public_id & (cm.partner_id.user_ids - self).all_group_ids
+                )
+            )
         ).unlink()
 
     def _init_messaging(self, store: Store):
@@ -59,7 +65,7 @@ class ResUsers(models.Model):
         # return whether the features are enabled
         get_param = self.env["ir.config_parameter"].sudo().get_param
         store.add_global_values(
-            hasGifPickerFeature=bool(get_param("discuss.tenor_api_key")),
+            hasGifPickerFeature=bool(get_param("discuss.klipy_api_key")),
             hasMessageTranslationFeature=bool(get_param("mail.google_translate_api_key")),
             hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
                 "|",

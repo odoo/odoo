@@ -162,6 +162,33 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
                 for mail in created_mails)
         )
 
+    def test_merging_partners_with_course_memberships(self):
+        """ Test merging partners with course memberships """
+        course_1, course_2 = self.env['slide.channel'].create([{'name': 'Course 1'}, {'name': 'Course 2'}])
+        partner_1, partner_2, partner_3 = partners = self.env['res.partner'].create([
+            {'name': 'Partner 1', 'email': 'partner1@example.com'},
+            {'name': 'Partner 2', 'email': 'partner2@example.com'},
+            {'name': 'Partner 3', 'email': 'partner3@example.com'}])
+        partners.invalidate_recordset(fnames=['slide_channel_ids'])
+        course_1.sudo()._action_add_members(partner_1 | partner_2)
+        course_2.sudo()._action_add_members(partner_1 | partner_3)
+        wizard = self.env['base.partner.merge.automatic.wizard'].create({})
+
+        with self.assertRaises(UserError) as user_error:
+            wizard._merge([partner_1.id, partner_2.id], partner_1)
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            "You cannot merge these contacts because multiple contacts are enrolled in the same courses: Course 1",
+            "Error message should appear that mentions the common courses that prevent the merge"
+        )
+
+        wizard._merge([partner_2.id, partner_3.id], partner_2)
+        self.assertFalse(partner_3.exists(), "Source partner should be deleted after merge")
+        self.assertTrue(partner_2.exists(), "Destination partner should exist after merge")
+        self.assertIn(course_1, partner_2.slide_channel_ids, "Course 1 should belong to destination partner")
+        self.assertIn(course_2, partner_2.slide_channel_ids, "Course 2 should belong to destination partner")
+
     def test_mail_completed_with_different_templates(self):
         """ When the completion email is generated, it must take into account different templates. """
 

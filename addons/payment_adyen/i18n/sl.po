@@ -2,14 +2,18 @@
 # This file contains the translation of the following modules:
 # * payment_adyen
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:17+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-09-10 11:11+0000\n"
+"Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment_adyen/sl/>\n"
 "Language: sl\n"
@@ -18,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -28,12 +32,15 @@ msgid ""
 "                    the Capture Delay to manual on your Adyen account "
 "settings."
 msgstr ""
+"<strong>Opozorilo:</strong> Če želite znesek zajeti ročno, morate v "
+"nastavitvah svojega računa Adyen prav tako nastaviti\n"
+"                    zamik zajema na ročno."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "A request was sent to void the transaction %(reference)s."
-msgstr ""
+msgstr "Poslana je bila zahteva za storniranje transakcije %(reference)s."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -43,7 +50,7 @@ msgstr "API ključ"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "API URL Prefix"
-msgstr ""
+msgstr "Predpona URL-ja API-ja"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -55,18 +62,18 @@ msgstr "Adyen"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
-msgstr ""
+msgstr "Prišlo je do napake med obdelavo vašega plačila. Poskusite znova."
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Plačilnega obrazca ni mogoče prikazati"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Ključ odjemalca"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
@@ -84,12 +91,12 @@ msgstr "Prikazani naziv"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "Ključ HMAC"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Ima transakcijo Adyen"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__id
@@ -103,7 +110,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Napačni podatki o plačilu"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -118,7 +125,7 @@ msgstr "Račun trgovca"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Čarovnik za zajem plačila"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
@@ -139,40 +146,40 @@ msgstr "Plačilna transakcija"
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Obdelava plačila ni uspela"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Prejeti podatki z neveljavnim stanjem plačila: %s"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Prejeti podatki z manjkajočim stanjem plačila."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Prejeti spremenjeni podatki zahteve za plačilo."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Referenca kupca"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "API-ključ uporabnika spletne storitve"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "HMAC ključ spletnega kavlja"
 
 #. module: payment_adyen
 #. odoo-python
@@ -181,17 +188,19 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Znesek, ki ga je Adyen obdelal za transakcijo %s, se razlikuje od "
+"zahtevanega. Ustvarjena je druga transakcija s pravilnim zneskom."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "The base URL for the API endpoints"
-msgstr ""
+msgstr "Osnovni URL za končne točke API-ja"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction %s failed."
-msgstr ""
+msgstr "Zajem transakcije %s ni uspel."
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -199,6 +208,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Zajem ali storniranje transakcije lahko traja nekaj minut, da jo\n"
+"                    Adyen obdela in se to odrazi v Odoo."
 
 #. module: payment_adyen
 #. odoo-python
@@ -206,35 +217,36 @@ msgstr ""
 msgid ""
 "The capture request of %(amount)s for transaction %(ref)s has been sent."
 msgstr ""
+"Zahteva za zajem zneska %(amount)s za transakcijo %(ref)s je bila poslana."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "Odjemalski ključ uporabnika spletne storitve"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Koda trgovskega računa, ki se uporablja s tem ponudnikom"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tehnična koda tega ponudnika plačil."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "Edinstvena referenca partnerja, ki je lastnik tega žetona"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The void of the transaction %s failed."
-msgstr ""
+msgstr "Razveljavitev transakcije %s ni uspela."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Vaše plačilo je bilo zavrnjeno. Poskusite znova."

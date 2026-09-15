@@ -27,12 +27,17 @@ class SaleOrder(models.Model):
             if operator in Domain.NEGATIVE_OPERATORS:
                 return NotImplemented
             domain = super()._search_display_name(operator, value)
-            company_domain = Domain('state', '=', 'sale') & ('company_id', 'in', self.env.companies.ids)
+            company_domain = Domain('state', '=', 'sale') & Domain('company_id', 'in', self.env.companies.ids)
             query = self.sudo()._search(domain & company_domain)
             return Domain('id', 'in', query)
         return super()._search_display_name(operator, value)
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):
+        expense_data = self.env['hr.expense']._read_group(
+            domain=[('sale_order_id', 'in', self.ids)],
+            groupby=['sale_order_id'],
+            aggregates=['__count'])
+        mapped_data = {sale_order.id: count for sale_order, count in expense_data}
         for sale_order in self:
-            sale_order.expense_count = len(sale_order.order_line.expense_ids)
+            sale_order.expense_count = mapped_data.get(sale_order.id, 0)

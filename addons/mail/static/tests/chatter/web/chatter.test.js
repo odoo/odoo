@@ -230,6 +230,29 @@ test("chatter: drop attachments", async () => {
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
 });
 
+test("chatter: drop attachments on message in edition", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "my note",
+        model: "res.partner",
+        res_id: partnerId,
+        message_type: "comment",
+    });
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input");
+    await dragenterFiles(".o-mail-Message-body", [file]);
+    await contains(".o-Dropzone");
+    await dropFiles(".o-Dropzone.o-mail-Composer-dropzone", [file]);
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)"
+    );
+});
+
 test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {
     await patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();

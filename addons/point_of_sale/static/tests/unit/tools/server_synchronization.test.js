@@ -50,3 +50,24 @@ test("Check behavior when deleting records", async () => {
     await store.data.loadServerOrders([["id", "=", order.id]]);
     expect(order.lines).toHaveLength(1);
 });
+
+test("Local changes must survive a synchronisation triggered by another device", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    await store.syncAllOrders();
+    expect(order.isSynced).toBe(true);
+
+    // Add local change to order
+    const product = store.models["product.template"].get(8);
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+    store.addPendingOrder([order.id]);
+    expect(order.isDirty()).toBe(true);
+
+    // Another device edited the same order: we read the open orders from the server
+    // Order must stay dirty (cause the local changes are not yet sent to the server)
+    await store.deviceSync.readDataFromServer();
+    expect(order.isDirty()).toBe(true);
+    await store.syncAllOrders();
+    expect(order.lines).toHaveLength(3);
+    expect(order.lines.every((l) => l.isSynced === true)).toBe(true);
+});

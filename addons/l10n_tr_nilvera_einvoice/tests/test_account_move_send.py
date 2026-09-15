@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import tagged
 from .test_xml_ubl_tr_common import TestUBLTRCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -53,6 +54,23 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
             wizard = self.create_send_and_print(invoice)
             self.assertIn('tr_moves_with_invalid_name', wizard.alerts)
 
+    def test_invoice_lines_missing_taxes_for_nilvera(self):
+        invoice = self.init_invoice('out_invoice', invoice_date='2025-11-28', amounts=[1000], taxes=[], post=True)
+
+        wizard = self.create_send_and_print(invoice)
+        self.assertIn('tr_lines_missing_taxes', wizard.alerts)
+
+    def test_invoice_lines_with_taxes_valid_for_nilvera(self):
+        invoice = self.init_invoice('out_invoice', invoice_date='2025-11-28', amounts=[1000], taxes=self.tax_sale_a)
+        invoice.write({'invoice_line_ids': [
+            Command.create({'display_type': 'line_note', 'name': 'A note'}),
+            Command.create({'display_type': 'line_section', 'name': 'A section'}),
+        ]})
+        invoice.action_post()
+
+        wizard = self.create_send_and_print(invoice)
+        self.assertNotIn('tr_lines_missing_taxes', wizard.alerts)
+
     def test_no_attachment_on_ubl_xml_for_ubl_tr(self):
         # Setup invoice
         invoice = self.init_invoice(
@@ -97,3 +115,32 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
         self.company_data['company'].bank_ids.bank_id = bank.id
 
         self.assertTrue(self._generate_invoice_xml(self.einvoice_partner), "XML generation failed")
+
+    def test_ubl_tr_amount_currency_translation(self):
+        """ Test that the currency subunit is translated to Turkish when sending to Nilvera."""
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.einvoice_partner,
+            invoice_date='2025-11-28',
+            amounts=[504.0],
+            currency=self.env.ref('base.USD'),
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+
+        wizard = self.create_send_and_print(invoice, True)
+        wizard.sending_methods = False
+        wizard.extra_edis = False
+        wizard.alerts = False
+        wizard.action_send_and_print()
+
+        xml_data = invoice.ubl_cii_xml_id.raw
+        xml_tree = ET.fromstring(xml_data.decode('utf-8'))
+        ns = {'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'}
+
+        notes = [node.text for node in xml_tree.findall('.//cbc:Note', ns) if node.text]
+        full_note_text = " ".join(notes).upper()
+
+        self.assertIn('SENT', full_note_text)
+        self.assertNotIn('CENTS', full_note_text)

@@ -1,38 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_fleet
+# * stock_fleet
 #
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-10-08 18:39+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-08-07 00:52+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"stock_fleet/sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
 msgid "%(display_name)s (%(load_capacity)s)"
-msgstr ""
+msgstr "%(display_name)s (%(load_capacity)s)"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
 msgid "%(volume_capacity)s %(volume_uom)s"
-msgstr ""
+msgstr "%(volume_capacity)s %(volume_uom)s"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
 msgid "%(weight_capacity)s %(weight_uom)s"
-msgstr ""
+msgstr "%(weight_capacity)s %(weight_uom)s"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
@@ -41,53 +44,56 @@ msgid ""
 "                        <span class=\"fw-bold\" invisible=\"code "
 "=='outgoing'\">To</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">Z</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">Do</span>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Dock:</strong>"
-msgstr ""
+msgstr "<strong>Dok:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Vehicle Category:</strong>"
-msgstr ""
+msgstr "<strong>Kategória vozidla:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Vehicle:</strong>"
-msgstr ""
+msgstr "<strong>Vozidlo:</strong>"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
 msgid "Allowed Docks"
-msgstr ""
+msgstr "Povolené doky"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_pivot
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Hromadný presun"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Batches by Route"
-msgstr ""
+msgstr "Dávky podľa trasy"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Calendar"
-msgstr ""
+msgstr "Kalendár"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_fleet_vehicle_model_category
 msgid "Category of the model"
-msgstr ""
+msgstr "Kategória modelu"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
 msgid "Dispatch Management"
-msgstr ""
+msgstr "Riadenie expedície"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
@@ -96,33 +102,33 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
 msgid "Dock"
-msgstr ""
+msgstr "Dok"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Dock Dispatching"
-msgstr ""
+msgstr "Dispečing dokov"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Dock Location"
-msgstr ""
+msgstr "Lokácia doku"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Dock Locations"
-msgstr ""
+msgstr "Lokácie dokov"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
 msgid "Driver"
-msgstr ""
+msgstr "Vodič"
 
 #. module: stock_fleet
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
@@ -131,16 +137,19 @@ msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
+"Túto možnosť aktivujte, ak chcete zobraziť podrobnosti týkajúce sa riadenia "
+"expedície v zobrazení formulára hromadného/vlnového presunu a v kanban "
+"prehľade operácií."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
 msgid "End Date"
-msgstr ""
+msgstr "Dátum ukončenia"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_graph
 msgid "Graph View"
-msgstr ""
+msgstr "Zobrazenie grafu"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
@@ -149,178 +158,178 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Manage Batches"
-msgstr ""
+msgstr "Správa dávok"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
 msgid "Max Volume"
-msgstr ""
+msgstr "Max. objem"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_volume_capacity
 msgid "Max Volume (m³)"
-msgstr ""
+msgstr "Max. objem (m³)"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity
 msgid "Max Weight"
-msgstr ""
+msgstr "Maximálna hmotnosť"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Next 7 Days"
-msgstr ""
+msgstr "Nasledujúcich 7 dní"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Operation Type"
-msgstr ""
+msgstr "Typ operácie"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Own Fleet"
-msgstr ""
+msgstr "Vlastný vozový park"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Typ presunu"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Plánovaný dátum"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "Sequence"
-msgstr ""
+msgstr "Poradie"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Shipping Volume"
-msgstr ""
+msgstr "Objem dodávky"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Hmotnosť dodávky"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Statistics"
-msgstr ""
+msgstr "Štatistiky"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Third Party Carrier"
-msgstr ""
+msgstr "Externý dopravca"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Third Party Provider"
-msgstr ""
+msgstr "Externý poskytovateľ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Today"
-msgstr ""
+msgstr "Dnes"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Tomorrow"
-msgstr ""
+msgstr "Zajtra"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Total Shipping Volume"
-msgstr ""
+msgstr "Celkový expedovaný objem"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Total Shipping Weight"
-msgstr ""
+msgstr "Celková expedovaná hmotnosť"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Presun"
 
 #. module: stock_fleet
 #: model:fleet.vehicle.tag,name:stock_fleet.vehicle_tag_transport
 msgid "Transport"
-msgstr ""
+msgstr "Preprava"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Transport Management"
-msgstr ""
+msgstr "Riadenie dopravy"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
 msgid "Vehcilce Payload Capacity"
-msgstr ""
+msgstr "Nosnosť vozidla"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Vehicle"
-msgstr ""
+msgstr "Vozidlo"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_category_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Vehicle Category"
-msgstr ""
+msgstr "Kategória vozidla"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Volume"
-msgstr ""
+msgstr "Objem"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_volume_percentage
 msgid "Volume %"
-msgstr ""
+msgstr "Objem %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Označenie mernej jednotky objemu"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Weight"
-msgstr ""
+msgstr "Hmotnosť"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_weight_percentage
 msgid "Weight %"
-msgstr ""
+msgstr "Hmotnosť %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Označenie mernej jednotky hmotnosti"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__zip
 msgid "Zip"
-msgstr ""
+msgstr "PSČ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "semi-truck"
-msgstr ""
+msgstr "nákladné auto"

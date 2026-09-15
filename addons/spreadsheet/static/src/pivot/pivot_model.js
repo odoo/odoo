@@ -753,7 +753,7 @@ export class OdooPivotModel extends PivotModel {
         const allGroupBys = params.groupingSets.flat();
         const order = columns
             .concat(rows)
-            .filter((dimension) => allGroupBys.includes(dimension.nameWithGranularity))
+            .filter((dimension) => allGroupBys.includes(dimension.nameWithGranularity) && !dimension.isCustomField) // the order should not contain the custom groups
             .map((dimension) =>
                 dimension.order
                     ? `${dimension.nameWithGranularity} ${dimension.order}`

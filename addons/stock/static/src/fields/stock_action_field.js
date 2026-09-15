@@ -52,7 +52,7 @@ class StockActionField extends Component {
         // const action = this.orm.call(this.props.record.resModel, actionName, this.props.record.resId);
         // Use the action service to perform the action
         this.actionService.doAction(actionName, {
-            additionalContext: { ...actionContext, ...this.props.record.context },
+            additionalContext: { ...this.props.record.context, ...actionContext },
         });
     }
 }

@@ -21,7 +21,7 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         };
     }
 
-    get sectionAndNoteIsReadonly() {
+    get labelIsReadonly() {
         return (
             this.props.readonly
             && this.isProductClickable
@@ -48,9 +48,9 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
     }
 
     parseLabel(value) {
-       return this.currentProductName && value && this.currentProductName.concat("\n", value) ||
-            this.currentProductName && !value && this.currentProductName ||
-            value || "";
+        return (this.productName && value && this.productName.concat("\n", value))
+            || (this.productName && !value && this.productName)
+            || (value || "");
     }
 
     shouldShowWarning() {

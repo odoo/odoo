@@ -22,7 +22,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'nemhandel':
-            return company.l10n_dk_nemhandel_proxy_state != 'rejected'
+            return company.l10n_dk_nemhandel_proxy_state != 'rejected' and self.move_id.partner_id.nemhandel_verification_state in {'valid', 'not_verified'}
         return super()._is_applicable_to_company(method, company)
 
     def _is_applicable_to_move(self, method, move, **move_data):

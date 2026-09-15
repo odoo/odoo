@@ -216,6 +216,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "active": True,
                                     "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                     "email": "test_customer@example.com",
+                                    "employee_ids": [],
                                     "id": self.test_partner.id,
                                     "im_status": "offline",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
@@ -300,6 +301,35 @@ class TestChannelInternals(MailCommon, HttpCase):
                 message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_channel_recipients_user_of_partner_with_archived_user(self):
+        """The user picked for a recipient partner is one of its active users."""
+        archived_only, two_logins = self.env["res.partner"].with_context(self._test_context).create([
+            {"email": "archived.only@example.com", "name": "Archived Only"},
+            {"email": "two.logins@example.com", "name": "Two Logins"},
+        ])
+        group_ids = [Command.set([self.env.ref("base.group_user").id])]
+        old_alone, old_login, new_login = (
+            self.env["res.users"].with_context(self._test_context).create([
+                {"group_ids": group_ids, "login": "old_alone", "partner_id": archived_only.id},
+                {"group_ids": group_ids, "login": "old_login", "partner_id": two_logins.id},
+                {"group_ids": group_ids, "login": "new_login", "partner_id": two_logins.id},
+            ])
+        )
+        (old_alone | old_login).active = False
+        recipients = self.test_channel._notify_get_recipients(
+            self.env["mail.message"],
+            {
+                "author_id": self.partner_employee.id,
+                "message_type": "comment",
+                "partner_ids": (archived_only | two_logins).ids,
+            },
+        )
+        self.assertEqual(
+            {r["id"]: r["uid"] for r in recipients if r["notif"] != "web_push"},
+            {archived_only.id: None, two_logins.id: new_login.id},
+        )
+
     @mute_logger("odoo.models.unlink")
     def test_channel_special_mention(self):
         """ Posting a message on a channel should support special mention """
@@ -327,6 +357,31 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.user_employee_nomail.unlink()
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
+
+    @mute_logger("odoo.models.unlink")
+    def test_channel_user_synchronize_partner_with_several_users(self):
+        """A partner stays in a group restricted channel as long as one of its users has access"""
+        group_restricted_channel = self.env["discuss.channel"]._create_channel(
+            name="Sic Mundus",
+            group_id=self.env.ref("base.group_user").id,
+        )
+        second_user = (
+            self.env["res.users"]
+            .with_context(self._test_context)
+            .create(
+                {
+                    "group_ids": [Command.set([self.env.ref("base.group_user").id])],
+                    "login": "employee_second_login",
+                    "partner_id": self.partner_employee.id,
+                },
+            )
+        )
+        group_restricted_channel.add_members(self.partner_employee.ids)
+        self.assertIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
+        self.user_employee.active = False
+        self.assertIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
+        second_user.active = False
+        self.assertNotIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
 
     @users('employee_nomail')
     def test_channel_info_get(self):

@@ -50,7 +50,10 @@ class TestSuite(BaseTestSuite):
 
             if not test.__class__._classSetupFailed:
                 test_method = getattr(test, test._testMethodName)
-                if not hasattr(test_method, '_retry') or test_method._retry:
+                if (
+                    (not hasattr(test_method, '_retry') or test_method._retry)
+                    and (not hasattr(test, '_retry') or test._retry)
+                ):
                     tests_run_count = default_tests_run_count
                 else:
                     tests_run_count = 1

@@ -83,10 +83,6 @@ export class TourInteractive {
     }
 
     play() {
-        if (this.onHold) {
-            return;
-        }
-
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
             this.observer.disconnect();

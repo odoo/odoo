@@ -19,7 +19,7 @@ class StockMove(models.Model):
         if not self.production_id or not last_subcontract_done_receipt:
             return valuation_data
 
-        bill_data = last_subcontract_done_receipt._get_value_from_account_move(quantity)
+        bill_data = last_subcontract_done_receipt.with_context(valuation_without_extra=True)._get_value_from_account_move(quantity)
         po_data = last_subcontract_done_receipt._get_value_from_quotation(quantity - bill_data['quantity'])
         if not bill_data['value'] and not po_data['value']:
             return valuation_data

@@ -8,13 +8,13 @@
 # Djordje Marjanovic <djvmarjanovic@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-20 11:55+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-07 22:46+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-19/project/sr_Latn/>\n"
@@ -24,12 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr ""
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -706,7 +701,9 @@ msgstr "Administrator"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
 msgstr ""
 
 #. module: project
@@ -777,6 +774,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
 msgstr ""
 
 #. module: project
@@ -1633,7 +1635,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "dana"
+msgstr "Dani"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
@@ -3226,7 +3228,7 @@ msgstr "ID niza nadređenog zapisa"
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 msgid "Parent Task"
-msgstr ""
+msgstr "Nadređeni zadatak"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -4970,8 +4972,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
-"To predstavlja različite kategorije stvari koje morate da uradite (npr. "
-"„Pozovi“ ili „Pošalji email“)."
+"To predstavlja različite kategorije stvari koje morate da uradite (npr. „"
+"Pozovi“ ili „Pošalji email“)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5321,7 +5323,7 @@ msgstr "Podešavanja korisnika"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
+msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project

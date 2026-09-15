@@ -7,6 +7,8 @@ import { getContent } from "./_helpers/selection";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isTableCell } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
+import { isBlock } from "@html_editor/utils/blocks";
+import { Plugin } from "@html_editor/plugin";
 
 const pressArrowKey = async (editor, key) => {
     const selection = editor.shared.selection.getSelectionData().deepEditableSelection;
@@ -562,14 +564,14 @@ test("selection placeholders are vertically positioned in the middle between it 
     const style = document.createElement("style");
     await testEditor({
         contentBefore: unformat(
-            `<table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+            `<table style="margin-top: 50px; margin-bottom: 50px;"><tbody><tr><td>a</td></tr></tbody></table>
+            <table style="margin-top: 10px; margin-bottom: 10px;"><tbody><tr><td>[]a</td></tr></tbody></table>`
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder="" style="margin: 25px 0px -26px;"><br></p>
-            <table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
+            <table style="margin-top: 50px; margin-bottom: 50px;"><tbody><tr><td>a</td></tr></tbody></table>
             <p data-selection-placeholder="" style="margin: -21px 0px 30px;"><br></p>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <table style="margin-top: 10px; margin-bottom: 10px;"><tbody><tr><td>[]a</td></tr></tbody></table>
             <p data-selection-placeholder="" style="margin: -6px 0px 5px;"><br></p>`
         ),
         stepFunction: async (editor) => {
@@ -595,8 +597,8 @@ test("selection placeholder margins remain correct when an element gets added", 
     const style = document.createElement("style");
     await testEditor({
         contentBefore: unformat(
-            `<table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+            `<table style="margin-top: 50px; margin-bottom: 50px;"><tbody><tr><td>a</td></tr></tbody></table>
+            <table style="margin-top: 10px; margin-bottom: 10px;"><tbody><tr><td>[]a</td></tr></tbody></table>`
         ),
         stepFunction: async (editor) => {
             style.innerText = `
@@ -613,7 +615,7 @@ test("selection placeholder margins remain correct when an element gets added", 
             editor.document.head.append(style);
             const table = parseHTML(
                 editor.document,
-                `<table style="margin: 100px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+                `<table style="margin-top: 100px; margin-bottom: 100px;"><tbody><tr><td>[]a</td></tr></tbody></table>`
             ).firstChild;
             editor.editable.append(table);
             editor.shared.history.addStep();
@@ -621,14 +623,31 @@ test("selection placeholder margins remain correct when an element gets added", 
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder="" style="margin: 25px 0px -26px;"><br></p>
-            <table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
+            <table style="margin-top: 50px; margin-bottom: 50px;"><tbody><tr><td>a</td></tr></tbody></table>
             <p data-selection-placeholder="" style="margin: -21px 0px 30px;"><br></p>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <table style="margin-top: 10px; margin-bottom: 10px;"><tbody><tr><td>[]a</td></tr></tbody></table>
             <p data-selection-placeholder="" style="margin: 55px 0px -46px;"><br></p>
-            <table style="margin: 100px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <table style="margin-top: 100px; margin-bottom: 100px;"><tbody><tr><td>[]a</td></tr></tbody></table>
             <p data-selection-placeholder="" style="margin: -51px 0px 50px;"><br></p>`
         ),
     });
     // Comment this to make it easier to debug visually.
     style.remove();
+});
+
+test("should not insert a selection placeholder around an inline element", async () => {
+    class SelectionBlockerPlugin extends Plugin {
+        id = "selectionBlockerPlugin";
+        resources = {
+            is_selection_blocker_predicates: (node) => node.nodeName === "i",
+        };
+    }
+    await testEditor({
+        includePlugins: [SelectionBlockerPlugin],
+        contentBefore: '<div contenteditable="true"><i>xyz</i></div>',
+        stepFunction: (editor) => {
+            expect(isBlock(editor.editable.querySelector("i"))).toBe(false);
+        },
+        contentAfterEdit: '<div contenteditable="true" class="o-paragraph"><i>xyz</i></div>',
+    });
 });

@@ -79,6 +79,10 @@ class TestUBLDE(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -117,6 +121,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_xrechnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'peppol_eas': '0204',
             'peppol_endpoint': '123456789',
@@ -180,6 +188,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_without_vat_and_peppol_endpoint(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'vat': False,
             'peppol_endpoint': False,
@@ -206,6 +218,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -244,6 +260,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_export_import_refund_xrehnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'peppol_eas': '0204',
             'peppol_endpoint': '123456789',
@@ -402,3 +422,30 @@ class TestUBLDE(TestUBLCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '123456789')
+
+    def test_leitweg_id_for_child_contact(self):
+        self.partner_2.write({
+            'peppol_eas': '0204',
+            'peppol_endpoint': '13075957-K000-52',
+            'invoice_edi_format': 'xrechnung',
+        })
+
+        child_contact = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'parent_id': self.partner_2.id,
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            child_contact,
+            move_type='out_invoice',
+            partner_id=child_contact.id,
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_etree = self.get_xml_tree_from_string(xml_content)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, '13075957-K000-52')

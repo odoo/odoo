@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 from odoo import fields, models
 
@@ -102,4 +103,35 @@ class AccountMoveSend(models.AbstractModel):
 
         # Check the status already
         if moves_by_company:
+            self._l10n_pl_edi_try_status_fetch_from_ksef(invoices_data)
+
+    def _l10n_pl_edi_try_status_fetch_from_ksef(self, invoices_data):
+        moves_to_update = self.env['account.move'].union(*invoices_data).filtered(lambda m: m.l10n_pl_edi_ref and not m.l10n_pl_edi_number)
+        attempts = 5
+        while attempts > 0 and moves_to_update:
+            sleep(2)  # We sleep first as it always fails on the first iteration
+            updated = self.env['account.move']
+
+            for move in moves_to_update:
+                move.action_l10n_pl_edi_update_invoice_status()
+                if move.l10n_pl_edi_status != 'sent':
+                    updated |= move
+                else:
+                    # If a move failed, it's probably too early for all moves, not just this one, and we're going to sleep anyways. Therefore we break.
+                    break
+
+            moves_to_update -= updated
+            attempts -= 1
+
+        if moves_to_update:
+
+            for move in moves_to_update:
+                invoices_data[move]['error'] = {
+                    'error_title': self.env._("Warning: KSeF status check failed"),
+                    'errors': [self.env._(
+                        "The invoice was successfully sent to KSeF but the status check failed and will be retried later,"
+                        " 'Check Sending' to retry immediately.",
+                    )],
+                }
+
             self.env.ref('l10n_pl_edi.cron_auto_checks_the_polish_invoice_status')._trigger()

@@ -287,8 +287,8 @@ class PosConfig(models.Model):
         record['_server_version'] = exp_version()
         record['_base_url'] = config.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
-        record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
-        record['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
+        record['_has_cash_move_perm'] = self.env.user._has_cash_move_permission()
+        record['_has_cash_delete_perm'] = self.env.user._has_cash_delete_permission()
         record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
 
         # Add custom fields for 'formula' taxes.
@@ -624,7 +624,8 @@ class PosConfig(models.Model):
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
-        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
+        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment',
+        'cash_rounding', 'rounding_method', 'only_round_cash_method')
     def _compute_local_data_integrity(self):
         self.last_data_change = self.env.cr.now()
 

@@ -4,6 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')
@@ -17,7 +18,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         Pricelist = cls.env['product.pricelist']
 
         cls.env['website'].search([]).write({'sequence': 1000})
-        website = cls.env['website'].create({
+        cls.website = cls.env['website'].create({
             'name': "Test website",
             'company_id': cls.env.company.id,
             'sequence': 1,
@@ -54,14 +55,14 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         Pricelist.search([]).write({'sequence': 1000})
         cls.pricelist_default = Pricelist.create({
             'name': 'pricelist_default',
-            'website_id': website.id,
+            'website_id': cls.website.id,
             'company_id': cls.env.company.id,
             'selectable': True,
             'sequence': 1,
         })
         cls.pricelist_with_discount = Pricelist.create({
             'name': 'pricelist_with_discount',
-            'website_id': website.id,
+            'website_id': cls.website.id,
             'company_id': cls.env.company.id,
             'selectable': True,
             'sequence': 2,
@@ -82,7 +83,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         })
         cls.pricelist_without_discount = Pricelist.create({
             'name': 'pricelist_without_discount',
-            'website_id': website.id,
+            'website_id': cls.website.id,
             'company_id': cls.env.company.id,
             'selectable': True,
             'sequence': 3,
@@ -101,6 +102,30 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
                 })
             ]
         })
+
+    def test_compare_list_price_strikethrough_visibility(self):
+        self.env['res.config.settings'].create({
+            'group_product_price_comparison': True,
+        }).execute()
+        mapping = {"detail": {"display_currency": self.env.company.currency_id}}
+        with MockRequest(self.env, website=self.website):
+            # compare_list_price == price: no strikethrough
+            self.test_product_with_compare_list_price.compare_list_price = 2000
+            combination_info = self.test_product_with_compare_list_price._get_combination_info()
+            _, list_price = self.test_product_with_compare_list_price._search_render_results_prices(
+                mapping, combination_info
+            )
+            self.assertFalse(list_price, "No strikethrough when compare_list_price equals price")
+
+            # compare_list_price > price: strikethrough shown
+            self.test_product_with_compare_list_price.compare_list_price = 2500
+            combination_info = self.test_product_with_compare_list_price._get_combination_info()
+            _, list_price = self.test_product_with_compare_list_price._search_render_results_prices(
+                mapping, combination_info
+            )
+            self.assertTrue(
+                list_price, "Strikethrough shown when compare_list_price is greater than price"
+            )
 
     def test_compare_list_price_price_list_display(self):
         self.env['res.config.settings'].create({

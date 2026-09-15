@@ -58,7 +58,7 @@ class BaseFollowersTest(MailCommon):
         followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
         self.assertTrue(partner in test_record.message_partner_ids)
         self.assertEqual(followed_before + test_record, followed_after)
-        with self.assertRaisesRegex(AccessError, 'Portal users can only filter threads'):
+        with self.assertRaises(AccessError):  # previously 'Portal users can only filter threads'
             self.env['mail.test.simple'].with_user(self.user_portal).search([('message_partner_ids', 'in', partner.ids)])
 
     def test_field_followers(self):
@@ -421,6 +421,13 @@ class AdvancedFollowersTest(MailCommon):
             'user_id': self.user_admin.id,
         })
         self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | self.user_admin.partner_id))
+
+        # After unsubscribing, current user should not appear in suggested recipients
+        sub.message_unsubscribe(partner_ids=self.user_admin.partner_id.ids)
+        suggested = sub.with_user(self.user_admin)._message_get_suggested_recipients()
+        suggested_partner_ids = [r['partner_id'] for r in suggested if r.get('partner_id')]
+        self.assertNotIn(self.user_admin.partner_id.id, suggested_partner_ids,
+                         'Current user should not appear in suggested recipients after unsubscribing')
 
     @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_defaults(self):

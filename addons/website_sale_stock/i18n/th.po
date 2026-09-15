@@ -7,14 +7,15 @@
 # monchai7 <montchye@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 22:54+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 18:55+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/th/>\n"
 "Language: th\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -88,8 +89,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
-"ตั้งค่าโหมดความพร้อมใช้งานเริ่มต้นในสินค้าที่สามารถจัดเก็บได้ที่สร้างขึ้นใหม่ "
-"ซึ่งสามารถเปลี่ยนแปลงได้ที่ระดับสินค้า"
+"ตั้งค่าโหมดความพร้อมใช้งานเริ่มต้นในสินค้าที่สามารถจัดเก็บได้ที่สร้างขึ้นใหม่ ซึ่งสามารถเปลี่ยนแปลงได้ที่"
+"ระดับสินค้า"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
@@ -143,14 +144,14 @@ msgstr "อีเมลไม่ถูกต้อง"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/interactions/website_sale.js:0
 msgid "Invalid email"
 msgstr "อีเมลไม่ถูกต้อง"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr "ค่าเริ่มต้นของสินค้าคงคลัง"
+msgstr "ค่าเริ่มต้นของคลังสินค้า"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -180,6 +181,12 @@ msgstr "Out-of-Stock"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "ข้อความหมดสต็อก"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -264,7 +271,8 @@ msgstr "แสดงจำนวนที่มีอยู่"
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
-msgstr "สินค้าบางรายการไม่มีอยู่และรถเข็นของคุณได้รับการอัปเดตแล้ว ขออภัยในความไม่สะดวก"
+msgstr ""
+"สินค้าบางรายการไม่มีอยู่และรถเข็นของคุณได้รับการอัปเดตแล้ว ขออภัยในความไม่สะดวก"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -276,6 +284,12 @@ msgstr "มีสินค้าดังต่อไปนี้"
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "สินค้า '%(product_name)s' พร้อมแล้ว"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking

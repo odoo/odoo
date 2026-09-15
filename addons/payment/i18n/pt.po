@@ -15,14 +15,15 @@
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 18:38+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-08 00:55+0000\n"
+"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
 "payment/pt/>\n"
 "Language: pt\n"
@@ -31,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -802,6 +803,11 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_cvs
+msgid "Convenience Stores"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
 msgid "Cordial"
 msgstr ""
@@ -982,6 +988,11 @@ msgid "DuitNow"
 msgstr ""
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_ecpay
+msgid "ECPay"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
 msgid "EMI"
 msgstr ""
@@ -989,11 +1000,6 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_eps
 msgid "EPS"
-msgstr ""
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_easypaisa
-msgid "EasyPaisa"
 msgstr ""
 
 #. module: payment
@@ -1054,6 +1060,11 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_family_mart
+msgid "Family Mart"
 msgstr ""
 
 #. module: payment
@@ -1160,6 +1171,11 @@ msgstr "O pagamento foi pós-processado"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
 msgid "Help Message"
 msgstr "Mensagem de ajuda"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_hi_life
+msgid "Hi-Life"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
@@ -1280,11 +1296,6 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
-msgstr ""
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_jazzcash
-msgid "JazzCash"
 msgstr ""
 
 #. module: payment
@@ -1530,6 +1541,11 @@ msgid "Mobile"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet
+msgid "Mobile Wallet"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
 msgstr ""
@@ -1627,6 +1643,11 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ok_mart
+msgid "OK Mart"
 msgstr ""
 
 #. module: payment
@@ -1812,6 +1833,11 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_payu
+msgid "PayU"
 msgstr ""
 
 #. module: payment
@@ -2406,6 +2432,11 @@ msgid "TTB"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_twqr
+msgid "TWQR"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 msgid "Tabby"
 msgstr ""
@@ -2499,8 +2530,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
-"O valor a ser capturado deve ser positivo e não pode ser superior a %s."
+msgstr "O valor a ser capturado deve ser positivo e não pode ser superior a %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
@@ -3202,6 +3232,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
@@ -3209,6 +3240,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3230,6 +3262,7 @@ msgstr "O seu pagamento foi autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
@@ -3237,6 +3270,7 @@ msgstr "O seu pagamento foi autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3246,7 +3280,7 @@ msgstr "O seu pagamento foi autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 msgid "Your payment has been cancelled."
-msgstr "Seu pagamento foi cancelado."
+msgstr "O seu pagamento foi cancelado."
 
 #. module: payment
 #. odoo-python
@@ -3258,6 +3292,7 @@ msgstr "Seu pagamento foi cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
@@ -3265,6 +3300,7 @@ msgstr "Seu pagamento foi cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3285,6 +3321,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
@@ -3292,6 +3329,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
@@ -3373,6 +3411,11 @@ msgstr ""
 #: model:payment.method,name:payment.payment_method_ideal
 #: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ipass_money
+msgid "iPASS Money"
 msgstr ""
 
 #. module: payment

@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="takeout_email_template" model="mail.template">
             <field name="name">Takeout: Confirmation order for self</field>
-            <field name="description">Sent to customers with the receipt in attachment</field>
+            <field name="description">Sent to customers</field>
             <field name="model_id" ref="pos_self_order.model_pos_order"/>
             <field name="subject">Your {{ object.config_id.name }} receipt</field>
             <field name="email_from">{{ (object.company_id.email_formatted or object.user_id.email_formatted)}}</field>
@@ -26,10 +26,6 @@
                     <br/>
                     <div>Thank you,</div>
                     <br/>
-                    <div t-if="object.state == 'paid'">
-                        <div>Attached, you will find your receipt</div>
-                        <br/>
-                    </div>
                     <t t-out="store_name">Store name</t>
                 </div>
             </field>
@@ -37,7 +33,7 @@
 
         <record id="delivery_email_template" model="mail.template">
             <field name="name">Delivery: Confirmation order for self</field>
-            <field name="description">Sent to customers with the receipt in attachment</field>
+            <field name="description">Sent to customers</field>
             <field name="model_id" ref="pos_self_order.model_pos_order"/>
             <field name="subject">Your {{ object.config_id.name }} receipt</field>
             <field name="email_from">{{ (object.company_id.email_formatted or object.user_id.email_formatted)}}</field>
@@ -66,10 +62,6 @@
                     <br/>
                     <div>Thank you,</div>
                     <br/>
-                    <div t-if="object.state == 'paid'">
-                        <div>Attached, you will find your receipt</div>
-                        <br/>
-                    </div>
                     <t t-out="store_name">Store name</t>
                 </div>
             </field>

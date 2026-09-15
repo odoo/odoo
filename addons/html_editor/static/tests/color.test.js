@@ -50,7 +50,7 @@ test("should get ready to type with a different color", async () => {
     await testEditor({
         contentBefore: "<p>ab[]cd</p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
     });
 });
 
@@ -58,7 +58,16 @@ test("should get ready to type with a different background color", async () => {
     await testEditor({
         contentBefore: "<p>ab[]cd</p>",
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
-        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
+    });
+});
+
+test("should not wrap br in font tag in non-empty block", async () => {
+    await testEditor({
+        contentBefore: "<p>[abc<br>def]</p>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<p><font style="color: rgb(255, 0, 0);">[abc</font><br><font style="color: rgb(255, 0, 0);">def]</font></p>',
     });
 });
 
@@ -67,10 +76,13 @@ test("should apply a color on empty selection", async () => {
         contentBefore: "<p>[<br></p><p><br></p><p>]<br></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>[<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p>]<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
-        contentAfter: "<p>[<br></p><p><br></p><p>]<br></p>",
+            '<p>[<font style="color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p><font style="color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p>]<font style="color: rgb(255, 0, 0);"><br></font></p>',
+        contentAfter:
+            '<p>[<font style="color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p><font style="color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p>]<font style="color: rgb(255, 0, 0);"><br></font></p>',
     });
 });
 
@@ -79,10 +91,13 @@ test("should apply a background color on empty selection", async () => {
         contentBefore: "<p>[<br></p><p><br></p><p>]<br></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfterEdit:
-            '<p>[<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
-            '<p>]<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
-        contentAfter: "<p>[<br></p><p><br></p><p>]<br></p>",
+            '<p>[<font style="background-color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p><font style="background-color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p>]<font style="background-color: rgb(255, 0, 0);"><br></font></p>',
+        contentAfter:
+            '<p>[<font style="background-color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p><font style="background-color: rgb(255, 0, 0);"><br></font></p>' +
+            '<p>]<font style="background-color: rgb(255, 0, 0);"><br></font></p>',
     });
 });
 
@@ -265,6 +280,15 @@ test("should remove font tag if font-color and background-color both are removed
             setColor("", "backgroundColor")(editor);
         },
         contentAfter: "<p>[abcabc]</p>",
+    });
+});
+
+test("should preserve color tag when removing font color if it has other styles", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="font-size: 36px; color: rgb(255, 0, 0);">[abcabc]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><span style="font-size: 36px;">[abcabc]</span></p>',
     });
 });
 
@@ -474,7 +498,7 @@ test("should update the gradient text color and remove the nested text color to 
             "color"
         ),
         contentAfter:
-            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abc]</font></p>',
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abc]</font></p>',
     });
 });
 test("should apply gradient color when a when background color is applied on span", async () => {
@@ -715,7 +739,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: `<div style='background-image: url("https://example.com/image.png");' class="o_cc o_cc1">a</div>`,
+            contentAfter: `<div class="o_cc o_cc1" style='background-image: url("https://example.com/image.png");'>a</div>`,
         });
     });
     test("should not keep custom gradient when switching o_cc class", async () => {
@@ -790,7 +814,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};' class="o_cc o_cc1">a</div>`,
+                contentAfter: `<div class="o_cc o_cc1" style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};'>a</div>`,
             });
         });
         test("change o_cc1 (with gradient) with o_cc2 (without gradient)", async () => {
@@ -818,7 +842,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
             test("should write o_cc1 gradient when bg-900 is already present", async () => {
@@ -844,7 +868,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${redToBlueGradient};" class="o_cc o_cc1">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 });
             });
         });
@@ -1102,4 +1126,13 @@ test("should not apply color to selection placeholder nodes", async () => {
             <p data-selection-placeholder="">]<br></p>
         `)
     );
+});
+
+test("should only target fully selected nodes when applying color", async () => {
+    await testEditor({
+        contentBefore: "<p><b>a[b</b>c]d</p>",
+        stepFunction: setColor("red", "color"),
+        contentAfter:
+            '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
+    });
 });

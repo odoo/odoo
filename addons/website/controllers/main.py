@@ -448,7 +448,7 @@ class Website(Home):
                 Domain('filter_id.model_id', '=', model_name)
                 | Domain('action_server_id.model_id.model', '=', model_name)
             )
-        dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
+        dynamic_filter = request.env['website.snippet.filter'].with_context(lang=request.env.user.lang).sudo().search_read(
             domain, ['id', 'name', 'limit', 'model_name', 'help'], order='id asc'
         )
         return dynamic_filter
@@ -873,7 +873,7 @@ class Website(Home):
                         "updated": False,
                         "res_model": model['model'],
                         "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
+                        "id": self._get_image_id(model['model'], model['id'], model['field'], index),
                         "field": model.get('field'),
                     })
         return json.dumps(result)
@@ -890,7 +890,7 @@ class Website(Home):
             tree = html.fromstring(str(record[img['field']]))
             modified = False
             for index, element in enumerate(tree.xpath('//img')):
-                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
+                imgId = self._get_image_id(img['res_model'], img['res_id'], img['field'], str(index))
                 if imgId == img['id']:
                     if (img['decorative']):
                         element.set('alt', '')
@@ -902,6 +902,10 @@ class Website(Home):
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
                 record.write({img['field']: new_html_content})
+
+    @staticmethod
+    def _get_image_id(model, model_id, field, index):
+        return f"{model}-{model_id}-{field}-{index}"
 
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
     def update_broken_links(self, links):

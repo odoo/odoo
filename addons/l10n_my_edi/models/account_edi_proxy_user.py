@@ -61,8 +61,13 @@ class AccountEdiProxyClientUser(models.Model):
                 url=url_join(self._get_server_url(), endpoint),
                 params=params,
             )
-        except AccountEdiProxyError as _error:
+        except AccountEdiProxyError as error:
+            if error.code == 'proxy_rate_limit_exceeded':
+                raise UserError(self.env._(
+                    "You have reached the maximum number of requests allowed in a short period of time. "
+                    "Please wait a few minutes before trying again."
+                ))
             # Request error while contacting the IAP server. We assume it is a temporary error.
-            raise UserError(self.env._("Failed to contact the E-Invoicing service. Please try again later."))
+            raise UserError(self.env._("The MyInvois server is temporarily unreachable. Please try again later."))
 
         return response

@@ -23,7 +23,7 @@ function compileChatter(node, params) {
         displayFollowButton: params.displayFollowButton,
     });
     const chatterContainerHookXml = createElement("div");
-    chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter", "pt-2");
+    chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter");
     setAttributes(chatterContainerHookXml, { "t-if": "!__comp__.env.inDialog" });
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;

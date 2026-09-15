@@ -13,6 +13,7 @@ from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_PDF_MIME_TEMPLATE
 from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
 
 
@@ -1009,6 +1010,38 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_original_email_not_set_as_main_attachment(self):
+        """ Testt that with "Keep Original" enabled on the incoming mail server,
+            a copy of the email is stored but not kept as a main attachment of the
+            invoice.
+        """
+        # Empty email, the invoice should have no main attachment
+        with RecordCapturer(self.env['account.move']) as move_capturer:
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'supplier@example.com',
+                self.journal.alias_id.display_name,
+                target_model='account.move',
+                save_original=True,
+            )
+        invoice = move_capturer.records
+        self.assertFalse(invoice.message_main_attachment_id)
+
+        # Email with a PDF, the invoice should have the pdf as main attachment
+        with RecordCapturer(self.env['account.move']) as move_capturer:
+            self.format_and_process(
+                MAIL_PDF_MIME_TEMPLATE,
+                'supplier@example.com',
+                self.journal.alias_id.display_name,
+                target_model='account.move',
+                pdf_mime='application/pdf',
+                save_original=True,
+            )
+        invoice = move_capturer.records
+        main = invoice.message_main_attachment_id
+        self.assertEqual(main.mimetype, 'application/pdf')
+        self.assertEqual(main.res_id, invoice.id)
 
     def test_import_with_traceback(self):
         # Verify that even an Exception does not cause the import to fail, and that we log the attachment in the chatter

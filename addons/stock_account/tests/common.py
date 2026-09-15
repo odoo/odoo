@@ -137,8 +137,11 @@ class TestStockValuationCommon(BaseCommon):
             ''picking_type_id: picking type
             ''uom_id: Unit of measure
             ''owner_id: Consignment owner
+            ''user: User making the move
         """
         env = self.env['stock.move'].with_company(company).env if company else self.env
+        user = kwargs.get('user', self.env.user)
+        env = env['stock.move'].with_user(user).env
         if company:
             warehouse = env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             default_dest = warehouse.lot_stock_id.id
@@ -224,8 +227,11 @@ class TestStockValuationCommon(BaseCommon):
             ''picking_type_id: picking type
             ''uom_id: Unit of measure
             ''owner_id: Consignment owner
+            ''user: User making the move
         """
         env = self.env['stock.move'].with_company(company).env if company else self.env
+        user = kwargs.get('user', self.env.user)
+        env = env['stock.move'].with_user(user).env
         if company:
             warehouse = env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             default_src = warehouse.lot_stock_id.id

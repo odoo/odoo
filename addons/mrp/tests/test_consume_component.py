@@ -24,6 +24,8 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.SERIAL_TRIGGERS_COUNT = 2
         cls.DEFAULT_TRIGGERS_COUNT = 1
 
+        cls.env.user.group_ids |= cls.env.ref('stock.group_production_lot')
+
         cls.manufacture_route = cls.env.ref('mrp.route_warehouse0_manufacture')
         cls.stock_id = cls.env.ref('stock.stock_location_stock').id
 
@@ -384,7 +386,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
 
     def test_automatic_consume_new_added_component(self):
@@ -504,7 +505,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that moves created after setting the qty producing are
         also taken into considaration once the MO is marked as done
         """
-        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         mo = self.env['mrp.production'].create({
             'product_id': self.produced_serial.id,
             'product_qty': 1,
@@ -583,3 +583,30 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Check quantity available in stock for each product
         self.assertEqual(self.raw_none.qty_available, 0)
         self.assertEqual(self.raw_lot.qty_available, 0)
+
+    def test_scrapped_component_is_not_reused_on_mo(self):
+        """Ensure scrapped lots/serials are not reused on the MO.
+
+        When a component tracked by lot/serial number is scrapped during
+        a work order, the same lot/serial should no longer be used if it is no
+        longer available in inventory.
+        """
+        self.create_quant(self.raw_serial, 2).action_apply_inventory()
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'operation',
+            'workcenter_id': self.workcenter.id,
+            'bom_id': self.bom_none.id,
+        })
+        mo = self.create_mo(self.mo_none_tmpl, 1)
+        mo.action_confirm()
+        mo.workorder_ids.button_start()
+        sn = mo.move_raw_ids[2].lot_ids
+        move_line = mo.move_raw_ids[2].move_line_ids
+        self.env['stock.scrap'].create({
+            'product_id': self.raw_serial.id,
+            'lot_id': sn.id,
+            'production_id': mo.id,
+        }).do_scrap()
+        self.assertTrue(mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(sn in mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(move_line.exists())

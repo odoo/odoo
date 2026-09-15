@@ -328,6 +328,44 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(downpayment_line.price_unit, 80,
                          "The downpayment line amount should be equal to the sum of the invoice and credit note amount")
 
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({})
+        payment.create_invoices()
+        invoice = max(self.sale_order.invoice_ids)
+        invoice_downpayment_line = invoice.invoice_line_ids.filtered('is_downpayment')
+        self.assertEqual(len(invoice_downpayment_line), 1,
+                         "The downpayment line should exist in the final invoice.")
+        self.assertEqual(invoice_downpayment_line.quantity, -1,
+                         "The downpayment line qty should be -1 for the final invoice.")
+        self.assertEqual(invoice_downpayment_line.price_unit, downpayment_line.price_unit,
+                         "The downpayment line price unit should match the price unit on the sale order.")
+
+    def test_downpayment_reference_after_reverse_and_create_invoice(self):
+        """Test that the down payment line shows the re-issued invoice reference
+        after a "Reverse and Create Invoice" on the down payment invoice."""
+        self.sale_order.action_confirm()
+
+        payment = self.env["sale.advance.payment.inv"].with_context(self.context).create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": 100,
+        })
+        payment.create_invoices()
+        downpayment_line = self.sale_order.order_line.filtered(
+            lambda l: l.is_downpayment and not l.display_type)
+        downpayment_invoice = downpayment_line.invoice_lines.move_id
+        downpayment_invoice.action_post()
+
+        move_reversal = self.env["account.move.reversal"].with_context(
+            active_model="account.move",
+            active_ids=downpayment_invoice.ids,
+        ).create({
+            "date": downpayment_invoice.date,
+            "journal_id": downpayment_invoice.journal_id.id,
+        })
+        new_invoice = self.env["account.move"].browse(move_reversal.modify_moves()["res_id"])
+        new_invoice.action_post()
+
+        self.assertIn(new_invoice.payment_reference, downpayment_line.name)
+
     def test_invoice_with_discount(self):
         """ Test invoice with a discount and check discount applied on both SO lines and an invoice lines """
         # Update discount and delivered quantity on SO lines
@@ -1507,3 +1545,37 @@ class TestSaleToInvoice(TestSaleCommon):
             {'debit': 0.0, 'credit': -100.0, 'balance': 100.0, 'account_type': 'income', 'display_type': 'product'},
             {'debit': 450.0, 'credit': 0.0, 'balance': 450.0, 'account_type': 'asset_receivable', 'display_type': 'payment_term'},
         ])
+
+    def test_keep_distribution_on_analytic_account_change(self):
+        """
+        Checks that when we create an invoice from a SO on which we set an analytic distribution manually,
+        that analytic distribution doesn't change when we change the analytic account of the product on the bill.
+        """
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'default',
+            'applicability_ids': [Command.create({
+                'business_domain': 'bill',
+                'applicability': 'optional',
+            })]
+        })
+        analytic_account = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        distribution_model_product = self.env['account.analytic.distribution.model'].create({
+            'product_id': self.product_a.id,
+            'analytic_distribution': {str(analytic_account.id): 100},
+            'company_id': self.company.id,
+        })
+        analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_2 = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan_2.id})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id}),
+            ],
+        })
+        self.assertEqual(sale_order.order_line.analytic_distribution, distribution_model_product.analytic_distribution)
+        analytic_distribution_manual = {str(analytic_account.id) + "," + str(analytic_account_2.id): 100}
+        sale_order.order_line.write({'analytic_distribution': analytic_distribution_manual})
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
+        self.assertEqual(invoice.line_ids[0].analytic_distribution, analytic_distribution_manual)

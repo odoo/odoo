@@ -646,7 +646,7 @@ describe("Selection collapsed", () => {
                         '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                     stepFunction: splitBlock,
                     contentAfter:
-                        '<p><span class="a">ab</span></p><p><span class="b">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
+                        '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline="">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
                 });
             });
 
@@ -684,7 +684,7 @@ describe("Selection collapsed", () => {
                     stepFunction: splitBlock,
                     contentAfterEdit:
                         '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font></h1>' +
-                        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
+                        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                     contentAfter: "<h1><br></h1><p>[]<br></p>",
                 });
             });

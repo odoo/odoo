@@ -1,7 +1,11 @@
-<p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-                      xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<p:FatturaElettronica
+    xmlns:ds="___ignore___"
+    xmlns:p="___ignore___"
+    xmlns:xsi="___ignore___"
+    xsi:schemaLocation="___ignore___"
+    versione="FPR12"
+>
     <FatturaElettronicaHeader>
         <DatiTrasmissione>
             <IdTrasmittente>
@@ -19,7 +23,7 @@
                     <IdPaese>IT</IdPaese>
                     <IdCodice>00313371213</IdCodice>
                 </IdFiscaleIVA>
-                <CodiceFiscale>93026890017</CodiceFiscale>
+                <CodiceFiscale>00313371213</CodiceFiscale>
                 <Anagrafica>
                     <Denominazione>SOCIETA' ALPHA SRL</Denominazione>
                 </Anagrafica>
@@ -32,6 +36,10 @@
                 <Provincia>SS</Provincia>
                 <Nazione>IT</Nazione>
             </Sede>
+            <Contatti>
+                <Telefono>321321312</Telefono>
+                <Email>vacinna@tulullu.it</Email>
+            </Contatti>
         </CedentePrestatore>
         <CessionarioCommittente>
             <DatiAnagrafici>
@@ -108,6 +116,7 @@
                 <PrezzoTotale>25.00</PrezzoTotale>
                 <AliquotaIVA>22.00</AliquotaIVA>
             </DettaglioLinee>
+            <DatiRiepilogo>
                 <AliquotaIVA>22.00</AliquotaIVA>
                 <ImponibileImporto>29.00</ImponibileImporto>
                 <Imposta>6.38</Imposta>
@@ -119,7 +128,12 @@
             <DettaglioPagamento>
                 <ModalitaPagamento>MP01</ModalitaPagamento>
                 <DataScadenzaPagamento>2015-01-30</DataScadenzaPagamento>
-                <ImportoPagamento>36.48</ImportoPagamento>
+                <ImportoPagamento>23.48</ImportoPagamento>
+            </DettaglioPagamento>
+            <DettaglioPagamento>
+                <ModalitaPagamento>MP01</ModalitaPagamento>
+                <DataScadenzaPagamento>2015-02-28</DataScadenzaPagamento>
+                <ImportoPagamento>13.00</ImportoPagamento>
             </DettaglioPagamento>
         </DatiPagamento>
     </FatturaElettronicaBody>

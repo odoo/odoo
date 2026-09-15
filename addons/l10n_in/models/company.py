@@ -102,6 +102,13 @@ class ResCompany(models.Model):
                 company.account_sale_tax_id = False
                 company.account_purchase_tax_id = False
 
+    @api.depends('country_code', 'root_id')
+    def _compute_force_restrictive_audit_trail(self):
+        super()._compute_force_restrictive_audit_trail()
+        for company in self:
+            if company.country_code == 'IN':
+                company.force_restrictive_audit_trail = company.root_id._existing_accounting()
+
     @api.depends('parent_id.l10n_in_tds_feature', 'parent_id.l10n_in_tcs_feature', 'parent_id.l10n_in_is_gst_registered')
     def _compute_l10n_in_parent_based_features(self):
         for company in self:

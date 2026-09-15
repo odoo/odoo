@@ -575,13 +575,13 @@ class Website(models.Model):
         if country_code:
             pricelists |= self.env['res.country.group'].search(
                 [('country_ids.code', '=', country_code)]
-            ).pricelist_ids.filtered(
+            ).sudo().pricelist_ids.filtered(
                 lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
             )
 
         # no GeoIP or no pricelist for this country
         if not pricelists:
-            pricelists = pricelists.browse(website_pricelist_ids).filtered(
+            pricelists = pricelists.browse(website_pricelist_ids).sudo().filtered(
                 lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids))
 
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
@@ -691,7 +691,7 @@ class Website(models.Model):
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
 
-            'fiscal_position_id': request.fiscal_position.id,
+            **(self.is_public_user() and {'fiscal_position_id': request.fiscal_position.id} or {}),
             'pricelist_id': request.pricelist.id,
 
             'team_id': self.salesteam_id.id,
@@ -936,8 +936,8 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
-                # fallback email_vals in case partner_to and email_to were emptied
-                email_vals = {} if template.email_to or template.partner_to else {
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                email_vals = {} if template.email_to or template.partner_to or template.use_default_to else {
                     'email_to': sale_order.partner_id.email_formatted
                 }
                 template.send_mail(sale_order.id, email_values=email_vals)

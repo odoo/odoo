@@ -3,7 +3,7 @@
 
     z-index: $zindex-sticky;
     &.o-mobile {
-        z-index: $zindex-sticky - 2 !important;
+        z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
     }
     &:not(.o-mobile) {
         --border-opacity: .15;

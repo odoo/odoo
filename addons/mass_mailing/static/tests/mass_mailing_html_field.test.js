@@ -70,7 +70,7 @@ class Mailing extends models.Model {
                     <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
                         <div class="row">
                             <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable oe_empty" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true">
-                                This element <t t-out="'should be inline'"/>
+                                This element <t t-out="'should be inline'"/> as well as this one <t t-if="active"><t t-out="'inline2'"/></t>
                             </div>
                         </div>
                     </div>
@@ -250,13 +250,19 @@ describe("field HTML", () => {
             arch: mailViewArch,
         });
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
-        const tElement = await waitFor(":iframe t", { timeout: 3000 });
+        const t1 = await waitFor(":iframe [t-out*=should]", { timeout: 3000 });
+        const t2 = await waitFor(":iframe [t-if]");
+        const t3 = await waitFor(":iframe [t-out*=inline2]");
 
         // assert that we are in readonly mode (sanity check)
         expect(":iframe .o_mass_mailing_value.o_readonly").toHaveCount(1);
 
-        // assert that tElement style has inline attibute
-        expect(tElement).toHaveAttribute("data-oe-t-inline", "true");
+        expect(":iframe t").toHaveCount(3);
+
+        // assert that t elements style has inline attribute
+        expect(t1).toHaveAttribute("data-oe-t-inline", "true");
+        expect(t2).toHaveAttribute("data-oe-t-inline", "true");
+        expect(t3).toHaveAttribute("data-oe-t-inline", "true");
     });
     test("switch out from a notebook tab with html field should update the record", async () => {
         const arch = `

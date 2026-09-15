@@ -8,14 +8,15 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 21:36+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-06 11:52+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "purchase_requisition/th/>\n"
 "Language: th\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -124,7 +125,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Alternative Warning"
-msgstr "เปรียบเทียบทางเลือกคำแจ้งเตือน"
+msgstr "การแจ้งเตือนทั่วไป"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -303,10 +304,11 @@ msgid ""
 "also decide to order some products from one vendor and others from another "
 "vendor."
 msgstr ""
-"สร้างประกาศเชิญเสนอราคาโดยเพิ่มคำขอใบเสนอราคาแบบทางเลือกไปยังผู้ขายแต่ละราย                                      "
-"จากนั้นเลือกข้อเสนอที่ดีที่สุดโดยพิจารณาจากระยะเวลาส่งมอบ OTD และ/"
-"หรือยอดรวม                                โดยการเปรียบเทียบแต่ละรายการสินค้า "
-"คุณยังสามารถตัดสินใจสั่งซื้อสินค้าบางรายการจากผู้ขายหนึ่ง และอีกบางรายการจากผู้ขายรายอื่นได้"
+"สร้างประกาศเชิญเสนอราคาโดยเพิ่มคำขอใบเสนอราคาแบบทางเลือกไปยังผู้ขายแต่ละราย"
+"                                      จากนั้นเลือกข้อเสนอที่ดีที่สุดโดยพิจารณาจากระยะเวล"
+"าส่งมอบ OTD และ/หรือยอดรวม                                โดยการเปรียบเทียบแต่ละรา"
+"ยการสินค้า คุณยังสามารถตัดสินใจสั่งซื้อสินค้าบางรายการจากผู้ขายหนึ่ง และอีกบางรายการจากผู้ขายราย"
+"อื่นได้"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -399,7 +401,8 @@ msgstr "วันที่สิ้นสุด"
 msgid ""
 "End date cannot be earlier than start date. Please check dates for "
 "agreements: %s"
-msgstr "วันที่สิ้นสุดต้องไม่อยู่ก่อนวันที่เริ่มต้น โปรดตรวจสอบวันที่สำหรับข้อตกลง: %s"
+msgstr ""
+"วันที่สิ้นสุดต้องไม่อยู่ก่อนวันที่เริ่มต้น โปรดตรวจสอบวันที่สำหรับข้อตกลง: %s"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -710,7 +713,7 @@ msgstr "ข้อตกลงการซื้อ:"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr "การซื้อ"
+msgstr "ข้อตกลงการซื้อ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__group_purchase_alternatives
@@ -767,12 +770,12 @@ msgstr "รายการใบขอซื้อ"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__purchase_template
 msgid "Purchase Template"
-msgstr "ซื้อเทมเพลต"
+msgstr "เทมเพลตการซื้อ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Templates"
-msgstr "ซื้อเทมเพลต"
+msgstr "เทมเพลตการซื้อ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
@@ -783,7 +786,7 @@ msgstr "ปริมาณ"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "RFQ"
-msgstr "ใบแจ้งขอใบเสนอราคา"
+msgstr "ใบขอเสนอราคา"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -808,7 +811,7 @@ msgstr "การอ้างอิง"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "ใบแจ้งขอใบเสนอราคา"
+msgstr "ใบขอเสนอราคา"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -921,8 +924,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
-"มีคำสั่งซื้อแบบ blanket order สำหรับซัพพลายเออร์รายนี้อยู่แล้ว "
-"เราขอแนะนำให้คุณดำเนินการคำสั่งซื้อแบบ blanket order นี้ให้เสร็จสิ้น แทนที่จะสร้างคำสั่งซื้อใหม่"
+"มีคำสั่งซื้อแบบ blanket order สำหรับซัพพลายเออร์รายนี้อยู่แล้ว เราขอแนะนำให้คุณดำเนินการคำสั่งซื้"
+"อแบบ blanket order นี้ให้เสร็จสิ้น แทนที่จะสร้างคำสั่งซื้อใหม่"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -970,7 +973,7 @@ msgstr "ราคาต่อหน่วย"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__partner_ids
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Vendor"
-msgstr "ผู้ขาย"
+msgstr "ผู้จำหน่าย"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
@@ -1041,7 +1044,8 @@ msgstr "คุณสามารถลบได้เฉพาะใบขอซ
 msgid ""
 "You cannot change the Agreement Type or Company of a not draft purchase "
 "agreement."
-msgstr "คุณไม่สามารถเปลี่ยนประเภทข้อตกลงหรือบริษัทของข้อตกลงการซื้อที่ไม่ใช่ฉบับร่างได้"
+msgstr ""
+"คุณไม่สามารถเปลี่ยนประเภทข้อตกลงหรือบริษัทของข้อตกลงการซื้อที่ไม่ใช่ฉบับร่างได้"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1061,7 +1065,8 @@ msgstr "คุณไม่สามารถยืนยันคำสั่ง
 msgid ""
 "You cannot confirm agreement '%(agreement)s' because it does not contain any "
 "product lines."
-msgstr "คุณไม่สามารถยืนยันข้อตกลง '%(agreement)s' ได้ เนื่องจากไม่มีกลุ่มผลิตภัณฑ์ใดๆ"
+msgstr ""
+"คุณไม่สามารถยืนยันข้อตกลง '%(agreement)s' ได้ เนื่องจากไม่มีกลุ่มผลิตภัณฑ์ใดๆ"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1069,7 +1074,8 @@ msgstr "คุณไม่สามารถยืนยันข้อตกล
 msgid ""
 "You cannot have a negative or unit price of 0 for an already confirmed "
 "blanket order."
-msgstr "คุณไม่สามารถมีราคาติดลบหรือราคาต่อหน่วยเป็น 0 สำหรับคำสั่งซื้อแบบครอบคลุมที่ยืนยันแล้ว"
+msgstr ""
+"คุณไม่สามารถมีราคาติดลบหรือราคาต่อหน่วยเป็น 0 สำหรับคำสั่งซื้อแบบครอบคลุมที่ยืนยันแล้ว"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

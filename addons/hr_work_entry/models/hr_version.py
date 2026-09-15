@@ -233,7 +233,7 @@ class HrVersion(models.Model):
             real_attendances = attendances - leaves - worked_leaves
             if not calendar:
                 real_leaves = leaves
-                real_worked_leaves = worked_leaves
+                real_worked_leaves = worked_leaves - real_leaves
             elif calendar.flexible_hours:
                 # Flexible hours case
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
@@ -246,7 +246,9 @@ class HrVersion(models.Model):
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources=resource, tz=tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
-                real_worked_leaves = (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
+                real_worked_leaves = (
+                    (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
+                ) - real_leaves
 
             elif version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
@@ -257,7 +259,7 @@ class HrVersion(models.Model):
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources=resource, tz=tz)[resource.id]
                 real_leaves = static_attendances & leaves
-                real_worked_leaves = static_attendances & worked_leaves
+                real_worked_leaves = (static_attendances & worked_leaves) - real_leaves
 
             real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
 
@@ -436,8 +438,8 @@ class HrVersion(models.Model):
         domain_to_nullify = Domain(False)
         work_entry_null_vals = {field: False for field in self.env["hr.work.entry.regeneration.wizard"]._work_entry_fields_to_nullify()}
 
-        for tz, versions in self.grouped("tz").items():
-            tz = pytz.timezone(tz) if tz else pytz.utc
+        for version_tz, versions in self.grouped(lambda v: v._get_tz()).items():
+            tz = pytz.timezone(version_tz) if version_tz else pytz.utc
             for version in versions:
                 if not version.contract_date_start:
                     continue
@@ -721,7 +723,7 @@ class HrVersion(models.Model):
         # It is more interesting for batching to process statically generated work entries first
         # since we get benefits from having multiple versions on the same calendar
         versions_todo = versions_todo.sorted(key=lambda v: 1 if v.has_static_work_entries() else 100)
-        versions_todo = versions_todo[:BATCH_SIZE].generate_work_entries(start.date(), stop.date(), False)
+        versions_todo = versions_todo[:BATCH_SIZE].with_context(lang=self.env.user.lang).generate_work_entries(start.date(), stop.date(), False)
         # if necessary, retrigger the cron to generate more work entries
         if version_todo_count > BATCH_SIZE:
             self.env.ref('hr_work_entry.ir_cron_generate_missing_work_entries')._trigger()

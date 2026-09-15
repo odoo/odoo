@@ -281,6 +281,34 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line[0].price_unit, 200)
         self.assertEqual(po.order_line[1].price_unit, 0, "No vendor with matching UoM is found, so price should be 0")
 
+    def test_amount_to_invoice_at_date_with_uom(self):
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+
+        product_data = {
+            'name': 'SuperProduct',
+            'type': 'consu',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': uom_dozens.id,
+                'price': 1200,
+            })]
+        }
+        product = self.env['product.product'].create(product_data)
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_uom_id = uom_dozens
+            po_line.product_qty = 2
+        po = po_form.save()
+
+        po.order_line[0].qty_received = 2
+
+        self.assertEqual(po.order_line[0].price_unit, 1200)
+        self.assertEqual(po.order_line[0].amount_to_invoice_at_date, 2400)
+
     def test_on_change_quantity_description(self):
         """
         When a user changes the quantity of a product in a purchase order it
@@ -306,9 +334,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         correctly handled when creating a purchase order i-e product having a price of 100 usd
         and when purchasing in EUR company the correct conversion should be applied
         """
-        self.env['decimal.precision'].search([
-            ('name', '=', 'Product Price'),
-        ]).digits = 5
         product = self.env['product.product'].create({
             'name': 'product_test',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
@@ -1359,3 +1384,48 @@ class TestPurchase(AccountTestInvoicingCommon):
             "The UoM of the PO line for the Blue variant should not be the supplier info UoM (dozens) tied to Red.")
         self.assertNotIn(self.uom_dozen, po_line_blue.allowed_uom_ids,
             "The dozens UoM should not be allowed for the Blue variant since the supplier info is specific to Red.")
+
+    @freeze_time('2026-05-12 20:00:00')
+    def test_supplierinfo_date_timezone_aware(self):
+        """Supplierinfo lookup should use the user's local date, not UTC.
+
+        When a user in Pacific/Auckland (UTC+12) creates a PO at
+        2026-05-12 20:00 UTC (= 2026-05-13 08:00 NZST), a supplierinfo
+        with date_start=2026-05-13 must match — the user's local date is
+        May 13, even though the UTC date is still May 12.
+
+        An older entry covering up to May 12 at a different price ensures
+        the test fails if the code uses the UTC date instead of the
+        user's local date.
+        """
+        self.env.user.tz = 'Pacific/Auckland'
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 30.0,
+            'date_start': fields.Date.from_string('2026-05-01'),
+            'date_end': fields.Date.from_string('2026-05-12'),
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 50.0,
+            'date_start': fields.Date.from_string('2026-05-13'),
+            'date_end': fields.Date.from_string('2026-05-31'),
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+            })],
+        })
+
+        self.assertEqual(
+            po.order_line.price_unit, 50.0,
+            "The price should come from the May 13–31 entry, not the "
+            "May 1–12 entry that matches the wrong UTC date.",
+        )

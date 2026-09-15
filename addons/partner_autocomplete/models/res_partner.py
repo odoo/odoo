@@ -4,6 +4,7 @@ import re
 from stdnum.eu.vat import check_vies
 
 from odoo import api, models, _
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,23 @@ class ResPartner(models.Model):
             iap_data['country_id'] = {'id': country.id, 'display_name': country.display_name}
         if state:
             iap_data['state_id'] = {'id': state.id, 'display_name': state.display_name}
+
+        # Handle base_address_extended
+        if self.env['ir.module.module']._get('base_address_extended').state == 'installed':
+            city_zip, city_name = iap_data.get('zip'), iap_data.get('city')
+            if (city_zip or city_name) and country and country.enforce_cities:
+                domain = Domain('country_id', '=', country.id)
+                if state:
+                    domain &= Domain('state_id', '=', state.id)
+                city = self.env['res.city']
+                if city_zip:
+                    city = self.env['res.city'].search(domain & Domain('zipcode', '=', city_zip), limit=1)
+                if not city and city_name:
+                    city = self.env['res.city'].search(domain & Domain('name', '=ilike', city_name), limit=1)
+                if city:
+                    iap_data['city_id'] = {'id': city.id, 'display_name': city.display_name}
+                    iap_data['state_id'] = {'id': city.state_id.id, 'display_name': city.state_id.display_name}
+                    iap_data.pop('city', False)
 
         return iap_data
 

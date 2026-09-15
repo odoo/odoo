@@ -12,6 +12,7 @@ export class BaseProductAttribute extends Component {
         "customValue",
         "setCustomValue",
         "allSelectedValues",
+        "showExtraPrice",
     ];
 
     setup() {
@@ -92,6 +93,7 @@ export class ProductConfiguratorPopup extends Component {
         hideAlwaysVariants: { type: Boolean, optional: true },
         forceVariantValue: { type: Object, optional: true },
         line: { type: Object, optional: true },
+        comboItem: { type: Object, optional: true },
     };
 
     setup() {
@@ -256,11 +258,19 @@ export class ProductConfiguratorPopup extends Component {
         }
 
         overridedValues.priceExtra = this.priceExtra;
+        // Extra price of dynamic variants not yet created
+        overridedValues.priceExtra += this.selectedValues
+            .filter((value) => !this.product && value.attribute_id.create_variant !== "no_variant")
+            .reduce((acc, val) => acc + val.price_extra, 0);
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         return `${this.props.productTemplate.display_name} | ${total}`;
+    }
+    get defaultCode() {
+        const product = this.product || this.props.productTemplate;
+        return product.default_code;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
@@ -269,6 +279,22 @@ export class ProductConfiguratorPopup extends Component {
         return this.selectedValues
             .filter((value) => value.attribute_id.create_variant === "no_variant")
             .reduce((acc, val) => acc + val.price_extra, 0);
+    }
+
+    get showExtraPrice() {
+        // Combo items add their extras on top of the combo price, always.
+        if (this.props.comboItem) {
+            return true;
+        }
+        // A fixed pricelist rule replaces the whole price of the product, attribute
+        // extra prices included, so those extras must not be advertised either.
+        const template = this.props.productTemplate;
+        const pricelist = this.pos.getOrder()?.pricelist_id;
+        const variant = this.product || false;
+        return (
+            template.getPrice(pricelist, 1, 1, false, variant) !==
+            template.getPrice(pricelist, 1, 0, false, variant)
+        );
     }
 
     confirm() {

@@ -1,4 +1,5 @@
 import { batched, reactive } from "@odoo/owl";
+import { closestScrollableY, scrollTo } from "@web/core/utils/scrolling";
 
 export const HEADINGS = ["H1", "H2", "H3", "H4", "H5", "H6"];
 
@@ -40,7 +41,27 @@ export class TableOfContentManager {
             return;
         }
         const { target } = heading;
-        target.scrollIntoView({ behavior: "smooth" });
+        let offset = 0;
+        const scrollable = closestScrollableY(target);
+        if (scrollable) {
+            for (const el of scrollable.children) {
+                const { position, top, height } = getComputedStyle(el);
+                if (position === "sticky" && parseInt(top) === 0) {
+                    offset = Math.max(offset, parseInt(height));
+                }
+            }
+
+            // calculate offset to scroll heading near 1/3 of the screen
+            const { top, bottom } = scrollable.getBoundingClientRect();
+            const scrollableOffset = (bottom - top) / 3;
+            // change offset based on scroll direction
+            const { top: targetTop } = target.getBoundingClientRect();
+            offset = top > targetTop ? -scrollableOffset - offset : scrollableOffset * 2;
+            scrollTo(target, { behavior: "smooth", offset: offset }).then(() => {
+                // Scroll again in case we actually went downwards.
+                scrollTo(target, { behavior: "smooth" });
+            });
+        }
         target.classList.add("o_embedded_toc_header_highlight");
         window.setTimeout(() => {
             target.classList.remove("o_embedded_toc_header_highlight");

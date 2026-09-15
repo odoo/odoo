@@ -97,14 +97,13 @@ export class PaymentCashdro extends PaymentInterface {
         const netAmount = this.env.utils.roundCurrency(moneyIn - moneyOut);
         if (netAmount == 0) {
             // Payment was cancelled
+            if (this.cancellationResolver) {
+                this.cancellationResolver(true);
+                this.cancellationResolver = null;
+            }
             return false;
         }
-        if (this.paymentLine.pos_order_id.remainingDue === 0 && this.paymentLine.amount > 0) {
-            // In this case, the POS will automatically add the 'Change' line
-            this.paymentLine.setAmount(moneyIn);
-        } else {
-            this.paymentLine.setAmount(netAmount);
-        }
+        this.paymentLine.setAmount(netAmount);
         this.paymentLine.transaction_id = operationid;
 
         return true;
@@ -143,8 +142,10 @@ export class PaymentCashdro extends PaymentInterface {
         await this.cashdroService.cancelPayment(this.operationId).catch((error) => {
             this.showError(_t("Cashdro cancellation failed: %s", error.message));
         });
-        // Don't resolve the cancellation, we want to wait
-        return new Promise(() => {});
+
+        const { promise, resolve } = Promise.withResolvers();
+        this.cancellationResolver = resolve;
+        return promise;
     }
 
     /**

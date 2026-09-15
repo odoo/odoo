@@ -315,7 +315,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
                            'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
         for field in readonly_fields:
-            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
+            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on the posted move %s" % self.test_move.name):
                 self.test_move.write({field: False})
 
     def test_misc_move_onchange(self):

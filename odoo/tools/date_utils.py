@@ -63,10 +63,18 @@ __all__ = [
 
 def float_to_time(hours: float) -> time:
     """ Convert a number of hours into a time object. """
-    if hours == 24.0:
-        return time.max
     fractional, integral = math.modf(hours)
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
+    hour = int(integral)
+    minute = int(float_round(60 * fractional, precision_digits=0))
+    # Rounding the minutes can carry over to a full hour, e.g. 16.9959 hours
+    # gives 59.75 -> 60 minutes. ``time(hour, 60)`` is invalid, so carry the
+    # extra minute into the hour.
+    if minute == 60:
+        hour += 1
+        minute = 0
+    if hour == 24 and minute == 0:  # edge case for 24h
+        return time.max
+    return time(hour, minute, 0)
 
 
 def time_to_float(duration: time | timedelta) -> float:
@@ -425,7 +433,7 @@ def sum_intervals(intervals: Iterable[tuple[datetime, datetime, ...]]) -> float:
     )
 
 
-def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:
+def weeknumber(locale: babel.Locale, date: date, first_week_day: int | None = None) -> tuple[int, int]:
     """Computes the year and weeknumber of `date`. The week number is 1-indexed
     (so the first week is week number 1).
 
@@ -443,23 +451,27 @@ def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:
 
     An alternative is to split the week in two, so the week from December 27,
     2015 to January 2, 2016 would be *both* W53/2015 and W01/2016.
+
+    :param first_week_day: Optional override for the first day of the week
+        (0 = Monday, ..., 6 = Sunday). If None, derived from the locale.
     """
-    if locale.first_week_day == 0 and locale.min_week_days == 4:
+    if first_week_day is None:
+        first_week_day = locale.first_week_day
+    if first_week_day == 0 and locale.min_week_days == 4:
         # woohoo nothing to do
         return date.isocalendar()[:2]
 
+    delta = relativedelta(weekday=weekdays[first_week_day](-1))
     # first find the first day of the first week of the next year, if the
     # reference date is after that then it must be in the first week of the next
     # year, remove this if we decide to implement split weeks instead
-    fdny = date.replace(year=date.year + 1, month=1, day=1) \
-       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    fdny = date.replace(year=date.year + 1, month=1, day=1) - delta
     if date >= fdny:
         return date.year + 1, 1
 
     # otherwise get the number of periods of 7 days between the first day of the
     # first week and the reference
-    fdow = date.replace(month=1, day=1) \
-       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    fdow = date.replace(month=1, day=1) - delta
     doy = (date - fdow).days
 
     return date.year, (doy // 7 + 1)

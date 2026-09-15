@@ -41,3 +41,10 @@ class StockMove(models.Model):
                 and self.partner_id.property_stock_subcontractor.parent_path
                 and self.partner_id.property_stock_subcontractor.parent_path in self.location_dest_id.parent_path
         )
+
+    def _get_value_from_account_move(self, quantity, at_date=None):
+        if not self.env.context.get('valuation_without_extra') and self.is_subcontract and self._is_dropshipped() and self.purchase_line_id:
+            last_subcontract_production_move = self.move_orig_ids.production_id.move_finished_ids[:1]
+            if last_subcontract_production_move:
+                return last_subcontract_production_move._get_value_from_account_move(quantity, at_date=at_date)
+        return super()._get_value_from_account_move(quantity, at_date=at_date)

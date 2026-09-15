@@ -286,6 +286,7 @@ export class RelationalModel extends Model {
         if (!this.withCache) {
             return;
         }
+        const currentResId = config.resId;
         if (
             !this.isReady || // first load of the model
             // monorecord, loading a different id, or creating a new record (onchange)
@@ -299,6 +300,10 @@ export class RelationalModel extends Model {
                         return;
                     }
                     const { root, loadId } = await rootLoadDef;
+                    if (root.config.isMonoRecord && currentResId !== root.config.resId) {
+                        // The record ID has been changed, likely because a new record was saved.
+                        return;
+                    }
                     if (root.id !== this.root.id) {
                         // The root id might have changed, either because:
                         //  1) the user already changed the domain and a second load has been done
@@ -685,6 +690,22 @@ export class RelationalModel extends Model {
         return orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
 
+    _displayOnchangeWarning(warning) {
+        Promise.resolve(this.hooks.onWillDisplayOnchangeWarning(warning)).then(() => {
+            const { type, title, message, className, sticky } = warning;
+            if (type === "dialog") {
+                this.dialog.add(WarningDialog, { title, message });
+            } else {
+                this.notification.add(message, {
+                    className,
+                    sticky,
+                    title,
+                    type: "warning",
+                });
+            }
+        });
+    }
+
     /**
      * @param {RelationalModelConfig} config
      * @param {OnChangeParams} params
@@ -713,19 +734,7 @@ export class RelationalModel extends Model {
             throw e;
         }
         if (response.warning) {
-            Promise.resolve(this.hooks.onWillDisplayOnchangeWarning(response.warning)).then(() => {
-                const { type, title, message, className, sticky } = response.warning;
-                if (type === "dialog") {
-                    this.dialog.add(WarningDialog, { title, message });
-                } else {
-                    this.notification.add(message, {
-                        className,
-                        sticky,
-                        title,
-                        type: "warning",
-                    });
-                }
-            });
+            this._displayOnchangeWarning(response.warning);
         }
         return response.value;
     }
@@ -852,7 +861,7 @@ export class RelationalModel extends Model {
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
-            context: { read_group_expand: true, ...config.context },
+            context: { bin_size: true, read_group_expand: true, ...config.context },
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
         const result = await orm.webReadGroup(

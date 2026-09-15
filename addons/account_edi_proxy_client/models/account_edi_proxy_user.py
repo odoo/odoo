@@ -122,9 +122,15 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 _('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
         if 'error' in response:
-            message = _('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response['error']['message'])
             if response['error']['code'] == 404:
                 message = _('The url that this service tried to contact does not exist. The url was “%s”', url)
+            else:
+                error_message = response['error'].get('data', {}).get('message') or response['error']['message']
+                message = _(
+                    "The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s",
+                    url=url,
+                    error_message=error_message,
+                )
             raise AccountEdiProxyError('connection_error', message)
 
         proxy_error = response['result'].pop('proxy_error', False)
@@ -174,6 +180,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # simulate registration
             response = {'id_client': f'demo{company.id}{proxy_type}', 'refresh_token': 'demo'}
         else:
+
+            if self.search_count([
+                ('company_id', '=', company.id),
+                ('proxy_type', '=', proxy_type),
+                ('edi_mode', '=', edi_mode),
+            ]):
+                raise UserError(self.env._('A user already exists with this identification.'))
+
             try:
                 # b64encode returns a bytestring, we need it as a string
                 server_url = self._get_server_url(proxy_type, edi_mode)

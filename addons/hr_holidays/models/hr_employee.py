@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.tools.float_utils import float_round
+from odoo.tools.intervals import Intervals
 
 
 class HrEmployee(models.Model):
@@ -501,7 +502,7 @@ class HrEmployee(models.Model):
                     allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
                     precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual' and not precomputed:
+            if allocation.allocation_type == 'accrual' and not precomputed and not ignore_future:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
@@ -636,3 +637,25 @@ class HrEmployee(models.Model):
 
     def _get_store_avatar_card_fields(self, target):
         return [*super()._get_store_avatar_card_fields(target), "leave_date_to"]
+
+    def _adjust_leaves(self, leave_intervals):
+        adjusted_leaves = Intervals([])
+        for (start, stop, leave) in leave_intervals:
+            tz = start.tzinfo
+            holiday = leave.holiday_id
+            leave_start = start
+            leave_stop = stop
+            if holiday and holiday.leave_type_request_unit == 'half_day':
+                if holiday.request_date_from_period == 'am':
+                    leave_start = datetime.combine(start.date(), time.min, tz)
+                if holiday.request_date_from_period == 'pm':
+                    leave_start = datetime.combine(start.date(), time(12), tz)
+                if holiday.request_date_to_period == 'am':
+                    leave_stop = datetime.combine(stop.date(), time(12), tz)
+                if holiday.request_date_to_period == 'pm':
+                    leave_stop = datetime.combine(stop.date() + timedelta(days=1), time.min, tz)
+            elif holiday and holiday.leave_type_request_unit == 'day':
+                leave_start = datetime.combine(start.date(), time.min, tz)
+                leave_stop = datetime.combine(stop.date() + timedelta(days=1), time.min, tz)
+            adjusted_leaves |= Intervals([(leave_start, leave_stop, leave)])
+        return adjusted_leaves

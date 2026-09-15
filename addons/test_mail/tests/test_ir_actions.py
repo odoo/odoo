@@ -180,6 +180,27 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             }],
         )
 
+        # Test dotted field path (e.g. 'parent_id.user_id') which traverses a relational chain.
+        parent_partner = self.env['res.partner'].create({
+            'name': 'ParentPartner',
+            'user_id': self.user_admin.id,
+        })
+        self.test_partner.write({'parent_id': parent_partner.id})
+        self.action.write({
+            'activity_user_field_name': 'parent_id.user_id',
+            'activity_summary': 'TestDottedField',
+        })
+        before_count = self.env['mail.activity'].search_count([])
+        run_res = self.action.with_context(self.context).run()
+        self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
+        self.assertRecordValues(
+            self.env['mail.activity'].search([('res_model', '=', 'res.partner'), ('res_id', '=', self.test_partner.id), ('user_id', '=', self.user_admin.id)]),
+            [{
+                'summary': 'TestDottedField',
+                'user_id': self.user_admin.id,
+            }],
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_action_send_mail_without_mail_thread(self):
         """ Check running a server action to send an email with custom layout on a non mail.thread model """

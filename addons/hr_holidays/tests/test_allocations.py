@@ -229,6 +229,30 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.number_of_hours_display, 10)
         self.assertEqual(employee_emp_allocation.number_of_hours_display, 10)
 
+    def test_allocation_hours_recompute_on_schedule_change(self):
+        self.leave_type.request_unit = 'hour'
+        self.employee.resource_calendar_id = self.employee_emp.resource_calendar_id  # 8 hours/day
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Hours Allocation',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee.id,
+            'allocation_type': 'regular',
+            'number_of_days': 7,  # 7 days * 8 hours/day = 56 hours
+        })
+        self.assertEqual(allocation.number_of_hours_display, 56)
+
+        # Moving the employee to a 7 hours/day schedule must recompute the
+        # allocation duration so the accrued hours stay unchanged.
+        self.employee.resource_calendar_id = self.calendar_35h
+        self.assertEqual(allocation.number_of_days, 8)  # 56 hours / 7 hours/day
+        self.assertEqual(allocation.number_of_hours_display, 56)
+
+        # A later accrual adds time at the new schedule (number_of_days += days).
+        # The hours accrued under the old schedule must not be revalued.
+        allocation.number_of_days += 8  # +8 days * 7 hours/day = +56 hours
+        self.assertEqual(allocation.number_of_hours_display, 112)  # 56 + 56
+
     def change_allocation_type_hours(self):
         self.leave_type.write({
             'name': 'Custom Time Off Test',
@@ -654,3 +678,30 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': '2023-12-25'
         })
         self.assertEqual(1, self.leave_type.allocation_count)
+
+    def test_allocation_title_displays_rounded_hours(self):
+        """
+        Ensure that the allocation title displays a rounded duration when
+        the request unit is set to hours.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Time Off',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        flex_38h_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 38/week',
+            'hours_per_day': 7.6,
+            'full_time_required_hours': 38.0,
+            'flexible_hours': True,
+        })
+        self.employee.resource_calendar_id = flex_38h_calendar
+
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
+            allocation_form.allocation_type = 'regular'
+            allocation_form.employee_id = self.employee
+            allocation_form.holiday_status_id = leave_type
+            allocation_form.number_of_hours_display = 8
+            self.assertEqual(allocation_form.name, "Test Time Off (8.0 hour(s))")

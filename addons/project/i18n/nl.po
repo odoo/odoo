@@ -8,16 +8,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-24 07:44+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-27 10:02+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/project/"
 "nl/>\n"
@@ -26,12 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Alle interne gebruikers en uitgenodigde portaalgebruikers"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -289,16 +284,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "           <t t-if=\"partner.name\">\n"
-"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
 "                Hallo,<br/><br/>\n"
@@ -306,9 +301,8 @@ msgstr ""
 "            Neem even de tijd om onze dienstverlening te beoordelen bij de "
 "taak <strong t-out=\"object.name or ''\">Planning en budget</strong>,\n"
 "           <t t-if=\"object._rating_get_operator().name\">\n"
-"                toegewezen aan <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -377,13 +371,13 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@jouwbedrijf.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@jouwbedrijf.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
@@ -426,14 +420,14 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
 "color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-"
 "mail omdat je project is verplaatst naar de fase <b t-"
-"out=\"object.stage_id.name or ''\">Gereed</b></span>\n"
+"out=\"object.stage_id.name or ''\">Voltooid</b></span>\n"
 "            "
 
 #. module: project
@@ -473,8 +467,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -562,7 +556,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr "<span class=\"fw-normal\"> Gereed</span>"
+msgstr "<span class=\"fw-normal\"> Voltooid</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -608,8 +602,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o pe-"
+"2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -852,7 +846,7 @@ msgid ""
 "Progress - Done</i>."
 msgstr ""
 "Voeg kolommen toe om je taken in <b>fases</b> te ordenen, <i>bijv. Nieuw - "
-"In behandeling - Gereed</i>."
+"In behandeling - Voltooid</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -893,8 +887,12 @@ msgstr "Beheerder"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "De beheerder kan het rooster van de werknemers beheren"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
+"Beheerder: Kan projecten en fases beheren, met toegang tot rapportage en "
+"configuratie."
 
 #. module: project
 #. odoo-javascript
@@ -965,6 +963,11 @@ msgstr "Alle taken"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Alle interne gebruikers"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr "Alle interne gebruikers en uitgenodigde portaalgebruikers"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1848,9 +1851,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
-"Datum waarop deze taak voor het laatst is toegewezen (of niet is "
-"toegewezen). Op basis hiervan kunt je statistieken krijgen over de tijd die "
-"gewoonlijk nodig is om taken toe te wijzen."
+"Datum waarop deze taak voor het laatst is toegewezen (of niet is toegewezen)"
+". Op basis hiervan kunt je statistieken krijgen over de tijd die gewoonlijk "
+"nodig is om taken toe te wijzen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -2033,7 +2036,7 @@ msgstr "Ontwikkeling"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr "Overzicht"
+msgstr "Samenvatting"
 
 #. module: project
 #. odoo-javascript
@@ -2092,7 +2095,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: project
 #. odoo-python
@@ -2115,7 +2118,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_5
 #: model:project.task.type,name:project.project_stage_2
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: project
 #. odoo-javascript
@@ -2989,7 +2992,7 @@ msgstr "Productie"
 #: code:addons/project/static/src/components/done_checkmark/task_done_checkmark.xml:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 msgid "Mark as done"
-msgstr "Markeren als gereed"
+msgstr "Markeren als voltooid"
 
 #. module: project
 #. odoo-javascript
@@ -3643,7 +3646,7 @@ msgstr "Delen via portaal"
 msgid ""
 "Portal users will be removed from the followers of the project and its tasks."
 msgstr ""
-"Portalgebruikers worden verwijderd uit de volgers van het project en zijn "
+"Portaalgebruikers worden verwijderd uit de volgers van het project en zijn "
 "taken."
 
 #. module: project
@@ -4086,7 +4089,7 @@ msgstr "Beoordeling gem. tekst"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr "Beoordeling e-mailsjabloon"
+msgstr "Sjabloon beoordelingsmail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_status_period
@@ -4861,7 +4864,7 @@ msgstr "Taakafhankelijkheden"
 #: model:mail.message.subtype,name:project.mt_project_task_done
 #: model:mail.message.subtype,name:project.mt_task_done
 msgid "Task Done"
-msgstr "Taak is gereed"
+msgstr "Taak voltooid"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_in_progress
@@ -4971,7 +4974,7 @@ msgstr "Taak omgezet naar sjabloon"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr "Taak gereed"
+msgstr "Taak voltooid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -5769,8 +5772,9 @@ msgstr "Gebruikersinstellingen"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "De gebruiker kan het rooster van je werknemers gebruiken"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
+"Gebruiker: Kan taken beheren in projecten die met hem of haar zijn gedeeld."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5950,9 +5954,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Je kunt het bedrijf van deze fase niet wijzigen naar %(company_name)s omdat "
-"het momenteel projecten bevat die zijn gekoppeld aan %"
-"(project_company_name)s. Zorg ervoor dat deze fase uitsluitend bestaat uit "
-"projecten gekoppeld aan %(company_name)s."
+"het momenteel projecten bevat die zijn gekoppeld aan %(project_company_name)"
+"s. Zorg ervoor dat deze fase uitsluitend bestaat uit projecten gekoppeld aan "
+"%(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -5975,8 +5979,7 @@ msgstr "Je kunt subtaken openen vanuit de kanban-kaart!"
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "You cannot convert this task into a sub-task because it is recurrent."
-msgstr ""
-"Je kunt deze taak niet omzetten in een subtaak omdat deze recurrent is."
+msgstr "Je kunt deze taak niet omzetten in een subtaak omdat deze recurrent is."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -6317,6 +6320,15 @@ msgstr "👤 Niet toegewezen"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Alle interne gebruikers en uitgenodigde portaalgebruikers"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "De beheerder kan het rooster van de werknemers beheren"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "De gebruiker kan het rooster van je werknemers gebruiken"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Ongeldige velden: "

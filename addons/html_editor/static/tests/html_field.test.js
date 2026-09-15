@@ -669,7 +669,36 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
             '<div class="o-paragraph" data-selection-placeholder=""><br></div>'
     );
     await clickSave();
-    expect.verifySteps(["update_value", "web_save"]);
+    expect.verifySteps(["update_value", "update_value", "web_save"]);
+});
+
+test("blurring an inner contenteditable field by clicking outside should trigger update_value", async () => {
+    patchWithCleanup(HtmlField.prototype, {
+        updateValue() {
+            expect.step("update_value");
+            super.updateValue(...arguments);
+        },
+    });
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div contenteditable="false">outside<div contenteditable="true"><p class="inner">inside</p></div></div>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelection({ anchorNode: queryOne(".inner"), anchorOffset: 0 });
+    await tick();
+    await insertText(htmlEditor, "a");
+    await click(document.body);
+    expect.verifySteps(["update_value"]);
 });
 
 test.tags("focus required");
@@ -1307,6 +1336,64 @@ test("add Vimeo video link in 'Videos' tab of MediaDialog", async () => {
     });
     await waitFor(".o_video_dialog_options", { timeout: 1500 });
     expect(input).toHaveClass("is-valid");
+    await click(queryOne(".modal-footer").firstChild);
+});
+
+test.tags("desktop");
+test("clicking Replace should allow updating video options", async () => {
+    serverState.debug = "1";
+    const videoId = "qxb74CMR748";
+    const videoURL = `https://www.youtube.com/embed/${videoId}`;
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    await onRpc("/html_editor/video_url/data", async () => ({
+        video_id: videoId,
+        platform: "youtube",
+        embed_url: videoURL,
+    }));
+
+    // Insert Video
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+
+    await contains(".modal-body .nav-link:contains('Videos')").click();
+    await waitFor("textarea#o_video_text");
+    const input = queryOne("textarea#o_video_text");
+    input.value = videoURL;
+    manuallyDispatchProgrammaticEvent(input, "input", {
+        inputType: "insertText",
+    });
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+    await click(queryOne(".modal-footer").firstChild);
+
+    // Hover on VideoBlock shows overlay
+    await waitFor("div[data-embedded='video'] iframe");
+    await hover(queryOne("div[data-embedded='video']"));
+    await expectElementCount(".video-overlay", 1);
+
+    // Click on overlay and choose Replace
+    await click(".video-overlay button");
+    await waitFor(".o-dropdown-item");
+    expect(queryAllTexts(".o-dropdown-item")[0]).toBe("Replace");
+    await click(".o-dropdown-item .fa-exchange");
+
+    // Toggle an option to verify the dialog works without triggering a props validation error
+    await waitFor("textarea#o_video_text");
+    await waitFor(".o_video_dialog_options");
+    await contains(".o_video_dialog_options label:contains('Autoplay') input").click();
+    expect(".o_video_dialog_options label:contains('Autoplay') input").toBeChecked();
+    await contains(".o_video_dialog_options label:contains('Autoplay') input").click();
+    expect(".o_video_dialog_options label:contains('Autoplay') input").not.toBeChecked();
     await click(queryOne(".modal-footer").firstChild);
 });
 

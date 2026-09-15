@@ -2,15 +2,17 @@
 # This file contains the translation of the following modules:
 # * auth_totp
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:16+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-09-10 09:11+0000\n"
+"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "auth_totp/sl/>\n"
 "Language: sl\n"
@@ -19,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_totp
 #. odoo-python
@@ -47,6 +49,10 @@ msgid ""
 "                            Enabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Omogočeno\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -56,6 +62,10 @@ msgid ""
 "                            Disabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Onemogočeno\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -65,11 +75,14 @@ msgid ""
 "                            Recommended for extra security.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                            Priporočeno za dodatno varnost.\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Add this key in your Authenticator app"
-msgstr ""
+msgstr "Dodajte ta ključ v aplikacijo Authenticator"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -217,7 +230,7 @@ msgstr "QR koda"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode in your Authenticator app"
-msgstr ""
+msgstr "Skenirajte to črtno kodo v svoji aplikaciji za preverjanje pristnosti"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -259,7 +272,7 @@ msgstr ""
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
-msgstr ""
+msgstr "Zadnji števec TOTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
@@ -338,7 +351,7 @@ msgstr "Potrditvena koda"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification code"
-msgstr ""
+msgstr "Potrditvena koda"
 
 #. module: auth_totp
 #. odoo-python
@@ -351,12 +364,12 @@ msgstr "Preverjanje ni uspelo, prosimo, dvakrat preverite 6-mestno kodo."
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
-msgstr ""
+msgstr "Preverjanje ni uspelo, prosimo, uporabite najnovejšo 6-mestno kodo"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Write the code given by your app"
-msgstr ""
+msgstr "Vnesite kodo, ki jo je izdala vaša aplikacija"
 
 #. module: auth_totp
 #. odoo-python
@@ -365,6 +378,8 @@ msgid ""
 "You reached the limit of authentication mails sent for your account, please "
 "try again later."
 msgstr ""
+"Dosegli ste omejitev pošiljanja avtentikacijskih e-poštnih sporočil za vaš "
+"račun, poskusite znova pozneje."
 
 #. module: auth_totp
 #. odoo-python
@@ -373,6 +388,8 @@ msgid ""
 "You reached the limit of code verifications for your account, please try "
 "again later."
 msgstr ""
+"Dosegli ste omejitev preverjanja kode za svoj račun, prosim, poskusite znova "
+"kasneje."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form

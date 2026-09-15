@@ -52,9 +52,13 @@ class Base(models.AbstractModel):
     @api.readonly
     def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
         id_name_pairs = self.name_search(name, domain, operator, limit)
-        if len(specification) == 1 and 'display_name' in specification:
-            return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
         records = self.browse([id for id, _ in id_name_pairs])
+        if len(specification) == 1 and 'display_name' in specification:
+            return [{
+                'id': record.id,
+                'display_name': record.display_name,
+                '__formatted_display_name': record.with_context(formatted_display_name=True).display_name,
+            } for record in records]
         return records.web_read(specification)
 
     @api.model
@@ -414,7 +418,15 @@ class Base(models.AbstractModel):
         aggregates = list(aggregates)
         if '__count' not in aggregates:  # Used for computing length of sublevel groups
             aggregates.append('__count')
-        domain = Domain(domain).optimize(self)
+
+        # If the domain contains a condition on the active field, we need to disable
+        # the active test to ensure that we can read all records, including inactive ones.
+        # Because optimizing the domain may remove the condition on the active field, and
+        # only active records will get returned in the default case
+        domain = Domain(domain)
+        if any(cond.field_expr == self._active_name for cond in domain.iter_conditions()):
+            domain &= Domain(self._active_name, 'in', [True, False])
+        domain = domain.optimize(self)
 
         # dict to help creating order compatible with _read_group and for search
         dict_order: dict[str, str] = {}  # {fname_and_property: "<direction> <nulls>"}
@@ -1369,18 +1381,22 @@ class Base(models.AbstractModel):
             progress bar field values to the related number of records
         """
         def adapt(value):
-            if isinstance(value, BaseModel):
-                return value.id
+            if isinstance(value, tuple):
+                return value[0]
             return value
 
         result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
 
-        for main_group, field_value, count in self._read_group(
+        # formatted_read_group produces the same group_by keys the kanban
+        # client uses to look up progress bar counts, so the two sides match
+        # for every field type (m2o, selection, date granularities, ...).
+        for group in self.formatted_read_group(
             domain, [group_by, progress_bar['field']], ['__count'],
         ):
+            field_value = group[progress_bar['field']]
             if field_value in progress_bar['colors']:
-                group_by_value = str(adapt(main_group))
-                result[group_by_value][field_value] += count
+                group_by_value = str(adapt(group[group_by]))
+                result[group_by_value][field_value] += group['__count']
 
         return result
 
@@ -1954,6 +1970,19 @@ class Base(models.AbstractModel):
 
             return { 'values': field_range, }
 
+    @api.model
+    def onchange_batch(self, values_list: list[dict], field_names: list[str], fields_spec: dict) -> list[dict]:
+        """
+        Apply onchange to a batch of new records.
+        This method only supports new records, so ``self`` must be empty.
+        """
+        assert not self, "self must be empty"
+
+        return [
+            self.onchange(values, field_names, fields_spec)
+            for values in values_list
+        ]
+
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
         Perform an onchange on the given fields, and return the result.
@@ -2141,8 +2170,10 @@ class Base(models.AbstractModel):
         # process names in order
         while todo:
             # apply field-specific onchange methods
+            visited_onchanges = set()
             for field_name in todo:
-                record._apply_onchange_methods(field_name, result)
+                record._apply_onchange_methods(field_name, result, visited_onchanges)
+                visited_onchanges.update(self._onchange_methods.get(field_name, ()))
                 done.add(field_name)
 
             if not env.context.get('recursive_onchanges', True):

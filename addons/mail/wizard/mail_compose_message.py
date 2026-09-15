@@ -875,9 +875,8 @@ class MailComposeMessage(models.TransientModel):
             # running several times on same records in case of issue
             if auto_commit is True:
                 counter_mails_done += len(prepared_mail_values_filtered)
-                self.env['ir.cron']._notify_progress(done=counter_mails_done,
+                self.env['ir.cron']._commit_progress(processed=counter_mails_done,
                                                       remaining=len(res_ids) - counter_mails_done)
-                self.env.cr.commit()
             self.env.invalidate_all()
 
         return mails_sudo

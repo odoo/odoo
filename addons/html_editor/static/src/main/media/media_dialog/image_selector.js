@@ -87,6 +87,7 @@ export class ImageSelector extends FileSelector {
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
         this.isImageField =
             !!this.props.media?.closest("[data-oe-type=image]") || !!this.props.addFieldImage;
+        this.isProcessingClick = false;
     }
 
     get canLoadMore() {
@@ -344,6 +345,10 @@ export class ImageSelector extends FileSelector {
     }
 
     async onClickAttachment(attachment) {
+        if (this.isProcessingClick) {
+            return;
+        }
+        this.isProcessingClick = true;
         if (attachment.unselectable) {
             this.notificationService.add(
                 _t(
@@ -360,6 +365,11 @@ export class ImageSelector extends FileSelector {
         if (!this.props.multiSelect) {
             await this.props.save();
         }
+        // The use of requestAnimationFrame is not ideal but we do it as a
+        // temporary fix as the media dialog will be refactored
+        requestAnimationFrame(() => {
+            this.isProcessingClick = false;
+        });
     }
 
     async onClickMedia(media) {

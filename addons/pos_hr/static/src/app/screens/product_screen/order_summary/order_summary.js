@@ -15,4 +15,12 @@ patch(OrderSummary.prototype, {
             body: _t("You are not allowed to change the price of a product."),
         });
     },
+
+    async updateSelectedOrderline({ buffer, key }) {
+        if (key == "-" && this.pos.cashier._role === "minimal") {
+            this.numberBuffer.reset();
+            return;
+        }
+        return super.updateSelectedOrderline({ buffer, key });
+    },
 });

@@ -6,15 +6,15 @@
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:38+0000\n"
-"PO-Revision-Date: 2026-04-21 22:27+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-11 10:43+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "de/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -52,6 +52,12 @@ msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 "12345678 oder UA12345678 (EDRPOU), 1234567890 (RNOPP) oder 123456789012 (IPN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
+msgstr "123456789 (TIN) oder 12345678901234 (PINFL)"
 
 #. module: base_vat
 #. odoo-python
@@ -108,7 +114,7 @@ msgstr "Land"
 #. module: base_vat
 #: model:ir.model,website_form_label:base_vat.model_res_partner
 msgid "Create a Customer"
-msgstr "Kunden erstellen"
+msgstr "Kunde erstellen"
 
 #. module: base_vat
 #. odoo-python
@@ -245,20 +251,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
-msgstr "Die innergemeinschaftliche Gültigkeit wurde aktualisiert."
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage des "
-"Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, dass der "
-"Partner nicht steuerpflichtig ist."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "Die innergemeinschaftliche Gültigkeit wurde aktualisiert auf: %s."
 
 #. module: base_vat
 #. odoo-python
@@ -271,8 +265,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
-"Die VIES-Prüfung steht noch aus. Der Status wird in Kürze aktualisiert."
+msgstr "Die VIES-Prüfung steht noch aus. Der Status wird in Kürze aktualisiert."
 
 #. module: base_vat
 #. odoo-python
@@ -302,28 +295,47 @@ msgstr "Prüfen Sie die USt-IdNr. mit dem europäischen MIAS-Service."
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr "XXXXXXXXX [9 Ziffern]"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 Ziffern] und es sollte die Prüfsumme des Luhn-Algorithmus "
 "einhalten"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+"Sie können „/“ verwenden, um anzugeben, dass der Kunde keine USt-IdNr. hat."
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "entweder 11 Ziffern für CPF oder 14 Ziffern für CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "entweder 11 Ziffern für die CPF oder 14 Zeichen für die CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "Partner [%s]"
+
+#~ msgid "XXXXXXXXX [9 digits]"
+#~ msgstr "XXXXXXXXX [9 Ziffern]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage "
+#~ "des Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, "
+#~ "dass der Partner nicht steuerpflichtig ist."
+
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "Die innergemeinschaftliche Gültigkeit wurde aktualisiert."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "entweder 11 Ziffern für CPF oder 14 Ziffern für CNPJ"
 
 #~ msgid ""
 #~ "Connection with the VIES server failed. The VAT number %s could not be "

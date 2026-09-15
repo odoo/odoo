@@ -23,8 +23,8 @@ import typing
 from opcode import opmap, opname
 from types import CodeType
 
+import psycopg2
 import werkzeug
-from psycopg2 import OperationalError
 
 import odoo.exceptions
 
@@ -186,7 +186,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'SET_FUNCTION_ATTRIBUTE',
     # 3.14
     'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',  # LOAD_FAST optimizations
-    'POP_ITER',
+    'POP_ITER', 'JUMP_BACKWARD_NO_INTERRUPT',
     # Hardcoded list of constants, does not bypasses __builtins__
     # c.f. https://github.com/python/cpython/blob/9181d776daf87f0e4e2ce02c08f162150fdf7d79/Python/pylifecycle.c#L830-L836
     'LOAD_COMMON_CONSTANT',
@@ -356,10 +356,12 @@ _BUILTINS = {
 
 
 _BUBBLEUP_EXCEPTIONS = (
+    odoo.exceptions.ConcurrencyError,  # let retrying handle this error
     odoo.exceptions.UserError,
     odoo.exceptions.RedirectWarning,
+    psycopg2.OperationalError,  # let auto-replay of serialized transactions work its magic
+    psycopg2.IntegrityError,  # let retrying handle this error
     werkzeug.exceptions.HTTPException,
-    OperationalError,  # let auto-replay of serialized transactions work its magic
     ZeroDivisionError,
 )
 

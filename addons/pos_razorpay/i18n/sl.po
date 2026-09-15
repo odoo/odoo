@@ -2,14 +2,17 @@
 # This file contains the translation of the following modules:
 # * pos_razorpay
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 21:23+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:23+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "pos_razorpay/sl/>\n"
 "Language: sl\n"
@@ -18,23 +21,26 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid ""
 "A partial refund is not allowed because the transaction has not yet been "
 "settled."
-msgstr ""
+msgstr "Delno vračilo ni dovoljeno, ker transakcija še ni bila poravnana."
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/screens/payment_screen/payment_screen.js:0
+#, fuzzy
 msgid ""
 "Adding a new Razorpay payment line is not allowed under the current "
 "conditions."
 msgstr ""
+"Dodajanje nove plačilne vrstice Razorpay v trenutnih pogojih ni dovoljeno."
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
@@ -43,20 +49,23 @@ msgstr "Vse"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
+#, fuzzy
 msgid "BHARATQR"
-msgstr ""
+msgstr "BHARATQR"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
+#, fuzzy
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "Odgovora Razorpay POS ni mogoče dekodirati"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "Transakcij z negativnim zneskom ni mogoče obdelati."
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__card
@@ -65,25 +74,34 @@ msgstr "Kartica"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+#, fuzzy
 msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"Izberite dovoljeni način plačila: \n"
+" Vse/Kartica/UPI ali QR"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid ""
 "Could not connect to the Odoo server, please check your internet connection "
 "and try again."
 msgstr ""
+"Povezave s strežnikom Odoo ni bilo mogoče vzpostaviti, preverite internetno "
+"povezavo in poskusite znova."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_tid
+#, fuzzy
 msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"Serijska št. naprave \n"
+" npr.: 7000012300"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__display_name
@@ -100,163 +118,207 @@ msgstr "ID"
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
+"Plačilo je bilo uvrščeno v čakalno vrsto. Lahko počakate, da se plačilo "
+"začne izvajati na terminalu, ali nadaljujete s preklicem te transakcije."
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment
+#, fuzzy
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Plačila na prodajnem mestu"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
+#, fuzzy
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "API-ključ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+#, fuzzy
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "Dovoljeni načini plačila Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
+#, fuzzy
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "Serijska št. naprave Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid "Razorpay Error"
-msgstr ""
+msgstr "Napaka Razorpay"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"Pri zahtevi za preklic plačila POS Razorpay koda napake errorCode ni bila "
+"najdena v odgovoru"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
 msgstr ""
+"Pri zahtevi za plačilo POS Razorpay pričakovana koda napake errorCode ni "
+"bila najdena v odgovoru"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
+"Pri zahtevi za status plačila POS Razorpay pričakovana koda napake errorCode "
+"ni bila najdena v odgovoru"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "POS-transakcija Razorpay je bila uspešno preklicana"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "Transakcija POS Razorpay ni uspela"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
+#, fuzzy
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "Povratna referenčna št. Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+#, fuzzy
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "Razorpay testni način"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
+#, fuzzy
 msgid "Razorpay Username"
-msgstr ""
+msgstr "Uporabniško ime Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
+#, fuzzy
 msgid "Razorpay p2pRequestId"
-msgstr ""
+msgstr "Razorpay p2pRequestId"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid "Reference number mismatched"
-msgstr ""
+msgstr "Referenčna številka se ne ujema"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid ""
 "Related transaction has already been Refunded. Please try using another "
 "payment method."
 msgstr ""
+"Povezana transakcija je bila že povrnjena. Poskusite uporabiti drug način "
+"plačila."
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid ""
 "Related transaction has already been voided. Please try using another "
 "payment method."
 msgstr ""
+"Povezana transakcija je bila že stornirana. Poskusite uporabiti drug način "
+"plačila."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
+#, fuzzy
 msgid "Required to fetch payment status during the refund order process"
-msgstr ""
+msgstr "Zahtevano za pridobitev statusa plačila med postopkom vračila naročila"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "The Razorpay POS refund request has encountered an unexpected error code."
 msgstr ""
+"Zahteva za vračilo v POS-u Razorpay je naletela na nepričakovano kodo napake."
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr ""
+msgstr "Ta plačilni terminal je veljaven samo za valuto INR"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+#, fuzzy
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "Transakcija ni uspela zaradi neaktivnosti"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+#, fuzzy
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "Vklopite ga v testnem načinu"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
+#, fuzzy
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
+#, fuzzy
 msgid ""
 "Used when connecting to Razorpay: https://razorpay.com/docs/payments/"
 "dashboard/account-settings/api-keys/"
 msgstr ""
+"Uporablja se pri povezovanju z Razorpay: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
+#, fuzzy
 msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"Uporabniško ime (prijava naprave) \n"
+" npr.: 1234500121"

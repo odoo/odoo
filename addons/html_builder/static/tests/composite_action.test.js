@@ -9,7 +9,7 @@ import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
-// TODO: test composite with each spec: prepare, load, getValue
+// TODO: test composite with each spec: prepare, load
 // TODO: test reloadComposite
 
 describe.current.tags("desktop");
@@ -146,6 +146,48 @@ test("composite action's isApplied returns false if no action defined it", async
     ]);
 });
 
+test("composite action should use the first getValue", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        setup() {
+            this.data = { name: "first action" };
+        }
+        getValue() {
+            return this.data.name;
+        }
+        apply() {}
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        setup() {
+            this.data = { name: "second action" };
+        }
+        getValue() {
+            return this.data.name;
+        }
+        apply() {}
+    }
+    addBuilderAction({
+        Action1,
+        Action2,
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".s_test";
+            static template = xml`
+            <BuilderTextInput action="'composite'"
+                actionParam="[
+                    { action: 'action1' },
+                    { action: 'action2' },
+                ]"/>`;
+        }
+    );
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+
+    expect("[data-action-id='composite'] input").toHaveValue("first action");
+});
+
 test("composite action's isApplied returns true if at least one action defined it", async () => {
     class Action1 extends BuilderAction {
         static id = "action1";
@@ -183,4 +225,26 @@ test("composite action's isApplied returns true if at least one action defined i
     expect("[data-action-id='composite']").not.toHaveClass("active");
     await contains("[data-action-id='composite']").click();
     expect("[data-action-id='composite']").toHaveClass("active");
+});
+
+test("applied composite action's with no getPriority implementation is considered the applied option", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".s_test";
+            static template = xml`
+            <BuilderSelect>
+                <BuilderSelectItem
+                    action="'composite'"
+                    actionParam="[
+                        { action: 'dataAttributeAction', actionParam: { mainParam: 'test' } },
+                    ]"
+                    actionValue="'something'">
+                    The Test Option
+                </BuilderSelectItem>
+            </BuilderSelect>`;
+        }
+    );
+    await setupHTMLBuilder(`<section class="s_test" data-test="something">Test</section>`);
+    await contains(":iframe .s_test").click();
+    expect(".o-hb-select-wrapper button").toHaveText("The Test Option");
 });

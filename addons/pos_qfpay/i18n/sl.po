@@ -1,167 +1,207 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_qfpay
+# * pos_qfpay
 #
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-11 13:59+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-08-08 07:15+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
+"pos_qfpay/sl/>\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__alipay
+#, fuzzy
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__amex_card
+#, fuzzy
 msgid "American Express Card"
-msgstr ""
+msgstr "Kartica American Express"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid "Credit card payments refund must be for the full amount."
-msgstr ""
+msgstr "Vračilo plačil s kreditno kartico mora biti za celoten znesek."
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__fps
+#, fuzzy
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/qfpay.js:0
+#, fuzzy
 msgid ""
 "Failed to connect to the QFPay terminal. This might be a certificate issue.\n"
 "Make sure you imported the certificates provided by QFPay on this machine."
 msgstr ""
+"Povezava s terminalom QFPay ni uspela. Morda gre za težavo s certifikatom.\n"
+"Prepričajte se, da ste v ta računalnik uvozili certifikate, ki jih je "
+"zagotovil QFPay.\n"
+"Lokacija: code:addons/pos_qfpay/static/src/app/qfpay.js:0"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid "No payment with %s found for this order."
-msgstr ""
+msgstr "Za to naročilo ni bilo najdeno nobeno plačilo z %s."
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__octopus
+#, fuzzy
 msgid "Octopus"
-msgstr ""
+msgstr "Octopus"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__payme
+#, fuzzy
 msgid "PayMe"
-msgstr ""
+msgstr "PayMe"
 
 #. module: pos_qfpay
 #: model:ir.model,name:pos_qfpay.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid "QFPay Error"
-msgstr ""
+msgstr "Napaka QFPay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_notification_key
+#, fuzzy
 msgid "QFPay Notification Key"
-msgstr ""
+msgstr "Ključ obvestila QFPay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_pos_key
+#, fuzzy
 msgid "QFPay POS Key"
-msgstr ""
+msgstr "POS ključ QFPay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_payment_type
+#, fuzzy
 msgid "QFPay Payment Type"
-msgstr ""
+msgstr "Način plačila QFPay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_terminal_ip_address
+#, fuzzy
 msgid "QFPay Terminal IP Address"
-msgstr ""
+msgstr "IP-naslov terminala QFPay"
 
 #. module: pos_qfpay
 #. odoo-python
 #: code:addons/pos_qfpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "QFPay is only valid for HKD Currency"
-msgstr ""
+msgstr "QFPay velja samo za valuto HKD"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid ""
 "QFPay payment failed. Please try again or use a different payment method."
 msgstr ""
+"Plačilo QFPay ni uspelo. Poskusite znova ali uporabite drug način plačila."
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_latest_response
+#, fuzzy
 msgid "Qfpay Latest Response"
-msgstr ""
+msgstr "Najnovejši odgovor Qfpay"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid "Refund amount cannot be greater than the original payment amount."
-msgstr ""
+msgstr "Znesek vračila ne sme biti večji od zneska prvotnega plačila."
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
+#, fuzzy
 msgid ""
 "Refunds can only be made on the same day before 23:00 HKT. Use the QFPay "
 "portal to perform this refund"
 msgstr ""
+"Vračila je mogoče izvesti samo istega dne pred 23.00 po hongkonškem času "
+"(HKT). Za izvedbo tega vračila uporabite portal QFPay"
 
 #. module: pos_qfpay
 #. odoo-python
 #: code:addons/pos_qfpay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "This method can only be used with QFPay payment terminal."
-msgstr ""
+msgstr "To metodo je mogoče uporabljati samo s plačilnim terminalom QFPay."
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__union
+#, fuzzy
 msgid "UnionPay QuickPass"
-msgstr ""
+msgstr "UnionPay QuickPass"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__unionpay_card
+#, fuzzy
 msgid "Unionpay Card"
-msgstr ""
+msgstr "Kartica UnionPay"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/qfpay.js:0
+#, fuzzy
 msgid "Unknown error occurred"
-msgstr ""
+msgstr "Prišlo je do neznane napake."
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__card_payment
+#, fuzzy
 msgid "Visa/Mastercard"
-msgstr ""
+msgstr "Visa/Mastercard"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__wx
+#, fuzzy
 msgid "WeChat Pay"
-msgstr ""
+msgstr "WeChat Pay"

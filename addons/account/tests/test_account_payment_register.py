@@ -261,6 +261,31 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             },
         ])
 
+    def test_register_payment_grouped_then_regroup_partially_paid_invoice(self):
+        """
+        Test that registering a second grouped payment on an invoice left partially paid by a
+        first grouped payment does not wrongly link the first payment to the other invoices of the second one.
+        """
+        active_ids = (self.out_invoice_1 + self.out_invoice_2 + self.out_invoice_3).ids
+        first_payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'amount': 3010.0,
+            'group_payment': True,
+            'payment_difference_handling': 'open',
+            'currency_id': self.other_currency.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        active_ids = (self.out_invoice_2 + self.out_invoice_4).ids
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'amount': 38.0,
+            'group_payment': True,
+            'currency_id': self.other_currency.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        first_payment.invalidate_recordset()
+        self.assertRecordValues(first_payment, [{'reconciled_invoices_count': 3}])
+
     def test_register_payment_single_batch_grouped_writeoff_lower_amount_debit(self):
         ''' Pay 800.0 with 'reconcile' as payment difference handling on two customer invoices (1000 + 2000). '''
         active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
@@ -857,6 +882,26 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 'reconciled': True,
             },
         ])
+
+    def test_cannot_register_payment_on_blocked_invoices(self):
+        blocked_invoice = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        blocked_invoice.action_toggle_block_payment()
+
+        invoice_1 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        invoice_2 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            blocked_invoice.action_force_register_payment()
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            (blocked_invoice + invoice_1 + invoice_2).action_force_register_payment()
+
+        receivable_lines = (blocked_invoice + invoice_1 + invoice_2).line_ids.filtered(
+            lambda line: line.account_type == 'asset_receivable'
+        )
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            Form.from_action(self.env, receivable_lines.action_register_payment())
 
     def test_register_payment_constraints(self):
         # Test to register a payment for an already fully reconciled journal entry.

@@ -2,11 +2,37 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    useChildSubEnv,
+    useEffect,
+    useExternalListener,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
+
+/**
+ * Returns a string representation of the options, to tell a new set of options
+ * apart from the same set rebuilt at the next render. Every field is taken into
+ * account because `label` is optional (an option can be rendered by an
+ * arbitrary `optionTemplate`), and records are identified by their local id.
+ *
+ * @param {Object[]} options
+ * @returns {string}
+ */
+function optionsToString(options) {
+    return options
+        .map((option) =>
+            Object.entries(option)
+                .map(([name, value]) => `${name}:${value?.localId ?? value}`)
+                .join(",")
+        )
+        .join("\n");
+}
 
 export class NavigableList extends Component {
     static components = { ImStatus };
@@ -29,6 +55,7 @@ export class NavigableList extends Component {
 
     setup() {
         super.setup();
+        useChildSubEnv({ inNavigableList: true });
         this.rootRef = useRef("root");
         this.state = useState({
             activeIndex: null,
@@ -50,10 +77,13 @@ export class NavigableList extends Component {
         // position and size
         usePosition("root", () => this.props.anchorRef, { position: this.props.position });
         useEffect(
+            // Open on mount and when a new set of options arrives. In particular,
+            // do not re-open on unrelated re-renders after the user closed the
+            // list (Escape, click away): the options are then the same.
             () => {
                 this.open();
             },
-            () => [this.props]
+            () => [optionsToString(this.props.options)]
         );
         useEffect(
             () => {
@@ -89,8 +119,14 @@ export class NavigableList extends Component {
         }
     }
 
+    /**
+     * @param {Event} ev
+     * @param {number} index
+     * @param {Object} [params]
+     * @param {Object} [params.option] defaults to `props.options[index]`
+     */
     selectOption(ev, index, params = {}) {
-        const option = this.props.options[index];
+        const { option = this.props.options[index], ...onSelectParams } = params;
         if (!option) {
             return;
         }
@@ -99,7 +135,7 @@ export class NavigableList extends Component {
             return;
         }
         this.props.onSelect(ev, option, {
-            ...params,
+            ...onSelectParams,
         });
         this.close();
     }

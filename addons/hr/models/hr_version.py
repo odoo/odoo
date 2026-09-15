@@ -184,7 +184,7 @@ class HrVersion(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True,
                                        groups="hr.group_hr_manager")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True, copy=False)
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
@@ -696,4 +696,17 @@ class HrVersion(models.Model):
             'context': {
                 'version_id': self.id,
             },
+        }
+
+    def action_open_version_form_view(self):
+        self.ensure_one()
+        view_id = self.env.ref('hr.hr_contract_template_form_view').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.version',
+            'res_id': self.id,
+            'views': [[view_id, "form"]],
+            'target': 'current',
+            'context': self.env.context,
         }

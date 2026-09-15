@@ -1,6 +1,10 @@
+import base64
+import textwrap
+import uuid
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tools import file_open
+from odoo.tools import config, file_open
 
 
 class TestUblCiiCommon(AccountTestInvoicingCommon):
@@ -12,6 +16,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         cls.partner_lu_dig = cls._create_partner_lu_dig()
         cls.partner_nl = cls._create_partner_nl()
         cls.partner_au = cls._create_partner_au()
+        cls.partner_fr = cls._create_partner_fr()
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -92,6 +97,21 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         })
 
     @classmethod
+    def _create_partner_fr(cls, **kwargs):
+        return cls.env['res.partner'].create({
+            **cls._create_partner_default_values(),
+            'name': 'partner_fr',
+            'street': "Rue Jean Jaurès, 42",
+            'zip': "75000",
+            'city': "Paris",
+            'vat': 'FR05677404089',
+            'company_registry': None,
+            'bank_ids': [Command.create({'acc_number': 'FR15001559627230', 'allow_out_payment': True})],
+            'country_id': cls.env.ref('base.fr').id,
+            **kwargs,
+        })
+
+    @classmethod
     def _create_mixed_early_payment_term(cls, **kwargs):
         return cls.env['account.payment.term'].create({
             'name': "2/7 Net 30",
@@ -100,6 +120,19 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'discount_percentage': 2,
             'discount_days': 7,
             'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
+            **kwargs,
+        })
+
+    @classmethod
+    def _create_early_payment_term(cls, **kwargs):
+        return cls.env['account.payment.term'].create({
+            'name': "2/7 Net 30",
+            'note': "Payment terms: 30 Days, 2% Early Payment Discount under 7 days",
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'early_pay_discount_computation': 'included',
             'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
             **kwargs,
         })
@@ -143,6 +176,10 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         subfolder = f'export/{subfolder_format}/{subfolder_document}/{subfolder_country}'
 
         self.assertTrue(invoice.ubl_cii_xml_id)
+
+        if 'EXTERNAL_MODE' in config['test_tags']:
+            self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
+
         self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
 
     # -------------------------------------------------------------------------
@@ -186,6 +223,50 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         if test_name:
             attachment = cls._import_invoice_as_attachment(test_name)
         return journal._create_document_from_attachment(attachment.id)
+
+    @classmethod
+    def _get_raw_mail_message_str(self, attachments, email_to, message_id=None):
+        """ Mock an incoming mail message
+        :param attachments: Odoo recordset of ir.attachment.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
 
 
 class TestUblCiiBECommon(TestUblCiiCommon):
@@ -249,3 +330,21 @@ class TestUblBis3Common(TestUblCiiCommon):
     def subfolders(cls):
         _subfolder_format, subfolder_document, subfolder_country = super().subfolders()
         return 'bis3', subfolder_document, subfolder_country
+
+
+class TestCiiFacturXCommon(TestUblCiiCommon):
+
+    @classmethod
+    def _create_partner_default_values(cls):
+        values = super()._create_partner_default_values()
+        values['invoice_edi_format'] = 'facturx'
+        return values
+
+    # -------------------------------------------------------------------------
+    # EXPORT HELPERS
+    # -------------------------------------------------------------------------
+
+    @classmethod
+    def subfolders(cls):
+        _subfolder_format, subfolder_document, subfolder_country = super().subfolders()
+        return 'facturx', subfolder_document, subfolder_country

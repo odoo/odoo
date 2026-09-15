@@ -577,7 +577,9 @@ export class Thread extends Record {
     async fetchNewMessages() {
         if (
             this.status === "loading" ||
-            (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
+            (!this.hasLoadingFailed &&
+                this.isLoaded &&
+                ["discuss.channel", "mail.box"].includes(this.model))
         ) {
             return;
         }
@@ -927,6 +929,13 @@ export class Thread extends Record {
         await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
             this.id,
         ]);
+        if (this.exists()) {
+            this.update({
+                self_member_id: undefined,
+                isLocallyPinned: false,
+                close_chat_window: true,
+            });
+        }
     }
 
     _getActualModelName() {

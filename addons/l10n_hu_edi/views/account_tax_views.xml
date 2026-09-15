@@ -8,8 +8,8 @@
             <field name="name" position="after">
                 <field name="l10n_hu_tax_type" invisible="country_code != 'HU'"/>
                 <field name="l10n_hu_tax_reason"
-                       invisible="country_code != 'HU' or l10n_hu_tax_type == 'VAT'"
-                       required="country_code == 'HU' and l10n_hu_tax_type not in [False, 'VAT']"/>
+                       invisible="country_code != 'HU' or l10n_hu_tax_type in ['VAT', 'DOMESTIC_REVERSE']"
+                       required="country_code == 'HU' and l10n_hu_tax_type not in [False, 'VAT', 'DOMESTIC_REVERSE']"/>
             </field>
         </field>
     </record>

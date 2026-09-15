@@ -53,7 +53,7 @@
                                 <li>I reckon I'm allowed to register this company.</li>
                             </ul>
                         </div>
-                        <div class="text-muted col" invisible="not display_itsme_login">
+                        <div class="text-muted col" invisible="1">
                             If you don't have Itsme, please contact
                             <a href="https://www.odoo.com/help" target="_blank">support</a>.
                         </div>
@@ -65,16 +65,11 @@
                 </sheet>
                 <footer>
 
-                    <!-- itsme auth button -->
-                    <button class="btn btn-secondary itsme_button"
+                    <button class="btn btn-primary"
                             name="button_register_with_itsme"
                             type="object"
                             invisible="not display_itsme_login">
-                            <img src="/account_peppol/static/img/itsme.svg"
-                                 id="itsme_logo"
-                                 alt="Itsme"
-                            />
-                        <b>Authentify with itsme</b>
+                        <b>Authenticate</b>
                     </button>
 
                     <!-- No auth buttons -->

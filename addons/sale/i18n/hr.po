@@ -26,16 +26,16 @@
 # Martin Trigaux, 2022
 # Matej Mijoč, 2022
 # Bole <bole@dajmi5.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Zvonimir Galić <zvonimir.galic@viavista.ba>, 2025, 2026.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-16 13:55+0000\n"
-"Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-05 21:42+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/sale/"
 "hr/>\n"
 "Language: hr\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -201,14 +201,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        u iznosu od\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        za Vašu narudžbu\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            je na čekanju.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -219,9 +218,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Nakon potvrde,\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                će ostati za uplatu.\n"
 "            </t>\n"
 "        </t>\n"
@@ -230,9 +229,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "                preostaje za uplatu.\n"
 "            </t>\n"
 "        </t>\n"
@@ -953,12 +952,12 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (s referencom: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        u iznosu od <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> je spremna za pregled.\n"
+"        u iznosu od <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> je spremna "
+"za pregled.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -1030,9 +1029,9 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (s referencom: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        u iznosu od <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> je dostupan.\n"
+"        u iznosu od <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> je "
+"dostupan.\n"
 "        <br/><br/>\n"
 "        Ne oklijevajte nas kontaktirati ako imate bilo kakvih pitanja.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -1280,8 +1279,7 @@ msgstr "Potvrđeni prodajni nalog zahtijeva datum potvrde."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
-"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
+msgstr "Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: sale
 #. odoo-python
@@ -1441,8 +1439,8 @@ msgid ""
 msgstr ""
 "Planovi aktivnosti koriste se za dodjeljivanje popisa aktivnosti u samo "
 "nekoliko klikova\n"
-"               npr. \"Raspored dostave\", \"Praćenje plaćanja "
-"narudžbe\", ...)"
+"               npr. \"Raspored dostave\", \"Praćenje plaćanja narudžbe\", "
+"...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2104,11 +2102,6 @@ msgstr "Poruka potvrde"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Povežite se sa svojim softverom!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Povežite svoj softver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3141,8 +3134,7 @@ msgstr "Uključeno"
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
-"Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
+msgstr "Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
 
 #. module: sale
 #. odoo-python
@@ -4499,8 +4491,7 @@ msgstr "Preračunaj sve poreze temeljno na ovoj fiskalnoj poziciji"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
-"Referenca dokumenta koji je generirao ovaj zahtjev za prodajnu narudžbu"
+msgstr "Referenca dokumenta koji je generirao ovaj zahtjev za prodajnu narudžbu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -6290,11 +6281,6 @@ msgid "sale order"
 msgstr "Prodajni nalog"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "za automatsko kreiranje ponuda."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "naučiti sve načine povezivanja vašeg softvera s"
@@ -6303,11 +6289,6 @@ msgstr "naučiti sve načine povezivanja vašeg softvera s"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "jedinice"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -6348,6 +6329,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "Povežite svoj softver"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "za automatsko kreiranje ponuda."
+
+#~ msgid "with"
+#~ msgstr "s"
 
 #, fuzzy
 #~ msgid "2023-12-31"

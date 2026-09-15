@@ -223,3 +223,40 @@ class TestResourceCalendar(TransactionCase):
                 (form.hours_per_week, form.hours_per_day),
                 (12, 4),
             )
+
+    def test_create_WS_when_company_two_weeks_calendar(self):
+        self.env.company.resource_calendar_id = False
+
+        calendar_two_week = self.env['resource.calendar'].create({
+            'name': 'Company Calendar',
+        })
+
+        calendar_two_week.company_id.resource_calendar_id = calendar_two_week
+        calendar_two_week.switch_calendar_type()
+
+        with Form(self.env['resource.calendar']) as calendar:
+            calendar.save()
+            self.assertEqual(len(calendar.attendance_ids_1st_week), 16)
+            self.assertEqual(len(calendar.attendance_ids_2nd_week), 16)
+            self.assertTrue(calendar.two_weeks_calendar)
+
+    def test_duration_switch_keeps_company_hours_on_two_weeks_calendar(self):
+        company_calendar = self.env.company.resource_calendar_id
+        company_calendar.attendance_ids.filtered(lambda a: a.day_period != 'morning').unlink()
+        company_calendar.attendance_ids.write({'hour_from': 9, 'hour_to': 18})
+        self.assertFalse(company_calendar.two_weeks_calendar)
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Two Weeks Calendar',
+            'attendance_ids': self.env['resource.calendar']._get_default_attendance_ids(self.env.company),
+        })
+        calendar.switch_calendar_type()
+        calendar.switch_based_on_duration()  # based on duration
+        calendar.switch_based_on_duration()  # back to fixed hours
+
+        self.assertEqual(
+            set(calendar.attendance_ids.filtered(lambda a: not a.display_type).mapped(
+                lambda a: (a.hour_from, a.hour_to))),
+            {(9.0, 18.0)},
+            "the working hours of the company calendar must be restored, not the default ones",
+        )

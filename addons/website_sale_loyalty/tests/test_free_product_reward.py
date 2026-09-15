@@ -116,3 +116,26 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 cart._get_claimable_and_showable_rewards(),
                 "Rewards should no longer be claimable if already claimed",
             )
+
+    def test_zero_priced_reward_line_does_not_block_checkout(self):
+        """
+        A reward line priced at 0 (e.g. a free gift whose product has no sale price) must not be
+        treated as a forbidden zero-priced product when `prevent_zero_price_sale` is set.
+        """
+        self.website.sudo().prevent_zero_price_sale = True
+        coupon = self.program.coupon_ids
+
+        website = self.website.with_user(self.website.user_id)
+        with MockRequest(website.env, website=website):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.sofa.product_tmpl_id, product_id=self.sofa.id, quantity=1
+            )
+            self.WebsiteSaleController.claim_reward(self.program.reward_ids.id, code=coupon.code)
+
+            response = self.WebsiteSaleController.shop_address()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            msg="The free gift must not be flagged as a zero-priced product and prevent checkout.",
+        )

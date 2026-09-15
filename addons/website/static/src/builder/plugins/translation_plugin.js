@@ -48,18 +48,15 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
+    static dependencies = ["history", "valueHistory"];
+    static shared = ["getElToTranslationInfoMap"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
-        after_replication_handlers: ({ targetEl }) => {
-            // Tag TOC navbar entries explicitly so the replicated
-            // translation reaches the save payload.
-            if (targetEl.classList.contains("o_translation_without_style")) {
-                targetEl.classList.add("o_dirty");
-            }
+        after_replication_handlers: ({ sourceEl, targetEl }) => {
+            targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
         },
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
@@ -193,6 +190,21 @@ export class TranslationPlugin extends Plugin {
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
+
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. For example, blog post title is such a placeholder.
+        const placeholderEls = editableEls.filter(
+            (el) =>
+                el.getAttribute("placeholder")?.includes("data-oe-translation-source-sha=") &&
+                !matchTag(el)
+        );
+        for (const el of placeholderEls) {
+            const translation = el.getAttribute("placeholder");
+            const match = translation.match(translationRegex);
+            el.setAttribute("placeholder", match[2]);
+        }
+
         for (const translatedAttr of translatedAttrs) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>
@@ -304,6 +316,7 @@ export class TranslationPlugin extends Plugin {
                     elToTranslationInfoMap: elToTranslationInfoMap,
                     addStep: this.dependencies.history.addStep,
                     applyCustomMutation: this.dependencies.history.applyCustomMutation,
+                    setValueProperty: this.dependencies.valueHistory.setValue,
                 });
             });
         }
@@ -317,6 +330,10 @@ export class TranslationPlugin extends Plugin {
             });
         }
         this.dispatchTo("mark_translatable_nodes", this.editableEls);
+    }
+
+    getElToTranslationInfoMap() {
+        return this.elToTranslationInfoMap;
     }
 
     updateTranslationMap(translateEl, translation, attrName) {

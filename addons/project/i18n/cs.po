@@ -17,31 +17,26 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Jiří Podhorecký, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Marek Jasanský <zahiro@ashtechnology.eu>, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:47+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 12:06+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/project/cs/"
-">\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/project/"
+"cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Všichni interní uživatelé a pozvaní uživatelé portálu"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -729,7 +724,9 @@ msgstr "Administrátor"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
 msgstr ""
 
 #. module: project
@@ -801,6 +798,11 @@ msgstr "Všechny úkoly"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Všichni interní uživatelé"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1183,8 +1185,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
-"Vyberte název úkolu <b></b> <i>(např. Návrh webových stránek, Nákup "
-"zboží...)</i>"
+"Vyberte název úkolu <b></b> <i>(např. Návrh webových stránek, Nákup zboží...)"
+"</i>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1753,8 +1755,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
-msgstr ""
-"Definujte kroky, kterými úkoly procházejí od vytvoření až po dokončení."
+msgstr "Definujte kroky, kterými úkoly procházejí od vytvoření až po dokončení."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_stage_action
@@ -5279,8 +5280,7 @@ msgstr "Sledujte čas strávený na projektech a úkolech"
 msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
-msgstr ""
-"Průhledné značky nejsou v zobrazení kanbanu projektů a úkolů viditelné."
+msgstr "Průhledné značky nejsou v zobrazení kanbanu projektů a úkolů viditelné."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__bimonthly
@@ -5465,7 +5465,7 @@ msgstr "Uživatelské nastavení"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
+msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project
@@ -5743,8 +5743,8 @@ msgid ""
 "your task.<br/>Let's save it manually."
 msgstr ""
 "Máte neuložené změny – žádné obavy! Odoo je bude při navigaci automaticky "
-"ukládat.<br/> Zde můžete tyto změny zahodit nebo ručně uložit svůj úkol.<br/"
-">Uložme jej ručně."
+"ukládat.<br/> Zde můžete tyto změny zahodit nebo ručně uložit svůj úkol.<br/>"
+"Uložme jej ručně."
 
 #. module: project
 #. odoo-javascript
@@ -5999,6 +5999,9 @@ msgstr "👤 Nepřiřazeno"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Soukromé"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Všichni interní uživatelé a pozvaní uživatelé portálu"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Neplatná pole: "

@@ -153,3 +153,31 @@ test("follow_relations option", async () => {
         message: "should not allow to follow relations",
     });
 });
+
+test("allow_properties option", async () => {
+    Contact._fields.contact_properties_definition = fields.PropertiesDefinition()
+    Lead._fields.lead_properties = fields.Properties({
+        definition_record: "contact_id",
+        definition_record_field: "contact_properties_definition",
+    })
+
+    await mountView({
+        type: "form",
+        resModel: "update.record.action",
+        arch: /* xml */ `
+            <form>
+                <field name="model"/>
+                <field name="update_path" widget="field_selector" options="{
+                    'model': 'model',
+                    'allow_properties': false,
+                }"/>
+            </form>
+        `,
+    });
+    await contains(".o_field_widget[name='model'] .o_input").edit("lead");
+    await contains(".o_field_widget[name='update_path'] .o_input").click();
+    expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
+        ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
+        { message: "should display fields of the specified model, except the properties field" }
+    );
+});

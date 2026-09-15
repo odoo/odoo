@@ -391,7 +391,7 @@ test("one2many in a list x2many non-editable use the right context", async () =>
     });
 
     await contains(".o_field_x2many_list .o_field_x2many_list_row_add a").click();
-    await contains("[name='trululu'] input").edit("new partner");
+    await contains("[name='trululu'] input").edit("new partner", { confirm: false });
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
     expect.verifySteps(["name_create form"]);
@@ -4584,8 +4584,9 @@ test("editable o2m with onchange and required field: delete an invalid line", as
     expect.verifySteps(["get_views", "web_read"]);
     await contains(".o_data_cell").click();
     await contains(".o_field_widget[name=product_id] input").clear();
+    await runAllTimers();
     // no onchange should be done as line is invalid
-    expect.verifySteps([]);
+    expect.verifySteps(["web_name_search"]);
     await contains(".o_list_record_remove").click();
     // onchange should have been done
     expect.verifySteps(["onchange"]);
@@ -6381,6 +6382,62 @@ test("one2many with x2many in form view (but not in list view)", async () => {
     await contains(".modal .modal-footer .btn-primary").click(); // save
 
     await clickSave();
+});
+
+test.tags("desktop");
+test("one2many with properties in form view but not in list view", async () => {
+    Partner._fields.definitions = fields.PropertiesDefinition();
+    Partner._records[0].definitions = [
+        {
+            name: "property_3",
+            string: "My Char 3",
+            type: "char",
+        },
+    ];
+    Turtle._fields.properties = fields.Properties({
+        string: "Properties",
+        searchable: false,
+        definition_record: "turtle_trululu",
+        definition_record_field: "definitions",
+    });
+    Turtle._records[1].turtle_trululu = 1;
+    Turtle._records[1].properties = {
+        property_3: "some property value",
+    };
+    Turtle._views.form = `
+        <form>
+            <field name="turtle_foo"/>
+            <field name="properties"/>
+            <field name="turtle_trululu"/>
+        </form>`;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="turtles">
+                        <list>
+                            <field name="turtle_foo"/>
+                        </list>
+                    </field>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    // Open a record and close once.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
+
+    // Open the same record and close again. This differs from the first time because the record has
+    // already been extended (extendRecord), and fake property fields have already been created.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
 });
 
 test.tags("desktop");

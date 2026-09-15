@@ -10,7 +10,7 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
+import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
@@ -79,6 +79,14 @@ describe("Selection collapsed", () => {
             });
         });
 
+        test("should correctly place cursor when backspacing inside a <t> tag", async () => {
+            await testEditor({
+                contentBefore: "<p><t>ab[]c</t></p>",
+                stepFunction: deleteBackward,
+                contentAfter: "<p><t>a[]c</t></p>",
+            });
+        });
+
         test("should delete the last character in a paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<p>abc[]</p>",
@@ -141,7 +149,7 @@ describe("Selection collapsed", () => {
                     '<p data-selection-placeholder=""><br></p>' +
                     '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>' +
                     '<p data-selection-placeholder=""><br></p>',
-                contentAfter: '<div><p>uv</p><br><span class="style">[]\u200B</span></div>',
+                contentAfter: '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>',
             });
         });
 
@@ -231,7 +239,7 @@ describe("Selection collapsed", () => {
                 },
                 contentAfterEdit:
                     '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
-                contentAfter: '<p>ab<span class="style">[]\u200B</span>ef</p>',
+                contentAfter: '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
             });
         });
 
@@ -596,6 +604,14 @@ describe("Selection collapsed", () => {
                 stepFunction: deleteBackward,
                 contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
                 contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
+            });
+        });
+
+        test("should not teleport cursor after image", async () => {
+            await testEditor({
+                contentBefore: `<div>a[]<img style="display: block" src="${base64Img}">b</div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div>[]<img style="display: block" src="${base64Img}">b</div>`,
             });
         });
     });
@@ -1713,7 +1729,7 @@ describe("Selection not collapsed", () => {
                 '<p data-selection-placeholder=""><br></p>' +
                 '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>' +
                 '<p data-selection-placeholder=""><br></p>',
-            contentAfter: '<div><p>ab <span class="style">[]\u200B</span> d</p></div>',
+            contentAfter: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
         });
     });
 
@@ -2274,7 +2290,7 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
+            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
         });
     });
 
@@ -2349,7 +2365,7 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>a<span class="style-class">[]\u200B</span>f</p>',
+            contentAfter: '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
         });
     });
 
@@ -2565,6 +2581,29 @@ describe("Selection not collapsed", () => {
             await insertText(editor, "nderful ");
             await tick(); // Wait for the selection change to be handled
             expect(getContent(el)).toBe("<p>wonderful []</p>");
+        });
+
+        test.tags("mobile");
+        test("should not break Gboard correction", async () => {
+            const dispatch = (type, eventInit) =>
+                manuallyDispatchProgrammaticEvent(editor.editable, type, eventInit);
+            const { editor, el } = await setupEditor("<p>Gxf[]</p>");
+            // Roughly as observed on Android Chrome with Gboard:
+            // - selection change
+            // - keydown event
+            // - input deleteContentBackward
+            // - keydown event
+            // - input insertText
+            const selection = editor.document.getSelection();
+            await dispatch("keydown", { key: "Unidentified" });
+            for (let i = 0; i < 2; i++) {
+                selection.modify("extend", "backward", "character");
+            }
+            await backspaceAndroid(editor);
+            await dispatch("keydown", { key: "Unidentified" });
+            await insertText(editor, "if ");
+            await tick(); // Wait for the selection change to be handled
+            expect(getContent(el)).toBe("<p>Gif []</p>");
         });
     });
 });

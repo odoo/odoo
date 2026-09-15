@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DevicesSynchronisation.prototype, {
     async processDynamicRecords(dynamicRecords) {
         const result = await super.processDynamicRecords(dynamicRecords);
-        if (!dynamicRecords["pos.order"]?.length) {
+        if (!dynamicRecords["pos.order"]?.length || !this.pos.config.module_pos_restaurant) {
             return result;
         }
         // Verify if there is only 1 order by table.

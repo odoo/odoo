@@ -23,7 +23,7 @@ class IrModel(models.Model):
 
         valid_models = self.search([]).filtered(
             lambda model: model.model in self.env
-            and not model.is_transient()
+            and not self.env[model.model].is_transient()
             and getattr(self.env[model.model], '_mailing_enabled', False)
         )
 

@@ -2,17 +2,17 @@
 # This file contains the translation of the following modules:
 # * sms_twilio
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-12 13:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-09-10 15:11+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "sms_twilio/ar/>\n"
 "Language: ar\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sms_twilio
 #. odoo-python
@@ -33,19 +33,19 @@ msgstr "%(failure_type)s: %(failure_reason)s"
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "'To' and 'From' numbers cannot be the same"
-msgstr ""
+msgstr "لا يمكن أن تكون أرقام \"إلى\" و\"من\" متطابقة"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'From' number is required to send a message"
-msgstr ""
+msgstr "يلزم وجود رقم \"المرسل\" لإرسال رسالة"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'To' phone number is required"
-msgstr ""
+msgstr "رقم المستلم مطلوب"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -62,7 +62,7 @@ msgstr "رقم تعريف الحساب"
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "An error occurred while fetching the numbers."
-msgstr ""
+msgstr "حدث خطأ أثناء استرداد الأرقام."
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_auth_token
@@ -74,7 +74,7 @@ msgstr "رمز المصادقة"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_authentication
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_authentication
 msgid "Authentication Error\""
-msgstr ""
+msgstr "خطأ في المصادقة\""
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_res_company
@@ -96,7 +96,7 @@ msgstr "تهيئة الإعدادات"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.res_config_settings_view_form
 msgid "Configure Twilio Account"
-msgstr ""
+msgstr "تهيئة حساب Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__country_id
@@ -185,7 +185,7 @@ msgstr "المُعرف"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
 msgid "Incorrect callback URL"
-msgstr ""
+msgstr "عنوان URL غير صحيح لصفحة إعادة التوجيه"
 
 #. module: sms_twilio
 #. odoo-python
@@ -194,8 +194,8 @@ msgid ""
 "Invalid Twilio Account SID: must only contain alphanumeric characters after "
 "'AC'."
 msgstr ""
-"رقم تعريف حساب Twilio غير صالح: يجب أن يحتوي فقط على أحرف أبجدية رقمية بعد "
-"”AC“."
+"رقم تعريف حساب Twilio غير صالح: يجب أن يحتوي فقط على أحرف أبجدية رقمية بعد ”"
+"AC“."
 
 #. module: sms_twilio
 #. odoo-python
@@ -238,7 +238,7 @@ msgstr "إشعارات الرسائل"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
 msgid "Missing From Number"
-msgstr ""
+msgstr "رقم المرسل غير موجود"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -262,7 +262,7 @@ msgstr "الرسائل النصية القصيرة الصادرة"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Phone Numbers"
-msgstr ""
+msgstr "أرقام الهواتف"
 
 #. module: sms_twilio
 #. odoo-python
@@ -300,12 +300,12 @@ msgstr "إرسال رسالة نصية قصيرة تجريبية"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__iap
 msgid "Send via Odoo"
-msgstr ""
+msgstr "إرسال عن طريق أودو"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__twilio
 msgid "Send via Twilio"
-msgstr ""
+msgstr "إرسال عبر Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__sequence
@@ -315,7 +315,7 @@ msgstr "التسلسل"
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__test_number
 msgid "Test Number"
-msgstr ""
+msgstr "رقم تجريبي"
 
 #. module: sms_twilio
 #: model:ir.model.fields,help:sms_twilio.field_sms_twilio_number__country_code
@@ -348,13 +348,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Trial Account Limitation"
-msgstr ""
+msgstr "قيود الحساب التجريبي"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio Authentication Error"
-msgstr ""
+msgstr "خطأ في المصادقة في Twilio"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_twilio_number
@@ -366,7 +366,7 @@ msgstr "رقم Twilio"
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Twilio SMS"
-msgstr ""
+msgstr "الرسائل النصية القصيرة باستخدام Twilio"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -377,7 +377,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__sms_twilio_sid
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__sms_twilio_sid
 msgid "Twilio SMS SID"
-msgstr ""
+msgstr "رقم تعريف المرسل (SID) لرسائل Twilio SMS"
 
 #. module: sms_twilio
 #. odoo-python
@@ -406,7 +406,7 @@ msgstr ""
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Update Account"
-msgstr ""
+msgstr "تحديث الحساب"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form

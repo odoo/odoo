@@ -71,7 +71,12 @@ class WebclientController(ThreadController):
                     as_thread=True,
                 )
             else:
-                store.add(thread, request_list=params["request_list"], as_thread=True)
+                request_list = params["request_list"]
+                if not request.env.user._is_internal() or not thread.sudo(False).with_context(
+                    allowed_company_ids=[]
+                ).has_access("read"):
+                    request_list = []
+                store.add(thread, request_list=request_list, as_thread=True)
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):

@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-01 09:33+0000\n"
+"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"PO-Revision-Date: 2026-08-07 22:29+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/sms/pl/>\n"
 "Language: pl\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -178,8 +178,8 @@ msgstr ""
 "                                    wiadomość wewnętrzna w historii "
 "wiadomości.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
+"                                <span invisible=\"sms_method != 'comment'\">"
+"\n"
 "                                    SMS zostanie wysłany jako SMS do "
 "odbiorców\n"
 "                                    szablonu i zostanie także opublikowany "
@@ -1461,8 +1461,8 @@ msgstr ""
 "Typ akcji serwera. Dostępne są następujące wartości:\n"
 "- \"Zaktualizuj zapis\": aktualizacja wartości rekordu.\n"
 "- \"Utwórz aktywność\": tworzenie aktywności (Dyskusje)\n"
-"- \"Wyślij Email\": opublikuj wiadomość, notatkę lub wyślij e-mail "
-"(Dyskusje)\n"
+"- \"Wyślij Email\": opublikuj wiadomość, notatkę lub wyślij e-mail (Dyskusje)"
+"\n"
 "- \"Wyślij SMS\": wysyłanie wiadomości SMS, rejestrowanie ich w dokumentach "
 "(SMS)- \"Dodaj/Usuń obserwujących\": dodawanie lub usuwanie obserwujących do "
 "zapisu (Dyskusje)\n"
@@ -1619,6 +1619,20 @@ msgstr ""
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
 msgstr "Twoje konto SMS zostało pomyślnie zarejestrowane."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your country is not supported due to sender registration legislation"
+msgstr ""
+"Twój kraj nie jest obsługiwany ze względu na przepisy dotyczące rejestracji "
+"nadawców"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your database is not activated"
+msgstr "Twoja baza danych nie jest aktywowana"
 
 #. module: sms
 #. odoo-python

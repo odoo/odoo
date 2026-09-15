@@ -203,6 +203,23 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.trackingMethodIsLot("123456789"),
+            {
+                content: "Check for self invoicing URL",
+                trigger: ".pos-receipt .portal-url",
+                run: ({ anchor }) => {
+                    const selfInvoicingURL = anchor.textContent;
+                    if (!selfInvoicingURL || selfInvoicingURL.includes("undefined")) {
+                        throw new Error(
+                            `Invalid self invoicing URL (contains undefined): ${selfInvoicingURL}`
+                        );
+                    }
+                    try {
+                        new URL(selfInvoicingURL);
+                    } catch {
+                        throw new Error(`Invalid self invoicing URL: ${selfInvoicingURL}`);
+                    }
+                },
+            },
         ].flat(),
 });
 

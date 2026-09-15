@@ -37,11 +37,23 @@ class ResPartner(models.Model):
     def _to_store_defaults(self, target):
         defaults = super()._to_store_defaults(target)
         if target.is_internal(self.env):
-            # sudo: res.users - to access other company's portal user leave date
-            defaults.append(
+            # sudo: access employee leave dates from other companies
+            defaults.extend([
+                Store.Many(
+                    "employee_ids",
+                    ["active", "company_id", "leave_date_to", "user_id"],
+                    sudo=True,
+                ),
                 Store.One(
                     "main_user_id",
-                    [Store.Many("employee_ids", "leave_date_to", sudo=True), "partner_id"],
+                    [
+                        Store.Many(
+                            "employee_ids",
+                            ["active", "company_id", "leave_date_to", "user_id"],
+                            sudo=True,
+                        ),
+                        "partner_id",
+                    ],
                 ),
-            )
+            ])
         return defaults

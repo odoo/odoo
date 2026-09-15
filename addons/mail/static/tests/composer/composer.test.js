@@ -879,6 +879,29 @@ test("composer: drop attachments", async () => {
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
 });
 
+test("composer: drop attachments on message in edition", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "my message",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input");
+    await dragenterFiles(".o-mail-Message-body", [file]);
+    await contains(".o-Dropzone");
+    await dropFiles(".o-Dropzone.o-mail-Composer-dropzone", [file]);
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)"
+    );
+});
+
 test("composer: add an attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -1941,4 +1964,40 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     cut(editor);
     await contains(editor.editable.querySelector("i.fa-hashtag"), { count: 0 });
     await contains(editor.editable, { textContent: "" });
+});
+
+test("discard stale mention when replacing it with a longer partner mention", async () => {
+    const pyEnv = await startServer();
+    const johnId = pyEnv["res.partner"].create({
+        email: "john@odoo.com",
+        name: "John",
+    });
+    const johnDoeId = pyEnv["res.partner"].create({
+        email: "john.doe@odoo.com",
+        name: "John Doe",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnId }),
+            Command.create({ partner_id: johnDoeId }),
+        ],
+    });
+
+    await start();
+    await openDiscuss(channelId);
+
+    await insertText(".o-mail-Composer-input", "@John");
+    await click(".o-mail-Composer-suggestion strong", { text: "John" });
+    await contains(".o-mail-Composer-input", { value: "@John " });
+    // Continue typing to replace the initially selected mention.
+    await press("Backspace");
+    await insertText(".o-mail-Composer-input", " Doe");
+    await click(".o-mail-Composer-suggestion strong", { text: "John Doe" });
+    await contains(".o-mail-Composer-input", { value: "@John Doe " });
+
+    await press("Enter");
+
+    await contains(".o-mail-Message a", { text: "@John Doe" });
 });

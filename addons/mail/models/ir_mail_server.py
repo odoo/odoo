@@ -17,14 +17,14 @@ class IrMail_Server(models.Model):
         string='Mail template using this mail server',
         readonly=True)
 
-    owner_user_id = fields.Many2one('res.users', 'Owner')
+    owner_user_id = fields.Many2one('res.users', 'Owner', copy=False)
 
     # Store the current time, and the number of emails we sent
     # Each minute, the time and the count will be reset
     # Used to throttle the number of emails we send for the personal
     # mail servers.
-    owner_limit_time = fields.Datetime('Owner Limit Time')
-    owner_limit_count = fields.Integer('Owner Limit Count')
+    owner_limit_time = fields.Datetime('Owner Limit Time', copy=False)
+    owner_limit_count = fields.Integer('Owner Limit Count', copy=False)
 
     _unique_owner_user_id = models.Constraint(
         "UNIQUE(owner_user_id)",

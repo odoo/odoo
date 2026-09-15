@@ -51,10 +51,11 @@ test("should insert a paragraph at end of editable and place cursor in it (table
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table></table>
+            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
             <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         ),
-        contentAfter: "<table></table><p>[]<br></p>",
+        contentAfter:
+            "<table><tbody><tr><td><div><br></div></td></tr></tbody></table><p>[]<br></p>",
     });
 });
 
@@ -81,10 +82,10 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
         },
         contentAfterEdit: unformat(`
             <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-            <table></table>
+            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
             <p data-selection-placeholder=""><br></p>
         `),
-        contentAfter: "[]<table></table>",
+        contentAfter: "[]<table><tbody><tr><td><div><br></div></td></tr></tbody></table>",
     });
 });
 
@@ -114,12 +115,13 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table></table>
+            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
             <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-            <table></table>
+            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
             <p data-selection-placeholder=""><br></p>`
         ),
-        contentAfter: "<table></table>[]<table></table>",
+        contentAfter:
+            "<table><tbody><tr><td><div><br></div></td></tr></tbody></table>[]<table><tbody><tr><td><div><br></div></td></tr></tbody></table>",
     });
 });
 
@@ -128,11 +130,11 @@ test("should insert a paragraph before the table, then one after it", async () =
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p><table></table><p data-selection-placeholder=""><br></p>`
+        `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
     );
     await simulateMouseClick(table);
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p><table></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 

@@ -20,4 +20,23 @@
         </field>
     </record>
 
+    <record id="sale_order_reinvoice_tree_view" model="ir.ui.view">
+        <field name="name">sale.order.list.reinvoice.expense</field>
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field eval="18" name="priority"/>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_untaxed" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+            </field>
+            <field name="amount_tax" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+            </field>
+            <field name="amount_total" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+            </field>
+        </field>
+    </record>
+
 </odoo>

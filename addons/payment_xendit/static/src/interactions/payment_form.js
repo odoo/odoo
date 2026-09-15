@@ -125,6 +125,7 @@ patch(PaymentForm.prototype, {
                 // Allow reusing tokens when the transaction should be tokenized.
                 is_multiple_use: processingValues['should_tokenize'],
                 amount: processingValues['rounded_amount'],
+                currency: processingValues['currency'],
             },
             async (err, token) =>
                 {
@@ -137,6 +138,7 @@ patch(PaymentForm.prototype, {
                     if (processingValues['should_tokenize']) {
                         Xendit.card.createAuthentication({
                             amount: processingValues['rounded_amount'],
+                            currency: processingValues['currency'],
                             token_id: token.id
                         }, async (err, result) => {
                             await this._xenditHandleResponse(err, result, processingValues, 'auth');

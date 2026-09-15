@@ -28,7 +28,7 @@
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d +1d')]"/>
                     </filter>
                     <separator/>
-                    <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="['|', ('has_template_ancestor', '=', True), ('project_id.is_template', '=', True)]"/>
+                    <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="[('has_template_ancestor', '=', True)]"/>
                     <group>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
@@ -214,6 +214,7 @@
                 'default_project_id': active_id,
                 'show_project_update': True,
                 'search_default_open_tasks': 1,
+                'display_milestone_deadline': True,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -374,7 +375,7 @@
                         <button name="action_recurring_tasks" type="object" invisible="not active or not recurrence_id or not allow_recurring_tasks" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-check"
+                        <button name="action_open_subtasks" type="object" class="oe_stat_button" icon="fa-check"
                             invisible="not id or subtask_count == 0"
                             context="{
                                 'default_project_id': project_id,
@@ -527,6 +528,7 @@
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_depend_on_count,
                                         'default_is_template': is_template,
+                                        'render_task_templates': False,
                                    }"
                                    widget="notebook_task_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">

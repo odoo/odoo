@@ -3,14 +3,15 @@
 # * event_booth_sale
 #
 # Translators:
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 02:37+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-08-10 11:18+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "event_booth_sale/ru/>\n"
 "Language: ru\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
@@ -357,6 +358,10 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
+"Значение «service_tracking» для шаблона товара %(product_template_name)s "
+"нельзя изменить, так как один из его вариантов привязан к категории стендов "
+"мероприятия %(event_booth_category_name)s. Значение должно оставаться «Стенд "
+"мероприятия»."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -375,6 +380,8 @@ msgid ""
 "The product, %(product_name)s , is used for Event Booth, it must have "
 "service_tracking set to \"Event Booth\"."
 msgstr ""
+"Товар %(product_name)s используется для стендов мероприятия, поэтому "
+"параметр «service_tracking» должен иметь значение «Стенд мероприятия»."
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -411,6 +418,9 @@ msgid ""
 "because it is already assigned to %(booth_category_name)s. The "
 "service_tracking must remain 'event_booth'."
 msgstr ""
+"Нельзя изменить параметр «service_tracking» для товара %(product_name)s, так "
+"как он уже привязан к %(booth_category_name)s. Значение должно оставаться "
+"'event_booth'."
 
 #. module: event_booth_sale
 #. odoo-python

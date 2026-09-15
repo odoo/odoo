@@ -26,9 +26,6 @@ export class EatingLocationPage extends Component {
     // In the self, we don't want to display presets that have service_at table. Except if the clients are in
     // restaurant (they scanned QR Code and have a table_identifier in the URL) or if the self is in KioskMode.
     get presets() {
-        const all = this.selfOrder.models["pos.preset"].getAll();
-        return this.router.getTableIdentifier() != null || this.selfOrder.kioskMode
-            ? all
-            : all.filter((item) => item.service_at !== "table");
+        return this.selfOrder.availablePresets;
     }
 }

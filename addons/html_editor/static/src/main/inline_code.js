@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
-import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -24,9 +24,15 @@ export class InlineCodePlugin extends Plugin {
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
         toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
+            const hasInlineCode = targetedNodes.some((node) =>
+                closestElement(node, "code.o_inline_code")
+            );
             if (
                 targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, "code.o_inline_code"))
+                hasInlineCode &&
+                targetedNodes.every(
+                    (node) => closestElement(node, "code.o_inline_code") || !isVisible(node)
+                )
             ) {
                 return DISABLED_NAMESPACE;
             }

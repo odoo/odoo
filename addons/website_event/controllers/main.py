@@ -284,10 +284,7 @@ class WebsiteEventController(http.Controller):
             }
         })
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
-        """ After (slot and) tickets selection, render attendee(s) registration form.
-        Slot and tickets availability check already performed in the template. """
+    def _prepare_registration_new_values(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         slot_id = post.get('event_slot_id', False)
         # Availability check needed as the total number of tickets can exceed the event/slot available tickets
@@ -320,14 +317,24 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+
+        return {
             'tickets': tickets,
             'event_slot_id': slot_id,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
             'limit_check': limit_check,
-        })
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        """ After (slot and) tickets selection, render attendee(s) registration form.
+        Slot and tickets availability check already performed in the template. """
+        values = self._prepare_registration_new_values(event, **post)
+        if not values:
+            return values
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -342,8 +349,12 @@ class WebsiteEventController(http.Controller):
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
-            if int(ticket_id) not in event.event_ticket_ids.ids and len(event.event_ticket_ids.ids) > 0:
-                raise UserError(_("This ticket is not available for sale for this event"))
+            ticket_id = int(ticket_id)
+            # ticket_id=0 means "no ticket selected", only valid on events without tickets
+            if ticket_id or event.event_ticket_ids:
+                ticket = event.event_ticket_ids.filtered(lambda t: t.id == ticket_id)
+                if not ticket or not ticket.is_launched or ticket.is_expired:
+                    raise UserError(_("This ticket is not available for sale for this event"))
         registrations = {}
         general_answer_ids = []
         general_identification_answers = {}

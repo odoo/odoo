@@ -393,14 +393,17 @@ class Base(models.AbstractModel):
         prioritize_email = getattr(self, '_mail_defaults_to_email', False)
         found = self._message_add_default_recipients()
 
-        # ban emails: never propose odoobot nor aliases
+        # ban emails: never propose aliases
         all_emails = []
         for defaults in found.values():
             all_emails += defaults['email_to_lst']
             if with_cc:
                 all_emails += defaults['email_cc_lst']
             all_emails += defaults['partners'].mapped('email_normalized')
-        ban_emails = [self.env.ref('base.partner_root').email_normalized]
+        ban_emails = []
+        # ban emails: don't propose odoobot unless another active partner has the same email
+        if not self.env['res.partner'].search_count([('email_normalized', '=', self.env.ref('base.partner_root').email_normalized)]):
+            ban_emails.append(self.env.ref('base.partner_root').email_normalized)
         ban_emails += self.env['mail.alias.domain'].sudo()._find_aliases(
             [email_key(e) for e in all_emails if e and e.strip()]
         )
@@ -465,6 +468,8 @@ class Base(models.AbstractModel):
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             # SUPERUSER because of a read on res.users that would crash otherwise
             for record_su in self.sudo():
+                if record_su.user_id.partner_id == self.env.user.partner_id:
+                    continue
                 suggested[record_su.id]['partners'] += record_su.user_id.partner_id
 
         # add customers

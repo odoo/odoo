@@ -4,6 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { ProjectTemplateButtons } from "./project_template_buttons";
+import { user } from "@web/core/user";
 
 export class ProjectTaskTemplateDropdown extends Component {
     static template = "project.TemplateDropdown";
@@ -40,23 +41,39 @@ export class ProjectTaskTemplateDropdown extends Component {
         this.action = useService("action");
         this.orm = useService("orm");
         this.state = useState({ taskTemplates: [] });
+        this.isProjectManager = false;
         onWillStart(this.onWillStart);
+    }
+
+    get taskTemplateButtonClasses() {
+        let classes = 'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center';
+        if (this.isProjectManager) {
+            classes += ' pe-0';
+        }
+        return classes;
     }
 
     async onWillStart() {
         if (this.props.projectId) {
-            this.state.taskTemplates = await this.orm
-                .cache({
-                    type: "disk",
-                    update: "always",
-                    callback: (result, hasChanged) => {
-                        if (hasChanged) {
-                            this.state.taskTemplates = result;
-                        }
-                    },
-                })
-                .call("project.project", "get_template_tasks", [this.props.projectId]);
+            await Promise.all([
+                user.hasGroup("project.group_project_manager").then((res) => (this.isProjectManager = res)),
+                this._fetchTasktemplates(),
+            ]);
         }
+    }
+
+    async _fetchTasktemplates() {
+        this.state.taskTemplates = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (result, hasChanged) => {
+                    if (hasChanged) {
+                        this.state.taskTemplates = result;
+                    }
+                },
+            })
+            .call("project.project", "get_template_tasks", [this.props.projectId]);
     }
 
     async createTaskFromTemplate(templateId) {

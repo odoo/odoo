@@ -7,7 +7,8 @@ import logging
 import werkzeug
 
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
 
 
@@ -44,6 +45,7 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     @api.model
     def _default_employee_id(self):
@@ -357,13 +359,12 @@ class HrExpense(models.Model):
 
             managers = (
                 expense.manager_id
-                | employee.expense_manager_id
-                | employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
+                | employee._get_expense_managers()
             )
             if is_all_approver:
                 managers |= self.env.user
             if expense.employee_id.id in expenses_employee_ids_under_user_ones:
-                    managers |= self.env.user
+                managers |= self.env.user
             if not is_own_expense and self.env.user in managers:
                 # If Approver-level or designated manager, can edit other people expense
                 expense.is_editable = True
@@ -822,7 +823,8 @@ class HrExpense(models.Model):
         res = super().write(vals)
 
         if vals.get('state') == 'approved' or vals.get('approval_state') == 'approved':
-            self._check_can_approve()
+            # filter out auto approved expenses
+            self.filtered(lambda expense: expense.manager_id - expense.employee_id.user_id or expense.employee_id.expense_manager_id)._check_can_approve()
         elif vals.get('state') == 'refused' or vals.get('approval_state') == 'refused':
             self._check_can_refuse()
 
@@ -1065,8 +1067,8 @@ class HrExpense(models.Model):
                     'email_to': manager.employee_id.work_email or manager.email,
                     'subject': _("New expenses waiting for your approval"),
                 })
-            if new_mails:
-                self.env['mail.mail'].sudo().create(new_mails).send()
+        if new_mails:
+            self.env['mail.mail'].sudo().create(new_mails).send()
 
     @api.model
     def get_empty_list_help(self, help_message):
@@ -1135,7 +1137,7 @@ class HrExpense(models.Model):
         expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
-            expenses_autovalidated._do_approve(check=False)
+            expenses_autovalidated.with_context(validate_analytic=True)._do_approve()
         self.sudo().update_activities_and_mails()
 
     def _can_be_autovalidated(self):
@@ -1146,20 +1148,12 @@ class HrExpense(models.Model):
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
         self._check_can_approve()
-        for expense in self:
-            expense._validate_distribution(
-                account=expense.account_id.id,
-                product=expense.product_id.id,
-                business_domain='expense',
-                company_id=expense.company_id.id,
-            )
-
         duplicates = self.duplicate_expense_ids.filtered(lambda exp: exp.state in {'submitted', 'approved', 'posted', 'paid', 'in_payment'})
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
             action['context'] = {'default_expense_ids': duplicates.ids}
             return action
-        self._do_approve(False)
+        self._do_approve()
 
     def action_refuse(self):
         """ Refuse an expense with a reason """
@@ -1223,7 +1217,18 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
+        if not self.has_access('write') and self.employee_id.user_id != self.env.user:
+            raise AccessError(self.env._("You don't have the access rights to modify this expense."))
+        attachment_ids = [attachment_id for attachment_id in kwargs.get('attachment_ids', []) if attachment_id]  # Filter out falsy values
+        if not attachment_ids:
+            # If uploading the document fails due to the checks in the create method of ir.attachment, the
+            # attachment_ids will contains [None], so we need to check here to raise the UserError.
+            raise UserError(self.env._("You can't add an attachment to an expense once it has been approved."))
+
+        attachment = self.env['ir.attachment'].browse(attachment_ids[-1:])
+        user_expenses = self.filtered(lambda expense: expense.employee_id.user_id == self.env.user)
+        user_expenses.sudo()._message_set_main_attachment_id(attachment, force=True)
+        (self - user_expenses)._message_set_main_attachment_id(attachment, force=True)
 
     @api.model
     def _get_untitled_expense_name(self, *args):
@@ -1297,12 +1302,15 @@ class HrExpense(models.Model):
         # - To Submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
         # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
-        fetched_expenses = self._read_group(
-            [
-                ('employee_id', 'in', self.env.user.employee_ids.ids),
-                '|', ('state', 'in', ('draft', 'submitted')),
-                     '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
-            ], ['state'], ['total_amount:sum'])
+        base_domain = [
+            ('employee_id', 'child_of', self.env.user.employee_ids.ids),
+            '|', ('state', 'in', ('draft', 'submitted')),
+            '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+        ]
+        if domain := self.env.context.get('domain'):
+            base_domain = Domain.AND([base_domain, domain])
+
+        fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
@@ -1404,9 +1412,8 @@ class HrExpense(models.Model):
 
             elif not is_hr_admin:
                 current_managers = (
-                        expense_employee.expense_manager_id
-                        | expense_employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
-                        | expense.manager_id
+                    expense_employee._get_expense_managers()
+                    | expense.manager_id
                 )
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
                     current_managers |= self.env.user
@@ -1438,10 +1445,14 @@ class HrExpense(models.Model):
             raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
 
     def _do_approve(self, check=True):
-        if check:
-            self._check_can_approve()
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
         for expense in expenses_to_approve:
+            expense._validate_distribution(
+                account=expense.account_id.id,
+                product=expense.product_id.id,
+                business_domain='expense',
+                company_id=expense.company_id.id,
+            )
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,
@@ -1534,7 +1545,7 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.post.wizard',
             'res_id': self.env['hr.expense.post.wizard'].create({}).id,
             'target': 'new',
-            'context': self.with_context(active_ids=self.ids).env.context,
+            'context': self.with_context(active_ids=self.ids, validate_analytic=True).env.context,
         }
 
     def _post_without_wizard(self):
@@ -1568,7 +1579,7 @@ class HrExpense(models.Model):
         Creation of the account moves for the company paid expenses.
         -> Create an account payment (we only "log" the already paid expense so it can be reconciled)
         """
-        self = self.with_context(clean_context(self.env.context))  # remove default_*
+        self = self.with_context(clean_context(self.env.context), project_id=False)  # noqa: PLW0642  # remove default_* and project_id
         company_account_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
         moves_sudo = self.env['account.move'].sudo()
 

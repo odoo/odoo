@@ -6,7 +6,7 @@ import {_t} from "@web/core/l10n/translation";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 
-class WhatIsPeppol extends Component {
+export class WhatIsPeppol extends Component {
     static props = { ...standardActionServiceProps };
     static template = "account_peppol.WhatIsPeppol";
 
@@ -15,8 +15,12 @@ class WhatIsPeppol extends Component {
         this.actionService = useService("action");
     }
 
+    get shouldRegisterOnClose() {
+        return this.props.action.context.action_on_activate.res_model === "peppol.registration";
+    }
+
     closeButtonLabel() {
-        if (this.props.action.context.action_on_activate.res_model === "peppol.registration") {
+        if (this.shouldRegisterOnClose) {
             return _t("Activate")
         } else {
             return _t("Got it !")

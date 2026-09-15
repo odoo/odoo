@@ -8,12 +8,13 @@ from psycopg2.errors import SerializationFailure
 
 from odoo import http
 from odoo.exceptions import AccessError, ConcurrencyError, UserError
-from odoo.http import request
+from odoo.http import fragment_to_query_string, request
 from odoo.tools import replace_exceptions, str2bool
 
 from odoo.addons.web.controllers.utils import ensure_db
 
 _logger = logging.getLogger(__name__)
+_f2qs_logger = _logger.getChild('test_fragment_to_query_string')
 
 
 CT_JSON = {'Content-Type': 'application/json; charset=utf-8'}
@@ -254,3 +255,67 @@ class TestHttp(http.Controller):
     @http.route('/test_http/httprequest_environ', type='http', auth='none')
     def request_environ(self):
         return json.dumps(list(request.httprequest.environ.keys()))
+
+    # =====================================================
+    # fragment to query string
+    # =====================================================
+    @http.route('/test_http/f2qs')
+    @fragment_to_query_string
+    def f2qs(self, **kwargs):
+        return request.make_json_response(kwargs)
+
+    @http.route('/test_http/f2qs/step1/no-operation-to-perform', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test(self, **kwargs):
+        assert kwargs['race'] == 'Asgard', (
+            "?race=Asgard was ok, fragment_to_query_string shouldnt intervene!"
+        )
+        _f2qs_logger.info("step 1: passed")
+        step2 = '/test_http/f2qs/step2/1-var-in-fragment#race=Asgard'
+        return request.redirect(step2)
+
+    @http.route('/test_http/f2qs/step2/1-var-in-fragment', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_simple_fragment(self, **kwargs):
+        assert kwargs['race'] == 'Asgard', (
+            'fragment_to_query_string should transform #race=Asgard into ?race=Asgard'
+        )
+        _f2qs_logger.info("step 2: passed")
+        # go to step 3 of test
+        step3 = '/test_http/f2qs/step3/3-var-in-fragment#race=Asgard&name=Thor&place=Orilla'
+        return request.redirect(step3)
+
+    @http.route('/test_http/f2qs/step3/3-var-in-fragment', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_3_args_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard'
+            and kwargs['name'] == 'Thor'
+            and kwargs['place'] == 'Orilla'
+        ), (
+            "#race=Asgard&name=Thor&place=Orilla "
+            "should have been transformed into "
+            "?race=Asgard&name=Thor&place=Orilla"
+        )
+        _f2qs_logger.info("step 3: passed")
+        # go to step 4 of test
+        step4 = (
+            '/test_http/f2qs/step4/'
+            'empty-query-3-var-in-frag?#race=Asgard&name=Thor&place=Orilla'
+        )
+        return request.redirect(step4)
+
+    @http.route('/test_http/f2qs/step4/empty-query-3-var-in-frag', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_empty_query_with_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard'
+            and kwargs['name'] == 'Thor'
+            and kwargs['place'] == 'Orilla'
+        ), (
+            "?#race=Asgard&name=Thor&place=Orilla "
+            "should have been transformed into "
+            "?race=Asgard&name=Thor&place=Orilla"
+        )
+        _f2qs_logger.info("step 4: passed")
+        return ''  # The end

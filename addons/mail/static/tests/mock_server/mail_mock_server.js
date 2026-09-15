@@ -276,6 +276,12 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
+registerRoute("/mail/rtc/channel/upgrade_connection", channel_upgrade_connection);
+/** @type {RouteCallback} */
+async function channel_upgrade_connection() {
+    // tests have no SFU server to hand out, so the call stays peer to peer
+}
+
 registerRoute("/discuss/channel/members", discuss_channel_members);
 /** @type {RouteCallback} */
 async function discuss_channel_members(request) {
@@ -579,10 +585,12 @@ async function mail_link_preview(request) {
     const { message_id } = await parseRequestParams(request);
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     const link = createDocumentFragmentFromContent(markup(message.body)).querySelector(
-        "a[href^='https://tenor.com'], a[href^='https://make-link-preview.com']"
+        "a[href^='https://tenor.com'], a[href^='https://make-link-preview.com'], a[href^='https://media.tenor.com']"
     );
     if (link) {
-        const isGifPreview = link.href.startsWith("https://tenor.com");
+        const isGifPreview =
+            link.href.startsWith("https://tenor.com") ||
+            link.href.startsWith("https://media.tenor.com");
         const linkPreviewId = MailLinkPreview.create({
             og_description: isGifPreview ? "Click to view the GIF" : "test description",
             og_image: isGifPreview ? link.href : undefined,
@@ -769,21 +777,28 @@ async function mail_message_update_content(request) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
     }
+    if ("subject" in update_data) {
+        msg_values.subject = update_data.subject;
+    }
     MailMessage.write([message_id], msg_values);
+    const res = {
+        attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
+        body: ["markup", message.body],
+        parent_id: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
+        partner_ids: mailDataHelpers.Store.many(
+            this.env["res.partner"].browse(message.partner_ids),
+            makeKwArgs({ fields: ["avatar_128", "name"] })
+        ),
+        pinned_at: message.pinned_at,
+        message_link_preview_ids: message.message_link_preview_ids,
+    };
+    if ("subject" in update_data) {
+        res.subject = message.subject;
+    }
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
-        new mailDataHelpers.Store(MailMessage.browse(message.id), {
-            attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
-            body: ["markup", message.body],
-            parent_id: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
-            partner_ids: mailDataHelpers.Store.many(
-                this.env["res.partner"].browse(message.partner_ids),
-                makeKwArgs({ fields: ["avatar_128", "name"] })
-            ),
-            pinned_at: message.pinned_at,
-            message_link_preview_ids: message.message_link_preview_ids,
-        }).get_result()
+        new mailDataHelpers.Store(MailMessage.browse(message.id), res).get_result()
     );
     return new mailDataHelpers.Store(
         MailMessage.browse(message_id),

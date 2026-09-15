@@ -11,6 +11,7 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Introduce error handlers in the component.
@@ -138,6 +139,9 @@ export function useTrackedAsync(asyncFn, options = {}) {
         } catch (error) {
             state.status = "error";
             state.result = error;
+            if (error instanceof ConnectionLostError) {
+                throw error;
+            }
         }
     };
 

@@ -19,7 +19,8 @@
                 <field name="name">Tax on domestic sales by tax rates</field>
                 <field name="name@fi">Vero kotimaan myynneistä verokannoittain</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
-                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance</field>
+                <!-- "sale_14_and_13_5" refers to both 14% and 13.5% taxes. Will only be 13.5 on 01/01/2026.-->
+                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14_and_13_5.balance + sale_10.balance</field>
                 <field name="code">domestic_sales</field>
                 <field name="children_ids">
                     <record id="tax_report_sales_25_5_and_24" model="account.report.line">
@@ -55,15 +56,36 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_sales_14" model="account.report.line">
-                        <field name="name">14% tax</field>
-                        <field name="name@fi">14 %:n vero</field>
-                        <field name="code">sale_14</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_sales_14_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">-fi_302</field>
+                    <record id="tax_report_sales_14_and_13_5" model="account.report.line">
+                        <field name="name">14% tax + 13.5% tax</field>
+                        <field name="name@fi">14 %:n vero + 13.5 %:n vero</field>
+                        <field name="code">sale_14_and_13_5</field>
+                        <field name="foldable">True</field>
+                        <field name="aggregation_formula">sale_14.balance + sale_13_5.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_sales_14" model="account.report.line">
+                                <field name="name">14% tax</field>
+                                <field name="name@fi">14 %:n vero</field>
+                                <field name="code">sale_14</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_sales_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-fi_302</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_sales_13_5" model="account.report.line">
+                                <field name="name">13.5% tax</field>
+                                <field name="name@fi">13.5 %:n vero</field>
+                                <field name="code">sale_13_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_sales_13_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-fi_321</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
@@ -158,7 +180,8 @@
                 <field name="name@fi">Maksettava vero / Palautukseen oikeuttava vero (-)</field>
                 <field name="code">payable_refundable_tax</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
-                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
+                <!-- "sale_14_and_13_5" refers to both 14% and 13.5% taxes. Will only be 13.5 on 01/01/2026.-->
+                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14_and_13_5.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
             </record>
             <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-Turnover subject to zero tax rate</field>

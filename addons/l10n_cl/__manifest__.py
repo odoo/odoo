@@ -44,7 +44,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
     ],
     'demo': [
         'demo/partner_demo.xml',
-        'demo/demo_company.xml',
+        'demo/company_demo.xml',
     ],
     'license': 'LGPL-3',
 }

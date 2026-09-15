@@ -4,7 +4,7 @@ from odoo import _, models, Command
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
@@ -47,10 +47,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # 3. Run constraints
         vals['document_node'] = document_node
-        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
-
         template = self._get_document_template(vals)
-        nsmap = self._get_document_nsmap(vals)
+        nsmap = document_node['_nsmap'] = self._get_document_nsmap(vals)
+        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
 
         # 4. Render the XML
         xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
@@ -1114,8 +1113,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
+        vat = self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        country_code = self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cac:Country/cbc:IdentificationCode', tree)
+        if not vat and country_code:
+            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
+                if field == 'vat' and (vat := self._find_value(f".//cac:{role}Party//cac:PartyIdentification/cbc:ID[@schemeID='{scheme_id}']", tree)):
+                    break
         return {
-            'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'vat': vat,
             'phone': self._find_value(f'.//cac:{role}Party//cac:Contact/cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party//cac:Contact/cbc:ElectronicMail', tree),
             'name': self._find_value(f'.//cac:{role}Party//cac:PartyTaxScheme/cbc:RegistrationName', tree) or
@@ -1305,7 +1310,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         of each quantity in the invoice.
         """
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
-            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
             return 'invoice', 1

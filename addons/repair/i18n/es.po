@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:47+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-08-06 02:24+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/repair/"
 "es/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: repair
 #. odoo-python
@@ -263,7 +263,7 @@ msgid ""
 msgstr ""
 "Como ya se han utilizado otras unidades de medida (por ejemplo, %"
 "(problem_uom)s) distintas de %(uom)s para este producto, no se puede cambiar "
-"la unidad de medida. Si desea cambiarla, archive el producto y cree uno "
+"la unidad de medida. Si deseas cambiarla, archiva el producto y crea uno "
 "nuevo."
 
 #. module: repair
@@ -448,6 +448,7 @@ msgid "Details"
 msgstr "Detalles"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_product_product__display_name
 #: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
@@ -527,6 +528,7 @@ msgid "Has Uncomplete Moves"
 msgstr "Tiene movimientos incompletos"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_product_product__id
 #: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
@@ -626,6 +628,11 @@ msgstr "Jane Smith"
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "John Doe"
 msgstr "John Doe"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -965,7 +972,7 @@ msgstr "Propiedades"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
 msgid "Quant"
-msgstr "Cuanto"
+msgstr "Cantidad"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quantity
@@ -1252,8 +1259,7 @@ msgstr "Establecer a borrador"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
-"Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
+msgstr "Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1776,9 +1782,6 @@ msgstr "sale_order_id"
 
 #~ msgid "Journal Entry"
 #~ msgstr "Asiento contable"
-
-#~ msgid "Journal Item"
-#~ msgstr "Apunte contable"
 
 #~ msgid "No Invoice"
 #~ msgstr "Sin factura"

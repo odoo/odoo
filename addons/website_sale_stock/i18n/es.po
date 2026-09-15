@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-12-20 09:48+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-08-26 17:50+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/es/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -71,7 +71,7 @@ msgstr "Ajustes de configuración"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr "Continuar venta"
+msgstr "Seguir vendiendo"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
@@ -89,8 +89,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
-"Modo de disponibilidad por defecto se aplica en productos almacenables "
-"recién creados. Esto se puede cambiar a nivel del producto."
+"Modo de disponibilidad predeterminado establecido para los productos "
+"almacenables recién creados. Puede modificarse a nivel del producto."
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
@@ -125,7 +125,7 @@ msgstr "Nombre para mostrar"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Get notified when back in stock"
-msgstr "Reciba una notificación cuando vuelva a estar disponible"
+msgstr "Recibe una notificación cuando vuelva a estar disponible"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
@@ -149,26 +149,26 @@ msgstr "Correo electrónico no válido"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/interactions/website_sale.js:0
 msgid "Invalid email"
 msgstr "Correo electrónico no válido"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr "Valores por defecto para Inventario"
+msgstr "Valores predeterminados de la aplicación Inventario"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
-msgstr "Pídala ahora"
+msgstr "Pedir ahora"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
-msgstr "Fuera de stock"
+msgstr "Agotado"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -179,13 +179,19 @@ msgstr "Sin stock"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr "Fuera de stock"
+msgstr "Agotado"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr "Mensaje de falta de stock"
+msgstr "Mensaje que aparecerá cuando no haya existencias"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -217,7 +223,8 @@ msgstr "Etiqueta del producto"
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
-msgstr "Producto: enviar correo electrónico sobre disponibilidad de productos"
+msgstr ""
+"Producto: enviar correo electrónico sobre la disponibilidad de productos"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -248,7 +255,7 @@ msgstr "Mostrar la cantidad disponible"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr "Mostrar cantidad disponible"
+msgstr "Mostrar la cantidad disponible"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -271,8 +278,8 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
-"Algunos productos dejaron de estar disponibles, así que su cesta se ha "
-"actualizado. Sentimos las molestias."
+"Algunos productos han dejado de estar disponibles y se ha actualizado la "
+"cesta. Sentimos las molestias."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -284,6 +291,12 @@ msgstr "Ya está disponible el siguiente producto."
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "El producto \"%(product_name)s\" ya está disponible"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -345,7 +358,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "e.g. 'Will be back soon'"
-msgstr "Por ejemplo, «Volveré pronto»"
+msgstr "p. ej., «volverá a estar disponible pronto»"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -373,7 +386,7 @@ msgstr "cuando se agote el stock"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
-msgstr "youremail@gmail.com"
+msgstr "tucorreo@gmail.com"
 
 #~ msgid "<span invisible=\"not show_availability\">Units</span>"
 #~ msgstr "<span invisible=\"not show_availability\">Unidades</span>"

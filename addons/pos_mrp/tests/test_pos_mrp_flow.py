@@ -1,5 +1,3 @@
-from unittest import skip
-
 import odoo
 
 from odoo.addons.pos_mrp.tests.common import CommonPosMrpTest
@@ -21,12 +19,16 @@ class TestPosMrp(CommonPosMrpTest):
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
         self.assertEqual(order.lines[0].total_cost, 20.0)
 
-    @skip('Temporary to fast merge new valuation')
     def test_bom_kit_with_kit_invoice_valuation(self):
+        self.env.company.inventory_valuation = 'real_time'
         self.product_product_kit_one.categ_id = self.category_fifo_realtime
         self.product_product_kit_two.categ_id = self.category_fifo_realtime
         self.product_product_kit_three.categ_id = self.category_fifo_realtime
         self.product_product_kit_four.categ_id = self.category_fifo_realtime
+        (self.product_product_comp_one + self.product_product_comp_two).write({
+            'categ_id': self.category_fifo_realtime.id,
+            'is_storable': True,
+        })
 
         order, _ = self.create_backend_pos_order({
             'order_data': {
@@ -45,34 +47,36 @@ class TestPosMrp(CommonPosMrpTest):
         self.assertEqual(order.lines.filtered(
             lambda l: l.product_id == self.product_product_kit_three).total_cost, 30.0)
         accounts = self.product_product_kit_three.product_tmpl_id.get_product_accounts()
-        debit_interim_account = accounts['stock_output']
+        debit_valuation_account = accounts['stock_valuation']
         credit_expense_account = accounts['expense']
         invoice_accounts = order.account_move.line_ids.mapped('account_id.id')
-        self.assertTrue(debit_interim_account.id in invoice_accounts)
+        self.assertTrue(debit_valuation_account.id in invoice_accounts)
         self.assertTrue(credit_expense_account.id in invoice_accounts)
         expense_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == credit_expense_account.id)
         self.assertEqual(expense_line.filtered(
             lambda l: l.product_id == self.product_product_kit_three).credit, 0.0)
         self.assertEqual(expense_line.filtered(
             lambda l: l.product_id == self.product_product_kit_three).debit, 30.0)
-        interim_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == debit_interim_account.id)
-        self.assertEqual(interim_line.filtered(
+        valuation_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == debit_valuation_account.id)
+        self.assertEqual(valuation_line.filtered(
             lambda l: l.product_id == self.product_product_kit_three).credit, 30.0)
-        self.assertEqual(interim_line.filtered(
+        self.assertEqual(valuation_line.filtered(
             lambda l: l.product_id == self.product_product_kit_three).debit, 0.0)
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
-    @skip('Temporary to fast merge new valuation')
     def test_bom_kit_different_uom_invoice_valuation(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
            the price unit is correctly computed on the invoice lines.
         """
         self.env.user.group_ids += self.env.ref('uom.group_uom')
+        self.env.company.inventory_valuation = 'real_time'
 
         # Edit kit product and component product
         self.product_product_kit_one.categ_id = self.category_fifo_realtime
         self.product_product_comp_one.standard_price = 12000
         self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_dozen').id
+        self.product_product_comp_one.categ_id = self.category_fifo_realtime
+        self.product_product_comp_one.is_storable = True
 
         # Edit kit product quantity
         self.bom_one_line.bom_line_ids[0].product_qty = 6.0
@@ -95,13 +99,13 @@ class TestPosMrp(CommonPosMrpTest):
         accounts = self.product_product_kit_one.product_tmpl_id.get_product_accounts()
         expense_line = order.account_move.line_ids.filtered(
             lambda l: l.account_id.id == accounts['expense'].id)
-        interim_line = order.account_move.line_ids.filtered(
-            lambda l: l.account_id.id == accounts['stock_output'].id)
+        valuation_line = order.account_move.line_ids.filtered(
+            lambda l: l.account_id.id == accounts['stock_valuation'].id)
         expense_line = expense_line.filtered(lambda l: l.product_id == self.product_product_kit_one)
-        interim_line = interim_line.filtered(lambda l: l.product_id == self.product_product_kit_one)
+        valuation_line = valuation_line.filtered(lambda l: l.product_id == self.product_product_kit_one)
 
         self.assertEqual(expense_line.debit, 6000.0)
-        self.assertEqual(interim_line.credit, 6000.0)
+        self.assertEqual(valuation_line.credit, 6000.0)
 
     def test_bom_kit_order_total_cost_with_shared_component(self):
         self.bom_one_line.product_tmpl_id.categ_id = self.category_average
@@ -400,10 +404,76 @@ class TestPosMrp(CommonPosMrpTest):
         })
         self.assertEqual(order.lines[0].total_cost, 1000.0)
 
+    def test_pos_picking_kit_qty(self):
+        """
+        Tests that when ordering a kit and its component, the move quantity in the generated
+        picking is the kit's quantity and not the component's.
+        """
+        kit, component = self.env['product.template'].create([
+            {
+                'name': 'Kit Product',
+                'available_in_pos': True,
+                'list_price': 10.0,
+                'type': 'consu',
+                'is_storable': True,
+            },
+            {
+                'name': 'Kit Component',
+                'available_in_pos': True,
+                'list_price': 5.0,
+                'tracking': 'lot',
+                'type': 'consu',
+                'is_storable': True,
+            }
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component.product_variant_id.id,
+                'product_qty': 0.5,
+            })],
+        })
+        self.pos_config_usd.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
+            ],
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_paid': 20.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
 
-# TODO : Merge this test with the other class when it is not skipped anymore
-@odoo.tests.tagged('post_install', '-at_install')
-class TestPosMrpTemp(CommonPosMrpTest):
+        self.assertEqual(order.picking_ids.move_ids[0].quantity, 2)
+        self.assertEqual(order.picking_ids.move_ids[1].quantity, 0.5)
+
     def test_bom_kit_different_uom_invoice_valuation_no_invoice(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
            the price unit is correctly computed on the invoice lines.
@@ -438,8 +508,133 @@ class TestPosMrpTemp(CommonPosMrpTest):
         accounts = self.product_product_kit_one.product_tmpl_id.get_product_accounts()
         expense_line = current_session.move_id.line_ids.filtered(
             lambda l: l.account_id.id == accounts['expense'].id)
-        interim_line = current_session.move_id.line_ids.filtered(
+        valuation_line = current_session.move_id.line_ids.filtered(
             lambda l: l.account_id.id == accounts['stock_valuation'].id)
 
         self.assertEqual(expense_line.debit, 1000.0)
-        self.assertEqual(interim_line.credit, 1000.0)
+        self.assertEqual(valuation_line.credit, 1000.0)
+
+    def test_kit_with_lot_tracked_component_multiple_orders(self):
+        """
+        Tests that ordering the same kit product across multiple lines/orders in a
+        session does not raise a singleton error when closing the session, since
+        _get_lot_line_qty must sum quantities across all matching order lines
+        instead of accessing .qty on a single record.
+        """
+
+        product_a = self.env['product.template'].create({
+            'name': 'Product A - Lot Tracked',
+            'available_in_pos': True,
+            'list_price': 5.0,
+            'tracking': 'lot',
+            'type': 'consu',
+        })
+
+        kit_product = self.env['product.template'].create({
+            'name': 'Kit with Lot Tracked Component',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'type': 'consu',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': product_a.product_variant_id.id,
+                'product_qty': 2.0,
+            })],
+        })
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        current_session.update_stock_at_closing = True
+
+        order_1 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': product_a.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 5.0,
+                    'price_subtotal_incl': 5.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot_a_1',
+                    })],
+                }),
+            ],
+            'amount_total': 5.0,
+            'amount_tax': 0.0,
+            'amount_paid': 5.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_1.ids, "active_id": order_1.id}
+        order_payment_1 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_1.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_1.with_context(**payment_context).check()
+
+        order_2 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit_product.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+            ],
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_2.ids, "active_id": order_2.id}
+        order_payment_2 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_2.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_2.with_context(**payment_context).check()
+
+        order_3 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': product_a.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot_a_2',
+                    })],
+                }),
+                Command.create({
+                    'product_id': kit_product.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+            ],
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_paid': 20.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_3.ids, "active_id": order_3.id}
+        order_payment_3 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_3.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_3.with_context(**payment_context).check()
+
+        # Close the PoS session - this should not raise a singleton error
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed')

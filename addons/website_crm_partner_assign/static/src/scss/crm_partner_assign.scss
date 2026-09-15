@@ -1,6 +1,7 @@
-.o_wcrm_short_description {
-    max-height: 100px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+.o_wcrm_short_description .o_editable {
+    &:focus, &[data-oe-type] {
+        min-height: 0.8em;
+        min-width: 8px;
+        display: inline-block;
+    }
 }

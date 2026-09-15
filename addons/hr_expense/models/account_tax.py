@@ -1,32 +1,25 @@
-# -*- coding: utf-8 -*-
-
-from odoo import models
+from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    def _hook_compute_is_used(self, taxes_to_compute):
-        # OVERRIDE in order to fetch taxes used in expenses
+    hr_expense_ids = fields.Many2many(
+        comodel_name='hr.expense',
+        relation='expense_tax',
+        column1='tax_id',
+        column2='expense_id',
+        copy=False,
+        readonly=True,
+    )
 
-        used_taxes = super()._hook_compute_is_used(taxes_to_compute)
-        taxes_to_compute -= used_taxes
-
-        if taxes_to_compute:
-            self.env['hr.expense'].flush_model(['tax_ids'])
-            self.env.cr.execute("""
-                SELECT id
-                FROM account_tax
-                WHERE EXISTS(
-                    SELECT 1
-                    FROM expense_tax AS exp
-                    WHERE account_tax.id = exp.tax_id
-                ) AND id IN %s
-            """, [tuple(taxes_to_compute)])
-
-            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
-
-        return used_taxes
+    @api.depends('hr_expense_ids')
+    def _compute_is_used(self):
+        super()._compute_is_used()
+        self.sudo().search([
+            ('id', 'in', self.filtered(lambda t: not t.is_used).ids),
+            ('hr_expense_ids', '!=', False),
+        ]).is_used = True
 
     def _prepare_base_line_for_taxes_computation(self, record, **kwargs):
         # EXTENDS 'account'

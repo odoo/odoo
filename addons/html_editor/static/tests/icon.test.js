@@ -188,7 +188,7 @@ test("Can set icon color", async () => {
     await waitFor(".o_color_button[data-color='#6BADDE']");
     await click(".o_color_button[data-color='#6BADDE']");
     await expectElementCount(".o_font_color_selector", 0); // selector closed
-    await waitFor(".o-we-toolbar .o-select-color-foreground [style*='#6badde']");
+    await waitFor(".o-we-toolbar .o-select-color-foreground [style*='#6BADDE']");
     expect(getContent(el)).toBe(
         `<p>\ufeff[<span class="fa fa-glass" contenteditable="false" style="color: rgb(107, 173, 222);">\u200b</span>]\ufeff</p>`
     );

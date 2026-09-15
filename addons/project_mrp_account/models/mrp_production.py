@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class MrpProduction(models.Model):
@@ -31,3 +32,25 @@ class MrpProduction(models.Model):
                 production.move_raw_ids._create_analytic_move()
                 production.workorder_ids._create_or_update_analytic_entry()
         return res
+
+    def _validate_analytic_distribution(self):
+        for production in self:
+            # Pass the produced product so applicabilities filtered by product_categ_id
+            plans = self.env['account.analytic.plan'].sudo().with_company(production.company_id).get_relevant_plans(
+                business_domain='manufacturing_order',
+                company_id=production.company_id.id,
+                product=production.product_id.id,
+            )
+            missing_plan_names = [
+                plan['name'] for plan in plans
+                if plan['applicability'] == 'mandatory' and not production.project_id[plan['column_name']]
+            ]
+            if missing_plan_names:
+                raise ValidationError(_(
+                    "The Project linked to the Manufacturing Order is missing a mandatory distribution for the analytic plan(s) %(missing_plan_names)s.",
+                    missing_plan_names=', '.join(missing_plan_names),
+                ))
+
+    def action_confirm(self):
+        self._validate_analytic_distribution()
+        return super().action_confirm()

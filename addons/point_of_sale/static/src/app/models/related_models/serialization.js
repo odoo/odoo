@@ -56,7 +56,7 @@ const deepSerialization = (
                     if (childRecord.isSynced && childRecord._dirty) {
                         toUpdate.push(childRecord);
 
-                        if (!opts.keepCommands) {
+                        if (!opts.keepCommands && !opts.keepDirty) {
                             childRecord._dirty = false;
                         }
                     } else if (!childRecord.isSynced) {
@@ -101,7 +101,13 @@ const deepSerialization = (
                 const processRecords = (records, cmdCode) => {
                     for (const { id, parentId } of records) {
                         const isAlreadyDeleted = serialized[relatedModel]?.["_deleted_" + id];
-                        if (parentId === record.id && !isAlreadyDeleted) {
+                        // A record cannot be both linked and removed: something re-read the
+                        // parent in between, bringing this record back, so the pending removal
+                        // is stale and must be dropped instead of unlinking the live record.
+                        const isStillLinked = record[fieldName].some(
+                            (childRecord) => childRecord.id === id
+                        );
+                        if (parentId === record.id && !isAlreadyDeleted && !isStillLinked) {
                             const isCascadeDelete =
                                 record.models[relatedModel]?.fields[field.inverse_name]?.ondelete;
                             if (isCascadeDelete) {
@@ -178,7 +184,7 @@ const deepSerialization = (
         res[key] = getValue();
     }
 
-    if (!opts.keepCommands) {
+    if (!opts.keepCommands && !opts.keepDirty) {
         record._dirty = false;
     }
 

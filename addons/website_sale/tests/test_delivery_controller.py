@@ -80,3 +80,48 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         self.assertEqual(
             self.empty_cart._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
         )
+
+    def test_recompute_cart_recomputes_delivery_rate(self):
+        delivery_product = self.env['product.product'].create({
+            'name': 'Delivery Fee',
+            'type': 'service',
+            'sale_ok': False,
+            'purchase_ok': False,
+        })
+        carrier = self.env['delivery.carrier'].create({
+            'name': 'Free over 15',
+            'delivery_type': 'base_on_rule',
+            'product_id': delivery_product.id,
+            'website_published': True,
+            'price_rule_ids': [
+                Command.create({
+                    'operator': '>=',
+                    'max_value': 15,
+                    'variable': 'price',
+                    'list_base_price': 0,
+                }),
+                Command.create({
+                    'operator': '<',
+                    'max_value': 15,
+                    'variable': 'price',
+                    'list_base_price': 10,
+                }),
+            ],
+        })
+        order = self.empty_cart
+        order.order_line = [
+            Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1.0,
+            }),
+        ]
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+            order = request.cart
+            order.partner_id.write(self.dummy_partner_address_values)
+            order._set_delivery_method(carrier)
+            self.assertEqual(order.amount_delivery, 0.0)
+
+            self.product.list_price = 10.0
+            order._recompute_cart()
+
+        self.assertEqual(order.amount_delivery, 10.0)

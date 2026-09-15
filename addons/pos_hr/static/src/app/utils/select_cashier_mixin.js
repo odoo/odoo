@@ -118,6 +118,9 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         }
 
         if (login && employee) {
+            if (!pos.canLoginCashier(employee)) {
+                return false;
+            }
             pos.hasLoggedIn = true;
             pos.setCashier(employee);
         }

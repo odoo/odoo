@@ -1,7 +1,7 @@
 Odoo Point of Sale
 -----------------------------
 
-Odoo's <a href="https://www.odoo.com/app/point-of-sale-shop">Point of Sale</a>
+Odoo's Point of Sale
 introduces a super clean interface with no installation required that runs
 online and offline on modern hardwares.
 

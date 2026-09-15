@@ -8,11 +8,11 @@
 :where(main:has(.oe_website_sale.container-fluid)) {
     .o_wsale_comparison_bottom_bar > .container {
         max-width: unset;
-    }
 
-    ul {
-        @media screen and (min-width: 1920px) {
-            max-width: 75%;
+        ul {
+            @media screen and (min-width: 1920px) {
+                max-width: 75%;
+            }
         }
     }
 }
@@ -116,7 +116,7 @@
         width: 5rem;
     }
 
-    a[title="Compare products"] .badge {
+    a.o_wsale_compare_btn .badge {
         --badge-color: var(--btn-hover-bg);
         --badge-bg: var(--btn-color);
     }

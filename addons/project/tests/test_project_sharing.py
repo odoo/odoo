@@ -333,12 +333,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         # However, cache is updated, but nothing is written.
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"),
+            Task.env.cr.savepoint() as sp,
+        ):
             task = Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.exists(), "Task should still be there, no delete is sent")
             sp.rollback()
-        with self.env.cr.savepoint() as sp:
+        with (
+            self.assertRaises(AccessError),
+            Task.env.cr.savepoint() as sp,
+        ):
             self.task_no_collabo.parent_id = self.task_no_collabo.create({'name': 'parent collabo'})
             task = Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
@@ -364,12 +370,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Same thing but using context defaults
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
             Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"),
+            Task.env.cr.savepoint() as sp,
+        ):
             task = Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertNotEqual(self.task_tag.name, 'Bar')
             sp.rollback()
-        with Task.env.cr.savepoint() as sp:
+        with (
+            self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"),
+            Task.env.cr.savepoint() as sp
+        ):
             Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_tag.exists())
@@ -737,3 +749,40 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(task.state, '1_done', "The portal user with edit rights should be able to mark the task as done.")
         next_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
         self.assertTrue(next_task, "The next occurrence of the recurrent task should be created.")
+
+    def test_portal_collaborator_cannot_transfer_task_between_shared_projects(self):
+        """ Test external collaborator cannot transfer an existing task from one shared
+            project to the other.
+
+            Test Cases:
+            ==========
+            1) Share `project_cows` and `project_portal` in edit mode with the portal user.
+            2) Check the portal user can create a task in each of the two projects.
+            3) Check the portal user cannot write `project_id` on a task to move it
+               to the other shared project.
+            4) Check the portal user cannot set `project_id` directly in the vals of
+               a `create` call either.
+        """
+        self.project_cows.write({
+            'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})],
+        })
+        self.project_cows.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.project_portal.write({
+            'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})],
+        })
+        self.project_portal.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+
+        Task = self.env['project.task'].with_user(self.user_portal)
+
+        task_in_cows = Task.with_context(default_project_id=self.project_cows.id).create({'name': 'Task in Cows'})
+        self.assertEqual(task_in_cows.project_id, self.project_cows, "The portal user should be able to create a task in the Cows project.")
+
+        task_in_portal = Task.with_context(default_project_id=self.project_portal.id).create({'name': 'Task in Portal'})
+        self.assertEqual(task_in_portal.project_id, self.project_portal, "The portal user should be able to create a task in the Portal project.")
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to transfer a task from one project to another."):
+            task_in_cows.with_context(project_sharing_create=True).write({'project_id': self.project_portal.id})
+        self.assertEqual(task_in_cows.project_id, self.project_cows, "The task should still belong to its original project.")
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to set project_id directly through create vals."):
+            Task.with_context(project_sharing_create=True).create({'name': 'foo', 'project_id': self.project_portal.id})

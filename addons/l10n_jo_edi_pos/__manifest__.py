@@ -9,7 +9,7 @@ Jordan Accounting EDI for POS
 Provides electronic invoicing for Jordan in the POS.
 """,
     "category": "Accounting/Localizations/EDI",
-    "license": "OEEL-1",
+    "license": "LGPL-3",
     "depends": ["l10n_jo_edi", "pos_edi_ubl"],
     "demo": ["demo/demo_company.xml"],
     "data": [

@@ -41,6 +41,67 @@ test("getProductPrice", async () => {
     expect(comp.getProductPrice()).toBe(400);
 });
 
+test("getProductPrice uses getTaxDetails with order fiscal position", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const order = store.currentOrder;
+    const productTemplate = models["product.template"].get(5);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+    const outPreset = models["pos.preset"].get(2);
+    const fpStrip = models["account.fiscal.position"].get(2);
+
+    store.config.default_fiscal_position_id = false;
+    outPreset.fiscal_position_id = fpStrip;
+    order.setPreset(outPreset);
+
+    const price = productTemplate.getPrice(
+        order.pricelist_id,
+        1,
+        0,
+        false,
+        productTemplate.product_variant_ids[0]
+    );
+    const taxDetails = productTemplate.getTaxDetails({
+        overridedValues: {
+            price,
+            fiscalPosition: order.fiscal_position_id,
+            quantity: comp.state.qty,
+        },
+    });
+
+    expect(comp.getProductPrice()).toBe(taxDetails.total_included);
+    expect(comp.getProductPrice()).toBe(100);
+
+    const taxDetailsWithoutFp = productTemplate.getTaxDetails({
+        overridedValues: {
+            price,
+            fiscalPosition: false,
+            quantity: comp.state.qty,
+        },
+    });
+    expect(taxDetailsWithoutFp.total_included).toBe(115);
+});
+
+test("getProductPrice matches cart line after take-out preset", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const order = store.currentOrder;
+    const productTemplate = models["product.template"].get(5);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+    const outPreset = models["pos.preset"].get(2);
+    const fpStrip = models["account.fiscal.position"].get(2);
+
+    store.config.default_fiscal_position_id = false;
+    outPreset.fiscal_position_id = fpStrip;
+    order.setPreset(outPreset);
+
+    expect(comp.getProductPrice()).toBe(100);
+
+    await store.addToCart(productTemplate, 1);
+    const line = order.lines.at(-1);
+    expect(line.displayPrice).toBe(comp.getProductPrice());
+});
+
 describe("getProductPrice with variants", () => {
     test("With attribute create_variant='always'", async () => {
         const store = await setupSelfPosEnv();
@@ -116,4 +177,21 @@ test("isAddToCartEnabled", async () => {
     // Product unavailability
     product.self_order_available = false;
     expect(comp.isAddToCartEnabled()).toBe(false);
+});
+
+test("hide attribute with single 'is_custom' value", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(51);
+    const attributeLines = product.attribute_line_ids;
+    const comp = await mountWithCleanup(ProductPage, {
+        props: { productTemplate: product },
+    });
+    const attributeHelper = comp.state.selectedValues[product.id];
+    expect(attributeLines.length).toBeGreaterThan(attributeHelper.availableAttributes.size);
+    expect(comp.isAddToCartEnabled()).toBe(false);
+    attributeHelper.selectAttribute(
+        attributeLines[0],
+        attributeLines[0].product_template_value_ids[1]
+    );
+    expect(comp.isAddToCartEnabled()).toBe(true);
 });

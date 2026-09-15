@@ -32,6 +32,7 @@ export class SelfOrder extends Reactive {
         super();
         this.ready = this.setup(...args).then(() => this);
     }
+    orderReceiptComponent = OrderReceipt;
 
     async setup(
         env,
@@ -92,15 +93,8 @@ export class SelfOrder extends Reactive {
             }
         });
         if (this.config.self_ordering_mode === "kiosk") {
-            this.data.connectWebSocket("STATUS", ({ status }) => {
-                if (status === "closed") {
-                    this.pos_session = [];
-                    this.ordering = false;
-                } else {
-                    // reload to get potential new settings
-                    // more easier than RPC for now
-                    window.location.reload();
-                }
+            this.data.connectWebSocket("STATUS", async ({ status }) => {
+                await this.handleKioskSessionStatusChange(status);
             });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
@@ -149,7 +143,7 @@ export class SelfOrder extends Reactive {
                 return;
             }
             const productTemplate = product.product_tmpl_id;
-            if (productTemplate.isConfigurable()) {
+            if (this.isProductConfigurable(productTemplate)) {
                 this.router.navigate("product", { id: productTemplate.id });
                 return;
             }
@@ -165,6 +159,16 @@ export class SelfOrder extends Reactive {
             initLNA(this.notification);
         } else {
             odoo.use_lna = false;
+        }
+    }
+    async handleKioskSessionStatusChange(status) {
+        if (status === "closed") {
+            this.pos_session = [];
+            this.ordering = false;
+        } else {
+            // reload to get potential new settings
+            // more easier than RPC for now
+            window.location.reload();
         }
     }
 
@@ -243,7 +247,7 @@ export class SelfOrder extends Reactive {
             if (
                 combo_item_ids.length > 1 ||
                 combo.qty_max > 1 ||
-                combo_item_ids[0]?.product_id.isConfigurable()
+                this.isProductConfigurable(combo_item_ids[0]?.product_id)
             ) {
                 return { show: true, selectedCombos: [] };
             }
@@ -257,6 +261,19 @@ export class SelfOrder extends Reactive {
             });
         }
         return { show: false, selectedCombos };
+    }
+
+    isProductConfigurable(product) {
+        if (!product) {
+            return false;
+        }
+        if (!this.kioskMode) {
+            return product.isConfigurable();
+        }
+        return product.attribute_line_ids.some(
+            (a) =>
+                a.product_template_value_ids.length > 1 || a.attribute_id.display_type === "multi"
+        );
     }
 
     async addToCart(
@@ -297,11 +314,19 @@ export class SelfOrder extends Reactive {
             throw new Error("No access token provided for confirmation page");
         }
 
+        // If the order uses a preset with a mail template, send the receipt to the customer via email
+        const order = this.models["pos.order"].find((o) => o.access_token === access_token);
+        if (order.preset_id?.raw?.mail_template_id) {
+            await this.sendReceiptToCustomer(order);
+        }
+
         this.router.navigate("confirmation", {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
-        this.printKioskChanges(access_token);
+        if (this.kioskMode) {
+            this.printKioskChanges(access_token);
+        }
         this.resetCategorySelection();
     }
 
@@ -352,9 +377,9 @@ export class SelfOrder extends Reactive {
             return;
         }
 
-        // When no payment methods redirect to confirmation page
-        // the client will be able to pay at counter
-        if (paymentMethods.length === 0) {
+        // Redirects users directly to the order confirmation page if no payment methods are available or if the total order amount is zero.
+        // Allows customers to pay at the counter when no payment option is configured.
+        if (!(paymentMethods.length && order.priceIncl)) {
             let screenMode = "pay";
 
             if (orderHasChanges) {
@@ -521,10 +546,6 @@ export class SelfOrder extends Reactive {
     }
 
     async printKioskChanges(access_token = "") {
-        if (!this.kioskMode) {
-            return;
-        }
-
         const d = new Date();
         let hours = "" + d.getHours();
         hours = hours.length < 2 ? "0" + hours : hours;
@@ -600,19 +621,17 @@ export class SelfOrder extends Reactive {
     }
 
     async initMobileData() {
-        if (this.config.self_ordering_mode !== "qr_code") {
-            if (
-                this.session &&
-                this.access_token &&
-                this.config.self_ordering_mode !== "consultation"
-            ) {
-                await this.getUserDataFromServer();
-                this.ordering = true;
-            }
+        if (
+            this.session &&
+            this.access_token &&
+            this.config.self_ordering_mode !== "consultation"
+        ) {
+            await this.getUserDataFromServer();
+            this.ordering = true;
+        }
 
-            if (!this.ordering) {
-                return;
-            }
+        if (!this.ordering) {
+            return;
         }
     }
 
@@ -803,6 +822,11 @@ export class SelfOrder extends Reactive {
                 openOrder.recomputeChanges();
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
+            const order = result["pos.order"]?.[0];
+            // If the order is paid and uses a preset with a mail template, send the receipt to the customer via email with attachment
+            if (order?.state === "paid" && order.preset_id?.raw?.mail_template_id) {
+                this.sendReceiptToCustomer(order);
+            }
         } catch (error) {
             this.handleErrorNotification(
                 error,
@@ -916,19 +940,14 @@ export class SelfOrder extends Reactive {
     }
 
     getProductPriceInfo(productTemplate, product) {
-        const pricelist = this.currentOrder.preset_id?.pricelist_id || this.config.pricelist_id;
-        const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-
-        if (!product) {
-            product = productTemplate;
-        }
-
-        // Taxes computation.
         const order = this.currentOrder;
-        const taxesData = product.getTaxDetails({
+        const pricelist = order.preset_id?.pricelist_id || this.config.pricelist_id;
+        const productVariant = product || productTemplate.product_variant_ids[0];
+        const price = productTemplate.getPrice(pricelist, 1, 0, false, productVariant);
+        const taxesData = (productVariant || productTemplate).getTaxDetails({
             overridedValues: {
                 price,
-                fiscalPosition: order?.fiscal_position_id || false,
+                fiscalPosition: order.fiscal_position_id || false,
             },
         });
         return { pricelist_price: price, ...taxesData };
@@ -966,8 +985,16 @@ export class SelfOrder extends Reactive {
         link.click();
     }
 
+    get availablePresets() {
+        const presets = this.models["pos.preset"].getAll();
+
+        return this.router.getTableIdentifier() != null || this.kioskMode
+            ? presets
+            : presets.filter((preset) => preset.service_at !== "table");
+    }
+
     hasPresets() {
-        return this.config.use_presets && this.models["pos.preset"].length > 1;
+        return this.config.use_presets && this.availablePresets.length > 1;
     }
 
     get orderLineNotSend() {
@@ -995,6 +1022,40 @@ export class SelfOrder extends Reactive {
             return `url('/web/image/ir.attachment/${imageId}/raw')`;
         }
         return "none";
+    }
+
+    async generateTicketImage(order, basicReceipt = false) {
+        return await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                order: order,
+                basic_receipt: basicReceipt,
+            },
+            { addClass: "pos-receipt-print p-3" }
+        );
+    }
+
+    async sendReceiptToCustomer(order) {
+        if (!order?.preset_id?.raw?.mail_template_id) {
+            return;
+        }
+        const fullTicketImage = ["paid", "done"].includes(order.state)
+            ? await this.generateTicketImage(order)
+            : null;
+        const basicTicketImage = this.config.basic_receipt
+            ? await this.generateTicketImage(order, true)
+            : null;
+        try {
+            await rpc("/pos-self-order/send_self_order_receipt", {
+                access_token: this.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+                fullTicketImage,
+                basicTicketImage,
+            });
+        } catch (error) {
+            this.handleErrorNotification(error);
+        }
     }
 }
 

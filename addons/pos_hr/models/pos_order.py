@@ -18,4 +18,10 @@ class PosOrder(models.Model):
                 order.cashier = order.user_id.name
 
     def _prepare_pos_log(self, body):
-        return super()._prepare_pos_log(body) + Markup("<br/>") + _("Cashier %s", self.cashier)
+        employee_id = self.env.context.get('current_cashier_id')
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.exists():
+            cashier = employee.name
+        else:
+            cashier = self.session_id.employee_id.name if self.session_id.employee_id else self.cashier
+        return Markup("%s<br/>%s") % (super()._prepare_pos_log(body), _("Cashier %s", cashier))

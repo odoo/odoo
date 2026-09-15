@@ -56,6 +56,7 @@ class TestModuleManifest(BaseCase):
             'installable': True,
             'images': [],
             'images_preview_theme': {},
+            'kpi_providers': [],
             'license': 'MIT',
             'live_test_url': '',
             'name': f'Temp {self.module_name}',

@@ -240,6 +240,14 @@ class AccountEdiFormat(models.Model):
         try:
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, certificate_sudo)
         except UserError:
+            _logger.warning(
+                "ZATCA_ERROR: ZATCA signing failed for move=%s (id=%s, journal_id=%s, company_id=%s, api_mode=%s)",
+                invoice.name,
+                invoice.id,
+                invoice.journal_id.id,
+                invoice.company_id.id,
+                invoice.company_id.l10n_sa_api_mode,
+            )
             return ({
                 'error': _("Something went wrong. Please retry, and if that does not work, then onboard the journal again."),
                 'blocking_level': 'error',
@@ -345,7 +353,7 @@ class AccountEdiFormat(models.Model):
 
         # Set 'l10n_sa_edi_is_production' to True upon the first invoice submission in Production mode
         if not invoice.company_id.l10n_sa_edi_is_production:
-            invoice.company_id.l10n_sa_edi_is_production = invoice.company_id.l10n_sa_api_mode == 'prod'
+            invoice.company_id.sudo().l10n_sa_edi_is_production = invoice.company_id.l10n_sa_api_mode == 'prod'
 
         # Save the submitted/returned invoice XML content once the submission has been completed successfully
         invoice._l10n_sa_log_results(cleared_xml.encode(), response_data)

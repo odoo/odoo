@@ -333,7 +333,7 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
         }
     }
     const newInputEl = oldFieldEl.querySelector("input");
-    if (newInputEl) {
+    if (newInputEl && previousName === newName && previousType === newType) {
         newInputEl.dataset.fillWith = dataFillWith;
     }
 }

@@ -134,7 +134,7 @@ class WebsitePage(models.Model):
             url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
             copy_param['url'] = self.env['website'].get_unique_path(url)
 
-        new_page = page.copy(copy_param)
+        new_page = page.with_context(check_translations=True).copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
@@ -308,6 +308,14 @@ class WebsitePage(models.Model):
             'view_id': self.env.ref('website.view_view_form_extend').id,
         }
 
+    def open_website_url(self):
+        default_website = self.env.ref('website.default_website', raise_if_not_found=False)
+        current_website_id = self.env['website'].get_current_website()
+        website_id = self.website_id.id
+        if current_website_id != default_website or website_id != default_website.id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(self.website_url, False, website_id)
+
     # website cache
 
     @api.model
@@ -352,7 +360,13 @@ class WebsitePage(models.Model):
         the cache serves the correct version of a page based on specific
         parameters like user language or currency.
         """
-        return (request.website.id, request.lang.code, request.httprequest.path, request.session.debug)
+        return (
+            request.website.id,
+            request.lang.code,
+            request.httprequest.path,
+            request.session.debug,
+            request.website._allConsentsGranted(),
+        )
 
     def _get_response(self, request):
         """ Returns the response corresponding to the request.
@@ -396,7 +410,10 @@ class WebsitePage(models.Model):
             # The cached response is too old and considered out-of-date. Get it
             # from scratch and update the cache accordingly.
             response = self._get_response_raw(request)
-            self._get_response_cached.__cache__.add_value(self, request, cache_value=(response, cache_key))
+            if response:
+                response.flatten()
+                if self._allow_cache_insertion(response.response[-1]):
+                    self._get_response_cached.__cache__.add_value(self, request, cache_value=(response, cache_key))
             return response
 
         return self._get_response_raw(request)

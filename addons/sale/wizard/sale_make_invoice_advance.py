@@ -205,10 +205,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
         """
         self.ensure_one()
         accounts = self.env.context.get('accounts')
+
+        dp_account = self.company_id.downpayment_account_id
+        if dp_account and order.fiscal_position_id:
+            dp_account = order.fiscal_position_id.map_account(dp_account)
+
         return {
             **order._prepare_invoice(),
             'invoice_line_ids': [
-                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, self.company_id.downpayment_account_id or account))
+                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, dp_account or account))
                 for so_line, account in zip(so_lines, accounts)
             ],
         }

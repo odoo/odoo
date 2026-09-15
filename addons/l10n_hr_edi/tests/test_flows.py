@@ -2,6 +2,7 @@ from contextlib import contextmanager
 import json
 from lxml import etree
 import requests
+from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -128,7 +129,9 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
         with file_open('l10n_hr_edi/tests/flows/out_invoice.xml', 'r') as f:
             expected_invoice_xml = f.read()
 
-        with self.assertRequests([
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+        ), self.assertRequests([
             (
                 # Request 1: Send invoice
                 self._build_request(
@@ -196,7 +199,9 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
         with file_open('l10n_hr_edi/tests/flows/out_invoice.xml', 'r') as f:
             expected_invoice_xml = f.read()
 
-        with self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+        ), self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
             with self.assertRequests([
                 (
                     # Request 1: Send invoice - error should be triggered

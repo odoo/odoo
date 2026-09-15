@@ -131,3 +131,45 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 },
             ],
         )
+
+    def test_import_embedded_pdf(self):
+        """
+        Importing an xml with embedded pdf should correctly import the
+        pdf in the newly created bill
+        """
+        journal = self.company_data['default_journal_purchase']
+        xml_attachment = self._import_invoice_as_attachment(test_name='test_import_embedded_pdf')
+
+        # Import the document manually
+        created_moves = []
+        move_create = self.env.registry['account.move'].create
+
+        # patch used to retrieve all created documents
+        def patched_create(self, vals_list):
+            records = move_create(self, vals_list)
+            created_moves.extend(records.ids)
+            return records
+        self.patch(self.env.registry['account.move'], 'create', patched_create)
+
+        # Import the document manually
+        journal.create_document_from_attachment(xml_attachment.id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        bill = self.env['account.move'].browse(created_moves)
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
+        self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+        # Import the document via mail alias
+        init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
+        email_raw = self._get_raw_mail_message_str(attachments=xml_attachment, email_to=journal.alias_id.display_name)
+        created_moves = []
+        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
+        bill = self.env['account.move'].browse(move_id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
+        self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")

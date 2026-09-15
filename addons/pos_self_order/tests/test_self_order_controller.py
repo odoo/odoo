@@ -3,6 +3,7 @@
 import json
 import odoo.tests
 from datetime import timedelta
+from odoo import Command
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -232,6 +233,32 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertNotIn(lowe_categ.id, loaded_category_ids, "The category not linked to any printer should not be loaded")
         self.start_tour(self_route, "test_preparation_categories_are_loaded")
 
+    def test_generate_return_values_includes_payment_method(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        payment_method = self.pos_config.payment_method_ids[0]
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'qty': 1, 'price_unit': 2.2, 'product_id': self.cola.id}],
+            'payment_data': [{'payment_method_id': payment_method.id}],
+        })
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'order_access_tokens': [{
+                'access_token': order.access_token,
+            }],
+        }
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+
+        self.assertIn('pos.payment.method', data)
+        returned_pm_ids = {pm['id'] for pm in data['pos.payment.method']}
+        self.assertIn(payment_method.id, returned_pm_ids)
+
     def test_config_session_loaded_fields(self):
         self.pos_config.write({
             'use_presets': False,
@@ -256,3 +283,66 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertEqual(session_data['id'], self.pos_config.current_session_id.id)
         self.assertEqual(session_data['state'], 'opened')
         self.assertFalse(config_data.get('access_token'))
+
+    def test_order_sanatization(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        params = {
+            'company_id': self.env.company.id,
+            'uuid': '61f8181c-18e1-4b83-8a7b-21224750fe2f',
+            'state': 'draft',
+            'preset_id': self.in_preset.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'account_move': 'test',  # This field should be removed by the _check_pos_order method
+            'access_token': 'test',  # This field should be removed by the _check_pos_order method
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [[0, 0, {
+                    'product_id': self.cola.id, 'qty': 1,
+                    'price_unit': self.cola.lst_price,
+                    'price_subtotal': self.cola.lst_price,
+                    'tax_ids': [(6, 0, self.cola.taxes_id.ids)],
+                    'price_subtotal_incl': 0,
+                }],
+            ],
+        }
+        data = self.env['pos.order']._check_pos_order(self.pos_config, params, 'mobile')
+        self.assertFalse('account_move' in data)  # Do not add it back, if needed contact the PoS team.
+        self.assertFalse('access_token' in data)  # Do not add it back, if needed contact the PoS team.
+
+    def test_foreign_line_update_is_dropped(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        victim_order, _ = self.create_backend_pos_order({
+            'order_data': {'table_id': self.pos_table_1.id},
+            'line_data': [{'qty': 1, 'price_unit': 1.0, 'product_id': self.cola.id}],
+        })
+        victim_line = victim_order.lines[0]
+
+        params = {
+            'uuid': '61f8181c-18e1-4b83-8a7b-21224750fe2f',  # attacker order, unrelated to victim_order
+            'state': 'draft',
+            'preset_id': self.in_preset.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [[Command.UPDATE, victim_line.id, {
+                'product_id': self.cola.id, 'qty': 10,
+                'price_unit': self.cola.lst_price,
+            }]],
+        }
+        data = self.env['pos.order']._check_pos_order(self.pos_config, params, 'mobile')
+
+        # The update targets a line of another order: it must not reach sync_from_ui.
+        self.assertFalse(data['lines'])
+        self.assertEqual(victim_line.qty, 1)
+        self.assertEqual(victim_line.order_id, victim_order)

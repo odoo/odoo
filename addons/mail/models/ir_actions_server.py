@@ -375,8 +375,8 @@ class IrActionsServer(models.Model):
             user = False
             if self.activity_user_type == 'specific':
                 user = self.activity_user_id
-            elif self.activity_user_type == 'generic' and self.activity_user_field_name in record:
-                user = record[self.activity_user_field_name]
+            elif self.activity_user_type == 'generic' and self.activity_user_field_name:
+                user = record.mapped(self.activity_user_field_name)
             if user:
                 # if x2m field, assign to the first user found
                 # (same behavior as Field.traverse_related)

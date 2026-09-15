@@ -95,32 +95,47 @@ class TestAvatarCardTour(MailCommon, HttpCase):
         )
 
     def _setup_channel(self, user):
+        # Clear the user's pre-existing (demo) activities so the systray counter
+        # snapshot computed at page load reflects only this test's activities.
+        self.env["mail.activity"].with_user(user).search([("user_id", "=", user.id)]).unlink()
         self.user_employee_c2.partner_id.sudo().with_user(self.user_employee_c2).message_post(
             body="Test message in chatter",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
         activity_type_todo = "mail.mail_activity_data_todo"
+        # Deadline in the past: the counter only counts today and overdue activities, and
+        # the default deadline (today in the scheduling env's timezone, Europe/Brussels
+        # for the superuser with demo data) is tomorrow for a user without timezone (UTC
+        # fallback) when the test runs between 22:00 and 00:00 UTC, making the activities
+        # planned and the counter empty (runbot 941407). A week-old deadline is overdue
+        # in every timezone.
+        date_deadline = date.today() - timedelta(days=7)
         self.test_record[0].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Test Activity for Company 2",
             user_id=user.id,
         )
         self.test_record[1].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Another Test Activity for Company 2",
             user_id=user.id,
         )
         self.test_record[2].activity_schedule(
             activity_type_todo,
+            date_deadline,
             summary="Test Activity for Company 3",
             user_id=user.id,
         )
+        # The unlink/schedule above emit "mail.activity/updated"; drop those bus rows so the
+        # systray counter baseline (activity_counter_bus_id, captured at page load) starts
+        # clean and none of them lands after it and gets double-counted (runbot 237779).
+        self._reset_bus()
 
     @users("admin", "hr_user")
     def test_avatar_card_tour_multi_company(self):
-        # Clear existing activities to avoid interference with the test
-        self.env["mail.activity"].with_user(self.env.user).search([]).unlink()
         self._setup_channel(self.env.user)
         self.start_tour(
             f"/odoo/res.partner/{self.user_employee_c2.partner_id.id}",
