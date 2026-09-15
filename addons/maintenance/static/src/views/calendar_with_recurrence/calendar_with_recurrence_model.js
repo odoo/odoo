@@ -10,9 +10,11 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
     async loadRecords(data) {
         const rawRecords = await this.fetchRecords(data);
         const planned = rawRecords.filter(
-            (rawRecord) => rawRecord.plan_id && !rawRecord.done && !rawRecord.archive,
+            (rawRecord) =>
+                rawRecord.plan_id &&
+                ["draft", "confirmed", "in_progress"].includes(rawRecord.state),
         );
-        const occurrencesByRequest = planned.length
+        const occurrencesByOrder = planned.length
             ? await this.orm.call(this.meta.resModel, "get_plan_occurrences", [
                   planned.map((rawRecord) => rawRecord.id),
                   serializeDateTime(data.range.start),
@@ -28,7 +30,7 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
             };
             recordsCounter++;
             const duration = rawRecord.duration || 1;
-            const occurrences = occurrencesByRequest[rawRecord.id] || [];
+            const occurrences = occurrencesByOrder[rawRecord.id] || [];
             for (const [index, occurrence] of occurrences.entries()) {
                 const date = deserializeDateTime(occurrence);
                 records[recordsCounter] = {
@@ -47,7 +49,7 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
         return records;
     }
     computeRangeDomain(data) {
-        // A request of a plan shows the plan's occurrences long after its own end, so
+        // An order of a plan shows the plan's occurrences long after its own end, so
         // it stays in range while the plan can still repeat into it.
         const { date_start, date_stop } = this.meta.fieldMapping;
         const { start, end } = data.range;
@@ -59,9 +61,7 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
             [date_stop, "=", false],
             "&",
             "&",
-            "&",
-            ["done", "=", false],
-            ["archive", "=", false],
+            ["state", "in", ["draft", "confirmed", "in_progress"]],
             ["plan_id.active", "=", true],
             "|",
             ["plan_id.repeat_type", "!=", "until"],

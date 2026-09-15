@@ -2,6 +2,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
+from .maintenance_order import OPEN_STATES
+
 
 class MixinMaintenance(models.AbstractModel):
     _name = "mixin.maintenance"
@@ -33,7 +35,7 @@ class MixinMaintenance(models.AbstractModel):
         tracking=True,
     )
     maintenance_ids = fields.One2many(
-        comodel_name="maintenance.request"
+        comodel_name="maintenance.order"
     )  # needs to be extended in order to specify inverse_name !
     maintenance_count = fields.Count(
         count_of="maintenance_ids",
@@ -50,20 +52,20 @@ class MixinMaintenance(models.AbstractModel):
     )
     mtbf = fields.Integer(
         string="MTBF",
-        compute="_compute_maintenance_request",
+        compute="_compute_maintenance_order",
         help="Mean Time Between Failure, computed based on done corrective maintenances.",
     )
     mttr = fields.Integer(
         string="MTTR",
-        compute="_compute_maintenance_request",
+        compute="_compute_maintenance_order",
         help="Mean Time To Repair",
     )
     estimated_next_failure = fields.Date(
         string="Estimated time before next failure (in days)",
-        compute="_compute_maintenance_request",
+        compute="_compute_maintenance_order",
         help="Computed as Latest Failure Date + MTBF",
     )
-    latest_failure_date = fields.Date(compute="_compute_maintenance_request")
+    latest_failure_date = fields.Date(compute="_compute_maintenance_order")
 
     @api.depends("company_id")
     def _compute_maintenance_team_id(self):
@@ -77,40 +79,38 @@ class MixinMaintenance(models.AbstractModel):
     @api.depends(
         "date_effective",
         "maintenance_ids.maintenance_type",
-        "maintenance_ids.stage_id.done",
+        "maintenance_ids.state",
         "maintenance_ids.close_date",
-        "maintenance_ids.request_date",
+        "maintenance_ids.date_order",
     )
-    def _compute_maintenance_request(self):
+    def _compute_maintenance_order(self):
         for record in self:
-            maintenance_requests = record.maintenance_ids.filtered(
-                lambda mr: mr.maintenance_type == "corrective" and mr.stage_id.done
+            maintenance_orders = record.maintenance_ids.filtered(
+                lambda mr: mr.maintenance_type == "corrective" and mr.state == "done"
             )
             repair_days = [
-                (request.close_date - request.request_date).days
-                for request in maintenance_requests
-                if request.close_date and request.request_date
+                (order.close_date - order.date_order).days
+                for order in maintenance_orders
+                if order.close_date and order.date_order
             ]
             record.mttr = sum(repair_days) / len(repair_days) if repair_days else 0
             record.latest_failure_date = max(
-                (request.request_date for request in maintenance_requests),
+                (order.date_order for order in maintenance_orders),
                 default=False,
             )
             record.mtbf = (
                 record.latest_failure_date
                 and max((record.latest_failure_date - record.date_effective).days, 0)
-                / len(maintenance_requests)
+                / len(maintenance_orders)
             ) or 0
             record.estimated_next_failure = (
                 record.mtbf
                 and record.latest_failure_date + relativedelta(days=record.mtbf)
             ) or False
 
-    @api.depends("maintenance_ids.stage_id.done", "maintenance_ids.archive")
+    @api.depends("maintenance_ids.state")
     def _compute_maintenance_open_count(self):
         for record in self:
             record.maintenance_open_count = len(
-                record.maintenance_ids.filtered(
-                    lambda mr: not mr.stage_id.done and not mr.archive
-                )
+                record.maintenance_ids.filtered(lambda mr: mr.state in OPEN_STATES)
             )

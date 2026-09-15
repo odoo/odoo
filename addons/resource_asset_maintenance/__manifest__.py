@@ -1,8 +1,8 @@
 {
     "name": "Assets - Maintenance",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden",
-    "summary": "Maintenance requests on assets; a planned request blocks the asset's time",
+    "summary": "Maintenance orders on assets; a planned order blocks the asset's time",
     "author": "AgroMarin",
     "license": "LGPL-3",
     "depends": [
@@ -10,7 +10,7 @@
         "maintenance",
     ],
     "data": [
-        "views/maintenance_request_views.xml",
+        "views/maintenance_order_views.xml",
         "views/resource_asset_views.xml",
     ],
     "auto_install": True,

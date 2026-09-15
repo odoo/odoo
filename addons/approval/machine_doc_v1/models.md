@@ -69,6 +69,9 @@ mixin.approval (Abstract)              [inherits mixin.approval.source]
 mixin.approval.state.sync (Abstract)   [inherits mixin.approval]
     +-- the document's own state field (declared per adopter) drives approval_request_id
 
+mixin.approval.lifecycle (Abstract)    [inherits mixin.approval, mixin.lifecycle]
+    +-- action_confirm asks for approval where a category applies
+
 mixin.approval.subjects (Abstract)     [inherits mixin.approval.source]
 mixin.approval.access (Abstract)       [inherits mixin.approval.subjects]
     +-- approval_request_ids -> approval.request (o2m on res_id, one live per subject_key)
@@ -721,6 +724,27 @@ For a record that holds one request per subject rather than one in all: a course
 | `_get_approval_request(subject_key)` / `_get_live_approval_request(subject_key)` | The latest request for the subject, and that request only while it is new or pending |
 
 `approval.request._get_notifiable_source_document()` tells such a record only about a request that carries a `subject_key`; a request pointed at the record without one reaches nothing, as a `mixin.approval` document is told only about the request it references. Covered by `test_approval/tests/test_approval_subjects.py` against `approval.test.subject.document`.
+
+---
+
+## mixin.approval.lifecycle (Abstract)
+
+| Key | Value |
+|-----|-------|
+| Model | `mixin.approval.lifecycle` |
+| File | `models/mixin_approval_lifecycle.py` |
+| Inherits | `mixin.approval`, `mixin.lifecycle` |
+
+For a document with a declared lifecycle whose confirmation is the approval gate. The adopter supplies `_get_domain_approval_category`; with no category matching, confirming is the plain lifecycle.
+
+| Method | What it does |
+|--------|--------------|
+| `action_confirm` | Runs the confirm checks, confirms the records that need no approval or already hold one, raises a request for the others (one record: returns that request's action), and refuses a record whose request is waiting, refused or cancelled |
+| `_on_approval_approved` | Confirms a draft, as superuser: the confirmation follows from the grant |
+| `action_cancel` | Refuses a new or pending request before cancelling |
+| `action_draft` | Clears a refused or cancelled request's link, so confirming asks again |
+
+Adopted by `maintenance.order`. Covered by `maintenance`'s `TestMaintenanceOrderApproval`.
 
 ---
 

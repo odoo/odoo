@@ -1,7 +1,7 @@
 from odoo.tests import Form, TransactionCase
 
 
-class TestMaintenanceRequestTeam(TransactionCase):
+class TestMaintenanceOrderTeam(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -39,35 +39,35 @@ class TestMaintenanceRequestTeam(TransactionCase):
         )
 
     def test_a_code_path_create_takes_the_equipment_team(self):
-        request = self.env["maintenance.request"].create(
-            {"name": "Probe request", "equipment_id": self.equipment.id}
+        order = self.env["maintenance.order"].create(
+            {"name": "Probe order", "equipment_id": self.equipment.id}
         )
-        self.assertEqual(request.maintenance_team_id, self.equipment_team)
+        self.assertEqual(order.maintenance_team_id, self.equipment_team)
 
     def test_a_create_without_equipment_takes_the_default_team(self):
-        request = self.env["maintenance.request"].create({"name": "Probe request"})
-        self.assertEqual(request.maintenance_team_id, self.default_team)
+        order = self.env["maintenance.order"].create({"name": "Probe order"})
+        self.assertEqual(order.maintenance_team_id, self.default_team)
 
     def test_an_explicit_team_is_kept(self):
-        request = self.env["maintenance.request"].create(
+        order = self.env["maintenance.order"].create(
             {
-                "name": "Probe request",
+                "name": "Probe order",
                 "equipment_id": self.equipment.id,
                 "maintenance_team_id": self.default_team.id,
             }
         )
-        self.assertEqual(request.maintenance_team_id, self.default_team)
+        self.assertEqual(order.maintenance_team_id, self.default_team)
 
     def test_the_form_path_still_takes_the_equipment_team(self):
-        form = Form(self.env["maintenance.request"])
-        form.name = "Probe request"
+        form = Form(self.env["maintenance.order"])
+        form.name = "Probe order"
         form.equipment_id = self.equipment
         self.assertEqual(form.save().maintenance_team_id, self.equipment_team)
 
-    def test_the_default_team_is_the_request_company_s(self):
-        request = (
-            self.env["maintenance.request"]
+    def test_the_default_team_is_the_order_company_s(self):
+        order = (
+            self.env["maintenance.order"]
             .with_company(self.company)
-            .create({"name": "Probe request", "company_id": self.other_company.id})
+            .create({"name": "Probe order", "company_id": self.other_company.id})
         )
-        self.assertEqual(request.maintenance_team_id, self.other_team)
+        self.assertEqual(order.maintenance_team_id, self.other_team)

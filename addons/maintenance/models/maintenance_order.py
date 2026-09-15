@@ -3,26 +3,38 @@ from datetime import UTC, timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-REQUEST_ACTIVITY_TYPE = "maintenance.mail_act_maintenance_request"
+ORDER_ACTIVITY_TYPE = "maintenance.mail_act_maintenance_order"
+OPEN_STATES = ("draft", "confirmed", "in_progress")
+CLOSED_STATES = ("done", "cancel")
+BOOKING_STATES = ("confirmed", "in_progress")
 
 
-class MaintenanceRequest(models.Model):
-    _name = "maintenance.request"
-    _inherit = ["mixin.mail.thread.cc", "mixin.mail.activity"]
-    _description = "Maintenance Request"
+class MaintenanceOrder(models.Model):
+    _name = "maintenance.order"
+    _inherit = [
+        "mixin.mail.thread.cc",
+        "mixin.mail.activity",
+        "mixin.approval.lifecycle",
+    ]
+    _description = "Maintenance Order"
     _order = "id desc"
     _check_company_auto = True
 
-    def _default_stage_id(self):
-        return self.env["maintenance.stage"].search([], limit=1)
+    _STATE_TRANSITIONS = {
+        "draft": {"confirmed", "cancel"},
+        "confirmed": {"in_progress", "done", "cancel", "draft"},
+        "in_progress": {"done", "cancel"},
+        "done": set(),
+        "cancel": {"draft"},
+    }
 
     def _creation_subtype(self):
-        return self.env.ref("maintenance.mt_req_created")
+        return self.env.ref("maintenance.mt_order_created")
 
     def _track_subtype(self, init_values):
         self.check_singleton()
-        if "stage_id" in init_values:
-            return self.env.ref("maintenance.mt_req_status")
+        if "state" in init_values:
+            return self.env.ref("maintenance.mt_order_state")
         return super()._track_subtype(init_values)
 
     name = fields.Char(
@@ -35,7 +47,7 @@ class MaintenanceRequest(models.Model):
         required=True,
     )
     description = fields.Html()
-    request_date = fields.Date(
+    date_order = fields.Date(
         default=fields.Date.context_today,
         tracking=True,
         help="Date requested for the maintenance to happen",
@@ -67,12 +79,20 @@ class MaintenanceRequest(models.Model):
         readonly=False,
         tracking=True,
     )
-    stage_id = fields.Many2one(
-        comodel_name="maintenance.stage",
-        default=_default_stage_id,
+    state = fields.Selection(
+        selection=[
+            ("draft", "Draft"),
+            ("confirmed", "Confirmed"),
+            ("in_progress", "In Progress"),
+            ("done", "Done"),
+            ("cancel", "Cancelled"),
+        ],
+        default="draft",
+        index=True,
         copy=False,
-        group_expand="_read_group_stage_ids",
-        ondelete="restrict",
+        readonly=True,
+        required=True,
+        group_expand=True,
         tracking=True,
     )
     priority = fields.Selection(
@@ -89,17 +109,13 @@ class MaintenanceRequest(models.Model):
     )
     kanban_state = fields.Selection(
         selection=[
-            ("normal", "In Progress"),
+            ("normal", "On Track"),
             ("blocked", "Blocked"),
-            ("done", "Ready for next stage"),
+            ("done", "Ready to Continue"),
         ],
         default="normal",
         required=True,
         tracking=True,
-    )
-    archive = fields.Boolean(
-        default=False,
-        help="Set archive to true to hide the maintenance request without deleting it.",
     )
     maintenance_type = fields.Selection(
         selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
@@ -107,7 +123,7 @@ class MaintenanceRequest(models.Model):
     )
     schedule_date = fields.Datetime(
         string="Scheduled Date",
-        help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ",
+        help="Date the maintenance team plans the maintenance.  It should not differ much from the Order Date. ",
     )
     schedule_end = fields.Datetime(
         string="Scheduled End",
@@ -117,7 +133,7 @@ class MaintenanceRequest(models.Model):
         store=True,
         copy=False,
         readonly=False,
-        help="Expected completion date and time of the maintenance request.",
+        help="Expected completion date and time of the maintenance order.",
     )
     maintenance_team_id = fields.Many2one(
         comodel_name="team.team",
@@ -135,7 +151,6 @@ class MaintenanceRequest(models.Model):
         default=1.0,
         help="Duration in hours.",
     )
-    done = fields.Boolean(related="stage_id.done")
     instruction_type = fields.Selection(
         selection=[("pdf", "PDF"), ("google_slide", "Google Slide"), ("text", "Text")],
         string="Instruction",
@@ -159,75 +174,88 @@ class MaintenanceRequest(models.Model):
         string="Planned Occurrence",
         copy=False,
         readonly=True,
-        help="The date of its plan's series this request stands for, however it is rescheduled.",
+        help="The date of its plan's series this order stands for, however it is rescheduled.",
     )
 
-    def archive_equipment_request(self):
-        self.write({"archive": True})
+    def _prepare_confirmation_values(self):
+        return {"state": "confirmed"}
 
-    def reset_equipment_request(self):
-        """Reinsert the maintenance request into the maintenance pipe in the first stage"""
-        self.write({"archive": False, "stage_id": self._default_stage_id().id})
+    def action_start(self):
+        self.write({"state": "in_progress"})
+        return True
+
+    def action_done(self):
+        self.write({"state": "done"})
+        return True
+
+    def _get_domain_approval_category(self):
+        self.check_singleton()
+        return [
+            ("active", "=", True),
+            ("approval_type", "=", f"maintenance_{self.maintenance_type}"),
+            ("target_model", "=", False),
+        ]
+
+    def _get_fields_approval_protected(self):
+        return ["equipment_id", "maintenance_type"]
 
     @api.model
     def _get_domain_open(self):
-        return [("stage_id.done", "=", False), ("archive", "=", False)]
+        return [("state", "in", OPEN_STATES)]
 
     @api.constrains("schedule_date", "schedule_end")
     def _check_schedule_end_after_start(self):
-        for request in self:
+        for order in self:
             if (
-                request.schedule_date
-                and request.schedule_end
-                and request.schedule_date > request.schedule_end
+                order.schedule_date
+                and order.schedule_end
+                and order.schedule_date > order.schedule_end
             ):
                 raise ValidationError(
                     self.env._("End date cannot be earlier than start date.")
                 )
 
-    @api.depends("stage_id")
+    @api.depends("state")
     def _compute_close_date(self):
         today = fields.Date.context_today(self)
-        for request in self:
-            if not request.stage_id.done:
-                request.close_date = False
-            elif not request.close_date:
-                request.close_date = today
+        for order in self:
+            if order.state != "done":
+                order.close_date = False
+            elif not order.close_date:
+                order.close_date = today
 
     @api.depends("schedule_date", "duration")
     def _compute_schedule_end(self):
-        for request in self:
-            request.schedule_end = request.schedule_date and (
-                request.schedule_date + timedelta(hours=request.duration or 1)
+        for order in self:
+            order.schedule_end = order.schedule_date and (
+                order.schedule_date + timedelta(hours=order.duration or 1)
             )
 
     def _inverse_schedule_end(self):
-        for request in self:
-            if request.schedule_date and request.schedule_end:
-                request.duration = (
-                    request.schedule_end - request.schedule_date
+        for order in self:
+            if order.schedule_date and order.schedule_end:
+                order.duration = (
+                    order.schedule_end - order.schedule_date
                 ).total_seconds() / 3600
 
     @api.depends("company_id", "equipment_id")
     def _compute_maintenance_team_id(self):
         default_teams = {}
-        for request in self:
-            team = (
-                request.equipment_id.maintenance_team_id or request.maintenance_team_id
-            )
-            if team.company_id and team.company_id != request.company_id:
+        for order in self:
+            team = order.equipment_id.maintenance_team_id or order.maintenance_team_id
+            if team.company_id and team.company_id != order.company_id:
                 team = team.browse()
             # The company default is the last resort of this precomputed field, not a field
             # default: a field default is filled before the compute, so a create never took the
             # equipment's (or an override's) team.
             if not team:
-                company = request.company_id
+                company = order.company_id
                 if company not in default_teams:
-                    default_teams[company] = request._get_default_maintenance_team(
+                    default_teams[company] = order._get_default_maintenance_team(
                         company
                     )
                 team = default_teams[company]
-            request.maintenance_team_id = team
+            order.maintenance_team_id = team
 
     @api.model
     def _get_default_maintenance_team(self, company):
@@ -246,55 +274,49 @@ class MaintenanceRequest(models.Model):
 
     @api.depends("company_id", "equipment_id")
     def _compute_user_id(self):
-        for request in self:
-            if request.equipment_id:
-                request.user_id = (
-                    request.equipment_id.technician_user_id
-                    or request.equipment_id.category_id.technician_user_id
+        for order in self:
+            if order.equipment_id:
+                order.user_id = (
+                    order.equipment_id.technician_user_id
+                    or order.equipment_id.category_id.technician_user_id
                 )
             if (
-                request.user_id
-                and request.company_id.id not in request.user_id.company_ids.ids
+                order.user_id
+                and order.company_id.id not in order.user_id.company_ids.ids
             ):
-                request.user_id = False
+                order.user_id = False
 
     @api.model_create_multi
     def create(self, vals_list):
-        requests = super().create(vals_list)
-        requests.filtered(
-            lambda request: request.owner_user_id or request.user_id
+        orders = super().create(vals_list)
+        orders.filtered(
+            lambda order: order.owner_user_id or order.user_id
         )._add_followers()
-        requests.activity_update()
-        return requests
+        orders.activity_update()
+        return orders
 
     def write(self, vals):
-        if "stage_id" in vals and "kanban_state" not in vals:
+        if "state" in vals and "kanban_state" not in vals:
             vals = {**vals, "kanban_state": "normal"}
         closing = self.browse()
-        if (
-            "stage_id" in vals
-            and self.env["maintenance.stage"].browse(vals["stage_id"]).done
-        ):
-            closing = self.filtered(lambda request: not request.stage_id.done)
-        if vals.get("archive"):
-            closing |= self.filtered(
-                lambda request: not request.archive and not request.stage_id.done
-            )
+        if vals.get("state") in CLOSED_STATES:
+            closing = self.filtered(lambda order: order.state in OPEN_STATES)
         res = super().write(vals)
         if vals.get("owner_user_id") or vals.get("user_id"):
             self._add_followers()
         if closing:
-            closing.filtered("stage_id.done").activity_feedback([REQUEST_ACTIVITY_TYPE])
+            closing.filtered(lambda order: order.state == "done").activity_feedback(
+                [ORDER_ACTIVITY_TYPE]
+            )
             # sudo: opening the next occurrence is a consequence of closing this one,
             # not an edit of the plan by whoever closes it.
-            for request in closing.filtered("plan_id").sudo():
-                request.plan_id._schedule_after(request)
+            for order in closing.filtered("plan_id").sudo():
+                order.plan_id._schedule_after(order)
         replace_activity = self._is_new_activity_required(vals)
         if replace_activity:
-            self.activity_unlink([REQUEST_ACTIVITY_TYPE])
+            self.activity_unlink([ORDER_ACTIVITY_TYPE])
         if replace_activity or vals.keys() & {
-            "stage_id",
-            "archive",
+            "state",
             "schedule_date",
             "user_id",
             "owner_user_id",
@@ -309,7 +331,7 @@ class MaintenanceRequest(models.Model):
         )
         occurrences = {}
         for plan in self.plan_id.sudo().filtered("active"):
-            latest = plan._get_open_requests()[-1:]
+            latest = plan._get_open_orders()[-1:]
             base = plan._get_projection_base()
             if latest.id not in self.ids or not base:
                 continue
@@ -321,11 +343,9 @@ class MaintenanceRequest(models.Model):
         return occurrences
 
     def unlink(self):
-        plans = self.filtered(
-            lambda request: not request.stage_id.done and not request.archive
-        ).plan_id
+        plans = self.filtered(lambda order: order.state in OPEN_STATES).plan_id
         res = super().unlink()
-        plans.exists().sudo()._ensure_open_request()
+        plans.exists().sudo()._ensure_open_order()
         return res
 
     def _is_new_activity_required(self, vals):
@@ -334,44 +354,40 @@ class MaintenanceRequest(models.Model):
     def _get_activity_note(self):
         self.check_singleton()
         if self.equipment_id:
-            return _("Request planned for %s", self.equipment_id._get_html_link())
+            return _("Order planned for %s", self.equipment_id._get_html_link())
         return False
 
     def activity_update(self):
         """Update maintenance activities based on current record set state.
-        It reschedule, unlink or create maintenance request activities."""
+        It reschedule, unlink or create maintenance order activities."""
         planned = self.filtered(
-            lambda request: (
-                request.schedule_date
-                and not request.archive
-                and not request.stage_id.done
-            )
+            lambda order: order.schedule_date and order.state in OPEN_STATES
         )
-        (self - planned).activity_unlink([REQUEST_ACTIVITY_TYPE])
+        (self - planned).activity_unlink([ORDER_ACTIVITY_TYPE])
         Activity = self.env["mail.activity"]
-        for request in planned:
-            assignee = request.user_id or request.owner_user_id or self.env.user
+        for order in planned:
+            assignee = order.user_id or order.owner_user_id or self.env.user
             deadline = Activity._today_in_tz(
-                assignee.sudo().tz, request.schedule_date.replace(tzinfo=UTC)
+                assignee.sudo().tz, order.schedule_date.replace(tzinfo=UTC)
             )
-            if not request.activity_reschedule(
-                [REQUEST_ACTIVITY_TYPE],
+            if not order.activity_reschedule(
+                [ORDER_ACTIVITY_TYPE],
                 date_deadline=deadline,
                 new_user_id=assignee.id,
             ):
-                request.activity_schedule(
-                    REQUEST_ACTIVITY_TYPE,
+                order.activity_schedule(
+                    ORDER_ACTIVITY_TYPE,
                     deadline,
-                    note=request._get_activity_note(),
+                    note=order._get_activity_note(),
                     user_id=assignee.id,
                 )
 
     def _add_followers(self):
-        for request in self:
+        for order in self:
             partner_ids = (
-                request.owner_user_id.partner_id + request.user_id.partner_id
+                order.owner_user_id.partner_id + order.user_id.partner_id
             ).ids
-            request.message_subscribe(partner_ids=partner_ids)
+            order.message_subscribe(partner_ids=partner_ids)
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
@@ -380,11 +396,3 @@ class MaintenanceRequest(models.Model):
         if team.company_id and "company_id" not in values:
             values["company_id"] = team.company_id.id
         return super().message_new(msg_dict, custom_values=values)
-
-    @api.model
-    def _read_group_stage_ids(self, stages, domain):
-        """Read group customization in order to display all the stages in the
-        kanban view, even if they are empty
-        """
-        stage_ids = stages.sudo()._search([], order=stages._order)
-        return stages.browse(stage_ids)

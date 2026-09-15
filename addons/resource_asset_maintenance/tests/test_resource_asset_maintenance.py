@@ -8,6 +8,15 @@ class TestResourceAssetMaintenance(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env["approval.category"].search(
+            [
+                (
+                    "approval_type",
+                    "in",
+                    ("maintenance_preventive", "maintenance_corrective"),
+                )
+            ]
+        ).action_archive()
         cls.machinery = cls.env.ref("resource_asset.kind_machinery")
         cls.press = cls.env["resource.asset"].create(
             {"name": "Press 1", "kind_id": cls.machinery.id}
@@ -15,14 +24,11 @@ class TestResourceAssetMaintenance(TransactionCase):
         cls.team = cls.env["team.team"].create(
             {"use_maintenance": True, "name": "Mechanics"}
         )
-        cls.stage_done = cls.env["maintenance.stage"].search(
-            [("done", "=", True)], limit=1
-        )
         cls.start = datetime(2026, 3, 2, 8, 0)
         cls.end = datetime(2026, 3, 2, 12, 0)
 
-    def _request(self, **vals):
-        return self.env["maintenance.request"].create(
+    def _order(self, **vals):
+        return self.env["maintenance.order"].create(
             {
                 "name": "Oil change",
                 "asset_id": self.press.id,
@@ -30,6 +36,7 @@ class TestResourceAssetMaintenance(TransactionCase):
                 "schedule_date": self.start,
                 "schedule_end": self.end,
                 "block_asset": True,
+                "state": "confirmed",
                 **vals,
             }
         )
@@ -39,52 +46,48 @@ class TestResourceAssetMaintenance(TransactionCase):
             [("resource_id", "=", self.press.resource_id.id)]
         )
 
-    def test_a_request_in_progress_puts_the_asset_under_maintenance(self):
-        new_stage, in_progress = self.env["maintenance.stage"].search([], limit=2)
+    def test_an_order_in_progress_puts_the_asset_under_maintenance(self):
         self.press.action_set_in_service()
-        first = self._request(stage_id=new_stage.id, block_asset=False)
+        first = self._order(block_asset=False)
         self.assertEqual(self.press.state, "in_service")
-        first.stage_id = in_progress
+        first.action_start()
         self.assertEqual(self.press.state, "maintenance")
-        second = self._request(name="Belt", stage_id=in_progress.id, block_asset=False)
-        first.stage_id = self.stage_done
+        second = self._order(name="Belt", state="in_progress", block_asset=False)
+        first.action_done()
         self.assertEqual(self.press.state, "maintenance")
-        second.archive = True
+        second.action_cancel()
         self.assertEqual(self.press.state, "in_service")
-        second.archive = False
-        self.assertEqual(self.press.state, "maintenance")
+        second.action_draft()
         second.unlink()
         self.assertEqual(self.press.state, "in_service")
 
-    def test_moving_a_request_to_another_asset_moves_the_maintenance(self):
-        in_progress = self.env["maintenance.stage"].search([], limit=2)[1:]
+    def test_moving_an_order_to_another_asset_moves_the_maintenance(self):
         other = self.env["resource.asset"].create(
             {"name": "Press 2", "kind_id": self.machinery.id}
         )
         (self.press | other).action_set_in_service()
-        request = self._request(stage_id=in_progress.id)
+        order = self._order(state="in_progress")
         self.assertEqual(self.press.state, "maintenance")
-        request.asset_id = other
+        order.asset_id = other
         self.assertEqual(self.press.state, "in_service")
         self.assertEqual(other.state, "maintenance")
 
-    def test_requests_leave_an_asset_that_is_not_in_service_alone(self):
-        in_progress = self.env["maintenance.stage"].search([], limit=2)[1:]
+    def test_orders_leave_an_asset_that_is_not_in_service_alone(self):
         self.assertEqual(self.press.state, "draft")
-        request = self._request(stage_id=in_progress.id)
+        order = self._order(state="in_progress")
         self.assertEqual(self.press.state, "draft")
         self.press.action_set_out_of_service()
-        request.stage_id = self.stage_done
+        order.action_done()
         self.assertEqual(self.press.state, "out_of_service")
 
-    def test_a_scheduled_request_blocks_the_asset(self):
-        request = self._request()
+    def test_a_scheduled_order_blocks_the_asset(self):
+        order = self._order()
         self.assertRecordValues(
             self._bookings(),
             [
                 {
-                    "res_model": "maintenance.request",
-                    "res_id": request.id,
+                    "res_model": "maintenance.order",
+                    "res_id": order.id,
                     "date_start": self.start,
                     "date_end": self.end,
                     "enforcement_mode": "hard",
@@ -103,48 +106,54 @@ class TestResourceAssetMaintenance(TransactionCase):
         )
 
     def test_the_block_follows_the_schedule_and_the_flag(self):
-        request = self._request()
-        request.write(
+        order = self._order()
+        order.write(
             {
                 "schedule_date": datetime(2026, 3, 3, 8, 0),
                 "schedule_end": datetime(2026, 3, 3, 9, 0),
             }
         )
         self.assertEqual(self._bookings().date_start, datetime(2026, 3, 3, 8, 0))
-        request.block_asset = False
+        order.block_asset = False
         self.assertFalse(self._bookings())
-        request.block_asset = True
+        order.block_asset = True
         self.assertEqual(len(self._bookings()), 1)
 
-    def test_a_done_or_archived_request_releases_the_asset(self):
-        request = self._request()
-        request.stage_id = self.stage_done
+    def test_a_done_or_cancelled_order_releases_the_asset(self):
+        order = self._order()
+        order.action_done()
         self.assertFalse(self._bookings())
-        other = self._request(name="Belt")
+        other = self._order(name="Belt")
         self.assertEqual(len(self._bookings()), 1)
-        other.archive_equipment_request()
+        other.action_cancel()
         self.assertFalse(self._bookings())
 
-    def test_two_requests_cannot_block_the_same_window(self):
+    def test_a_draft_order_does_not_block_the_asset_until_confirmed(self):
+        order = self._order(state="draft")
+        self.assertFalse(self._bookings())
+        order.action_confirm()
+        self.assertEqual(len(self._bookings()), 1)
+
+    def test_two_orders_cannot_block_the_same_window(self):
         from odoo.exceptions import ValidationError
 
-        self._request()
+        self._order()
         with self.assertRaises(ValidationError):
-            self._request(
+            self._order(
                 name="Second",
                 schedule_date=datetime(2026, 3, 2, 10, 0),
                 schedule_end=datetime(2026, 3, 2, 14, 0),
             )
 
-    def test_the_asset_counts_its_requests_and_lends_its_team(self):
+    def test_the_asset_counts_its_orders_and_lends_its_team(self):
         self.press.write({"maintenance_team_id": self.team.id})
-        request = self.env["maintenance.request"].create({"name": "Check"})
-        request.asset_id = self.press
-        self.assertEqual(request.maintenance_team_id, self.team)
+        order = self.env["maintenance.order"].create({"name": "Check"})
+        order.asset_id = self.press
+        self.assertEqual(order.maintenance_team_id, self.team)
         self.press.invalidate_recordset()
         self.assertEqual(self.press.maintenance_count, 1)
         self.assertEqual(self.press.maintenance_open_count, 1)
-        self.assertFalse(self._bookings(), "an unscheduled request blocks nothing")
+        self.assertFalse(self._bookings(), "an unscheduled order blocks nothing")
 
     def test_the_asset_outranks_the_equipment_for_team_and_technician(self):
         """The bridge used to set the asset's team, then let the base compute
@@ -161,28 +170,28 @@ class TestResourceAssetMaintenance(TransactionCase):
         self.press.write(
             {"maintenance_team_id": self.team.id, "technician_user_id": technician.id}
         )
-        request = self.env["maintenance.request"].create(
+        order = self.env["maintenance.order"].create(
             {"name": "Check", "equipment_id": equipment.id, "asset_id": self.press.id}
         )
-        self.assertEqual(request.maintenance_team_id, self.team)
-        self.assertEqual(request.user_id, technician)
-        request.asset_id = False
-        self.assertEqual(request.maintenance_team_id, other_team)
+        self.assertEqual(order.maintenance_team_id, self.team)
+        self.assertEqual(order.user_id, technician)
+        order.asset_id = False
+        self.assertEqual(order.maintenance_team_id, other_team)
 
-    def test_an_asset_only_request_plans_an_activity_on_the_asset(self):
-        request = self._request()
-        activity = request.activity_ids.filtered(
+    def test_an_asset_only_order_plans_an_activity_on_the_asset(self):
+        order = self._order()
+        activity = order.activity_ids.filtered(
             lambda a: (
                 a.activity_type_id
-                == self.env.ref("maintenance.mail_act_maintenance_request")
+                == self.env.ref("maintenance.mail_act_maintenance_order")
             )
         )
         self.assertEqual(len(activity), 1)
         self.assertIn(self.press.name, activity.note)
 
     def test_the_asset_outranks_the_work_centre(self):
-        Request = self.env["maintenance.request"]
-        if "workcenter_id" not in Request._fields:
+        Order = self.env["maintenance.order"]
+        if "workcenter_id" not in Order._fields:
             self.skipTest("mrp_maintenance is not installed")
         workcenter_team = self.env["team.team"].create(
             {"use_maintenance": True, "name": "Line crew"}
@@ -196,8 +205,8 @@ class TestResourceAssetMaintenance(TransactionCase):
             "workcenter_id": workcenter.id,
             "asset_id": self.press.id,
         }
-        at_create = Request.create({"name": "Check", **sources})
-        after_write = Request.create({"name": "Check", "maintenance_for": "workcenter"})
+        at_create = Order.create({"name": "Check", **sources})
+        after_write = Order.create({"name": "Check", "maintenance_for": "workcenter"})
         after_write.write(sources)
         self.assertEqual(at_create.maintenance_team_id, self.team)
         self.assertEqual(after_write.maintenance_team_id, self.team)

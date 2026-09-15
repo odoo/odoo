@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="maintenance_request_view_form_asset" model="ir.ui.view">
-        <field name="name">maintenance.request.form.asset</field>
-        <field name="model">maintenance.request</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form" />
+    <record id="maintenance_order_view_form_asset" model="ir.ui.view">
+        <field name="name">maintenance.order.form.asset</field>
+        <field name="model">maintenance.order</field>
+        <field name="inherit_id" ref="maintenance.maintenance_order_view_form" />
         <field name="arch" type="xml">
             <field name="equipment_id" position="after">
                 <field name="asset_id" />
@@ -37,10 +37,10 @@
         </field>
     </record>
 
-    <record id="maintenance_request_view_search_asset" model="ir.ui.view">
-        <field name="name">maintenance.request.search.asset</field>
-        <field name="model">maintenance.request</field>
-        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search" />
+    <record id="maintenance_order_view_search_asset" model="ir.ui.view">
+        <field name="name">maintenance.order.search.asset</field>
+        <field name="model">maintenance.order</field>
+        <field name="inherit_id" ref="maintenance.maintenance_order_view_search" />
         <field name="arch" type="xml">
             <field name="equipment_id" position="after">
                 <field name="asset_id" />

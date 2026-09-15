@@ -1,6 +1,6 @@
 {
     "name": "Maintenance - HR",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources",
     "sequence": 125,
     "summary": "Equipment, Assets, Internal Hardware, Allocation Tracking",

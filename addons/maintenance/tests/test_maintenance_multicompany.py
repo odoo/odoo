@@ -10,7 +10,7 @@ class TestEquipmentMulticompany(TransactionCase):
 
         # Use full models
         Equipment = self.env["maintenance.equipment"]
-        MaintenanceRequest = self.env["maintenance.request"]
+        MaintenanceOrder = self.env["maintenance.order"]
         Category = self.env["maintenance.equipment.category"]
         ResUsers = self.env["res.users"]
         ResCompany = self.env["res.company"]
@@ -201,16 +201,8 @@ class TestEquipmentMulticompany(TransactionCase):
                 }
             )
 
-        # create an maintenance stage BY user
-        with self.assertRaises(AccessError):
-            self.env["maintenance.stage"].with_user(user).create(
-                {
-                    "name": "identify corrective maintenance requirements",
-                }
-            )
-
-        # Create an maintenance request for ( User Follower ).
-        MaintenanceRequest.with_user(user).create(
+        # Create an maintenance order for ( User Follower ).
+        MaintenanceOrder.with_user(user).create(
             {
                 "name": "Some keys are not working",
                 "company_id": company_b.id,
@@ -219,8 +211,8 @@ class TestEquipmentMulticompany(TransactionCase):
             }
         )
 
-        # Create an maintenance request for equipment_manager (Admin Follower)
-        MaintenanceRequest.with_user(equipment_manager).create(
+        # Create an maintenance order for equipment_manager (Admin Follower)
+        MaintenanceOrder.with_user(equipment_manager).create(
             {
                 "name": "Battery drains fast",
                 "company_id": company_a.id,
@@ -229,11 +221,11 @@ class TestEquipmentMulticompany(TransactionCase):
             }
         )
 
-        # Now here is total 1 maintenance request can be view by Normal User
+        # Now here is total 1 maintenance order can be view by Normal User
         self.assertEqual(
-            MaintenanceRequest.with_user(equipment_manager)
+            MaintenanceOrder.with_user(equipment_manager)
             .with_context(allowed_company_ids=cids)
             .search_count([]),
             2,
         )
-        self.assertEqual(MaintenanceRequest.with_user(user).search_count([]), 1)
+        self.assertEqual(MaintenanceOrder.with_user(user).search_count([]), 1)

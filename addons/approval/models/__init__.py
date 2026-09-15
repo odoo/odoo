@@ -14,6 +14,7 @@ from . import (
     mixin_approval_state_sync,
     mixin_approval_subjects,
     mixin_approval_access,
+    mixin_approval_lifecycle,
     approval_refusal_reason,
     approval_request,
     approval_request_access,

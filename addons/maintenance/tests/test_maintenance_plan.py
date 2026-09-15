@@ -12,9 +12,6 @@ class TestMaintenancePlan(TransactionCase):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tz="UTC"))
         cls.Plan = cls.env["maintenance.plan"]
-        cls.stage_new = cls.env.ref("maintenance.stage_0")
-        cls.stage_repaired = cls.env.ref("maintenance.stage_3")
-        cls.stage_scrap = cls.env.ref("maintenance.stage_4")
         cls.technician = cls.env["res.users"].create(
             {
                 "name": "Plan technician",
@@ -35,17 +32,17 @@ class TestMaintenancePlan(TransactionCase):
             }
         )
 
-    def _close_at(self, plan, moment, stage=None, request=None):
-        request = request or plan._get_open_request()
+    def _close_at(self, plan, moment, order=None):
+        order = order or plan._get_open_order()
         with freeze_time(moment):
-            request.stage_id = stage or self.stage_repaired
+            order.action_done()
             self.env.flush_all()
-        return plan._get_open_request()
+        return plan._get_open_order()
 
-    def test_a_plan_opens_its_first_request_on_its_first_occurrence(self):
+    def test_a_plan_opens_its_first_order_on_its_first_occurrence(self):
         plan = self._plan(user_id=self.env.user.id, duration=3)
         self.assertRecordValues(
-            plan.request_ids,
+            plan.order_ids,
             [
                 {
                     "name": "Plan probe",
@@ -54,18 +51,18 @@ class TestMaintenancePlan(TransactionCase):
                     "date_occurrence": datetime(2026, 1, 31, 10),
                     "user_id": self.env.user.id,
                     "duration": 3,
-                    "stage_id": self.stage_new.id,
+                    "state": "confirmed",
                 }
             ],
         )
         self.assertEqual(plan.date_next, datetime(2026, 1, 31, 10))
 
-    def test_a_linked_request_stands_in_for_the_first_one(self):
-        request = self.env["maintenance.request"].create(
+    def test_a_linked_order_stands_in_for_the_first_one(self):
+        order = self.env["maintenance.order"].create(
             {"name": "Existing", "schedule_date": datetime(2026, 2, 3, 10)}
         )
-        plan = self._plan(request_ids=[(4, request.id)])
-        self.assertEqual(plan.request_ids, request)
+        plan = self._plan(order_ids=[(4, order.id)])
+        self.assertEqual(plan.order_ids, order)
 
     def test_fixed_dates_come_back_to_the_month_end(self):
         plan = self._plan()
@@ -108,15 +105,15 @@ class TestMaintenancePlan(TransactionCase):
         skipped = plan.message_ids - messages
         self.assertEqual(len(skipped.filtered(lambda m: "skipped" in m.body)), 1)
 
-    def test_a_technician_without_plan_rights_closes_a_late_request(self):
+    def test_a_technician_without_plan_rights_closes_a_late_order(self):
         plan = self._plan(user_id=self.technician.id)
-        request = plan._get_open_request()
+        order = plan._get_open_order()
         self.assertFalse(plan.with_user(self.technician).has_access("write"))
         with freeze_time("2026-03-15 12:00:00"):
-            request.with_user(self.technician).stage_id = self.stage_repaired
+            order.with_user(self.technician).action_done()
             self.env.flush_all()
         self.assertEqual(
-            plan._get_open_request().date_occurrence, datetime(2026, 3, 31, 10)
+            plan._get_open_order().date_occurrence, datetime(2026, 3, 31, 10)
         )
 
     def test_a_completion_plan_counts_from_the_day_it_was_done(self):
@@ -128,70 +125,70 @@ class TestMaintenancePlan(TransactionCase):
 
     def test_a_completion_plan_counts_from_the_close_date_given(self):
         plan = self._plan(repeat_anchor="completion")
-        request = plan._get_open_request()
+        order = plan._get_open_order()
         with freeze_time("2026-02-20 12:00:00"):
-            request.write(
-                {"stage_id": self.stage_repaired.id, "close_date": date(2026, 2, 16)}
-            )
+            order.write({"state": "done", "close_date": date(2026, 2, 16)})
         self.assertEqual(
-            plan._get_open_request().schedule_date, datetime(2026, 3, 16, 10)
+            plan._get_open_order().schedule_date, datetime(2026, 3, 16, 10)
         )
 
     def test_a_cancelled_occurrence_hands_over_to_the_next_one(self):
         plan = self._plan()
-        request = plan._get_open_request()
+        order = plan._get_open_order()
         with freeze_time("2026-02-20 12:00:00"):
-            request.archive_equipment_request()
+            order.action_cancel()
         self.assertEqual(
-            plan._get_open_request().schedule_date, datetime(2026, 2, 28, 10)
+            plan._get_open_order().schedule_date, datetime(2026, 2, 28, 10)
         )
 
     def test_cancelling_an_overdue_occurrence_does_not_open_one_in_the_past(self):
         plan = self._plan()
-        request = plan._get_open_request()
+        order = plan._get_open_order()
         with freeze_time("2026-03-15 12:00:00"):
-            request.archive_equipment_request()
+            order.action_cancel()
         self.assertEqual(
-            plan._get_open_request().schedule_date, datetime(2026, 3, 31, 10)
+            plan._get_open_order().schedule_date, datetime(2026, 3, 31, 10)
         )
 
-    def test_only_the_first_closing_stage_opens_the_next_request(self):
+    def test_closing_an_order_twice_opens_the_next_one_once(self):
         plan = self._plan()
-        request = plan._get_open_request()
+        order = plan._get_open_order()
         with freeze_time("2026-01-31 12:00:00"):
-            request.stage_id = self.stage_repaired
-            request.stage_id = self.stage_scrap
-        self.assertEqual(len(plan.request_ids), 2)
+            order.action_done()
+            order.write({"state": "done"})
+        self.assertEqual(len(plan.order_ids), 2)
 
-    def test_reopening_a_request_projects_the_series_once(self):
+    def test_reopening_an_order_projects_the_series_once(self):
         plan = self._plan()
-        first = plan._get_open_request()
+        first = plan._get_open_order()
         with freeze_time("2026-01-31 12:00:00"):
-            first.stage_id = self.stage_repaired
-            first.stage_id = self.stage_new
-            requests = plan._get_open_requests()
-            self.assertEqual(len(requests), 2)
-            occurrences = requests.get_plan_occurrences(
+            first.action_cancel()
+            first.action_draft()
+            orders = plan._get_open_orders()
+            self.assertEqual(len(orders), 2)
+            occurrences = orders.get_plan_occurrences(
                 "2026-02-01 00:00:00", "2026-05-31 23:59:59"
             )
-        self.assertEqual(list(occurrences), [requests[-1].id])
+        self.assertEqual(list(occurrences), [orders[-1].id])
 
-    def test_a_duplicated_request_leaves_the_plan(self):
+    def test_a_duplicated_order_leaves_the_plan(self):
         plan = self._plan()
-        self.assertFalse(plan._get_open_request().copy().plan_id)
+        self.assertFalse(plan._get_open_order().copy().plan_id)
 
-    def test_deleting_the_open_request_opens_the_next_one(self):
+    def test_deleting_the_open_order_opens_the_next_one(self):
         plan = self._plan()
         with freeze_time("2026-02-10 12:00:00"):
-            plan._get_open_request().unlink()
+            order = plan._get_open_order()
+            order.action_draft()
+            order.unlink()
             self.assertEqual(
-                plan._get_open_request().date_occurrence, datetime(2026, 2, 28, 10)
+                plan._get_open_order().date_occurrence, datetime(2026, 2, 28, 10)
             )
 
-    def test_the_next_request_keeps_what_the_last_one_carried(self):
+    def test_the_next_order_keeps_what_the_last_one_carried(self):
         plan = self._plan()
-        request = plan._get_open_request()
-        request.write(
+        order = plan._get_open_order()
+        order.write(
             {
                 "instruction_type": "text",
                 "instruction_text": "<p>Check the belts</p>",
@@ -231,9 +228,9 @@ class TestMaintenancePlan(TransactionCase):
                 tz="America/Mexico_City",
                 date_start=datetime(2026, 1, 31, 2),
             )
-            request = plan._get_open_request().with_context(tz=closer_tz)
-            self._close_at(plan, "2026-04-01 12:00:00", request=request)
-            dates.append(plan._get_open_request().date_occurrence)
+            order = plan._get_open_order().with_context(tz=closer_tz)
+            self._close_at(plan, "2026-04-01 12:00:00", order=order)
+            dates.append(plan._get_open_order().date_occurrence)
         self.assertEqual(dates[0], dates[1])
         self.assertEqual(dates[0], datetime(2026, 5, 1, 2))
 
@@ -241,23 +238,23 @@ class TestMaintenancePlan(TransactionCase):
         plan = self._plan()
         plan.action_archive()
         with freeze_time("2026-01-31 12:00:00"):
-            plan.request_ids.stage_id = self.stage_repaired
-        self.assertFalse(plan._get_open_request())
+            plan.order_ids.action_done()
+        self.assertFalse(plan._get_open_order())
         with freeze_time("2026-04-10 12:00:00"):
             plan.action_unarchive()
         self.assertEqual(
-            plan._get_open_request().schedule_date, datetime(2026, 4, 30, 10)
+            plan._get_open_order().schedule_date, datetime(2026, 4, 30, 10)
         )
 
     def test_a_resumed_fixed_plan_does_not_repeat_work_done_early(self):
         plan = self._plan(date_start=datetime(2026, 4, 30, 10))
         plan.action_archive()
         with freeze_time("2026-04-05 12:00:00"):
-            plan.request_ids.stage_id = self.stage_repaired
+            plan.order_ids.action_done()
         with freeze_time("2026-04-10 12:00:00"):
             plan.action_unarchive()
         self.assertEqual(
-            plan._get_open_request().date_occurrence, datetime(2026, 5, 30, 10)
+            plan._get_open_order().date_occurrence, datetime(2026, 5, 30, 10)
         )
 
     def test_a_resumed_completion_plan_counts_from_its_local_close_day(self):
@@ -269,21 +266,19 @@ class TestMaintenancePlan(TransactionCase):
         )
         plan.action_archive()
         with freeze_time("2026-03-05 20:00:00"):
-            plan.request_ids.write(
-                {"stage_id": self.stage_repaired.id, "close_date": date(2026, 3, 5)}
-            )
+            plan.order_ids.write({"state": "done", "close_date": date(2026, 3, 5)})
         with freeze_time("2026-03-06 12:00:00"):
             plan.action_unarchive()
         self.assertEqual(
-            plan._get_open_request().date_occurrence, datetime(2026, 3, 13, 2)
+            plan._get_open_order().date_occurrence, datetime(2026, 3, 13, 2)
         )
 
-    def test_moving_the_first_occurrence_moves_the_untouched_open_request(self):
+    def test_moving_the_first_occurrence_moves_the_untouched_open_order(self):
         with freeze_time("2026-01-20 12:00:00"):
             plan = self._plan()
             plan.date_start = datetime(2026, 2, 5, 10)
         self.assertEqual(
-            plan._get_open_request().date_occurrence, datetime(2026, 2, 5, 10)
+            plan._get_open_order().date_occurrence, datetime(2026, 2, 5, 10)
         )
         march = self._close_at(plan, "2026-02-05 12:00:00")
         self.assertEqual(march.date_occurrence, datetime(2026, 3, 5, 10))
@@ -291,14 +286,14 @@ class TestMaintenancePlan(TransactionCase):
     def test_the_calendar_reads_the_plan_occurrences_from_the_server(self):
         with freeze_time("2026-01-20 12:00:00"):
             plan = self._plan()
-            request = plan._get_open_request()
-            occurrences = request.get_plan_occurrences(
+            order = plan._get_open_order()
+            occurrences = order.get_plan_occurrences(
                 "2026-02-01 00:00:00", "2026-05-31 23:59:59"
             )
         self.assertEqual(
             occurrences,
             {
-                request.id: [
+                order.id: [
                     "2026-02-28 10:00:00",
                     "2026-03-31 10:00:00",
                     "2026-04-30 10:00:00",
@@ -310,12 +305,12 @@ class TestMaintenancePlan(TransactionCase):
     def test_the_calendar_does_not_project_dates_already_missed(self):
         with freeze_time("2026-04-10 12:00:00"):
             plan = self._plan()
-            request = plan._get_open_request()
-            occurrences = request.get_plan_occurrences(
+            order = plan._get_open_order()
+            occurrences = order.get_plan_occurrences(
                 "2026-02-01 00:00:00", "2026-05-31 23:59:59"
             )
         self.assertEqual(
-            occurrences, {request.id: ["2026-04-30 10:00:00", "2026-05-31 10:00:00"]}
+            occurrences, {order.id: ["2026-04-30 10:00:00", "2026-05-31 10:00:00"]}
         )
 
     def test_the_plan_takes_its_recurrence_vocabulary_from_the_mixin(self):

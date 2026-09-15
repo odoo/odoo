@@ -9,14 +9,14 @@ _logger = logging.getLogger(__name__)
 
 def migrate(cr, version):
     if not version or not column_exists(
-        cr, "maintenance_request", "recurring_maintenance"
+        cr, "maintenance_order", "recurring_maintenance"
     ):
         return
     # date_recurrence_origin exists only on databases upgraded between feadf2864ac1
     # and this migration; everywhere else a series starts on its request's date.
     origin = (
         SQL("request.date_recurrence_origin")
-        if column_exists(cr, "maintenance_request", "date_recurrence_origin")
+        if column_exists(cr, "maintenance_order", "date_recurrence_origin")
         else SQL("NULL::timestamp")
     )
     cr.execute(
@@ -28,7 +28,7 @@ def migrate(cr, version):
                    request.repeat_type,
                    request.repeat_until,
                    COALESCE(%s, request.schedule_date, request.create_date)
-              FROM maintenance_request request
+              FROM maintenance_order request
          LEFT JOIN maintenance_stage stage ON stage.id = request.stage_id
              WHERE request.recurring_maintenance
                AND NOT COALESCE(request.archive, FALSE)
@@ -41,7 +41,7 @@ def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {"tracking_disable": True})
     series = {}
     for request_id, interval, unit, repeat_type, until, start in cr.fetchall():
-        request = env["maintenance.request"].browse(request_id)
+        request = env["maintenance.order"].browse(request_id)
         key = (
             request.name,
             request.equipment_id.id,
@@ -86,7 +86,7 @@ def migrate(cr, version):
                         "repeat_until": until,
                         "repeat_anchor": "fixed",
                         "date_start": start,
-                        "request_ids": [
+                        "order_ids": [
                             Command.link(member.id) for member, _start in members
                         ],
                     }

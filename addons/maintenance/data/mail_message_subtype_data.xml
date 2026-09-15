@@ -2,18 +2,18 @@
 <odoo>
 
     <data noupdate="1">
-        <!-- Maintenance Request-related subtypes for messaging / Chatter -->
-        <record id="mt_req_created" model="mail.message.subtype">
-            <field name="name">Request Created</field>
-            <field name="description">Maintenance Request created</field>
-            <field name="res_model">maintenance.request</field>
+        <!-- Maintenance Order-related subtypes for messaging / Chatter -->
+        <record id="mt_order_created" model="mail.message.subtype">
+            <field name="name">Order Created</field>
+            <field name="description">Maintenance Order created</field>
+            <field name="res_model">maintenance.order</field>
             <field name="default" eval="False" />
             <field name="hidden" eval="True" />
         </record>
-        <record id="mt_req_status" model="mail.message.subtype">
+        <record id="mt_order_state" model="mail.message.subtype">
             <field name="name">Status Changed</field>
             <field name="description">Status changed</field>
-            <field name="res_model">maintenance.request</field>
+            <field name="res_model">maintenance.order</field>
             <field name="default" eval="True" />
         </record>
         <!-- Equipment-related subtypes for messaging / Chatter -->
@@ -23,11 +23,11 @@
             <field name="res_model">maintenance.equipment</field>
         </record>
         <!-- Equipment Category-related subtypes for messaging / Chatter -->
-        <record id="mt_cat_req_created" model="mail.message.subtype">
-            <field name="name">Maintenance Request Created</field>
+        <record id="mt_cat_order_created" model="mail.message.subtype">
+            <field name="name">Maintenance Order Created</field>
             <field name="res_model">maintenance.equipment.category</field>
             <field name="relation_field">category_id</field>
-            <field name="parent_id" ref="mt_req_created" />
+            <field name="parent_id" ref="mt_order_created" />
             <field name="default" eval="True" />
         </record>
         <record id="mt_cat_mat_assign" model="mail.message.subtype">

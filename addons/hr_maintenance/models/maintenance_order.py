@@ -4,8 +4,8 @@ from odoo.libs.debug_log import DebugLog
 _debug = DebugLog(__name__)
 
 
-class MaintenanceRequest(models.Model):
-    _inherit = "maintenance.request"
+class MaintenanceOrder(models.Model):
+    _inherit = "maintenance.order"
 
     def _default_employee_id(self):
         return self.env.user.employee_id
@@ -26,25 +26,25 @@ class MaintenanceRequest(models.Model):
 
     @api.depends("employee_id", "equipment_id.equipment_assign_to")
     def _compute_owner_user_id(self):
-        for request in self:
+        for order in self:
             if (
-                request.equipment_id.equipment_assign_to == "employee"
-                and request.employee_id.user_id
+                order.equipment_id.equipment_assign_to == "employee"
+                and order.employee_id.user_id
             ):
-                request.owner_user_id = request.employee_id.user_id
+                order.owner_user_id = order.employee_id.user_id
             else:
-                request.owner_user_id = request.owner_user_id or self.env.user
+                order.owner_user_id = order.owner_user_id or self.env.user
 
     @api.model_create_multi
     def create(self, vals_list):
-        requests = super().create(vals_list)
-        _debug.lifecycle("requests_created", requests=requests)
-        for request in requests:
-            if request.employee_id.user_id:
-                request.message_subscribe(
-                    partner_ids=[request.employee_id.user_id.partner_id.id]
+        orders = super().create(vals_list)
+        _debug.lifecycle("orders_created", orders=orders)
+        for order in orders:
+            if order.employee_id.user_id:
+                order.message_subscribe(
+                    partner_ids=[order.employee_id.user_id.partner_id.id]
                 )
-        return requests
+        return orders
 
     def write(self, vals):
         if vals.get("employee_id"):
@@ -64,7 +64,7 @@ class MaintenanceRequest(models.Model):
             else self.env["res.users"]
         )
         _debug.logic(
-            "request_from_email", email=email or "none", employee=user.employee_id
+            "order_from_email", email=email or "none", employee=user.employee_id
         )
         if user.employee_id:
             custom_values["employee_id"] = user.employee_id.id

@@ -6,7 +6,7 @@ class ResourceAsset(models.Model):
     _inherit = ["resource.asset", "mixin.maintenance"]
 
     maintenance_ids = fields.One2many(
-        comodel_name="maintenance.request",
+        comodel_name="maintenance.order",
         inverse_name="asset_id",
     )
     maintenance_plan_ids = fields.One2many(
@@ -18,7 +18,7 @@ class ResourceAsset(models.Model):
     def action_view_maintenance(self):
         self.check_singleton()
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
-            "maintenance.hr_equipment_request_action"
+            "maintenance.maintenance_order_action"
         )
         action["domain"] = [("asset_id", "=", self.id)]
         action["context"] = {
@@ -42,18 +42,10 @@ class ResourceAsset(models.Model):
     def _sync_state_from_maintenance(self):
         if not self:
             return
-        first_stage = self.env["maintenance.stage"].sudo().search([], limit=1)
         in_progress = (
-            self.env["maintenance.request"]
+            self.env["maintenance.order"]
             .sudo()
-            .search(
-                [
-                    ("asset_id", "in", self.ids),
-                    ("archive", "=", False),
-                    ("stage_id.done", "=", False),
-                    ("stage_id", "!=", first_stage.id),
-                ]
-            )
+            .search([("asset_id", "in", self.ids), ("state", "=", "in_progress")])
         )
         busy_ids = set(in_progress.asset_id.ids)
         assets = self.sudo()

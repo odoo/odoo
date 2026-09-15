@@ -25,27 +25,27 @@ class TestHrMaintenanceOwner(TransactionCase):
             {"name": "Mail sender", "user_id": cls.sender.id}
         )
 
-    def test_an_internal_user_without_employee_can_create_a_request(self):
-        request = (
-            self.env["maintenance.request"]
+    def test_an_internal_user_without_employee_can_create_a_order(self):
+        order = (
+            self.env["maintenance.order"]
             .with_user(self.requester)
             .create({"name": "Printer jammed"})
         )
-        self.assertEqual(request.owner_user_id, self.requester)
-        self.assertFalse(request.user_id)
+        self.assertEqual(order.owner_user_id, self.requester)
+        self.assertFalse(order.user_id)
 
     def test_an_employee_assigned_equipment_makes_its_user_the_owner(self):
         equipment = self.env["maintenance.equipment"].create(
             {"name": "Laptop", "employee_id": self.sender_employee.id}
         )
-        request = self.env["maintenance.request"].create(
+        order = self.env["maintenance.order"].create(
             {
                 "name": "Battery",
                 "equipment_id": equipment.id,
                 "employee_id": self.sender_employee.id,
             }
         )
-        self.assertEqual(request.owner_user_id, self.sender)
+        self.assertEqual(order.owner_user_id, self.sender)
 
     def test_an_explicit_equipment_owner_is_kept(self):
         for assign_to in ("employee", "other"):
@@ -59,8 +59,8 @@ class TestHrMaintenanceOwner(TransactionCase):
                 )
                 self.assertEqual(equipment.owner_user_id, self.requester)
 
-    def test_a_request_by_email_belongs_to_the_sender_employee(self):
-        request = self.env["maintenance.request"].message_new(
+    def test_a_order_by_email_belongs_to_the_sender_employee(self):
+        order = self.env["maintenance.order"].message_new(
             {
                 "from": "Mail sender <sender@example.com>",
                 "email_from": "sender@example.com",
@@ -72,4 +72,4 @@ class TestHrMaintenanceOwner(TransactionCase):
                 "author_id": self.sender.partner_id.id,
             }
         )
-        self.assertEqual(request.employee_id, self.sender_employee)
+        self.assertEqual(order.employee_id, self.sender_employee)

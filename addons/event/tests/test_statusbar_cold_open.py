@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from odoo.tests import HttpCase, tagged
 
 
@@ -7,7 +5,7 @@ from odoo.tests import HttpCase, tagged
 class TestStatusBarColdOpen(HttpCase):
     """Guards web's `useSpecialData` against the cold-cache hang.
 
-    `maintenance.request` is a real form carrying a **many2one** statusbar, which
+    `event.event` is a real form carrying a **many2one** statusbar, which
     is the only shape that reaches `StatusBarField.setupRelationData`. The hook it
     calls asks the ORM disk cache with `update: "always"`, which hands the fresh
     value to a callback and settles the promise it returns from the cache -- so on
@@ -22,21 +20,13 @@ class TestStatusBarColdOpen(HttpCase):
 
     def test_a_cold_form_open_renders_and_fills_its_statusbar(self):
         self.assertEqual(
-            self.env["maintenance.request"]._fields["stage_id"].type,
+            self.env["event.event"]._fields["stage_id"].type,
             "many2one",
             "this test only exercises the defect while stage_id is a many2one",
         )
-        stages = self.env["maintenance.stage"].search([], limit=4)
+        stages = self.env["event.stage"].search([], limit=4)
         self.assertTrue(stages, "the statusbar needs stages to render")
-        equipment = self.env["maintenance.equipment"].create({"name": "room"})
-        request = self.env["maintenance.request"].create(
-            {
-                "name": "cold open",
-                "schedule_date": datetime.now(),
-                "equipment_id": equipment.id,
-                "maintenance_type": "preventive",
-            }
-        )
+        event = self.env["event.event"].create({"name": "cold open"})
         # A fresh browser profile per browser_js call, opened straight at the
         # form: the first read through useSpecialData is the one that used to
         # hang, so anything that warms the cache first would hide the defect.
@@ -64,7 +54,7 @@ class TestStatusBarColdOpen(HttpCase):
             })()
         """ % {"stage": repr(stages[0].name).replace("'", '"')}
         self.browser_js(
-            "/odoo/maintenance-requests/%d" % request.id,
+            "/odoo/event.event/%d" % event.id,
             code,
             "odoo.isReady === true",
             login="admin",

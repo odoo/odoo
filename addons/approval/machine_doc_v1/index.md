@@ -20,7 +20,7 @@ dashboards.
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
 | Application | No: the Approvals application (menu root, generic request categories, demo) is `approval_app`, so the modules adopting `mixin.approval` pull in no application tile. Configuration without it: Settings > Technical > Approvals |
 | License | LGPL-3 |
-| Python models | 11 own + 5 extensions, across 34 files in `models/` (plus `__init__.py`), + 2 wizards + 3 report models. One of the 34 declares no model: `approval_trace.py`, the campaign instrumentation (conventions.md, "Campaign Instrumentation") |
+| Python models | 12 own + 5 extensions, across 35 files in `models/` (plus `__init__.py`), + 2 wizards + 3 report models. One of the 35 declares no model: `approval_trace.py`, the campaign instrumentation (conventions.md, "Campaign Instrumentation") |
 | Views | 15 XML files (9 `views/` + 4 `reports/` + 2 `wizards/`) |
 | Wizards | 2 transient models |
 | Reports | 4 (2 SQL views + 1 singleton dashboard + 1 QWeb PDF) |
@@ -46,6 +46,7 @@ dashboards.
 | `approval_decision_log.py` | `approval.decision.log`, extends `approval.request` | The append-only decision ledger: one `verdict` per fact (approved, refused, withdrawn, granted, revoked, cancelled, reset) with the acting user, the `principal_id` a delegate acted for, the caller's elevation and the `state_after`. Written by every funnel through `_append_decision_log`; `write` and `unlink` refuse always. Read through `approval.request.decision_log_ids` |
 | `mixin_approval_source.py` | `mixin.approval.source` (Abstract) | What every record an approval request is raised for may answer: `_filter_approval_step_user_ids()` (who its own policy lets decide) and `_get_approval_activity_type()` (which activity asks them). Parent of both adopter shapes |
 | `mixin_approval.py` | `mixin.approval` (Abstract) | Mixin for source documents (PO, SO, etc.) to integrate with approvals: one request per document, `approval_request_id` |
+| `mixin_approval_lifecycle.py` | `mixin.approval.lifecycle` (Abstract) | A `mixin.lifecycle` document whose confirmation waits for approval when a category applies: `action_confirm` confirms what needs none, raises a request for what does, and refuses while one is waiting or was refused. The grant confirms a draft; cancelling refuses a waiting request; a reset clears a refused link |
 | `mixin_approval_access.py` | `mixin.approval.access` (Abstract) | A record whose access a partner asks for: the subject is the partner and role, and the adopter says whether the access is held and writes the grant on approval |
 | `mixin_approval_subjects.py` | `mixin.approval.subjects` (Abstract) | A record holding one request per subject (`subject_key`): a course and each partner asking to join it, an engineering change and each stage it passes. Raises, looks up and is told about each subject's request |
 | `mixin_approval_state_sync.py` | `mixin.approval.state.sync` (Abstract) | A source document whose own state drives its request: a state change syncs the request (decision, grant, revoke, force, reset), a request-side decision reaches the document through the document's own policy, and the request refuses being moved from the approvals app. Adopted by `hr.leave` and `hr.leave.allocation` |
@@ -204,6 +205,7 @@ approval/
 |   +-- mixin_approval.py             # Source document mixin (one request)
 |   +-- mixin_approval_subjects.py    # One request per subject
 |   +-- mixin_approval_access.py      # Access asked for through approval
+|   +-- mixin_approval_lifecycle.py   # Confirmation gated by approval
 |   +-- mixin_approval_state_sync.py  # Document state drives its request
 |   +-- mixin_approval_threshold.py   # Currency-aware threshold base
 |   +-- mixin_approval_domain.py      # Subject-domain parsing + path checks
@@ -243,9 +245,9 @@ approval/
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 17 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 18 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
-| Abstract models | 7 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
+| Abstract models | 8 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.lifecycle, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |
 | Transient models | 2 |
 | Test-only models | 3 |

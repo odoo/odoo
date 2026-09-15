@@ -32,7 +32,7 @@ class MaintenanceEquipmentCategory(models.Model):
     )
     equipment_count = fields.Integer(compute="_compute_equipment_count")
     maintenance_ids = fields.One2many(
-        comodel_name="maintenance.request",
+        comodel_name="maintenance.order",
         inverse_name="category_id",
         copy=False,
     )
@@ -64,12 +64,12 @@ class MaintenanceEquipmentCategory(models.Model):
             category.equipment_count = mapped_data.get(category.id, 0)
 
     def _compute_maintenance_counts(self):
-        Request = self.env["maintenance.request"]
+        Order = self.env["maintenance.order"]
         domain = [("category_id", "in", self.ids)]
-        total = dict(Request._read_group(domain, ["category_id"], ["__count"]))
+        total = dict(Order._read_group(domain, ["category_id"], ["__count"]))
         open_ = dict(
-            Request._read_group(
-                domain + Request._get_domain_open(), ["category_id"], ["__count"]
+            Order._read_group(
+                domain + Order._get_domain_open(), ["category_id"], ["__count"]
             )
         )
         for category in self:
@@ -77,7 +77,7 @@ class MaintenanceEquipmentCategory(models.Model):
             category.maintenance_open_count = open_.get(category, 0)
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_contains_maintenance_requests(self):
+    def _unlink_except_contains_maintenance_orders(self):
         if any(
             category.with_context(active_test=False).equipment_ids
             or category.maintenance_ids
@@ -85,6 +85,6 @@ class MaintenanceEquipmentCategory(models.Model):
         ):
             raise UserError(
                 _(
-                    "You can’t delete an equipment category if some equipment or maintenance requests are linked to it."
+                    "You can’t delete an equipment category if some equipment or maintenance orders are linked to it."
                 )
             )

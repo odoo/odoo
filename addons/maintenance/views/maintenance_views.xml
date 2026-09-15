@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- equiment.request: views -->
-    <record id="hr_equipment_request_view_search" model="ir.ui.view">
-        <field name="name">equipment.request.search</field>
-        <field name="model">maintenance.request</field>
+    <!-- equiment.order: views -->
+    <record id="maintenance_order_view_search" model="ir.ui.view">
+        <field name="name">equipment.order.search</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <search string="Maintenance Request Search">
-                <field name="name" string="Request" />
+            <search string="Maintenance Order Search">
+                <field name="name" string="Order" />
                 <field name="category_id" />
                 <field name="user_id" />
                 <field name="equipment_id" />
                 <field name="owner_user_id" />
-                <field name="stage_id" />
+                <field name="state" />
                 <field name="maintenance_team_id" />
                 <filter
                     name="my_maintenances"
@@ -22,36 +22,37 @@
                 <filter
                     name="todo"
                     string="To Do"
-                    domain="[('stage_id.done', '=', False)]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress'))]" />
+                <filter
+                    name="draft"
+                    string="Draft"
+                    domain="[('state', '=', 'draft')]" />
                 <filter
                     name="progress"
                     string="In Progress"
-                    domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'normal')]" />
-                <filter
-                    name="done"
-                    string="Done"
-                    domain="[('stage_id.done', '=', True)]" />
+                    domain="[('state', '=', 'in_progress')]" />
+                <filter name="done" string="Done" domain="[('state', '=', 'done')]" />
                 <separator />
                 <filter
                     name="kanban_state_block"
                     string="Blocked"
-                    domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'blocked')]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('kanban_state', '=', 'blocked')]" />
                 <filter
                     name="ready"
                     string="Ready"
-                    domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'done')]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('kanban_state', '=', 'done')]" />
                 <separator />
                 <filter
                     name="high_priority"
                     string="High-priority"
-                    domain="[('stage_id.done', '=', False), ('priority', '=', '3')]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('priority', '=', '3')]" />
                 <separator />
                 <filter
                     name="unscheduled"
                     string="Unscheduled"
-                    domain="[('stage_id.done', '=', False), ('schedule_date', '=', False)]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('schedule_date', '=', False)]" />
                 <separator />
-                <filter name="filter_request_date" date="request_date" />
+                <filter name="filter_date_order" date="date_order" />
                 <filter name="filter_schedule_date" date="schedule_date" />
                 <filter name="filter_close_date" date="close_date" />
                 <separator />
@@ -86,12 +87,12 @@
                 <separator />
                 <filter
                     name="active"
-                    string="Active"
-                    domain="[('archive', '=', False)]" />
+                    string="Not Cancelled"
+                    domain="[('state', '!=', 'cancel')]" />
                 <filter
                     name="inactive"
                     string="Cancelled"
-                    domain="[('archive', '=', True)]" />
+                    domain="[('state', '=', 'cancel')]" />
                 <group>
                     <filter
                         name="assigned"
@@ -102,9 +103,9 @@
                         string="Category"
                         context="{'group_by' : 'category_id'}" />
                     <filter
-                        name="stages"
-                        string="Stage"
-                        context="{'group_by' : 'stage_id'}" />
+                        name="states"
+                        string="Status"
+                        context="{'group_by' : 'state'}" />
                     <filter
                         name="created_by"
                         string="Created By"
@@ -114,11 +115,11 @@
         </field>
     </record>
 
-    <record id="maintenance_request_view_activity" model="ir.ui.view">
-        <field name="name">maintenance.request.view.activity</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_activity" model="ir.ui.view">
+        <field name="name">maintenance.order.view.activity</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <activity string="Maintenance Request">
+            <activity string="Maintenance Order">
                 <field name="user_id" />
                 <templates>
                     <div t-name="activity-box">
@@ -145,37 +146,54 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_form" model="ir.ui.view">
-        <field name="name">equipment.request.form</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_form" model="ir.ui.view">
+        <field name="name">equipment.order.form</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <form string="Maintenance Request">
+            <form string="Maintenance Order">
                 <field name="company_id" invisible="1" />
                 <field name="category_id" invisible="1" />
                 <header>
                     <button
-                        name="archive_equipment_request"
+                        name="action_confirm"
+                        type="object"
+                        string="Confirm"
+                        invisible="state != 'draft'"
+                        class="btn-primary" />
+                    <button
+                        name="action_start"
+                        type="object"
+                        string="Start"
+                        invisible="state != 'confirmed'"
+                        class="btn-primary" />
+                    <button
+                        name="action_done"
+                        type="object"
+                        string="Done"
+                        invisible="state not in ('confirmed', 'in_progress')"
+                        class="btn-primary" />
+                    <button
+                        name="action_cancel"
                         type="object"
                         string="Cancel"
-                        invisible="archive" />
+                        invisible="state in ('done', 'cancel')" />
                     <button
-                        name="reset_equipment_request"
+                        name="action_draft"
                         type="object"
-                        string="Reopen Request"
-                        invisible="not archive" />
+                        string="Reset to Draft"
+                        invisible="state not in ('confirmed', 'cancel')" />
                     <field
-                        name="stage_id"
+                        name="state"
                         widget="statusbar"
-                        options="{'clickable': '1'}"
-                        invisible="archive" />
+                        statusbar_visible="draft,confirmed,in_progress,done" />
                 </header>
                 <sheet>
-                    <div invisible="not archive">
+                    <div invisible="state != 'cancel'">
                         <span class="badge text-bg-warning float-end">Cancelled</span>
                     </div>
                     <field name="kanban_state" widget="state_selection" />
                     <div class="oe_title">
-                        <label for="name" string="Request" />
+                        <label for="name" string="Order" />
                         <h1>
                             <field name="name" placeholder="e.g. Screen not working" />
                         </h1>
@@ -194,13 +212,11 @@
                                 context="{'default_company_id':company_id}"
                                 groups="maintenance.group_equipment_manager"
                                 invisible="not equipment_id" />
-                            <field name="request_date" readonly="True" />
-                            <field name="done" invisible="1" />
+                            <field name="date_order" readonly="True" />
                             <field
                                 name="close_date"
-                                invisible="not done"
+                                invisible="state != 'done'"
                                 readonly="True" />
-                            <field name="archive" invisible="1" />
                             <field name="maintenance_type" widget="radio" />
                         </group>
                         <group>
@@ -263,12 +279,15 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_kanban" model="ir.ui.view">
-        <field name="name">equipment.request.kanban</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_kanban" model="ir.ui.view">
+        <field name="name">equipment.order.kanban</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" sample="1" highlight_color="color">
-                <field name="archive" />
+            <kanban
+                default_group_by="state"
+                sample="1"
+                highlight_color="color"
+                records_draggable="0">
                 <progressbar
                     field="kanban_state"
                     colors="{&quot;done&quot;: &quot;success&quot;, &quot;blocked&quot;: &quot;danger&quot;}" />
@@ -294,7 +313,7 @@
                             <div class="d-flex ms-auto align-items-center">
                                 <div
                                     class="badge text-bg-warning float-end"
-                                    invisible="not archive">
+                                    invisible="state != 'cancel'">
                                     Cancelled
                                 </div>
                                 <field
@@ -313,21 +332,21 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_tree" model="ir.ui.view">
-        <field name="name">equipment.request.list</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_list" model="ir.ui.view">
+        <field name="name">equipment.order.list</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <list string="Maintenance Request" multi_edit="1" sample="1">
+            <list string="Maintenance Order" multi_edit="1" sample="1">
                 <field name="message_needaction" column_invisible="True" />
                 <field name="name" />
-                <field name="request_date" groups="base.group_no_one" />
+                <field name="date_order" groups="base.group_no_one" />
                 <field name="owner_user_id" />
                 <field name="user_id" />
                 <field
                     name="category_id"
                     groups="maintenance.group_equipment_manager"
                     readonly="1" />
-                <field name="stage_id" />
+                <field name="state" />
                 <field
                     name="company_id"
                     groups="base.group_multi_company"
@@ -339,34 +358,34 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_graph" model="ir.ui.view">
-        <field name="name">equipment.request.graph</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_graph" model="ir.ui.view">
+        <field name="name">equipment.order.graph</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <graph string="Maintenance Request" sample="1">
+            <graph string="Maintenance Order" sample="1">
                 <field name="user_id" />
-                <field name="stage_id" />
+                <field name="state" />
                 <field name="duration" type="measure" />
                 <field name="color" type="measure" invisible="1" />
             </graph>
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_pivot" model="ir.ui.view">
-        <field name="name">equipment.request.pivot</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_pivot" model="ir.ui.view">
+        <field name="name">equipment.order.pivot</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
-            <pivot string="Maintenance Request" sample="1">
+            <pivot string="Maintenance Order" sample="1">
                 <field name="user_id" />
-                <field name="stage_id" />
+                <field name="state" />
                 <field name="color" invisible="1" />
             </pivot>
         </field>
     </record>
 
-    <record id="hr_equipment_view_calendar" model="ir.ui.view">
-        <field name="name">equipment.request.calendar</field>
-        <field name="model">maintenance.request</field>
+    <record id="maintenance_order_view_calendar" model="ir.ui.view">
+        <field name="name">equipment.order.calendar</field>
+        <field name="model">maintenance.order</field>
         <field name="arch" type="xml">
             <calendar
                 color="user_id"
@@ -378,20 +397,19 @@
                 <field name="priority" />
                 <field name="maintenance_type" />
                 <field name="plan_id" invisible="1" />
-                <field name="done" invisible="1" />
-                <field name="archive" invisible="1" />
+                <field name="state" invisible="1" />
                 <field name="duration" invisible="1" />
             </calendar>
         </field>
     </record>
 
-    <!-- equiment.request: actions -->
-    <record id="hr_equipment_request_action" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
-        <field name="res_model">maintenance.request</field>
-        <field name="path">maintenance-requests</field>
+    <!-- equiment.order: actions -->
+    <record id="maintenance_order_action" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders</field>
+        <field name="res_model">maintenance.order</field>
+        <field name="path">maintenance-orders</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="hr_equipment_request_view_kanban" />
+        <field name="view_id" ref="maintenance_order_view_kanban" />
         <field
             name="context">{
             'search_default_active': True,
@@ -399,19 +417,19 @@
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
 
-    <record id="hr_equipment_request_action_link" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
-        <field name="res_model">maintenance.request</field>
+    <record id="maintenance_order_action_link" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders</field>
+        <field name="res_model">maintenance.order</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="hr_equipment_request_view_kanban" />
-        <field name="search_view_id" ref="hr_equipment_request_view_search" />
+        <field name="view_id" ref="maintenance_order_view_kanban" />
+        <field name="search_view_id" ref="maintenance_order_view_search" />
         <field
             name="context">{
             'search_default_category_id': [active_id],
@@ -420,18 +438,16 @@
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
 
-    <record
-        id="hr_equipment_request_action_from_equipment"
-        model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
-        <field name="res_model">maintenance.request</field>
+    <record id="maintenance_order_action_from_equipment" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders</field>
+        <field name="res_model">maintenance.order</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="domain">[('equipment_id', '=', active_id)]</field>
         <field
@@ -442,18 +458,16 @@
         <field name="binding_model_id" ref="maintenance.model_maintenance_equipment" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
 
-    <record
-        id="hr_equipment_todo_request_action_from_dashboard"
-        model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
-        <field name="res_model">maintenance.request</field>
+    <record id="maintenance_order_action_from_dashboard" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders</field>
+        <field name="res_model">maintenance.order</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field
             name="domain">[('maintenance_team_id', '=', active_id), ('maintenance_type', 'in', context.get('maintenance_type', ['preventive', 'corrective']))]</field>
@@ -465,19 +479,19 @@
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
 
-    <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
-        <field name="res_model">maintenance.request</field>
+    <record id="maintenance_order_action_cal" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders</field>
+        <field name="res_model">maintenance.order</field>
         <field name="path">maintenance-calendar</field>
         <field name="view_mode">calendar,kanban,list,form,pivot,graph,activity</field>
-        <field name="view_id" ref="hr_equipment_view_calendar" />
+        <field name="view_id" ref="maintenance_order_view_calendar" />
         <field
             name="context">{
             'search_default_active': True,
@@ -485,17 +499,17 @@
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
 
-    <record id="maintenance_request_action_reports" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests Analysis</field>
-        <field name="res_model">maintenance.request</field>
-        <field name="path">maintenance-requests-analysis</field>
+    <record id="maintenance_order_action_reports" model="ir.actions.act_window">
+        <field name="name">Maintenance Orders Analysis</field>
+        <field name="res_model">maintenance.order</field>
+        <field name="path">maintenance-orders-analysis</field>
         <field name="view_mode">graph,pivot,kanban,list,form,calendar,activity</field>
         <field
             name="context">{
@@ -503,9 +517,9 @@
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new maintenance request
+                Add a new maintenance order
             </p><p>
-                Follow the process of the request and communicate with the collaborator.
+                Follow the process of the order and communicate with the collaborator.
             </p>
         </field>
     </record>
@@ -520,7 +534,7 @@
                     <field name="company_id" invisible="1" />
                     <div class="oe_button_box" name="button_box">
                         <button
-                            name="%(hr_equipment_request_action_from_equipment)d"
+                            name="%(maintenance_order_action_from_equipment)d"
                             type="action"
                             icon="fa-wrench"
                             context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
@@ -650,7 +664,7 @@
                             <div
                                 class="badge text-bg-danger"
                                 t-if="record.maintenance_open_count.raw_value">
-                                <field name="maintenance_open_count" /> Request
+                                <field name="maintenance_open_count" /> Order
                             </div>
                             <div class="d-flex ms-auto align-items-center">
                                 <field name="activity_ids" widget="kanban_activity" />
@@ -833,7 +847,7 @@
                             widget="statinfo" />
                     </button>
                     <button
-                        name="%(hr_equipment_request_action_link)d"
+                        name="%(maintenance_order_action_link)d"
                         type="action"
                         icon="fa-wrench"
                         class="oe_stat_button">
@@ -938,57 +952,6 @@
         </field>
     </record>
 
-    <!-- equipment.stage: views -->
-    <record id="hr_equipment_stage_view_search" model="ir.ui.view">
-        <field name="name">equipment.stage.search</field>
-        <field name="model">maintenance.stage</field>
-        <field name="arch" type="xml">
-            <search string="Maintenance Request Stages">
-                <field name="name" string="Maintenance Request Stages" />
-            </search>
-        </field>
-    </record>
-
-    <record id="hr_equipment_stage_view_tree" model="ir.ui.view">
-        <field name="name">equipment.stage.list</field>
-        <field name="model">maintenance.stage</field>
-        <field name="arch" type="xml">
-            <list string="Maintenance Request Stage" editable="top">
-                <field name="sequence" widget="handle" />
-                <field name="name" />
-                <field name="fold" />
-                <field name="done" />
-            </list>
-        </field>
-    </record>
-
-    <record id="hr_equipment_stage_view_kanban" model="ir.ui.view">
-        <field name="name">equipment.stage.kanban</field>
-        <field name="model">maintenance.stage</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <templates>
-                    <t t-name="card">
-                        <field name="name" class="fw-bolder" />
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
-    <!-- equipment.stages: actions -->
-    <record id="hr_equipment_stage_action" model="ir.actions.act_window">
-        <field name="name">Stages</field>
-        <field name="res_model">maintenance.stage</field>
-        <field name="path">maintenance-stages</field>
-        <field name="view_mode">list,kanban,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new stage in the maintenance request
-            </p>
-        </field>
-    </record>
-
     <record id="team_view_search_maintenance" model="ir.ui.view">
         <field name="name">team.team.view.search.maintenance</field>
         <field name="model">team.team</field>
@@ -1058,18 +1021,18 @@
                                     <h5
                                         role="menuitem"
                                         class="o_kanban_card_manage_title">
-                                        <span>Requests</span>
+                                        <span>Orders</span>
                                     </h5>
                                     <div role="menuitem">
                                         <a
-                                            name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                            name="%(maintenance_order_action_from_dashboard)d"
                                             type="action">
                                             All
                                         </a>
                                     </div>
                                     <div role="menuitem">
                                         <a
-                                            name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                            name="%(maintenance_order_action_from_dashboard)d"
                                             type="action"
                                             context="{'search_default_todo': 1}">
                                             To Do
@@ -1077,7 +1040,7 @@
                                     </div>
                                     <div role="menuitem">
                                         <a
-                                            name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                            name="%(maintenance_order_action_from_dashboard)d"
                                             type="action"
                                             context="{'search_default_progress': 1}">
                                             In Progress
@@ -1085,7 +1048,7 @@
                                     </div>
                                     <div role="menuitem">
                                         <a
-                                            name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                            name="%(maintenance_order_action_from_dashboard)d"
                                             type="action"
                                             context="{'search_default_done': 1}">
                                             Done
@@ -1100,10 +1063,10 @@
                                     </h5>
                                     <div role="menuitem">
                                         <a
-                                            name="%(maintenance_request_action_reports)d"
+                                            name="%(maintenance_order_action_reports)d"
                                             type="action"
                                             context="{'search_default_maintenance_team_id': id}">
-                                        Maintenance Requests
+                                        Maintenance Orders
                                         </a>
                                     </div>
                                 </div>
@@ -1122,58 +1085,57 @@
                     </t>
                     <t t-name="card">
                         <a
-                            name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                            name="%(maintenance_order_action_from_dashboard)d"
                             type="action">
                             <field name="name" class="fw-bold fs-4 ms-2" />
                         </a>
                         <div class="row g-0 mt-3 ms-2 pb-4">
                             <div class="col-6">
                                 <button
-                                    name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                    name="%(maintenance_order_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_todo': 1}"
                                     class="btn btn-primary">
-                                    <field name="maintenance_todo_request_count" /> To Do
+                                    <field name="maintenance_todo_order_count" /> To Do
                                 </button>
                             </div>
                             <div class="col-6">
                                 <a
-                                    t-if="record.maintenance_todo_request_count_date.raw_value &gt; 0"
-                                    name="%(hr_equipment_request_action_cal)d"
+                                    t-if="record.maintenance_todo_order_count_date.raw_value &gt; 0"
+                                    name="%(maintenance_order_action_cal)d"
                                     type="action"
                                     context="{'search_default_todo': 1, 'search_default_maintenance_team_id': id}"
                                     class="d-block">
-                                    <field name="maintenance_todo_request_count_date" />
+                                    <field name="maintenance_todo_order_count_date" />
                                     Scheduled
                                 </a>
                                 <a
-                                    t-if="record.maintenance_todo_request_count_high_priority.raw_value &gt; 0"
-                                    name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                    t-if="record.maintenance_todo_order_count_high_priority.raw_value &gt; 0"
+                                    name="%(maintenance_order_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_high_priority': 1}"
                                     class="d-block">
                                     <field
-                                        name="maintenance_todo_request_count_high_priority" />
+                                        name="maintenance_todo_order_count_high_priority" />
                                     Top Priorities
                                 </a>
                                 <a
-                                    t-if="record.maintenance_todo_request_count_block.raw_value &gt; 0"
-                                    name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                    t-if="record.maintenance_todo_order_count_block.raw_value &gt; 0"
+                                    name="%(maintenance_order_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_kanban_state_block': 1}"
                                     class="d-block">
-                                    <field
-                                        name="maintenance_todo_request_count_block" />
+                                    <field name="maintenance_todo_order_count_block" />
                                     Blocked
                                 </a>
                                 <a
-                                    t-if="record.maintenance_todo_request_count_unscheduled.raw_value &gt; 0"
-                                    name="%(hr_equipment_todo_request_action_from_dashboard)d"
+                                    t-if="record.maintenance_todo_order_count_unscheduled.raw_value &gt; 0"
+                                    name="%(maintenance_order_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_todo': 1, 'search_default_unscheduled': 1}"
                                     class="d-block">
                                     <field
-                                        name="maintenance_todo_request_count_unscheduled" />
+                                        name="maintenance_todo_order_count_unscheduled" />
                                     Unscheduled
                                 </a>
                             </div>
@@ -1193,7 +1155,7 @@
         <field name="context">{'default_use_maintenance': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a team in the maintenance request
+                Add a team in the maintenance order
             </p>
         </field>
         <field

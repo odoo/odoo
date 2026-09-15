@@ -13,11 +13,11 @@ class MaintenancePlan(models.Model):
     )
     block_asset = fields.Boolean(
         default=True,
-        help="Each request of this plan blocks the asset's time while it is scheduled.",
+        help="Each order of this plan blocks the asset's time while it is scheduled.",
     )
 
-    def _prepare_request_vals(self, occurrence, previous=None):
-        vals = super()._prepare_request_vals(occurrence, previous)
+    def _prepare_order_vals(self, occurrence, previous=None):
+        vals = super()._prepare_order_vals(occurrence, previous)
         if self.asset_id:
             vals["asset_id"] = self.asset_id.id
             vals["block_asset"] = self.block_asset

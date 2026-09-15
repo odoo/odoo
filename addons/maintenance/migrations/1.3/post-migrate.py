@@ -3,7 +3,7 @@ def migrate(cr, version):
         return
     cr.execute(
         """
-        UPDATE maintenance_request
+        UPDATE maintenance_order
            SET date_occurrence = schedule_date
          WHERE plan_id IS NOT NULL
            AND date_occurrence IS NULL

@@ -67,7 +67,7 @@ class MaintenanceEquipment(models.Model):
     color = fields.Integer(string="Color Index")
     scrap_date = fields.Date()
     maintenance_ids = fields.One2many(
-        comodel_name="maintenance.request",
+        comodel_name="maintenance.order",
         inverse_name="equipment_id",
     )
     equipment_properties = fields.Properties(

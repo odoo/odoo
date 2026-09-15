@@ -17,32 +17,32 @@
         groups="base.group_user" />
 
     <menuitem
-        id="menu_m_request"
+        id="menu_m_order"
         name="Maintenance"
         parent="menu_maintenance_title"
         sequence="1"
         groups="base.group_user" />
 
     <menuitem
-        id="menu_m_request_form"
-        name="Maintenance Requests"
-        parent="menu_m_request"
-        action="hr_equipment_request_action"
+        id="menu_m_order_form"
+        name="Maintenance Orders"
+        parent="menu_m_order"
+        action="maintenance_order_action"
         sequence="1"
         groups="base.group_user" />
 
     <menuitem
-        id="menu_m_request_calendar"
+        id="menu_m_order_calendar"
         name="Maintenance Calendar"
-        parent="menu_m_request"
-        action="hr_equipment_request_action_cal"
+        parent="menu_m_order"
+        action="maintenance_order_action_cal"
         sequence="2"
         groups="base.group_user" />
 
     <menuitem
         id="menu_m_plan"
         name="Maintenance Plans"
-        parent="menu_m_request"
+        parent="menu_m_order"
         action="maintenance_plan_action"
         sequence="3"
         groups="base.group_user" />
@@ -62,9 +62,9 @@
         sequence="20" />
 
     <menuitem
-        id="maintenance_request_reporting"
+        id="maintenance_order_reporting"
         parent="maintenance_reporting"
-        action="maintenance_request_action_reports" />
+        action="maintenance_order_action_reports" />
 
     <menuitem
         id="menu_maintenance_configuration"
@@ -87,14 +87,6 @@
         parent="menu_maintenance_configuration"
         action="hr_equipment_category_action"
         sequence="2" />
-
-    <menuitem
-        id="menu_maintenance_stage_configuration"
-        name="Maintenance Stages"
-        parent="menu_maintenance_configuration"
-        action="hr_equipment_stage_action"
-        sequence="3"
-        groups="base.group_no_one" />
 
     <menuitem
         id="maintenance_menu_config_activity_type"

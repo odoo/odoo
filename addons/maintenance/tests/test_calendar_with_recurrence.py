@@ -16,7 +16,7 @@ class TestCalendarWithRecurrence(HttpCase):
             }
         )
         equipment = self.env["maintenance.equipment"].create({"name": "room"})
-        self.env["maintenance.request"].create(
+        self.env["maintenance.order"].create(
             [
                 {
                     "name": "send the mails",
@@ -41,18 +41,18 @@ class TestCalendarWithRecurrence(HttpCase):
                 "repeat_unit": "day",
             }
         )
-        request = plan.request_ids
+        order = plan.order_ids
 
-        url = "/odoo/action-maintenance.hr_equipment_request_action_cal"
+        url = "/odoo/action-maintenance.maintenance_order_action_cal"
         self.start_tour(url, "test_dblclick_event_from_calendar", login="admin")
 
         self.assertEqual(
-            request.name,
+            order.name,
             "make your bed",
-            "The event modification should update the request",
+            "The event modification should update the order",
         )
         self.assertAlmostEqual(
-            request.duration, 2, 2, "The event modification should update the request"
+            order.duration, 2, 2, "The event modification should update the order"
         )
 
     def test_drag_and_drop_calendar_event(self):
@@ -66,7 +66,7 @@ class TestCalendarWithRecurrence(HttpCase):
                 "name": "the boys",
             }
         )
-        self.env["maintenance.request"].create(
+        self.env["maintenance.order"].create(
             [
                 {
                     "name": "send the mails",
@@ -90,16 +90,16 @@ class TestCalendarWithRecurrence(HttpCase):
                 "repeat_unit": "week",
             }
         )
-        request = plan.request_ids
+        order = plan.order_ids
 
-        url = "/odoo/action-maintenance.hr_equipment_request_action_cal"
+        url = "/odoo/action-maintenance.maintenance_order_action_cal"
         self.start_tour(url, "test_drag_and_drop_event_in_calendar", login="admin")
 
         target_datetime = datetime.combine(
             datetime.now().replace(day=15), time.min.replace(hour=10)
         )  # 15h of the month at 10 AM
         self.assertEqual(
-            request.schedule_date,
+            order.schedule_date,
             target_datetime,
-            "The event modification should update the request",
+            "The event modification should update the order",
         )

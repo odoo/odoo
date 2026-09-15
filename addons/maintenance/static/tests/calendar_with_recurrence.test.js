@@ -35,16 +35,24 @@ class MaintenancePlan extends models.Model {
     ];
 }
 
-class MaintenanceRequest extends models.Model {
-    _name = "maintenance.request";
+class MaintenanceOrder extends models.Model {
+    _name = "maintenance.order";
 
     name = fields.Char();
     schedule_date = fields.Datetime();
     schedule_end = fields.Datetime();
     duration = fields.Float();
     plan_id = fields.Many2one({ relation: "maintenance.plan" });
-    done = fields.Boolean();
-    archive = fields.Boolean();
+    state = fields.Selection({
+        selection: [
+            ["draft", "Draft"],
+            ["confirmed", "Confirmed"],
+            ["in_progress", "In Progress"],
+            ["done", "Done"],
+            ["cancel", "Cancelled"],
+        ],
+        default: "confirmed",
+    });
 
     has_access() {
         return true;
@@ -73,7 +81,7 @@ class MaintenanceRequest extends models.Model {
             schedule_end: "2025-09-12 17:00:00",
             duration: 1,
             plan_id: 1,
-            done: true,
+            state: "done",
         },
         {
             id: 3,
@@ -86,28 +94,27 @@ class MaintenanceRequest extends models.Model {
     ];
 }
 
-defineModels([MaintenancePlan, MaintenanceRequest]);
+defineModels([MaintenancePlan, MaintenanceOrder]);
 preloadFullCalendar();
 
 const arch = `
     <calendar js_class="calendar_with_recurrence" date_start="schedule_date" date_stop="schedule_end" mode="week">
         <field name="plan_id" invisible="1"/>
-        <field name="done" invisible="1"/>
-        <field name="archive" invisible="1"/>
+        <field name="state" invisible="1"/>
         <field name="duration" invisible="1"/>
     </calendar>
 `;
 
 test.tags("desktop");
-test("a plan's request shows the occurrences the server projects for it", async () => {
+test("a plan's order shows the occurrences the server projects for it", async () => {
     mockDate("2026-09-14T08:00:00", -6);
-    onRpc("maintenance.request", "get_plan_occurrences", ({ args }) => {
+    onRpc("maintenance.order", "get_plan_occurrences", ({ args }) => {
         expect.step(args[0]);
         return {
             1: ["2026-09-15 16:00:00", "2026-09-16 16:00:00", "2026-09-17 16:00:00"],
         };
     });
-    await mountView({ resModel: "maintenance.request", type: "calendar", arch });
+    await mountView({ resModel: "maintenance.order", type: "calendar", arch });
     expect.verifySteps([[1]]);
     expect(queryAllTexts(".fc-event .o_event_title")).toEqual([
         "daily check",
@@ -118,14 +125,14 @@ test("a plan's request shows the occurrences the server projects for it", async 
 });
 
 test.tags("desktop");
-test("a request that cannot repeat into the range is not fetched", async () => {
+test("an order that cannot repeat into the range is not fetched", async () => {
     mockDate("2026-09-14T08:00:00", -6);
-    onRpc("maintenance.request", "get_plan_occurrences", () => ({}));
-    onRpc("maintenance.request", "search_read", async ({ parent }) => {
+    onRpc("maintenance.order", "get_plan_occurrences", () => ({}));
+    onRpc("maintenance.order", "search_read", async ({ parent }) => {
         const records = await parent();
         expect.step(records.map((record) => record.id));
         return records;
     });
-    await mountView({ resModel: "maintenance.request", type: "calendar", arch });
+    await mountView({ resModel: "maintenance.order", type: "calendar", arch });
     expect.verifySteps([[1]]);
 });

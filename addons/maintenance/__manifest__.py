@@ -1,21 +1,21 @@
 {
     "name": "Maintenance",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Supply Chain/Maintenance",
-    "summary": "Track equipment and manage maintenance requests",
+    "summary": "Track equipment and manage maintenance orders",
     "description": """
-Track equipment and maintenance requests""",
+Track equipment and maintenance orders""",
     "author": "Odoo S.A.",
     "website": "https://www.odoo.com/app/maintenance",
     "license": "LGPL-3",
     "depends": [
+        "approval",
         "mail",
         "team",
     ],
     "data": [
         "security/maintenance.xml",
         "security/ir.model.access.csv",
-        "data/maintenance_data.xml",
         "data/mail_activity_type_data.xml",
         "data/mail_message_subtype_data.xml",
         "views/maintenance_views.xml",
