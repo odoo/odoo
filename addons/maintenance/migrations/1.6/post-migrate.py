@@ -275,7 +275,6 @@ def _move_custody(cr, env, assets):
            {"AND equipment_assign_to = 'other'" if by_hr else ""}
         """
     )
-    Resource = env["resource.resource"]
     holders = {}
     vals_list = []
     for (
@@ -290,23 +289,15 @@ def _move_custody(cr, env, assets):
         if not asset:
             continue
         date_start = fields.Datetime.to_datetime(assign_date) or create_date
-        if user_id not in holders:
-            user = env["res.users"].browse(user_id)
-            holders[user_id] = Resource.search(
-                [("user_id", "=", user_id), ("resource_type", "=", "user")], limit=1
-            ) or Resource.create(
-                {
-                    "name": user.name,
-                    "user_id": user_id,
-                    "resource_type": "user",
-                    "company_id": user.company_id.id,
-                    "calendar_id": False,
-                }
-            )
+        user = env["res.users"].browse(user_id)
+        company = asset.company_id or user.company_id
+        key = (user_id, company.id)
+        if key not in holders:
+            holders[key] = user.partner_id._get_or_create_resources(company)
         vals_list.append(
             {
                 "resource_id": asset.resource_id.id,
-                "assignee_id": holders[user_id].id,
+                "assignee_id": holders[key].id,
                 "role": "custodian",
                 "date_start": date_start,
                 "date_end": _retired_on(active, scrap_date, date_start),
