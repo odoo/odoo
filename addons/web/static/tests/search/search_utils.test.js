@@ -10,6 +10,7 @@ import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import {
     constructDateDomain,
+    constructRelativeDateDomain,
     getRelativeDateLabel,
     RELATIVE_FILTER_OPTIONS,
 } from "@web/search/utils/dates";
@@ -27,6 +28,11 @@ const dateSearchItem = {
 const dateTimeSearchItem = {
     ...dateSearchItem,
     fieldType: "datetime",
+};
+const dateRangeSearchItem = {
+    ...dateSearchItem,
+    endFieldName: "end_date_field",
+    endFieldType: "date",
 };
 
 beforeEach(() => {
@@ -304,6 +310,130 @@ test("Quarter option: custom translation and right to left", async () => {
         ),
         description: "2020 2e Trimestre",
     });
+});
+
+test("construct domain based on a date range: the periods overlapping it", () => {
+    mockDate("2020-01-01T12:00:00");
+    const referenceMoment = luxon.DateTime.local();
+
+    // A record without an end date ends when it starts.
+    let domain = constructDateDomain(referenceMoment, dateRangeSearchItem, ["month", "year"]);
+    expect(domain).toEqual({
+        domain: new Domain(
+            "[" +
+                `"&", ("date_field", "<=", "2020-01-31"), ` +
+                `"|", ("end_date_field", ">=", "2020-01-01"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "2020-01-01")` +
+                "]"
+        ),
+        description: "January 2020",
+    });
+
+    domain = constructDateDomain(referenceMoment, dateRangeSearchItem, [
+        "year",
+        "month",
+        "month-2",
+    ]);
+    expect(domain).toEqual({
+        domain: new Domain(
+            "[" +
+                `"|", ` +
+                `"&", ("date_field", "<=", "2020-01-31"), ` +
+                `"|", ("end_date_field", ">=", "2020-01-01"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "2020-01-01"), ` +
+                `"&", ("date_field", "<=", "2020-11-30"), ` +
+                `"|", ("end_date_field", ">=", "2020-11-01"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "2020-11-01")` +
+                "]"
+        ),
+        description: "January 2020/November 2020",
+    });
+});
+
+test("construct domain based on a date range mixing date and datetime fields", () => {
+    mockTimeZone(2);
+    mockDate("2020-06-01T00:00:00");
+    const referenceMoment = luxon.DateTime.local();
+
+    // Each bound is serialized with the type of the field it is compared to.
+    const domain = constructDateDomain(
+        referenceMoment,
+        { ...dateRangeSearchItem, endFieldType: "datetime" },
+        ["month", "year"]
+    );
+    expect(domain).toEqual({
+        domain: new Domain(
+            "[" +
+                `"&", ("date_field", "<=", "2020-06-30"), ` +
+                `"|", ("end_date_field", ">=", "2020-05-31 22:00:00"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "2020-06-01")` +
+                "]"
+        ),
+        description: "June 2020",
+    });
+});
+
+test("construct relative domain based on a date range", () => {
+    const relativeDomain = (searchItem, optionId, offset) =>
+        new Domain(
+            constructRelativeDateDomain(searchItem, RELATIVE_FILTER_OPTIONS[optionId], offset)
+        );
+
+    // A record without an end date ends when it starts.
+    expect(relativeDomain(dateRangeSearchItem, "today", 0)).toEqual(
+        new Domain(
+            "[" +
+                `"&", ("date_field", "<", "today +1d"), ` +
+                `"|", ("end_date_field", ">=", "today"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "today")` +
+                "]"
+        )
+    );
+    expect(relativeDomain(dateRangeSearchItem, "this_week", -1)).toEqual(
+        new Domain(
+            "[" +
+                `"&", ("date_field", "<", "today =week_start"), ` +
+                `"|", ("end_date_field", ">=", "today =week_start -1w"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "today =week_start -1w")` +
+                "]"
+        )
+    );
+    expect(relativeDomain(dateRangeSearchItem, "this_month", 1)).toEqual(
+        new Domain(
+            "[" +
+                `"&", ("date_field", "<", "today =1d +2m"), ` +
+                `"|", ("end_date_field", ">=", "today =1d +1m"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "today =1d +1m")` +
+                "]"
+        )
+    );
+    expect(relativeDomain(dateRangeSearchItem, "this_year", 0)).toEqual(
+        new Domain(
+            "[" +
+                `"&", ("date_field", "<", "today =1d =1m +1y"), ` +
+                `"|", ("end_date_field", ">=", "today =1d =1m"), ` +
+                `"&", ("end_date_field", "=", False), ("date_field", ">=", "today =1d =1m")` +
+                "]"
+        )
+    );
+
+    // Quarters have no smart date anchor: their bounds are expressions, and
+    // those depend on the type of the field they are compared to.
+    const quarterStart = "month=(context_today().month-1)//3*3+1, day=1";
+    expect(
+        relativeDomain({ ...dateRangeSearchItem, endFieldType: "datetime" }, "this_quarter", 0)
+    ).toEqual(
+        new Domain(
+            "[" +
+                `"&", ` +
+                `("date_field", "<", (context_today() + relativedelta(${quarterStart}, months=3)).strftime("%Y-%m-%d")), ` +
+                `"|", ` +
+                `("end_date_field", ">=", datetime.datetime.combine(context_today() + relativedelta(${quarterStart}), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ` +
+                `"&", ("end_date_field", "=", False), ` +
+                `("date_field", ">=", (context_today() + relativedelta(${quarterStart})).strftime("%Y-%m-%d"))` +
+                "]"
+        )
+    );
 });
 
 test("relative filter labels: the period covered, current year left implicit", () => {

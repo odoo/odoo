@@ -5,6 +5,7 @@ export class Foo extends models.Model {
     foo = fields.Char();
     birthday = fields.Date();
     date_field = fields.Date({ string: "Date" });
+    date_field_end = fields.Date({ string: "End Date" });
     parent_id = fields.Many2one({ string: "Parent", relation: "parent.model" });
     properties = fields.Properties({
         definition_record: "parent_id",

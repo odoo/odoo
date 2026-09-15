@@ -242,6 +242,12 @@ export class SearchArchParser {
                 preSearchItem.type = "dateFilter";
                 preSearchItem.fieldName = fieldName;
                 preSearchItem.fieldType = this.fields[fieldName].type;
+                if (node.hasAttribute("end_date")) {
+                    // The filter spans two fields: it matches the records whose
+                    // [fieldName, endFieldName] range overlaps the searched period.
+                    preSearchItem.endFieldName = node.getAttribute("end_date");
+                    preSearchItem.endFieldType = this.fields[preSearchItem.endFieldName].type;
+                }
                 const optionsParams = {
                     customOptions: [],
                 };
