@@ -137,7 +137,7 @@ class HrVersion(models.Model):
         tracking=1)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute='_compute_work_location_id',
                                        store=True, readonly=False,
-                                       domain="[('address_id', '=', address_id)]", index=True, tracking=1)
+                                       domain="[('address_id', '=', address_id), ('location_type', '=', 'office')]", index=True, tracking=1)
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
