@@ -92,7 +92,9 @@ class TestProjectCommon(TransactionCase):
             'name': 'Pigs',
             'privacy_visibility': 'employees',
             'alias_name': 'project+pigs',
-            'partner_id': cls.partner_1.id})
+            'partner_id': cls.partner_1.id,
+            'type_ids': [Command.set([])],
+        })
         # Already-existing tasks in Pigs
         cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask',
