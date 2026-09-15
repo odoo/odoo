@@ -5298,6 +5298,25 @@ test("calendar sidebar reacts to isSmall changes", async () => {
     expect(".o_other_calendar_panel").toHaveCount(0);
 });
 
+test.tags("desktop");
+test("calendar should keep displaying its content after widening from a mobile viewport", async () => {
+    // Reduce the viewport to a mobile size (isSmall = true)
+    await resize({ width: 500 });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+    });
+    expect(".o_calendar_renderer").toHaveCount(1);
+
+    await resize({ width: 1200 });
+    await animationFrame();
+
+    expect(".o_calendar_renderer").toHaveCount(1);
+    expect(".fc-view-harness").toBeVisible();
+});
+
 test(`calendar should show date information on header`, async () => {
     mockDate("2015-12-26 09:00:00");
 
