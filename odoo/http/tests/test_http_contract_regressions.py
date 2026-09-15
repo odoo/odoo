@@ -146,7 +146,11 @@ def controller_registry():
     Controller.children_classes.update(saved)
 
 
-def test_an_undecorated_override_is_actually_skipped(controller_registry):
+def test_an_undecorated_override_is_a_definition_error_and_the_route_is_not_served(
+    controller_registry, caplog
+):
+    import logging
+
     class Parent(Controller):
         __module__ = "odoo.addons.audit_routing_skip"
 
@@ -158,14 +162,16 @@ def test_an_undecorated_override_is_actually_skipped(controller_registry):
         __module__ = "odoo.addons.audit_routing_skip"
 
         def hit(self, count):
-            raise AssertionError("the skipped override ran")
+            raise AssertionError("the undecorated override ran")
 
-    endpoint = dict(_generate_routing_rules(["audit_routing_skip"], True))[
-        "/audit/skip"
-    ]
-    assert endpoint._param_specs is not None
-    response = endpoint(**coerce_params({"count": "4"}, endpoint._param_specs))
-    assert response.get_data(as_text=True) == "5"
+    with caplog.at_level(logging.ERROR, logger="odoo.http.routing"):
+        rules = dict(_generate_routing_rules(["audit_routing_skip"], True))
+    assert "/audit/skip" not in rules, (
+        "neither body is served: the parent's would be stale behaviour behind a "
+        "warning, the child's would mask the missing decorator"
+    )
+    assert "overrides a route without @route()" in caplog.text
+    assert "The route is not served" in caplog.text
 
 
 def test_forwarding_overrides_preserve_inherited_coercion(controller_registry):

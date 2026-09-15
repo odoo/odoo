@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 
     class RequestState:
         app: Any
+        database_detached: bool
         db: str | None
         dispatcher: Dispatcher
         env: odoo.api.Environment | None

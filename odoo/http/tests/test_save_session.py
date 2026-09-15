@@ -214,3 +214,35 @@ def test_the_cookie_lifetime_follows_authentication(uid, expected):
     s._content_changed = True
     _, future = _save(s)
     assert future.set["session_id"][1]["max_age"] == expected
+
+
+def test_an_error_response_keeps_the_budget_read_while_the_cursor_was_live():
+    s = _Session(uid=2)
+    s._content_changed = True
+    store = _Store()
+    future = _Cookies()
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None, session_id=None, path="/x"
+    )
+    this: Any = request_class.Request(
+        httprequest, app=types.SimpleNamespace(session_store=store)
+    )
+    this.session = s
+    this.future_response = future
+    this.env = types.SimpleNamespace(cr=types.SimpleNamespace(closed=False))
+    this._save_session()
+    assert future.set["session_id"][1]["max_age"] == MAX_INACTIVITY
+
+    this.env = None
+    this._save_session()
+    assert future.set["session_id"][1]["max_age"] == MAX_INACTIVITY, (
+        "the error path has no environment; the cookie must not fall back to "
+        "SESSION_LIFETIME once the real budget was read"
+    )
+
+
+def test_without_any_live_environment_the_budget_is_the_default():
+    s = _Session(uid=2)
+    s._content_changed = True
+    _, future = _save(s, env=None)
+    assert future.set["session_id"][1]["max_age"] == SESSION_LIFETIME

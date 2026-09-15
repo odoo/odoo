@@ -8,9 +8,9 @@ import types
 import typing
 from typing import Any, NamedTuple
 
-from werkzeug.exceptions import BadRequest
-
 from odoo.libs.debug_log import DebugLog
+
+from .exceptions import ParameterError
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -139,12 +139,12 @@ def _coerce_bool(name: str, value: Any) -> bool:
             return False
     if isinstance(value, int):
         return bool(value)
-    raise BadRequest(f"parameter {name!r} must be a boolean")
+    raise ParameterError(f"parameter {name!r} must be a boolean")
 
 
 def _check_json_number_syntax(name: str, value: Any, kind: str) -> None:
     if isinstance(value, str) and ("_" in value or not value.isascii()):
-        raise BadRequest(f"parameter {name!r} must be {kind}")
+        raise ParameterError(f"parameter {name!r} must be {kind}")
 
 
 def _coerce_scalar(name: str, value: Any, target: type) -> Any:
@@ -152,34 +152,36 @@ def _coerce_scalar(name: str, value: Any, target: type) -> Any:
         if isinstance(value, str):
             return value
         if isinstance(value, bool):
-            raise BadRequest(f"parameter {name!r} must be a string")
+            raise ParameterError(f"parameter {name!r} must be a string")
         if isinstance(value, (int, float)):
             return str(value)
-        raise BadRequest(f"parameter {name!r} must be a string")
+        raise ParameterError(f"parameter {name!r} must be a string")
     if target is bool:
         return _coerce_bool(name, value)
     if target is int:
         if isinstance(value, bool):
-            raise BadRequest(f"parameter {name!r} must be an integer")
+            raise ParameterError(f"parameter {name!r} must be an integer")
         if isinstance(value, float) and not value.is_integer():
-            raise BadRequest(f"parameter {name!r} must be an integer")
+            raise ParameterError(f"parameter {name!r} must be an integer")
         _check_json_number_syntax(name, value, "an integer")
         try:
             return int(value)
         except TypeError, ValueError:
-            raise BadRequest(f"parameter {name!r} must be an integer") from None
+            raise ParameterError(f"parameter {name!r} must be an integer") from None
     if target is float:
         if isinstance(value, bool):
-            raise BadRequest(f"parameter {name!r} must be a number")
+            raise ParameterError(f"parameter {name!r} must be a number")
         _check_json_number_syntax(name, value, "a number")
         try:
             result = float(value)
         except OverflowError:
-            raise BadRequest(f"parameter {name!r} must be a finite number") from None
+            raise ParameterError(
+                f"parameter {name!r} must be a finite number"
+            ) from None
         except TypeError, ValueError:
-            raise BadRequest(f"parameter {name!r} must be a number") from None
+            raise ParameterError(f"parameter {name!r} must be a number") from None
         if not math.isfinite(result):
-            raise BadRequest(f"parameter {name!r} must be a finite number")
+            raise ParameterError(f"parameter {name!r} must be a finite number")
         return result
     return value
 
@@ -188,7 +190,7 @@ def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
     if value is None:
         if spec.allow_none:
             return None
-        raise BadRequest(f"parameter {name!r} must not be null")
+        raise ParameterError(f"parameter {name!r} must not be null")
     if spec.target is list:
         items = value if isinstance(value, (list, tuple)) else [value]
         if spec.item is None:
@@ -207,11 +209,11 @@ def coerce_params(
         if name not in params:
             if spec.required:
                 _debug.logic("http.params.missing_required", param=name)
-                raise BadRequest(f"missing required parameter {name!r}")
+                raise ParameterError(f"missing required parameter {name!r}")
             continue
         try:
             coerced[name] = _coerce_value(name, params[name], spec)
-        except BadRequest:
+        except ParameterError:
             _debug.logic(
                 "http.params.rejected",
                 param=name,

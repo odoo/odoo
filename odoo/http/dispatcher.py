@@ -32,7 +32,7 @@ from .constants import (
     WILDCARD_CORS_CREDENTIALS_WARNING,
     prepare_allow_header,
 )
-from .exceptions import SessionExpiredException
+from .exceptions import ParameterError, SessionExpiredException
 from .helpers import is_cors_preflight, serialize_exception
 from .wrappers import Response, prepare_no_content_response
 
@@ -441,6 +441,14 @@ class JsonRPCDispatcher(Dispatcher):
         return self._prepare_jsonrpc_response(result)
 
     def prepare_error_response(self, exc: Exception) -> Response:
+        if isinstance(exc, ParameterError):
+            _debug.logic(
+                "http.jsonrpc.error",
+                code=400,
+                error="ParameterError",
+                id=self.request_id,
+            )
+            return self._prepare_bad_request_response(exc.description or "Bad Request")
         error = {
             "code": 0,
             "message": "Odoo Server Error",
@@ -462,14 +470,15 @@ class JsonRPCDispatcher(Dispatcher):
         return self._prepare_jsonrpc_response(error=error)
 
     def _prepare_bad_request_error(self, message: str) -> HTTPException:
+        return HTTPException(response=self._prepare_bad_request_response(message))
+
+    def _prepare_bad_request_response(self, message: str) -> Response:
         body = {
             "jsonrpc": "2.0",
             "id": self.request_id,
             "error": {"code": 400, "message": message, "data": {}},
         }
-        return HTTPException(
-            response=self.request.prepare_json_response(body, status=400)
-        )
+        return self.request.prepare_json_response(body, status=400)
 
     def _prepare_jsonrpc_response(
         self, result: Any = None, error: dict[str, Any] | None = None

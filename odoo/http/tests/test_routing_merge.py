@@ -340,11 +340,11 @@ def test_a_plain_helper_method_is_neither_a_route_nor_a_warning(caplog):
     with caplog.at_level(logging.WARNING, logger="odoo.http.routing"):
         rules = dict(_generate_routing_rules(["ma", "mb"], False))
     assert set(rules) == {"/a"}
-    assert "overridden without @route" not in caplog.text
+    assert "without @route()" not in caplog.text
     assert rules["/a"]().data == b"child"
 
 
-def test_an_undecorated_override_of_a_route_warns_once_and_serves_the_parent(caplog):
+def test_an_undecorated_override_of_a_route_is_refused_once(caplog):
     from odoo.http.routing import _generate_routing_rules
 
     class Base(Controller):
@@ -362,8 +362,7 @@ def test_an_undecorated_override_of_a_route_warns_once_and_serves_the_parent(cap
 
     Controller.children_classes.clear()
     Controller.children_classes["ma"].append(Base)
-    with caplog.at_level(logging.WARNING, logger="odoo.http.routing"):
+    with caplog.at_level(logging.ERROR, logger="odoo.http.routing"):
         rules = dict(_generate_routing_rules(["ma", "mb"], False))
-    assert set(rules) == {"/a"}
-    assert caplog.text.count("overridden without @route") == 1
-    assert rules["/a"]().data == b"base", "the undecorated override is skipped"
+    assert rules == {}
+    assert caplog.text.count("overrides a route without @route()") == 1

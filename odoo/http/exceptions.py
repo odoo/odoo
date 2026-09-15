@@ -54,6 +54,10 @@ class SessionExpiredException(Exception):
     http_status: int = HTTPStatus.FORBIDDEN
 
 
+class ParameterError(BadRequest):
+    __module__ = "odoo.http"
+
+
 def abort(status: int | Response, *args: Any, **kwargs: Any) -> NoReturn:
     # Resolved per call: `wrappers` installs the Odoo `abort` on werkzeug after
     # this module is imported, so a name bound here at import time would be
@@ -90,6 +94,7 @@ __all__ = (
     "Locked",
     "MethodNotAllowed",
     "NotFound",
+    "ParameterError",
     "RegistryError",
     "RequestEntityTooLarge",
     "ServiceUnavailable",

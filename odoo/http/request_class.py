@@ -72,6 +72,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         self._session_transaction_cursor: Any = None
         self._session_snapshot: Session | None = None
         self._session_written_in_transaction = False
+        self._session_max_age: int | None = None
         self._session_response: Response | None = None
         self._session_save_pending = False
         self._session_uses_transactions = False
@@ -199,10 +200,19 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         user: int | Any | None = None,
         context: dict[str, Any] | None = None,
         su: bool | None = None,
+        *,
+        anonymous: bool = False,
     ) -> None:
         env = self.env
         assert env is not None, "update_env() needs a database-bound request"
-        self.env = env = env(None, user, context, su)
+        if anonymous:
+            assert user is None, "anonymous=True and user= are exclusive"
+            env = odoo.api.Environment(
+                env.cr, None, env.context if context is None else context
+            )
+        else:
+            env = env(None, user, context, su)
+        self.env = env
         env.transaction.default_env = env
         current_worker_thread().uid = env.uid
         _debug.lifecycle("http.request.env_updated", uid=env.uid, su=env.su)
@@ -404,6 +414,15 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         if self._session_response is not None:
             self._update_response_from_future(self._session_response)
 
+    def _get_session_max_age(self, env: odoo.api.Environment | None) -> int:
+        # An error response is built after `_serve_db` released the cursor, so the
+        # budget read while the environment was live is the one the cookie keeps.
+        if env is not None and not env.cr.closed:
+            self._session_max_age = get_session_max_inactivity(env)
+        elif self._session_max_age is None:
+            self._session_max_age = SESSION_LIFETIME
+        return self._session_max_age
+
     def _is_periodic_rotation_due(self) -> bool:
         session = self.session
         return bool(
@@ -484,7 +503,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             _debug.pipeline("http.session.save_deferred", uid=sess.uid)
             return
 
-        max_age = get_session_max_inactivity(env) if sess.uid else SESSION_LIFETIME
+        max_age = self._get_session_max_age(env) if sess.uid else SESSION_LIFETIME
         stale = sess.mtime is not None and time.time() - sess.mtime > max_age / 2
         content_changed = sess.has_content_changed()
         modified = sess.is_dirty or content_changed or stale

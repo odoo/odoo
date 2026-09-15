@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import typing
-
 from odoo.libs.debug_log import DebugLog
 
+from ._protocols import RequestState
 from .helpers import rewind_uploaded_files
 
 _debug = DebugLog(__name__)
@@ -12,7 +11,7 @@ _debug = DebugLog(__name__)
 class RequestRetryParticipant:
     __slots__ = ("_request",)
 
-    def __init__(self, request: typing.Any) -> None:
+    def __init__(self, request: RequestState) -> None:
         self._request = request
 
     def on_rollback(self, exc: BaseException) -> None:

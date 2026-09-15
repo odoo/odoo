@@ -74,7 +74,12 @@ class TestOpenApi(BaseCase):
         self.assertEqual(schema["properties"]["qty"], {"type": "integer"})
         self.assertEqual(schema["properties"]["note"], {"type": ["string", "null"]})
         self.assertEqual(schema["required"], ["qty"])
-        self.assertNotIn("400", op["responses"])
+        self.assertIn(
+            "400",
+            op["responses"],
+            "JsonRPCDispatcher answers a typed-parameter coercion failure with "
+            "the same HTTP 400 envelope as a malformed body, so it is documented",
+        )
         self.assertEqual(op["security"], [{"sessionCookie": []}])
         self.assertEqual(
             doc["components"]["securitySchemes"]["sessionCookie"]["in"], "cookie"

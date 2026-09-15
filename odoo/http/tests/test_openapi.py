@@ -116,7 +116,7 @@ def test_typed_jsonrpc_documents_the_enveloped_request_body():
     assert params["required"] == ["n"]
 
 
-def test_typed_jsonrpc_does_not_document_a_400_it_never_answers():
+def test_typed_jsonrpc_documents_the_400_its_dispatcher_answers():
     def handler(self, n: int): ...
 
     route = _route(
@@ -126,11 +126,9 @@ def test_typed_jsonrpc_does_not_document_a_400_it_never_answers():
         handler=handler,
     )
     op = prepare_openapi_document([route])["paths"]["/rpc"]["post"]
-    assert "400" not in op["responses"], (
-        "a JSON-RPC parameter-coercion failure is answered as HTTP 200 with "
-        "an error member (only a body that is not a JSON object gets a 400), "
-        "so documenting 400 as 'Invalid request parameters' describes a "
-        "response the dispatcher never sends"
+    assert op["responses"]["400"] == {"description": "Invalid request parameters"}, (
+        "JsonRPCDispatcher answers a ParameterError with the same HTTP 400 "
+        "envelope as a malformed body, so the document says so"
     )
 
 

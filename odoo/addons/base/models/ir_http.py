@@ -217,8 +217,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _auth_method_none(cls) -> None:
-        request.env = api.Environment(request.env.cr, None, request.env.context)
-        request.env.transaction.default_env = request.env
+        request.update_env(anonymous=True)
 
     @classmethod
     def _auth_method_public(cls) -> None:
@@ -242,9 +241,7 @@ class IrHttp(models.AbstractModel):
                 if not security.is_session_valid(request.session, request.env, request):
                     _debug.logic("session_invalidated", uid=request.session.uid)
                     request.session.logout(keep_db=True)
-                    request.env = api.Environment(
-                        request.env.cr, None, request.session.context
-                    )
+                    request.update_env(anonymous=True, context=request.session.context)
             auth_method = getattr(cls, f"_auth_method_{auth}", None)
             if auth_method is None:
                 msg = f"Unknown authentication method: {auth!r}"

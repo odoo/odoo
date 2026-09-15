@@ -186,10 +186,7 @@ def prepare_openapi_operation(
             operation["requestBody"] = {
                 "content": {"application/json": {"schema": body}}
             }
-        if route_type != "jsonrpc":
-            operation["responses"]["400"] = {
-                "description": "Invalid request parameters"
-            }
+        operation["responses"]["400"] = {"description": "Invalid request parameters"}
 
     if parameters:
         operation["parameters"] = parameters
