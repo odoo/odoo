@@ -18,6 +18,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
         self.env.company.partner_id.write({
             'routing_identifier': None,
             'additional_identifiers': {},
+            'vat': False,
         })
         self.assertFalse(self.env.company.partner_id._l10n_fr_pdp_get_siren())
         wizard = self.env['pdp.registration'].create({'contact_email': "test@pdp.example.com"})
