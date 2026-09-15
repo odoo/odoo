@@ -456,6 +456,39 @@ class TestThePackageImportsOnlyWhatItMayDependOn(unittest.TestCase):
                 offenders[path.name] = bad
         self.assertEqual(offenders, {})
 
+    # `db-resilience-below-connectivity` (doc/architecture/module.md): the
+    # resilience tier must be importable with no pool and no cursor behind it.
+    _RESILIENCE = ("lag", "budget", "leaks", "reaper", "probe", "metrics", "stats")
+    _CONNECTIVITY = (
+        "pool",
+        "cursor",
+        "ddl",
+        "schema",
+        "savepoint",
+        "schema_cache",
+        "bulk",
+        "lifecycle",
+        "endpoints",
+        "replica",
+    )
+
+    def test_the_resilience_tier_sits_below_connectivity(self):
+        package = pathlib.Path(cursor.__file__).parent
+        offenders = {}
+        for name in self._RESILIENCE:
+            tree = ast.parse((package / f"{name}.py").read_text(encoding="utf-8"))
+            reached = set()
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module:
+                    reached.add(node.module.split(".")[0])
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    if node.module.startswith("odoo.db."):
+                        reached.add(node.module.split(".")[2])
+            bad = sorted(reached & set(self._CONNECTIVITY))
+            if bad:
+                offenders[name] = bad
+        self.assertEqual(offenders, {})
+
     def test_the_scan_sees_a_runtime_reach_and_spares_a_type_checking_one(self):
         source = (
             "from typing import TYPE_CHECKING\n"
