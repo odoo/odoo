@@ -21,3 +21,9 @@ class BaseDocumentLayout(models.TransientModel):
 
     account_fiscal_country_id = fields.Many2one(related="company_id.account_fiscal_country_id")
     income_tax_id = fields.Char(related='company_id.income_tax_id')
+
+    def _get_default_vat_disabled_purchase_tax(self):
+        self.ensure_one()
+        if self.account_fiscal_country_id.code != 'SK':
+            return super()._get_default_vat_disabled_purchase_tax()
+        return self._get_or_create_chart_template_tax('vp_vat_disabled_nd')

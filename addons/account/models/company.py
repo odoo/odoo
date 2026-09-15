@@ -502,18 +502,19 @@ class ResCompany(models.Model):
         """
         This function does two things:
         1. Enables or disables Sales Tax when VAT applicability is changed.
-        2. Changes the default sale tax of the company to a tax specified in the localisation.
+        2. Changes the default sale/purchase taxes of the company to taxes specified in the localisation.
         Can be overridden by localisations to perform specific actions when VAT is disabled.
         """
         for company in self:
             if company.parent_id or not company.vat_disabled_available or not company.chart_template:
                 continue
-            ChartTemplate = self.env['account.chart.template'].with_company(self)
+            ChartTemplate = self.env['account.chart.template'].with_company(company)
             chart_template_data = ChartTemplate._get_chart_template_data(company.chart_template)
 
             tax_data = chart_template_data['account.tax']
             default_inactive_tax_ids = {ChartTemplate.ref(key).id for key, values in tax_data.items() if not values.get('active', True)}
-            no_vat_tax = self._get_default_vat_disabled_tax()
+            no_vat_tax = company._get_default_vat_disabled_tax()
+            no_vat_purchase_tax = company._get_default_vat_disabled_purchase_tax()
 
             taxes_to_toggle = self.env['account.tax'].with_context(active_test=False).search([
                 *self.env['account.tax']._check_company_domain(company),
@@ -522,11 +523,14 @@ class ResCompany(models.Model):
             ])
             company_data = chart_template_data['res.company'][company.id]
             default_sale_tax = ChartTemplate.ref(company_data['account_sale_tax_id'], raise_if_not_found=None)
+            default_purchase_tax = ChartTemplate.ref(company_data['account_purchase_tax_id'], raise_if_not_found=None)
 
             taxes_to_toggle.write({'active': not company.vat_disabled})
             company.account_sale_tax_id = no_vat_tax if company.vat_disabled else default_sale_tax
+            company.account_purchase_tax_id = no_vat_purchase_tax if company.vat_disabled and no_vat_purchase_tax else default_purchase_tax
             if company.vat_disabled:
                 no_vat_tax.active = True
+                no_vat_purchase_tax.active = True
 
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
@@ -594,6 +598,10 @@ class ResCompany(models.Model):
 
     def _get_default_vat_disabled_tax(self):
         """Return the default tax to be used as sale tax when the company is `vat_disabled`. Needs to be overridden by localisations."""
+        return self.env['account.tax']
+
+    def _get_default_vat_disabled_purchase_tax(self):
+        """Return the default tax to be used as purchase tax when the company is `vat_disabled`. Needs to be overridden by localisations."""
         return self.env['account.tax']
 
     def _get_or_create_chart_template_tax(self, xmlid, chart_template_data=None):

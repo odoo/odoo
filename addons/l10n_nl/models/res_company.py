@@ -15,3 +15,9 @@ class ResCompany(models.Model):
         if self.account_fiscal_country_id.code != 'NL':
             return super()._get_default_vat_disabled_tax()
         return self._get_or_create_chart_template_tax('btw_0_d')
+
+    def _get_default_vat_disabled_purchase_tax(self):
+        self.ensure_one()
+        if self.account_fiscal_country_id.code != 'NL':
+            return super()._get_default_vat_disabled_purchase_tax()
+        return self._get_or_create_chart_template_tax('btw_purchase_disabled_nd')

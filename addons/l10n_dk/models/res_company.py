@@ -154,3 +154,9 @@ class ResCompany(models.Model):
     def _get_nemhandel_webhook_endpoint(self):
         self.ensure_one()
         return urljoin(self.get_base_url(), '/nemhandel/webhook')
+
+    def _get_default_vat_disabled_purchase_tax(self):
+        self.ensure_one()
+        if self.account_fiscal_country_id.code != 'DK':
+            return super()._get_default_vat_disabled_purchase_tax()
+        return self._get_or_create_chart_template_tax('tax_k_vat_disabled_nd')
