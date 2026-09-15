@@ -5,6 +5,7 @@ import base64
 import logging
 import re
 
+from datetime import timedelta
 from lxml import etree
 from psycopg2.errors import LockNotAvailable
 
@@ -162,7 +163,24 @@ class AccountMove(models.Model):
 
     def _inverse_delivery_date(self):
         super()._inverse_delivery_date()
-        self._conditional_add_to_compute('invoice_currency_rate', lambda m: m.country_code == 'HU')
+
+        for move in self:
+            if (
+                move.country_code == 'HU'
+                and move.is_invoice(include_receipts=True)
+                and move.delivery_date
+                and move.expected_currency_rate != move.invoice_currency_rate
+            ):
+                date = move.invoice_date or fields.Date.context_today(self)
+                expected_rates = {
+                    move._get_expected_currency_rate_at(date),
+                    move._get_expected_currency_rate_at(date - timedelta(days=1)),  # In case of currency rate sync after invoice was created
+                }
+
+                # If invoice_currency_rate is as expected based on invoice_date, update it to reflect new delivery date.
+                # If invoice_currency_rate is not as expected based on invoice_date, it was likely edited manually, so don't update it.
+                if move.invoice_currency_rate in expected_rates:
+                    move.invoice_currency_rate = move.expected_currency_rate
 
     # === Overrides === #
 
