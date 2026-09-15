@@ -557,7 +557,7 @@ class StockWarehouseOrderpoint(models.Model):
         result = {}
         orderpoints_by_context = defaultdict(self.browse)
         for orderpoint in self:
-            orderpoints_by_context[frozendict(orderpoint._get_product_context())] |= (
+            orderpoints_by_context[frozendict(orderpoint._prepare_product_context())] |= (
                 orderpoint
             )
         dbg.performance.debug(

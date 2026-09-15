@@ -1503,7 +1503,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.render("website_sale.extra_info", values)
 
-    def _get_shop_payment_values(self, order, **kwargs):
+    def _prepare_shop_payment_context(self, order, **kwargs):
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
@@ -1569,7 +1569,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return redirection
 
         order_sudo._recompute_cart()
-        render_values = self._get_shop_payment_values(order_sudo, **post)
+        render_values = self._prepare_shop_payment_context(order_sudo, **post)
         render_values["only_services"] = order_sudo and order_sudo.only_services
 
         if render_values["errors"]:

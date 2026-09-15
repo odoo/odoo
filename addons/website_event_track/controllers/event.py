@@ -2,7 +2,7 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 
 class EventOnlineController(WebsiteEventController):
-    def _get_registration_confirm_values(self, event, attendees_sudo):
-        values = super()._get_registration_confirm_values(event, attendees_sudo)
+    def _prepare_registration_confirmation_context(self, event, attendees_sudo):
+        values = super()._prepare_registration_confirmation_context(event, attendees_sudo)
         values["hide_sponsors"] = True
         return values

@@ -11,7 +11,7 @@ class SurveySurvey(models.Model):
 
     @api.model
     def action_load_survey_template_sample(self, template_key: str) -> dict[str, Any]:
-        template_values = self._get_survey_template_values(template_key)
+        template_values = self._prepare_template_vals(template_key)
         return self.env["survey.survey"].create(template_values).action_show_sample()
 
     @api.model
@@ -39,7 +39,7 @@ class SurveySurvey(models.Model):
             },
         }
 
-    def _get_survey_template_values(self, template_key: str) -> dict[str, Any]:
+    def _prepare_template_vals(self, template_key: str) -> dict[str, Any]:
         if template_key == "survey":
             return self._prepare_survey_template_values()
         elif template_key == "assessment":

@@ -667,10 +667,10 @@ class WebsiteEventController(http.Controller):
         )
         return request.render(
             "website_event.registration_complete",
-            self._get_registration_confirm_values(event, attendees_sudo),
+            self._prepare_registration_confirmation_context(event, attendees_sudo),
         )
 
-    def _get_registration_confirm_values(self, event, attendees_sudo):
+    def _prepare_registration_confirmation_context(self, event, attendees_sudo):
         slot = attendees_sudo.event_slot_id
         urls = event._get_event_resource_urls(slot)
         return {

@@ -1735,7 +1735,7 @@ class HrExpense(models.Model):
         if not self.is_editable:
             raise UserError(_("You do not have the rights to edit this expense."))
 
-        splits = self.env["hr.expense.split"].create(self._get_split_values())
+        splits = self.env["hr.expense.split"].create(self._prepare_split_vals())
 
         wizard = self.env["hr.expense.split.wizard"].create(
             [
@@ -1956,7 +1956,7 @@ class HrExpense(models.Model):
             )
         self.update_activities_and_mails()
 
-    def _get_split_values(self):
+    def _prepare_split_vals(self):
         self.check_singleton()
         _debug.pipeline("split_values", expense=self)
         half_price = self.total_amount_currency / 2

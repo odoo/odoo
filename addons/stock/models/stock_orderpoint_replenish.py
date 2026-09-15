@@ -257,7 +257,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
             orderpoint.id: orderpoint._prepare_lead_time_params() for orderpoint in self
         }
 
-    def _get_product_context(self):
+    def _prepare_product_context(self):
         self.check_singleton()
         return {
             "location": self.location_id.id,

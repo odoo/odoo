@@ -15,10 +15,10 @@ class SurveySurvey(models.Model):
             },
         }
 
-    def _get_survey_template_values(self, template_key):
+    def _prepare_template_vals(self, template_key):
         if template_key == "lead_qualification":
             return self._prepare_lead_qualification_template_values()
-        return super()._get_survey_template_values(template_key)
+        return super()._prepare_template_vals(template_key)
 
     @api.model
     def _prepare_lead_qualification_template_values(self):

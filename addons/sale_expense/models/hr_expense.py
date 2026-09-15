@@ -73,8 +73,8 @@ class HrExpense(models.Model):
             }
         )
 
-    def _get_split_values(self):
-        vals = super()._get_split_values()
+    def _prepare_split_vals(self):
+        vals = super()._prepare_split_vals()
         for split_value in vals:
             split_value["sale_order_id"] = self.sale_order_id.id
         return vals
