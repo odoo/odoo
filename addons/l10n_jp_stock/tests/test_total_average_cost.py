@@ -56,10 +56,11 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._add_opening_stock()
         self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
         self._run_category_wizard()
-        first_cost = self.product.standard_price
-        self.assertAlmostEqual(first_cost, (100 * 100 + 10 * 200) / 110, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 200) / 110, places=2)
+        # the claim is that nothing moves, which only the cost itself can state
+        cost_after_first_run = self.product.standard_price
         action = self._run_category_wizard()
-        self.assertEqual(self.product.standard_price, first_cost)
+        self.assertEqual(self.product.standard_price, cost_after_first_run)
         self.assertEqual(action['params']['type'], 'info')
 
     def test_worthless_stock_skipped(self):
