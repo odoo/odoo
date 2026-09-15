@@ -296,17 +296,17 @@ hr {
 @each $-name, $-color in $theme-colors {
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name} {
-            background-color: o-color($-name);
-            border: 1px solid o-color($-name);
-            color: o-color($-name);
+            background-color: $-color;
+            border: 1px solid $-color;
+            color: $-color;
         }
     }
 
 
     @if (not map-get($o-btns-bs-outline-override, $-name)) {
         .btn-outline-#{$-name} {
-            border: 1px solid o-color($-name);
-            color: o-color($-name);
+            border: 1px solid $-color;
+            color: $-color;
         }
     }
 }
