@@ -490,6 +490,38 @@ class TestHolidaysOvertime(TransactionCase):
             self.employee.total_overtime, 0, "Should have 0 hours of overtime"
         )
 
+    def test_validating_and_refusing_a_leave_reprices_attendances_on_every_day_it_covers(
+        self,
+    ):
+        self.company.resource_calendar_id.tz = "UTC"
+        leave_type = self.env["hr.leave.type"].create(
+            {
+                "name": "Day off",
+                "company_id": self.company.id,
+                "requires_allocation": False,
+                "leave_validation_type": "no_validation",
+            }
+        )
+        attendance = self.new_attendance(
+            check_in=datetime(2021, 1, 5, 8), check_out=datetime(2021, 1, 5, 12)
+        )
+        self.assertEqual(attendance.overtime_hours, 0)
+
+        leave = self.env["hr.leave"].create(
+            {
+                "name": "Two days off",
+                "employee_id": self.employee.id,
+                "holiday_status_id": leave_type.id,
+                "request_date_from": "2021-01-04",
+                "request_date_to": "2021-01-05",
+            }
+        )
+        self.assertEqual(leave.state, "validate")
+        self.assertEqual(attendance.overtime_hours, 4)
+
+        leave.action_refuse()
+        self.assertEqual(attendance.overtime_hours, 0)
+
     def test_overtime_approval_after_refusal(self):
         self.new_attendance(
             check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16)

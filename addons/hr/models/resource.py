@@ -105,23 +105,22 @@ class ResourceResource(models.Model):
         )
         for contract in contracts:
             tz = timezone(contract.employee_id.tz)
-            if contract.contract_date_start > start.astimezone(tz).date():
+            if contract.date_start > start.astimezone(tz).date():
                 interval_start = localize_standard(
-                    datetime.combine(contract.contract_date_start, datetime.min.time()),
+                    datetime.combine(contract.date_start, datetime.min.time()),
                     tz,
                 )
             else:
                 interval_start = start
-            if (
-                contract.contract_date_end
-                and contract.contract_date_end < end.astimezone(tz).date()
-            ):
+            if contract.date_end and contract.date_end < end.astimezone(tz).date():
                 interval_end = localize_standard(
-                    datetime.combine(contract.contract_date_end, datetime.max.time()),
+                    datetime.combine(contract.date_end, datetime.max.time()),
                     tz,
                 )
             else:
                 interval_end = end
+            if interval_start >= interval_end:
+                continue
             res[contract.employee_id.resource_id.id][contract.resource_calendar_id] |= (
                 Intervals(
                     [

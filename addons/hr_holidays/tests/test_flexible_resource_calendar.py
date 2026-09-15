@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 from odoo.libs.datetime import timezone
+from odoo.libs.intervals import Intervals
 from odoo.tests.common import TransactionCase
 
 UTC = timezone("UTC")
@@ -218,3 +219,113 @@ class TestFlexibleResourceCalendar(TransactionCase):
             "2 days off 31 & 01 (-16 hours), half day on 28 and 30 (-8 hours), 5 hours off on day 29 / hours = 40-(16+8+5) = 11 hours",
         )
         self.assertTrue(self.fully_flex_resource.id not in hours_per_week)
+
+    def _leave_intervals_on(self, calendar, employee, day):
+        start = datetime.combine(day, datetime.min.time(), tzinfo=UTC)
+        stop = start.replace(hour=23, minute=59, second=59, microsecond=999999)
+        return [
+            (begin, end)
+            for begin, end, _leave in calendar._leave_intervals_batch(
+                start, stop, resources=employee.resource_id
+            )[employee.resource_id.id]
+        ]
+
+    def _bounds_of(self, leaves):
+        return [
+            (begin, end)
+            for begin, end, _leave in Intervals(
+                [
+                    (
+                        leave.date_from.replace(tzinfo=UTC),
+                        leave.date_to.replace(tzinfo=UTC),
+                        leave,
+                    )
+                    for leave in leaves
+                ]
+            )
+        ]
+
+    def test_partial_day_time_off_keeps_its_own_bounds_in_leave_intervals(self):
+        half_day, hourly, full_day = self.env["hr.leave.type"].create(
+            [
+                {
+                    "name": "Half",
+                    "requires_allocation": False,
+                    "request_unit": "half_day",
+                },
+                {"name": "Hours", "requires_allocation": False, "request_unit": "hour"},
+                {"name": "Day", "requires_allocation": False, "request_unit": "day"},
+            ]
+        )
+        for employee in (self.flex_employee, self.fully_flex_employee):
+            with self.subTest(employee=employee.name):
+                leaves = (
+                    self.env["hr.leave"]
+                    .sudo()
+                    .create(
+                        [
+                            {
+                                "holiday_status_id": half_day.id,
+                                "employee_id": employee.id,
+                                "request_date_from": date(2025, 7, 28),
+                                "request_date_to": date(2025, 7, 28),
+                                "request_date_from_period": "am",
+                                "request_date_to_period": "am",
+                            },
+                            {
+                                "holiday_status_id": half_day.id,
+                                "employee_id": employee.id,
+                                "request_date_from": date(2025, 7, 28),
+                                "request_date_to": date(2025, 7, 28),
+                                "request_date_from_period": "pm",
+                                "request_date_to_period": "pm",
+                            },
+                            {
+                                "holiday_status_id": hourly.id,
+                                "employee_id": employee.id,
+                                "request_date_from": date(2025, 7, 29),
+                                "request_date_to": date(2025, 7, 29),
+                                "request_hour_from": 11.0,
+                                "request_hour_to": 16.0,
+                            },
+                            {
+                                "holiday_status_id": full_day.id,
+                                "employee_id": employee.id,
+                                "request_date_from": date(2025, 7, 30),
+                                "request_date_to": date(2025, 7, 30),
+                            },
+                        ]
+                    )
+                )
+                leaves.action_approve()
+                am, pm, hours, _day = leaves
+                calendar = (
+                    self.env["resource.calendar.leaves"]
+                    .search([("holiday_id", "in", leaves.ids)])
+                    .calendar_id
+                )
+                self.assertEqual(len(calendar), 1)
+
+                self.assertEqual(
+                    self._leave_intervals_on(calendar, employee, date(2025, 7, 28)),
+                    self._bounds_of(am | pm),
+                )
+                self.assertNotEqual(am.date_from.time(), datetime.min.time())
+                self.assertEqual(
+                    self._leave_intervals_on(calendar, employee, date(2025, 7, 29)),
+                    [
+                        (
+                            hours.date_from.replace(tzinfo=UTC),
+                            hours.date_to.replace(tzinfo=UTC),
+                        )
+                    ],
+                )
+                self.assertEqual(
+                    self._leave_intervals_on(calendar, employee, date(2025, 7, 30)),
+                    [
+                        (
+                            datetime(2025, 7, 30, tzinfo=UTC),
+                            datetime(2025, 7, 30, 23, 59, 59, 999999, tzinfo=UTC),
+                        )
+                    ],
+                )

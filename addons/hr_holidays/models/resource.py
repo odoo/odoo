@@ -217,6 +217,12 @@ class ResourceCalendar(models.Model):
         compute="_compute_associated_leaves_count",
     )
 
+    def _handle_flexible_leave_interval(self, dt0, dt1, leave):
+        holiday = leave.sudo().holiday_id
+        if holiday.request_unit_half or holiday.request_unit_hours:
+            return dt0, dt1
+        return super()._handle_flexible_leave_interval(dt0, dt1, leave)
+
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env["resource.calendar.leaves"]._read_group(
             [("resource_id", "=", False), ("calendar_id", "in", self.ids)],

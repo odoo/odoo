@@ -428,6 +428,39 @@ class TestResource(TestHrCommon):
                     "Calendar 40h validity should cover all interval 40h",
                 )
 
+    def test_calendars_validity_follows_each_version_inside_one_contract(self):
+        self.contract_cdd.contract_date_end = False
+        self.employee.create_version(
+            {
+                "date_version": Date.to_date("2021-10-01"),
+                "resource_calendar_id": self.calendar_richard.id,
+            }
+        )
+        tz = timezone(self.employee.tz)
+        start = datetime(2021, 9, 1).replace(tzinfo=tz)
+        end = datetime(2021, 11, 1).replace(tzinfo=tz)
+        no_attendance = self.env["resource.calendar.attendance"]
+        september = Intervals(
+            [
+                (
+                    start,
+                    datetime(2021, 9, 30, 23, 59, 59).replace(tzinfo=tz),
+                    no_attendance,
+                )
+            ]
+        )
+        october = Intervals(
+            [(datetime(2021, 10, 1).replace(tzinfo=tz), end, no_attendance)]
+        )
+
+        validity = self.employee.resource_id._get_calendars_validity_within_period(
+            start, end
+        )[self.employee.resource_id.id]
+
+        self.assertEqual(set(validity), {self.calendar_35h, self.calendar_richard})
+        self.assertFalse(validity[self.calendar_35h] & october)
+        self.assertFalse(validity[self.calendar_richard] & september)
+
     def test_queries(self):
         employees_test = self.env["hr.employee"].create(
             [

@@ -98,10 +98,11 @@ class HrLeave(models.Model):
         return res
 
     def _update_leaves_overtime(self):
-        Attendance = self.env["hr.attendance"]
+        Attendance = self.env["hr.attendance"].sudo()
         dates = [
-            Attendance._get_day_start_and_day(leave.employee_id, leave.date_from)[1]
-            for leave in self.filtered(lambda leave: leave.state == "confirmed")
+            Attendance._get_day_start_and_day(leave.employee_id, moment)[1]
+            for leave in self.filtered(lambda leave: leave.employee_id)
+            for moment in (leave.date_from, leave.date_to)
         ]
         if dates:
             Attendance.search(
