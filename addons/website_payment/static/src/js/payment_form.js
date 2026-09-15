@@ -3,6 +3,7 @@
 import { _t } from '@web/core/l10n/translation';
 
 import PaymentForm from '@payment/js/payment_form';
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 
 PaymentForm.include({
     events: Object.assign({}, PaymentForm.prototype.events || {}, {
@@ -11,6 +12,18 @@ PaymentForm.include({
         'focus input[name="o_donation_amount"]': '_updateAmount',
     }),
 
+    init() {
+        this._super(...arguments);
+        if (document.querySelector('.o_donation_payment_form')) {
+            this._recaptcha = new ReCaptcha();
+        }
+    },
+
+    async willStart() {
+        if (document.querySelector('.o_donation_payment_form')) {
+            return this._recaptcha.loadLibs();
+        }
+    },
 
     // #=== EVENT HANDLERS ===#
 
@@ -52,6 +65,7 @@ PaymentForm.include({
      * @return {void}
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+        const _super = this._super.bind(this);
         if (document.querySelector('.o_donation_payment_form')) {
             const errorFields = {};
             if (!this.el.querySelector('input[name="email"]').checkValidity()) {
@@ -88,9 +102,14 @@ PaymentForm.include({
                 );
                 this._enableButton();
                 return;
+            } else if (this._recaptcha._publicKey && !this.$el.find("input[name='recaptcha_token_response']").length) {
+                const tokenCaptcha = await this._recaptcha.getToken("donation");
+                this.$el.append(
+                    `<input name="recaptcha_token_response" type="hidden" value="${tokenCaptcha.token}"/>`
+                );
             }
         }
-        await this._super(...arguments);
+        await _super(...arguments);
     },
 
     /**
@@ -118,6 +137,7 @@ PaymentForm.include({
             donation_recipient_email: this.el.querySelector(
                 'input[name="donation_recipient_email"]'
             ).value,
+            recaptcha_token_response: this.el.querySelector('input[name="recaptcha_token_response"]')?.value,
         } : transactionRouteParams;
     },
 
