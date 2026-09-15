@@ -6,6 +6,7 @@ from . import mixin_integration_receiver
 from . import integration_receiver
 from . import integration_service
 from . import integration_connection
+from . import mixin_integration_connected
 from . import response_cache
 from . import credential_access_log
 from . import credential_credential

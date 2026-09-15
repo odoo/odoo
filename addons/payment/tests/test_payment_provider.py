@@ -475,15 +475,54 @@ class TestPaymentProvider(PaymentCommon):
         self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
 
     @mute_logger("odoo.addons.payment.models.payment_provider")
-    def test_a_provider_request_is_recorded_under_its_own_purpose(self):
+    def _ok_response(self):
         response = requests.Response()
         response.status_code = 200
         response._content = b"{}"
-        IrEgress = type(self.env["ir.egress"])
-        with patch.object(IrEgress, "request", return_value=response) as sent:
-            self.provider._send_api_request("GET", "/dummy")
+        return response
 
-        self.assertEqual(sent.call_args.kwargs["purpose"], "payment_none")
+    def test_a_provider_request_goes_through_the_provider_connection(self):
+        with patch.object(GuardedSession, "request", return_value=self._ok_response()):
+            self.provider._send_api_request("GET", "/dummy")
+        self.env.flush_all()
+        self.env.cr.precommit.run()
+
+        connection = self.provider._get_integration_connection()
+        row = self.env["integration.exchange"].search(
+            [("connection_id", "=", connection.id)], limit=1
+        )
+        self.assertEqual(row.tags, "egress:payment_none")
+        self.assertEqual(connection.service_id.code, "payment_none")
+        self.assertEqual(connection.service_id.category, "payment")
+
+    def test_a_paused_provider_says_so_instead_of_calling(self):
+        connection = self.provider._get_integration_connection()
+        connection.write({"breaker_failure_threshold": 1, "breaker_max_cooldown": 60})
+        with patch("odoo.libs.breaker.monotonic", return_value=1000.0):
+            with (
+                patch.object(
+                    GuardedSession,
+                    "request",
+                    side_effect=requests.ConnectionError("down"),
+                ),
+                self.assertRaises(ValidationError),
+            ):
+                self.provider._send_api_request("GET", "/dummy")
+
+            with (
+                patch.object(GuardedSession, "request") as sent,
+                self.assertRaisesRegex(ValidationError, "paused"),
+            ):
+                self.provider._send_api_request("GET", "/dummy")
+        sent.assert_not_called()
+
+    def test_deleting_a_provider_deletes_its_connection(self):
+        provider = self.provider.copy()
+        connection = provider._get_integration_connection()
+
+        provider.unlink()
+
+        self.assertFalse(connection.exists())
 
     @mute_logger("odoo.addons.payment.models.payment_provider")
     def test_parsing_non_json_response_falls_back_to_text_response(self):

@@ -31,6 +31,7 @@ class AuthorizeAPI:
             self.url = "https://apitest.authorize.net/xml/v1/request.api"
 
         self.env = provider.env
+        self.connection = provider._get_integration_connection()
         self.state = provider.state
         self.name = provider.authorize_login
         self.transaction_key = provider.authorize_transaction_key
@@ -50,7 +51,7 @@ class AuthorizeAPI:
         _logger.info(
             "sending request to %s:\n%s", self.url, pprint.pformat(logged_request)
         )
-        response = self.env["ir.egress"].request(
+        response = self.connection._egress_request(
             "POST",
             self.url,
             purpose="payment_authorize",

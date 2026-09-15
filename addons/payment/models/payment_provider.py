@@ -8,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.mail import is_html_empty
 
+from odoo.addons.integration.tools.connection_gate import ConnectionUnavailable
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
@@ -18,7 +19,7 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 class PaymentProvider(models.Model):
     _name = "payment.provider"
-    _inherit = ["mixin.credential.holder"]
+    _inherit = ["mixin.credential.holder", "mixin.integration.connected"]
     _description = "Payment Provider"
     _order = "module_state, state desc, sequence, name"
     _check_company_auto = True
@@ -862,6 +863,13 @@ class PaymentProvider(models.Model):
 
     # === REQUEST HELPERS === #
 
+    def _integration_connection_service(self) -> tuple[str, str, str]:
+        self.check_singleton()
+        label = dict(self._fields["code"]._description_selection(self.env)).get(
+            self.code, self.code
+        )
+        return f"payment_{self.code}", self.env._("Payments: %s", label), "payment"
+
     def _send_api_request(
         self,
         method,
@@ -907,7 +915,7 @@ class PaymentProvider(models.Model):
 
         # Send the request.
         try:
-            response = self.env["ir.egress"].request(
+            response = self._get_integration_connection()._egress_request(
                 method,
                 url,
                 purpose=f"payment_{self.code}",
@@ -918,6 +926,8 @@ class PaymentProvider(models.Model):
                 auth=auth,
                 timeout=timeout,
             )
+        except ConnectionUnavailable as error:
+            raise ValidationError(str(error)) from None
         except (
             requests.exceptions.ConnectionError,
             requests.exceptions.Timeout,
