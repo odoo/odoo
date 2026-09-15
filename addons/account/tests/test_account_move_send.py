@@ -771,6 +771,31 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'email': {'count': 1, 'label': 'by Email'},
             })
 
+    def test_invoice_foreign_vat_fiscal_position_extra_edi_not_checked_by_default(self):
+        invoice = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000])
+        foreign_vat_fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Foreign VAT',
+            'company_id': invoice.company_id.id,
+            'country_id': self.env.ref('base.fr').id,
+            'foreign_vat': 'FR40303265045',
+        })
+        invoice.fiscal_position_id = foreign_vat_fiscal_position
+        invoice.action_post()
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {
+                    'label': 'EDI 1',
+                    'is_applicable': lambda move: True,
+                },
+            }
+
+        with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis):
+            wizard = self.create_send_and_print(invoice, default=True)
+            self.assertFalse(wizard.extra_edis)
+            self.assertFalse(wizard.extra_edi_checkboxes)
+            self.assertFalse(self.env['account.move.send']._get_default_extra_edis(invoice))
+
     def test_invoice_multi_child_contact(self):
         """ Test bulk invoice sending will retrieve info from the main partner. """
         self.partner_a.write({'invoice_sending_method': 'manual'})
