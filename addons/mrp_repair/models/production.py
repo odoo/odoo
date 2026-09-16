@@ -12,14 +12,23 @@ class MrpProduction(models.Model):
         groups='stock.group_stock_user',
     )
 
-    @api.depends('move_dest_ids.repair_id')
+    @api.depends('move_dest_ids.repair_id', 'reference_ids')
     def _compute_repair_count(self):
         for production in self:
-            production.repair_count = len(production.move_dest_ids.repair_id)
+            production.repair_count = len(production._get_repair_orders())
+
+    def _get_repair_orders(self):
+        self.ensure_one()
+        repair_ids = self.move_dest_ids.repair_id
+        if self.reference_ids:
+            repair_ids |= self.env['repair.order'].search([
+                ('reference_ids', 'in', self.reference_ids.ids),
+            ])
+        return repair_ids
 
     def action_view_repair_orders(self):
         self.ensure_one()
-        repair_ids = self.move_dest_ids.repair_id
+        repair_ids = self._get_repair_orders()
         action = {
             'type': 'ir.actions.act_window',
             'res_model': 'repair.order',
