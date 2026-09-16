@@ -127,6 +127,8 @@ class TestMailingTest(TestMassMailCommon):
         mailing.write({
             'body_html': '<p>Hello {{ object.name }} <t t-out="object.name"/></p>',
             'subject': 'Subject {{ object.name }} <t t-out="object.name"/>',
+            'reply_to_mode': 'new',
+            'reply_to': 'reply.to@test.example.com',
         })
         model = mailing.mailing_model_real
         record = self.test_records[1]
@@ -135,6 +137,9 @@ class TestMailingTest(TestMassMailCommon):
             'mass_mailing_id': mailing.id,
             'preview_record_ref': f'{model},{record.id}',
         })
+
+        self.assertEqual(mailing_test.reply_to, mailing.reply_to,
+            "Preview / Test wizard should use the mailing's reply-to")
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing_test.send_mail_test()
@@ -148,7 +153,8 @@ class TestMailingTest(TestMassMailCommon):
 
         self.assertSentEmail(self.env.user.partner_id, ['test@test.com'],
             subject=expected_test_subject,
-            body_content=expected_body)
+            body_content=expected_body,
+            reply_to=mailing.reply_to)
 
         with self.mock_mail_gateway():
             # send the mailing
@@ -160,6 +166,7 @@ class TestMailingTest(TestMassMailCommon):
             [record.email_from],
             subject=expected_subject,
             body_content=expected_body,
+            reply_to=mailing.reply_to,
         )
 
         self.assertEqual(
