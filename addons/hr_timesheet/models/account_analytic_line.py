@@ -65,10 +65,10 @@ class AccountAnalyticLine(models.Model):
         ui_domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]")
     parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null', init_storage=lambda model: None)
     project_id = fields.Many2one(
-        'project.project', 'Project', domain=_domain_project_id, index=True,
+        'project.project', 'Project', ui_domain=_domain_project_id, index=True,
         compute='_compute_project_id', inverse='_inverse_project_id', store=True, readonly=False, init_storage=lambda model: None)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
+    employee_id = fields.Many2one('hr.employee', "Employee", ui_domain=_domain_employee_id, context={'active_test': False},
         index=True, help="Define an 'hourly cost' on the employee to track the cost of their time.")
     job_title = fields.Char(related='employee_id.job_title', export_string_translation=False)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True, init_storage=lambda model: None)

@@ -166,7 +166,7 @@ class AccountPayment(models.Model):
         string='Destination Account',
         store=True, readonly=False,
         compute='_compute_destination_account_id',
-        ui_domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
+        domain=[('account_type', 'in', ('asset_receivable', 'liability_payable'))],
         index='btree_not_null',
         check_company=True)
 

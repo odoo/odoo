@@ -71,8 +71,8 @@ class PosConfig(models.Model):
         return self.sudo()._get_or_create_default_partner()
 
     name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.")
-    preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", ui_domain="[('use_type', '=', 'preparation')]")
-    receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", ui_domain="[('use_type', '=', 'receipt')]")
+    preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", domain=[('use_type', '=', 'preparation')])
+    receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", domain=[('use_type', '=', 'receipt')])
     use_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")

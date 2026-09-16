@@ -12,7 +12,7 @@ class StockRequestCount(models.TransientModel):
         'Scheduled at', required=True,
         help="Choose a date to get the inventory at that date",
         default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string="Assign to", domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
+    user_id = fields.Many2one('res.users', string="Assign to", ui_domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
     quant_ids = fields.Many2many('stock.quant')
     show_expected_quantity = fields.Boolean(help='If the user can see the expected quantity or not', compute='_compute_show_expected_quantity', inverse='_set_show_expected_quantity')
 

@@ -49,7 +49,7 @@ class StockStorageCategoryCapacity(models.Model):
 
     storage_category_id = fields.Many2one('stock.storage.category', ondelete='cascade', required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', check_company=True, index='btree_not_null',
-        domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+        ui_domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
             " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
             " [('is_storable', '=', True)]"))
     package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True, index='btree_not_null')

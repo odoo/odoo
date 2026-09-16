@@ -161,7 +161,7 @@ class ProjectProject(models.Model):
         compute='_compute_allowed_internal_user_ids',
         store=True,
         readonly=False,
-        domain=lambda self: f"[('share', '=', False), ('group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
+        ui_domain=lambda self: f"[('share', '=', False), ('group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
     )
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)

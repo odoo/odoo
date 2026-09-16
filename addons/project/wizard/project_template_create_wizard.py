@@ -84,6 +84,6 @@ class ProjectTemplateRoleToUsersMap(models.TransientModel):
     user_ids = fields.Many2many(
         'res.users',
         string='Assignees',
-        domain=lambda self: str(self._domain_user_ids()),
+        ui_domain=lambda self: str(self._domain_user_ids()),
     )
     role_user_ids = fields.Many2many(related='role_id.user_ids', export_string_translation=False)
