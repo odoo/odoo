@@ -501,7 +501,7 @@ class AccountEdiFormat(models.Model):
             for line in invoice.invoice_line_ids.filtered(
                 lambda line: (
                     line.display_type == "product"
-                    and line._check_edi_line_tax_required()
+                    and line._is_edi_line_tax_required()
                 )
             )
         ):

@@ -150,7 +150,7 @@ class StockLandedCost(models.Model):
         )
         if cost_without_adjusment_lines:
             cost_without_adjusment_lines.compute_landed_cost()
-        if not self._check_sum():
+        if not self._is_valuation_balanced():
             raise UserError(
                 _(
                     "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
@@ -317,7 +317,7 @@ class StockLandedCost(models.Model):
                     )
                 )
 
-    def _check_sum(self):
+    def _is_valuation_balanced(self):
         _debug.logic("landed_cost_sum_check", costs=self)
         for landed_cost in self:
             total_amount = sum(

@@ -498,7 +498,7 @@ class AccountEdiCommon(models.AbstractModel):
         for line in invoice.invoice_line_ids.filtered(
             lambda x: (
                 x.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
-                and x._check_edi_line_tax_required()
+                and x._is_edi_line_tax_required()
             )
         ):
             if not line.tax_ids:

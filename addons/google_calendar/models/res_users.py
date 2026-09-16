@@ -73,7 +73,7 @@ class ResUsers(models.Model):
             status = "sync_stopped"
         return status
 
-    def _check_pending_odoo_records(self):
+    def _has_pending_odoo_records(self):
         """Returns True if sync is active and there are records to be synchronized to Google."""
         if self._get_google_sync_status() != "sync_active":
             return False
@@ -87,7 +87,7 @@ class ResUsers(models.Model):
         self.check_singleton()
         results = self._sync_request(calendar_service)
         if not results or (
-            not results.get("events") and not self._check_pending_odoo_records()
+            not results.get("events") and not self._has_pending_odoo_records()
         ):
             return False
         events, default_reminders, full_sync = results.values()

@@ -4403,7 +4403,7 @@ class AccountMoveLine(models.Model):
         )
 
     @_debug.perf.timed
-    def _check_edi_line_tax_required(self):
+    def _is_edi_line_tax_required(self):
         return self.product_id.type != "combo"
 
     def _prepare_aml_values(self, **kwargs):
