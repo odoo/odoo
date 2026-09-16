@@ -176,8 +176,10 @@ class Dispatcher(ABC):
         env = getattr(self.request, "env", None)
         if env is None or env.cr.closed:
             return
-        # SET LOCAL: the budget lives with this transaction and dies with it,
-        # so a replay or the next request starts from the server default.
+        # The cursor remembers the budget and re-arms it (SET LOCAL) before the
+        # first statement of every transaction it runs, so a mid-request commit,
+        # a savepoint rollback or the promotion replay keep it; it ends with
+        # the cursor, i.e. with the request.
         env.cr.set_statement_timeout(seconds)
         _debug.logic(
             "http.dispatch.statement_timeout",
