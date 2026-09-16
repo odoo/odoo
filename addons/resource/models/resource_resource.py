@@ -71,7 +71,11 @@ class ResourceResource(models.Model):
     )
     avatar_128 = fields.Image(compute="_compute_avatar_128")
     share = fields.Boolean(related="user_id.share")
-    email = fields.Char(related="partner_id.email")
+    email = fields.Char(
+        compute="_compute_email",
+        inverse="_inverse_email",
+        search="_search_email",
+    )
     phone_ids = fields.Many2many(related="partner_id.phone_ids")
 
     calendar_id = fields.Many2one(
@@ -375,6 +379,20 @@ class ResourceResource(models.Model):
                 continue
             logins = users.filtered(lambda user: user.active and not user.share)
             resource.user_id = logins.id if len(logins) == 1 else False
+
+    @api.depends("partner_id.email")
+    def _compute_email(self):
+        for resource in self:
+            resource.email = resource.partner_id.sudo().email
+
+    def _inverse_email(self):
+        for resource in self.filtered("partner_id"):
+            party = resource.partner_id.sudo()
+            if party.email != resource.email:
+                party.email = resource.email
+
+    def _search_email(self, operator, value):
+        return Domain("partner_id.email", operator, value)
 
     def _inverse_name(self):
         for resource in self.filtered("partner_id"):
