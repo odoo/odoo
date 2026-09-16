@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import heapq
+import itertools
 import logging
 from collections import namedtuple
 
@@ -259,6 +260,12 @@ class StockQuant(models.Model):
                 self.env.context['quants_cache'][
                     quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
                 ] |= quant
+            non_strict_quants_cache = self.env.context.get('non_strict_quants_cache')
+            if non_strict_quants_cache:
+                for location_id in map(int, quant.location_id.parent_path.split('/')[:-1]):
+                    key = (quant.product_id.id, location_id)
+                    if key in non_strict_quants_cache:
+                        non_strict_quants_cache[key] |= quant
 
         quants = self.env['stock.quant']
         is_inventory_mode = self._is_inventory_mode()
@@ -779,11 +786,23 @@ class StockQuant(models.Model):
         order = self._get_removal_strategy_order(removal_strategy)
 
         quants_cache = self.env.context.get('quants_cache')
+        non_strict_quants_cache = self.env.context.get('non_strict_quants_cache')
         if quants_cache is not None and strict and removal_strategy != 'least_packages':
             res = self.env['stock.quant']
             if lot_id:
                 res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
             res |= quants_cache[product_id.id, location_id.id, False, package_id.id, owner_id.id]
+        elif (
+            non_strict_quants_cache is not None and not strict and removal_strategy in ('fifo', 'lifo', 'closest')
+            and not lot_id and not package_id and not owner_id
+            and not self.env.context.get('with_expiration')
+            and (product_id.id, location_id.id) in non_strict_quants_cache
+        ):
+            res = self.browse(non_strict_quants_cache[product_id.id, location_id.id].ids)
+            if order == 'in_date ASC, id':
+                res = res.sorted(key=lambda q: (q.in_date, q.id))
+            elif order == 'in_date DESC, id DESC':
+                res = res.sorted(key=lambda q: (q.in_date, q.id), reverse=True)
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
@@ -929,6 +948,21 @@ class StockQuant(models.Model):
             )
             for product, loc, lot, package, owner, quants in needed_quants:
                 res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        return res
+
+    def _get_quants_by_products_locations_non_strict(self, product_ids, location_ids):
+        """Prefetch the quants of each (product, location subtree) pair for `_gather`'s non-strict case.
+        """
+        res = dict.fromkeys(itertools.product(product_ids.ids, location_ids.ids), self.env['stock.quant'])
+        if res:
+            groups = self.env['stock.quant']._read_group(
+                [('product_id', 'in', product_ids.ids), ('location_id', 'child_of', location_ids.ids)],
+                ['product_id', 'location_id'], ['id:recordset'],
+            )
+            for product, location, quants in groups:
+                for parent_id in map(int, location.parent_path.split('/')[:-1]):
+                    if (product.id, parent_id) in res:
+                        res[product.id, parent_id] |= quants
         return res
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
