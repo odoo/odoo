@@ -54,7 +54,7 @@ class FleetVehicleLogServices(models.Model):
                 'date': record.date or fields.Date.context_today(record),
                 'vehicle_id': record.vehicle_id.id
             })
-            self.odometer_id = odometer
+            record.odometer_id = odometer
 
     @api.model_create_multi
     def create(self, vals_list):
