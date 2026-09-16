@@ -279,7 +279,7 @@ class AccountReturnCheck(models.Model):
             check.approver_supervisor_ids = check.approver_ids | check.supervisor_id
 
     @_debug.perf.timed
-    def _get_evaluation_context(self):
+    def _prepare_evaluation_context(self):
         def generate_journals_options():
             options = self.env.ref("account.trial_balance_report").get_options({})
             journals = options.get("journals", [])
@@ -342,7 +342,7 @@ class AccountReturnCheck(models.Model):
         :rtype: dict or None
         """
         # Actions coming from data carry their domain and context as strings, so they must be
-        # evaluated against _get_evaluation_context before being returned.
+        # evaluated against _prepare_evaluation_context before being returned.
         _debug.lifecycle("action_review", records=self)
         self.check_singleton()
 
@@ -378,7 +378,7 @@ class AccountReturnCheck(models.Model):
         if self.action:
             action = {**self.action}
 
-            evaluation_context = self._get_evaluation_context()
+            evaluation_context = self._prepare_evaluation_context()
             if _debug.logic.enabled:
                 _debug.logic(
                     "review_action_string_expressions",
