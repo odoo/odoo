@@ -1,3 +1,4 @@
+import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { StyleInfo } from "./style_models";
 
 export const BLOCKED_PSEUDO_CLASSES = new Set([
@@ -119,4 +120,22 @@ export function renderAttributes({
         }
     }
     return renderedAttributes;
+}
+
+export function isCSSColorTransparent(cssColor) {
+    const rgbaColor = convertCSSColorToRgba(cssColor);
+    return rgbaColor?.opacity === 0 || cssColor === "transparent";
+}
+
+export function areCSSColorEqual(cssColor1, cssColor2) {
+    const c1 = convertCSSColorToRgba(cssColor1);
+    const c2 = convertCSSColorToRgba(cssColor2);
+    return (
+        c1 &&
+        c2 &&
+        c1.red === c2.red &&
+        c1.green === c2.green &&
+        c1.blue === c2.blue &&
+        c1.opacity === c2.opacity
+    );
 }

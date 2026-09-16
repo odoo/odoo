@@ -2,9 +2,9 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
 import { parseCssValue } from "../css_parsers";
+import { areCSSColorEqual, isCSSColorTransparent } from "../core/utils";
 
 const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = [
-    "color",
     "font-size",
     "font-style",
     "font-weight",
@@ -30,6 +30,7 @@ export class ContextStylePlugin extends Plugin {
         "getTableContextStyleInfo",
     ];
     resources = {
+        on_measure_reference_content_handlers: this.captureBodyColor.bind(this),
         fix_raw_style_values_handlers: this.fixRemUnits.bind(this),
     };
 
@@ -38,6 +39,12 @@ export class ContextStylePlugin extends Plugin {
         // and where these context rules should be defined (probably here)
         this.tableContextStyleRules = new Rules();
         this.provideTableContextStyleRules();
+        this.transparentFromReferenceDescendants = new Set();
+        this.notTransparentFromReferenceDescendants = new Set();
+    }
+
+    captureBodyColor() {
+        this.bodyColor = this.getStylePropertyValue(this.config.referenceDocument.body, "color");
     }
 
     fixRemUnits({ element, propertyName, propertyInfo, styleInfo }) {
@@ -141,6 +148,12 @@ export class ContextStylePlugin extends Plugin {
             }
         }
         const styleInfo = this.filterStyleInfo(rawStyleInfo, element, this.tableContextStyleRules);
+        this.setTableContextLineHeight(styleInfo, element);
+        this.setTableContextColor(styleInfo, element);
+        return styleInfo;
+    }
+
+    setTableContextLineHeight(styleInfo, element) {
         let lineHeight = styleInfo.getPropertyValue("line-height");
         if (lineHeight === "" && element.closest("table")) {
             let referenceNode = element;
@@ -165,7 +178,62 @@ export class ContextStylePlugin extends Plugin {
                     this.getStylePropertyValue(body, "line-height")
             );
         }
-        return styleInfo;
+    }
+
+    isTransparentFromReferenceDescendant(element) {
+        if (this.transparentFromReferenceDescendants.has(element)) {
+            return true;
+        }
+        if (this.notTransparentFromReferenceDescendants.has(element)) {
+            return false;
+        }
+        let isTransparent, previousElement;
+        let currentElement = element;
+        const ancestors = new Set();
+        do {
+            const backgroundColor = this.getStylePropertyValue(currentElement, "background-color");
+            isTransparent = isCSSColorTransparent(backgroundColor);
+            ancestors.add(currentElement);
+            previousElement = currentElement;
+            currentElement = currentElement.parentElement;
+        } while (
+            isTransparent &&
+            currentElement &&
+            previousElement !== this.config.reference &&
+            !this.notTransparentFromReferenceDescendants.has(currentElement) &&
+            !this.transparentFromReferenceDescendants.has(currentElement)
+        );
+        if (
+            isTransparent &&
+            (previousElement === this.config.reference ||
+                this.transparentFromReferenceDescendants.has(currentElement))
+        ) {
+            this.transparentFromReferenceDescendants =
+                this.transparentFromReferenceDescendants.union(ancestors);
+            return true;
+        } else if (this.config.reference.contains(element)) {
+            this.notTransparentFromReferenceDescendants =
+                this.notTransparentFromReferenceDescendants.union(ancestors);
+        }
+        return false;
+    }
+
+    setTableContextColor(styleInfo, element) {
+        // TODO EGGMAIL: there is an issue for tables, they have a triple-depth
+        // var which resolves to "initial" which is not parsed properly
+        // resulting in the computed color being applied
+        // => table text will appear black in the chatter in dark mode
+        // => find a solution for this case
+        if (styleInfo.getPropertyValue("color")) {
+            return;
+        }
+        const computedColor = this.getStylePropertyValue(element, "color");
+        if (
+            !areCSSColorEqual(computedColor, this.bodyColor) ||
+            !this.isTransparentFromReferenceDescendant(element)
+        ) {
+            styleInfo.setProperty("color", computedColor);
+        }
     }
 }
 

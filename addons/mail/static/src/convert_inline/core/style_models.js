@@ -31,11 +31,15 @@ export class PropertyInfo {
  * Inline style representation of an email Element
  */
 export class StyleInfo extends Map {
+    /**
+     * Return a new StyleInfo instance from a Map or Object of
+     * StyleInfo-like instances
+     * @param {Object|Map|StyleInfo} styleObject
+     * @returns {StyleInfo}
+     */
     static from(styleObject) {
         let entries;
-        if (styleObject instanceof StyleInfo) {
-            return styleObject;
-        } else if (styleObject instanceof Map) {
+        if (styleObject instanceof Map) {
             entries = styleObject.entries();
         } else {
             entries = Object.entries(styleObject);

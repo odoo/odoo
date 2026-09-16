@@ -13,6 +13,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { Rules } from "../core/rules_models";
 import { ElementLayout } from "../core/render_models";
+import { isCSSColorTransparent } from "../core/utils";
 
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
@@ -437,8 +438,8 @@ export class ImageStrategyPlugin extends Plugin {
         let bg, isTransparent;
         let element = fontIcon;
         do {
-            bg = this.getStylePropertyValue(element, "background-color").replace(/\s/g, "");
-            isTransparent = bg === "transparent" || bg === "rgba(0,0,0,0)";
+            bg = this.getStylePropertyValue(element, "background-color");
+            isTransparent = isCSSColorTransparent(bg);
             element = element.parentElement;
         } while (isTransparent && element && isPhrasingContent(element));
         if (isTransparent) {
