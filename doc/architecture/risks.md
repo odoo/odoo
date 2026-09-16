@@ -72,8 +72,14 @@ aggregate and an order term outside the groupby; fetch bookkeeping, the jsonb
 merges, the company-dependent guards on unlink and `load()` (with the real
 `ir.fields.converter` handed to an isolated registry) run on both tiers, and
 `model_test_env` ends every test with `Cache.check` against its rows as
-`TransactionCase` does against PostgreSQL. Access rights and record rules stay
-outside the tier by design and raise loud markers.
+`TransactionCase` does against PostgreSQL. Re-read 2026-09-15: the `_has_cycle`
+walk, the counter increment and the transient vacuum's backlog probe are port
+methods (no capability flag is declared any more), grouping sets and the
+empty-having probe run through `read_grouping_sets_rows` / `read_group_rows`, and
+the in-memory unlink lets a referrer the batch deletes refuse nothing, as the SQL
+scan after DELETE does -- one "same verdict" note in the inventory was false until
+then. Access rights and record rules stay outside the tier by design and raise
+loud markers.
 The gap that remains is not in the port but in the harness: a module's test
 class cannot yet be hosted on the in-memory tier, because building a registry
 from `base`'s real models and their data files stops at the shared id space of
