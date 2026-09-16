@@ -33,7 +33,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "depreciation_method": "linear",
             }
         )
-        cls.truck.validate()
+        cls.truck.action_confirm()
         moves_to_post = cls.env["account.move"].search(
             [
                 ("state", "=", "draft"),
@@ -116,7 +116,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car.depreciation_prorata = "constant_periods"
         CEO_car.depreciation_duration = 5
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
 
         self.assertFalse(
             any(CEO_car.depreciation_move_ids.line_ids.mapped("tax_line_id"))
@@ -137,7 +137,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car.depreciation_prorata = "constant_periods"
         CEO_car.depreciation_duration = 5
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
 
         CEO_car.flush_recordset()
 
@@ -306,7 +306,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
 
-        CEO_car.set_to_close(
+        CEO_car._close(
             self.closing_invoice.invoice_line_ids,
             date=fields.Date.today() + relativedelta(days=-1),
         )
@@ -447,7 +447,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car.depreciation_prorata = "constant_periods"
         CEO_car.depreciation_duration = 5
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
 
         CEO_car.depreciation_move_ids.write({"auto_post": "no"})
         CEO_car.depreciation_move_ids.action_post()
@@ -495,7 +495,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
 
-        CEO_car.set_to_close(
+        CEO_car._close(
             self.closing_invoice.invoice_line_ids,
             date=fields.Date.today() + relativedelta(days=30),
         )
@@ -675,7 +675,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         CEO_car._onchange_depreciation_profile_id()
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
         self.assertRecordValues(
             CEO_car,
             [
@@ -688,7 +688,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
         self.assertFalse(CEO_car.depreciation_move_ids)
-        CEO_car.set_to_close(self.closing_invoice.invoice_line_ids)
+        CEO_car._close(self.closing_invoice.invoice_line_ids)
         self.assertRecordValues(
             CEO_car,
             [
@@ -756,7 +756,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         CEO_car._onchange_depreciation_profile_id()
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
         self.assertRecordValues(
             CEO_car,
             [
@@ -769,7 +769,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
         self.assertFalse(CEO_car.depreciation_move_ids)
-        CEO_car.set_to_close(self.closing_invoice.invoice_line_ids)
+        CEO_car._close(self.closing_invoice.invoice_line_ids)
         self.assertRecordValues(
             CEO_car,
             [
@@ -838,7 +838,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car._onchange_depreciation_profile_id()
         CEO_car.depreciation_duration = 5
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
         self.assertRecordValues(
             CEO_car,
             [
@@ -851,7 +851,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
         self.assertEqual(len(CEO_car.depreciation_move_ids), 4)
-        CEO_car.set_to_close(
+        CEO_car._close(
             self.closing_invoice.invoice_line_ids,
             date=fields.Date.today() + relativedelta(months=-6, days=-1),
         )
@@ -923,7 +923,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car.depreciation_duration = 5
         CEO_car.account_depreciation_id = CEO_car.account_asset_id
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
         self.assertRecordValues(
             CEO_car,
             [
@@ -936,7 +936,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             ],
         )
         self.assertEqual(len(CEO_car.depreciation_move_ids), 5)
-        CEO_car.set_to_close(
+        CEO_car._close(
             self.env["account.move.line"],
             date=fields.Date.today() + relativedelta(days=-1),
         )
@@ -1017,7 +1017,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
         posted_entries = len(
             CEO_car.depreciation_move_ids.filtered(lambda x: x.state == "posted")
         )
@@ -1050,7 +1050,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         CEO_car._onchange_depreciation_profile_id()
         CEO_car.depreciation_duration = 5
-        CEO_car.validate()
+        CEO_car.action_confirm()
 
         self.assertRecordValues(
             CEO_car,
@@ -1063,7 +1063,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 }
             ],
         )
-        CEO_car.set_to_cancelled()
+        CEO_car.action_cancel()
 
         self.assertEqual(CEO_car.depreciation_state, "cancelled")
         self.assertFalse(CEO_car.depreciation_move_ids)
@@ -1079,7 +1079,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
         Hashed_car.depreciation_journal_id.restrict_mode_hash_table = True
-        Hashed_car.validate()
+        Hashed_car.action_confirm()
         self.assertTrue(
             False
             not in Hashed_car.depreciation_move_ids._sorted_by_date()[:3].mapped(
@@ -1092,7 +1092,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 Hashed_car.depreciation_move_ids._sorted_by_date()[i].reversal_move_ids
             )
 
-        Hashed_car.set_to_cancelled()
+        Hashed_car.action_cancel()
 
         self.assertEqual(Hashed_car.depreciation_state, "cancelled")
         for i in range(2):
@@ -1128,11 +1128,11 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date_acquisition": today + relativedelta(years=-3, month=1, day=1),
             }
         )
-        Locked_car.validate()
+        Locked_car.action_confirm()
         Locked_car.company_id.fiscalyear_lock_date = today + relativedelta(years=-1)
 
         self.assertEqual(len(Locked_car.depreciation_move_ids), 10)
-        Locked_car.set_to_cancelled()
+        Locked_car.action_cancel()
         self.assertRecordValues(
             Locked_car,
             [
@@ -1164,7 +1164,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         asset_form.depreciation_journal_id = self.company_data["default_journal_misc"]
         asset_form.depreciation_prorata = "none"
         asset = asset_form.save()
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(len(asset.depreciation_move_ids), 5)
         for move in asset.depreciation_move_ids:
@@ -1197,7 +1197,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "depreciation_prorata": "none",
             }
         )
-        asset.compute_depreciation_board()
+        asset._create_depreciation_entries()
 
         self.assertEqual(len(asset.depreciation_move_ids), 5)
         for move in asset.depreciation_move_ids:
@@ -1244,7 +1244,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 ].id,
             }
         )
-        asset.validate()
+        asset.action_confirm()
 
         sorted_depreciation_moves = asset.depreciation_move_ids.sorted(lambda l: l.date)
         td = fields.Date.to_date
@@ -1597,7 +1597,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "default_account_assets"
                 ].id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(self.truck.value_depreciable_residual, 3000)
         self.assertEqual(self.truck.value_salvage, 2500)
         self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 1000)
@@ -1617,7 +1617,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 2000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 2000)
         self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
@@ -1642,7 +1642,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 4500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 4500)
         self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
@@ -1658,7 +1658,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 6000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(self.truck.value_depreciable_residual, 1000)
         self.assertEqual(self.truck.value_salvage, 4500)
         self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 0)
@@ -1674,7 +1674,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 2000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(self.truck.value_depreciable_residual, 3500)
         self.assertEqual(self.truck.value_salvage, 2000)
         self.assertEqual(self.truck.increase_ids.value_depreciable_residual, 500)
@@ -1732,7 +1732,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 3000,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertEqual(
             self.truck.value_depreciable_residual
@@ -1779,7 +1779,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.env["asset.modify"].create(
             {
                 "name": "Huge scratch on beautiful sticker :'( It went through...",
@@ -1789,7 +1789,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_salvage": 2500,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertEqual(
             self.truck.value_depreciable_residual
             + sum(self.truck.increase_ids.mapped("value_depreciable_residual")),
@@ -1836,7 +1836,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(days=-1),
                 "asset_id": self.truck.id,
             }
-        ).pause()
+        ).action_pause()
         self.assertEqual(
             len(
                 self.truck.depreciation_move_ids.filtered(lambda e: e.state == "draft")
@@ -1849,7 +1849,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "asset_id": self.truck.id,
                 }
-            ).modify()
+            ).action_modify()
             self.assertEqual(
                 len(
                     self.truck.depreciation_move_ids.filtered(
@@ -1881,7 +1881,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
@@ -1932,7 +1932,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
         )
@@ -1988,7 +1988,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
         )
@@ -2035,7 +2035,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "dispose",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
         )
@@ -2229,7 +2229,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertTrue(invoice_asset)
         self.assertTrue(credit_note_asset)
 
-        (invoice_asset + credit_note_asset).validate()
+        (invoice_asset + credit_note_asset).action_confirm()
 
         self.assertRecordValues(
             credit_note_asset,
@@ -2705,7 +2705,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(
             asset.depreciation_duration + 1, len(asset.depreciation_move_ids)
@@ -2762,7 +2762,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(asset.depreciation_duration, len(asset.depreciation_move_ids))
 
@@ -2813,7 +2813,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         asset.depreciation_prorata = "constant_periods"
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda l: (l.date, l.id)),
@@ -2866,7 +2866,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda l: (l.date, l.id)),
@@ -2949,7 +2949,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(asset.value_book, -refund.amount_total)
         self.assertEqual(asset.value_depreciable_residual, -refund.amount_total)
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(
             len(asset.depreciation_move_ids.filtered(lambda m: m.state == "posted")), 1
@@ -2978,7 +2978,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         report = self.env.ref("account_depreciation.assets_report")
 
@@ -3011,7 +3011,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "date": fields.Date.today(),
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
 
         self.env["account.move"].browse(disposal_action_view["res_id"]).action_post()
@@ -3121,7 +3121,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     (account_e.id, "Xbox", 500),
                 ]
             ]
-        ).validate()
+        ).action_confirm()
 
         report = self.env.ref("account_depreciation.assets_report")
         options = self._generate_options(report, "2022-01-01", "2022-12-31")
@@ -3195,7 +3195,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
-        asset.validate()
+        asset.action_confirm()
 
         expense_account_copy = self.company_data["default_account_expense"].copy()
 
@@ -3209,7 +3209,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "date": fields.Date.today() + relativedelta(days=-1),
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
 
         report = self.env.ref("account_depreciation.assets_report")
@@ -3264,7 +3264,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "depreciation_journal_id": self.company_data["default_journal_misc"].id,
             }
         )
-        asset.validate()
+        asset.action_confirm()
 
         report = self.env.ref("account_depreciation.assets_report")
 
@@ -3293,7 +3293,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "date": fields.Date.today(),
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
 
         expected_values_asset_disposal_unposted = [
@@ -3347,7 +3347,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         CEO_car.depreciation_duration = 5
         CEO_car.analytic_distribution = {self.analytic_account.id: 100}
 
-        CEO_car.validate()
+        CEO_car.action_confirm()
 
         for move in CEO_car.depreciation_move_ids:
             self.assertRecordValues(
@@ -3397,7 +3397,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_analytic_filter(self):
         truck_b = self.truck.copy()
         truck_b.date_acquisition = self.truck.date_acquisition
-        truck_b.validate()
+        truck_b.action_confirm()
         self.truck.analytic_distribution = {self.analytic_account.id: 100}
 
         with self.enter_registry_test_mode():
@@ -3494,7 +3494,7 @@ class TestAccountAsset(TestAccountReportsCommon):
     def test_asset_analytic_groupby(self):
         truck_b = self.truck.copy()
         truck_b.date_acquisition = self.truck.date_acquisition
-        truck_b.validate()
+        truck_b.action_confirm()
         self.truck.analytic_distribution = {self.analytic_account.id: 100}
         with self.enter_registry_test_mode():
             self.env.ref(
@@ -3651,7 +3651,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
@@ -3709,7 +3709,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "depreciation_prorata": "none",
                 }
             )
-            asset.validate()
+            asset.action_confirm()
 
         with self.enter_registry_test_mode():
             self.env.ref(
@@ -4088,7 +4088,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "depreciation_prorata": "none",
                 }
             )
-            asset.validate()
+            asset.action_confirm()
         self.env["account.move"].search(
             [
                 ("state", "=", "draft"),
@@ -4143,7 +4143,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda l: (l.date, l.id)),
@@ -4173,7 +4173,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(days=-1),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertEqual(asset.value_book, 8000)
 
@@ -4233,7 +4233,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(asset.value_book, 6000)
 
@@ -4245,7 +4245,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(days=-1),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertEqual(asset.value_book, 4000)
 
@@ -4409,7 +4409,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "depreciation_factor": 0.4,
             }
         )
-        asset.validate()
+        asset.action_confirm()
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
             [
@@ -4443,7 +4443,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_depreciable_residual": 5600,
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
         self.assertRecordValues(
             asset.increase_ids[0].depreciation_move_ids.sorted(
                 lambda mv: (mv.date, mv.id)
@@ -4507,7 +4507,7 @@ class TestAccountAsset(TestAccountReportsCommon):
             "default_account_expense"
         ]
         car = asset_form.save()
-        car.validate()
+        car.action_confirm()
 
         self.assertTrue(
             all(
@@ -4524,7 +4524,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_depreciable_residual": car.value_book - 150,
                 "date": fields.Date.today(),
             }
-        ).modify()
+        ).action_modify()
 
         added_move_on_revaluation = car.depreciation_move_ids.filtered(
             lambda m: m.date == fields.Date.today()
@@ -4553,7 +4553,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "invoice_line_ids": closing_invoice.invoice_line_ids,
                 "date": fields.Date.today(),
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         selling_move = car.depreciation_move_ids.filtered(lambda l: l.state == "draft")
         selling_move.action_post()
 
@@ -4565,7 +4565,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(car.value_gain_on_sale, 100)
 
         new_car = car.copy()
-        new_car.validate()
+        new_car.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -4576,7 +4576,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today(),
                 "account_asset_counterpart_id": self.assert_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertEqual(
             new_car.increase_ids.original_move_line_ids.move_id.asset_move_type,
@@ -4593,7 +4593,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "date": fields.Date.today(),
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
 
         self.env["account.move"].browse(disposal_action_view["res_id"]).action_post()
@@ -4624,7 +4624,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_depreciated_import": 3000,
             }
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -4632,7 +4632,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() - relativedelta(days=1),
                 "name": "Test reason",
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids._sorted_by_date(),
@@ -4676,7 +4676,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "value_depreciated_import": 6000,
             }
         )
-        fully_depreciated_asset.validate()
+        fully_depreciated_asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -4684,7 +4684,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today(),
                 "modify_action": "dispose",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         self.assertEqual(
             len(fully_depreciated_asset.depreciation_move_ids),
             1,
@@ -4741,7 +4741,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
         self.assertEqual(assets[0].company_id, self.company_data["company"])
         self.assertEqual(assets[1].company_id, self.company_data_2["company"])
-        assets.validate()
+        assets.action_confirm()
 
     def test_depreciation_moves_company_with_sub_company(self):
         company = self.env.company
@@ -4787,7 +4787,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     }
                 )
                 asset = self.env["resource.asset"].create(asset_vals)
-                asset.compute_depreciation_board()
+                asset._create_depreciation_entries()
                 self.assertEqual(
                     asset.depreciation_move_ids.mapped("company_id"), expected
                 )
@@ -4863,12 +4863,12 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
         locked_car._onchange_depreciation_profile_id()
-        locked_car.validate()
+        locked_car.action_confirm()
 
         locked_car.company_id.fiscalyear_lock_date = today + relativedelta(years=-1)
 
         self.assertEqual(len(locked_car.depreciation_move_ids), 3)
-        locked_car.set_to_cancelled()
+        locked_car.action_cancel()
         self.assertRecordValues(
             locked_car,
             [
@@ -4934,7 +4934,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
         )
@@ -4987,7 +4987,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "date": fields.Date.today() + relativedelta(months=-6, days=-1),
                 "modify_action": "sell",
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
         closing_move = self.truck.depreciation_move_ids.filtered(
             lambda l: l.state == "draft"
         )

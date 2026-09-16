@@ -19,30 +19,30 @@
                 <field name="increased_asset_id" invisible="1" />
                 <header>
                     <button
-                        name="validate"
+                        name="action_confirm"
                         type="object"
                         string="Confirm"
                         invisible="depreciation_state != 'draft'"
                         class="oe_highlight"
                         data-hotkey="q" />
                     <button
-                        name="compute_depreciation_board"
+                        name="action_compute_depreciation"
                         type="object"
                         string="Compute Depreciation"
                         invisible="depreciation_state != 'draft'"
                         data-hotkey="d" />
                     <button
-                        name="set_to_draft"
+                        name="action_reset_to_draft"
                         type="object"
                         string="Set to Draft"
                         invisible="depreciation_move_ids or depreciation_state not in ['open', 'cancelled']" />
                     <button
-                        name="set_to_running"
+                        name="action_reopen"
                         type="object"
                         string="Set to Running"
                         invisible="depreciation_state != 'close'" />
                     <button
-                        name="resume_after_pause"
+                        name="action_resume"
                         type="object"
                         string="Resume Depreciation"
                         invisible="depreciation_state != 'paused'"
@@ -61,7 +61,7 @@
                         invisible="depreciation_state not in ('open', 'paused', 'close')"
                         data-hotkey="m" />
                     <button
-                        name="set_to_cancelled"
+                        name="action_cancel"
                         type="object"
                         string="Cancel Asset"
                         invisible="depreciation_state != 'open'"
@@ -620,7 +620,7 @@
         <field name="state">code</field>
         <field
             name="code">if records:
-    action = records.filtered(lambda asset: asset.depreciation_state == 'draft').validate()</field>
+    action = records.filtered(lambda asset: asset.depreciation_state == 'draft').action_confirm()</field>
     </record>
 
     <record id="action_account_asset_compute_depreciations" model="ir.actions.server">
@@ -634,7 +634,7 @@
         <field name="state">code</field>
         <field
             name="code">if records:
-    action = records.filtered(lambda asset: asset.depreciation_state == 'draft').compute_depreciation_board()</field>
+    action = records.filtered(lambda asset: asset.depreciation_state == 'draft').action_compute_depreciation()</field>
     </record>
 
     <!-- Override of move line list view. Avoid the assets taking a random list view, and make sure to only display relevant fields by default. -->

@@ -26,11 +26,11 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def _running_asset(self, **kwargs):
         asset = self.create_asset(1200, "yearly", 4, **kwargs)
-        asset.validate()
+        asset.action_confirm()
         return asset
 
     def _disposal_move(self, asset):
-        asset.set_to_close(
+        asset._close(
             self.env["account.move.line"], date=datetime.date(2026, 6, 30)
         )
         return asset.depreciation_move_ids.filtered(
@@ -39,7 +39,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_depreciation_value_inverse_on_a_plain_entry(self):
         asset = self.create_asset(1200, "yearly", 4)
-        asset.compute_depreciation_board()
+        asset._create_depreciation_entries()
         move = asset.depreciation_move_ids.sorted(lambda m: (m.date, m.id))[0]
         self.assertEqual(move.state, "draft")
         self.assertEqual(len(move.line_ids), 2)
@@ -106,7 +106,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 "value_salvage": 0.0,
             }
         )
-        wizard.modify()
+        wizard.action_modify()
 
         decrease = asset.depreciation_move_ids.filtered(
             lambda move: move.asset_move_type == "negative_revaluation"
@@ -311,8 +311,8 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         for index, group in enumerate(groups):
             self.create_asset(
                 (index + 1) * 100, "yearly", 4, asset_group_id=group.id
-            ).validate()
-        self.create_asset(500, "yearly", 4).validate()
+            ).action_confirm()
+        self.create_asset(500, "yearly", 4).action_confirm()
 
         options = report.get_options(
             {
@@ -404,7 +404,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             one_at_a_time,
             "linked_assets_ids must not depend on how many records share the compute",
         )
-        siblings[0].validate()
+        siblings[0].action_confirm()
         siblings.invalidate_recordset()
         self.assertTrue(siblings[1].warning_count_assets)
 
@@ -423,7 +423,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             return original(self, current_date)
 
         with patch.object(company_model, "compute_fiscalyear_dates", counting):
-            assets.compute_depreciation_board()
+            assets._create_depreciation_entries()
 
         self.assertTrue(seen)
         self.assertEqual(
@@ -521,7 +521,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         )
         wizard.value_depreciable_residual += 400
         wizard.value_salvage += 100
-        wizard.modify()
+        wizard.action_modify()
 
         increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
@@ -554,7 +554,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_a_closed_gross_increase_is_not_re_credited_with_the_sale(self):
         asset = self.create_asset(4000, "yearly", 3)
-        asset.validate()
+        asset.action_confirm()
         wizard = self.env["asset.modify"].create(
             {
                 "asset_id": asset.id,
@@ -565,7 +565,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             }
         )
         wizard.value_depreciable_residual += 600
-        wizard.modify()
+        wizard.action_modify()
         increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
         self.assertEqual(increase.value_depreciable_residual, 0.0)
@@ -576,7 +576,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 "date": datetime.date(2026, 6, 30),
                 "modify_action": "pause",
             }
-        ).pause()
+        ).action_pause()
         self.assertEqual(increase.depreciation_state, "paused")
 
         invoice = self.env["account.move"].create(
@@ -599,7 +599,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         invoice.action_post()
         revenue_account = invoice.invoice_line_ids.account_id
 
-        asset.set_to_close(
+        asset._close(
             invoice.invoice_line_ids, date=datetime.date(2026, 6, 30), message="sold"
         )
         self.env.flush_all()
@@ -634,15 +634,15 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             "the increase is still closed, by a disposal entry",
         )
 
-    def test_validate_runs_the_board_inside_a_savepoint(self):
+    def test_confirming_runs_the_board_inside_a_savepoint(self):
         asset = self.create_asset(1000, "yearly", 4)
         asset.account_depreciation_id = False
-        source = inspect.getsource(type(asset).validate)
+        source = inspect.getsource(type(asset).action_confirm)
 
         self.assertIn(
             "self.env.cr.savepoint()",
             source,
-            "validate() must contain the CheckViolation it catches",
+            "action_confirm() must contain the CheckViolation it catches",
         )
         self.assertLess(
             source.index("self.env.cr.savepoint()"),
@@ -650,7 +650,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             "the savepoint has to open before the block that can raise",
         )
         with self.assertRaises(ValidationError):
-            asset.validate()
+            asset.action_confirm()
 
     def test_open_asset_on_several_records_does_not_ask_for_a_singleton(self):
         assets = self.create_asset(1000, "yearly", 4) | self.create_asset(
@@ -664,7 +664,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_residual_before_the_board_starts_is_not_zero(self):
         asset = self.create_asset(10000, "yearly", 5, import_depreciation=4000)
-        asset.validate()
+        asset.action_confirm()
         first_beginning = min(
             asset.depreciation_move_ids.mapped("asset_depreciation_beginning_date")
         )
@@ -688,7 +688,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_residual_of_a_negative_asset_stays_negative_before_the_board(self):
         asset = self.create_asset(-10000, "yearly", 5, import_depreciation=-4000)
-        asset.validate()
+        asset.action_confirm()
 
         self.assertEqual(
             asset._get_residual_value_at_date(datetime.date(2020, 12, 31)), -6000

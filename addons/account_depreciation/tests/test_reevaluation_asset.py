@@ -46,7 +46,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -54,7 +54,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-01"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -162,7 +162,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -170,7 +170,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-15"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -278,7 +278,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -286,7 +286,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-30"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -387,7 +387,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-15",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -395,7 +395,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-01"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -510,7 +510,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-15",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -518,7 +518,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-15"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -633,7 +633,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-15",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -641,7 +641,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-30"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -749,7 +749,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-28",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -757,7 +757,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-01"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -872,7 +872,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-28",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -880,7 +880,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-15"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -995,7 +995,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-28",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -1003,7 +1003,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "name": "Test reason",
                 "date": fields.Date.to_date("2022-06-30"),
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1111,7 +1111,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -1120,7 +1120,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "date": fields.Date.to_date("2022-06-30"),
                 "value_depreciable_residual": 4000,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1228,7 +1228,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-04-15")
         self.env["asset.modify"].create(
@@ -1241,7 +1241,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 )
                 - 8500,
             }
-        ).modify()
+        ).action_modify()
 
         self.env["asset.modify"].create(
             {
@@ -1250,7 +1250,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "date": fields.Date.to_date("2022-06-30"),
                 "value_depreciable_residual": 18000,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1372,7 +1372,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify_1 = fields.Date.to_date("2022-04-15")
         self.env["asset.modify"].create(
@@ -1386,7 +1386,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         date_modify_2 = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -1400,7 +1400,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1629,7 +1629,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify_1 = fields.Date.to_date("2022-04-15")
         self.env["asset.modify"].create(
@@ -1642,7 +1642,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 )
                 - 8500,
             }
-        ).modify()
+        ).action_modify()
 
         date_modify_2 = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -1656,7 +1656,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1821,7 +1821,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2018-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify_1 = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -1835,7 +1835,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 1000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         date_modify_2 = fields.Date.to_date("2022-09-30")
         self.env["asset.modify"].create(
@@ -1850,7 +1850,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "depreciation_period": "1",
                 "depreciation_duration": 60,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -1976,7 +1976,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify_1 = fields.Date.to_date("2022-04-15")
         self.env["asset.modify"].create(
@@ -1989,7 +1989,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 )
                 - 8500,
             }
-        ).modify()
+        ).action_modify()
 
         self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
             "2022-05-01"
@@ -2007,7 +2007,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 6000,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -2172,7 +2172,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify_1 = fields.Date.to_date("2022-04-15")
         self.env["asset.modify"].create(
@@ -2186,7 +2186,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         date_modify_2 = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -2199,7 +2199,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 )
                 - 6000,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -2385,7 +2385,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
         self.loss_account_id = self.company_data["default_account_expense"].copy().id
 
         date_modify = fields.Date.to_date("2022-04-15")
@@ -2399,7 +2399,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 )
                 - 8500,
             }
-        ).modify()
+        ).action_modify()
 
         self.env["asset.modify"].create(
             {
@@ -2408,7 +2408,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "modify_action": "dispose",
                 "loss_account_id": self.loss_account_id,
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -2488,7 +2488,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
         self.loss_account_id = self.company_data["default_account_expense"].copy().id
         self.asset_counterpart_account_id = (
             self.company_data["default_account_expense"].copy().id
@@ -2506,7 +2506,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.env["asset.modify"].create(
             {
@@ -2515,7 +2515,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "modify_action": "dispose",
                 "loss_account_id": self.loss_account_id,
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -2632,7 +2632,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id,
             }
-        ).modify()
+        ).action_modify()
 
         self.env.invalidate_all()
         self.assertEqual(asset.account_asset_id.current_balance, 36000 + 8500)
@@ -2650,7 +2650,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                     "loss_account_id": self.env.company.loss_account_id.id,
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
         self.env["account.move"].browse(disposal_action["res_id"]).action_post()
 
@@ -2680,7 +2680,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "gain_account_id": self.env.company.gain_account_id.id,
                 "date": fields.Date.to_date("2022-06-30"),
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         self.assertFalse(
             gross_increase.depreciation_move_ids.filtered(
@@ -2755,7 +2755,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2021-10-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-01-15")
         self.env["asset.modify"].create(
@@ -2774,7 +2774,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -2953,7 +2953,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2021-10-01",
             depreciation_prorata="daily_computation",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -2968,7 +2968,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -3147,7 +3147,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -3167,7 +3167,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -3339,7 +3339,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -3359,7 +3359,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -3469,7 +3469,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self,
     ):
         asset = self.degressive_asset
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-15")
         self.env["asset.modify"].create(
@@ -3483,7 +3483,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -4190,7 +4190,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
     ):
         asset = self.degressive_asset
         asset.write({"date_acquisition": "2019-07-01"})
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-15")
         self.env["asset.modify"].create(
@@ -4204,7 +4204,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -4824,7 +4824,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
 
     def test_monthly_degressive_start_beginning_month_decrease_middle_month(self):
         asset = self.degressive_asset
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-15")
         self.env["asset.modify"].create(
@@ -4838,7 +4838,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 - 500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -5284,7 +5284,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self,
     ):
         asset = self.degressive_then_linear_asset
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2021-06-15")
         self.env["asset.modify"].create(
@@ -5298,7 +5298,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -5976,7 +5976,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self,
     ):
         asset = self.degressive_then_linear_asset
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-15")
         self.env["asset.modify"].create(
@@ -5990,7 +5990,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 + 8500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -6570,7 +6570,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         self,
     ):
         asset = self.degressive_then_linear_asset
-        asset.validate()
+        asset.action_confirm()
 
         date_modify = fields.Date.to_date("2022-06-15")
         self.env["asset.modify"].create(
@@ -6584,7 +6584,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 - 500,
                 "account_asset_counterpart_id": self.asset_counterpart_account_id.id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -6958,7 +6958,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-02-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -6974,7 +6974,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -7034,7 +7034,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2020-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -7156,7 +7156,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2020-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         invoice = self.env["account.move"].create(
             {
@@ -7208,7 +7208,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             depreciation_prorata="constant_periods",
         )
         asset.depreciation_journal_id.restrict_mode_hash_table = True
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -7219,7 +7219,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -7278,7 +7278,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-05-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         with patch.object(
             self.env.registry["account.move"],
@@ -7294,7 +7294,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                     .copy()
                     .id,
                 }
-            ).sell_dispose()
+            ).action_sell_dispose()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),
@@ -7346,7 +7346,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2020-01-01",
             depreciation_prorata="constant_periods",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -7357,7 +7357,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
     def test_asset_disposal_in_middle_of_fiscal_year(self):
         self.company_data["company"].fiscalyear_last_month = "3"
@@ -7370,7 +7370,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             date_acquisition="2022-01-01",
             depreciation_prorata="daily_computation",
         )
-        asset.validate()
+        asset.action_confirm()
 
         self.env["asset.modify"].create(
             {
@@ -7381,7 +7381,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).sell_dispose()
+        ).action_sell_dispose()
 
         self.assertRecordValues(
             asset.depreciation_move_ids.sorted(lambda mv: (mv.date, mv.id)),

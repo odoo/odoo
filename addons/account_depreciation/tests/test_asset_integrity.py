@@ -45,16 +45,16 @@ class TestAssetIntegrity(TestAccountAssetCommon):
         asset = self.create_asset(
             value=1000, periodicity="yearly", periods=5, value_salvage=200
         )
-        asset.validate()
+        asset.action_confirm()
         asset.depreciation_move_ids.filtered(lambda m: m.state != "posted")._post()
-        asset.set_to_close(
+        asset._close(
             self.env["account.move.line"], date=fields.Date.to_date("2026-06-30")
         )
         asset.depreciation_move_ids.filtered(lambda m: m.state == "draft")._post()
         self.env.invalidate_all()
         self.assertEqual(asset.value_book, 0)
 
-        asset.set_to_running()
+        asset.action_reopen()
         self.env.invalidate_all()
         self.assertEqual(
             asset.value_book,
@@ -64,7 +64,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
 
     def test_gross_increase_is_named_even_without_a_note(self):
         asset = self.create_asset(value=1000, periodicity="yearly", periods=5)
-        asset.validate()
+        asset.action_confirm()
         date = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
             {
@@ -79,7 +79,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
                 .copy()
                 .id,
             }
-        ).modify()
+        ).action_modify()
         increase = asset.increase_ids
         self.assertTrue(increase.name, "a gross increase must carry a name")
         self.assertTrue(increase.display_name)
@@ -139,7 +139,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
 
     def test_writing_an_unrelated_field_does_not_walk_the_board(self):
         asset = self.create_asset(value=6000, periodicity="monthly", periods=12)
-        asset.validate()
+        asset.action_confirm()
         self.assertTrue(asset.depreciation_move_ids)
         company_model = type(self.env["res.company"])
         original = company_model._get_user_fiscal_lock_date
@@ -159,7 +159,7 @@ class TestAssetIntegrity(TestAccountAssetCommon):
 
     def test_changing_the_expense_account_rewrites_the_board_lines(self):
         asset = self.create_asset(value=1200, periodicity="yearly", periods=3)
-        asset.validate()
+        asset.action_confirm()
         new_expense = self.company_data["default_account_expense"].copy()
         asset.write({"account_depreciation_expense_id": new_expense.id})
         self.env.flush_all()
@@ -175,9 +175,9 @@ class TestAssetIntegrity(TestAccountAssetCommon):
             "default_account_expense"
         ].copy()
         asset = self.create_asset(value=1000, periodicity="yearly", periods=5)
-        asset.validate()
+        asset.action_confirm()
         asset.depreciation_move_ids.filtered(lambda m: m.state != "posted")._post()
-        asset.set_to_close(
+        asset._close(
             self.env["account.move.line"], date=fields.Date.to_date("2026-06-30")
         )
         disposal = asset.depreciation_move_ids.filtered(

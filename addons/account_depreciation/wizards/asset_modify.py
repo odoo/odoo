@@ -414,7 +414,7 @@ class AssetModify(models.TransientModel):
                 ],
             }
         )
-        asset_increase.validate()
+        asset_increase.action_confirm()
         self.asset_id.message_post(
             body=_(
                 "A gross increase has been created: %(link)s",
@@ -447,9 +447,9 @@ class AssetModify(models.TransientModel):
     @staticmethod
     def _rebuild_board(asset, restart_date):
         if asset.depreciation_move_ids:
-            asset.compute_depreciation_board(restart_date)
+            asset._create_depreciation_entries(restart_date)
         else:
-            asset.compute_depreciation_board()
+            asset._create_depreciation_entries()
 
     def _propagate_to_children(self, asset_vals, restart_date):
         self.check_singleton()
@@ -484,7 +484,7 @@ class AssetModify(models.TransientModel):
                 tracking_value_ids=tracking_value_ids,
             )
 
-    def modify(self):
+    def action_modify(self):
         self.check_singleton()
         self._check_can_modify()
         resuming = bool(self.env.context.get("resume_after_pause"))
@@ -550,11 +550,11 @@ class AssetModify(models.TransientModel):
         )._post()
         return {"type": "ir.actions.act_window_close"}
 
-    def pause(self):
+    def action_pause(self):
         for record in self:
-            record.asset_id.pause(pause_date=record.date, message=record.name)
+            record.asset_id._pause(date=record.date, message=record.name)
 
-    def sell_dispose(self):
+    def action_sell_dispose(self):
         self.check_singleton()
         if self.asset_id.account_depreciation_id in (
             self.gain_account_id,
@@ -568,7 +568,7 @@ class AssetModify(models.TransientModel):
             if self.modify_action == "dispose"
             else self.invoice_line_ids
         )
-        return self.asset_id.set_to_close(
+        return self.asset_id._close(
             invoice_line_ids=invoice_lines, date=self.date, message=self.name
         )
 

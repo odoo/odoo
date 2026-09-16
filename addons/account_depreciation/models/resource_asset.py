@@ -1116,7 +1116,7 @@ class ResourceAsset(models.Model):
 
         return number_days, self.currency_id.round(amount)
 
-    def compute_depreciation_board(self, date=False):
+    def _create_depreciation_entries(self, date=False):
         self.depreciation_move_ids.filtered(
             lambda mv: mv.state == "draft" and (mv.date >= date if date else True)
         ).unlink()
@@ -1467,7 +1467,7 @@ class ResourceAsset(models.Model):
         running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
         for asset in running:
             asset._check_disposal_accounts()
-            asset.set_to_close(self.env["account.move.line"], date)
+            asset._close(self.env["account.move.line"], date)
         return super(ResourceAsset, self - running)._dispose(date)
 
     def _check_disposal_accounts(self):
@@ -1521,7 +1521,7 @@ class ResourceAsset(models.Model):
                     )
                 )
                 asset._post_non_deductible_tax_value()
-        to_validate.validate()
+        to_validate.action_confirm()
         return assets
 
     @api.model
@@ -1530,7 +1530,10 @@ class ResourceAsset(models.Model):
             return parent.name
         return f"{parent.name} — {profile.name}"
 
-    def validate(self):
+    def action_compute_depreciation(self):
+        return self._create_depreciation_entries()
+
+    def action_confirm(self):
         self.write({"depreciation_state": "open"})
         self.filtered(lambda asset: asset.state == "draft").write(
             {"state": "in_service"}
@@ -1540,7 +1543,7 @@ class ResourceAsset(models.Model):
             with self.env.cr.savepoint():
                 boardless = self.filtered(lambda asset: not asset.depreciation_move_ids)
                 if boardless:
-                    boardless.compute_depreciation_board()
+                    boardless._create_depreciation_entries()
                 self._check_depreciations()
                 unposted = self.depreciation_move_ids.filtered(
                     lambda move: move.state != "posted"
@@ -1560,7 +1563,7 @@ class ResourceAsset(models.Model):
         ):
             asset._post_non_deductible_tax_value()
 
-    def set_to_close(self, invoice_line_ids, date=None, message=None):
+    def _close(self, invoice_line_ids, date=None, message=None):
         self.check_singleton()
         date_disposal = date or fields.Date.today()
         if date_disposal <= self.company_id._get_user_fiscal_lock_date(
@@ -1640,7 +1643,7 @@ class ResourceAsset(models.Model):
             }
         return None
 
-    def set_to_cancelled(self):
+    def action_cancel(self):
         for asset in self:
             posted_moves = asset.depreciation_move_ids.filtered(
                 lambda m: m._is_effective_depreciation()
@@ -1708,29 +1711,29 @@ class ResourceAsset(models.Model):
             asset.depreciation_paused_days = 0
             asset.write({"depreciation_state": "cancelled"})
 
-    def set_to_draft(self):
+    def action_reset_to_draft(self):
         self.write({"depreciation_state": "draft"})
 
-    def set_to_running(self):
+    def action_reopen(self):
         self.check_singleton()
         if self.depreciation_move_ids and not self.currency_id.is_zero(
             self.depreciation_move_ids._sorted_by_date()[-1].asset_remaining_value
         ):
             self.env["asset.modify"].create(
                 {"asset_id": self.id, "name": _("Reset to running")}
-            ).modify()
+            ).action_modify()
         vals = {"depreciation_state": "open", "value_gain_on_sale": 0}
         if self.state == "disposed":
             vals.update(state="in_service", date_disposal=False, active=True)
         self.with_context(board_lifecycle=True).write(vals)
 
-    def resume_after_pause(self):
+    def action_resume(self):
         self.check_singleton()
         return self.with_context(resume_after_pause=True).action_asset_modify()
 
-    def pause(self, pause_date, message=None):
+    def _pause(self, date, message=None):
         self.check_singleton()
-        self._create_move_before_date(pause_date)
+        self._create_move_before_date(date)
         self.write({"depreciation_state": "paused"})
         self.message_post(body=_("Asset paused. %s", message or ""))
 

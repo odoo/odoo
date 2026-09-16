@@ -23,7 +23,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
             date_acquisition=self.today + relativedelta(years=-3),
             **vals,
         )
-        asset.validate()
+        asset.action_confirm()
         return asset
 
     def _dispose(self, asset, date=None):
@@ -37,7 +37,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
                     "date": date or self.today,
                 }
             )
-            .sell_dispose()
+            .action_sell_dispose()
         )
 
     def test_confirming_a_board_puts_a_draft_asset_in_service(self):
@@ -53,17 +53,17 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
             date_acquisition=self.today + relativedelta(years=-3),
             state="maintenance",
         )
-        asset.validate()
+        asset.action_confirm()
         self.assertEqual(asset.state, "maintenance")
 
     def test_pausing_and_resuming_a_board_leave_the_asset_in_service(self):
         asset = self._running_board()
-        asset.pause(self.today)
+        asset._pause(self.today)
         self.assertEqual(asset.depreciation_state, "paused")
         self.assertEqual(asset.state, "in_service")
         self.env["asset.modify"].with_context(resume_after_pause=True).create(
             {"asset_id": asset.id}
-        ).modify()
+        ).action_modify()
         self.assertEqual(asset.depreciation_state, "open")
         self.assertEqual(asset.state, "in_service")
 
@@ -158,7 +158,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
 
     def test_cancelling_a_board_leaves_the_asset_state_alone(self):
         asset = self._running_board()
-        asset.set_to_cancelled()
+        asset.action_cancel()
         self.assertEqual(asset.depreciation_state, "cancelled")
         self.assertEqual(asset.state, "in_service")
 
@@ -171,7 +171,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
     def test_setting_a_closed_board_running_again_puts_the_asset_back_in_service(self):
         asset = self._running_board()
         self._dispose(asset)
-        asset.set_to_running()
+        asset.action_reopen()
         self.assertRecordValues(
             asset,
             [

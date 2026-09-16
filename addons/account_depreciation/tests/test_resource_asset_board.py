@@ -102,7 +102,7 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
             date_acquisition=today + relativedelta(years=-6, months=-6),
             value_salvage=2500,
         )
-        asset.validate()
+        asset.action_confirm()
         self.env["asset.modify"].create(
             {
                 "name": "Engine overhaul",
@@ -117,7 +117,7 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
                     "default_account_assets"
                 ].id,
             }
-        ).modify()
+        ).action_modify()
         increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
         self.assertEqual(increase.increased_asset_id, asset)
