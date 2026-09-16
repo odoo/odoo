@@ -50,6 +50,7 @@ test("RelativeDateField on a date field in list view", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list><field name="date" widget="relative_date" /></list>`,
@@ -332,6 +333,7 @@ test("RelativeDateField on a datetime field in list view in UTC", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list><field name="datetime" widget="relative_date" /></list>`,
@@ -372,6 +374,7 @@ test("RelativeDateField on a datetime field in list view in UTC+6", async () => 
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list><field name="datetime" widget="relative_date" /></list>`,
@@ -399,6 +402,7 @@ test("RelativeDateField on a date field in list view in UTC-6", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list><field name="date" widget="relative_date" /></list>`,
@@ -425,6 +429,7 @@ test("RelativeDateField on a datetime field in list view in UTC-8", async () => 
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list><field name="datetime" widget="relative_date" /></list>`,
@@ -454,6 +459,7 @@ test("RelativeDateField with custom decoration classes", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `

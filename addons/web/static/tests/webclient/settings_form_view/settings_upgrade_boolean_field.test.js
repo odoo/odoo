@@ -36,6 +36,7 @@ test("widget upgrade_boolean in a form view - dialog", async () => {
 
 test("widget upgrade_boolean in a form view - label", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: /* xml */ `
             <form js_class="base_settings">
@@ -83,6 +84,7 @@ test("widget upgrade_boolean in a form view - dialog (enterprise version)", asyn
 test("widget upgrade_boolean in a form view - label (enterprise version)", async () => {
     patchWithCleanup(odoo, { info: { isEnterprise: 1 } });
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: /* xml */ `
             <form js_class="base_settings">

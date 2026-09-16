@@ -46,6 +46,7 @@ preventResizeObserverError();
 
 const mountChildView = async () =>
     await mountView({
+        noMainContainer: true,
         resModel: "ir.ui.view",
         resId: 1,
         type: "form",

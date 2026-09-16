@@ -39,6 +39,7 @@ defineModels([Partner]);
 test("HandleField in x2m", async () => {
     Partner._records[0].p = [2, 4];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -76,6 +77,7 @@ test("HandleField in x2m", async () => {
 test("HandleField with falsy values", async () => {
     onRpc("has_group", () => true);
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
@@ -94,6 +96,7 @@ test("HandleField in a readonly one2many", async () => {
     Partner._records[0].p = [1, 2, 4];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `

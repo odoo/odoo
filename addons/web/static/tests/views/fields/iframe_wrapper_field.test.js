@@ -33,6 +33,7 @@ test("IframeWrapperField in form view with onchange", async () => {
         record.html_field = record.html_field.replace("Some content", "New content");
     };
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "report",
         resId: 1,

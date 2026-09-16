@@ -37,6 +37,7 @@ preventResizeObserverError();
 
 test("AceEditorField on text fields works", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -49,6 +50,7 @@ test("AceEditorField on text fields works", async () => {
 
 test("AceEditorField mark as dirty as soon at onchange", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -78,6 +80,7 @@ test("AceEditorField on html fields works", async () => {
     onRpc(({ method }) => expect.step(method));
 
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 3,
         type: "form",
@@ -95,6 +98,7 @@ test("AceEditorField on html fields works", async () => {
 test.tags("desktop", "focus required");
 test("AceEditorField doesn't crash when editing", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -107,6 +111,7 @@ test("AceEditorField doesn't crash when editing", async () => {
 
 test("AceEditorField is updated on value change", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         resIds: [1, 2],
@@ -133,6 +138,7 @@ test("leaving an untouched record with an unset ace field should not write", asy
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         resIds: [1, 2],
@@ -157,6 +163,7 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         resIds: [1, 2],
@@ -175,6 +182,7 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
 
 test("Save and Discard buttons are displayed when necessary", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -203,6 +211,7 @@ test("AceEditorField preserves python code when lineWrapping=false", async () =>
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -242,6 +251,7 @@ test("AceEditorField preserves python code and wraps lines when lineWrapping=tru
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",

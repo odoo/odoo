@@ -92,6 +92,7 @@ test("PhoneField delegates calls to an applicable phone call handler", async () 
 
 test("PhoneField in form view on normal screens (readonly)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         readonly: true,
@@ -191,6 +192,7 @@ test("use TAB to navigate to a PhoneField", async () => {
 test("phone field with placeholder", async () => {
     Partner._fields.foo.default = false;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -210,6 +212,7 @@ test("placeholder_field shows as placeholder", async () => {
         default: "My Placeholder",
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `<form>
@@ -223,6 +226,7 @@ test("placeholder_field shows as placeholder", async () => {
 test("unset and readonly PhoneField", async () => {
     Partner._fields.foo.default = false;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
 

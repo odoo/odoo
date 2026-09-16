@@ -37,6 +37,7 @@ test("UrlField in form view", async () => {
 test("in form view (readonly)", async () => {
     Product._records = [{ id: 1, url: "https://www.example.com" }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         resId: 1,
@@ -51,6 +52,7 @@ test("in form view (readonly)", async () => {
 test("it takes its text content from the text attribute", async () => {
     Product._records = [{ id: 1, url: "https://www.example.com" }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         resId: 1,
@@ -163,6 +165,7 @@ test("onchange scenario", async () => {
 test("with placeholder", async () => {
     Product._records = [{ id: 1 }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         arch: `<form><field name="url" widget="url" placeholder="Placeholder"/></form>`,
@@ -175,6 +178,7 @@ test("placeholder_field shows as placeholder", async () => {
         default: "http://www.url1.com",
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         arch: `<form>
@@ -188,6 +192,7 @@ test("placeholder_field shows as placeholder", async () => {
 test("with non falsy, but non url value", async () => {
     Product._fields.url.default = "odoo://hello";
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         arch: `<form><field name="url" widget="url"/></form>`,
