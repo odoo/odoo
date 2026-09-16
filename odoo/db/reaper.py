@@ -22,6 +22,49 @@ def get_checked_out_count(pool) -> int:
     return stats.get("pool_size", 0) - stats.get("pool_available", 0)
 
 
+# psycopg_pool's own `_shrink_pool` minus its "unused for max_idle" rule:
+# the oldest idle connections go, under the pool's lock, never below
+# min_size. `tests/contract/test_psycopg_pool_internals.py` pins the four
+# attributes this reads against the installed psycopg_pool.
+def close_idle_connections(pool, count: int) -> int:
+    to_close: list[Any] = []
+    with pool._lock:
+        while len(to_close) < count and pool._pool and pool._nconns > pool.min_size:
+            to_close.append(pool._pool.popleft())
+            pool._nconns -= 1
+        pool._nconns_min = min(pool._nconns_min, len(pool._pool))
+    for conn in to_close:
+        pool._close_connection(conn)
+    return len(to_close)
+
+
+# One process's backends against one server are bounded by the budget only
+# while checked out; each per-database pool keeps its own idle ones, so a
+# host serving many databases holds up to maxconn x databases at rest.
+# Trim on return, least recently borrowed pool first, until the pools of
+# this ConnectionPool hold no more than `ceiling` connections in total.
+def trim_idle_to_ceiling(pools: Mapping[Any, Any], ceiling: int) -> int:
+    excess = sum(pool._nconns for pool in pools.values()) - ceiling
+    if excess <= 0:
+        return 0
+    trimmed = 0
+    now = monotonic()
+    for pool in sorted(
+        pools.values(), key=lambda pool: getattr(pool, _LAST_BORROW_ATTR, now)
+    ):
+        trimmed += close_idle_connections(pool, excess - trimmed)
+        if trimmed >= excess:
+            break
+    _debug.lifecycle(
+        "pool.trimmed_to_ceiling",
+        ceiling=ceiling,
+        excess=excess,
+        trimmed=trimmed,
+        pools=len(pools),
+    )
+    return trimmed
+
+
 class IdlePoolReaper:
     __slots__ = ("_last_check", "check_interval", "ttl")
 

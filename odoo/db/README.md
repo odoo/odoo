@@ -17,7 +17,7 @@ files here carry one, so this README is the only map.
 | `probe.py` | `ReachabilityProbe`: is this DSN connectable, and permanently or not — the pre-flight probe, its leader/follower dedup, the `postgres`-side existence check and the per-key proof. Was inlined in `pool.py` | no |
 | `budget.py` | `ConnectionBudget`: the shared `db_maxconn` cap, its permit `Condition` and its saturation counter | yes |
 | `stats.py` | `PoolStats`: borrow-wait histogram, pool churn and probe-outcome counters behind `ConnectionPool.get_health()` | yes |
-| `reaper.py` | `IdlePoolReaper`: which quiet per-DSN pools to close and how often to look (the decision; the pool keeps the locking and teardown) | yes |
+| `reaper.py` | `IdlePoolReaper`: which quiet per-DSN pools to close and how often to look (the decision; the pool keeps the locking and teardown); `trim_idle_to_ceiling` / `close_idle_connections`: the backend ceiling across a `ConnectionPool`'s per-DSN pools, enforced on every return | yes |
 | `leaks.py` | `CheckoutTracker`: which connections are out, since when, from which thread and borrow site | yes |
 | `lag.py` | `ReplicaLagGate` + `LAG_SQL`: sampled apply-lag ceiling that demotes stale reads to the primary | yes |
 | `replica.py` | `ReplicaRouter`: the primary `Connection`, the optional readonly one, the `CircuitBreaker` (`odoo/libs/breaker.py` — Odoo-agnostic, so `libs/`) and the `ReplicaLagGate` composed into one decision — which connection serves a cursor request, and the mode (`ro` / `ro->rw` / `rw`) it decided; `WritePins`, the read-your-writes table; `REPLICA_RETRY_TIME`, the breaker's cooldown ceiling; `is_readonly_cursor_enabled`; `get_replica_health`, every live router's state for the metrics surface. Was the body of `Registry.cursor` | no |
@@ -46,13 +46,28 @@ one exception, and the scanner has a control showing it tells the two apart.
 
 ## Load-bearing invariants (cross-module)
 
-- **The budget bounds checked-out connections, not the server footprint.**
-  Each per-DSN pool separately retains up to `maxconn` *idle* connections for
-  `db_conn_max_idle`, so one process holds up to `maxconn × n_databases`
-  backends — measured: four databases under `db_maxconn = 2` hold four
-  backends, with never more than one checked out at a time. Size PostgreSQL's
-  `max_connections` against that product, not against `db_maxconn`. Everything
-  below is about how the *budget* is keyed and is orthogonal to this.
+- **`db_maxconn` bounds this process's backends against a server, idle
+  ones included.** The budget bounds what is checked out; each per-DSN pool
+  separately retains up to `maxconn` *idle* connections for
+  `db_conn_max_idle`, so without more a host serving many databases held
+  `maxconn × n_databases` backends at rest — measured: four databases under
+  `db_maxconn = 2` held four, with never more than one checked out. Every
+  return now trims (`reaper.trim_idle_to_ceiling`, when the `ConnectionPool`
+  has more than one per-DSN pool; 442 ns for four pools under the ceiling)
+  the oldest idle connections of the least recently borrowed pools until
+  the pools hold no more than `maxconn` in total, never below a pool's
+  `min_size`, through psycopg_pool's own bookkeeping
+  (`tests/contract/test_psycopg_pool_internals.py` pins the four attributes
+  against the installed release). Measured: the same four databases hold
+  two backends after the sequence and two after 2 s of two threads cycling
+  across all four. A working set wider than `maxconn` thrashes —
+  1 475 trims in those 2 s, each a reconnect — and
+  `odoo_pool_connections_trimmed_total` is the counter that says so: raise
+  `db_maxconn`, the ceiling is doing its job. The read/write and read-only
+  `ConnectionPool`s trim independently, so two pools on one server can
+  hold `2 × maxconn` at rest; the budget they share still bounds
+  checkouts. Everything below is about how the *budget* is keyed and is
+  orthogonal to this.
 
 - **One budget per PostgreSQL server**: `db_maxconn` is the cap for a *server*,
   because that is what an operator sizes `max_connections` against, so

@@ -20,6 +20,7 @@ _COUNTERS: dict[str, str] = {
     "pools_reaped": "pools_reaped",
     "pools_evicted_stale": "pools_evicted_stale",
     "connections_discarded": "connections_discarded",
+    "connections_trimmed": "connections_trimmed",
     "leaks_reported": "leaks_reported",
     "probe_run": "probe_run",
     "probe_permanent": "probe_permanent",
@@ -44,6 +45,7 @@ class PoolStats:
         "borrows_direct",
         "borrows_failed",
         "connections_discarded",
+        "connections_trimmed",
         "leaks_reported",
         "pools_created",
         "pools_evicted_stale",
@@ -66,6 +68,7 @@ class PoolStats:
         self.pools_reaped = 0
         self.pools_evicted_stale = 0
         self.connections_discarded = 0
+        self.connections_trimmed = 0
         self.leaks_reported = 0
         self.probe_run = 0
         self.probe_permanent = 0
@@ -106,6 +109,10 @@ class PoolStats:
     def record_pool_created(self) -> None:
         with self._lock:
             self.pools_created += 1
+
+    def record_connections_trimmed(self, count: int) -> None:
+        with self._lock:
+            self.connections_trimmed += count
 
     def record_pools_reaped(self, count: int) -> None:
         with self._lock:

@@ -25,7 +25,7 @@ from .lifecycle import (
     _reset_connection,
 )
 from .probe import PROBE_CONNECT_TIMEOUT, ReachabilityProbe, get_libpq_connect_timeout
-from .reaper import IdlePoolReaper, mark_active
+from .reaper import IdlePoolReaper, mark_active, trim_idle_to_ceiling
 from .settings import PoolSettings, resolve
 from .stats import PoolStats
 from .utils import is_maintenance_db
@@ -779,7 +779,21 @@ class ConnectionPool:
                 _logger.debug("Failed to return connection to pool", exc_info=True)
         finally:
             self._budget.release()
+        if len(self._pools) > 1:
+            self._trim_to_ceiling_safely()
         self._reap_idle_pools_safely()
+
+    def _trim_to_ceiling_safely(self) -> None:
+        try:
+            with self._lock:
+                pools = dict(self._pools)
+            trimmed = trim_idle_to_ceiling(pools, self._maxconn)
+        except Exception as exc:
+            _debug.logic("pool.trim_failed", error=type(exc).__name__)
+            _logger.debug("Backend-ceiling trim on give_back failed", exc_info=True)
+            return
+        if trimmed:
+            self.stats.record_connections_trimmed(trimmed)
 
     # The session reset runs here, on the returning thread, not in psycopg_pool's
     # worker: with `reset=` set, putconn hands every return to the pool's one

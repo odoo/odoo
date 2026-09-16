@@ -226,6 +226,10 @@ _POOL_COUNTERS: dict[str, tuple[str, str]] = {
         "odoo_pool_connections_discarded_total",
         "Connections dropped rather than returned to the pool.",
     ),
+    "connections_trimmed": (
+        "odoo_pool_connections_trimmed_total",
+        "Idle connections closed to keep this process's backends within db_maxconn.",
+    ),
     "probe_run": (
         "odoo_pool_probe_run_total",
         "Pre-flight connectability probes run.",
@@ -289,9 +293,9 @@ def _add_pool_family(exp: _Exposition, mode: str, health: dict) -> None:
             "odoo_pool_backends",
             health["backends"],
             help=(
-                "Server connections held (checked out + idle). NOT bounded by "
-                "db_maxconn: each per-DSN pool retains up to that many idle, "
-                "so this can reach maxconn x databases."
+                "Server connections held (checked out + idle). Trimmed on every "
+                "return to at most db_maxconn per pool mode; a transient "
+                "excess is one in flight."
             ),
             labels=label,
         )

@@ -128,7 +128,7 @@ Defaults, from `odoo/tools/config.py`:
 | `limit_time_real_job` | `-1` | wall time per background job; `-1` defers to `limit_time_real_cron`, which defers in turn |
 | `limit_time_worker_cron` | `0` | how long a cron thread or worker lives before it is restarted; `0` disables |
 | `limit_time_worker_job` | `-1` | the same for a job worker; `-1` defers to `limit_time_worker_cron` |
-| `db_maxconn` | `64` | checked-out connections, **per PostgreSQL server** |
+| `db_maxconn` | `64` | connections held, checked out and idle, **per PostgreSQL server** |
 
 **There is one memory limit, not one of four.** `limit_memory_soft` is enforced at
 three sites — `_worker.py`'s `check_limits`, and `_threaded.py` for the HTTP and

@@ -1,11 +1,15 @@
+import collections
+import threading
 import unittest
 from time import monotonic
 
 from odoo.db.reaper import (
     _LAST_BORROW_ATTR,
     IdlePoolReaper,
+    close_idle_connections,
     get_checked_out_count,
     mark_active,
+    trim_idle_to_ceiling,
 )
 
 
@@ -113,6 +117,50 @@ class TestThrottle(unittest.TestCase):
     def test_disabled_reaping_is_never_due(self):
         self.assertFalse(IdlePoolReaper(0).acquire_check_interval())
         self.assertFalse(IdlePoolReaper(0).is_probably_due())
+
+
+class _IdlePool:
+    # The four psycopg_pool attributes close_idle_connections reads, shaped
+    # as the contract suite pins them; `closed` records what went.
+    def __init__(self, idle: int, checked_out: int = 0, min_size: int = 0, age=0.0):
+        self._lock = threading.Lock()
+        self._pool = collections.deque(f"c{i}" for i in range(idle))
+        self._nconns = idle + checked_out
+        self._nconns_min = idle
+        self.min_size = min_size
+        self.closed: list = []
+        setattr(self, _LAST_BORROW_ATTR, monotonic() - age)
+
+    def _close_connection(self, conn):
+        self.closed.append(conn)
+
+
+class TestTrimToCeiling(unittest.TestCase):
+    def test_nothing_goes_while_the_total_is_within_the_ceiling(self):
+        pools = {"a": _IdlePool(2), "b": _IdlePool(2)}
+        self.assertEqual(trim_idle_to_ceiling(pools, 4), 0)
+        self.assertEqual([p.closed for p in pools.values()], [[], []])
+
+    def test_the_oldest_idle_of_the_least_recently_borrowed_pool_goes_first(self):
+        fresh, stale = _IdlePool(3, age=1.0), _IdlePool(3, age=60.0)
+        pools = {"fresh": fresh, "stale": stale}
+        self.assertEqual(trim_idle_to_ceiling(pools, 4), 2)
+        self.assertEqual(stale.closed, ["c0", "c1"], "oldest idle first, FIFO")
+        self.assertEqual(fresh.closed, [])
+        self.assertEqual((stale._nconns, len(stale._pool)), (1, 1))
+
+    def test_checked_out_connections_count_but_cannot_be_trimmed(self):
+        busy = _IdlePool(0, checked_out=3, age=60.0)
+        other = _IdlePool(2, age=1.0)
+        self.assertEqual(trim_idle_to_ceiling({"busy": busy, "o": other}, 3), 2)
+        self.assertEqual(busy.closed, [])
+        self.assertEqual(other.closed, ["c0", "c1"], "the excess comes from idle")
+
+    def test_min_size_is_a_floor(self):
+        pool = _IdlePool(3, min_size=2, age=60.0)
+        self.assertEqual(close_idle_connections(pool, 3), 1)
+        self.assertEqual(pool._nconns, 2)
+        self.assertEqual(pool._nconns_min, 2, "the shrink bookkeeping follows")
 
 
 if __name__ == "__main__":

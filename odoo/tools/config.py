@@ -1127,15 +1127,15 @@ class configmanager:
             dest="db_maxconn",
             type="int",
             my_default=64,
-            help="specify the maximum number of physical connections checked out "
-            "at once by this process, per PostgreSQL server. The read/write and "
+            help="specify the maximum number of physical connections this "
+            "process holds against a PostgreSQL server: checked out at once "
+            "through one budget, and idle ones across all its databases, which "
+            "are trimmed on return past this ceiling. The read/write and "
             "read-only pools share one budget while they target the same server "
             "(no replica, test_enable, dev_mode=replica), and get one each once "
             "db_replica_host resolves elsewhere — so this is the number to size "
             "each server's max_connections against, multiplied by the worker "
-            "count, plus the idle connections each per-database pool may keep "
-            "for db_conn_max_idle. See db_maxconn_replica to size the replica "
-            "independently",
+            "count. See db_maxconn_replica to size the replica independently",
         )
         group.add_option(
             "--db_maxconn_replica",
