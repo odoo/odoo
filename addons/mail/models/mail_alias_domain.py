@@ -192,7 +192,7 @@ class MailAliasDomain(models.Model):
                 if not value:
                     continue
                 if (
-                    self.env["mail.alias"]._sanitize_alias_name(
+                    self.env["mail.alias"]._normalize_alias_name(
                         value, is_email=is_email
                     )
                     != value
@@ -216,7 +216,7 @@ class MailAliasDomain(models.Model):
                 raise exceptions.ValidationError(
                     _("You cannot assign an empty domain name.")
                 )
-            if self.env["mail.alias"]._sanitize_alias_domain_name(domain.name) != (
+            if self.env["mail.alias"]._normalize_alias_domain_name(domain.name) != (
                 domain.name
             ):
                 raise exceptions.ValidationError(
@@ -296,7 +296,7 @@ class MailAliasDomain(models.Model):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         for vals in vals_list:
-            self._sanitize_configuration(vals)
+            self._update_configuration(vals)
 
         was_unconfigured = not self.search_count([], limit=1)
 
@@ -318,7 +318,7 @@ class MailAliasDomain(models.Model):
         return alias_domains
 
     def write(self, vals: ValuesType) -> Literal[True]:
-        self._sanitize_configuration(vals)
+        self._update_configuration(vals)
         ret = super().write(vals)
         self.env.registry.clear_cache("stable")
         _debug.lifecycle("write", domains=self.ids, fields=list(vals))
@@ -369,24 +369,24 @@ class MailAliasDomain(models.Model):
                     )
 
     @api.model
-    def _sanitize_configuration(self, config_values: dict) -> None:
+    def _update_configuration(self, config_values: dict) -> None:
         Alias = self.env["mail.alias"]
         if name := config_values.get("name"):
-            config_values["name"] = Alias._sanitize_alias_domain_name(name) or name
+            config_values["name"] = Alias._normalize_alias_domain_name(name) or name
         for fname, _email_fname, is_email in CONFIG_FIELDS:
             if value := config_values.get(fname):
-                config_values[fname] = Alias._sanitize_alias_name(
+                config_values[fname] = Alias._normalize_alias_name(
                     value, is_email=is_email
                 )
 
     @api.model
-    def _sanitize_allowed_domains(self, allowed_domains: str) -> str:
+    def _normalize_allowed_domains(self, allowed_domains: str) -> str:
         Alias = self.env["mail.alias"]
         seen, value = set(), []
         for candidate in allowed_domains.split(","):
             if not candidate.strip():
                 continue
-            domain = Alias._sanitize_alias_domain_name(candidate)
+            domain = Alias._normalize_alias_domain_name(candidate)
             if not domain:
                 raise exceptions.ValidationError(
                     _(
@@ -446,7 +446,7 @@ class MailAliasDomain(models.Model):
         if not raw_name:
             return self.browse()
 
-        alias_domain = self.env["mail.alias"]._sanitize_alias_domain_name(raw_name)
+        alias_domain = self.env["mail.alias"]._normalize_alias_domain_name(raw_name)
         if not alias_domain:
             _debug.logic("icp_migration_skipped", reason="unusable_domain")
             _logger.warning(

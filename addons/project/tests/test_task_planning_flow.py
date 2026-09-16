@@ -83,6 +83,7 @@ class TestTaskPlanningFlow(TransactionCase):
                 "arch": """
                 <form position="inside">
                     <field name="allocated_hours"/>
+                    <field name="user_ids" widget="many2many_tags"/>
                 </form>
             """,
             }

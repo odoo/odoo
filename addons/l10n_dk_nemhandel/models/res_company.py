@@ -68,7 +68,7 @@ class ResCompany(models.Model):
         if not phonenumbers:
             raise ValidationError(_("Please install the phonenumbers library."))
 
-    def _sanitize_nemhandel_phone_number(self, phone_number=None):
+    def _normalize_nemhandel_phone_number(self, phone_number=None):
         self.check_singleton()
 
         error_message = _(
@@ -105,7 +105,7 @@ class ResCompany(models.Model):
     def _check_nemhandel_phone_number(self):
         for company in self:
             if company.nemhandel_phone_number:
-                company._sanitize_nemhandel_phone_number()
+                company._normalize_nemhandel_phone_number()
 
     @api.constrains("nemhandel_purchase_journal_id")
     def _check_nemhandel_purchase_journal_id(self):
@@ -158,7 +158,7 @@ class ResCompany(models.Model):
                 company_phone = company.phone_ids._primary().number
                 try:
                     # precompute only if it's a valid phone number
-                    company._sanitize_nemhandel_phone_number(company_phone)
+                    company._normalize_nemhandel_phone_number(company_phone)
                     company.nemhandel_phone_number = company_phone
                 except ValidationError:
                     continue

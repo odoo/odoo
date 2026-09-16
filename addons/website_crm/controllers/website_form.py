@@ -123,7 +123,7 @@ class WebsiteForm(form.WebsiteForm):
             ):
                 values_phone = request.env.context.get("website_form_phone_ids")
                 if values_phone and visitor_partner.phone_ids:
-                    sanitized = request.env["phone.number"]._sanitize_number(
+                    sanitized = request.env["phone.number"]._normalize_number(
                         values_phone, visitor_partner.country_id
                     )
                     if _debug.logic.enabled:

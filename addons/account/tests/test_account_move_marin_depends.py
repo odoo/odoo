@@ -94,7 +94,7 @@ class TestAccountMoveMarinDepends(AccountTestInvoicingCommon):
                 "the batched result must include the partner's outstanding credit",
             )
 
-    def test_sanitize_vals_does_not_mutate_caller(self):
+    def test_normalize_vals_does_not_mutate_caller(self):
         vals = {
             "move_type": "out_invoice",
             "invoice_line_ids": [
@@ -105,7 +105,7 @@ class TestAccountMoveMarinDepends(AccountTestInvoicingCommon):
             ],
         }
         original_line_ids = vals["line_ids"]
-        result = self.env["account.move"]._sanitize_vals(vals)
+        result = self.env["account.move"]._normalize_vals(vals)
         self.assertIn("invoice_line_ids", vals, "caller dict must be untouched")
         self.assertEqual(len(vals["line_ids"]), 1, "caller list must not grow")
         self.assertIs(vals["line_ids"], original_line_ids)

@@ -138,7 +138,7 @@ class PeppolRegistration(models.TransientModel):
         self.env["res.company"]._check_phonenumbers_import()
         for wizard in self:
             if wizard.phone_number:
-                # The `phone_number` we set is not necessarily valid (may fail `_sanitize_peppol_phone_number`)
+                # The `phone_number` we set is not necessarily valid (may fail `_normalize_peppol_phone_number`)
                 with contextlib.suppress(phonenumbers.NumberParseException):
                     parsed_phone_number = phonenumbers.parse(
                         wizard.phone_number,

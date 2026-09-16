@@ -45,7 +45,7 @@ class TestAddressParamInjection(HttpCase):
 
     def test_reserved_keys_are_dropped(self):
         controller = CustomerPortal()
-        cleaned = controller._sanitize_client_address_params(
+        cleaned = controller._filter_client_address_params(
             {
                 "partner_sudo": "x",
                 "invalid_fields": "x",

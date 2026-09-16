@@ -78,7 +78,7 @@ Internal helpers for search panel.
 **Key Methods:**
 - `_search_panel_get_field_image(field_name, ...)` — Returns `{value: {count, display_name}}` dict for filter options.
 - `_search_panel_rollup_counters_global(values_range, parent_name)` — Aggregate child counts to parent for hierarchical filters.
-- `_search_panel_sanitize_parent_hierarchy(records, parent_name, ids)` — Filter to maximal ancestor-closed subset.
+- `_search_panel_filter_parent_hierarchy(records, parent_name, ids)` — Filter to maximal ancestor-closed subset.
 
 ## Session and UI Bootstrap
 

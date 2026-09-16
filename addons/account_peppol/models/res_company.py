@@ -196,7 +196,7 @@ class ResCompany(models.Model):
         if not phonenumbers:
             raise ValidationError(_("Please install the phonenumbers library."))
 
-    def _sanitize_peppol_phone_number(self, phone_number=None):
+    def _normalize_peppol_phone_number(self, phone_number=None):
         self.check_singleton()
 
         error_message = _(
@@ -243,7 +243,7 @@ class ResCompany(models.Model):
     def _check_account_peppol_phone_number(self):
         for company in self:
             if company.account_peppol_phone_number:
-                company._sanitize_peppol_phone_number()
+                company._normalize_peppol_phone_number()
 
     @api.constrains("peppol_endpoint")
     def _check_peppol_endpoint(self):
@@ -382,7 +382,7 @@ class ResCompany(models.Model):
                 try:
                     # precompute only if it's a valid phone number
                     phone = company.phone_ids._primary().number
-                    company._sanitize_peppol_phone_number(phone)
+                    company._normalize_peppol_phone_number(phone)
                     company.account_peppol_phone_number = phone
                 except ValidationError:
                     continue
@@ -402,7 +402,7 @@ class ResCompany(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _sanitize_peppol_endpoint_in_values(self, values):
+    def _update_peppol_endpoint_in_values(self, values):
         eas = values.get("peppol_eas")
         endpoint = values.get("peppol_endpoint")
         if not eas or not endpoint:
@@ -415,7 +415,7 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            self._sanitize_peppol_endpoint_in_values(vals)
+            self._update_peppol_endpoint_in_values(vals)
 
         res = super().create(vals_list)
         if res:
@@ -429,7 +429,7 @@ class ResCompany(models.Model):
         return res
 
     def write(self, vals):
-        self._sanitize_peppol_endpoint_in_values(vals)
+        self._update_peppol_endpoint_in_values(vals)
         return super().write(vals)
 
     # -------------------------------------------------------------------------

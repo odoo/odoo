@@ -898,7 +898,7 @@ class WebsocketRequest:
     def cookies(self):
         cookies = MultiDict(self.httprequest.cookies)
         if self.registry:
-            self.registry["ir.http"]._sanitize_cookies(cookies)
+            self.registry["ir.http"]._update_cookies(cookies)
         return ImmutableMultiDict(cookies)
 
 

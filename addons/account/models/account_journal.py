@@ -1250,7 +1250,7 @@ class AccountJournal(models.Model):
 
         unusable_alias = bool(vals.get("alias_name")) and (
             not is_encodable(vals["alias_name"])
-            or not self.env["mail.alias"]._sanitize_alias_name(vals["alias_name"])
+            or not self.env["mail.alias"]._normalize_alias_name(vals["alias_name"])
         )
         alias_names = {}
         if _debug.logic.enabled and journals_changing_type:
@@ -1274,7 +1274,7 @@ class AccountJournal(models.Model):
                 )
                 claimed = taken.setdefault(journal.company_id.id, set())
                 if derived and derived in claimed:
-                    derived = self.env["mail.alias"]._sanitize_alias_name(
+                    derived = self.env["mail.alias"]._normalize_alias_name(
                         f"{derived}-{journal.code}"
                     )
                 claimed.add(derived)
@@ -1377,7 +1377,7 @@ class AccountJournal(models.Model):
                 derived = alias_vals["alias_name"]
                 company_claimed = claimed.setdefault(journal.company_id.id, set())
                 if derived and derived in company_claimed:
-                    derived = self.env["mail.alias"]._sanitize_alias_name(
+                    derived = self.env["mail.alias"]._normalize_alias_name(
                         f"{derived}-{journal.code}"
                     )
                 company_claimed.add(derived)
@@ -1453,14 +1453,14 @@ class AccountJournal(models.Model):
                 if (
                     string
                     and is_encodable(string)
-                    and self.env["mail.alias"]._sanitize_alias_name(string)
+                    and self.env["mail.alias"]._normalize_alias_name(string)
                 )
             ),
             False,
         )
         if company != self.env.ref("base.main_company"):
             company_identifier = (
-                self.env["mail.alias"]._sanitize_alias_name(company.name)
+                self.env["mail.alias"]._normalize_alias_name(company.name)
                 if is_encodable(company.name)
                 else company.id
             )
@@ -1469,11 +1469,11 @@ class AccountJournal(models.Model):
         _debug.logic(
             "alias_name_prepared", type=jtype, company=company, alias=alias_name
         )
-        return self.env["mail.alias"]._sanitize_alias_name(alias_name)
+        return self.env["mail.alias"]._normalize_alias_name(alias_name)
 
     @api.model
     def _get_unique_alias_name(self, vals, company, taken_alias_names=()):
-        alias_name = self.env["mail.alias"]._sanitize_alias_name(vals["alias_name"])
+        alias_name = self.env["mail.alias"]._normalize_alias_name(vals["alias_name"])
         if not alias_name:
             _debug.logic("alias_unsanitizable", company=company, code=vals.get("code"))
             return False
@@ -1499,7 +1499,7 @@ class AccountJournal(models.Model):
                 company=company,
                 code=vals.get("code"),
             )
-            alias_name = self.env["mail.alias"]._sanitize_alias_name(
+            alias_name = self.env["mail.alias"]._normalize_alias_name(
                 f"{alias_name}-{vals.get('code')}"
             )
 

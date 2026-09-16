@@ -15,7 +15,7 @@ PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
 }
 
 
-def sanitize_peppol_endpoint(peppol_endpoint, eas=None):
+def normalize_peppol_endpoint(peppol_endpoint, eas=None):
     if not peppol_endpoint:
         return peppol_endpoint
     sanitizer = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(
@@ -274,13 +274,13 @@ class ResPartner(models.Model):
             if value.isalnum():
                 value = value.removeprefix(country_code)
 
-        return sanitize_peppol_endpoint(value, eas)
+        return normalize_peppol_endpoint(value, eas)
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ["peppol_eas"])
     def _compute_peppol_endpoint(self):
         """If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
-            partner.peppol_endpoint = sanitize_peppol_endpoint(
+            partner.peppol_endpoint = normalize_peppol_endpoint(
                 partner.peppol_endpoint, partner.peppol_eas
             )
             country_code = partner._deduce_country_code()

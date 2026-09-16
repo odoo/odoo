@@ -86,7 +86,7 @@ class ResPartner(models.Model):
             )
         )
         for partner in l10n_ar_partners:
-            if id_number := partner._get_id_number_sanitize():
+            if id_number := partner._get_id_number_digits():
                 partner.vat = str(id_number)
             if validation == "error":
                 partner._l10n_ar_identification_validation()
@@ -187,7 +187,7 @@ class ResPartner(models.Model):
             except Exception as error:
                 raise ValidationError(repr(error))
 
-    def _get_id_number_sanitize(self):
+    def _get_id_number_digits(self):
         """Sanitize the identification number. Return the digits/integer value of the identification number
         If not vat number defined return 0"""
         self.check_singleton()

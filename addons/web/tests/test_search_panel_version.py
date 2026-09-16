@@ -245,7 +245,7 @@ class TestSearchPanelHierarchy(TransactionCase):
                 original = [dict(record) for record in records]
                 result = self.env[
                     "res.partner"
-                ]._search_panel_sanitize_parent_hierarchy(
+                ]._search_panel_filter_parent_hierarchy(
                     records,
                     "parent_id",
                     [record["id"] for record in records],
@@ -269,7 +269,7 @@ class TestSearchPanelHierarchy(TransactionCase):
             {"id": 2, "parent_id": (1, "Child")},
             {"id": 3, "parent_id": False},
         ]
-        result = self.env["res.partner"]._search_panel_sanitize_parent_hierarchy(
+        result = self.env["res.partner"]._search_panel_filter_parent_hierarchy(
             records,
             "parent_id",
             [1, 2, 3],
@@ -282,7 +282,7 @@ class TestSearchPanelHierarchy(TransactionCase):
             {"id": 1, "parent_id": False},
             {"id": 3, "parent_id": (1, "Parent")},
         ]
-        result = self.env["res.partner"]._search_panel_sanitize_parent_hierarchy(
+        result = self.env["res.partner"]._search_panel_filter_parent_hierarchy(
             records,
             "parent_id",
             [2, 3],

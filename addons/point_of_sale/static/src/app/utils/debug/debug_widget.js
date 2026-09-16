@@ -104,7 +104,7 @@ export class DebugWidget extends Component {
         if (!this.barcodeReader) {
             return;
         }
-        const ean = this.barcodeReader.parser.sanitize_ean(
+        const ean = this.barcodeReader.parser.normalize_ean(
             this.state.barcodeInput || "0",
         );
         this.state.barcodeInput = ean;

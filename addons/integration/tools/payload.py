@@ -46,7 +46,7 @@ def inspect_content_type(
     return True, None
 
 
-def sanitize_error_message(error: str | Exception, max_length: int = 500) -> str:
+def redact_error_message(error: str | Exception, max_length: int = 500) -> str:
     message = str(error)
 
     if len(message) > max_length:

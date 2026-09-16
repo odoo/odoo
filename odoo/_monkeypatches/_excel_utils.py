@@ -11,7 +11,7 @@ class SheetNameCollisionError(ValueError):
     pass
 
 
-def sanitize_excel_sheet_name(name: str, taken: Iterable[str] = ()) -> str:
+def normalize_excel_sheet_name(name: str, taken: Iterable[str] = ()) -> str:
     if not name:
         return name
     name = _INVALID_EXCEL_CHARS_RE.sub("", name).strip().strip("'").strip()

@@ -2275,7 +2275,7 @@ class AccountMoveLine(models.Model):
             defaults["account_id"] = journal.default_account_id.id
         return defaults
 
-    def _sanitize_vals(self, vals):
+    def _normalize_vals(self, vals):
         if "debit" in vals or "credit" in vals:
             vals = vals.copy()
 
@@ -2417,7 +2417,7 @@ class AccountMoveLine(models.Model):
             moves._sync_dynamic_lines(move_container),
             self._sync_invoice(container),
         ):
-            lines = super().create([self._sanitize_vals(vals) for vals in vals_list])
+            lines = super().create([self._normalize_vals(vals) for vals in vals_list])
             exit_stack.enter_context(
                 self.env.protecting(
                     [
@@ -2561,7 +2561,7 @@ class AccountMoveLine(models.Model):
         if account_to_write and not account_to_write.active:
             raise UserError(_("You cannot use an archived account."))
 
-        vals = self._sanitize_vals(vals)
+        vals = self._normalize_vals(vals)
 
         self._check_write_on_hashed_entry(vals)
 

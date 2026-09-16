@@ -284,7 +284,7 @@ class PosController(PortalAccount):
         sitemap=False,
     )
     def show_ticket_validation_screen(self, access_token="", **kwargs):
-        kwargs = self._sanitize_client_address_params(kwargs)
+        kwargs = self._filter_client_address_params(kwargs)
 
         if not access_token:
             return request.prepare_not_found_error()

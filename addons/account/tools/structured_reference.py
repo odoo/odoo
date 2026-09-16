@@ -19,11 +19,11 @@ __all__ = [
     "is_valid_structured_reference_nl",
     "is_valid_structured_reference_no_se",
     "is_valid_structured_reference_si",
-    "sanitize_structured_reference",
+    "normalize_structured_reference",
 ]
 
 
-def sanitize_structured_reference(reference):
+def normalize_structured_reference(reference):
     ref = re.sub(r"\s", "", reference)
     if re.fullmatch(r"(\+{3}|\*{3}|)\d{3}/\d{4}/\d{5}\1", ref):
         return re.sub(r"[+*/]", "", ref)
@@ -41,12 +41,12 @@ def format_structured_reference_iso(number):
 
 
 def is_valid_structured_reference_iso(reference):
-    ref = sanitize_structured_reference(reference)
+    ref = normalize_structured_reference(reference)
     return iso11649.is_valid(ref)
 
 
 def is_valid_structured_reference_be(reference):
-    ref = sanitize_structured_reference(reference)
+    ref = normalize_structured_reference(reference)
     be_ref = re.fullmatch(r"(\d{10})(\d{2})", ref)
     if not be_ref:
         return False
@@ -55,7 +55,7 @@ def is_valid_structured_reference_be(reference):
 
 
 def is_valid_structured_reference_dk(reference):
-    ref = sanitize_structured_reference(reference)
+    ref = normalize_structured_reference(reference)
     match = re.fullmatch(r"\+?(?:71<(\d{15})|75<(\d{16}))\+\d{8}<", ref)
     if not match:
         return False
@@ -65,7 +65,7 @@ def is_valid_structured_reference_dk(reference):
 
 
 def is_valid_structured_reference_fi(reference):
-    ref = sanitize_structured_reference(reference)
+    ref = normalize_structured_reference(reference)
     fi_ref = re.fullmatch(r"(\d{1,19})(\d)", ref)
     if not fi_ref:
         return False
@@ -77,13 +77,13 @@ def is_valid_structured_reference_fi(reference):
 
 
 def is_valid_structured_reference_no_se(reference):
-    ref = sanitize_structured_reference(reference)
+    ref = normalize_structured_reference(reference)
     no_se_ref = re.fullmatch(r"\d+", ref)
     return no_se_ref and luhn.is_valid(ref)
 
 
 def is_valid_structured_reference_nl(reference):
-    sanitized_reference = sanitize_structured_reference(reference)
+    sanitized_reference = normalize_structured_reference(reference)
 
     if re.fullmatch(r"\d{7}", sanitized_reference):
         _debug.logic("nl_short_reference_accepted", length=7)
@@ -116,7 +116,7 @@ def is_valid_structured_reference_nl(reference):
 
 
 def is_valid_structured_reference_si(reference):
-    sanitized_reference = sanitize_structured_reference(reference)
+    sanitized_reference = normalize_structured_reference(reference)
 
     if sanitized_reference.startswith("SI01"):
         sanitized_reference = sanitized_reference[4:]
@@ -157,7 +157,7 @@ def is_valid_structured_reference_si(reference):
 
 
 def is_valid_structured_reference(reference):
-    reference = sanitize_structured_reference(reference or "")
+    reference = normalize_structured_reference(reference or "")
 
     return (
         (
@@ -184,7 +184,7 @@ def is_valid_structured_reference_for_country(reference, country_code=""):
         "SI": is_valid_structured_reference_si,
     }
 
-    reference = sanitize_structured_reference(reference or "")
+    reference = normalize_structured_reference(reference or "")
     if check := check_per_country.get(country_code.upper()):
         return check(reference)
     return is_valid_structured_reference_iso(reference)

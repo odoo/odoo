@@ -143,7 +143,7 @@ class PortalChatter(ThreadController):
                 )
             Message = request.env["mail.message"].sudo()
         res = Message._message_fetch(
-            domain, **Message._sanitize_fetch_params(fetch_params)
+            domain, **Message._filter_fetch_params(fetch_params)
         )
         messages = res.pop("messages")
         _debug.pipeline(

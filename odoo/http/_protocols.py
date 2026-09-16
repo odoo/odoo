@@ -145,7 +145,7 @@ class HttpExtension(Protocol):
     def _is_allowed_cookie(self, cookie_type: str) -> bool:
         pass
 
-    def _sanitize_cookies(
+    def _update_cookies(
         self,
         cookies: werkzeug.datastructures.MultiDict,
     ) -> None:

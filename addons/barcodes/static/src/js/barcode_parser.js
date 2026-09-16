@@ -120,7 +120,7 @@ export class BarcodeParser {
      * @param {String} ean
      * @returns {String}
      */
-    sanitize_ean(ean) {
+    normalize_ean(ean) {
         ean = ean.substr(0, 13);
         ean = "0".repeat(Math.max(0, 13 - ean.length)) + ean;
         return ean.substr(0, 12) + this.get_barcode_check_digit(ean);
@@ -132,8 +132,8 @@ export class BarcodeParser {
      * @param {String} upc
      * @returns {String}
      */
-    sanitize_upc(upc) {
-        return this.sanitize_ean("0" + upc).substr(1, 12);
+    normalize_upc(upc) {
+        return this.normalize_ean("0" + upc).substr(1, 12);
     }
 
     /**
@@ -297,9 +297,9 @@ export class BarcodeParser {
             parsedResult.value = match.value;
             parsedResult.code = curBarcode;
             if (rule.encoding === "ean13") {
-                parsedResult.base_code = this.sanitize_ean(match.base_code);
+                parsedResult.base_code = this.normalize_ean(match.base_code);
             } else if (rule.encoding === "upca") {
-                parsedResult.base_code = this.sanitize_upc(match.base_code);
+                parsedResult.base_code = this.normalize_upc(match.base_code);
             } else {
                 parsedResult.base_code = match.base_code;
             }

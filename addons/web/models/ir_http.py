@@ -39,8 +39,8 @@ class IrHttp(models.AbstractModel):
         return any(bot in user_agent for bot in CRAWLER_USER_AGENTS)
 
     @classmethod
-    def _sanitize_cookies(cls, cookies: dict) -> None:
-        super()._sanitize_cookies(cookies)
+    def _update_cookies(cls, cookies: dict) -> None:
+        super()._update_cookies(cookies)
         if cids := cookies.get("cids"):
             cookies["cids"] = "-".join(cids.split(","))
 

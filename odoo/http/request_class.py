@@ -170,7 +170,7 @@ class Request(
 
         cookies = werkzeug.datastructures.MultiDict(self.httprequest.cookies)
         if registry is not None:
-            get_ir_http(registry)._sanitize_cookies(cookies)
+            get_ir_http(registry)._update_cookies(cookies)
             _debug.logic(
                 "http.cookies.sanitized",
                 before=len(self.httprequest.cookies),

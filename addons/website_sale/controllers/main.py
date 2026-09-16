@@ -1049,7 +1049,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             _debug.pipeline("checkout", verdict="redirected", order=order_sudo.id)
             return redirection
 
-        query_params = self._sanitize_client_address_params(query_params)
+        query_params = self._filter_client_address_params(query_params)
         checkout_page_values = self._prepare_checkout_page_values(
             order_sudo, **query_params
         )
@@ -1125,7 +1125,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 == order_sudo.partner_invoice_id
             )
 
-        query_params = self._sanitize_client_address_params(query_params)
+        query_params = self._filter_client_address_params(query_params)
         address_form_values = self._prepare_address_form_values(
             partner_sudo,
             address_type=address_type,
@@ -1212,7 +1212,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             callback = callback or "/shop/checkout"
 
-        form_data = self._sanitize_client_address_params(form_data)
+        form_data = self._filter_client_address_params(form_data)
 
         partner_sudo, feedback_dict = self._create_or_update_address(
             partner_sudo,

@@ -248,9 +248,9 @@ class TestEmailHeaderFolding(unittest.TestCase):
 
 class TestExcelSheetNames(unittest.TestCase):
     def _sanitize(self, name, taken=()):
-        from odoo._monkeypatches._excel_utils import sanitize_excel_sheet_name
+        from odoo._monkeypatches._excel_utils import normalize_excel_sheet_name
 
-        return sanitize_excel_sheet_name(name, taken)
+        return normalize_excel_sheet_name(name, taken)
 
     def test_invalid_characters_are_dropped(self):
         self.assertEqual(self._sanitize("a[b]c:d*e?f/g\\h"), "abcdefgh")

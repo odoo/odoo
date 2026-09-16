@@ -75,8 +75,8 @@ class PhoneNumber(models.Model):
             return False
 
     @api.model
-    def _sanitize_number(self, number, country=None):
-        return self._e164(number, country) or super()._sanitize_number(number, country)
+    def _normalize_number(self, number, country=None):
+        return self._e164(number, country) or super()._normalize_number(number, country)
 
     @api.depends("number", "country_id", "partner_ids.country_id")
     def _compute_valid(self):

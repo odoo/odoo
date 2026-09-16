@@ -235,10 +235,10 @@ class MailAlias(models.Model):
 
     @api.model
     def _alias_name_is_valid(self, name: str) -> bool:
-        return bool(name) and self._sanitize_alias_name(name) == name
+        return bool(name) and self._normalize_alias_name(name) == name
 
     @api.constrains("alias_name")
-    def _check_alias_name_is_sanitized(self) -> None:
+    def _check_alias_name_is_normalized(self) -> None:
         for alias in self.filtered("alias_name"):
             if not self._alias_name_is_valid(alias.alias_name):
                 raise ValidationError(
@@ -472,14 +472,14 @@ class MailAlias(models.Model):
                 continue
             raw = vals["alias_name"]
             domain_part = raw.partition("@")[2].strip() if isinstance(raw, str) else ""
-            vals["alias_name"] = self._sanitize_alias_name(raw)
+            vals["alias_name"] = self._normalize_alias_name(raw)
             if domain_part and vals["alias_name"]:
                 pending.append((vals, domain_part))
         if not pending:
             return
 
         sanitized = {
-            domain_part: self._sanitize_alias_domain_name(domain_part)
+            domain_part: self._normalize_alias_domain_name(domain_part)
             for _vals, domain_part in pending
         }
         wanted = {name for name in sanitized.values() if name}
@@ -572,7 +572,7 @@ class MailAlias(models.Model):
         )
 
     @api.model
-    def _sanitize_alias_name(
+    def _normalize_alias_name(
         self, name: str, is_email: bool = False
     ) -> str | Literal[False]:
         if not name:
@@ -587,11 +587,11 @@ class MailAlias(models.Model):
             return False
         if not is_email or not domain_part:
             return local_part
-        domain_part = self._sanitize_alias_domain_name(domain_part)
+        domain_part = self._normalize_alias_domain_name(domain_part)
         return f"{local_part}@{domain_part}" if domain_part else False
 
     @api.model
-    def _sanitize_alias_domain_name(self, domain_name: str) -> str | Literal[False]:
+    def _normalize_alias_domain_name(self, domain_name: str) -> str | Literal[False]:
         domain_name = domain_name.strip().lower()
         if not domain_name:
             return False

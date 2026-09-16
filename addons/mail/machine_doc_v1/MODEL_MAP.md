@@ -366,7 +366,7 @@ Fields: `alias_name`, `alias_full_name`, `alias_domain_id`/`alias_domain`, `alia
 `alias_defaults`, `alias_force_thread_id`, `alias_parent_model_id`, `alias_parent_thread_id`,
 `alias_contact` (everyone/partners/followers), `alias_incoming_local`, `alias_bounced_content`,
 `alias_status`.
-Methods: `_check_unique(...)`, `_sanitize_alias_name(name, ...)`, `open_document()`,
+Methods: `_check_unique(...)`, `_normalize_alias_name(name, ...)`, `open_document()`,
 `_alias_bounce_incoming_email(...)`, `_get_alias_bounced_body(...)`, `_get_alias_contact_description()`.
 
 ### `mail.tracking.value` (`mail_tracking_value.py`, `_rec_name="field_id"`)

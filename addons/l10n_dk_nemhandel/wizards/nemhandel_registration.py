@@ -80,7 +80,7 @@ class NemhandelRegistration(models.TransientModel):
     def _onchange_phone_number(self):
         self.env["res.company"]._check_phonenumbers_import()
         if self.phone_number:
-            # The `phone_number` we set is not necessarily valid (may fail `_sanitize_nemhandel_phone_number`)
+            # The `phone_number` we set is not necessarily valid (may fail `_normalize_nemhandel_phone_number`)
             with contextlib.suppress(phonenumbers.NumberParseException):
                 parsed_phone_number = phonenumbers.parse(
                     self.phone_number,

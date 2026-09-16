@@ -1857,14 +1857,14 @@ class Survey(http.Controller):
                     )
                 else:
                     row.append("")
-            rows.append([self._sanitize_export_cell(cell) for cell in row])
+            rows.append([self._escape_export_cell(cell) for cell in row])
 
         return header, rows
 
     _FORMULA_TRIGGERS = ("=", "+", "-", "@", "\t", "\r")
 
     @staticmethod
-    def _sanitize_export_cell(value: Any) -> Any:
+    def _escape_export_cell(value: Any) -> Any:
         if isinstance(value, str) and value.startswith(Survey._FORMULA_TRIGGERS):
             return f"'{value}"
         return value

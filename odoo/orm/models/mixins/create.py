@@ -525,7 +525,7 @@ class CreateMixin(_ModelStubs):
                 if field.is_properties:
                     other_fields.add(field)
 
-            self._sanitize_html_columns(stored_list, col_fields)
+            self._update_html_columns(stored_list, col_fields)
             ids.extend(
                 self.env.backend.create_rows(self, stored_list, columns, col_fields)
             )
@@ -583,7 +583,7 @@ class CreateMixin(_ModelStubs):
         prof.report(_orm_crud, "_create %s: %d records", self._name, len(records))
         return records
 
-    def _sanitize_html_columns(
+    def _update_html_columns(
         self, stored_list: list[dict], col_fields: list[Field]
     ) -> None:
         html_fields = [field for field in col_fields if field.is_html]

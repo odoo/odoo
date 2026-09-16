@@ -61,7 +61,7 @@ class IrConfig_Parameter(models.Model):
             self._sync_template_editor_group(self._restricts_template_rendering(value))
         elif key == "mail.catchall.domain.allowed":
             value = (
-                self.env["mail.alias.domain"]._sanitize_allowed_domains(value)
+                self.env["mail.alias.domain"]._normalize_allowed_domains(value)
                 if value
                 else False
             )
@@ -69,16 +69,16 @@ class IrConfig_Parameter(models.Model):
 
         return super().set_param(key, value)
 
-    def _sanitize_param_value(self, key: str, value: Any) -> str:
+    def _normalize_param_value(self, key: str, value: Any) -> str:
         if key == "mail.catchall.domain.allowed" and value:
-            return self.env["mail.alias.domain"]._sanitize_allowed_domains(value)
+            return self.env["mail.alias.domain"]._normalize_allowed_domains(value)
         return value
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         for vals in vals_list:
             if vals.get("key") and "value" in vals:
-                vals["value"] = self._sanitize_param_value(vals["key"], vals["value"])
+                vals["value"] = self._normalize_param_value(vals["key"], vals["value"])
         params = super().create(vals_list)
         params._sync_template_editor_group_from_rows()
         return params
@@ -90,7 +90,7 @@ class IrConfig_Parameter(models.Model):
             records_by_value = defaultdict(self.browse)
             for record in self:
                 key = vals.get("key", record.key)
-                records_by_value[self._sanitize_param_value(key, vals["value"])] |= (
+                records_by_value[self._normalize_param_value(key, vals["value"])] |= (
                     record
                 )
             result = True

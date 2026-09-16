@@ -332,14 +332,14 @@ class ProductPricelistItem(models.Model):
                     **{field: values.get(field) for field in self._TARGETING_FIELDS}
                 )
 
-            self._sanitize_applied_on_vals(values)
+            self._update_applied_on_vals(values)
             new_vals_list.append(values)
         return super().create(new_vals_list)
 
     def write(self, vals):
         if vals.get("applied_on"):
             vals = dict(vals)
-            self._sanitize_applied_on_vals(vals)
+            self._update_applied_on_vals(vals)
             return super().write(vals)
 
         if not any(field in vals for field in self._TARGETING_FIELDS):
@@ -360,7 +360,7 @@ class ProductPricelistItem(models.Model):
             item_vals = {**vals, "applied_on": applied_on}
             if override is not None:
                 item_vals["product_tmpl_id"] = override
-            self._sanitize_applied_on_vals(item_vals)
+            self._update_applied_on_vals(item_vals)
             result = (
                 super(ProductPricelistItem, self.browse(item_ids)).write(item_vals)
                 and result
@@ -401,7 +401,7 @@ class ProductPricelistItem(models.Model):
         return "3_global"
 
     @api.model
-    def _sanitize_applied_on_vals(self, vals):
+    def _update_applied_on_vals(self, vals):
         applied_on = vals.get("applied_on")
         if applied_on == "3_global":
             vals.update({"product_id": None, "product_tmpl_id": None, "categ_id": None})

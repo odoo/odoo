@@ -82,7 +82,7 @@ def _read_stream_blocks(stream: Any, reader: Any = None) -> Any:
             yield content[offset : offset + _ZIP_READ_BLOCK]
 
 
-def _sanitize_zip_name(name: str) -> str:
+def _normalize_zip_name(name: str) -> str:
     name = (name or "").replace("/", "_").replace("\\", "_")
     if name in (".", ".."):
         name = "_" * len(name)
@@ -371,7 +371,7 @@ class ShareRoute(http.Controller):
                 _debug.logic("zip_item_skipped", reason="download_denied")
                 return None
             if document.type == "folder":
-                document_name = _sanitize_zip_name(document.name)
+                document_name = _normalize_zip_name(document.name)
                 # A directory weighs nothing, so it is accounted at size 0 --
                 # it is the entry count, not the byte count, that it moves.
                 account(0)
@@ -384,7 +384,7 @@ class ShareRoute(http.Controller):
                 stream = self._documents_content_stream(
                     document.shortcut_document_id or document
                 )
-                download_name = _sanitize_zip_name(stream.download_name)
+                download_name = _normalize_zip_name(stream.download_name)
             except ValueError, MissingError:
                 _debug.logic("zip_item_skipped", reason="no_stream")
                 return None

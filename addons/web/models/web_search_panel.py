@@ -128,7 +128,7 @@ class Base(models.AbstractModel):
             ids = (
                 [rec["id"] for rec in comodel_records] if expand else image_element_ids
             )
-            comodel_records = self._search_panel_sanitize_parent_hierarchy(
+            comodel_records = self._search_panel_filter_parent_hierarchy(
                 comodel_records, parent_name, ids
             )
 

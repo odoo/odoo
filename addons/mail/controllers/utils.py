@@ -54,7 +54,7 @@ def message_fetch_response(
     res = request.env["mail.message"]._message_fetch(
         domain=domain,
         thread=thread,
-        **request.env["mail.message"]._sanitize_fetch_params(fetch_params),
+        **request.env["mail.message"]._filter_fetch_params(fetch_params),
     )
     messages = res.pop("messages")
     if mark_done and not request.env.user._is_public():

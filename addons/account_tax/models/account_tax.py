@@ -625,7 +625,7 @@ class AccountTax(models.Model):
         for tax in self:
             tax.tax_label = tax.invoice_label or tax.name
 
-    def _sanitize_vals(self, vals):
+    def _normalize_vals(self, vals):
         sanitized = vals.copy()
 
         if sanitized.get("description") and not re.search(
@@ -687,12 +687,12 @@ class AccountTax(models.Model):
             }
         )
         taxes = super(AccountTax, self.with_context(context)).create(
-            [self._sanitize_vals(vals) for vals in vals_list]
+            [self._normalize_vals(vals) for vals in vals_list]
         )
         return taxes.with_context(self.env.context)
 
     def write(self, vals):
-        return super().write(self._sanitize_vals(vals))
+        return super().write(self._normalize_vals(vals))
 
     def copy_data(self, default=None):
         default = dict(default or {})

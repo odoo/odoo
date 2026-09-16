@@ -59,7 +59,7 @@ class BarcodeNomenclature(models.Model):
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.",
     )
 
-    def _sanitize_ean(self, ean):
+    def _normalize_ean(self, ean):
         """Returns a valid zero padded EAN-13 from an EAN prefix.
 
         :type ean: str
@@ -67,12 +67,12 @@ class BarcodeNomenclature(models.Model):
         ean = ean[0:13].zfill(13)
         return ean[0:-1] + str(get_barcode_check_digit(ean))
 
-    def _sanitize_upc(self, upc):
+    def _normalize_upc(self, upc):
         """Returns a valid zero padded UPC-A from a UPC-A prefix.
 
         :type upc: str
         """
-        return self._sanitize_ean("0" + upc)[1:]
+        return self._normalize_ean("0" + upc)[1:]
 
     def _match_pattern(self, barcode, pattern):
         """Checks barcode matches the pattern and retrieves the optional numeric value in barcode.
@@ -228,9 +228,9 @@ class BarcodeNomenclature(models.Model):
             parsed_result["value"] = match["value"]
             parsed_result["code"] = cur_barcode
             if rule.encoding == "ean13":
-                parsed_result["base_code"] = self._sanitize_ean(match["base_code"])
+                parsed_result["base_code"] = self._normalize_ean(match["base_code"])
             elif rule.encoding == "upca":
-                parsed_result["base_code"] = self._sanitize_upc(match["base_code"])
+                parsed_result["base_code"] = self._normalize_upc(match["base_code"])
             else:
                 parsed_result["base_code"] = match["base_code"]
             return parsed_result

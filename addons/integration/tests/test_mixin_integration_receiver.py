@@ -13,7 +13,7 @@ from odoo.addons.integration.tools import (
     inspect_content_type,
     inspect_json_payload,
     inspect_payload_size,
-    sanitize_error_message,
+    redact_error_message,
 )
 from odoo.addons.integration.tools.authentication import (
     is_bearer_token_valid,
@@ -227,25 +227,25 @@ class TestPayloadHash(TransactionCase):
 
 class TestSanitizeErrorMessage(TransactionCase):
     def test_the_value_after_a_mixed_case_password_label_is_masked(self):
-        result = sanitize_error_message("Invalid Password: abc123")
+        result = redact_error_message("Invalid Password: abc123")
         self.assertNotIn("abc123", result)
         self.assertIn("***REDACTED***", result)
 
     def test_the_value_after_an_uppercase_token_label_is_masked(self):
-        result = sanitize_error_message("Expired TOKEN=XYZ987")
+        result = redact_error_message("Expired TOKEN=XYZ987")
         self.assertNotIn("XYZ987", result)
 
     def test_a_secret_with_a_known_shape_is_masked_without_a_label(self):
         key_id = "AKIA" + "ABCDEFGHIJKLMNOP"
-        self.assertNotIn(key_id, sanitize_error_message(f"S3 refused {key_id}"))
+        self.assertNotIn(key_id, redact_error_message(f"S3 refused {key_id}"))
 
     def test_truncates_long_message(self):
         long_msg = "x" * 1000
-        result = sanitize_error_message(long_msg, max_length=100)
+        result = redact_error_message(long_msg, max_length=100)
         self.assertLessEqual(len(result), 120)
 
     def test_accepts_exception(self):
-        result = sanitize_error_message(ValueError("bad token: s3cr3tvalue"))
+        result = redact_error_message(ValueError("bad token: s3cr3tvalue"))
         self.assertNotIn("s3cr3tvalue", result)
 
 

@@ -2,7 +2,7 @@ from typing import Any
 
 import xlsxwriter
 
-from ._excel_utils import sanitize_excel_sheet_name
+from ._excel_utils import normalize_excel_sheet_name
 
 
 class PatchedXlsxWorkbook(xlsxwriter.Workbook):
@@ -16,7 +16,7 @@ class PatchedXlsxWorkbook(xlsxwriter.Workbook):
     def _sanitized(self, name: str | None) -> str | None:
         if not name:
             return name
-        return sanitize_excel_sheet_name(
+        return normalize_excel_sheet_name(
             name, [sheet.name for sheet in self.worksheets()]
         )
 

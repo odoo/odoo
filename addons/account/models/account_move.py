@@ -4328,7 +4328,7 @@ class AccountMove(models.Model):
         )
 
     @_debug.perf.timed
-    def _sanitize_vals(self, vals):
+    def _normalize_vals(self, vals):
         if not (vals.get("invoice_line_ids") and vals.get("line_ids")):
             return vals
         vals = dict(vals)
@@ -4408,7 +4408,7 @@ class AccountMove(models.Model):
         container = {"records": self}
         with self._check_balanced(container):
             with ExitStack() as exit_stack, self._sync_dynamic_lines(container):
-                vals_list = [self._sanitize_vals(vals) for vals in vals_list]
+                vals_list = [self._normalize_vals(vals) for vals in vals_list]
                 stolen_moves = self.browse(
                     {move for vals in vals_list for move in self._stolen_move(vals)}
                 )
@@ -4593,7 +4593,7 @@ class AccountMove(models.Model):
         _debug.lifecycle("write", records=self, fields=sorted(vals))
         if not vals:
             return True
-        vals = self._sanitize_vals(vals)
+        vals = self._normalize_vals(vals)
 
         self._check_write_allowed(vals)
 

@@ -120,7 +120,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return "S"
         return "O"
 
-    def _sanitize_phone(self, raw):
+    def _normalize_phone(self, raw):
         return re.sub(r"[^0-9]", "", raw or "")[:15]
 
     # -------------------------------------------------------------------------
@@ -195,7 +195,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             # For non-refund invoices, use the standard party node
             document_node["cac:AccountingCustomerParty"]["cac:AccountingContact"] = {
                 "cbc:Telephone": {
-                    "_text": self._sanitize_phone(
+                    "_text": self._normalize_phone(
                         invoice.partner_id.phone_ids._primary().number
                     )
                 }

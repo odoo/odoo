@@ -49,7 +49,7 @@ class MailMessage(models.Model):
         return value if isinstance(value, bool) else None
 
     @api.model
-    def _sanitize_fetch_params(self, fetch_params: Any) -> dict:
+    def _filter_fetch_params(self, fetch_params: Any) -> dict:
         if not isinstance(fetch_params, dict):
             return {}
         return {

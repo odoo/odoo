@@ -457,7 +457,7 @@ class TestSupplierInfoCompute(ProductCommon):
             msg="10% discount on 100 should be 90",
         )
 
-    def test_sanitize_vals_sets_template(self):
+    def test_normalize_vals_sets_template(self):
         partner = self.env["res.partner"].create({"name": "Vendor"})
         supplier = self.env["product.supplierinfo"].create(
             {

@@ -115,13 +115,15 @@ class TestProjectRecurrence(TransactionCase):
             form.step_id = self.stage_b
             form.tag_ids.add(self.env["project.tags"].search([], limit=1))
             form.date_end = self.date_01_01 + relativedelta(weeks=1)
-            form.user_ids = self.user
 
             form.recurring_task = True
             form.repeat_interval = 2
             form.repeat_unit = "month"
             form.repeat_type = "forever"
             task = form.save()
+            # not through the form: a layer composing user_ids assigns through its
+            # own fields, so the form need not show this one
+            task.user_ids = self.user
 
         with freeze_time(self.date_01_01 + relativedelta(months=1)):
             task.state = "done"

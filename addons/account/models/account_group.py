@@ -95,14 +95,14 @@ class AccountGroup(models.Model):
                 count=len(vals_list),
                 fields=sorted({key for vals in vals_list for key in vals}),
             )
-        groups = super().create([self._sanitize_vals(vals) for vals in vals_list])
+        groups = super().create([self._normalize_vals(vals) for vals in vals_list])
         groups._adapt_parent_account_group()
         return groups
 
     @_debug.perf.timed
     def write(self, vals):
         _debug.lifecycle("write", records=self, fields=sorted(vals))
-        res = super().write(self._sanitize_vals(vals))
+        res = super().write(self._normalize_vals(vals))
         if "code_prefix_start" in vals or "code_prefix_end" in vals:
             self._adapt_parent_account_group()
         return res
@@ -219,7 +219,7 @@ class AccountGroup(models.Model):
                     updated += 1
         _debug.perf.count("group_parents_relinked", rows=updated)
 
-    def _sanitize_vals(self, vals):
+    def _normalize_vals(self, vals):
         vals = dict(vals)
         if (
             vals.get("code_prefix_start")

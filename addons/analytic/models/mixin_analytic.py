@@ -249,7 +249,7 @@ class MixinAnalytic(models.AbstractModel):
         decimal_precision = self.env["decimal.precision"].get_precision(
             "Percentage Analytic"
         )
-        vals = self._sanitize_values(vals, decimal_precision)
+        vals = self._normalize_values(vals, decimal_precision)
         return super().write(vals)
 
     @api.model_create_multi
@@ -259,7 +259,7 @@ class MixinAnalytic(models.AbstractModel):
             "Percentage Analytic"
         )
         vals_list = [
-            self._sanitize_values(vals, decimal_precision) for vals in vals_list
+            self._normalize_values(vals, decimal_precision) for vals in vals_list
         ]
         return super().create(vals_list)
 
@@ -313,10 +313,10 @@ class MixinAnalytic(models.AbstractModel):
         """
         # Only models that actually consume the marker (via `_merge_distribution`)
         # may let it reach persistence; for every other model it is stripped in
-        # `_sanitize_values` so it never corrupts the stored JSON.
+        # `_normalize_values` so it never corrupts the stored JSON.
         return False
 
-    def _sanitize_values(self, vals, decimal_precision):
+    def _normalize_values(self, vals, decimal_precision):
         """Normalize the distribution floats and drop the unused ``__update__`` marker"""
         if "analytic_distribution" in vals:
             distribution = vals.get("analytic_distribution")

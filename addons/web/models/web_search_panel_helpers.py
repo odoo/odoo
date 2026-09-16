@@ -111,7 +111,7 @@ class Base(models.AbstractModel):
                     parent_id = values[parent_name]
 
     @api.model
-    def _search_panel_sanitize_parent_hierarchy(
+    def _search_panel_filter_parent_hierarchy(
         self,
         records: list[dict[str, Any]],
         parent_name: str,

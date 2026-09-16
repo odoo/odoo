@@ -1056,7 +1056,7 @@ class ResPartner(models.Model):
                         (
                             "phone_ids.sanitized",
                             "=",
-                            self.env["phone.number"]._sanitize_number(phone),
+                            self.env["phone.number"]._normalize_number(phone),
                         )
                     ],
                 }

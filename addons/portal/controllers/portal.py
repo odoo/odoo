@@ -167,7 +167,7 @@ class CustomerPortal(Controller):
     def _get_reserved_address_form_keys(self):
         return self._RESERVED_ADDRESS_FORM_KEYS
 
-    def _sanitize_client_address_params(self, client_params):
+    def _filter_client_address_params(self, client_params):
         reserved = self._get_reserved_address_form_keys()
         return {
             key: value for key, value in client_params.items() if key not in reserved
@@ -242,7 +242,7 @@ class CustomerPortal(Controller):
     @route("/my/addresses", type="http", auth="user", readonly=True, website=True)
     def my_addresses(self, **query_params):
         partner_sudo = request.env.user.partner_id
-        query_params = self._sanitize_client_address_params(query_params)
+        query_params = self._filter_client_address_params(query_params)
         address_data = self._prepare_address_data(partner_sudo, **query_params)
         has_invoice_type_address = any(
             address.type == "invoice" for address in address_data["billing_addresses"]
@@ -367,7 +367,7 @@ class CustomerPortal(Controller):
         _debug.pipeline(
             "address_form", partner=partner_sudo.id, address_type=address_type
         )
-        query_params = self._sanitize_client_address_params(query_params)
+        query_params = self._filter_client_address_params(query_params)
 
         address_form_values = {
             **self._prepare_address_form_values(
@@ -465,7 +465,7 @@ class CustomerPortal(Controller):
             )
             raise Forbidden
 
-        form_data = self._sanitize_client_address_params(form_data)
+        form_data = self._filter_client_address_params(form_data)
 
         _partner_sudo, feedback_dict = self._create_or_update_address(
             partner_sudo, **form_data

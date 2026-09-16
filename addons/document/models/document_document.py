@@ -31,7 +31,7 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
-def _sanitize_file_extension(extension: str) -> str:
+def _normalize_file_extension(extension: str) -> str:
     return re.sub(r"^[\s.]+|\s+$", "", extension)
 
 
@@ -1408,13 +1408,13 @@ class DocumentsDocument(models.Model):
             if record.type != "binary":
                 record.file_extension = False
             elif record.shortcut_document_id.name:
-                file_extension = _sanitize_file_extension(
+                file_extension = _normalize_file_extension(
                     get_extension(record.shortcut_document_id.name.strip())
                 )
                 record.file_extension = file_extension or False
             elif record.name:
                 record.file_extension = (
-                    _sanitize_file_extension(get_extension(record.name.strip()))
+                    _normalize_file_extension(get_extension(record.name.strip()))
                     or False
                 )
 
@@ -1650,7 +1650,7 @@ class DocumentsDocument(models.Model):
     def _inverse_file_extension(self) -> None:
         for record in self:
             file_extension = (
-                _sanitize_file_extension(record.file_extension)
+                _normalize_file_extension(record.file_extension)
                 if record.file_extension
                 else False
             )

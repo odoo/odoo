@@ -14,7 +14,7 @@ class _Registry(dict):
         self.calls = 0
         self["ir.http"] = self
 
-    def _sanitize_cookies(self, cookies):
+    def _update_cookies(self, cookies):
         self.calls += 1
         for name in self.dropped:
             cookies.poplist(name)

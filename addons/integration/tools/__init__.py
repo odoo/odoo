@@ -16,7 +16,7 @@ from .exceptions import (
 )
 from .payload import (
     compute_payload_hash,
-    sanitize_error_message,
+    redact_error_message,
     split_large_payload,
     inspect_content_type,
     inspect_json_payload,
@@ -39,7 +39,7 @@ __all__ = [
     "inspect_json_payload",
     "inspect_payload_size",
     "is_private_host",
+    "redact_error_message",
     "register_url_secret",
-    "sanitize_error_message",
     "split_large_payload",
 ]

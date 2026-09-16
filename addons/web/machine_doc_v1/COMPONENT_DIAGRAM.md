@@ -192,14 +192,14 @@ prose must not reach for them.
 | PY | `controllers/session.py` | 125 | `get_session_info`, `authenticate`, `modules`, `check`, `account`, `destroy`, `logout` |
 | PY | `controllers/home.py:web_login` | 178–250 | Login form + CAPTCHA |
 | PY | `models/res_users.py` | 128 | `name_search()`, `_on_webclient_bootstrap()`, `_is_captcha_login_required()`, `web_create_users()` |
-| PY | `models/ir_http.py` | 385 | `_handle_debug()`, `_sanitize_cookies()`, `session_info()` |
+| PY | `models/ir_http.py` | 385 | `_handle_debug()`, `_update_cookies()`, `session_info()` |
 | JS | `static/src/webclient/session_service.js` | 61 | Client-side session |
 | JS | `static/src/public/login.js` | 44 | Login form component |
 
 **Key invariants to check**:
 - `authenticate()` never returns session_info for invalid credentials
 - Session cookies have correct flags (HttpOnly, Secure, SameSite)
-- `_sanitize_cookies()` removes stale company IDs correctly
+- `_update_cookies()` removes stale company IDs correctly
 - CAPTCHA check cannot be bypassed by omitting parameter
 - Debug mode restricted to internal users
 

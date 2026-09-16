@@ -2,7 +2,7 @@ from odoo import _, api, models
 
 from odoo.addons.account.tools import (
     is_valid_structured_reference,
-    sanitize_structured_reference,
+    normalize_structured_reference,
 )
 
 
@@ -22,7 +22,7 @@ class ResPartnerBank(models.Model):
             if structured_communication and is_valid_structured_reference(
                 structured_communication
             ):
-                structured_communication = sanitize_structured_reference(
+                structured_communication = normalize_structured_reference(
                     structured_communication
                 )
                 comment = ""
