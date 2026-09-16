@@ -11,6 +11,7 @@ export class PaymentStripe extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.createStripeTerminal();
+        this.fetchStripeMerchantCountry();
     }
 
     stripeUnexpectedDisconnect() {
@@ -278,11 +279,28 @@ export class PaymentStripe extends PaymentInterface {
         });
     }
 
+    async fetchStripeMerchantCountry() {
+        if (!this.pos.stripe_merchant_country) {
+            debugger;
+            try {
+                const country = await this.pos.data.call(
+                    "pos.payment.method", 
+                    "stripe_get_merchant_country", 
+                    []
+                );
+                this.pos.stripe_merchant_country = country;
+            } catch (error) {
+                this.pos.stripe_merchant_country = null;
+            }
+        }
+    }
+
     canBeAdjusted(uuid) {
         var order = this.pos.getOrder();
         var line = order.getPaymentlineByUuid(uuid);
         return (
             this.pos.config.set_tip_after_payment &&
+            this.pos.stripe_merchant_country === "US" &&
             line.payment_method_id.use_payment_terminal === "stripe" &&
             line.card_type !== "interac" &&
             line.uiState.stripeCardPresentNetwork !== "eftpos_au"
