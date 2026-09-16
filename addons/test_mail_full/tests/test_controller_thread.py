@@ -176,12 +176,11 @@ class TestPortalThreadController(MailControllerThreadCommon):
         """Test getting thread data through a portal record with no access."""
         record = self.env["mail.test.portal.no.access"].create({"name": "Test"})
         partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        token = {"token": record._portal_ensure_token()}
+        sign = {"hash": record._sign_token(partner.id), "pid": partner.id}
         for user, route_kw in product(
             (self.user_public, self.user_portal, self.user_employee),
-            (
-                {"token": record._portal_ensure_token()},
-                {"hash": record._sign_token(partner.id), "pid": partner.id},
-            ),
+            (token, sign),
         ):
             with self.subTest(user=user.name, kw=route_kw):
                 self._authenticate_pseudo_user(user)
@@ -190,20 +189,26 @@ class TestPortalThreadController(MailControllerThreadCommon):
                     {
                         "fetch_params": [
                             [
-                                "mail.thread",
+                                "/portal/chatter_init",
                                 {
-                                    "thread_model": record._name,
                                     "thread_id": record.id,
-                                    "request_list": ["followers"],
+                                    "thread_model": record._name,
                                     "access_params": route_kw,
                                 },
                             ]
                         ]
                     },
                 )
-                thread_data = result["mail.thread"][0]
-                self.assertNotIn("mail.followers", result)
-                self.assertNotIn("followersCount", thread_data)
-                self.assertFalse(thread_data["canPostOnReadonly"])
-                self.assertFalse(thread_data["hasReadAccess"])
-                self.assertFalse(thread_data["hasWriteAccess"])
+                self.assertEqual(
+                    result["mail.thread"],
+                    [
+                        {
+                            "can_react": user != self.user_public or route_kw is sign,
+                            "display_name": "Test",
+                            "hasReadAccess": False,
+                            "id": record.id,
+                            "model": record._name,
+                            "portal_partner": partner.id if route_kw is sign else False,
+                        },
+                    ],
+                )
