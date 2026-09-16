@@ -1412,6 +1412,30 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
         res = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(res["messages"]), 2)
 
+    def test_message_fetch_search_filters(self):
+        record = self.test_record.with_user(self.user_employee)
+        comment = record.message_post(body="Conversation", message_type="comment", subtype_xmlid="mail.mt_comment")
+        email = record.message_post(body="Incoming email", message_type="email", subtype_xmlid="mail.mt_comment")
+        note = record.message_post(body="Note", message_type="comment", subtype_xmlid="mail.mt_note")
+        tracking = record.message_post(body="Tracking", message_type="tracking")
+        activity = record.message_post(
+            body="Activity",
+            message_type="notification",
+            subtype_xmlid="mail.mt_activities",
+            mail_activity_type_id=self.env.ref("mail.mail_activity_data_todo").id,
+        )
+        for search_filter, expected in (
+            ("messages", email + comment),
+            ("notes", note),
+            ("activities", activity),
+            ("changes", tracking),
+        ):
+            with self.subTest(search_filter=search_filter):
+                res = self.env["mail.message"].with_user(self.user_employee)._message_fetch(
+                    [], thread=record, search_filter=search_filter,
+                )
+                self.assertEqual(res["messages"], expected)
+
     @users("employee")
     def test_unlink_notification_message(self):
         message = self.test_record.with_user(self.user_admin).message_notify(
