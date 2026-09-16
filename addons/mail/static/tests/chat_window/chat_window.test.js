@@ -1204,6 +1204,7 @@ test("preserve link formatting in chat bubble message preview", async () => {
     await start();
     await hover(".o-mail-ChatBubble[name='General']");
     await contains(`.o-mail-ChatBubble-preview a[href="https://odoo.com/"]`);
+    expect(".o-mail-ChatBubble-preview a").toHaveStyle({ pointerEvents: "none" }); // links in preview should not be clickable
 });
 
 test("decorate emojis in chat bubble message preview", async () => {
