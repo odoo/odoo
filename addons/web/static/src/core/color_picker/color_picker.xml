@@ -4,6 +4,7 @@
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root"
         t-on-mouseenter="this.onMouseEnter">
         <div class="px-1 mb-1 pt-2 d-flex">
+<<<<<<< f23b63e5c7020c20ca5898cf5c48995d21740167
             <t t-if="isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
@@ -27,9 +28,22 @@
                         <t t-out="tab.name" />
                     </button>
                 </t>
+||||||| 4307f657c73a860c755e1499138a878268882f7a
+            <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                    t-on-click="() => this.setTab(tab.id)">
+                    <t t-out="tab.name" />
+                </button>
+=======
+            <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                <button t-attf-class="btn btn-sm text-truncate btn-tab me-1 #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                    t-on-click="() => this.setTab(tab.id)">
+                    <t t-out="tab.name" />
+                </button>
+>>>>>>> 63c3b884cf814310be288fa556b8e26b875a408d
             </t>
             <div class="flex-grow-1" />
-            <button t-attf-class="btn btn-sm fa fa-trash #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+            <button t-attf-class="btn btn-sm fa fa-trash o_color_picker_reset #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     title="Reset"
                     t-on-click="onColorApply"
                     t-on-mouseover="onColorHover"
