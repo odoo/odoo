@@ -1279,7 +1279,7 @@ class AccountReport(models.Model):
         )
 
     @api.model
-    def _get_editable_cell_data(
+    def _prepare_editable_cell_data(
         self, options, col_group_key, groupby_model, column_expression, column_value
     ):
         """Return the edit-popup payload for a cell the ledger allows editing in place, or None.

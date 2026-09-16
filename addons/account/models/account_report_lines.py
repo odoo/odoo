@@ -581,7 +581,7 @@ class AccountReportLines(models.Model):
 
                 formatter_params["digits"] = rounding
 
-            editable_cell_data = self._get_editable_cell_data(
+            editable_cell_data = self._prepare_editable_cell_data(
                 options, col_group_key, groupby_model, column_expression, column_value
             )
             if editable_cell_data:
