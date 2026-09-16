@@ -1,6 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { STORE_LOCATOR_PARTNER_FIELDS } from "./store_locator_option";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { locationBatchUtils } from "./store_locator_utils";
@@ -11,6 +12,7 @@ class StoreLocatorOptionPlugin extends Plugin {
         builder_actions: {
             AddLocationToStoreLocatorAction,
             HideLocationsOffscreenAction,
+            RefreshStoreLocatorAction,
         },
     };
 }
@@ -90,6 +92,57 @@ export class AddLocationToStoreLocatorAction extends BuilderAction {
 
     getValue({ editingElement }) {
         return editingElement.dataset.locationsList;
+    }
+}
+
+export class RefreshStoreLocatorAction extends BuilderAction {
+    static id = "refreshStoreLocator";
+
+    async apply({ editingElement }) {
+        // Query the database and compare the current locations data with the
+        // data saved in this.el.dataset. If an address changed, re-geolocalize
+        // it. Update opening hours when existing. If a location does not exist
+        // anymore in the database, remove it. Finally, save the new location
+        // list in this.el.dataset.
+        const locationsList = JSON.parse(editingElement.dataset.locationsList || "[]");
+        const locationsId = locationsList.map((entry) => entry.id);
+        if (locationsId.length === 0) {
+            return;
+        }
+        const locationsUpToDate = await this.services.orm.read(
+            "res.partner",
+            locationsId,
+            STORE_LOCATOR_PARTNER_FIELDS
+        );
+        const locationsUpToDateMap = new Map(locationsUpToDate.map((loc) => [loc.id, loc]));
+
+        // Update geolocations only if address has changed.
+        const locationsToGeolocalize = [];
+        locationsList.forEach((location) => {
+            const locationUpToDate = locationsUpToDateMap.get(location.id);
+            if (
+                locationUpToDate &&
+                location.contact_address_inline !== locationUpToDate.contact_address_inline
+            ) {
+                locationsToGeolocalize.push(location.id);
+            }
+        });
+        if (locationsToGeolocalize.length) {
+            await locationBatchUtils.geolocalize(
+                this.services.orm,
+                locationsUpToDateMap,
+                locationsToGeolocalize
+            );
+        }
+
+        // Update opening hours
+        await locationBatchUtils.updateCalendar(
+            this.services.orm,
+            locationsUpToDateMap,
+            Array.from(locationsUpToDateMap.keys())
+        );
+        const newLocationsList = Array.from(locationsUpToDateMap.values());
+        editingElement.dataset.locationsList = JSON.stringify(newLocationsList);
     }
 }
 
