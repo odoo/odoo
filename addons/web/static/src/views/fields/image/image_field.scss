@@ -14,25 +14,20 @@
         }
     }
 
-    button {
-        transition: opacity ease 400ms;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 26px;
-        height: 26px;
-    }
-
-    .o_mobile_controls {
-        button {
-            width: 30px;
-            height: 30px;
-            padding: 6px !important;
-        }
-    }
-
     &.o_field_invalid img {
         border: 1px solid map-get($theme-colors, 'danger');
+    }
+}
+
+.o_image_uploader_container {
+    .o_btn_circle {
+        --o-btn-circle-height: 26px;
+        height: var(--o-btn-circle-height);
+        aspect-ratio: 1;
+    }
+
+    &.o_mobile_controls .o_btn_circle {
+        --o-btn-circle-height: 30px;
     }
 }
 
