@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_sii" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.sii</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kanban_dashboard']" position="after">
+                <field name="l10n_es_sii_pending_count"/>
+                <field name="l10n_es_sii_kanban_state"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']//div[@name='kanban_primary_right']/div[@t-if='dashboard.number_draft']" position="before">
+                <div class="row" t-if="dashboard.l10n_es_sii_pending_count" groups="account.group_account_user">
+                    <div class="col overflow-hidden text-start">
+                        <a type="object"
+                           name="action_l10n_es_sii_open_pending"
+                           t-attf-class="text-{{ dashboard.l10n_es_sii_state_color }} text-truncate">
+                            <span title="Invoices to send to SII">
+                                <t t-out="dashboard.l10n_es_sii_pending_count"/> To Send to SII
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
