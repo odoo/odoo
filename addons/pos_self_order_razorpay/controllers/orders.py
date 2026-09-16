@@ -8,7 +8,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
     def razorpay_payment_status(self, access_token, order_id, payment_data, payment_method_id):
         pos_config = self._verify_pos_config(access_token)
         order = pos_config.env['pos.order'].search([
-            ('id', '=', order_id), ('config_id', '=', pos_config.id)
+            ('id', '=', order_id), ('config_id', '=', pos_config.id), ('access_token', '=', payment_data.get('order_token'))
         ], limit=1)
 
         if not order:
@@ -18,6 +18,9 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
         razorpay_status_response = payment_method.razorpay_fetch_payment_status(payment_data)
         payment_status = razorpay_status_response.get('status')
         if payment_status == "AUTHORIZED":
+            reference_id = f'{order.config_id.id}/{order.uuid}/{payment_method_id}/{order.currency_id.name}/{order.amount_total}'
+            if razorpay_status_response.get('externalRefNumber') != reference_id:
+                raise Unauthorized()
             order.add_payment({
                 'amount': order.amount_total,
                 'payment_method_id': payment_method.id,
@@ -47,7 +50,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
     def razorpay_cancel_status(self, access_token, order_id, payment_data, payment_method_id):
         pos_config = self._verify_pos_config(access_token)
         order = pos_config.env['pos.order'].search([
-            ('id', '=', order_id), ('config_id', '=', pos_config.id)
+            ('id', '=', order_id), ('config_id', '=', pos_config.id), ('access_token', '=', payment_data.get('order_token'))
         ], limit=1)
 
         if not order:
