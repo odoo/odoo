@@ -21,6 +21,7 @@ from odoo.tools.config import configmanager
 class _Conn:
     def __init__(self, label, fails=False, lag=0.0):
         self.label = label
+        self.dbname = label
         self.fails = fails
         self.lag = lag
         self.attempts = 0
@@ -323,6 +324,31 @@ class TestWritePins(unittest.TestCase):
         self.assertEqual(len(cm.output), 1)
         self.assertNotIn("a-session-id", cm.output[0])
         self.assertIn("replica.pinned", cm.output[0])
+
+
+class TestLiveRoutersAreVisibleToTheHealthSurface(unittest.TestCase):
+    def test_a_router_with_a_replica_reports_under_its_database_name(self):
+        before = set(replica_module.get_replica_health())
+        primary, replica = _Conn("prod"), _Conn("replica")
+        router = ReplicaRouter(_as_conn(primary), _as_conn(replica))
+        health = replica_module.get_replica_health()
+        self.assertIn("prod", health)
+        self.assertEqual(
+            set(health["prod"]), {"lag", "breaker", "write_pins"}, health["prod"]
+        )
+        self.assertTrue(health["prod"]["breaker"]["closed"])
+        del router
+        self.assertEqual(
+            set(replica_module.get_replica_health()),
+            before,
+            "a collected router leaves the table; the reference is weak",
+        )
+
+    def test_a_router_without_a_replica_has_nothing_to_report(self):
+        primary = _Conn("solo")
+        router = ReplicaRouter(_as_conn(primary))
+        self.assertNotIn("solo", replica_module.get_replica_health())
+        del router
 
 
 class TestReadYourWrites(unittest.TestCase):

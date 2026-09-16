@@ -9,6 +9,7 @@ from .cursor import BaseCursor, Connection, Cursor, Savepoint
 from .endpoints import EndpointRegistry, get_endpoint_key
 from .metrics import classify_query
 from .pool import ConnectionPool, PoolError
+from .replica import get_replica_health
 from .savepoint import get_or_create_row
 from .settings import PoolSettings
 from .schema import FunctionStatus, get_unaccent_status, has_trigram
@@ -36,6 +37,7 @@ __all__ = [
     "get_connection_info_for_database",
     "get_or_create_row",
     "get_pool_health",
+    "get_replica_health",
     "get_unaccent_status",
     "has_trigram",
     "is_maintenance_db",

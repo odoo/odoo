@@ -310,6 +310,55 @@ def _add_pool_family(exp: _Exposition, mode: str, health: dict) -> None:
             )
 
 
+_REPLICA_GAUGES = {
+    ("breaker", "closed"): (
+        "odoo_replica_breaker_closed",
+        (
+            "1 while read-only cursors are routed to the replica; 0 while the "
+            "circuit breaker holds them on the primary."
+        ),
+    ),
+    ("breaker", "failures"): (
+        "odoo_replica_breaker_failures",
+        "Consecutive replica cursor failures counted by the breaker.",
+    ),
+    ("breaker", "trips"): (
+        "odoo_replica_breaker_trips",
+        "Times the breaker opened since the registry was built.",
+    ),
+    ("breaker", "cooldown_remaining_seconds"): (
+        "odoo_replica_breaker_cooldown_remaining_seconds",
+        "Seconds until the breaker lets one request try the replica again.",
+    ),
+    ("lag", "last_lag_seconds"): (
+        "odoo_replica_lag_seconds",
+        (
+            "Apply lag measured on the last sample; +Inf for a standby that has "
+            "replayed nothing yet."
+        ),
+    ),
+    ("lag", "lagging"): (
+        "odoo_replica_lagging",
+        "1 while the lag gate routes read-only cursors to the primary.",
+    ),
+}
+
+
+def _add_replica_family(exp: _Exposition, database: str, health: dict) -> None:
+    label = {"database": database}
+    for (section, key), (name, help_text) in _REPLICA_GAUGES.items():
+        value = (health.get(section) or {}).get(key)
+        if isinstance(value, (int, float)):
+            exp.add(name, value, help=help_text, labels=label)
+    if "write_pins" in health:
+        exp.add(
+            "odoo_replica_write_pins",
+            health["write_pins"],
+            help="Sessions currently reading from the primary because they wrote.",
+            labels=label,
+        )
+
+
 def render_prometheus_exposition() -> str:
     from odoo import db
 
@@ -407,6 +456,15 @@ def render_prometheus_exposition() -> str:
                 stats=len(health.get("pool") or {}),
                 databases=len(health.get("per_database") or {}),
             )
+    try:
+        replicas = db.get_replica_health()
+    except Exception:
+        _debug.logic("metrics.replica_health_unavailable")
+        replicas = {}
+    for database, health in replicas.items():
+        _add_replica_family(exp, database, health)
+    if replicas:
+        _debug.pipeline("metrics.replica_families_added", databases=len(replicas))
 
     with _debug.perf("metrics.rendered", families=len(exp._families)) as span:
         text: str = exp.render()

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import threading
 import typing
+import weakref
 from time import monotonic
 
 import psycopg
@@ -80,8 +81,21 @@ def is_readonly_cursor_enabled(settings: PoolSettings | None = None) -> bool:
     return resolve(settings).readonly_cursors
 
 
+# Every live router with a replica, so the health surface can report what
+# the log lines say: a registry owns its router, and the registry table is
+# the ORM's, which this package does not read.
+_routers: weakref.WeakSet[ReplicaRouter] = weakref.WeakSet()
+
+
+def get_replica_health() -> dict[str, dict]:
+    return {
+        getattr(router.primary, "dbname", None) or "unknown": router.get_health()
+        for router in list(_routers)
+    }
+
+
 class ReplicaRouter:
-    __slots__ = ("breaker", "lag", "pins", "primary", "readonly")
+    __slots__ = ("__weakref__", "breaker", "lag", "pins", "primary", "readonly")
 
     def __init__(
         self,
@@ -104,6 +118,8 @@ class ReplicaRouter:
             else CircuitBreaker(max_cooldown=REPLICA_RETRY_TIME)
         )
         self.lag = lag if lag is not None else ReplicaLagGate(max_lag)
+        if readonly is not None:
+            _routers.add(self)
         _debug.lifecycle(
             "replica.router_created",
             db=getattr(primary, "dbname", None),

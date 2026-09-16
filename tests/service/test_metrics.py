@@ -307,6 +307,43 @@ class TestPrometheusExposition:
             "its own exclusion"
         )
 
+    def test_replica_routers_render_one_family_per_database(self, mod, pooled_db):
+        health = {
+            "prod": {
+                "lag": {
+                    "enabled": True,
+                    "max_lag_seconds": 1.0,
+                    "last_lag_seconds": float("inf"),
+                    "lagging": True,
+                },
+                "breaker": {
+                    "closed": False,
+                    "failures": 2,
+                    "trips": 1,
+                    "failure_threshold": 1,
+                    "failure_window_seconds": None,
+                    "cooldown_seconds": 30.0,
+                    "cooldown_remaining_seconds": 12.5,
+                },
+                "write_pins": 3,
+            }
+        }
+        with patch.object(pooled_db, "get_replica_health", return_value=health):
+            text = mod.render_prometheus_exposition()
+        declared, errors = parse_exposition(text)
+        assert not errors, errors
+        pid = os.getpid()
+        label = f'{{pid="{pid}",database="prod"}}'
+        assert f"odoo_replica_breaker_closed{label} 0" in text
+        assert f"odoo_replica_breaker_cooldown_remaining_seconds{label} 12.5" in text
+        assert f"odoo_replica_lag_seconds{label} +Inf" in text
+        assert f"odoo_replica_lagging{label} 1" in text
+        assert f"odoo_replica_write_pins{label} 3" in text
+        assert "odoo_replica_breaker_failure_window_seconds" not in text, (
+            "None is configuration, not a sample"
+        )
+        assert declared["odoo_replica_breaker_trips"] == "gauge"
+
     def test_booleans_render_as_one_and_zero(self, mod):
         server = prefork_server(population=0)
 

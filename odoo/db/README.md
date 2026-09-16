@@ -10,7 +10,7 @@ files here carry one, so this README is the only map.
 
 | Module | Contents | Pure? |
 |---|---|---|
-| `__init__.py` | Public API only: `db_connect`, `close_db`/`close_all`, `drain_db`/`drain_all`, `get_pool_health`, the process `registry`, and `sql_counter` via module `__getattr__` | no |
+| `__init__.py` | Public API only: `db_connect`, `close_db`/`close_all`, `drain_db`/`drain_all`, `get_pool_health`, `get_replica_health`, `cancel_queries_of`, the process `registry`, and `sql_counter` via module `__getattr__` | no |
 | `endpoints.py` | `EndpointRegistry`: the lazy registry of `ConnectionPool`s keyed `(endpoint, readonly)` and of `ConnectionBudget`s keyed by endpoint, plus the endpoint resolution (`get_endpoint_key`, `get_maxconn_at_endpoint`) both sides of the budget comparison share. Was module state in `__init__.py` | no |
 | `cursor.py` | `BaseCursor` (hooks, flush convergence, savepoint seam), `Cursor` (the `cr` object: execute/executemany, DDL handling, the lost-connection replay, close/commit/rollback guards) and `Connection`, the `(pool, dbname, dsn)` record whose `cursor()` builds one — it lives beside the class it instantiates, so `pool.py` never imports `cursor.py` | no |
 | `pool.py` | `ConnectionPool` (per-DSN psycopg_pool registry, borrow/give_back, idle-pool reaper, stale-credential eviction, direct maintenance-DB path, `get_health()`) | no |
@@ -20,7 +20,7 @@ files here carry one, so this README is the only map.
 | `reaper.py` | `IdlePoolReaper`: which quiet per-DSN pools to close and how often to look (the decision; the pool keeps the locking and teardown) | yes |
 | `leaks.py` | `CheckoutTracker`: which connections are out, since when, from which thread and borrow site | yes |
 | `lag.py` | `ReplicaLagGate` + `LAG_SQL`: sampled apply-lag ceiling that demotes stale reads to the primary | yes |
-| `replica.py` | `ReplicaRouter`: the primary `Connection`, the optional readonly one, the `CircuitBreaker` (`odoo/libs/breaker.py` — Odoo-agnostic, so `libs/`) and the `ReplicaLagGate` composed into one decision — which connection serves a cursor request, and the mode (`ro` / `ro->rw` / `rw`) it decided; `REPLICA_RETRY_TIME`, the breaker's cooldown ceiling; `is_readonly_cursor_enabled`. Was the body of `Registry.cursor` | no |
+| `replica.py` | `ReplicaRouter`: the primary `Connection`, the optional readonly one, the `CircuitBreaker` (`odoo/libs/breaker.py` — Odoo-agnostic, so `libs/`) and the `ReplicaLagGate` composed into one decision — which connection serves a cursor request, and the mode (`ro` / `ro->rw` / `rw`) it decided; `WritePins`, the read-your-writes table; `REPLICA_RETRY_TIME`, the breaker's cooldown ceiling; `is_readonly_cursor_enabled`; `get_replica_health`, every live router's state for the metrics surface. Was the body of `Registry.cursor` | no |
 | `pipeline.py` | `_PipelineMixin`: `cr.pipeline()` — arming on the second statement, the sync-on-demand behind `rowcount`/`description`, the wait accounting, the deferred-error seam at block exit. Its own module because it is the one concern of the cursor with eight attributes of its own; the methods resolve through `Cursor`'s MRO at no per-call cost | no |
 | `bulk.py` | `_BulkAccessMixin`: `copy_from` (COPY, optional binary + pre-generated ids), `execute_values` | no |
 | `savepoint.py` | `Savepoint` / `_FlushingSavepoint` (ORM state restore is injected by `odoo.orm.runtime.savepoint`) | yes |
@@ -848,6 +848,18 @@ one exception, and the scanner has a control showing it tells the two apart.
   rollback with the budget armed inside it, and on the replacement
   connection after the backend was terminated before the first statement
   (`SHOW statement_timeout` = `200ms` in each), and `0` after clearing.
+- **What the replica log lines say, `/web/metrics` says too.**
+  `ReplicaRouter.get_health()` existed and nothing read it: a breaker that
+  had opened, a lag gate that had demoted, were WARNING lines and nothing
+  else. Routers live in ORM registries, which this package does not read,
+  so every router built with a replica joins a module-level `WeakSet` and
+  `db.get_replica_health()` reports each under its primary's database name;
+  `odoo/service/metrics.py` renders them as
+  `odoo_replica_{breaker_closed,breaker_failures,breaker_trips,breaker_cooldown_remaining_seconds,lag_seconds,lagging,write_pins}{database=…}`.
+  Measured: a server started with `--db_replica_port 1`, one page served,
+  `odoo_replica_breaker_closed{database="odoo64_db"} 0`, `failures 2`,
+  `trips 1`, `cooldown_remaining_seconds 1.991`. A collected router leaves
+  the table (weak reference; pinned by a test).
 - **A session reads its own writes, on the primary, for `db_replica_write_pin`
   seconds.** A replica that has not applied a client's own commit would show
   that client its write as missing. `ReplicaRouter.cursor(pin_key=…)` routes
