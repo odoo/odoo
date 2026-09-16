@@ -26,11 +26,12 @@ export function loadIframe(iframe, callback = () => {}) {
                 });
         }
     };
-    if (iframe.contentDocument?.readyState === "complete") {
-        // Browsers like Chrome don't make use of the load event for iframes without `src`
+    if (
+        iframe.contentDocument?.readyState === "complete" &&
+        (!iframe.hasAttribute("srcdoc") || iframe.contentDocument.URL === "about:srcdoc")
+    ) {
         onIframeLoaded();
     } else {
-        // Browsers like Firefox only make iframe document available after dispatching "load"
         iframe.addEventListener("load", () => onIframeLoaded(), { once: true });
     }
     return iframeLoaded;
