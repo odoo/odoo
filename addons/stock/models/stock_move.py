@@ -854,7 +854,7 @@ class StockMove(models.Model):
             label += f" ({self.create_uid.display_name})"
         return label
 
-    # `product_uom_id.factor` is read here, through `_compute_quantity_stored`,
+    # `product_uom_id.factor` is read here, through `_get_quantity_stored`,
     # and is deliberately NOT declared. `uom.uom.write` refuses a ratio change
     # only while moves are OPEN (`state not in ("cancel", "done")`), so a unit
     # can be re-rated once its moves are done -- and a done move's `product_qty`
