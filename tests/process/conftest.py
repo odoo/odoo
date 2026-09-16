@@ -96,7 +96,7 @@ class ServerHandle:
                     continue
                 # Reload keeps the original supervisor and one serving master.
                 # Only their leaf, non-evented descendants are HTTP workers.
-                if "evented" not in " ".join(child.cmdline()) and not child.children():
+                if not is_evented(child) and not child.children():
                     out.append(child)
             except psutil.NoSuchProcess, psutil.AccessDenied:
                 continue
@@ -135,6 +135,16 @@ class ServerHandle:
 DB_MAXCONN = 8
 
 GRACEFUL_STOP_TIMEOUT_S = 10.0
+
+
+def is_evented(process):
+    # `odoo-bin evented …`: the subcommand, not the word anywhere in argv
+    # (a log path under a test named for it would match too).
+    try:
+        argv = process.cmdline()
+    except psutil.Error:
+        return False
+    return len(argv) > 2 and argv[2] == "evented"
 
 
 class Poller(threading.Thread):

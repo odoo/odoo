@@ -14,7 +14,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import stripped_sys_argv
 
 from . import _process_state
-from ._env import INHERITED_SOCKET_FD, get_env_float
+from ._env import INHERITED_SOCKET_FD, INHERITED_WEBSOCKET_FD, get_env_float
 from ._limits import get_graceful_stop_timeout
 from ._sdnotify import notify_ready, notify_reloading
 
@@ -190,9 +190,13 @@ class GenerationHandoff:
         env["ODOO_RELOAD_SUPERVISOR_PID"] = str(master.pid)
         env["ODOO_RELOAD_READY_FD"] = str(ready_fd)
         pass_fds = [ready_fd]
-        if master.socket is not None:
-            env[INHERITED_SOCKET_FD] = str(master.socket.fileno())
-            pass_fds.append(master.socket.fileno())
+        for name, sock in (
+            (INHERITED_SOCKET_FD, master.socket),
+            (INHERITED_WEBSOCKET_FD, master.websocket_socket),
+        ):
+            if sock is not None:
+                env[name] = str(sock.fileno())
+                pass_fds.append(sock.fileno())
         args = stripped_sys_argv()
         if not args or args[0] not in (sys.executable, Path(sys.executable).name):
             args.insert(0, sys.executable)

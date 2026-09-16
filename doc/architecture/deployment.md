@@ -66,8 +66,15 @@ workers; later reload requests return to the original supervisor, avoiding a
 growing chain of proxy masters. The stable supervisor owns the file watcher so
 an edit does not schedule duplicate reloads. The replacement rereads configuration normally.
 
-The evented process restarts with its generation; this handoff does not preserve
-established WebSocket connections. Shutdown bounds generation draining and kills
+The websocket port is the master's too: it binds `gevent_port` once at start
+and hands the listener to every evented child it spawns (as that child's own
+HTTP listener, `ODOO_HTTP_SOCKET_FD`) and to its reload candidate
+(`ODOO_WEBSOCKET_SOCKET_FD`). An evented child recycled over
+`limit_memory_soft_gevent`, a crashed one, or a replacement generation's
+child therefore never re-binds the port and never refuses a connection
+(measured across a reload: 39 refused before, 0 after). What restarts with
+the generation is the process; established WebSocket connections are not
+preserved. Shutdown bounds generation draining and kills
 remaining descendants in its owned process group after the generation exits.
 `tests/process/test_reload_continuity.py` covers served requests during successful
 reload and preservation of the current generation after rejected replacements.

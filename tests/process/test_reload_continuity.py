@@ -1,11 +1,12 @@
 import os
+import re
 import signal
 import socket
 import time
 
 import pytest
 
-from .conftest import REPO_ROOT, Poller, requires_pg, requires_posix
+from .conftest import REPO_ROOT, Poller, is_evented, requires_pg, requires_posix
 
 WORKERS = 2
 RELOAD_TIMEOUT_S = 60.0
@@ -13,6 +14,20 @@ RELOAD_TIMEOUT_S = 60.0
 
 def _child_pids(srv):
     return {worker.pid for worker in srv.http_workers()}
+
+
+def _websocket_port(srv):
+    found = re.search(
+        r"Evented/WebSocket service running on [^:]+:(\d+)", srv.log_text()
+    )
+    return int(found.group(1)) if found else None
+
+
+def _evented_child(srv):
+    for child in srv.children():
+        if is_evented(child):
+            return child
+    return None
 
 
 @requires_pg
@@ -253,6 +268,32 @@ class TestSighupReloadKeepsServing:
             "no longer exercising the socket handoff"
         )
 
+    def test_the_websocket_port_is_never_unbound_either(self, server):
+        srv = server("--workers", str(WORKERS))
+        assert srv.wait_until(lambda: _websocket_port(srv) is not None, timeout=60)
+        port = _websocket_port(srv)
+        with Poller(port) as poller:
+            time.sleep(1.0)
+            baseline = poller.served
+            assert baseline > 0
+            os.kill(srv.proc.pid, signal.SIGHUP)
+            done = srv.wait_until(
+                lambda: (
+                    "New server has started" in srv.log_text()
+                    and srv.log_text().count("Evented/WebSocket service running") == 2
+                ),
+                timeout=RELOAD_TIMEOUT_S,
+                interval=0.5,
+            )
+            time.sleep(2.0)
+        assert poller.refused == 0 and not poller.other, (
+            f"{poller.refused} refused, other errors {set(poller.other)}: the "
+            f"replacement's evented child bound the websocket port itself instead "
+            f"of adopting the master's"
+        )
+        assert done, srv.log_text()[-2000:]
+        assert poller.served > baseline
+
     def test_a_threaded_reexec_refuses_no_connection_either(self, server):
         srv = server("--workers", "0")
         assert srv.is_serving()
@@ -367,3 +408,33 @@ def test_failed_replacements_leave_the_same_generation_serving(
     )
     assert srv.is_serving()
     assert pidfile.read_text() == str(srv.proc.pid)
+
+
+@requires_pg
+@requires_posix
+def test_an_evented_child_restart_refuses_no_websocket_connection(server):
+    srv = server("--workers", "1")
+    assert srv.wait_until(lambda: _websocket_port(srv) is not None, timeout=60)
+    port = _websocket_port(srv)
+    first = _evented_child(srv)
+    assert first is not None
+    with Poller(port) as poller:
+        time.sleep(0.5)
+        first.send_signal(signal.SIGTERM)
+        assert srv.wait_until(
+            lambda: (
+                (child := _evented_child(srv)) is not None and child.pid != first.pid
+            ),
+            timeout=30,
+        )
+        assert srv.wait_until(
+            lambda: srv.log_text().count("Evented/WebSocket service running") == 2, 30
+        )
+        time.sleep(1.0)
+    assert poller.refused == 0 and not poller.other, (
+        f"{poller.refused} refused, other errors {set(poller.other)}: the "
+        f"websocket port went away with the evented child instead of staying "
+        f"bound in the master"
+    )
+    assert poller.served > 0
+    assert "holding respawn" not in srv.log_text()

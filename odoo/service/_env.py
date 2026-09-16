@@ -79,8 +79,14 @@ unbound, and the connections that arrive meanwhile wait in the kernel's
 backlog instead of being refused."""
 
 
-def take_inherited_socket() -> socket.socket | None:
-    fd = os.environ.pop(INHERITED_SOCKET_FD, None)
+INHERITED_WEBSOCKET_FD = "ODOO_WEBSOCKET_SOCKET_FD"
+"""The websocket port's listening socket, which the prefork master binds
+once and hands to every evented child and to its reload candidate under
+the name above, so that port is never unbound either."""
+
+
+def take_inherited_socket(name: str = INHERITED_SOCKET_FD) -> socket.socket | None:
+    fd = os.environ.pop(name, None)
     if not fd:
         return None
     sock = socket.socket(fileno=int(fd))
@@ -88,15 +94,18 @@ def take_inherited_socket() -> socket.socket | None:
     return sock
 
 
-def bequeath_socket(sock: socket.socket, env: MutableMapping[str, str]) -> int:
+def bequeath_socket(
+    sock: socket.socket, env: MutableMapping[str, str], name: str = INHERITED_SOCKET_FD
+) -> int:
     fd = sock.detach()
     os.set_inheritable(fd, True)
-    env[INHERITED_SOCKET_FD] = str(fd)
+    env[name] = str(fd)
     return fd
 
 
 __all__ = (
     "INHERITED_SOCKET_FD",
+    "INHERITED_WEBSOCKET_FD",
     "bequeath_socket",
     "get_env_float",
     "get_env_int",

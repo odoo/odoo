@@ -19,6 +19,7 @@ from odoo.service import (
     _limits,
     _prefork,
     _process_state,
+    _reload,
     _threaded,
 )
 from odoo.service import settings as server_settings
@@ -1141,6 +1142,50 @@ class TestPreforkRespawnBackoff:
         assert prefork_server._get_respawn_hold(_prefork.SPAWN_HOLD).not_before > before
 
 
+class TestTheWebsocketPortIsTheMastersToo:
+    def test_the_evented_child_is_handed_the_masters_listener(
+        self, prefork_server, monkeypatch
+    ):
+        prefork_server.long_polling_pid = None
+        prefork_server.websocket_socket = MagicMock(fileno=lambda: 42)
+        popen = MagicMock(return_value=MagicMock(pid=555))
+        monkeypatch.setattr(_prefork.subprocess, "Popen", popen)
+        prefork_server.spawn_long_polling_process()
+        kwargs = popen.call_args.kwargs
+        assert kwargs["pass_fds"] == [42]
+        assert kwargs["env"]["ODOO_HTTP_SOCKET_FD"] == "42", (
+            "the child adopts it as its own http listener, under the name every "
+            "ThreadedHTTPServer looks for"
+        )
+        assert "ODOO_HTTP_SOCKET_FD" not in os.environ
+
+    def test_the_reload_candidate_is_handed_both_listeners(
+        self, prefork_server, monkeypatch
+    ):
+        prefork_server.socket = MagicMock(fileno=lambda: 7)
+        prefork_server.websocket_socket = MagicMock(fileno=lambda: 8)
+        popen = MagicMock()
+        monkeypatch.setattr(_reload.subprocess, "Popen", popen)
+        monkeypatch.setattr(_reload, "stripped_sys_argv", lambda: ["odoo-bin"])
+        prefork_server.handoff._spawn_candidate(9)
+        kwargs = popen.call_args.kwargs
+        assert sorted(kwargs["pass_fds"]) == [7, 8, 9]
+        assert kwargs["env"]["ODOO_HTTP_SOCKET_FD"] == "7"
+        assert kwargs["env"]["ODOO_WEBSOCKET_SOCKET_FD"] == "8"
+
+    def test_stop_closes_both_listeners(self, prefork_server):
+        prefork_server.socket = MagicMock()
+        prefork_server.websocket_socket = MagicMock()
+        with (
+            patch.object(_prefork.CommonServer, "stop"),
+            patch.object(prefork_server, "stop_workers_gracefully"),
+            patch.object(prefork_server, "_close_watchdog_selector"),
+        ):
+            prefork_server.stop()
+        prefork_server.socket.close.assert_called_once_with()
+        prefork_server.websocket_socket.close.assert_called_once_with()
+
+
 class TestPreforkGracefulStopEscalation:
     def test_escalates_to_sigkill_after_deadline(self, prefork_server, monkeypatch):
         prefork_server.pid = os.getpid()
@@ -1612,13 +1657,16 @@ def _adopt_inherited_fd(fd, *, via_env, interface):
     server.open_pipe = MagicMock(return_value=(0, 0))
     env = {"ODOO_HTTP_SOCKET_FD": str(fd)} if via_env else {}
     with (
-        server_settings.override(http_enable=True, http_socket_activation=not via_env),
+        server_settings.override(
+            http_enable=True, http_socket_activation=not via_env, gevent_port=0
+        ),
         patch.object(signal, "signal"),
         patch.dict(os.environ, env, clear=False),
     ):
         if not via_env:
             os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
         server.start()
+    server.websocket_socket.close()
     return server.socket
 
 
@@ -2365,7 +2413,9 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
         server._census = MagicMock()
         with (
             server_settings.override(
-                http_enable=True, http_socket_activation=socket_activation
+                http_enable=True,
+                http_socket_activation=socket_activation,
+                gevent_port=0,
             ),
             patch.object(signal, "signal"),
             patch.object(_prefork.socket, "socket") as mock_sock,

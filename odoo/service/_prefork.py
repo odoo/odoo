@@ -26,7 +26,12 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
-from ._env import get_env_float, take_inherited_socket
+from ._env import (
+    INHERITED_SOCKET_FD,
+    INHERITED_WEBSOCKET_FD,
+    get_env_float,
+    take_inherited_socket,
+)
 from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._reload import GenerationHandoff
 from ._sdnotify import Watchdog, notify, notify_ready
@@ -146,6 +151,7 @@ class PreforkServer(CommonServer):
         self.beat: float = SUPERVISION_BEAT_S
         self.pipe: tuple[int, int] | None = None
         self.socket: socket.socket | None = None
+        self.websocket_socket: socket.socket | None = None
         self.workers_http: dict[int, WorkerHTTP] = {}
         self.workers_cron: dict[int, WorkerCron] = {}
         self.workers_job: dict[int, WorkerJob] = {}
@@ -329,8 +335,13 @@ class PreforkServer(CommonServer):
     def spawn_long_polling_process(self) -> None:
         nargs = stripped_sys_argv()
         cmd = [sys.executable, sys.argv[0], "evented"] + nargs[1:]
+        env = dict(os.environ)
+        pass_fds: list[int] = []
+        if self.websocket_socket is not None:
+            env[INHERITED_SOCKET_FD] = str(self.websocket_socket.fileno())
+            pass_fds.append(self.websocket_socket.fileno())
         try:
-            popen = subprocess.Popen(cmd)
+            popen = subprocess.Popen(cmd, env=env, pass_fds=pass_fds)
         except OSError:
             self.logger.debug(
                 "long-polling subprocess spawn failed; will retry",
@@ -743,26 +754,44 @@ class PreforkServer(CommonServer):
                 _debug.lifecycle("prefork.socket_bound", source="socket_activation")
                 self.logger.info("HTTP service running through socket activation")
             else:
-                family = socket.AF_INET
-                if ":" in self.interface:
-                    family = socket.AF_INET6
-                self.socket = socket.socket(family, socket.SOCK_STREAM)
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                self.socket.setblocking(False)
-                self.socket.bind((self.interface, self.port))
-                self.socket.listen(8 * self.population)
-                _debug.lifecycle(
-                    "prefork.socket_bound",
-                    source="bind",
-                    interface=self.interface,
-                    port=self.port,
-                    backlog=8 * self.population,
+                self.socket = self._bind_listener(
+                    self.port, backlog=8 * self.population
                 )
                 self.logger.info(
                     "HTTP service running on %s:%s",
                     self.interface,
                     self.port,
                 )
+            # The websocket port is the master's too: the evented child
+            # adopts it, so its restarts and this master's reloads leave the
+            # port bound and the connections that arrive meanwhile queued.
+            if inherited := take_inherited_socket(INHERITED_WEBSOCKET_FD):
+                self.websocket_socket = inherited
+                _debug.lifecycle(
+                    "prefork.websocket_socket_bound",
+                    source="inherited",
+                    fd=inherited.fileno(),
+                )
+            else:
+                self.websocket_socket = self._bind_listener(
+                    self.settings.gevent_port, backlog=socket.SOMAXCONN
+                )
+
+    def _bind_listener(self, port: int, *, backlog: int) -> socket.socket:
+        family = socket.AF_INET6 if ":" in self.interface else socket.AF_INET
+        sock = socket.socket(family, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.setblocking(False)
+        sock.bind((self.interface, port))
+        sock.listen(backlog)
+        _debug.lifecycle(
+            "prefork.socket_bound",
+            source="bind",
+            interface=self.interface,
+            port=port,
+            backlog=backlog,
+        )
+        return sock
 
     @property
     def shutdown_requested(self) -> bool:
@@ -910,8 +939,9 @@ class PreforkServer(CommonServer):
         if not self.handoff.is_supervised:
             notify("STOPPING=1")
         self.handoff.stop()
-        if self.socket:
-            self.socket.close()
+        for sock in (self.socket, self.websocket_socket):
+            if sock is not None:
+                sock.close()
         try:
             super().stop()
         except Exception as exc:
