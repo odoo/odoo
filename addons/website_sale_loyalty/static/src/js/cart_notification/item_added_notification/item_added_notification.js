@@ -1,3 +1,4 @@
+import { t, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { ItemAddedNotification } from
     "@website_sale/js/cart_notification/item_added_notification/item_added_notification";
@@ -6,8 +7,12 @@ import { PromotionProgressBar } from
 
 patch(ItemAddedNotification, {
     components: { ...ItemAddedNotification.components, PromotionProgressBar },
-    props: {
-        ...ItemAddedNotification.props,
-        promotion_progress_bars: { type: Array, optional: true },
+});
+
+patch(ItemAddedNotification.prototype, {
+    setup() {
+        this.websiteSaleLoyaltyProps = useProps({
+            promotion_progress_bars: t.array().optional(),
+        });
     },
 });

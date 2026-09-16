@@ -3,33 +3,34 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
-    status,
-    useEffect,
+    providePlugins,
     proxy,
     signal,
+    t,
+    useEffect,
+    useProps,
     useScope,
-    providePlugins,
 } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { TemplatePreviewField } from "../../fields/template_preview_field/template_preview_field";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
 import { closestScrollableY } from "@web/core/utils/scrolling";
-import { StyleSheetPlugin } from "../../views/mailing_template_kanban_view/stylesheets_plugin";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { TemplatePreviewField } from "../../fields/template_preview_field/template_preview_field";
 import { getStyleSheets } from "../../utils/iframe_assets";
+import { StyleSheetPlugin } from "../../views/mailing_template_kanban_view/stylesheets_plugin";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
-    static props = {
-        config: { type: Object },
-        themesPromise: Promise,
-        // Reactive wrapper for templateThemes promise: { promise }
-        templateThemes: Object,
-        iframeRef: { type: Function },
-    };
     static components = {
         TemplatePreviewField,
     };
+
+    props = useProps({
+        config: t.object(),
+        themesPromise: t.instanceOf(Promise),
+        templateThemesPromise: t.signal(t.promise(t.array(t.object()))),
+        iframeRef: t.signal(),
+    });
 
     themeSelectorWrapperRef = signal.ref();
 
@@ -57,18 +58,18 @@ export class ThemeSelector extends Component {
             showBanner: !this.props.config.isTemplate,
         });
         onWillStart(async () => {
-            const { themesPromise, templateThemes } = this.props;
-            const [templates] = await Promise.all([templateThemes.promise, themesPromise]);
+            const { themesPromise, templateThemesPromise } = this.props;
+            const [templates] = await Promise.all([templateThemesPromise(), themesPromise]);
             Object.assign(this.state, { templates });
         });
-        let templateThemesPromise = this.props.templateThemes.promise;
+        let templateThemesPromise = this.props.templateThemesPromise();
         const keepLastTemplateThemes = new KeepLast();
         useEffect(async () => {
-            if (status(this) === "destroyed") {
+            if (scope.isDestroyed()) {
                 return;
             }
-            if (templateThemesPromise !== this.props.templateThemes.promise) {
-                templateThemesPromise = this.props.templateThemes.promise;
+            if (templateThemesPromise !== this.props.templateThemesPromise()) {
+                templateThemesPromise = this.props.templateThemesPromise();
                 this.state.loading = true;
                 const templates = await keepLastTemplateThemes.add(templateThemesPromise);
                 Object.assign(this.state, { templates });
@@ -76,7 +77,7 @@ export class ThemeSelector extends Component {
             }
         });
         this.throttledResize = useThrottleForAnimation(() => {
-            if (status(this) === "destroyed") {
+            if (scope.isDestroyed()) {
                 return;
             }
             const iframe = this.props.iframeRef();

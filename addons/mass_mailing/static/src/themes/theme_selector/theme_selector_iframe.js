@@ -1,31 +1,34 @@
-import { ThemeSelector } from "./theme_selector";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 import {
     Component,
     markup,
     onMounted,
     onWillUnmount,
-    status,
     proxy,
     signal,
+    t,
     useApp,
     useOnChange,
+    useProps,
     useScope,
 } from "@odoo/owl";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { localization } from "@web/core/l10n/localization";
 import { useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
-import { localization } from "@web/core/l10n/localization";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
-import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
+import { ThemeSelector } from "./theme_selector";
 
 export class ThemeSelectorIframe extends Component {
     static template = "mass_mailing.ThemeSelectorIframe";
-    static props = {
-        config: Object,
-    };
+
+    props = useProps({
+        config: t.object(),
+    });
 
     app = useApp();
 
     iframeRef = signal.ref();
+    templateThemesPromise = signal(null);
 
     setup() {
         this.themeService = useService("mass_mailing.themes");
@@ -33,11 +36,6 @@ export class ThemeSelectorIframe extends Component {
         this.state = proxy({
             show: false,
         });
-        this.themeSelectorProps = {
-            templateThemes: proxy({
-                promise: undefined,
-            }),
-        };
         this.scope = useScope();
         onMounted(() => {
             this.setupIframe();
@@ -50,9 +48,7 @@ export class ThemeSelectorIframe extends Component {
         useOnChange(
             () => [this.props.config.mailingModelId],
             () => {
-                this.themeSelectorProps.templateThemes.promise = this.fetchTemplateThemes(
-                    this.props
-                );
+                this.templateThemesPromise.set(this.fetchTemplateThemes());
             },
             { initialRun: false }
         );
@@ -62,25 +58,15 @@ export class ThemeSelectorIframe extends Component {
         return isBrowserSafari();
     }
 
-    getTemplatesDomain(props) {
-        return props.config.filterTemplates
-            ? [["mailing_model_id", "=", props.config.mailingModelId]]
+    getTemplatesDomain() {
+        return this.props.config.filterTemplates
+            ? [["mailing_model_id", "=", this.props.config.mailingModelId]]
             : [];
     }
 
-    getThemeSelectorProps() {
-        Object.assign(this.themeSelectorProps, {
-            config: this.props.config,
-            themesPromise: this.themeService.load(),
-            iframeRef: this.iframeRef,
-        });
-        this.themeSelectorProps.templateThemes.promise = this.fetchTemplateThemes(this.props);
-        return this.themeSelectorProps;
-    }
-
-    async fetchTemplateThemes(props) {
+    async fetchTemplateThemes() {
         const templates = await this.orm.call("mailing.mailing", "action_fetch_templates", [
-            this.getTemplatesDomain(props),
+            this.getTemplatesDomain(),
         ]);
         return templates.map((template) => ({
             bodyArch: markup(template.body_arch),
@@ -106,9 +92,18 @@ export class ThemeSelectorIframe extends Component {
             await loadIframe(this.iframeRef(), async (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
+
+                const themesPromise = this.themeService.load();
+                this.templateThemesPromise.set(this.fetchTemplateThemes());
+
                 this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
                     env: this.env,
-                    props: this.getThemeSelectorProps(),
+                    props: {
+                        config: this.props.config,
+                        iframeRef: this.iframeRef,
+                        templateThemesPromise: this.templateThemesPromise,
+                        themesPromise: themesPromise,
+                    },
                 });
                 return Promise.all([
                     this.loadIframeAssets(),
@@ -118,7 +113,7 @@ export class ThemeSelectorIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         } else if (loadingError) {
             throw loadingError;
