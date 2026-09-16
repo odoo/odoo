@@ -751,7 +751,7 @@ class HrLeave(models.Model):
             result[leave.id] = (days, hours)
         return result
 
-    @api.depends('date_from', 'date_to', 'resource_calendar_id')
+    @api.depends('date_from', 'date_to', 'resource_calendar_id', 'work_entry_type_id')
     def _compute_duration(self):
         durations = self._get_durations()
         for leave in self:
