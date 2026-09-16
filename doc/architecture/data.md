@@ -169,9 +169,16 @@ The question to ask of any change: *if these disagreed, which one wins?*
 - **Replica topology.** There is a read-only replica path with a breaker —
   `libs/breaker.py` owns the mechanism, `db/replica.py` the policy
   (`ReplicaRouter`, and `REPLICA_RETRY_TIME`, the cooldown ceiling it
-  constructs the breaker with).
-  Which data may be read from a replica, and the staleness window, are not
-  described here.
+  constructs the breaker with). Two facts about what a replica read may
+  return *are* settled, because the router enforces them: the staleness
+  window is bounded by `db_replica_max_lag` (apply lag, sampled; a standby
+  with WAL outstanding and nothing replayed yet counts as infinitely
+  behind), and a session reads its own writes — for `db_replica_write_pin`
+  seconds after a transaction of its own assigned a transaction id, its
+  read-only requests go to the primary (`WritePins`, keyed by the session id
+  the http layer passes). Which data is *appropriate* to read from a
+  replica beyond that — a route's `readonly=True` — is the route author's
+  claim, not this view's.
 - **Retention.** Nothing here says how long sessions, attachments or log-like
   tables are kept.
 - **Encryption at rest**, for any of the four stores.
