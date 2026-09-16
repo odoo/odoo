@@ -340,6 +340,14 @@ def render_prometheus_exposition() -> str:
                 help="Live prefork worker processes.",
                 labels={"type": kind},
             )
+        for outcome, count in (svc.get("worker_exits") or {}).items():
+            exp.add(
+                "odoo_worker_exits_total",
+                count,
+                kind="counter",
+                help="Worker exits since the master started, by outcome.",
+                labels={"outcome": outcome},
+            )
         for kind, count in (svc.get("threads") or {}).items():
             exp.add(
                 "odoo_threads",
@@ -376,6 +384,14 @@ def render_prometheus_exposition() -> str:
         ):
             if key in svc:
                 exp.add(name, svc[key], help=help_text)
+        if "overruns_cancelled" in svc:
+            exp.add(
+                "odoo_overruns_cancelled_total",
+                svc["overruns_cancelled"],
+                kind="counter",
+                help="Requests, sweeps and jobs over their wall-clock budget whose "
+                "queries were cancelled, since the process started.",
+            )
 
     try:
         pools = db.get_pool_health()

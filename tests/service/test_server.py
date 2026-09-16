@@ -889,6 +889,49 @@ class TestLongPollingPopenReconciliation:
         )
 
 
+class TestWorkerExitsAreCountedByOutcome:
+    @staticmethod
+    def _exit(prefork_server, pid, status, *, ready=True, killed=False, age_s=60.0):
+        w = MagicMock()
+        w.__class__.__name__ = "WorkerHTTP"
+        w.spawn_time = time.monotonic() - age_s
+        w.ready = ready
+        if killed:
+            prefork_server._killed_workers[pid] = w
+        else:
+            prefork_server.workers[pid] = w
+        prefork_server._record_worker_exit(pid, status)
+
+    @pytest.mark.parametrize(
+        ("status", "kwargs", "outcome"),
+        [
+            (0, {}, "clean"),
+            (3 << 8, {}, "crash"),
+            (signal.SIGSEGV, {}, "crash"),
+            (signal.SIGTERM, {}, "terminated"),
+            (signal.SIGKILL, {"killed": True, "ready": True}, "timeout"),
+            (signal.SIGKILL, {"killed": True, "ready": False}, "crash"),
+        ],
+    )
+    def test_each_exit_lands_in_one_bucket(
+        self, prefork_server, status, kwargs, outcome
+    ):
+        self._exit(prefork_server, 100, status, **kwargs)
+        counts = prefork_server._get_census()["worker_exits"]
+        assert counts[outcome] == 1
+        assert sum(counts.values()) == 1
+
+    def test_the_count_survives_the_healthy_lifetime_short_cut(self, prefork_server):
+        self._exit(prefork_server, 1, 1 << 8, age_s=0.0)
+        self._exit(prefork_server, 2, 1 << 8, age_s=600.0)
+        assert prefork_server._get_census()["worker_exits"]["crash"] == 2
+
+    def test_a_generation_exit_is_not_a_worker_exit(self, prefork_server):
+        prefork_server.handoff.replacement = MagicMock(pid=777)
+        prefork_server._record_worker_exit(777, 0)
+        assert sum(prefork_server._get_census()["worker_exits"].values()) == 0
+
+
 class TestPreforkRespawnBackoff:
     @staticmethod
     def _worker(prefork_server, pid, *, age_s):

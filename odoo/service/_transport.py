@@ -250,8 +250,9 @@ def _reset_request_attributes() -> None:
     worker = current_worker_thread()
     worker.rpc_model_method = ""
     worker.request_line = ""
-    if hasattr(worker, "query_count"):
-        del worker.query_count
+    for attr in ("query_count", "request_id"):
+        if hasattr(worker, attr):
+            delattr(worker, attr)
 
 
 @dataclass(frozen=True, slots=True)

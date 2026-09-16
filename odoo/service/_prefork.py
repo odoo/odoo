@@ -61,6 +61,19 @@ def _read_process_title(pid: int) -> str:
     return words.removeprefix("odoo: ") if words.startswith("odoo: ") else ""
 
 
+_EXIT_OUTCOMES = ("clean", "terminated", "timeout", "crash")
+
+
+def _get_exit_outcome(status: int, *, policy_kill: bool) -> str:
+    if os.WIFEXITED(status):
+        return "clean" if os.WEXITSTATUS(status) == 0 else "crash"
+    if policy_kill:
+        return "timeout"
+    if os.WIFSIGNALED(status) and os.WTERMSIG(status) == signal.SIGTERM:
+        return "terminated"
+    return "crash"
+
+
 class RespawnHold:
     """How long one population's respawn waits after consecutive early deaths."""
 
@@ -109,6 +122,7 @@ class PreforkServer(CommonServer):
             },
             "worker_population": self.population,
             "worker_generation": self.generation,
+            "worker_exits": dict(self._exits),
             "long_polling_alive": self.long_polling_pid is not None,
         }
 
@@ -137,6 +151,9 @@ class PreforkServer(CommonServer):
         self.workers_job: dict[int, WorkerJob] = {}
         self.workers: dict[int, Worker] = {}
         self._killed_workers: dict[int, Worker] = {}
+        # Worker exits since start by outcome, for the census and /metrics:
+        # a crash loop reads as a rising `crash` next to a flat `clean`.
+        self._exits: dict[str, int] = dict.fromkeys(_EXIT_OUTCOMES, 0)
         self._retiring_workers: set[int] = set()
         self.generation = 0
         self.queue: deque[int] = deque()
@@ -451,12 +468,15 @@ class PreforkServer(CommonServer):
             # back off from; the same kill on a worker that never got there
             # is a worker that hangs at boot, which is what the back-off is for.
             policy_kill = killed_by_master and bool(worker.ready)
+        outcome = _get_exit_outcome(status, policy_kill=policy_kill)
+        self._exits[outcome] += 1
         _debug.lifecycle(
             "prefork.worker_exited",
             kind=name,
             pid=pid,
             lifetime_s=lifetime,
             status=status,
+            outcome=outcome,
         )
         hold = self._get_respawn_hold(name)
         if lifetime >= WORKER_MIN_HEALTHY_LIFETIME_S:
@@ -472,11 +492,7 @@ class PreforkServer(CommonServer):
             self._get_respawn_hold(SPAWN_HOLD).clear()
             return
         exited_nonzero = os.WIFEXITED(status) and os.WEXITSTATUS(status) != 0
-        crashed_by_signal = (
-            os.WIFSIGNALED(status)
-            and os.WTERMSIG(status) != signal.SIGTERM
-            and not policy_kill
-        )
+        crashed_by_signal = outcome == "crash" and not exited_nonzero
         _debug.logic(
             "prefork.early_exit",
             kind=name,

@@ -87,6 +87,7 @@ class TestServiceMetrics:
             workers_job={},
             population=4,
             generation=17,
+            _exits={"clean": 2, "crash": 1},
             long_polling_pid=999,
             pid=pid,
             _census=WorkerCensus(pid),
@@ -101,7 +102,22 @@ class TestServiceMetrics:
         assert out["workers"] == {"http": 2, "cron": 1, "job": 0}
         assert out["worker_population"] == 4
         assert out["worker_generation"] == 17
+        assert out["worker_exits"] == {"clean": 2, "crash": 1}
         assert out["long_polling_alive"] is True
+
+    def test_worker_exits_render_as_one_counter_family_by_outcome(self, mod):
+        server = self._prefork(os.getpid())
+        with patch.object(_process_state, "server", server):
+            text = mod.render_prometheus_exposition()
+        assert "# TYPE odoo_worker_exits_total counter" in text
+        assert re.search(
+            r'odoo_worker_exits_total\{[^}]*outcome="clean"[^}]*\} 2', text
+        )
+        assert re.search(
+            r'odoo_worker_exits_total\{[^}]*outcome="crash"[^}]*\} 1', text
+        )
+        _, errors = parse_exposition(text)
+        assert not errors, errors
 
     def test_forked_worker_omits_the_master_only_gauges(self, mod):
         server = self._prefork(os.getpid() + 1)
@@ -113,6 +129,7 @@ class TestServiceMetrics:
             "workers",
             "worker_population",
             "worker_generation",
+            "worker_exits",
             "long_polling_alive",
         ):
             assert key not in out, f"{key} is master-only but a worker emitted it"
@@ -123,6 +140,7 @@ class TestServiceMetrics:
             "odoo_workers",
             "odoo_worker_population",
             "odoo_worker_generation",
+            "odoo_worker_exits_total",
             "odoo_long_polling_alive",
         ):
             assert family not in text
@@ -144,6 +162,7 @@ class TestServiceMetrics:
         assert out["flavor"] == "threaded"
         assert out["http_threads_max"] == 31
         assert out["threads"]["http"] >= 1
+        assert out["overruns_cancelled"] == 0
         assert set(out["threads"]) == {"http", "cron", "job", "websocket"}, (
             "websocket threads are long-lived and hold a thread and a "
             "connection each; they are exempt from check_limits, not from "
@@ -153,6 +172,19 @@ class TestServiceMetrics:
 
 class TestEveryServerAnswersForItself:
     """`get_service_metrics` asks the server; it no longer recognises one."""
+
+    def test_threaded_counts_the_overruns_it_cancelled(self, mod):
+        server = threaded_server()
+        server.httpd = MagicMock(max_http_threads=31)
+        server.limits_reached_threads = set()
+        server._overrun_start_times = {}
+        server._overruns_cancelled = 5
+        with patch.object(_process_state, "server", server):
+            text = mod.render_prometheus_exposition()
+        assert "# TYPE odoo_overruns_cancelled_total counter" in text
+        assert "odoo_overruns_cancelled_total{" in text
+        _, errors = parse_exposition(text)
+        assert not errors, errors
 
     def test_each_flavour_names_itself(self):
         from odoo.service._prefork import PreforkServer

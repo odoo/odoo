@@ -127,6 +127,7 @@ class ThreadedServer(CommonServer):
         self.limits_reached_threads: set[threading.Thread] = set()
         self._overrun_start_times: dict[threading.Thread, float] = {}
         self._cancelled_overruns: dict[threading.Thread, float] = {}
+        self._overruns_cancelled = 0
         self.limit_reached_time: float | None = None
         self._stop_after_init = False
         self._listener_threads: list[threading.Thread] = []
@@ -137,6 +138,7 @@ class ThreadedServer(CommonServer):
         return {
             **_get_http_server_metrics(self.httpd),
             "limits_reached_threads": len(self.limits_reached_threads),
+            "overruns_cancelled": self._overruns_cancelled,
         }
 
     def signal_handler(self, sig: int, frame: Any) -> None:
@@ -197,6 +199,7 @@ class ThreadedServer(CommonServer):
                 # an error instead of the whole server reloading under
                 # everyone.
                 self._cancelled_overruns[thread] = start_time
+                self._overruns_cancelled += 1
                 cancelled = self._cancel_thread_queries(thread)
                 self.logger.warning(
                     "Thread %s real time limit (%.1f/%ds) reached%s; cancelled "
