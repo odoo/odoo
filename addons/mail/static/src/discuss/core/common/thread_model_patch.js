@@ -13,6 +13,15 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
+        this.onChange(
+            () => [this.channel],
+            (channel) => {
+                if (!channel) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
         this.channel = fields.One("discuss.channel", {
             inverse: "thread",
             /** @this {import("models").Thread} */

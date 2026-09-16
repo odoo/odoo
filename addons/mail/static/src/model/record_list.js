@@ -43,7 +43,6 @@ export class RecordList extends Array {
                     recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 if (inverse) {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
@@ -75,7 +74,6 @@ export class RecordList extends Array {
                 return;
             }
             record._.uses.delete(recordList);
-            store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
             const inverse = recordList._.getInverse();
             if (inverse) {
                 store._.updateFields(record, { [inverse]: [["DELETE", recordList._.owner]] });
@@ -95,7 +93,6 @@ export class RecordList extends Array {
                     recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 if (inverse) {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
@@ -130,7 +127,6 @@ export class RecordList extends Array {
             const inverse = recordList._.getInverse();
             for (const oldRecord of oldRecords) {
                 oldRecord._.uses.delete(recordList);
-                store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, oldRecord);
                 if (inverse) {
                     store._.updateFields(oldRecord, {
                         [inverse]: [["DELETE", recordList._.owner]],
@@ -140,7 +136,6 @@ export class RecordList extends Array {
             for (const newRecordProxy of newRecordsProxy) {
                 const newRecord = newRecordProxy._raw;
                 newRecord._.uses.add(recordList);
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
                 if (inverse) {
                     store._.updateFields(newRecord, { [inverse]: [["ADD", recordList._.owner]] });
                 }
