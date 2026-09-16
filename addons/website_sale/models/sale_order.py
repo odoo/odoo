@@ -972,12 +972,19 @@ class SaleOrder(models.Model):
         if request:
             request.session["website_sale_cart_quantity"] = self.cart_quantity
 
-    def _verify_cart(self):
-        """Check cart content and clear outdated/invalid lines."""
-        self.ensure_one()
+    def _cleanup_cart(self, *, force_update_checks=False):
+        """Check the cart content and clear the lines that are no longer valid.
 
-        # Remove lines with inactive products
-        self.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+        :param bool force_update_checks: Whether to run the post-update checks even if no line
+            was removed, e.g. on a revived cart.
+        :rtype: None
+        """
+        self.ensure_one()
+        invalid_lines = self.order_line.filtered(lambda sol: sol._is_invalid_line())
+        invalid_lines.unlink()
+
+        if invalid_lines or force_update_checks:
+            self._verify_cart_after_update()
 
     def _cart_accessories(self):
         """Suggest accessories based on 'Accessory Products' of products in cart."""

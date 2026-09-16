@@ -19,14 +19,6 @@ class SaleOrderLine(models.Model):
         """ Override of `website_sale` to hide the strikethrough price for events. """
         return super()._should_show_strikethrough_price() and not self.event_id
 
-    def _is_reorder_allowed(self):
-        return not self.event_id and super()._is_reorder_allowed()
-
-    def _is_sellable(self):
-        """Override of `website_sale` to flag ticket lines and the additional products as not sellable.
-        This avoid having the cart update button for these lines.
-        """
-        return super()._is_sellable() and (
-            self.product_id.service_tracking != 'event' and
-            self.linked_line_id.product_id.service_tracking != 'event'
-        )
+    def _is_custom_cart_line(self):
+        # Event ticket lines should not be modified during the ecommerce checkout.
+        return super()._is_custom_cart_line() or bool(self.event_id) or bool(self.event_ticket_id)
