@@ -1,7 +1,5 @@
 /* global posmodel */
 
-import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-
 export function clickNextOrder() {
     return [
         ...isContinueEnabled(),
@@ -408,7 +406,7 @@ export function clickEmailButton() {
 export function emailIsSuccessful() {
     return [
         {
-            trigger: `.modal-body .notice .text-success`,
+            trigger: `.o_notification_manager .o_notification_progress`,
         },
     ];
 }
@@ -419,7 +417,6 @@ export function sendEmail(email, expectSuccess = true) {
         ...setEmail(email),
         ...clickEmailButton(),
         ...(expectSuccess ? emailIsSuccessful() : []),
-        Dialog.cancel(),
     ];
 }
 
