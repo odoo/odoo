@@ -80,6 +80,55 @@ def test_source_watcher_survives_successful_and_rejected_reloads(server, tmp_pat
 
 @requires_pg
 @requires_posix
+def test_a_threaded_dev_reload_reexecs_on_a_python_edit_and_refuses_nothing(
+    server, tmp_path
+):
+    addon = tmp_path / "addons" / "service_threaded_watcher_probe"
+    addon.mkdir(parents=True)
+    watched = tmp_path / "watched"
+    watched.mkdir()
+    source = watched / "change.py"
+    source.write_text("value = 0\n")
+    (addon / "__manifest__.py").write_text(
+        "{'name': 'Threaded watcher probe', 'license': 'LGPL-3', 'depends': ['base']}\n"
+    )
+    (addon / "__init__.py").write_text(
+        "import os\nfrom odoo.service import _watcher\n"
+        "_watcher.FSWatcherBase.get_watch_paths = staticmethod(\n"
+        "    lambda: [os.environ['SERVICE_WATCH_ROOT']])\n"
+    )
+    paths = f"{REPO_ROOT / 'odoo/addons'},{REPO_ROOT / 'addons'},{addon.parent}"
+    srv = server(
+        "--workers",
+        "0",
+        "--dev",
+        "reload",
+        "--load",
+        "web,service_threaded_watcher_probe",
+        "--addons-path",
+        paths,
+        env={"SERVICE_WATCH_ROOT": str(watched)},
+    )
+    assert srv.wait_until(lambda: "AutoReload watcher running" in srv.log_text())
+    with Poller(srv.port) as poller:
+        time.sleep(0.5)
+        source.write_text("value = 1\n")
+        assert srv.wait_until(
+            lambda: (
+                "inherited from the server this one replaced" in srv.log_text()
+                and srv.log_text().count("AutoReload watcher running") == 2
+                and srv.is_serving(3)
+            ),
+            timeout=RELOAD_TIMEOUT_S,
+        ), srv.log_text()[-2000:]
+    assert poller.refused == 0 and not poller.other, (poller.refused, poller.other)
+    assert poller.served > 0
+    assert srv.proc.poll() is None, "the re-exec keeps the pid the fixture holds"
+    assert "Initiating server reload" in srv.log_text()
+
+
+@requires_pg
+@requires_posix
 def test_worker_respawn_continues_while_replacement_preload_waits(server, tmp_path):
     addon = tmp_path / "addons" / "service_waiting_preload_probe"
     addon.mkdir(parents=True)
