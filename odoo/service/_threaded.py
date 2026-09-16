@@ -78,6 +78,19 @@ they were invisible while the two lists were one.
 
 _SIGXCPU_EXIT_CODE = 128 + getattr(signal, "SIGXCPU", 24)
 
+
+def _get_http_server_metrics(httpd: ThreadedHTTPServer | None) -> dict[str, Any]:
+    by_type: dict[str, int] = {}
+    for thread in threading.enumerate():
+        kind = getattr(thread, "type", None)
+        if kind in _REPORTED_THREAD_TYPES:
+            by_type[kind] = by_type.get(kind, 0) + 1
+    return {
+        "threads": {k: by_type.get(k, 0) for k in _REPORTED_THREAD_TYPES},
+        "http_threads_max": httpd.max_http_threads if httpd else 0,
+    }
+
+
 _CONSOLE_EVENT_SIGNALS = {
     0: signal.SIGINT,  # CTRL_C_EVENT
     1: signal.SIGINT,  # CTRL_BREAK_EVENT
@@ -104,14 +117,8 @@ class ThreadedServer(CommonServer):
         self._listener_stop_pipe: tuple[int, int] | None = None
 
     def get_metrics(self) -> dict[str, Any]:
-        by_type: dict[str, int] = {}
-        for thread in threading.enumerate():
-            kind = getattr(thread, "type", None)
-            if kind in _REPORTED_THREAD_TYPES:
-                by_type[kind] = by_type.get(kind, 0) + 1
         return {
-            "threads": {k: by_type.get(k, 0) for k in _REPORTED_THREAD_TYPES},
-            "http_threads_max": self.httpd.max_http_threads if self.httpd else 0,
+            **_get_http_server_metrics(self.httpd),
             "limits_reached_threads": len(self.limits_reached_threads),
         }
 
@@ -698,6 +705,11 @@ class EventServer(CommonServer):
 
     def get_memory_soft_limit(self) -> int:
         return self.settings.limit_memory_soft_gevent or self.settings.limit_memory_soft
+
+    def get_metrics(self) -> dict[str, Any]:
+        # The same pool as the threaded server, on the websocket port: an
+        # operator wants its long-lived websocket threads counted too.
+        return _get_http_server_metrics(self.httpd)
 
     def check_limits(self) -> None:
         Registry._evict_idle_registries()

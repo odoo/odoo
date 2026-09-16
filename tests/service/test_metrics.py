@@ -179,17 +179,19 @@ class TestEveryServerAnswersForItself:
         _, errors = parse_exposition(text)
         assert not errors, errors
 
-    def test_the_evented_server_does_not_claim_thread_metrics(self, mod):
-
+    def test_the_evented_server_reports_its_pool_but_no_time_limits(self, mod):
+        """It runs the same threaded HTTP server as --workers 0, so its
+        threads are real; it has no limit monitor, so that count is not."""
         server = event_server()
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
         assert out["flavor"] == "evented"
-        for key in ("threads", "http_threads_max", "limits_reached_threads"):
-            assert key not in out, (
-                f"the evented server has no {key}; reporting one as zero is a "
-                f"number an operator can act on and should not"
-            )
+        assert set(out["threads"]) == {"http", "cron", "job", "websocket"}
+        assert "http_threads_max" in out
+        assert "limits_reached_threads" not in out, (
+            "the evented server has no limit monitor; reporting its count as "
+            "zero is a number an operator can act on and should not"
+        )
 
 
 class TestPrometheusExposition:
@@ -414,6 +416,23 @@ class TestReportingAndRecyclingAreDifferentQuestions:
         finally:
             stop.set()
             ws.join()
+
+    def test_the_evented_port_counts_its_threads_too(self, mod):
+        import threading
+
+        server = event_server(httpd=MagicMock(max_http_threads=7))
+        stop = threading.Event()
+        ws = threading.Thread(target=stop.wait, args=(10,), daemon=True)
+        ws.type = "websocket"
+        ws.start()
+        try:
+            out = server.get_metrics()
+        finally:
+            stop.set()
+            ws.join()
+        assert out["threads"]["websocket"] >= 1
+        assert out["http_threads_max"] == 7
+        assert "limits_reached_threads" not in out
 
     def test_websocket_threads_are_never_time_limited(self):
         from odoo.service import _threaded
