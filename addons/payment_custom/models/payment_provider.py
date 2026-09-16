@@ -99,7 +99,7 @@ class PaymentProvider(models.Model):
         res["custom_mode"] = None
         return res
 
-    def _transfer_ensure_pending_msg_is_set(self):
+    def _transfer_update_missing_pending_msg(self):
         transfer_providers_without_msg = self.filtered(
             lambda p: p.custom_mode == "wire_transfer" and not p.pending_msg
         )

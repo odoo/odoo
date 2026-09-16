@@ -50,7 +50,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
                 "company_id": self.env.company.id,
             }
         )
-        transfer_provider._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_update_missing_pending_msg()
 
         large_cabinet = self.env["product.product"].create(
             {

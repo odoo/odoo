@@ -15,7 +15,7 @@ class TestUi(odoo.tests.HttpCase):
                 "is_published": True,
             }
         )
-        transfer_provider._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_update_missing_pending_msg()
 
         self.env.ref("base.partner_admin").write(
             {

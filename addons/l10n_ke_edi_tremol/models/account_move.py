@@ -70,7 +70,7 @@ class AccountMove(models.Model):
     # CHECKS
     # -------------------------------------------------------------------------
 
-    def _l10n_ke_validate_move(self):
+    def _l10n_ke_get_move_errors(self):
         """Returns list of errors related to misconfigurations per move
 
         Find misconfigurations on the move, the lines of the move, and the
@@ -407,7 +407,7 @@ class AccountMove(models.Model):
                 )
             )
         # Check the configuration of the invoice
-        errors = self._l10n_ke_validate_move()
+        errors = self._l10n_ke_get_move_errors()
         if errors:
             error_msg = ""
             for move, error_list in errors:

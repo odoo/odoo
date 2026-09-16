@@ -33,7 +33,7 @@ class StockPickingBatch(models.Model):
 
         self.picking_ids.with_context(
             l10n_ro_edi_stock_validate_carrier=True
-        )._l10n_ro_edi_stock_validate_carrier()
+        )._l10n_ro_edi_stock_check_carrier()
 
         # Carrier should be the same on all pickings
         first_carrier = self.picking_ids[0].carrier_id
@@ -56,7 +56,7 @@ class StockPickingBatch(models.Model):
 
         return super().action_done()
 
-    def _l10n_ro_edi_stock_validate_fetch_data(self, errors=None):
+    def _l10n_ro_edi_stock_get_fetch_data_errors(self, errors=None):
         if errors is None:
             errors = []
         self.check_singleton()
@@ -190,7 +190,7 @@ class StockPickingBatch(models.Model):
             "l10n_ro_edi_stock_document_uit": self.l10n_ro_edi_stock_document_uit,
         }
 
-        if errors := self.env["stock.picking"]._l10n_ro_edi_stock_validate_data(
+        if errors := self.env["stock.picking"]._l10n_ro_edi_stock_get_data_errors(
             data=data
         ):
             self._l10n_ro_edi_stock_get_all_documents("stock_sending_failed").unlink()
@@ -272,7 +272,7 @@ class StockPickingBatch(models.Model):
                 lambda doc: doc.state == "stock_sent"
             )[0]
 
-            if errors := batch._l10n_ro_edi_stock_validate_fetch_data():
+            if errors := batch._l10n_ro_edi_stock_get_fetch_data_errors():
                 documents_to_delete |= batch._l10n_ro_edi_stock_get_all_documents(
                     "stock_sending_failed"
                 )

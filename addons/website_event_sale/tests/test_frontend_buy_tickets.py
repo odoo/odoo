@@ -110,7 +110,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
                 "is_published": True,
             }
         )
-        transfer_provider._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_update_missing_pending_msg()
 
         self.start_tour("/", "event_buy_tickets", login="admin")
 
@@ -125,7 +125,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
                 "is_published": True,
             }
         )
-        transfer_provider._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_update_missing_pending_msg()
 
         self.env["product.pricelist"].create({"name": "Public Pricelist"})
 
@@ -139,7 +139,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
                 "is_published": True,
             }
         )
-        transfer_provider._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_update_missing_pending_msg()
 
         self.start_tour("/", "event_buy_last_ticket")
 

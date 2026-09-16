@@ -15,7 +15,7 @@ class Picking(models.Model):
             )
 
     @api.model
-    def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
+    def _l10n_ro_edi_stock_is_carrier_check_required(self, picking):
         # OVERRIDE l10n_ro_edi_stock
 
         # Override for when the batch picking calls this function to validate the carriers

@@ -50,13 +50,13 @@ class Picking(models.Model):
 
         # Validate the carrier first because it cannot be changed after the super call
         _debug.pipeline("etransport_picking_validate", pickings=self)
-        self._l10n_ro_edi_stock_validate_carrier()
+        self._l10n_ro_edi_stock_check_carrier()
 
         return super().button_validate()
 
-    def _l10n_ro_edi_stock_validate_carrier(self):
+    def _l10n_ro_edi_stock_check_carrier(self):
         _debug.logic("etransport_validate_carrier", pickings=self)
-        for picking in self.filtered(self._l10n_ro_edi_stock_validate_carrier_filter):
+        for picking in self.filtered(self._l10n_ro_edi_stock_is_carrier_check_required):
             # validate carrier
             if not picking.carrier_id:
                 raise UserError(
@@ -76,12 +76,12 @@ class Picking(models.Model):
                 )
 
     @api.model
-    def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
+    def _l10n_ro_edi_stock_is_carrier_check_required(self, picking):
         # To be overridden by stock.picking.batch
         return picking.l10n_ro_edi_stock_enable
 
     @api.model
-    def _l10n_ro_edi_stock_validate_data(self, data: dict):
+    def _l10n_ro_edi_stock_get_data_errors(self, data: dict):
         _debug.logic("edi_delivery_validate", regime="ro", pickings=self)
         errors = []
 
@@ -261,7 +261,7 @@ class Picking(models.Model):
 
         return errors
 
-    def _l10n_ro_edi_stock_validate_fetch_data(self, errors=None):
+    def _l10n_ro_edi_stock_get_fetch_data_errors(self, errors=None):
         _debug.logic("etransport_validate_fetch", pickings=self)
         if errors is None:
             errors = []
@@ -397,7 +397,7 @@ class Picking(models.Model):
             "l10n_ro_edi_stock_document_uit": self.l10n_ro_edi_stock_document_uit,
         }
 
-        if errors := self._l10n_ro_edi_stock_validate_data(data=data):
+        if errors := self._l10n_ro_edi_stock_get_data_errors(data=data):
             document_values = {"message": "\n".join(errors)}
 
             if send_type == "amend":
@@ -472,7 +472,7 @@ class Picking(models.Model):
                 lambda doc: doc.state == "stock_sent"
             )[0]
 
-            if errors := picking._l10n_ro_edi_stock_validate_fetch_data():
+            if errors := picking._l10n_ro_edi_stock_get_fetch_data_errors():
                 picking._l10n_ro_edi_stock_create_document_stock_sending_failed(
                     {
                         "message": "\n".join(errors),

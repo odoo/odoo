@@ -119,7 +119,7 @@ class TestIndexPlan(MaterializedCase):
 
     def test_ensure_indexes_is_idempotent(self):
         before = self._indexes()
-        self.report._relation_ensure_indexes()
+        self.report._relation_create_indexes()
         self.assertEqual(self._indexes(), before)
 
     def test_ensure_indexes_drops_a_legacy_index_left_by_an_older_version(self):
@@ -131,7 +131,7 @@ class TestIndexPlan(MaterializedCase):
             )
         )
         self.assertIn(f"id_{self.table}", self._indexes())
-        self.report._relation_ensure_indexes()
+        self.report._relation_create_indexes()
         self.assertNotIn(f"id_{self.table}", self._indexes())
         self.assertIn(f"{self.table}__grain_uidx", self._indexes())
 

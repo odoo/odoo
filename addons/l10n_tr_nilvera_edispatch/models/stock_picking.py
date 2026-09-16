@@ -116,7 +116,7 @@ class StockPicking(models.Model):
                 and picking.state in {"assigned", "done"}
             ):
                 picking.l10n_tr_nilvera_edispatch_warnings = (
-                    picking._l10n_tr_validate_edispatch_fields()
+                    picking._l10n_tr_get_edispatch_field_errors()
                 )
             else:
                 picking.l10n_tr_nilvera_edispatch_warnings = False
@@ -141,7 +141,7 @@ class StockPicking(models.Model):
                 )
         return res
 
-    def _l10n_tr_validate_edispatch_on_done(self):
+    def _l10n_tr_get_edispatch_errors_on_done(self):
         _debug.logic("edispatch_validate_on_done", pickings=self)
         partners = (
             self.company_id.partner_id
@@ -153,7 +153,7 @@ class StockPicking(models.Model):
             | self.l10n_tr_nilvera_buyer_originator_id
         )
 
-        error_messages = partners._l10n_tr_nilvera_validate_partner_details()
+        error_messages = partners._l10n_tr_nilvera_get_partner_detail_errors()
 
         if self.l10n_tr_nilvera_dispatch_type == "MATBUDAN":
             if not self.l10n_tr_nilvera_delivery_date:
@@ -230,7 +230,7 @@ class StockPicking(models.Model):
 
         return error_messages or False
 
-    def _l10n_tr_validate_edispatch_fields(self):
+    def _l10n_tr_get_edispatch_field_errors(self):
         _debug.logic("edi_delivery_validate", regime="tr", pickings=self)
         self.check_singleton()
         if self.state not in {"assigned", "done"}:
@@ -250,7 +250,7 @@ class StockPicking(models.Model):
                 }
             }
         if self.state == "done":
-            return self._l10n_tr_validate_edispatch_on_done()
+            return self._l10n_tr_get_edispatch_errors_on_done()
 
     def _l10n_tr_generate_edispatch_xml(self):
         _debug.pipeline("edi_delivery_send", regime="tr", pickings=self)
@@ -319,7 +319,7 @@ class StockPicking(models.Model):
         errors = []
         for picking in self:
             if picking.country_code == "TR" and picking.picking_type_code == "outgoing":
-                if picking._l10n_tr_validate_edispatch_fields():
+                if picking._l10n_tr_get_edispatch_field_errors():
                     errors.append(picking.name)
                 else:
                     picking._l10n_tr_generate_edispatch_xml()

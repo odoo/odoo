@@ -6058,8 +6058,8 @@ class AccountMove(models.Model):
                 )
 
     @_debug.perf.timed
-    def _post_validate(self, posting_now=True):
-        _debug.lifecycle("_post_validate", records=self)
+    def _check_before_post(self, posting_now=True):
+        _debug.lifecycle("_check_before_post", records=self)
         validation_msgs = set()
 
         self._check_post_invoices(validation_msgs)
@@ -6069,7 +6069,7 @@ class AccountMove(models.Model):
 
         if validation_msgs:
             _debug.logic(
-                "_post_validate",
+                "_check_before_post",
                 refused=self,
                 validation_msgs_count=len(validation_msgs),
             )
@@ -6204,7 +6204,7 @@ class AccountMove(models.Model):
             "_post_defer_future_moves_deferring_auto_post_date",
             future_moves=future_moves,
         )
-        future_moves._post_validate(posting_now=False)
+        future_moves._check_before_post(posting_now=False)
         future_moves.filtered(lambda move: move.auto_post == "no").auto_post = "at_date"
         future_moves._message_log_batch(
             bodies={
@@ -6295,7 +6295,7 @@ class AccountMove(models.Model):
     @_debug.perf.timed
     def _post_entries(self):
         _debug.lifecycle("_post_entries", records=self)
-        self._post_validate()
+        self._check_before_post()
 
         self._post_update_accounting_dates()
         self.line_ids._create_analytic_lines()

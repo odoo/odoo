@@ -91,7 +91,7 @@ class TestCustomProviderFlows(PaymentCustomCommon):
         """The ensure hook only recomputes providers lacking a message."""
         self.provider.pending_msg = False
 
-        self.provider._transfer_ensure_pending_msg_is_set()
+        self.provider._transfer_update_missing_pending_msg()
 
         # Without account_payment_provider the delegated recompute is a no-op, so the
         # observable contract here is "selected and delegated without error".

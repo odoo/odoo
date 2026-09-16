@@ -433,7 +433,7 @@ class L10nInEwaybill(models.Model):
             self.partner_ship_from_id,
         }
         for partner in partners:
-            error_message += self._l10n_in_validate_partner(partner)
+            error_message += self._l10n_in_get_partner_errors(partner)
         return error_message
 
     def _check_state(self):
@@ -452,7 +452,7 @@ class L10nInEwaybill(models.Model):
         return error_message
 
     @api.model
-    def _l10n_in_validate_partner(self, partner):
+    def _l10n_in_get_partner_errors(self, partner):
         """
         Validation method for Ewaybill (different from EDI)
         """

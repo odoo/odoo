@@ -305,7 +305,7 @@ class MixinMaterializedView(models.AbstractModel):
         if self._relation_needs_rebuild(with_data=with_data):
             self._create_relation(with_data=with_data)
         else:
-            self._relation_ensure_indexes()
+            self._relation_create_indexes()
 
     def _relation_prepare_schema(self) -> None:
         """Hook for DDL this relation depends on — functions, types, extensions.
@@ -451,7 +451,7 @@ class MixinMaterializedView(models.AbstractModel):
                 self._table,
             )
 
-        self._relation_ensure_indexes(index_cols)
+        self._relation_create_indexes(index_cols)
 
         # Stamp the definition hash so later init() calls can recognize an
         # up-to-date relation and skip the rebuild.
@@ -483,7 +483,7 @@ class MixinMaterializedView(models.AbstractModel):
             )
         )
 
-    def _relation_ensure_indexes(self, index_cols=None) -> None:
+    def _relation_create_indexes(self, index_cols=None) -> None:
         """Create the unique index, an ``id`` index, and any extras — idempotently.
 
         The ``id`` index is not optional.  Every ORM read of a report ends in

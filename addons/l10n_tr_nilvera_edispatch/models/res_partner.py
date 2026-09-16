@@ -13,7 +13,7 @@ class ResPartner(models.Model):
         help="The postal code of the customs office used to ship to the destination country.",
     )
 
-    def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False):
+    def _l10n_tr_nilvera_get_partner_detail_errors(self, is_delivery_partner=False):
         _debug.logic(
             "edispatch_partner_validate", partners=self, delivery=is_delivery_partner
         )

@@ -149,8 +149,8 @@ class AccountMove(models.Model):
 
     def download_l10n_jo_edi_computed_xml(self):
         if (
-            error_message := self._l10n_jo_validate_config()
-            or self._l10n_jo_validate_fields()
+            error_message := self._l10n_jo_get_config_errors()
+            or self._l10n_jo_get_field_errors()
         ):
             raise ValidationError(
                 _("The following errors have to be fixed in order to create an XML:\n")
@@ -302,7 +302,7 @@ class AccountMove(models.Model):
     def _l10n_jo_edi_get_xml_attachment_name(self):
         return f"{self.name.replace('/', '_')}_edi.xml"
 
-    def _l10n_jo_validate_config(self):
+    def _l10n_jo_get_config_errors(self):
         error_msgs = []
         if not self.sudo().company_id.l10n_jo_edi_client_identifier:
             error_msgs.append(_("Client ID is missing."))
@@ -321,7 +321,7 @@ class AccountMove(models.Model):
                 "\n".join(error_msgs),
             )
 
-    def _l10n_jo_validate_fields(self):
+    def _l10n_jo_get_field_errors(self):
         def has_non_digit_vat(partner, partner_type, error_msgs):
             if partner.vat and not partner.vat.isdigit():
                 error_msgs.append(
@@ -426,8 +426,8 @@ class AccountMove(models.Model):
         ):
             return None
         if (
-            error_message := self._l10n_jo_validate_config()
-            or self._l10n_jo_validate_fields()
+            error_message := self._l10n_jo_get_config_errors()
+            or self._l10n_jo_get_field_errors()
             or self._submit_to_jofotara()
         ):
             self.l10n_jo_edi_error = error_message
