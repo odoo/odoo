@@ -6,7 +6,7 @@
             name="name">Generate or refresh account return for every companies</field>
         <field name="model_id" ref="model_account_return_type" />
         <field name="state">code</field>
-        <field name="code">model._cron_generate_or_refresh_all_returns()</field>
+        <field name="code">model._cron_sync_all_returns()</field>
         <field name="repeat_interval">1</field>
         <field name="repeat_unit">day</field>
         <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')" />
