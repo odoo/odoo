@@ -9,15 +9,16 @@ def migrate(cr, version):
     `project.project.user_id` is composed here from `employee_id.user_id`, and
     gains `direct_user_id` in this version for a manager who holds no employee
     record. Adding that dependency makes the ORM recompute the field for every
-    row, which would answer an empty employee with an empty manager -- and the
-    managers that answer describes are the majority: on the production database
-    read for this migration, 41 of 42 projects are managed by someone with no
-    employee in the project's company.
+    row, and the recompute answers an empty `employee_id` with an empty manager.
 
-    Their user is still in the column, because the compute has never been
-    triggered on those rows. This runs before the recompute and puts each one
-    where the new compute will find it, so the manager a project has today is the
-    manager it has tomorrow.
+    A project can carry a manager and no employee, because `user_id` was a plain
+    field before this module composed it and the compute has never been triggered
+    on those rows. Measured on the production database: of 42 projects, 41 name a
+    manager, 39 of those have no `employee_id` and would lose the manager on
+    upgrade. All 39 managers do hold an employee record, so they are matched to
+    it; none of them needs `direct_user_id` today. The field exists because a
+    manager is allowed to be a user with no employee, not because production has
+    one -- and the first statement below is what keeps such a manager when it does.
     """
     cr.execute("""
         ALTER TABLE project_project
