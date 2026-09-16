@@ -1,0 +1,39 @@
+// Fallbacks mirror the values set on the snippet markup, so resetting an
+// option restores the shipped look.
+$-references-carousel-gap: var(--references-carousel-gap, #{$spacer * 2});
+$-references-carousel-logo-height: var(--references-carousel-logo-height, 72px);
+
+.s_references_carousel {
+    @include o-marquee-animation('s_references_carousel');
+
+    .s_references_carousel_marquee_item {
+        gap: $-references-carousel-gap;
+        // The gap between a strip and its clone must be part of the strip
+        // width: the animation translates by -100%, which ignores the flex
+        // `gap` of the container (that made the frontend items overlap).
+        padding-inline-end: $-references-carousel-gap;
+    }
+
+    .s_references_carousel_item {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        // Fixed box so the strip width (and thus the animation) does not
+        // depend on the images being loaded. The landscape ratio suits the
+        // wordmarks most logos are, and keeps every cell the same size
+        // whatever the uploaded image.
+        height: $-references-carousel-logo-height;
+        width: calc(#{$-references-carousel-logo-height} * 2.5);
+        overflow: hidden;
+
+        img {
+            // Logos must stay whole and keep their ratio: unlike a photo, a
+            // cropped logo is a broken logo. Only caps, no explicit size, so a
+            // logo smaller than its cell is never upscaled into a blurry mess
+            // (same behavior as the other references snippets via `img-fluid`).
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+}
