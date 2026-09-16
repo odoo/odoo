@@ -200,7 +200,7 @@ set, and does nothing otherwise:
 
 | State | When |
 |---|---|
-| `READY=1` | the threaded server after its cron and job threads are spawned; the prefork master before its first supervision pass |
+| `READY=1` | the threaded server after its cron and job threads are spawned; the prefork master before its first supervision pass. The same moment logs one `Ready: <flavour>, pid …; <capacity>; <budgets>; limit_memory_soft …; db_maxconn …` line (`CommonServer.log_ready`) |
 | `RELOADING=1` + `MONOTONIC_USEC=` | a threaded `--dev=reload` re-exec, and a prefork SIGHUP, with `READY=1` again once the new generation serves |
 | `STOPPING=1` | the stop path of either flavour |
 | `WATCHDOG=1` | every supervision beat, at half the `WATCHDOG_USEC` interval when `WATCHDOG_PID` names this process |
