@@ -717,11 +717,14 @@ otherwise change costs twice:
 * ``# noqa`` is anchored to a **line**. Reflowing moves the diagnostic off the
   directive: the suppressed finding goes live and the orphaned directive is
   reported as ``RUF100``. Lint, format, then lint again.
-* Wrapping spends lines, and ``py_function_length.py`` ratchets excess over the
-  limit ``[ratchet pyfunclen]``, so a pure reformat can turn that gate red.
+* Wrapping spends lines. ``py_function_length.py`` ratcheted excess over the
+  limit until it was deleted with ``odoo/tooling/`` in ``7b0f58cb517f``, so a
+  pure reformat no longer turns a gate red and **method length is now measured by
+  nothing** ``[review]``. The scale, measured 2026-09-15 over the four
+  repositories: **6,893** production definitions exceed 40 lines and **952**
+  exceed 100, against a median of 11.
 
-Reformatting a whole file is its own commit, justified, with lint and length
-ratchets re-checked.
+Reformatting a whole file is its own commit, justified, with lint re-checked.
 
 2.2 Model class organisation
 ----------------------------
@@ -1069,6 +1072,27 @@ compute).
      - ``_selection_target_model`` -- named for the values, not the field: one
        method serves fields of several names on unrelated models
 
+**Nothing in this section is mechanically enforced, and its gate markers say
+otherwise** ``[review]``. ``odoo/tooling/`` was deleted in ``7b0f58cb517f`` and
+took every naming gate with it: ``naming_vocabulary.py``,
+``naming_core_vocabulary.py``, ``field_hook_naming.py``,
+``collection_head_order``, ``py_function_length.py``, ``ratchet.py`` and
+``doc_restated_counts.py``. **Thirty of the thirty-one ``[ratchet …]`` and
+``[gate …]`` markers below name one of those**, and the survivor is
+``[ruff RUF022]``. ``doc/architecture/gates.md`` is the list of what still runs
+and no entry of it reads a method name; ``test_lint``'s ``test_naming.py``
+checks one thing, that no public method takes ``ids`` or ``context``. **Read
+every naming marker in §2.4 as ``[review]``** until a gate is rebuilt, and read
+a sentence that says a gate "now sees" something as history.
+
+**The figures are re-derivable even though the gates are not** ``[review]``, and
+the instrument is
+agromarin-knowledge/research/2026-09-15-method-naming-census-refresh-evidence --
+named in prose because the doc-link gate resolves paths inside this repository
+alone. Its ``census.py`` and ``extend.py`` measure a **named commit from a
+detached worktree**, which is the condition §2.4.3 already states and which the
+shared checkout cannot meet. Re-derive before quoting any number here.
+
 2.4.1 Field hooks
 ~~~~~~~~~~~~~~~~~
 
@@ -1310,18 +1334,77 @@ ways: stems are written with two or more verbs drawn from one semantic family,
 and groups of methods share a byte-identical body under different names; the
 census table below counts both.
 
-**Every figure in this section is measured, not stated**
-``[gate doc_restated_counts]``. The population is the non-test methods declared
-on a model class **in this repository** -- the population
-``naming_vocabulary.py`` ratchets, and the first §2.4.3 row of the census table.
-The census stops here, so every figure is a floor.
+**But the verb is no longer where the duplication is, and that is a measured
+result rather than a concession** ``[review]``. Canonical names make redundancy
+detectable only while the duplicate pair *differs by a verb*, and the sweeps
+have drained that population. Measured 2026-09-15 over ``odoo``, ``enterprise``,
+``agromarin`` and ``design-themes`` at ``42ea7357e265`` / ``e793e1375d6`` /
+``a8a1a081e`` / ``b284de453``: of **139** groups of definitions sharing an
+identical body, **118** already share a name, and applying the
+abolished→canonical substitution to the other 21 merges exactly **one**
+(``_save_label`` / ``save_label``, and the difference there is the underscore,
+not the verb). **The rule's own mechanism now reports one candidate.** Where the
+residual duplication actually lives is two shapes this section does not name:
 
-**The census table.** A count whose only job is to be current lives here and
-nowhere else in prose: ``doc_restated_counts.py --update census`` rewrites the
-block in full (``--update <row>`` one row), and ``--check`` names any row the
-tree has moved. A figure a sentence *reasons* from -- a ratio, a split, a zero --
-stays in its sentence, as a ``Figure`` the same tool checks and ``--update
-<figure>`` refreshes on its own.
+* **A namespace-prefixed sibling.** ``_l10n_ae_get_company_wps`` /
+  ``_l10n_sa_get_company_wps``, ``_dk_build_zip_response`` /
+  ``_ee_build_zip_response``, ``_envia_convert_weight`` /
+  ``_shiprocket_convert_weight``, ``_add_invoice_line_price_nodes`` /
+  ``_add_purchase_order_line_price_nodes`` / ``_add_sale_order_line_price_nodes``.
+  The verbs already agree; the discriminating token is the country, carrier or
+  document the body is identical across, which is the tell that the body belongs
+  one layer down.
+* **The same name copied into sibling modules.** ``debug_log.py`` is duplicated
+  verbatim into six addons, ``l10n_be_hr_payroll`` carries nine identical
+  ``default_get``, ``l10n_ch_hr_payroll`` four identical ``_get_declaration``.
+  No naming rule can see these, because nothing is misnamed.
+
+So **run the body comparison, not only the name search**: `clones.json` and
+`repeated-blocks.csv` in the evidence directory above are that report, and the
+block view is the sharper of the two -- **1,128** repeated three-statement
+windows across **2,527** sites, **1,375** of them inside a method longer than 40
+lines, which is the extraction backlog stated as a number. §2.4's order stands
+(naming → redundancy detection → logic improvement); what has changed is that
+step one is finished for verbs and step two now needs a different instrument.
+
+**Every figure in this section was measured, not stated** ``[review]``. The
+population is the non-test methods declared on a model class **in this
+repository** -- the population ``naming_vocabulary.py`` ratcheted, and the first
+§2.4.3 row of the census table. The census stops here, so every figure is a
+floor.
+
+**The census table is a FROZEN reading now, not a current one** ``[review]``.
+``doc_restated_counts.py`` was deleted with ``odoo/tooling/``, so no ``--update``
+and no ``--check`` exists: the block states the tree as it stood when the tool
+last ran and **nothing has refreshed it since**. Re-derived 2026-09-15 at
+``42ea7357e265`` with the instrument named at the head of §2.4, **10 of its 59
+rows are still true**, and the three ways a row fails are different problems:
+
+* **33 rows are reproducible** from the prose alone -- a prefix count, a
+  decorator count -- and 23 of those have moved. The loudest are the campaign's
+  own signal: ``_prepare_*`` 911 → **1,598** and ``_set_*`` 126 → **83**, which
+  is the payload sweep of §2.4.7 landing. ``_get_*`` 6,553 → 6,518,
+  ``_check_*`` 1,281 → 1,389, ``inverse=`` targets 269 → 374.
+* **19 rows are approximable but not exact**, because the prose fixes the
+  family and not the population: "field hooks the declaring model also calls on
+  ``self``" does not say whether a call from a sibling file counts.
+* **7 rows cannot be re-derived by anybody.** Their population lived in
+  ``naming_vocabulary.py``'s ``_COLLECTION_HEADS`` tuple and its
+  ``_HEADS_HEAD_FIRST`` regex -- which heads were searched, and the requirement
+  of a token after the head. Those are the five §2.4.4 head/tail rows and the two
+  §2.4.5 converter rows. A re-measurement answers a **different question** and
+  is not comparable; the cautions four paragraphs down in §2.4.4 describe a
+  measurement nobody can now run.
+
+**That is the durable lesson, and it is about where a definition lives rather
+than about a number** ``[review]``. A figure whose population is defined only
+inside a tool dies with the tool, while a figure whose population is defined in
+the sentence beside it survives. **State the population in the prose, in enough
+detail to re-derive it**, and treat a count that needs a deleted classifier to
+mean anything as prose that was never finished. A count whose only job is to be
+current still belongs in this block and nowhere else, and re-deriving the block
+is now a scripted measurement recorded in the vault rather than a ``--update``
+flag.
 
 **Who re-derives it, and when** ``[review]``. The block goes stale on every
 rename that touches ``odoo/`` or ``addons/``, which in a workspace where several
@@ -1730,8 +1813,34 @@ prefix, no ORM operation, none of the protocol namespaces below) and that carry
 after it. It is a candidate list for the same reason the abolished one is:
 ``_ubl_add_*`` and ``_stripe_get_*`` sit in it and are namespaces this section
 admits, and nothing mechanical separates a protocol prefix from a noun parked in
-front of the verb. Read it grouped by first token -- a token with one member is
-almost always a noun, one with sixty is almost always a namespace.
+front of the verb. Read it grouped by first token.
+
+**Grouping by first token sorts the list; the size of a group does not sort it**
+``[review]``. An earlier form of this rule said a token with one member is almost
+always a noun and one with sixty is almost always a namespace. The first half
+holds and **the second is false**, which matters because it was the half that
+licensed skipping the big groups. Measured 2026-09-15 over the four repositories:
+**18,148** production definitions open with a token carrying no rule from any
+table in §2.4, under **2,333** distinct tokens, of which **988** have exactly one
+member and **39** have sixty or more. Read those 39, and the majority are not
+namespaces but **verbs the table does not print** -- ``generate`` 400,
+``parse`` 279, ``format`` 273, ``convert`` 222, ``extract`` 177, ``merge`` 122,
+``filter`` 109, ``find`` 89, ``split`` 85, ``normalize`` 75, ``save`` 70,
+``sanitize`` 56 -- beside the genuine namespaces ``l10n`` 1,778, ``cron`` 208,
+``message`` 196, ``mail`` 121, ``web`` 108, ``ubl`` 91, ``portal`` 83. **A big
+group is the most likely place for an unlisted verb, not the safest place to
+stop**, and §2.4.20 is where an unlisted verb is resolved.
+
+**The discriminator is the token's grammar, not its frequency** ``[review]``.
+Ask the two questions that already appear in this section: could the token follow
+*which* or *whose* (then it is a qualifier or a namespace), and would the prefix
+survive being moved to another model (then it is a protocol). A token that
+answers *what does this do* is a verb wherever it sits, and ``l10n`` is the
+proof that size decides nothing: it is the largest ungoverned token in the tree,
+it is a namespace, and its 1,778 definitions average 33.4 lines against the
+tree's median of 11 -- the longest family in the census after the getters,
+which makes it the first place §2.4.9's splitting work should look rather than
+the last.
 
 * A noun-first prefix is legitimate only where it names a **protocol several
   models implement** (``_message_*``, ``_notify_*``, ``_track_*``,
@@ -2090,6 +2199,18 @@ Four limits:
 * **The receiver can supply the left operand.** A leading ``_to_`` is correct
   where the receiver is the source representation:
   ``attachment._to_http_stream()``.
+
+**``convert_to_*`` is the field protocol and is reserved, not an ``X_to_Y``
+spelled wrong** ``[review]``. ``Field.convert_to_cache``, ``convert_to_column``,
+``convert_to_record``, ``convert_to_read``, ``convert_to_write`` and
+``convert_to_export`` name one representation the *receiver* converts **into**,
+the receiver being the field, and an override of one is bound by the ORM calling
+it. Measured 2026-09-15 over the four repositories: ``convert`` leads **222**
+definitions, **157** of which carry ``to``, and the protocol is most of them.
+**So a leading ``_convert_`` is right only there.** Elsewhere it states the
+operation twice -- ``X_to_Y`` already says a conversion happens -- and
+``_convert_amount_to_company_currency`` is ``_amount_to_company_currency`` under
+the idiom above, or a ``_get_`` where the second limit bites.
 
 **``2`` is the ORM's cardinality notation and nothing else** ``[review]``. It is
 reserved the way the table in §2.4.3 means it: ``many2one``, ``one2many``,
@@ -4699,6 +4820,68 @@ the Read row -- the core gate's ``accumulate`` rule reads the body for it); and
 ``locate_node`` is the view-inheritance spec resolver, so a row for it would be
 five allowlist entries and no tightening.
 
+**The edge of the table is now measurable, and ``sanitize`` is the row it is
+missing** ``[review]``. The argument above is that a synonym table nobody can see
+the edge of is a word list again; the edge is the set of leading tokens the
+vocabulary governs by nothing, and it is **2,333** tokens over **18,148**
+production definitions (§2.4.4). Read the large end of it against §2.4 as a
+whole, and the section already rules on most: ``generate`` in §2.4.7, ``parse``,
+``split`` and ``extract`` in §2.4.18, ``find`` in §2.4.11, ``convert`` in §2.4.5,
+``filter`` and ``iter`` against the receiver-shaping rule of §2.4.22. **Two
+spellings are ruled nowhere and name one operation between them**:
+``_normalize_`` at **75** definitions and ``_sanitize_`` at **56**, both
+reshaping a value and returning it -- ``_sanitize_number`` beside
+``_normalize_iban_acc_number``, ``_sanitize_vals`` beside ``_normalize_rfc``.
+**``_sanitize_`` is abolished**, because *sanitise* names a **motive** -- the
+input is untrusted -- and a motive is not an operation. That is also why it
+cannot be swapped for one word: read against their bodies, the 57 definitions
+wearing it were doing **five** different things, which is the cost of a motive
+verb stated as a count.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 24 30 46
+
+   * - Body
+     - Canonical
+     - Example
+   * - reshapes a value
+     - ``_normalize_``
+     - ``_sanitize_ean`` → ``_normalize_ean``
+   * - returns a subset
+     - ``_filter_`` (§2.4.22)
+     - ``_sanitize_fetch_params`` → ``_filter_fetch_params``
+   * - mutates in place
+     - ``_update_`` (§2.4.12)
+     - ``_sanitize_configuration`` → ``_update_configuration``
+   * - builds a payload
+     - ``_prepare_`` (§2.4.7)
+     - ``_sanitize_payload`` → ``_prepare_task_vals``
+   * - raises
+     - ``_check_`` (§2.4.8)
+     - ``sanitize_model_name`` → ``check_model_name``
+
+**Two neighbours are reserved rather than abolished, on §2.4.3's terms.**
+``escape`` is the operation that makes a value inert **inside a target syntax**
+and is not a normalisation -- prefixing a spreadsheet formula trigger with an
+apostrophe changes the value so the cell does not execute it, and
+``_escape_export_cell`` says which syntax. **HTML sanitisation keeps the word**:
+``libs/text/html``'s cleaner removes scripts, event handlers and foreign
+attributes, which destroys content on purpose, and *sanitise* is that layer's
+term of art exactly as ``_drop_`` is SQL's. The test between them is whether the
+output is the same value in another form (normalise), the same value made inert
+(escape), or **less** than the input on purpose (sanitise, and say what it
+strips).
+
+**``_save_`` is the reserved-table case, not a new row** ``[review]``. §2.4.3
+reserves ``read`` / ``write`` for a method whose object is a **file**;
+``_save_`` at **70** definitions is the same contract wearing a third word, and
+the census caught the pair that proves it -- ``_save_label`` and ``save_label``,
+byte-identical bodies, the **only** duplicate group in the tree that the
+abolished→canonical substitution merges. Where the object is a file the verb is
+``write``; where it is a record it is ``create`` or ``_update_``; where it is an
+attachment row, say which.
+
 **A predicate prefix suspends the infix rule, and that is not a fudge**
 ``[review]``. §2.4.4 flags a verb behind a noun because the noun hides it from a
 ``classify`` that partitions on the first token. Behind ``is_`` / ``has_`` /
@@ -4962,6 +5145,41 @@ protocol claims the protocol's dispatcher reaches this name, and the test is to
 go and find the call. Where the prefix instead claims something about the
 *return*, the test is the body. Neither test is expensive; what makes the claim
 worth checking is that nothing else in the tree records it.
+
+**A return annotation is the one thing that does record it, and it turns the
+claim from a reading into a check** ``[review]``. A name says *what* comes back
+in the only vocabulary a name has; ``-> Domain``, ``-> bool``, ``-> dict`` says
+it in a vocabulary ``mypy`` and a reviewer read the same way. §2.4.1 already
+rests a rule on exactly this -- the ``_get_*_domain`` exemption is read off the
+annotation and never off the name, *because the name cannot say which ``domain``
+it means and the annotation can*. **So annotate the return wherever the name
+makes a type claim**: a ``_get_*_domain``, a predicate, a ``_prepare_*``, a
+converter. That is where the annotation pays for itself, and it is not a call to
+annotate the tree.
+
+**The mechanism is real and almost unexercised, which is why it is written as an
+instruction here rather than reported as a backlog** ``[review]``. Measured
+2026-09-15 over the four repositories: **23.3 %** of production definitions carry
+a return annotation, and the coverage is a repository fact rather than a tree
+fact -- ``odoo`` 32.5 %, ``agromarin`` 24.8 %, ``enterprise`` **0.7 %**. Against
+the claim families: of **8** surviving ``_get_*_domain`` definitions, **2** are
+annotated and **none** returns an annotated ``Domain``, so §2.4.1's exemption
+test would today decide nothing; of **1,706** predicates, **603** are annotated
+and **595** of those say ``bool``, which is the family in the best shape and
+still a third of it; of **2,242** ``_prepare_*``, **339** are annotated. **Of
+the 952 definitions longer than 100 lines, 66 are annotated** -- the methods
+whose contract is hardest to read from the body are the ones that state it least.
+
+**And a type is a second axis for the duplicate search of §2.4.3** ``[review]``,
+which is the argument for annotating that has nothing to do with type checking.
+Two methods with the same object, the same return type and the same verb are
+candidates to be one method, and the census groups them that way: **357** groups
+of three or more share a verb and a full signature type. Naming alone cannot
+raise that question, because the pair is already spelled correctly --
+``_get_fields_select`` and ``_get_fields_pos_select`` both return ``dict`` and
+sit in the same group. **Name, body and type are three different detectors; the
+section has always argued the first, §2.4.3 now names the second, and this is
+the third.**
 
 **A protocol namespace is a claim about the caller** ``[review]``.
 ``point_of_sale`` declares its data-loading protocol on an ``AbstractModel``,
