@@ -120,13 +120,35 @@ class TestLotUniquenessSeesArchivedLots(TransactionCase):
         self.env.flush_all()
 
     def test_the_next_serial_survives_an_out_of_order_import(self):
+        """The guarantee is that the proposal is FREE, not that it is highest.
+
+        `_get_next_serial` reads the most recently *created* lot
+        (`order="id DESC"`), not the highest-named one, so importing an old
+        serial after a newer block moves the proposal back to the low range --
+        SN00002 here, not SN00052. That is deliberate and matches upstream;
+        uniqueness is what `_get_free_lot_name` guarantees, by walking forward
+        until the name is free. This test asserted neither, so a change from
+        "most recent" to "highest" would have passed it silently.
+        """
         for name in ("SN00050", "SN00051"):
             self.Lot.create({"name": name, "product_id": self.product.id})
         self.Lot.create({"name": "SN00001", "product_id": self.product.id})
         self.env.flush_all()
+
         proposed = self.Lot._get_next_serial(self.env.company, self.product)
-        self.Lot.create({"name": proposed, "product_id": self.product.id})
+
+        self.assertEqual(
+            proposed, "SN00002", "the proposal follows the most recent lot"
+        )
+        self.assertFalse(
+            self.Lot.with_context(active_test=False).search_count(
+                [("name", "=", proposed), ("product_id", "=", self.product.id)]
+            ),
+            "the proposal must be free before it is offered",
+        )
+        created = self.Lot.create({"name": proposed, "product_id": self.product.id})
         self.env.flush_all()
+        self.assertEqual(created.name, proposed)
 
     def test_prepare_next_lot_vals_is_the_one_place_that_decides(self):
         vals = self.Lot._prepare_next_lot_vals(self.env.company, self.product)

@@ -310,9 +310,19 @@ class TestStockQuant(TestStockCommon):
         self.assertEqual(quant.quantity, 18.0)
 
     def test_increase_available_quantity_4(self):
+        """A stock user, not a superuser, can add to available quantity."""
         self.env = self.env(user=self.demo_user)
         self.env["stock.quant"]._update_available_quantity(
             self.productA, self.stock_location, 1.0
+        )
+        self.env.flush_all()
+
+        self.assertEqual(
+            self.env["stock.quant"]._get_available_quantity(
+                self.productA, self.stock_location
+            ),
+            1.0,
+            "the update ran without raising but moved nothing",
         )
 
     def test_increase_available_quantity_5(self):

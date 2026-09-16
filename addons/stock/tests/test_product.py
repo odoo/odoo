@@ -491,6 +491,12 @@ class TestVirtualAvailable(TestStockCommon):
 
         self.picking_out.button_validate()
 
+        self.assertEqual(
+            self.picking_out.state,
+            "done",
+            "the transfer ran without raising but did not complete",
+        )
+
     def test_qty_available_values_on_product(self):
         product = self.env["product.product"].create(
             {
