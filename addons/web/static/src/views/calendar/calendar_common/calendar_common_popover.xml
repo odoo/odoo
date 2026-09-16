@@ -9,6 +9,12 @@
         </CardPopover>
     </t>
 
+    <t t-name="web.CalendarCommonPopover.CloseButton" t-inherit="web.CardPopover.CloseButton" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_card_popover_close')]" position="attributes">
+            <attribute name="class" add="my-3 mx-2" separator=" "/>
+        </xpath>
+    </t>
+
     <t t-name="web.CalendarCommonPopover.DefaultFooterButtons">
         <t t-if="this.isEventEditable or this.isEventViewable">
             <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="this.onEditEvent">
