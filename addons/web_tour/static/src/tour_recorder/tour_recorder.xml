@@ -3,7 +3,7 @@
 <t t-name="web_tour.TourRecorder">
     <div t-ref="this.tourRecorderRef" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{this.state.position.x}}px; bottom: {{this.state.position.y}}px;">
         <div class="d-flex align-items-center">
-            <div class="bg-primary text-secondary o_tour_recorder_handler px-1" style="cursor: grab;">
+            <div class="bg-primary text-300 o_tour_recorder_handler px-1" style="cursor: grab;">
                 <span class="oi" data-icon="drag_indicator"/>
             </div>
             <button class="o_button_record btn btn-primary " t-on-click.prevent.stop="this.toggleRecording">
@@ -18,7 +18,7 @@
                 <t t-set-slot="content">
                     <div class="o_tour_recorder" style="height: 400px; width: 500px">
                         <table class="table">
-                            <thead class="fw-bold bg-secondary-subtle position-sticky top-0">
+                            <thead class="fw-bold bg-100 position-sticky top-0">
                                 <tr>
                                     <td>#</td>
                                     <td style="width: 25rem">Trigger</td>

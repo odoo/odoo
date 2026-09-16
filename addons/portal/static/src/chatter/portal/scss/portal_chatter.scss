@@ -6,6 +6,12 @@
     }
 }
 
+// '$o-btns-bs-override' is reset for the portal chatter, so '.btn-secondary' is
+// generated from '$theme-colors': keep it light.
+.btn-secondary {
+    @include button-variant($gray-300, $gray-300);
+}
+
 .o-portal-overlay {
     z-index: $zindex-modal + 2;
 }

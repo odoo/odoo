@@ -6,7 +6,7 @@
             <t t-call-slot="default" t-props="tag"/>
         </t>
         <t t-if="this.invisibleTags.length">
-            <BadgeTag color="0" cssClass="'bg-secondary o_m2m_avatar_empty fw-bold cursor-pointer'" text="'+' + this.invisibleTags.length" tooltip.translate="Click to show more" t-on-click.stop="this.showAllTags"/>
+            <BadgeTag color="0" cssClass="'bg-300 o_m2m_avatar_empty fw-bold cursor-pointer'" text="'+' + this.invisibleTags.length" tooltip.translate="Click to show more" t-on-click.stop="this.showAllTags"/>
         </t>
     </t>
 

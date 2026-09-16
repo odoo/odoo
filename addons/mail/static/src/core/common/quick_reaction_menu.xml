@@ -6,10 +6,10 @@
             <t t-call="mail.QuickReactionMenu.toggler"/>
             <t t-set-slot="content">
                 <div class="o-mail-QuickReactionMenu d-flex align-items-center o-px-0_5 bg-100 border rounded-pill shadow-sm gap-1" t-ref="this.toggle">
-                    <button t-foreach="this.mostFrequentEmojis" t-as="emoji" t-key="emoji" class="o-mail-QuickReactionMenu-emoji o-mail-QuickReactionMenu-popEffect o-navigable d-flex justify-content-center align-items-center rounded-pill btn lh-1 p-1" t-att-class="{ 'bg-secondary': this.reactedBySelf(emoji) }" t-att-title="this.getEmojiShortcode(emoji)" t-on-click="() => this.toggleReaction(emoji)">
+                    <button t-foreach="this.mostFrequentEmojis" t-as="emoji" t-key="emoji" class="o-mail-QuickReactionMenu-emoji o-mail-QuickReactionMenu-popEffect o-navigable d-flex justify-content-center align-items-center rounded-pill btn lh-1 p-1" t-att-class="{ 'bg-300': this.reactedBySelf(emoji) }" t-att-title="this.getEmojiShortcode(emoji)" t-on-click="() => this.toggleReaction(emoji)">
                         <span class="fs-2" t-out="emoji"/>
                     </button>
-                    <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary rounded-circle border border-dark-subtle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
+                    <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary bg-300 rounded-circle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
                         <i class="oi" data-icon="close_small"/>
                     </button>
                 </div>
