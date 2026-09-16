@@ -6,6 +6,9 @@ from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from typing import TYPE_CHECKING
 
+from lxml import etree
+from psycopg.types.json import Json
+
 from odoo.db.schema import (
     column_exists,
     get_tables_existing,
@@ -325,7 +328,6 @@ def absorb_readonly_forerunners(cr: _SqlCursor) -> int:
 
 
 _EXPRESSION_SOURCES = (
-    ("ir_ui_view", ("arch_db",), (), "model", False),
     (
         "mail_template",
         ("body_html", "subject"),
@@ -346,6 +348,189 @@ _EXPRESSION_SOURCES = (
     ("ir_rule", (), ("domain_force",), "model_id", True),
     ("base_automation", (), ("filter_domain", "filter_pre_domain"), "model_id", True),
 )
+
+_EXPRESSION_ATTRIBUTES = frozenset(
+    {
+        "attrs",
+        "column_invisible",
+        "context",
+        "domain",
+        "eval",
+        "filter_domain",
+        "invisible",
+        "options",
+        "readonly",
+        "required",
+        "t-esc",
+        "t-field",
+        "t-if",
+        "t-out",
+        "t-value",
+    }
+)
+_UNKNOWN_MODEL = object()
+
+
+def rename_in_view_arches(
+    cr: BaseCursor, old: str, new: str, *, model: str | None = None
+) -> int:
+    # A view's nested subviews describe their comodel, not the view's model, so a
+    # rewrite scoped by ir_ui_view.model alone renames a namesake of the comodel
+    # and misses the subview nodes that do belong to `model`.
+    if not table_exists(cr, "ir_ui_view"):
+        return 0
+    pattern = r"\y%s\y" % old.replace(".", r"\.")
+    cr.execute(
+        SQL(
+            "SELECT id, model, arch_db FROM ir_ui_view WHERE arch_db::text ~ %s",
+            pattern,
+        )
+    )
+    rows = cr.fetchall()
+    if not rows:
+        return 0
+    comodels = _relational_comodels(cr)
+    word = re.compile(r"\b%s\b" % re.escape(old))
+    rewritten = 0
+    for view_id, view_model, arch in rows:
+        translations = {
+            lang: _rename_in_arch(value, view_model, old, new, model, comodels, word)
+            for lang, value in (arch or {}).items()
+        }
+        if translations == (arch or {}):
+            continue
+        cr.execute(
+            SQL(
+                "UPDATE ir_ui_view SET arch_db = %s WHERE id = %s",
+                Json(translations),
+                view_id,
+            )
+        )
+        rewritten += 1
+    _debug.perf.count(
+        "module_data.view_arches_rewritten",
+        old=old,
+        new=new,
+        model=model,
+        rows=rewritten,
+    )
+    return rewritten
+
+
+def _relational_comodels(cr: BaseCursor) -> dict[tuple[str, str], str]:
+    cr.execute(
+        SQL(
+            "SELECT model, name, relation FROM ir_model_fields "
+            "WHERE relation IS NOT NULL AND ttype IN ('many2one', 'one2many', 'many2many')"
+        )
+    )
+    return {(model, name): relation for model, name, relation in cr.fetchall()}
+
+
+def _rename_in_arch(value, view_model, old, new, model, comodels, word):
+    if not value or old not in value:
+        return value
+    try:
+        root = etree.fromstring(value.encode())
+    except etree.XMLSyntaxError:
+        _debug.logic("module_data.arch_unparsed", old=old, model=model)
+        return value
+    if not _rename_in_node(root, view_model, old, new, model, comodels, word):
+        return value
+    return etree.tostring(root, encoding="unicode")
+
+
+def _rename_in_node(node, node_model, old, new, model, comodels, word):
+    renamed = False
+    in_scope = model is None or node_model == model
+    for attribute, value in node.attrib.items():
+        if not value or old not in value:
+            continue
+        if attribute == "expr":
+            rewritten, _around, _inside = _rename_in_xpath(
+                value, node_model, old, new, model, comodels
+            )
+            if rewritten != value:
+                node.set(attribute, rewritten)
+                renamed = True
+            continue
+        if not in_scope:
+            continue
+        if attribute in ("name", "for") and node.tag in ("field", "label", "attribute"):
+            if node.tag == "attribute":
+                continue
+            if value == old:
+                node.set(attribute, new)
+                renamed = True
+            continue
+        if attribute in _EXPRESSION_ATTRIBUTES or attribute.startswith("decoration-"):
+            rewritten = word.sub(new, value)
+            if rewritten != value:
+                node.set(attribute, rewritten)
+                renamed = True
+    if in_scope and node.tag == "attribute" and node.text and old in node.text:
+        if node.get("name") in _EXPRESSION_ATTRIBUTES or (
+            node.get("name") or ""
+        ).startswith("decoration-"):
+            rewritten = word.sub(new, node.text)
+            if rewritten != node.text:
+                node.text = rewritten
+                renamed = True
+    for child in node:
+        renamed |= _rename_in_node(
+            child,
+            _child_model(node, child, node_model, comodels),
+            old,
+            new,
+            model,
+            comodels,
+            word,
+        )
+    return renamed
+
+
+def _child_model(node, child, node_model, comodels):
+    if node.tag == "xpath":
+        _expr, around, inside = _rename_in_xpath(
+            node.get("expr") or "", node_model, None, None, None, comodels
+        )
+        return inside if node.get("position") == "inside" else around
+    if node.tag == "field" and len(node):
+        return _comodel(node_model, node.get("name"), comodels)
+    return node_model
+
+
+def _comodel(node_model, name, comodels):
+    if node_model is _UNKNOWN_MODEL or not name:
+        return _UNKNOWN_MODEL
+    return comodels.get((node_model, name), _UNKNOWN_MODEL)
+
+
+_XPATH_NAME = re.compile(r"@name\s*=\s*'([^']*)'|@name\s*=\s*\"([^\"]*)\"")
+
+
+def _rename_in_xpath(expr, node_model, old, new, model, comodels):
+    # `//field[@name='invoice_line_ids']//field[@name='account_id']` walks into the
+    # subview: each component naming a relational field of the model reached so far
+    # moves the scope to its comodel. A node placed before, after or in place of the
+    # anchor is a sibling, so it belongs to the model the anchor itself sits in.
+    around = current = node_model
+    pieces = []
+    last = 0
+    for match in _XPATH_NAME.finditer(expr):
+        name = match.group(1) if match.group(1) is not None else match.group(2)
+        start, end = match.span(1) if match.group(1) is not None else match.span(2)
+        if old is not None and name == old and (model is None or current == model):
+            pieces.append(expr[last:start])
+            pieces.append(new)
+            last = end
+        around = current
+        nested = _comodel(current, name, comodels)
+        if nested is not _UNKNOWN_MODEL:
+            current = nested
+    pieces.append(expr[last:])
+    return "".join(pieces), around, current
+
 
 _RENAMEABLE = re.compile(r"\A[A-Za-z_][A-Za-z0-9_.]*\Z")
 _REPLACEMENT = re.compile(r"\A[A-Za-z_][A-Za-z0-9_.()]*\Z")
@@ -369,7 +554,7 @@ def rename_in_stored_expressions(
 
     pattern = r"\y%s\y" % old.replace(".", r"\.")
     tables = set(get_tables_existing(cr, [name for name, *_ in _EXPRESSION_SOURCES]))
-    rewritten = 0
+    rewritten = rename_in_view_arches(cr, old, new, model=model)
     for (
         table,
         jsonb_columns,

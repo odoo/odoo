@@ -71,6 +71,7 @@ from . import test_mixin_profiler
 from . import test_module
 from . import test_module_data_rename_model
 from . import test_module_data_remove_xmlid_records
+from . import test_module_data_rename_in_view_arches
 from . import test_module_data_rename_module
 from . import test_orm
 from . import test_ormcache

@@ -110,6 +110,47 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
         (van + draft).action_dispose()
         self.assertEqual((van + draft).mapped("state"), ["disposed", "disposed"])
 
+    def test_disposing_an_asset_without_the_wizard_books_the_disposal(self):
+        company = self.env.company
+        company.gain_account_id = self.company_data["default_account_revenue"]
+        company.loss_account_id = self.loss_account
+        date = self.today + relativedelta(days=-2)
+        asset = self._running_board()
+        asset._dispose(date)
+        self.assertRecordValues(
+            asset,
+            [
+                {
+                    "depreciation_state": "close",
+                    "state": "disposed",
+                    "date_disposal": date,
+                    "active": False,
+                }
+            ],
+        )
+        self.assertEqual(
+            asset.depreciation_move_ids._sorted_by_date()[-1].asset_move_type,
+            "disposal",
+        )
+
+    def test_disposing_a_depreciating_asset_needs_the_gain_and_loss_accounts(self):
+        company = self.env.company
+        company.gain_account_id = False
+        company.loss_account_id = False
+        asset = self._running_board()
+        with self.assertRaises(UserError):
+            asset._dispose(self.today)
+        self.assertEqual(asset.depreciation_state, "open")
+
+    def test_disposing_an_asset_without_a_board_needs_no_accounts(self):
+        van = self.env["resource.asset"].create(
+            {"name": "Van", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
+        )
+        van._dispose(self.today)
+        self.assertRecordValues(
+            van, [{"state": "disposed", "date_disposal": self.today, "active": False}]
+        )
+
     def test_writing_disposed_on_a_running_board_is_refused(self):
         asset = self._running_board()
         with self.assertRaises(UserError):

@@ -1,4 +1,5 @@
 import re
+from ast import literal_eval
 from datetime import UTC, datetime, timedelta
 
 from lxml import etree
@@ -34,6 +35,18 @@ class TestResourceAsset(TransactionCase):
         self.assertEqual(truck.resource_id.asset_id, truck)
         truck.name = "Truck 7"
         self.assertEqual(truck.resource_id.name, "Truck 7")
+
+    def test_the_asset_list_shows_whole_assets_and_hides_components(self):
+        truck = self._truck()
+        crane = self._truck("Crane on truck", parent_id=truck.id)
+        action = self.env.ref("resource_asset.action_resource_asset")
+        self.assertEqual(action.context, "{'search_default_top_level': 1}")
+        search = self.env.ref("resource_asset.resource_asset_view_search")
+        arch = etree.fromstring(search.arch)
+        domain = arch.xpath("//filter[@name='top_level']")[0].get("domain")
+        listed = self.Asset.search(literal_eval(domain))
+        self.assertIn(truck, listed)
+        self.assertNotIn(crane, listed)
 
     def test_an_asset_created_through_a_form_is_active(self):
         form = Form(self.Asset)

@@ -1462,6 +1462,24 @@ class ResourceAsset(models.Model):
             )
         )
 
+    def _dispose(self, date=None):
+        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
+        for asset in running:
+            asset._check_disposal_accounts()
+            asset.set_to_close(self.env["account.move.line"], date)
+        return super(ResourceAsset, self - running)._dispose(date)
+
+    def _check_disposal_accounts(self):
+        company = self.company_id.sudo()
+        if not (company.gain_account_id and company.loss_account_id):
+            raise UserError(
+                _(
+                    "%(asset)s depreciates, so disposing of it books an entry. Set the gain and loss accounts of %(company)s first.",
+                    asset=self.display_name,
+                    company=self.company_id.display_name,
+                )
+            )
+
     def validate(self):
         self.write({"depreciation_state": "open"})
         self.filtered(lambda asset: asset.state == "draft").write(

@@ -219,6 +219,15 @@
                     domain="[('holder_id', '=', False)]" />
                 <separator />
                 <filter
+                    name="top_level"
+                    string="Whole Assets"
+                    domain="[('parent_id', '=', False)]" />
+                <filter
+                    name="components"
+                    string="Components"
+                    domain="[('parent_id', '!=', False)]" />
+                <separator />
+                <filter
                     name="archived"
                     string="Archived"
                     domain="[('active', '=', False)]" />
@@ -240,6 +249,7 @@
         <field name="res_model">resource.asset</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="resource_asset_view_search" />
+        <field name="context">{'search_default_top_level': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Register an asset

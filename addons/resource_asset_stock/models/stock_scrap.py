@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import fields, models
 
 
 class StockScrap(models.Model):
@@ -6,8 +6,11 @@ class StockScrap(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        assets = self.filtered(
+        for scrap in self.filtered(
             lambda scrap: scrap.state == "done" and scrap.lot_id.asset_id
-        ).lot_id.asset_id
-        assets.filtered(lambda asset: asset.state != "disposed").action_dispose()
+        ):
+            assets = scrap.lot_id.asset_id.filtered(
+                lambda asset: asset.state != "disposed"
+            )
+            assets._dispose(fields.Date.context_today(scrap, scrap.date_done))
         return res
