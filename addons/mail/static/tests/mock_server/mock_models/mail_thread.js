@@ -318,6 +318,14 @@ export class MailThread extends models.ServerModel {
         return {};
     }
 
+    _get_pinned_messages_domain() {
+        return [
+            ["model", "=", this._name],
+            ["res_id", "in", this.map((t) => t.id)],
+            ["pinned_at", "!=", false],
+        ];
+    }
+
     /**
      * @param {number} id
      * @param {number} message_id
@@ -335,15 +343,24 @@ export class MailThread extends models.ServerModel {
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
 
         const pinned_at = pinned && serializeDateTime(DateTime.now());
         MailMessage.write([message_id], { pinned_at });
         const [thread] = this.read(id);
+        const pinned_message_count = MailMessage._filter(
+            MailThread._get_pinned_messages_domain.call(this.browse(id))
+        ).length;
         BusBus._sendone(
             thread,
             "mail.record/insert",
-            new Store().add(MailMessage.browse(message_id), { pinned_at }).as_dict()
+            new Store()
+                .add(MailMessage.browse(message_id), { pinned_at })
+                .add(this.browse(id), { pinned_message_count }, { as_thread: true })
+                .as_dict()
         );
+        return true;
     }
 
     /**
@@ -603,6 +620,23 @@ export class MailThread extends models.ServerModel {
         return false;
     }
 
+    _store_pinned_messages_fields(res, { request_list = [] } = {}) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+
+        const pinned_domain = (t) => MailThread._get_pinned_messages_domain.call(this.browse(t.id));
+        if (request_list.includes("pinned_message_count")) {
+            res.attr("pinned_message_count", (t) => MailMessage._filter(pinned_domain(t)).length);
+        }
+        if (request_list.includes("pinnedMessages")) {
+            res.many("pinnedMessages", "_store_message_fields", {
+                value: (t) => MailMessage.browse(MailMessage.search(pinned_domain(t))),
+            });
+        }
+    }
+
     _store_thread_fields(res, { request_list = [] } = {}) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
@@ -610,8 +644,6 @@ export class MailThread extends models.ServerModel {
         const MailActivity = this.env["mail.activity"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailScheduledMessage} */
         const MailScheduledMessage = this.env["mail.scheduled.message"];
         /** @type {import("mock_models").MailThread} */
@@ -694,23 +726,7 @@ export class MailThread extends models.ServerModel {
                 reset: true,
             });
         }
-        const pinned_domain = (t) => [
-            ["model", "=", this._name],
-            ["res_id", "=", t.id],
-            ["pinned_at", "!=", false],
-        ];
-        if (res.is_for_internal_users() && request_list.includes("has_pinned_messages")) {
-            res.attr(
-                "has_pinned_messages",
-                (t) => MailMessage._filter(pinned_domain(t)).length > 0
-            );
-        }
-        if (res.is_for_internal_users() && request_list.includes("pinned_messages")) {
-            res.many("pinned_messages", "_store_message_fields", {
-                only_data: true,
-                value: (t) => MailMessage.browse(MailMessage.search(pinned_domain(t))),
-            });
-        }
+        MailThread._store_pinned_messages_fields.call(this, res, { request_list });
         if (request_list.includes("scheduledMessages")) {
             res.many("scheduledMessages", "_store_scheduled_message_fields", {
                 value: (t) =>
