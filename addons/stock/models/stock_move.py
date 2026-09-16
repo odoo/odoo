@@ -644,7 +644,8 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _compute_show_info(self):
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\
-                           and move.product_id.is_storable
+                           and move.product_id.is_storable\
+                           and not (move.has_tracking != 'none' and move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots)
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
                 and not move.picking_type_id.use_existing_lots\
