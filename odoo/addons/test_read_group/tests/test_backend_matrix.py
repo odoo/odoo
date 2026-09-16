@@ -102,11 +102,13 @@ class TestReadGroupBackendMatrix(TransactionCase):
         with model_test_env(registry=_isolated_registry(*classes)) as env_a:
             obs_a = script(env_a)
         obs_b = script(self.env)
-        self.assertEqual(
-            obs_a,
-            obs_b,
-            f"in-memory read_group diverged from SQL{': ' + msg if msg else ''}",
-        )
+        suffix = f"in-memory read_group diverged from SQL{': ' + msg if msg else ''}"
+        if isinstance(obs_a, dict) and isinstance(obs_b, dict):
+            # one call at a time, so the message shows whole rows
+            self.assertEqual(list(obs_a), list(obs_b), suffix)
+            for key in obs_a:
+                self.assertEqual(obs_a[key], obs_b[key], f"{key} -- {suffix}")
+        self.assertEqual(obs_a, obs_b, suffix)
         return obs_a
 
     def test_aggregates_and_groupbys_on_scalars_and_a_many2one(self):
@@ -628,8 +630,88 @@ class TestReadGroupBackendWalk(TestReadGroupBackendMatrix):
                     self.env.invalidate_all()
                     savepoint.rollback()
 
+    def _grouping_sets_script(self, seed):
+        rng = random.Random(seed)
+        rows = [
+            {
+                "key": rng.choice([0, 1, 2, 3]),
+                "value": rng.randint(-5, 9),
+                "numeric_value": round(rng.random(), 2),
+                "partner": rng.choice([None, "zulu", "alpha", "alpha"]),
+            }
+            for _ in range(rng.randint(3, 12))
+        ]
+        plan = []
+        for _ in range(15):
+            sets = [rng.choice(self.SCALAR_GROUPBYS) for _ in range(rng.randint(1, 3))]
+            aggs = rng.choice(self.SCALAR_AGGREGATES)
+            order = None
+            if any("partner_id" not in groupby for groupby in sets):
+                # a many2one order term sorts the sets that lack it by
+                # ANY_VALUE() of the joined name, which PostgreSQL picks
+                # arbitrarily, while the in-memory tier drops the term for
+                # those sets; and without it the sets that have it tie
+                # arbitrarily. Neither is wrong, and no caller orders a set
+                # by a column it does not group by: the many2one is drawn
+                # only when every set groups by it
+                sets = [[t for t in groupby if t != "partner_id"] for groupby in sets]
+            terms = sorted({term for groupby in sets for term in groupby})
+            if rng.random() < 0.5 and (terms or aggs):
+                # the groupby terms break the ties an aggregate leaves; a
+                # term a set lacks is dropped for that set
+                term = rng.choice([*terms, *aggs])
+                order = ", ".join(
+                    [
+                        f"{term}{rng.choice(['', ' desc'])}",
+                        *(t for t in terms if t != term),
+                    ]
+                )
+            plan.append((rng.choice(self.SCALAR_DOMAINS), sets, aggs, order))
+
+        def script(env):
+            partners = {
+                name: env["res.partner"].create({"name": name})
+                for name in ("zulu", "alpha")
+            }
+            Model = env["test_read_group.aggregate"]
+            Model.create(
+                [
+                    {
+                        "key": row["key"],
+                        "value": row["value"],
+                        "numeric_value": row["numeric_value"],
+                        "partner_id": (
+                            partners[row["partner"]].id if row["partner"] else False
+                        ),
+                    }
+                    for row in rows
+                ]
+            )
+            observed = {}
+            for index, (domain, sets, aggs, order) in enumerate(plan):
+                try:
+                    result = Model._read_grouping_sets(domain, sets, aggs, order=order)
+                except NotImplementedError:
+                    result = NotImplemented
+                except ValueError as error:
+                    result = str(error)
+                else:
+                    result = [
+                        [tuple(_spell(v) for v in row) for row in rows_of_set]
+                        for rows_of_set in result
+                    ]
+                observed[f"{index}: {domain} {sets} {aggs} {order}"] = result
+            return observed
+
+        return script
+
     def test_drawn_scalar_read_groups_agree(self):
         self._diff_seeds((Test_Read_GroupAggregate, _StubPartner), self._scalar_script)
+
+    def test_drawn_grouping_sets_agree(self):
+        self._diff_seeds(
+            (Test_Read_GroupAggregate, _StubPartner), self._grouping_sets_script
+        )
 
     def test_drawn_temporal_read_groups_agree(self):
         self._diff_seeds((Test_Read_GroupFill_Temporal,), self._temporal_script)

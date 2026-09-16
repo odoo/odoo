@@ -106,11 +106,15 @@ grouping, granularity and aggregate emulation — is drawn against PostgreSQL by
 `test_read_group/tests/test_backend_matrix.py::TestReadGroupBackendWalk`:
 random rows, then random `_read_group` calls (groupbys, granularities,
 aggregates, orders, havings, limits, offsets) run through both tiers and
-compared row for row, twelve seeds each for scalars and for temporal
-granularities. Its first run found the array-aggregate order the inventory
-had marked unsupported and nothing else. What it does not draw: many2many and
-property groupbys, `sum_currency`, and the `read_grouping_sets` shapes, which
-keep their hand-written cases.
+compared row for row, twelve seeds each for scalars, for temporal
+granularities and for grouping sets. Its first run found the array-aggregate
+order the inventory had marked unsupported; the grouping-sets draw found that
+a many2one order term sorts the sets that lack it by `ANY_VALUE()` of the
+joined name, which PostgreSQL picks per group and the in-memory tier drops —
+no caller orders a set by a column it does not group by, so the draw keeps
+the many2one out of sets that lack it rather than pin either reading. What it
+does not draw: many2many and property groupbys and `sum_currency`, which keep
+their hand-written cases.
 
 ## R4 — Headless test runs skip the tours they select
 
