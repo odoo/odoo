@@ -65,7 +65,7 @@ export class DebugWidget extends Component {
         );
     }
     get isDisabled() {
-        return this.pos.cashier._role === "minimal";
+        return this.pos.cashier?._role === "minimal";
     }
     disableDebugMode() {
         const url = new URL(window.location.href);
