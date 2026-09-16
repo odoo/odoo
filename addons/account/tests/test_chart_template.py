@@ -154,6 +154,18 @@ def _account_vals(name, code, account_type):
         'account_type': account_type,
     }
 
+
+def _create_chart_template_mapping(name, country_id=None, country_code=None, module='account', parent=None, visible=True, **kwargs):
+    return {
+        'name': name,
+        'country_id': country_id,
+        'country_code': country_code,
+        'module': module,
+        'parent': parent,
+        'visible': visible,
+        **kwargs,
+    }
+
 CSV_DATA = {
     'tax_1': (
         '"id","name","type_tax_use","amount","amount_type","description","invoice_label","tax_group_id","repartition_line_ids/repartition_type",'
@@ -840,6 +852,236 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=True)
         self.assertEqual(company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
+
+    def test_has_same_parent(self):
+        def local_get_chart_template_mapping(self, get_all=False):
+            return {
+                'root': _create_chart_template_mapping('root'),
+                'branch_a': _create_chart_template_mapping('branch_a', parent='root'),
+                'leaf_a': _create_chart_template_mapping('leaf_a', parent='branch_a'),
+                'branch_b': _create_chart_template_mapping('branch_b', parent='root'),
+                'leaf_b': _create_chart_template_mapping('leaf_b', parent='branch_b'),
+                'other_root': _create_chart_template_mapping('other_root'),
+            }
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping):
+            ChartTemplate = self.env['account.chart.template']
+            self.assertTrue(ChartTemplate._has_same_parent('branch_a', 'branch_b'))
+            self.assertFalse(ChartTemplate._has_same_parent('leaf_a', 'leaf_b'))
+            self.assertFalse(ChartTemplate._has_same_parent('root', 'branch_a'))
+
+    def test_change_coa_with_existing_accounting_uses_reload_preprocessing(self):
+        def local_get_chart_template_mapping(self, get_all=False):
+            return {
+                'test': _create_chart_template_mapping('test', parent='root'),
+                'other_test': _create_chart_template_mapping('other_test', parent='root'),
+                'root': _create_chart_template_mapping('root', visible=False),
+            }
+
+        pre_reload_calls = []
+        original_pre_reload_data = AccountChartTemplate._pre_reload_data
+
+        def patched_pre_reload_data(chart_template, company, template_data, data, force_create=True, force_update=False):
+            pre_reload_calls.append((company, force_create, force_update))
+            return original_pre_reload_data(chart_template, company, template_data, data, force_create, force_update)
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True),
+            patch.object(AccountChartTemplate, '_pre_reload_data', patched_pre_reload_data),
+            patch.object(self.env.registry['res.company'], '_existing_accounting', return_value=True),
+        ):
+            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=False)
+
+        self.assertEqual(self.company.chart_template, 'other_test')
+        self.assertEqual(len(pre_reload_calls), 1)
+
+    def test_change_coa_with_existing_accounting_removes_records_from_previous_template(self):
+        def local_get_chart_template_mapping(coa_instance, get_all=False):
+            return {
+                'test': _create_chart_template_mapping('test'),
+                'other_test': _create_chart_template_mapping('other_test'),
+            }
+
+        def local_get_data(coa_instance, template_code, demo=False):
+            data = test_get_data(coa_instance, template_code, demo)
+            if template_code == 'test' and not demo:
+                # Explicitly inject the records for the first template
+                data['account.tax']['test_tax_1_template'] = _tax_vals('Tax 1', 15, '')
+                data['account.account']['test_account_1_template'] = {
+                    'name': 'Account 1',
+                    'code': '111111',
+                    'account_type': 'asset_current',
+                }
+            elif template_code == 'other_test' and not demo:
+                # Safely remove the records so they get deleted during the reload
+                data['account.tax'].pop('test_tax_1_template', None)
+                data['account.account'].pop('test_account_1_template', None)
+
+                data['account.tax']['test_tax_3_template'] = _tax_vals('Tax 3', 30, '')
+                data['account.account']['test_account_3_template'] = {
+                    'name': 'Account 3',
+                    'code': '333333',
+                    'account_type': 'asset_current',
+                }
+
+                data['res.company'][self.company.id]['account_sale_tax_id'] = 'test_tax_3_template'
+            return data
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(self.env.registry['res.company'], '_existing_accounting', return_value=False),
+        ):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        old_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', 'Tax 1'),
+        ])
+        old_account = self.env['account.account'].search([
+            ('company_ids', 'in', self.company.id),
+            ('name', '=', 'Account 1'),
+        ])
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(self.env.registry['res.company'], '_existing_accounting', return_value=True),
+        ):
+            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=False)
+
+        self.assertFalse(old_tax.exists())
+        self.assertFalse(old_account.exists())
+        self.assertRecordValues(self.env['account.tax'].search([('company_id', '=', self.company.id)]), [
+            {'name': 'Tax 2', 'active': True},
+            {'name': 'Tax 3', 'active': True},
+        ])
+        self.assertTrue(self.env['account.account'].search([
+            ('company_ids', 'in', self.company.id),
+            ('name', '=', 'Account 3'),
+            ('active', '=', True),
+        ]))
+
+    def test_change_coa_with_existing_accounting_archives_records_from_previous_template_when_deletion_fails(self):
+        def local_get_chart_template_mapping(coa_instance, get_all=False):
+            return {
+                'test': _create_chart_template_mapping('test'),
+                'other_test': _create_chart_template_mapping('other_test'),
+            }
+
+        def local_get_data(coa_instance, template_code, demo=False):
+            data = test_get_data(coa_instance, template_code, demo)
+            if template_code == 'test' and not demo:
+                data['account.tax']['test_tax_1_template'] = _tax_vals('Tax 1', 15)
+                data['account.account']['test_account_1_template'] = {
+                    'name': 'Account 1',
+                    'code': '111111',
+                    'account_type': 'asset_current',
+                }
+                data['account.tax']['test_tax_4_template'] = _tax_vals('Unused stale tax', 5)
+                data['account.account']['test_account_4_template'] = {
+                    'name': 'Unused stale account',
+                    'code': '400004',
+                    'account_type': 'asset_current',
+                }
+            elif template_code == 'other_test' and not demo:
+                data['account.tax'].pop('test_tax_1_template', None)
+                data['account.account'].pop('test_account_1_template', None)
+                data['account.tax']['test_tax_3_template'] = _tax_vals('Tax 3', 30)
+                data['account.account']['test_account_3_template'] = {
+                    'name': 'Account 3',
+                    'code': '300003',
+                    'account_type': 'asset_current',
+                }
+                data['res.company'][self.company.id]['account_sale_tax_id'] = 'test_tax_3_template'
+            return data
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(self.env.registry['res.company'], '_existing_accounting', return_value=False),
+        ):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        old_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', 'Tax 1'),
+        ])
+        old_account = self.env['account.account'].search([
+            ('company_ids', 'in', self.company.id),
+            ('name', '=', 'Account 1'),
+        ])
+        unused_old_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', 'Unused stale tax'),
+        ])
+        unused_old_account = self.env['account.account'].search([
+            ('company_ids', 'in', self.company.id),
+            ('name', '=', 'Unused stale account'),
+        ])
+
+        self.assertTrue(old_tax.exists(), "Tax 1 was not created")
+        self.assertTrue(old_account.exists(), "Account 1 was not created")
+        self.assertTrue(unused_old_tax.exists(), "Unused stale tax was not created")
+        self.assertTrue(unused_old_account.exists(), "Unused stale account was not created")
+
+        old_coa_moves = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'company_id': self.company.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'old_coa_tax_line_1',
+                        'quantity': 1.0,
+                        'price_unit': 100.0,
+                        'tax_ids': [Command.set(old_tax.ids)],
+                        'account_id': old_account.id,
+                    }),
+                ],
+            },
+            {
+                'move_type': 'in_invoice',
+                'company_id': self.company.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'old_coa_tax_line_2',
+                        'quantity': 1.0,
+                        'price_unit': 200.0,
+                        'tax_ids': [Command.set(old_tax.ids)],
+                        'account_id': old_account.id,
+                    }),
+                ],
+            },
+        ])
+        old_tax.invalidate_recordset(['is_used'])
+        self.assertTrue(old_tax.is_used)
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', local_get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(self.env.registry['res.company'], '_existing_accounting', return_value=True),
+        ):
+            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=False)
+
+        self.assertTrue(old_tax.exists())
+        self.assertFalse(old_tax.active)
+        self.assertTrue(old_account.exists())
+        self.assertFalse(old_account.active)
+        self.assertEqual(old_coa_moves.invoice_line_ids.tax_ids, old_tax)
+        self.assertEqual(old_coa_moves.invoice_line_ids.account_id, old_account)
+        self.assertFalse(unused_old_tax.exists())
+        self.assertFalse(unused_old_account.exists())
+        self.assertTrue(self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', '=', 'Tax 3'),
+            ('active', '=', True),
+        ]))
+        self.assertTrue(self.env['account.account'].search([
+            ('company_ids', 'in', self.company.id),
+            ('name', '=', 'Account 3'),
+            ('active', '=', True),
+        ]))
 
     def test_change_coa(self):
         def _get_chart_template_mapping(self, get_all=False):
