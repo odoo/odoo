@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('mass_mailing_dynamic_placeholder_tour',
         },
         {
             content: "Ensure the editable contain the dynamic field t tag",
-            trigger: `:iframe .note-editable.odoo-editor-editable t[t-out="object.company_name"]:contains("defValue")`,
+            trigger: `:iframe .note-editable.odoo-editor-editable t[t-out="object.company_name or 'defValue'"]:contains("defValue")`,
         },
         {
             content: "Discard form changes",
