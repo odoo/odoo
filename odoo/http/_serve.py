@@ -410,7 +410,11 @@ class _RequestServeMixin(RequestState):
                     return served
                 promoted = True
             else:
-                current_worker_thread().cursor_mode = "rw"
+                thread = current_worker_thread()
+                # The router records "ro->rw" when it pinned a read-only
+                # request to the primary; that reading outranks ours.
+                if getattr(thread, "cursor_mode", None) is None:
+                    thread.cursor_mode = "rw"
 
             env = self._require_env()
             cr = self._open_read_write_cursor(cr)

@@ -211,3 +211,14 @@ def test_readonly_error_after_transaction_finished_is_never_replayed(finished):
     assert this.calls["opened"] == []
     assert this.calls["reset_for_replay"] == []
     assert this.first_cursor.rollbacks == 0
+
+
+def test_a_mode_the_router_recorded_is_kept_for_the_access_log():
+    this, env = _make(readonly_route=True, replica=False)
+    current_worker_thread().cursor_mode = "ro->rw"
+    served = _run(this, env, lambda func, env, participant=None: func())
+
+    assert served == "served"
+    assert current_worker_thread().cursor_mode == "ro->rw", (
+        "a request pinned to the primary must not read as a plain rw route"
+    )
