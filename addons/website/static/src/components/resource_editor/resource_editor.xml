@@ -56,14 +56,14 @@
                     </div>
                 </label>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-primary" t-on-click="this.onSave"><i t-if="this.state.saving" class="oi oi-spin mr8" data-icon="autorenew"/>Save</button>
+                    <button class="btn btn-primary" t-on-click="this.onSave"><i t-if="this.state.saving" class="oi oi-spin mr8" data-icon="autorenew" role="img" aria-hidden="true"/>Save</button>
                     <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
                 </div>
             </div>
             <div t-if="this.state.currentResource" id="resource-editor-id">
                 <div class="float-end">
                     <button t-if="this.state.type !== 'xml' and this.isCustomResource(this.state.currentResource.url)" type="button" class="btn btn-sm btn-danger" t-on-click="this.onReset">
-                        <i class="oi" data-icon="undo"/>
+                        <i class="oi" data-icon="undo" role="img" aria-hidden="true"/>
                         Reset
                     </button>
                     <button t-if="this.state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="this.onFormat">Format</button>
@@ -84,7 +84,7 @@
     </t>
 
     <t t-name="website.ResourceEditor.ResourceLabel">
-        <i t-if="resource.customized or resource.dirty" t-att-class="{ 'oi mr8': true, 'text-warning': resource.dirty, 'text-success': resource.customized }" data-icon="save"/>
+        <i t-if="resource.customized or resource.dirty" t-att-class="{ 'oi mr8': true, 'text-warning': resource.dirty, 'text-success': resource.customized }" data-icon="save" role="img" aria-hidden="true"/>
         <t t-out="label"/>
     </t>
 

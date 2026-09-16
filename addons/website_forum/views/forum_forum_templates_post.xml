@@ -26,7 +26,7 @@
                   title="Solved"
                   aria-label="Solved"
                   class="badge bg-success">
-                    <i class="oi me-1" data-icon="check"/>Solved
+                    <i class="oi me-1" data-icon="check" role="img" aria-hidden="true"/>Solved
             </span>
         </div>
     </div>
@@ -66,7 +66,7 @@
                     <div t-if="not answer">Created on <span t-field="question.create_date" t-options='{"format": "d MMM yy "}'/></div>
                     <div t-if="answer">Answered on <span t-field="answer.create_date" t-options='{"format": "d MMM yy "}'/></div>
                     <div class="text-muted" title="Last Activity">
-                        <i class="oi oi-filled me-1" data-icon="calendar_today"/><span t-field="question.last_activity_date" t-options='{"format":"short"}'/>
+                        <i class="oi oi-filled me-1" data-icon="calendar_today" role="img" aria-hidden="true"/><span t-field="question.last_activity_date" t-options='{"format":"short"}'/>
                     </div>
                 </div>
             </div>
@@ -99,11 +99,11 @@
         </td>
         <td class="o_wforum_reply_count order-3 d-flex d-lg-table-cell flex-column text-end text-lg-center">
             <a t-if="question.child_count" class="text-reset" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
-                <i class="oi me-1 d-lg-none" data-icon="reply"/>
+                <i class="oi me-1 d-lg-none" data-icon="reply" role="img" aria-hidden="true"/>
                 <t t-out="question.child_count"/>
             </a>
             <span t-else="" class="opacity-50">
-                <i class="oi me-1 d-lg-none" data-icon="reply"/>
+                <i class="oi me-1 d-lg-none" data-icon="reply" role="img" aria-hidden="true"/>
                 0
             </span>
             <div class="d-lg-none flex-grow-1"/>
@@ -131,7 +131,7 @@
             <img t-if="uid" t-attf-class="o_wforum_avatar me-2 rounded-circle" t-att-src="website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
             <h4 class="my-0">Your Answer</h4>
         </div>
-        <button class="o_wforum_expand_toggle btn oi ms-auto" data-icon="expand_content" data-bs-toggle="collapse"/>
+        <button class="o_wforum_expand_toggle btn oi ms-auto" data-icon="expand_content" aria-label="Expand the reply box" data-bs-toggle="collapse"/>
     </div>
     <t t-if="request.params.get('nocontent')">
         <p class="alert alert-danger" role="alert">You cannot post an empty answer</p>
@@ -197,9 +197,9 @@
                     As a moderator you can either <b>Accept</b> or <b>Reject</b> this post.</p>
                 <div>
                     <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
-                        <i class="oi oi-fw me-1" data-icon="check"/>Accept</a>
+                        <i class="oi oi-fw me-1" data-icon="check" role="img" aria-hidden="true"/>Accept</a>
                     <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
-                        <i class="oi oi-fw me-1" data-icon="close"/>Reject</a>
+                        <i class="oi oi-fw me-1" data-icon="close" role="img" aria-hidden="true"/>Reject</a>
                 </div>
             </div>
             <div t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate" class="alert alert-warning mb-0 text-center" role="status" >
@@ -260,7 +260,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
                         href="#">
-                        <i class="oi me-1" data-icon="reply"/>Reply
+                        <i class="oi me-1" data-icon="reply" role="img" aria-hidden="true"/>Reply
                     </a>
                 </div>
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum">
@@ -362,12 +362,14 @@
                                 t-att-data-helper-no-karma="helper_no_karma"
                                 t-att-data-helper-decline="helper_decline"
                                 t-att-title="helper_no_karma if not post_id.can_accept else (helper_decline if answer.is_correct else (helper_accept if not answer.is_correct else (helper_own_post if answer.is_correct and answer.create_uid.id == uid else '')))"
+                                t-att-aria-label="helper_no_karma if not post_id.can_accept else (helper_decline if answer.is_correct else (helper_accept if not answer.is_correct else (helper_own_post if answer.is_correct and answer.create_uid.id == uid else '')))"
                                 data-bs-toggle="tooltip"
                                 t-attf-data-target="#answer-#{post_id.id}"
                                 t-attf-data-href="/forum/#{ slug(question.forum_id) }/post/#{ slug(answer) }/toggle_correct">
                                 <i
                                     t-attf-class="oi oi-lg #{ 'oi-filled text-success' if answer.is_correct else '' }"
                                     data-icon="check_circle"
+                                    role="img" aria-hidden="true"
                                 />
                             </a>
                         </t>
@@ -381,19 +383,19 @@
                                     data-bs-toggle="collapse" data-bs-target=".answer_collapse"
                                     href="#"
                                 >
-                                    <i class="oi me-1" data-icon="reply"/>Reply
+                                    <i class="oi me-1" data-icon="reply" role="img" aria-hidden="true"/>Reply
                                 </a>
                             </div>
                             <a t-if="user_answer" class="btn btn-sm btn-primary"
                                 t-attf-href="#answer-#{user_answer.id}"
                             >
-                                View my answer <i class="oi ms-1" data-icon="east"/>
+                                View my answer <i class="oi ms-1" data-icon="east" role="img" aria-hidden="true"/>
                             </a>
                         </t>
                         <div class="d-flex ms-auto me-2" t-if="post_id == answer and post_id.create_uid.id == uid">
                             <a class="btn btn-sm btn-outline-primary"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
-                                <i class="oi oi-filled" data-icon="edit"/>
+                                <i class="oi oi-filled" data-icon="edit" role="img" aria-hidden="true"/>
                                 Edit<span class="d-none d-lg-inline"> your answer</span>
                             </a>
                         </div>
@@ -403,25 +405,25 @@
                                t-att-data-bs-toggle="'collapse' if post_id.can_comment else None"
                                t-attf-href="##{ _answer_comment_collapse_uid if post_id == answer else _question_comment_collapse_uid}"
                             >
-                                <i t-attf-class="oi oi-filled #{ 'karma_required' if not post_id.can_comment else ''}" data-icon="chat_bubble" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
+                                <i t-attf-class="oi oi-filled #{ 'karma_required' if not post_id.can_comment else ''}" data-icon="chat_bubble" role="img" aria-label="Comment" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
                             <t t-call="website_forum.follow_button" t-if="post_id.parent_id"
                                 object="post_id" btn_classes.f="opacity-50 opacity-100-hover"/>
                             <div class="dropdown">
                                 <a type="button" class="btn opacity-50 opacity-100-hover px-2" data-bs-toggle="dropdown">
-                                    <i class="oi" data-icon="family_history" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
+                                    <i class="oi" data-icon="family_history" role="img" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Share" title="Share"/>
                                 </a>
                                 <div class="dropdown-menu css_editable_mode_hidden">
                                     <div class="s_share o_no_link_popover text-center">
                                         <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
-                                            <i class="oi oi-stack" data-icon="oi_facebook"/>
+                                            <i class="oi oi-stack" data-icon="oi_facebook" role="img" aria-hidden="true"/>
                                         </a>
                                         <t t-set="_hashtags" t-value="(' %23' + post_type) if post_type else ''"/>
                                         <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
-                                            <i class="oi oi-stack" data-icon="oi_x"/>
+                                            <i class="oi oi-stack" data-icon="oi_x" role="img" aria-hidden="true"/>
                                         </a>
                                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
-                                            <i class="oi oi-stack" data-icon="oi_linkedin"/>
+                                            <i class="oi oi-stack" data-icon="oi_linkedin" role="img" aria-hidden="true"/>
                                         </a>
                                     </div>
                                 </div>
@@ -443,7 +445,7 @@
 
 <template id="post_dropdown">
     <a class="btn opacity-50 opacity-100-hover px-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="oi" data-icon="more_horiz"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
+        <i class="oi" data-icon="more_horiz" role="img" aria-label="More" data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
     </a>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
         <t t-if="post_id == question">
@@ -555,8 +557,8 @@
                     <div t-field="comment.body" class="o_wforum_readable oe_no_empty small text-break"/>
                 </div>
                 <div t-if="can_interact_with_post" class="dropdown ms-auto">
-                    <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="oi" data-icon="more_horiz"/>
+                    <a class="btn text-muted" type="button" id="dropdownMenuButton" aria-label="Options" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="oi" data-icon="more_horiz" role="img" aria-hidden="true"/>
                     </a>
                     <div class="dropdown-menu">
                         <t t-set="comment_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(object) }/comment/#{ slug(comment) }"/>

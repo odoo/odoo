@@ -99,27 +99,27 @@
             t-att-aria-label="sameLangDir ? backward : forward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             t-on-click="sameLangDir ? slidePrev : slideNext">
-        <span class="oi oi-fw" data-icon="keyboard_arrow_left"/>
+        <span class="oi oi-fw" data-icon="keyboard_arrow_left" role="img" aria-hidden="true"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
             t-att-title="sameLangDir ? forward : backward"
             t-att-aria-label="sameLangDir ? forward : backward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             t-on-click="sameLangDir ? slideNext : slidePrev">
-        <span class="oi oi-fw" data-icon="keyboard_arrow_right"/>
+        <span class="oi oi-fw" data-icon="keyboard_arrow_right" role="img" aria-hidden="true"/>
     </button>
     <button class="btn btn-success ms-0 py-0 px-1 me-1"
             title="Add Slide"
             aria-label="Add Slide"
             t-on-click="this.addSlide">
-        <span class="oi oi-fw" data-icon="add"/>
+        <span class="oi oi-fw" data-icon="add" role="img" aria-hidden="true"/>
     </button>
     <button class="btn btn-danger py-0 px-1"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="this.removeSlide">
-        <span class="oi oi-fw" data-icon="remove"/>
+        <span class="oi oi-fw" data-icon="remove" role="img" aria-hidden="true"/>
     </button>
 </t>
 

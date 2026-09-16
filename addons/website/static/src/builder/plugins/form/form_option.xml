@@ -25,7 +25,7 @@
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
-                <i class="oi" data-icon="visibility_off"/>
+                <i class="oi" data-icon="visibility_off" role="img" aria-hidden="true"/>
             </BuilderButton>
             <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'" id="'label_position_top_opt'"/>
             <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
@@ -247,7 +247,7 @@
                     max="this.domStateCurrentFieldInput.maxLength"
                     applyTo="`input, textarea`"
                 />
-            </BuilderRow>   
+            </BuilderRow>
             <BuilderRow label.translate="Max Characters" level="1">
                 <BuilderNumberInput
                     title.translate="The maximum number of characters allowed."
@@ -363,7 +363,7 @@
             <p class="hb-row-label mb-0 flex-basis-auto"
                 t-att-data-tooltip="this.multiTextRequirementConfig.tooltip">
                 <t t-out="this.multiTextRequirementConfig.title"/>
-                <i class="oi icon-sup" data-icon="question_mark"/>
+                <i class="oi icon-sup" data-icon="question_mark" role="img" aria-hidden="true"/>
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"
