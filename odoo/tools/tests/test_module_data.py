@@ -55,7 +55,12 @@ class _Cursor:
             if self.modules.get(params[0], "uninstalled") != "uninstalled":
                 self.modules[params[0]] = "uninstalled"
                 self.rowcount = 1
-        elif code.startswith("DELETE FROM ir_module_module_dependency"):
+        elif code.startswith(
+            (
+                "UPDATE ir_module_module SET auto_install = FALSE",
+                "DELETE FROM ir_module_module_dependency",
+            )
+        ):
             pass
         else:
             raise AssertionError(f"unexpected statement: {code}")
