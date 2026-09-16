@@ -99,20 +99,25 @@ class TestResource(TestResourceCommon):
 
     def test_multi_company_prevent_incoherent_calendar_for_material_resource(self):
         """ Test that changing the company of a material resource sets its
-            working calendar to the new company's flexible calendar, in order
+            working calendar to the new company's fully flexible calendar, in order
             to prevent incoherent data.
 
             Test case:
-            1) create multiple companies by setting up second company
+            1) create multiple companies by setting up second company, with a fully flexible calendar
             2) set a material of default company with a working calendar
             3) switch the company of material resource to 2nd_company
-            4) verify that the working calendar is set to the new company's flexible calendar
+            4) verify that the working calendar is set to the new company's fully flexible calendar
         """
 
-        # create a second company
+        # create a second company, with its own fully flexible calendar
         second_company = self.env['res.company'].create({
             'name': 'Arasaka',
             'currency_id': self.env.ref('base.USD').id,
+        })
+        fully_flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'company_id': second_company.id,
+            'calendar_type': 'undefined',
         })
         resource = self.env['resource.resource'].create({
             'name': 'resource',
@@ -138,10 +143,9 @@ class TestResource(TestResourceCommon):
         form.company_id = second_company
         form.save()
 
-        # check that the working calendar is set to the new company's flexible calendar
+        # check that the working calendar is set to the new company's fully flexible calendar
         self.assertEqual(resource.company_id, second_company, "Material resource should have the new company set")
-        self.assertEqual(resource.calendar_id.company_id, second_company, "Material resource's calendar should belong to the new company")
-        self.assertEqual(resource.calendar_id.calendar_type, 'undefined', "Material resource should be assigned a flexible calendar when changing its company")
+        self.assertEqual(resource.calendar_id, fully_flexible_calendar, "Material resource should be assigned the new company's fully flexible calendar")
 
     def test_change_company_id_with_linked_resources_should_raise_validation_error(self):
         self.company_a = self.env['res.company'].create({'name': 'Company A'})
