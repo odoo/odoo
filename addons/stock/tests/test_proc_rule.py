@@ -930,9 +930,11 @@ class TestProcRule(TransactionCase):
 
     def test_orderpoint_wizard_warehouse_option_lead_time(self):
         """Check the Warehouses tab lead time follows the selected resupply route."""
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH Address'})
         warehouse_a = self.env['stock.warehouse'].sudo().create({
             'name': 'Lead Time Warehouse A',
             'code': 'LTWA',
+            'partner_id': dummy_partner.id,
         })
         warehouse_b = self.env['stock.warehouse'].sudo().create({
             'name': 'Lead Time Warehouse B',

@@ -347,9 +347,11 @@ class TestPickShip(TestStockCommon):
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         warehouse_1 = self.warehouse_1
         warehouse_1.delivery_steps = 'pick_pack_ship'
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH2 Address'})
         warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Small Warehouse',
-            'code': 'SWH'
+            'code': 'SWH',
+            'partner_id': dummy_partner.id,
         })
         warehouse_1.resupply_wh_ids = [Command.set([warehouse_2.id])]
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
@@ -3081,11 +3083,12 @@ class TestRoutes(TestStockCommon):
         to ressuply the other one, Then check if the quantity and the product are matching
         """
         self.product_uom_qty = 42
-
         warehouse_1 = self.warehouse_1
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH2 Address'})
         warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Small Warehouse',
-            'code': 'SWH'
+            'code': 'SWH',
+            'partner_id': dummy_partner.id,
         })
         warehouse_1.resupply_wh_ids = [Command.set([warehouse_2.id])]
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
