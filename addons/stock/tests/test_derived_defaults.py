@@ -526,3 +526,126 @@ class TestConstraintTriggers(TestStockCommon):
             "the product moved out from under the lot",
             lambda: quant.write({"product_id": other.id}),
         )
+
+
+@tagged("post_install", "-at_install")
+class TestCategoryRouteInheritance(TestStockCommon):
+    """`product.category.total_route_ids`, which decides a product's routes.
+
+    It is read through `product.template.route_from_categ_ids` on the product
+    form and by route resolution in `stock_rule_selection`, `stock_orderpoint`,
+    `stock_replenishment_report`, `sale_stock` and `stock_dropshipping`.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.route_sel, cls.route_other = cls.env["stock.route"].create(
+            [
+                {"name": "Categ inherit", "product_categ_selectable": True},
+                {"name": "Categ other", "product_categ_selectable": True},
+            ]
+        )
+        Categ = cls.env["product.category"]
+        cls.categ_root = Categ.create(
+            {"name": "Inherit root", "route_ids": [(6, 0, cls.route_sel.ids)]}
+        )
+        cls.categ_child = Categ.create(
+            {"name": "Inherit child", "parent_id": cls.categ_root.id}
+        )
+        cls.categ_deep = Categ.create(
+            {"name": "Inherit deep", "parent_id": cls.categ_child.id}
+        )
+
+    def test_a_batch_read_inherits_the_same_routes_as_a_single_one(self):
+        """The regression this pins cost every descendant its ancestors' routes.
+
+        Computing `parent_route_ids` by reading `parent_id.total_route_ids` is
+        right one record at a time and wrong for a recordset: the parent's
+        total is still being computed, the in-progress value is empty, and the
+        descendants come back bare. `mapped()` is how route resolution reads
+        this, so the batch path is the one that matters.
+        """
+        chain = self.categ_root | self.categ_child | self.categ_deep
+        single = []
+        for category in chain:
+            self.env.invalidate_all()
+            single.append(category.total_route_ids)
+
+        self.env.invalidate_all()
+        self.env["product.category"].search([]).mapped("total_route_ids")
+        batched = [category.total_route_ids for category in chain]
+
+        self.assertEqual(
+            batched,
+            single,
+            "a batch read of total_route_ids disagrees with a single-record one",
+        )
+        for category in chain:
+            self.assertIn(
+                self.route_sel,
+                category.total_route_ids,
+                f"{category.name} lost the route its ancestor carries",
+            )
+
+    def test_the_search_does_not_re_enter_its_own_domain(self):
+        """`filtered_domain` on this leaf routes back through the field's own
+        `search=`. It used to, and every search raised `Domain nesting too deep
+        to optimize` -- reachable from a custom filter on the product form's
+        `route_from_categ_ids`."""
+        found = self.env["product.category"].search(
+            [("total_route_ids", "in", self.route_sel.ids)]
+        )
+        self.assertEqual(
+            found & (self.categ_root | self.categ_child | self.categ_deep),
+            self.categ_root | self.categ_child | self.categ_deep,
+            "the search missed a descendant that inherits the route",
+        )
+        self.assertFalse(
+            self.env["product.category"].search(
+                [("total_route_ids", "in", self.route_other.ids)]
+            )
+            & self.categ_root,
+        )
+
+    def test_the_search_agrees_with_reading_the_field(self):
+        Categ = self.env["product.category"]
+        for operator in ("in", "not in"):
+            for value in (self.route_sel.ids, self.route_other.ids, []):
+                with self.subTest(operator=operator, value=value):
+                    by_search = Categ.search([("total_route_ids", operator, value)])
+                    wanted = set(value)
+                    hit = Categ.browse(
+                        [
+                            category.id
+                            for category in Categ.search([])
+                            if wanted & set(category.total_route_ids.ids)
+                        ]
+                    )
+                    expected = hit if operator == "in" else Categ.search([]) - hit
+                    self.assertEqual(by_search, expected)
+
+    def test_a_link_the_fields_domain_hides_stays_hidden(self):
+        """`route_ids` carries `domain=[("product_categ_selectable", "=", True)]`
+        and a relational field's domain is applied on READ, so a row in the
+        relation table pointing at a non-selectable route is invisible to the
+        field. The search bounds its candidates with that table, which
+        over-approximates; the read must still decide."""
+        hidden = self.env["stock.route"].create(
+            {"name": "Categ hidden", "product_categ_selectable": False}
+        )
+        owner = self.env["product.category"].create({"name": "Inherit hidden"})
+        self.env.cr.execute(
+            "INSERT INTO stock_route_categ (categ_id, route_id) VALUES (%s, %s)",
+            (owner.id, hidden.id),
+        )
+        self.env.invalidate_all()
+
+        self.assertNotIn(hidden, owner.total_route_ids)
+        self.assertNotIn(
+            owner,
+            self.env["product.category"].search(
+                [("total_route_ids", "in", hidden.ids)]
+            ),
+            "the search returned a link the field's own domain hides",
+        )
