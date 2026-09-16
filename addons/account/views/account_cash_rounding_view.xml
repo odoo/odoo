@@ -43,6 +43,7 @@
                                 <field name="partner_category_ids" widget="many2many_tags"/>
                                 <field name="payment_method_line_ids" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -69,6 +70,7 @@
                 <list string="Rounding List" editable="top" multi_edit="1" open_form_view="True">
                     <field name="sequence" widget="handle"/>
                     <field name="name_placeholder" column_invisible="1"/>
+                    <field name="company_id" column_invisible="1"/>
                     <field name="name" options="{'placeholder_field': 'name_placeholder'}"/>
                     <field name="rounding"/>
                     <field name="strategy"/>
