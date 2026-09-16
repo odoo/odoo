@@ -18,7 +18,7 @@ from . import decorators as api
 from . import registration
 from .components.model_graph import ModelGraph
 from .components.storage import DictBackend
-from .fields import Boolean, Char, Many2one
+from .fields import Boolean, Char, Many2many, Many2one
 from .models import AbstractModel, MetaModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
@@ -83,6 +83,7 @@ class _TestResUsers(Model):
     tz = Char()
     lang = Char()
     company_id = Many2one("res.company")
+    company_ids = Many2many("res.company")
     # res.users inherits res.partner's parent_id: a many2one to a user
     # describes itself with the hierarchy operators, as on PostgreSQL
     parent_id = Many2one("res.users")
@@ -91,7 +92,7 @@ class _TestResUsers(Model):
     group_xmlids = Char()
 
     def _get_company_ids(self):
-        return self.company_id.ids
+        return (self.company_id | self.company_ids).ids
 
     def _held_groups(self) -> set[str]:
         self.check_singleton()

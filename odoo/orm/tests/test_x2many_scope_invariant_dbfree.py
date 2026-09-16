@@ -6,7 +6,9 @@ nothing. The maintenance rules (read fills, full write evicts the others,
 inverse-side addition appends to the superuser and the writer and evicts the
 rest, removal applies everywhere) are each pinned by a named test elsewhere;
 this file checks the invariant they exist for, after every step of a random
-sequence of reads and writes by two users and the superuser.
+sequence of reads and writes by users in several company scopes and the
+superuser, over a plain one2many, one with a callable domain, one that
+bypasses search access, and a many2many.
 
 The one stated exception -- the writer's own slot lists what the writer wrote
 even when its read rule hides it -- is kept out of the walk by construction: a
@@ -34,6 +36,10 @@ class Order(models.Model):
 
     name = fields.Char()
     line_ids = fields.One2many("inv.line", "order_id")
+    positive_line_ids = fields.One2many(
+        "inv.line", "order_id", domain=lambda self: [("value", ">", 0)]
+    )
+    any_line_ids = fields.One2many("inv.line", "order_id", bypass_search_access=True)
     tag_ids = fields.Many2many("inv.tag")
     total = fields.Integer(compute="_compute_total", store=True)
 
@@ -52,6 +58,7 @@ class Line(models.Model):
     order_id = fields.Many2one("inv.order")
     value = fields.Integer()
     secret = fields.Boolean()
+    company_id = fields.Many2one("res.company")
 
 
 class Tag(models.Model):
@@ -80,33 +87,59 @@ class IrRule(models.AbstractModel):
     _name = "ir.rule"
     _module = _MOD + "_rules"
     _description = (
-        "ir.rule (test stub): secret lines and tags are hidden from user reads"
+        "ir.rule (test stub): secret lines and tags are hidden from user reads, "
+        "a line of another company too"
     )
 
     def _get_domain_accessible_records(self, model_name, mode="read"):
-        if model_name in ("inv.line", "inv.tag") and mode == "read":
+        if mode != "read":
+            return Domain.TRUE
+        if model_name == "inv.tag":
             return Domain("secret", "=", False)
+        if model_name == "inv.line":
+            return Domain("secret", "=", False) & (
+                Domain("company_id", "=", False)
+                | Domain("company_id", "in", self.env.companies.ids)
+            )
         return Domain.TRUE
 
     def _prepare_access_error(self, operation, records):
         return AccessError(f"{operation} denied on {records}")
 
 
-USERS = (2, 3)
+# "two" belongs to both companies, "three" to the second; a scope is a user
+# with the companies it has switched to
+SCOPES = (
+    ("two@c1", "two", ("c1",)),
+    ("two@c1c2", "two", ("c1", "c2")),
+    ("three@c2", "three", ("c2",)),
+)
+STORED_X2MANY = ("line_ids", "positive_line_ids", "any_line_ids", "tag_ids")
 
 
-def _scopes(env):
-    return {"sudo": env, **{f"user{uid}": env(user=uid, su=False) for uid in USERS}}
+def _scopes(env, users, companies):
+    scopes = {"sudo": env}
+    for name, user, company_names in SCOPES:
+        scopes[name] = env(
+            user=users[user].id,
+            context={"allowed_company_ids": [companies[c].id for c in company_names]},
+            su=False,
+        )
+    return scopes
 
 
 def _truth(scope_env, field, record_id):
-    # what the scope's search returns: the relation, then the scope's read
-    # rule over it -- neither comodel overrides _search
+    # what the scope's search returns: the field's domain over the relation,
+    # then the scope's read rule; bypass_search_access relaxes a search
+    # *through* the field, never the field's own read. Neither comodel
+    # overrides _search
     comodel = scope_env[field.comodel_name].sudo()
+    host = scope_env[field.model_name].browse(record_id)
     if field.is_one2many:
         domain = Domain(field.inverse_name, "=", record_id)
     else:
         domain = Domain("order_ids", "in", [record_id])
+    domain &= field.get_comodel_domain(host)
     related = comodel.browse(
         comodel._search(domain, order=comodel._order, active_test=False)
     )
@@ -118,13 +151,13 @@ def _truth(scope_env, field, record_id):
     return related._ids
 
 
-def _check_invariant(env, orders, log):
+def _check_invariant(env, scopes, orders, log):
     env.flush_all()
-    for field in (orders._fields["line_ids"], orders._fields["tag_ids"]):
+    for field in (orders._fields[name] for name in STORED_X2MANY):
         for key, slot in list(env.core.iter_context_caches(field)):
             if key == PENDING_SCOPE_KEY:
                 continue
-            for name, scope_env in _scopes(env).items():
+            for name, scope_env in scopes.items():
                 if scope_env.get_cache_key(field) != key:
                     continue
                 for order_id in orders._ids:
@@ -151,7 +184,20 @@ def _walk(seed, steps):
     rng = random.Random(seed)
     log = []
     with model_test_env(Order, Line, Tag, IrModelAccess, IrRule) as env:
-        scopes = _scopes(env)
+        c1, c2 = env["res.company"].create([{"name": "c1"}, {"name": "c2"}])
+        companies = {"c1": c1, "c2": c2}
+        two, three = env["res.users"].create(
+            [
+                {
+                    "name": "two",
+                    "company_id": c1.id,
+                    "company_ids": [Command.link(c2.id)],
+                },
+                {"name": "three", "company_id": c2.id},
+            ]
+        )
+        scopes = _scopes(env, {"two": two, "three": three}, companies)
+        company_ids = [False, c1.id, c2.id]
         orders = env["inv.order"].create([{"name": f"o{i}"} for i in range(3)])
         tags = env["inv.tag"].create(
             [{"name": f"t{i}", "secret": i == 3} for i in range(4)]
@@ -181,18 +227,21 @@ def _walk(seed, steps):
                     "invalidate",
                     "read_total",
                     "toggle_secret",
+                    "read_positive",
+                    "read_any",
+                    "move_company",
                 ]
             )
             log.append(f"{step}: {name} {op} on {order.name}")
             try:
-                _apply(op, name, scope_env, order, orders, tags, rng, env)
+                _apply(op, name, scope_env, order, orders, tags, rng, env, company_ids)
             except AccessError as exc:
                 # a denied write changes nothing, and the slots must say so
                 log[-1] += f" (denied: {exc})"
-            _check_invariant(env, orders, log)
+            _check_invariant(env, scopes, orders, log)
 
 
-def _apply(op, name, scope_env, order, orders, tags, rng, env):
+def _apply(op, name, scope_env, order, orders, tags, rng, env, company_ids):
     def lines_of(order):
         return scope_env["inv.line"].search([("order_id", "=", order.id)])
 
@@ -205,8 +254,16 @@ def _apply(op, name, scope_env, order, orders, tags, rng, env):
             _ = order.total
         case "create_line":
             secret = name == "sudo" and rng.random() < 0.3
+            companies = (
+                company_ids if name == "sudo" else [False, *scope_env.companies.ids]
+            )
             scope_env["inv.line"].create(
-                {"order_id": order.id, "value": rng.randrange(10), "secret": secret}
+                {
+                    "order_id": order.id,
+                    "value": rng.randrange(-2, 10),
+                    "secret": secret,
+                    "company_id": rng.choice(companies),
+                }
             )
         case "move_line":
             if line := lines_of(order)[:1]:
@@ -230,6 +287,17 @@ def _apply(op, name, scope_env, order, orders, tags, rng, env):
             if name == "sudo":
                 if line := lines_of(order)[:1]:
                     line.write({"secret": not line.secret})
+        case "read_positive":
+            _ = order.positive_line_ids
+        case "read_any":
+            _ = order.any_line_ids
+        case "move_company":
+            # a user may move a line it reads to a company it belongs to
+            if line := lines_of(order)[:1]:
+                choices = (
+                    company_ids if name == "sudo" else [False, *scope_env.companies.ids]
+                )
+                line.write({"company_id": rng.choice(choices)})
         case "invalidate":
             env.invalidate_all()
 

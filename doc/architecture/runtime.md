@@ -334,8 +334,11 @@ writer itself wrote in this transaction even when its read rule would hide it (a
 create or write rule may admit what the read rule hides; checking would cost the
 comodel's access check on every write, and upstream reads the same way).
 `odoo/orm/tests/test_x2many_scope_invariant_dbfree.py` walks forty random
-sequences of reads and writes by two users and the superuser and checks the
-invariant after every step; `base/tests/test_x2many_cache_scope.py::
+sequences of reads and writes by two users in three company scopes and the
+superuser — over a plain one2many, one with a callable domain, one declared
+`bypass_search_access` and a many2many, with rule fields of both kinds written
+along the way — and checks the invariant after every step (300 further seeds
+at 80 steps read clean on 2026-09-16); `base/tests/test_x2many_cache_scope.py::
 TestX2manyScopeInvariant` is the same walk on PostgreSQL with `res.partner`,
 its tags and a name rule. A cache rule that breaks the invariant fails there
 before it fails a query pin.
