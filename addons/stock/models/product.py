@@ -627,11 +627,9 @@ class ProductProduct(models.Model):
 
     def action_view_related_putaway_rules(self):
         self.ensure_one()
-        domain = [
-            '|',
-                ('product_id', '=', self.id),
-                ('category_id', '=', self.product_tmpl_id.categ_id.id),
-        ]
+        domain = [('product_id', '=', self.id)]
+        if self.product_tmpl_id.categ_id:
+            domain = ['|', *domain, ('category_id', '=', self.product_tmpl_id.categ_id.id)]
         return self.env['product.template']._get_action_view_related_putaway_rules(domain)
 
     def action_view_storage_category_capacity(self):
@@ -1227,11 +1225,9 @@ class ProductTemplate(models.Model):
 
     def action_view_related_putaway_rules(self):
         self.ensure_one()
-        domain = [
-            '|',
-                ('product_id.product_tmpl_id', '=', self.id),
-                ('category_id', '=', self.categ_id.id),
-        ]
+        domain = [('product_id.product_tmpl_id', '=', self.id)]
+        if self.categ_id:
+            domain = ['|', *domain, ('category_id', '=', self.categ_id.id)]
         return self._get_action_view_related_putaway_rules(domain)
 
     def action_view_storage_category_capacity(self):
