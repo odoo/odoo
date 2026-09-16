@@ -817,6 +817,43 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(so.order_line[0].price_unit, 1200)
         self.assertEqual(so.order_line[0].amount_to_invoice_at_date, 2400)
 
+    def test_duplicate_sol_custom_price_retained(self):
+        test_product = self.env['product.product'].create({
+            'name': 'Duplication Product',
+            'list_price': 10.0,
+            'taxes_id': False,
+        })
+        order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        custom_price = 99.0
+        qty = 2.0
+
+        changes_list = [{
+            'order_id': order.id,
+            'product_id': test_product.id,
+            'product_uom_qty': qty,
+            'price_unit': custom_price,
+        }]
+        fields_spec = {
+            'product_id': {},
+            'product_uom_qty': {},
+            'price_unit': {},
+            'price_subtotal': {},
+        }
+
+        result = self.env['sale.order.line'].onchange_batch(changes_list, [], fields_spec)
+        line_vals = result[0].get('value', {})
+
+        self.assertEqual(
+            line_vals.get('price_unit'),
+            custom_price,
+            "The duplicated line should retain the custom price of $99.0, not reset to $10.0."
+        )
+        self.assertEqual(
+            line_vals.get('price_subtotal'),
+            custom_price * qty,
+            "The subtotal should be accurately calculated using the custom copied price."
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
