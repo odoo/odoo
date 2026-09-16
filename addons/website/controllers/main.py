@@ -839,6 +839,8 @@ class Website(Home):
         is_dark='0',
         **kwargs,
     ):
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise NotFound()
         if not theme_name or not re.fullmatch(r'[a-z0-9_]+', theme_name):
             raise NotFound()
         preview_url = request.env['website']._get_configurator_theme_preview_url(theme_name)
