@@ -2153,6 +2153,47 @@ class ProjectProject(models.Model):
             "allow_recurring_tasks", "project.group_project_recurring_tasks"
         )
 
+    def _get_fields_assignment(self) -> set[str]:
+        """The fields a write names the project manager through.
+
+        `user_id` is the manager everything downstream reads, but a layer that
+        composes it from fields of its own must name those here, or every hook
+        keyed on a manager change stops firing.
+        """
+        return {"user_id"}
+
+    def _get_assigned_users(self, values: dict[str, Any]):
+        """The user a write makes the manager, whatever field carried it.
+
+        Read before the write is applied, so a composed `user_id` cannot be read
+        back from the record yet.
+        """
+        user_id = values.get("user_id")
+        return self.env["res.users"].browse(user_id) if user_id else self.env["res.users"]
+
+    @api.model
+    def _prepare_assignment_vals(self, users) -> dict[str, Any]:
+        return {"user_id": users[:1].id}
+
+    def _message_auto_subscribe_followers(
+        self, updated_values: dict, default_subtype_ids: list[int]
+    ) -> list:
+        # Not super()'s: it subscribes `user_id` only while that field is tracked,
+        # and a layer composing it from its own tracked fields leaves it untracked.
+        # The manager follows the project either way.
+        manager = self._get_assigned_users(updated_values).sudo()
+        if not manager or not manager.active or not manager.partner_id:
+            return super()._message_auto_subscribe_followers(
+                updated_values, default_subtype_ids
+            )
+        return [
+            (
+                manager.partner_id.id,
+                default_subtype_ids,
+                "mail.message_user_assigned" if manager != self.env.user else False,
+            )
+        ]
+
     def message_subscribe(
         self,
         partner_ids: list[int] | None = None,

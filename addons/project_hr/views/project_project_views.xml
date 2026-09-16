@@ -16,6 +16,12 @@
                     name="employee_id"
                     string="Project Manager"
                     domain="[('company_id', '=', company_id)]" />
+                <field
+                    name="direct_user_id"
+                    string="Project Manager"
+                    widget="many2one_avatar_user"
+                    options="{'no_open': True, 'no_create': True}"
+                    invisible="not direct_user_id" />
             </xpath>
         </field>
     </record>
@@ -27,6 +33,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="employee_id" string="Project Manager (Employee)" />
+                <field name="direct_user_id" string="Project Manager (User)" />
             </xpath>
         </field>
     </record>
