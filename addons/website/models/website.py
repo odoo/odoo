@@ -1770,6 +1770,10 @@ class Website(models.CachedModel):
         homepage_url = self.homepage_url
         pages = self._get_website_pages(domain)
 
+        # Only fetch the fields needed below: lazily reading a view field would
+        # prefetch arch_db arch_prev for every page and may end in a out-of-memory error.
+        pages.view_id.fetch(['name', 'priority', 'write_date'])
+
         for page in pages:
             if ignore_custom_homepage and homepage_url == page['url']:
                 continue
