@@ -100,6 +100,11 @@ export class FontSizePlugin extends Plugin {
                     },
                     document: this.document,
                     maxFontSize: this.config.maxFontSize,
+                    isSelectionInEditable: () =>
+                        this.dependencies.selection.isSelectionInEditable(
+                            this.document.getSelection()
+                        ),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
             }),
         ],
