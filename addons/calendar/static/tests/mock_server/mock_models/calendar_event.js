@@ -35,7 +35,8 @@ export class CalendarEvent extends models.ServerModel {
     }
 
     _store_calendar_event_fields(res) {
-        res.extend(["name", "start", "stop", "location"]);
+        res.extend(["name", "start", "stop", "location", "videocall_location"]);
         res.many("partner_ids", ["name"]);
+        res.one("videocall_channel_id", []);
     }
 }
