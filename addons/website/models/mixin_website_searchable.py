@@ -55,17 +55,22 @@ class MixinWebsiteSearchable(models.AbstractModel):
         for result in results_data:
             result["_fa"] = icon
             result["_mapping"] = mapping
+        # `escaped_twice` is declared by the detail, not guessed from a field
+        # name. It used to read `if html_field == "arch"` -- one model's field
+        # name hardcoded in the mixin every searchable model shares, the same
+        # shape as the `arch_db` special case the fuzzy enumerators carried.
         html_fields = [
-            config["name"] for config in mapping.values() if config.get("html")
+            (config["name"], config.get("escaped_twice"))
+            for config in mapping.values()
+            if config.get("html")
         ]
         if html_fields:
             for data in results_data:
-                for html_field in html_fields:
+                for html_field, escaped_twice in html_fields:
                     if data[html_field]:
-                        if html_field == "arch":
+                        if escaped_twice:
                             data[html_field] = re.sub(
                                 r"&amp;(?=\w+;)", "&", data[html_field]
                             )
-                        text = text_from_html(data[html_field], True)
-                        data[html_field] = text
+                        data[html_field] = text_from_html(data[html_field], True)
         return results_data

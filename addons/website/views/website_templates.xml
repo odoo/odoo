@@ -4194,6 +4194,16 @@
                             t-as="result" />
                     </div>
                     <div
+                        t-if="search_count &gt; search_count_reachable"
+                        class="alert alert-info mt8"
+                        role="alert">
+                        Showing the first
+                        <t t-out="search_count_reachable" />
+                        of
+                        <t t-out="search_count" />
+                        matches. Narrow your search to reach the rest.
+                    </div>
+                    <div
                         t-if="pager"
                         class="o_portal_pager d-flex justify-content-center">
                         <t t-call="website.pager" />

@@ -384,21 +384,36 @@ class Website(models.Model):
 
             website.blocked_third_party_domains = full_list
 
-    def _get_blocked_third_party_domains_list(self):
-        return [
+    @tools.ormcache("self.id", cache="templates")
+    def _get_blocked_third_party_domains_tuple(self):
+        # Split once per website rather than once per rendered element: qweb
+        # calls _post_processing_att for every element it compiles, and for
+        # every element carrying a dynamic attribute on every render, and the
+        # default blocklist is ~200 lines. Cached in the "templates" group,
+        # which `write` already clears for `custom_blocked_third_party_domains`
+        # (TEMPLATE_AFFECTING_FIELDS). Cached as a tuple: an ormcache must not
+        # hand out a mutable object for a caller to mutate in place.
+        return tuple(
             domain
             for line in (self.blocked_third_party_domains or "").split("\n")
             if (domain := line.strip().lower())
-        ]
+        )
 
-    def _get_blocked_iframe_containers_classes(self):
-        return {
+    def _get_blocked_third_party_domains_list(self):
+        return list(self._get_blocked_third_party_domains_tuple())
+
+    _BLOCKED_IFRAME_CONTAINER_CLASSES = frozenset(
+        {
             "s_map",
             "s_instagram_page",
             "o_facebook_page",
             "o_background_video",
             "media_iframe_video",
         }
+    )
+
+    def _get_blocked_iframe_containers_classes(self):
+        return self._BLOCKED_IFRAME_CONTAINER_CLASSES
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1275,12 +1290,16 @@ class Website(models.Model):
     def _get_website_pages(self, domain=None, order="name", limit=None):
         website = self.get_current_website()
         domain = Domain(domain or Domain.TRUE) & website.website_domain()
+        # The limit is applied AFTER the shadowed generics are dropped. Applied
+        # in SQL it cut the rows the dedup was about to choose between, so a url
+        # carrying both a generic page and this website's override could lose
+        # both: `_get_website_pages([("url", "=", u)], limit=1)` answered with
+        # nothing for a url that serves, and `is_page_existing(u)` said False.
         with _debug.perf("website_pages", cr=self.env.cr, website=website.id) as span:
-            pages = (
-                self.env["website.page"].sudo().search(domain, order=order, limit=limit)
-            )
+            pages = self.env["website.page"].sudo().search(domain, order=order)
             span.set(found=len(pages))
-        return pages.with_context(website_id=website.id)._get_most_specific_pages()
+        pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
+        return pages[:limit] if limit else pages
 
     def search_pages(self, needle=None, limit=None):
         name = self.env["ir.http"]._slugify(needle, max_length=50, path=True)
@@ -1493,47 +1512,74 @@ class Website(models.Model):
         _debug.perf.count("html_fields_computed", fields=len(html_fields))
         return html_fields
 
-    def _is_snippet_used(
-        self, snippet_module, snippet_id, asset_version, asset_type, html_fields
-    ):
-        snippet_occurences = []
+    def _get_snippet_occurrences(self, snippet_ids, html_fields):
+        """Every stored element carrying one of `snippet_ids`, grouped by id.
+
+        One scan for all of them. This used to be one `UNION` over every stored
+        html field of every model *per snippet asset*, and the SQL depends only
+        on the snippet id -- so a snippet with three versions in two flavours
+        re-ran the identical scan six times. On a stock install that was 82
+        scans over 22 fields, 1,804 `regexp_matches` branches, to answer a
+        question that fits in one query.
+        """
+        occurrences = {snippet_id: [] for snippet_id in snippet_ids}
+        if not snippet_ids or not html_fields:
+            return occurrences
+        models_and_fields = [
+            (self.env[model_name], field_name) for model_name, field_name in html_fields
+        ]
+        alternation = "|".join(
+            re.escape(snippet_id) for snippet_id in sorted(snippet_ids)
+        )
+        pattern = f'<([^>]*data-snippet="(?:{alternation})"[^>]*)>'
+        rows = self.env.execute_query(
+            SQL(" UNION ").join(
+                SQL(
+                    "SELECT regexp_matches(%s, %s, 'g') FROM %s",
+                    model._field_to_sql(model._table, field_name),
+                    pattern,
+                    SQL.identifier(model._table),
+                )
+                for model, field_name in models_and_fields
+            )
+        )
+        carried = re.compile(r'data-snippet="([^"]*)"')
+        for (match,) in rows:
+            element = match[0]
+            found = carried.search(element)
+            if found and found.group(1) in occurrences:
+                occurrences[found.group(1)].append(element)
+        _debug.perf.count(
+            "snippet_occurrences_scanned",
+            snippets=len(snippet_ids),
+            models=len(models_and_fields),
+            occurrences=sum(len(v) for v in occurrences.values()),
+        )
+        return occurrences
+
+    def _get_snippet_template_occurrence(self, snippet_module, snippet_id):
         snippet_template_html = self.env["ir.qweb"]._render(
             f"{snippet_module}.{snippet_id}", raise_if_not_found=False
         )
         if snippet_template_html:
             match = re.search(r'<([^>]*class="[^>]*)>', snippet_template_html)
             if match:
-                snippet_occurences.append(match.group())
+                return [match.group()]
+        return []
 
+    def _is_snippet_used(
+        self, snippet_module, snippet_id, asset_version, asset_type, html_fields
+    ):
         if self._is_snippet_used_in_occurrences(
-            snippet_occurences, asset_type, asset_version
+            self._get_snippet_template_occurrence(snippet_module, snippet_id),
+            asset_type,
+            asset_version,
         ):
             return True
-
-        html_fields = [
-            (self.env[model_name], field_name) for model_name, field_name in html_fields
-        ]
-        self.env.cr.execute(
-            SQL(" UNION ").join(
-                SQL(
-                    "SELECT regexp_matches(%s, %s, 'g') FROM %s",
-                    model._field_to_sql(model._table, field_name),
-                    f'<([^>]*data-snippet="{snippet_id}"[^>]*)>',
-                    SQL.identifier(model._table),
-                )
-                for model, field_name in html_fields
-            )
-        )
-
-        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
-        _debug.perf.count(
-            "snippet_occurrences_scanned",
-            snippet=snippet_id,
-            models=len(html_fields),
-            occurrences=len(snippet_occurences),
-        )
         return self._is_snippet_used_in_occurrences(
-            snippet_occurences, asset_type, asset_version
+            self._get_snippet_occurrences([snippet_id], html_fields)[snippet_id],
+            asset_type,
+            asset_version,
         )
 
     def _is_snippet_used_in_occurrences(
@@ -1563,7 +1609,11 @@ class Website(models.Model):
             r"(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss)"
         )
         html_fields = self._get_fields_html()
-        snippet_used = {}
+
+        # One pass to learn which snippets exist, then ONE scan of the stored
+        # html for all of them, then the per-(version, flavour) decision. The
+        # scan used to run once per asset and depends only on the snippet id.
+        parsed = []
         for snippet_asset in snippet_assets:
             match = snippet_re.match(snippet_asset.path)
             if not match:
@@ -1571,14 +1621,37 @@ class Website(models.Model):
             (snippet_module, snippet_id, asset_version, asset_type) = match.groups()
             if asset_type == "scss":
                 asset_type = "css"
+            parsed.append(
+                (snippet_asset, snippet_module, snippet_id, asset_version, asset_type)
+            )
+        stored_occurrences = self._get_snippet_occurrences(
+            {snippet_id for _a, _m, snippet_id, _v, _t in parsed}, html_fields
+        )
+        template_occurrences = {}
+        snippet_used = {}
+        for (
+            snippet_asset,
+            snippet_module,
+            snippet_id,
+            asset_version,
+            asset_type,
+        ) in parsed:
             key = (
                 snippet_id,
                 asset_version,
                 asset_type,
             )
             if key not in snippet_used:
-                snippet_used[key] = self._is_snippet_used(
-                    snippet_module, snippet_id, asset_version, asset_type, html_fields
+                if snippet_id not in template_occurrences:
+                    template_occurrences[snippet_id] = (
+                        self._get_snippet_template_occurrence(
+                            snippet_module, snippet_id
+                        )
+                    )
+                snippet_used[key] = self._is_snippet_used_in_occurrences(
+                    template_occurrences[snippet_id], asset_type, asset_version
+                ) or self._is_snippet_used_in_occurrences(
+                    stored_occurrences.get(snippet_id, ()), asset_type, asset_version
                 )
             is_snippet_used = snippet_used[key]
             if is_snippet_used != snippet_asset.active:

@@ -239,30 +239,37 @@ class WebsiteRewrite(models.Model):
     def _check_redirect_cycles(self, excluded_ids=()):
         # Check the resulting configuration, including chains unmasked by an
         # override being archived, renamed, moved to another site, or deleted.
-        redirects = self.search(
-            [("active", "=", True), ("id", "not in", excluded_ids)], order="id"
+        # Read rows, not records. This runs as a constraint on every create,
+        # write and unlink of any redirect, so it rebuilds the whole graph each
+        # time; browsing the recordset cost ~19 us per existing redirect, which
+        # made a row-at-a-time import quadratic in wall time and not just in
+        # work. The chain walk below needs four scalars per redirect and no ORM.
+        redirects = self.search_read(
+            [("active", "=", True), ("id", "not in", excluded_ids)],
+            ["website_id", "redirect_type", "url_from", "url_to"],
+            order="id",
         )
         fallbacks_by_website = {}
         routing_by_website = {}
         for redirect in redirects:
-            website_id = redirect.website_id.id
-            if redirect.redirect_type in ("301", "302"):
+            website_id = (redirect["website_id"] or (False,))[0]
+            redirect["website_id"] = website_id
+            url_from, url_to = redirect["url_from"], redirect["url_to"]
+            if redirect["redirect_type"] in ("301", "302"):
                 if (
-                    not redirect.url_from
-                    or not redirect.url_to
-                    or redirect.url_from.startswith("#")
-                    or redirect.url_to.startswith("#")
-                    or redirect.url_from.split("#")[0] == redirect.url_to.split("#")[0]
+                    not url_from
+                    or not url_to
+                    or url_from.startswith("#")
+                    or url_to.startswith("#")
+                    or url_from.split("#")[0] == url_to.split("#")[0]
                 ):
                     # The structural constraint owns these diagnostics.
                     continue
                 fallbacks_by_website.setdefault(website_id, {}).setdefault(
-                    redirect.url_from, redirect
+                    url_from, redirect
                 )
-            elif redirect.redirect_type in ("308", "404"):
-                routing_by_website.setdefault(website_id, {})[redirect.url_from] = (
-                    redirect
-                )
+            elif redirect["redirect_type"] in ("308", "404"):
+                routing_by_website.setdefault(website_id, {})[url_from] = redirect
         if not fallbacks_by_website:
             return
         website_ids = self.env["website"].search([]).ids
@@ -287,13 +294,14 @@ class WebsiteRewrite(models.Model):
             # A 308 publishes its controller at the destination. A 301/302
             # fallback there does not redirect the newly published controller.
             controller_paths = {
-                redirect.url_to
+                redirect["url_to"]
                 for redirect in routing.values()
-                if redirect.redirect_type == "308"
+                if redirect["redirect_type"] == "308"
             }
             checked_urls = set()
             for redirect in (generic_fallbacks | specific_fallbacks).values():
-                redirect._check_redirect_chain(
+                self._check_redirect_chain(
+                    redirect,
                     generic_fallbacks,
                     specific_fallbacks,
                     controller_paths,
@@ -303,24 +311,49 @@ class WebsiteRewrite(models.Model):
 
     def _check_redirect_chain(
         self,
+        start,
         generic_fallbacks,
         specific_fallbacks,
         controller_paths,
         website_id,
         checked_urls,
     ):
-        self.check_singleton()
+        """`start` and the mapping values are `search_read` rows, not records."""
+        current_url = start["url_from"] or ""
+        # `checked_urls` holds urls already walked to a dead end in this website.
+        # Re-entering the loop for one of them parses and normalises it again
+        # before the memo is consulted, which is most of this constraint's cost:
+        # it is called once per fallback per website, so on 1,500 redirects a
+        # single create ran it 1,505 times and spent 0.56 s of 0.69 s here.
+        if current_url in checked_urls:
+            return
         seen = set()
-        current_url = self.url_from or ""
         while current_url:
-            url = urlsplit(current_url)
-            if url.scheme or url.netloc or url.path in controller_paths:
+            # A plain path -- no scheme, authority, query or fragment -- is what
+            # redirects overwhelmingly are, and for it the urlsplit/urlunsplit/
+            # parse_qsl/urljoin round trip below is pure overhead: four
+            # `_urlsplit` calls per hop, which profiled as 0.48 s of this
+            # constraint's 0.59 s on 1,500 redirects. Anything else still takes
+            # the general path.
+            if (
+                ":" not in current_url
+                and "?" not in current_url
+                and "#" not in current_url
+                and not current_url.startswith("//")
+            ):
+                path, query = current_url, ""
+            else:
+                url = urlsplit(current_url)
+                if url.scheme or url.netloc:
+                    break
+                path, query = url.path, url.query
+                current_url = url._replace(fragment="").geturl()
+            if path in controller_paths:
                 break
-            current_url = url._replace(fragment="").geturl()
             if current_url in checked_urls:
                 break
             sources = sorted(
-                self._get_redirect_source_urls(url.path, current_url), reverse=True
+                self._get_redirect_source_urls(path, current_url), reverse=True
             )
             redirect = next(
                 (
@@ -333,36 +366,42 @@ class WebsiteRewrite(models.Model):
             )
             if not redirect:
                 break
-            target = redirect.url_to or ""
-            if target.split("#")[0] == redirect.url_from.split("#")[0]:
+            target = redirect["url_to"] or ""
+            if target.split("#")[0] == redirect["url_from"].split("#")[0]:
                 # Structural validation owns invalid/self-referencing URLs.
                 break
             if current_url in seen:
                 _logger.debug(
                     "Redirect cycle: website=%s start=%s repeated=%s hops=%s",
                     website_id,
-                    self.id,
-                    redirect.id,
+                    start["id"],
+                    redirect["id"],
                     len(seen),
                 )
                 _debug.logic(
                     "rewrite_refused",
                     reason="redirect_cycle",
-                    rewrite=self.id,
+                    rewrite=start["id"],
                     website=website_id,
-                    repeated=redirect.id,
+                    repeated=redirect["id"],
                     hops=len(seen),
                 )
                 raise ValidationError(
                     _("This redirect creates a cycle with another active redirect.")
                 )
             seen.add(current_url)
-            params = dict(
-                werkzeug.datastructures.MultiDict(
-                    parse_qsl(url.query, keep_blank_values=True)
+            if query:
+                params = dict(
+                    werkzeug.datastructures.MultiDict(
+                        parse_qsl(query, keep_blank_values=True)
+                    )
                 )
-            )
-            current_url = urljoin(current_url, _get_url_with_params(target, params))
+                target = _get_url_with_params(target, params)
+            if target.startswith("/") and not target.startswith("//"):
+                # urljoin of an absolute path onto any base is that path.
+                current_url = target
+            else:
+                current_url = urljoin(current_url, target)
         checked_urls.update(seen)
 
     @api.depends("redirect_type")

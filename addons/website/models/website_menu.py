@@ -169,7 +169,6 @@ class WebsiteMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache("templates")
         menus = self.env["website.menu"]
         websites = self.env["website"]
         if not self.env.context.get("website_id") and any(
@@ -212,11 +211,11 @@ class WebsiteMenu(models.Model):
                 new_menu = super().create(vals)
             menus |= new_menu
         _debug.lifecycle("create", menus=menus, count=len(menus))
+        self.env.registry.clear_cache("templates")
         return menus
 
     def write(self, vals):
         _debug.lifecycle("write", menus=self, count=len(self), fields=sorted(vals))
-        self.env.registry.clear_cache("templates")
         res = super().write(vals)
         if "group_ids" in vals and not self.env.context.get(
             "adding_designer_group_to_menu"
@@ -226,10 +225,12 @@ class WebsiteMenu(models.Model):
             restricted.with_context(
                 adding_designer_group_to_menu=True
             ).group_ids += self.env.ref("website.group_website_designer")
+        # After the write, not before: a cache cleared ahead of its own change is
+        # free to be refilled from pre-change state by anything `super()` reads.
+        self.env.registry.clear_cache("templates")
         return res
 
     def unlink(self):
-        self.env.registry.clear_cache("templates")
         default_menu = self.env.ref("website.main_menu", raise_if_not_found=False)
         generic_menus = self.filtered(
             lambda m: (
@@ -255,7 +256,9 @@ class WebsiteMenu(models.Model):
             generic=len(generic_menus),
             cascaded=len(menus_to_remove) - len(self),
         )
-        return super(WebsiteMenu, menus_to_remove).unlink()
+        result = super(WebsiteMenu, menus_to_remove).unlink()
+        self.env.registry.clear_cache("templates")
+        return result
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_tags(self):

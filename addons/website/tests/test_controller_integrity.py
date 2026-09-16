@@ -15,7 +15,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.addons.website.controllers import main as website_main
+from odoo.addons.website.controllers import theme as website_theme
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website.controllers.model_page import ModelPageController
@@ -101,9 +101,13 @@ class TestControllerIntegrity(TransactionCase):
             with (
                 self.subTest(name=name, encoded_size=len(data)),
                 MockRequest(self.env, website=self.website),
-                patch.object(website_main, "MAX_FONT_FILE_SIZE", 64),
-                patch.object(website_main, "MAX_FONT_ARCHIVE_SIZE", 100, create=True),
-                patch.object(website_main, "MAX_FONT_ARCHIVE_ENTRIES", 3, create=True),
+                patch.object(website_theme, "MAX_FONT_FILE_SIZE", 64),
+                # No `create=True`: it would make a patch aimed at the wrong
+                # module look like it worked, which is how these limits moving
+                # to controllers/theme.py stayed invisible in two of the three
+                # font tests until the others errored.
+                patch.object(website_theme, "MAX_FONT_ARCHIVE_SIZE", 100),
+                patch.object(website_theme, "MAX_FONT_ARCHIVE_ENTRIES", 3),
                 patch.object(
                     type(self.env["ir.attachment"]),
                     "create",
@@ -124,7 +128,7 @@ class TestControllerIntegrity(TransactionCase):
             fonts.writestr("nested/example.woff", content)
         with (
             MockRequest(self.env, website=self.website),
-            patch.object(website_main, "MAX_FONT_FILE_SIZE", len(content)),
+            patch.object(website_theme, "MAX_FONT_FILE_SIZE", len(content)),
         ):
             for name, payload in [
                 ("example.woff", content),
@@ -141,9 +145,9 @@ class TestControllerIntegrity(TransactionCase):
     def test_font_upload_rejects_encoded_oversize_before_decoding(self):
         with (
             MockRequest(self.env, website=self.website),
-            patch.object(website_main, "MAX_FONT_UPLOAD_SIZE", 3),
+            patch.object(website_theme, "MAX_FONT_UPLOAD_SIZE", 3),
             patch.object(
-                website_main.base64, "b64decode", wraps=base64.b64decode
+                website_theme.base64, "b64decode", wraps=base64.b64decode
             ) as decode,
         ):
             with self.assertRaises(UserError):
@@ -382,26 +386,79 @@ class TestControllerIntegrity(TransactionCase):
             extract.assert_not_called()
 
     def test_hybrid_results_follow_the_pager_for_out_of_range_pages(self):
-        results = [{"name": str(i)} for i in range(51)]
+        """The pager decides the window and `autocomplete` renders exactly it.
+
+        `hybrid_list` used to ask for MAX_PAGE_SEARCH_RESULTS rows and slice
+        them itself, which made `len(results)` the pager's total -- a cap
+        reported as a count -- and rendered every row on every page view. It now
+        asks once for the counts and once for the page, so what this pins is the
+        offset it asks for and the page it lands on.
+        """
+        page_rows = [{"name": str(i)} for i in range(50)]
         controller = Website()
-        for page, offset in [(0, 0), (99, 50), ("2", 50)]:
+        for page, expected_offset in [(0, 0), (99, 50), ("2", 50)]:
             with (
                 self.subTest(page=page),
                 MockRequest(self.env, website=self.website) as req,
             ):
                 req.render = Mock(return_value="<rendered/>")
-                with patch.object(
-                    controller, "autocomplete", return_value={"results": results}
-                ):
+                calls = []
+
+                def fake_autocomplete(*args, calls=calls, **kw):
+                    # Every call answers with both counts: the controller reads
+                    # them from whichever search renders the page, and a mock
+                    # that only answers on one call shape pins the shape rather
+                    # than the behaviour.
+                    calls.append(kw)
+                    return {
+                        "results": page_rows,
+                        "results_count": 51,
+                        "results_reachable": 51,
+                    }
+
+                with patch.object(controller, "autocomplete", fake_autocomplete):
                     controller.hybrid_list(page=page, search="example")
                 values = req.render.call_args.args[1]
                 _logger.debug(
-                    "Hybrid page=%s pager=%s results=%s",
-                    page,
-                    values["pager"],
-                    values["results"],
+                    "Hybrid page=%s pager=%s calls=%s", page, values["pager"], calls
                 )
-                self.assertEqual(values["results"], results[offset : offset + 50])
+                self.assertEqual(
+                    calls[-1].get("offset"),
+                    expected_offset,
+                    "an out-of-range page must be clamped before the rows are asked for",
+                )
+                self.assertEqual(values["results"], page_rows)
+                self.assertEqual(
+                    values["search_count"], 51, "the count must be the real total"
+                )
+                self.assertLessEqual(
+                    len(values["results"]),
+                    50,
+                    "a page view must not carry more than one page of rows",
+                )
+
+    def test_hybrid_reports_the_true_count_when_the_reachable_set_is_capped(self):
+        controller = Website()
+        with MockRequest(self.env, website=self.website) as req:
+            req.render = Mock(return_value="<rendered/>")
+            with patch.object(
+                controller,
+                "autocomplete",
+                return_value={
+                    "results": [],
+                    "results_count": 620,
+                    "results_reachable": 500,
+                },
+            ):
+                controller.hybrid_list(page=1, search="example")
+            values = req.render.call_args.args[1]
+            self.assertEqual(values["search_count"], 620)
+            self.assertEqual(values["search_count_reachable"], 500)
+            self.assertEqual(
+                values["pager"]["page_count"],
+                10,
+                "the pager offers only the pages it can actually serve",
+            )
 
     def test_page_results_follow_the_pager_for_out_of_range_pages(self):
         pages = self.env["website.page"].search([], limit=2)

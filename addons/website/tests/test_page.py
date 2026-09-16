@@ -1113,6 +1113,9 @@ class TestMostSpecificPagesScan(common.TransactionCase):
             )
             pages.append(
                 {
+                    # Distinct names on purpose: a fixture whose rows sort the
+                    # same ascending and descending cannot witness an order bug.
+                    "name": f"Scan probe {index:02d}",
                     "url": f"/scan-probe-{index}",
                     "view_id": view.id,
                     "website_id": cls.website.id,
@@ -1197,3 +1200,179 @@ class TestMostSpecificPagesScan(common.TransactionCase):
         empty = self.env["website.page"].with_context(website_id=self.website.id)
         kept, _fetched = self._fetched_keys(empty)
         self.assertFalse(kept)
+
+    def test_the_caller_s_order_survives_the_dedup(self):
+        """The url sort inside the dedup decides which page wins, not the output
+        order. Returning `browse(ids)` handed every caller its pages in url
+        order instead, so site search ignored the requested sort."""
+        candidates = self.pages.with_context(website_id=self.website.id)
+        for order in ("name asc", "name desc"):
+            with self.subTest(order=order):
+                asked = (
+                    self.env["website.page"]
+                    .sudo()
+                    .search([("id", "in", self.pages.ids)], order=order)
+                )
+                kept = asked.with_context(
+                    website_id=self.website.id
+                )._get_most_specific_pages()
+                self.assertEqual(
+                    kept.ids,
+                    [i for i in asked.ids if i in set(kept.ids)],
+                    "the dedup must filter, not re-sort",
+                )
+        self.assertNotEqual(
+            self.env["website.page"]
+            .sudo()
+            .search([("id", "in", self.pages.ids)], order="name asc")
+            .ids,
+            self.env["website.page"]
+            .sudo()
+            .search([("id", "in", self.pages.ids)], order="name desc")
+            .ids,
+            "the fixture must be able to tell the two orders apart",
+        )
+        self.assertTrue(candidates)
+
+
+@tagged("-at_install", "post_install")
+class TestShadowedPageIsReachable(common.TransactionCase):
+    """A url carrying both a generic page and this website's override must not
+    lose both to a SQL limit applied before the dedup."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        key = "website.shadowed_reachable"
+        generic_view = cls.env["ir.ui.view"].create(
+            {
+                "name": "Shadowed reachable",
+                "type": "qweb",
+                "key": key,
+                "arch": '<t t-name="%s"><t t-call="website.layout">GHOST</t></t>' % key,
+            }
+        )
+        cls.generic = cls.env["website.page"].create(
+            {"url": "/ghost-page", "view_id": generic_view.id, "is_published": True}
+        )
+        cls.specific = cls.env["website.page"].create(
+            {
+                "url": "/ghost-page",
+                "website_id": cls.website.id,
+                "view_id": generic_view.copy(
+                    {"website_id": cls.website.id, "key": key}
+                ).id,
+                "is_published": True,
+            }
+        )
+        cls.env.flush_all()
+
+    def _lookup(self, limit=None):
+        return self.env["website"]._get_website_pages(
+            domain=[("url", "=", "/ghost-page"), ("view_id", "!=", False)], limit=limit
+        )
+
+    def test_a_limit_of_one_still_finds_the_override(self):
+        self.assertEqual(self._lookup(limit=1), self.specific)
+
+    def test_the_limit_agrees_with_no_limit(self):
+        self.assertEqual(self._lookup(limit=1), self._lookup())
+
+    def test_a_limit_still_truncates(self):
+        self.assertEqual(len(self.env["website"]._get_website_pages(limit=2)), 2)
+
+    def test_the_page_is_reported_as_existing(self):
+        with MockRequest(self.env, website=self.website):
+            self.assertTrue(self.env["website"].is_page_existing("/ghost-page"))
+
+
+@tagged("-at_install", "post_install")
+class TestSearchFetchScalesWithMatches(common.TransactionCase):
+    """A public search must cost what it matches, not what the site contains.
+
+    `_search_fetch` used to fetch every page the base domain admits and filter
+    it with `filtered_domain`, which reads `arch_db` -- the whole stored html of
+    every page -- for a search matching a handful. This pins the property rather
+    than a timing: the candidate set the dedup is handed must not grow with the
+    table.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        template = cls.env.ref("website.default_page")
+        cls.needle = "zqneedle"
+        pages = []
+        for index in range(40):
+            view = template.copy(
+                {"website_id": cls.website.id, "key": f"website.scale_probe_{index}"}
+            )
+            marker = cls.needle if index < 3 else "filler"
+            view.with_context(no_cow=True).write(
+                {
+                    "arch": '<t t-name="website.scale_probe_%d">'
+                    '<t t-call="website.layout"><div id="wrap">'
+                    "<p>%s body %d</p></div></t></t>" % (index, marker, index),
+                }
+            )
+            pages.append(
+                {
+                    "name": f"Scale probe {index:02d}",
+                    "url": f"/scale-probe-{index}",
+                    "view_id": view.id,
+                    "website_id": cls.website.id,
+                    "is_published": True,
+                }
+            )
+        cls.pages = cls.env["website.page"].create(pages)
+        cls.env.flush_all()
+
+    def _candidates_handed_to_the_dedup(self, term):
+        sizes = []
+        original = type(self.env["website.page"])._get_most_specific_pages
+
+        def counting(records):
+            sizes.append(len(records))
+            return original(records)
+
+        with patch.object(
+            type(self.env["website.page"]), "_get_most_specific_pages", counting
+        ):
+            options = {
+                "displayDescription": True,
+                "displayDetail": False,
+                "displayExtraDetail": False,
+                "displayExtraLink": False,
+                "displayImage": False,
+                "allowFuzzy": False,
+            }
+            detail = self.env["website.page"]._search_get_detail(
+                self.website, "name asc", options
+            )
+            results, count = self.env["website.page"]._search_fetch(
+                detail, term, 5, "name asc"
+            )
+        return results, count, sizes
+
+    def test_the_candidate_set_is_bounded_by_the_matches(self):
+        total = self.env["website.page"].sudo().search_count([])
+        _results, count, sizes = self._candidates_handed_to_the_dedup(self.needle)
+        self.assertEqual(count, 3, "the fixture must match exactly three pages")
+        self.assertTrue(sizes, "the dedup must still run")
+        self.assertLess(
+            max(sizes),
+            total,
+            "the dedup must not be handed the whole page table for a 3-page match",
+        )
+        self.assertLessEqual(
+            max(sizes),
+            10,
+            "the candidate set must be the matching url groups, not the site",
+        )
+
+    def test_a_search_matching_nothing_hands_over_nothing(self):
+        _results, count, sizes = self._candidates_handed_to_the_dedup("zqabsentterm")
+        self.assertEqual(count, 0)
+        self.assertEqual(max(sizes, default=0), 0)
