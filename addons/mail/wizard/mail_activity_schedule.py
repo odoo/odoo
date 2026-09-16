@@ -98,13 +98,12 @@ class MailActivitySchedule(models.TransientModel):
         readonly=False, store=True)
     # used in both (plan- and activity- based)
     activity_user_id_fname = fields.Char('User Field', help="Field name of the user to choose on the record")
-    # logging an activity on the document of the user's choice, e.g. a call that took
-    # place (see `mail.activity.schedule.call`)
+    # logging an activity on a document, e.g. a call that took place
+    # (see `mail.activity.schedule.call`)
     activity_type_id_domain = fields.Char(
         compute='_compute_activity_type_id_domain', export_string_translation=False)
     contact_id = fields.Many2one(
-        'res.partner', compute='_compute_contact_id',
-        readonly=False, store=False)
+        'res.partner', compute='_compute_contact_id', readonly=False)
     contact_id_domain = fields.Char(
         compute='_compute_contact_id_domain', export_string_translation=False)
     res_model_selection = fields.Selection(
@@ -345,19 +344,54 @@ class MailActivitySchedule(models.TransientModel):
                 domain &= Domain('category', '=', category)
             scheduler.activity_type_id_domain = domain
 
+    @api.depends('res_model_selection', 'contact_id_domain')
     @api.depends_context('log_contact_id')
     def _compute_contact_id(self):
-        self.contact_id = self.env.context.get('log_contact_id')
+        for scheduler in self:
+            if scheduler.contact_id or scheduler.res_model_selection != 'res.partner':
+                continue
+            domain = ast.literal_eval(scheduler.contact_id_domain or '[]')
+            scheduler.contact_id = self.env.context.get('log_contact_id') or self._get_log_default_record(
+                'res.partner', domain,
+            )
 
-    @api.depends_context('log_contact_id')
+    @api.depends_context('log_contact_id', 'log_channel_partner_ids')
     def _compute_contact_id_domain(self):
-        # the call may be logged on any contact of the commercial entity of the
-        # contact it was made with, not just on that contact itself
-        if contact := self.env['res.partner'].browse(self.env.context.get('log_contact_id')):
-            domain = [('id', 'in', contact._search_commercial_partners().ids)]
+        # restrict the contacts to the commercial entity of the one the call was made
+        # with: the call may be logged on any of its contacts, not just on that one
+        if contact := self._get_log_filter_contact():
+            domain = [('id', 'child_of', contact.commercial_partner_id.ids)]
         else:
             domain = []
         self.contact_id_domain = domain
+
+    @api.model
+    def _is_logging_call(self):
+        """ Whether a call is being logged on a document, as opposed to an activity being
+        scheduled on a record already known. """
+        context = self.env.context
+        return bool(context.get('log_contact_id')) or 'log_channel_partner_ids' in context
+
+    @api.model
+    def _get_log_filter_contact(self):
+        """ The contact the wizard restricts its lists to, void when they are to be left
+        whole: a call held with several contacts merely ranks theirs first
+        (see `discuss.call.log.mixin.name_search`). """
+        if 'log_channel_partner_ids' in self.env.context:
+            return self.env['res.partner']
+        return self.env['res.partner'].browse(self.env.context.get('log_contact_id'))
+
+    @api.model
+    def _get_log_default_record(self, model_name, domain):
+        """ The record of ``model_name`` the wizard pre-selects: the first one its list
+        ranks, the user logging the call aside. A call held with nobody known ranks no
+        one, so its list starts on an unrelated record: pre-select nothing instead. """
+        model = self.env[model_name]
+        if not self._get_log_filter_contact() and 'log_channel_partner_ids' not in self.env.context:
+            return model
+        domain = Domain(domain or Domain.TRUE) & ~model._get_call_log_partner_domain(self.env.user.partner_id)
+        offered = model.name_search('', domain, limit=1)
+        return model.browse(offered[0][0]) if offered else model
 
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
@@ -514,38 +548,6 @@ class MailActivitySchedule(models.TransientModel):
     # CALL LOGGING API
     # ------------------------------------------------------------
 
-    @api.model
-    def _get_field_selection_for_model(self, model_name, res_id):
-        """ The context pre-filling the wizard with the given record, ``None`` when no
-        record type of the wizard accepts it. """
-        if model_name == 'res.partner':
-            # res.partner is already handled by the default context of the log actions
-            return None
-        wizard = self.new()
-        fields_map = wizard._get_res_model_fields()
-        for value, _label in wizard._selection_res_model():
-            if wizard._get_res_model_from_selection(value) != model_name:
-                continue
-            field_name = fields_map.get(value)
-            # a record type may restrict what its field offers: only pre-select a
-            # record its own domain accepts
-            domain_field = f'{field_name}_domain'
-            if domain_field in wizard._fields:
-                domain = ast.literal_eval(wizard[domain_field] or '[]')
-                if not self.env[model_name].search_count(
-                    Domain('id', '=', res_id) & Domain(domain), limit=1,
-                ):
-                    # The record is out of this option's domain: skip it and
-                    # try the next option mapping to the same model, e.g. a
-                    # plain ``sale.order`` failing the ``sale.subscription``
-                    # domain still matches the ``sale.order`` option.
-                    continue
-            return {
-                f'default_{field_name}': res_id,
-                'default_res_model_selection': value,
-            }
-        return None
-
     def _get_partner_from_target(self):
         """ The partner of the record the activity is logged on, void when it has none. """
         record = self._get_applied_on_records()
@@ -571,7 +573,7 @@ class MailActivitySchedule(models.TransientModel):
             scheduler.res_model = scheduler._get_res_model_from_selection(scheduler.res_model_selection)
 
     def _selection_res_model(self):
-        """ The record types the wizard offers, which a module adding one of its own
+        """ The record types the wizard lists, which a module adding one of its own
         overrides. """
         return [('res.partner', _("Contact"))]
 
