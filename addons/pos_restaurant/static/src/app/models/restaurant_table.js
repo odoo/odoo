@@ -49,12 +49,12 @@ export class RestaurantTable extends Base {
         }
         return table;
     }
-    get startDateForDuration() {
+    startDateForDuration() {
         const order = this.getOrder();
         return order ? order.create_date : null;
     }
     orderDuration() {
-        const startTime = this.startDateForDuration;
+        const startTime = this.startDateForDuration();
         if (!startTime) {
             return false;
         }

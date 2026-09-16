@@ -25,6 +25,26 @@ import {
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 
+registry.category("web_tour.tours").add("test_release_table_clears_timer_badge", {
+    steps: () =>
+        Chrome.withTimeFreeze(1786792500000, [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                content: "Check that the timer badge shows 15 minutes on table 4",
+                trigger:
+                    '.o_fp_table:has(.o_fp_table_number:contains("4")) .table-timer-badge:contains("15\'")',
+            },
+            FloorScreen.clickTable("4"),
+            ProductScreen.releaseTable(),
+            FloorScreen.isShown(),
+            negateStep({
+                content: "Check that the timer badge is cleared on table 4",
+                trigger: '.o_fp_table:has(.o_fp_table_number:contains("4")) .table-timer-badge',
+            }),
+        ]).flat(),
+});
+
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
     steps: () =>
         [
