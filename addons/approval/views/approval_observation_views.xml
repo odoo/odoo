@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_approval_observation_list" model="ir.ui.view">
+        <field name="name">approval.observation.list</field>
+        <field name="model">approval.observation</field>
+        <field name="arch" type="xml">
+            <list string="Watched Calls" create="false" edit="false">
+                <field name="date" />
+                <field name="model_name" />
+                <field name="operation" />
+                <field name="res_id" />
+                <field name="user_id" />
+                <field name="elevation" />
+                <field name="would_block" />
+                <field name="binding_id" optional="hidden" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_approval_observation_search" model="ir.ui.view">
+        <field name="name">approval.observation.search</field>
+        <field name="model">approval.observation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="model_name" />
+                <field name="operation" />
+                <field name="user_id" />
+                <filter
+                    name="would_block"
+                    string="Would Be Refused"
+                    domain="[('would_block', '=', True)]" />
+                <filter
+                    name="elevated"
+                    string="Arrived Elevated"
+                    domain="[('elevation', '!=', 'none')]" />
+                <separator />
+                <filter
+                    name="configured_gate"
+                    string="Configured Gate"
+                    domain="[('binding_id', '!=', False)]" />
+                <filter
+                    name="code_gate"
+                    string="Gate Declared In Code"
+                    domain="[('binding_id', '=', False)]" />
+                <group>
+                    <filter
+                        name="groupby_model"
+                        string="Model"
+                        context="{'group_by': 'model_name'}" />
+                    <filter
+                        name="groupby_operation"
+                        string="Operation"
+                        context="{'group_by': 'operation'}" />
+                    <filter
+                        name="groupby_user"
+                        string="User"
+                        context="{'group_by': 'user_id'}" />
+                    <filter
+                        name="groupby_elevation"
+                        string="Elevation"
+                        context="{'group_by': 'elevation'}" />
+                    <filter
+                        name="groupby_date"
+                        string="Date"
+                        context="{'group_by': 'date:day'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_approval_observation" model="ir.actions.act_window">
+        <field name="name">Watched Calls</field>
+        <field name="res_model">approval.observation</field>
+        <field name="view_mode">list</field>
+        <field
+            name="context">{'search_default_would_block': 1, 'search_default_groupby_model': 1, 'search_default_groupby_operation': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing has reached a watching gate yet</p>
+            <p>
+                Each row is one call that reached a gated operation while its gate was
+                only watching, so it was recorded and let through. Read this before
+                switching a gate on: the rows flagged Would Be Refused are the calls
+                enforcement would start refusing, and they are the cost of the change.
+            </p>
+            <p>
+                A row with no binding comes from a gate a model declares in code, whose
+                enforcement is the <code>approval.gate_enforced</code> system parameter
+                rather than the binding's own mode.
+            </p>
+        </field>
+    </record>
+
+</odoo>

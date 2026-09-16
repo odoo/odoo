@@ -941,10 +941,21 @@ Kill switch: `ir.config_parameter` `approval.binding_enabled`.
 | Type | Model |
 | Order | `id desc` |
 
-One row per gated call written by an Observe binding, or by any binding whose
-`sudo_policy` let an elevated caller pass. Append-only on purpose: a counter
-on the binding would contend for one row lock on every gated call, and the
-question the table answers needs the breakdown rather than a total.
+One row per gated call let through while its gate was only watching: written by
+an Observe binding, by any binding whose `sudo_policy` let an elevated caller
+pass, and by `mixin.approval.gate` when a call reaches a terminal transition by
+a path the gate does not own and `approval.gate_enforced` is not set.
+Append-only on purpose: a counter on the binding would contend for one row lock
+on every gated call, and the question the table answers needs the breakdown
+rather than a total.
+
+**Reading it is the point.** Both gates are meant to be sized before they are
+switched on, so the table has its own screen: *Settings > Technical > Approvals
+> Watched Calls* (`action_approval_observation`), which opens filtered to
+`would_block` and grouped by model and operation. Those rows are what
+enforcement would begin refusing. Rows with no `binding_id` come from a code
+gate, whose switch is the `approval.gate_enforced` system parameter rather than
+a binding's mode; the search view separates the two.
 
 ### Fields
 

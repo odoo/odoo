@@ -230,7 +230,7 @@ approval/
 |   +-- approval_request_report.xml   # QWeb PDF report action
 +-- migrations/                       # 29 script directories (1.0.1 .. 2.9)
 +-- tests/                            # 44 test modules + common.py
-+-- views/                            # 10 XML view files
++-- views/                            # 9 XML view files
 +-- data/                             # 6 XML data files
 +-- security/                         # Groups, rules, ACL
 +-- static/                           # JS, SCSS, images
