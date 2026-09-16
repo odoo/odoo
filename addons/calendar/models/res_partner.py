@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime
 
 from odoo import _, api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 from odoo.fields import Domain
 from odoo.tools import SQL
 
@@ -11,6 +12,7 @@ from odoo.tools import SQL
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    is_in_meeting = fields.Boolean(compute='_compute_is_in_meeting')
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id',
                                    'calendar_event_id', string='Meetings', copy=False)
@@ -24,6 +26,30 @@ class ResPartner(models.Model):
         result = self._compute_meeting()
         for p in self:
             p.meeting_count = len(result.get(p.id, []))
+
+    @api.depends(
+        'meeting_ids.attendee_ids.state',
+        'meeting_ids.show_as',
+        'meeting_ids.is_draft',
+        'meeting_ids.start',
+        'meeting_ids.stop',
+        'meeting_ids.res_model',
+    )
+    def _compute_is_in_meeting(self):
+        now = fields.Datetime.now()
+        # sudo: calendar.attendee - checking meeting busy status of accessible partners
+        attendees = self.env['calendar.attendee'].sudo().search([
+            ('partner_id', 'in', self.ids),
+            ('state', '=', 'accepted'),
+            ('event_id.show_as', '=', 'busy'),
+            ('event_id.is_draft', '=', False),
+            ('event_id.start', '<=', now),
+            ('event_id.stop', '>=', now),
+            ('event_id.res_model', '!=', 'hr.leave'),
+        ])
+        partner_ids_in_meeting = set(attendees.partner_id.ids)
+        for partner in self:
+            partner.is_in_meeting = partner.id in partner_ids_in_meeting
 
     @api.depends('meeting_count', 'meeting_ids', 'meeting_ids.start')
     def _compute_meeting_display(self):
@@ -152,3 +178,7 @@ class ResPartner(models.Model):
             for partner in event.partner_ids:
                 event_by_partner_id[partner.id] |= event
         return dict(event_by_partner_id)
+
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        res.attr("is_in_meeting")

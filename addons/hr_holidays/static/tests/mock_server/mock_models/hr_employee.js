@@ -5,6 +5,7 @@ export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
     leave_date_to = fields.Date();
+    is_absent = fields.Boolean();
 
     _records = [
         {
@@ -28,5 +29,6 @@ export class HrEmployee extends hrModels.HrEmployee {
     _store_im_status_fields(res) {
         super._store_im_status_fields(res);
         res.attr("leave_date_to");
+        res.attr("is_absent");
     }
 }

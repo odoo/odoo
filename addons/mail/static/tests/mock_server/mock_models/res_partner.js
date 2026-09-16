@@ -36,11 +36,13 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     _compute_is_in_call() {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         for (const partner of this) {
+            const memberIds = DiscussChannelMember.search([["partner_id", "=", partner.id]]);
             partner.is_in_call =
-                this.env["discuss.channel.member"].search([
-                    ["rtc_session_ids", "!=", false],
-                    ["partner_id", "=", partner.id],
+                this.env["discuss.channel.rtc.session"].search([
+                    ["channel_member_id", "in", memberIds],
                 ]).length > 0;
         }
     }
@@ -244,6 +246,8 @@ export class ResPartner extends webModels.ResPartner {
 
     _store_im_status_fields(res) {
         res.many("user_ids", "_store_im_status_fields", { sudo: true });
+        this._compute_is_in_call();
+        res.attr("is_in_call");
     }
 
     _store_mention_fields(res) {

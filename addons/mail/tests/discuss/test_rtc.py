@@ -1487,6 +1487,7 @@ class TestChannelRTC(MailCommon, HttpCase):
             res["write_date"] = fields.Datetime.to_string(partner.write_date)
         if internal:
             res["agent_ids"] = []
+            res["is_in_meeting"] = False
             res["user_ids"] = partner.user_ids.ids
         return res
 
