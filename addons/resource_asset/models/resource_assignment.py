@@ -14,7 +14,7 @@ class ResourceAssignment(models.Model):
         now = fields.Datetime.now()
         started = assignments.filtered(
             lambda assignment: (
-                assignment.role in CUSTODY_ROLE_BY_FIELD.values()
+                assignment.custody_role in CUSTODY_ROLE_BY_FIELD.values()
                 and assignment.date_start <= now
                 and (not assignment.date_end or assignment.date_end > now)
             )
@@ -29,7 +29,7 @@ class ResourceAssignment(models.Model):
         ).filtered(
             lambda rival: any(
                 rival.resource_id == assignment.resource_id
-                and rival.role == assignment.role
+                and rival.custody_role == assignment.custody_role
                 for assignment in started
             )
         )

@@ -278,13 +278,13 @@ class TestResourceAsset(TransactionCase):
             {
                 "resource_id": truck.resource_id.id,
                 "assignee_id": self.driver.id,
-                "role": "operator",
+                "custody_role": "operator",
                 "date_start": datetime.now() - timedelta(days=1),
             }
         )
         truck.invalidate_recordset()
         self.assertEqual(truck.holder_id, self.driver)
-        self.assertEqual(truck._get_holder(role="operator"), self.driver)
+        self.assertEqual(truck._get_holder(custody_role="operator"), self.driver)
         self.assertIn(assignment, truck.assignment_ids)
         self.assertIn(truck, self.Asset.search([("holder_id", "=", self.driver.id)]))
 
@@ -340,7 +340,7 @@ class TestResourceAsset(TransactionCase):
             {
                 "resource_id": truck.resource_id.id,
                 "assignee_id": self.driver.id,
-                "role": "operator",
+                "custody_role": "operator",
                 "date_start": now - timedelta(days=1),
             }
         )
@@ -351,7 +351,7 @@ class TestResourceAsset(TransactionCase):
             {
                 "resource_id": truck.resource_id.id,
                 "assignee_id": successor.id,
-                "role": "operator",
+                "custody_role": "operator",
                 "date_start": now + timedelta(days=3),
             }
         )
@@ -361,7 +361,7 @@ class TestResourceAsset(TransactionCase):
         self.assertEqual(planned.date_end, planned.date_start)
         self.assertFalse(
             truck._get_holder(
-                role="operator", at=planned.date_start + timedelta(hours=1)
+                custody_role="operator", at=planned.date_start + timedelta(hours=1)
             )
         )
 

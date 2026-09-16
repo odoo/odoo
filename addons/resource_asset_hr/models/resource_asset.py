@@ -120,7 +120,7 @@ def live_custody_subquery(role, asset_alias, alias):
                   FROM resource_assignment ra
                   JOIN hr_employee e ON e.resource_id = ra.assignee_id
                  WHERE ra.resource_id = {asset_alias}.resource_id
-                   AND ra.role = '{role}'
+                   AND ra.custody_role = '{role}'
                    AND ra.active
                    AND ra.date_start <= (clock_timestamp() AT TIME ZONE 'UTC')
                    AND (ra.date_end IS NULL OR ra.date_end > (clock_timestamp() AT TIME ZONE 'UTC'))

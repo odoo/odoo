@@ -27,7 +27,7 @@ class TestResourceAssignment(TransactionCase):
             {
                 "resource_id": self.truck.id,
                 "assignee_id": (assignee or self.driver).id,
-                "role": "operator",
+                "custody_role": "operator",
                 "date_start": self.now - timedelta(days=1),
                 **vals,
             }
@@ -127,11 +127,11 @@ class TestResourceAssignment(TransactionCase):
 
     def test_holder_search_agrees_with_the_compute(self):
         self._assign(
-            role="manager",
+            custody_role="manager",
             assignee=self.other_driver,
             date_start=self.now - timedelta(days=10),
         )
-        self._assign(role="operator", date_start=self.now - timedelta(days=1))
+        self._assign(custody_role="operator", date_start=self.now - timedelta(days=1))
         self.truck.invalidate_recordset(["holder_id"])
         self.assertEqual(self.truck.holder_id, self.driver)
         Resource = self.env["resource.resource"]
@@ -149,13 +149,13 @@ class TestResourceAssignment(TransactionCase):
         )
 
     def test_holder_by_role_and_moment(self):
-        self._assign(role="manager", assignee=self.other_driver)
-        self._assign(role="operator")
+        self._assign(custody_role="manager", assignee=self.other_driver)
+        self._assign(custody_role="operator")
         self.assertEqual(
-            self.Assignment._get_holder(self.truck, role="manager"), self.other_driver
+            self.Assignment._get_holder(self.truck, custody_role="manager"), self.other_driver
         )
         self.assertEqual(
-            self.Assignment._get_holder(self.truck, role="operator"), self.driver
+            self.Assignment._get_holder(self.truck, custody_role="operator"), self.driver
         )
         self.assertFalse(
             self.Assignment._get_holder(self.truck, at=self.now - timedelta(days=5))
@@ -201,7 +201,7 @@ class TestResourceAssignment(TransactionCase):
                 {
                     "resource_id": room.id,
                     "assignee_id": assignee.id,
-                    "role": "custodian",
+                    "custody_role": "custodian",
                     "date_start": self.now - timedelta(days=1),
                     "date_end": self.now + timedelta(days=3),
                 }
@@ -307,7 +307,7 @@ class TestResourceAssignment(TransactionCase):
             {
                 "resource_id": self.truck.id,
                 "assignee_partner_id": contractor.id,
-                "role": "technician",
+                "custody_role": "technician",
             }
         )
         self.assertEqual(assignment.assignee_partner_id, contractor)

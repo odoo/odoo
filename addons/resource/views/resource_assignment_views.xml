@@ -8,7 +8,7 @@
             <list string="Assignments" decoration-muted="state == 'ended'">
                 <field name="resource_id" />
                 <field name="assignee_partner_id" />
-                <field name="role" />
+                <field name="custody_role" />
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="state" />
@@ -45,7 +45,7 @@
                             <field name="active" invisible="1" />
                             <field name="resource_id" />
                             <field name="assignee_partner_id" required="1" />
-                            <field name="role" />
+                            <field name="custody_role" />
                         </group>
                         <group name="period">
                             <field name="date_start" />
@@ -99,7 +99,7 @@
                 <filter
                     name="group_role"
                     string="Role"
-                    context="{'group_by': 'role'}" />
+                    context="{'group_by': 'custody_role'}" />
             </search>
         </field>
     </record>

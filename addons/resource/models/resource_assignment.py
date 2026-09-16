@@ -48,7 +48,7 @@ class ResourceAssignment(models.Model):
         store=True,
         index=True,
     )
-    role = fields.Selection(
+    custody_role = fields.Selection(
         selection=[
             ("custodian", "Custodian"),
             ("operator", "Operator"),
@@ -122,15 +122,15 @@ class ResourceAssignment(models.Model):
             for (vals, _party_id), holder in zip(entries, holders, strict=True):
                 vals["assignee_id"] = holder.id
 
-    @api.depends("resource_id.name", "assignee_id.name", "role")
+    @api.depends("resource_id.name", "assignee_id.name", "custody_role")
     @api.depends_context("lang")
     def _compute_name(self):
-        roles = dict(self._fields["role"]._description_selection(self.env))
+        roles = dict(self._fields["custody_role"]._description_selection(self.env))
         for record in self:
             record.name = self.env._(
                 "%(assignee)s, %(role)s of %(resource)s",
                 assignee=record._get_holder_name() or "?",
-                role=roles.get(record.role, record.role),
+                role=roles.get(record.custody_role, record.custody_role),
                 resource=record.resource_id.name or "?",
             )
 
@@ -220,13 +220,13 @@ class ResourceAssignment(models.Model):
         return super()._get_fields_sync_trigger() | {"resource_id", "name"}
 
     @api.model
-    def _get_holder(self, resource, role=None, at=None):
+    def _get_holder(self, resource, custody_role=None, at=None):
         at = at or fields.Datetime.now()
         domain = (
             Domain("resource_id", "=", resource.id)
             & Domain("date_start", "<=", at)
             & (Domain("date_end", "=", False) | Domain("date_end", ">", at))
         )
-        if role:
-            domain &= Domain("role", "=", role)
+        if custody_role:
+            domain &= Domain("custody_role", "=", custody_role)
         return self.search(domain, order="date_start desc", limit=1).assignee_id

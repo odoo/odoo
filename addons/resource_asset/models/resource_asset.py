@@ -436,7 +436,7 @@ class ResourceAsset(models.Model):
             return self.env["resource.assignment"]
         now = fields.Datetime.now()
         domain = Domain("resource_id", "in", self.sudo().resource_id.ids) & Domain(
-            "role", "=", role
+            "custody_role", "=", role
         )
         if planned:
             domain &= Domain("date_start", ">", now) & Domain("date_end", "=", False)
@@ -462,7 +462,7 @@ class ResourceAsset(models.Model):
 
     @api.depends(
         "resource_id.assignment_ids.assignee_id",
-        "resource_id.assignment_ids.role",
+        "resource_id.assignment_ids.custody_role",
         "resource_id.assignment_ids.date_start",
         "resource_id.assignment_ids.date_end",
         "resource_id.assignment_ids.active",
@@ -478,7 +478,7 @@ class ResourceAsset(models.Model):
 
     @api.depends(
         "resource_id.assignment_ids.assignee_id",
-        "resource_id.assignment_ids.role",
+        "resource_id.assignment_ids.custody_role",
         "resource_id.assignment_ids.date_start",
         "resource_id.assignment_ids.date_end",
         "resource_id.assignment_ids.active",
@@ -497,7 +497,7 @@ class ResourceAsset(models.Model):
             self.env["resource.assignment"]._read_group(
                 [
                     ("resource_id", "in", self.resource_id.ids),
-                    ("role", "=", OPERATOR_ROLE),
+                    ("custody_role", "=", OPERATOR_ROLE),
                 ],
                 ["resource_id"],
                 ["__count"],
@@ -514,7 +514,7 @@ class ResourceAsset(models.Model):
             window = Domain("date_start", "<=", now) & (
                 Domain("date_end", "=", False) | Domain("date_end", ">", now)
             )
-        live = Domain("role", "=", role) & window
+        live = Domain("custody_role", "=", role) & window
         if operator in ("in", "not in"):
             ids = [value] if isinstance(value, (int, bool)) else list(value)
             resource_ids = [i for i in ids if i]
@@ -578,7 +578,7 @@ class ResourceAsset(models.Model):
                     {
                         "resource_id": resource.id,
                         "assignee_id": holder.id,
-                        "role": role,
+                        "custody_role": role,
                         "date_start": now,
                     }
                 )
@@ -619,7 +619,7 @@ class ResourceAsset(models.Model):
                     {
                         "resource_id": resource.id,
                         "assignee_id": asset.future_operator_id.id,
-                        "role": OPERATOR_ROLE,
+                        "custody_role": OPERATOR_ROLE,
                         "date_start": date_start,
                     }
                 )
@@ -695,7 +695,7 @@ class ResourceAsset(models.Model):
             "res_model": "resource.assignment",
             "domain": [
                 ("resource_id", "=", self.resource_id.id),
-                ("role", "=", OPERATOR_ROLE),
+                ("custody_role", "=", OPERATOR_ROLE),
             ],
             "context": {
                 "default_resource_id": self.resource_id.id,
@@ -721,7 +721,7 @@ class ResourceAsset(models.Model):
             .with_context(active_test=False)
             .search(
                 Domain("resource_id", "in", resources.ids)
-                & Domain("role", "in", list(CUSTODY_ROLE_BY_FIELD.values()))
+                & Domain("custody_role", "in", list(CUSTODY_ROLE_BY_FIELD.values()))
                 & Domain("date_start", "<=", now)
                 & (Domain("date_end", "=", False) | Domain("date_end", ">", now))
             )
@@ -770,10 +770,10 @@ class ResourceAsset(models.Model):
         self.check_singleton()
         return self.meter_ids.filtered(lambda m: m.kind == kind)[:1]
 
-    def _get_holder(self, role=None, at=None):
+    def _get_holder(self, custody_role=None, at=None):
         self.check_singleton()
         return self.env["resource.assignment"]._get_holder(
-            self.resource_id, role=role, at=at
+            self.resource_id, custody_role=custody_role, at=at
         )
 
     def _search_domain_of_kind(self, code):

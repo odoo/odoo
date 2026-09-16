@@ -81,7 +81,7 @@ class HrEmployee(models.Model):
             ._read_group(
                 [
                     ("assignee_id", "in", self.resource_id.ids),
-                    ("role", "=", "operator"),
+                    ("custody_role", "=", "operator"),
                 ],
                 ["assignee_id"],
                 ["__count"],
@@ -98,7 +98,7 @@ class HrEmployee(models.Model):
             "view_mode": "list,form",
             "domain": [
                 ("assignee_id", "=", self.resource_id.id),
-                ("role", "=", "operator"),
+                ("custody_role", "=", "operator"),
             ],
             "context": {
                 "default_assignee_id": self.resource_id.id,

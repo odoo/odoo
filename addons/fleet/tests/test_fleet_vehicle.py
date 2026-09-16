@@ -79,7 +79,7 @@ class TestFleetVehicle(TransactionCase):
     def test_a_driver_is_an_operator_assignment(self):
         vehicle = self._vehicle()
         vehicle.operator_id = self.alice
-        assignment = vehicle.assignment_ids.filtered(lambda a: a.role == "operator")
+        assignment = vehicle.assignment_ids.filtered(lambda a: a.custody_role == "operator")
         self.assertEqual(assignment.assignee_id, self.alice)
         self.assertEqual(assignment.state, "active")
 
@@ -87,7 +87,7 @@ class TestFleetVehicle(TransactionCase):
         vehicle.invalidate_recordset()
         self.assertEqual(vehicle.operator_id, self.bob)
         drivers = vehicle.with_context(active_test=False).assignment_ids.filtered(
-            lambda a: a.role == "operator"
+            lambda a: a.custody_role == "operator"
         )
         self.assertEqual(len(drivers), 2)
         self.assertEqual(
