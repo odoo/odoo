@@ -48,6 +48,7 @@ class GoogleAuth(http.Controller):
             service_field = 'res_users_settings_id'
             if service_field in request.env.user:
                 request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
+                self._post_google_auth_success_hook()
             else:
                 raise Warning('No callback field for service <%s>' % service)
             return request.redirect(_build_url_w_params(url_return, {"auth_success": "True"}))
@@ -55,3 +56,7 @@ class GoogleAuth(http.Controller):
             return request.redirect(_build_url_w_params(url_return, {"error": kw['error']}))
         else:
             return request.redirect(_build_url_w_params(url_return, {"error": "Unknown_error"}))
+
+    def _post_google_auth_success_hook(self):
+        """ This hook can be overridden to run logic after the user has been successfully authenticated with Google """
+        return

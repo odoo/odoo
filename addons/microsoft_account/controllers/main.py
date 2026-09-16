@@ -46,8 +46,13 @@ class MicrosoftAuth(http.Controller):
                 redirect_uri=f'{base_url}/microsoft_account/authentication'
             )
             request.env.user._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
+            self._post_microsoft_auth_success_hook()
             return request.redirect(_build_url_w_params(url_return, {"auth_success": "True"}))
         elif kw.get('error'):
             return request.redirect(_build_url_w_params(url_return, {"error": kw['error']}))
         else:
             return request.redirect(_build_url_w_params(url_return, {"error": "Unknown_error"}))
+
+    def _post_microsoft_auth_success_hook(self):
+        """ This hook can be overridden to run logic after the user has been successfully authenticated with Microsoft """
+        return
