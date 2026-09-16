@@ -663,7 +663,7 @@ export class SelectionPlugin extends Plugin {
      */
     setSelection(
         { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset },
-        { normalize = true } = {}
+        { normalize = true, forceSelectionInEditable = false } = {}
     ) {
         if (!this.validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset })) {
             return null;
@@ -685,7 +685,8 @@ export class SelectionPlugin extends Plugin {
         [anchorNode, anchorOffset] = normalizeFakeBR(anchorNode, anchorOffset);
         [focusNode, focusOffset] = normalizeFakeBR(focusNode, focusOffset);
         const selection = this.document.getSelection();
-        const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        const documentSelectionIsInEditable =
+            forceSelectionInEditable || (selection && this.isSelectionInEditable(selection));
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
                 selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
@@ -777,7 +778,7 @@ export class SelectionPlugin extends Plugin {
         const cursor = {
             anchor,
             focus,
-            restore: () => {
+            restore: ({ forceSelectionInEditable } = {}) => {
                 const index = this.preservedCursors.findIndex((ref) => ref.deref() === cursor);
                 if (index !== -1) {
                     this.preservedCursors.splice(index, 1);
@@ -792,7 +793,7 @@ export class SelectionPlugin extends Plugin {
                         focusNode: cursor.focus.node,
                         focusOffset: cursor.focus.offset,
                     },
-                    { normalize: false }
+                    { normalize: false, forceSelectionInEditable }
                 );
             },
             update: (callback) => {
