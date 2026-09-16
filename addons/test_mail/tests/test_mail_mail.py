@@ -151,11 +151,12 @@ class TestMailMail(MailCommon):
         with patch.object(
             self.env.registry["ir.attachment"], "_check_access", _patched_check_access
         ):
-            # Sanity check
+            # Sanity check; attachments read newest first (ir.attachment's
+            # _order is "id desc"), from the cache as from a fetch
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
             self.assertEqual(
-                mail.unrestricted_attachment_ids.mapped("name"), ["file 1", "file 3"]
+                mail.unrestricted_attachment_ids.mapped("name"), ["file 3", "file 1"]
             )
 
             # Add a new attachment
@@ -168,7 +169,7 @@ class TestMailMail(MailCommon):
             self.assertEqual(len(mail.unrestricted_attachment_ids), 3)
             self.assertEqual(
                 mail.unrestricted_attachment_ids.mapped("name"),
-                ["file 1", "file 3", "new file"],
+                ["new file", "file 3", "file 1"],
             )
             self.assertEqual(len(mail.attachment_ids), 5)
 
@@ -181,7 +182,7 @@ class TestMailMail(MailCommon):
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
             self.assertEqual(
-                mail.unrestricted_attachment_ids.mapped("name"), ["file 1", "file 3"]
+                mail.unrestricted_attachment_ids.mapped("name"), ["file 3", "file 1"]
             )
             self.assertEqual(len(mail.attachment_ids), 4)
 

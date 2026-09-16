@@ -218,6 +218,10 @@ class WriteMixin(_ModelStubs):
                 field_values.sort(key=lambda item: item[0].write_sequence)
             for field, value in field_values:
                 field.mark_dirty(self, value)
+            if real_recs:
+                real_recs._evict_x2many_scopes_reading_through(
+                    [field.name for field, _value in field_values]
+                )
             prof.mark("dirty")
 
             self.modified(vals)

@@ -122,6 +122,9 @@ class _ModelStubs:
             ids: typing.Sequence[IdType] | None = None,
             flush: bool = True,
         ) -> None: ...
+        def _evict_x2many_scopes_reading_through(
+            self, fnames: Collection[str]
+        ) -> None: ...
         def update_field_translations(self, fname: str, translations: dict) -> bool: ...
 
         def _read_format(

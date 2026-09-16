@@ -1,4 +1,9 @@
+import random
+
+from odoo.exceptions import AccessError
 from odoo.fields import Command
+from odoo.orm.domain import Domain
+from odoo.orm.fields.relational._base import PENDING_SCOPE_KEY
 from odoo.tests import TransactionCase, new_test_user, tagged
 
 
@@ -92,3 +97,185 @@ class TestX2manyCacheScope(TransactionCase):
         )
         with self.assertQueryCount(0):
             self.assertFalse(created.sudo().child_ids)
+
+
+@tagged("post_install", "-at_install")
+class TestX2manyScopeInvariant(TransactionCase):
+    """The DB-free walk of odoo/orm/tests/test_x2many_scope_invariant_dbfree.py
+    against PostgreSQL: after every step of a random sequence of reads and
+    writes by a user and the superuser, every scope's x2many slot equals what
+    that scope's search returns, or is absent. A user never writes the field
+    the rule tests (`name`), the one stated exception of the invariant."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = new_test_user(
+            cls.env,
+            login="scope_walk",
+            groups="base.group_user,base.group_partner_manager",
+        )
+        for model, hidden in (
+            ("res.partner", "walk hidden"),
+            ("res.partner.tag", "walk hidden"),
+        ):
+            cls.env["ir.rule"].create(
+                {
+                    "name": f"walk: no hidden {model}",
+                    "model_id": cls.env["ir.model"]._get_id(model),
+                    "domain_force": f"[('name', 'not like', '{hidden}')]",
+                    "groups": [Command.link(cls.env.ref("base.group_user").id)],
+                }
+            )
+
+    def _scopes(self):
+        return {"sudo": self.env, "user": self.env(user=self.user.id, su=False)}
+
+    def _truth(self, scope_env, field, record_id, inverse):
+        comodel = scope_env[field.comodel_name].sudo()
+        host = comodel.env[field.model_name].browse(record_id)
+        domain = field.get_comodel_domain(host) & Domain(inverse, "in", [record_id])
+        related = comodel.browse(
+            comodel._search(domain, order=comodel._order, active_test=False)
+        )
+        if not scope_env.su:
+            rule = scope_env.registry.access_policy.record_domain(
+                scope_env, field.comodel_name, "read"
+            )
+            related = related.filtered_domain(rule)
+        return related._ids
+
+    def _check(self, parents, log):
+        self.env.flush_all()
+        fields_ = (
+            (parents._fields["child_ids"], "parent_id"),
+            (parents._fields["tag_ids"], "partner_ids"),
+        )
+        for field, inverse in fields_:
+            for key, slot in list(self.env.core.iter_context_caches(field)):
+                if key == PENDING_SCOPE_KEY:
+                    continue
+                for name, scope_env in self._scopes().items():
+                    if scope_env.get_cache_key(field) != key:
+                        continue
+                    for parent_id in parents._ids:
+                        if parent_id not in slot:
+                            continue
+                        held = slot[parent_id]
+                        truth = self._truth(scope_env, field, parent_id, inverse)
+                        why = (
+                            f"{name}'s slot of {field} for {parent_id}; after:\n  "
+                            + "\n  ".join(log)
+                        )
+                        self.assertEqual(set(held), set(truth), why)
+                        # the order is the search's whenever the sort keys are in
+                        # memory; a write whose keys are not caches the written order
+                        comodel = self.env[field.comodel_name]
+                        if (
+                            comodel.browse(held)._sorted_by_ids(comodel._order, False)
+                            is not None
+                        ):
+                            self.assertEqual(held, truth, why)
+
+    def _walk(self, seed, steps=40):
+        rng = random.Random(seed)
+        log = []
+        Partner = self.env["res.partner"]
+        parents = Partner.create([{"name": f"walk parent {i}"} for i in range(3)])
+        tags = self.env["res.partner.tag"].create(
+            [
+                {"name": f"walk tag {i}" if i < 3 else "walk hidden tag"}
+                for i in range(4)
+            ]
+        )
+        Partner.create(
+            [
+                {
+                    "name": "walk hidden child" if i == 0 else f"walk child {i}",
+                    "parent_id": p.id,
+                }
+                for i, p in enumerate(parents)
+            ]
+        )
+        self.env.invalidate_all()
+        ops = [
+            "read_children",
+            "read_tags",
+            "create_child",
+            "move_child",
+            "unlink_child",
+            "set_children",
+            "link_tag",
+            "unlink_tag",
+            "set_tags",
+            "hide_child",
+            "invalidate",
+        ]
+        for step in range(steps):
+            name, scope_env = rng.choice(list(self._scopes().items()))
+            parent = parents[rng.randrange(len(parents))].with_env(scope_env)
+            op = rng.choice(ops)
+            log.append(f"{step}: {name} {op} on {parent.name}")
+            try:
+                self._apply(op, name, scope_env, parent, parents, tags, rng)
+            except AccessError as exc:
+                log[-1] += f" (denied: {exc})"
+            self._check(parents, log)
+
+    def _apply(self, op, name, scope_env, parent, parents, tags, rng):
+        def children_of(parent):
+            return scope_env["res.partner"].search([("parent_id", "=", parent.id)])
+
+        match op:
+            case "read_children":
+                _ = parent.child_ids
+            case "read_tags":
+                _ = parent.tag_ids
+            case "create_child":
+                hidden = name == "sudo" and rng.random() < 0.3
+                scope_env["res.partner"].create(
+                    {
+                        "name": "walk hidden child"
+                        if hidden
+                        else f"walk child {rng.random()}",
+                        "parent_id": parent.id,
+                    }
+                )
+            case "move_child":
+                if child := children_of(parent)[:1]:
+                    child.write({"parent_id": parents[rng.randrange(len(parents))].id})
+            case "unlink_child":
+                if child := children_of(parent)[:1]:
+                    child.unlink()
+            case "set_children":
+                keep = children_of(parent).filtered(lambda _c: rng.random() < 0.5)
+                parent.write({"child_ids": [Command.set(keep.ids)]})
+            case "link_tag" | "unlink_tag":
+                tag = tags[rng.randrange(len(tags))]
+                if name == "sudo" or "hidden" not in tag.name:
+                    command = Command.link if op == "link_tag" else Command.unlink
+                    parent.write({"tag_ids": [command(tag.id)]})
+            case "set_tags":
+                pool = (
+                    tags
+                    if name == "sudo"
+                    else tags.filtered(lambda t: "hidden" not in t.name)
+                )
+                chosen = pool.filtered(lambda _t: rng.random() < 0.5)
+                parent.write({"tag_ids": [Command.set(chosen.ids)]})
+            case "hide_child":
+                if name == "sudo" and (child := children_of(parent)[:1]):
+                    child.write(
+                        {
+                            "name": "walk hidden child"
+                            if "hidden" not in child.name
+                            else "walk child again"
+                        }
+                    )
+            case "invalidate":
+                self.env.invalidate_all()
+
+    def test_every_scope_slot_equals_its_search_or_is_absent(self):
+        for seed in range(8):
+            with self.subTest(seed=seed), self.env.cr.savepoint():
+                self._walk(seed)

@@ -16,7 +16,7 @@ from ...primitives import NewId
 from ...validation import check_pg_name
 from .. import _field_ddl as _ddl
 from ..base import Field
-from ._base import _RelationalMulti
+from ._base import _is_cache_order_stable, _RelationalMulti
 from ._commands import CommandDelta
 
 _debug = DebugLog(__name__)
@@ -236,7 +236,15 @@ class Many2many(_RelationalMulti):
         created: bool = False,
     ) -> None:
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]), created=created)
+            ids = tuple(new_relation[record.id])
+            if store and not _is_cache_order_stable(comodel, ids):
+                # a stored slot reads as a fetch would: in the comodel's order
+                # when the sort keys are in memory, else in the commands'
+                # order; a computed value keeps the order its compute produced
+                sorted_ids = comodel.browse(ids)._sorted_by_ids(comodel._order, False)
+                if sorted_ids is not None:
+                    ids = sorted_ids
+            self._update_cache(record, ids, created=created)
 
         modified_corecord_ids = set()
 

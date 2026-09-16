@@ -279,3 +279,42 @@ class TestABatchJudgesNoScope:
             assert slots[as_user.env.get_cache_key(field)] == expected
             assert slots[env.get_cache_key(field)] == expected
             assert orders.sudo()[3].line_ids == lines[3].sudo()
+
+
+class TestAWriteToARuleFieldEvictsTheScopesThatReadThroughIt:
+    def test_hiding_a_line_evicts_the_user_slot_and_keeps_the_superuser_slot(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            order = as_user.create({"name": "o"})
+            line = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create({"order_id": order.id, "value": 1})
+            )
+            field = order._fields["line_ids"]
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: (line.id,)
+            }
+            line.sudo().write({"secret": True})
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {}
+            assert _slots(env, field)[env.get_cache_key(field)] == {
+                order.id: (line.id,)
+            }
+            assert order.line_ids._ids == ()
+            line.sudo().write({"secret": False})
+            assert order.line_ids == line
+
+    def test_a_write_to_a_field_no_rule_tests_keeps_every_slot(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            order = as_user.create({"name": "o"})
+            line = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create({"order_id": order.id, "value": 1})
+            )
+            field = order._fields["line_ids"]
+            line.sudo().write({"value": 2})
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: (line.id,)
+            }

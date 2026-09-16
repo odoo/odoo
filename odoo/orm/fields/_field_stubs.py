@@ -1,7 +1,7 @@
 import typing
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, MutableMapping
+    from collections.abc import Callable, Collection, Iterable, MutableMapping
 
     from odoo.tools import Query
 
@@ -72,6 +72,10 @@ class _FieldStubs:
         ) -> typing.Any: ...
 
         def _update_inverse(self, records: BaseModel, value: BaseModel) -> None: ...
+
+        def _evict_user_scopes_reading_through(
+            self, env: Environment, fnames: Collection[str]
+        ) -> None: ...
 
         def _update_inverses(
             self, updates: Iterable[tuple[BaseModel, typing.Any]]

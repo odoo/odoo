@@ -505,6 +505,63 @@ class _RelationalMulti(_Relational):
         except NotImplementedError:
             return False
 
+    def _scope_env(self, env: Environment, key: tuple) -> Environment:
+        index = env._field_depends_context[self].index("access")
+        uid, company_ids = key[index]
+        context = dict(env.context)
+        if company_ids:
+            context["allowed_company_ids"] = list(company_ids)
+        else:
+            context.pop("allowed_company_ids", None)
+        return env(user=uid, context=context, su=False)
+
+    def _scope_reads_through(
+        self, env: Environment, key: tuple, fnames: Collection[str]
+    ) -> bool:
+        # a user's search applies the user's read rules on the comodel; a
+        # write to a field a rule tests can move a record in or out of view
+        try:
+            domain = env.registry.access_policy.record_domain(
+                self._scope_env(env, key), self.comodel_name, "read"
+            )
+        except NotImplementedError:
+            # an environment without an access policy declares no rule
+            return False
+        return any(
+            condition.field_expr.split(".", 1)[0] in fnames
+            for condition in domain.iter_conditions()
+        )
+
+    def _evict_user_scopes_reading_through(
+        self, env: Environment, fnames: Collection[str]
+    ) -> None:
+        # after a write of `fnames` on comodel rows: every user scope whose
+        # read rule tests one of them forgets what it held, and its next
+        # read searches; the superuser reads through no rule
+        verdicts: dict[tuple, bool] = {}
+        evicted = 0
+        for key, slot in list(env.core.iter_context_caches(self)):
+            if (
+                key == PENDING_SCOPE_KEY
+                or not slot
+                or self._is_superuser_scope(env, key)
+            ):
+                continue
+            if key not in verdicts:
+                verdicts[key] = self._scope_reads_through(env, key, fnames)
+            if verdicts[key]:
+                evicted += len(slot)
+                slot.clear()
+        if evicted and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.scope_evict_rule_field_written",
+                model=self.model_name,
+                field=self.name,
+                comodel=self.comodel_name,
+                fields=sorted(fnames),
+                evicted=evicted,
+            )
+
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
         index = env._field_depends_context[self].index("access")
