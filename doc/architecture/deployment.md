@@ -348,6 +348,70 @@ location / {
 websocket location still needs `Upgrade`/`Connection: upgrade` and, under
 `workers > 0`, the evented port.
 
+## What `/web/metrics` exposes
+
+`odoo/service/metrics.py` renders the Prometheus exposition the `web` addon
+serves at `/web/metrics` (bearer token `ODOO_METRICS_TOKEN`; 404 when unset).
+Every sample carries `pid`; a prefork worker answering the route reports the
+master's census, so the worker gauges are the master's numbers. This table is
+gated: `tests/service/test_metrics_catalogue.py` fails when a family is
+rendered and not listed here, or listed and no longer rendered.
+
+**Process**
+
+| Family | Kind | Meaning |
+|---|---|---|
+| `odoo_up` | gauge | 1 when the endpoint is serving |
+| `odoo_server_info` | gauge | constant 1 with the `flavor` label (`threaded`, `prefork`, `evented`) |
+| `odoo_registries` | gauge | registries held in memory |
+| `odoo_threads` | gauge | live service threads by `type` (`http`, `cron`, `job`, `websocket`) — threaded and evented |
+| `odoo_http_threads_max` | gauge | the bounded HTTP handler slots — threaded and evented |
+| `odoo_limits_reached_threads` | gauge | threads over their time limit whose cancel did not free them, pending the reload — threaded |
+| `odoo_overruns_cancelled_total` | counter | requests, sweeps and jobs over `limit_time_real` whose queries were cancelled — threaded |
+
+**Prefork master** (absent on a threaded server)
+
+| Family | Kind | Meaning |
+|---|---|---|
+| `odoo_workers` | gauge | live worker processes by `type` (`http`, `cron`, `job`) |
+| `odoo_worker_population` | gauge | the configured HTTP worker count, after SIGTTIN/SIGTTOU |
+| `odoo_worker_generation` | gauge | workers forked since the master started |
+| `odoo_worker_exits_total` | counter | worker exits by `outcome`: `clean`, `terminated` (its SIGTERM), `timeout` (the watchdog's kill of a ready worker), `crash` — a crash loop is a rising `crash` beside a flat `clean` |
+| `odoo_long_polling_alive` | gauge | 1 while the evented child runs |
+
+**Connection pool** (`db.get_pool_health()`, one series per `pool` mode)
+
+| Family | Kind | Meaning |
+|---|---|---|
+| `odoo_pool_borrows_total` | counter | connections borrowed |
+| `odoo_pool_borrows_direct_total` | counter | borrows served outside the pooled path |
+| `odoo_pool_borrows_failed_total` | counter | borrows that raised instead of yielding a connection |
+| `odoo_pool_borrow_wait_seconds` | histogram | time borrows spent waiting for a connection |
+| `odoo_pool_borrow_wait_seconds_max` | gauge | the longest single wait observed |
+| `odoo_pool_created_total` / `odoo_pool_reaped_total` / `odoo_pool_evicted_stale_total` | counter | per-DSN pools created; closed by the idle reaper; evicted because their credentials changed |
+| `odoo_pool_pools` | gauge | per-DSN pools open |
+| `odoo_pool_connections_discarded_total` | counter | connections dropped rather than returned |
+| `odoo_pool_connections_trimmed_total` | counter | idle connections closed to keep this process's backends within `db_maxconn` |
+| `odoo_pool_backends` | gauge | server connections held (checked out + idle), trimmed on every return to `db_maxconn` per pool mode |
+| `odoo_pool_checked_out` / `odoo_pool_checked_out_oldest_seconds` | gauge | connections a borrower holds now; the age of the longest-held one — a rising floor is a leak |
+| `odoo_pool_direct_out` | gauge | unpooled connections outstanding |
+| `odoo_pool_budget_maxconn` / `odoo_pool_budget_in_use` / `odoo_pool_budget_available` | gauge | the shared connection budget: ceiling, held, unclaimed |
+| `odoo_pool_budget_exhausted_total` | counter | times the budget ran out |
+| `odoo_pool_leaks_reported_total` | counter | connections found held past `db_leak_detection` |
+| `odoo_pool_probe_run_total` / `odoo_pool_probe_permanent_total` / `odoo_pool_probe_transient_total` / `odoo_pool_probe_skipped_total` | counter | pre-flight connectability probes: run; concluded permanent; concluded transient; skipped for a DSN already proven |
+| `odoo_db_pool_<stat>` | gauge | psycopg_pool's own per-database statistics, labelled `pool` and `database` |
+
+**Replica routing** (`db.get_replica_health()`, one series per `database`)
+
+| Family | Kind | Meaning |
+|---|---|---|
+| `odoo_replica_breaker_closed` | gauge | 1 while read-only cursors go to the replica; 0 while the breaker holds them on the primary |
+| `odoo_replica_breaker_failures` / `odoo_replica_breaker_trips` | gauge | consecutive replica failures counted; times the breaker opened since the registry was built |
+| `odoo_replica_breaker_cooldown_remaining_seconds` | gauge | seconds until one request may try the replica again |
+| `odoo_replica_lag_seconds` | gauge | apply lag on the last sample; `+Inf` for a standby that has replayed nothing yet |
+| `odoo_replica_lagging` | gauge | 1 while the lag gate routes read-only cursors to the primary |
+| `odoo_replica_write_pins` | gauge | sessions reading from the primary because they wrote |
+
 ## What a deployment must provide
 
 | Dependency | Why it is not optional |
