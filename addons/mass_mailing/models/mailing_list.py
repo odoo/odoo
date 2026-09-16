@@ -10,10 +10,9 @@ from odoo.exceptions import UserError
 class MassMailingList(models.Model):
     """Model of a contact list. """
     _name = 'mailing.list'
-    _order = 'name'
     _description = 'Mailing List'
     _mailing_enabled = True
-    _order = 'create_date DESC'
+    _order = 'create_date DESC, id DESC'
     # As this model has their own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 
