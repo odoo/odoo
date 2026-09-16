@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.stock_account.tests.test_lot_valuation import TestLotValuation
+from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 from odoo.tests import tagged, Form
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCostsLots(TestLotValuation):
+class TestStockLandedCostsLots(PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,16 +23,12 @@ class TestStockLandedCostsLots(TestLotValuation):
 
         :param lot_qtys: list of (lot_name, quantity) tuples
         """
-        po = self.env['purchase.order'].create({
-            'partner_id': self.vendor.id,
-            'order_line': [Command.create({
-                'product_id': product.id,
-                'product_qty': sum(qty for _name, qty in lot_qtys),
-                'price_unit': unit_cost,
-                'tax_ids': [Command.clear()],
-            })],
-        })
-        po.button_confirm()
+        po = self._create_purchase(
+            product=product,
+            quantity=sum(qty for _name, qty in lot_qtys),
+            price_unit=unit_cost,
+            partner_id=self.vendor.id,
+        )
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids = [Command.clear()] + [Command.create({
             'product_id': product.id,
