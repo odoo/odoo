@@ -40,7 +40,7 @@ def _configure_journals(env):
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
         template_code = company.chart_template
-        full_data = ChartTemplate._get_chart_template_data(template_code)
+        full_data = ChartTemplate._prepare_chart_template_data(template_code)
         data = {
             "template_data": {
                 fname: value
@@ -99,7 +99,7 @@ def _configure_stock_account_company_data(env):
         template_code = company.chart_template
         res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
         account_account_data = ChartTemplate._get_stock_account_account(template_code)
-        account_templates = ChartTemplate._get_chart_template_model_data(
+        account_templates = ChartTemplate._prepare_chart_template_model_data(
             template_code, "account.account"
         )
         for xmlid, vals in account_account_data.items():

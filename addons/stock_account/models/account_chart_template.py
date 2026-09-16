@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_stock_account_res_company(self, template_code):
         return {
             company_id: filtered_vals
-            for company_id, vals in self._get_chart_template_model_data(
+            for company_id, vals in self._prepare_chart_template_model_data(
                 template_code, "res.company"
             ).items()
             if (
@@ -30,7 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_stock_account_account(self, template_code):
         return {
             xmlid: filtered_vals
-            for xmlid, vals in self._get_chart_template_model_data(
+            for xmlid, vals in self._prepare_chart_template_model_data(
                 template_code, "account.account"
             ).items()
             if (

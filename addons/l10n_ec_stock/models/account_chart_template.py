@@ -26,7 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
             # get template data
             Template = self.env["account.chart.template"].with_company(company)
             template_code = company.chart_template
-            full_data = Template._get_chart_template_data(template_code)
+            full_data = Template._prepare_chart_template_data(template_code)
             template_data = full_data.pop("template_data")
 
             ref = template_data.get("loss_stock_valuation_account")

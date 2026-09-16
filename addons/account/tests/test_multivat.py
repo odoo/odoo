@@ -185,7 +185,7 @@ class TestMultiVAT(AccountTestInvoicingCommon):
         test_get_data = data_method_provider("local", "be")
         with patch.object(
             AccountChartTemplate,
-            "_get_chart_template_data",
+            "_prepare_chart_template_data",
             side_effect=test_get_data,
             autospec=True,
         ):
@@ -214,7 +214,7 @@ class TestMultiVAT(AccountTestInvoicingCommon):
         test_get_data = data_method_provider("foreign", "fr")
         with patch.object(
             AccountChartTemplate,
-            "_get_chart_template_data",
+            "_prepare_chart_template_data",
             side_effect=test_get_data,
             autospec=True,
         ):
@@ -349,7 +349,7 @@ class TestMultiVAT(AccountTestInvoicingCommon):
         test_get_data = wrap_data_getter_for_caba(data_method_provider("foreign", "es"))
         with patch.object(
             AccountChartTemplate,
-            "_get_chart_template_data",
+            "_prepare_chart_template_data",
             side_effect=test_get_data,
             autospec=True,
         ):

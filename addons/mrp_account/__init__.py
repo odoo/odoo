@@ -9,7 +9,7 @@ def _configure_journals(env):
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
         template_code = company.chart_template
-        template_data = ChartTemplate._get_chart_template_data(template_code)[
+        template_data = ChartTemplate._prepare_chart_template_data(template_code)[
             "template_data"
         ]
         if "property_stock_account_production_cost_id" in template_data:

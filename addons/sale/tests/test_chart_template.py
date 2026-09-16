@@ -5,11 +5,11 @@ from odoo.tests import tagged
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-_get_chart_template_data = AccountChartTemplate._get_chart_template_data
+_prepare_chart_template_data = AccountChartTemplate._prepare_chart_template_data
 
 
-def _get_chart_template_data_with_downpayment(self, template_code):
-    data = _get_chart_template_data(self, template_code)
+def _prepare_chart_template_data_with_downpayment(self, template_code):
+    data = _prepare_chart_template_data(self, template_code)
     data["template_data"]["downpayment_account_id"] = next(
         xmlid
         for xmlid, vals in data["account.account"].items()
@@ -21,13 +21,13 @@ def _get_chart_template_data_with_downpayment(self, template_code):
 @tagged("post_install", "-at_install")
 @patch.object(
     AccountChartTemplate,
-    "_get_chart_template_data",
-    _get_chart_template_data_with_downpayment,
+    "_prepare_chart_template_data",
+    _prepare_chart_template_data_with_downpayment,
 )
 class TestSaleChartTemplate(AccountTestInvoicingCommon):
     def _template_downpayment_account(self, company):
         ChartTemplate = self.env["account.chart.template"].with_company(company)
-        template_data = ChartTemplate._get_chart_template_data(company.chart_template)
+        template_data = ChartTemplate._prepare_chart_template_data(company.chart_template)
         return ChartTemplate.ref(
             template_data["template_data"]["downpayment_account_id"]
         )
