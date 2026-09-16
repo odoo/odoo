@@ -106,6 +106,27 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         with self.assertRaises(UserError):
             self._run_category_wizard()
 
+    def test_preview_lists_the_cost_without_writing_it(self):
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        wizard = self._create_wizard(product_ids=[self.product.id])
+        wizard.action_preview_total_average_cost()
+        line = wizard.evaluation_line_ids
+        self.assertEqual(line.product_id, self.product)
+        self.assertFalse(line.pulled_in, "the user picked this one by hand")
+        self.assertAlmostEqual(line.current_cost, 100, places=2)
+        self.assertAlmostEqual(line.evaluated_cost, (100 * 100 + 10 * 200) / 110, places=2)
+        # a preview the user never applied must leave the product exactly as it was
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
+        self.assertFalse(
+            self.env['product.value'].sudo().search_count([
+                ('product_id', '=', self.product.id),
+                ('move_id', '=', False),
+                ('date', '=', wizard._get_period_bounds()[0]),
+            ]),
+            "a preview that leaves a cost behind in the history is not a preview",
+        )
+
     def test_period_issues_leave_at_the_evaluated_cost(self):
         self._add_opening_stock()
         self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)

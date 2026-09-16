@@ -1,6 +1,7 @@
+import contextlib
 from datetime import UTC, datetime, time, timedelta
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 
@@ -26,6 +27,11 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         help="Last day of the period to evaluate, and the date the stock closing that makes it final should "
              "carry. Evaluate again before closing if a stock move of the period changed in the meantime.",
     )
+    evaluation_line_ids = fields.One2many(
+        'l10n_jp_stock.total.average.cost.line', 'wizard_id',
+        string='Evaluation',
+        readonly=True,
+    )
 
     @api.model
     def default_get(self, fields):
@@ -42,41 +48,99 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         it to the product's standard price, so later sales are costed at it.
         """
         self.ensure_one()
+        evaluation = self._evaluate_total_average_cost()
+        updated_count = sum(1 for result in evaluation.values() if result['updated'])
+        unchanged_count = sum(
+            1 for result in evaluation.values() if result['evaluated'] and not result['updated']
+        )
+        if updated_count and unchanged_count:
+            message = self.env._(
+                'Updated the standard price of %(updated)s products; %(unchanged)s already '
+                'matched the evaluated cost.',
+                updated=updated_count, unchanged=unchanged_count,
+            )
+            notification_type = 'success'
+        elif updated_count:
+            message = self.env._('Updated the standard price of %s products.', updated_count)
+            notification_type = 'success'
+        elif unchanged_count:
+            message = self.env._(
+                'The standard price of %s products already matches the evaluated cost.',
+                unchanged_count,
+            )
+            notification_type = 'info'
+        else:
+            message = self.env._(
+                'No standard price was updated: no stock movement in the period, '
+                'or the result is not positive.',
+            )
+            notification_type = 'warning'
+        params = {
+            'message': message,
+            'sticky': False,
+            'type': notification_type,
+            'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
+        }
+        if updated_count or unchanged_count:
+            # an evaluation is only final once the period is closed, which nothing here does
+            params['message'] = message + ' ' + self.env._(
+                'The period is not final until the stock valuation is closed for it in %s.',
+            )
+            params['links'] = [{
+                'label': self.env._('Inventory Valuation'),
+                'url': '/odoo/action-stock_account.action_report_stock_valuation',
+            }]
+            params['sticky'] = True
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': params,
+        }
+
+    def action_preview_total_average_cost(self):
+        """
+        List what the evaluation would come to, leaving the products as they are.
+
+        Each level is valued off the corrected moves of the level below, so what a
+        manufactured good comes to is only known once the evaluation has been carried
+        out; the savepoint is what takes it back, whether it finished or raised.
+        """
+        self.ensure_one()
+        self.evaluation_line_ids.unlink()
+        with contextlib.closing(self.env.cr.savepoint()):
+            evaluation = self._evaluate_total_average_cost()
+        self.evaluation_line_ids = [
+            Command.create({
+                'product_id': product.id,
+                'current_cost': result['current_cost'],
+                'evaluated_cost': result['evaluated_cost'],
+                'pulled_in': result['pulled_in'],
+            })
+            for product, result in evaluation.items()
+        ]
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def _evaluate_total_average_cost(self):
+        """
+        Evaluate the 総平均法 cost of the period and write it to the standard price.
+
+        Returns what the period makes of every product it covers, by product: the
+        cost it starts from, the cost it is evaluated at, whether the period had
+        anything to evaluate it on, whether that moved the price, and whether the
+        product was pulled in rather than picked. A caller after the figures alone
+        reads them off that instead of off the products.
+        """
+        self.ensure_one()
         if self.date_from > self.date_to:
             raise UserError(self.env._("The start date must not be after the end date."))
-        if self.product_ids:
-            products = self.product_ids.filtered(lambda p: p.cost_method == 'standard')
-            if len(products) != len(self.product_ids):
-                raise UserError(
-                    self.env._(
-                        'The total average cost can only be applied to products valued with the standard cost method.',
-                    ),
-                )
-            # a closing leaves a real time valuation out, so nothing would protect this
-            if real_time := products.filtered(lambda p: p.valuation != 'periodic'):
-                raise UserError(
-                    self.env._(
-                        'The total average cost cannot be applied to products valued in real time, '
-                        'as the stock closing that makes a period final leaves them out: %s',
-                        ', '.join(real_time.mapped('display_name')),
-                    ),
-                )
-        else:
-            if not self.category_id:
-                raise UserError(self.env._('Select a category or products.'))
-            products = self.env['product.product'].search(
-                [('categ_id', 'child_of', self.category_id.id)],
-            ).filtered(lambda p: p.cost_method == 'standard' and p.valuation == 'periodic')
-        if lot_valuated := products.filtered('lot_valuated'):
-            raise UserError(
-                self.env._(
-                    'The total average cost cannot be applied to products valued lot by lot: %s',
-                    ', '.join(lot_valuated.mapped('display_name')),
-                ),
-            )
-        updated_count = 0
+        selected = self._get_selected_products()
         price_precision = self.env['decimal.precision'].precision_get('Product Price')
-        unchanged_count = 0
         period_start, period_end = self._get_period_bounds()
         # sudo: a product manager does not read the closing entries
         if period_start <= (last_closing := self.env.company.sudo()._get_last_closing_date()):
@@ -88,10 +152,17 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     date_from=self.date_from,
                 ),
             )
-        # sudo: nor the moves, purchase lines and orders feeding the evaluation
-        moves = self.env['stock.move'].sudo().search(
-            self._get_move_domain(products, period_start, period_end),
-        )
+        products, pulled_in, moves = self._get_evaluated_products(selected, period_start, period_end)
+        evaluation = {
+            product: {
+                'current_cost': product.standard_price,
+                'evaluated_cost': product.standard_price,
+                'evaluated': False,
+                'updated': False,
+                'pulled_in': product in pulled_in,
+            }
+            for product in products
+        }
         moves_by_product = moves.grouped('product_id')
         before_period = period_start - timedelta(seconds=1)
         opening_values = products._get_last_product_value(before_period)
@@ -169,6 +240,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 tot_val = init_val + purchases_val - returns_val
                 if product.uom_id.compare(tot_qty, 0) > 0 and product.currency_id.compare_amounts(tot_val, 0) > 0:
                     new_cost = float_round(tot_val / tot_qty, precision_digits=price_precision)
+                    evaluation[product].update(evaluated=True, evaluated_cost=new_cost)
                     if float_compare(new_cost, old_price := product.standard_price, precision_digits=price_precision):
                         product.with_context(disable_auto_revaluation=True).standard_price = new_cost
                         product._change_standard_price({product: old_price}, valuation_date=period_start)
@@ -188,57 +260,92 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                                 date_from=self.date_from, date_to=self.date_to, opening=init_qty,
                                 purchases=purchases_qty, reductions=returns_qty, cost=new_cost,
                             )
-                        updated_count += 1
+                        evaluation[product]['updated'] = True
                         batch_revalued |= product
-                    else:
-                        unchanged_count += 1
             if batch_revalued:
                 # the issues leave at the average it produced (施行令28条1項1号ハ)
                 # sudo: replaying the valuation writes the value of every move it covers
                 batch_revalued.sudo()._correct_inventory_valuation(period_start)
-        if updated_count and unchanged_count:
-            message = self.env._(
-                'Updated the standard price of %(updated)s products; %(unchanged)s already '
-                'matched the evaluated cost.',
-                updated=updated_count, unchanged=unchanged_count,
-            )
-            notification_type = 'success'
-        elif updated_count:
-            message = self.env._('Updated the standard price of %s products.', updated_count)
-            notification_type = 'success'
-        elif unchanged_count:
-            message = self.env._(
-                'The standard price of %s products already matches the evaluated cost.',
-                unchanged_count,
-            )
-            notification_type = 'info'
+        return evaluation
+
+    def _get_selected_products(self):
+        """
+        Return the products the user picked, refusing the ones that cannot be evaluated.
+
+        Naming a product asks for that product, so one this method cannot cost is an
+        error; a category only says where to look, so what it cannot cost is left out.
+        """
+        if self.product_ids:
+            products = self.product_ids.filtered(lambda p: p.cost_method == 'standard')
+            if len(products) != len(self.product_ids):
+                raise UserError(
+                    self.env._(
+                        'The total average cost can only be applied to products valued with the standard cost method.',
+                    ),
+                )
+            # a closing leaves a real time valuation out, so nothing would protect this
+            if real_time := products.filtered(lambda p: p.valuation != 'periodic'):
+                raise UserError(
+                    self.env._(
+                        'The total average cost cannot be applied to products valued in real time, '
+                        'as the stock closing that makes a period final leaves them out: %s',
+                        ', '.join(real_time.mapped('display_name')),
+                    ),
+                )
         else:
-            message = self.env._(
-                'No standard price was updated: no stock movement in the period, '
-                'or the result is not positive.',
+            if not self.category_id:
+                raise UserError(self.env._('Select a category or products.'))
+            products = self.env['product.product'].search(
+                [('categ_id', 'child_of', self.category_id.id)],
+            ).filtered(lambda p: p.cost_method == 'standard' and p.valuation == 'periodic')
+        if lot_valuated := products.filtered('lot_valuated'):
+            raise UserError(
+                self.env._(
+                    'The total average cost cannot be applied to products valued lot by lot: %s',
+                    ', '.join(lot_valuated.mapped('display_name')),
+                ),
             )
-            notification_type = 'warning'
-        params = {
-            'message': message,
-            'sticky': False,
-            'type': notification_type,
-            'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
-        }
-        if updated_count or unchanged_count:
-            # an evaluation is only final once the period is closed, which nothing here does
-            params['message'] = message + ' ' + self.env._(
-                'The period is not final until the stock valuation is closed for it in %s.',
+        return products
+
+    def _get_evaluated_products(self, selected, period_start, period_end):
+        """
+        Return the products the period covers, the ones it pulled in, and its moves.
+
+        A good is valued off what the moves of its components were worth, so a
+        component left at its old cost values the good on a stale figure. Pulling one
+        in can uncover components of its own, and the moves are searched per product,
+        so both are repeated until the set stops growing.
+        """
+        products = selected
+        pulled_in = self.env['product.product']
+        while True:
+            # sudo: nor the moves, the purchase lines and the orders feeding the evaluation,
+            # which the closing check just above is the other half of
+            moves = self.env['stock.move'].sudo().search(
+                self._get_move_domain(products, period_start, period_end),
             )
-            params['links'] = [{
-                'label': self.env._('Inventory Valuation'),
-                'url': '/odoo/action-stock_account.action_report_stock_valuation',
-            }]
-            params['sticky'] = True
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': params,
-        }
+            # the user never picked these, so one this evaluation cannot cost is
+            # dropped rather than refused, the way a category drops its own
+            found = self._filter_evaluable(self._get_consumed_components(moves)) - products
+            if not found:
+                return products, pulled_in, moves
+            products |= found
+            pulled_in |= found
+
+    def _filter_evaluable(self, products):
+        """Return the products of ``products`` the total average cost can be applied to."""
+        return products.filtered(
+            lambda p: p.cost_method == 'standard' and p.valuation == 'periodic' and not p.lot_valuated,
+        )
+
+    def _get_consumed_components(self, moves):
+        """
+        Return the components the orders behind these moves consumed.
+
+        Without `mrp` nothing is made out of anything; `l10n_jp_mrp` reads the
+        orders the moves belong to, when the user asked for their components.
+        """
+        return self.env['product.product']
 
     def _default_date_from(self):
         """
@@ -323,3 +430,27 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
 
     def _move_date_local(self, move):
         return fields.Datetime.context_timestamp(self, move.date).date()
+
+
+class L10nJpTotalAverageCostLine(models.TransientModel):
+    _name = 'l10n_jp_stock.total.average.cost.line'
+    _description = 'JGAAP Total Average Cost Preview Line'
+
+    wizard_id = fields.Many2one(
+        'l10n_jp_stock.total.average.cost.wizard',
+        required=True,
+        ondelete='cascade',
+    )
+    product_id = fields.Many2one('product.product', string='Product', required=True)
+    currency_id = fields.Many2one(related='product_id.currency_id')
+    current_cost = fields.Monetary(string='Current Cost')
+    evaluated_cost = fields.Monetary(
+        string='Evaluated Cost',
+        help="The cost the period comes to, which is the current one again when the period "
+             "holds nothing to evaluate the product on.",
+    )
+    pulled_in = fields.Boolean(
+        string='Pulled In',
+        help="The evaluation added this product because the cost of a selected one is read "
+             "off it; it was not selected itself, and its own cost changes too.",
+    )

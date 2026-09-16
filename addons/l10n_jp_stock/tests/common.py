@@ -69,11 +69,13 @@ class TestTotalAverageCostCommon(TransactionCase):
             'price_unit': price_unit,
         })
 
-    def _run_wizard(self, date_from=None, date_to=None, **values):
+    def _create_wizard(self, date_from=None, date_to=None, **values):
         values.setdefault('date_from', self.today - timedelta(days=2) if date_from is None else date_from)
         values.setdefault('date_to', self.today if date_to is None else date_to)
-        wizard = self.env['l10n_jp_stock.total.average.cost.wizard'].create(values)
-        return wizard.action_apply_total_average_cost()
+        return self.env['l10n_jp_stock.total.average.cost.wizard'].create(values)
+
+    def _run_wizard(self, date_from=None, date_to=None, **values):
+        return self._create_wizard(date_from, date_to, **values).action_apply_total_average_cost()
 
     def _run_category_wizard(self, **values):
         values.setdefault('category_id', self.category.id)
