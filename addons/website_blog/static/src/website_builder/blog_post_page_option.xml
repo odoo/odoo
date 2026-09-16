@@ -16,6 +16,9 @@
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
             </BuilderRow>
         </t>
+        <BuilderRow t-else="" label.translate="Show Title" tooltip.translate="Display the title on the 'All blogs' page">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_page_title']}"/>
+        </BuilderRow>
 
         <BuilderRow label.translate="Style">
             <BuilderSelect>
