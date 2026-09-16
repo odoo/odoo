@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="document_type_emission_certificate" model="document.type">
+        <field name="name">Emissions Verification Certificate</field>
+        <field name="code">MX_EMISSION</field>
+        <field name="company_id" eval="False" />
+        <field name="applies_to">resource.asset</field>
+        <field
+            name="asset_kind_ids"
+            eval="[Command.set([ref('resource_asset.kind_vehicle')])]" />
+        <field name="is_mandatory" eval="True" />
+        <field name="has_expiration" eval="True" />
+        <field name="is_renewable" eval="True" />
+        <field name="requires_original" eval="True" />
+        <field
+            name="instructions">The hologram is filed against the vehicle when its inspection passes. It expires with the next period's deadline, which the inspection calendar computes from the plate.</field>
+    </record>
+
+</odoo>

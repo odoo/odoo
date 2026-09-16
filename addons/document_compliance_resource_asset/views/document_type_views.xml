@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_type_form_asset_kinds" model="ir.ui.view">
+        <field name="name">document.type.form.asset.kinds</field>
+        <field name="model">document.type</field>
+        <field
+            name="inherit_id"
+            ref="document_compliance.view_document_type_form_compliance" />
+        <field name="arch" type="xml">
+            <field name="applies_to" position="after">
+                <field
+                    name="asset_kind_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                    invisible="applies_to != 'resource.asset'" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

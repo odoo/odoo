@@ -9,5 +9,8 @@
         "document_compliance",
         "document_resource_asset",
     ],
+    "data": [
+        "views/document_type_views.xml",
+    ],
     "auto_install": True,
 }

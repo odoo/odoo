@@ -118,7 +118,18 @@ class DocumentComplianceReport(models.Model):
         ]
         return "\n                UNION ALL\n                ".join(parts)
 
+    def _get_type_scope_conditions(self) -> list[str]:
+        """What makes a document type required *of this entity*.
+
+        Joined with AND, so an extension narrows rather than widens: a bridge
+        that knows a sub-kind of its entity adds its own clause here.
+        """
+        return ["dt.applies_to = 'all' OR dt.applies_to = e.entity_type"]
+
     def _with_cte(self) -> SQL:
+        type_scope = " AND ".join(
+            f"({condition})" for condition in self._get_type_scope_conditions()
+        )
         return SQL(f"""
             entities AS (
                 {self._get_entities_union()}
@@ -175,7 +186,7 @@ class DocumentComplianceReport(models.Model):
                     MAX(dd.date_verification) as last_verification
                 FROM entities e
                 JOIN document_type dt
-                    ON dt.applies_to = 'all' OR dt.applies_to = e.entity_type
+                    ON {type_scope}
                 LEFT JOIN document_document dd
                     ON dd.res_model = e.entity_type
                     AND dd.res_id = e.entity_id

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class ResourceAsset(models.Model):
@@ -57,6 +57,30 @@ class ResourceAsset(models.Model):
             "access_internal": "view",
             "access_via_link": "none",
         }
+
+    def _prepare_document_vals(self, name, **extra):
+        """Vals for a document filed against this asset, routed by its kind."""
+        self.check_singleton()
+        return {
+            "name": name,
+            "type": "binary",
+            "res_model": self._name,
+            "res_id": self.id,
+            "folder_id": self._get_document_folder().id or False,
+            "tag_ids": [Command.set(self._get_document_tags().ids)],
+            "owner_id": self._get_document_owner().id,
+            "company_id": self._documents_company().id,
+            **self._get_document_vals_access_rights(),
+            **extra,
+        }
+
+    def _file_document(self, name, **extra):
+        return (
+            self.env["document.document"]
+            .sudo()
+            .create(self._prepare_document_vals(name, **extra))
+            .with_env(self.env)
+        )
 
     def _check_create_documents(self):
         return bool(

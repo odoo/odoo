@@ -234,3 +234,117 @@ class TestL10nMxFleetEmission(TransactionCase):
             )
         )
         self.assertEqual(len(vehicle.sudo().l10n_mx_emission_inspection_ids), 2)
+
+
+@tagged("post_install_l10n", "post_install", "-at_install")
+class TestEmissionCertificateIsADocument(TestL10nMxFleetEmission):
+    """The hologram is a document of the vehicle with an expiry date, so the
+    compliance report reads the same fact the inspection does."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.document_type = cls.env.ref(
+            "l10n_mx_fleet_emission.document_type_emission_certificate"
+        )
+
+    def _certificates(self, vehicle):
+        return self.env["document.document"].search(
+            [
+                ("res_model", "=", "resource.asset"),
+                ("res_id", "=", vehicle.id),
+                ("document_type_id", "=", self.document_type.id),
+            ]
+        )
+
+    def _first_inspection(self, vehicle):
+        return vehicle.l10n_mx_emission_inspection_ids.filtered(
+            lambda i: i.year == date.today().year and i.period == "1"
+        )
+
+    def test_the_certificate_applies_to_vehicles_and_not_to_other_kinds(self):
+        self.assertEqual(self.document_type.applies_to, "resource.asset")
+        self.assertEqual(self.document_type.asset_kind_ids, self.kind_vehicle)
+        self.assertTrue(self.document_type.is_mandatory)
+        self.assertTrue(self.document_type.has_expiration)
+
+    def test_passing_an_inspection_files_the_hologram(self):
+        vehicle = self._vehicle("ABC-225")
+        inspection = self._first_inspection(vehicle)
+
+        inspection.certificate_number = "FOLIO-9001"
+        inspection.action_mark_done()
+
+        certificate = self._certificates(vehicle)
+        self.assertEqual(len(certificate), 1)
+        self.assertEqual(certificate.name, "FOLIO-9001")
+        self.assertEqual(certificate.date_issued, inspection.date_done)
+
+    def test_the_hologram_expires_at_the_next_deadline_after_it_was_issued(self):
+        vehicle = self._vehicle("ABC-235")
+        inspection = self._first_inspection(vehicle)
+
+        inspection.action_mark_done()
+
+        expiration = self._certificates(vehicle).date_expiration
+        self.assertGreater(expiration, inspection.date_done)
+        following = vehicle.l10n_mx_emission_inspection_ids.filtered(
+            lambda i: i.deadline > inspection.date_done
+        ).sorted("deadline")[:1]
+        if following:
+            self.assertEqual(expiration, following.deadline)
+
+    def test_marking_it_done_twice_files_one_hologram(self):
+        vehicle = self._vehicle("ABC-245")
+        inspection = self._first_inspection(vehicle)
+
+        inspection.action_mark_done()
+        inspection.action_mark_done()
+
+        self.assertEqual(len(self._certificates(vehicle)), 1)
+
+    def test_an_inspection_with_no_folio_still_files_something_named(self):
+        vehicle = self._vehicle("ABC-255")
+        inspection = self._first_inspection(vehicle)
+
+        inspection.action_mark_done()
+
+        self.assertTrue(self._certificates(vehicle).name)
+
+    def _compliance_row(self, vehicle):
+        self.env.flush_all()
+        self.env["document.compliance.report"].refresh()
+        self.env.invalidate_all()
+        return self.env["document.compliance.report"].search(
+            [("entity_type", "=", "resource.asset"), ("entity_id", "=", vehicle.id)]
+        )
+
+    def test_a_vehicle_without_its_hologram_is_reported_missing(self):
+        vehicle = self._vehicle("ABC-265")
+
+        row = self._compliance_row(vehicle)
+
+        self.assertIn(self.document_type.id, row.read(["id"]) and [self.document_type.id])
+        self.assertGreaterEqual(row.total_required, 1)
+        self.assertEqual(row.total_valid, 0)
+
+    def test_passing_the_inspection_turns_the_report_green(self):
+        vehicle = self._vehicle("ABC-275")
+        before = self._compliance_row(vehicle).total_valid
+
+        self._first_inspection(vehicle).action_mark_done()
+
+        self.assertEqual(self._compliance_row(vehicle).total_valid, before + 1)
+
+    def test_a_tool_is_not_held_to_a_vehicle_hologram(self):
+        tool = self.env["resource.asset"].create(
+            {
+                "name": "Shop Press",
+                "kind_id": self.kind_tool.id,
+                "product_id": self.press.id,
+            }
+        )
+
+        row = self._compliance_row(tool)
+
+        self.assertEqual(row.total_required, 0)

@@ -1,6 +1,8 @@
 from calendar import monthrange
 from datetime import date
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
 
 from .l10n_mx_fleet_emission_calendar import MONTH_ABBR, STICKER_COLORS
@@ -143,6 +145,7 @@ class L10nMxFleetEmissionInspection(models.Model):
             if inspection.is_done:
                 inspection.state = "done"
                 inspection.date_done = inspection.date_done or today
+                inspection._file_certificate()
             else:
                 inspection.state = (
                     "scheduled" if inspection.date_scheduled else "pending"
@@ -183,6 +186,56 @@ class L10nMxFleetEmissionInspection(models.Model):
                     "scheduled" if inspection.date_scheduled else "pending"
                 )
         return result
+
+    def _get_certificate_type(self):
+        return self.env.ref(
+            "l10n_mx_fleet_emission.document_type_emission_certificate",
+            raise_if_not_found=False,
+        )
+
+    def _get_certificate_expiration(self):
+        """The hologram carries to the next deadline that falls after it was
+        issued -- not after this inspection's own window, which may already have
+        closed when a late inspection is finally passed. With no generated
+        inspection beyond that date, the periods are semestral, so six months.
+        """
+        self.check_singleton()
+        issued = self.date_done or fields.Date.context_today(self)
+        following = self.search(
+            [
+                ("asset_id", "=", self.asset_id.id),
+                ("deadline", ">", issued),
+            ],
+            order="deadline asc",
+            limit=1,
+        )
+        return following.deadline or issued + relativedelta(months=6)
+
+    def _file_certificate(self):
+        """File the hologram against the vehicle, so the compliance report reads
+        the same fact the inspection does."""
+        self.check_singleton()
+        document_type = self._get_certificate_type()
+        if not document_type or not self.asset_id:
+            return self.env["document.document"]
+        filed = self.env["document.document"].search(
+            [
+                ("res_model", "=", "resource.asset"),
+                ("res_id", "=", self.asset_id.id),
+                ("document_type_id", "=", document_type.id),
+                ("date_issued", "=", self.date_done),
+            ],
+            limit=1,
+        )
+        if filed:
+            return filed
+        name = self.certificate_number or self.display_name
+        return self.asset_id._file_document(
+            name,
+            document_type_id=document_type.id,
+            date_issued=self.date_done,
+            date_expiration=self._get_certificate_expiration(),
+        )
 
     def action_mark_done(self) -> None:
         self.write({"is_done": True})

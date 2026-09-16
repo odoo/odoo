@@ -19,12 +19,14 @@ two yearly inspection windows under the Programa de Verificación Vehicular Obli
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
+        "document_compliance_resource_asset",
         "fleet",
     ],
     "countries": [
         "mx",
     ],
     "data": [
+        "data/document_type_data.xml",
         "security/ir.model.access.csv",
         "data/l10n_mx_fleet_emission_calendar_data.xml",
         "data/ir_cron_data.xml",
