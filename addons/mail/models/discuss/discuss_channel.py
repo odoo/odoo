@@ -349,9 +349,14 @@ class DiscussChannel(models.Model):
         :rtype: odoo.tools.BinaryBytes | bool
         """
         if self.channel_type == "chat":
+            channel_member_ids_sudo = (
+                # sudo: discuss.channel.member - it is acceptable to show the correspondent's
+                # generated avatar to the current user
+                self.channel_member_ids.sudo() if self.env.user.share else self.channel_member_ids
+            )
             correspondent = (
-                self.channel_member_ids.filtered(lambda member: not member.is_self)
-                or self.channel_member_ids
+                channel_member_ids_sudo.filtered(lambda member: not member.is_self)
+                or channel_member_ids_sudo
             ).partner_id[:1]
             if not correspondent or correspondent.image_128:
                 return False
