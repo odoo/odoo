@@ -1,10 +1,11 @@
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
-import { beforeEach, describe, test, expect } from "@odoo/hoot";
+import { beforeEach, describe, test, expect, mockUserAgent } from "@odoo/hoot";
 import { queryOne, waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     click,
     contains,
+    listenStoreFetch,
     openFormView,
     registerArchs,
     start,
@@ -13,7 +14,9 @@ import {
     SIZES,
     dragenterFiles,
     dropFiles,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
@@ -131,6 +134,96 @@ test("Attachment view popout controls test", async () => {
     await click(".o_attachment_preview .o_attachment_control");
     await animationFrame();
     expect(".o_attachment_preview").not.toBeVisible();
+});
+
+async function hasFloatingPopoutControl(count) {
+    await contains(".o_attachment_preview .o_attachment_control", { count });
+}
+
+test("Floating popout control is shown on desktop", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    listenStoreFetch("mail.thread");
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await waitStoreFetch("mail.thread");
+    await hasFloatingPopoutControl(1);
+});
+
+test("Floating popout control is hidden on mobile", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    mockUserAgent("android");
+    listenStoreFetch("mail.thread");
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await contains(".o-mail-Attachment");
+    await waitStoreFetch("mail.thread");
+    await hasFloatingPopoutControl(0);
+});
+
+test("Popout does not crash when the browser blocks the popup", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    patchWithCleanup(window, { open: () => null });
+    listenStoreFetch("mail.thread");
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await waitStoreFetch("mail.thread");
+    await click(".o_attachment_preview .o_attachment_control");
+    await animationFrame();
+    // No crash occurred (an uncaught error would be reported as unverified by Hoot),
+    // and hooks.afterPopoutClosed() reverted the hideAttachmentView() call made
+    // by hooks.beforePopout() before the popout was aborted.
+    expect(".o_attachment_preview").not.toHaveClass("d-none");
 });
 
 test("Chatter main attachment: can change from non-viewable to viewable", async () => {

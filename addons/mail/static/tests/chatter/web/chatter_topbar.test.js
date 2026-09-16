@@ -3,11 +3,12 @@ import {
     defineMailModels,
     listenStoreFetch,
     openFormView,
+    registerArchs,
     start,
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import { describe, expect, test, waitFor, waitForNone, mockUserAgent } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
@@ -26,6 +27,66 @@ test("base rendering", async () => {
     await waitFor("button:text('Activity'):count(1)");
     await waitFor("button[aria-label='Attach files']:count(1)");
     await waitFor(".o-mail-Followers:count(1)");
+});
+
+async function hasAttachmentPopoutButton(count) {
+    if (count) {
+        await waitFor(`button i[title='Pop out Attachments']:count(${count})`);
+    } else {
+        await waitForNone("button i[title='Pop out Attachments']");
+    }
+}
+
+test("Attachment popout button is shown on desktop", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    registerArchs({
+        "res.partner,false,form": `
+            <form string="Partner">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    listenStoreFetch("mail.thread");
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitStoreFetch("mail.thread");
+    await hasAttachmentPopoutButton(1);
+});
+
+test("Attachment popout button is hidden on mobile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    registerArchs({
+        "res.partner,false,form": `
+            <form string="Partner">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    mockUserAgent("android");
+    listenStoreFetch("mail.thread");
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Chatter-topbar");
+    await waitStoreFetch("mail.thread");
+    await hasAttachmentPopoutButton(0);
 });
 
 test("rendering with multiple partner followers", async () => {
