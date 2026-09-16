@@ -36,6 +36,10 @@ class WebsiteBackend(http.Controller):
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
+    @http.route('/website/theme_colors_preview', type="http", auth='user', website=True, readonly=True)
+    def get_theme_colors_preview(self):
+        return request.render('website.theme_colors_preview')
+
 
 class WebsiteBackendHome(Home):
 

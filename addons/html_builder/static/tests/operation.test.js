@@ -121,6 +121,26 @@ test("handle 3 concurrent cancellable operations (without delay)", async () => {
 });
 
 describe("Block editable", () => {
+    test("Loading screen uses the extra preview document when available", () => {
+        const editableDocument = document.implementation.createHTMLDocument();
+        const previewDocument = document.implementation.createHTMLDocument();
+        let extraPreviewDocument = previewDocument;
+        const operation = new Operation(editableDocument, () => extraPreviewDocument);
+
+        let removeLoadingElement = operation.addLoadingElement(false);
+        expect(previewDocument.querySelectorAll(".o_loading_screen")).toHaveCount(1);
+        expect(editableDocument.querySelectorAll(".o_loading_screen")).toHaveCount(0);
+
+        removeLoadingElement();
+        extraPreviewDocument = null;
+        removeLoadingElement = operation.addLoadingElement(false);
+        expect(previewDocument.querySelectorAll(".o_loading_screen")).toHaveCount(0);
+        expect(editableDocument.querySelectorAll(".o_loading_screen")).toHaveCount(1);
+
+        removeLoadingElement();
+        expect(editableDocument.querySelectorAll(".o_loading_screen")).toHaveCount(0);
+    });
+
     test("Doing an operation should block the editable during its execution", async () => {
         const customActionDef = Promise.withResolvers();
         addBuilderAction({

@@ -104,6 +104,7 @@ export class Builder extends Component {
         // "regular" mode.
         const config = {
             Plugins: this.props.Plugins,
+            extraPreviewDocument: null,
             ...this.props.config,
             mobileBreakpoint,
             isMobileView: (targetEl) => {
