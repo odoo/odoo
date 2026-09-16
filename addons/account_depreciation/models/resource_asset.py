@@ -11,6 +11,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero, formatLang
 from odoo.tools.date_utils import end_of
+from odoo.tools.misc import clean_context
 
 DAYS_PER_MONTH = 30
 DAYS_PER_YEAR = DAYS_PER_MONTH * 12
@@ -1479,6 +1480,55 @@ class ResourceAsset(models.Model):
                     company=self.company_id.display_name,
                 )
             )
+
+    @api.model
+    def _create_from_plans(self, plans):
+        # A plan's board lands on the asset the bill line names, on a component of
+        # it, or on a new asset; every further board of the same line is a
+        # component of the one that landed first.
+        Asset = self.with_context(clean_context(self.env.context))
+        landed = {}
+        assets = self.browse()
+        for plan in plans:
+            named = plan["named_asset"]
+            vals = dict(plan["vals"])
+            root = landed.get(plan["unit"])
+            if plan["component_of_unit"] and root:
+                vals["parent_id"] = root.id
+                vals["name"] = self._component_name(root, plan["profile"])
+                asset = Asset.create(vals)
+            elif named and not named.depreciation_state:
+                named.write({**vals, "depreciation_state": "draft"})
+                asset = named
+            elif named:
+                vals["parent_id"] = named.id
+                vals["name"] = self._component_name(named, plan["profile"])
+                asset = Asset.create(vals)
+            else:
+                asset = Asset.create(vals)
+            landed.setdefault(plan["unit"], asset)
+            assets |= asset
+            plan["asset"] = asset
+        to_validate = self.browse()
+        for plan in plans:
+            asset = plan["asset"]
+            if plan["profile"] and plan["validate"]:
+                to_validate |= asset
+            if plan["move"]:
+                asset.message_post(
+                    body=_(
+                        "Asset created from invoice: %s", plan["move"]._get_html_link()
+                    )
+                )
+                asset._post_non_deductible_tax_value()
+        to_validate.validate()
+        return assets
+
+    @api.model
+    def _component_name(self, parent, profile):
+        if not profile:
+            return parent.name
+        return f"{parent.name} — {profile.name}"
 
     def validate(self):
         self.write({"depreciation_state": "open"})

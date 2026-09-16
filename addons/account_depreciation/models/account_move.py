@@ -3,7 +3,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, float_compare
-from odoo.tools.misc import clean_context, formatLang
+from odoo.tools.misc import formatLang
 
 
 class AccountMove(models.Model):
@@ -277,64 +277,15 @@ class AccountMove(models.Model):
             asset.message_post(body=msg)
 
     def _auto_create_asset(self):
-        create_list = []
-        invoice_list = []
-        auto_validate = []
+        plans = []
         for move in self:
             if not move.is_invoice():
                 continue
             for move_line in move.line_ids:
                 if not move_line._creates_an_asset():
                     continue
-                account = move_line.account_id
-                if account.multiple_assets_per_line:
-                    units_quantity = max(1, int(move_line.quantity))
-                else:
-                    units_quantity = 1
-                base_vals = move_line._get_asset_vals()
-                profiles = account.depreciation_profile_ids.filtered(
-                    lambda profile: (
-                        profile.company_id in move_line.company_id.parent_ids  # noqa: B023  the lambda runs inside this iteration
-                    )
-                )
-                for profile in profiles or [None]:
-                    profile_vals = dict(base_vals)
-                    if profile:
-                        profile_vals["depreciation_profile_id"] = profile.id
-                        profile_defaults = profile._get_asset_defaults()
-                        profile_defaults.pop("account_asset_id", None)
-                        profile_vals.update(profile_defaults)
-                    for index in range(1, units_quantity + 1):
-                        vals = dict(profile_vals)
-                        if units_quantity > 1:
-                            vals["name"] = _(
-                                "%(move_line)s (%(current)s of %(total)s)",
-                                move_line=move_line.name,
-                                current=index,
-                                total=units_quantity,
-                            )
-                        create_list.append(vals)
-                        invoice_list.append(move)
-                        auto_validate.append(account.create_asset == "validate")
-
-        assets = (
-            self.env["resource.asset"]
-            .with_context(clean_context(self.env.context))
-            .create(create_list)
-        )
-        to_validate = self.env["resource.asset"]
-        for asset, vals, invoice, validate in zip(
-            assets, create_list, invoice_list, auto_validate, strict=True
-        ):
-            if "depreciation_profile_id" in vals and validate:
-                to_validate |= asset
-            if invoice:
-                asset.message_post(
-                    body=_("Asset created from invoice: %s", invoice._get_html_link())
-                )
-                asset._post_non_deductible_tax_value()
-        to_validate.validate()
-        return assets
+                plans.extend(move_line._plan_assets())
+        return self.env["resource.asset"]._create_from_plans(plans)
 
     @api.model
     def _prepare_move_for_asset_depreciation(self, vals):
@@ -483,6 +434,53 @@ class AccountMoveLine(models.Model):
                 and account.internal_group == "asset"
             )
         )
+
+    def _plan_assets(self):
+        # Several profiles on one account describe one purchase from several angles
+        # (a depreciable half and a non-depreciable one), so the first board lands
+        # on the asset and each further one on a component of it. A line naming an
+        # asset never creates an unrelated root: its board joins that asset, or
+        # becomes its component when it already depreciates.
+        self.check_singleton()
+        account = self.account_id
+        units = max(1, int(self.quantity)) if account.multiple_assets_per_line else 1
+        named = (
+            self.asset_id if "asset_id" in self._fields else self.env["resource.asset"]
+        )
+        base_vals = self._get_asset_vals()
+        profiles = account.depreciation_profile_ids.filtered(
+            lambda profile: profile.company_id in self.company_id.parent_ids
+        )
+        plans = []
+        for unit in range(1, units + 1):
+            for position, profile in enumerate(
+                list(profiles) or [self.env["account.depreciation.profile"]]
+            ):
+                vals = dict(base_vals)
+                if profile:
+                    vals["depreciation_profile_id"] = profile.id
+                    defaults = profile._get_asset_defaults()
+                    defaults.pop("account_asset_id", None)
+                    vals.update(defaults)
+                if units > 1:
+                    vals["name"] = _(
+                        "%(move_line)s (%(current)s of %(total)s)",
+                        move_line=self.name,
+                        current=unit,
+                        total=units,
+                    )
+                plans.append(
+                    {
+                        "vals": vals,
+                        "move": self.move_id,
+                        "validate": account.create_asset == "validate",
+                        "named_asset": named,
+                        "profile": profile,
+                        "unit": (self.id, unit),
+                        "component_of_unit": position > 0,
+                    }
+                )
+        return plans
 
     def _get_asset_vals(self):
         self.check_singleton()
