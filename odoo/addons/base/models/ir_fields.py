@@ -8,7 +8,7 @@ from typing import NamedTuple
 import pytz
 
 from odoo import api, Command, fields, models
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, clean_context
 from odoo.tools.translate import _, code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -555,7 +555,13 @@ class IrFieldsConverter(models.AbstractModel):
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
                 if name_create_enabled_fields.get(field.name):
                     try:
-                        id, _name = RelatedModel.name_create(name=value)
+                        # Isolate defaults intended for the imported model so they
+                        # do not leak into a different relational model created only
+                        # to resolve an imported value (e.g. partner created via
+                        # name_create during task import with default_user_ids).
+                        id, _name = RelatedModel.with_context(
+                            clean_context(self.env.context)
+                        ).name_create(name=value)
                         RelatedModel.env.flush_all()
                     except Exception:  # noqa: BLE001
                         savepoint.rollback()
