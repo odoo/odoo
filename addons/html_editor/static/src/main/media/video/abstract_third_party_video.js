@@ -90,7 +90,7 @@ export class AbstractThirdPartyVideo {
      */
     static getVideoUrlData(urlMatch, forcedOptions = {}) {
         const baseUrl = new URL(urlMatch[0]);
-        const videoId = urlMatch.groups.id;
+        const videoId = urlMatch.groups.id || "";
         const options = {
             ...getUrlOptions(baseUrl, this.optionsConfig || {}),
             ...(this?.getCustomUrlOptions?.(baseUrl) || {}),
@@ -107,7 +107,7 @@ export class AbstractThirdPartyVideo {
             videoId,
             embedUrl: this.getEmbedUrl(videoId, options),
             // thumbnailUrl can be a promise in some cases (see vimeo)
-            thumbnailUrl: this.getThumbnailUrl?.(videoId) || "",
+            thumbnailUrl: this.getThumbnailUrl?.(videoId, options) || "",
             options,
         };
     }

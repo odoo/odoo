@@ -20,7 +20,7 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
                 expect(urlData.baseUrl).toBe(urlToCompare);
                 expect(urlData.embedUrl).toBeOfType("string");
                 expect(urlData.videoId).toBeOfType("string");
-                expect(urlData.videoId).toBe(urlMatch.groups.id);
+                expect(urlData.videoId).toBe(urlMatch.groups.id || "");
                 expect(urlData.options).toBeOfType("object");
 
                 //ensure the embed url is also parsable and match the options of the original url
