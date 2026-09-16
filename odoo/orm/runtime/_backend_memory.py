@@ -154,7 +154,9 @@ class InMemoryColumnStore:
         self.storage.update_rows(model._table, [(record_id, {column: merged or None})])
         return 1
 
-    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
+    def get_column_values(
+        self, model: BaseModel, column: str
+    ) -> list[tuple[int, typing.Any]]:
         storage = self.storage
         return [
             (row_id, _load(row[column]))
@@ -815,7 +817,7 @@ class _ForeignKeyPlan:
         self.nulls: dict[str, list[tuple[int, dict]]] = {}
         self.m2m_rows: dict[str, set[int]] = {}
 
-    def delete(self, model: BaseModel, ids: set[int]) -> None:
+    def add_removal(self, model: BaseModel, ids: set[int]) -> None:
         storage = self.backend.storage
         seen = self.rows.setdefault(model._table, set())
         ids = ids.difference(seen)
@@ -824,13 +826,13 @@ class _ForeignKeyPlan:
         seen.update(ids)
         for field in model._fields.values():
             if field.is_many2many and field.store and field.relation and field.column1:
-                self._drop_m2m_rows(field.relation, field.column1, ids)
+                self._add_relation_removal(field.relation, field.column1, ids)
         for field in self.registry.fields_by_comodel.get(model._name, ()):
             if not field.store:
                 continue
             if field.is_many2many:
                 if field.relation and field.column2:
-                    self._drop_m2m_rows(field.relation, field.column2, ids)
+                    self._add_relation_removal(field.relation, field.column2, ids)
                 continue
             if not field.is_many2one or field.company_dependent:
                 continue
@@ -855,7 +857,7 @@ class _ForeignKeyPlan:
                 rows=len(hit),
             )
             if field.ondelete == "cascade":
-                self.delete(referrer, set(hit))
+                self.add_removal(referrer, set(hit))
             elif field.ondelete == "restrict":
                 raise ForeignKeyViolation(
                     f"update or delete on table {model._table!r} violates foreign "
@@ -867,7 +869,7 @@ class _ForeignKeyPlan:
                     (row_id, {field.name: None}) for row_id in hit
                 )
 
-    def _drop_m2m_rows(self, relation: str, column: str, ids: set[int]) -> None:
+    def _add_relation_removal(self, relation: str, column: str, ids: set[int]) -> None:
         self.m2m_rows.setdefault(relation, set()).update(
             row_id
             for row_id, row in self.backend._iter_m2m_rows(relation)
@@ -1326,7 +1328,7 @@ class InMemoryBackend:
         # rows of every many2many relation table naming the ids -- planned
         # in full first, so a refusal deep in a cascade deletes nothing
         plan = _ForeignKeyPlan(self, env.registry)
-        plan.delete(model, wanted)
+        plan.add_removal(model, wanted)
 
         many2one_fields = env.registry.many2one_company_dependents[model._name]
         uninstalling = env.context.get(MODULE_UNINSTALL_FLAG)
