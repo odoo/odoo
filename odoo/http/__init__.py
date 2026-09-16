@@ -94,11 +94,11 @@ from .core import (
     borrow_request,
 )
 
+from ._cookies import FutureResponse
 from .wrappers import (
     HTTPRequest,
     prepare_content_disposition_header,
     Response,
-    FutureResponse,
     Headers,
     prepare_no_content_response,
     ResponseCacheControl,

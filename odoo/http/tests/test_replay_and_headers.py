@@ -4,9 +4,10 @@ import pytest
 import werkzeug.datastructures
 from werkzeug.test import EnvironBuilder
 
+from odoo.http._cookies import FutureResponse
 from odoo.http.dispatcher import Dispatcher, _dispatchers
 from odoo.http.request_class import Request
-from odoo.http.wrappers import FutureResponse, HTTPRequest, Response
+from odoo.http.wrappers import HTTPRequest, Response
 
 
 class _FakeRequest(Request):

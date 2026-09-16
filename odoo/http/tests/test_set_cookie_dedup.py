@@ -1,4 +1,5 @@
-from odoo.http.wrappers import FutureResponse, _Response
+from odoo.http._cookies import FutureResponse
+from odoo.http.wrappers import _Response
 
 
 def test_response_set_cookie_replaces_same_key_instead_of_duplicating():

@@ -4,9 +4,10 @@ from typing import Any
 
 import pytest
 
+from odoo.http._cookies import FutureResponse
 from odoo.http.application import _prepare_proxy_fix
 from odoo.http.dispatcher import Dispatcher, HttpDispatcher
-from odoo.http.wrappers import FutureResponse, prepare_no_content_response
+from odoo.http.wrappers import prepare_no_content_response
 
 
 def _environ(forwarded_for, forwarded_host=None, forwarded_proto=None):

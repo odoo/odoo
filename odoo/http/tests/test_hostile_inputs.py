@@ -103,7 +103,7 @@ def test_no_hostile_url_escapes_get_static_file():
 
 
 def test_no_hostile_cookie_or_filename_escapes():
-    from odoo.http.wrappers import get_cookie_name
+    from odoo.http._cookies import get_cookie_name
 
     assert _hostile_probe(get_cookie_name) == []
     assert _hostile_probe(prepare_content_disposition_header) == []

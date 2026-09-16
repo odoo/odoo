@@ -12,10 +12,11 @@ if TYPE_CHECKING:
     import odoo.api
     from odoo.modules.registry import Registry
 
+    from ._cookies import FutureResponse
     from .dispatcher import Dispatcher
     from .geoip import GeoIP
     from .session import Session
-    from .wrappers import FutureResponse, HTTPRequest, Response
+    from .wrappers import HTTPRequest, Response
 
 
 if TYPE_CHECKING:

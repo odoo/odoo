@@ -14,6 +14,7 @@ from odoo.libs.worker_thread import current_worker_thread
 from odoo.modules.registry import Registry
 from odoo.tools import profiler
 
+from ._cookies import FutureResponse
 from ._csrf import _RequestCsrfMixin
 from ._protocols import get_ir_http
 from ._response import _RequestResponseMixin
@@ -23,7 +24,7 @@ from .constants import DEFAULT_LANG
 from .dispatcher import _dispatchers
 from .geoip import GeoIP
 from .session import Session
-from .wrappers import FutureResponse, HTTPRequest, Response
+from .wrappers import HTTPRequest, Response
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)

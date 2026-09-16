@@ -11,6 +11,7 @@ CLEAN_MODULES = (
     "odoo.db.cursor",
     "odoo.db.pool",
     "odoo.db.utils",
+    "odoo.http._cookies",
     "odoo.http._cors",
     "odoo.http._csrf",
     "odoo.http._dbfilter",

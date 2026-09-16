@@ -9,6 +9,7 @@ import werkzeug.exceptions
 import odoo.api
 from odoo.libs.debug_log import DebugLog
 
+from ._cookies import get_cookie_identity
 from ._protocols import RequestState
 from .constants import (
     SESSION_LIFETIME,
@@ -18,7 +19,7 @@ from .constants import (
 )
 from .exceptions import SessionExpiredException
 from .session import Session
-from .wrappers import Response, get_cookie_identity
+from .wrappers import Response
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
