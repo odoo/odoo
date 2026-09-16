@@ -432,6 +432,7 @@ class AccountChartTemplate(models.AbstractModel):
         moves = self.env['account.move'].search([
             ('company_id', '=', company.id),
             ('partner_id', '!=', False),
+            ('partner_id.l10n_cl_sii_taxpayer_type', '!=', False),
             ('move_type', '!=', 'entry')
         ])
 
