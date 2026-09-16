@@ -3502,3 +3502,62 @@ class TestMrpAuditFixes(TestMrpCommon):
             "exploding a kit must not cost a query per move: "
             f"{few} queries for 2 moves, {many} for 20, {per_move:.2f} per move",
         )
+
+    def test_posting_the_rest_of_an_order_keeps_the_first_batch_traceable(self):
+        """`_post_inventory` runs once per post, `move_finished_ids` spans them all.
+
+        Produce part of an order, post it, then mark the rest done. The first
+        batch's produced line is already linked to what it consumed, and the
+        second pass must not reach back and rewrite it -- least of all with the
+        empty set it holds when the raw moves were consumed in full the first
+        time round.
+        """
+        finished = self.env["product.product"].create(
+            {"name": "Partial finished", "is_storable": True, "route_ids": []}
+        )
+        component = self.env["product.product"].create(
+            {"name": "Partial component", "is_storable": True}
+        )
+        bom = self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": finished.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 1.0})
+                ],
+            }
+        )
+        warehouse = self.env["stock.warehouse"].search([], limit=1)
+        self.env["stock.quant"]._update_available_quantity(
+            component, warehouse.lot_stock_id, 100.0
+        )
+        production = self.env["mrp.production"].create(
+            {"product_id": finished.id, "product_qty": 10.0, "bom_id": bom.id}
+        )
+        production.action_confirm()
+        production.action_assign()
+
+        production.qty_producing = 4.0
+        production.move_raw_ids.picked = True
+        production._post_inventory()
+
+        first_batch = production.move_finished_ids.move_line_ids.filtered(
+            lambda line: line.move_id.state == "done"
+        )
+        self.assertEqual(len(first_batch), 1)
+        traced = first_batch.consume_line_ids
+        self.assertTrue(
+            traced, "the first batch must record what it consumed to be a test at all"
+        )
+
+        production.qty_producing = 10.0
+        production.move_raw_ids.filtered(lambda m: m.state != "done").picked = True
+        production.button_mark_done()
+        self.env.invalidate_all()
+
+        self.assertEqual(
+            first_batch.consume_line_ids,
+            traced,
+            "posting the rest of the order rewrote what the first batch consumed",
+        )

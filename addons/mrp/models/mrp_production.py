@@ -3291,10 +3291,29 @@ class MrpProduction(models.Model):
             moves_to_finish = moves_to_finish._action_done(
                 cancel_backorder=cancel_backorder
             )
+        finished_lines_by_order = defaultdict(
+            lambda: self.env["stock.move.line"],
+            [
+                (key, self.env["stock.move.line"].concat(*values))
+                for key, values in tools_groupby(
+                    moves_to_finish.move_line_ids,
+                    key=lambda line: line.move_id.production_id.id,
+                )
+            ],
+        )
         for order in self:
-            consume_move_lines = moves_to_do_by_order[order.id].mapped("move_line_ids")
-            order.move_finished_ids.move_line_ids.consume_line_ids = [
-                (6, 0, consume_move_lines.ids)
+            # Only the lines this pass produced, and only when this pass
+            # consumed something. An order can be posted more than once -- post
+            # part of it, then mark the rest done -- and `move_finished_ids`
+            # carries every batch, so writing the whole set would hand the
+            # earlier batch's produced lines this batch's components. When the
+            # raw moves were already done, `consume_move_lines` is empty and a
+            # replace would erase the first batch's traceability outright.
+            consume_move_lines = moves_to_do_by_order[order.id].move_line_ids
+            if not consume_move_lines:
+                continue
+            finished_lines_by_order[order.id].consume_line_ids = [
+                Command.set(consume_move_lines.ids)
             ]
         return True
 

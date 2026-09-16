@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -66,16 +66,14 @@ class StockMoveLine(models.Model):
                     production=mo.id,
                     by="finished_lots" if finished_lots else "all_finished_lines",
                 )
+                produced_move_lines = mo.move_finished_ids.move_line_ids
                 if finished_lots:
-                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(
+                    produced_move_lines = produced_move_lines.filtered(
                         lambda sml, finished_lots=finished_lots: (
                             sml.lot_id in finished_lots
                         )
                     )
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
-                else:
-                    produced_move_lines = mo.move_finished_ids.move_line_ids
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                line.produce_line_ids = [Command.set(produced_move_lines.ids)]
         return res
 
     def _get_similar_move_lines(self):
