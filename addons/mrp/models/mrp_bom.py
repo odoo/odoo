@@ -453,23 +453,23 @@ class MrpBom(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        needs_uom = [
-            values
-            for values in vals_list
+        needs_uom = {
+            index
+            for index, values in enumerate(vals_list)
             if values.get("product_tmpl_id") and "product_uom_id" not in values
-        ]
+        }
         if needs_uom:
             templates = self.env["product.template"].browse(
-                {values["product_tmpl_id"] for values in needs_uom}
+                {vals_list[index]["product_tmpl_id"] for index in needs_uom}
             )
             uom_by_template = {
                 template.id: template.uom_id.id for template in templates
             }
             vals_list = [
                 {**values, "product_uom_id": uom_by_template[values["product_tmpl_id"]]}
-                if values in needs_uom
+                if index in needs_uom
                 else values
-                for values in vals_list
+                for index, values in enumerate(vals_list)
             ]
         res = super().create(vals_list)
         _debug.lifecycle("create", count=len(res), boms=res)

@@ -353,14 +353,6 @@ class MrpProduction(models.Model):
         readonly=False,
         domain=_NON_INVENTORY_MOVE_DOMAIN,
     )
-    all_move_raw_ids = fields.One2many(
-        comodel_name="stock.move",
-        inverse_name="raw_material_production_id",
-    )
-    all_move_ids = fields.One2many(
-        comodel_name="stock.move",
-        inverse_name="production_id",
-    )
     move_byproduct_ids = fields.One2many(
         comodel_name="stock.move",
         compute="_compute_move_byproduct_ids",
@@ -946,6 +938,7 @@ class MrpProduction(models.Model):
                     [
                         ("raw_material_production_id", "in", saved.ids),
                         ("date_delay_alert", "!=", False),
+                        *_NON_INVENTORY_MOVE_DOMAIN,
                     ],
                     ["raw_material_production_id"],
                     ["date_delay_alert:max"],

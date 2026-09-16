@@ -29,11 +29,6 @@ class StockWarehouse(models.Model):
         string="Picking Before Manufacturing MTO Rule",
         copy=False,
     )
-    sam_rule_id = fields.Many2one(
-        comodel_name="stock.rule",
-        string="Stock After Manufacturing Rule",
-        copy=False,
-    )
     manu_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Manufacturing Operation Type",
