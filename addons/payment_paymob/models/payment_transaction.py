@@ -77,7 +77,9 @@ class PaymentTransaction(models.Model):
         :return: The request payload.
         :rtype: dict
         """
-        partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        partner_first_name, partner_last_name = payment_utils.split_partner_name(
+            self.billing_partner_id.name
+        )
         payment_method_codes = [self.payment_method_code]
 
         # If the user selects the Oman Net Payment Method to pay, Integration ID for both Card and
@@ -106,11 +108,11 @@ class PaymentTransaction(models.Model):
             "billing_data": {
                 "first_name": partner_first_name or partner_last_name or "",
                 "last_name": partner_last_name or "",
-                "email": self.partner_email or "",
-                "street": self.partner_address or "",
-                "state": self.partner_state_id.name or "",
-                "phone_number": (self.partner_phone or "").replace(" ", ""),
-                "country": self.partner_country_id.code or "",
+                "email": self.billing_partner_id.email or "",
+                "street": self.billing_partner_id.street or "",
+                "state": self.billing_partner_id.state_id.name or "",
+                "phone_number": (self.billing_partner_id.phone or "").replace(" ", ""),
+                "country": self.billing_partner_id.country_id.code or "",
             },
         }
 

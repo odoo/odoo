@@ -160,7 +160,3 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         if amount and not payment_utils.check_access_token(payment_token, invoice_id, amount):
             return request.redirect('/my')
         return super().portal_my_invoice_detail(invoice_id, amount=amount, **kw)
-
-    def _create_transaction(self, *args, **kwargs):
-        tx_sudo = super()._create_transaction(*args, **kwargs)
-        return tx_sudo

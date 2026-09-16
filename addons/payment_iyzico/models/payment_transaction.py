@@ -69,10 +69,10 @@ class PaymentTransaction(models.Model):
                 }
             ],
             "billingAddress": {
-                "address": self.partner_address,
-                "contactName": self.partner_name,
-                "city": self.partner_city,
-                "country": self.partner_country_id.name,
+                "address": self.billing_partner_id.address,
+                "contactName": self.billing_partner_id.name,
+                "city": self.billing_partner_id.city,
+                "country": self.billing_partner_id.country_id.name,
             },
             "buyer": {
                 "id": self.partner_id.id,

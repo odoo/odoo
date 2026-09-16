@@ -106,11 +106,11 @@ class PaymentTransaction(models.Model):
                 },
                 "customer": {  # required to create a token and for some redirected payment methods
                     "billingAddress": {
-                        "city": self.partner_city or "",
-                        "countryCode": self.partner_country_id.code or "",
-                        "state": self.partner_state_id.name or "",
-                        "street": self.partner_address or "",
-                        "zip": self.partner_zip or "",
+                        "city": self.billing_partner_id.city or "",
+                        "countryCode": self.billing_partner_id.country_id.code or "",
+                        "state": self.billing_partner_id.state_id.name or "",
+                        "street": self.billing_partner_id.street or "",
+                        "zip": self.billing_partner_id.zip or "",
                     },
                     "contactDetails": {
                         "emailAddress": self.partner_email or "",

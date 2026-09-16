@@ -521,12 +521,27 @@ class PaymentPortal(payment_portal.PaymentPortal):
             "sale_order_id": order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         tx_sudo = self._create_transaction(
-            custom_create_values={
-                "sale_order_ids": [Command.set([order_id])],
-                "billing_partner_id": order_sudo.partner_invoice_id.id,
-                "shipping_partner_id": order_sudo.partner_shipping_id.id,
-            },
-            **kwargs,
+            custom_create_values={"sale_order_ids": [Command.set([order_id])]}, **kwargs
         )
 
         return tx_sudo._get_processing_values()
+
+    def _create_transaction(self, *args, **kwargs):
+        """Override of `payment` to fill in the billing and shipping addresses from the order.
+
+        This is only done as a fallback: flows that already know their billing/shipping partner
+        set `billing_partner_id`/`shipping_partner_id` themselves through `custom_create_values`
+        and are left untouched.
+        """
+        tx_sudo = super()._create_transaction(*args, **kwargs)
+        if (
+            not tx_sudo.billing_partner_id
+            and not tx_sudo.shipping_partner_id
+            and tx_sudo.sale_order_ids
+        ):
+            order_sudo = tx_sudo.sale_order_ids[:1]
+            tx_sudo.with_context(payment_safe_write=True).write({
+                "billing_partner_id": order_sudo.partner_invoice_id.id,
+                "shipping_partner_id": order_sudo.partner_shipping_id.id,
+            })
+        return tx_sudo

@@ -123,23 +123,23 @@ class PaymentTransaction(models.Model):
         :return: The Mollie-formatted payload for the billingAddress field in the payment request.
         :rtype: dict
         """
-        given_name, family_name = payment_utils.split_partner_name(self.partner_name)
+        given_name, family_name = payment_utils.split_partner_name(self.billing_partner_id)
         billing_address = {
             "givenName": given_name,
             "familyName": family_name,
-            "email": self.partner_email or "",
+            "email": self.billing_partner_id.email or "",
         }
         if all((
-            self.partner_address,
-            self.partner_zip,
-            self.partner_city,
-            self.partner_country_id,
+            self.billing_partner_id.address,
+            self.billing_partner_id.zip,
+            self.billing_partner_id.city,
+            self.billing_partner_id.country_id,
         )):
             billing_address |= {
-                "streetAndNumber": self.partner_address,
-                "postalCode": self.partner_zip,
-                "city": self.partner_city,
-                "country": self.partner_country_id.code,
+                "streetAndNumber": self.billing_partner_id.address,
+                "postalCode": self.billing_partner_id.zip,
+                "city": self.billing_partner_id.city,
+                "country": self.billing_partner_id.country_id.code,
             }
         return billing_address
 
