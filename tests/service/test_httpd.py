@@ -18,6 +18,17 @@ from odoo.service import settings as server_settings
 _SLOW_GATE = threading.Event()
 
 
+def _read_body(environ):
+    # PEP 3333's validator insists on read(size); a chunked body has no size.
+    stream = environ["wsgi.input"]
+    if environ.get("CONTENT_LENGTH"):
+        return stream.read(int(environ["CONTENT_LENGTH"]))
+    chunks = []
+    while chunk := stream.read(65536):
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
 def _app(environ, start_response):
     path = environ["PATH_INFO"]
     if path == "/stream":
@@ -29,7 +40,7 @@ def _app(environ, start_response):
         start_response("413 Content Too Large", [("Content-Length", "0")])
         return [b""]
     if path == "/upgrade":
-        sock = environ["socket"]
+        sock = environ["odoo.socket"]
 
         class Upgraded(list):
             def close(self):
@@ -44,7 +55,7 @@ def _app(environ, start_response):
         threading.current_thread().rpc_model_method = "res.users.read"
     if path == "/slow":
         _SLOW_GATE.wait(5)
-    body = environ["wsgi.input"].read()
+    body = _read_body(environ)
     out = json.dumps(
         {
             "path": path,
@@ -55,7 +66,7 @@ def _app(environ, start_response):
             "terminated": environ.get("wsgi.input_terminated"),
             "dup": environ.get("HTTP_X_DUP"),
             "underscore": "HTTP_X_UNDER" in environ,
-            "socket": "socket" in environ,
+            "socket": "odoo.socket" in environ,
             "thread": threading.current_thread().name,
         }
     ).encode()
@@ -67,14 +78,14 @@ def _app(environ, start_response):
 
 
 @contextmanager
-def _server(**env):
+def _server(app=_app, **env):
     with (
         patch.dict(os.environ, {"ODOO_MAX_HTTP_THREADS": "4", **env}),
         server_settings.override(
             db_maxconn=64, max_cron_threads=0, job_workers=0, test_enable=False
         ),
     ):
-        srv = httpd.ThreadedHTTPServer("127.0.0.1", 0, _app)
+        srv = httpd.ThreadedHTTPServer("127.0.0.1", 0, app)
     thread = threading.Thread(target=srv.serve_forever, daemon=True)
     thread.start()
     try:
@@ -931,3 +942,25 @@ class TestDrain:
             t0 = time.monotonic()
             assert srv.drain(5.0) == 0
             assert time.monotonic() - t0 < 0.1
+
+
+class TestTheEnvironIsWsgiCompliant:
+    """`wsgiref.validate` is the reference checker for PEP 3333: every CGI
+    variable a str, the input/errors streams with the required methods, the
+    start_response protocol honoured.  `REMOTE_PORT` was an int until
+    2026-09-15 and nothing said so."""
+
+    def test_a_validated_app_serves_a_get_and_a_post(self):
+        from wsgiref.validate import validator
+
+        with _server(app=validator(_app)) as srv:
+            raw = _talk(srv.server_port, b"GET /p?q=1 HTTP/1.1\r\nHost: h\r\n\r\n")
+            assert raw.startswith(b"HTTP/1.1 200")
+            # The validator's iterator wrapper has no len(), so the reply is
+            # chunked; HTTP/1.0 makes it close-delimited and plain to read.
+            raw = _talk(
+                srv.server_port,
+                b"POST /p HTTP/1.0\r\nHost: h\r\nContent-Length: 3\r\n\r\nabc",
+            )
+            assert raw.startswith(b"HTTP/1.1 200")
+            assert _json_body(raw)["len"] == 3

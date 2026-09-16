@@ -924,7 +924,7 @@ class WebsocketConnectionHandler:
             raise ServiceUnavailable("Websocket is disabled in test mode")
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
-            socket = request.httprequest.raw_environ["socket"]
+            socket = request.httprequest.raw_environ["odoo.socket"]
             public_session = cls._handle_public_configuration(request)
             session, db, httprequest = (
                 (public_session or request.session),

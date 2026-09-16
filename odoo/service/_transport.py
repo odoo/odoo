@@ -302,7 +302,7 @@ def prepare_wsgi_environ(
                 value = f"{environ[key]},{value}"
         environ[key] = value
     if identity.exposes_socket:
-        environ["socket"] = conn.sock
+        environ["odoo.socket"] = conn.sock
     if head.host is not None:
         environ["HTTP_HOST"] = head.host
     if head.chunked:
