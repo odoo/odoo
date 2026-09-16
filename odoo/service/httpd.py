@@ -242,7 +242,9 @@ class ThreadedHTTPServer:
         self.limits = TransportLimits.from_environment()
         self.max_http_threads, auto_limit = compute_http_thread_limit(self.settings)
         announce_thread_budget(self.settings, self.max_http_threads, auto_limit)
-        self.socket, self.reload_socket = self._bind(host, port, announce=announce)
+        self.socket, self.listener_outlives_exec = self._bind(
+            host, port, announce=announce
+        )
         self.server_address = self.socket.getsockname()[:2]
         self.server_name, self.server_port = (
             self.server_address[0],
@@ -276,7 +278,7 @@ class ThreadedHTTPServer:
             host=host,
             port=self.server_port,
             max_http_threads=self.max_http_threads,
-            activation=self.reload_socket,
+            outlives_exec=self.listener_outlives_exec,
         )
 
     @staticmethod
@@ -720,10 +722,10 @@ class ThreadedHTTPServer:
         # the listener stays bound through the interpreter restart and the
         # connections that arrive meanwhile wait in its backlog.  A
         # socket-activated listener already survives as LISTEN_FDS.
-        if self.reload_socket:
+        if self.listener_outlives_exec:
             return
         fd = bequeath_socket(self.socket, os.environ)
-        self.reload_socket = True
+        self.listener_outlives_exec = True
         _debug.lifecycle("httpd.listener_bequeathed", port=self.server_port, fd=fd)
 
     def server_close(self) -> None:

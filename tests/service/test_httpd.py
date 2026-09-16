@@ -988,7 +988,7 @@ class TestTheListenerSurvivesAReexec:
     def test_a_socket_activated_listener_is_left_to_listen_fds(self):
         with _server() as srv, patch.dict(os.environ, {}, clear=False):
             os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
-            srv.reload_socket = True
+            srv.listener_outlives_exec = True
             srv.bequeath_listener()
             assert "ODOO_HTTP_SOCKET_FD" not in os.environ
             assert not os.get_inheritable(srv.socket.fileno())
@@ -1009,7 +1009,7 @@ class TestTheListenerSurvivesAReexec:
                 srv = httpd.ThreadedHTTPServer("127.0.0.1", 0, _app)
             try:
                 assert srv.server_port == port
-                assert srv.reload_socket, (
+                assert srv.listener_outlives_exec, (
                     "an inherited listener is kept on the next reload too"
                 )
                 assert srv.socket.fileno() == fd
