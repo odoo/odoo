@@ -3,7 +3,7 @@ import threading
 import time
 import types
 import typing
-from collections.abc import Collection, Iterable, Mapping
+from collections.abc import Collection, Hashable, Iterable, Mapping
 from contextlib import ExitStack, closing, nullcontext
 
 import psycopg
@@ -234,6 +234,7 @@ class Registry(
             if is_readonly_cursor_enabled()
             else None,
             max_lag=config["db_replica_max_lag"] or 0.0,
+            write_pin=config["db_replica_write_pin"] or 0.0,
         )
 
         with closing(self.cursor()) as cr:
@@ -652,8 +653,10 @@ class Registry(
                 self.registry_invalidated = False
         self._reset_cache_changes()
 
-    def cursor(self, /, readonly: bool = False) -> BaseCursor:
-        cr, mode = self._replica.cursor(readonly)
+    def cursor(
+        self, /, readonly: bool = False, *, pin_key: Hashable | None = None
+    ) -> BaseCursor:
+        cr, mode = self._replica.cursor(readonly, pin_key=pin_key)
         if mode != "rw":
             thread = current_worker_thread()
             if hasattr(thread, "cursor_mode"):

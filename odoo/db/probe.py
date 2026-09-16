@@ -198,10 +198,15 @@ class ReachabilityProbe:
                     error=type(translated).__name__,
                 )
                 raise translated from e
-            if self.is_database_absent(conninfo, kwargs, deadline):
+            maintenance = self.ask_maintenance_db(conninfo, kwargs, deadline)
+            if maintenance == "absent":
                 self._stats.record_probe_outcome("permanent")
                 _debug.logic("pool.probe.permanent", reason="database_absent")
                 raise psycopg.errors.InvalidCatalogName(str(e)) from e
+            if _is_authentication_failure(e, maintenance):
+                self._stats.record_probe_outcome("permanent")
+                _debug.logic("pool.probe.permanent", reason="auth_phase")
+                raise psycopg.errors.InvalidAuthorizationSpecification(str(e)) from e
             self._stats.record_probe_outcome("transient")
             _debug.logic("pool.probe.transient", error=type(e).__name__)
             _logger.debug(
@@ -229,6 +234,15 @@ class ReachabilityProbe:
     def is_database_absent(
         self, conninfo: str, kwargs: dict, deadline: float | None = None
     ) -> bool:
+        return self.ask_maintenance_db(conninfo, kwargs, deadline) == "absent"
+
+    # What the `postgres` database says about the one that refused us:
+    # "absent" or "present" from pg_database, "auth_failed" when the
+    # maintenance connect itself was turned away at the password stage,
+    # "unknown" for anything else (including a deadline already spent).
+    def ask_maintenance_db(
+        self, conninfo: str, kwargs: dict, deadline: float | None = None
+    ) -> str:
         maint = _expand_conninfo({"dsn": conninfo, **kwargs})
         db_name = maint.get("dbname")
         if not db_name or db_name == "postgres":
@@ -237,7 +251,7 @@ class ReachabilityProbe:
                 db=db_name,
                 reason="maintenance_db" if db_name else "no_db_name",
             )
-            return False
+            return "unknown"
         maint.pop("options", None)
         maint["dbname"] = "postgres"
         maint["autocommit"] = True
@@ -246,7 +260,7 @@ class ReachabilityProbe:
             _debug.logic(
                 "pool.probe.absence_check_skipped", db=db_name, reason="deadline"
             )
-            return False
+            return "unknown"
         maint["connect_timeout"] = probe_timeout
         try:
             with psycopg.connect("", **maint) as mc:
@@ -254,7 +268,21 @@ class ReachabilityProbe:
                     "SELECT 1 FROM pg_database WHERE datname = %s", (db_name,)
                 ).fetchone()
             _debug.logic("pool.probe.database_absent", db=db_name, absent=row is None)
-            return row is None
+            return "absent" if row is None else "present"
+        except psycopg.OperationalError as e:
+            at_auth = _failed_at_password_stage(e)
+            _debug.logic(
+                "pool.probe.absence_check_unavailable",
+                db=db_name,
+                error=type(e).__name__,
+                auth_failed=at_auth,
+            )
+            _logger.debug(
+                "pg_database existence check unavailable for %r",
+                db_name,
+                exc_info=True,
+            )
+            return "auth_failed" if at_auth else "unknown"
         except Exception as e:
             _debug.logic(
                 "pool.probe.absence_check_unavailable",
@@ -266,4 +294,32 @@ class ReachabilityProbe:
                 db_name,
                 exc_info=True,
             )
-            return False
+            return "unknown"
+
+
+# libpq's own account of where a connect died, which no lc_messages
+# translates: the server asked for a password we could not give, or it took
+# ours and turned us away. A refused port or a dead host never reaches the
+# password stage; a missing database is refused *after* it, which is why the
+# maintenance database is asked first and only a second refusal at the same
+# stage counts.
+def _failed_at_password_stage(exc: psycopg.OperationalError) -> bool:
+    pgconn = getattr(exc, "pgconn", None)
+    if pgconn is None:
+        return False
+    try:
+        return bool(pgconn.needs_password or pgconn.used_password)
+    except Exception:
+        return False
+
+
+def _is_authentication_failure(exc: psycopg.OperationalError, maintenance: str) -> bool:
+    pgconn = getattr(exc, "pgconn", None)
+    if pgconn is None:
+        return False
+    try:
+        if pgconn.needs_password:
+            return True
+        return bool(pgconn.used_password) and maintenance == "auth_failed"
+    except Exception:
+        return False

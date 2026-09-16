@@ -6,8 +6,11 @@ from time import monotonic
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import psycopg
 from psycopg_pool import PoolTimeout
 
+from odoo.db import settings as pool_settings
+from odoo.db.dsn import _get_dsn_key
 from odoo.db.pool import (
     _DIRECT_CONNECTION,
     ConnectionBudget,
@@ -15,10 +18,12 @@ from odoo.db.pool import (
     PoolError,
     _get_base_connection_options,
     _get_seconds_remaining,
+    _prepare_connection_options,
     _SuppressKnownPoolWarnings,
 )
 from odoo.db.probe import PROBE_CONNECT_TIMEOUT, get_libpq_connect_timeout
 from odoo.db.reaper import _LAST_BORROW_ATTR, mark_active
+from odoo.db.settings import PoolSettings
 
 
 def _fake_pool_factory(*_a, **_k):
@@ -475,3 +480,70 @@ class TestABugIsNotLaunderedIntoAPoolError(unittest.TestCase):
             with self.assertRaises(PoolError):
                 pool.borrow({"dbname": "slowdb", "host": "h"})
         self.assertEqual(pool._budget.in_use, 0)
+
+
+class TestCancelQueriesOf(unittest.TestCase):
+    class _Conn:
+        def __init__(self, fails=False):
+            self.fails = fails
+            self.cancelled = 0
+
+        def cancel_safe(self):
+            if self.fails:
+                raise psycopg.OperationalError("connection gone")
+            self.cancelled += 1
+
+    def test_cancels_each_connection_the_thread_holds_and_counts_them(self):
+        pool = ConnectionPool(maxconn=4)
+        mine, also_mine, theirs, gone = (
+            self._Conn(),
+            self._Conn(),
+            self._Conn(),
+            self._Conn(fails=True),
+        )
+        for conn in (mine, also_mine, gone):
+            pool._checkouts.track(conn)
+        pool._checkouts.track(theirs)
+        pool._checkouts._out[theirs] = pool._checkouts._out[theirs]._replace(
+            thread="other-thread"
+        )
+        me = threading.current_thread().name
+        self.assertEqual(pool.cancel_queries_of(me), 2)
+        self.assertEqual(
+            (mine.cancelled, also_mine.cancelled, theirs.cancelled), (1, 1, 0)
+        )
+        self.assertEqual(pool.cancel_queries_of("nobody"), 0)
+
+    def test_the_registry_fans_out_over_every_pool(self):
+        from odoo.db.endpoints import EndpointRegistry
+
+        reg = EndpointRegistry()
+        with pool_settings.installed(PoolSettings()):
+            rw = reg.get_pool_at_endpoint(("h", 5432), False)
+            ro = reg.get_pool_at_endpoint(("h", 5432), True)
+        a, b = self._Conn(), self._Conn()
+        rw._checkouts.track(a)
+        ro._checkouts.track(b)
+        self.assertEqual(reg.cancel_queries_of(threading.current_thread().name), 2)
+
+
+class TestIdleInTransactionTimeoutAtConnect(unittest.TestCase):
+    def test_a_configured_timeout_is_a_startup_guc_in_milliseconds(self):
+        options = _prepare_connection_options(
+            "", {}, 5, session_gucs=None, idle_in_transaction_ms=90000
+        )
+        self.assertIn("-c idle_in_transaction_session_timeout=90000", options)
+
+    def test_zero_leaves_the_server_setting_alone(self):
+        options = _prepare_connection_options(
+            "", {}, 5, session_gucs=None, idle_in_transaction_ms=0
+        )
+        self.assertNotIn("idle_in_transaction", options)
+
+    def test_the_pool_reads_it_from_its_settings(self):
+        with pool_settings.installed(PoolSettings(idle_in_transaction_timeout=90.0)):
+            pool = ConnectionPool(maxconn=2)
+        _conninfo, kwargs = pool._prepare_connect_args(
+            _get_dsn_key({"dbname": "d"}), {"dbname": "d"}
+        )
+        self.assertIn("-c idle_in_transaction_session_timeout=90000", kwargs["options"])

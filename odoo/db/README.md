@@ -580,7 +580,13 @@ one exception, and the scanner has a control showing it tells the two apart.
   impossible. `retrying` has to name `PG_STALE_PLAN_EXCEPTIONS` in its `except`
   explicitly, because `FeatureNotSupported` is **not** an `OperationalError` and
   was never caught at all. Measured, six readers against a writer altering a
-  column they read: **6832 failed requests → 0**.
+  column they read: **6832 failed requests → 0**. A stale plan met by *this*
+  connection came from a schema change this process never saw land — a DBA's
+  `ALTER`, another process's migration, anything outside the registry
+  signal — so the idle siblings hold the same plans and would each burn a
+  retry of their own; `_drain_siblings_after_stale_plan` drains the
+  database's idle connections once per `_STALE_PLAN_DRAIN_INTERVAL` (5 s), so
+  a burst of requests heals the pool once rather than draining it once each.
 - **Pipeline mode does not exempt a statement from the seam**: psycopg does
   not raise where a pipelined statement was issued — it queues the command and
   surfaces the server's error at the next sync, which is `Cursor.pipeline`'s
@@ -773,6 +779,57 @@ one exception, and the scanner has a control showing it tells the two apart.
   instead of a per-cursor fetch that every cursor paid for. `EndpointRegistry`
   hands `ConnectionPool` its `settings` and nothing the constructor already
   reads from them.
+- **A connection lost before the transaction's first statement completed is
+  replayed on a fresh borrow.** Nothing has happened server-side, so the
+  statement is the same request it was: `_replace_lost_connection` gives the
+  dead connection back (`keep_in_pool=False`), borrows another from the same
+  pool, rebuilds the psycopg cursor and re-issues the statement — `execute`
+  and `executemany` both. It is refused once a statement has run
+  (`_transaction_touched`, set by `_statement_done` and cleared with the
+  transaction caches), inside a savepoint, or inside a pipeline block; those
+  transactions have state only the caller can rebuild, and the loss
+  propagates as before. Eligible losses are `OperationalError`s that left the
+  connection closed or never reached the server (a terminated backend, a
+  dead idle connection handed out inside `db_healthcheck_grace`, a broken
+  socket). Measured: a backend killed before the first statement → replayed
+  on a new pid; killed after one → `AdminShutdown` propagates; killed inside
+  a savepoint → propagates; permits and checkouts balanced through all of it.
+  This closes the grace window's one failure mode for the common case — a
+  request's first statement — and leaves `retrying`'s contract untouched.
+- **A running statement can be cancelled from another thread, and a
+  transaction's statements bounded**: `db.cancel_queries_of(thread_name)`
+  walks every pool's `CheckoutTracker` for that thread's checkouts and calls
+  psycopg's `cancel_safe()` on each — libpq's `PQcancel` from the client
+  side: no borrow (a saturated pool is when this is needed), no
+  `pg_signal_backend` privilege, and it reaches a replica connection.
+  `Cursor.set_statement_timeout(seconds)` is `SET LOCAL statement_timeout`
+  through the inliner, transaction-scoped so a rollback clears it. Both are
+  primitives: the serving tier decides which requests get which budget and
+  cancels on client disconnect. Measured: a 10 s `pg_sleep` cancelled in
+  0.30 s with the cursor usable after `rollback()`; a 0.2 s timeout fired at
+  0.20 s and read `0` again after the rollback.
+- **A session reads its own writes, on the primary, for `db_replica_write_pin`
+  seconds.** A replica that has not applied a client's own commit would show
+  that client its write as missing. `ReplicaRouter.cursor(pin_key=…)` routes
+  a read-only request for a pinned key to the primary (`ro->rw`,
+  `reason=pinned`), and a read-write cursor opened with a key registers
+  `Cursor.on_commit_if_written` — at commit, one
+  `SELECT txid_current_if_assigned() IS NOT NULL` (an xid is assigned on the
+  first write and never otherwise) says whether the transaction wrote, so a
+  request that only read pins nothing and keeps the replica. The round trip
+  is paid only when an observer is registered and something ran. `WritePins`
+  prunes past 1024 entries. `Registry.cursor(pin_key=…)` passes the key
+  through; the http layer supplies the session id. Measured against the
+  observer: a read-only transaction and an empty one fired nothing, a write
+  fired once.
+- **A transaction left idle is ended by the server, not only reported.**
+  `db_idle_in_transaction_timeout` (0 = off) becomes
+  `idle_in_transaction_session_timeout` in the connection's startup options
+  beside `idle_session_timeout`; a cursor forgotten inside a transaction
+  holds locks, a permit and a backend until then, and the leak detector only
+  says so. Measured at 0.3 s: `SHOW` answered `300ms` on the connection and
+  the next statement after 0.6 s idle raised
+  `IdleInTransactionSessionTimeout`.
 - **A statement that failed still cost a round trip**: `_record_metrics` ran
   after the `try/except`, so every server-side failure counted as zero queries —
   in `sql_log_count`, in the process-wide `sql_counter`, and therefore in
@@ -899,12 +956,21 @@ one exception, and the scanner has a control showing it tells the two apart.
   and German. The missing-database case does not depend on text at all — the
   probe falls back to `is_database_absent`, which asks `pg_database`. What remains
   is an **authentication** failure on a server with translations installed: it
-  is not recognised and costs the full `db_borrow_timeout` (measured, 0.02 s
-  against 30.00 s). There is no client-side fix — `options='-c lc_messages=C'`
-  cannot help, because authentication happens *before* the server processes
-  `options`, verified by pairing a bad password with an invalid GUC and getting
-  the password error. Deployments that care set `lc_messages = C` in
-  `postgresql.conf`.
+  used to be unrecognised and cost the full `db_borrow_timeout` (measured,
+  0.02 s against 30.00 s), and `options='-c lc_messages=C'` cannot help
+  because authentication happens *before* the server processes `options`.
+  **libpq's own account of where the connect died does not go through a
+  catalogue**: the failed `PGconn` rides on psycopg's `OperationalError`
+  (`e.pgconn`), and `needs_password` / `used_password` say whether the server
+  reached the password stage. `needs_password` alone is conclusive. A refused
+  port or a dead host never gets there; a *missing database* is refused
+  **after** the password, which is why `ask_maintenance_db` is consulted first
+  — `absent` wins, and only a maintenance connect that is itself turned away
+  at the password stage (`auth_failed`) makes `used_password` an
+  authentication failure. Measured with every English marker disabled: a
+  wrong password over scram is `InvalidAuthorizationSpecification` in
+  **0.03 s**, a missing database still `InvalidCatalogName`, a refused port
+  still transient.
 - **One mechanism invalidates the catalog cache on a savepoint rollback**: the
   `ROLLBACK TO` detection in `Cursor.execute`. `Savepoint.rollback` used to call
   the hook itself as well; counted per host flavour that call was never the one

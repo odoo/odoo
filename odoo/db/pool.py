@@ -104,12 +104,16 @@ def _prepare_connection_options(
     *,
     session_gucs: str | None,
     forced_gucs: tuple[str, ...] = (),
+    idle_in_transaction_ms: int = 0,
 ) -> str:
     base = _get_base_connection_options(conninfo, kwargs)
     parts = [
         base,
         _prepare_session_gucs(base, session_gucs) if session_gucs else "",
         f"-c idle_session_timeout={idle_session_ms}",
+        f"-c idle_in_transaction_session_timeout={idle_in_transaction_ms}"
+        if idle_in_transaction_ms > 0
+        else "",
         *(f"-c {guc}" for guc in forced_gucs),
     ]
     return " ".join(p for p in parts if p)
@@ -349,6 +353,9 @@ class ConnectionPool:
             self._get_idle_session_ms(),
             session_gucs=self._settings.session_gucs,
             forced_gucs=_get_forced_gucs(_get_key_dbname(key), self._settings),
+            idle_in_transaction_ms=int(
+                self._settings.idle_in_transaction_timeout * 1000
+            ),
         )
         return conninfo, kwargs
 
@@ -811,6 +818,22 @@ class ConnectionPool:
         except Exception as exc:
             _debug.logic("pool.drain_failed", error=type(exc).__name__)
             _logger.debug("Failed to drain pool", exc_info=True)
+
+    # libpq's PQcancel from the client side: no borrow (a saturated pool is
+    # when this is needed), no pg_signal_backend privilege, and it reaches a
+    # replica connection too. A cancel that fails is a connection that is
+    # already gone or a backend that already finished; either way nothing to do.
+    def cancel_queries_of(self, thread_name: str) -> int:
+        cancelled = 0
+        for conn in self._checkouts.get_connections_of(thread_name):
+            try:
+                conn.cancel_safe()
+            except Exception as exc:
+                _debug.logic("pool.cancel_failed", error=type(exc).__name__)
+                continue
+            cancelled += 1
+        _debug.lifecycle("pool.queries_cancelled", thread=thread_name, count=cancelled)
+        return cancelled
 
     def has_database(self, db_name: str) -> bool:
         with self._lock:

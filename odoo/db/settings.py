@@ -59,6 +59,8 @@ class PoolSettings:
     discard_on_return: bool = False
     healthcheck_grace: float = 1.0
     leak_detection: float = 0.0
+    idle_in_transaction_timeout: float = 0.0
+    replica_write_pin: float = 2.0
     session_gucs: str = "jit=off,work_mem=16MB"
     readonly_cursors: bool = False
 
@@ -103,6 +105,10 @@ class PoolSettings:
             discard_on_return=bool(config["db_discard_on_return"]),
             healthcheck_grace=float(config["db_healthcheck_grace"] or 0.0),
             leak_detection=float(config["db_leak_detection"] or 0.0),
+            idle_in_transaction_timeout=float(
+                config["db_idle_in_transaction_timeout"] or 0.0
+            ),
+            replica_write_pin=float(config["db_replica_write_pin"] or 0.0),
             session_gucs=config["db_session_gucs"] or "",
             readonly_cursors=bool(
                 replica_host

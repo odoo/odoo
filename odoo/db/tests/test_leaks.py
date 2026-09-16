@@ -154,3 +154,15 @@ class TestReportThrottle(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestConnectionsOfAThread(unittest.TestCase):
+    def test_only_the_named_threads_checkouts(self):
+        tracker = CheckoutTracker()
+        a, b, c = object(), object(), object()
+        tracker.track(a)
+        tracker.track(b)
+        tracker._out[c] = tracker._out[b]._replace(thread="other")
+        mine = tracker.get_connections_of(threading.current_thread().name)
+        self.assertEqual({id(x) for x in mine}, {id(a), id(b)})
+        self.assertEqual(tracker.get_connections_of("nobody"), [])

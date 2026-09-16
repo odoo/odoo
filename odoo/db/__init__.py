@@ -26,6 +26,7 @@ __all__ = [
     "PoolError",
     "PoolSettings",
     "Savepoint",
+    "cancel_queries_of",
     "classify_query",
     "close_all",
     "close_db",
@@ -89,6 +90,11 @@ def drain_db(db_name: str) -> None:
 def drain_all() -> None:
     with _debug.perf("db.drain_all"):
         registry.drain_all()
+
+
+def cancel_queries_of(thread_name: str) -> int:
+    with _debug.perf("db.cancel_queries_of", thread=thread_name):
+        return registry.cancel_queries_of(thread_name)
 
 
 atexit.register(close_all)

@@ -40,6 +40,13 @@ class CheckoutTracker:
     def __len__(self) -> int:
         return len(self._out)
 
+    def get_connections_of(self, thread_name: str) -> list[object]:
+        return [
+            conn
+            for conn, entry in self._out.copy().items()
+            if entry.thread == thread_name
+        ]
+
     def get_checkouts_outstanding(self, older_than: float = 0.0) -> list[Checkout]:
         return sorted(
             (c for c in self._out.copy().values() if c.get_age() > older_than),

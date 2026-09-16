@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import logging
+import threading
 import typing
+from time import monotonic
 
 import psycopg
 
@@ -29,12 +31,53 @@ REPLICA_BORROW_TIMEOUT = 5.0
 CursorMode = typing.Literal["ro", "ro->rw", "rw"]
 
 
+# Which sessions read from the primary for a while because they just wrote:
+# a replica that has not applied a client's own commit would show that
+# client its write as missing. Keyed by whatever the caller identifies a
+# client by (the http layer passes the session id); pruned on insert past
+# `_PRUNE_ABOVE` entries so an idle server does not keep every session ever
+# seen.
+class WritePins:
+    __slots__ = ("_deadlines", "_lock", "window")
+
+    _PRUNE_ABOVE = 1024
+
+    def __init__(self, window: float) -> None:
+        self.window = window
+        self._deadlines: dict[typing.Hashable, float] = {}
+        self._lock = threading.Lock()
+
+    def pin(self, key: typing.Hashable) -> None:
+        if not self.window:
+            return
+        now = monotonic()
+        with self._lock:
+            self._deadlines[key] = now + self.window
+            if len(self._deadlines) > self._PRUNE_ABOVE:
+                self._deadlines = {k: d for k, d in self._deadlines.items() if d > now}
+        _debug.logic("replica.pinned", key=key, window=self.window)
+
+    def is_pinned(self, key: typing.Hashable) -> bool:
+        deadline = self._deadlines.get(key)
+        if deadline is None:
+            return False
+        if deadline > monotonic():
+            return True
+        with self._lock:
+            if self._deadlines.get(key) == deadline:
+                del self._deadlines[key]
+        return False
+
+    def __len__(self) -> int:
+        return len(self._deadlines)
+
+
 def is_readonly_cursor_enabled(settings: PoolSettings | None = None) -> bool:
     return resolve(settings).readonly_cursors
 
 
 class ReplicaRouter:
-    __slots__ = ("breaker", "lag", "primary", "readonly")
+    __slots__ = ("breaker", "lag", "pins", "primary", "readonly")
 
     def __init__(
         self,
@@ -44,9 +87,13 @@ class ReplicaRouter:
         max_lag: float = 0.0,
         breaker: CircuitBreaker | None = None,
         lag: ReplicaLagGate | None = None,
+        write_pin: float | None = None,
     ) -> None:
         self.primary = primary
         self.readonly = readonly
+        self.pins = WritePins(
+            resolve(None).replica_write_pin if write_pin is None else write_pin
+        )
         self.breaker = (
             breaker
             if breaker is not None
@@ -66,11 +113,27 @@ class ReplicaRouter:
         return {
             "lag": self.lag.get_snapshot(),
             "breaker": self.breaker.get_snapshot(),
+            "write_pins": len(self.pins),
         }
 
-    def cursor(self, readonly: bool = False) -> tuple[BaseCursor, CursorMode]:
-        if not readonly or self.readonly is None:
+    def cursor(
+        self, readonly: bool = False, *, pin_key: typing.Hashable | None = None
+    ) -> tuple[BaseCursor, CursorMode]:
+        if self.readonly is None:
             return self.primary.cursor(), "rw"
+        if not readonly:
+            cr = self.primary.cursor()
+            if pin_key is not None and self.pins.window:
+                cr.on_commit_if_written(lambda: self.pins.pin(pin_key))
+            return cr, "rw"
+        if pin_key is not None and self.pins.is_pinned(pin_key):
+            _debug.logic(
+                "replica.route",
+                db=getattr(self.primary, "dbname", None),
+                mode="ro->rw",
+                reason="pinned",
+            )
+            return self.primary.cursor(), "ro->rw"
         cr = self._resolve_replica_cursor(self.readonly)
         if cr is not None:
             _debug.logic(

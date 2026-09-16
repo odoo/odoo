@@ -174,6 +174,9 @@ class EndpointRegistry:
         for pool in pools:
             pool.drain_database(db_name)
 
+    def cancel_queries_of(self, thread_name: str) -> int:
+        return sum(pool.cancel_queries_of(thread_name) for pool in self.get_all_pools())
+
     def drain_all(self) -> None:
         pools = self.get_all_pools()
         _debug.lifecycle("endpoints.drain_all", pools=len(pools))

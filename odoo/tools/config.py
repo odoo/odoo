@@ -1286,9 +1286,35 @@ class configmanager:
             "liveness probe on the next borrow. The probe is a server round-trip "
             "on every checkout; a connection released moments ago was provably "
             "alive then. Raise on low-traffic multi-tenant hosts, where nearly "
-            "every borrow pays it, at the cost of handing out a connection that "
-            "died within the window (it fails on first use and is discarded). "
-            "0 probes every borrow (default 1.0)",
+            "every borrow pays it. A connection that died within the window is "
+            "replaced when the transaction's first statement fails on it; a "
+            "later statement in that transaction fails. 0 probes every borrow "
+            "(default 1.0)",
+        )
+        group.add_option(
+            "--db_idle_in_transaction_timeout",
+            dest="db_idle_in_transaction_timeout",
+            type="float",
+            my_default=0.0,
+            env_name="ODOO_DB_IDLE_IN_TRANSACTION_TIMEOUT",
+            help="seconds a pooled connection may sit idle inside an open "
+            "transaction before the server ends it "
+            "(idle_in_transaction_session_timeout, set per connection at "
+            "connect). A cursor forgotten inside a transaction holds locks, a "
+            "budget permit and a backend until then; the leak detector only "
+            "reports it. 0 (default) leaves the server setting in force",
+        )
+        group.add_option(
+            "--db_replica_write_pin",
+            dest="db_replica_write_pin",
+            type="float",
+            my_default=2.0,
+            env_name="ODOO_DB_REPLICA_WRITE_PIN",
+            help="seconds a session's read-only requests stay on the primary "
+            "after one of its transactions wrote, so a client reads its own "
+            "writes rather than a replica that has not applied them yet. Only "
+            "transactions that assigned a transaction id count (a cheap "
+            "server-side check at commit). 0 disables pinning (default 2.0)",
         )
 
     def _add_i18n_options(

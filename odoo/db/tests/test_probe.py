@@ -1,5 +1,6 @@
 import unittest
 from time import monotonic
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import psycopg
@@ -353,3 +354,60 @@ class TestFailFastOnASurvivingPool(unittest.TestCase):
         pool._pools[key] = fake
         self.assertIs(pool._get_or_create_pool(key, {"dbname": "d"}), fake)
         self.assertEqual(calls, [])
+
+
+class TestAuthenticationIsClassifiedWithoutTheMessage(unittest.TestCase):
+    # lc_messages translates every word of a connect failure; libpq's
+    # needs_password/used_password do not.
+    def _error(self, *, needs=False, used=False, pgconn=True):
+        conn = SimpleNamespace(needs_password=needs, used_password=used)
+        return psycopg.OperationalError(
+            "FATAL: <translated, unreadable>", pgconn=conn if pgconn else None
+        )
+
+    def _probe(self, maintenance):
+        pool = ConnectionPool(maxconn=2)
+        pool._probe.ask_maintenance_db = lambda *a, **k: maintenance  # type: ignore[method-assign]
+        return pool._probe
+
+    def _connect_raising(self, exc):
+        return patch("odoo.db.probe.psycopg.connect", side_effect=exc)
+
+    def test_a_server_that_wanted_a_password_we_lacked_is_permanent(self):
+        probe = self._probe("unknown")
+        with (
+            self._connect_raising(self._error(needs=True)),
+            self.assertRaises(psycopg.errors.InvalidAuthorizationSpecification),
+        ):
+            probe.probe_connectable("", {"dbname": "d"})
+
+    def test_a_password_the_server_rejected_twice_is_permanent(self):
+        probe = self._probe("auth_failed")
+        with (
+            self._connect_raising(self._error(used=True)),
+            self.assertRaises(psycopg.errors.InvalidAuthorizationSpecification),
+        ):
+            probe.probe_connectable("", {"dbname": "d"})
+
+    def test_a_missing_database_behind_a_good_password_stays_a_missing_database(self):
+        probe = self._probe("absent")
+        with (
+            self._connect_raising(self._error(used=True)),
+            self.assertRaises(psycopg.errors.InvalidCatalogName),
+        ):
+            probe.probe_connectable("", {"dbname": "d"})
+
+    def test_a_refusal_before_the_password_stage_is_transient(self):
+        probe = self._probe("unknown")
+        with self._connect_raising(self._error()):
+            self.assertFalse(probe.probe_connectable("", {"dbname": "d"}))
+
+    def test_a_used_password_with_a_reachable_present_database_is_transient(self):
+        probe = self._probe("present")
+        with self._connect_raising(self._error(used=True)):
+            self.assertFalse(probe.probe_connectable("", {"dbname": "d"}))
+
+    def test_an_error_without_a_pgconn_falls_back_to_transient(self):
+        probe = self._probe("unknown")
+        with self._connect_raising(self._error(needs=True, pgconn=False)):
+            self.assertFalse(probe.probe_connectable("", {"dbname": "d"}))

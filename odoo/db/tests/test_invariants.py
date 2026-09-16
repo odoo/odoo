@@ -320,13 +320,37 @@ class TestStalePlanIsRetriedAtTheRequestLayer(unittest.TestCase):
         def __getattr__(self, name):
             raise AssertionError(f"SQL layer touched through .{name} on an aborted tx")
 
+    def setUp(self):
+        cursor.Cursor._stale_plan_drains.clear()
+        self.drained: list[str] = []
+        patcher = mock.patch.object(
+            cursor.Cursor,
+            "_drain_sibling_connections",
+            lambda cr: self.drained.append(cr.dbname),
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def _cursor(self):
         cr = cursor.Cursor.__new__(cursor.Cursor)
+        cr.dbname = "d"
         cr._cnx = SimpleNamespace(_prepared=self._Prepared(), execute=self._Refusing())
         cr._obj = self._Refusing()
         cr._schema_cache = TransactionSchemaCache()
         cr._schema_cache.set_id_sequence("t", "t_id_seq")
         return cr
+
+    def test_the_idle_siblings_are_drained_once_per_window(self):
+        exc = psycopg.errors.FeatureNotSupported("cached plan must not change")
+        for _ in range(3):
+            self.assertTrue(self._cursor()._invalidate_cached_plans_if_stale(exc))
+        self.assertEqual(
+            self.drained,
+            ["d"],
+            "a schema change that landed outside this process left every idle "
+            "sibling with the same stale plans; one drain heals them, and a "
+            "burst of requests must not drain the pool once each",
+        )
 
     def test_it_clears_the_plans_so_the_retry_re_prepares(self):
         cr = self._cursor()
@@ -875,3 +899,133 @@ class TestTheProbeAsksItsQuestionOnce(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestALostConnectionIsReplacedBeforeTheFirstStatementOnly(unittest.TestCase):
+    class _DeadThenAlive:
+        def __init__(self):
+            self.handed: list = []
+            self.given_back: list = []
+            self.readonly = False
+
+        def borrow(self, dsn, key=None, **kw):
+            conn = _FakeConn()
+            conn.cursor = lambda: _StatementRecorder(conn)  # type: ignore[method-assign]
+            self.handed.append(conn)
+            return conn
+
+        def give_back(self, conn, keep_in_pool=True):
+            self.given_back.append((conn, keep_in_pool))
+
+    def _cursor(self):
+        fake_pool = self._DeadThenAlive()
+        cr = cursor.Cursor(
+            typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
+        )
+        return cr, fake_pool
+
+    def _kill(self, cr):
+        cr._cnx.closed = True
+        cr._obj.dead = True
+
+    def test_the_first_statement_is_replayed_on_a_fresh_borrow(self):
+        cr, fake_pool = self._cursor()
+        first = cr._cnx
+        self._kill(cr)
+        with self.assertLogs("odoo.db.cursor", level="WARNING") as cm:
+            cr.execute("SELECT 1")
+        self.assertIn("replayed on a fresh connection", cm.output[0])
+        self.assertEqual(fake_pool.given_back, [(first, False)])
+        self.assertEqual(len(fake_pool.handed), 2)
+        self.assertIs(cr._cnx, fake_pool.handed[1])
+        self.assertEqual(cr._obj.executed, ["SELECT 1"])
+        self.assertTrue(cr._transaction_touched)
+
+    def test_a_statement_after_the_first_is_not(self):
+        cr, fake_pool = self._cursor()
+        cr.execute("SELECT 1")
+        self._kill(cr)
+        with self.assertRaises(psycopg.OperationalError):
+            cr.execute("SELECT 2")
+        self.assertEqual(len(fake_pool.handed), 1, "the transaction had state")
+
+    def test_not_inside_a_savepoint_or_a_pipeline_block(self):
+        cr, _fake_pool = self._cursor()
+        cr._savepoint_depth = 1
+        self._kill(cr)
+        with self.assertRaises(psycopg.OperationalError):
+            cr.execute("SELECT 1")
+        cr, _fake_pool = self._cursor()
+        cr._pipeline_stack = contextlib.ExitStack()
+        self._kill(cr)
+        with self.assertRaises(psycopg.OperationalError):
+            cr.execute("SELECT 1")
+
+    def test_a_server_side_error_is_never_a_lost_connection(self):
+        cr, fake_pool = self._cursor()
+        cr._obj.raise_next = psycopg.errors.UniqueViolation("dup")
+        with self.assertRaises(psycopg.errors.UniqueViolation):
+            cr.execute("INSERT ...")
+        self.assertEqual(len(fake_pool.handed), 1)
+
+    def test_commit_and_rollback_make_the_next_transaction_fresh_again(self):
+        cr, fake_pool = self._cursor()
+        cr.execute("SELECT 1")
+        cr._cnx.commit = lambda: None  # type: ignore[attr-defined]
+        cr.commit()
+        self.assertFalse(cr._transaction_touched)
+        self._kill(cr)
+        cr.execute("SELECT 1")
+        self.assertEqual(len(fake_pool.handed), 2)
+
+
+class _StatementRecorder:
+    def __init__(self, conn):
+        self.conn = conn
+        self.executed: list = []
+        self.dead = False
+        self.raise_next = None
+        self.description = None
+        self.rowcount = -1
+
+    def execute(self, query, params=None, prepare=None):
+        if self.raise_next is not None:
+            exc, self.raise_next = self.raise_next, None
+            raise exc
+        if self.dead:
+            raise psycopg.OperationalError("the connection is closed")
+        self.executed.append(query)
+
+    def executemany(self, query, rows, returning=False):
+        self.execute(query)
+
+    def fetchone(self):
+        return (1,)
+
+    def close(self):
+        pass
+
+
+class TestStatementTimeoutPrimitive(unittest.TestCase):
+    def test_it_is_a_set_local_in_milliseconds_and_zero_clears_it(self):
+        fake_pool = (
+            TestALostConnectionIsReplacedBeforeTheFirstStatementOnly._DeadThenAlive()
+        )
+        cr = cursor.Cursor(
+            typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
+        )
+        with mock.patch.object(
+            cursor,
+            "_inline_ddl_params",
+            lambda qs, params, ctx: qs.replace("%s", repr(params[0])),
+        ):
+            cr.set_statement_timeout(1.5)
+            cr.set_statement_timeout(None)
+        self.assertEqual(
+            cr._obj.executed,
+            [
+                "SET LOCAL statement_timeout = '1500ms'",
+                "SET LOCAL statement_timeout = '0'",
+            ],
+            "SET takes client-side params (README), so the value is inlined",
+        )

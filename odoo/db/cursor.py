@@ -307,6 +307,10 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
         self.__pool: ConnectionPool = pool
         self.dbname = dbname
+        self._dsn = dsn
+        self._key = key
+        self._transaction_touched = False
+        self._commit_write_observer: Callable[[], None] | None = None
 
         self._schema_cache = TransactionSchemaCache()
         self._schema_changed = False
@@ -533,6 +537,73 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             return
         self._close()
 
+    # A connection lost before the transaction's first statement completed is
+    # replayed on a fresh borrow: nothing has happened server-side, so the
+    # statement is the same request it was. Once a statement has run, a
+    # savepoint is open or a pipeline block is armed, the transaction has
+    # state only the caller can rebuild, and the loss propagates as it did.
+    def _replace_lost_connection(self, exc: Exception) -> bool:
+        if (
+            self._transaction_touched
+            or self._savepoint_depth
+            or self._pipeline_stack is not None
+            or not isinstance(exc, psycopg.OperationalError)
+            or not (self._cnx.closed or not has_reached_server(exc))
+        ):
+            return False
+        pool = self.__pool
+        old = self._cnx
+        _debug.lifecycle(
+            "cursor.connection_replaced",
+            db=self.dbname,
+            error=type(exc).__name__,
+            sqlstate=getattr(exc, "sqlstate", None),
+        )
+        with suppress(Exception):
+            self._obj.close()
+        del self._obj
+        pool.give_back(old, keep_in_pool=False)
+        self._cnx = pool.borrow(self._dsn, key=self._key)
+        try:
+            self._obj = self._cnx.cursor()
+            if self._readonly and not pool.readonly:
+                self._cnx.read_only = True
+        except BaseException:
+            keep = self._is_connection_clean()
+            pool.give_back(self._cnx, keep_in_pool=keep)
+            self._closed = True
+            raise
+        self._reset_transaction_caches()
+        self._pipeline_pending = False
+        _logger.warning(
+            "Connection to %s lost before the transaction's first statement "
+            "completed (%s); replayed on a fresh connection",
+            self.dbname,
+            exc,
+        )
+        return True
+
+    # `txid_current_if_assigned()` is non-NULL exactly when this transaction
+    # wrote (an xid is assigned on the first write), so one round trip at
+    # commit answers "did it write" without classifying a single statement.
+    # Asked only when someone registered an observer and something ran.
+    def on_commit_if_written(self, observer: Callable[[], None]) -> None:
+        self._commit_write_observer = observer
+
+    def _has_written(self) -> bool:
+        self.execute("SELECT txid_current_if_assigned() IS NOT NULL")
+        row = self.fetchone()
+        return bool(row and row[0])
+
+    def cancel(self) -> None:
+        _debug.lifecycle("cursor.cancel", db=self.dbname, backend_pid=self._backend_pid)
+        self._cnx.cancel_safe()
+
+    def set_statement_timeout(self, seconds: float | None) -> None:
+        value = "0" if not seconds else f"{int(seconds * 1000)}ms"
+        _debug.logic("cursor.statement_timeout", db=self.dbname, value=value)
+        self.execute("SET LOCAL statement_timeout = %s", (value,))
+
     def _statement_failed(
         self,
         exc: Exception,
@@ -615,6 +686,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 in_pipeline=vars(self).get("_pipeline") is not None,
             )
         if counts:
+            self._transaction_touched = True
             self._record_metrics(
                 delay,
                 count,
@@ -665,7 +737,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         t0 = monotonic()
         counts = False
         try:
-            obj.execute(query, params, prepare=prepare)
+            try:
+                obj.execute(query, params, prepare=prepare)
+            except Exception as e:
+                if not self._replace_lost_connection(e):
+                    raise
+                self._obj.execute(query, params, prepare=prepare)
             counts = True
             self._pipeline_pending = self._pipeline is not None
         except Exception as e:
@@ -772,7 +849,30 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             db=vars(self).get("dbname"),
             error=type(exc).__name__,
         )
+        self._drain_siblings_after_stale_plan()
         return True
+
+    # A stale plan this connection met came from a schema change this process
+    # did not see land -- a DBA's ALTER, another process's migration -- so the
+    # idle siblings hold the same stale plans and each would burn a retry of
+    # its own. One drain per database per window heals them together; the
+    # window keeps a burst of requests from draining the pool once each.
+    _STALE_PLAN_DRAIN_INTERVAL = 5.0
+    _stale_plan_drains: dict[str, float] = {}
+
+    def _drain_siblings_after_stale_plan(self) -> None:
+        now = monotonic()
+        last = self._stale_plan_drains.get(self.dbname, 0.0)
+        if now - last < self._STALE_PLAN_DRAIN_INTERVAL:
+            _debug.logic("cursor.stale_plan_drain_throttled", db=self.dbname)
+            return
+        self._stale_plan_drains[self.dbname] = now
+        _logger.info(
+            "Stale cached plan on %s: a schema change landed outside this "
+            "process; draining its idle connections",
+            self.dbname,
+        )
+        self._drain_sibling_connections()
 
     def _drain_sibling_connections(self) -> None:
         from . import drain_db
@@ -837,7 +937,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         t0 = monotonic()
         counts = False
         try:
-            obj.executemany(query, rows, returning=returning)
+            try:
+                obj.executemany(query, rows, returning=returning)
+            except Exception as e:
+                if not self._replace_lost_connection(e):
+                    raise
+                self._obj.executemany(query, rows, returning=returning)
             counts = True
             self._pipeline_pending = self._pipeline is not None
         except Exception as e:
@@ -1030,8 +1135,15 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         )
         with _debug.perf("cursor.commit.flush", cr=self, db=self.dbname):
             self.flush()
+        observer = self._commit_write_observer
+        written = (
+            observer is not None and self._transaction_touched and self._has_written()
+        )
         with _debug.perf("cursor.commit.sync", db=self.dbname):
             self._cnx.commit()
+        if written:
+            _debug.logic("cursor.commit_observed_write", db=self.dbname)
+            observer()
         self.commit_count += 1
         _debug.lifecycle(
             "cursor.committed",
@@ -1115,6 +1227,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     def _reset_transaction_caches(self) -> None:
         self._schema_cache.clear()
         self._now = None
+        self._transaction_touched = False
 
     def __getattr__(self, name: str) -> Any:
         if name.startswith("__") and name.endswith("__"):

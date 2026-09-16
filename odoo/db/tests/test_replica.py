@@ -1,3 +1,4 @@
+import time
 import typing
 import unittest
 
@@ -7,7 +8,12 @@ from odoo.db import replica as replica_module
 from odoo.db import settings as pool_settings
 from odoo.db.lag import ReplicaLagGate
 from odoo.db.pool import PoolError
-from odoo.db.replica import REPLICA_BORROW_TIMEOUT, REPLICA_RETRY_TIME, ReplicaRouter
+from odoo.db.replica import (
+    REPLICA_BORROW_TIMEOUT,
+    REPLICA_RETRY_TIME,
+    ReplicaRouter,
+    WritePins,
+)
 from odoo.db.settings import PoolSettings
 from odoo.libs.breaker import CircuitBreaker
 from odoo.tools.config import configmanager
@@ -36,6 +42,10 @@ class _Cursor:
     def __init__(self, conn):
         self.conn = conn
         self.closed = False
+        self.write_observer = None
+
+    def on_commit_if_written(self, observer):
+        self.write_observer = observer
 
     def execute(self, *args, **kwargs):
         self.conn.queries += 1
@@ -275,3 +285,65 @@ class TestReadonlyCursorEnabled(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestWritePins(unittest.TestCase):
+    def test_a_pinned_key_expires_after_the_window(self):
+        pins = WritePins(0.05)
+        pins.pin("sid")
+        self.assertTrue(pins.is_pinned("sid"))
+        self.assertFalse(pins.is_pinned("other"))
+        time.sleep(0.06)
+        self.assertFalse(pins.is_pinned("sid"))
+        self.assertEqual(len(pins), 0, "an expired pin is dropped when it is read")
+
+    def test_a_zero_window_pins_nothing(self):
+        pins = WritePins(0.0)
+        pins.pin("sid")
+        self.assertFalse(pins.is_pinned("sid"))
+
+    def test_the_table_is_pruned_past_its_ceiling(self):
+        pins = WritePins(60.0)
+        pins._deadlines = dict.fromkeys(range(WritePins._PRUNE_ABOVE), 0.0)
+        pins.pin("fresh")
+        self.assertEqual(
+            len(pins), 1, "expired pins go when the table grows past the ceiling"
+        )
+
+
+class TestReadYourWrites(unittest.TestCase):
+    def _router(self, window=2.0):
+        primary, replica = _Conn("primary"), _Conn("replica")
+        return ReplicaRouter(primary, replica, write_pin=window), primary, replica
+
+    def test_a_rw_cursor_with_a_key_pins_it_when_the_transaction_wrote(self):
+        router, _primary, replica = self._router()
+        cr, mode = router.cursor(readonly=False, pin_key="sid")
+        self.assertEqual(mode, "rw")
+        self.assertIsNotNone(cr.write_observer, "the cursor asks at commit")
+        self.assertFalse(router.pins.is_pinned("sid"), "nothing written yet")
+        cr.write_observer()
+        self.assertTrue(router.pins.is_pinned("sid"))
+        _cr, mode = router.cursor(readonly=True, pin_key="sid")
+        self.assertEqual(
+            mode, "ro->rw", "its next read-only request stays on the primary"
+        )
+        self.assertEqual(replica.attempts, 0)
+        _cr, mode = router.cursor(readonly=True, pin_key="someone_else")
+        self.assertEqual(mode, "ro", "another session still reads from the replica")
+
+    def test_no_key_means_no_observer_and_no_pin(self):
+        router, _primary, _replica = self._router()
+        cr, _mode = router.cursor(readonly=False)
+        self.assertIsNone(cr.write_observer)
+
+    def test_a_zero_window_registers_no_observer(self):
+        router, _primary, _replica = self._router(window=0.0)
+        cr, _mode = router.cursor(readonly=False, pin_key="sid")
+        self.assertIsNone(cr.write_observer, "no pin window, no round trip at commit")
+
+    def test_without_a_replica_the_key_is_irrelevant(self):
+        router = ReplicaRouter(_Conn("primary"), None, write_pin=2.0)
+        cr, mode = router.cursor(readonly=False, pin_key="sid")
+        self.assertEqual(mode, "rw")
+        self.assertIsNone(cr.write_observer)

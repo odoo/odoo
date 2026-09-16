@@ -30,7 +30,7 @@ class _Router(ReplicaRouter):
         super().__init__(typing.cast("typing.Any", _Conn("primary")))
         self.decisions = list(decisions)
 
-    def cursor(self, readonly=False):
+    def cursor(self, readonly=False, *, pin_key=None):
         cr, mode = self.decisions.pop(0)
         return typing.cast("typing.Any", cr), mode
 
