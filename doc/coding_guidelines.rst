@@ -4,8 +4,8 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.49
-:Date: 2026-09-15
+:Version: 6.50
+:Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
 
@@ -4760,7 +4760,7 @@ in every database that already has it and the rename needs a migration script.
 ``model.notify_expiring_contract_work_permit()`` in an ``ir.cron`` under
 ``noupdate="1"``: a green tree there means nothing, and it is left as found for
 that reason and not because the name is right. **Check the flag on the enclosing
-``<data>``, not the file.**
+``<data>``, not the file**, and §3.9 for what the flag does and does not protect.
 
 **A nested function is the population §2.4.13 counts as ``nested_helpers``**,
 and the reason to read it there rather than here is that the three ungoverned
@@ -6531,15 +6531,15 @@ render one grammar, sections in this order, a divider between non-empty ones.
 Each section is a ``COG_GROUP`` constant from ``@web/search/cog_menu/cog_menu_group``;
 a bare number is rejected by the ``cogMenu`` registry validation.
 
-======================  ==============================================================
-``COG_GROUP.DATA``      import and export: Import Records, Export All, Export…
-``COG_GROUP.RECORD``    the record at hand: Edit Properties…, Duplicate, Archive
-``COG_GROUP.APP``       the current app's own features
-``COG_GROUP.PRINT``     reports
-``COG_GROUP.ACTIONS``   server-bound actions (``binding_model_id``)
-``COG_GROUP.INTEGRATE`` send the view elsewhere: Knowledge, Dashboard, Spreadsheet
-``COG_GROUP.DANGER``    irreversible, alone and last: Delete
-======================  ==============================================================
+=======================  =============================================================
+``COG_GROUP.DATA``       import and export: Import Records, Export All, Export…
+``COG_GROUP.RECORD``     the record at hand: Edit Properties…, Duplicate, Archive
+``COG_GROUP.APP``        the current app's own features
+``COG_GROUP.PRINT``      reports
+``COG_GROUP.ACTIONS``    server-bound actions (``binding_model_id``)
+``COG_GROUP.INTEGRATE``  send the view elsewhere: Knowledge, Dashboard, Spreadsheet
+``COG_GROUP.DANGER``     irreversible, alone and last: Delete
+=======================  =============================================================
 
 - Render items with ``CogMenuItem`` (``icon``, ``description``, ``danger``); a shared
   verb (``duplicate``, ``delete``, ``versionHistory``, ``insertInSpreadsheet`` …) is
@@ -6571,6 +6571,49 @@ a bare number is rejected by the ``cogMenu`` registry validation.
        </block>
      </app>
    </xpath>
+
+3.9 ``noupdate`` protects every write but the first
+---------------------------------------------------
+
+``noupdate="1"`` on an ``<odoo>`` or ``<data>`` block says *seed, do not manage*:
+the records inside it are a starting point a database is then free to change.
+Two halves of that follow, and each has cost a fix here.
+
+**The install writes regardless of the flag** ``[review]``. ``convert.py`` gates
+the skip on ``if self.noupdate and self.mode != "init"``, and a module being
+*installed* loads its data with ``"init"`` (``modules/loading.py`` picks
+``"update"`` only for an upgrade), so every record in the block is written --
+including one whose xml id already names a record the database had. A
+``pre_init_hook`` that hands a shipped xml id to an existing record, so the data
+file updates it instead of creating a twin, therefore also hands that record's
+fields to the data file for one write. ``fleet``'s brand catalogue adopts a
+manufacturer partner of the same name this way; on a production copy that first
+write replaced four logos the database already had and turned 77 partners into
+companies. ``noupdate`` stops the *next* ``-u fleet`` from doing it again and
+could not have stopped the first.
+
+The rule behind that: **a data file carries only the fields the module owns.**
+A field a user may have set on a record the module adopted is not one of them,
+so it belongs in a ``post_init_hook`` writing the records the module itself
+created, not in the data file.
+
+**The stored flag is never refreshed** ``[review]``.
+``ir.model.data._update_xmlids`` writes ``{"model", "res_id"}`` on an existing
+row and never its ``noupdate`` column, so removing the attribute from the tree
+reaches new databases only. A database that has the record keeps the flag it
+stored at install, and correcting the record in the tree is not delivery: it
+takes a **pre**-migration clearing ``ir_model_data.noupdate`` for that xml id,
+which runs before the data files load, so the same upgrade rewrites the record.
+Log how many rows still carried the broken content -- on a customer database
+that count is the only evidence it was ever broken. This is why a renamed method
+surviving inside a ``noupdate`` ``ir.cron`` needs a migration (§2.4.19).
+
+**Neither half shows on a fresh database**, which is where nearly everything here
+is tested: with no stored row there is nothing to freeze, and with no existing
+record there is nothing for the install to overwrite. Both are green there while
+wrong, so green is not evidence. The witness for both is ``-u <module>`` on a
+restored production copy, and the question to ask before running it is which xml
+ids the module hands over and which of them the database already has.
 
 ----
 
@@ -8514,6 +8557,17 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.50
+     - 2026-09-16
+     - §3.9: ``noupdate`` protects every write but the first. A module being
+       installed loads its data with ``"init"``, which is the one mode
+       ``convert.py`` does not skip, so the flag cannot protect a record the
+       install writes -- including one a ``pre_init_hook`` handed the xml id to,
+       which is how ``fleet``'s catalogue replaced four manufacturer logos on a
+       production copy. The stored flag is never refreshed either
+       (``_update_xmlids`` writes ``model`` and ``res_id`` only), so unfreezing a
+       database takes a pre-migration, not a tree edit (agromarin ``f10b85a09`` /
+       ``marin`` 19.0.1.71). §2.4.19 points here.
    * - 6.49
      - 2026-09-15
      - §2.4.1: "unbound" is a claim about a search — a binding hides behind a
