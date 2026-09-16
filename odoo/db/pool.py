@@ -829,6 +829,12 @@ class ConnectionPool:
         cancelled = 0
         for conn in self._checkouts.get_connections_of(thread_name):
             pid = getattr(getattr(conn, "info", None), "backend_pid", None)  # debuglog
+            # A cancel reaches whoever runs on the backend now: the previous
+            # cancel may have waited up to _CANCEL_TIMEOUT, in which time this
+            # connection can have been returned and borrowed by another thread.
+            if not self._checkouts.is_held_by(conn, thread_name):
+                _debug.logic("pool.cancel_skipped", backend_pid=pid, reason="rehomed")
+                continue
             try:
                 conn.cancel_safe(timeout=self._CANCEL_TIMEOUT)
             except Exception as exc:

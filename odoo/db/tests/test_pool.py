@@ -25,6 +25,18 @@ from odoo.db.probe import PROBE_CONNECT_TIMEOUT, get_libpq_connect_timeout
 from odoo.db.reaper import _LAST_BORROW_ATTR, mark_active
 from odoo.db.settings import PoolSettings
 
+# As in test_probe: ConnectionPool() reads the settings slot, which nothing
+# provides when this module runs alone.
+_settings = pool_settings.installed(PoolSettings())
+
+
+def setUpModule():
+    _settings.__enter__()
+
+
+def tearDownModule():
+    _settings.__exit__(None, None, None)
+
 
 def _fake_pool_factory(*_a, **_k):
     return _FakePool()
@@ -513,6 +525,29 @@ class TestCancelQueriesOf(unittest.TestCase):
             (mine.cancelled, also_mine.cancelled, theirs.cancelled), (1, 1, 0)
         )
         self.assertEqual(pool.cancel_queries_of("nobody"), 0)
+
+    def test_a_connection_rehomed_while_the_list_aged_is_not_cancelled(self):
+        pool = ConnectionPool(maxconn=4)
+        slow, rehomed = self._Conn(), self._Conn()
+        pool._checkouts.track(slow)
+        pool._checkouts.track(rehomed)
+        me = threading.current_thread().name
+
+        def cancel_and_rehome(*, timeout):
+            slow.cancelled += 1
+            pool._checkouts.release(rehomed)
+            pool._checkouts.track(rehomed)
+            pool._checkouts._out[rehomed] = pool._checkouts._out[rehomed]._replace(
+                thread="another-request"
+            )
+
+        slow.cancel_safe = cancel_and_rehome  # type: ignore[assignment, method-assign]
+        self.assertEqual(pool.cancel_queries_of(me), 1)
+        self.assertEqual(
+            (slow.cancelled, rehomed.cancelled),
+            (1, 0),
+            "the cancel would have reached another request's statement",
+        )
 
     def test_the_registry_fans_out_over_every_pool(self):
         from odoo.db.endpoints import EndpointRegistry

@@ -47,6 +47,10 @@ class CheckoutTracker:
             if entry.thread == thread_name
         ]
 
+    def is_held_by(self, conn: object, thread_name: str) -> bool:
+        entry = self._out.get(conn)
+        return entry is not None and entry.thread == thread_name
+
     def get_checkouts_outstanding(self, older_than: float = 0.0) -> list[Checkout]:
         return sorted(
             (c for c in self._out.copy().values() if c.get_age() > older_than),

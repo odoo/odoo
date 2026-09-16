@@ -821,7 +821,13 @@ one exception, and the scanner has a control showing it tells the two apart.
   walks every pool's `CheckoutTracker` for that thread's checkouts and calls
   psycopg's `cancel_safe()` on each — libpq's `PQcancel` from the client
   side: no borrow (a saturated pool is when this is needed), no
-  `pg_signal_backend` privilege, and it reaches a replica connection.
+  `pg_signal_backend` privilege, and it reaches a replica connection. A
+  cancel reaches whoever runs on the backend *now*, and the previous cancel
+  in the walk may have waited `_CANCEL_TIMEOUT` (2 s), long enough for a
+  connection to be returned and borrowed by another request: each cancel
+  re-checks the tracker's owner first and skips a rehomed connection
+  (`pool.cancel_skipped reason=rehomed`); the window left is the cancel
+  call itself.
   `Cursor.set_statement_timeout(seconds)` remembers the budget on the cursor
   and arms it as `SET LOCAL statement_timeout` (through the inliner) before
   the next statement of every transaction: `SET LOCAL` dies at each commit
