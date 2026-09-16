@@ -29,7 +29,7 @@
         <field name="volume_capacity">15</field>
     </record>
 
-    <record id="driver_resource_admin" model="resource.resource">
+    <record id="operator_resource_admin" model="resource.resource">
         <field name="partner_id" ref="base.partner_admin" />
         <field name="resource_type">user</field>
         <field name="company_id" eval="False" />
@@ -45,9 +45,9 @@
         <field
             name="date_acquisition"
             eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
-        <field name="operator_id" ref="driver_resource_admin" />
+        <field name="operator_id" ref="operator_resource_admin" />
         <field name="odometer">18000</field>
-        <field name="manager_id" ref="base.user_admin" />
+        <field name="manager_id" ref="operator_resource_admin" />
         <field name="tag_ids" eval="[Command.set([ref('vehicle_tag_transport')])]" />
     </record>
 
