@@ -723,7 +723,7 @@ class Website(Home):
         :return: preview HTML with updated shape URLs
         :rtype: str
         """
-        for shape_url in set(re.findall(r'/(?:html_editor|web_editor)/(?:image_)?shape/[^"\'\s)]+', final_html)):
+        for shape_url in set(re.findall(r'/html_editor/(?:image_)?shape/[^"\'\s)]+', final_html)):
             updated_shape_url = self._get_configurator_preview_shape_url(shape_url, palette_map)
             if updated_shape_url != shape_url:
                 final_html = final_html.replace(shape_url, updated_shape_url)

@@ -252,9 +252,7 @@ export class BlockTab extends Component {
                 // Color-customize the snippet dynamic SVGs with the current
                 // theme colors.
                 const dynamicSvgEls = [
-                    ...snippetEl.querySelectorAll(
-                        'img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]'
-                    ),
+                    ...snippetEl.querySelectorAll('img[src^="/html_editor/shape/"]'),
                 ];
                 dynamicSvgEls.forEach((dynamicSvgEl) => {
                     const colorCustomizedURL = new URL(

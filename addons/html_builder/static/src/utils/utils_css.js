@@ -458,15 +458,12 @@ export function getAllUsedColors(el) {
             collectColor(url.searchParams.get(colorKey));
         }
     };
-    for (const imgEl of selectElements(
-        el,
-        'img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]'
-    )) {
+    for (const imgEl of selectElements(el, 'img[src^="/html_editor/shape/"]')) {
         collectUrlColors(imgEl.src);
     }
     for (const bgEl of selectElements(
         el,
-        `[style*="background-image: url(\\"/html_editor/shape/"], [style*="background-image: url(\\"/web_editor/shape/"]`
+        `[style*="background-image: url(\\"/html_editor/shape/"]`
     )) {
         collectUrlColors(getBgImageURLFromEl(bgEl));
     }
