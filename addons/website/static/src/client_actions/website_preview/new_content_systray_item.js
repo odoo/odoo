@@ -265,7 +265,7 @@ export class NewContentSystrayItem extends Component {
                 this.state.newContentElements = this.state.newContentElements.map((el) => {
                     if (el.moduleXmlId === element.moduleXmlId) {
                         el.status = MODULE_STATUS.INSTALLING;
-                        el.icon = xml`<i class="oi oi-spin" data-icon="autorenew"/>`;
+                        el.icon = xml`<i class="oi oi-spin" data-icon="autorenew" role="img" aria-hidden="true"/>`;
                         el.title = sprintf(this.newContentText.installPleaseWait, name);
                     }
                     return el;
@@ -281,7 +281,7 @@ export class NewContentSystrayItem extends Component {
                     this.state.newContentElements = this.state.newContentElements.map((el) => {
                         if (el.moduleXmlId === element.moduleXmlId) {
                             el.status = MODULE_STATUS.FAILED_TO_INSTALL;
-                            el.icon = xml`<i class="oi" data-icon="warning"/>`;
+                            el.icon = xml`<i class="oi" data-icon="warning" role="img" aria-hidden="true"/>`;
                             el.title = sprintf(this.newContentText.failed, name);
                         }
                         return el;

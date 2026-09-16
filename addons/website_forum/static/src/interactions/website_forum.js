@@ -235,9 +235,13 @@ export class WebsiteForum extends Interaction {
      */
     onExpandAnswerClick(ev) {
         if (ev.target.matches(".o_wforum_expand_toggle")) {
-            ev.currentTarget.classList.toggle("o_expand");
+            const isExpanded = ev.currentTarget.classList.toggle("o_expand");
             ev.currentTarget.classList.toggle("min-vh-100");
             ev.currentTarget.classList.toggle("w-lg-50");
+            ev.target.setAttribute(
+                "aria-label",
+                isExpanded ? _t("Collapse the reply box") : _t("Expand the reply box")
+            );
         } else if (ev.target.matches(".o_wforum_discard_btn")) {
             ev.currentTarget.classList.remove("o_expand", "min-vh-100");
             ev.currentTarget.classList.add("w-lg-50");

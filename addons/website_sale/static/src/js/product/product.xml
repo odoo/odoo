@@ -48,7 +48,7 @@
             t-if="!this.props.can_be_sold"
             class="text-muted fst-italic"
         >
-            <i class="oi me-1" data-icon="close"/>
+            <i class="oi me-1" data-icon="close" role="img" aria-hidden="true"/>
             Not available for sale
         </div>
     </t>
@@ -74,7 +74,7 @@
             t-if="this.isOutOfStock()"
             class="badge text-bg-danger"
         >
-            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>
+            <i class="oi oi-filled me-2 text-danger" data-icon="circle" role="img" aria-hidden="true"/>
             Out of stock
         </div>
     </t>
