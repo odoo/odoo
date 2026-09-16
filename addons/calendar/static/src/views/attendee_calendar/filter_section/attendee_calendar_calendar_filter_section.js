@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * Filter event by calendars. eg. 'My Calendar' or 'Work Calendar'
+ * + 'My Activities' filter
  */
 export class AttendeeCalendarCalendarFilterSection extends CalendarFilterSection {
     static template = "calendar.AttendeeCalendarCalendarFilterSection";
@@ -18,8 +19,35 @@ export class AttendeeCalendarCalendarFilterSection extends CalendarFilterSection
 
     setup() {
         super.setup();
-        this.action = useService('action')
+        this.action = useService('action');
+        this.state.activityFilterChecked = this.showActivities;
     }
+
+    // =========================================================================
+    // ACTIVITIES
+    // =========================================================================
+
+    get activityFilterName() {
+        return _t("My Activities");
+    }
+
+    get showActivities() {
+        return this.props.model.showActivities;
+    }
+
+    get showActivityFilter() {
+        return this.props.model.userActivitiesEnabled && this.props.model.scale !== "year";
+    }
+
+    async onToggleActivityFilter() {
+        this.state.activityFilterChecked = !this.state.activityFilterChecked;
+        await user.setUserSettings("calendar_show_activities", this.state.activityFilterChecked);
+        await this.props.model.load();
+    }
+
+    // =========================================================================
+    // CALENDARS
+    // =========================================================================
 
     /*
     * @override
