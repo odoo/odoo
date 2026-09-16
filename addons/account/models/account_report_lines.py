@@ -229,7 +229,7 @@ class AccountReportLines(models.Model):
                         )
                     ) from e
 
-            line_dict = self._get_static_line_dict(
+            line_dict = self._prepare_static_line_dict(
                 options,
                 line,
                 all_column_groups_expression_totals,
@@ -1494,7 +1494,7 @@ class AccountReportLines(models.Model):
         return lines
 
     @_debug.perf.timed
-    def _get_static_line_dict(
+    def _prepare_static_line_dict(
         self, options, line, all_column_groups_expression_totals, parent_id=None
     ):
         line_id = self._get_generic_line_id(
