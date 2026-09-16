@@ -36,9 +36,11 @@
             <button t-if="this.meeting" class="btn btn-link p-0 me-3" t-on-click="this.onClickReschedule">
                 <i class="oi oi-filled" data-icon="calendar_today"/> View
             </button>
-            <a t-if="this.meeting?.videocall_location" class="btn btn-link p-0 me-3" type="button" t-att-href="this.meeting.videocall_location">
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-Activity-assign')]" position="before">
+            <button t-if="this.meeting?.videocall_location" class="o-mail-Activity-joinMeeting btn btn-link p-0 me-3" t-on-click="() => this.onClickJoinMeeting()">
                 <i class="oi" data-icon="videocam"/> Join Meeting
-            </a>
+            </button>
         </xpath>
     </t>
 

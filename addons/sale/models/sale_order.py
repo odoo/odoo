@@ -38,6 +38,7 @@ class SaleOrder(models.Model):
     _inherit = [
         "account.document.import.mixin",
         "mail.activity.mixin",
+        "mail.call.log.mixin",
         "mail.thread.subject.suggested",
         "portal.mixin",
         "product.catalog.mixin",

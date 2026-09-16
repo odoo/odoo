@@ -7,7 +7,6 @@ export const ICON_BY_MODEL_NAME = {
     "crm.lead": "star",
     "sale.order": "attach_money",
     "account.move": "file_export",
-    subscription: "refresh",
     "event.event": "calendar_today",
     "helpdesk.ticket": "support",
     "project.task": "check",
@@ -26,10 +25,6 @@ export class Many2OneReferenceIconField extends Many2OneReferenceField {
 
     /** Icon of the related model, "description" for a model with no specific icon. */
     get modelIcon() {
-        // flag set by voip_sale_subscription, to tell a subscription from a plain sale order
-        if (this.props.record.data.is_related_activity_document_subscription) {
-            return ICON_BY_MODEL_NAME["subscription"];
-        }
         return ICON_BY_MODEL_NAME[this.relation] || "description";
     }
 

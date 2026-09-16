@@ -345,19 +345,54 @@ class MailActivitySchedule(models.TransientModel):
                 domain &= Domain('category', '=', category)
             scheduler.activity_type_id_domain = domain
 
+    @api.depends('res_model_selection', 'contact_id_domain')
     @api.depends_context('log_contact_id')
     def _compute_contact_id(self):
-        self.contact_id = self.env.context.get('log_contact_id')
+        for scheduler in self:
+            if scheduler.contact_id or scheduler.res_model_selection != 'res.partner':
+                continue
+            domain = ast.literal_eval(scheduler.contact_id_domain or '[]')
+            scheduler.contact_id = self.env.context.get('log_contact_id') or self._get_log_default_record(
+                'res.partner', domain,
+            )
 
-    @api.depends_context('log_contact_id')
+    @api.depends_context('log_contact_id', 'log_channel_partner_ids')
     def _compute_contact_id_domain(self):
         # the call may be logged on any contact of the commercial entity of the
         # contact it was made with, not just on that contact itself
-        if contact := self.env['res.partner'].browse(self.env.context.get('log_contact_id')):
-            domain = [('id', 'in', contact._search_commercial_partners().ids)]
+        if contact := self._get_log_filter_contact():
+            domain = [('id', 'child_of', contact.commercial_partner_id.ids)]
         else:
             domain = []
         self.contact_id_domain = domain
+
+    @api.model
+    def _is_logging_call(self):
+        """ Whether a call is being logged on a document of the user's choice, as opposed
+        to an activity being scheduled on a record already known. """
+        context = self.env.context
+        return bool(context.get('log_contact_id')) or 'log_channel_partner_ids' in context
+
+    @api.model
+    def _get_log_filter_contact(self):
+        """ The contact whose records alone the wizard offers, void when the lists are
+        to be left whole: a call held with several contacts merely ranks theirs first
+        (see `mail.call.log.mixin.name_search`). """
+        if 'log_channel_partner_ids' in self.env.context:
+            return self.env['res.partner']
+        return self.env['res.partner'].browse(self.env.context.get('log_contact_id'))
+
+    @api.model
+    def _get_log_default_record(self, model_name, domain):
+        """ The record of ``model_name`` the wizard offers by default: the first one its
+        list offers, the user logging the call aside. Nothing is offered for a call held
+        with nobody known, whose list starts on a stranger. """
+        model = self.env[model_name]
+        if not self._get_log_filter_contact() and 'log_channel_partner_ids' not in self.env.context:
+            return model
+        domain = Domain(domain or Domain.TRUE) & ~model._get_call_log_partner_domain(self.env.user.partner_id)
+        offered = model.name_search('', domain, limit=1)
+        return model.browse(offered[0][0]) if offered else model
 
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
@@ -535,10 +570,7 @@ class MailActivitySchedule(models.TransientModel):
                 if not self.env[model_name].search_count(
                     Domain('id', '=', res_id) & Domain(domain), limit=1,
                 ):
-                    # The record is out of this option's domain: skip it and
-                    # try the next option mapping to the same model, e.g. a
-                    # plain ``sale.order`` failing the ``sale.subscription``
-                    # domain still matches the ``sale.order`` option.
+                    # another record type may map to the same model and accept it
                     continue
             return {
                 f'default_{field_name}': res_id,

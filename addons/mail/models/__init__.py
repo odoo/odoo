@@ -8,6 +8,7 @@ from . import mail_notification  # keep before as decorated m2m
 
 # mixin
 from . import mail_activity_mixin
+from . import mail_call_log_mixin
 from . import mail_alias_mixin_optional
 from . import mail_alias_mixin
 from . import mail_render_mixin
