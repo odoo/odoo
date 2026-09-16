@@ -3,21 +3,21 @@
 
 <t t-name="website.DynamicSnippetCarouselOption" t-inherit="website.DynamicSnippetOption">
     <BuilderRow id="this.section_title_opt_row" position="after">
-        <BuilderRow id="this.arrow_position_opt" label.translate="Arrow Position">
+        <BuilderRow id="this.style_opt" label.translate="Arrows">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'o_default_arrows'">Default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_boxed_arrows'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem classAction="''">Rounded</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_hidden_arrows'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow id="this.arrow_position_opt" label.translate="Position" level="1">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">Default</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_arrows_inside'">Inside</BuilderSelectItem>
                 <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'o_arrows_bottom o_arrows_bottom_left'">Bottom Left</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_center'">Bottom Center</BuilderSelectItem>
                 <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'o_arrows_bottom o_arrows_bottom_right'">Bottom Right</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow id="this.style_opt" label.translate="Style" level="1">
-            <BuilderSelect>
-                <BuilderSelectItem classAction="'o_default_arrows'">Default</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_boxed_arrows'">Boxed</BuilderSelectItem>
-                <BuilderSelectItem classAction="''">Rounded</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_hidden_arrows'">Hidden</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow id="this.color_opt" label.translate="Color" level="1">
