@@ -180,8 +180,8 @@ class TestWebAssetsCursors(HttpCase):
         cursors = []
         original_cursor = self.env.registry.cursor
 
-        def cursor(readonly=False):
-            cursor = original_cursor(readonly=readonly)
+        def cursor(readonly=False, *, pin_key=None):
+            cursor = original_cursor(readonly=readonly, pin_key=pin_key)
             cursors.append(
                 (
                     "ro" if cursor.readonly else "rw",
