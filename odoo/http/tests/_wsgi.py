@@ -236,8 +236,9 @@ class FakeRegistry:
             "res.users": FakeUsers(),
         }
 
-    def cursor(self, readonly: bool = False) -> FakeCursor:
+    def cursor(self, readonly: bool = False, *, pin_key: object = None) -> FakeCursor:
         cr = FakeCursor(readonly=readonly and self.replica)
+        cr.pin_key = pin_key
         self.cursors.append(cr)
         return cr
 

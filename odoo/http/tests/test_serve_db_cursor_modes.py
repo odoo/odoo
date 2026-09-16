@@ -50,7 +50,7 @@ def _make(readonly_route=True, replica=True):
     )
     rule = types.SimpleNamespace(endpoint=endpoint)
 
-    def _cursor():
+    def _cursor(readonly=False, pin_key=None):
         cr = _Cursor(readonly=False)
         calls["opened"].append(cr)
         return cr
@@ -76,7 +76,7 @@ def _make(readonly_route=True, replica=True):
     this: Any = Request(httprequest, app=None)
     this.db = "db"
     this.registry = registry
-    this.session = types.SimpleNamespace(uid=1, context={})
+    this.session = types.SimpleNamespace(uid=1, context={}, sid="S" * 84)
     this._acquire_registry_cursor = lambda: first
     this._update_dispatcher = lambda r: None
     this._serve_ir_http = lambda r, a: "served"

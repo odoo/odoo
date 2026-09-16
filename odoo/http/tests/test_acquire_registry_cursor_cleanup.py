@@ -24,10 +24,12 @@ def _acquire(this: typing.Any) -> typing.Any:
 def _call(check_signaling):
     cursor = _TrackingCursor()
     registry: typing.Any = SimpleNamespace(
-        cursor=lambda readonly=False: cursor,
+        cursor=lambda readonly=False, pin_key=None: cursor,
         check_signaling=check_signaling,
     )
-    this = SimpleNamespace(db="testdb", registry=None)
+    this = SimpleNamespace(
+        db="testdb", registry=None, session=SimpleNamespace(sid="S" * 84)
+    )
     with mock.patch.object(_serve, "Registry", lambda db: registry):
         raised = None
         try:
@@ -41,10 +43,12 @@ class TestAcquireRegistryCursorCleanup(unittest.TestCase):
     def test_success_returns_the_open_cursor(self):
         cursor = _TrackingCursor()
         registry: typing.Any = SimpleNamespace(
-            cursor=lambda readonly=False: cursor,
+            cursor=lambda readonly=False, pin_key=None: cursor,
             check_signaling=lambda cr: registry,
         )
-        this = SimpleNamespace(db="testdb", registry=None)
+        this = SimpleNamespace(
+            db="testdb", registry=None, session=SimpleNamespace(sid="S" * 84)
+        )
         with mock.patch.object(_serve, "Registry", lambda db: registry):
             got = _acquire(this)
         self.assertIs(got, cursor)

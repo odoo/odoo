@@ -205,7 +205,7 @@ class _RequestServeMixin(RequestState):
                     with borrow_request():
                         registry = Registry(db)
                 with _debug.perf("http.registry.cursor", db=db):
-                    cr = registry.cursor(readonly=True)
+                    cr = registry.cursor(readonly=True, pin_key=self.session.sid)
                 with _debug.perf("http.registry.signaling", cr=cr, db=db):
                     self.registry = registry.check_signaling(cr)
                 span.set(reloaded=self.registry is not registry)
@@ -366,7 +366,7 @@ class _RequestServeMixin(RequestState):
             if cr.readonly:
                 _debug.lifecycle("http.serve.cursor_replaced", db=env.registry.db_name)
                 cr.close()
-                cr = env.registry.cursor()
+                cr = env.registry.cursor(pin_key=self.session.sid)
             else:
                 cr.rollback()
                 _debug.lifecycle("http.serve.cursor_reused", db=env.registry.db_name)
