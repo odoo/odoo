@@ -456,6 +456,12 @@ def _coerce_union(name: str, value: Any, spec: ParamSpec) -> Any:
             f"parameter {name!r}: {spec.discriminator!r} must be one of "
             f"{sorted(map(str, variants))}"
         )
+    _debug.logic(
+        "http.params.union_variant",
+        param=name,
+        tag=tag,
+        target=getattr(variant.target, "__qualname__", str(variant.target)),
+    )
     return _coerce_object(name, value, variant)
 
 

@@ -39,7 +39,14 @@ def _get_request_id(httprequest: Any) -> str:
     offered = headers.get("X-Request-Id") if headers is not None else None
     if offered and _REQUEST_ID_RE.fullmatch(offered):
         return offered
-    return secrets.token_urlsafe(9)
+    minted = secrets.token_urlsafe(9)
+    if offered:
+        _debug.logic(
+            "http.request.id_replaced",
+            offered_length=len(offered),
+            minted=minted,
+        )
+    return minted
 
 
 class Request(
