@@ -77,7 +77,9 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         picking.button_validate()
         self.assertEqual(sale_order.line_ids.qty_transferred, 0)
 
-        sale_order.picking_ids[1].action_cancel()
+        sale_order.picking_ids.filtered(
+            lambda p: p.partner_id == partners[1]
+        ).action_cancel()
         self.assertEqual(sale_order.line_ids.qty_transferred, 1)
 
     def test_return_kit_and_delivered_qty(self):
@@ -379,8 +381,8 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
 
         sale_order.picking_ids.move_ids.quantity = 1
         sale_order.picking_ids.move_ids.picked = True
-        sale_order.picking_ids[0].button_validate()
-        sale_order.picking_ids[1].button_validate()
+        for picking in sale_order.picking_ids:
+            picking.button_validate()
 
         self.assertEqual(sale_order.line_ids.qty_transferred, 1.0)
 
