@@ -76,6 +76,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
+            PreviewableFooterWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
             ToggleBodyBgImageAction,
@@ -818,6 +819,38 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def.promise;
+    }
+}
+
+export class PreviewableFooterWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "previewableFooterWebsiteConfig";
+    static dependencies = ["customizeWebsite", "domObserver", "builderActions"];
+    setup() {  
+        this.preview = true;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+        this.reload = {};
+    }
+    async apply({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+        }
+        if (!isPreviewing) {
+            if (params.previewClass) {
+                params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
+            }
+            await super.apply({ editingElement: el, isPreviewing, params });
+        }
+    }
+    async clean({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
+        }
+        if (!isPreviewing) {
+            if (params.previewClass) {
+                params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+            }
+            await super.clean({ editingElement: el, isPreviewing, params });
+        }
     }
 }
 
