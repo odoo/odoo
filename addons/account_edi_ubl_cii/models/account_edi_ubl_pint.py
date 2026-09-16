@@ -543,7 +543,7 @@ class AccountEdiUBLPint(models.AbstractModel):
 
             line_item = line['cac:Item']
             # [IBR-025] - Each Invoice line (ibg-25) MUST contain the Item name (ibt-153).
-            if not line_item['cbc:Name']['_text']:
+            if not (line_item.get('cbc:Name') or {}).get('_text'):
                 constraints[f'ibr_025_item_name_required_{line_idx}'] = self.env._(
                     "Line %s: Item name is missing [IBR-025].", line_idx
                 )
