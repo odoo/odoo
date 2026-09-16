@@ -5,9 +5,12 @@
         counter-reset: sale_line_counter;
     }
 
-    .o_data_row:not(.o_hide_composition) .o_line_number::before {
-        content: counter(sale_line_counter);
+    .o_data_row:not(.o_hide_composition) {
         counter-increment: sale_line_counter;
+
+        .o_line_number::before {
+            content: counter(sale_line_counter);
+        }
     }
 
     &:has(.o_line_number) tr.o_data_row {
@@ -27,7 +30,6 @@
                 @include o-position-absolute($top: 0, $left: 0);
 
                 content: counter(sale_line_counter);
-                counter-increment: sale_line_counter;
 
                 width: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 2);
                 padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
