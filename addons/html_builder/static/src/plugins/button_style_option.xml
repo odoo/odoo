@@ -33,12 +33,12 @@
 
     <t t-if="this.state.currentButtonType === 'custom'">
         <BuilderRow label.translate="Text" level="1">
-            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
+        <BuilderColorPicker action="'buttonTextColorAction'" actionParam="{ mainParam: 'color' }" enabledTabs="['solid', 'custom']" />
         </BuilderRow>
         <BuilderRow label.translate="Fill" level="1">
             <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
+        <BorderConfigurator action="'buttonBorderStyleAction'" label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
     </t>
 
     <BuilderRow label.translate="Size">
