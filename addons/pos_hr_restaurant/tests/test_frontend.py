@@ -7,6 +7,13 @@ from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 class TestUi(TestPosHrHttpCommon, TestFrontendCommon):
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        admin = cls.pos_admin.employee_id or cls.pos_admin.action_create_employee()
+        admin.name = "Mitchell Admin"
+        cls.main_pos_config.manager_employee_ids |= admin
+
     def test_post_login_default_screen_tables(self):
         self.main_pos_config.default_screen = "tables"
         self.main_pos_config.with_user(self.pos_admin).open_ui()

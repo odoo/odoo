@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+from freezegun import freeze_time
 
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command, fields
 import json
 from datetime import datetime, timedelta
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontendCommon(TestPointOfSaleHttpCommon):
+class TestFrontendCommon(TestPointOfSaleHttpCommon, CommonPosTest):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -585,6 +588,24 @@ class TestFrontend(TestFrontendCommon):
         last_order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.state, "cancel")
         self.assertEqual(len(last_order.lines), 0)
+
+    def test_release_table_clears_timer_badge(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        table = self.env['restaurant.table'].search([
+            ('floor_id', '=', self.main_floor.id),
+            ('table_number', '=', 4),
+        ], limit=1)
+        # Backdate the order create date to show the timer badge.
+        with (freeze_time('2026-08-15'), patch.object(self.env.cr, 'now', lambda: fields.Datetime.to_datetime("2026-08-15 11:00:00"))):
+            self.create_backend_pos_order({
+                'pos_config': self.pos_config,
+                'order_data': {
+                    'config_id': self.pos_config.id,
+                    'table_id': table.id,
+                    'date_order': fields.Datetime.now(),
+                },
+            })
+        self.start_pos_tour('test_release_table_clears_timer_badge')
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.
