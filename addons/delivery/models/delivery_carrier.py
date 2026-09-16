@@ -754,7 +754,7 @@ class DeliveryCarrier(models.Model):
                 continue
             # `product_uom_qty` IS the line quantity already converted to the
             # product's reference UoM, which is the unit `weight`/`volume` are
-            # expressed in. Running it through `_compute_quantity` again converted
+            # expressed in. Running it through `_get_quantity_in_unit` again converted
             # a second time and inflated every weight/volume on a line whose UoM
             # differs from the product's (12 Units sold as 1 Dozen weighed as 144).
             qty = line.product_uom_qty

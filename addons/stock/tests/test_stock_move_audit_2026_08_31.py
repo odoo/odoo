@@ -264,7 +264,7 @@ class TestStockMoveAudit20260831(TransactionCase):
             sum(available.values()),
             line.quantity_product_uom,
             "the incoming half must read the same stored quantity the outgoing "
-            "half and _deduct_own_lines read; _compute_quantity rounds coarser "
+            "half and _deduct_own_lines read; _get_quantity_in_unit rounds coarser "
             "and the two are subtracted from each other",
         )
 

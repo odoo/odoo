@@ -131,7 +131,7 @@ class TestUom(UomCommon):
 
     def test_compute_quantity_wrappers_forward_kwargs(self):
         """The wrappers forward round/rounding_method through to the base
-        _compute_quantity. Uses the same controlled setup as test_20_rounding
+        _get_quantity_in_unit. Uses the same controlled setup as test_20_rounding
         (Product Unit precision 0 + a Score unit worth 20 units) so the
         assertions do not depend on the reference UoMs' stored rounding."""
         self.env["decimal.precision"].search([("name", "=", "Product Unit")]).digits = 0
@@ -169,7 +169,7 @@ class TestUom(UomCommon):
 
     def test_compute_quantity_wrappers_match_base_for_compatible(self):
         """For compatible UoMs the wrappers are byte-identical to the base
-        _compute_quantity — they only differ when conversion is impossible."""
+        _get_quantity_in_unit — they only differ when conversion is impossible."""
         cases = [
             (self.uom_gram, 1020000, self.uom_ton),
             (self.uom_dozen, 1, self.uom_unit),
@@ -403,7 +403,7 @@ class TestUom(UomCommon):
         """`rounding` is a compute with no `@api.depends` (it reads a
         `decimal.precision` row, not a field), so nothing invalidated it when
         the precision changed. A cached `rounding` then disagreed with
-        `get_precision` for the rest of the transaction: `_compute_quantity`
+        `get_precision` for the rest of the transaction: `_get_quantity_in_unit`
         (reads `rounding`) and `round` (reads the precision) returned different
         numbers for the same input, and which one you got depended on whether
         the unit was already in cache.
@@ -442,7 +442,7 @@ class TestUom(UomCommon):
 
     def test_compute_price_accepts_an_unset_unit(self):
         """`_compute_price` `check_singleton()`d before its degenerate-input guard,
-        so an unset source unit raised where `_compute_quantity` returned
+        so an unset source unit raised where `_get_quantity_in_unit` returned
         quietly. The two are now symmetric."""
         no_uom = self.env["uom.uom"]
         self.assertEqual(no_uom._get_price_in_unit(5.0, self.uom_gram), 5.0)

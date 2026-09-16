@@ -371,7 +371,7 @@ class UomUom(models.Model):
         return amount
 
     # --- Degrade-on-failure wrappers ------------------------------------
-    # `_compute_quantity` raises when the units share no common reference.
+    # `_get_quantity_in_unit` raises when the units share no common reference.
     # Call-sites that must degrade instead (return the quantity unconverted,
     # visibly wrong but non-blocking) use one of the named wrappers below so
     # the intent stays greppable per bucket. Pick by what the value feeds:
@@ -530,7 +530,7 @@ class UomUom(models.Model):
     ) -> float:
         """Convert a price per unit of `self` into a price per unit of `to_unit`.
 
-        Strict by default, exactly like `_compute_quantity`: scaling by the
+        Strict by default, exactly like `_get_quantity_in_unit`: scaling by the
         ratio of two factors is only meaningful when both units measure the
         same thing. Without the check a price of 100 per kg asked for "in
         Units" came back as 0.1 -- a plausible-looking number that is off by
@@ -540,7 +540,7 @@ class UomUom(models.Model):
         below (`_get_price_report` / `_get_price_estimate`) -- see the
         comment block above them for the decision rule.
 
-        Degenerate recordsets are handled exactly as in `_compute_quantity`: an
+        Degenerate recordsets are handled exactly as in `_get_quantity_in_unit`: an
         unset unit on either side returns the price untouched instead of
         raising. The two were asymmetric -- `_compute_price` `check_singleton()`d
         first, so a price read off a record whose unit is not resolved yet blew

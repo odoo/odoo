@@ -1389,7 +1389,7 @@ class TestProcurement(TestMrpCommon):
         """The path almost every procurement takes must not have moved.
 
         `uom.round` rounds HALF-UP at the 'Product Unit' decimal precision and
-        never reads the unit; `_compute_quantity` rounds UP at the unit's own
+        never reads the unit; `_get_quantity_in_unit` rounds UP at the unit's own
         `rounding`. Sizing a record wants the second -- `uom_uom.py` says so in
         as many words -- and a first draft of this method used the first, which
         rounds a converted quantity below the unit's precision DOWN TO ZERO
@@ -1403,8 +1403,8 @@ class TestProcurement(TestMrpCommon):
         """
         kg = self.env.ref("uom.product_uom_kgm")
         gram = self.env.ref("uom.product_uom_gram")
-        self.assertEqual(gram._compute_quantity(1.0, kg), 0.01)
-        self.assertEqual(kg.round(gram._compute_quantity(1.0, kg, round=False)), 0.0)
+        self.assertEqual(gram._get_quantity_in_unit(1.0, kg), 0.01)
+        self.assertEqual(kg.round(gram._get_quantity_in_unit(1.0, kg, round=False)), 0.0)
 
         product = self.env["product.product"].create(
             {"name": "Rounded", "is_storable": True, "uom_id": kg.id}
