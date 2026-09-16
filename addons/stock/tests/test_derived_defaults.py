@@ -1,4 +1,4 @@
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -828,3 +828,83 @@ class TestEditableDefaultsSurviveANoOpTrigger(TestStockCommon):
             other.lot_stock_id,
             "the rule kept a location belonging to the previous warehouse",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestARerateDoesNotRewriteHistory(TestStockCommon):
+    """`product_uom_id.factor` is read by `_compute_product_qty` and must NOT
+    be declared. The pin exists because a detector will flag the omission as a
+    missing dependency, and adding it is the defect."""
+
+    def test_a_done_move_keeps_the_quantity_it_recorded(self):
+        unit = self.env.ref("uom.product_uom_unit")
+        box = self.env["uom.uom"].create(
+            {"name": "Rerate box", "relative_factor": 10, "relative_uom_id": unit.id}
+        )
+        product = self.env["product.product"].create(
+            {"name": "Rerate product", "is_storable": True, "uom_id": unit.id}
+        )
+        self.StockQuantObj._update_available_quantity(
+            product, self.stock_location, 1000
+        )
+        picking = self.PickingObj.create(
+            {
+                "picking_type_id": self.picking_type_out.id,
+                "move_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": product.id,
+                            "product_uom_id": box.id,
+                            "product_uom_qty": 2,
+                        },
+                    )
+                ],
+            }
+        )
+        picking.action_confirm()
+        picking.action_assign()
+        picking.move_ids.picked = True
+        picking.button_validate()
+        self.env.flush_all()
+        move = picking.move_ids
+        self.assertEqual(move.state, "done")
+        self.assertEqual(move.product_qty, 20.0, "2 boxes of 10 units")
+
+        # allowed precisely because every move on this unit is done --
+        # `uom.uom.write` refuses a ratio change only while moves are open
+        box.relative_factor = 20
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(
+            move.product_qty,
+            20.0,
+            "a re-rated unit restated what a done move had already recorded",
+        )
+
+    def test_the_guard_still_refuses_a_rerate_while_a_move_is_open(self):
+        unit = self.env.ref("uom.product_uom_unit")
+        box = self.env["uom.uom"].create(
+            {
+                "name": "Rerate open box",
+                "relative_factor": 10,
+                "relative_uom_id": unit.id,
+            }
+        )
+        product = self.env["product.product"].create(
+            {"name": "Rerate open product", "is_storable": True, "uom_id": unit.id}
+        )
+        self.MoveObj.create(
+            {
+                "product_id": product.id,
+                "product_uom_id": box.id,
+                "product_uom_qty": 2,
+                "picking_type_id": self.picking_type_int.id,
+            }
+        )._action_confirm()
+        self.env.flush_all()
+
+        with self.assertRaises(UserError):
+            box.relative_factor = 20

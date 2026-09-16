@@ -854,6 +854,15 @@ class StockMove(models.Model):
             label += f" ({self.create_uid.display_name})"
         return label
 
+    # `product_uom_id.factor` is read here, through `_compute_quantity_stored`,
+    # and is deliberately NOT declared. `uom.uom.write` refuses a ratio change
+    # only while moves are OPEN (`state not in ("cancel", "done")`), so a unit
+    # can be re-rated once its moves are done -- and a done move's `product_qty`
+    # is what was actually moved, not a conversion to be replayed. Measured: a
+    # done move of 2 boxes at 10 units records 20; after the box is re-rated to
+    # 20 units the stored value stays 20, and a forced recompute writes 40.
+    # Declaring the dependency would rewrite history on every historical move
+    # whose unit was ever re-rated.
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_product_qty(self):
         for move in self:
@@ -901,6 +910,9 @@ class StockMove(models.Model):
         for move in self:
             move.packaging_uom_id = move.product_uom_id
 
+    # `product_uom_id.factor` is deliberately absent for the same reason as on
+    # `_compute_product_qty` above: a re-rated unit must not restate what a done
+    # move recorded.
     @api.depends("product_uom_qty", "product_uom_id", "packaging_uom_id")
     def _compute_quantity_packaging_uom(self):
         for move in self:
