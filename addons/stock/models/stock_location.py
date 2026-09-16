@@ -574,7 +574,15 @@ class StockRoute(models.Model):
                 rules.action_unarchive()
             else:
                 rules.action_archive()
-        return super().write(vals)
+        if 'warehouse_ids' in vals:
+            old_warehouse_ids = {route: route.warehouse_ids for route in self}
+        res = super().write(vals)
+        if 'warehouse_ids' in vals:
+            for route in self:
+                changed_warehouses = (old_warehouse_ids[route] - route.warehouse_ids) | (route.warehouse_ids - old_warehouse_ids[route])
+                for warehouse in changed_warehouses:
+                    warehouse._create_or_update_global_routes_rules_for_route(route)
+        return res
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
