@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
+import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { removePlugins } from "@html_builder/utils/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
-import { registry } from "@web/core/registry";
-import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
-import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
 import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
+import { Component, t, useProps } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
 
 class CustomizeTabWithSnippetVersionControl extends CustomizeTab {
     static components = {
@@ -25,12 +25,12 @@ class BuilderWithSnippetVersionControl extends Builder {
 export class MassMailingBuilder extends Component {
     static template = "mass_mailing.MassMailingBuilder";
     static components = { Builder: BuilderWithSnippetVersionControl };
-    static props = {
-        builderProps: { type: Object },
-        toggleCodeView: { type: Function, optional: true },
-        saveAndClose: { type: Function },
-        discardChanges: { type: Function },
-    };
+
+    props = useProps({
+        builderProps: t.object(),
+        saveAndClose: t.function(),
+        toggleCodeView: t.function().optional(),
+    });
 
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);

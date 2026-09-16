@@ -1,18 +1,18 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { Component, providePlugins } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { View } from "@web/views/view";
+import { Component, providePlugins, useProps } from "@odoo/owl";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 import "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_view";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { View } from "@web/views/view";
 
 export class CalendarOne2Many extends Component {
     static template = "resource.CalendarOne2Many";
     static components = { View };
-    static props = standardFieldProps;
+
+    props = useProps(standardFieldProps);
 
     setup() {
-        super.setup();
         providePlugins([ResourceCalendarPlugin], { record: this.props.record });
     }
 

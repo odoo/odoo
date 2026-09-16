@@ -9,7 +9,6 @@ test("LazyComponent loads the required bundle", async () => {
             <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="this.childProps"/>
         `;
         static components = { LazyComponent };
-        static props = ["*"];
         get childProps() {
             return {
                 onCreated: () => expect.step("Lazy test component created"),
