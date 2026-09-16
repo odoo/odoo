@@ -673,7 +673,7 @@ function isValidFieldValue(record, fieldDef) {
             );
         }
         case "selection": {
-            return fieldDef.selection.some(([value]) => value === value);
+            return fieldDef.selection.some(([selectionValue]) => selectionValue === value);
         }
         default: {
             return true;
