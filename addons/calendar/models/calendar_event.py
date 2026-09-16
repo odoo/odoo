@@ -409,6 +409,8 @@ class CalendarEvent(models.Model):
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
                 editor_candidates |= set(event._origin.partner_ids.user_ids)
+            if event.calendar_id:
+                editor_candidates |= set(event.calendar_id.calendar_user_ids.filtered(lambda l: l.access_role in ('writer', 'owner')))
             # Non-private events must be editable by uninvited administrators.
             if self.env.user.has_group('base.group_system') and event.privacy != 'private':
                 editor_candidates.add(self.env.user)
