@@ -121,3 +121,38 @@ class TestDeliveryPickingBatch(TestStockBatchCommon):
         pick_2.button_validate()
         ship_2 = pick_2.move_ids.move_dest_ids.picking_id
         self.assertEqual(ship_1.batch_id.picking_ids, ship_1 | ship_2)
+
+    def test_auto_batch_group_by_carrier_and_product(self):
+        """Ensure that correct carrier grouping happens when auto batch is enabled with carrier and product.
+
+        - Initial deliveries with different carriers must create separate batches.
+        - Each subsequent delivery must join the existing batch with the same carrier.
+        """
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_carrier': True,
+            'wave_group_by_product': True,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_location, 4)
+        carrier_1, carrier_2 = self.local_delivery_carrier, self.local_delivery_carrier.copy({'name': 'Other Carrier'})
+        carrier_1_pick_1, carrier_2_pick_1, carrier_1_pick_2, carrier_2_pick_2 = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_out.id,
+            'carrier_id': carrier.id,
+            'move_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        } for carrier in (carrier_1, carrier_2, carrier_1, carrier_2)])
+
+        initial_pickings = carrier_1_pick_1 | carrier_2_pick_1
+        initial_pickings.action_confirm()
+        initial_pickings.action_assign()
+        # A separate batch is automatically created for each picking with a different carrier.
+        self.assertNotEqual(carrier_1_pick_1.batch_id, carrier_2_pick_1.batch_id)
+
+        followup_pickings = carrier_1_pick_2 | carrier_2_pick_2
+        followup_pickings.action_confirm()
+        followup_pickings.action_assign()
+        # Add follow-up pickings to the existing batches with matching carriers.
+        self.assertEqual(carrier_1_pick_1 | carrier_1_pick_2, carrier_1_pick_1.batch_id.picking_ids)
+        self.assertEqual(carrier_2_pick_1 | carrier_2_pick_2, carrier_2_pick_1.batch_id.picking_ids)
