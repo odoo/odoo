@@ -13,7 +13,7 @@ from odoo.cli.deploy import Deploy
 from odoo.cli.obfuscate import DEFAULT_FIELDS, _get_fields_selected, _parse_field_spec
 from odoo.cli.populate import _prepare_factors_by_model_name
 from odoo.cli.scaffold import Template, _str_to_pascal_case, _str_to_snake_case
-from odoo.cli.start import _has_arg, _is_path_arg
+from odoo.cli.start import _derive_addons_paths, _has_arg, _is_path_arg
 
 import odoo.addons
 
@@ -233,6 +233,20 @@ class TestStartArgumentSplit:
         assert _has_arg(["--db-filter=^x$"], "--db-filter")
         assert _has_arg(["--db-filter", "^x$"], "--db-filter")
         assert not _has_arg(["--db-filter-x"], "--db-filter")
+
+
+class TestStartAddonsPaths:
+    def test_the_project_joins_the_configured_paths_instead_of_replacing_them(self):
+        paths = _derive_addons_paths(
+            Path("/proj"), bootstrap=None, configured=["/core", "/enterprise"]
+        )
+        assert paths == ["/proj", "/core", "/enterprise"]
+
+    def test_bootstrap_paths_lead_and_duplicates_collapse(self):
+        paths = _derive_addons_paths(
+            Path("/proj"), bootstrap="/a,,/proj", configured=["/a", "/core"]
+        )
+        assert paths == ["/a", "/proj", "/core"]
 
 
 class TestPopulateFactors:

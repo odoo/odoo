@@ -1,5 +1,6 @@
 import os
 import re
+from collections.abc import Iterable
 from pathlib import Path
 
 import odoo.cli
@@ -71,17 +72,17 @@ class Start(Command):
             explicit_path=args.path is not None,
         )
         if mods and not _has_arg(server_args, "--addons-path"):
-            addons_paths = [str(project_path)]
-            if bootstrap_value := odoo.cli.BOOTSTRAP_ADDONS_PATH:
-                user_paths = [p for p in bootstrap_value.split(",") if p]
-                addons_paths = user_paths + [
-                    p for p in addons_paths if p not in user_paths
-                ]
+            addons_paths = _derive_addons_paths(
+                project_path,
+                bootstrap=odoo.cli.BOOTSTRAP_ADDONS_PATH,
+                configured=config["addons_path"],
+            )
             server_args.append(f"--addons-path={','.join(addons_paths)}")
             _debug.logic(
                 "cli.start.addons_path_derived",
                 paths=len(addons_paths),
                 merged_bootstrap=bool(odoo.cli.BOOTSTRAP_ADDONS_PATH),
+                merged_configured=len(config["addons_path"]),
             )
 
         if not args.db_name:
@@ -142,6 +143,17 @@ class Start(Command):
 def is_path_in_module(path: str | Path) -> bool:
     path = Path(path)
     return any(Manifest._from_path(str(p)) for p in (path, *path.parents))
+
+
+# An explicit --addons-path on the command line replaces the configuration
+# file's, so the project directory alone would drop every path the file
+# names and leave the database's other modules unloadable. The project comes
+# first among the non-bootstrap paths: it is what `start` was asked to run.
+def _derive_addons_paths(
+    project_path: Path, *, bootstrap: str | None, configured: Iterable[str]
+) -> list[str]:
+    user_paths = [p for p in (bootstrap or "").split(",") if p]
+    return list(dict.fromkeys([*user_paths, str(project_path), *configured]))
 
 
 def _is_path_arg(index: int, args: list[str]) -> bool:
