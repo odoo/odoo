@@ -328,6 +328,17 @@ class SlideChannel(models.Model):
             channel.slide_category_ids = channel.slide_ids.filtered(lambda slide: slide.is_category)
             channel.slide_content_ids = channel.slide_ids - channel.slide_category_ids
 
+    def _get_sitemap_lastmod_map(self):
+        res = {channel.id: channel.write_date for channel in self}
+        # The channel page lists its slides, so an edited slide must advance
+        # the recrawl signal of the channel page.
+        for channel, last in self.env['slide.slide']._read_group(
+            [('channel_id', 'in', self.ids)],
+            groupby=['channel_id'], aggregates=['write_date:max'],
+        ):
+            res[channel.id] = max(res[channel.id], last)
+        return res
+
     @api.depends('slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
