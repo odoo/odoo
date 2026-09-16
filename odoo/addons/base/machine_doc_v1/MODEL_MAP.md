@@ -1776,8 +1776,6 @@ the per-user form.
 
 **Fields:** `is_favorite` (Boolean)
 
-**Key Methods:** `action_toggle_favorite()`
-
 ### models/mixin_user_favorite.py
 
 #### MixinUserFavorite — `mixin.user.favorite` (AbstractModel)
