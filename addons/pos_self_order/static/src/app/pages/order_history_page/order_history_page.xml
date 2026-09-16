@@ -37,7 +37,7 @@
                                     <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} ">
                                         <t t-set="lineName" t-value="this.getNameAndDescription(line)" />
                                         <div class="fw-bold mb-0 o_self_product_name" t-out="lineName.productName" />
-                                        <div t-if="line.qty">
+                                        <div t-if="line.qty and !line.isDiscountLine">
                                             <span class="small" t-out="`${line.qty}x `" />
                                             <span class="flex-grow-1 me-3 small text-muted" t-out="this.selfOrder.formatMonetary(this.getPrice(line) / line.qty)"/>
                                         </div>
