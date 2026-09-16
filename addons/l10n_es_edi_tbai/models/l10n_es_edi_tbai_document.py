@@ -129,8 +129,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             if chain_head_doc and chain_head_doc != self and chain_head_doc.state != 'accepted':
                 return _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head_doc.name)
 
-            # Tax configuration check: In case of foreign customer we need the tax scope to be set
-            if values['partner'] and values['partner']._l10n_es_is_foreign() and values['taxes'].filtered(lambda t: not t.tax_scope):
+            if values['partner'] and not values["is_simplified"] and not self._l10n_es_tbai_partner_has_nif(values['partner']) \
+                    and values['taxes'].filtered(lambda t: not t.tax_scope):
                 return _(
                     "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
                     "\n".join(values['taxes'].mapped('name'))
@@ -395,6 +395,17 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'sender': sender,
         }
 
+    @api.model
+    def _l10n_es_tbai_partner_has_nif(self, partner):
+        """ Whether `partner` is a domestic Spanish recipient identified by a real NIF (the
+        <NIF> block, no IDOtro). Any other case -- an intra-EU partner with a NIF-IVA (IDType 02),
+        a foreign partner without one (IDOtro 03-06), or a *Spanish-resident* partner without a
+        NIF (also IDOtro 03-06, e.g. identified by passport) -- must use DesgloseTipoOperacion
+        rather than DesgloseFactura. Shared by `_get_recipient_values` (NIF vs IDOtro/IDType02
+        block) and `_get_sale_values` (DesgloseFactura vs DesgloseTipoOperacion), which must stay
+        in sync. """
+        return not partner._l10n_es_is_foreign() and bool(partner.vat)
+
     def _get_recipient_values(self, partner, is_simplified=False):
         # TicketBAI accept recipient data for simplified invoices,
         # but only if the partner has a VAT number
@@ -405,16 +416,19 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'partner_address': ', '.join(filter(None, [partner.street, partner.street2, partner.city])),
             'alt_id_number': partner.vat or 'NO_DISPONIBLE',
         }
+        if self._l10n_es_tbai_partner_has_nif(partner):
+            # Spanish with NIF → block <NIF> (without IDOtro)
+            recipient_values['nif'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
 
-        if not partner._l10n_es_is_foreign() and partner.vat:
-            recipient_values['nif'] = split_vat(partner.vat, default_country_code='ES')[1]
-
-        elif partner.country_id and 'EU' in partner.country_id.country_group_codes:
+        elif partner.vat and partner.country_id and 'EU' in partner.country_id.country_group_codes:
+            # Intra-communitary with NIF-IVA → IDType 02 (no CodigoPais)
             recipient_values['alt_id_type'] = '02'
+            recipient_values['alt_id_number'] = partner.vat
 
         else:
-            recipient_values['alt_id_type'] = '04' if partner.vat else '06'
+            # No NIF (national or intra-EU): IDOtro document required. CodigoPais mandatory.
             recipient_values['alt_id_country'] = partner.country_id.code if partner.country_id else None
+            recipient_values['alt_id_type'], recipient_values['alt_id_number'] = partner._l10n_es_get_additional_identifier_type()
 
         return {'recipient': recipient_values}
 
@@ -444,7 +458,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             if any(t.l10n_es_type == 'no_sujeto_loc' for t in values['taxes']):
                 sale_values.update({'regime_key': ['08']})
 
-        if not values['partner'] or not values['partner']._l10n_es_is_foreign() or values["is_simplified"]:
+        if not values['partner'] or values["is_simplified"] or self._l10n_es_tbai_partner_has_nif(values['partner']):
             sale_values.update(**self._get_importe_desglose_es_partner(values['base_lines'], values['is_refund']))
         else:
             sale_values.update(**self._get_importe_desglose_foreign_partner(values['base_lines'], values['is_refund']))
