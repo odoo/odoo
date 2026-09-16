@@ -7421,10 +7421,10 @@ class AccountMove(models.Model):
             )
         return report_action
 
-    def _get_installments_data(self):
+    def _prepare_installments_data(self):
         self.check_singleton()
         term_lines = self.line_ids.filtered(lambda l: l.display_type == "payment_term")
-        return term_lines._get_installments_data()
+        return term_lines._prepare_installments_data()
 
     def _get_early_payment_discount_installment_values(self, epd_installment):
         discount_date = epd_installment[
@@ -7525,7 +7525,7 @@ class AccountMove(models.Model):
         if not term_lines:
             _debug.logic("next_payment_skipped", move=self, reason="no_term_lines")
             return {}
-        installments = term_lines._get_installments_data()
+        installments = term_lines._prepare_installments_data()
         not_reconciled_installments = [x for x in installments if not x["reconciled"]]
         next_values = self._get_next_installment_values(installments)
 

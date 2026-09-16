@@ -4125,7 +4125,7 @@ class AccountMoveLine(models.Model):
                 rounding_error -= amt
 
     @_debug.perf.timed
-    def _get_installments_data(
+    def _prepare_installments_data(
         self, payment_currency=None, payment_date=None, next_payment_date=None
     ):
         move = self.move_id

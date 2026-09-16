@@ -160,7 +160,7 @@ class TestMarinAccountMoveSequenceGap(AccountTestInvoicingCommon):
         values = move._get_next_installment_values(
             move.line_ids.filtered(
                 lambda line: line.display_type == "payment_term"
-            )._get_installments_data()
+            )._prepare_installments_data()
         )
         self.assertEqual(
             set(values),

@@ -900,7 +900,7 @@ class AccountPaymentRegister(models.TransientModel):
             key=lambda line: (line.move_id, line.date_maturity or date.max)
         )
         for lines in all_lines.grouped("move_id").values():
-            installments = lines._get_installments_data(
+            installments = lines._prepare_installments_data(
                 payment_currency=self.currency_id,
                 payment_date=self.payment_date,
                 next_payment_date=next_payment_date,
