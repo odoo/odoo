@@ -154,7 +154,12 @@ def get_response_schema(handler: typing.Callable) -> dict[str, Any] | None:
     if isinstance(annotation, str):
         try:
             annotation = eval(annotation, getattr(handler, "__globals__", None))  # noqa: S307  the route author's own return annotation, resolved against their module
-        except Exception:
+        except Exception as exc:
+            _debug.logic(
+                "http.openapi.return_annotation_unresolved",
+                handler=getattr(handler, "__qualname__", None),
+                error=type(exc).__name__,
+            )
             return None
     origin = typing.get_origin(annotation)
     if annotation is dict or origin is dict:

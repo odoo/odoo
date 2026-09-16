@@ -225,6 +225,9 @@ shared host.
 `[serving]` as well. `tests/test_layer_contract.py` checks it on every Tier-2
 run (module-scope imports only; a `TYPE_CHECKING` block or a deferred import
 does not count), and that no module of the package reaches `odoo.addons`.
+`tests/test_observability_contract.py` holds the debug-logger discipline that the
+retired checker held: every serving or feature module owns a `DebugLog`, and a broad
+`except` that swallows must emit an event or a log line.
 
 | Module | Tier | Contents |
 |---|---|---|
