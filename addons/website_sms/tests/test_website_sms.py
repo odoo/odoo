@@ -24,9 +24,9 @@ class TestWebsiteSms(TransactionCase):
             {"access_token": str(cls.partner_no_phone.id)}
         )
 
-    def test_check_for_sms_composer_follows_partner_phone(self):
-        self.assertTrue(self.visitor_phone._check_for_sms_composer())
-        self.assertFalse(self.visitor_no_phone._check_for_sms_composer())
+    def test_can_use_sms_composer_follows_partner_phone(self):
+        self.assertTrue(self.visitor_phone._can_use_sms_composer())
+        self.assertFalse(self.visitor_no_phone._can_use_sms_composer())
 
     def test_action_send_sms_without_phone_raises(self):
         with self.assertRaises(UserError):

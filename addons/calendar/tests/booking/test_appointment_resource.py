@@ -616,7 +616,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         ]
 
         self.assertEqual(
-            self.env["calendar.event"]._check_organizer_validation_conditions(
+            self.env["calendar.event"]._get_organizer_validation_conditions(
                 appointment_vals_list
             ),
             [False, True, True],

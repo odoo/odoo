@@ -336,7 +336,7 @@ class ExchangeTransmission(models.Model):
                         name=transmission.display_name,
                     ),
                 )
-            errors = transmission._get_protocol()._check_message(transmission)
+            errors = transmission._get_protocol()._get_message_errors(transmission)
             if errors:
                 transmission._settle(
                     Verdict(state="rejected", message="\n".join(errors)),

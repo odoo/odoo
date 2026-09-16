@@ -98,7 +98,7 @@ class CalendarEvent(models.Model):
         )
 
     @api.model
-    def _check_values_to_sync(self, values):
+    def _has_values_to_sync(self, values):
         """Return True if values being updated intersects with Google synced values and False otherwise."""
         synced_fields = self._get_fields_google_synced()
         return any(key in synced_fields for key in values)
@@ -148,7 +148,7 @@ class CalendarEvent(models.Model):
         # Edge case 2: when resetting an account, we must be able to erase the event's google_id.
         skip_event_permission = self.env.context.get("skip_event_permission", False)
         # Edge case 3: check if event is synchronizable in order to make sure the error is worth it.
-        is_synchronizable = self._check_values_to_sync(values)
+        is_synchronizable = self._has_values_to_sync(values)
         if google_sync_restart or skip_event_permission or not is_synchronizable:
             return
         if any(

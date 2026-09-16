@@ -1701,7 +1701,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         delivery_partner_sudo = order_sudo.partner_shipping_id
         if (
             not order_sudo.only_services
-            and not self._check_delivery_address(delivery_partner_sudo)
+            and not self._is_delivery_address_complete(delivery_partner_sudo)
             and delivery_partner_sudo._can_be_edited_by_current_customer(
                 order_sudo=order_sudo
             )
@@ -1710,7 +1710,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 f"/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery"
             )
         invoice_partner_sudo = order_sudo.partner_invoice_id
-        if not self._check_billing_address(
+        if not self._is_billing_address_complete(
             invoice_partner_sudo
         ) and invoice_partner_sudo._can_be_edited_by_current_customer(
             order_sudo=order_sudo

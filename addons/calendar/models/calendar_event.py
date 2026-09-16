@@ -805,7 +805,7 @@ class CalendarEvent(models.Model):
                     ),
                 )
 
-    def _check_organizer_validation_conditions(self, vals_list):
+    def _get_organizer_validation_conditions(self, vals_list):
         """Method for check in the microsoft_calendar module that needs to be
         overridden in appointment.
         """
@@ -2609,7 +2609,7 @@ class CalendarEvent(models.Model):
         return {"active": False}
 
     @api.model
-    def _check_values_to_sync(self, values):
+    def _has_values_to_sync(self, values):
         """Method to be overriden: return candidate values to be synced within rewrite_recurrence function scope."""
         return False
 
@@ -2705,7 +2705,7 @@ class CalendarEvent(models.Model):
         update_dict = self._get_time_update_dict(base_event, time_values)
         time_values.update(update_dict)
 
-        if self._check_values_to_sync(values) or time_values or recurrence_values:
+        if self._has_values_to_sync(values) or time_values or recurrence_values:
             # Get base values from the previous recurrence and update the start date weekday field.
             start_date = (
                 time_values["start"].date()

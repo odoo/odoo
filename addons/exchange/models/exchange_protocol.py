@@ -103,7 +103,7 @@ class ExchangeProtocol(models.AbstractModel):
             f"{self._name} must build the document it sends",
         )
 
-    def _check_message(self, transmission) -> list[str]:
+    def _get_message_errors(self, transmission) -> list[str]:
         return []
 
     def _seal_message(self, transmission, document: Document) -> Document:

@@ -10,12 +10,12 @@ class StockPicking(models.Model):
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()
         if res is True and not self.env.context.get("skip_sms"):
-            pickings_to_warn_sms = self._check_warn_sms()
+            pickings_to_warn_sms = self._get_pickings_to_warn_sms()
             if pickings_to_warn_sms:
                 return pickings_to_warn_sms._action_generate_warn_sms_wizard()
         return res
 
-    def _check_warn_sms(self):
+    def _get_pickings_to_warn_sms(self):
         _debug.logic("sms_warn_check", pickings=self)
         warn_sms_pickings = self.browse()
         for picking in self:

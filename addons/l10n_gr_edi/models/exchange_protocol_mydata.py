@@ -58,7 +58,7 @@ class ExchangeProtocolMydata(models.AbstractModel):
 
     # PROTOCOL METHODS
 
-    def _check_message(self, transmission) -> list[str]:
+    def _get_message_errors(self, transmission) -> list[str]:
         error = transmission.subject_id._l10n_gr_edi_get_pre_error_string()
         return [error] if error else []
 

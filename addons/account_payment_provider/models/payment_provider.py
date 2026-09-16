@@ -162,7 +162,7 @@ class PaymentProvider(models.Model):
                 }
             )
 
-    def _check_existing_payment(self, payment_method):
+    def _has_existing_payment(self, payment_method):
         existing_payment_count = self.env["account.payment"].search_count(
             [("payment_method_id", "=", payment_method.id)], limit=1
         )
@@ -173,7 +173,7 @@ class PaymentProvider(models.Model):
         """Override of `payment` to delete the payment method of the provider."""
         payment_method = self._get_provider_payment_method(code)
         # If the payment method is used by any payments, we block the uninstallation of the module.
-        if self._check_existing_payment(payment_method):
+        if self._has_existing_payment(payment_method):
             raise UserError(
                 _(
                     "You cannot uninstall this module as payments using this payment method already exist."

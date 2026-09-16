@@ -51,12 +51,12 @@ class TestPaymentProviderSetup(AccountPaymentCommon):
             "create a duplicate method.",
         )
 
-    def test_check_existing_payment_false_when_method_unused(self):
+    def test_has_existing_payment_false_when_method_unused(self):
         self.assertFalse(
-            self.provider._check_existing_payment(self.dummy_provider_method)
+            self.provider._has_existing_payment(self.dummy_provider_method)
         )
 
-    def test_check_existing_payment_true_when_payment_uses_method(self):
+    def test_has_existing_payment_true_when_payment_uses_method(self):
         method_line = self.provider.journal_id.inbound_payment_channel_ids.filtered(
             lambda l: l.payment_provider_id == self.provider
         )
@@ -65,7 +65,7 @@ class TestPaymentProviderSetup(AccountPaymentCommon):
         )
 
         self.assertTrue(
-            self.provider._check_existing_payment(method_line.payment_method_id)
+            self.provider._has_existing_payment(method_line.payment_method_id)
         )
 
     def test_remove_provider_blocked_when_payments_exist(self):

@@ -8,7 +8,7 @@ _debug = DebugLog(__name__)
 class WebsiteVisitor(models.Model):
     _inherit = "website.visitor"
 
-    def _check_for_sms_composer(self):
+    def _can_use_sms_composer(self):
         return bool(self.partner_id.phone_ids)
 
     def _prepare_sms_composer_context(self):
@@ -25,9 +25,9 @@ class WebsiteVisitor(models.Model):
             "visitor_sms_composer",
             visitor=self,
             partner=self.partner_id,
-            reachable=self._check_for_sms_composer(),
+            reachable=self._can_use_sms_composer(),
         )
-        if not self._check_for_sms_composer():
+        if not self._can_use_sms_composer():
             raise UserError(
                 _(
                     "There are no contact and/or no phone or mobile numbers linked to this visitor."

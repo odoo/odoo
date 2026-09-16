@@ -170,7 +170,7 @@ class AccountAnalyticLine(models.Model):
             and self.timesheet_invoice_id.payment_state != "invoicing_legacy"
         )
 
-    def _check_timesheet_can_be_billed(self):
+    def _can_timesheet_be_billed(self):
         return (
             self.so_line
             in self.project_id.mapped("sale_line_employee_ids.sale_line_id")

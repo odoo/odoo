@@ -25,7 +25,7 @@ class ExchangeProtocolDemo(models.AbstractModel):
             name=f"demo-{transmission.id}.xml",
         )
 
-    def _check_message(self, transmission):
+    def _get_message_errors(self, transmission):
         return list(self.env.context.get("demo_errors") or [])
 
     def _send_message(self, transmission, document):

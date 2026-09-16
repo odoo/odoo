@@ -264,8 +264,8 @@ class CalendarEvent(models.Model):
                     )
                 )
 
-    def _check_organizer_validation_conditions(self, vals_list):
-        res = super()._check_organizer_validation_conditions(vals_list)
+    def _get_organizer_validation_conditions(self, vals_list):
+        res = super()._get_organizer_validation_conditions(vals_list)
         appointment_type_ids = list(
             {
                 vals["appointment_type_id"]

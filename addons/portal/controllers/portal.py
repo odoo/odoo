@@ -281,9 +281,9 @@ class CustomerPortal(Controller):
         )
 
         if partner_sudo != commercial_partner_sudo:
-            if not self._check_billing_address(commercial_partner_sudo):
+            if not self._is_billing_address_complete(commercial_partner_sudo):
                 billing_partners_sudo -= commercial_partner_sudo
-            if not self._check_delivery_address(commercial_partner_sudo):
+            if not self._is_delivery_address_complete(commercial_partner_sudo):
                 delivery_partners_sudo -= commercial_partner_sudo
 
         return {
@@ -291,7 +291,7 @@ class CustomerPortal(Controller):
             "delivery_addresses": delivery_partners_sudo,
         }
 
-    def _check_billing_address(self, partner_sudo):
+    def _is_billing_address_complete(self, partner_sudo):
         mandatory_billing_fields = self._get_mandatory_billing_address_fields(
             partner_sudo.country_id
         )
@@ -300,7 +300,7 @@ class CustomerPortal(Controller):
     def _get_mandatory_billing_address_fields(self, country_sudo):
         return self._get_mandatory_address_form_fields(country_sudo)
 
-    def _check_delivery_address(self, partner_sudo):
+    def _is_delivery_address_complete(self, partner_sudo):
         mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
             partner_sudo.country_id
         )

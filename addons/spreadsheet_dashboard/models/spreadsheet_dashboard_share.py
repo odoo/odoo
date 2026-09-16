@@ -55,14 +55,14 @@ class SpreadsheetDashboardShare(models.Model):
         )
         return share.full_url
 
-    def _check_token(self, access_token):
+    def _is_access_token_matching(self, access_token):
         if not access_token:
             return False
         return consteq(access_token, self.access_token)
 
     def _check_dashboard_access(self, access_token):
         self.check_singleton()
-        token_access = self._check_token(access_token)
+        token_access = self._is_access_token_matching(access_token)
         dashboard = self.dashboard_id.with_user(self.create_uid)
         user_access = dashboard.has_access("read")
         if not (token_access and user_access):

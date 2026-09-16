@@ -94,10 +94,10 @@ class WebsiteSaleMondialrelay(WebsiteSale):
 
         return partner_sudo, _address_type
 
-    def _check_delivery_address(self, partner_sudo):
+    def _is_delivery_address_complete(self, partner_sudo):
         if partner_sudo.is_mondialrelay:
             return True
-        return super()._check_delivery_address(partner_sudo)
+        return super()._is_delivery_address_complete(partner_sudo)
 
 
 class WebsiteSaleDeliveryMondialrelay(Delivery):

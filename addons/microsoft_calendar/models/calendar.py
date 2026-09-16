@@ -116,7 +116,7 @@ class CalendarEvent(models.Model):
         ):
             self._forbid_recurrence_creation()
 
-        vals_check_organizer = self._check_organizer_validation_conditions(vals_list)
+        vals_check_organizer = self._get_organizer_validation_conditions(vals_list)
         for vals in [
             vals
             for vals, check_organizer in zip(vals_list, vals_check_organizer)
