@@ -112,6 +112,9 @@ class IterationMixin(_ModelStubs):
                 rs._prefetch_ids = prefetch_ids
                 yield rs
 
+    # __iter__ repeated with the ids reversed, on purpose: the ORM's hottest
+    # loop, and a shared spawning generator reached through `yield from` costs
+    # 7-12 % on 5, 50 and 5,000 records (measured 2026-09-15)
     def __reversed__(self) -> Iterator[Self]:
         ids = self._ids
         size = len(ids)

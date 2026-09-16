@@ -1,3 +1,5 @@
+import annotationlib
+import inspect
 import unittest
 from typing import NamedTuple
 from unittest.mock import Mock
@@ -411,6 +413,30 @@ class TestOrmCoreDelegationDrift(unittest.TestCase):
                 underlying_mock.assert_called_once_with(*args, **kwargs)
                 if returns:
                     self.assertIs(result, underlying_mock.return_value)
+
+    def test_every_pass_through_keeps_the_signature_it_forwards(self) -> None:
+        # a parameter the component grows and the forwarder does not is a
+        # kwarg Layer 1 cannot pass; names and kinds must match, defaults may
+        # differ (get_value's sentinel dispatches on presence)
+        components = {"cache": FieldCache, "engine": ComputeEngine}
+        rows = [row[:3] for row in _DELEGATIONS] + [
+            row[:3] for row in _KWARG_DELEGATIONS
+        ]
+        for orm_method, target, underlying in rows:
+            with self.subTest(method=orm_method):
+                forwarder = inspect.signature(
+                    getattr(OrmCore, orm_method),
+                    annotation_format=annotationlib.Format.STRING,
+                )
+                forwarded = inspect.signature(
+                    getattr(components[target], underlying),
+                    annotation_format=annotationlib.Format.STRING,
+                )
+                self.assertEqual(
+                    [(p.name, p.kind) for p in forwarder.parameters.values()],
+                    [(p.name, p.kind) for p in forwarded.parameters.values()],
+                    f"OrmCore.{orm_method} and {components[target].__name__}.{underlying} disagree",
+                )
 
     def test_table_covers_every_pass_through(self) -> None:
         documented = {row[0] for row in _DELEGATIONS}
