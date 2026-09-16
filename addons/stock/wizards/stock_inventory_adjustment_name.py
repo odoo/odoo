@@ -31,6 +31,6 @@ class StockInventoryAdjustmentName(models.TransientModel):
             dbg.rec(quants),
             len(self.quant_ids),
         )
-        return quants.with_context(self._prepare_quants_context()).action_apply_inventory(
-            self.counting_date
-        )
+        return quants.with_context(
+            self._prepare_quants_context()
+        ).action_apply_inventory(self.counting_date)
