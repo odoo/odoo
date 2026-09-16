@@ -7,3 +7,4 @@ from . import res_company
 from . import sale
 from . import stock
 from . import stock_replenish_mixin
+from . import stock_move_line
