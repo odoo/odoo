@@ -44,10 +44,12 @@ export class FloatTimeSelectionField extends FloatTimeField {
 
     get formattedValue() {
         const floatValue = this.props.record.data[this.props.name];
+        if (floatValue === false || floatValue === undefined) {
+            return "";
+        }
         const { hours, minutes } = floatToHoursMinutes(floatValue);
-
         return DateTime.fromObject(
-            { hour: hours, minute: minutes },
+            { hour: Number(hours), minute: Number(minutes) },
             { numberingSystem: "latn", zone: "default" }
         ).toFormat("h:mm a");
     }
