@@ -7,7 +7,8 @@
     }
     &:not(.o-mobile) {
         --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
-        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
+        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9);
+        border-radius: calc(#{$o-mail-Composer-chatWindowVPadding} + 11px);
     }
     outline: none;
 
