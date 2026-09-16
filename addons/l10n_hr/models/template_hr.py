@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('hr')
     def _get_hr_template_data(self):
         return {
+            'vat_disabled_tax_id': 'VAT_S_NOT_SUBJECT_HR',
+            'vat_disabled_purchase_tax_id': 'VAT_P_DISABLED_ND_HR',
             'code_digits': '6',
         }
 

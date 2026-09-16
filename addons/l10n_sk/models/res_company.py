@@ -9,7 +9,6 @@ class ResCompany(models.Model):
     trade_registry = fields.Char()
     income_tax_id = fields.Char(string="Income Tax ID")
 
-
 class BaseDocumentLayout(models.TransientModel):
     _inherit = 'base.document.layout'
 

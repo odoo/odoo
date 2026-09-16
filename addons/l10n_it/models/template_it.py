@@ -8,7 +8,10 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('it')
     def _get_it_template_data(self):
-        return {}
+        return {
+            'vat_disabled_tax_id': '00v',
+            'vat_disabled_purchase_tax_id': 'vat_disabled_purchase_nd',
+        }
 
     @template('it', 'res.company')
     def _get_it_res_company(self):

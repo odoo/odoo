@@ -10,6 +10,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cz')
     def _get_cz_template_data(self):
         return {
+            'vat_disabled_tax_id': 'l10n_cz_sale_not_subject_vat',
+            'vat_disabled_purchase_tax_id': 'l10n_cz_21_other_supplies_chargeable',
             'code_digits': '6',
         }
 

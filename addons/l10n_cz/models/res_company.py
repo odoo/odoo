@@ -90,7 +90,6 @@ class ResCompany(models.Model):
             else:
                 company.l10n_cz_relationship_person_authorized = None
 
-
 class BaseDocumentLayout(models.TransientModel):
     _inherit = 'base.document.layout'
 

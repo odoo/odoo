@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('de_skr04')
     def _get_de_skr04_template_data(self):
         return {
+            'vat_disabled_tax_id': 'tax_not_taxable_skr04',
+            'vat_disabled_purchase_tax_id': 'tax_vat_disabled_purchase_nd_skr04',
             'name': 'German chart of accounts SKR04',
             'code_digits': '4',
         }
