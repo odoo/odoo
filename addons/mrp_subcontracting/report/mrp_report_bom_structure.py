@@ -40,21 +40,27 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
         res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
-        if bom.type == 'subcontract' and not self.env.context.get('minimized', False):
+        if (bom.type == 'subcontract' or (parent_bom and parent_bom.type == 'subcontract')) and not self.env.context.get('minimized', False):
+            seller_info = {}
             if not res['product']:
                 seller_info = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]._get_seller_info()
-            else:
+            elif bom.type == 'subcontract':
                 seller_info = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller_info:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller_info, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):
                     res['bom_cost'] += res['subcontracting']['bom_cost']
                     res['bom_unit_cost'] += bom.uom_id._compute_price(res['subcontracting']['bom_cost'], product.uom_id)
-                    if not ignore_stock and parent_bom:
-                        quantities_info = self._get_quantities_info(res.get('product'), bom.uom_id, product_info, bom=bom, parent_bom=parent_bom, parent_product=parent_product)
-                        if quantities_info.get('subcontracting_loc'):
-                            res['subcontract_free_qty'] = quantities_info.get('subcontract_free_qty', 0)
-                            res['subcontract_qty_on_hand'] = quantities_info.get('subcontract_qty_on_hand', 0)
+            if not ignore_stock:
+                quantities_info = self._get_quantities_info(res.get('product'), bom.uom_id, product_info, bom=bom, parent_bom=parent_bom, parent_product=parent_product)
+                if quantities_info.get('subcontracting_loc'):
+                    res['subcontract_free_qty'] = quantities_info.get('subcontract_free_qty', 0)
+                    res['subcontract_qty_on_hand'] = quantities_info.get('subcontract_qty_on_hand', 0)
+                    if res['subcontract_qty_on_hand'] >= line_qty:
+                        res['status'] = self._format_date_display('available', 0)
+                        res['availability_state'] = 'available'
+                        res['availability_delay'] = 0
+
         return res
 
     @api.model
@@ -82,7 +88,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         component_map = {comp['name']: comp for comp in data.get('components')}
         for line in lines:
             comp = component_map.get(line.get('name'))
-            if comp and comp.get('subcontract_free_qty'):
+            if comp and comp.get('subcontract_free_qty') is not None:
                 line['subcontract_free_qty'] = comp.get('subcontract_free_qty', 0)
                 line['subcontract_qty_on_hand'] = comp.get('subcontract_qty_on_hand', 0)
 
@@ -151,19 +157,23 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, bom=False, parent_bom=False, parent_product=False):
         quantities_info = super()._get_quantities_info(product, bom_uom, product_info, bom, parent_bom, parent_product)
-        if parent_product and parent_bom and parent_bom.type == 'subcontract' and product.is_storable:
-            route_info = product_info.get(parent_product.id, {}).get(parent_bom.id, {})
-            if route_info and route_info['route_type'] == 'subcontract':
-                subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor or self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))._get_subcontracting_location()
-                subloc_product = product.with_context(location=subcontracting_loc.id, warehouse_id=False)
-                subloc_product.fetch(['free_qty', 'qty_available', 'virtual_available'])
-                stock_loc = f"subcontract_{subcontracting_loc.id}"
-                if not product_info[product.id]['consumptions'].get(stock_loc, False):
-                    product_info[product.id]['consumptions'][stock_loc] = 0
-                quantities_info['subcontract_free_qty'] = product.uom_id._compute_quantity(subloc_product.free_qty, bom_uom)
-                quantities_info['subcontract_qty_on_hand'] = product.uom_id._compute_quantity(subloc_product.qty_available, bom_uom)
-                quantities_info['stock_loc'] = quantities_info['subcontracting_loc'] = stock_loc
-                quantities_info['forecasted_qty'] = subloc_product.virtual_available
+        is_parent_subcontract = parent_bom and parent_bom.type == 'subcontract'
+        if ((bom and bom.type == 'subcontract') or is_parent_subcontract) and product.is_storable:
+            route_info = product_info.get(parent_product.id, {}).get(parent_bom.id, {}) if is_parent_subcontract else {}
+            subcontracting_loc = (
+                route_info['supplier'].partner_id.property_stock_subcontractor
+                if route_info.get('route_type') == 'subcontract'
+                else self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))._get_subcontracting_location()
+            )
+            subloc_product = product.with_context(location=subcontracting_loc.id, warehouse_id=False)
+            subloc_product.fetch(['free_qty', 'qty_available', 'virtual_available'])
+            stock_loc = f"subcontract_{subcontracting_loc.id}"
+            if product_info and not product_info[product.id]['consumptions'].get(stock_loc, False):
+                product_info[product.id]['consumptions'][stock_loc] = 0
+            quantities_info['subcontract_free_qty'] = max(product.uom_id._compute_quantity(subloc_product.free_qty, bom_uom), 0)
+            quantities_info['subcontract_qty_on_hand'] = product.uom_id._compute_quantity(subloc_product.qty_available, bom_uom)
+            quantities_info['stock_loc'] = quantities_info['subcontracting_loc'] = stock_loc
+            quantities_info['forecasted_qty'] = subloc_product.virtual_available
         return quantities_info
 
     @api.model
