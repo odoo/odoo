@@ -1,44 +1,53 @@
-import { ThemeSelector } from "./theme_selector";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 import {
+    asyncComputed,
     Component,
     markup,
     onMounted,
     onWillUnmount,
-    status,
-    proxy,
     signal,
+    t,
     useApp,
-    useOnChange,
+    usePlugin,
+    useProps,
     useScope,
 } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { renderToFragment } from "@web/core/utils/render";
-import { localization } from "@web/core/l10n/localization";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
-import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
+import { localization } from "@web/core/l10n/localization";
+import { ORM } from "@web/core/orm_plugin";
+import { renderToFragment } from "@web/core/utils/render";
+import { ThemeSelector } from "./theme_selector";
 
 export class ThemeSelectorIframe extends Component {
     static template = "mass_mailing.ThemeSelectorIframe";
-    static props = {
-        config: Object,
-    };
+
+    props = useProps({
+        config: t.object({
+            filterTemplates: t.boolean().optional(),
+            mailingModelId: t.or([t.number(), t.literal(false)]),
+        }),
+    });
 
     app = useApp();
+    scope = useScope();
+    orm = usePlugin(ORM);
+
+    isBrowserSafari = isBrowserSafari();
 
     iframeRef = signal.ref();
+    show = signal(false);
+    templates = asyncComputed(
+        () =>
+            this.fetchTemplateThemes(
+                this.props.config.filterTemplates,
+                this.props.config.mailingModelId
+            ),
+        {
+            initial: [],
+        }
+    );
 
     setup() {
-        this.themeService = useService("mass_mailing.themes");
-        this.orm = useService("orm");
-        this.state = proxy({
-            show: false,
-        });
-        this.themeSelectorProps = {
-            templateThemes: proxy({
-                promise: undefined,
-            }),
-        };
-        this.scope = useScope();
         onMounted(() => {
             this.setupIframe();
         });
@@ -47,40 +56,19 @@ export class ThemeSelectorIframe extends Component {
                 this.themeSelectorRoot.destroy();
             }
         });
-        useOnChange(
-            () => [this.props.config.mailingModelId],
-            () => {
-                this.themeSelectorProps.templateThemes.promise = this.fetchTemplateThemes(
-                    this.props
-                );
-            },
-            { initialRun: false }
-        );
     }
 
-    get isBrowserSafari() {
-        return isBrowserSafari();
-    }
-
-    getTemplatesDomain(props) {
-        return props.config.filterTemplates
-            ? [["mailing_model_id", "=", props.config.mailingModelId]]
-            : [];
-    }
-
-    getThemeSelectorProps() {
-        Object.assign(this.themeSelectorProps, {
-            config: this.props.config,
-            themesPromise: this.themeService.load(),
-            iframeRef: this.iframeRef,
-        });
-        this.themeSelectorProps.templateThemes.promise = this.fetchTemplateThemes(this.props);
-        return this.themeSelectorProps;
-    }
-
-    async fetchTemplateThemes(props) {
+    /**
+     * @param {boolean | undefined} filterTemplates
+     * @param {number | false} mailingModelId
+     */
+    async fetchTemplateThemes(filterTemplates, mailingModelId) {
+        const domain = [];
+        if (filterTemplates) {
+            domain.push(["mailing_model_id", "=", mailingModelId]);
+        }
         const templates = await this.orm.call("mailing.mailing", "action_fetch_templates", [
-            this.getTemplatesDomain(props),
+            domain,
         ]);
         return templates.map((template) => ({
             bodyArch: markup(template.body_arch),
@@ -106,9 +94,14 @@ export class ThemeSelectorIframe extends Component {
             await loadIframe(this.iframeRef(), async (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
+
                 this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
                     env: this.env,
-                    props: this.getThemeSelectorProps(),
+                    props: {
+                        config: this.props.config,
+                        iframeRef: this.iframeRef,
+                        templates: this.templates,
+                    },
                 });
                 return Promise.all([
                     this.loadIframeAssets(),
@@ -118,12 +111,12 @@ export class ThemeSelectorIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         } else if (loadingError) {
             throw loadingError;
         }
-        this.state.show = true;
+        this.show.set(true);
     }
 
     loadIframeAssets() {

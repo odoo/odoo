@@ -206,7 +206,6 @@ class VPortal extends owl.blockDom.text("").constructor {
 
 class Portal extends owl.Component {
     static template = owl.xml`<t t-call-slot="default"/>`;
-    static props = { selector: String, slots: true };
 
     setup() {
         const node = this.__owl__;
