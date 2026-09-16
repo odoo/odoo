@@ -213,6 +213,18 @@
             <field name="model_id" ref="model_stock_scrap" />
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
         </record>
+        <!-- Lost in 114e90fadbd3, which moved stock.picking.batch into this
+             module: that commit carried the model's ACL line across and left
+             its multi-company rule behind in the deleted
+             stock_picking_batch/security/stock_picking_batch_security.xml.
+             Measured before restoring it: a stock user of company A could
+             search and read company B's batch transfers, while the same query
+             for stock.picking was correctly filtered. -->
+        <record id="stock_picking_batch_comp_rule" model="ir.rule">
+            <field name="name">stock_picking_batch multi-company</field>
+            <field name="model_id" ref="model_stock_picking_batch" />
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
         <record id="report_stock_quantity_flow_comp_rule" model="ir.rule">
             <field name="name">report_stock_quantity_flow multi-company</field>
             <field name="model_id" ref="model_report_stock_quantity" />

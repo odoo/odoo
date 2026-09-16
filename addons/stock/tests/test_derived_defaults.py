@@ -1,5 +1,5 @@
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.stock.tests.common import TestStockCommon
 
@@ -908,3 +908,77 @@ class TestARerateDoesNotRewriteHistory(TestStockCommon):
 
         with self.assertRaises(UserError):
             box.relative_factor = 20
+
+
+@tagged("post_install", "-at_install")
+class TestBatchIsCompanyScoped(TransactionCase):
+    """`stock.picking.batch` carries a required `company_id` and was the only
+    company-scoped model in this module with no record rule -- the rule was
+    left behind when the model moved in from `stock_picking_batch`.
+    """
+
+    def test_a_user_of_one_company_cannot_see_anothers_batches(self):
+        env = self.env
+        co_a, co_b = env["res.company"].create(
+            [{"name": "Batch scope A"}, {"name": "Batch scope B"}]
+        )
+        env.flush_all()
+        wh_a = env["stock.warehouse"].search([("company_id", "=", co_a.id)], limit=1)
+        wh_b = env["stock.warehouse"].search([("company_id", "=", co_b.id)], limit=1)
+        batch_a, batch_b = env["stock.picking.batch"].create(
+            [
+                {
+                    "name": "SCOPE-A",
+                    "company_id": co_a.id,
+                    "picking_type_id": wh_a.out_type_id.id,
+                },
+                {
+                    "name": "SCOPE-B",
+                    "company_id": co_b.id,
+                    "picking_type_id": wh_b.out_type_id.id,
+                },
+            ]
+        )
+        picking_a = env["stock.picking"].create(
+            {"picking_type_id": wh_a.out_type_id.id}
+        )
+        picking_b = env["stock.picking"].create(
+            {"picking_type_id": wh_b.out_type_id.id}
+        )
+        user_a = env["res.users"].create(
+            {
+                "name": "Batch scope user",
+                "login": "batch_scope_user",
+                "company_id": co_a.id,
+                "company_ids": [(6, 0, [co_a.id])],
+                "group_ids": [(4, env.ref("stock.group_stock_user").id)],
+            }
+        )
+        env.flush_all()
+        # a read that answers from the superuser's cache never reaches a rule,
+        # so the cache is dropped and the check is a search
+        env.invalidate_all()
+
+        def visible(model, records):
+            return (
+                env[model]
+                .with_user(user_a)
+                .with_context(allowed_company_ids=[co_a.id])
+                .search([("id", "in", records.ids)])
+            )
+
+        seen_pickings = visible("stock.picking", picking_a + picking_b)
+        self.assertIn(picking_a, seen_pickings, "the control must see its own")
+        self.assertNotIn(
+            picking_b,
+            seen_pickings,
+            "the control is broken: stock.picking's own rule did not filter",
+        )
+
+        seen_batches = visible("stock.picking.batch", batch_a + batch_b)
+        self.assertIn(batch_a, seen_batches)
+        self.assertNotIn(
+            batch_b,
+            seen_batches,
+            "a user of one company can search another company's batch transfers",
+        )
