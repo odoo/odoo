@@ -7,6 +7,7 @@ import {
     getService,
     makeMockEnv,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -98,6 +99,27 @@ test("Step Tour validity", async () => {
     await getService("tour_service").startTour("tour1");
     await animationFrame();
     expect.verifySteps([waited_error1, waited_error2, waited_error3]);
+});
+
+test("testing a custom tour that only exists in the database", async () => {
+    onRpc("web_tour.tour", "get_tour_json_by_name", () => ({
+        name: "custom_tour",
+        steps: [{ trigger: ".button0", run: "click" }],
+    }));
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `<button class="button0" t-on-click="onClick">Button 0</button>`;
+        static props = ["*"];
+        onClick() {
+            expect.step("clicked");
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await odoo.startTour("custom_tour", { mode: "auto", fromDB: true });
+    await waitForMacro();
+    expect.verifySteps(["clicked"]);
 });
 
 test("a tour with invalid step trigger", async () => {
