@@ -64,6 +64,7 @@ odoo/
 │   └── transaction (the retrying() primitive), model, security, common,
 │       _dispatch (arity policy + db-name exposure for the common/db RPC tables),
 │       _env, _limits (time/memory/back-off budgets),
+│       _sdnotify (READY/RELOADING/STOPPING/WATCHDOG to the service manager),
 │       metrics (the Prometheus exposition web serves at /web/metrics)
 ├── modules/        The module graph (iterated by phase, dependency depth,
 │   │               then name) and what loads it

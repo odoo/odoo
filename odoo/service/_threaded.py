@@ -34,6 +34,7 @@ from ._cron import (
 )
 from ._env import IS_POSIX, IS_WINDOWS
 from ._limits import get_graceful_stop_timeout
+from ._sdnotify import Watchdog, notify, notify_ready, notify_reloading
 from .httpd import ThreadedHTTPServer
 from .lifecycle import preload_registries, restart
 
@@ -548,10 +549,12 @@ class ThreadedServer(CommonServer):
         )
         if _process_state.server_phoenix:
             self.logger.info("Initiating server reload")
+            notify_reloading()
         elif self._stop_after_init:
             self.logger.info("Initialization done, shutting down")
         else:
             self.logger.info("Initiating shutdown")
+            notify("STOPPING=1")
             self.logger.info(
                 "Hit CTRL-C again or send a second signal to force the shutdown."
             )
@@ -617,8 +620,11 @@ class ThreadedServer(CommonServer):
 
             self.spawn_cron_threads()
             self.spawn_job_threads()
+            notify_ready()
+            watchdog = Watchdog()
 
             while self.quit_signals_received == 0:
+                watchdog.beat()
                 self.check_limits()
                 if self.limit_reached_time:
                     has_other_valid_requests = self._has_other_http_requests()
@@ -651,9 +657,9 @@ class ThreadedServer(CommonServer):
                             grace_s=LIMIT_GRACE_PERIOD_S,
                             threads=len(self.limits_reached_threads),
                         )
-                        time.sleep(1)
+                        time.sleep(watchdog.bound(1))
                 else:
-                    time.sleep(LIMIT_MONITOR_INTERVAL_S)
+                    time.sleep(watchdog.bound(LIMIT_MONITOR_INTERVAL_S))
         except KeyboardInterrupt:
             pass
         finally:

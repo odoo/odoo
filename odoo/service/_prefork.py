@@ -31,6 +31,7 @@ from ._base_server import CommonServer
 from ._census import WorkerCensus
 from ._env import IS_POSIX, get_env_float
 from ._limits import empty_pipe, get_graceful_stop_timeout
+from ._sdnotify import Watchdog, notify, notify_ready, notify_reloading
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
 from .settings import SD_LISTEN_FDS_START
@@ -1064,6 +1065,8 @@ class PreforkServer(CommonServer):
             workers=len(self.workers),
             replacement=self._replacement is not None,
         )
+        if not self._reload_supervisor:
+            notify("STOPPING=1")
         if self._replacement is not None:
             self._stop_generation(self._replacement)
             self._replacement = None
@@ -1105,11 +1108,16 @@ class PreforkServer(CommonServer):
         if self._reload_supervisor:
             os.kill(self._reload_supervisor, signal.SIGHUP)
             return
+        notify_reloading()
         try:
             self.reload()
         except Exception as exc:
             self.logger.exception("Reload failed; keeping current generation")
             _debug.logic("prefork.reload.failed", error=type(exc).__name__)
+        finally:
+            # Serving again either way: on the new generation, or still on
+            # the one that was never stopped.
+            notify_ready()
 
     def run(self, preload: list[str] | None = None, stop: bool = False) -> int | None:
         try:
@@ -1130,8 +1138,16 @@ class PreforkServer(CommonServer):
         db.close_all()
 
         self.logger.debug("starting")
+        # Only the process systemd started talks to it: a replacement
+        # generation reports through its supervisor's promotion instead.
+        speaks = not self._reload_supervisor
+        if speaks:
+            notify_ready()
+        watchdog = Watchdog() if speaks else None
         while True:
             try:
+                if watchdog is not None:
+                    watchdog.beat()
                 self.apply_pending_signals()
                 self.reap_exited_workers()
                 if self._replacement is not None:
