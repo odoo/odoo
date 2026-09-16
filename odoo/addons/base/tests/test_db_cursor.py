@@ -6268,6 +6268,7 @@ class TestNoRedundantLockAfterDdl(BaseCase):
 class TestPermitsSurviveKilledBackendsUnderLoad(BaseCase):
     # Cursors are taken from db_connect(), not registry(): every TestCursor
     # serialises on one lock, and this test exists to race.
+    @mute_logger("odoo.db.cursor")
     def test_budget_and_checkouts_read_zero_after_the_storm(self):
         import gc
         import random
