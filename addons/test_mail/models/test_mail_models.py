@@ -151,7 +151,7 @@ class MailTestActivity(models.Model):
     features. """
     _description = 'Activity Model'
     _name = "mail.test.activity"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'discuss.call.log.mixin']
 
     name = fields.Char()
     date = fields.Date()

@@ -17,7 +17,7 @@ const SEARCH_RESULT_LIMIT = 100;
  * @typedef {Object} MemberCategory
  * @property {number} sequence sort key; lower is rendered first.
  * @property {(channel: import("models").DiscussChannel) => import("models").ChannelMember[]} getMembers
- * @property {TranslatedString} label
+ * @property {TranslatedString | ((channel: import("models").DiscussChannel) => TranslatedString)} label
  * @property {boolean} [showCount=true] whether to append the member count to the label.
  * @property {number} [sequenceGroup] categories sharing this key are rendered inside a common container.
  * @property {string} [icon] class of an icon shown before the section label.
@@ -31,7 +31,7 @@ const SEARCH_RESULT_LIMIT = 100;
  * are carried over (minus the source-only `getMembers`) and enriched
  * with the members it matched.
  *
- * @typedef {Omit<MemberCategory, "getMembers"> & ResolvedMembers} ComputedMemberCategory
+ * @typedef {Omit<MemberCategory, "getMembers" | "label"> & { label: TranslatedString } & ResolvedMembers} ComputedMemberCategory
  */
 
 /**
@@ -115,7 +115,7 @@ export class ChannelMemberList extends Component {
         const shownMemberIds = new Set();
         return [...MEMBER_CATEGORIES]
             .sort((a, b) => a.sequence - b.sequence)
-            .map(({ getMembers, showCount = true, ...definition }) => {
+            .map(({ getMembers, label, showCount = true, ...definition }) => {
                 const all = getMembers(this.props.channel).filter((m) => {
                     if (shownMemberIds.has(m.id)) {
                         return false;
@@ -128,7 +128,13 @@ export class ChannelMemberList extends Component {
                     : all;
                 const filtered = term ? matching.slice(0, Math.max(0, remaining)) : matching;
                 remaining -= filtered.length;
-                return { ...definition, matching, filtered, showCount };
+                return {
+                    ...definition,
+                    label: typeof label === "function" ? label(this.props.channel) : label,
+                    matching,
+                    filtered,
+                    showCount,
+                };
             });
     }
 

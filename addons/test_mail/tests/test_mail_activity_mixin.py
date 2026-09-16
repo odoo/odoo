@@ -865,3 +865,111 @@ class TestORM(TestActivityCommon):
         self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
         self.assertEqual(groups[1][groupby][0], pg_groups["today"])
         self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
+
+
+@tests.tagged('mail_activity', 'mail_activity_mixin')
+class TestActivityMixinCallLogPriority(TestActivityCommon):
+    """When logging a call, the records about whoever attended it are listed first
+    (see `discuss.call.log.mixin.name_search`)."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.attendee, cls.outsider = cls.env['res.partner'].create([
+            {'name': 'Call Attendee'},
+            {'name': 'Call Outsider'},
+        ])
+        # named so that the order of the model, by name, is the opposite of the expected one
+        cls.outsider_lead, cls.attendee_lead = cls.env['mail.test.lead'].create([
+            {'name': 'AAA Lead of the outsider', 'partner_id': cls.outsider.id},
+            {'name': 'ZZZ Lead of the attendee', 'partner_id': cls.attendee.id},
+        ])
+        cls.leads = cls.outsider_lead + cls.attendee_lead
+        cls.domain = [('id', 'in', cls.leads.ids)]
+
+    def _name_search_ids(self, records, **context):
+        return [id_ for id_, _name in records.with_context(**context).name_search(domain=self.domain)]
+
+    def test_records_of_the_call_contacts_come_first(self):
+        Lead = self.env['mail.test.lead']
+        self.assertEqual(self._name_search_ids(Lead), (self.outsider_lead + self.attendee_lead).ids)
+        self.assertEqual(
+            self._name_search_ids(Lead, log_channel_partner_ids=self.attendee.ids),
+            (self.attendee_lead + self.outsider_lead).ids,
+            "the lead of the partner who was in the call comes first",
+        )
+
+    def test_untiered_records_are_kept(self):
+        """Records about nobody who attended the call are pushed down, not dropped: a
+        call can be logged on a document about nobody in particular."""
+        stray_lead = self.env['mail.test.lead'].create({'name': 'MMM Lead of nobody'})
+        self.domain = [('id', 'in', (self.leads + stray_lead).ids)]
+        ranked = self._name_search_ids(
+            self.env['mail.test.lead'], log_channel_partner_ids=self.attendee.ids,
+        )
+        self.assertEqual(ranked[0], self.attendee_lead.id)
+        self.assertEqual(set(ranked), set((self.leads + stray_lead).ids))
+
+    def test_the_limit_is_honored(self):
+        ranked = self.env['mail.test.lead'].with_context(
+            log_channel_partner_ids=self.attendee.ids,
+        ).name_search(domain=self.domain, limit=1)
+        self.assertEqual([id_ for id_, _name in ranked], self.attendee_lead.ids)
+
+    def test_default_record_of_a_model_without_the_mixin(self):
+        """A record type whose model lacks the mixin ranks nothing: a call held in a
+        channel pre-selects none of its records, one placed with a contact the first one
+        its domain lists."""
+        record = self.env['mail.test.simple'].create({'name': 'Test'})
+        Wizard = self.env['mail.activity.schedule.call']
+        self.assertFalse(
+            Wizard.with_context(log_channel_partner_ids=self.attendee.ids)._get_log_default_record(
+                'mail.test.simple', [('id', '=', record.id)],
+            ),
+        )
+        self.assertEqual(
+            Wizard.with_context(log_contact_id=self.attendee.id)._get_log_default_record(
+                'mail.test.simple', [('id', '=', record.id)],
+            ),
+            record,
+        )
+
+    def test_default_record_is_about_the_call(self):
+        """A call held only with guests, or with attendees owning no record, pre-selects
+        none rather than the first record of the order of the model."""
+        Lead = self.env['mail.test.lead']
+        Wizard = self.env['mail.activity.schedule.call']
+        leadless = self.env['res.partner'].create({'name': 'Call Attendee Without Lead'})
+        for partners, expected in [
+            (self.attendee, self.attendee_lead),
+            (leadless, Lead),
+            (self.env['res.partner'], Lead),
+        ]:
+            with self.subTest(partners=partners.name):
+                self.assertEqual(
+                    Wizard.with_context(log_channel_partner_ids=partners.ids)._get_log_default_record(
+                        'mail.test.lead', self.domain,
+                    ),
+                    expected,
+                )
+
+    def test_default_record_of_an_unranked_list_is_the_newest(self):
+        """A call placed with a contact ranks nothing: the newest record is pre-selected,
+        not the first one the order of the model lists."""
+        self.assertEqual(
+            self.env['mail.activity.schedule.call'].with_context(
+                log_contact_id=self.attendee.id,
+            )._get_log_default_record('mail.test.lead', self.domain),
+            self.attendee_lead,
+        )
+
+    def test_model_without_partner_keeps_its_order(self):
+        """`mail.test.activity` relates to no partner: nothing makes one of its records
+        more likely than another, and the order of the model applies as usual."""
+        records = self.env['mail.test.activity'].create([{'name': 'ZZZ'}, {'name': 'AAA'}])
+        self.domain = [('id', 'in', records.ids)]
+        Activity = self.env['mail.test.activity']
+        self.assertEqual(
+            self._name_search_ids(Activity, log_channel_partner_ids=self.attendee.ids),
+            self._name_search_ids(Activity),
+        )

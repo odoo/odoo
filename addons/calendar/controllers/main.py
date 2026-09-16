@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import url_encode
+
 import odoo.http as http
 
 from odoo.http import request
@@ -120,7 +122,7 @@ class CalendarController(http.Controller):
         return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()
 
     @http.route('/calendar/join_videocall/<string:access_token>', type='http', auth='public')
-    def calendar_join_videocall(self, access_token):
+    def calendar_join_videocall(self, access_token, email_token=None):
         event = request.env['calendar.event'].sudo().search([('access_token', '=', access_token)])
         if not event:
             return request.not_found()
@@ -129,4 +131,8 @@ class CalendarController(http.Controller):
         if not event.videocall_channel_id:
             event._create_videocall_channel()
 
-        return request.redirect(event.videocall_channel_id.invitation_url)
+        url = event.videocall_channel_id.invitation_url
+        if email_token:
+            # an attendee without a user, joining as the guest of their email address
+            url = f"{url}?{url_encode({'email_token': email_token})}"
+        return request.redirect(url)
