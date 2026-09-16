@@ -537,7 +537,7 @@ class AutomationRuntime(models.Model):
             )
 
         next_line = ready_lines[0]
-        context = self._get_execution_context()
+        context = self._prepare_execution_context()
         context.update(
             {
                 "runtime_id": self.id,
@@ -675,7 +675,7 @@ class AutomationRuntime(models.Model):
             return self.env["automation.runtime"].browse(self.id)
         return self.env[self.res_model].browse(self.res_id or [])
 
-    def _get_execution_context(self):
+    def _prepare_execution_context(self):
         self.check_singleton()
         return {
             "default_partner_id": self.partner_id.id if self.partner_id else False,
