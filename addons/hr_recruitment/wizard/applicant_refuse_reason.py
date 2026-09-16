@@ -162,20 +162,33 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def _prepare_send_refusal_mails(self):
         for applicant in self.applicant_ids:
             mail_values = self._prepare_mail_values(applicant)
-            applicant.message_post(**mail_values)
+            if self.template_id:
+                # Ensure template custom recipients are used if needed
+                composer = self.env['mail.compose.message'].with_context(
+                    default_composition_mode='comment',
+                    default_model=self.applicant_ids._name,
+                    default_res_ids=applicant.ids,
+                    default_template_id=self.template_id.id,
+                ).create({
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                    **mail_values,
+                })
+                composer._action_send_mail()
+            else:
+                # Need to explicitly set recipients in this case
+                applicant.message_post(
+                    partner_ids=applicant.partner_id.ids,
+                    **mail_values,
+                )
 
     def _prepare_mail_values(self, applicant):
         """ Create mail specific for recipient """
         lang = self._render_lang(applicant.ids)[applicant.id]
         subject = self._render_field('subject', applicant.ids, set_lang=lang)[applicant.id]
         body = self._render_field('body', applicant.ids, set_lang=lang)[applicant.id]
-        email_from = self.template_id.email_from if self.template_id and self.template_id.email_from else self.env.user.email_formatted
         return {
             'body': body,
-            'email_from': email_from,
             'subject': subject,
-            'author_id': self.env.user.partner_id.id,
             'scheduled_date': self.scheduled_date,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'partner_ids': applicant.partner_id.ids
+            'attachment_ids': self.attachment_ids.ids,
         }
