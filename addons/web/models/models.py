@@ -1493,6 +1493,9 @@ class Base(models.AbstractModel):
 
         domain_image = {}
         for group in groups:
+            if not group[field_name]:
+                # value hidden by a record rule or archived
+                continue
             id_, display_name = group_id_name(group[field_name])
             values = {
                 'id': id_,

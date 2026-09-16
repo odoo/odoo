@@ -590,6 +590,39 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
+    def test_many2many_hidden_values(self):
+        tags = self.TargetModel.create([
+            {'name': 'Tag 1'},
+            {'name': 'Tag 2'},
+        ])
+
+        t1_id, t2_id = tags.ids
+
+        self.SourceModel.create([
+            {'name': 'Rec 1', 'tag_ids': [t1_id]},
+            {'name': 'Rec 2', 'tag_ids': [t1_id, t2_id]},
+            {'name': 'Rec 3', 'tag_ids': [t2_id]},
+        ])
+
+        self.env['ir.rule'].create({
+            'name': 'Hide Tag 2',
+            'model_id': self.env['ir.model']._get_id(self.TargetModel._name),
+            'domain_force': [('id', '!=', t2_id)],
+        })
+
+        SourceModel = self.SourceModel.with_user(self.env.ref('base.user_admin'))
+
+        result = SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+            ]
+        )
+
     # Selection case
 
     def test_selection_empty(self):
