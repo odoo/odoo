@@ -17,9 +17,13 @@ class CalendarUser(models.Model):
     is_filter_checked = fields.Boolean(string="Filter Enabled", compute='_compute_filters', store=True, readonly=False)
 
     def _compute_google_sync_enabled(self):
-        # This compute is needed when the module is installed/upgraded to ensure that the primary calendar is synced
         for record in self:
-            record.google_sync_enabled = record.is_primary
+            # when the module is installed/upgraded, ensure that the primary calendar is synced
+            if record.is_primary:
+                record.google_sync_enabled = True
+            else:
+                # Calendars created while not synced should not be synced by default
+                record.google_sync_enabled = self.env.user._get_google_sync_status() == 'sync_active'
 
     @api.model_create_multi
     def create(self, vals_list):
