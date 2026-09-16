@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.addons.website.tools import add_seo_rels_to_links
 from odoo.exceptions import AccessError
 
 
@@ -16,6 +17,10 @@ class ForumPostMessage(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('body'):
+                vals['body'] = add_seo_rels_to_links(vals['body'])
+
         records = super().create(vals_list)
 
         if not self.env.is_admin() and (message := next((record for record in records if not record.post_id.can_comment), None)):
@@ -29,6 +34,9 @@ class ForumPostMessage(models.Model):
 
         if not self.env.is_admin() and (message := next((record for record in self if not record.post_id.can_edit), None)):
             raise AccessError(_('%i karma required to edit a comment.', message.post_id.karma_edit))
+
+        if vals.get('body'):
+            vals['body'] = add_seo_rels_to_links(vals['body'])
 
         return super().write(vals)
 
