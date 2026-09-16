@@ -342,11 +342,21 @@
                 order: var(--o-wsale-card-btn-submit-order);
                 flex-grow: var(--o-wsale-card-btn-submit-flex-grow);
                 aspect-ratio: var(--o-wsale-card-btn-submit-aspect-ratio);
+                min-width: var(--o-wsale-card-btn-submit-min-width, 0);
                 margin: var(--o-wsale-card-btn-submit-margin);
                 padding-left: var(--o-wsale-card-btn-submit-padding-x, var(--#{$prefix}btn-padding-x));
                 padding-right: var(--o-wsale-card-btn-submit-padding-x, var(--#{$prefix}btn-padding-x));
 
+                span {
+                    max-width: 100%;
+                }
+
+                i {
+                    flex-shrink: 0;
+                }
+
                 .o_label {
+                    @include text-truncate;
                     display: var(--o-wsale-card-btn-submit-label-display,  var(--o-wsale-card-btn-label-display));
                     font-size: var(--o-wsale-card-btn-submit-label-font-size, .8em);
                     line-height: 1;
