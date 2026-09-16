@@ -326,6 +326,18 @@ class TestWritePins(unittest.TestCase):
         self.assertIn("replica.pinned", cm.output[0])
 
 
+class TestTheRouterReadsItsPolicyFromTheSettingsSlot(unittest.TestCase):
+    def test_max_lag_and_write_pin_come_from_the_slot_unless_given(self):
+        primary, replica = _Conn("primary"), _Conn("replica")
+        with pool_settings.override(replica_max_lag=7.0, replica_write_pin=0.5):
+            router = ReplicaRouter(_as_conn(primary), _as_conn(replica))
+            explicit = ReplicaRouter(
+                _as_conn(primary), _as_conn(replica), max_lag=1.0, write_pin=0.0
+            )
+        self.assertEqual((router.lag.max_lag, router.pins.window), (7.0, 0.5))
+        self.assertEqual((explicit.lag.max_lag, explicit.pins.window), (1.0, 0.0))
+
+
 class TestLiveRoutersAreVisibleToTheHealthSurface(unittest.TestCase):
     def test_a_router_with_a_replica_reports_under_its_database_name(self):
         before = set(replica_module.get_replica_health())

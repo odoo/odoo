@@ -61,6 +61,7 @@ class PoolSettings:
     leak_detection: float = 0.0
     idle_in_transaction_timeout: float = 0.0
     replica_write_pin: float = 2.0
+    replica_max_lag: float = 0.0
     session_gucs: str = "jit=off,work_mem=16MB"
     readonly_cursors: bool = False
 
@@ -109,6 +110,7 @@ class PoolSettings:
                 config["db_idle_in_transaction_timeout"] or 0.0
             ),
             replica_write_pin=float(config["db_replica_write_pin"] or 0.0),
+            replica_max_lag=float(config["db_replica_max_lag"] or 0.0),
             session_gucs=config["db_session_gucs"] or "",
             readonly_cursors=bool(
                 replica_host

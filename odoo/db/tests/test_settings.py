@@ -41,6 +41,12 @@ class TestFromConfig(unittest.TestCase):
         self.assertIsNone(settings.port)
         self.assertIsNone(settings.password)
 
+    def test_the_replica_policy_options_are_floats(self):
+        settings = self._snapshot(db_replica_max_lag=3.5, db_replica_write_pin="1.5")
+        self.assertEqual(
+            (settings.replica_max_lag, settings.replica_write_pin), (3.5, 1.5)
+        )
+
     def test_ports_are_integers(self):
         settings = self._snapshot(db_port="5433", db_replica_port=5434)
         self.assertEqual((settings.port, settings.replica_port), (5433, 5434))

@@ -102,16 +102,19 @@ class ReplicaRouter:
         primary: Connection,
         readonly: Connection | None = None,
         *,
-        max_lag: float = 0.0,
+        max_lag: float | None = None,
         breaker: CircuitBreaker | None = None,
         lag: ReplicaLagGate | None = None,
         write_pin: float | None = None,
     ) -> None:
+        settings = resolve(None)
+        if max_lag is None:
+            max_lag = settings.replica_max_lag
+        if write_pin is None:
+            write_pin = settings.replica_write_pin
         self.primary = primary
         self.readonly = readonly
-        self.pins = WritePins(
-            resolve(None).replica_write_pin if write_pin is None else write_pin
-        )
+        self.pins = WritePins(write_pin)
         self.breaker = (
             breaker
             if breaker is not None

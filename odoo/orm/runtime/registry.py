@@ -233,8 +233,6 @@ class Registry(
             db.db_connect(db_name, readonly=True)
             if is_readonly_cursor_enabled()
             else None,
-            max_lag=config["db_replica_max_lag"] or 0.0,
-            write_pin=config["db_replica_write_pin"] or 0.0,
         )
 
         with closing(self.cursor()) as cr:

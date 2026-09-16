@@ -32,7 +32,7 @@ files here carry one, so this README is the only map.
 | `schema_cache.py` | `TransactionSchemaCache`: per-cursor, transaction-lifetime catalog facts for `copy_from` (id sequences, column types) | yes |
 | `metrics.py` | `_MetricsMixin` (query counters, thread metrics, DEBUG per-table stats), `classify_query` (the statement -> (kind, table) classifier those stats key on), `sql_counter` | yes |
 | `utils.py` | `get_connection_info_for_database`, `is_maintenance_db`, `update_planner_stats` | yes |
-| `settings.py` | `PoolSettings`: the frozen snapshot of every `db_*` option the package reads, `from_config` to build one, and the slot (`current`, `installed`, `override`) through which `odoo.tools.config` supplies it — the one door the option dict has into this package | yes |
+| `settings.py` | `PoolSettings`: the frozen snapshot of every `db_*` option the package reads, `from_config` to build one, and the slot (`current`, `installed`, `override`) through which `odoo.tools.config` supplies it — the one door the option dict has into this package. Every policy the package applies reads the slot, including the router's `replica_max_lag` and `replica_write_pin`: `Registry.init` passes neither, so a `pool_settings.override(...)` reaches a registry built inside it | yes |
 
 “Pure” = importable and testable without a database or the framework. No
 module here imports `odoo.tools`: the `db-imports-only-libs` contract holds the
