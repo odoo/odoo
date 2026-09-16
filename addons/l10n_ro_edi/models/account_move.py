@@ -8,7 +8,7 @@ from .utils import (
     _request_ciusro_download_answer,
     _request_ciusro_fetch_status,
     _request_ciusro_send_invoice,
-    _request_ciusro_synchronize_invoices,
+    _request_ciusro_sync_invoices,
 )
 from odoo.addons.account.tools.import_file_type import (
     CUSTOMIZATION_ID,
@@ -268,7 +268,7 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_ro_edi_fetch_invoices(self):
         """Synchronize bills/invoices from SPV"""
-        result = _request_ciusro_synchronize_invoices(
+        result = _request_ciusro_sync_invoices(
             company=self.env.company,
             session=self.env["ir.egress"].session(purpose="l10n_ro_edi"),
         )

@@ -194,7 +194,7 @@ class ResCompany(models.Model):
                     func="_cron_l10n_ro_edi_refresh_access_token",
                 )
 
-    def _cron_l10n_ro_edi_synchronize_invoices(self):
+    def _cron_l10n_ro_edi_sync_invoices(self):
         """
         This CRON method will be run every 24 hours to synchronize the invoices and the bills with the ANAF
         """
@@ -222,5 +222,5 @@ class ResCompany(models.Model):
             except UserError as e:
                 self._l10n_ro_edi_log_message(
                     message=f"{company.id}\n{e}",
-                    func="_cron_l10n_ro_edi_synchronize_invoices",
+                    func="_cron_l10n_ro_edi_sync_invoices",
                 )
