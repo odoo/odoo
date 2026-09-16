@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list', 
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
         }, {
             content: "Feedback textarea not displayed (see data)",
             trigger: "div#o_mailing_portal_subscription:not(textarea)",
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
         }, {
             content: "List1 is present, just opt-outed",
             trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') span:contains('Not subscribed')",
