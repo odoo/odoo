@@ -11,7 +11,7 @@
                 >
                     <t t-set-slot="toggler">
                         <button
-                            class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                            class="o_select_file_button btn btn-secondary o_btn_circle"
                             data-tooltip="Edit"
                             aria-label="Edit">
                             <i class="oi oi-fw oi-filled" data-icon="edit"/>
@@ -19,7 +19,7 @@
                     </t>
                     <button
                         t-if="this.props.record.data[this.props.name] and this.state.isValid"
-                        class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                        class="o_clear_file_button btn btn-secondary o_btn_circle"
                         data-tooltip="Clear"
                         aria-label="Clear"
                         t-on-click="this.onFileRemove">
