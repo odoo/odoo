@@ -29,15 +29,9 @@
             </BuilderRow>
             <BuilderRow label.translate="Alignment">
                 <BuilderButtonGroup dataAttributeAction="'alignment'">
-                    <BuilderButton dataAttributeActionValue="'left'">
-                        <i class="oi oi-fw" data-icon="format_align_left"/>
-                    </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'center'">
-                        <i class="oi oi-fw" data-icon="format_align_center"/>
-                    </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'right'">
-                        <i class="oi oi-fw" data-icon="format_align_right"/>
-                    </BuilderButton>
+                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" dataAttributeActionValue="'left'" icon="'format_align_left'"/>
+                    <BuilderButton title.translate="Center" dataAttributeActionValue="'center'" icon="'format_align_center'"/>
+                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" dataAttributeActionValue="'right'" icon="'format_align_right'"/>
                 </BuilderButtonGroup>
             </BuilderRow>
             <BuilderRow label.translate="Filters">

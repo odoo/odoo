@@ -11,7 +11,7 @@
                             <span t-field="object.website" class="o_forum_tooltip_line"/>
                         </a>
                 </div>
-                <b class="mt-4"><i class="oi text-secondary" data-icon="diamond"/> <t t-out="object.karma"/></b>
+                <b class="mt-4"><i class="oi text-secondary" data-icon="diamond" role="img" aria-hidden="true"/> <t t-out="object.karma"/></b>
                 <div t-if="options.get('badges')" style="display: inline-block">
                     <t t-out="separator"/>
                     <b>|</b>

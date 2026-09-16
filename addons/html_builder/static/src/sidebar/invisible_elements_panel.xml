@@ -18,7 +18,11 @@
         t-att-class="{'o_we_invisible_root_parent': entry.isRootParent, 'o_we_sublevel_1': entry.isDescendant}"
         t-on-click="() => toggleElementVisibility(entry)">
         <div class="o_title" t-out="entry.name"/>
-        <i class="oi ms-2" t-att-data-icon="entry.isVisible ? 'visibility' : 'visibility_off'"></i>
+        <i class="oi ms-2" t-att-data-icon="entry.isVisible ? 'visibility' : 'visibility_off'" role="img" t-att-aria-label="entry.isVisible ? 'Visible' : 'Hidden'"></i>
+        <span class="visually-hidden">
+            <t t-if="entry.isVisible">(Click to hide)</t>
+            <t t-else="">(Click to show)</t>
+        </span>
     </div>
     <ul t-if="entry.isVisible and entry.children.length > 0">
         <t t-foreach="entry.children" t-as="child" t-key="child_index">

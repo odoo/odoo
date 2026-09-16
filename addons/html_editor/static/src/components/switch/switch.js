@@ -24,8 +24,8 @@ export class Switch extends Component {
                 t-att-disabled="this.props.disabled"
                 t-on-change="(ev) => this.props.onChange(ev.target.checked)"
                 t-on-keyup="this.onKeyup"/>
-        <span class="oi oi-filled"/>
-        <i t-if="this.props.labelIcon" class="oi ms-2" t-att-class="this.props.labelIconClass" t-att-data-icon="this.props.labelIcon"/>
+        <span class="oi oi-filled" role="presentation" aria-hidden="true"/>
+        <i t-if="this.props.labelIcon" class="oi ms-2" t-att-class="this.props.labelIconClass" t-att-data-icon="this.props.labelIcon" role="img" aria-hidden="true"/>
         <span t-if="this.props.label" t-out="this.props.label" class="ms-2"/>
         <span t-if="this.props.description" class="text-muted ms-2" t-out="this.props.description"/>
     </label>

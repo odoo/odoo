@@ -11,7 +11,8 @@
                 <tr t-foreach="items" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
                     <td>
                         <button class="btn o_drag_handle">
-                            <i class="oi" data-icon="drag_indicator"/>
+                            <i class="oi" data-icon="drag_indicator" role="img" aria-hidden="true"/>
+                            <span class="visually-hidden">Drag Handle</span>
                         </button>
                     </td>
                     <td width="100%">

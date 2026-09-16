@@ -8,7 +8,7 @@
         </div>
     </t>
 
-    <t t-name="event_booth_registration_complete"> 
+    <t t-name="event_booth_registration_complete">
         <div class="col-12">
             <div class="row my-3">
                 <div class="col-12">
@@ -19,11 +19,11 @@
             <div class="d-flex flex-column">
                 <span t-if="contact.name" t-out="contact.name" class="fw-bold"/>
                 <span t-if="contact.email">
-                    <i class="oi oi-fw oi-filled me-2" data-icon="mail"/>
+                    <i class="oi oi-fw oi-filled me-2" data-icon="mail" role="img" aria-hidden="true"/>
                     <t t-out="contact.email"/>
                 </span>
                 <span t-if="contact.phone">
-                    <i class="oi oi-fw oi-filled me-2" data-icon="phone"/>
+                    <i class="oi oi-fw oi-filled me-2" data-icon="phone" role="img" aria-hidden="true"/>
                     <t t-out="contact.phone"/>
                 </span>
             </div>
