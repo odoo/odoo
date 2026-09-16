@@ -479,29 +479,32 @@ class ResLang(models.Model):
     }
 
     def _check_deactivation_allowed(self, lang_codes: list[str]) -> None:
-        # one query per model: an active holder outranks an archived one in
-        # the message, so the first row by `active desc` decides
-        for model_name in ("res.users", "res.partner"):
-            holder = (
-                self.env[model_name]
-                .with_context(active_test=False)
-                .search_fetch(
-                    [("lang", "in", lang_codes)],
-                    ["active"],
-                    order="active desc, id",
-                    limit=1,
-                )
+        # one query per model, the first row by `active desc` telling whether
+        # an active holder exists; the message ranks users over contacts and
+        # active over archived
+        holders = {
+            model_name: self.env[model_name]
+            .with_context(active_test=False)
+            .search_fetch(
+                [("lang", "in", lang_codes)],
+                ["active"],
+                order="active desc, id",
+                limit=1,
             )
-            if holder:
-                _debug.logic(
-                    "deactivate_refused",
-                    codes=lang_codes,
-                    model=model_name,
-                    active=holder.active,
-                )
-                raise UserError(
-                    str(self._DEACTIVATION_REFUSALS[model_name, holder.active])
-                )
+            for model_name in ("res.users", "res.partner")
+        }
+        for active in (True, False):
+            for model_name, holder in holders.items():
+                if holder and holder.active == active:
+                    _debug.logic(
+                        "deactivate_refused",
+                        codes=lang_codes,
+                        model=model_name,
+                        active=active,
+                    )
+                    raise UserError(
+                        str(self._DEACTIVATION_REFUSALS[model_name, active])
+                    )
 
     def _reset_environment_languages(self) -> None:
         # Environment.lang caches whether its context language is installed;

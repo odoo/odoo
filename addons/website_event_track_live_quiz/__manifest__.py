@@ -2,7 +2,7 @@
     "name": "Quiz on Live Event Tracks",
     "version": "1.0",
     "category": "Marketing/Events",
-    "summary": 'Bridge module to support quiz features during "live" tracks.',
+    "summary": "Bridge module to support quiz features during \"live\" tracks.",
     "author": "Odoo S.A.",
     "website": "https://www.odoo.com/app/events",
     "license": "LGPL-3",

@@ -135,7 +135,7 @@ def _get_jinja_env() -> Environment:
         )
     # autoescape stays off: the templates render Python, XML and CSV source
     # for a module skeleton, never HTML served to a browser.
-    env = jinja2.Environment()  # noqa: S701
+    env = jinja2.Environment()  # noqa: S701  see the two lines above
     env.filters["snake"] = _str_to_snake_case
     env.filters["pascal"] = _str_to_pascal_case
     _debug.lifecycle("cli.scaffold.jinja_env_built", filters=2)

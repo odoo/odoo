@@ -162,3 +162,33 @@ class TestMixinMergeSummableCompanyDependent(TransactionCase):
             "a summable company-dependent field is summed in every company, "
             "not only the current one",
         )
+
+    def test_a_company_dependent_field_that_is_not_summable_takes_the_destination(
+        self,
+    ):
+        fname = self._company_dependent_integer()
+        company_a = self.env.company
+        company_b = self.env["res.company"].create({"name": "merge keep company b"})
+        company_c = self.env["res.company"].create({"name": "merge keep company c"})
+        Partner = self.env["res.partner"]
+        src = Partner.create({"name": "keep src"})
+        dst = Partner.create({"name": "keep dst"})
+        src.with_company(company_a)[fname] = 5
+        src.with_company(company_b)[fname] = 7
+        src.with_company(company_c)[fname] = 9
+        dst.with_company(company_a)[fname] = 10
+        dst.with_company(company_b)[fname] = 3
+        self.env.flush_all()
+
+        self.env["base.partner.merge.automatic.wizard"].create(
+            {}
+        )._update_values_generic(src, dst)
+        self.env.invalidate_all()
+
+        self.assertEqual(dst.with_company(company_a)[fname], 10)
+        self.assertEqual(dst.with_company(company_b)[fname], 3)
+        self.assertEqual(
+            dst.with_company(company_c)[fname],
+            9,
+            "a company where only the source held a value takes the source's",
+        )
