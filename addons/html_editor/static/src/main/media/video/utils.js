@@ -82,8 +82,11 @@ export function encodeOptionsToParams(options, optionsConfig, useBoolean = false
             const isDefaultValue = optionValue === config.default;
             if (!isDefaultValue) {
                 let paramValue = convertOptionValueToUrlParam(optionValue, config);
-                if (useBoolean && config.type === Boolean) {
-                    paramValue = paramName ? "true" : "false";
+                if (useBoolean && (config.type === Boolean || config.type === BooleanInt)) {
+                    paramValue = [true, "1", "true"].includes(optionValue) ? "true" : "false";
+                    if (config.reversed) {
+                        paramValue = paramValue === "true" ? "false" : "true";
+                    }
                 }
                 URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
             }
@@ -94,8 +97,11 @@ export function encodeOptionsToParams(options, optionsConfig, useBoolean = false
                 const isDefaultValue = optionValue === config.default;
                 if (!isDefaultValue) {
                     let paramValue = convertOptionValueToUrlParam(optionValue, config);
-                    if (useBoolean && config.type === Boolean) {
-                        paramValue = paramName ? "true" : "false";
+                    if (useBoolean && (config.type === Boolean || config.type === BooleanInt)) {
+                        paramValue = [true, "1", "true"].includes(optionValue) ? "true" : "false";
+                        if (config.reversed) {
+                            paramValue = paramValue === "true" ? "false" : "true";
+                        }
                     }
                     URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
                 }

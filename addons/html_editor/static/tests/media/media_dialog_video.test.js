@@ -610,5 +610,94 @@ describe("media dialod video", () => {
             expect(regeneratedUrl).not.toInclude("playlist=");
             expect(regeneratedUrl).not.toInclude("loop=");
         });
+
+        test("YouTube: handles pure playlist URL correctly", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const playlistId = "PL4fGSI1pDJn6O1LS0XSdF3RyO0Rq_LDeI";
+            await waitFor(`div.modal #o_video_text`);
+            await click(`#o_video_text`);
+            await edit(`https://www.youtube.com/playlist?list=${playlistId}`);
+            await advanceTime(100);
+            await animationFrame();
+
+            const iframe = await waitFor(`div.modal .o_video_preview iframe`);
+            const embedSrc = iframe.dataset.src || iframe.src;
+            expect(embedSrc).toInclude(`https://www.youtube.com/embed/videoseries`);
+            expect(embedSrc).toInclude(`list=${playlistId}`);
+        });
+
+        test("Vimeo: handles showcase URL correctly", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const showcaseId = "1234567";
+            await waitFor(`div.modal #o_video_text`);
+            await click(`#o_video_text`);
+            await edit(`https://vimeo.com/showcase/${showcaseId}`);
+            await advanceTime(100);
+            await animationFrame();
+
+            const iframe = await waitFor(`div.modal .o_video_preview iframe`);
+            const embedSrc = iframe.dataset.src || iframe.src;
+            expect(embedSrc).toBe(`https://player.vimeo.com/showcase/${showcaseId}/embed`);
+        });
+
+        test("Dailymotion: handles playlist URL correctly", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const playlistId = "x61w5b";
+            await waitFor(`div.modal #o_video_text`);
+            await click(`#o_video_text`);
+            await edit(`https://www.dailymotion.com/playlist/${playlistId}`);
+            await advanceTime(100);
+            await animationFrame();
+
+            const iframe = await waitFor(`div.modal .o_video_preview iframe`);
+            const embedSrc = iframe.dataset.src || iframe.src;
+            expect(embedSrc).toBe(`https://geo.dailymotion.com/player.html?playlist=${playlistId}`);
+        });
+
+        test("Twitch: handles collection URL correctly", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const collectionId = "cOLlEcTiOnId";
+            await waitFor(`div.modal #o_video_text`);
+            await click(`#o_video_text`);
+            await edit(`https://www.twitch.tv/collections/${collectionId}`);
+            await advanceTime(100);
+            await animationFrame();
+
+            const iframe = await waitFor(`div.modal .o_video_preview iframe`);
+            const embedSrc = iframe.dataset.src || iframe.src;
+            expect(embedSrc).toInclude(`https://player.twitch.tv/?collection=${collectionId}`);
+        });
     });
 });

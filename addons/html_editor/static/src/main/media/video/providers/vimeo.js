@@ -6,7 +6,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
     static name = "Vimeo";
 
     static urlMatcher =
-        /^(?:(?:https?:)?\/\/)?(player.)?vimeo.com\/([a-z]*\/)?(?<id>[^?]+)(?:\/(?<hash>[^?]+))?(?:\?(?<params>\S+))?$/i;
+        /^(?:(?:https?:)?\/\/)?(player\.)?vimeo\.com\/(?:showcase\/|album\/)?(?:video\/)?(?<id>[^?#/]+)(?:\/(?:video\/)?(?<hash>[^?#/]+))?\/?(?:\?(?<params>\S+))?$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number },
@@ -14,15 +14,21 @@ export class Vimeo extends AbstractThirdPartyVideo {
         muted: { default: false, type: BooleanInt, params: ["muted"] },
         loop: { default: false, type: BooleanInt, params: ["loop"] },
         hideControls: { default: false, type: BooleanInt, params: ["controls"], reversed: true },
-        hideFullscreen: {
-            default: false,
-            type: BooleanInt,
-            params: ["fullscreen"],
-            reversed: true,
-        },
     };
+
     /**
-     * Returns the embed url for a vimeo video.
+     * @override
+     * @param {URL} url
+     */
+    static getCustomUrlOptions(url) {
+        return {
+            // Check if the pasted Vimeo URL is a Showcase or Album gallery (/showcase/ or /album/)
+            isShowcase: url.pathname.includes("/showcase/") || url.pathname.includes("/album/"),
+        };
+    }
+
+    /**
+     * Returns the embed url for a vimeo video or showcase.
      *
      * @param {string} videoId
      * @param {Object} options
@@ -30,7 +36,10 @@ export class Vimeo extends AbstractThirdPartyVideo {
      */
     static getEmbedUrl(videoId, options = {}) {
         const params = encodeOptionsToParams(options, Vimeo.optionsConfig);
-        let embedUrl = `https://player.vimeo.com/video/${videoId}${params ? "?" + params : ""}`;
+        // Generates showcase embed URL (player.vimeo.com/showcase/.../embed) or standard video embed URL
+        let embedUrl = options.isShowcase
+            ? `https://player.vimeo.com/showcase/${videoId}/embed${params ? "?" + params : ""}`
+            : `https://player.vimeo.com/video/${videoId}${params ? "?" + params : ""}`;
         if (options.startFrom) {
             embedUrl += `#t=${options.startFrom}`;
         }
@@ -40,9 +49,13 @@ export class Vimeo extends AbstractThirdPartyVideo {
      * Returns the url for the thumbnail image of the video.
      *
      * @param {string} videoId
-     * @return {Promise[string]} url
+     * @param {Object} [options={}]
+     * @return {Promise<string>} url
      */
-    static async getThumbnailUrl(videoId) {
+    static async getThumbnailUrl(videoId, options = {}) {
+        if (options.isShowcase) {
+            return "";
+        }
         const apiResponse = await fetch(
             `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${encodeURIComponent(videoId)}`
         );
@@ -70,8 +83,10 @@ export class Vimeo extends AbstractThirdPartyVideo {
         unlisted: "https://vimeo.com/795669787/0763fdb816", // Not sure if this format is still relevant
         embed: "https://player.vimeo.com/video/395399735",
         embedUnlisted: "https://player.vimeo.com/video/795669787?h=0763fdb816",
+        showcase: "https://vimeo.com/showcase/1234567",
+        embedShowcase: "https://player.vimeo.com/showcase/1234567/embed",
         params: "vimeo.com/395399735?autoplay=1#t=62",
         embedParams:
-            "https://player.vimeo.com/video/395399735?controls=0&fullscreen=1&autoplay=1#t=62",
+            "https://player.vimeo.com/video/395399735?controls=0&autoplay=1#t=62",
     };
 }
