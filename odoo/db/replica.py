@@ -125,10 +125,10 @@ class ReplicaRouter:
         if self.readonly is None:
             return self.primary.cursor(), "rw"
         if not readonly:
-            cr = self.primary.cursor()
+            primary = self.primary.cursor()
             if pin_key is not None and self.pins.window:
-                cr.on_commit_if_written(lambda: self.pins.pin(pin_key))
-            return cr, "rw"
+                primary.on_commit_if_written(lambda: self.pins.pin(pin_key))
+            return primary, "rw"
         if pin_key is not None and self.pins.is_pinned(pin_key):
             _debug.logic(
                 "replica.route",

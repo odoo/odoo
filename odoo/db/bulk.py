@@ -306,7 +306,7 @@ class _BulkAccessMixin:
             with ctx:
                 i, n = 0, len(argslist)
                 while i < n:
-                    placeholders = []
+                    placeholders: list[str] = []
                     params: list[Any] = []
                     # A page is `page_size` rows, or fewer when the widest rows
                     # would push one statement past the uint16 bind-parameter

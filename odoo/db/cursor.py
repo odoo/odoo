@@ -1,7 +1,7 @@
 import logging
 import threading
 from collections.abc import Callable, Collection, Generator, Iterable
-from contextlib import AbstractContextManager, ExitStack, contextmanager, suppress
+from contextlib import AbstractContextManager, contextmanager, suppress
 from datetime import datetime
 from inspect import currentframe
 from time import monotonic
@@ -33,6 +33,7 @@ from .errors import (
 )
 from .lifecycle import clear_prepared_cache
 from .metrics import _MetricsMixin, classify_query
+from .pipeline import _PipelineMixin
 from .pool import ConnectionPool, _get_borrow_caller
 from .savepoint import Savepoint, _FlushingSavepoint
 from .schema_cache import TransactionSchemaCache
@@ -285,7 +286,7 @@ class BaseCursor:
         return self._now
 
 
-class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
+class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     _closed: bool = True
 
     __caller: tuple[str | None, int | str] | Literal[False]
@@ -315,14 +316,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._schema_cache = TransactionSchemaCache()
         self._schema_changed = False
 
-        self._pipeline_depth = 0
-        self._pipeline_stack: ExitStack | None = None
-        self._pipeline: psycopg.Pipeline | None = None
-        self._pipeline_statements = 0
-        self._pipeline_statement_time = 0.0
-        self._pipeline_wait_time = 0.0
-        self._pipeline_exit_started = 0.0
-        self._pipeline_pending = False
+        self._init_pipeline_state()
 
         self._thread = threading.current_thread()
 
@@ -368,20 +362,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             return self._cnx.info.backend_pid
         except Exception:
             return None
-
-    def _wait_in_pipeline[T](self, wait: Callable[..., T], *args: Any) -> T:
-        t0 = monotonic()
-        try:
-            result = wait(*args)
-        finally:
-            self._pipeline_wait_time += monotonic() - t0
-        self._pipeline_pending = False
-        return result
-
-    def _sync_pipeline_results(self) -> None:
-        if self._pipeline_pending and (pipeline := self._pipeline) is not None:
-            _debug.pipeline("cursor.pipeline_synced_for_result", db=self.dbname)
-            self._wait_in_pipeline(pipeline.sync)
 
     def _fetchall(self) -> list[tuple[Any, ...]]:
         obj = self._obj
@@ -962,85 +942,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
         self._after_statement(qs, ddl_kw, rollback_to, delay, debug)
 
-    @property
-    def in_pipeline(self) -> bool:
-        return self._pipeline is not None
-
-    def _arm_pipeline(self) -> None:
-        self._pipeline_statements += 1
-        if self._pipeline_statements == 2 and self._pipeline_stack is not None:
-            self._pipeline = self._pipeline_stack.enter_context(self._cnx.pipeline())
-            self._pipeline_stack.callback(self._mark_pipeline_exit_started)
-            _debug.lifecycle("cursor.pipeline_entered", db=self.dbname)
-
-    def _mark_pipeline_exit_started(self) -> None:
-        self._pipeline_exit_started = monotonic()
-
-    @contextmanager
-    def pipeline(
-        self, log_exceptions: bool = True, query: Any = None
-    ) -> Generator[None]:
-        if self._pipeline_depth:
-            self._pipeline_depth += 1
-            _debug.lifecycle(
-                "cursor.pipeline_nested", db=self.dbname, depth=self._pipeline_depth
-            )
-            try:
-                yield
-            finally:
-                self._pipeline_depth -= 1
-            return
-
-        self._pipeline_depth = 1
-        self._pipeline_statements = 0
-        self._pipeline_statement_time = 0.0
-        self._pipeline_wait_time = 0.0
-        self._pipeline_exit_started = 0.0
-        failed = None  # debuglog
-        if _debug.pipeline.enabled:
-            _debug.pipeline(
-                "cursor.pipeline_opened",
-                db=self.dbname,
-                savepoint_depth=self._savepoint_depth,
-                query_given=query is not None,
-                caller=_get_borrow_caller(),
-            )
-        try:
-            with ExitStack() as stack:
-                self._pipeline_stack = stack
-                yield
-        except Exception as e:
-            failed = type(e).__name__  # debuglog
-            if has_reached_server(e):
-                self._statement_failed(
-                    e,
-                    query
-                    if query is not None
-                    else "<pipelined statement; psycopg does not report which>",
-                    label="pipelined statement",
-                    log_exceptions=log_exceptions,
-                )
-            raise
-        finally:
-            if self._pipeline_exit_started:
-                self._pipeline_wait_time += monotonic() - self._pipeline_exit_started
-            waited = self._pipeline_wait_time
-            if waited > 0:
-                self._record_metrics(waited, count=0, statement=False)
-            _debug.perf.count(
-                "cursor.pipeline",
-                db=self.dbname,
-                statements=self._pipeline_statements,
-                entered=self._pipeline is not None,
-                statement_ms=self._pipeline_statement_time * 1000.0,
-                wait_ms=waited * 1000.0,
-                error=failed,
-            )
-            self._pipeline_stack = None
-            self._pipeline = None
-            self._pipeline_depth = 0
-            self._pipeline_pending = False
-
     def close(self) -> None:
         if not self._closed:
             self._close()
@@ -1141,7 +1042,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         )
         with _debug.perf("cursor.commit.sync", db=self.dbname):
             self._cnx.commit()
-        if written:
+        if written and observer is not None:
             _debug.logic("cursor.commit_observed_write", db=self.dbname)
             observer()
         self.commit_count += 1
@@ -1311,4 +1212,9 @@ if TYPE_CHECKING:
     from .metrics import _MetricsHost
 
     def _assert_cursor_satisfies_metrics_host(_c: Cursor) -> _MetricsHost:
+        return _c
+
+    from .pipeline import _PipelineHost
+
+    def _assert_cursor_satisfies_pipeline_host(_c: Cursor) -> _PipelineHost:
         return _c

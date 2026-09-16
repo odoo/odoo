@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import threading
 from time import monotonic
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from odoo.libs.debug_log import DebugLog
 
@@ -40,7 +40,7 @@ class CheckoutTracker:
     def __len__(self) -> int:
         return len(self._out)
 
-    def get_connections_of(self, thread_name: str) -> list[object]:
+    def get_connections_of(self, thread_name: str) -> list[Any]:
         return [
             conn
             for conn, entry in self._out.copy().items()
