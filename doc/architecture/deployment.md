@@ -156,15 +156,29 @@ and `probe` change what a request gets, while `leaks`, `metrics` and
 decision is made from. The tier is `db-resilience-below-connectivity`'s
 source list ([`module.md`](module.md#dependency-rules)).
 
-Two properties for any capacity decision:
+Three properties for any capacity decision:
 
 **The budget is per PostgreSQL server, not per process or per database.**
 `db_maxconn` caps a *server's* checked-out connections (`db/endpoints.py` keys
 the budget by endpoint): a budget per database over-commits the server, and a
 single budget across two independent servers under-uses both.
 
-**The replica is optional and self-demoting.** Lag is sampled, and reads that
-would be too stale go to the primary instead of being served wrong. The breaker
+**Backends track concurrency, not the budget.** A pool's session reset runs
+on the returning thread (`ConnectionPool.give_back`), so a returned
+connection is idle the moment `putconn` files it. With the reset in
+psycopg_pool's worker instead, the next `getconn` found nothing idle and
+grew the pool by every return in flight: measured against a running server,
+16 request threads held **64** backends — the `db_maxconn` ceiling — and hold
+**16** now (`db/README.md`, the entry on `reset=None`). Size
+`max_connections` against threads × databases plus `db_pool_reap_idle`'s
+residue, not against the ceiling.
+
+**The replica is optional and self-demoting, and never waits the budget out.**
+Lag is sampled, and reads that would be too stale go to the primary instead
+of being served wrong; a replica that does not answer costs a read-only
+request at most `REPLICA_BORROW_TIMEOUT` (5 s) once and nothing while the
+breaker is open, where the primary keeps the full `db_borrow_timeout` because a
+restart should be waited out (`db/README.md`, the replica entry). The breaker
 backs off exponentially to a ceiling of `REPLICA_RETRY_TIME` (1200 s),
 which the table above does not list because it is not the resilience tier's:
 `libs/breaker.py` owns the `CircuitBreaker` (failure gating with exponential
