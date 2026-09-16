@@ -54,10 +54,10 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         issue_date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), invoice.l10n_sa_confirmation_datetime)
 
         document_node.update({
-            'cbc:ProfileID': {'_text': 'reporting:1.0'},
-            'cbc:UUID': {'_text': invoice.l10n_sa_uuid},
-            'cbc:IssueDate': {'_text': issue_date.strftime('%Y-%m-%d')},
-            'cbc:IssueTime': {'_text': issue_date.strftime('%H:%M:%S')},
+            'cbc:ProfileID': 'reporting:1.0',
+            'cbc:UUID': invoice.l10n_sa_uuid,
+            'cbc:IssueDate': issue_date.strftime('%Y-%m-%d'),
+            'cbc:IssueTime': issue_date.strftime('%H:%M:%S'),
             'cbc:DueDate': None,
             'cbc:InvoiceTypeCode': {
                 '_text': (
@@ -67,20 +67,18 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                 ),
                 'name': invoice._get_l10n_sa_edi_invoice_type_code(),
             },
-            'cbc:TaxCurrencyCode': {'_text': vals['company_currency_id'].name},
+            'cbc:TaxCurrencyCode': vals['company_currency_id'].name,
             'cac:OrderReference': None,
             'cac:BillingReference': {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {
-                        '_text': (invoice.reversed_entry_id.name or invoice.ref)
+                    'cbc:ID': (invoice.reversed_entry_id.name or invoice.ref)
                         if invoice.move_type == 'out_refund'
                         else invoice.debit_origin_id.name,
-                    },
                 },
             } if invoice.move_type == 'out_refund' or invoice.debit_origin_id else None,
             'cac:AdditionalDocumentReference': [
                 {
-                    'cbc:ID': {'_text': 'QR'},
+                    'cbc:ID': 'QR',
                     'cac:Attachment': {
                         'cbc:EmbeddedDocumentBinaryObject': {
                             '_text': 'N/A',
@@ -89,7 +87,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                     },
                 } if invoice.l10n_sa_invoice_type == 'simplified' else None,
                 {
-                    'cbc:ID': {'_text': 'PIH'},
+                    'cbc:ID': 'PIH',
                     'cac:Attachment': {
                         'cbc:EmbeddedDocumentBinaryObject': {
                             '_text': (
@@ -102,13 +100,13 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                     },
                 },
                 {
-                    'cbc:ID': {'_text': 'ICV'},
-                    'cbc:UUID': {'_text': invoice.l10n_sa_chain_index},
+                    'cbc:ID': 'ICV',
+                    'cbc:UUID': invoice.l10n_sa_chain_index,
                 },
             ],
             'cac:Signature': {
-                'cbc:ID': {'_text': "urn:oasis:names:specification:ubl:signature:Invoice"},
-                'cbc:SignatureMethod': {'_text': "urn:oasis:names:specification:ubl:dsig:enveloped:xades"},
+                'cbc:ID': "urn:oasis:names:specification:ubl:signature:Invoice",
+                'cbc:SignatureMethod': "urn:oasis:names:specification:ubl:dsig:enveloped:xades",
             } if invoice.l10n_sa_invoice_type == 'simplified' else None,
             'cac:PaymentTerms': None,
         })
@@ -215,7 +213,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         )
 
         return {
-            'cbc:ID': {'_text': vals['line_idx']},
+            'cbc:ID': vals['line_idx'],
             'cbc:InvoicedQuantity': {
                 '_text': '1.0',
                 'unitCode': 'C62',
@@ -225,19 +223,15 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             },
             'cac:DocumentReference': {
-                'cbc:ID': {'_text': prepayment_move.name},
-                'cbc:IssueDate': {
-                    '_text': prepayment_move_issue_date.strftime('%Y-%m-%d') if prepayment_move_issue_date else None,
-                },
-                'cbc:IssueTime': {
-                    '_text': prepayment_move_issue_date.strftime('%H:%M:%S') if prepayment_move_issue_date else None,
-                },
-                'cbc:DocumentTypeCode': {'_text': '386'},
+                'cbc:ID': prepayment_move.name,
+                'cbc:IssueDate': prepayment_move_issue_date.strftime('%Y-%m-%d') if prepayment_move_issue_date else None,
+                'cbc:IssueTime': prepayment_move_issue_date.strftime('%H:%M:%S') if prepayment_move_issue_date else None,
+                'cbc:DocumentTypeCode': '386',
             },
             'cac:TaxTotal': self._get_prepayment_line_tax_total_node({**vals, 'aggregated_tax_details': aggregated_tax_details}),
             'cac:Item': {
-                'cbc:Description': {'_text': "Down Payment"},
-                'cbc:Name': {'_text': "Down Payment"},
+                'cbc:Description': "Down Payment",
+                'cbc:Name': "Down Payment",
                 'cac:ClassifiedTaxCategory': [
                     self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
                     for grouping_key in aggregated_tax_details
@@ -274,7 +268,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                         '_text': self.format_float(values['tax_amount_currency'], vals['currency_dp']),
                         'currencyID': vals['currency_name'],
                     },
-                    'cbc:Percent': {'_text': grouping_key['amount']},
+                    'cbc:Percent': grouping_key['amount'],
                     'cac:TaxCategory': self._get_tax_category_node({**vals, 'grouping_key': grouping_key}),
                 }
                 for grouping_key, values in aggregated_tax_details.items()

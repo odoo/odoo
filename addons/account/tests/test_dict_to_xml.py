@@ -138,6 +138,39 @@ class TestDictToXml(TransactionCase):
             '</Parent>'
         ))
 
+    def test_33_compound_node_with_template_and_string_text_node(self):
+        node = {
+            '_tag': 'Parent',
+            'Child1': 'content 1',
+            'attribute2': 'value2',
+        }
+        template = {
+            'Child1': {},
+        }
+        element = dict_to_xml(node, template=template)
+        self.assertXmlEqual(element, etree.fromstring(
+            '<Parent attribute2="value2">'
+            '<Child1>content 1</Child1>'
+            '</Parent>'
+        ))
+
+    def test_33_compound_node_with_template_and_mixed_text_node_types_raises(self):
+        node = {
+            '_tag': 'Parent',
+            'Child1': [
+                'content 1',
+                {
+                    '_text': 'content 2',
+                    'attribute1': 'value1',
+                },
+            ],
+        }
+        template = {
+            'Child1': {},
+        }
+        with self.assertRaises(ValueError):
+            dict_to_xml(node, template=template)
+
     def test_34_compound_node_with_template_raises(self):
         node = {
             '_tag': 'Parent',
@@ -164,6 +197,14 @@ class TestDictToXml(TransactionCase):
         }
         with self.assertRaises(ValueError):
             dict_to_xml(node, template=template)
+
+    def test_34_simple_values_without_template_are_attributes(self):
+        node = {
+            '_tag': 'Parent',
+            'attribute1': 'value1',
+        }
+        element = dict_to_xml(node)
+        self.assertXmlEqual(element, etree.fromstring('<Parent attribute1="value1"/>'))
 
     def test_35_compound_node_with_template_and_nsmap(self):
         node = {

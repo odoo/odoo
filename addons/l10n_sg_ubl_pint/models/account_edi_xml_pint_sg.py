@@ -40,8 +40,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
         invoice = vals['invoice']
 
         # see https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_bis_identifiers
-        document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
-        document_node['cbc:UUID'] = {'_text': invoice._l10n_sg_get_uuid()}
+        document_node['cbc:ProfileID'] = 'urn:peppol:bis:billing'
+        document_node['cbc:UUID'] = invoice._l10n_sg_get_uuid()
 
         if invoice.currency_id != invoice.company_id.currency_id:
             amounts_in_accounting_currency = (
@@ -53,9 +53,9 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
             document_node['cac:AdditionalDocumentReference'] = [
                 {
-                    'cbc:ID': {'_text': invoice.company_id.currency_id.name},
-                    'cbc:DocumentTypeCode': {'_text': code},
-                    'cbc:DocumentDescription': {'_text': amount},
+                    'cbc:ID': invoice.company_id.currency_id.name,
+                    'cbc:DocumentTypeCode': code,
+                    'cbc:DocumentDescription': amount,
                 }
                 for code, amount in amounts_in_accounting_currency
             ]

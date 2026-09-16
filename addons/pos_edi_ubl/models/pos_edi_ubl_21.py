@@ -84,14 +84,14 @@ class PosEdiXmlUBL21(models.AbstractModel):
     def _add_pos_order_header_nodes(self, document_node, vals):
         pos_order = vals['pos_order']
         document_node.update({
-            'cbc:UBLVersionID': {'_text': '2.0'},
-            'cbc:ID': {'_text': vals['name']},
-            'cbc:IssueDate': {'_text': pos_order.date_order},
-            'cbc:InvoiceTypeCode': {'_text': 380} if vals['document_type'] == 'invoice' else None,
-            'cbc:Note': {'_text': pos_order.general_customer_note},
-            'cbc:DocumentCurrencyCode': {'_text': pos_order.currency_id.name},
+            'cbc:UBLVersionID': '2.0',
+            'cbc:ID': vals['name'],
+            'cbc:IssueDate': pos_order.date_order,
+            'cbc:InvoiceTypeCode': 380 if vals['document_type'] == 'invoice' else None,
+            'cbc:Note': pos_order.general_customer_note,
+            'cbc:DocumentCurrencyCode': pos_order.currency_id.name,
             'cac:OrderReference': {
-                'cbc:ID': {'_text': vals['name']},
+                'cbc:ID': vals['name'],
             }
         })
 

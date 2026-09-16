@@ -233,13 +233,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             subentity_code = subentity_code.split('-')[1] if 'MY-' in subentity_code else subentity_code
 
         return {
-            'cbc:CityName': {'_text': partner.city},
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentity': {'_text': partner.state_id.name},
-            'cbc:CountrySubentityCode': {'_text': subentity_code},
+            'cbc:CityName': partner.city,
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentity': partner.state_id.name,
+            'cbc:CountrySubentityCode': subentity_code,
             'cac:AddressLine': [
-                {'cbc:Line': {'_text': partner.street}},
-                {'cbc:Line': {'_text': partner.street2}},
+                {'cbc:Line': partner.street},
+                {'cbc:Line': partner.street2},
             ],
             'cac:Country': {
                 'cbc:IdentificationCode': {
@@ -318,27 +318,27 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             } if role == 'supplier' else None,
             'cac:PartyIdentification': self._get_myinvois_document_party_identification_node({**vals, 'partner': partner.commercial_partner_id}),
             'cac:PartyName': {
-                'cbc:Name': {'_text': partner.display_name}
+                'cbc:Name': partner.display_name
             } if role != 'delivery' else None,
             'cac:PostalAddress': self._get_myinvois_document_address_node(vals),
             'cac:PartyLegalEntity': {
-                'cbc:RegistrationName': {'_text': partner.commercial_partner_id.name},
+                'cbc:RegistrationName': partner.commercial_partner_id.name,
             },
             'cac:Contact': {
-                'cbc:ID': {'_text': partner.id},
-                'cbc:Name': {'_text': partner.name},
-                'cbc:Telephone': {'_text': self._l10n_my_edi_get_formatted_phone_number(partner.phone)},
-                'cbc:ElectronicMail': {'_text': partner.email},
+                'cbc:ID': partner.id,
+                'cbc:Name': partner.name,
+                'cbc:Telephone': self._l10n_my_edi_get_formatted_phone_number(partner.phone),
+                'cbc:ElectronicMail': partner.email,
             } if role != 'delivery' else None,
         }
 
     def _get_tax_category_node(self, vals):
         grouping_key = vals['grouping_key']
         return {
-            'cbc:ID': {'_text': grouping_key['tax_category_code']},
-            'cbc:Name': {'_text': grouping_key['tax_exemption_reason']},
-            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
-            'cbc:TaxExemptionReason': {'_text': grouping_key['tax_exemption_reason']},
+            'cbc:ID': grouping_key['tax_category_code'],
+            'cbc:Name': grouping_key['tax_exemption_reason'],
+            'cbc:Percent': grouping_key['amount'] if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:TaxExemptionReason': grouping_key['tax_exemption_reason'],
             'cac:TaxScheme': {
                 'cbc:ID': {
                     '_text': 'OTH',
@@ -363,10 +363,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         document_node.update({
             'cbc:UBLVersionID': None,
-            'cbc:ID': {'_text': vals['document_name']},
+            'cbc:ID': vals['document_name'],
             # The issue date and time must be the current time set in the UTC time zone
-            'cbc:IssueDate': {'_text': datetime.now(tz=UTC).strftime("%Y-%m-%d")},
-            'cbc:IssueTime': {'_text': datetime.now(tz=UTC).strftime("%H:%M:%SZ")},
+            'cbc:IssueDate': datetime.now(tz=UTC).strftime("%Y-%m-%d"),
+            'cbc:IssueTime': datetime.now(tz=UTC).strftime("%H:%M:%SZ"),
             'cbc:DueDate': None,
 
             # The current version is 1.1 (document with signature), the type code depends on the move type.
@@ -374,9 +374,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 '_text': vals['document_type_code'],
                 'listVersionID': '1.1',
             },
-            'cbc:DocumentCurrencyCode': {'_text': vals['currency_id'].name},
+            'cbc:DocumentCurrencyCode': vals['currency_id'].name,
             'cac:OrderReference': None,
-            'cbc:BuyerReference': {'_text': vals['customer'].commercial_partner_id.ref},
+            'cbc:BuyerReference': vals['customer'].commercial_partner_id.ref,
 
             # Debit/Credit note original invoice ref.
             # Applies to credit notes, debit notes, refunds for both invoices and self-billed invoices.
@@ -384,21 +384,21 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             # managed outside Odoo/...)
             'cac:BillingReference': [{
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': _get_original_document_id(original_document) or 'NA'},
-                    'cbc:UUID': {'_text': (original_document and original_document.myinvois_external_uuid) or 'NA'},
+                    'cbc:ID': _get_original_document_id(original_document) or 'NA',
+                    'cbc:UUID': (original_document and original_document.myinvois_external_uuid) or 'NA',
                 }
             } for original_document in vals['original_documents'] or [None]] if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} else None,
             'cac:AdditionalDocumentReference': [
                 {
-                    'cbc:ID': {'_text': vals['custom_form_reference']},
-                    'cbc:DocumentType': {'_text': 'CustomsImportForm'},
+                    'cbc:ID': vals['custom_form_reference'],
+                    'cbc:DocumentType': 'CustomsImportForm',
                 } if vals['document_type_code'] in {'11', '12', '13', '14'} and vals['custom_form_reference'] else None,
                 {
-                    'cbc:ID': {'_text': vals["incoterm_id"].code}
+                    'cbc:ID': vals["incoterm_id"].code
                 } if vals["incoterm_id"] else None,
                 {
-                    'cbc:ID': {'_text': vals['custom_form_reference']},
-                    'cbc:DocumentType': {'_text': 'K2'},
+                    'cbc:ID': vals['custom_form_reference'],
+                    'cbc:DocumentType': 'K2',
                 } if vals['document_type_code'] in {'01', '02', '03', '04'} and vals['custom_form_reference'] else None,
             ],
         })
@@ -426,7 +426,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if vals['invoice_payment_term_id']:
             document_node['cac:PaymentTerms'] = {
                 # The payment term's note is automatically embedded in a <p> tag in Odoo
-                'cbc:Note': {'_text': html2plaintext(vals['invoice_payment_term_id'].note)}
+                'cbc:Note': html2plaintext(vals['invoice_payment_term_id'].note)
             }
 
     def _add_myinvois_document_exchange_rate_nodes(self, document_node, vals):
@@ -440,9 +440,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             rate = self.env.ref('base.MYR').round(abs(total_amount_in_company_currency) / (total_amount_in_currency or 1))
             # Exchange rate information must be provided if applicable
             document_node['cac:TaxExchangeRate'] = {
-                'cbc:SourceCurrencyCode': {'_text': vals['currency_id'].name},
-                'cbc:TargetCurrencyCode': {'_text': 'MYR'},
-                'cbc:CalculationRate': {'_text': rate},
+                'cbc:SourceCurrencyCode': vals['currency_id'].name,
+                'cbc:TargetCurrencyCode': 'MYR',
+                'cbc:CalculationRate': rate,
             }
 
     def _add_myinvois_document_monetary_total_nodes(self, document_node, vals):

@@ -88,7 +88,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
             ):
                 nodes.append({
                     'cac:InvoiceDocumentReference': {
-                        'cbc:ID': {'_text': credit_note.ref},
+                        'cbc:ID': credit_note.ref,
                     }
                 })
 

@@ -60,7 +60,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         super()._add_invoice_header_nodes(document_node, vals)
 
         # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_identifying_the_a_nz_billing_specialisation
-        document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
+        document_node['cbc:ProfileID'] = 'urn:peppol:bis:billing'
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS
@@ -71,7 +71,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         if commercial_partner.country_code in ('AU', 'NZ'):
             if commercial_partner.has_vat:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
-                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:RegistrationName': commercial_partner.name,
                     'cbc:CompanyID': {
                         '_text': commercial_partner.vat,
                         'schemeID': '0151' if commercial_partner.country_code == 'AU' else '0088',
@@ -81,7 +81,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
                 identifier_vals = partner._get_preferred_routing_identifier_vals()
                 if identifier_vals:
                     vals['party_node']['cac:PartyLegalEntity'] = [{
-                        'cbc:RegistrationName': {'_text': commercial_partner.name},
+                        'cbc:RegistrationName': commercial_partner.name,
                         'cbc:CompanyID': {
                             '_text': identifier_vals['value'],
                             'schemeID': identifier_vals['scheme'],

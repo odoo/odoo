@@ -97,29 +97,27 @@ class ZatcaUblMixin(models.AbstractModel):
 
         party_node.update({
             'cac:PartyName': {
-                'cbc:Name': {'_text': partner.display_name},
+                'cbc:Name': partner.display_name,
             },
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:RegistrationName': commercial_partner.name,
+                'cbc:CompanyID': commercial_partner.vat,
                 'cac:RegistrationAddress': self._get_address_node({'partner': commercial_partner}),
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT'}
+                    'cbc:ID': 'VAT'
                 }
             } if (role != 'customer' or partner.country_id.code == 'SA') and commercial_partner.vat and commercial_partner.vat != '/' else None,  # BR-KSA-46
             'cac:PartyLegalEntity': {
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {'_text': commercial_partner.vat} if commercial_partner.country_code == 'SA' else None,
+                'cbc:RegistrationName': commercial_partner.name,
+                'cbc:CompanyID': commercial_partner.vat if commercial_partner.country_code == 'SA' else None,
                 'cac:RegistrationAddress': self._get_address_node({'partner': commercial_partner}),
             },
             'cac:Contact': {
-                'cbc:ID': {'_text': partner.id},
-                'cbc:Name': {'_text': partner.name},
-                'cbc:Telephone': {
-                    '_text': re.sub(r"[^+\d]", '', partner.phone) if partner.phone else None,
-                },
-                'cbc:ElectronicMail': {'_text': partner.email},
+                'cbc:ID': partner.id,
+                'cbc:Name': partner.name,
+                'cbc:Telephone': re.sub(r"[^+\d]", '', partner.phone) if partner.phone else None,
+                'cbc:ElectronicMail': partner.email,
             },
         })
         return party_node
@@ -130,18 +128,18 @@ class ZatcaUblMixin(models.AbstractModel):
         edi_plot_identification = partner.l10n_sa_edi_plot_identification if partner._name == 'res.partner' else ''
 
         return {
-            'cbc:StreetName': {'_text': partner.street},
-            'cbc:BuildingNumber': {'_text': building_number},
-            'cbc:PlotIdentification': {'_text': edi_plot_identification},
-            'cbc:CitySubdivisionName': {'_text': partner.street2},
-            'cbc:CityName': {'_text': partner.city},
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentity': {'_text': partner.state_id.name},
-            'cbc:CountrySubentityCode': {'_text': partner.state_id.code},
+            'cbc:StreetName': partner.street,
+            'cbc:BuildingNumber': building_number,
+            'cbc:PlotIdentification': edi_plot_identification,
+            'cbc:CitySubdivisionName': partner.street2,
+            'cbc:CityName': partner.city,
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentity': partner.state_id.name,
+            'cbc:CountrySubentityCode': partner.state_id.code,
             'cac:AddressLine': None,
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': partner.country_id.code},
-                'cbc:Name': {'_text': partner.country_id.name},
+                'cbc:IdentificationCode': partner.country_id.code,
+                'cbc:Name': partner.country_id.name,
             },
         }
 
@@ -205,7 +203,7 @@ class ZatcaUblMixin(models.AbstractModel):
         super()._add_document_line_item_nodes(line_node, vals)
         product = vals['base_line']['product_id']
         line_node['cac:Item']['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': product.code or product.default_code},
+            'cbc:ID': product.code or product.default_code,
         }
 
     def _add_document_line_tax_category_nodes(self, line_node, vals):
@@ -268,9 +266,9 @@ class ZatcaUblMixin(models.AbstractModel):
             return super()._get_document_allowance_charge_node(vals)
         if base_amount_currency < 0:
             return {
-                'cbc:ChargeIndicator': {'_text': 'false'},
-                'cbc:AllowanceChargeReasonCode': {'_text': '95'},
-                'cbc:AllowanceChargeReason': {'_text': 'Discount'},
+                'cbc:ChargeIndicator': 'false',
+                'cbc:AllowanceChargeReasonCode': '95',
+                'cbc:AllowanceChargeReason': 'Discount',
                 'cbc:Amount': {
                     '_text': self.format_float(abs(base_amount_currency), 2),
                     'currencyID': vals['currency_id'].name,
@@ -299,10 +297,10 @@ class ZatcaUblMixin(models.AbstractModel):
             document_node['cac:Delivery']['cac:DeliveryLocation'] = None
 
         if not document_node['cac:Delivery']['cbc:ActualDeliveryDate']['_text']:
-            document_node['cac:Delivery']['cbc:ActualDeliveryDate'] = {'_text': issue_date}
+            document_node['cac:Delivery']['cbc:ActualDeliveryDate'] = issue_date
 
         if record.l10n_sa_edi_supply_end_date:
-            document_node['cac:Delivery']['cbc:LatestDeliveryDate'] = {'_text': record.l10n_sa_edi_supply_end_date}
+            document_node['cac:Delivery']['cbc:LatestDeliveryDate'] = record.l10n_sa_edi_supply_end_date
 
     # -------------------------------------------------------------------------
     # Tax Category and Exemption
@@ -382,7 +380,7 @@ class ZatcaUblMixin(models.AbstractModel):
             ),
             'listID': 'UN/ECE 4461',
         }
-        payment_means_node['cbc:InstructionNote'] = {'_text': invoice._l10n_sa_get_adjustment_reason()}
+        payment_means_node['cbc:InstructionNote'] = invoice._l10n_sa_get_adjustment_reason()
 
     # -------------------------------------------------------------------------
     # XML Hash Generation
