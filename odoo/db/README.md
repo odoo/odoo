@@ -999,6 +999,25 @@ one exception, and the scanner has a control showing it tells the two apart.
   field. `_get_key_dbname` walks the key once and is the only reader; nothing
   else takes a key apart.
 
+## Re-deriving the figures
+
+Every number above came from a measurement, and `tooling/` — which used to
+rerun them — is gone. `odoo/db/tests/bench.py` re-derives the ones that
+matter, on this machine, against a database with `base` installed:
+
+```bash
+p314o19m/bin/python -m odoo.db.tests.bench -c p314o19m.conf -d <db>
+```
+
+Wire-stubbed rows (`execute()`, `fetchone()`, `classify_statement`) measure
+Python only and are the ones to compare across a change to the statement
+path; the round-trip rows move with the host's load, so compare them within
+one run (reset string against `DISCARD ALL`, prepared against unprepared).
+The storm rows print backends held beside cycles per second, which is the
+inline-reset property in one line. Run it before believing a figure and
+after touching the path it describes; a figure here that the bench no longer
+reproduces is stale, not wrong by definition — say which in the entry.
+
 ## Tracing (campaign instrumentation, temporary)
 
 Every module carries `_debug = DebugLog(__name__)` (`odoo/libs/debug_log.py`) and logs
