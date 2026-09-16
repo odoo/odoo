@@ -474,7 +474,7 @@ class Website(Home):
         :return: preview HTML
         :rtype: str
         """
-        if not preview_url.startswith('/'):
+        if not re.fullmatch(r'/[a-z0-9_]+/static/description/preview\.html', preview_url):
             raise NotFound()
         try:
             with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
