@@ -326,6 +326,9 @@ class TestEventNotifications(CalendarMailCommon):
 
         with self.mock_datetime_and_now(now):
             with self.assertBus(notifications):
+                self.partner.write({
+                    'calendar_last_notif_ack': now
+                })
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
@@ -343,6 +346,9 @@ class TestEventNotifications(CalendarMailCommon):
         })
         now = datetime(2019, 10, 25, 8, 0)
         admin_partner = self.user_admin.partner_id
+        admin_partner.write({
+            'calendar_last_notif_ack': now
+        })
         event = self.env['calendar.event'].with_user(self.user_admin).with_context(no_mail_to_attendees=True).create({
             'name': "Admin Meeting",
             'start': now + relativedelta(minutes=50),
@@ -684,6 +690,9 @@ class TestEventNotifications(CalendarMailCommon):
 
         with self.mock_datetime_and_now(now):
             with self.assertBus(notifications):
+                self.partner.write({
+                    'calendar_last_notif_ack': now
+                })
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
