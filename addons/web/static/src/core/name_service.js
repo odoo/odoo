@@ -12,6 +12,7 @@ function isId(val) {
  * @typedef {Record<string, (string|ERROR_INACCESSIBLE_OR_MISSING)>} DisplayNames
  */
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const nameService = {
     dependencies: ["orm"],
     async: ["loadDisplayNames"],

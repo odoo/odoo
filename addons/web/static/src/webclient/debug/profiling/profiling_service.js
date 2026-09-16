@@ -7,6 +7,7 @@ import { profilingSystrayItem } from "@web/webclient/debug/profiling/profiling_s
 
 const systrayRegistry = registry.category("systray");
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const profilingService = {
     dependencies: ["action", "orm"],
     start(env, { action, orm }) {
