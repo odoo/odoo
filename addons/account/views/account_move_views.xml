@@ -1407,7 +1407,8 @@
                                         <field name="date_maturity"
                                                optional="hide"
                                                invisible="display_type in ('line_section', 'line_note')"
-                                               column_invisible="context.get('view_no_maturity')"/>
+                                               column_invisible="context.get('view_no_maturity')"
+                                               readonly="parent.move_type != 'entry'"/>
                                         <field name="amount_currency"
                                                groups="base.group_multi_currency"
                                                optional="hide"/>
@@ -1497,7 +1498,7 @@
                                                     'active_test': True,
                                                }"
                                         />
-                                        <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
+                                        <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)" readonly="parent.move_type != 'entry'"/>
                                       </group>
                                     </form>
                                 </field>
