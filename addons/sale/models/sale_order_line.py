@@ -2214,16 +2214,17 @@ class SaleOrderLine(models.Model):
         line, depending on whether the linked line is saved in the DB.
         """
         self.ensure_one()
-        return (
-            self.linked_line_id
-            or (
-                self.linked_virtual_id
-                and self.order_id.order_line.filtered(
-                    lambda line: line.virtual_id == self.linked_virtual_id
-                ).ensure_one()
-            )
-            or self.env["sale.order.line"]
-        )
+        if self.id and self.linked_line_id:
+            return self.linked_line_id
+        if origin := self.linked_line_id._origin:
+            return self.order_id.order_line.filtered(
+                lambda line: line._origin == origin
+            ).ensure_one()
+        if self.linked_virtual_id:
+            return self.order_id.order_line.filtered(
+                lambda line: line.virtual_id == self.linked_virtual_id
+            ).ensure_one()
+        return self.env["sale.order.line"]
 
     def _get_linked_lines(self):
         """Return the linked lines of this line, if any."""
