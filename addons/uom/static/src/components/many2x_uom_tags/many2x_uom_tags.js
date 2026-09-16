@@ -19,6 +19,12 @@ export function getProductRelatedModel() {
     return resModel;
 }
 
+export function hasCommonReference(uom1, uom2) {
+    const uom1Path = uom1.parent_path.split("/");
+    const uom2Path = uom2.parent_path.split("/");
+    return uom1Path[0] === uom2Path[0];
+}
+
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     props = useProps({
         ...many2XAutocompleteProps,
@@ -60,11 +66,6 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
 
         await Promise.all([recordsPromise, roundingDigitsPromise, referenceUnitPromise]);
 
-        const hasCommonReference = (uom1, uom2) => {
-            const uom1Path = uom1.parent_path.split("/");
-            const uom2Path = uom2.parent_path.split("/");
-            return uom1Path[0] === uom2Path[0];
-        };
         records = records.map((record) => {
             let relativeInfo = this.referenceUnit && this.referenceUnit.id !== record.id ? `${roundDecimals((this.props.productQuantity || 1) * record.factor / this.referenceUnit.factor, this.roundingDigits)} ${this.referenceUnit.name}` : "";
             if (
