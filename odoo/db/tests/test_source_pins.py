@@ -76,7 +76,9 @@ class TestSchemaCacheClearsHaveDistinctCallSites(unittest.TestCase):
             inspect.getsource(cursor.Cursor._on_rollback_to_savepoint)
         )
         guards = [
-            node for node in ast.walk(ast.parse(source)) if isinstance(node, ast.If)
+            node
+            for node in ast.walk(ast.parse(source))
+            if isinstance(node, ast.If) and "_schema_changed" in ast.unparse(node.test)
         ]
         self.assertEqual(
             len(guards),

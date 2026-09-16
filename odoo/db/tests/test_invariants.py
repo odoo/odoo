@@ -1059,26 +1059,147 @@ class _StatementRecorder:
         pass
 
 
-class TestStatementTimeoutPrimitive(unittest.TestCase):
-    def test_it_is_a_set_local_in_milliseconds_and_zero_clears_it(self):
+class TestStatementTimeoutIsOwnedByTheCursor(unittest.TestCase):
+    _SET = "SET LOCAL statement_timeout = '1500ms'"
+    _LIFT = "SET LOCAL statement_timeout = '0'"
+
+    def setUp(self):
         fake_pool = (
             TestALostConnectionIsReplacedBeforeTheFirstStatementOnly._DeadThenAlive()
         )
-        cr = cursor.Cursor(
+        self.cr = cursor.Cursor(
             typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
         )
-        with mock.patch.object(
-            cursor,
-            "_inline_ddl_params",
-            lambda qs, params, ctx: qs.replace("%s", repr(params[0])),
-        ):
-            cr.set_statement_timeout(1.5)
-            cr.set_statement_timeout(None)
+        self.fake_pool = fake_pool
+        self.enterContext(
+            mock.patch.object(
+                cursor,
+                "_inline_ddl_params",
+                lambda qs, params, ctx: qs.replace("%s", repr(params[0])),
+            )
+        )
+
+    def test_it_is_armed_before_the_first_statement_not_when_set(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        self.assertEqual(cr._obj.executed, [], "nothing to bound yet")
+        cr.execute("SELECT 1")
+        self.assertEqual(cr._obj.executed, [self._SET, "SELECT 1"])
+        cr.execute("SELECT 2")
+        self.assertEqual(cr._obj.executed[2:], ["SELECT 2"], "armed once")
+
+    def test_it_survives_commit_and_rollback_on_the_same_cursor(self):
+        cr = self.cr
+        cr._cnx.commit = mock.Mock()
+        cr.set_statement_timeout(1.5)
+        cr.execute("SELECT 1")
+        cr.commit()
+        cr.execute("SELECT 2")
+        cr.rollback()
+        cr.execute("SELECT 3")
+        self.assertEqual(
+            cr._obj.executed,
+            [self._SET, "SELECT 1", self._SET, "SELECT 2", self._SET, "SELECT 3"],
+            "SET LOCAL dies with each transaction; the cursor re-arms it",
+        )
+
+    def test_arming_does_not_spend_the_replay_window(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        cr._cnx.closed = True
+        cr._obj.dead = True
+        with self.assertLogs("odoo.db.cursor", level="WARNING"):
+            cr.execute("SELECT 1")
+        self.assertEqual(len(self.fake_pool.handed), 2, "replayed")
+        self.assertEqual(
+            cr._obj.executed,
+            [self._SET, self._SET, "SELECT 1"],
+            "the replacement is armed, then the lost statement retried",
+        )
+        self.assertTrue(cr._transaction_touched)
+
+    def test_a_savepoint_rollback_that_reverts_it_re_arms_the_next_statement(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        with contextlib.suppress(RuntimeError), cr.savepoint(flush=False) as sp:
+            cr._statement_timeout_armed = False  # as after a commit inside
+            cr.execute("SELECT 1")
+            raise RuntimeError
+        cr.execute("SELECT 2")
         self.assertEqual(
             cr._obj.executed,
             [
-                "SET LOCAL statement_timeout = '1500ms'",
-                "SET LOCAL statement_timeout = '0'",
+                self._SET,
+                f'SAVEPOINT "{sp.name}"',
+                self._SET,
+                "SELECT 1",
+                f'ROLLBACK TO SAVEPOINT "{sp.name}"',
+                self._SET,
+                f'RELEASE SAVEPOINT "{sp.name}"',
+                "SELECT 2",
             ],
-            "SET takes client-side params (README), so the value is inlined",
+            "armed inside the savepoint, reverted by its rollback, re-armed before "
+            "the next statement (the RELEASE, which keeps it)",
+        )
+
+    def test_a_budget_armed_before_the_savepoint_survives_its_rollback(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        with contextlib.suppress(RuntimeError), cr.savepoint(flush=False) as sp:
+            cr.execute("SELECT 1")
+            raise RuntimeError
+        cr.execute("SELECT 2")
+        self.assertEqual(
+            cr._obj.executed,
+            [
+                self._SET,
+                f'SAVEPOINT "{sp.name}"',
+                "SELECT 1",
+                f'ROLLBACK TO SAVEPOINT "{sp.name}"',
+                f'RELEASE SAVEPOINT "{sp.name}"',
+                "SELECT 2",
+            ],
+            "SET LOCAL issued before the SAVEPOINT is not reverted by it",
+        )
+
+    def test_a_rollback_to_a_deeper_savepoint_keeps_it(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        cr.execute("SELECT 1")
+        cr._savepoint_depth = 1
+        cr._on_rollback_to_savepoint()
+        cr._savepoint_depth = 0
+        cr.execute("SELECT 2")
+        self.assertEqual(cr._obj.executed, [self._SET, "SELECT 1", "SELECT 2"])
+
+    def test_clearing_lifts_an_armed_budget_now_and_an_unarmed_one_silently(self):
+        cr = self.cr
+        cr.set_statement_timeout(None)
+        cr.set_statement_timeout(1.5)
+        cr.set_statement_timeout(None)
+        self.assertEqual(cr._obj.executed, [], "never armed: nothing to lift")
+        cr.set_statement_timeout(1.5)
+        cr.execute("SELECT 1")
+        cr.set_statement_timeout(None)
+        cr.execute("SELECT 2")
+        self.assertEqual(
+            cr._obj.executed, [self._SET, "SELECT 1", self._LIFT, "SELECT 2"]
+        )
+
+    def test_clearing_a_set_budget_mid_transaction_lifts_it_even_when_disarmed(self):
+        cr = self.cr
+        cr.set_statement_timeout(1.5)
+        cr.execute("SELECT 1")
+        cr._statement_timeout_armed = False  # a savepoint rollback said so
+        cr.set_statement_timeout(None)
+        self.assertEqual(cr._obj.executed, [self._SET, "SELECT 1", self._LIFT])
+
+    def test_set_mid_transaction_applies_now(self):
+        cr = self.cr
+        cr.execute("SELECT 1")
+        cr.set_statement_timeout(1.5)
+        cr.set_statement_timeout(0.5)
+        self.assertEqual(
+            cr._obj.executed,
+            ["SELECT 1", self._SET, "SET LOCAL statement_timeout = '500ms'"],
         )

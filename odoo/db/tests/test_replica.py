@@ -316,6 +316,14 @@ class TestWritePins(unittest.TestCase):
             len(pins), 1, "expired pins go when the table grows past the ceiling"
         )
 
+    def test_the_debug_channel_never_carries_the_key(self):
+        pins = WritePins(60.0)
+        with self.assertLogs(replica_module._debug.logic.logger, level="DEBUG") as cm:
+            pins.pin("a-session-id-is-a-secret")
+        self.assertEqual(len(cm.output), 1)
+        self.assertNotIn("a-session-id", cm.output[0])
+        self.assertIn("replica.pinned", cm.output[0])
+
 
 class TestReadYourWrites(unittest.TestCase):
     def _router(self, window=2.0):

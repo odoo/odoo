@@ -58,7 +58,8 @@ class WritePins:
             self._deadlines[key] = now + self.window
             if len(self._deadlines) > self._PRUNE_ABOVE:
                 self._deadlines = {k: d for k, d in self._deadlines.items() if d > now}
-        _debug.logic("replica.pinned", key=key, window=self.window)
+        # The key is a session id at the http call site: never log it.
+        _debug.logic("replica.pinned", window=self.window, pinned=len(self._deadlines))
 
     def is_pinned(self, key: typing.Hashable) -> bool:
         deadline = self._deadlines.get(key)

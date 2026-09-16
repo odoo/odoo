@@ -137,9 +137,7 @@ class ReachabilityProbe:
     ) -> bool:
         if leader:
             try:
-                probe.connected = (
-                    self.probe_connectable(conninfo, kwargs, deadline) is not False
-                )
+                probe.connected = self.probe_connectable(conninfo, kwargs, deadline)
             except BaseException as e:
                 probe.exc = e
                 raise

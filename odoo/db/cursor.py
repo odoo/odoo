@@ -312,6 +312,9 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         self._key = key
         self._transaction_touched = False
         self._commit_write_observer: Callable[[], None] | None = None
+        self._statement_timeout: float | None = None
+        self._statement_timeout_armed = False
+        self._statement_timeout_depth = 0
 
         self._schema_cache = TransactionSchemaCache()
         self._schema_changed = False
@@ -526,15 +529,15 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     # can rebuild, and the loss propagates as it did.
     def _replace_lost_connection(self, exc: Exception) -> bool:
         refused = (
-            "touched"
+            "not_a_loss"
+            if not isinstance(exc, psycopg.OperationalError)
+            or not (self._cnx.closed or not has_reached_server(exc))
+            else "touched"
             if self._transaction_touched
             else "savepoint"
             if self._savepoint_depth
             else "pipeline"
             if self._pipeline is not None
-            else "not_a_loss"
-            if not isinstance(exc, psycopg.OperationalError)
-            or not (self._cnx.closed or not has_reached_server(exc))
             else None
         )
         if refused is not None:
@@ -585,6 +588,8 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         )
         self._reset_transaction_caches()
         self._pipeline_pending = False
+        if self._statement_timeout is not None:
+            self._arm_statement_timeout()
         _logger.warning(
             "Connection to %s lost before the transaction's first statement "
             "completed (%s); replayed on a fresh connection",
@@ -611,10 +616,48 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         _debug.lifecycle("cursor.cancel", db=self.dbname, backend_pid=self._backend_pid)
         self._cnx.cancel_safe()
 
+    # The budget belongs to the cursor, not to one transaction: `SET LOCAL`
+    # dies at every commit and rollback, and a savepoint rollback reverts one
+    # issued inside it, so the cursor re-arms it before the next statement.
+    # Arming does not count as touching the transaction: the replay re-arms
+    # on the replacement connection, so nothing is lost with the old one.
     def set_statement_timeout(self, seconds: float | None) -> None:
-        value = "0" if not seconds else f"{int(seconds * 1000)}ms"
-        _debug.logic("cursor.statement_timeout", db=self.dbname, value=value)
+        previous, self._statement_timeout = self._statement_timeout, seconds or None
+        _debug.logic(
+            "cursor.statement_timeout",
+            db=self.dbname,
+            seconds=self._statement_timeout,
+            previous=previous,
+            armed=self._statement_timeout_armed,
+            touched=self._transaction_touched,
+        )
+        # Mid-transaction the change applies now; a budget that was set is
+        # lifted now even when a savepoint rollback disarmed it, because the
+        # arming may have been outside that savepoint (test cursors nest
+        # savepoints this cursor does not count).
+        if self._statement_timeout_armed or (
+            self._transaction_touched and (previous or seconds)
+        ):
+            self._arm_statement_timeout()
+
+    def _arm_statement_timeout(self) -> None:
+        seconds = self._statement_timeout
+        self._statement_timeout_armed = seconds is not None
+        self._statement_timeout_depth = self._savepoint_depth
+        touched = self._transaction_touched
+        value = f"{int(seconds * 1000)}ms" if seconds else "0"
+        _debug.logic(
+            "cursor.statement_timeout_armed",
+            db=self.dbname,
+            value=value,
+            savepoint_depth=self._savepoint_depth,
+        )
         self.execute("SET LOCAL statement_timeout = %s", (value,))
+        self._transaction_touched = touched
+
+    def _before_statement(self) -> None:
+        if self._statement_timeout is not None and not self._statement_timeout_armed:
+            self._arm_statement_timeout()
 
     def _statement_failed(
         self,
@@ -837,6 +880,8 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
             locked_tables=len(self._schema_cache.locked_tables),
         )
         self._schema_cache.release_locks_since_depth(self._savepoint_depth)
+        if self._savepoint_depth <= self._statement_timeout_depth:
+            self._statement_timeout_armed = False
 
     def _mark_table_locked(self, table: str) -> None:
         self._schema_cache.mark_locked(table, self._savepoint_depth)
@@ -1167,6 +1212,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         self._schema_cache.clear()
         self._now = None
         self._transaction_touched = False
+        self._statement_timeout_armed = False
 
     def __getattr__(self, name: str) -> Any:
         if name.startswith("__") and name.endswith("__"):

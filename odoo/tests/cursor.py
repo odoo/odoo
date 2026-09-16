@@ -206,6 +206,10 @@ class TestCursor(BaseCursor):
             return
         try:
             self.rollback()
+            # A statement budget lives as long as its cursor; here the real
+            # cursor outlives every test cursor, so the budget ends with this one.
+            if getattr(self._cursor, "_statement_timeout", None) is not None:
+                self._cursor.set_statement_timeout(None)
         finally:
             self._closed = True
 

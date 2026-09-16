@@ -292,8 +292,8 @@ class TestFailFast(unittest.TestCase):
             pool._get_or_create_pool(key, {"dbname": "d"}, fail_fast=True)
         self.assertIn(key, pool._pools)
 
-    def test_a_stub_answering_none_counts_as_connected(self):
-        pool = self._pool(None)
+    def test_a_connected_answer_is_handed_back_as_is(self):
+        pool = self._pool(True)
         key = _get_dsn_key({"dbname": "d"})
         self.assertTrue(pool._probe.check_connectable(key, "", {"dbname": "d"}))
 

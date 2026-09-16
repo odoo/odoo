@@ -822,12 +822,25 @@ one exception, and the scanner has a control showing it tells the two apart.
   psycopg's `cancel_safe()` on each — libpq's `PQcancel` from the client
   side: no borrow (a saturated pool is when this is needed), no
   `pg_signal_backend` privilege, and it reaches a replica connection.
-  `Cursor.set_statement_timeout(seconds)` is `SET LOCAL statement_timeout`
-  through the inliner, transaction-scoped so a rollback clears it. Both are
-  primitives: the serving tier decides which requests get which budget and
-  cancels on client disconnect. Measured: a 10 s `pg_sleep` cancelled in
-  0.30 s with the cursor usable after `rollback()`; a 0.2 s timeout fired at
-  0.20 s and read `0` again after the rollback.
+  `Cursor.set_statement_timeout(seconds)` remembers the budget on the cursor
+  and arms it as `SET LOCAL statement_timeout` (through the inliner) before
+  the next statement of every transaction: `SET LOCAL` dies at each commit
+  and rollback and is reverted by the rollback of a savepoint it was issued
+  in, so an eager one would have covered a request only until its first
+  `cr.commit()`. Arming does not count as touching the transaction and the
+  lost-connection replay re-arms on the replacement, so a budgeted request
+  keeps the replay window (an eager `SET LOCAL` was the transaction's first
+  statement and spent it). `set_statement_timeout(None)` lifts an armed
+  budget at once (`SET LOCAL statement_timeout = 0`) and is silent when none
+  is armed; `TestCursor.close()` lifts it because the real cursor outlives
+  every test cursor. Both are primitives: the serving tier decides which
+  requests get which budget and cancels on client disconnect. Measured: a
+  10 s `pg_sleep` cancelled in 0.30 s with the cursor usable after
+  `rollback()`; a 0.2 s budget cancelled at 0.20 s in the first
+  transaction, after `rollback()`, after `commit()`, after a savepoint
+  rollback with the budget armed inside it, and on the replacement
+  connection after the backend was terminated before the first statement
+  (`SHOW statement_timeout` = `200ms` in each), and `0` after clearing.
 - **A session reads its own writes, on the primary, for `db_replica_write_pin`
   seconds.** A replica that has not applied a client's own commit would show
   that client its write as missing. `ReplicaRouter.cursor(pin_key=…)` routes

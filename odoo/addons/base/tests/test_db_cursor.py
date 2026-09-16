@@ -438,6 +438,42 @@ class TestTestCursor(common.TransactionCase):
                     cursor.close()
 
 
+class TestStatementBudgetOnATestCursor(common.TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.registry_enter_test_mode()
+
+    def _sleeps(self, cr, seconds=0.4):
+        try:
+            cr.execute("SELECT pg_sleep(%s)", (seconds,))
+        except psycopg.errors.QueryCanceled:
+            cr.rollback()
+            return False
+        return True
+
+    def test_the_budget_outlives_a_rollback_and_ends_with_the_test_cursor(self):
+        cr = self.registry.cursor()
+        try:
+            cr.set_statement_timeout(0.1)
+            self.assertFalse(self._sleeps(cr), "bounded on the first statement")
+            self.assertFalse(self._sleeps(cr), "still bounded after its rollback")
+            cr.execute("SHOW statement_timeout")
+            self.assertEqual(cr.fetchone(), ("100ms",))
+        finally:
+            cr.close()
+        cr = self.registry.cursor()
+        try:
+            cr.execute("SHOW statement_timeout")
+            self.assertEqual(
+                cr.fetchone(),
+                ("0",),
+                "the real cursor outlives every test cursor: the budget must not",
+            )
+            self.assertTrue(self._sleeps(cr, 0.05))
+        finally:
+            cr.close()
+
+
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -3058,6 +3094,7 @@ class TestBulkCatalogFactScope(BaseCase):
 
 
 class TestConcurrentDdlDuringBinaryCopy(BaseCase):
+    @mute_logger("odoo.db.cursor")
     def test_concurrent_alter_does_not_corrupt_binary_copy(self):
         tbl = "_test_race_copy"
         db_name = common.get_db_name()
