@@ -18,6 +18,7 @@ class CalendarUser(models.Model):
     user_id = fields.Many2one('res.users', string='User', required=True, readonly=True)
     is_primary = fields.Boolean('Primary', readonly=True)
     name = fields.Char('Label')
+    other_members = fields.One2many(related='calendar_id.calendar_user_ids', readonly=True)
 
     # Access roles matching those of Google Calendar
     access_role = fields.Selection([
