@@ -982,7 +982,19 @@ campaign ends; the recipe, the cost figures and the first findings are in
   takes that mark and every entry point routes through both halves, a URI that
   omits its host defaults to the configured one and does it from the config
   rather than the environment, and `pool.py` contains no raw counter mutation
-  at all. Each was verified to fail when its invariant is violated.
+  at all. Added 2026-09-15: a dropped cursor gives its connection back
+  whatever the connection's state, the construction guard asks the pool
+  nothing before it releases, the transaction flags are set once and re-set
+  only when a cursor changed them, the reset and the liveness probe go
+  through libpq with a fake that returns the `int` libpq returns, the psycopg
+  pool is built with `reset=None` and `give_back` reaches the reset, a reset
+  that raises discards, `execute_values` carries no seam of its own and packs
+  pages to the bind ceiling, the replica borrow carries its short deadline and
+  `fail_fast`, a fail-fast borrow ends on a transient probe answer and
+  re-probes a surviving unproven empty pool, `get_tables_existing`'s relkinds
+  derive from `TableKind`, and the two layer contracts (`imports-only-libs`,
+  `resilience-below-connectivity`) are scanned with a control each. Each was
+  verified to fail when its invariant is violated.
   Add the check here when you add an invariant above. One class per invariant:
   a behavioural check against a fake and the structural one (`co_names`, AST)
   sit together, with the AST helpers in `tests/_source.py`; `test_source_pins.py`
