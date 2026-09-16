@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3819 methods, 778 classes, 137 files)
+# All base tests (3820 methods, 778 classes, 137 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -182,7 +182,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 51 | 289 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
-| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 3 | 10 | TransactionCase |
+| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 3 | 11 | TransactionCase |
 
 ### Untagged Files (60 files)
 
@@ -255,7 +255,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 137 |
 | Total test classes | 778 |
-| Total test methods | 3819 |
+| Total test methods | 3820 |
 | Files with @tagged | 77 (56%) |
 | Files without @tagged | 60 (44%) |
 | Classes using post_install | 245 |
