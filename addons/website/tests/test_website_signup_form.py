@@ -3,48 +3,28 @@ from odoo.tests import tagged, HttpCase
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteAuthSignupCustomFieldFlow(HttpCase):
+class TestWebsiteSignupForm(HttpCase):
 
     def setUp(self):
         super().setUp()
         self.env['res.config.settings'].create({'auth_signup_uninvited': 'b2c'}).execute()
 
-    def test_website_auth_signup_custom_field(self):
-        self.authenticate(None, None)
-        country_in = self.env.ref('base.in')
-        self.url_open('/web/signup', data={
-            'name': 'odoo_bot',
-            'login': 'odoo@odoo.com',
-            'password': '123456789',
-            'confirm_password': '123456789',
-            'zip': '380006',
-            'city': 'Gandhinagar',
-            'country_id': str(country_in.id),
-            'field_1': 'this_is_the_text_of_field_1',
-            'csrf_token': self.csrf_token(),
-        }, files=[
-            ('file_1[0][0]', ('image.png', b'fake_file_content', 'image/png')),
-        ])
-
-        # Retrieve the partner created from signup
-        partner = self.env['res.partner'].search(
-            [('name', '=', 'odoo_bot')], limit=1
+    def test_website_signup_form(self):
+        """ The fields added on the signup form from the editor are saved on the
+        page: on signup, the values of the existing ones are written on the
+        partner, the ones of the custom fields are logged in its chatter. """
+        self.start_tour(
+            self.env['website'].get_client_action_url('/web/signup', True),
+            'website_signup_form',
+            login='admin',
         )
 
-        # Verify that whitelisted fields are correctly saved on the partner
-        self.assertTrue(partner, "Partner 'odoo_bot' should exist")
-        self.assertEqual(partner.zip, '380006')
-        self.assertEqual(partner.city, 'Gandhinagar')
-        self.assertEqual(partner.country_id, country_in)
-
-        # Verify that custom text field is logged in the chatter
-        self.assertIn(
-            'this_is_the_text_of_field_1',
-            ''.join(partner.message_ids.mapped('body')),
+        partner = self.env['res.users'].search([('login', '=', 'test.submit@example.com')]).partner_id
+        self.assertTrue(partner, "The browser should have submitted the signup form")
+        self.assertEqual(partner.city, "Grand-Rosière", "An existing field is written on the partner")
+        self.assertEqual(partner.phone, "+32 495 00 00 00", "An existing field is written on the partner")
+        log_note = next(
+            message for message in partner.message_ids if "Other Information" in message.body
         )
-
-        # Verify that the uploaded file is stored as an attachment in chatter
-        self.assertIn(
-            'image.png',
-            partner.message_ids.mapped('attachment_ids.name'),
-        )
+        self.assertIn("Notes : yes please", log_note.body, "A custom field is logged in the chatter")
+        self.assertIn("Comments : From the editor", log_note.body)
