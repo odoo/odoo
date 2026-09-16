@@ -33,7 +33,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             ('unbuild_id', '=', False),
         ]
 
-    def _get_evaluation_batches(self, products, moves):
+    def _get_evaluation_batches(self, products, moves, pulled_in):
         """
         Group the products by how deep they sit in the manufacturing of the period.
 
@@ -42,6 +42,11 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         moves corrected, by the time the good made out of them is valued. The
         orders themselves say what came out of what, which a BoM only approximates
         and a by-product is missing from entirely.
+
+        Products the period makes out of each other have no level to start from.
+        Naming one asks for that product, so it is refused; one the evaluation
+        pulled in on its own is left out instead, and so is everything made out of
+        it, whose own cost would otherwise be read off a component that never moved.
         """
         issued_for = defaultdict(lambda: self.env['product.product'])
         for production in moves.production_id | moves.raw_material_production_id:
@@ -52,28 +57,49 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
 
         depths = {}
         walked = []
+        looping = set()
+        reasons = {}
 
         def depth(product):
-            if product not in depths:
-                if product in walked:
-                    # no level to start from, and core only forbids a loop through a
-                    # BoM's components, never one closed by a by-product
-                    loop = walked[walked.index(product):] + [product]
-                    raise UserError(self.env._(
+            """Return how deep the product sits, or nothing when a loop lies at or under it."""
+            if product in depths:
+                return depths[product]
+            if product in walked:
+                # core only forbids a loop through a BoM's components, never one a by-product closes
+                loop = walked[walked.index(product):] + [product]
+                for looped in loop:
+                    looping.add(looped)
+                    reasons[looped] = self.env._(
                         'The orders of the period make these products out of each other, '
                         'so their costs cannot be evaluated in order: %s',
-                        ' → '.join(looped.display_name for looped in loop),
-                    ))
-                walked.append(product)
-                depths[product] = 1 + max(
-                    (depth(component) for component in issued_for[product]),
-                    default=-1,
-                )
-                walked.pop()
+                        ' → '.join(other.display_name for other in loop),
+                    )
+                return None
+            walked.append(product)
+            components = issued_for[product]
+            levels = [depth(component) for component in components]
+            walked.pop()
+            if stale := [c for c, level in zip(components, levels) if level is None]:
+                depths[product] = None
+                # the good would be valued off a component the period never corrected
+                reasons.setdefault(product, self.env._(
+                    'Its cost is read off %s, which the evaluation could not cost either.',
+                    ', '.join(component.display_name for component in stale),
+                ))
+            else:
+                depths[product] = 1 + max(levels, default=-1)
             return depths[product]
 
-        batches = products.grouped(depth)
-        return [batches[level] for level in sorted(batches)]
+        batches = defaultdict(lambda: self.env['product.product'])
+        excluded = {}
+        for product in products:
+            if (level := depth(product)) is None:
+                excluded[product] = reasons[product]
+            else:
+                batches[level] |= product
+        if refused := next((product for product in products - pulled_in if product in looping), None):
+            raise UserError(reasons[refused])
+        return [batches[level] for level in sorted(batches)], excluded
 
     def _get_production_move_values(self, moves):
         """
