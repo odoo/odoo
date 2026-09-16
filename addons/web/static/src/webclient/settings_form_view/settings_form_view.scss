@@ -54,6 +54,10 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    padding: 0px;
 }
 
+.o_base_settings_view .o_control_panel {
+    margin-bottom: var(--settings__controlPanel-margin-bottom, #{map-get($spacers, 3)});
+}
+
 // BASE SETTINGS LAYOUT
 .o_base_settings_view .o_form_renderer {
    --settings__tab-bg: #{map-get($grays, '100')};
