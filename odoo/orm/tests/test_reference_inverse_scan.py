@@ -132,7 +132,7 @@ def _browses_for_one_reference(extra_models):
             original(self, ids),
         )[1]
         try:
-            field._update_inverses(note, alpha.id)
+            field._update_inverses([(note, alpha.id)])
         finally:
             note_cls.browse = original
         return inverses, len(calls)

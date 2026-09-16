@@ -1,6 +1,7 @@
+import itertools
 import typing
 from collections import defaultdict
-from collections.abc import Iterator, Reversible
+from collections.abc import Iterable, Iterator, Reversible
 from operator import attrgetter
 from typing import override
 
@@ -16,6 +17,7 @@ from .selection import Selection
 if typing.TYPE_CHECKING:
     from .._typing import ModelLike
     from ..models import BaseModel
+    from ..primitives import IdType
     from .relational._base import _RelationalMulti
 
 REFERENCE_VERIFIED_CACHE_KEY = "reference.verified_pairs"
@@ -286,31 +288,57 @@ class Many2oneReference(Integer):
         self._update_cache(records, value.id or 0)
 
     @override
-    def _update_inverses(self, records: BaseModel, value: typing.Any) -> None:
-        if not value:
+    def _update_inverses(self, updates: Iterable[tuple[BaseModel, typing.Any]]) -> None:
+        updates = [(records, value) for records, value in updates if value]
+        if not updates:
             return
-        model_ids = self._get_record_ids_per_res_model(records)
-
-        for invf in records.pool.field_inverses[self]:
-            ids = model_ids.get(invf.model_name)
-            if not ids:
-                continue
-            recs = records.browse(ids)
-            corecord = records.env[invf.model_name].browse(value)
-            recs = recs.filtered_domain(invf.get_comodel_domain(corecord))
-            if not recs:
-                continue
+        env = updates[0][0].env
+        model_ids_per_update = [
+            (records, value, self._get_record_ids_per_res_model(records))
+            for records, value in updates
+        ]
+        for invf in env[self.model_name].pool.field_inverses[self]:
             invf = typing.cast("_RelationalMulti", invf)
-            invf._sync_other_scopes(corecord.env, corecord.id, added=recs._ids)
-            inv_cache = invf._get_cache(corecord.env)
-            ids0 = inv_cache.get(corecord.id)
-            if ids0 is None and corecord.id:
+            additions: dict[IdType, tuple[IdType, ...]] = {}
+            for records, value, model_ids in model_ids_per_update:
+                ids = model_ids.get(invf.model_name)
+                if not ids:
+                    continue
+                corecord = env[invf.model_name].browse(value)
+                recs = records.browse(ids).filtered_domain(
+                    invf.get_comodel_domain(corecord)
+                )
+                if recs:
+                    additions[corecord.id] = tuple(
+                        unique(additions.get(corecord.id, ()) + recs._ids)
+                    )
+            if not additions:
                 continue
-            if corecord.id and not invf._writer_scope_keeps(corecord.env, recs._ids):
-                inv_cache.pop(corecord.id, None)
-                continue
-            ids1 = tuple(unique((ids0 or ()) + recs._ids))
-            invf._update_cache(corecord, ids1, keep_other_scopes=True)
+            invf._sync_added_to_other_scopes(env, additions)
+            inv_cache = invf._get_cache(env)
+            readable = invf._writer_scope_readable(
+                env,
+                list(
+                    unique(
+                        itertools.chain.from_iterable(
+                            added
+                            for coid, added in additions.items()
+                            if coid and coid in inv_cache
+                        )
+                    )
+                ),
+            )
+            for coid, added in additions.items():
+                ids0 = inv_cache.get(coid)
+                if ids0 is None and coid:
+                    continue
+                if coid and not invf._scope_keeps(readable, added):
+                    inv_cache.pop(coid, None)
+                    continue
+                ids1 = tuple(unique((ids0 or ()) + added))
+                invf._update_cache(
+                    env[invf.model_name].browse((coid,)), ids1, keep_other_scopes=True
+                )
 
     def _get_record_ids_per_res_model(
         self, records: BaseModel

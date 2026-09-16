@@ -215,3 +215,70 @@ class TestTheWriterSlotListsWhatTheWriterMayRead:
                 .create({"order_id": order.id, "value": 1, "secret": True})
             )
             assert order.sudo().held_ids == line.sudo()
+
+
+def _count_readability_checks(monkeypatch, env):
+    from odoo.orm.fields.relational._base import _RelationalMulti
+
+    calls = []
+    original = _RelationalMulti._scope_readable_ids
+
+    def counted(self, env, key, comodel_ids):
+        calls.append(tuple(comodel_ids))
+        return original(self, env, key, comodel_ids)
+
+    monkeypatch.setattr(_RelationalMulti, "_scope_readable_ids", counted)
+    return calls
+
+
+class TestABatchIsJudgedOncePerScope:
+    def test_a_superuser_batch_over_many_hosts_checks_the_user_scope_once(
+        self, monkeypatch
+    ):
+        # _message_log_batch: N messages on N threads, created under sudo,
+        # while the user's slot holds every thread's x2many
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
+            calls = _count_readability_checks(monkeypatch, env)
+            lines = env["mirror.line"].create(
+                [
+                    {"order_id": order.id, "value": i, "secret": i == 3}
+                    for i, order in enumerate(orders)
+                ]
+            )
+            assert len(calls) == 1
+            assert sorted(calls[0]) == sorted(lines._ids)
+            field = orders._fields["line_ids"]
+            user_slot = _slots(env, field)[as_user.env.get_cache_key(field)]
+            assert orders[3].id not in user_slot
+            assert {
+                order.id: user_slot[order.id] for order in orders if order != orders[3]
+            } == {
+                order.id: (line.id,)
+                for order, line in zip(orders, lines, strict=True)
+                if order != orders[3]
+            }
+            assert orders[3].with_env(as_user.env).line_ids._ids == ()
+
+    def test_a_user_batch_over_many_hosts_checks_its_own_scope_once(self, monkeypatch):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            as_user = _user_env(env)["mirror.order"]
+            orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
+            calls = _count_readability_checks(monkeypatch, env)
+            lines = (
+                env["mirror.line"]
+                .with_env(as_user.env)
+                .create(
+                    [
+                        {"order_id": order.id, "value": i, "secret": i == 3}
+                        for i, order in enumerate(orders)
+                    ]
+                )
+            )
+            assert len(calls) == 1
+            field = orders._fields["line_ids"]
+            user_slot = _slots(env, field)[as_user.env.get_cache_key(field)]
+            assert orders[3].id not in user_slot
+            assert user_slot[orders[0].id] == (lines[0].id,)
+            assert orders.sudo()[3].line_ids == lines[3].sudo()

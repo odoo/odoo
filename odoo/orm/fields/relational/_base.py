@@ -490,9 +490,9 @@ class _RelationalMulti(_Relational):
         index = env._field_depends_context[self].index("access")
         return key[index] is True or key[index] is None
 
-    def _scope_can_read(
+    def _scope_readable_ids(
         self, env: Environment, key: tuple, comodel_ids: Collection[IdType]
-    ) -> bool:
+    ) -> set[IdType]:
         index = env._field_depends_context[self].index("access")
         uid, company_ids = key[index]
         context = dict(env.context)
@@ -503,9 +503,9 @@ class _RelationalMulti(_Relational):
         try:
             scope_env = env(user=uid, context=context, su=False)
             records = scope_env[self.comodel_name].browse(comodel_ids)
-            return len(records._filtered_access("read")) == len(records)
+            return set(records._filtered_access("read")._ids)
         except AccessError, NotImplementedError:
-            return False
+            return set()
 
     def _reads_as_superuser(self, env: Environment) -> bool:
         comodel = env[self.comodel_name]
@@ -518,17 +518,29 @@ class _RelationalMulti(_Relational):
         except NotImplementedError:
             return False
 
-    def _writer_scope_keeps(self, env: Environment, added: Collection[IdType]) -> bool:
+    def _writer_scope_readable(
+        self, env: Environment, added: Collection[IdType]
+    ) -> set[IdType] | None:
         # the writer's own slot lists what the writer wrote only when the
         # writer's search would list it too: a create or write rule may admit
-        # a record the read rule hides, and the slot answers reads
-        if env.su or not all(isinstance(id_, int) for id_ in added):
-            return True
+        # a record the read rule hides, and the slot answers reads; None
+        # means the scope keeps everything
+        if env.su:
+            return None
         key = env.get_cache_key(self)
         if self._is_superuser_scope(env, key):
             # a computed x2many keeps one slot for every scope
-            return True
-        return self._scope_can_read(env, key, added)
+            return None
+        stored = [id_ for id_ in added if isinstance(id_, int)]
+        return self._scope_readable_ids(env, key, stored) if stored else set()
+
+    @staticmethod
+    def _scope_keeps(
+        readable: Collection[IdType] | None, added: Collection[IdType]
+    ) -> bool:
+        return readable is None or all(
+            id_ in readable for id_ in added if isinstance(id_, int)
+        )
 
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
@@ -621,41 +633,83 @@ class _RelationalMulti(_Relational):
     ) -> None:
         if not isinstance(record_id, int):
             return
+        if added:
+            self._sync_added_to_other_scopes(env, {record_id: tuple(added)})
+        if not removed:
+            return
         own = env.get_cache_key(self)
-        synced = evicted = 0
+        synced = 0
         for key, slot in list(env.core.iter_context_caches(self)):
             if key in (own, PENDING_SCOPE_KEY) or record_id not in slot:
                 continue
             ids = slot[record_id]
             if ids is PENDING:
                 continue
-            if removed:
-                ids = tuple(id_ for id_ in ids if id_ not in removed)
-            if added:
-                if not self._is_superuser_scope(env, key) and not self._scope_can_read(
-                    env, key, added
-                ):
-                    del slot[record_id]
+            slot[record_id] = tuple(id_ for id_ in ids if id_ not in removed)
+            synced += 1
+        if synced and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.scope_sync",
+                model=self.model_name,
+                field=self.name,
+                record=record_id,
+                added=0,
+                removed=len(removed),
+                synced=synced,
+                evicted=0,
+            )
+
+    def _sync_added_to_other_scopes(
+        self, env: Environment, additions: Mapping[IdType, tuple[IdType, ...]]
+    ) -> None:
+        # one readability check per scope, not one per record: a batch create
+        # of N messages on N threads reaches here once with N additions
+        additions = {
+            id_: added
+            for id_, added in additions.items()
+            if isinstance(id_, int) and added
+        }
+        if not additions:
+            return
+        own = env.get_cache_key(self)
+        comodel = env[self.comodel_name]
+        synced = evicted = 0
+        for key, slot in list(env.core.iter_context_caches(self)):
+            if key in (own, PENDING_SCOPE_KEY):
+                continue
+            held = {
+                id_: added
+                for id_, added in additions.items()
+                if id_ in slot and slot[id_] is not PENDING
+            }
+            if not held:
+                continue
+            readable: set[IdType] | None = None
+            if not self._is_superuser_scope(env, key):
+                readable = self._scope_readable_ids(
+                    env, key, list(unique(itertools.chain.from_iterable(held.values())))
+                )
+            for id_, added in held.items():
+                if not self._scope_keeps(readable, added):
+                    del slot[id_]
                     evicted += 1
                     continue
-                ids = tuple(unique(itertools.chain(ids, added)))
-                comodel = env[self.comodel_name]
+                ids = tuple(unique(itertools.chain(slot[id_], added)))
                 if not _is_cache_order_stable(comodel, ids):
                     sorted_ids = comodel.browse(ids)._sorted_by_ids(
                         comodel._order, False
                     )
                     if sorted_ids is not None:
                         ids = sorted_ids
-            slot[record_id] = ids
-            synced += 1
+                slot[id_] = ids
+                synced += 1
         if _debug.logic.enabled and (synced or evicted):
             _debug.logic(
                 "field.x2many.scope_sync",
                 model=self.model_name,
                 field=self.name,
-                record=record_id,
-                added=len(added),
-                removed=len(removed),
+                records=len(additions),
+                added=sum(len(added) for added in additions.values()),
                 synced=synced,
                 evicted=evicted,
             )

@@ -1,5 +1,7 @@
+import itertools
 import typing
 from collections.abc import (
+    Iterable,
     Iterator,
     Reversible,
 )
@@ -13,7 +15,7 @@ from odoo.tools.misc import PENDING, SENTINEL, Sentinel
 from ..._recordset import is_recordset
 from ...domain import Domain
 from ...domain.ast import DomainCondition, OptimizationLevel
-from ...primitives import Command, NewId
+from ...primitives import Command, IdType, NewId
 from .. import _field_ddl as _ddl
 from ._base import _is_cache_order_stable, _Relational, _RelationalMulti
 
@@ -348,7 +350,7 @@ class Many2one(_Relational):
 
         self._update_cache(records, cache_value, dirty=True)
 
-        self._update_inverses(records, cache_value)
+        self._update_inverses([(records, cache_value)])
         if _debug.pipeline.enabled:
             _debug.pipeline(
                 "field.many2one.dirty",
@@ -418,49 +420,76 @@ class Many2one(_Relational):
                     )
                     invf._update_cache(env[invf.model_name].browse(coid), ids1)
 
-    def _update_inverses(self, records: BaseModel, value: int | NewId | None) -> None:
-        if value is None:
+    def _update_inverses(
+        self, updates: Iterable[tuple[BaseModel, int | NewId | None]]
+    ) -> None:
+        updates = [(records, value) for records, value in updates if value is not None]
+        if not updates:
             return
-        corecord = self.convert_to_record(value, records)
-        for invf in records.pool.field_inverses[self]:
+        env = updates[0][0].env
+        model = env[self.model_name]
+        for invf in model.pool.field_inverses[self]:
             invf = typing.cast("_RelationalMulti", invf)
-            valid_records = records.filtered_domain(invf.get_comodel_domain(corecord))
-            if not valid_records:
-                continue
-            invf._sync_other_scopes(corecord.env, corecord.id, added=valid_records._ids)
-            inv_cache = invf._get_cache(corecord.env)
-            ids0 = inv_cache.get(corecord.id)
-            if ids0 is None and corecord.id:
-                continue
-            if corecord.id and not invf._writer_scope_keeps(
-                corecord.env, valid_records._ids
-            ):
-                _debug.logic(
-                    "field.many2one.inverse_evicted_from_writer_scope",
-                    model=self.model_name,
-                    field=self.name,
-                    inverse=f"{invf.model_name}.{invf.name}",
-                    corecord=corecord.id,
-                    uid=corecord.env.uid,
+            additions: dict[IdType, tuple[IdType, ...]] = {}
+            for records, value in updates:
+                corecord = self.convert_to_record(value, records)
+                valid_records = records.filtered_domain(
+                    invf.get_comodel_domain(corecord)
                 )
-                inv_cache.pop(corecord.id, None)
+                if valid_records:
+                    additions[corecord.id] = tuple(
+                        unique(additions.get(corecord.id, ()) + valid_records._ids)
+                    )
+            if not additions:
                 continue
-            ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
-            if corecord.id and not _is_cache_order_stable(records, ids1):
-                # never invalidate here: the next read would fetch, and a fetch
-                # flushes the half-written transaction this call is part of
-                sorted_ids = records.browse(ids1)._sorted_by_ids(records._order, False)
-                if sorted_ids is not None:
-                    ids1 = sorted_ids
-                if _debug.logic.enabled and sorted_ids is None:
+            invf._sync_added_to_other_scopes(env, additions)
+            inv_cache = invf._get_cache(env)
+            readable = invf._writer_scope_readable(
+                env,
+                list(
+                    unique(
+                        itertools.chain.from_iterable(
+                            added
+                            for coid, added in additions.items()
+                            if coid and coid in inv_cache
+                        )
+                    )
+                ),
+            )
+            for coid, added in additions.items():
+                ids0 = inv_cache.get(coid)
+                if ids0 is None and coid:
+                    continue
+                if coid and not invf._scope_keeps(readable, added):
                     _debug.logic(
-                        "field.many2one.inverse_appended_unsorted",
+                        "field.many2one.inverse_evicted_from_writer_scope",
                         model=self.model_name,
                         field=self.name,
                         inverse=f"{invf.model_name}.{invf.name}",
-                        corecord=corecord.id,
+                        corecord=coid,
+                        uid=env.uid,
                     )
-            invf._update_cache(corecord, ids1, keep_other_scopes=True)
+                    inv_cache.pop(coid, None)
+                    continue
+                ids1 = tuple(unique((ids0 or ()) + added))
+                if coid and not _is_cache_order_stable(model, ids1):
+                    # never invalidate here: the next read would fetch, and a
+                    # fetch flushes the half-written transaction this call is
+                    # part of
+                    sorted_ids = model.browse(ids1)._sorted_by_ids(model._order, False)
+                    if sorted_ids is not None:
+                        ids1 = sorted_ids
+                    if _debug.logic.enabled and sorted_ids is None:
+                        _debug.logic(
+                            "field.many2one.inverse_appended_unsorted",
+                            model=self.model_name,
+                            field=self.name,
+                            inverse=f"{invf.model_name}.{invf.name}",
+                            corecord=coid,
+                        )
+                invf._update_cache(
+                    env[invf.model_name].browse((coid,)), ids1, keep_other_scopes=True
+                )
 
     @override
     def to_sql(self, model: ModelLike, alias: str) -> SQL:

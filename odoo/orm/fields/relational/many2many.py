@@ -258,10 +258,13 @@ class Many2many(_RelationalMulti):
                 if not valid_ids:
                     continue
                 inv_cache = invf._get_cache(comodel.env)
-                for y, xs in y_to_xs.items():
+                linked_by_y = {
+                    y: tuple(x for x in xs if x in valid_ids)
+                    for y, xs in y_to_xs.items()
+                }
+                invf._sync_added_to_other_scopes(comodel.env, linked_by_y)
+                for y, linked in linked_by_y.items():
                     corecord = comodel.browse((y,))
-                    linked = tuple(x for x in xs if x in valid_ids)
-                    invf._sync_other_scopes(comodel.env, y, added=linked)
                     ids0 = inv_cache.get(corecord.id, SENTINEL)
                     if ids0 is SENTINEL:
                         if corecord.id:

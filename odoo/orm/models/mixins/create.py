@@ -542,8 +542,13 @@ class CreateMixin(_ModelStubs):
         records, inverses_update = self._update_create_cache(ids, data_list)
         prof.mark("cache")
 
-        for (field, value), record_ids in inverses_update.items():
-            field._update_inverses(self.browse(record_ids), value)
+        for field, updates in inverses_update.items():
+            field._update_inverses(
+                [
+                    (self.browse(record_ids), value)
+                    for value, record_ids in updates.items()
+                ]
+            )
         prof.mark("inverses")
 
         records._update_parent_path_on_create()
@@ -593,7 +598,9 @@ class CreateMixin(_ModelStubs):
         self, ids: list[int], data_list: list[dict]
     ) -> tuple[Self, dict]:
         records = self.browse(ids)
-        inverses_update = defaultdict(list)
+        inverses_update: defaultdict[Field, defaultdict[typing.Any, list[int]]] = (
+            defaultdict(lambda: defaultdict(list))
+        )
         common_set_vals = _BAD_NAMES_LOG
 
         env = self.env
@@ -659,7 +666,7 @@ class CreateMixin(_ModelStubs):
                 if (
                     field.is_many2one or field.is_many2one_reference
                 ) and _field_inverses[field]:
-                    inverses_update[(field, cache_value)].append(record.id)
+                    inverses_update[field][cache_value].append(record.id)
 
         _debug.perf.count(
             "create.cache_primed",
@@ -668,7 +675,7 @@ class CreateMixin(_ModelStubs):
             x2many_fields=len(_stored_x2m_fields),
             scalar_fields=len(_stored_scalar_caches),
             supplied=len(supplied),
-            inverse_updates=len(inverses_update),
+            inverse_updates=sum(len(updates) for updates in inverses_update.values()),
         )
         return records, inverses_update
 
