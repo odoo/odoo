@@ -13,6 +13,7 @@ export class ResUsers extends ImStatusMixin {
     /** @type {number} */
     id;
     company_id = fields.One("res.company");
+    company_ids = fields.Many("res.company");
     /** @type {boolean} */
     is_admin;
     /** @type {boolean} */

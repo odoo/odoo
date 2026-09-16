@@ -256,6 +256,7 @@ export class ResPartner extends webModels.ResPartner {
         res.from_method("_store_im_status_fields", { internal: true });
         this._compute_main_user_id(); // compute not automatically triggering when necessary
         res.one("main_user_id", "_store_avatar_card_fields", { sudo: true });
+        res.many("user_ids", ["active", "company_ids", "share"], { internal: true, sudo: true });
         if (res.is_for_internal_users()) {
             res.extend(["email", "phone", "tz"]);
         }
@@ -271,6 +272,7 @@ export class ResPartner extends webModels.ResPartner {
         res.from_method("_store_im_status_fields", { internal: true });
         this._compute_main_user_id(); // compute not automatically triggering when necessary
         res.one("main_user_id", "_store_main_user_fields", { sudo: true });
+        res.many("user_ids", ["active", "company_ids", "share"], { internal: true, sudo: true });
         res.extend(["email", "tz"], { internal: true });
     }
 
