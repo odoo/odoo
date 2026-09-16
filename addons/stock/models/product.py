@@ -640,7 +640,7 @@ class ProductProduct(models.Model):
         domain = [
             '|',
                 ('product_id', '=', self.id),
-                ('category_id', '=', self.product_tmpl_id.categ_id.id),
+                ('category_id', 'parent_of', self.product_tmpl_id.categ_id.id),
         ]
         return self.env['product.template']._get_action_view_related_putaway_rules(domain)
 
@@ -1240,7 +1240,7 @@ class ProductTemplate(models.Model):
         domain = [
             '|',
                 ('product_id.product_tmpl_id', '=', self.id),
-                ('category_id', '=', self.categ_id.id),
+                ('category_id', 'parent_of', self.categ_id.id),
         ]
         return self._get_action_view_related_putaway_rules(domain)
 
