@@ -50,44 +50,6 @@ def sorted_fields(fields):
     return sorted(recursed, key=lambda field: field['id'])
 
 
-def generate_xls(data):
-    """
-    Generates an XLS file from the given data dictionary. Each key in the `data` dictionary represents a column header,
-    and its corresponding values are written as rows under that column.
-
-    Date and datetime objects in the values will automatically set the style of the cell to a date/datetime.
-
-    :param dict data: keys are column headers, values are rows.
-    :return bytes: the xls file as bytes.
-    """
-    import xlwt  # noqa: PLC0415
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Sheet1')
-
-    default_style = xlwt.XFStyle()
-
-    date_style = xlwt.XFStyle()
-    date_style.num_format_str = 'yyyy-mm-dd'
-
-    datetime_style = xlwt.XFStyle()
-    datetime_style.num_format_str = 'yyyy-mm-dd hh:mm:ss'
-
-    for column, (key, values) in enumerate(data.items()):
-        ws.write(0, column, key, default_style)
-        for row, value in enumerate(values, 1):
-            style = default_style
-            if isinstance(value, datetime.datetime):
-                style = datetime_style
-            elif isinstance(value, datetime.date):
-                style = date_style
-            ws.write(row, column, value, style)
-
-    output = io.BytesIO()
-    wb.save(output)
-    return output.getvalue()
-
-
 def generate_xlsx(data):
     """
     Generates an XLSX file from the given data dictionary. Each key in the `data` dictionary represents a column header,
@@ -1070,7 +1032,7 @@ foo3,Invalid Country\n"""),
 
         Given how easy this is to land in such a situation using Google Spreadhseet, Odoo should support it.
         """
-        for data, expected_preview in [
+        GENERATE_DATA_DATETIME = [
             ({
                 'Some Value': [1, 2],
                 'Date': ['06/30/2025', datetime.date(2025, 7, 1)],
@@ -1090,11 +1052,13 @@ foo3,Invalid Country\n"""),
                 ['2025-06-30', '2025-07-01'],
                 ['2025-06-30 13:37:42', '2025-07-01 09:08:07'],
             ])
-        ]:
-            for file_content, file_type in [
-                (generate_xls(data), 'application/vnd.ms-excel'),
-                (generate_xlsx(data), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-            ]:
+        ]
+
+        for index, (_data, expected_preview) in enumerate(GENERATE_DATA_DATETIME):
+            for extension in ('xls', 'xlsx'):
+                file_type = 'application/vnd.ms-excel' if extension == 'xls' else 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                # content was generate with generate_xls/generate_xls(_data)
+                file_content = self.file_read(f'test_import_export/data/generated_{index}.{extension}').content
                 import_wizard = self.env['base_import.import'].create({
                     'res_model': 'import.preview',
                     'file': BinaryBytes(file_content),
