@@ -276,3 +276,23 @@ class TestX2manyScopeInvariant(TransactionCase):
         for seed in range(8):
             with self.subTest(seed=seed), self.env.cr.savepoint():
                 self._walk(seed)
+
+
+@tagged("post_install", "-at_install")
+class TestSearchVisibilityFields(TransactionCase):
+    def test_every_declared_visibility_field_exists_on_its_model(self):
+        # a _search override that narrows by code names the fields it reads;
+        # a name no field carries would never evict a slot
+        declared = {
+            name: cls._search_visibility_fields
+            for name, cls in self.env.registry.items()
+            if cls._search_visibility_fields is not None
+        }
+        self.assertTrue(declared, "no model declares _search_visibility_fields")
+        for name, fields_ in declared.items():
+            with self.subTest(model=name):
+                self.assertEqual(
+                    [f for f in fields_ if f not in self.env[name]._fields],
+                    [],
+                    f"{name}._search_visibility_fields names fields it lacks",
+                )

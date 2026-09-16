@@ -762,7 +762,11 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 .create({})
             )
 
-        with self.assertQueryCount(admin=40, employee=40):
+        # 41: the composer's creation wrote res_model/res_id on attachment
+        # copies, fields ir.attachment's _search reads to decide visibility,
+        # which emptied the user's slot of the template's attachment_ids; the
+        # send reads it once more
+        with self.assertQueryCount(admin=41, employee=41):
             composer._action_send_mail()
 
         # notifications

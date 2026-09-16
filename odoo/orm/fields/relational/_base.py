@@ -519,7 +519,14 @@ class _RelationalMulti(_Relational):
         self, env: Environment, key: tuple, fnames: Collection[str]
     ) -> bool:
         # a user's search applies the user's read rules on the comodel; a
-        # write to a field a rule tests can move a record in or out of view
+        # write to a field a rule tests can move a record in or out of view.
+        # A comodel whose _search is overridden narrows by code: it declares
+        # the fields that code reads, or every write may have moved a record
+        comodel_cls = type(env[self.comodel_name])
+        if is_search_overridden(comodel_cls):
+            visibility = comodel_cls._search_visibility_fields
+            if visibility is None or not set(visibility).isdisjoint(fnames):
+                return True
         try:
             domain = env.registry.access_policy.record_domain(
                 self._scope_env(env, key), self.comodel_name, "read"

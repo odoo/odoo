@@ -20,6 +20,16 @@ _debug = DebugLog(__name__)
 
 class MailMessage(models.Model):
     _inherit = "mail.message"
+    _search_visibility_fields = (
+        "model",
+        "res_id",
+        "author_id",
+        "create_uid",
+        "message_type",
+        "partner_ids",
+        "is_internal",
+        "subtype_id",
+    )
 
     _SEARCH_ACCESS_CHUNK_MIN = 30
     _SEARCH_ACCESS_CHUNK_MAX = 8192

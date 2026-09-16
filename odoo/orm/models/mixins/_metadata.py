@@ -74,6 +74,10 @@ class _ModelMetadataMixin(_ModelStubs):
 
     _translate: bool = True
     _check_company_auto: bool = False
+    # the fields a _search override reads to decide what a user sees, beyond
+    # the record rules: a write to one of them evicts the x2many slots users
+    # hold on this model's records. None on an override means every field
+    _search_visibility_fields: tuple[str, ...] | None = None
 
     _allow_sudo_commands: bool = True
 

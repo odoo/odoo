@@ -53,6 +53,11 @@ class MailActivity(models.Model):
     _description = "Activity"
     _order = "date_deadline ASC, id ASC"
     _rec_name = "summary"
+    _search_visibility_fields = (
+        "res_model",
+        "res_id",
+        "user_id",
+    )
 
     @api.model
     def default_get(self, fields: list[str]) -> ValuesType:

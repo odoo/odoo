@@ -110,6 +110,13 @@ class IrAttachment(models.Model):
     _name = "ir.attachment"
     _description = "Attachment"
     _order = "id desc"
+    _search_visibility_fields = (
+        "res_model",
+        "res_id",
+        "res_field",
+        "public",
+        "create_uid",
+    )
 
     name = fields.Char(required=True)
     description = fields.Text()
