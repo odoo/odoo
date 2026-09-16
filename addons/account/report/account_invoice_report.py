@@ -26,6 +26,8 @@ class AccountInvoiceReport(models.Model):
         ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Credit Note'),
         ('in_refund', 'Vendor Credit Note'),
+        ('out_receipt', 'Sales Receipt'),
+        ('in_receipt', 'Purchase Receipt'),
         ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -82,7 +84,7 @@ class AccountInvoiceReport(models.Model):
         today = fields.Date.context_today(self)
         self.env['account.move.line'].check_access('read')
         query = self.env['account.move.line'].sudo().with_context(date_to=today)._search([
-            ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+            ('move_type', 'in', self._fields['move_type'].get_values(self.env)),
             ('account_id', '!=', False),
             ('display_type', '=', 'product'),
         ])
