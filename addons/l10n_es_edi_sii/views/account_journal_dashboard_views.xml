@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_kanban_view_sii" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.sii</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='kanban_dashboard']" position="after">
+                    <field name="l10n_es_sii_pending_count"/>
+                    <field name="l10n_es_sii_kanban_state"/>
+                </xpath>
+
+                <xpath expr="//t[@t-name='JournalBodySalePurchase']//div[@name='kanban_primary_right']/div[1]" position="before">
+                    <div class="row" t-if="['sale', 'purchase'].includes(journal_type) and record.l10n_es_sii_pending_count.raw_value > 0">
+                        <div class="col overflow-hidden text-start">
+                            <a type="object" name="action_l10n_es_sii_open_pending"
+                               t-att-class="record.l10n_es_sii_kanban_state.raw_value === 'error' ? 'text-warning fw-bold' : (record.l10n_es_sii_kanban_state.raw_value === 'urgent' ? 'text-danger fw-bold' : '')">
+                                <span title="Invoices to send to SII">
+                                    <t t-out="record.l10n_es_sii_pending_count.value"/> To Send To SII
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
