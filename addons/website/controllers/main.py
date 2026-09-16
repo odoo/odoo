@@ -57,6 +57,13 @@ MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+CONFIGURATOR_PREVIEW_CSP = (
+    "default-src 'none';"
+    f" img-src 'self' data: {API_WEBSITE_IMAGES_URL};"
+    " style-src 'unsafe-inline';"
+    " font-src 'self' data: https://fonts.gstatic.com;"
+    " frame-ancestors 'self'"
+)
 CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
     f'website.{image_name}': f'website.{fallback_image_name}'
     for image_name, fallback_image_name in [
@@ -474,7 +481,7 @@ class Website(Home):
         :return: preview HTML
         :rtype: str
         """
-        if not preview_url.startswith('/'):
+        if not re.fullmatch(r'/[a-z0-9_]+/static/description/preview\.html', preview_url):
             raise NotFound()
         try:
             with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
@@ -566,6 +573,11 @@ class Website(Home):
         image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
         return self._get_theme_static_preview_image_url(theme_name, image_name)
 
+    def _is_configurator_preview_image_url(self, image_url):
+        if not image_url:
+            return False
+        return image_url.startswith(API_WEBSITE_IMAGES_URL) or bool(re.match(r'^/[^/]+/static/', image_url))
+
     def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
         """Replace preview image URLs with industry-specific images.
 
@@ -578,12 +590,7 @@ class Website(Home):
         shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
         for image_name, shape_path in shape_urls:
             mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
-            if not mapped_image_url:
-                continue
-            if (
-                not mapped_image_url.startswith(API_WEBSITE_IMAGES_URL)
-                and not re.match(r'^/[^/]+/static/', mapped_image_url)
-            ):
+            if not self._is_configurator_preview_image_url(mapped_image_url):
                 continue
             shape_src = f'/html_editor/image_shape/{image_name}/{shape_path}'
             shape_file_path, _, shape_query = shape_path.partition('?')
@@ -621,7 +628,7 @@ class Website(Home):
         def replace_keyed_image(match):
             el = match.group(0)
             image_url = self._get_configurator_industry_image_url(images_map, match.group(1))
-            if not image_url:
+            if not self._is_configurator_preview_image_url(image_url):
                 return el
             el = re.sub(r'src="[^"]*"', lambda _m: f'src="{image_url}"', el)
             return re.sub(r'url\((["\']?)[^)]*?\1\)', lambda m: f'url({m.group(1)}{image_url}{m.group(1)})', el)
@@ -635,7 +642,9 @@ class Website(Home):
                 images_map,
                 image_url.replace('/web/image/', '', 1),
             )
-            return mapped_image_url or image_url
+            if not self._is_configurator_preview_image_url(mapped_image_url):
+                return image_url
+            return mapped_image_url
 
         final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
         return final_html
@@ -829,7 +838,6 @@ class Website(Home):
     @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
     def website_configurator_preview(
         self,
-        preview_url,
         theme_name=None,
         industry_id=-1,
         color1='',
@@ -840,12 +848,20 @@ class Website(Home):
         is_dark='0',
         **kwargs,
     ):
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise NotFound()
+        if not theme_name or not re.fullmatch(r'[a-z0-9_]+', theme_name):
+            raise NotFound()
+        preview_url = request.env['website']._get_configurator_theme_preview_url(theme_name)
         if not preview_url:
             raise NotFound()
 
         industry_id = int(industry_id)
         is_dark_color_palette = is_dark == '1'
-        palette = [color1, color2, color3, color4, color5]
+        palette = [
+            color if re.fullmatch(r'#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?', color) else ''
+            for color in (color1, color2, color3, color4, color5)
+        ]
         palette_map = {
             f'o-color-{index}': color
             for index, color in enumerate(palette, start=1)
@@ -878,7 +894,10 @@ class Website(Home):
             preview_overrides,
         )
 
-        return request.make_response(final_html, [('Content-Type', 'text/html; charset=utf-8')])
+        return request.make_response(final_html, [
+            ('Content-Type', 'text/html; charset=utf-8'),
+            ('Content-Security-Policy', CONFIGURATOR_PREVIEW_CSP),
+        ])
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
