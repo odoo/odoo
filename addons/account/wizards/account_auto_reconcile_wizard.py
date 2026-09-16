@@ -59,12 +59,12 @@ class AccountAutoReconcileWizard(models.TransientModel):
         if "line_ids" in fields and "line_ids" not in res and domain:
             amls = self.env["account.move.line"].search(domain)
             if amls:
-                res.update(self._get_default_wizard_values(amls))
+                res.update(self._prepare_default_wizard_values(amls))
                 res["line_ids"] = [Command.set(amls.ids)]
         return res
 
     @api.model
-    def _get_default_wizard_values(self, amls):
+    def _prepare_default_wizard_values(self, amls):
         return {
             "account_ids": [Command.set(amls[0].account_id.ids)]
             if all(aml.account_id == amls[0].account_id for aml in amls)
@@ -79,7 +79,7 @@ class AccountAutoReconcileWizard(models.TransientModel):
             "to_date": max(amls.mapped("date")),
         }
 
-    def _get_wizard_values(self):
+    def _prepare_wizard_values(self):
         self.check_singleton()
         return {
             "account_ids": [Command.set(self.account_ids.ids)]
@@ -97,8 +97,8 @@ class AccountAutoReconcileWizard(models.TransientModel):
         self.check_singleton()
         if (
             self.line_ids
-            and self._get_wizard_values()
-            == self._get_default_wizard_values(self.line_ids)
+            and self._prepare_wizard_values()
+            == self._prepare_default_wizard_values(self.line_ids)
         ):
             _debug.logic(
                 "amls_domain_chosen", autoreconcile=self, mode="selected_lines"
