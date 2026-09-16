@@ -3,7 +3,7 @@
     <t t-name="delivery.locationSelector.mapContainer">
         <div class="d-flex flex-column h-100 w-100">
             <Map
-                t-if="this.state.shouldLoadMap"
+                t-if="this.state.mapStatus === 'loaded'"
                 locations="this.props.locations"
                 selectedLocationId="this.props.selectedLocationId"
                 setSelectedLocation="this.props.setSelectedLocation"
@@ -12,7 +12,7 @@
                 t-else=""
                 class="d-flex justify-content-center align-items-center flex-grow-1 w-100 bg-200"
             >
-                <span t-out="errorMessage"/>
+                <span t-if="this.state.mapStatus === 'failed'" t-out="errorMessage"/>
             </div>
 
             <!-- Desktop infos -->

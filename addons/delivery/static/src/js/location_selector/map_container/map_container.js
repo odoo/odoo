@@ -1,7 +1,7 @@
 /** @odoo-module native */
 import { LocationSchedule } from "@delivery/js/location_selector/location_schedule/location_schedule";
 import { Map } from "@delivery/js/location_selector/map/map";
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { AssetsLoadingError, loadCSS, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/translation";
 
@@ -41,29 +41,24 @@ export class MapContainer extends Component {
     };
 
     setup() {
-        this.state = useState({
-            shouldLoadMap: false,
-        });
-
-        onWillStart(async () => {
-            /**
-             * We load the script for the map before rendering the owl component to avoid a
-             * UserError if the script can't be loaded (e.g. if the customer loses the connection
-             * between the rendering of the page and when he opens the location selector, or if the
-             * CDN’s doesn't host the library anymore).
-             */
-            try {
-                await Promise.all([
-                    loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
-                    loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"),
-                ]);
-                this.state.shouldLoadMap = true;
-            } catch (error) {
+        this.state = useState({ mapStatus: "loading" });
+        // The dialog does not wait for the library: loadJS retries an unreachable CDN for
+        // more than twenty seconds before it gives up, and the list and the selected
+        // location's details are usable without the map.
+        Promise.all([
+            loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
+            loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"),
+        ]).then(
+            () => {
+                this.state.mapStatus = "loaded";
+            },
+            (error) => {
                 if (!(error instanceof AssetsLoadingError)) {
                     throw error;
                 }
-            }
-        });
+                this.state.mapStatus = "failed";
+            },
+        );
     }
 
     /**
