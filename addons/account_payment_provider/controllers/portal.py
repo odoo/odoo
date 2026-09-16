@@ -27,7 +27,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         epd = values.get("epd_discount_amount_currency", 0.0)
         discounted_amount = invoice.amount_residual - epd
 
-        common_view_values = self._get_common_page_view_values(
+        common_view_values = self._prepare_common_page_view_values(
             invoices_data={
                 "partner": invoice.partner_id,
                 "company": invoice.company_id,
@@ -116,7 +116,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             }
         )
 
-        common_view_values = self._get_common_page_view_values(
+        common_view_values = self._prepare_common_page_view_values(
             invoices_data={
                 "partner": partner,
                 "company": company,
@@ -132,7 +132,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         values |= common_view_values
         return values
 
-    def _get_common_page_view_values(self, invoices_data, access_token=None, **kwargs):
+    def _prepare_common_page_view_values(self, invoices_data, access_token=None, **kwargs):
         logged_in = not request.env.user._is_public()
         # We set partner_id to the partner id of the current user if logged in, otherwise we set it
         # to the invoice partner id. We do this to ensure that payment tokens are assigned to the
