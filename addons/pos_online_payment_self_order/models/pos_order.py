@@ -77,6 +77,7 @@ class PosOrder(models.Model):
     def _send_notification_online_payment_status(self, status):
         if status == 'success':
             self._send_order()
+            self.filtered(lambda order: order.config_id.self_ordering_pay_after == 'each')._notify_new_self_order()
 
         self.config_id._notify("ONLINE_PAYMENT_STATUS", {
             'status': status,  # progress, success, fail

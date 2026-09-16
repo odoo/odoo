@@ -55,6 +55,7 @@ class PosSelfOrderController(http.Controller):
         for order in order_ids:
             order._send_order()
 
+        order_ids._notify_new_self_order()
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config):
