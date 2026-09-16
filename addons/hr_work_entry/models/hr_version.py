@@ -52,7 +52,17 @@ class HrVersion(models.Model):
                 interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self._get_default_leave_work_entry_type()
+
+    def _get_default_leave_work_entry_type(self):
+        # Time type of a leave interval that cannot be tied to a specific time off.
+        # Time types are country specific: a company whose country has none simply
+        # gets no type, leaving the work entry in conflict.
+        self.ensure_one()
+        return self.env['hr.work.entry.type'].search([
+            ('code', '=', 'LEAVE100'),
+            ('country_id', '=', self.company_id.country_id.id),
+        ], limit=1)
 
     def _get_sub_leave_domain(self):
         return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
