@@ -107,6 +107,14 @@
             color: var(--o-hb-select-color-hover);
         }
 
+        &:first-child {
+            @include border-top-radius(calc(var(--dropdown-inner-border-radius) + 1px));
+        }
+
+        &:last-child {
+            @include border-bottom-radius(calc(var(--dropdown-inner-border-radius) + 1px));
+        }
+
         &::before {
             color: $active-color !important;
         }
@@ -118,7 +126,8 @@
             &::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
-                border: 1px solid color-mix(in srgb, $active-color 50%, transparent);
+                border: 2px solid color-mix(in srgb, $active-color 50%, transparent);
+                border-radius: inherit;
             }
         }
     }
