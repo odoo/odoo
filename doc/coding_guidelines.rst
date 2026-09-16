@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.50
+:Version: 6.51
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -4601,7 +4601,7 @@ and no reviewer could put two of them side by side. ``file_data``,
 ``DocumentSource`` and ``raw_file`` are one concept under three names, in three
 modules, none of which cites another.
 
-**The cycle has four operations, and the stages after them are already
+**The cycle has five operations, and the stages after them are already
 governed** ``[review]``. Mapping values onto a record is a payload operation
 (``_prepare_*``, §2.4.7), writing them is a mutation (``_update_*``), checking
 them raises (``_check_*``) or answers (``_is_``/``_has_``), and reporting what
@@ -4616,6 +4616,11 @@ a verb for them is how a seventh dialect starts.
      - Canonical
      - Operand → result
      - Abolished
+   * - Acquire
+     - ``_download_*`` ``_import_*``
+     - a remote service → a document (``_download_``), or → local records made
+       from what it returned (``_import_``)
+     - ``_fetch_`` ``_retrieve_`` ``_grab_`` (of something remote)
    * - Identify
      - ``_guess_*``
      - bytes → a name for what they are: mimetype, encoding, separator,
@@ -4636,6 +4641,29 @@ a verb for them is how a seventh dialect starts.
      - ``_extract_*``
      - representations → **candidate field values**, with where each came from
      - ``_digitize_`` ``_mine_`` ``_pull_`` ``_ocr_``
+
+**Acquisition is the step before the bytes are in hand, and it had no verb**
+``[review]``. The four operations below it all start from a document the server
+already holds; getting one from a bank, a tax portal or a payroll service is a
+separate step that crosses a network boundary, and it was spelled ``_fetch_`` in
+forty-odd places — the word §2.4.13 keeps for the ORM's own read. Name what comes
+back, not the trip:
+
+* **``_download_*``** when the result is a document — bank statement files,
+  invoice PDFs and XML. The direction is *this server takes from a remote
+  service*; serving a file to a browser is a route or an ``action_``, never this
+  row, even though public ``download_*`` methods do both today.
+* **``_import_*``** when what comes back becomes **local records** — vendor bills
+  from a tax portal, transactions from a bank feed, payruns from a payroll
+  service. ``_import_`` already means external data in as records for 108
+  definitions, and remote acquisition is the same operation from a further source.
+* **``_get_*``** when the remote answer is **not stored** — a status, a
+  participant lookup, an access token held only in a cache. Crossing a network does
+  not change the Read row (§2.4.7); a cache write is not a record.
+
+A body that downloads **and** imports is ``_import_``, because the records are the
+product and the document an intermediate. A cron wrapping one keeps its namespace:
+``_cron_import_*``.
 
 **The Read/Extract line is the one that keeps being crossed** ``[review]``, and
 crossing it is what made the eight implementations impossible to compare.
@@ -8557,6 +8585,12 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.51
+     - 2026-09-16
+     - §2.4.18: the ingestion cycle gains an Acquire row before Identify —
+       ``_download_`` for a document taken from a remote service, ``_import_``
+       for local records made from what it returned, ``_get_`` for a remote
+       answer that is not stored — retiring ``_fetch_`` of something remote.
    * - 6.50
      - 2026-09-16
      - §3.9: ``noupdate`` protects every write but the first. A module being
