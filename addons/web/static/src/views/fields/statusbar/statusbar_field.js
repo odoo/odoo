@@ -279,7 +279,8 @@ export class StatusBarField extends Component {
             parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
         const { height: currentHeight } = root.getBoundingClientRect();
         const { height: targetHeight } = firstItem.getBoundingClientRect();
-        return currentHeight > targetHeight + verticalOffset;
+        // Round to ignore sub-pixel rounding noise at some zoom/DPI ratios.
+        return Math.round(currentHeight) > Math.round(targetHeight + verticalOffset);
     }
 
     /**
