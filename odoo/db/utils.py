@@ -1,12 +1,16 @@
+import logging
 import os
 import warnings
 from urllib.parse import parse_qsl, urlsplit
+
+import psycopg
 
 from odoo.libs.debug_log import DebugLog
 
 from .settings import PoolSettings, resolve
 
 _ODOO_PGAPPNAME_WARNED = False
+_logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
@@ -90,31 +94,67 @@ def get_connection_info_for_database(
     return db_or_uri, connection_info
 
 
-def update_planner_stats(cr, *, reltuples: float = 1000.0, relpages: int = 100) -> int:
+_SEED_PLANNER_STATS_SQL = """
+    SELECT count(*)
+      FROM (
+        SELECT pg_restore_relation_stats(
+                   'schemaname', n.nspname::text,
+                   'relname', c.relname::text,
+                   'relpages', %s::integer,
+                   'reltuples', %s::real
+               ) AS ok
+          FROM pg_class c
+          JOIN pg_namespace n ON n.oid = c.relnamespace
+         WHERE c.relkind = 'r'
+           AND n.nspname = 'public'
+           AND c.reltuples <= 0
+           AND c.relowner = quote_ident(current_user)::regrole
+      ) AS seeded
+     WHERE seeded.ok
+"""
+
+PLANNER_STATS_LOCK_TIMEOUT = 2.0
+
+
+# The seed is an optimisation for the planner, and pg_restore_relation_stats
+# locks every relation it touches: behind another session's ALTER TABLE (or a
+# test cursor's open transaction) the caller waited without bound -- measured,
+# still blocked after 8 s with the lock held. A LockNotAvailable inside the
+# savepoint rolls the timeout back with the statement; the success path puts
+# the previous value back by hand, because a released savepoint keeps its
+# SET LOCAL for the rest of the transaction.
+def update_planner_stats(
+    cr,
+    *,
+    reltuples: float = 1000.0,
+    relpages: int = 100,
+    lock_timeout: float = PLANNER_STATS_LOCK_TIMEOUT,
+) -> int:
     with _debug.perf(
         "db.planner_stats_seeded", cr=cr, reltuples=reltuples, relpages=relpages
     ) as span:
-        cr.execute(
-            """
-            SELECT count(*)
-              FROM (
-                SELECT pg_restore_relation_stats(
-                           'schemaname', n.nspname::text,
-                           'relname', c.relname::text,
-                           'relpages', %s::integer,
-                           'reltuples', %s::real
-                       ) AS ok
-                  FROM pg_class c
-                  JOIN pg_namespace n ON n.oid = c.relnamespace
-                 WHERE c.relkind = 'r'
-                   AND n.nspname = 'public'
-                   AND c.reltuples <= 0
-                   AND c.relowner = quote_ident(current_user)::regrole
-              ) AS seeded
-             WHERE seeded.ok
-            """,
-            (relpages, reltuples),
-        )
-        seeded: int = cr.fetchone()[0]
+        cr.execute("SELECT current_setting('lock_timeout')")
+        previous: str = cr.fetchone()[0]
+        try:
+            with cr.savepoint(flush=False):
+                cr.execute(
+                    "SET LOCAL lock_timeout = %s", (f"{int(lock_timeout * 1000)}ms",)
+                )
+                cr.execute(
+                    _SEED_PLANNER_STATS_SQL, (relpages, reltuples), log_exceptions=False
+                )
+                seeded: int = cr.fetchone()[0]
+                cr.execute("SET LOCAL lock_timeout = %s", (previous,))
+        except psycopg.errors.LockNotAvailable:
+            _debug.logic(
+                "db.planner_stats_skipped", reason="lock_timeout", timeout=lock_timeout
+            )
+            _logger.warning(
+                "Planner statistics not seeded: a relation stayed locked by "
+                "another session for %.1fs; the planner keeps its defaults until "
+                "ANALYZE runs",
+                lock_timeout,
+            )
+            return 0
         span.set(tables=seeded)
     return seeded

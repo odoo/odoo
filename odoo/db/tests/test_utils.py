@@ -2,6 +2,8 @@ import unittest
 from dataclasses import replace
 from typing import Any
 
+import psycopg
+
 from odoo.db import settings as pool_settings
 from odoo.db import utils as db_utils
 from odoo.db.settings import PoolSettings
@@ -187,3 +189,65 @@ class TestConnectionInfoForUri(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class _SeedCursor:
+    def __init__(self, *, blocked=False):
+        self.statements: list[tuple[str, tuple]] = []
+        self.blocked = blocked
+        self.rolled_back = 0
+        self._row = None
+
+    def execute(self, query, params=None, log_exceptions=True):
+        self.statements.append((" ".join(query.split()), tuple(params or ())))
+        if query.startswith("SELECT current_setting"):
+            self._row = ("5min",)
+        elif "pg_restore_relation_stats" in query:
+            if self.blocked:
+                raise psycopg.errors.LockNotAvailable(
+                    "canceling statement due to lock timeout"
+                )
+            self._row = (7,)
+
+    def fetchone(self):
+        return self._row
+
+    def savepoint(self, flush=True):
+        cursor = self
+
+        class _Savepoint:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                if exc_type is not None:
+                    cursor.rolled_back += 1
+                return False
+
+        return _Savepoint()
+
+
+class TestPlannerStatsSeedNeverWaitsWithoutBound(unittest.TestCase):
+    def test_the_seed_runs_under_a_lock_timeout_and_puts_the_old_value_back(self):
+        from odoo.db.utils import update_planner_stats
+
+        cr = _SeedCursor()
+        self.assertEqual(update_planner_stats(cr, lock_timeout=2.0), 7)
+        sets = [p for q, p in cr.statements if q.startswith("SET LOCAL lock_timeout")]
+        self.assertEqual(sets, [("2000ms",), ("5min",)])
+        self.assertEqual(cr.rolled_back, 0)
+
+    def test_a_relation_locked_by_another_session_skips_the_seed(self):
+        from odoo.db.utils import update_planner_stats
+
+        cr = _SeedCursor(blocked=True)
+        with self.assertLogs("odoo.db.utils", level="WARNING") as cm:
+            self.assertEqual(update_planner_stats(cr, lock_timeout=2.0), 0)
+        self.assertIn("not seeded", cm.output[0])
+        self.assertEqual(
+            cr.rolled_back,
+            1,
+            "the timeout and the failed statement leave with the savepoint, "
+            "so the caller's transaction is usable and its lock_timeout is "
+            "what it was",
+        )
