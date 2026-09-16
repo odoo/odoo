@@ -31,10 +31,10 @@ test("Limiting the visible tags displays a clickable counter badge", async () =>
     const parent = await mountWithCleanup(Parent);
     // tagLimit = 3 -> displays 2 tags + 1 counter (4 tags left)
     expect(".custom_tag").toHaveCount(2);
-    expect(".o_badge.bg-secondary").toHaveText("+4", {
+    expect(".o_badge.bg-300").toHaveText("+4", {
         message: "the counter displays 4 more items",
     });
-    expect(".o_badge.bg-secondary").toHaveAttribute("data-tooltip", "Click to show more", {
+    expect(".o_badge.bg-300").toHaveAttribute("data-tooltip", "Click to show more", {
         message: "the counter has the correct static tooltip",
     });
 
@@ -43,22 +43,22 @@ test("Limiting the visible tags displays a clickable counter badge", async () =>
 
     // limit = 5 -> displays 4 tags + 1 counter (2 tags left)
     expect(".custom_tag").toHaveCount(4);
-    expect(".o_badge.bg-secondary").toHaveText("+2");
+    expect(".o_badge.bg-300").toHaveText("+2");
 
     parent.state.tagLimit = 6;
     await animationFrame();
     expect(".custom_tag").toHaveCount(6);
-    expect(".o_badge.bg-secondary").toHaveCount(0);
+    expect(".o_badge.bg-300").toHaveCount(0);
 
     // Test the click-to-expand behavior
     parent.state.tagLimit = 4;
     await animationFrame();
     expect(".custom_tag").toHaveCount(3);
     // Clicking should override the limit and display ALL tags
-    await click(".o_badge.bg-secondary");
+    await click(".o_badge.bg-300");
     await animationFrame();
     expect(".custom_tag").toHaveCount(6);
-    expect(".o_badge.bg-secondary").toHaveCount(0, {
+    expect(".o_badge.bg-300").toHaveCount(0, {
         message: "The counter badge should disappear after expansion",
     });
 });
