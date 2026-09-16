@@ -165,10 +165,8 @@ def _get_settings_from_live_config() -> ServerSettings:
 
     settings = ServerSettings.from_config(odoo.tools.config)
     # Derived once per config change; the event names the fields that moved.
-    if not _debug.lifecycle.enabled:
-        return settings
     previous, _last_seen = _last_seen, settings  # debuglog
-    if settings != previous:
+    if _debug.lifecycle.enabled and settings != previous:
         _debug.lifecycle(
             "settings.changed",
             first=previous is None,
