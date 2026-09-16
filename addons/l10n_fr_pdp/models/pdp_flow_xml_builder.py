@@ -241,6 +241,12 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'category_code': self._get_line_category_code(line),
             }),
         )
+        for taxes in summary.values():
+            for tax in list(taxes['subtotals']):
+                if tax and tax._l10n_fr_pdp_is_oss():
+                    oss_subtotal = taxes['subtotals'].pop(tax)
+                    taxes['subtotals'][None]['taxable_amount'] += oss_subtotal['taxable_amount']
+            taxes['tax_total'] = sum(subtotal['tax_amount'] for subtotal in taxes['subtotals'].values())
         for agregate, taxes in summary.items():
             nodes.append({
                 'Date': {'_text': self._format_date(agregate['date'])},
@@ -266,7 +272,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _get_line_category_code(self, line):
         # TODO: ADD TMA1 Margin scheme when applicable, add field on tax ??
-        if all(float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1]) for tax in line.tax_ids):
+        if any(tax._l10n_fr_pdp_is_oss() for tax in line.tax_ids) or all(
+            float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1])
+            for tax in line.tax_ids
+        ):
             return 'TNT1'
         if any(tax.tax_scope == 'service' for tax in line.tax_ids):
             return 'TPS1'
@@ -277,7 +286,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         if move.narration:
             invoice['IncludedNote'] = {
                 'Subject': {'_text': 'AAB'},
-                'Content':  {'_text': html2plaintext(move.narration).strip()},
+                'Content': {'_text': html2plaintext(move.narration).strip()[:1024]},
             }
 
     @api.model
@@ -330,6 +339,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     def _invoice_add_partner_vals(self, invoice, partner, tag):
         # Country codes for DROM-COM territories are mapped to 'FR' for PPF transmission
         mapped_country_code = drom_com_territories.map_country_code_for_ppf(partner.country_id.code)
+        mapped_country_code = mapped_country_code.upper() if mapped_country_code else mapped_country_code
         # Check for specific identifier schemes (RIDET, TAHITI, etc.)
         specific_scheme = drom_com_territories.get_specific_identifier_scheme(partner.country_id.code)
 
@@ -378,13 +388,14 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _invoice_add_delivery_vals(self, invoice, move):
         if move.partner_shipping_id:
+            country_code = drom_com_territories.map_country_code_for_ppf(move.partner_shipping_id.country_id.code)
             location = {
                 'LineOne': {'_text': move.partner_shipping_id.street},
                 **({'LineTwo': {'_text': move.partner_shipping_id.street2}} if move.partner_shipping_id.street2 else {}),
                 'CityName': {'_text': move.partner_shipping_id.city},
                 'PostalZone': {'_text': move.partner_shipping_id.zip},
                 **({'CountrySubentity': {'_text': move.partner_shipping_id.state_id}} if move.partner_shipping_id.state_id else {}),
-                'CountryId': {'_text': drom_com_territories.map_country_code_for_ppf(move.partner_shipping_id.country_id.code)},
+                'CountryId': {'_text': country_code.upper() if country_code else country_code},
             }
             invoice['Delivery'] = {
                 'Date': {'_text': self._format_date(move.date)},
@@ -482,6 +493,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 is_refund=line.is_refund,
             )
             tax_items = taxes_res['taxes']
+            if not tax_items:
+                base_amount = line.currency_id.round(taxes_res['total_excluded'])
+                summary['subtotals'][None]['taxable_amount'] += base_amount
+                summary['taxable_amount_total'] += base_amount
             for tax_item in tax_items:
                 base_amount = line.currency_id.round(tax_item['base'])
                 tax_amount = tax_item['amount']
@@ -499,9 +514,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     values['tax_category_code'] = tax_code
                     values['exemption_code'] = exemption_code
                     values['exemption_reason'] = exemption_reason
-
-            if not tax_items:
-                summary['subtotals'][None]['tax_category_code'] = 'E'
 
         return summaries if agregation_function else summaries[None]
 
@@ -527,7 +539,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     **({
                         'TaxExemptionReason': {'_text': tax_sub_total['exemption_reason']},
                         'TaxExemptionReasonCode': {'_text': tax_sub_total['exemption_code']},
-                    } if tax_sub_total.get('exemption_code') else {}),
+                    } if tax_sub_total.get('exemption_reason') or tax_sub_total.get('exemption_code') else {}),
                 }
             })
 
@@ -571,7 +583,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'AllowanceChargeBaseAmount': {'_text': allowance_charge_base},
             }
             res['Product'] = {
-                'Name': {'_text': line.display_name},
+                'Name': {'_text': line.display_name[:255]},
             }
 
             invoice['Line'].append(res)
@@ -589,6 +601,8 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             return 'S', None, None  # default to standard rate if tax code is not valid
         exemption_reason_code = res.get('tax_exemption_reason_code')
         exemption_reason = res.get('tax_exemption_reason')
+        if tax_code == 'E' and not exemption_reason:
+            exemption_reason = _("Exempt from tax")
         return tax_code, exemption_reason_code, exemption_reason
 
     @api.model
@@ -668,10 +682,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _get_move_typecode(self, move):
+        is_credit_note = move.move_type in {'out_refund', 'in_refund'}
         if move.journal_id.is_self_billing:
-            return '389' if move.is_inbound() else '261'
-        else:
-            return '380' if move.is_inbound() else '381'
+            return '261' if is_credit_note else '389'
+        return '381' if is_credit_note else '380'
 
     @api.model
     def _get_payments(self, flow):
