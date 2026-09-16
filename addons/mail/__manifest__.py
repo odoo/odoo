@@ -305,6 +305,29 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_markdown': [
             'mail/static/src/markdown_assets/mail_markdown_assets.scss',
         ],
+        # Minimal assets for isolated iframes from web (eg email html converter)
+        'mail.assets_iframe_helpers': [
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/lib/bootstrap/scss/_alert.scss',
+            ('include', 'web._assets_bootstrap_frontend'),
+            ('include', 'web.icons_fonts'),
+            'web/static/src/scss/animation.scss',
+            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
+        ],
+        'mail.assets_convert_inline': [
+            ('include', 'mail.assets_iframe_helpers'),
+            ('include', 'html_editor.assets_readonly'),
+            # useful scss from /html_editor web.assets_frontend
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/html_editor.frontend.scss',
+            'html_editor/static/src/scss/base_style.scss',
+        ],
         'im_livechat.assets_embed_core': [
             ("include", "html_editor.assets_editor"),
             'mail/static/src/model/**/*',
