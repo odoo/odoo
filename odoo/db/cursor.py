@@ -1126,7 +1126,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         with _debug.perf("cursor.commit.sync", db=self.dbname):
             self._cnx.commit()
         if written and observer is not None:
-            _debug.logic("cursor.commit_observed_write", db=self.dbname)
             observer()
         self.commit_count += 1
         _debug.lifecycle(
