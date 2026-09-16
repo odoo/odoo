@@ -14,4 +14,11 @@ patch(OrderPaymentValidation.prototype, {
         }
         return await super.afterOrderValidation(...arguments);
     },
+    shouldSendOrderInPreparation() {
+        const result = super.shouldSendOrderInPreparation(...arguments);
+        if (!this.pos.config.module_pos_restaurant) {
+            return result;
+        }
+        return result && this.pos.getCategoryCount(this.order).length > 0;
+    },
 });
