@@ -428,7 +428,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0, ''])
         products[key1][key2][0] = round(products[key1][key2][0] + abs(line.qty), precision)
@@ -461,7 +461,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _get_total_and_qty_per_category(self, categories):
         all_qty = 0
         all_total = 0
-        qty_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        qty_precision = self.env['decimal.precision'].precision_get('Product Unit')
         price_precision = self.env['decimal.precision'].precision_get('Product Price')
         for category_dict in categories:
             qty_cat = 0
