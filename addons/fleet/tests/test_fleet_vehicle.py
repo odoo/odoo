@@ -76,55 +76,60 @@ class TestFleetVehicle(TransactionCase):
             .is_vehicle
         )
 
-    def test_a_driver_is_a_driver_assignment(self):
+    def test_a_driver_is_an_operator_assignment(self):
         vehicle = self._vehicle()
-        vehicle.driver_id = self.alice
-        assignment = vehicle.assignment_ids.filtered(lambda a: a.role == "driver")
+        vehicle.operator_id = self.alice
+        assignment = vehicle.assignment_ids.filtered(lambda a: a.role == "operator")
         self.assertEqual(assignment.assignee_id, self.alice)
         self.assertEqual(assignment.state, "active")
 
-        vehicle.driver_id = self.bob
+        vehicle.operator_id = self.bob
         vehicle.invalidate_recordset()
-        self.assertEqual(vehicle.driver_id, self.bob)
+        self.assertEqual(vehicle.operator_id, self.bob)
         drivers = vehicle.with_context(active_test=False).assignment_ids.filtered(
-            lambda a: a.role == "driver"
+            lambda a: a.role == "operator"
         )
         self.assertEqual(len(drivers), 2)
         self.assertEqual(
             drivers.filtered(lambda a: a.assignee_id == self.alice).state, "ended"
         )
-        self.assertEqual(vehicle.driver_history_count, 2)
+        self.assertEqual(vehicle.operator_history_count, 2)
         self.assertEqual(
-            self.env["resource.asset"].search([("driver_id", "=", self.bob.id)]),
+            self.env["resource.asset"].search([("operator_id", "=", self.bob.id)]),
             vehicle,
         )
         self.assertIn(
             "Alice",
             vehicle.message_ids.filtered(
-                lambda m: m.subtype_id == self.env.ref("fleet.mt_fleet_driver_updated")
+                lambda m: (
+                    m.subtype_id
+                    == self.env.ref("resource_asset.mt_asset_operator_updated")
+                )
             )[:1].body,
         )
 
     def test_a_future_driver_takes_over_when_the_change_is_applied(self):
         car = self._vehicle("PRB-CAR")
         other = self._vehicle("PRB-OLD")
-        car.driver_id = self.alice
-        other.driver_id = self.bob
-        car.future_driver_id = self.bob
+        car.operator_id = self.alice
+        other.operator_id = self.bob
+        car.future_operator_id = self.bob
         car.invalidate_recordset()
-        self.assertEqual(car.future_driver_id, self.bob)
-        self.assertGreater(car.next_assignation_date, fields.Datetime.now())
+        self.assertEqual(car.future_operator_id, self.bob)
+        self.assertGreater(car.date_future_operator, fields.Datetime.now())
         self.assertEqual(
-            self.env["resource.asset"].search([("future_driver_id", "=", self.bob.id)]),
+            self.env["resource.asset"].search(
+                [("future_operator_id", "=", self.bob.id)]
+            ),
             car,
         )
 
-        car.action_accept_driver_change()
+        car.action_accept_operator_change()
         (car | other).invalidate_recordset()
-        self.assertEqual(car.driver_id, self.bob)
-        self.assertFalse(car.future_driver_id)
+        self.assertEqual(car.operator_id, self.bob)
+        self.assertFalse(car.future_operator_id)
         self.assertFalse(
-            other.driver_id, "the new driver's previous vehicle is released"
+            other.operator_id, "the new driver's previous vehicle is released"
         )
 
     def test_a_hand_over_date_must_be_in_the_future(self):
@@ -132,8 +137,8 @@ class TestFleetVehicle(TransactionCase):
         with self.assertRaises(UserError):
             vehicle.write(
                 {
-                    "future_driver_id": self.alice.id,
-                    "next_assignation_date": fields.Datetime.now() - timedelta(days=1),
+                    "future_operator_id": self.alice.id,
+                    "date_future_operator": fields.Datetime.now() - timedelta(days=1),
                 }
             )
 
@@ -168,7 +173,7 @@ class TestFleetVehicle(TransactionCase):
         )
         carla = partner._get_or_create_resources(self.env["res.company"])
         vehicle = self._vehicle()
-        vehicle.driver_id = carla
+        vehicle.operator_id = carla
         wizard = self.env["fleet.vehicle.send.mail"].create(
             {
                 "vehicle_ids": [(6, 0, vehicle.ids)],

@@ -1,8 +1,17 @@
+from collections import defaultdict
+from datetime import timedelta
+
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.translate import html_translate
+
+CUSTODY_SILENT = "custody_silent"
+OPERATOR_ROLE = "operator"
+MANAGER_ROLE = "manager"
+CUSTODY_ROLE_BY_FIELD = {"operator_id": OPERATOR_ROLE, "manager_id": MANAGER_ROLE}
+DEFAULT_HANDOVER_DELAY = timedelta(days=7)
 
 IDENTIFIER_CODE_BY_FIELD = {
     "license_plate": "plate",
@@ -172,6 +181,43 @@ class ResourceAsset(models.Model):
     )
     assignment_ids = fields.One2many(related="resource_id.assignment_ids")
     holder_id = fields.Many2one(related="resource_id.holder_id")
+    operator_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Operator",
+        compute="_compute_custody",
+        inverse="_inverse_operator_id",
+        search="_search_operator_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
+        help="Who operates the asset now: the live operator assignment.",
+    )
+    manager_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Manager",
+        compute="_compute_custody",
+        inverse="_inverse_manager_id",
+        search="_search_manager_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
+        help="Who answers for the asset: the live manager assignment.",
+    )
+    future_operator_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Future Operator",
+        compute="_compute_future_operator",
+        inverse="_inverse_future_operator",
+        search="_search_future_operator_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
+        help="Who takes the asset over next: the planned operator assignment.",
+    )
+    date_future_operator = fields.Datetime(
+        string="Hand-over Date",
+        compute="_compute_future_operator",
+        inverse="_inverse_future_operator",
+        help="When the next operator takes over. A hand-over without a date takes effect in a week unless accepted before.",
+    )
+    operator_history_count = fields.Integer(compute="_compute_operator_history_count")
     parent_id = fields.Many2one(
         comodel_name="resource.asset",
         string="Part Of",
@@ -384,6 +430,308 @@ class ResourceAsset(models.Model):
         if not vals:
             return True
         return super().write(vals)
+
+    def _get_custody_assignments(self, role, planned=False, archived=False):
+        if not self.ids:
+            return self.env["resource.assignment"]
+        now = fields.Datetime.now()
+        domain = Domain("resource_id", "in", self.sudo().resource_id.ids) & Domain(
+            "role", "=", role
+        )
+        if planned:
+            domain &= Domain("date_start", ">", now) & Domain("date_end", "=", False)
+        else:
+            domain &= Domain("date_start", "<=", now) & (
+                Domain("date_end", "=", False) | Domain("date_end", ">", now)
+            )
+        assignments = self.env["resource.assignment"].sudo()
+        if archived:
+            # An archived row is invisible to a search and still holds the
+            # asset: unarchiving it would bring back a second holder.
+            assignments = assignments.with_context(active_test=False)
+        return assignments.search(domain)
+
+    def _first_by_asset(self, assignments, reverse):
+        asset_by_resource = {asset.sudo().resource_id.id: asset for asset in self}
+        first = {}
+        for assignment in assignments.sorted("date_start", reverse=reverse):
+            asset = asset_by_resource.get(assignment.resource_id.id)
+            if asset:
+                first.setdefault(asset.id, assignment)
+        return first
+
+    @api.depends(
+        "resource_id.assignment_ids.assignee_id",
+        "resource_id.assignment_ids.role",
+        "resource_id.assignment_ids.date_start",
+        "resource_id.assignment_ids.date_end",
+        "resource_id.assignment_ids.active",
+    )
+    def _compute_custody(self):
+        for field_name, role in CUSTODY_ROLE_BY_FIELD.items():
+            live = self._first_by_asset(
+                self._get_custody_assignments(role), reverse=True
+            )
+            for asset in self:
+                assignment = live.get(asset.id)
+                asset[field_name] = assignment.assignee_id if assignment else False
+
+    @api.depends(
+        "resource_id.assignment_ids.assignee_id",
+        "resource_id.assignment_ids.role",
+        "resource_id.assignment_ids.date_start",
+        "resource_id.assignment_ids.date_end",
+        "resource_id.assignment_ids.active",
+    )
+    def _compute_future_operator(self):
+        planned = self._first_by_asset(
+            self._get_custody_assignments(OPERATOR_ROLE, planned=True), reverse=False
+        )
+        for asset in self:
+            assignment = planned.get(asset.id)
+            asset.future_operator_id = assignment.assignee_id if assignment else False
+            asset.date_future_operator = assignment.date_start if assignment else False
+
+    def _compute_operator_history_count(self):
+        counts = dict(
+            self.env["resource.assignment"]._read_group(
+                [
+                    ("resource_id", "in", self.resource_id.ids),
+                    ("role", "=", OPERATOR_ROLE),
+                ],
+                ["resource_id"],
+                ["__count"],
+            )
+        )
+        for asset in self:
+            asset.operator_history_count = counts.get(asset.resource_id, 0)
+
+    def _search_custody(self, role, operator, value, planned=False):
+        now = fields.Datetime.now()
+        if planned:
+            window = Domain("date_start", ">", now) & Domain("date_end", "=", False)
+        else:
+            window = Domain("date_start", "<=", now) & (
+                Domain("date_end", "=", False) | Domain("date_end", ">", now)
+            )
+        live = Domain("role", "=", role) & window
+        if operator in ("in", "not in"):
+            ids = [value] if isinstance(value, (int, bool)) else list(value)
+            resource_ids = [i for i in ids if i]
+            wants_empty = len(resource_ids) < len(ids)
+        elif operator in ("ilike", "not ilike", "=ilike", "like", "=like"):
+            resource_ids = (
+                self.env["resource.resource"]
+                .with_context(active_test=False)
+                ._search([("name", operator.removeprefix("not "), value)])
+            )
+            wants_empty = False
+        else:
+            return NotImplemented
+        domain = Domain(
+            "resource_id.assignment_ids",
+            "any",
+            live & Domain("assignee_id", "in", resource_ids),
+        )
+        if wants_empty:
+            domain |= ~Domain("resource_id.assignment_ids", "any", live)
+        return ~domain if operator.startswith("not") else domain
+
+    def _search_operator_id(self, operator, value):
+        return self._search_custody(OPERATOR_ROLE, operator, value)
+
+    def _search_manager_id(self, operator, value):
+        return self._search_custody(MANAGER_ROLE, operator, value)
+
+    def _search_future_operator_id(self, operator, value):
+        return self._search_custody(OPERATOR_ROLE, operator, value, planned=True)
+
+    def _inverse_operator_id(self):
+        self._sync_custody("operator_id")
+
+    def _inverse_manager_id(self):
+        self._sync_custody("manager_id")
+
+    def _sync_custody(self, field_name):
+        """Write the holder of one role into resource.assignment, and answer
+        the assets whose holder actually changed, for whoever records it."""
+        role = CUSTODY_ROLE_BY_FIELD[field_name]
+        now = fields.Datetime.now()
+        live = self._get_custody_assignments(role, archived=True)
+        live_by_resource = defaultdict(live.browse)
+        for assignment in live:
+            live_by_resource[assignment.resource_id.id] |= assignment
+        new_vals_list = []
+        changed = self.browse()
+        for asset in self:
+            resource = asset.sudo().resource_id
+            current = live_by_resource[resource.id]
+            holder = asset[field_name]
+            if holder and current.assignee_id == holder:
+                continue
+            if not holder and not current:
+                continue
+            previous = current.assignee_id[:1]
+            self._end_custody(current, now)
+            if holder:
+                new_vals_list.append(
+                    {
+                        "resource_id": resource.id,
+                        "assignee_id": holder.id,
+                        "role": role,
+                        "date_start": now,
+                    }
+                )
+            changed |= asset
+            asset._post_custody_message(role, previous, holder)
+        if new_vals_list:
+            # The rivals are ended above; the create hook has nothing to supersede.
+            self.env["resource.assignment"].sudo().with_context(
+                custody_sync=True
+            ).create(new_vals_list)
+        return changed
+
+    def _inverse_future_operator(self):
+        now = fields.Datetime.now()
+        planned = self._get_custody_assignments(OPERATOR_ROLE, planned=True)
+        planned_by_resource = defaultdict(planned.browse)
+        for assignment in planned:
+            planned_by_resource[assignment.resource_id.id] |= assignment
+        new_vals_list = []
+        for asset in self:
+            resource = asset.sudo().resource_id
+            rows = planned_by_resource[resource.id]
+            date_start = asset.date_future_operator or now + DEFAULT_HANDOVER_DELAY
+            current = rows.sorted("date_start")[:1]
+            if (
+                asset.future_operator_id
+                and current.assignee_id == asset.future_operator_id
+                and current.date_start == date_start
+            ):
+                continue
+            self._end_custody(rows, now)
+            if asset.future_operator_id:
+                if date_start <= now:
+                    raise UserError(
+                        self.env._("A scheduled hand-over must start in the future.")
+                    )
+                new_vals_list.append(
+                    {
+                        "resource_id": resource.id,
+                        "assignee_id": asset.future_operator_id.id,
+                        "role": OPERATOR_ROLE,
+                        "date_start": date_start,
+                    }
+                )
+                if self.env.context.get(CUSTODY_SILENT):
+                    continue
+                subtype = self.env.ref(
+                    "resource_asset.mt_asset_future_operator_scheduled",
+                    raise_if_not_found=False,
+                )
+                asset.sudo().message_post(
+                    body=self.env._(
+                        "Scheduled operator: %(before)s → %(after)s",
+                        before=current.assignee_id.sudo().name or "—",
+                        after=asset.future_operator_id.sudo().name,
+                    ),
+                    subtype_id=subtype.id if subtype else None,
+                )
+        if new_vals_list:
+            self.env["resource.assignment"].sudo().create(new_vals_list)
+
+    def _get_custody_message(self, role, before, after):
+        names = {
+            "before": before.sudo().name or "—",
+            "after": after.sudo().name or "—",
+        }
+        if role == MANAGER_ROLE:
+            return self.env._("Manager: %(before)s → %(after)s", **names)
+        return self.env._("Operator: %(before)s → %(after)s", **names)
+
+    def _post_custody_message(self, role, before, after):
+        self.check_singleton()
+        if before == after or self.env.context.get(CUSTODY_SILENT):
+            return
+        subtype = self.env.ref(
+            "resource_asset.mt_asset_operator_updated", raise_if_not_found=False
+        )
+        self.sudo().message_post(
+            body=self._get_custody_message(role, before, after),
+            subtype_id=subtype.id if subtype else None,
+        )
+
+    def _get_assets_released_by_operator_change(self):
+        return self.search(
+            [
+                ("kind_id", "in", self.kind_id.ids),
+                ("operator_id", "in", self.future_operator_id.ids),
+                ("id", "not in", self.ids),
+            ]
+        )
+
+    def action_accept_operator_change(self):
+        assets = self.filtered("future_operator_id")
+        assets._get_assets_released_by_operator_change().operator_id = False
+        now = fields.Datetime.now()
+        for asset in assets:
+            planned = asset._get_custody_assignments(
+                OPERATOR_ROLE, planned=True
+            ).sorted("date_start")[:1]
+            previous = asset.operator_id
+            self._end_custody(asset._get_custody_assignments(OPERATOR_ROLE), now)
+            planned.date_start = now
+            asset.invalidate_recordset(
+                ["operator_id", "future_operator_id", "date_future_operator"]
+            )
+            asset._post_custody_message(OPERATOR_ROLE, previous, asset.operator_id)
+
+    def action_view_operator_history(self):
+        self.check_singleton()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.env._("Operators"),
+            "view_mode": "list,form",
+            "res_model": "resource.assignment",
+            "domain": [
+                ("resource_id", "=", self.resource_id.id),
+                ("role", "=", OPERATOR_ROLE),
+            ],
+            "context": {
+                "default_resource_id": self.resource_id.id,
+                "default_role": OPERATOR_ROLE,
+                "active_test": False,
+            },
+        }
+
+    @api.model
+    def _search_live_custody(self, resources):
+        """Every custody assignment on those resources that has not ended.
+
+        Wider than `date_end = False`: a row ending in the future is still live,
+        and an archived one still holds its resource, so both are superseded
+        like an open one rather than left as rivals.
+        """
+        if not resources:
+            return self.env["resource.assignment"]
+        now = fields.Datetime.now()
+        return (
+            self.env["resource.assignment"]
+            .sudo()
+            .with_context(active_test=False)
+            .search(
+                Domain("resource_id", "in", resources.ids)
+                & Domain("role", "in", list(CUSTODY_ROLE_BY_FIELD.values()))
+                & Domain("date_start", "<=", now)
+                & (Domain("date_end", "=", False) | Domain("date_end", ">", now))
+            )
+        )
+
+    @api.model
+    def _close_custody(self, resources):
+        """End every custody assignment on those resources: what they held is
+        no longer theirs to hold."""
+        self._end_custody(self._search_live_custody(resources))
 
     @api.model
     def _end_custody(self, assignments, now=None):

@@ -38,8 +38,10 @@ class TestActivitySchedule(ActivityScheduleHRCase):
                     "name": f"Car of {employee.name}",
                     "kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
                     "product_id": model.id,
-                    "driver_employee_id": employee.id,
-                    "manager_id": cls.user_manager.id,
+                    "operator_employee_id": employee.id,
+                    "manager_id": cls.user_manager.partner_id._get_or_create_resources(
+                        cls.env.company
+                    ).id,
                 }
             )
 
@@ -81,7 +83,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         )
         form.save()
 
-        self.employee_1.car_ids.driver_id = False
+        self.employee_1.car_ids.operator_id = False
         form = self._instantiate_activity_schedule_wizard(employees)
         form.plan_id = self.plan_fleet
         self.assertTrue(form.has_error)

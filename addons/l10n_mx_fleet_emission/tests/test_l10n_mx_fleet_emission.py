@@ -205,7 +205,7 @@ class TestL10nMxFleetEmission(TransactionCase):
             .create({"name": "Emissions Driver"})
             ._get_or_create_resources(self.env.company)
         )
-        vehicle.driver_id = driver
+        vehicle.operator_id = driver
         self.assertEqual(inspection.driver_id, driver)
         self.assertIn(
             inspection, self.Inspection.search([("driver_id", "=", driver.id)])

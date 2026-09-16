@@ -1,6 +1,6 @@
 {
     "name": "Fleet",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Human Resources/Fleet",
     "sequence": 185,
     "summary": "Manage your company's vehicles, drivers, services and costs",
@@ -30,7 +30,6 @@ Main Features
         "security/ir.model.access.csv",
         "data/fleet_cars_data.xml",
         "data/fleet_data.xml",
-        "data/mail_message_subtype_data.xml",
         "views/product_template_views.xml",
         "views/fleet_vehicle_views.xml",
         "views/fleet_service_views.xml",

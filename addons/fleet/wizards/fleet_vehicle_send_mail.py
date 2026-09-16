@@ -41,7 +41,7 @@ class FleetVehicleSendMail(models.TransientModel):
 
     def action_send(self):
         self.check_singleton()
-        without_emails = self.vehicle_ids.driver_id.partner_id.filtered(
+        without_emails = self.vehicle_ids.operator_id.partner_id.filtered(
             lambda partner: not partner.email
         )
         if without_emails:
@@ -70,7 +70,7 @@ class FleetVehicleSendMail(models.TransientModel):
                 body=bodies[vehicle.id],
                 email_layout_xmlid="mail.mail_notification_light",
                 message_type="comment",
-                partner_ids=vehicle.driver_id.partner_id.ids,
+                partner_ids=vehicle.operator_id.partner_id.ids,
                 subject=subjects[vehicle.id],
             )
         # Nothing to do next: an action method answering None closes the dialog,

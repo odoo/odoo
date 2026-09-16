@@ -24,7 +24,7 @@ class HrDepartureWizard(models.TransientModel):
             .search(
                 [
                     ("assignee_id", "in", self.employee_ids.sudo().resource_id.ids),
-                    ("role", "=", "driver"),
+                    ("role", "=", "operator"),
                     ("resource_id", "in", vehicles.resource_id.ids),
                     "|",
                     ("date_end", "=", False),

@@ -30,13 +30,14 @@ class MailActivityPlanTemplate(models.Model):
             warning = False
             if not vehicle:
                 error = _("Employee %s is not linked to a vehicle.", employee_id.name)
-            if vehicle and not vehicle.manager_id:
+            manager = vehicle._get_manager_user()
+            if vehicle and not manager:
                 warning = _(
                     "The vehicle of employee %(employee)s is not linked to a fleet manager, assigning to you.",
                     employee=employee_id.name,
                 )
             return {
-                "responsible": vehicle.manager_id or self.env.user,
+                "responsible": manager or self.env.user,
                 "error": error,
                 "warning": warning,
             }

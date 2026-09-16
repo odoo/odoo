@@ -255,13 +255,13 @@ class TestResourceAsset(TransactionCase):
             {
                 "resource_id": truck.resource_id.id,
                 "assignee_id": self.driver.id,
-                "role": "driver",
+                "role": "operator",
                 "date_start": datetime.now() - timedelta(days=1),
             }
         )
         truck.invalidate_recordset()
         self.assertEqual(truck.holder_id, self.driver)
-        self.assertEqual(truck._get_holder(role="driver"), self.driver)
+        self.assertEqual(truck._get_holder(role="operator"), self.driver)
         self.assertIn(assignment, truck.assignment_ids)
         self.assertIn(truck, self.Asset.search([("holder_id", "=", self.driver.id)]))
 

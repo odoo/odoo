@@ -1,13 +1,13 @@
 {
     "name": "Fleet History",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Human Resources",
     "summary": "Get history of driven cars by employees",
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
-        "hr",
         "fleet",
+        "resource_asset_hr",
     ],
     "data": [
         "views/employee_views.xml",

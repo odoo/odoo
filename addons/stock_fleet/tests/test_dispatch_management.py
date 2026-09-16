@@ -37,7 +37,7 @@ class TestDispatchManagement(TransactionCase):
                 "name": "Van",
                 "kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
                 "product_id": cls.model.id,
-                "driver_id": cls.env["resource.resource"]
+                "operator_id": cls.env["resource.resource"]
                 .create(
                     {
                         "name": "Driver",

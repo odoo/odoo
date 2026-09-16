@@ -28,9 +28,9 @@ class TestHrFleetDriver(common.TransactionCase):
         )
 
     def test_an_employee_drives_through_their_resource(self):
-        car = self._car("HR-001", driver_employee_id=self.employee.id)
-        self.assertEqual(car.driver_id, self.employee.resource_id)
-        self.assertEqual(car.driver_employee_id, self.employee)
+        car = self._car("HR-001", operator_employee_id=self.employee.id)
+        self.assertEqual(car.operator_id, self.employee.resource_id)
+        self.assertEqual(car.operator_employee_id, self.employee)
         self.assertEqual(self.employee.car_ids, car)
         self.assertEqual(self.employee.employee_cars_count, 1)
         self.assertIn("HR-001", self.employee.license_plate)
@@ -40,23 +40,23 @@ class TestHrFleetDriver(common.TransactionCase):
         )
         self.assertEqual(
             self.env["resource.asset"].search(
-                [("driver_employee_id", "=", self.employee.id)]
+                [("operator_employee_id", "=", self.employee.id)]
             ),
             car,
         )
 
     def test_a_future_employee_driver_takes_over(self):
-        car = self._car("HR-002", driver_employee_id=self.employee.id)
-        car.future_driver_employee_id = self.other_employee
-        self.assertEqual(car.future_driver_id, self.other_employee.resource_id)
-        car.action_accept_driver_change()
+        car = self._car("HR-002", operator_employee_id=self.employee.id)
+        car.future_operator_employee_id = self.other_employee
+        self.assertEqual(car.future_operator_id, self.other_employee.resource_id)
+        car.action_accept_operator_change()
         car.invalidate_recordset()
-        self.assertEqual(car.driver_employee_id, self.other_employee)
+        self.assertEqual(car.operator_employee_id, self.other_employee)
         self.assertEqual(self.employee.employee_cars_count, 1)
         self.assertFalse(self.employee.car_ids)
 
     def test_departure_releases_the_company_car(self):
-        car = self._car("HR-003", driver_employee_id=self.employee.id)
+        car = self._car("HR-003", operator_employee_id=self.employee.id)
         wizard = self.env["hr.departure.wizard"].create(
             {
                 "employee_ids": [(6, 0, self.employee.ids)],
@@ -66,4 +66,4 @@ class TestHrFleetDriver(common.TransactionCase):
         )
         wizard._free_company_car()
         car.invalidate_recordset()
-        self.assertFalse(car.driver_id)
+        self.assertFalse(car.operator_id)

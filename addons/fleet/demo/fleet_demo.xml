@@ -136,8 +136,7 @@
             <field
                 name="date_acquisition"
                 eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
-            <field name="driver_id" ref="driver_resource_1" />
-            <field name="manager_id" ref="base.user_admin" />
+            <field name="operator_id" ref="driver_resource_1" />
             <field name="tag_ids" eval="[Command.set([ref('vehicle_tag_leasing')])]" />
         </record>
         <record id="driver_resource_2" model="resource.resource">
@@ -155,8 +154,7 @@
             <field
                 name="date_acquisition"
                 eval="(DateTime.now() - timedelta(days=400)).strftime('%Y-%m-%d')" />
-            <field name="driver_id" ref="driver_resource_2" />
-            <field name="manager_id" ref="base.user_admin" />
+            <field name="operator_id" ref="driver_resource_2" />
             <field
                 name="tag_ids"
                 eval="[Command.set([ref('vehicle_tag_purchased')])]" />
@@ -176,8 +174,7 @@
             <field
                 name="date_acquisition"
                 eval="(DateTime.now() - timedelta(days=230)).strftime('%Y-%m-%d')" />
-            <field name="driver_id" ref="driver_resource_3" />
-            <field name="manager_id" ref="base.user_admin" />
+            <field name="operator_id" ref="driver_resource_3" />
             <field name="tag_ids" eval="[Command.set([ref('vehicle_tag_leasing')])]" />
         </record>
         <record id="driver_resource_4" model="resource.resource">
@@ -195,8 +192,7 @@
             <field
                 name="date_acquisition"
                 eval="(DateTime.now() - timedelta(days=150)).strftime('%Y-%m-%d')" />
-            <field name="driver_id" ref="driver_resource_4" />
-            <field name="manager_id" ref="base.user_admin" />
+            <field name="operator_id" ref="driver_resource_4" />
             <field name="tag_ids" eval="[Command.set([ref('vehicle_tag_senior')])]" />
         </record>
         <record id="driver_resource_5" model="resource.resource">
@@ -214,8 +210,7 @@
             <field
                 name="date_acquisition"
                 eval="(DateTime.now() - timedelta(days=90)).strftime('%Y-%m-%d')" />
-            <field name="driver_id" ref="driver_resource_5" />
-            <field name="manager_id" ref="base.user_admin" />
+            <field name="operator_id" ref="driver_resource_5" />
             <field name="tag_ids" eval="[Command.set([ref('vehicle_tag_junior')])]" />
         </record>
         <record id="odometer_meter_1" model="resource.asset.meter">

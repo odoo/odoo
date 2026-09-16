@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="mt_asset_operator_updated" model="mail.message.subtype">
+            <field name="name">Operator Updated</field>
+            <field name="description">The asset's operator has been updated</field>
+            <field name="res_model">resource.asset</field>
+            <field name="sequence" eval="1" />
+            <field name="default" eval="True" />
+            <field name="internal" eval="True" />
+        </record>
+        <record id="mt_asset_future_operator_scheduled" model="mail.message.subtype">
+            <field name="name">Future Operator Scheduled</field>
+            <field
+                name="description">An operator has been scheduled to take over this asset</field>
+            <field name="res_model">resource.asset</field>
+            <field name="sequence" eval="2" />
+            <field name="default" eval="True" />
+            <field name="internal" eval="True" />
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">resource.asset.form.inherit.hr</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='custody']/field[@name='assignment_ids']/list/field[@name='assignee_partner_id']"
+                position="after">
+                <field name="department_id" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

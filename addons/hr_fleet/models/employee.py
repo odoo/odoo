@@ -29,13 +29,13 @@ class HrEmployee(models.Model):
             self.env["resource.asset"]
             .sudo()
             .search(
-                [("is_vehicle", "=", True), ("driver_id", "in", self.resource_id.ids)]
+                [("is_vehicle", "=", True), ("operator_id", "in", self.resource_id.ids)]
             )
         )
         for employee in self:
             employee.car_ids = vehicles.filtered(
                 lambda vehicle, employee=employee: (
-                    vehicle.driver_id == employee.resource_id
+                    vehicle.operator_id == employee.resource_id
                 )
             )
 
@@ -46,7 +46,7 @@ class HrEmployee(models.Model):
             vehicles = self.env["resource.asset"].sudo().search(value)
         else:
             vehicles = self.env["resource.asset"].sudo().browse(value)
-        domain = Domain("resource_id", "in", vehicles.driver_id.ids)
+        domain = Domain("resource_id", "in", vehicles.operator_id.ids)
         return ~domain if operator.startswith("not") else domain
 
     @api.depends("private_car_plate")
@@ -69,7 +69,7 @@ class HrEmployee(models.Model):
             .sudo()
             .search([("is_vehicle", "=", True), ("license_plate", operator, value)])
         )
-        return Domain("resource_id", "in", vehicles.driver_id.ids) | Domain(
+        return Domain("resource_id", "in", vehicles.operator_id.ids) | Domain(
             "private_car_plate", operator, value
         )
 
@@ -81,7 +81,7 @@ class HrEmployee(models.Model):
             ._read_group(
                 [
                     ("assignee_id", "in", self.resource_id.ids),
-                    ("role", "=", "driver"),
+                    ("role", "=", "operator"),
                 ],
                 ["assignee_id"],
                 ["__count"],
@@ -98,11 +98,11 @@ class HrEmployee(models.Model):
             "view_mode": "list,form",
             "domain": [
                 ("assignee_id", "=", self.resource_id.id),
-                ("role", "=", "driver"),
+                ("role", "=", "operator"),
             ],
             "context": {
                 "default_assignee_id": self.resource_id.id,
-                "default_role": "driver",
+                "default_role": "operator",
                 "active_test": False,
             },
             "name": self.env._("Cars History"),

@@ -27,7 +27,7 @@ class TestResourceAssignment(TransactionCase):
             {
                 "resource_id": self.truck.id,
                 "assignee_id": (assignee or self.driver).id,
-                "role": "driver",
+                "role": "operator",
                 "date_start": self.now - timedelta(days=1),
                 **vals,
             }
@@ -35,7 +35,7 @@ class TestResourceAssignment(TransactionCase):
 
     def test_name_and_state(self):
         assignment = self._assign()
-        self.assertEqual(assignment.name, "Ana, Driver of Truck 12")
+        self.assertEqual(assignment.name, "Ana, Operator of Truck 12")
         self.assertEqual(assignment.state, "active")
         assignment.date_end = self.now - timedelta(hours=1)
         self.assertEqual(assignment.state, "ended")
@@ -131,7 +131,7 @@ class TestResourceAssignment(TransactionCase):
             assignee=self.other_driver,
             date_start=self.now - timedelta(days=10),
         )
-        self._assign(role="driver", date_start=self.now - timedelta(days=1))
+        self._assign(role="operator", date_start=self.now - timedelta(days=1))
         self.truck.invalidate_recordset(["holder_id"])
         self.assertEqual(self.truck.holder_id, self.driver)
         Resource = self.env["resource.resource"]
@@ -150,12 +150,12 @@ class TestResourceAssignment(TransactionCase):
 
     def test_holder_by_role_and_moment(self):
         self._assign(role="manager", assignee=self.other_driver)
-        self._assign(role="driver")
+        self._assign(role="operator")
         self.assertEqual(
             self.Assignment._get_holder(self.truck, role="manager"), self.other_driver
         )
         self.assertEqual(
-            self.Assignment._get_holder(self.truck, role="driver"), self.driver
+            self.Assignment._get_holder(self.truck, role="operator"), self.driver
         )
         self.assertFalse(
             self.Assignment._get_holder(self.truck, at=self.now - timedelta(days=5))
@@ -290,9 +290,15 @@ class TestResourceAssignment(TransactionCase):
 
     def test_deleting_the_assignment_releases_the_booking(self):
         assignment = self._assign(date_end=self.now + timedelta(days=3))
+        assignment_id = assignment.id
         assignment.unlink()
         self.assertFalse(
-            self.Reservation.search([("res_model", "=", "resource.assignment")])
+            self.Reservation.search(
+                [
+                    ("res_model", "=", "resource.assignment"),
+                    ("res_id", "=", assignment_id),
+                ]
+            )
         )
 
     def test_anyone_can_hold_by_their_contact(self):

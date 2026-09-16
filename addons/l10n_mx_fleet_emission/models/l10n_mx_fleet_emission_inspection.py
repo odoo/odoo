@@ -23,7 +23,10 @@ class L10nMxFleetEmissionInspection(models.Model):
         ondelete="cascade",
     )
     license_plate = fields.Char(related="asset_id.license_plate")
-    driver_id = fields.Many2one(related="asset_id.driver_id")
+    driver_id = fields.Many2one(
+        related="asset_id.operator_id",
+        string="Driver",
+    )
     company_id = fields.Many2one(
         related="asset_id.company_id",
         store=True,

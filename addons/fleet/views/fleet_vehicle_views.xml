@@ -10,20 +10,20 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <button
-                    name="action_accept_driver_change"
+                    name="action_accept_operator_change"
                     type="object"
                     string="Apply New Driver"
-                    invisible="not future_driver_id"
+                    invisible="not future_operator_id"
                     class="btn-primary" />
             </field>
             <div name="button_box" position="inside">
                 <button
-                    name="action_view_driver_history"
+                    name="action_view_operator_history"
                     type="object"
                     icon="fa-history"
                     class="oe_stat_button">
                     <field
-                        name="driver_history_count"
+                        name="operator_history_count"
                         string="Drivers"
                         widget="statinfo" />
                 </button>
@@ -67,11 +67,17 @@
                     <field name="odometer_uom_id" class="oe_inline" />
                 </div>
             </field>
-            <field name="holder_id" position="replace">
-                <field name="driver_id" />
-                <field name="future_driver_id" />
-                <field name="next_assignation_date" invisible="not future_driver_id" />
-                <field name="manager_id" />
+            <field name="operator_id" position="attributes">
+                <attribute name="string">Driver</attribute>
+            </field>
+            <field name="future_operator_id" position="attributes">
+                <attribute name="string">Future Driver</attribute>
+            </field>
+            <field name="date_future_operator" position="attributes">
+                <attribute name="string">Assignment Date</attribute>
+            </field>
+            <field name="manager_id" position="attributes">
+                <attribute name="string">Fleet Manager</attribute>
             </field>
             <page name="identifiers" position="before">
                 <page name="model" string="Model">
@@ -120,9 +126,10 @@
                 <field name="license_plate" />
                 <field name="name" />
                 <field name="product_id" string="Model" />
-                <field name="driver_id" widget="many2one_avatar" />
+                <field name="operator_id" string="Driver" widget="many2one_avatar" />
                 <field
-                    name="future_driver_id"
+                    name="future_operator_id"
+                    string="Future Driver"
                     widget="many2one_avatar"
                     optional="hide" />
                 <field name="vin_sn" optional="hide" />
@@ -161,9 +168,9 @@
                                 name="tag_ids"
                                 widget="many2many_tags"
                                 options="{'color_field': 'color'}" />
-                            <div t-if="record.driver_id.raw_value">
-                                <field name="driver_id" widget="many2one_avatar" />
-                                <field name="driver_id" />
+                            <div t-if="record.operator_id.raw_value">
+                                <field name="operator_id" widget="many2one_avatar" />
+                                <field name="operator_id" />
                             </div>
                         </main>
                     </t>
@@ -181,7 +188,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="license_plate" />
-                <field name="driver_id" />
+                <field name="operator_id" string="Driver" />
                 <field name="product_id" string="Model" />
                 <field name="manufacturer_id" />
                 <field name="tag_ids" />
@@ -190,17 +197,17 @@
                 <filter
                     name="driven"
                     string="With a Driver"
-                    domain="[('driver_id', '!=', False)]" />
+                    domain="[('operator_id', '!=', False)]" />
             </filter>
             <filter name="unheld" position="replace">
                 <filter
                     name="available"
                     string="Available"
-                    domain="[('driver_id', '=', False)]" />
+                    domain="[('operator_id', '=', False)]" />
                 <filter
                     name="planned"
                     string="Driver Change Planned"
-                    domain="[('future_driver_id', '!=', False)]" />
+                    domain="[('future_operator_id', '!=', False)]" />
             </filter>
             <filter name="group_kind" position="replace">
                 <filter

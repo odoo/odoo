@@ -51,7 +51,6 @@ class ResourceAssignment(models.Model):
     role = fields.Selection(
         selection=[
             ("custodian", "Custodian"),
-            ("driver", "Driver"),
             ("operator", "Operator"),
             ("manager", "Manager"),
             ("technician", "Technician"),

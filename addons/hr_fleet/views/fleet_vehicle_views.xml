@@ -6,11 +6,11 @@
         <field name="model">resource.asset</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
-            <field name="driver_id" position="after">
+            <field name="operator_id" position="after">
                 <field
-                    name="driver_employee_id"
+                    name="operator_employee_id"
                     widget="many2one_avatar_employee"
-                    invisible="not driver_employee_id" />
+                    invisible="not operator_employee_id" />
                 <field name="mobility_card" invisible="not mobility_card" />
             </field>
         </field>
@@ -21,8 +21,8 @@
         <field name="model">resource.asset</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search" />
         <field name="arch" type="xml">
-            <field name="driver_id" position="after">
-                <field name="driver_employee_id" />
+            <field name="operator_id" position="after">
+                <field name="operator_employee_id" />
             </field>
         </field>
     </record>
@@ -32,9 +32,9 @@
         <field name="model">resource.asset</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
         <field name="arch" type="xml">
-            <field name="driver_id" position="after">
+            <field name="operator_id" position="after">
                 <field
-                    name="driver_employee_id"
+                    name="operator_employee_id"
                     widget="many2one_avatar_employee"
                     optional="hide" />
             </field>

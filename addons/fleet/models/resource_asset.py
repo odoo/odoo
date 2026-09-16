@@ -1,12 +1,6 @@
-from collections import defaultdict
-from datetime import timedelta
-
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-
-DRIVER_ROLE = "driver"
-DEFAULT_HANDOVER_DELAY = timedelta(days=7)
 
 
 class ResourceAsset(models.Model):
@@ -17,35 +11,7 @@ class ResourceAsset(models.Model):
         store=True,
         index=True,
     )
-    driver_id = fields.Many2one(
-        comodel_name="resource.resource",
-        compute="_compute_driver_id",
-        inverse="_inverse_driver_id",
-        search="_search_driver_id",
-        domain="[('resource_type', '=', 'user')]",
-        help="Who drives the vehicle now: the live driver assignment.",
-    )
-    future_driver_id = fields.Many2one(
-        comodel_name="resource.resource",
-        compute="_compute_future_driver",
-        inverse="_inverse_future_driver",
-        search="_search_future_driver_id",
-        domain="[('resource_type', '=', 'user')]",
-        help="Who takes the vehicle over next: the planned driver assignment.",
-    )
-    next_assignation_date = fields.Datetime(
-        string="Assignment Date",
-        compute="_compute_future_driver",
-        inverse="_inverse_future_driver",
-        help="When the next driver takes the vehicle over. A hand-over without a date takes effect in a week unless accepted before.",
-    )
     company_country_code = fields.Char(related="company_id.country_id.code")
-    manager_id = fields.Many2one(
-        comodel_name="res.users",
-        string="Fleet Manager",
-        domain="[('share', '=', False)]",
-        tracking=True,
-    )
     tag_ids = fields.Many2many(
         comodel_name="fleet.vehicle.tag",
         relation="resource_asset_fleet_vehicle_tag_rel",
@@ -82,7 +48,6 @@ class ResourceAsset(models.Model):
         readonly=False,
     )
     service_count = fields.Integer(compute="_compute_service_count")
-    driver_history_count = fields.Integer(compute="_compute_driver_history_count")
 
     @api.depends("kind_id")
     def _compute_is_vehicle(self):
@@ -113,196 +78,6 @@ class ResourceAsset(models.Model):
             parts.append(vehicle.license_plate or self.env._("No Plate"))
             vehicle.display_name = " / ".join(parts)
         super(ResourceAsset, self - vehicles)._compute_display_name()
-
-    def _get_driver_assignments(self, planned=False):
-        if not self.ids:
-            return self.env["resource.assignment"]
-        now = fields.Datetime.now()
-        domain = Domain("resource_id", "in", self.sudo().resource_id.ids) & Domain(
-            "role", "=", DRIVER_ROLE
-        )
-        if planned:
-            domain &= Domain("date_start", ">", now) & Domain("date_end", "=", False)
-        else:
-            domain &= Domain("date_start", "<=", now) & (
-                Domain("date_end", "=", False) | Domain("date_end", ">", now)
-            )
-        return self.env["resource.assignment"].sudo().search(domain)
-
-    def _first_by_asset(self, assignments, reverse):
-        asset_by_resource = {asset.sudo().resource_id.id: asset for asset in self}
-        first = {}
-        for assignment in assignments.sorted("date_start", reverse=reverse):
-            asset = asset_by_resource.get(assignment.resource_id.id)
-            if asset:
-                first.setdefault(asset.id, assignment)
-        return first
-
-    @api.depends(
-        "resource_id.assignment_ids.assignee_id",
-        "resource_id.assignment_ids.role",
-        "resource_id.assignment_ids.date_start",
-        "resource_id.assignment_ids.date_end",
-        "resource_id.assignment_ids.active",
-    )
-    def _compute_driver_id(self):
-        live = self._first_by_asset(self._get_driver_assignments(), reverse=True)
-        for asset in self:
-            assignment = live.get(asset.id)
-            asset.driver_id = assignment.assignee_id if assignment else False
-
-    @api.depends(
-        "resource_id.assignment_ids.assignee_id",
-        "resource_id.assignment_ids.role",
-        "resource_id.assignment_ids.date_start",
-        "resource_id.assignment_ids.date_end",
-        "resource_id.assignment_ids.active",
-    )
-    def _compute_future_driver(self):
-        planned = self._first_by_asset(
-            self._get_driver_assignments(planned=True), reverse=False
-        )
-        for asset in self:
-            assignment = planned.get(asset.id)
-            asset.future_driver_id = assignment.assignee_id if assignment else False
-            asset.next_assignation_date = assignment.date_start if assignment else False
-
-    def _search_driver(self, operator, value, planned):
-        now = fields.Datetime.now()
-        if planned:
-            window = Domain("date_start", ">", now) & Domain("date_end", "=", False)
-        else:
-            window = Domain("date_start", "<=", now) & (
-                Domain("date_end", "=", False) | Domain("date_end", ">", now)
-            )
-        live = Domain("role", "=", DRIVER_ROLE) & window
-        if operator in ("in", "not in"):
-            ids = [value] if isinstance(value, (int, bool)) else list(value)
-            resource_ids = [i for i in ids if i]
-            wants_empty = len(resource_ids) < len(ids)
-        elif operator in ("ilike", "not ilike", "=ilike", "like", "=like"):
-            resource_ids = (
-                self.env["resource.resource"]
-                .with_context(active_test=False)
-                ._search([("name", operator.removeprefix("not "), value)])
-            )
-            wants_empty = False
-        else:
-            return NotImplemented
-        domain = Domain(
-            "resource_id.assignment_ids",
-            "any",
-            live & Domain("assignee_id", "in", resource_ids),
-        )
-        if wants_empty:
-            domain |= ~Domain("resource_id.assignment_ids", "any", live)
-        return ~domain if operator.startswith("not") else domain
-
-    def _search_driver_id(self, operator, value):
-        return self._search_driver(operator, value, planned=False)
-
-    def _search_future_driver_id(self, operator, value):
-        return self._search_driver(operator, value, planned=True)
-
-    def _inverse_driver_id(self):
-        now = fields.Datetime.now()
-        live = self._get_driver_assignments()
-        live_by_resource = defaultdict(live.browse)
-        for assignment in live:
-            live_by_resource[assignment.resource_id.id] |= assignment
-        new_vals_list = []
-        for asset in self:
-            resource = asset.sudo().resource_id
-            current = live_by_resource[resource.id]
-            if asset.driver_id and current.assignee_id == asset.driver_id:
-                continue
-            previous = current.assignee_id[:1]
-            self._end_custody(current, now)
-            if asset.driver_id:
-                new_vals_list.append(
-                    {
-                        "resource_id": resource.id,
-                        "assignee_id": asset.driver_id.id,
-                        "role": DRIVER_ROLE,
-                        "date_start": now,
-                    }
-                )
-            asset._post_driver_message(previous, asset.driver_id)
-        if new_vals_list:
-            self.env["resource.assignment"].sudo().create(new_vals_list)
-
-    def _inverse_future_driver(self):
-        now = fields.Datetime.now()
-        planned = self._get_driver_assignments(planned=True)
-        planned_by_resource = defaultdict(planned.browse)
-        for assignment in planned:
-            planned_by_resource[assignment.resource_id.id] |= assignment
-        new_vals_list = []
-        for asset in self:
-            resource = asset.sudo().resource_id
-            rows = planned_by_resource[resource.id]
-            date_start = asset.next_assignation_date or now + DEFAULT_HANDOVER_DELAY
-            current = rows.sorted("date_start")[:1]
-            if (
-                asset.future_driver_id
-                and current.assignee_id == asset.future_driver_id
-                and current.date_start == date_start
-            ):
-                continue
-            self._end_custody(rows, now)
-            if asset.future_driver_id:
-                if date_start <= now:
-                    raise UserError(
-                        self.env._("A scheduled hand-over must start in the future.")
-                    )
-                new_vals_list.append(
-                    {
-                        "resource_id": resource.id,
-                        "assignee_id": asset.future_driver_id.id,
-                        "role": DRIVER_ROLE,
-                        "date_start": date_start,
-                    }
-                )
-        if new_vals_list:
-            self.env["resource.assignment"].sudo().create(new_vals_list)
-
-    def _post_driver_message(self, before, after):
-        self.check_singleton()
-        if before == after:
-            return
-        self.sudo().message_post(
-            body=self.env._(
-                "Driver: %(before)s → %(after)s",
-                before=before.sudo().name or "—",
-                after=after.sudo().name or "—",
-            ),
-            subtype_xmlid="fleet.mt_fleet_driver_updated",
-        )
-
-    def _get_vehicles_released_by_driver_change(self):
-        return self.search(
-            [
-                ("is_vehicle", "=", True),
-                ("driver_id", "in", self.future_driver_id.ids),
-                ("id", "not in", self.ids),
-            ]
-        )
-
-    def action_accept_driver_change(self):
-        vehicles = self.filtered("future_driver_id")
-        vehicles._get_vehicles_released_by_driver_change().driver_id = False
-        now = fields.Datetime.now()
-        for vehicle in vehicles:
-            planned = vehicle._get_driver_assignments(planned=True).sorted(
-                "date_start"
-            )[:1]
-            previous = vehicle.driver_id
-            self._end_custody(vehicle._get_driver_assignments(), now)
-            planned.date_start = now
-            vehicle.invalidate_recordset(
-                ["driver_id", "future_driver_id", "next_assignation_date"]
-            )
-            vehicle._post_driver_message(previous, vehicle.driver_id)
 
     def _inverse_odometer(self):
         for asset in self:
@@ -341,20 +116,6 @@ class ResourceAsset(models.Model):
         for asset in self:
             asset.service_count = counts.get(asset, 0)
 
-    def _compute_driver_history_count(self):
-        counts = dict(
-            self.env["resource.assignment"]._read_group(
-                [
-                    ("resource_id", "in", self.resource_id.ids),
-                    ("role", "=", DRIVER_ROLE),
-                ],
-                ["resource_id"],
-                ["__count"],
-            )
-        )
-        for asset in self:
-            asset.driver_history_count = counts.get(asset.resource_id, 0)
-
     def action_view_services(self):
         self.check_singleton()
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
@@ -366,24 +127,6 @@ class ResourceAsset(models.Model):
             "search_default_groupby_product": 1,
         }
         return action
-
-    def action_view_driver_history(self):
-        self.check_singleton()
-        return {
-            "type": "ir.actions.act_window",
-            "name": self.env._("Drivers"),
-            "view_mode": "list,form",
-            "res_model": "resource.assignment",
-            "domain": [
-                ("resource_id", "=", self.resource_id.id),
-                ("role", "=", DRIVER_ROLE),
-            ],
-            "context": {
-                "default_resource_id": self.resource_id.id,
-                "default_role": DRIVER_ROLE,
-                "active_test": False,
-            },
-        }
 
     def action_view_odometer(self):
         self.check_singleton()

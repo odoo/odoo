@@ -119,7 +119,7 @@ class StockPickingBatch(models.Model):
     @api.depends("vehicle_id")
     def _compute_driver_id(self):
         for rec in self:
-            rec.driver_id = rec.vehicle_id.driver_id.partner_id
+            rec.driver_id = rec.vehicle_id.operator_id.partner_id
 
     @api.depends(
         "estimated_shipping_weight",

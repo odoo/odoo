@@ -104,7 +104,12 @@
                             <field name="brand_new" />
                         </group>
                         <group name="where">
-                            <field name="holder_id" />
+                            <field name="operator_id" />
+                            <field name="future_operator_id" />
+                            <field
+                                name="date_future_operator"
+                                invisible="not future_operator_id" />
+                            <field name="manager_id" />
                             <field name="address_id" />
                             <field
                                 name="company_id"
