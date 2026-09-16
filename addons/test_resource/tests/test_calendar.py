@@ -13,7 +13,7 @@ class TestCalendar(TestResourceCommon):
         super().setUp()
 
     def test_get_work_hours_count(self):
-        self.env["resource.schedule.exception"].create(
+        jean_global_leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
                 "resource_id": False,
@@ -213,6 +213,7 @@ class TestCalendar(TestResourceCommon):
         leave.unlink()
 
         # leave without calendar, should count for anyone in the company
+        jean_global_leave.unlink()
         leave = self.env["resource.schedule.exception"].create(
             {
                 "name": "small leave",

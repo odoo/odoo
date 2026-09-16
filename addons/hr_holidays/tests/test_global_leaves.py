@@ -257,16 +257,16 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         cls.global_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
-                "date_from": date(2022, 3, 7),
-                "date_to": date(2022, 3, 7),
+                "local_date_from": date(2022, 3, 7),
+                "local_date_to": date(2022, 3, 7),
             }
         )
 
         cls.calendar_leave = cls.env["resource.schedule.exception"].create(
             {
                 "name": "Global Time Off",
-                "date_from": date(2022, 3, 8),
-                "date_to": date(2022, 3, 8),
+                "local_date_from": date(2022, 3, 8),
+                "local_date_to": date(2022, 3, 8),
                 "calendar_id": cls.calendar_1.id,
             }
         )
@@ -283,8 +283,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
-                    "date_from": date(2022, 3, 7),
-                    "date_to": date(2022, 3, 7),
+                    "local_date_from": date(2022, 3, 7),
+                    "local_date_to": date(2022, 3, 7),
                     "calendar_id": self.calendar_1.id,
                 }
             )
@@ -293,8 +293,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
-                    "date_from": date(2022, 3, 7),
-                    "date_to": date(2022, 3, 7),
+                    "local_date_from": date(2022, 3, 7),
+                    "local_date_to": date(2022, 3, 7),
                 }
             )
 
@@ -302,8 +302,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         self.env["resource.schedule.exception"].create(
             {
                 "name": "Correct Time Off",
-                "date_from": date(2022, 3, 8),
-                "date_to": date(2022, 3, 8),
+                "local_date_from": date(2022, 3, 8),
+                "local_date_to": date(2022, 3, 8),
                 "calendar_id": self.calendar_2.id,
             }
         )
@@ -312,8 +312,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
-                    "date_from": date(2022, 3, 8),
-                    "date_to": date(2022, 3, 8),
+                    "local_date_from": date(2022, 3, 8),
+                    "local_date_to": date(2022, 3, 8),
                 }
             )
 
@@ -321,8 +321,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             self.env["resource.schedule.exception"].create(
                 {
                     "name": "Wrong Time Off",
-                    "date_from": date(2022, 3, 8),
-                    "date_to": date(2022, 3, 8),
+                    "local_date_from": date(2022, 3, 8),
+                    "local_date_to": date(2022, 3, 8),
                     "calendar_id": self.calendar_1.id,
                 }
             )
@@ -344,14 +344,42 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             .create(
                 {
                     "name": "Public holiday",
-                    "date_from": "2023-05-15 06:00:00",
-                    "date_to": "2023-05-15 15:00:00",
+                    "local_date_from": "2023-05-15",
+                    "local_hour_from": 8.0,
+                    "local_date_to": "2023-05-15",
+                    "local_hour_to": 17.0,
                     "calendar_id": calendar_asia.id,
                 }
             )
         )
+        self.assertEqual(global_leave.tz, "Asia/Kolkata")
         self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 2, 30))
         self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 11, 30))
+
+        self.assertEqual(global_leave.local_hour_from, 8.0)
+        self.assertEqual(global_leave.local_hour_to, 17.0)
+
+    @freeze_time("2023-05-12")
+    def test_a_global_leave_keeps_the_instants_a_caller_writes(self):
+        calendar_asia = self.env["resource.calendar"].create(
+            {
+                "name": "Asia calendar",
+                "tz": "Asia/Kolkata",
+                "attendance_ids": [],
+            }
+        )
+        self.env.user.tz = "Europe/Brussels"
+        global_leave = self.env["resource.schedule.exception"].create(
+            {
+                "name": "Public holiday",
+                "date_from": "2023-05-15 06:00:00",
+                "date_to": "2023-05-15 15:00:00",
+                "calendar_id": calendar_asia.id,
+            }
+        )
+        self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 6, 0))
+        self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 15, 0))
+        self.assertEqual(global_leave.local_hour_from, 11.5)
 
     def test_global_leave_working_schedule_without_company(self):
         calendar_no_company = self.env["resource.calendar"].create(

@@ -1,6 +1,9 @@
+from datetime import UTC, date, datetime
+
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime, Domain
+from odoo.libs.datetime import timezone
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -167,19 +170,46 @@ class TestExpression(TransactionCase):
         )
 
     def test_resource_creation_with_date_from(self):
-        with self.assertRaises(AssertionError):
-            with Form(self.env["resource.schedule.exception"]) as res:
-                res.date_from = False
-                res.date_to = Datetime.now()
+        """The form collects local days and hours, and stores the instants.
 
+        The exception's zone is the schedule's, so what a reader types is not read
+        in the reader's own zone: 08:00 on this calendar is 08:00 there.
+        """
         with Form(self.env["resource.schedule.exception"]) as res:
-            date_from = Datetime.now()
-            date_to = Datetime.now() + relativedelta(hours=24)
-            res.date_from = date_from
-            res.date_to = date_to
+            res.calendar_id = self.env.company.resource_calendar_id
+            res.local_date_from = date(2026, 3, 4)
+            res.local_hour_from = 8.0
+            res.local_date_to = date(2026, 3, 4)
+            res.local_hour_to = 17.0
 
             self.assertFalse(res.id, "The resource does not have an id before saving")
-            res.save()
-            self.assertTrue(res.id, "The resource was successfully created")
-            self.assertEqual(res.date_from, Datetime.to_string(date_from))
-            self.assertEqual(res.date_to, Datetime.to_string(date_to))
+            exception = res.save()
+            self.assertTrue(exception.id, "The resource was successfully created")
+
+        tz = timezone(exception.tz)
+        self.assertEqual(
+            exception.date_from,
+            datetime(2026, 3, 4, 8, 0, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+        )
+        self.assertEqual(
+            exception.date_to,
+            datetime(2026, 3, 4, 17, 0, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+        )
+
+    def test_an_exception_entered_as_a_day_covers_that_whole_local_day(self):
+        with Form(self.env["resource.schedule.exception"]) as res:
+            res.calendar_id = self.env.company.resource_calendar_id
+            res.local_date_from = date(2026, 3, 4)
+            exception = res.save()
+
+        tz = timezone(exception.tz)
+        self.assertEqual(
+            exception.date_from,
+            datetime(2026, 3, 4, 0, 0, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+        )
+        self.assertEqual(
+            exception.date_to,
+            datetime(2026, 3, 4, 23, 59, 59, tzinfo=tz)
+            .astimezone(UTC)
+            .replace(tzinfo=None),
+        )

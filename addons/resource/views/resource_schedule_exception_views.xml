@@ -72,8 +72,17 @@
                             <field name="resource_id" />
                         </group>
                         <group name="leave_dates">
-                            <field name="date_from" />
-                            <field name="date_to" />
+                            <label for="local_date_from" string="From" />
+                            <div class="o_row">
+                                <field name="local_date_from" />
+                                <field name="local_hour_from" widget="float_time" />
+                            </div>
+                            <label for="local_date_to" string="To" />
+                            <div class="o_row">
+                                <field name="local_date_to" />
+                                <field name="local_hour_to" widget="float_time" />
+                            </div>
+                            <field name="tz" />
                         </group>
                     </group>
                 </sheet>
@@ -94,8 +103,11 @@
                     optional="hide"
                     groups="base.group_multi_company" />
                 <field name="calendar_id" />
-                <field name="date_from" />
-                <field name="date_to" />
+                <field name="local_date_from" />
+                <field name="local_hour_from" widget="float_time" optional="hide" />
+                <field name="local_date_to" />
+                <field name="local_hour_to" widget="float_time" optional="hide" />
+                <field name="tz" optional="hide" />
             </list>
         </field>
     </record>

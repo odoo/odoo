@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import UTC
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -49,8 +49,8 @@ class ResourceScheduleException(models.Model):
                     lambda leave, record=record: (
                         record.id != leave.id
                         and record["company_id"] == leave["company_id"]
-                        and record["date_from"] <= leave["date_to"]
-                        and record["date_to"] >= leave["date_from"]
+                        and record["date_from"] < leave["date_to"]
+                        and record["date_to"] > leave["date_from"]
                     )
                 )
                 if record.calendar_id:
@@ -133,55 +133,6 @@ class ResourceScheduleException(models.Model):
             if message:
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()
-
-    def _convert_timezone(self, utc_naive_datetime, tz_from, tz_to):
-        naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(
-            tzinfo=None
-        )
-        aware_datetime_to = naive_datetime_from.replace(tzinfo=tz_to)
-        return aware_datetime_to.astimezone(UTC).replace(tzinfo=None)
-
-    def _resolve_datetime(self, datetime_representation, date_format=None):
-        if isinstance(datetime_representation, datetime):
-            return datetime_representation
-        elif isinstance(datetime_representation, str) and date_format:
-            return datetime.strptime(datetime_representation, date_format)
-        else:
-            return None
-
-    def _prepare_public_holidays_values(self, vals_list):
-        for vals in vals_list:
-            if (
-                not vals.get("calendar_id")
-                or vals.get("resource_id")
-                or not isinstance(vals.get("date_from"), (datetime, str))
-                or not isinstance(vals.get("date_to"), (datetime, str))
-            ):
-                continue
-            user_tz = timezone(self.env.user.tz) if self.env.user.tz else UTC
-            calendar_tz = timezone(
-                self.env["resource.calendar"].browse(vals["calendar_id"]).tz
-            )
-            if user_tz != calendar_tz:
-                datetime_from = self._resolve_datetime(
-                    vals["date_from"], "%Y-%m-%d %H:%M:%S"
-                )
-                datetime_to = self._resolve_datetime(
-                    vals["date_to"], "%Y-%m-%d %H:%M:%S"
-                )
-                if datetime_from and datetime_to:
-                    vals["date_from"] = self._convert_timezone(
-                        datetime_from, user_tz, calendar_tz
-                    )
-                    vals["date_to"] = self._convert_timezone(
-                        datetime_to, user_tz, calendar_tz
-                    )
-        return vals_list
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        return super().create(self._prepare_public_holidays_values(vals_list))
-
 
     @api.model
     def _on_schedule_changed(self, scopes):

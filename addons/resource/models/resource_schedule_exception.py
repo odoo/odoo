@@ -9,6 +9,21 @@ from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.models import ValuesType
 
+from odoo.addons.base.models.res_partner import _selection_timezones
+
+_DAY_END_HOUR = 24 - 1 / 3600
+
+
+def _hour_of(dt: datetime) -> float:
+    return dt.hour + dt.minute / 60 + dt.second / 3600
+
+
+def _to_utc(day: date, hour: float, tz) -> datetime:
+    local = datetime.combine(day, time.min).replace(tzinfo=tz) + relativedelta(
+        seconds=round(hour * 3600)
+    )
+    return local.astimezone(UTC).replace(tzinfo=None)
+
 
 class ResourceScheduleException(models.Model):
     _name = "resource.schedule.exception"
@@ -60,6 +75,33 @@ class ResourceScheduleException(models.Model):
         readonly=False,
         required=True,
     )
+    tz = fields.Selection(
+        selection=_selection_timezones,
+        string="Timezone",
+        compute="_compute_tz",
+        help="The time zone this exception's hours are read in: the resource's work zone, or the schedule's own zone when it closes the whole company.",
+    )
+    local_date_from = fields.Date(
+        string="Start Day",
+        compute="_compute_local_dates",
+        inverse="_inverse_local_dates",
+    )
+    local_date_to = fields.Date(
+        string="End Day",
+        compute="_compute_local_dates",
+        inverse="_inverse_local_dates",
+    )
+    local_hour_from = fields.Float(
+        string="Start Hour",
+        compute="_compute_local_dates",
+        inverse="_inverse_local_dates",
+    )
+    local_hour_to = fields.Float(
+        string="End Hour",
+        compute="_compute_local_dates",
+        inverse="_inverse_local_dates",
+        help="The local hour the exception ends at, 0 meaning the end of the day.",
+    )
 
     @api.constrains("date_from", "date_to")
     def _check_dates(self):
@@ -106,27 +148,57 @@ class ResourceScheduleException(models.Model):
                 or self.env.company
             )
 
-    @api.depends("date_from")
+    @api.depends("resource_id.tz", "calendar_id.tz", "company_id")
+    def _compute_tz(self):
+        for leave in self:
+            leave.tz = (
+                leave.resource_id.tz
+                or leave.calendar_id.tz
+                or leave.company_id.resource_calendar_id.tz
+                or "UTC"
+            )
+
+    @api.depends("date_from", "tz")
     def _compute_date_to(self):
-        user_tz_name = self.env.context.get("tz") or self.env.user.tz
         for leave in self:
             if not leave.date_from or (
                 leave.date_to and leave.date_to > leave.date_from
             ):
                 continue
-            tz_name = (
-                leave.calendar_id.tz
-                or leave.company_id.resource_calendar_id.tz
-                or user_tz_name
-                or "UTC"
-            )
             local_date_from = leave.date_from.replace(tzinfo=UTC).astimezone(
-                timezone(tz_name)
+                timezone(leave.tz or "UTC")
             )
             local_date_to = local_date_from + relativedelta(
                 hour=23, minute=59, second=59
             )
             leave.date_to = local_date_to.astimezone(UTC).replace(tzinfo=None)
+
+    @api.depends("date_from", "date_to", "tz")
+    def _compute_local_dates(self):
+        for leave in self:
+            tz = timezone(leave.tz or "UTC")
+            start = leave.date_from and leave.date_from.replace(tzinfo=UTC).astimezone(tz)
+            stop = leave.date_to and leave.date_to.replace(tzinfo=UTC).astimezone(tz)
+            leave.local_date_from = start and start.date()
+            leave.local_hour_from = start and _hour_of(start)
+            leave.local_date_to = stop and stop.date()
+            leave.local_hour_to = stop and _hour_of(stop)
+
+    def _inverse_local_dates(self):
+        for leave in self.filtered("local_date_from"):
+            tz = timezone(leave.tz or "UTC")
+            leave.write(
+                {
+                    "date_from": _to_utc(
+                        leave.local_date_from, leave.local_hour_from, tz
+                    ),
+                    "date_to": _to_utc(
+                        leave.local_date_to or leave.local_date_from,
+                        leave.local_hour_to or _DAY_END_HOUR,
+                        tz,
+                    ),
+                }
+            )
 
     @api.model_create_multi
     def create(self, vals_list):
