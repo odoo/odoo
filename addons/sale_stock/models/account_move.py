@@ -134,7 +134,7 @@ class AccountMoveLine(models.Model):
             else:
                 continue
             aml.cogs_move_ids |= moves.filtered(lambda m:
-                (m.is_valued or any(ml._is_consigned_valued_line() for ml in m.move_line_ids))
+                (m.is_valued or m.is_dropship or any(ml._is_consigned_valued_line() for ml in m.move_line_ids))
                 and any(loc.usage in ['customer', 'transit'] for loc in [m.location_id, m.location_dest_id])
             )
 
