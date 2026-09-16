@@ -5,5 +5,13 @@
 
     .o_btn_circle {
         --o-btn-circle-radius: var(--btn-border-radius);
+        --o-btn-circle-height: calc(#{$btn-font-size} + #{map-get($spacers, 1)} * 2);
+
+        height: var(--o-btn-circle-height);
+        aspect-ratio: 1;
+
+        @include media-breakpoint-down(md) {
+            --o-btn-circle-height: #{$input-height};
+        }
     }
 }
