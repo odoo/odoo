@@ -216,6 +216,14 @@ LimitNOFILE=65536
 ExecStart=/opt/odoo/venv/bin/python /opt/odoo/odoo-bin -c /etc/odoo/odoo.conf
 ```
 
+A balancer or orchestrator that cannot read sd_notify reads `/web/readyz`
+(`addons/web/controllers/health.py`): 200 once PostgreSQL answers, `data_dir`
+is writable and no registry preload is in progress in the answering process
+(`odoo.service.server.is_ready()`, fed by `_process_state.preloading` from
+`preload_registries`); 503 with `checks.registries = "loading"` otherwise. A
+request for a database still loading waits on the registry lock, which is what
+the 503 keeps a balancer from sending. `/web/healthz` is liveness only.
+
 Socket activation (`LISTEN_FDS`/`LISTEN_PID`, `settings.py`) takes the
 unit's sockets in the order its `[Socket]` section lists them: the first is
 the HTTP port; a second, when the unit declares one, is the websocket port
