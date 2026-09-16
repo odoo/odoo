@@ -6,6 +6,6 @@ from odoo import models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _is_reorder_allowed(self):
-        # Don't allow courses in reorder
-        return self.service_tracking != 'course' and super()._is_reorder_allowed()
+    def _is_custom_cart_line(self):
+        # Course registration lines should not be modified during the ecommerce checkout.
+        return super()._is_custom_cart_line() or self.service_tracking == 'course'
