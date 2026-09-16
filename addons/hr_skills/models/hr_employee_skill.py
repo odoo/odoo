@@ -45,29 +45,5 @@ class HrEmployeeSkill(models.Model):
             'views': [(self.env.ref('hr_skills.employee_skill_view_inherit_certificate_form').id, 'form')],
         }
 
-    def action_hr_employee_skill_certification(self):
-        action = self.env["ir.actions.act_window"]._for_xml_id(
-            "hr_skills.action_hr_employee_skill_certification"
-        )
-        # Only the "no certification type configured at all" case is handled here. When a
-        # certification type exists but no employee has one yet, the empty-list message and the
-        # header button's visibility are decided live instead, by CertificationListController/
-        # CertificationListRenderer (certification_list_renderer.js): this method only runs once,
-        # when the action is first dispatched, and never again when the user navigates back to
-        # it through the breadcrumb, so it can't be relied on to reflect that transition.
-        if not self.env["hr.skill.type"].search_count([("is_certification", "=", True)], limit=1):
-            if self.env.user.has_group("hr.group_hr_manager"):
-                action["help"] = (
-                    self.env._("""<p class="o_view_nocontent_smiling_face">No Certifications available. Navigate to Skill types!</p>
-                    <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">
-                    Show Skill Types
-                    </a>""")
-                )
-            else:
-                action["help"] = self.env._(
-                    """<p class="o_view_nocontent_smiling_face">No Certifications available!</p>"""
-                )
-        return action
-
     def action_save(self):
         return {'type': 'ir.actions.act_window_close'}

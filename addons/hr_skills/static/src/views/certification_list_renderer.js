@@ -1,6 +1,7 @@
 import { markup, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
@@ -40,21 +41,44 @@ export class CertificationListRenderer extends ListRenderer {
 
     setup() {
         super.setup();
-        this.certificationState = proxy({ hasCertificationSkillType: null });
+        this.certificationState = proxy({ hasCertificationSkillType: null, isHrManager: null });
         onWillStart(async () => {
-            this.certificationState.hasCertificationSkillType = await hasCertificationSkillType(this.orm);
+            [
+                this.certificationState.hasCertificationSkillType,
+                this.certificationState.isHrManager,
+            ] = await Promise.all([
+                hasCertificationSkillType(this.orm),
+                user.hasGroup("hr.group_hr_manager"),
+            ]);
         });
     }
 
+    // The base getter gates on `this.props.noContentHelp`, which is never set anymore: the
+    // message is always decided live, below, regardless of what the action itself carries.
+    get showNoContentHelper() {
+        const { model } = this.props.list;
+        return model.useSampleModel || !model.hasData();
+    }
+
     get noContentHelp() {
-        if (!this.certificationState.hasCertificationSkillType) {
-            return this.props.noContentHelp;
+        if (this.certificationState.hasCertificationSkillType) {
+            return markup(
+                `<p class="o_view_nocontent_smiling_face">${_t("No Certified Employees. Register a Certification!")}</p>
+                <a type="action" name="hr_skills.action_hr_employee_new_certification" class="btn btn-primary">
+                ${_t("New certification")}
+                </a>`
+            );
+        }
+        if (this.certificationState.isHrManager) {
+            return markup(
+                `<p class="o_view_nocontent_smiling_face">${_t("No Certifications available. Navigate to Skill types!")}</p>
+                <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">
+                ${_t("Show Skill Types")}
+                </a>`
+            );
         }
         return markup(
-            `<p class="o_view_nocontent_smiling_face">${_t("No Certified Employees. Register a Certification!")}</p>
-            <a type="action" name="hr_skills.action_hr_employee_new_certification" class="btn btn-primary">
-            ${_t("New certification")}
-            </a>`
+            `<p class="o_view_nocontent_smiling_face">${_t("No Certifications available!")}</p>`
         );
     }
 }

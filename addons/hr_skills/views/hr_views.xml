@@ -582,15 +582,6 @@
         </field>
     </record>
 
-    <record id="action_server_hr_employee_skill_certification" model="ir.actions.server">
-        <field name="name">Certifications</field>
-        <field name="model_id" ref="model_hr_employee_skill"/>
-        <field name="state">code</field>
-        <field name="code">
-            action = model.action_hr_employee_skill_certification()
-        </field>
-    </record>
-
     <record id="action_hr_employee_skill_certification" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
@@ -631,7 +622,7 @@
             id="hr_certification_menu"
             name="Certifications"
             parent="hr_skill_learning_menu"
-            action="action_server_hr_employee_skill_certification"
+            action="action_hr_employee_skill_certification"
             sequence="94"/>
 
         <menuitem
