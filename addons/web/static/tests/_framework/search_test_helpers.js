@@ -305,8 +305,21 @@ export async function editPager(value) {
  * @param {string} [menuFinder="Action"]
  * @returns {Promise}
  */
+/**
+ * The toggler of the actions menu: the cog on large screens, and on small
+ * ones the single actions menu of the control panel, where the cog items are
+ * inlined and have no toggler of their own.
+ *
+ * @returns {string}
+ */
+export function actionMenuToggler() {
+    return isSmall()
+        ? "button.o-control-panel-adaptive-dropdown"
+        : ".o_cp_action_menus .dropdown-toggle";
+}
+
 export async function toggleActionMenu() {
-    await contains(".o_cp_action_menus .dropdown-toggle").click();
+    await contains(actionMenuToggler()).click();
 }
 
 //-----------------------------------------------------------------------------

@@ -127,6 +127,17 @@
         margin-left: -$border-width;
     }
 
+    // Below md the box shows nothing but its "More" toggler: the buttons
+    // themselves sit in its menu, nested a level deeper. That toggler is a
+    // button among the others of the control panel, and the stat button
+    // height is shorter than theirs, which would leave it overflowing its own
+    // box and sitting higher than the ellipsis and the pager next to it.
+    @include media-breakpoint-down(md) {
+        > .oe_stat_button {
+            height: auto;
+        }
+    }
+
     @include media-breakpoint-up(md) {
         .oe_stat_button,
         .oe_stat_button > button {

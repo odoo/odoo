@@ -18,6 +18,7 @@ import {
     selectGroup,
     serverState,
     switchView,
+    toggleActionMenu,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
@@ -421,14 +422,14 @@ test("Add to my dashboard is not available in form views", async () => {
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
 
     // sanity check
-    await contains(".o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     expect(".o-dropdown--menu .o_add_to_board").toHaveCount(1);
 
     // open form view
     await contains(".o_data_cell").click();
     expect(".o_form_view").toHaveCount(1);
 
-    await contains(".o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     expect(".o-dropdown--menu").toHaveCount(1);
     expect(".o-dropdown--menu .o_add_to_board").toHaveCount(0);
 });

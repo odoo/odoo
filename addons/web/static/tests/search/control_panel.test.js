@@ -7,6 +7,7 @@ import {
     defineModels,
     fields,
     getService,
+    isSmall,
     models,
     mountWithCleanup,
     mountWithSearch,
@@ -34,7 +35,8 @@ test("simple rendering", async () => {
     expect(`.o_control_panel_actions`).toHaveCount(1);
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     expect(`.o_control_panel_navigation`).toHaveCount(1);
-    expect(`.o_control_panel_navigation > *`).toHaveCount(0);
+    // small screens carry the single actions menu of the view there
+    expect(`.o_control_panel_navigation > *`).toHaveCount(isSmall() ? 1 : 0);
     expect(`.o_cp_switch_buttons`).toHaveCount(0);
     expect(`.o_breadcrumb`).toHaveCount(1);
 });

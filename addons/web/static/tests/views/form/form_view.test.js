@@ -34,6 +34,7 @@ import {
     xml,
 } from "@odoo/owl";
 import {
+    actionMenuToggler,
     clickSave,
     contains,
     defineActions,
@@ -3264,7 +3265,7 @@ test(`form with custom cog action that has a confirmation target="new" action`, 
     await getService("action").doAction(1);
     expect(".o_form_view").toHaveCount(1);
 
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -3432,7 +3433,9 @@ test(`buttons should be in .o_statusbar_buttons in form view header on mobile`, 
     });
 
     expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "0");
-    await contains(".o_statusbar_buttons .dropdown-toggle:has([data-icon='more_vert'])").click();
+    // the header buttons that stay out of the status bar are in the single
+    // actions menu of the control panel
+    await contains("button.o-control-panel-adaptive-dropdown").click();
     expect(`.o-dropdown--menu div.o_field_widget`).toHaveAttribute("name", "foo");
 });
 
@@ -4084,13 +4087,13 @@ test(`there is an Actions menu when creating a new record`, async () => {
         actionMenus: {},
         resId: 1,
     });
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await contains(`.o_form_button_create`).click();
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await contains(`.o_form_button_save`).click();
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 });
 
 test(`basic default record`, async () => {
@@ -4207,7 +4210,7 @@ test(`archive/unarchive a record`, async () => {
         resId: 1,
         actionMenus: {},
     });
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(1);
@@ -4366,7 +4369,7 @@ test(`apply custom standard action menu (archive)`, async () => {
         resId: 1,
         actionMenus: {},
     });
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(1);
@@ -4423,7 +4426,7 @@ test(`add custom static action menu`, async () => {
         resId: 1,
         actionMenus: {},
     });
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(queryAllTexts`.o-dropdown--menu .dropdown-item`).toEqual([
@@ -4518,7 +4521,7 @@ test(`archive action with active field not in view`, async () => {
         resId: 1,
         actionMenus: {},
     });
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(`.o_cp_action_menus span:contains(Archive)`).toHaveCount(0);
@@ -4536,7 +4539,7 @@ test(`archive action not shown with readonly active field`, async () => {
         resId: 1,
         actionMenus: {},
     });
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect(queryAllTexts`.o_menu_item`).toEqual(["Duplicate", "Delete"]);
 });
 
@@ -4589,7 +4592,7 @@ test(`cannot duplicate a record`, async () => {
         actionMenus: {},
     });
     expect(`.o_breadcrumb`).toHaveText("first record");
-    expect(`.o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(`.o_cp_action_menus span:contains(Duplicate)`).toHaveCount(0);
@@ -8437,7 +8440,7 @@ test(`execute ActionMenus actions`, async () => {
             },
         },
     });
-    expect(`.o_cp_action_menus .dropdown-toggle`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect.verifySteps(["get_views", "web_read"]);
 
     await toggleActionMenu();
@@ -8488,7 +8491,7 @@ test(`execute ActionMenus actions (create)`, async () => {
     expect.verifySteps(["get_views", "onchange"]);
 
     await contains(`.o_field_widget[name='foo'] input`).edit("test");
-    expect(`.o_cp_action_menus .dropdown-toggle`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Action Partner");
@@ -10019,7 +10022,8 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
         type: "form",
         arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
     });
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    // a lone header widget is the one the actions menu keeps outside of
+    // itself, so it is right there in the status bar
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
 });
@@ -10051,7 +10055,7 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
         </header></form>`,
     });
 
-    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
+    await contains("button.o-control-panel-adaptive-dropdown").click();
     expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
     await contains(".o-dropdown--menu button:contains(Upload Test)").click();
     expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
@@ -12004,7 +12008,7 @@ test(`prevent recreating a deleted record`, async () => {
     await contains(`.o_field_char .o_input`).edit("now dirty");
     expect(`.o_form_status_indicator_buttons`).toBeVisible();
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown--menu .dropdown-item:contains(Delete)`).click();
     expect(`.modal`).toHaveCount(1);
 
@@ -13011,12 +13015,15 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
     });
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Confirm");
-    // open the dropdown
-    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
+    expect(".o_statusbar_buttons button:has([data-icon='more_vert'])").toHaveCount(0, {
+        message: "the status bar keeps the first button and no menu of its own",
+    });
+    // open the single actions menu of the control panel
+    await contains("button.o-control-panel-adaptive-dropdown").click();
     await animationFrame();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
-    expect(".o-dropdown--menu button").toHaveCount(1, {
-        message: "should have 1 button in the dropdown",
+    expect(".o-dropdown--menu button:contains(Do it)").toHaveCount(1, {
+        message: "the header button that did not fit is in the menu",
     });
 });
 
@@ -13042,21 +13049,18 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
     });
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
-    // Now there should an action dropdown, because there are two visible buttons
-    expect(".o_statusbar_buttons button:has([data-icon='more_vert'])").toHaveCount(1, {
-        message: "should have 'More' dropdown",
-    });
-
-    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
-    expect(".o-dropdown--menu button").toHaveCount(1, {
-        message: "should have 1 button in the dropdown",
+    // the second visible button is in the actions menu of the control panel
+    await contains("button.o-control-panel-adaptive-dropdown").click();
+    expect(".o-dropdown--menu button:contains(Ciao)").toHaveCount(1, {
+        message: "the header button that did not fit is in the menu",
     });
 
     // change display_name to update buttons modifiers and make one button visible
     await contains(".o_field_widget[name=name] input").edit("first record");
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
-    expect(".o_statusbar_buttons button:has([data-icon='more_vert'])").toHaveCount(0, {
-        message: "shouldn't have 'More' dropdown",
+    await contains("button.o-control-panel-adaptive-dropdown").click();
+    expect(".o-dropdown--menu button:contains(Ciao)").toHaveCount(0, {
+        message: "an invisible header button is in no menu either",
     });
 });
 
@@ -13088,23 +13092,23 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
             `,
     });
 
-    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveCount(1, {
+    expect(actionMenuToggler()).toHaveCount(1, {
         message: "statusbar should contain a dropdown",
     });
-    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").not.toHaveClass("show", {
+    expect(actionMenuToggler()).not.toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     await contains(".o_field_widget[name=name] input").edit("before onchange");
-    await contains(".o_cp_action_menus button:has([data-icon='more_vert'])").click();
-    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveClass("show", {
+    await toggleActionMenu();
+    expect(actionMenuToggler()).toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     onchangeDef.resolve({ value: { name: "after onchange" } });
     await animationFrame();
     expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
-    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveClass("show", {
+    expect(actionMenuToggler()).toHaveClass("show", {
         message: "dropdown should be opened",
     });
 });
@@ -13147,7 +13151,7 @@ test(`cog menu action is executed with up to date context`, async () => {
             },
         },
     });
-    expect(`.o_cp_action_menus .dropdown-toggle`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     await toggleActionMenu();
     await toggleMenuItem("Action Partner");
 
@@ -13177,8 +13181,10 @@ test("CogMenu receives the model in env", async () => {
         resId: 5,
         arch: `<form><field name="display_name"/></form>`,
     });
+    await toggleActionMenu();
+    // on small screens the cog is mounted with the actions menu rather than
+    // with the control panel, so it is only asked to display itself then
     expect.verifySteps([["cog displayed", "partner", 5]]);
-    await contains(".o_cp_action_menus button").click();
     await contains("button.test-cog").click();
     expect.verifySteps([["cog clicked", "partner", 5]]);
 });
@@ -13273,7 +13279,7 @@ test("attach_document widget also works inside a dropdown", async () => {
         `,
     });
 
-    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
+    await contains("button.o-control-panel-adaptive-dropdown").click();
     await contains(".o_attach_document").click();
     await manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();

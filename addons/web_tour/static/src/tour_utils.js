@@ -81,16 +81,21 @@ export const stepUtils = {
                     const buttonOutSideDropdownMenu = queryFirst(
                         `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`
                     );
-                    const node = queryFirst(
-                        ".o_statusbar_buttons button:has([data-icon='more_vert'])"
-                    );
+                    // The status bar keeps its first button on small screens;
+                    // the others are in the single actions menu of the
+                    // control panel, which is then what has to be opened.
+                    const node =
+                        queryFirst(".o_statusbar_buttons button:has([data-icon='more_vert'])") ||
+                        queryFirst("button.o-control-panel-adaptive-dropdown");
                     if (!buttonOutSideDropdownMenu && node) {
                         await click(node);
                     }
                 },
             },
             {
-                trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}')`,
+                // In the actions menu of the control panel the button carries
+                // the entry class itself, where the status bar used to wrap it.
+                trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}'), button.dropdown-item:enabled:contains('${innerTextButton}')`,
                 content: description,
                 run: "click",
             }

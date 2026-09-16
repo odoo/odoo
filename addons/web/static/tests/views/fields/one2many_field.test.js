@@ -31,6 +31,7 @@ import {
     patchWithCleanup,
     selectFieldDropdownItem,
     serverState,
+    toggleActionMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -9649,7 +9650,7 @@ test("one2many add a line should not crash if orderedResIDs is not set on mobile
             </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    await toggleActionMenu();
     await contains('button[name="post"]').click();
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_data_row.o_selected_row").toHaveCount(1);

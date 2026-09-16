@@ -14,6 +14,7 @@ import {
     onRpc,
     patchWithCleanup,
     stepAllNetworkCalls,
+    toggleActionMenu,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
@@ -265,7 +266,7 @@ describe("new", () => {
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
-        await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+        await toggleActionMenu();
         await contains(`button[name="5"]`).click();
         expect.verifySteps(["web_save", "/web/action/load", "get_views", "onchange"]);
         expect(".modal").toHaveCount(1);

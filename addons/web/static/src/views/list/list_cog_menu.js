@@ -2,7 +2,7 @@ import { t, useProps } from "@odoo/owl";
 import { CogMenu, cogMenuProps } from "../../search/cog_menu/cog_menu";
 
 export class ListCogMenu extends CogMenu {
-    static template = "web.ListCogMenu";
+    printItemsSeparator = true;
     props = useProps({
         ...cogMenuProps,
         hasSelectedRecords: t.number().optional(),

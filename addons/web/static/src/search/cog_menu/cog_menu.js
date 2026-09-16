@@ -40,11 +40,30 @@ export class CogMenu extends ActionMenus {
     };
     static actionMenusProps = cogMenuProps;
 
+    // Views that fill the cog with items of their own keep those apart from
+    // the print ones.
+    printItemsSeparator = false;
+
     setup() {
         super.setup();
         this.uiService = useService("ui");
         this.registryItems = asyncComputed(async () => this._registryItems(), { initial: [] });
         onWillStart(() => this.registryItems.currentPromise());
+        // Inlined in an already open menu on small screens: there is no
+        // toggler left to load the print items on, so load them upfront. A
+        // failure there -- offline, or a report the server will not list --
+        // costs the print items, never the rest of the menu.
+        onWillStart(async () => {
+            if (this.uiService.isSmall) {
+                try {
+                    await this.loadPrintItems();
+                } catch (error) {
+                    // `loadPrintItems` only assigns once it has them all, so
+                    // there is nothing to undo here, only a reason to give.
+                    console.warn("Could not load the print items of the cog menu", error);
+                }
+            }
+        });
     }
 
     get hasItems() {
@@ -53,8 +72,23 @@ export class CogMenu extends ActionMenus {
 
     async _registryItems() {
         const registryItems = cogMenuRegistry.getAll();
+        // An item that cannot tell whether it applies is not shown; it does
+        // not get to take the menu it belongs to down with it.
         const areDisplayed = await Promise.all(
-            registryItems.map((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            registryItems.map(async (item) => {
+                if (!("isDisplayed" in item)) {
+                    return true;
+                }
+                try {
+                    return await item.isDisplayed(this.env);
+                } catch (error) {
+                    console.warn(
+                        `Cog item "${item.Component?.name}" could not tell whether it applies`,
+                        error
+                    );
+                    return false;
+                }
+            })
         );
         const items = [];
         for (let i = 0; i < registryItems.length; i++) {

@@ -1,10 +1,11 @@
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
+    contains,
     mountView,
     onRpc,
-    contains,
-    toggleKanbanColumnActions
+    toggleActionMenu,
+    toggleKanbanColumnActions,
 } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels } from "./project_models";
@@ -27,7 +28,7 @@ test("project.project (list) show archive/unarchive action for project manager",
     onRpc("has_group", ({ args }) => args[1] === "project.group_project_manager");
     await mountView(listViewParams);
     await contains("input.form-check-input").click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect("[data-icon='archive']").toHaveCount(1, { message: "Archive action should be visible" });
     expect("[data-icon='unarchive']").toHaveCount(1, { message: "Unarchive action should be visible" });
 });
@@ -36,7 +37,7 @@ test("project.project (list) hide archive/unarchive action for project user", as
     onRpc("has_group", ({ args }) => args[1] === "project.group_project_user");
     await mountView(listViewParams);
     await contains("input.form-check-input").click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(0, { message: "Archive action should not be visible" });
     expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(0, { message: "Unarchive action should not be visible" });
 });
