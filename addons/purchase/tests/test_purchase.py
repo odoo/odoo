@@ -350,6 +350,51 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
         self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
 
+    def test_compute_packaging_02(self):
+        """Create a PO and use packaging. Check product_qty and product_packaging
+        are correctly calculated when packaging_qty is manually changed.
+        """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        packaging_one, packaging_four = self.env['product.packaging'].create([{
+            'name': "One pack",
+            'product_id': self.product_a.id,
+            'qty': 1.0,
+        }, {
+            'name': "Four pack",
+            'product_id': self.product_a.id,
+            'qty': 4.0,
+        }])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po_form = Form(po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 1.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(po.order_line.product_packaging_qty, 1.0)
+
+        with po_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 4.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_qty, 4.0)
+        self.assertEqual(po.order_line.product_packaging_id, packaging_one)
+
+        with po_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 5.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(po.order_line.product_packaging_qty, 5.0)
+
+        with po_form.order_line.edit(0) as line:
+            line.product_qty = 4.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_four)
+        self.assertEqual(po.order_line.product_packaging_qty, 1.0)
+
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
         # Required for `product_uom` to be visibile in the view
