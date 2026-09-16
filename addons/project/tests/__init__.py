@@ -2,6 +2,7 @@
 
 from . import test_access_rights
 from . import test_burndown_chart
+from . import test_mail_activity_schedule
 from . import test_project_base
 from . import test_project_config
 from . import test_project_embedded_action_settings

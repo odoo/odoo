@@ -3,40 +3,35 @@ import { registry } from "@web/core/registry";
 import { extractM2OFieldProps } from "@web/views/fields/many2one/many2one_field";
 import { Many2OneReferenceField } from "@web/views/fields/many2one_reference/many2one_reference_field";
 
-export const ICON_BY_MODEL_NAME = {
-    "crm.lead": "star",
-    "sale.order": "attach_money",
-    "account.move": "file_export",
-    subscription: "refresh",
-    "event.event": "calendar_today",
-    "helpdesk.ticket": "support",
-    "project.task": "check",
-    "purchase.order": "credit_card",
-    "document.document": "article",
-    "hr.employee": "badge",
-    "stock.picking": "local_shipping",
-    "res.partner": "contact_page",
-    "mrp.production": "build",
-    "hr.applicant": "account_circle",
-    "fleet.vehicle": "directions_car",
-};
-
+/**
+ * The document an activity was logged on, shown with the icon of its model. A module
+ * registers the icon of each model it owns:
+ * `registry.category("mail.log_document_icons").add("crm.lead", { icon: "star", filled: true })`
+ */
 export class Many2OneReferenceIconField extends Many2OneReferenceField {
     static template = "mail.Many2OneReferenceIconField";
 
-    /** Icon of the related model, "description" for a model with no specific icon. */
+    get iconDefinition() {
+        return registry.category("mail.log_document_icons").get(this.relation, {});
+    }
+
     get modelIcon() {
-        // flag set by voip_sale_subscription, to tell a subscription from a plain sale order
-        if (this.props.record.data.is_related_activity_document_subscription) {
-            return ICON_BY_MODEL_NAME["subscription"];
-        }
-        return ICON_BY_MODEL_NAME[this.relation] || "description";
+        return this.iconDefinition.icon || "description";
     }
 
     get modelIconClass() {
-        return this.relation === "crm.lead" || this.relation === "event.event" ? "oi-filled" : "";
+        return this.iconDefinition.filled ? "oi-filled" : "";
+    }
+
+    /** Name of the document's model, when the record carries it: a module whose records
+     * hold that name overrides this to have it shown as a tooltip. */
+    get modelDisplayName() {
+        return "";
     }
 }
+
+registry.category("mail.log_document_icons").add("res.partner", { icon: "contact_page" });
+registry.category("mail.log_document_icons").add("res.users", { icon: "person" });
 
 registry.category("fields").add("many2one_reference_icon", {
     component: Many2OneReferenceIconField,

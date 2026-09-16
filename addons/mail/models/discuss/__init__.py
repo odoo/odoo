@@ -8,6 +8,7 @@ from . import update
 from . import bus
 from . import bus_sync_mixin
 from . import discuss_call_history
+from . import discuss_call_log_mixin
 from . import discuss_category
 from . import discuss_channel_member
 from . import discuss_channel_rtc_session

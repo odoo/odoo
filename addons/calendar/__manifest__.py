@@ -60,6 +60,7 @@ If you need to manage your meetings, you should install the CRM module.
         ],
         'mail.assets_public': [
             'calendar/static/src/core/common/**/*',
+            'calendar/static/src/discuss/**/*',
         ],
         'im_livechat.assets_embed_core': [
             'calendar/static/src/core/common/**/*',

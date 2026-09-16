@@ -5,12 +5,16 @@ from odoo.fields import Domain
 from odoo.tools.sql import SQL
 
 from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg
+from odoo.addons.mail.tools.discuss import Store
 
 
 class DiscussChannel(models.Model):
     _inherit = "discuss.channel"
 
     calendar_event_ids = fields.One2many("calendar.event", "videocall_channel_id")
+    meeting_invited_member_ids = fields.One2many(
+        "discuss.channel.member", compute="_compute_meeting_invited_member_ids", compute_sudo=True,
+    )
 
     def _videocall_channel_ids(self, domain=Domain.TRUE):
         """Subquery of the channels backing a meeting matching `domain`.
@@ -60,6 +64,26 @@ class DiscussChannel(models.Model):
         if self.calendar_event_ids:
             return False
         return super()._should_invite_members_to_join_call()
+
+    @api.depends("calendar_event_ids.user_id", "channel_member_ids.last_seen_dt")
+    def _compute_meeting_invited_member_ids(self):
+        """Members who have not read the conversation or joined its call yet, the organizers aside."""
+        self.meeting_invited_member_ids = False
+        for channel in self.filtered("calendar_event_ids"):
+            organizers = channel.calendar_event_ids.user_id.partner_id
+            channel.meeting_invited_member_ids = channel.channel_member_ids.filtered(
+                lambda member: not member.last_seen_dt and member.partner_id not in organizers
+            )
+
+    def _store_channel_fields(self, res: Store.FieldList):
+        super()._store_channel_fields(res)
+        res.many(
+            "meeting_invited_member_ids",
+            "_store_avatar_card_fields",
+            mode="ADD",
+            # sudo: calendar.event: whether an accessible channel backs a meeting is not private
+            predicate=lambda channel: channel.sudo().calendar_event_ids,
+        )
 
     def _generate_avatar(self):
         """A meeting channel identifies itself by the day of its meeting, not of its
