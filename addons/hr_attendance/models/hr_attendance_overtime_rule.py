@@ -449,13 +449,17 @@ class HrAttendanceOvertimeRule(models.Model):
         timing_type_set = set(timing_rule_by_timing_type.keys())
 
         intervals_by_timing_type = {
-            'leave': schedules_intervals_by_employee['leave'],
+            'leave': defaultdict(Intervals),
             'schedule': defaultdict(lambda: defaultdict(Intervals)),
             'work_days': defaultdict(),
             'non_work_days': defaultdict()
         }
 
         for employee in employees:
+            if 'leave' in timing_type_set:
+                # The scheduled break is not worked time, so it never counts as extra hours
+                employee_lunch = schedules_intervals_by_employee['schedule'][employee]['lunch']
+                intervals_by_timing_type['leave'][employee] = schedules_intervals_by_employee['leave'][employee] - employee_lunch
             if {'work_days', 'non_work_days'} & timing_type_set:
                 sudo_calendar = employee.sudo().resource_calendar_id
                 if sudo_calendar and sudo_calendar.flexible_hours:
