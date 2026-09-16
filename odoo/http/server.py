@@ -148,7 +148,7 @@ class HTTPSocket:
             'REMOTE_ADDR': self.addr[0],
             'REMOTE_PORT': self.addr[1],
             'SERVER_NAME': config['http_interface'],
-            'SERVER_PORT': config['http_port'],
+            'SERVER_PORT': config['gevent_port' if odoo.evented else 'http_port'],
             'SERVER_PROTOCOL': 'HTTP/' + self.h11request.http_version.decode('ascii'),
             'SERVER_SOFTWARE': SERVER_SOFTWARE,
             'wsgi.version': (1, 0),
@@ -160,9 +160,8 @@ class HTTPSocket:
             'wsgi.multiprocess': config['workers'] and not odoo.evented,
             'wsgi.run_once': False,
         }
-        if environ['wsgi.multithread']:
-            # cannot use websocket in multiworker and gevent uses
-            # another http library than this one
+        if environ['wsgi.multithread'] or odoo.evented:
+            # cannot use websocket in prefork HTTP workers
             environ['socket'] = self.sock
             environ['odoo.trailing_data'] = lambda: self.conn.trailing_data
 
