@@ -127,12 +127,14 @@ export class CartPage extends Component {
         const payAfter = this.selfOrder.config.self_ordering_pay_after;
         let lines = [];
         if (this.isCheckout) {
-            const sourceLines = payAfter === "each" ? order.lines : order.unsentLines;
+            const sourceLines = payAfter === "each" ? order.getOrderlines() : order.unsentLines;
             lines = sourceLines.filter((line) => !line.combo_parent_id && !line.isTipLine());
         } else {
-            lines = order.lines.filter(
-                (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id && !l.isTipLine()
-            );
+            lines = order
+                .getOrderlines()
+                .filter(
+                    (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id && !l.isTipLine()
+                );
         }
 
         const regularLines = [];

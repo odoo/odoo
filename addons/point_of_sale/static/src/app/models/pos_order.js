@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
-import { getStrNotes } from "./utils/order_change";
+import { getStrNotes, receiptLineGrouper } from "./utils/order_change";
 
 const { DateTime } = luxon;
 
@@ -661,11 +661,63 @@ export class PosOrder extends PosOrderAccounting {
         return this.toBeValidate() && this._isValidEmptyOrder() && !this.isCustomerRequired;
     }
 
+    getLineCategoryInfo(line) {
+        const categs =
+            line.product_id?.pos_categ_ids || line.product_id?.product_tmpl_id?.pos_categ_ids;
+        if (!categs?.length) {
+            return { sequence: Infinity, id: Infinity };
+        }
+        let minSeq = Infinity;
+        let minId = Infinity;
+        for (const categ of categs) {
+            const seq = categ.sequence ?? 0;
+            if (seq < minSeq || (seq === minSeq && categ.id < minId)) {
+                minSeq = seq;
+                minId = categ.id;
+            }
+        }
+        return { sequence: minSeq, id: minId };
+    }
+
     // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.
     getOrderlines() {
+        let lines = this.lines;
+        if (this.config?.iface_group_by_categ) {
+            const sortKeyMap = new Map(
+                this.lines.map((line) => [line, this.getLineCategoryInfo(line)])
+            );
+            for (const line of this.lines) {
+                if (!line.combo_line_ids?.length) {
+                    continue;
+                }
+                let minKey = sortKeyMap.get(line);
+                for (const child of line.combo_line_ids) {
+                    const childKey = sortKeyMap.get(child);
+                    if (
+                        childKey &&
+                        (childKey.sequence < minKey.sequence ||
+                            (childKey.sequence === minKey.sequence && childKey.id < minKey.id))
+                    ) {
+                        minKey = childKey;
+                    }
+                }
+                sortKeyMap.set(line, minKey);
+                for (const child of line.combo_line_ids) {
+                    sortKeyMap.set(child, minKey);
+                }
+            }
+            lines = [...this.lines].sort((a, b) => {
+                const infoA = sortKeyMap.get(a);
+                const infoB = sortKeyMap.get(b);
+                if (infoA.sequence !== infoB.sequence) {
+                    return infoA.sequence - infoB.sequence;
+                }
+                return infoA.id - infoB.id;
+            });
+        }
         const regularLines = [];
         const serviceFeeLines = [];
-        for (const line of this.lines) {
+        for (const line of lines) {
             (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
         }
         return [...regularLines, ...serviceFeeLines];
@@ -768,7 +820,11 @@ export class PosOrder extends PosOrderAccounting {
                 customer_note: getStrNotes(line?.getCustomerNote?.() || false),
                 pos_categ_id: product.pos_categ_ids[0]?.id || 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence || 0,
-                group: (!opts.hideCourse && line?.getCourse?.()) || false,
+                group:
+                    (!opts.hideCourse && line?.getCourse?.()) ||
+                    receiptLineGrouper.getGroup(line) ||
+                    false,
+                isCombo: Boolean(line?.combo_line_ids?.length),
                 combo_line_ids: line?.combo_line_ids?.map((l) => ({
                     id: l.id,
                     product_id: l.product_id.id,

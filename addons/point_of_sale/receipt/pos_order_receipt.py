@@ -494,6 +494,7 @@ class PosOrderReceipt(models.AbstractModel):
             "pos_categ_id": first_categ.id,
             "pos_categ_sequence": first_categ.sequence,
             "group": group,
+            "isCombo": bool(line.combo_line_ids),
             "combo_line_ids": line.combo_line_ids.ids,
             "combo_parent_uuid": line.combo_parent_id.uuid,
             "uom_is_base_unit": line.product_id.uom_id.id == self.env.ref('uom.product_uom_unit').id
