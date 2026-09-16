@@ -1054,7 +1054,8 @@ class TestSaleToInvoice(TestSaleCommon):
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
         self.assertEqual(line.untaxed_amount_invoiced, 300)
-        self.assertEqual(sale_order.amount_to_invoice, 150)
+        # 10 of the 20 ordered units are invoiced, whatever was delivered.
+        self.assertEqual(sale_order.amount_to_invoice, 300)
 
     def test_salesperson_in_invoice_followers(self):
         """
