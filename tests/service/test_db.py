@@ -3160,14 +3160,22 @@ class TestPgDumpFailurePolicyIsShared:
 
         assert "exit 1" in str(dump._prepare_pg_dump_failed_error(1, b"\xff\xfe bad"))
 
-    def test_the_runner_does_not_spell_the_message_itself(self):
-        import inspect
-
+    def test_the_runner_raises_what_the_shared_builder_returns(self):
         from odoo.service.db import dump
 
-        src = inspect.getsource(dump._run_pg_dump)
-        assert "ODOO_PG_DUMP_TOTAL_TIMEOUT" not in src
-        assert "pg_dump failed (exit" not in src
+        cmd = [
+            sys.executable,
+            "-c",
+            "import sys; sys.stderr.write('boom'); sys.exit(3)",
+        ]
+        marker = RuntimeError("built once, raised as is")
+        with patch.object(
+            dump, "_prepare_pg_dump_failed_error", return_value=marker
+        ) as build:
+            with pytest.raises(RuntimeError) as raised:
+                dump._run_pg_dump(cmd, dict(os.environ), io.BytesIO())
+        assert raised.value is marker
+        build.assert_called_once_with(3, b"boom")
 
 
 class TestANewDatabaseIsAnnouncedToTheListeners:
