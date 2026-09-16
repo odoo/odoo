@@ -273,7 +273,7 @@ class HrAttendanceOvertimeRule(models.Model):
         timing_type_set = set(timing_rule_by_timing_type.keys())
 
         intervals_by_timing_type = {
-            'leave': schedules_intervals_by_employee['leave'],
+            'leave': defaultdict(Intervals),
             'schedule': defaultdict(lambda: defaultdict(Intervals)),
             'work_days': defaultdict(),
             'non_work_days': defaultdict(),
@@ -281,6 +281,14 @@ class HrAttendanceOvertimeRule(models.Model):
         }
 
         for employee in employees:
+            if 'leave' in timing_type_set:
+                # The breaks are the gaps inside each scheduled day, they are not worked so they never count as extra hours
+                employee_schedule = schedules_intervals_by_employee['schedule'][employee]
+                day_bounds = defaultdict(list)
+                for start, stop, _record in employee_schedule:
+                    day_bounds[start.date()] += [start, stop]
+                employee_days = Intervals([(min(bounds), max(bounds), self.env['resource.calendar']) for bounds in day_bounds.values()])
+                intervals_by_timing_type['leave'][employee] = schedules_intervals_by_employee['leave'][employee] - (employee_days - employee_schedule)
             if {'work_days', 'non_work_days'} & timing_type_set:
                 employee_sudo = employee.sudo()
                 if employee_sudo.is_flexible:
