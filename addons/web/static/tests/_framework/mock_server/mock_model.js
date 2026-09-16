@@ -3604,9 +3604,7 @@ export class Model extends Array {
                 case "many2one": {
                     for (const record of records) {
                         if (record[fieldName] !== false) {
-                            if (!relatedFields) {
-                                record[fieldName] = record[fieldName];
-                            } else {
+                            if (relatedFields) {
                                 record[fieldName] = getRelation(field).web_read(
                                     [record[fieldName]],
                                     relatedFields,
