@@ -33,7 +33,7 @@ class IrActionsReport(models.Model):
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # OVERRIDE
         res = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
-        if not res_ids:
+        if not res_ids or self.env.context.get("l10n_ch_disable_insert_qr_in_report"):
             return res
         report = self._get_report(report_ref)
         if self._is_invoice_report(report_ref):
