@@ -68,6 +68,7 @@ from . import ir_websocket
 from . import kpi_provider
 from . import res_company
 from . import res_config_settings
+from . import res_groups
 from . import res_role
 from . import res_users
 from . import update
