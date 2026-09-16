@@ -30,4 +30,11 @@
     </BuilderComponent>
 </t>
 
+<t t-name="html_builder.BuilderNumberSelectItemInternal" t-inherit="html_builder.BuilderSelectItemInternal">
+    <xpath expr="//div" position="attributes">
+        <attribute name="t-att-class" remove="{'active': this.state.isActive}" />
+        <attribute name="t-att-class" add="{'active': this.state.isActive and this.props.isAnySelectItemActive}" separator="" />
+    </xpath>
+</t>
+
 </templates>

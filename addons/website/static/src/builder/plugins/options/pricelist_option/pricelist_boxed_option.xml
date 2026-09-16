@@ -8,13 +8,13 @@
             actionParam="{ itemClass:'s_pricelist_boxed_item', descriptionClass: 's_pricelist_boxed_item_description', descriptionExtraClass: 'o_small-fs' }"/>
     </BuilderRow>
     <BuilderContext applyTo="'.s_pricelist_boxed_item_line'">
-        <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
+        <WebsiteBorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
     </BuilderContext>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <price_list_boxed_description_option template="website.PriceListBoxedDescriptionOption" selector=".s_pricelist_boxed"/>
+        <price_list_boxed_description_option selector=".s_pricelist_boxed"/>
     </xpath>
 </t>
 
