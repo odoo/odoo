@@ -181,10 +181,10 @@ class MixinAccountMoveSend(models.AbstractModel):
             # Download SInvoice documents in order to attach them to the email we sent to the customer.
             # If the email is not being sent, we will still get the files and attach them to the invoice.
             xml_data, xml_error_message = (
-                invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+                invoice._l10n_vn_edi_download_invoice_xml_file_data()
             )
             pdf_data, pdf_error_message = (
-                invoice._l10n_vn_edi_fetch_invoice_pdf_file_data()
+                invoice._l10n_vn_edi_download_invoice_pdf_file_data()
             )
             if xml_error_message or pdf_error_message:
                 invoice_data["error"] = {

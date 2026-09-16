@@ -101,7 +101,7 @@ class StockPickingBatch(models.Model):
         self._l10n_ro_edi_stock_send_etransport_document(send_type=send_type)
 
     def action_l10n_ro_edi_stock_fetch_status(self):
-        self._l10n_ro_edi_stock_fetch_document_status()
+        self._l10n_ro_edi_stock_update_document_status()
 
     ################################################################################
     # Document Helpers
@@ -262,7 +262,7 @@ class StockPickingBatch(models.Model):
                 }
             )
 
-    def _l10n_ro_edi_stock_fetch_document_status(self):
+    def _l10n_ro_edi_stock_update_document_status(self):
         session = self.env["ir.egress"].session(purpose="l10n_ro_etransport")
         documents_to_delete = self.env["l10n_ro_edi.document"]
         to_fetch = self.filtered(lambda b: b.l10n_ro_edi_stock_state == "stock_sent")

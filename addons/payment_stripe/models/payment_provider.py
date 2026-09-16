@@ -184,7 +184,7 @@ class PaymentProvider(models.Model):
             action = {"type": "ir.actions.act_window_close"}
         else:
             # Account creation
-            connected_account = self._stripe_fetch_or_create_connected_account()
+            connected_account = self._stripe_get_or_create_connected_account()
 
             # Link generation
             if not menu_id:
@@ -397,7 +397,7 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - STRIPE CONNECT ONBOARDING === #
 
-    def _stripe_fetch_or_create_connected_account(self):
+    def _stripe_get_or_create_connected_account(self):
         """Fetch the connected Stripe account and create one if not already done.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.

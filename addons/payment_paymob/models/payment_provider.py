@@ -259,10 +259,10 @@ class PaymentProvider(models.Model):
         if not is_refresh_token_request and is_client_request:
             auth = self.paymob_secret_key
         elif not is_refresh_token_request:
-            auth = self._paymob_fetch_access_token()
+            auth = self._paymob_get_access_token()
         return {"Authorization": f"Bearer {auth}"}
 
-    def _paymob_fetch_access_token(self):
+    def _paymob_get_access_token(self):
         """Generate a new access token if it's expired, otherwise return the existing access token.
 
         Paymob's access tokens expire every hour.

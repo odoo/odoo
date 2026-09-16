@@ -53,4 +53,4 @@ class AccountJournal(models.Model):
         self.company_id._l10n_hr_mer_get_new_documents(undelivered_only=False)
 
     def l10n_hr_mer_get_message_status(self):
-        self.company_id._l10n_hr_mer_fetch_document_status_company()
+        self.company_id._l10n_hr_mer_update_document_status_company()

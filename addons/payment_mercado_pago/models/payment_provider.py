@@ -279,11 +279,11 @@ class PaymentProvider(models.Model):
         if method == "POST" and idempotency_key:
             headers["X-Idempotency-Key"] = idempotency_key
         if not is_proxy_request and not is_refresh_token_request:
-            access_token = self._mercado_pago_fetch_access_token()
+            access_token = self._mercado_pago_get_access_token()
             headers["Authorization"] = f"Bearer {access_token}"
         return headers
 
-    def _mercado_pago_fetch_access_token(self):
+    def _mercado_pago_get_access_token(self):
         """Generate a new access token if it's expired, otherwise return the existing access token.
 
         Note: `self.check_singleton()`

@@ -167,10 +167,10 @@ class PaymentProvider(models.Model):
         if idempotency_key:
             headers["PayPal-Request-Id"] = idempotency_key
         if not is_refresh_token_request:
-            headers["Authorization"] = f"Bearer {self._paypal_fetch_access_token()}"
+            headers["Authorization"] = f"Bearer {self._paypal_get_access_token()}"
         return headers
 
-    def _paypal_fetch_access_token(self):
+    def _paypal_get_access_token(self):
         """Generate a new access token if it's expired, otherwise return the existing access token.
 
         :return: A valid access token.

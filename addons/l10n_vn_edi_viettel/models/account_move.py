@@ -245,10 +245,10 @@ class AccountMove(models.Model):
         )
         return fields_list
 
-    def _l10n_vn_edi_fetch_invoice_file_data(self, file_format):
+    def _l10n_vn_edi_download_invoice_file_data(self, file_format):
         """Helper to try fetching a few time in case the files are not yet ready."""
         self.check_singleton()
-        files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(
+        files_data, error_message = self._l10n_vn_edi_try_download_invoice_file_data(
             file_format
         )
 
@@ -260,13 +260,13 @@ class AccountMove(models.Model):
         threshold = 1
         while not files_data["fileToBytes"] and threshold < 3:
             time.sleep(0.125 * threshold)
-            files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(
+            files_data, error_message = self._l10n_vn_edi_try_download_invoice_file_data(
                 file_format
             )
             threshold += 1
         return files_data, error_message
 
-    def _l10n_vn_edi_try_fetch_invoice_file_data(self, file_format):
+    def _l10n_vn_edi_try_download_invoice_file_data(self, file_format):
         """
         Query sinvoice in order to fetch the data representation of the invoice, either zip or pdf.
         """
@@ -295,14 +295,14 @@ class AccountMove(models.Model):
             cookies={"access_token": access_token},
         )
 
-    def _l10n_vn_edi_fetch_invoice_xml_file_data(self):
+    def _l10n_vn_edi_download_invoice_xml_file_data(self):
         """
         Query sinvoice in order to fetch the xsl and xml data representation of the invoice.
 
         Returns a list of tuple with both file names, mimetype, content and the field it should be stored in.
         """
         self.check_singleton()
-        files_data, error_message = self._l10n_vn_edi_fetch_invoice_file_data("ZIP")
+        files_data, error_message = self._l10n_vn_edi_download_invoice_file_data("ZIP")
         if error_message:
             return files_data, error_message
 
@@ -323,14 +323,14 @@ class AccountMove(models.Model):
                             "res_field": "l10n_vn_edi_sinvoice_xml_file",
                         }, ""
 
-    def _l10n_vn_edi_fetch_invoice_pdf_file_data(self):
+    def _l10n_vn_edi_download_invoice_pdf_file_data(self):
         """
         Query sinvoice in order to fetch the pdf data representation of the invoice.
 
         Returns a tuple with the pdf name, mimetype, content and field.
         """
         self.check_singleton()
-        file_data, error_message = self._l10n_vn_edi_fetch_invoice_file_data("PDF")
+        file_data, error_message = self._l10n_vn_edi_download_invoice_file_data("PDF")
         if error_message:
             return file_data, error_message
 

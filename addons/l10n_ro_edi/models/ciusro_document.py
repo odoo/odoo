@@ -60,7 +60,7 @@ class L10n_Ro_EdiDocument(models.Model):
         """Fetch the latest response from E-Factura about the XML sent"""
         self.check_singleton()
         # Do the batch fetch process on a single invoice/document
-        self.invoice_id._l10n_ro_edi_fetch_invoice_sent_documents()
+        self.invoice_id._l10n_ro_edi_update_invoice_sent_documents()
 
     def action_l10n_ro_edi_download_attachment(self):
         """Download the sent attachment in case if no status have been received from ANAF.

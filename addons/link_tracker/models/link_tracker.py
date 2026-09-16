@@ -448,7 +448,7 @@ class LinkTracker(models.Model):
             if not vals.get("title"):
                 # Display-only, and `link_preview` fetches it over the network with
                 # a 10s deadline per link. That does not belong in a transaction on
-                # the mailing send path; `_cron_fetch_titles` backfills it, and a
+                # the mailing send path; `_cron_update_titles` backfills it, and a
                 # caller that needs it now asks for it.
                 vals["title"] = (
                     self._get_title_from_url(vals["url"])
@@ -656,7 +656,7 @@ class LinkTracker(models.Model):
         return code_rec.link_id.redirected_url
 
     @api.model
-    def _cron_fetch_titles(self, limit=200):
+    def _cron_update_titles(self, limit=200):
         """Backfill the titles `create` no longer fetches over the network."""
         trackers = self.sudo().search([("title", "=", False)], limit=limit)
         trackers |= (

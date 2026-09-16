@@ -306,7 +306,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with (
             patch.object(
                 type(self.env["payment.provider"]),
-                "_stripe_fetch_or_create_connected_account",
+                "_stripe_get_or_create_connected_account",
                 return_value={"id": "dummy"},
             ),
             patch.object(
@@ -333,7 +333,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             ) as mock,
             patch.object(
                 self.env.registry["payment.provider"],
-                "_stripe_fetch_or_create_connected_account",
+                "_stripe_get_or_create_connected_account",
                 return_value={"id": "dummy"},
             ),
         ):

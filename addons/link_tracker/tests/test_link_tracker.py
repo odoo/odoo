@@ -165,7 +165,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             "medium_id": self.env["utm.medium"],
             "source_id": self.env["utm.source"],
             # `create` no longer reaches out over the network for a title;
-            # it records the url and `_cron_fetch_titles` backfills the real one.
+            # it records the url and `_cron_update_titles` backfills the real one.
             "title": "https://odoo.com",
             "url": "https://odoo.com",
         }
@@ -532,12 +532,12 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         )
         self.assertEqual(asked.title, "Test_TITLE")
 
-    def test_cron_fetch_titles_backfills(self):
+    def test_cron_update_titles_backfills(self):
         tracker = self.env["link.tracker"].create(
             {"url": "https://backfill.example.com"}
         )
         self.assertEqual(tracker.title, tracker.url)
-        self.env["link.tracker"]._cron_fetch_titles()
+        self.env["link.tracker"]._cron_update_titles()
         self.assertEqual(tracker.title, "Test_TITLE")
 
     # ------------------------------------------------------------

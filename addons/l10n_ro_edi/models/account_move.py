@@ -6,7 +6,7 @@ from odoo.fields import Domain
 
 from .utils import (
     _request_ciusro_download_answer,
-    _request_ciusro_fetch_status,
+    _request_ciusro_get_status,
     _request_ciusro_send_invoice,
     _request_ciusro_sync_invoices,
 )
@@ -166,7 +166,7 @@ class AccountMove(models.Model):
             self.env.cr.commit()
         return None
 
-    def _l10n_ro_edi_fetch_invoice_sent_documents(self):
+    def _l10n_ro_edi_update_invoice_sent_documents(self):
         """
         This method loops over all invoice with sending document in `self`. For each of them,
         it pre-checks errors and make a fetch request for the invoice. Then:
@@ -187,7 +187,7 @@ class AccountMove(models.Model):
 
         for invoice in invoices_to_fetch:
             self.env["res.company"]._with_locked_records(invoice)
-            result = _request_ciusro_fetch_status(
+            result = _request_ciusro_get_status(
                 company=invoice.company_id,
                 key_loading=invoice.l10n_ro_edi_index,
                 session=session,
@@ -266,7 +266,7 @@ class AccountMove(models.Model):
             self.env.cr.commit()
 
     @api.model
-    def _l10n_ro_edi_fetch_invoices(self):
+    def _l10n_ro_edi_import_invoices(self):
         """Synchronize bills/invoices from SPV"""
         result = _request_ciusro_sync_invoices(
             company=self.env.company,
@@ -618,7 +618,7 @@ class AccountMove(models.Model):
             )
 
     def action_l10n_ro_edi_fetch_invoices(self):
-        self._l10n_ro_edi_fetch_invoices()
+        self._l10n_ro_edi_import_invoices()
         return {
             "type": "ir.actions.client",
             "tag": "reload",

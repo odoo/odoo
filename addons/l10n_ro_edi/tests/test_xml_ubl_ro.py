@@ -379,7 +379,7 @@ class TestUBLRO(TestUBLROCommon):
         document_count = len(bill.l10n_ro_edi_document_ids)
         message_count = len(bill.message_ids)
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(len(bill.l10n_ro_edi_document_ids), document_count)
         self.assertEqual(len(bill.message_ids), message_count)
@@ -399,7 +399,7 @@ class TestUBLRO(TestUBLROCommon):
         self.assertEqual(bill.l10n_ro_edi_index, False)
         self.assertEqual(bill.l10n_ro_edi_state, False)
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(bill.l10n_ro_edi_index, "5020704741")
         self.assertEqual(bill.l10n_ro_edi_state, "invoice_validated")
@@ -418,7 +418,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         self.assertEqual(len(bills), 0)
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         bills = self.env["account.move"].search(
             [
@@ -455,7 +455,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_validated")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
@@ -479,7 +479,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
@@ -511,7 +511,7 @@ class TestUBLRO(TestUBLROCommon):
         invoice.l10n_ro_edi_index = False
         invoice.l10n_ro_edi_state = "invoice_not_indexed"
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_index, "5019882651")
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_validated")
@@ -532,7 +532,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
@@ -554,7 +554,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_sent")
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_refused")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
@@ -578,11 +578,11 @@ class TestUBLRO(TestUBLROCommon):
         self.assertEqual(invoice.l10n_ro_edi_index, False)
 
         with freeze_time(invoice.create_date + relativedelta(days=HOLDING_DAYS + 1)):
-            self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+            self.env["account.move"]._l10n_ro_edi_import_invoices()
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_not_indexed")
 
         with freeze_time(invoice.create_date + relativedelta(days=HOLDING_DAYS + 2)):
-            self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+            self.env["account.move"]._l10n_ro_edi_import_invoices()
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_refused")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
 
@@ -605,7 +605,7 @@ class TestUBLRO(TestUBLROCommon):
         )
         invoice.l10n_ro_edi_state = "invoice_not_indexed"
 
-        self.env["account.move"]._l10n_ro_edi_fetch_invoices()
+        self.env["account.move"]._l10n_ro_edi_import_invoices()
 
         self.assertEqual(invoice.l10n_ro_edi_state, "invoice_validated")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 2)

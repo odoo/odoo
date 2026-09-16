@@ -218,7 +218,7 @@ class ResCompany(models.Model):
             try:
                 self.env["account.move"].with_company(
                     company
-                )._l10n_ro_edi_fetch_invoices()
+                )._l10n_ro_edi_import_invoices()
             except UserError as e:
                 self._l10n_ro_edi_log_message(
                     message=f"{company.id}\n{e}",

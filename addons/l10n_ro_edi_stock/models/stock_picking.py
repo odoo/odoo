@@ -309,7 +309,7 @@ class Picking(models.Model):
 
     def action_l10n_ro_edi_stock_fetch_status(self):
         _debug.pipeline("edi_delivery_status", regime="ro", pickings=self)
-        self._l10n_ro_edi_stock_fetch_document_status()
+        self._l10n_ro_edi_stock_update_document_status()
 
     ################################################################################
     # Document Helpers
@@ -462,7 +462,7 @@ class Picking(models.Model):
                 }
             )
 
-    def _l10n_ro_edi_stock_fetch_document_status(self):
+    def _l10n_ro_edi_stock_update_document_status(self):
         session = self.env["ir.egress"].session(purpose="l10n_ro_etransport")
         documents_to_delete = self.env["l10n_ro_edi.document"]
         to_fetch = self.filtered(lambda p: p.l10n_ro_edi_stock_state == "stock_sent")

@@ -123,7 +123,7 @@ def _request_ciusro_send_invoice(
     return {"key_loading": root.get("index_incarcare")}
 
 
-def _request_ciusro_fetch_status(company, key_loading, session):
+def _request_ciusro_get_status(company, key_loading, session):
     """
     This method makes a "Fetch Status" (GET/stareMesaj) request to the Romanian SPV. After processing the response,
     it will return one of the following three possible objects:

@@ -151,7 +151,7 @@ class ResCompany(models.Model):
             [("l10n_hr_mer_connection_state", "=", "active")]
         )
         for company in edi_user_companies:
-            company._l10n_hr_mer_fetch_document_status_company(from_cron=True)
+            company._l10n_hr_mer_update_document_status_company(from_cron=True)
 
     def _cron_mer_archive_signed_xmls(self):
         edi_user_companies = self.search(
@@ -410,7 +410,7 @@ class ResCompany(models.Model):
         # Return the documents that were successfully imported
         return imported_documents
 
-    def _l10n_hr_mer_fetch_document_status_company(self, from_cron=False):
+    def _l10n_hr_mer_update_document_status_company(self, from_cron=False):
         """
         Fetch and update the status of up to 20000 documents belonging to a company on MojEracun.
         """

@@ -132,9 +132,9 @@ class AccountMoveSend(models.AbstractModel):
 
         # Check the status already
         if moves_by_company:
-            self._l10n_pl_edi_try_status_fetch_from_ksef(invoices_data)
+            self._l10n_pl_edi_try_update_status_from_ksef(invoices_data)
 
-    def _l10n_pl_edi_try_status_fetch_from_ksef(self, invoices_data):
+    def _l10n_pl_edi_try_update_status_from_ksef(self, invoices_data):
         moves_to_update = (
             self.env["account.move"]
             .union(*invoices_data)

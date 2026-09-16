@@ -521,11 +521,11 @@ class TestVNEDI(AccountTestInvoicingCommon):
 
         with (
             patch(
-                "odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_pdf_file_data",
+                "odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_download_invoice_pdf_file_data",
                 return_value=pdf_response,
             ),
             patch(
-                "odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data",
+                "odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_download_invoice_xml_file_data",
                 return_value=xml_response,
             ),
             patch(
