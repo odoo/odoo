@@ -342,7 +342,7 @@ class TestResourceReservation(TransactionCase):
 
     def test_sync_reservation_create(self):
         partner = self.env["res.partner"].create({"name": "Test Consumer"})
-        result = self.Reservation._sync_reservation(
+        result = self.Reservation._sync_projection(
             partner,
             [
                 {
@@ -361,7 +361,7 @@ class TestResourceReservation(TransactionCase):
 
     def test_sync_reservation_delete_all(self):
         partner = self.env["res.partner"].create({"name": "Consumer 2"})
-        self.Reservation._sync_reservation(
+        self.Reservation._sync_projection(
             partner,
             [
                 {
@@ -374,7 +374,7 @@ class TestResourceReservation(TransactionCase):
                 },
             ],
         )
-        result = self.Reservation._sync_reservation(partner, [])
+        result = self.Reservation._sync_projection(partner, [])
         self.assertEqual(len(result), 0)
         remaining = self.Reservation.search(
             [("res_model", "=", "res.partner"), ("res_id", "=", partner.id)]
@@ -383,7 +383,7 @@ class TestResourceReservation(TransactionCase):
 
     def test_sync_reservation_reconcile(self):
         partner = self.env["res.partner"].create({"name": "Consumer 3"})
-        self.Reservation._sync_reservation(
+        self.Reservation._sync_projection(
             partner,
             [
                 {
@@ -396,7 +396,7 @@ class TestResourceReservation(TransactionCase):
                 },
             ],
         )
-        result = self.Reservation._sync_reservation(
+        result = self.Reservation._sync_projection(
             partner,
             [
                 {
@@ -435,7 +435,7 @@ class TestResourceReservation(TransactionCase):
                 for i in range(2)
             ]
         )
-        result = self.Reservation._sync_reservation(
+        result = self.Reservation._sync_projection(
             partner,
             [
                 {

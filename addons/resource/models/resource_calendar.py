@@ -924,6 +924,7 @@ class ResourceCalendar(models.Model):
             return [
                 (start.astimezone(UTC), stop.astimezone(UTC))
                 for start, stop in intervals
+                if start < stop
             ]
 
         result = {}

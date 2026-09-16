@@ -12,6 +12,7 @@ from odoo.models import ValuesType
 
 class ResourceScheduleException(models.Model):
     _name = "resource.schedule.exception"
+    _inherit = ["mixin.resource.ledger"]
     _description = "Schedule Exception"
     _order = "date_from"
     _check_company_auto = True

@@ -234,7 +234,27 @@ class TestTimezones(TestResourceCommon):
             datetime(2022, 9, 21), datetime(2022, 9, 22)
         )
         self.assertEqual(
-            next(iter(intervals.values())),
+            intervals[resource.id],
+            [
+                (
+                    datetime(2022, 9, 21, 2, 0, tzinfo=UTC),
+                    datetime(2022, 9, 21, 3, 0, tzinfo=UTC),
+                ),
+                (
+                    datetime(2022, 9, 21, 7, 0, tzinfo=UTC),
+                    datetime(2022, 9, 21, 22, 0, tzinfo=UTC),
+                ),
+            ],
+        )
+
+    @freeze_time("2022-09-21 15:30:00", tz_offset=-10)
+    def test_unavailable_intervals_of_a_resource_without_a_zone(self):
+        resource = self.env["resource.resource"].create({"name": "resource"})
+        intervals = resource._get_unavailable_intervals(
+            datetime(2022, 9, 21), datetime(2022, 9, 22)
+        )
+        self.assertEqual(
+            intervals[resource.id],
             [
                 (
                     datetime(2022, 9, 21, 0, 0, tzinfo=UTC),

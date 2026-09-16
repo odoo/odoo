@@ -1471,31 +1471,44 @@ Versions:
             "eligible_for_accrual_rate": self.holiday_status_id.eligible_for_accrual_rate,
         }
 
+    def _sync_resource_leave(self, vals_list_by_leave=None):
+        """Reconcile each leave's schedule exception with what it should be.
+
+        Through resource's ledger mixin, so an exception that is already right
+        is left alone and one that moved is rewritten in place: its id stays
+        valid for the work entries and timesheets that point at it, and the
+        schedule-change hook hears one change rather than a delete and a create.
+        """
+        exceptions = self.env["resource.schedule.exception"].sudo()
+        synced = exceptions.browse()
+        for leave in self:
+            vals_list = (
+                vals_list_by_leave.get(leave.id, [])
+                if vals_list_by_leave is not None
+                else [leave._prepare_resource_leave_vals()]
+            )
+            synced |= exceptions._sync_projection(leave, vals_list)
+        return synced
+
     def _create_resource_leave(self):
-        vals_list = [leave._prepare_resource_leave_vals() for leave in self]
-        return self.env["resource.schedule.exception"].sudo().create(vals_list)
+        return self._sync_resource_leave()
 
     def _remove_resource_leave(self):
-        return (
-            self.env["resource.schedule.exception"]
-            .sudo()
-            .search([("holiday_id", "in", self.ids)])
-            .unlink()
-        )
+        return self._sync_resource_leave(vals_list_by_leave={})
 
     def _apply_leave_request(self):
         """Make the calendar reflect these leaves: block the working time and
         raise the meeting.
 
-        Idempotent, because it is not only called once at validation -- a
+        Idempotent, because it is not only called once at validation: a
         working-schedule or contract change re-applies an already approved
-        leave, and appending a second `resource.schedule.exception` row there
-        would have the working-time engine subtract the period twice.
+        leave, and a second `resource.schedule.exception` row would have the
+        working-time engine subtract the period twice. The ledger reconciles
+        rather than appends, so re-applying rewrites the row it already has.
         """
         holidays = self.filtered("employee_id")
-        holidays._remove_resource_leave()
         holidays.meeting_id.write({"active": False})
-        holidays._create_resource_leave()
+        holidays._sync_resource_leave()
         meeting_holidays = holidays.filtered(
             lambda l: l.holiday_status_id.create_calendar_meeting
         )

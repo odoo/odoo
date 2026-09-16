@@ -19,6 +19,18 @@ class ResourceScheduleException(models.Model):
         help="If checked, this time off type will be taken into account for accruals computation.",
     )
 
+    @api.model
+    def _get_domain_projection(self, record):
+        if record._name == "hr.leave":
+            return Domain("holiday_id", "=", record.id)
+        return super()._get_domain_projection(record)
+
+    @api.model
+    def _prepare_projection_link_vals(self, record):
+        if record._name == "hr.leave":
+            return {"holiday_id": record.id}
+        return super()._prepare_projection_link_vals(record)
+
     @api.constrains("date_from", "date_to", "calendar_id")
     def _check_compare_dates(self):
         dated = self.filtered(lambda leave: leave.date_from and leave.date_to)
@@ -169,6 +181,7 @@ class ResourceScheduleException(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         return super().create(self._prepare_public_holidays_values(vals_list))
+
 
     @api.model
     def _on_schedule_changed(self, scopes):

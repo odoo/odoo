@@ -27,7 +27,7 @@ COMPARATORS = {
 class ResourceReservation(models.Model):
     _name = "resource.reservation"
     _description = "Resource Reservation"
-    _inherit = ["mixin.resource.scheduling.tools"]
+    _inherit = ["mixin.resource.scheduling.tools", "mixin.resource.ledger"]
     _order = "date_start"
     _check_company_auto = True
 
@@ -678,70 +678,6 @@ class ResourceReservation(models.Model):
             "views": [(False, "form")],
             "target": "current",
         }
-
-    @api.model
-    def _sync_reservation(self, record, reservation_vals_list, existing=None):
-        if not record.id or not isinstance(record.id, int):
-            return self.browse()
-
-        if existing is None:
-            existing = (
-                self.sudo()
-                .with_context(active_test=False)
-                .search(
-                    [
-                        ("res_model", "=", record._name),
-                        ("res_id", "=", record.id),
-                    ]
-                )
-            )
-
-        if not reservation_vals_list:
-            existing.unlink()
-            return self.browse()
-
-        existing_by_resource = defaultdict(list)
-        for reservation in existing:
-            existing_by_resource[reservation.resource_id.id].append(reservation)
-        to_create = []
-
-        for vals in reservation_vals_list:
-            res_id = vals.get("resource_id") or False
-            base_vals = {
-                **vals,
-                "res_model": record._name,
-                "res_id": record.id,
-                "active": True,
-            }
-            bucket = existing_by_resource.get(res_id)
-            if bucket:
-                reservation = bucket.pop(0)
-                changed_vals = {
-                    fname: value
-                    for fname, value in base_vals.items()
-                    if reservation._fields[fname].convert_to_write(
-                        reservation[fname], reservation
-                    )
-                    != value
-                }
-                if changed_vals:
-                    reservation.write(changed_vals)
-            else:
-                to_create.append(base_vals)
-
-        to_delete = self.browse().union(
-            *(
-                reservation
-                for bucket in existing_by_resource.values()
-                for reservation in bucket
-            )
-        )
-
-        if to_delete:
-            to_delete.sudo().unlink()
-        created = self.sudo().create(to_create) if to_create else self.browse()
-
-        return (existing - to_delete) | created
 
     @api.model
     def _reservation_intervals_batch(self, start_dt, end_dt, resources, domain=None):

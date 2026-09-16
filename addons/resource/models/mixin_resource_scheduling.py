@@ -61,7 +61,7 @@ class MixinResourceScheduling(models.AbstractModel):
         existing_by_record = existing_all.grouped("res_id")
         no_reservations = existing_all.browse()
         for record in self:
-            reservation_model._sync_reservation(
+            reservation_model._sync_projection(
                 record,
                 record._prepare_reservation_vals_list(),
                 existing=existing_by_record.get(record.id, no_reservations),
