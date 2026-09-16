@@ -146,7 +146,10 @@ class StockMoveLine(models.Model):
     def _get_potential_existing_waves_extra_domain(self, domain_list, picking_type):
         domain_list = super()._get_potential_existing_waves_extra_domain(domain_list, picking_type)
         if picking_type.batch_group_by_carrier:
-            domain_list.append(Domain('picking_ids.carrier_id', 'in', self.carrier_id.ids))
+            carrier_ids = self.carrier_id.ids
+            if any(not line.carrier_id for line in self):
+                carrier_ids += [False]
+            domain_list.append(Domain('picking_ids.carrier_id', 'in', carrier_ids))
         return domain_list
 
     def _is_potential_existing_wave_extra(self, wave):
