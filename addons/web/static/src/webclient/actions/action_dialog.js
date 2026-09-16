@@ -7,7 +7,7 @@ import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 export class ActionDialog extends Dialog {
     static components = { ...Dialog.components, DebugMenu };
     static template = "web.ActionDialog";
-    static props = {
+    static propsSchema = {
         ...dialogProps,
         // ActionDialog renders `actionProps.ActionComponent` in place of the
         // default slot, so unlike the base Dialog it may receive no slots.
