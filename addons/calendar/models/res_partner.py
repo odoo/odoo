@@ -27,6 +27,38 @@ class ResPartner(models.Model):
         default=fields.Datetime.now,
     )
 
+    def _get_calendar_event_resources(self, company=None):
+        """Resolve people in one query: this company's resource, else a shared one, else any.
+
+        A person is a human resource through their party, so an attendee with no
+        user — an outside contractor, an employee with no login — resolves exactly
+        like one who has a login. A person attends a meeting once, so the last
+        fallback books the resource they have elsewhere rather than nothing.
+        """
+        company = company or self.env.company
+        resources = (
+            self.env["resource.resource"]
+            .sudo()
+            .search_fetch(
+                [("partner_id", "in", self.ids), ("resource_type", "=", "user")],
+                ["partner_id", "company_id"],
+                order="id",
+            )
+        )
+        by_partner = resources.grouped("partner_id")
+        return {
+            partner: by_partner.get(partner, resources.browse()).sorted(
+                key=lambda resource: (
+                    0
+                    if resource.company_id == company
+                    else 1
+                    if not resource.company_id
+                    else 2
+                )
+            )[:1]
+            for partner in self
+        }
+
     def _compute_meeting_count(self):
         result = self._get_meetings_by_partner()
         for p in self:
@@ -239,13 +271,16 @@ class ResPartner(models.Model):
         stop = self._calendar_utc(end_datetime)
         if start >= stop:
             return {}
-        resources = user_resources
-        if resources is None:
-            users = (events.filtered("allday").partner_ids & self).user_ids
-            resources = users._get_calendar_event_resources() if users else {}
         resources_by_partner = defaultdict(lambda: self.env["resource.resource"])
-        for user, resource in resources.items():
-            resources_by_partner[user.partner_id.id] |= resource
+        if user_resources is None:
+            attendees = events.filtered("allday").partner_ids & self
+            for partner, resource in (
+                attendees._get_calendar_event_resources() if attendees else {}
+            ).items():
+                resources_by_partner[partner.id] |= resource
+        else:
+            for user, resource in user_resources.items():
+                resources_by_partner[user.partner_id.id] |= resource
         grouped = defaultdict(list)
         for event in events:
             if not event.active or event.show_as != "busy":

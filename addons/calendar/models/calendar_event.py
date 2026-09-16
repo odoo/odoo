@@ -1351,19 +1351,19 @@ class CalendarEvent(models.Model):
 
         vals_list = []
         booked = set()
-        users = self._get_scheduled_partners().user_ids
-        user_resources = users._get_calendar_event_resources()
-        for user in users:
-            resource = user_resources[user]
-            # One row per resource, not per user.  A partner may carry several
-            # users, and two partners may share one, but a person attends a
-            # meeting once; the ledger permits repeated resources (a task can
-            # book one twice) and would take the duplicates at face value as
-            # 200% of that person's capacity, conflicting with themselves.
+        partners = self._get_scheduled_partners()
+        partner_resources = partners._get_calendar_event_resources()
+        for partner in partners:
+            resource = partner_resources[partner]
+            # One row per resource, not per attendee.  A person invited both in
+            # person and through a contact that shares their resource attends the
+            # meeting once; the ledger permits repeated resources (a task can book
+            # one twice) and would take the duplicates at face value as 200% of
+            # that person's capacity, conflicting with themselves.
             if not resource or resource.id in booked:
                 continue
             booked.add(resource.id)
-            start, stop = self._get_reservation_interval(user.tz or resource.tz)
+            start, stop = self._get_reservation_interval(partner.tz or resource.tz)
             vals_list.append(
                 {
                     "name": self.display_name,
@@ -1400,8 +1400,7 @@ class CalendarEvent(models.Model):
         if not self.allday:
             return [self._get_reservation_interval("UTC")]
         if resources is None:
-            user_resources = partner.user_ids._get_calendar_event_resources()
-            resources = self.env["resource.resource"].union(*user_resources.values())
+            resources = partner._get_calendar_event_resources()[partner]
         timezones = {partner.tz or resource.tz or "UTC" for resource in resources}
         return [
             self._get_reservation_interval(timezone)

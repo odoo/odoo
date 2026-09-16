@@ -25,28 +25,12 @@ class ResUsers(models.Model):
         return self._get_calendar_event_resources()[self]
 
     def _get_calendar_event_resources(self):
-        """Resolve people in one query, preferring their own company to shared resources."""
-        resources = (
-            self.env["resource.resource"]
-            .sudo()
-            .search_fetch(
-                [("user_id", "in", self.ids)],
-                order="id",
-            )
-        )
-        by_user = resources.grouped("user_id")
-        return {
-            user: by_user.get(user, resources.browse())
-            .filtered(
-                lambda resource, user=user: (
-                    not resource.company_id or resource.company_id == user.company_id
-                )
-            )
-            .sorted(
-                key=lambda resource, user=user: resource.company_id != user.company_id
-            )[:1]
-            for user in self
-        }
+        """Resolve people through their party, one query per company represented."""
+        resources = {}
+        for company, users in self.grouped("company_id").items():
+            by_partner = users.partner_id._get_calendar_event_resources(company)
+            resources.update({user: by_partner[user.partner_id] for user in users})
+        return resources
 
     def _get_or_create_calendar_event_resource(self):
         self.check_singleton()
