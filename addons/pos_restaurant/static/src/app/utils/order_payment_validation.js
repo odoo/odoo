@@ -14,4 +14,8 @@ patch(OrderPaymentValidation.prototype, {
         }
         return await super.afterOrderValidation(...arguments);
     },
+    shouldSendOrderInPreparation() {
+        const result = super.shouldSendOrderInPreparation(...arguments);
+        return result && this.pos.getCategoryCount(this.order).length > 0;
+    },
 });
