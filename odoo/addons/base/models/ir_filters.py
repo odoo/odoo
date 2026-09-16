@@ -32,8 +32,8 @@ class IrFilters(models.Model):
     active = fields.Boolean(default=True)
 
     def _sanitize_shared_context(self):
-        for shared_filter in self.filtered(lambda f: not f.user_id):
-            context = ast.literal_eval(shared_filter.context)
+        for shared_filter in self.filtered(lambda f: not f.user_id and f.context.strip()):
+            context = ast.literal_eval(shared_filter.context.strip())
             cleaned = clean_context(context)
             defaults = context.keys() - cleaned.keys()
             if defaults:
