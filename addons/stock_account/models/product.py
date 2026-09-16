@@ -347,6 +347,8 @@ class ProductProduct(models.Model):
             domain &= Domain([('lot_id', '=', False)])
         if date:
             domain &= Domain([('date', '<=', date)])
+        if self.env.context.get('exclude_min_valuation_date'):
+            domain &= Domain([('date', '!=', datetime.min)])
 
         query = self.env['product.value'].sudo()._search(domain)
         query_select = SQL('distinct ON (product_value.product_id) product_value.id')
@@ -393,7 +395,7 @@ class ProductProduct(models.Model):
     def _run_standard_batch(self, at_date=None, lot=None):
         std_price_by_product_id = {product.id: product.standard_price for product in self}
         if at_date:
-            product_value_by_product = self._get_last_product_value(at_date, lot=lot)
+            product_value_by_product = self.with_context(exclude_min_valuation_date=True)._get_last_product_value(at_date, lot=lot)
             std_price_by_product_id = {
                 product.id: product_value_by_product[product].value if product in product_value_by_product else product.standard_price
                 for product in self
