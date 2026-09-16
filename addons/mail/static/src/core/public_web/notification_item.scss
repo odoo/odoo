@@ -4,7 +4,10 @@
     outline-offset: -1px;
     --border-opacity: 0;
 
-    &:hover, &.o-active {
+    &:not(.o-interest) {
+        opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
+    }
+    &:hover, &.o-active, .o-mail-MessagingMenuItem[data-right-clicking] & {
         --border-opacity: var(--mail-NotificationItem-activeBorderOpacity, .075);
         backdrop-filter: contrast(var(--mail-NotificationItem-activeBackdropFilterContrast, .85));
     }
