@@ -14,6 +14,7 @@ class PurchaseOrderLine(models.Model):
     _inherit = ['analytic.mixin', 'res.currency.rate.consolidation.mixin']
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
+    _rec_names_search = ['name', 'order_id.name']
 
     name = fields.Text(
         string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
