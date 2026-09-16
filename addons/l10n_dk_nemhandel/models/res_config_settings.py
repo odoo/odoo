@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_dk_nemhandel.tools.demo_utils import handle_demo
@@ -44,15 +44,6 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
-
-    @api.depends("company_id.account_edi_proxy_client_ids")
-    def _compute_nemhandel_edi_user(self):
-        for config in self:
-            config.nemhandel_edi_user = (
-                config.company_id.account_edi_proxy_client_ids.filtered(
-                    lambda u: u.proxy_type == "nemhandel"
-                )
-            )
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

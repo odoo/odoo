@@ -53,12 +53,6 @@ class CardCard(models.Model):
                     self.env[model].browse(card.res_id).sudo().display_name
                 )
 
-    @api.depends("campaign_id")
-    def _compute_res_model(self):
-        """Compute the res_model once and never update it again."""
-        for campaign, cards in self.grouped("campaign_id").items():
-            cards.res_model = campaign.res_model
-
     @api.autovacuum
     def _gc_card(self):
         """Remove cards. Social networks are expected to cache the images on their side."""

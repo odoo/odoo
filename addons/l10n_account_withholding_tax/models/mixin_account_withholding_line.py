@@ -257,9 +257,6 @@ class MixinAccountWithholdingLine(models.AbstractModel):
     def _compute_company_id(self):
         raise NotImplementedError
 
-    def _compute_currency_id(self):
-        raise NotImplementedError
-
     def _compute_comodel_percentage_paid_factor(self):
         self.comodel_percentage_paid_factor = 1.0
 
