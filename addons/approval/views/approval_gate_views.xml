@@ -8,7 +8,6 @@
             <list string="Code Gates" editable="bottom" create="false" delete="false">
                 <field name="model_name" readonly="1" />
                 <field name="operation" readonly="1" />
-                <field name="observation_count" string="Seen" readonly="1" />
                 <field name="would_block_count" readonly="1" />
                 <field name="enforced" widget="boolean_toggle" />
                 <button
@@ -62,7 +61,9 @@
                 path the gate does not own is recorded and let through. Read Would Be
                 Refused first: it is exactly what enforcing would start refusing, and
                 it is counted per operation so a cheap gate need not wait for an
-                expensive one.
+                expensive one. A row appears only where the model names a checkpoint
+                for the operation, because that is the only place enforcement can
+                hold a caller who did not come through the gate.
             </p>
         </field>
     </record>

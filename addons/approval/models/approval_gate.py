@@ -48,10 +48,9 @@ class ApprovalGate(models.Model):
         "does not own is recorded and let through. Switch it on once the watched "
         "calls show what refusing them would cost.",
     )
-    observation_count = fields.Integer(compute="_compute_observation_counts")
     would_block_count = fields.Integer(
         string="Would Be Refused",
-        compute="_compute_observation_counts",
+        compute="_compute_would_block_count",
     )
 
     _model_operation_uniq = models.Constraint(
@@ -65,35 +64,56 @@ class ApprovalGate(models.Model):
             gate.model_id = self.env["ir.model"]._get(gate.model_name)
 
     @api.depends("model_name", "operation")
-    def _compute_observation_counts(self) -> None:
+    def _compute_would_block_count(self) -> None:
+        """How many calls enforcing this gate would have refused.
+
+        The only number the decision needs, and the only one a code gate can
+        honestly offer: it records a call it would have refused and no other, so
+        a second "how many arrived at all" column would repeat this one.
+        """
         counts = {}
-        for model_name, operation, would_block, count in self.env[
+        for model_name, operation, count in self.env[
             "approval.observation"
         ]._read_group(
             [
                 ("model_name", "in", self.mapped("model_name")),
                 ("operation", "in", self.mapped("operation")),
+                ("would_block", "=", True),
             ],
-            ["model_name", "operation", "would_block"],
+            ["model_name", "operation"],
             ["__count"],
         ):
-            key = (model_name, operation)
-            seen, blocked = counts.get(key, (0, 0))
-            counts[key] = (seen + count, blocked + (count if would_block else 0))
+            counts[(model_name, operation)] = count
         for gate in self:
-            seen, blocked = counts.get((gate.model_name, gate.operation), (0, 0))
-            gate.observation_count = seen
-            gate.would_block_count = blocked
+            gate.would_block_count = counts.get((gate.model_name, gate.operation), 0)
 
     @api.model
     def _get_declared_operations(self) -> set[tuple[str, str]]:
+        """The gated operations a row can actually govern.
+
+        An operation earns a row only where the model also names a checkpoint for
+        it. `_check_approval_admits` is called from that checkpoint and nowhere
+        else, so without one there is no path for enforcement to close: the
+        toggle would govern nothing and the count beside it could never leave
+        zero. `mixin.approval.lifecycle` is the standing case -- it declares
+        `action_confirm` for every order-like document and names no checkpoint.
+        """
         declared = set()
+        unenforceable = set()
         for model_name, Model in self.env.registry.items():
             if Model._abstract or Model._transient:
                 continue
-            declared.update(
-                (model_name, operation)
-                for operation in getattr(Model, "_approval_operations", ())
+            checkpoints = getattr(Model, "_operation_checkpoints", {})
+            for operation in getattr(Model, "_approval_operations", ()):
+                target = declared if operation in checkpoints else unenforceable
+                target.add((model_name, operation))
+        if unenforceable:
+            trace.REGISTRY.note(
+                "gate_declared_without_checkpoint",
+                operations=sorted(
+                    f"{model_name}.{operation}"
+                    for model_name, operation in unenforceable
+                ),
             )
         return declared
 

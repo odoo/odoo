@@ -989,6 +989,15 @@ walks the registry, adds a row for each declared operation and deletes any row
 whose operation the model no longer declares. A new adopter therefore appears
 the next time the registry is built, without a data file.
 
+An operation earns a row only where the model also names it in
+`_operation_checkpoints`. `_check_approval_admits` is called from that checkpoint
+and nowhere else, so without one enforcement has no path to close: the toggle
+would govern nothing and the count beside it could never leave zero.
+`mixin.approval.lifecycle` is the standing case -- it declares `action_confirm`
+for every order-like document and names no checkpoint, so `sale.order`,
+`purchase.order`, `maintenance.order` and `rma.order` have no row. The pairs left
+out are named on `trace.REGISTRY` at each sync.
+
 The only field a person may write is `enforced`, and that is the point: the row
 is a place to put the decision the counts beside it inform. Enforcement is **per
 operation**, so a gate whose watched calls cost nothing can be switched on while
@@ -1013,8 +1022,7 @@ several gated operations but cannot have two of them waiting at once.
 | `operation` | Char | Yes | **Yes** | index, readonly. The method the model declares as terminal |
 | `model_id` | Many2one(`ir.model`) | No | No | compute, for display |
 | `enforced` | Boolean | Yes | No | the one writable field: whether this operation refuses a bypassing caller yet |
-| `observation_count` | Integer | No | No | compute: every watched call on this operation |
-| `would_block_count` | Integer | No | No | compute: those enforcement would refuse -- the cost of switching it on |
+| `would_block_count` | Integer | No | No | compute: the calls enforcement would refuse -- the cost of switching it on, and the only count a code gate can honestly offer, since it records a call it would have refused and no other |
 
 Constraint: UNIQUE `(model_name, operation)`.
 

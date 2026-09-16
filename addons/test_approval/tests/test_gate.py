@@ -125,14 +125,16 @@ class TestApprovalGate(ApprovalCommon):
         document.action_ship()
         self.assertEqual(document.ship_count, 1)
 
-    def test_the_registry_declares_a_row_for_every_gated_operation(self):
+    def test_only_an_operation_with_a_checkpoint_gets_a_row(self):
         gates = self.env["approval.gate"].search(
             [("model_name", "=", "approval.test.gated")]
         )
         self.assertEqual(
             set(gates.mapped("operation")),
-            {"action_ship", "action_bill"},
-            "both declared operations have a row, and nobody created them",
+            {"action_ship"},
+            "the registry declares the row and nobody created it -- and action_bill "
+            "names no checkpoint, so enforcing it could close no path and it is "
+            "given no switch that would govern nothing",
         )
         self.assertFalse(
             gates.filtered("enforced"),
@@ -154,7 +156,7 @@ class TestApprovalGate(ApprovalCommon):
         with self.assertRaises(UserError):
             document.action_ship_from_elsewhere()
 
-    def test_the_counts_beside_a_gate_are_its_own_observations(self):
+    def test_the_count_beside_a_gate_is_its_own(self):
         document = self._document()
         document.action_ship()
         document.action_ship_from_elsewhere()
@@ -165,16 +167,21 @@ class TestApprovalGate(ApprovalCommon):
                 ("operation", "=", "action_ship"),
             ]
         )
-        bill = self.env["approval.gate"].search(
-            [
-                ("model_name", "=", "approval.test.gated"),
-                ("operation", "=", "action_bill"),
-            ]
-        )
         self.assertEqual(ship.would_block_count, 1)
+
+        self.env["approval.observation"].sudo().create(
+            {
+                "model_name": "approval.test.gated",
+                "operation": "action_elsewhere",
+                "res_id": document.id,
+                "elevation": "none",
+                "would_block": True,
+            }
+        )
+        ship.invalidate_recordset(["would_block_count"])
         self.assertEqual(
-            bill.would_block_count,
-            0,
+            ship.would_block_count,
+            1,
             "a gate counts what reached its own operation, not its neighbour's",
         )
 
