@@ -17,13 +17,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = [
-        "translateWebpageOption",
-        "translation",
-        "history",
-        "domObserver",
-        "valueHistory",
-    ];
+    static dependencies = ["builderActions", "translateWebpageOption", "translation"];
 
     setup() {
         this.canTimeout = false;
@@ -266,29 +260,19 @@ export class TranslateToAction extends BuilderAction {
                     }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
-                    const attributeInfo =
-                        this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo && text != attributeInfo.translation) {
-                        const oldValue = attributeInfo.translation;
-                        this.dependencies.domObserver.applyCustomMutation({
-                            apply: () => (attributeInfo.translation = text),
-                            revert: () => (attributeInfo.translation = oldValue),
-                        });
+                    const translateAction =
+                        this.dependencies.builderActions.getAction("translateAttribute");
+                    const translateSpec = { editingElement: el, params: { mainParam: attribute } };
+                    if (
+                        this.dependencies.translation.hasTranslatedAttribute(el, attribute) &&
+                        text != translateAction.getValue(translateSpec)
+                    ) {
                         el.dataset.oeTranslationState = "translated";
-                        if (attribute === "textContent" || attribute === "value") {
-                            this.dependencies.valueHistory.setValue(el, text);
-                        }
-                        if (attribute === "textContent") {
-                            el.textContent = text;
-                        } else {
-                            el.setAttribute(attribute, text);
-                        }
+                        translateAction.apply({ ...translateSpec, value: text });
                     }
                 }
             }
         }
-        this.dependencies.history.commit();
-
         return numOfFailedTranslationNodes;
     }
 
