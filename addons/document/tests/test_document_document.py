@@ -1852,15 +1852,15 @@ class TestDocumentsCreateBatching(TransactionCaseDocuments):
         self._create_with_content(1, "warmup")  # fill the caches the first call fills
         self.env.flush_all()
 
-        before = self.env.cr.sql_log_count
+        before = self.env.cr.sql_statement_count
         self._create_with_content(1, "one")
         self.env.flush_all()
-        cost_of_one = self.env.cr.sql_log_count - before
+        cost_of_one = self.env.cr.sql_statement_count - before
 
-        before = self.env.cr.sql_log_count
+        before = self.env.cr.sql_statement_count
         documents = self._create_with_content(20, "twenty")
         self.env.flush_all()
-        cost_of_twenty = self.env.cr.sql_log_count - before
+        cost_of_twenty = self.env.cr.sql_statement_count - before
 
         self.assertEqual(len(documents), 20)
         self.assertTrue(all(documents.mapped("attachment_id")))

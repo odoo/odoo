@@ -24,8 +24,8 @@ class ResourceTimeType(models.Model):
     _order = "sequence, id"
 
     name = fields.Char(
-        required=True,
         translate=True,
+        required=True,
     )
     code = fields.Char(
         required=True,
