@@ -199,3 +199,18 @@ export function removePlugins(plugins, pluginsToRemove) {
 export function isSmallInteger(value) {
     return /^-?[0-9]{1,15}$/.test(value);
 }
+
+/**
+ * Retrieves all elements sharing the same data-oe-xpath as the given element,
+ * Falls back to just the given element if it has no data-oe-xpath.
+ *
+ * @param {HTMLElement} editingElement
+ * @returns {Array<HTMLElement>}
+ */
+export function getXpathTargets(editingElement) {
+    const xpath = editingElement.dataset?.oeXpath;
+    if (!xpath) {
+        return [editingElement];
+    }
+    return [...editingElement.ownerDocument.querySelectorAll(`[data-oe-xpath="${xpath}"]`)];
+}

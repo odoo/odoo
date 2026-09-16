@@ -6,6 +6,7 @@ import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_se
 import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_number_input";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
+import { getXpathTargets } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
@@ -22,7 +23,12 @@ import {
 export class ButtonStyleOptionPlugin extends Plugin {
     static id = "buttonStyleOption";
     resources = {
-        builder_actions: { ButtonStyleAction, ButtonFillColorAction },
+        builder_actions: {
+            ButtonStyleAction,
+            ButtonFillColorAction,
+            ButtonTextColorAction,
+            ButtonBorderStyleAction,
+        },
     };
 }
 
@@ -170,14 +176,17 @@ export class ButtonStyleAction extends BuilderAction {
 
     apply({ editingElement, params, value }) {
         const mode = params.mainParam;
-        if (mode === "type") {
-            this.applyDefaultInlineStyle(editingElement, value);
-        }
+        const targetEls = getXpathTargets(editingElement);
 
-        editingElement.className = computeButtonClasses(editingElement, {
-            type: mode === "type" ? value : getButtonType(editingElement),
-            size: mode === "size" ? value : getButtonSize(editingElement),
-            shape: mode === "shape" ? value : getButtonShape(editingElement),
+        targetEls.forEach((el) => {
+            if (mode === "type") {
+                this.applyDefaultInlineStyle(el, value);
+            }
+            el.className = computeButtonClasses(el, {
+                type: mode === "type" ? value : getButtonType(el),
+                size: mode === "size" ? value : getButtonSize(el),
+                shape: mode === "shape" ? value : getButtonShape(el),
+            });
         });
     }
 
@@ -223,11 +232,42 @@ export class ButtonFillColorAction extends StyleAction {
     static id = "buttonFillColorAction";
     static dependencies = ["color"];
 
+    apply({ editingElement, params, value }) {
+        const targetEls = getXpathTargets(editingElement);
+        targetEls.forEach((el) => {
+            super.apply({ editingElement: el, params, value });
+        });
+    }
+
     getValue(context) {
         // This override is needed because when the button is in outline mode,
         // the color is not shown unless we hover the button
         const { editingElement: el } = context;
         return el.style.backgroundImage || el.style.backgroundColor || super.getValue(context);
+    }
+}
+
+export class ButtonTextColorAction extends StyleAction {
+    static id = "buttonTextColorAction";
+    static dependencies = ["color"];
+
+    apply({ editingElement, params, value }) {
+        const targetEls = getXpathTargets(editingElement);
+        targetEls.forEach((el) => {
+            super.apply({ editingElement: el, params, value });
+        });
+    }
+}
+
+export class ButtonBorderStyleAction extends StyleAction {
+    static id = "buttonBorderStyleAction";
+    static dependencies = ["color"];
+
+    apply({ editingElement, params, value }) {
+        const targetEls = getXpathTargets(editingElement);
+        targetEls.forEach((el) => {
+            super.apply({ editingElement: el, params, value });
+        });
     }
 }
 
