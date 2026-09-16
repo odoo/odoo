@@ -49,3 +49,27 @@ class TestConfigGeneration(unittest.TestCase):
         restored = config.generation
         self.assertGreater(restored, stable)
         self.assertEqual(config.generation, restored)
+
+    def test_a_deep_copied_layer_is_a_plain_dict_and_moves_nothing(self):
+        import copy
+
+        config = self.config
+        config["db_name"] = "x"
+        before = config.generation
+        layer = copy.deepcopy(config._override_options)
+        self.assertIs(type(layer), dict)
+        self.assertEqual(layer, {"db_name": ["x"]})
+        self.assertEqual(config.generation, before)
+        layer["db_name"] = "y"
+        self.assertEqual(config["db_name"], ["x"])
+
+    def test_a_deep_copied_manager_works_and_never_memoises(self):
+        import copy
+
+        config = self.config
+        config["db_name"] = "x"
+        clone = copy.deepcopy(config)
+        self.assertEqual(clone["db_name"], ["x"])
+        clone["db_name"] = "y"
+        self.assertEqual(config["db_name"], ["x"])
+        self.assertNotEqual(clone.generation, clone.generation)

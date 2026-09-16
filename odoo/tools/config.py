@@ -233,6 +233,12 @@ class _CountingDict(dict[str, Any]):
         super().__init__()
         self._bump = bump
 
+    # A copy is a plain dict: deep-copying a layer must not drag the manager
+    # along through the bound bump, nor bump a half-built copy while its
+    # items are being restored. What copies a layer wants its content.
+    def __reduce__(self) -> tuple[Any, ...]:
+        return (dict, (dict(self),))
+
     def __setitem__(self, key: str, value: Any) -> None:
         super().__setitem__(key, value)
         self._bump()
