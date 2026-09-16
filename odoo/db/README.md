@@ -212,7 +212,16 @@ one exception, and the scanner has a control showing it tells the two apart.
   `pg_stat_replication` on the primary, which would defeat the point of reading
   elsewhere. A measurement that fails is recorded as healthy — a replica that
   cannot answer is one whose failure the breaker sees anyway, and demoting on
-  a failed *question* would demote on no evidence.
+  a failed *question* would demote on no evidence. **WAL received and not
+  replayed on a standby that has replayed no transaction yet is infinite
+  lag, not zero**: `pg_last_xact_replay_timestamp()` is NULL until the first
+  replayed commit, the `ELSE` arithmetic came out NULL and the `coalesce`
+  called 1.5 s of outstanding WAL "caught up" (measured on a fresh standby
+  with replay paused: receive `F9/7101E310`, replay `F9/71000000`, answer
+  `0`). The query answers `'infinity'` there, the gate demotes on it, the
+  warning says "an unknown amount", and the first replayed commit turns it
+  into a number. Found because the standby contract test, run inside the
+  whole suite, met a standby that had nothing to replay since its start.
 - **The trades this layer makes are countable**: a shared budget that can
   starve itself, and a probe that trades a connect for a fast permanent
   failure, are only defensible if an operator can watch them. **Both borrow

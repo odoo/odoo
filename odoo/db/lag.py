@@ -13,12 +13,23 @@ LAG_SQL = """
             WHEN NOT pg_is_in_recovery() THEN 0
             WHEN pg_last_wal_receive_lsn() IS NULL THEN 0
             WHEN pg_last_wal_receive_lsn() = pg_last_wal_replay_lsn() THEN 0
+            WHEN pg_last_xact_replay_timestamp() IS NULL THEN 'infinity'
             ELSE greatest(
                 0, extract(epoch FROM now() - pg_last_xact_replay_timestamp())
             )
         END, 0)::float8
 """
-"""Apply lag in seconds, and zero wherever the question cannot be answered.
+"""Apply lag in seconds, zero wherever the question cannot be answered, and
+infinity where it can be answered only as "behind, by an unknown amount".
+
+That last branch is a standby with WAL received and not replayed that has
+not yet replayed a single transaction since it started: `pg_last_xact_replay_
+timestamp()` is NULL until the first replayed commit, so the ELSE arithmetic
+was NULL and the coalesce turned genuinely outstanding WAL into "caught up".
+Measured on a PG 18 standby started fresh, replay paused, 1.5 s of WAL
+received: receive F9/7101E310, replay F9/71000000, timestamp NULL, and the
+query answered 0. It answers infinity now, the gate demotes on it, and the
+first replayed commit turns it into a number.
 
 The caught-up check exists because `pg_last_xact_replay_timestamp()` grows
 without bound on an idle primary, so the replay timestamp is only consulted

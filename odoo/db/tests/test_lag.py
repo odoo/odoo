@@ -198,6 +198,32 @@ class TestLagSql(unittest.TestCase):
     def test_it_never_returns_a_negative(self):
         self.assertIn("greatest(", LAG_SQL)
 
+    def test_outstanding_wal_with_nothing_replayed_yet_is_infinite_lag(self):
+        unknown = LAG_SQL.index(
+            "pg_last_xact_replay_timestamp() IS NULL THEN 'infinity'"
+        )
+        self.assertGreater(
+            unknown,
+            LAG_SQL.index("pg_last_wal_receive_lsn() = pg_last_wal_replay_lsn()"),
+            "caught up is settled first; only WAL received and not replayed "
+            "reaches the timestamp",
+        )
+        self.assertLess(
+            unknown,
+            LAG_SQL.index("greatest("),
+            "a NULL timestamp used to fall into the arithmetic, come out NULL, "
+            "and be coalesced to 0: a fresh standby behind by 1.5 s of WAL "
+            "answered 0 (measured)",
+        )
+
+    def test_the_gate_demotes_on_infinite_lag_and_recovers_on_a_number(self):
+        gate = ReplicaLagGate(2.0)
+        gate.record(float("inf"))
+        self.assertFalse(gate.is_replica_usable())
+        self.assertEqual(gate.get_snapshot()["last_lag_seconds"], float("inf"))
+        gate.record(0.3)
+        self.assertTrue(gate.is_replica_usable())
+
 
 class TestSnapshot(unittest.TestCase):
     def test_a_disabled_gate_reports_disabled(self):

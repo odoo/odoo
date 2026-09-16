@@ -222,8 +222,10 @@ class ReplicaRouter:
             )
         else:
             _logger.warning(
-                "Replica %.1fs behind (db_replica_max_lag=%.1fs); serving "
+                "Replica %s behind (db_replica_max_lag=%.1fs); serving "
                 "readonly requests from the primary until it catches up",
-                self.lag.last_lag,
+                "an unknown amount (WAL outstanding, nothing replayed yet)"
+                if self.lag.last_lag == float("inf")
+                else f"{self.lag.last_lag:.1f}s",
                 self.lag.max_lag,
             )
