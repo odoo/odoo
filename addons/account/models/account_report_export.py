@@ -351,7 +351,7 @@ class AccountReportExport(models.Model):
                 <div class="d-flex align-items-start">
                 <table class="o_table">
             """),
-            "column_headers_render_data": self._get_column_headers_render_data(options),
+            "column_headers_render_data": self._prepare_column_headers_render_data(options),
             "custom_templates": custom_print_templates,
         }
         if additional_context:
@@ -784,7 +784,7 @@ class AccountReportExport(models.Model):
 
         # Add headers.
         # For this, iterate in the same way as done in main_table_header template
-        column_headers_render_data = self._get_column_headers_render_data(options)
+        column_headers_render_data = self._prepare_column_headers_render_data(options)
         for header_level_index, header_level in enumerate(options["column_headers"]):
             for header_to_render in (
                 header_level

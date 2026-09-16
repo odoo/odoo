@@ -872,7 +872,7 @@ class AccountReportLines(models.Model):
         return sorted_list
 
     @_debug.perf.timed
-    def _get_column_headers_render_data(self, options):
+    def _prepare_column_headers_render_data(self, options):
         column_headers_render_data = {}
 
         # We only want to consider the columns that are visible in the current report and don't rely on self.column_ids

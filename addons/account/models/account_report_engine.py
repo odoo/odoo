@@ -927,7 +927,7 @@ class AccountReport(models.Model):
             )
         return {
             "caret_options": self._get_caret_options(),
-            "column_headers_render_data": self._get_column_headers_render_data(options),
+            "column_headers_render_data": self._prepare_column_headers_render_data(options),
             "column_groups_totals": json_friendly_column_group_totals,
             "context": self.env.context,
             "annotations": self.get_annotations(options, lines),
