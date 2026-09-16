@@ -109,7 +109,7 @@ class AccountReportSend(models.TransientModel):
             partner
         ) + self._prepare_template_attachment_entries(mail_template)
 
-    def _get_wizard_values(self):
+    def _prepare_wizard_values(self):
         self.check_singleton()
         options = self.report_options
         if not options.get("partner_ids", []):
@@ -283,7 +283,7 @@ class AccountReportSend(models.TransientModel):
         :return: a download action if attachments have to be downloaded, else None
         """
         wizard_vals = (
-            report.send_and_print_values if not wizard else wizard._get_wizard_values()
+            report.send_and_print_values if not wizard else wizard._prepare_wizard_values()
         )
         to_email = wizard_vals["checkbox_send_mail"]
         to_download = wizard_vals["checkbox_download"]
@@ -415,7 +415,7 @@ class AccountReportSend(models.TransientModel):
                     )
                 )
 
-            self.account_report_id.send_and_print_values = self._get_wizard_values()
+            self.account_report_id.send_and_print_values = self._prepare_wizard_values()
 
             self.env.ref("account.ir_cron_account_report_send")._trigger()
             return {
