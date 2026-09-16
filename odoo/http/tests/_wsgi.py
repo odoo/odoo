@@ -315,6 +315,7 @@ class Harness:
         self.registry = FakeRegistry(db_map, replica=replica)
         FakeRegistry.current = self.registry
         self.served_dbs = [DB]
+        self.db_list_calls: list[str | None] = []
 
     def serve(self, environ: dict[str, Any]) -> Served:
         captured: dict[str, Any] = {}
@@ -326,9 +327,7 @@ class Harness:
         with (
             mock.patch("odoo.http._serve.Registry", lambda db: self.registry),
             mock.patch("odoo.api.Environment", FakeEnv),
-            mock.patch.object(
-                self.app, "get_dbs_served", lambda host: list(self.served_dbs)
-            ),
+            mock.patch.object(self.app, "get_dbs_served", self._list_served_dbs),
             mock.patch.object(
                 self.app,
                 "filter_dbs_served",
@@ -338,6 +337,10 @@ class Harness:
         ):
             body = b"".join(self.app(environ, start_response))
         return Served(captured["status"], captured["headers"], body)
+
+    def _list_served_dbs(self, host: str | None = None) -> list[str]:
+        self.db_list_calls.append(host)
+        return list(self.served_dbs)
 
     @property
     def ir_http(self) -> FakeIrHttp:

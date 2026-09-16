@@ -208,7 +208,12 @@ transaction, session publication after commit and rollback restore, login, the
 negotiated 404, CSRF, JSON-RPC and json2, typed coercion, read-only promotion
 with and without a replica, a controller bug, a rejected method, the header/
 session database conflict. `test_http` on a real database remains the
-integration gate; this is what runs before it.
+integration gate; this is what runs before it. `tests/test_pipeline_costs.py` pins
+the counts behind the two measured costs on the same harness: zero settings
+derivations per request once the memo is warm, one store read per cookie and none
+without one, one served-databases call per request, one cursor per database request
+and none for a database-free one. Counts, not timings, so the guard holds on a
+shared host.
 
 ## Module map
 
