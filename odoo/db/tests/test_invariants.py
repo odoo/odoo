@@ -1000,6 +1000,30 @@ class TestALostConnectionIsReplacedBeforeTheFirstStatementOnly(unittest.TestCase
         self.assertEqual(len(fake_pool.handed), 2)
 
 
+class TestTheCommitWriteQuestionIsNeverAskedOfAFailedTransaction(unittest.TestCase):
+    def test_a_failed_transaction_commits_as_before_and_pins_nothing(self):
+        fake_pool = (
+            TestALostConnectionIsReplacedBeforeTheFirstStatementOnly._DeadThenAlive()
+        )
+        cr = cursor.Cursor(
+            typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
+        )
+        fired = []
+        cr.on_commit_if_written(lambda: fired.append(True))
+        cr.execute("INSERT ...")
+        cr._cnx.info.transaction_status = psycopg.pq.TransactionStatus.INERROR
+        cr._cnx.commit = lambda: None  # type: ignore[attr-defined]
+        cr.commit()
+        self.assertEqual(fired, [])
+        self.assertEqual(
+            cr._obj.executed,
+            ["INSERT ..."],
+            "no SELECT txid_current_if_assigned() on an aborted transaction: "
+            "COMMIT there is a quiet rollback, the question would have been "
+            "InFailedSqlTransaction",
+        )
+
+
 class _StatementRecorder:
     def __init__(self, conn):
         self.conn = conn

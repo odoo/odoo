@@ -1051,8 +1051,14 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         with _debug.perf("cursor.commit.flush", cr=self, db=self.dbname):
             self.flush()
         observer = self._commit_write_observer
+        # A failed transaction cannot be asked anything, and COMMIT on one is
+        # a rollback the server performs quietly; asking would turn that into
+        # InFailedSqlTransaction.
         written = (
-            observer is not None and self._transaction_touched and self._has_written()
+            observer is not None
+            and self._transaction_touched
+            and not self.in_failed_transaction()
+            and self._has_written()
         )
         with _debug.perf("cursor.commit.sync", db=self.dbname):
             self._cnx.commit()

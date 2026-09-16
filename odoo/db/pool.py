@@ -823,11 +823,13 @@ class ConnectionPool:
     # when this is needed), no pg_signal_backend privilege, and it reaches a
     # replica connection too. A cancel that fails is a connection that is
     # already gone or a backend that already finished; either way nothing to do.
+    _CANCEL_TIMEOUT = 2.0
+
     def cancel_queries_of(self, thread_name: str) -> int:
         cancelled = 0
         for conn in self._checkouts.get_connections_of(thread_name):
             try:
-                conn.cancel_safe()
+                conn.cancel_safe(timeout=self._CANCEL_TIMEOUT)
             except Exception as exc:
                 _debug.logic("pool.cancel_failed", error=type(exc).__name__)
                 continue

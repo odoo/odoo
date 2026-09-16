@@ -488,7 +488,7 @@ class TestCancelQueriesOf(unittest.TestCase):
             self.fails = fails
             self.cancelled = 0
 
-        def cancel_safe(self):
+        def cancel_safe(self, *, timeout=30.0):
             if self.fails:
                 raise psycopg.OperationalError("connection gone")
             self.cancelled += 1
@@ -547,3 +547,23 @@ class TestIdleInTransactionTimeoutAtConnect(unittest.TestCase):
             _get_dsn_key({"dbname": "d"}), {"dbname": "d"}
         )
         self.assertIn("-c idle_in_transaction_session_timeout=90000", kwargs["options"])
+
+
+class TestCancelDoesNotWaitOutAnUnreachableServer(unittest.TestCase):
+    def test_cancel_safe_is_given_a_short_timeout(self):
+        seen = {}
+
+        class _Conn:
+            def cancel_safe(self, *, timeout):
+                seen["timeout"] = timeout
+
+        pool = ConnectionPool(maxconn=2)
+        pool._checkouts.track(_Conn())
+        pool.cancel_queries_of(threading.current_thread().name)
+        self.assertEqual(seen["timeout"], ConnectionPool._CANCEL_TIMEOUT)
+        self.assertLess(
+            ConnectionPool._CANCEL_TIMEOUT,
+            30.0,
+            "psycopg's default is 30 s per connection, in the thread that "
+            "exists to enforce budgets",
+        )
