@@ -1,6 +1,8 @@
 import datetime
+import io
 import logging
 import re
+import zipfile
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Collection
@@ -2439,6 +2441,21 @@ class AccountReportCustomHandler(models.AbstractModel):
 
         Should only be used when necessary, _dynamic_lines_generator is preferred.
         """
+
+    def _get_zip_export(
+        self, file_name: str, files: Collection[tuple[str, str | bytes]]
+    ) -> dict:
+        with io.BytesIO() as buffer:
+            with zipfile.ZipFile(
+                buffer, "w", compression=zipfile.ZIP_DEFLATED
+            ) as zip_file:
+                for name, content in files:
+                    zip_file.writestr(name, content)
+            return {
+                "file_name": file_name,
+                "file_content": buffer.getvalue(),
+                "file_type": "zip",
+            }
 
 
 class AccountReportFileDownloadException(Exception):
