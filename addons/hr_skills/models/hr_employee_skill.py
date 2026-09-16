@@ -54,16 +54,24 @@ class HrEmployeeSkill(models.Model):
             "hr_skills.action_hr_employee_skill_certification"
         )
         action["context"] = {"show_certificate": show_certificate_button}
-        if self.env.user.has_group("hr.group_hr_manager"):
-            action["help"] = (
-                self.env._("""<p class="o_view_nocontent_smiling_face">No Certifications available. Navigate to Skill types!</p>
-                <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">
-                Show Skill Types
-                </a>""")
-            )
+        if not skill_type:
+            if self.env.user.has_group("hr.group_hr_manager"):
+                action["help"] = (
+                    self.env._("""<p class="o_view_nocontent_smiling_face">No Certifications available. Navigate to Skill types!</p>
+                    <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">
+                    Show Skill Types
+                    </a>""")
+                )
+            else:
+                action["help"] = self.env._(
+                    """<p class="o_view_nocontent_smiling_face">No Certifications available!</p>"""
+                )
         else:
-            action["help"] = self.env._(
-                """<p class="o_view_nocontent_smiling_face">No Certifications available!</p>"""
+            action["help"] = (
+                self.env._("""<p class="o_view_nocontent_smiling_face">No Certified Employees. Register a Certification!</p>
+                <a type="action" name="hr_skills.action_hr_employee_new_certification" class="btn btn-primary">
+                New certification
+                </a>""")
             )
         return action
 

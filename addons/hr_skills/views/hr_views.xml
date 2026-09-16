@@ -535,6 +535,7 @@
         <field name="model">hr.employee.skill</field>
         <field name="arch" type="xml">
             <list string="Certification"
+                js_class="hr_employee_skill_certification_list"
                 action="open_hr_employee_skill_modal"
                 type="object"
                 create="0"
@@ -596,6 +597,15 @@
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': False}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('employee_skill_view_inherit_certificate_form')})]"/>
+    </record>
+
+    <record id="action_hr_employee_new_certification" model="ir.actions.act_window">
+        <field name="name">New Certification</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="target">new</field>
+        <field name="context">{'show_employee': True, 'certificate_skill': True}</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="employee_skill_view_inherit_certificate_form"/>
     </record>
 
     <menuitem
