@@ -809,6 +809,23 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
+    def _check_billing_address(self, **kwargs):
+        mandatory_identifiers = self._get_mandatory_additional_identifiers(self.country_id, **kwargs)
+        return super()._check_billing_address(**kwargs) and all(
+            self._get_additional_identifier(key)
+            for key in mandatory_identifiers
+            if not (self.vat and self._is_individual_identifier(key))
+        )
+
+    def _get_mandatory_additional_identifiers(self, country_sudo, **_kwargs):  # noqa: ARG002
+        """Return the set of `additional_identifiers` keys mandatory on a billing address.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory keys.
+        :return: The set of mandatory additional identifier keys.
+        :rtype: set
+        """
+        return set()
+
     @api.constrains('additional_identifiers', 'vat')
     def _check_identifier_combination(self):
         """A partner cannot combine an individual identifier (citizen number) with a company
