@@ -2,6 +2,7 @@
 
 from . import test_health
 from . import test_image
+from . import test_icons
 from . import test_ir_model
 from . import test_js
 from . import test_router
