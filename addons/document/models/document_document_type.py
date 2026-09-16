@@ -264,7 +264,7 @@ class DocumentDocument(models.Model):
             Domain(company_domain) & self._get_domain_stale_expiration(today)
             for today, company_domain in self._iter_expiration_windows()
         )
-        stale = self.search(
+        stale = self.sudo().search(
             Domain("document_type_id.has_expiration", "=", True)
             & Domain("date_expiration", "!=", False)
             & windows

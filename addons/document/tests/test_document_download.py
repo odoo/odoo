@@ -541,3 +541,200 @@ class TestDocumentsLastAccessUpsert(TransactionCaseDocuments):
         )
         self.assertEqual(len(rows), 1)
         self.assertTrue(rows.last_access_date)
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsDownloadBlockedLinkEditor(HttpCase):
+    """`is_download_blocked` withholds content from viewers, not from editors.
+
+    The field's own help says editors are unaffected because they can replace
+    the content anyway, so withholding it from them means nothing. An `edit`
+    link makes *every* reader of that document an editor -- including the
+    unauthenticated visitor the document-request flow is built around, whose
+    `user_permission` is structurally "none" because
+    `_search_user_permission` short-circuits to FALSE for the public user.
+    """
+
+    def test_a_public_link_editor_may_download_a_blocked_document(self):
+        document = self.env["document.document"].create(
+            {
+                "name": "fill-me-in.txt",
+                "type": "binary",
+                "raw": b"secret",
+                "access_via_link": "edit",
+                "is_download_blocked": True,
+            }
+        )
+
+        response = self.url_open(f"/documents/content/{document.access_token}")
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            "an editor reached through the link may take the content they are "
+            "allowed to overwrite",
+        )
+        self.assertEqual(response.content, b"secret")
+
+    def test_a_public_link_viewer_still_may_not(self):
+        """The negative control: the block still blocks the audience it is for."""
+        document = self.env["document.document"].create(
+            {
+                "name": "watch-only.txt",
+                "type": "binary",
+                "raw": b"secret",
+                "access_via_link": "view",
+                "is_download_blocked": True,
+            }
+        )
+
+        self.assertEqual(
+            self.url_open(f"/documents/content/{document.access_token}").status_code,
+            403,
+        )
+
+    def test_a_blocked_document_in_a_link_edit_folder_rides_along_in_the_zip(self):
+        folder = self.env["document.document"].create(
+            {"name": "Dropbox", "type": "folder", "access_via_link": "edit"}
+        )
+        self.env["document.document"].create(
+            {
+                "name": "blocked.txt",
+                "type": "binary",
+                "folder_id": folder.id,
+                "access_via_link": "edit",
+                "raw": b"blocked",
+                "is_download_blocked": True,
+            }
+        )
+
+        response = self.url_open(f"/documents/content/{folder.access_token}")
+        response.raise_for_status()
+
+        self.assertIn(
+            "blocked.txt",
+            set(zipfile.ZipFile(BytesIO(response.content)).namelist()),
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsLinkEditPermissionInvariant(TransactionCase):
+    """Where `access_via_link` is "edit", `user_permission` is never "view".
+
+    `_is_download_allowed` leans on this: it may answer from `access_via_link`
+    alone only because no principal can hold a *viewer* permission on such a
+    document. Every branch of `_direct_user_permission_domain` that yields
+    "view" also requires `access_via_link in ("none", "view")`, so the value is
+    "edit" or "none" and nothing between. Should that stop being true, the
+    download gate silently starts exempting genuine viewers.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        other_company = cls.env["res.company"].create({"name": "Invariant Co"})
+
+        def user(login, groups, companies=None):
+            values = {
+                "name": login,
+                "login": login,
+                "group_ids": [Command.set([cls.env.ref(group).id for group in groups])],
+            }
+            if companies:
+                # Keep the main company in `company_ids` and merely make the
+                # other one current: a user belonging ONLY to a fresh company
+                # trips `digest` at create time, which is not what is under test.
+                values["company_ids"] = [
+                    Command.set([cls.env.company.id, *(c.id for c in companies)])
+                ]
+                values["company_id"] = companies[0].id
+            return cls.env["res.users"].create(values)
+
+        cls.principals = {
+            "public": cls.env.ref("base.public_user"),
+            "portal": user("inv_portal", ["base.group_portal"]),
+            "internal": user(
+                "inv_internal",
+                ["base.group_user", "document.group_documents_user"],
+            ),
+            "manager": user(
+                "inv_manager",
+                ["base.group_user", "document.group_documents_manager"],
+            ),
+            "system": user(
+                "inv_system",
+                ["base.group_user", "document.group_documents_system"],
+            ),
+            "other_company": user(
+                "inv_other_company",
+                ["base.group_user", "document.group_documents_user"],
+                [other_company],
+            ),
+        }
+        cls.companies = [cls.env.company, other_company, None]
+
+    def _permissions_on(self, access_via_link):
+        seen = []
+        for access_internal in ("none", "view", "edit"):
+            for hidden in (False, True):
+                for role in (None, "view", "edit"):
+                    for company in self.companies:
+                        document = self.env["document.document"].create(
+                            {
+                                "name": "invariant.txt",
+                                "type": "binary",
+                                "raw": b"x",
+                                "access_via_link": access_via_link,
+                                "access_internal": access_internal,
+                                "is_access_via_link_hidden": hidden,
+                                "company_id": company.id if company else False,
+                            }
+                        )
+                        if role:
+                            self.env["document.access"].sudo().create(
+                                [
+                                    {
+                                        "document_id": document.id,
+                                        "partner_id": user.partner_id.id,
+                                        "role": role,
+                                    }
+                                    for label, user in self.principals.items()
+                                    if label != "public"
+                                ]
+                            )
+                        self.env.flush_all()
+                        self.env.invalidate_all()
+                        for label, user in self.principals.items():
+                            seen.append(
+                                (
+                                    label,
+                                    access_internal,
+                                    hidden,
+                                    role,
+                                    document.with_user(user)
+                                    .sudo(False)
+                                    .user_permission,
+                                )
+                            )
+                        document.sudo().unlink()
+        return seen
+
+    def test_a_link_editor_document_admits_no_viewer(self):
+        seen = self._permissions_on("edit")
+        viewers = [row for row in seen if row[-1] == "view"]
+
+        self.assertTrue(seen, "the sweep must actually measure something")
+        self.assertFalse(
+            viewers,
+            f"{len(viewers)} of {len(seen)} principal/configuration pairs hold "
+            f"'view' on a link-edit document; _is_download_allowed would exempt "
+            f"them. First: {viewers[:3]}",
+        )
+
+    def test_the_sweep_can_see_a_viewer_at_all(self):
+        """Negative control: without it, an empty result proves nothing."""
+        self.assertTrue(
+            [row for row in self._permissions_on("view") if row[-1] == "view"],
+            "the same sweep over a link-VIEW document must find viewers, or it "
+            "is not capable of detecting the thing the other test asserts",
+        )

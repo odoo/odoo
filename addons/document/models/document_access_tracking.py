@@ -78,22 +78,30 @@ class DocumentsAccessTracking(models.Model):
         Cron = self.env["ir.cron"]
         remaining = self.search_count([])
         _debug.pipeline("tracking_cron_start", queued=remaining)
-        while tracking := self.search([], limit=1):
-            try:
-                with self.env.cr.savepoint():
-                    tracking._create_message_track()
-            except Exception:
-                _debug.logic("tracking_dropped", tracking=tracking.id)
-                _logger.warning(
-                    "Documents: dropping unrenderable access tracking %s",
-                    tracking.id,
-                    exc_info=True,
-                )
-            tracking.unlink()
-            remaining = max(remaining - 1, 0)
-            if Cron._commit_progress(processed=1, remaining=remaining) <= 0:
-                return
+        # Fetch the queue a page at a time. The previous shape ran one
+        # `search` per row, so draining a queue of N cost N extra queries on
+        # top of the N it had to do anyway.
+        while batch := self.search([], limit=self._cron_batch_size()):
+            for tracking in batch:
+                try:
+                    with self.env.cr.savepoint():
+                        tracking._create_message_track()
+                except Exception:
+                    _debug.logic("tracking_dropped", tracking=tracking.id)
+                    _logger.warning(
+                        "Documents: dropping unrenderable access tracking %s",
+                        tracking.id,
+                        exc_info=True,
+                    )
+                tracking.unlink()
+                remaining = max(remaining - 1, 0)
+                if Cron._commit_progress(processed=1, remaining=remaining) <= 0:
+                    return
         Cron._commit_progress(remaining=0)
+
+    @api.model
+    def _cron_batch_size(self) -> int:
+        return 100
 
     def _create_message_track(self) -> None:
         self.check_singleton()

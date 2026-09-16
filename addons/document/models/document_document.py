@@ -6,7 +6,7 @@ import re
 import string
 import uuid
 from collections import defaultdict
-from typing import Any
+from typing import Any, NamedTuple
 from urllib.parse import quote
 from urllib.parse import urlencode as url_encode
 
@@ -33,6 +33,23 @@ _debug = DebugLog(__name__)
 
 def _sanitize_file_extension(extension: str) -> str:
     return re.sub(r"^[\s.]+|\s+$", "", extension)
+
+
+class DocumentMovePlan(NamedTuple):
+    """What a `folder_id` change decided, carried across `super().write`.
+
+    The move is validated before the ORM write and acted on after it, and
+    everything it needs -- which documents actually change folder, and which
+    folder each one came from -- stops being readable the moment the write
+    lands. `resolved_vals` is the one non-empty case: the destination was a
+    shortcut, so nothing was planned and the caller restarts against the
+    target.
+    """
+
+    new_parent_folder: Any
+    documents_to_move: Any
+    documents_to_move_per_initial_folder: dict
+    resolved_vals: dict | None
 
 
 class DocumentsDocument(models.Model):
@@ -496,12 +513,23 @@ class DocumentsDocument(models.Model):
 
     @api.constrains("res_model")
     def _check_res_model(self) -> None:
-        self.flush_recordset(["res_model"])
-        if self.sudo().search_count(
-            [("id", "in", self.ids), ("res_model", "=", "document.document")], limit=1
-        ):
+        # Read the value off the recordset rather than asking the database for
+        # it. The `search_count` this replaces went through `_search`, which
+        # applies `active_test` -- so the rule simply did not exist for an
+        # archived document. Archive, link, restore, and an ACTIVE document
+        # linked to another document (or to ITSELF, `res_id == id`) was left
+        # behind, which is the exact state this constraint is here to forbid.
+        # It also cost a flush and a round-trip per `create` for values already
+        # in memory.
+        offenders = self.filtered(lambda d: d.res_model == "document.document")
+        if offenders:
+            _debug.logic("res_model_refused", documents=offenders)
             raise ValidationError(
-                _("A document can not be linked to itself or another document.")
+                _(
+                    "A document can not be linked to itself or another "
+                    "document: %(documents)s",
+                    documents=", ".join(offenders.mapped("name")),
+                )
             )
 
     @api.constrains("url")
@@ -532,7 +560,13 @@ class DocumentsDocument(models.Model):
         for vals in vals_list:
             self._clean_vals_for_user_folder_id(vals, is_create=True)
         self._check_parent_folders([vals.get("folder_id") for vals in vals_list])
-        for vals in vals_list:
+        # The attachments a vals carries its content in are created in ONE call
+        # for the whole batch, not one call per document: `ir.attachment.create`
+        # is a row insert plus its own filestore work, so doing it per vals made
+        # creating N documents cost N inserts where the documents themselves
+        # cost one. Collected here, created below.
+        pending_attachment_vals = {}
+        for position, vals in enumerate(vals_list):
             attachment_dict = self._pop_attachment_vals(vals)
             attachment = self.env["ir.attachment"].browse(vals.get("attachment_id"))
             if not self.env.su and self.env.user.share:
@@ -546,20 +580,28 @@ class DocumentsDocument(models.Model):
             if attachment and attachment_dict:
                 attachment.write(attachment_dict)
             elif attachment_dict:
-                _debug.lifecycle(
-                    "attachment_created_for_document", keys=len(attachment_dict)
-                )
                 attachment_dict.setdefault("name", vals.get("name", "unnamed"))
-                attachment = (
-                    self.env["ir.attachment"]
-                    .with_context(clean_context(self.env.context))
-                    .create(attachment_dict)
-                )
-                vals["attachment_id"] = attachment.id
-                vals["name"] = vals.get("name", attachment.name)
+                pending_attachment_vals[position] = attachment_dict
+            attachments.append(attachment)
+
+        if pending_attachment_vals:
+            _debug.lifecycle(
+                "attachment_created_for_document", count=len(pending_attachment_vals)
+            )
+            created_attachments = (
+                self.env["ir.attachment"]
+                .with_context(clean_context(self.env.context))
+                .create(list(pending_attachment_vals.values()))
+            )
+            for position, attachment in zip(
+                pending_attachment_vals, created_attachments, strict=True
+            ):
+                vals_list[position]["attachment_id"] = attachment.id
+                attachments[position] = attachment
+
+        for vals, attachment in zip(vals_list, attachments, strict=True):
             if attachment and not vals.get("name"):
                 vals["name"] = attachment.name
-            attachments.append(attachment)
 
         with _debug.perf("create_super", cr=self.env.cr, count=len(vals_list)):
             documents = super(
@@ -626,6 +668,14 @@ class DocumentsDocument(models.Model):
             raise UserError(_("Invalid folder id"))
 
     def write(self, vals: dict) -> bool:
+        """Apply `vals`, running the document-specific steps around the ORM write.
+
+        The steps are ordered and several of them look at state that the ORM
+        write itself destroys, so each one says in its name whether it runs
+        BEFORE or AFTER `super().write`. They are methods rather than blocks so
+        that a bridge module can extend one of them instead of this whole
+        sequence, and so each is reachable from a test on its own.
+        """
         _debug.lifecycle("write", documents=self, fields=sorted(vals))
         if "shortcut_document_id" in vals:
             _debug.logic("write_refused", reason="shortcut_retarget", documents=self)
@@ -647,230 +697,22 @@ class DocumentsDocument(models.Model):
         is_manager = self._is_documents_manager()
         pinned_folders_start = self.filtered(lambda d: d._is_company_root_folder())
 
-        content_keys = ("datas", "raw")
-        writes_content = any(key in vals for key in content_keys)
-        has_content = any(vals.get(key) for key in content_keys)
-        replaces_content = writes_content or "attachment_id" in vals
-        if replaces_content and (locked_by_other := self._locked_by_other()):
-            _debug.logic("write_refused", reason="locked_by_other")
-            raise UserError(
-                _(
-                    "“%(name)s” is locked by %(user)s and its content cannot "
-                    "be replaced by another user.",
-                    name=locked_by_other[0].name,
-                    user=locked_by_other[0].lock_uid.name,
-                )
-            )
+        writes_content, has_content = self._write_content_flags(vals)
+        self._write_check_lock_before(vals, writes_content)
+        previous_owner_access_to_keep = self._write_check_owner_before(vals, is_manager)
 
-        previous_owner_access_to_keep = {}
-        documents_per_initial_active = {}
+        move = self._write_plan_move_before(vals)
+        if move.resolved_vals is not None:
+            # The destination is a shortcut: retry against what it points at.
+            return self.write(move.resolved_vals)
 
-        if (owner_id := vals.get("owner_id")) is not None:
-            if not is_manager and any(d.owner_id != self.env.user for d in self):
-                _debug.logic("write_refused", reason="owner_change_not_owner")
-                raise AccessError(
-                    _("You cannot change the owner of documents you do not own.")
-                )
-            if not isinstance(owner_id, int | bool | None):
-                owner_id = owner_id.id
-            documents_changing_owner = self.filtered(
-                lambda d: d.owner_id and d.owner_id.id != owner_id
-            )
-            previous_owner_access_to_keep.update(
-                documents_changing_owner.grouped("owner_id")
-            )
-            _debug.logic(
-                "owner_changed", documents=documents_changing_owner, to=owner_id
-            )
+        documents_per_initial_active = self._write_check_active_before(vals)
 
-        new_parent_folder = self.browse()
-        documents_to_move, documents_to_move_per_initial_folder = (
-            self.browse(),
-            self.browse(),
-        )
-
-        if "folder_id" in vals:
-            self._check_parent_folders([vals["folder_id"]])
-            new_parent_folder = self.browse(vals["folder_id"])
-            documents_to_move = self.filtered(
-                lambda d: d.folder_id != new_parent_folder
-            )
-            if documents_to_move and new_parent_folder and not new_parent_folder.active:
-                _debug.logic("move_refused", reason="target_archived")
-                raise UserError(
-                    _("It is not possible to move documents into archived folders.")
-                )
-            if documents_to_move and not self.env.su:
-                if new_parent_folder and new_parent_folder.user_permission != "edit":
-                    _debug.logic("move_refused", reason="target_not_editable")
-                    raise AccessError(_("You can't access that folder_id."))
-                for doc in documents_to_move:
-                    if doc.user_permission != "edit":
-                        _debug.logic("move_refused", reason="source_not_editable")
-                        raise AccessError(
-                            _("You are not allowed to move (some of) these documents.")
-                        )
-                    if not doc.user_can_move:
-                        _debug.logic("move_refused", reason="cannot_move_out")
-                        raise AccessError(
-                            _(
-                                "You can't move documents you do not own out of folders you cannot edit."
-                            )
-                        )
-
-            if new_parent_folder.shortcut_document_id:
-                _debug.pipeline(
-                    "move_target_resolved_through_shortcut",
-                    shortcut=new_parent_folder,
-                    target=new_parent_folder.shortcut_document_id,
-                )
-                resolved_vals = vals | {
-                    "folder_id": new_parent_folder.shortcut_document_id.id
-                }
-                resolved_vals.pop("user_folder_id", None)
-                return self.write(resolved_vals)
-
-            if new_parent_folder:
-                for doc in documents_to_move:
-                    to_active = vals.get("active")
-                    if (not doc.active and not to_active) or (
-                        doc.folder_id
-                        and not doc.folder_id.active
-                        and (not to_active or doc.folder_id not in self)
-                    ):
-                        _debug.logic("move_refused", reason="source_archived")
-                        raise UserError(
-                            _("It is not possible to move archived documents.")
-                        )
-            documents_to_move_per_initial_folder = documents_to_move.grouped(
-                "folder_id"
-            )
-            _debug.pipeline(
-                "move_planned",
-                documents=documents_to_move,
-                to=new_parent_folder,
-                from_folders=len(documents_to_move_per_initial_folder),
-            )
-
-        if (to_active := vals.get("active")) is not None:
-            if to_active is False:
-                if not self.env.su and self.env.user.share:
-                    _debug.logic("archive_refused", reason="share_user", documents=self)
-                    raise UserError(_("You are not allowed to (un)archive documents."))
-                self.check_access("unlink")
-            documents_per_initial_active = self.grouped("active")
-
-        attachment_id = vals.get("attachment_id")
-        if attachment_id:
+        if vals.get("attachment_id"):
             self.check_singleton()
-
-        attachments_was_present = []
-        versioned = self.browse()
-        for record in self:
-            attachments_was_present.append(bool(record.attachment_id))
-            fulfils_request = (
-                record.request_activity_id
-                and not record.attachment_id
-                and (has_content or vals.get("attachment_id"))
-            )
-            if (
-                record.type == "binary"
-                and (writes_content or "url" in vals)
-                and (not record.attachment_id or not record.attachment_id.file_size)
-                and not fulfils_request
-            ):
-                body = _(
-                    "Document Request: %(name)s Uploaded by: %(user)s",
-                    name=record.name,
-                    user=self.env.user.name,
-                )
-                record.with_context(no_document=True).message_post(body=body)
-
-            if record.attachment_id:
-                if attachment_id and attachment_id != record.attachment_id.id:
-                    attachment = self.env["ir.attachment"].browse(attachment_id)
-                    if (attachment.res_model, attachment.res_id) != (
-                        record.res_model,
-                        record.res_id,
-                    ):
-                        attachment.with_context(no_document=True).write(
-                            {
-                                "res_model": record.res_model or "document.document",
-                                "res_id": record.res_id
-                                if record.res_model
-                                else record.id,
-                            }
-                        )
-
-                    related_record = record.res_model and self.env[
-                        record.res_model
-                    ].browse(record.res_id)
-                    if (
-                        not hasattr(related_record, "message_main_attachment_id")
-                        or related_record.message_main_attachment_id
-                        != record.attachment_id
-                    ):
-                        record.attachment_id.with_context(no_document=True).write(
-                            {"res_model": "document.document", "res_id": record.id}
-                        )
-                    if attachment_id in record.previous_attachment_ids.ids:
-                        record.previous_attachment_ids = [(3, attachment_id, False)]
-                    record.previous_attachment_ids = [
-                        (4, record.attachment_id.id, False)
-                    ]
-                    _debug.logic("versioned", by="attachment_swap", document=record)
-                    versioned |= record
-                elif "attachment_id" in vals and not attachment_id:
-                    # Detaching the file outright. This used to keep no version
-                    # at all: the document went empty, the outgoing attachment
-                    # stayed behind pointing at it, and the history panel
-                    # offered nothing to go back to -- unlike every other way of
-                    # replacing the content. Emptying a document IS replacing
-                    # its content, which is how the lock guard above already
-                    # reads it.
-                    #
-                    # The attachment itself becomes the previous version, not a
-                    # copy of it: nothing is overwriting it here, so the copy
-                    # the branch below makes would archive a duplicate and leave
-                    # the original dangling.
-                    record.previous_attachment_ids = [
-                        (4, record.attachment_id.id, False)
-                    ]
-                    _debug.logic("versioned", by="detach", document=record)
-                    versioned |= record
-                elif writes_content:
-                    old_attachment = record.attachment_id.with_context(
-                        no_document=True
-                    ).copy()
-                    old_attachment.write(
-                        {
-                            "res_model": "document.document",
-                            "res_id": record.id,
-                        }
-                    )
-                    record.previous_attachment_ids = [(4, old_attachment.id, False)]
-                    _debug.logic("versioned", by="content_copy", document=record)
-                    versioned |= record
-            elif has_content and not vals.get("attachment_id"):
-                res_model = vals.get("res_model", record.res_model)
-                res_id = vals.get("res_id", record.res_id)
-                if res_model and not self.env[res_model].browse(res_id).exists():
-                    _debug.logic("res_record_cleared", res_model=res_model)
-                    record.res_model = False
-                    record.res_id = False
-
-                attachment = (
-                    self.env["ir.attachment"]
-                    .with_context(no_document=True)
-                    .create(
-                        {
-                            "name": vals.get("name", record.name),
-                            "res_model": record.res_model or "document.document",
-                            "res_id": record.res_id if record.res_model else record.id,
-                        }
-                    )
-                )
-                record.attachment_id = attachment.id
+        attachments_was_present, versioned = self._write_apply_versioning_before(
+            vals, writes_content, has_content
+        )
 
         attachment_dict = self._pop_attachment_vals(vals)
 
@@ -888,43 +730,7 @@ class DocumentsDocument(models.Model):
 
         versioned._remove_excess_versions()
 
-        if (new_active := vals.get("active")) is not None:
-            if not new_active:
-                if self.sudo().search(
-                    [("id", "child_of", self.ids), ("active", "=", True)]
-                ):
-                    _debug.logic("archive_refused", reason="active_descendants")
-                    raise UserError(
-                        _(
-                            'Operation not supported. Please use "Move to Trash" / `action_archive` instead.'
-                        )
-                    )
-                if archived_documents := documents_per_initial_active.get(True):
-                    archived_documents._log_transition_to_parent_folders(
-                        lambda names: self.env._(
-                            "The following documents have been sent to trash: "
-                            "%(documents)s.",
-                            documents=names,
-                        )
-                    )
-            elif new_active:
-                if self.sudo().search(
-                    [("id", "parent_of", self.ids), ("active", "=", False)]
-                ):
-                    _debug.logic("unarchive_refused", reason="archived_ancestors")
-                    raise UserError(
-                        _(
-                            'Operation not supported. Please use "Restore" / `action_unarchive` instead.'
-                        )
-                    )
-                if restored_documents := documents_per_initial_active.get(False):
-                    restored_documents._log_transition_to_parent_folders(
-                        lambda names: self.env._(
-                            "The following documents have been restored from the "
-                            "trash: %(documents)s.",
-                            documents=names,
-                        )
-                    )
+        self._write_check_active_after(vals, documents_per_initial_active)
 
         if (
             not is_manager
@@ -933,6 +739,355 @@ class DocumentsDocument(models.Model):
         ):
             self._raise_company_folder_manager_only()
 
+        self._write_fulfil_requests_after(attachments_was_present)
+
+        if (
+            (company_id := vals.get("company_id")) is not None
+        ) and self.shortcut_ids | self.children_ids:
+            self._update_company(company_id)
+
+        self._add_user_role_without_propagation("edit", previous_owner_access_to_keep)
+
+        self._write_sync_moved_after(vals, move)
+
+        if "url" in vals:
+            self._mark_url_preview_pending(self)
+
+        _debug.pipeline(
+            "write_done",
+            documents=self,
+            moved=len(move.documents_to_move),
+            versioned=len(versioned),
+        )
+        return write_result
+
+    @api.model
+    def _write_content_flags(self, vals: dict) -> tuple[bool, bool]:
+        content_keys = ("datas", "raw")
+        return (
+            any(key in vals for key in content_keys),
+            any(vals.get(key) for key in content_keys),
+        )
+
+    def _write_check_lock_before(self, vals: dict, writes_content: bool) -> None:
+        replaces_content = writes_content or "attachment_id" in vals
+        if replaces_content and (locked_by_other := self._locked_by_other()):
+            _debug.logic("write_refused", reason="locked_by_other")
+            raise UserError(
+                _(
+                    "“%(name)s” is locked by %(user)s and its content cannot "
+                    "be replaced by another user.",
+                    name=locked_by_other[0].name,
+                    user=locked_by_other[0].lock_uid.name,
+                )
+            )
+
+    def _write_check_owner_before(self, vals: dict, is_manager: bool) -> dict:
+        """Refuse an owner change on documents this user does not own.
+
+        Returns the documents whose owner is about to change, grouped by their
+        CURRENT owner -- read here because `super().write` overwrites it, and
+        needed afterwards to leave that owner an explicit `edit` membership.
+        """
+        if (owner_id := vals.get("owner_id")) is None:
+            return {}
+        if not is_manager and any(d.owner_id != self.env.user for d in self):
+            _debug.logic("write_refused", reason="owner_change_not_owner")
+            raise AccessError(
+                _("You cannot change the owner of documents you do not own.")
+            )
+        if not isinstance(owner_id, int | bool | None):
+            owner_id = owner_id.id
+        documents_changing_owner = self.filtered(
+            lambda d: d.owner_id and d.owner_id.id != owner_id
+        )
+        _debug.logic("owner_changed", documents=documents_changing_owner, to=owner_id)
+        return dict(documents_changing_owner.grouped("owner_id"))
+
+    def _write_plan_move_before(self, vals: dict) -> DocumentMovePlan:
+        """Validate a `folder_id` change and capture what the move needs later.
+
+        `resolved_vals` set on the result means the destination turned out to be
+        a shortcut and the caller must restart against the target instead; every
+        other field is empty in that case.
+        """
+        empty = self.browse()
+        if "folder_id" not in vals:
+            return DocumentMovePlan(empty, empty, {}, None)
+
+        self._check_parent_folders([vals["folder_id"]])
+        new_parent_folder = self.browse(vals["folder_id"])
+        documents_to_move = self.filtered(lambda d: d.folder_id != new_parent_folder)
+        if documents_to_move and new_parent_folder and not new_parent_folder.active:
+            _debug.logic("move_refused", reason="target_archived")
+            raise UserError(
+                _("It is not possible to move documents into archived folders.")
+            )
+        if documents_to_move and not self.env.su:
+            self._write_check_move_access(documents_to_move, new_parent_folder)
+
+        if new_parent_folder.shortcut_document_id:
+            _debug.pipeline(
+                "move_target_resolved_through_shortcut",
+                shortcut=new_parent_folder,
+                target=new_parent_folder.shortcut_document_id,
+            )
+            resolved_vals = vals | {
+                "folder_id": new_parent_folder.shortcut_document_id.id
+            }
+            resolved_vals.pop("user_folder_id", None)
+            return DocumentMovePlan(empty, empty, {}, resolved_vals)
+
+        if new_parent_folder:
+            self._write_check_move_not_archived(documents_to_move, vals)
+
+        documents_to_move_per_initial_folder = documents_to_move.grouped("folder_id")
+        _debug.pipeline(
+            "move_planned",
+            documents=documents_to_move,
+            to=new_parent_folder,
+            from_folders=len(documents_to_move_per_initial_folder),
+        )
+        return DocumentMovePlan(
+            new_parent_folder,
+            documents_to_move,
+            dict(documents_to_move_per_initial_folder),
+            None,
+        )
+
+    def _write_check_move_access(
+        self, documents_to_move: DocumentsDocument, new_parent_folder: DocumentsDocument
+    ) -> None:
+        if new_parent_folder and new_parent_folder.user_permission != "edit":
+            _debug.logic("move_refused", reason="target_not_editable")
+            raise AccessError(_("You can't access that folder_id."))
+        for doc in documents_to_move:
+            if doc.user_permission != "edit":
+                _debug.logic("move_refused", reason="source_not_editable")
+                raise AccessError(
+                    _("You are not allowed to move (some of) these documents.")
+                )
+            if not doc.user_can_move:
+                _debug.logic("move_refused", reason="cannot_move_out")
+                raise AccessError(
+                    _(
+                        "You can't move documents you do not own out of folders you cannot edit."
+                    )
+                )
+
+    def _write_check_move_not_archived(
+        self, documents_to_move: DocumentsDocument, vals: dict
+    ) -> None:
+        for doc in documents_to_move:
+            to_active = vals.get("active")
+            if (not doc.active and not to_active) or (
+                doc.folder_id
+                and not doc.folder_id.active
+                and (not to_active or doc.folder_id not in self)
+            ):
+                _debug.logic("move_refused", reason="source_archived")
+                raise UserError(_("It is not possible to move archived documents."))
+
+    def _write_check_active_before(self, vals: dict) -> dict:
+        if (to_active := vals.get("active")) is None:
+            return {}
+        if to_active is False:
+            if not self.env.su and self.env.user.share:
+                _debug.logic("archive_refused", reason="share_user", documents=self)
+                raise UserError(_("You are not allowed to (un)archive documents."))
+            self.check_access("unlink")
+        return dict(self.grouped("active"))
+
+    def _write_apply_versioning_before(
+        self, vals: dict, writes_content: bool, has_content: bool
+    ) -> tuple[list[bool], DocumentsDocument]:
+        """Move the outgoing content into the version history.
+
+        Returns which records already held an attachment -- read before the
+        write, and the only way to tell afterwards that a document request was
+        just fulfilled -- and the records that gained a version.
+        """
+        attachment_id = vals.get("attachment_id")
+        attachments_was_present = []
+        versioned = self.browse()
+        replaced_content = self.browse()
+        for record in self:
+            attachments_was_present.append(bool(record.attachment_id))
+            fulfils_request = (
+                record.request_activity_id
+                and not record.attachment_id
+                and (has_content or attachment_id)
+            )
+            if (
+                record.type == "binary"
+                and (writes_content or "url" in vals)
+                and (not record.attachment_id or not record.attachment_id.file_size)
+                and not fulfils_request
+            ):
+                record.with_context(no_document=True).message_post(
+                    body=_(
+                        "Document Request: %(name)s Uploaded by: %(user)s",
+                        name=record.name,
+                        user=self.env.user.name,
+                    )
+                )
+
+            if record.attachment_id:
+                outcome = self._write_version_existing(record, vals, writes_content)
+                if outcome:
+                    versioned |= record
+                if outcome == "content_copy":
+                    replaced_content |= record
+            elif has_content and not attachment_id:
+                self._write_attach_empty_document(record, vals)
+
+        # One `copy()` for every record whose content is being overwritten:
+        # `copy()` ends in a single `create()`, so calling it per record turned
+        # N version snapshots into N inserts.
+        self._write_snapshot_replaced_content(replaced_content)
+        return attachments_was_present, versioned
+
+    def _write_snapshot_replaced_content(self, records: DocumentsDocument) -> None:
+        if not records:
+            return
+        snapshots = records.attachment_id.with_context(no_document=True).copy()
+        for record, snapshot in zip(records, snapshots, strict=True):
+            # `copy()` already carries the source's res_model/res_id, which for
+            # a document-owned file is this document -- so only a file that
+            # lives on another record needs redirecting, and the common case
+            # writes nothing.
+            if (snapshot.res_model, snapshot.res_id) != (
+                "document.document",
+                record.id,
+            ):
+                snapshot.write({"res_model": "document.document", "res_id": record.id})
+            record.previous_attachment_ids = [(4, snapshot.id, False)]
+            _debug.logic("versioned", by="content_copy", document=record)
+
+    def _write_version_existing(
+        self, record: DocumentsDocument, vals: dict, writes_content: bool
+    ) -> str | bool:
+        """Report which kind of version this write creates, if any.
+
+        A content overwrite is only REPORTED here ("content_copy") and carried
+        out by `_write_snapshot_replaced_content` for the whole batch at once;
+        the other two shapes are per-record by nature and rare.
+        """
+        attachment_id = vals.get("attachment_id")
+        if attachment_id and attachment_id != record.attachment_id.id:
+            attachment = self.env["ir.attachment"].browse(attachment_id)
+            if (attachment.res_model, attachment.res_id) != (
+                record.res_model,
+                record.res_id,
+            ):
+                attachment.with_context(no_document=True).write(
+                    {
+                        "res_model": record.res_model or "document.document",
+                        "res_id": record.res_id if record.res_model else record.id,
+                    }
+                )
+
+            related_record = record.res_model and self.env[record.res_model].browse(
+                record.res_id
+            )
+            if (
+                not hasattr(related_record, "message_main_attachment_id")
+                or related_record.message_main_attachment_id != record.attachment_id
+            ):
+                record.attachment_id.with_context(no_document=True).write(
+                    {"res_model": "document.document", "res_id": record.id}
+                )
+            if attachment_id in record.previous_attachment_ids.ids:
+                record.previous_attachment_ids = [(3, attachment_id, False)]
+            record.previous_attachment_ids = [(4, record.attachment_id.id, False)]
+            _debug.logic("versioned", by="attachment_swap", document=record)
+            return "swap"
+        if "attachment_id" in vals and not attachment_id:
+            # Detaching the file outright. This used to keep no version
+            # at all: the document went empty, the outgoing attachment
+            # stayed behind pointing at it, and the history panel
+            # offered nothing to go back to -- unlike every other way of
+            # replacing the content. Emptying a document IS replacing
+            # its content, which is how the lock guard above already
+            # reads it.
+            #
+            # The attachment itself becomes the previous version, not a
+            # copy of it: nothing is overwriting it here, so the copy
+            # the branch below makes would archive a duplicate and leave
+            # the original dangling.
+            record.previous_attachment_ids = [(4, record.attachment_id.id, False)]
+            _debug.logic("versioned", by="detach", document=record)
+            return "detach"
+        if writes_content:
+            return "content_copy"
+        return False
+
+    def _write_attach_empty_document(
+        self, record: DocumentsDocument, vals: dict
+    ) -> None:
+        res_model = vals.get("res_model", record.res_model)
+        res_id = vals.get("res_id", record.res_id)
+        if res_model and not self.env[res_model].browse(res_id).exists():
+            _debug.logic("res_record_cleared", res_model=res_model)
+            record.res_model = False
+            record.res_id = False
+
+        record.attachment_id = (
+            self.env["ir.attachment"]
+            .with_context(no_document=True)
+            .create(
+                {
+                    "name": vals.get("name", record.name),
+                    "res_model": record.res_model or "document.document",
+                    "res_id": record.res_id if record.res_model else record.id,
+                }
+            )
+            .id
+        )
+
+    def _write_check_active_after(
+        self, vals: dict, documents_per_initial_active: dict
+    ) -> None:
+        if (new_active := vals.get("active")) is None:
+            return
+        if not new_active:
+            if self.sudo().search(
+                [("id", "child_of", self.ids), ("active", "=", True)]
+            ):
+                _debug.logic("archive_refused", reason="active_descendants")
+                raise UserError(
+                    _(
+                        'Operation not supported. Please use "Move to Trash" / `action_archive` instead.'
+                    )
+                )
+            if archived_documents := documents_per_initial_active.get(True):
+                archived_documents._log_transition_to_parent_folders(
+                    lambda names: self.env._(
+                        "The following documents have been sent to trash: "
+                        "%(documents)s.",
+                        documents=names,
+                    )
+                )
+        else:
+            if self.sudo().search(
+                [("id", "parent_of", self.ids), ("active", "=", False)]
+            ):
+                _debug.logic("unarchive_refused", reason="archived_ancestors")
+                raise UserError(
+                    _(
+                        'Operation not supported. Please use "Restore" / `action_unarchive` instead.'
+                    )
+                )
+            if restored_documents := documents_per_initial_active.get(False):
+                restored_documents._log_transition_to_parent_folders(
+                    lambda names: self.env._(
+                        "The following documents have been restored from the "
+                        "trash: %(documents)s.",
+                        documents=names,
+                    )
+                )
+
+    def _write_fulfil_requests_after(self, attachments_was_present: list[bool]) -> None:
         for document, attachment_was_present in zip(
             self, attachments_was_present, strict=True
         ):
@@ -952,61 +1107,45 @@ class DocumentsDocument(models.Model):
                     feedback=feedback, attachment_ids=[document.attachment_id.id]
                 )
 
-        if (
-            (company_id := vals.get("company_id")) is not None
-        ) and self.shortcut_ids | self.children_ids:
-            self._update_company(company_id)
-
-        self._add_user_role_without_propagation("edit", previous_owner_access_to_keep)
-
-        if new_parent_folder and (
-            documents_to_sync := documents_to_move.filtered(
+    def _write_sync_moved_after(self, vals: dict, move: DocumentMovePlan) -> None:
+        if move.new_parent_folder and (
+            documents_to_sync := move.documents_to_move.filtered(
                 lambda d: not d.shortcut_document_id
             )
         ):
             _debug.pipeline(
                 "move_access_synced",
                 documents=documents_to_sync,
-                folder=new_parent_folder,
-                access_internal=new_parent_folder.access_internal,
-                access_via_link=new_parent_folder.access_via_link,
+                folder=move.new_parent_folder,
+                access_internal=move.new_parent_folder.access_internal,
+                access_via_link=move.new_parent_folder.access_via_link,
             )
             documents_to_sync.action_update_access_rights(
-                access_internal=new_parent_folder.access_internal,
-                access_via_link=new_parent_folder.access_via_link,
+                access_internal=move.new_parent_folder.access_internal,
+                access_via_link=move.new_parent_folder.access_via_link,
                 partners={
                     access.partner_id: (access.role, access.expiration_date)
-                    for access in new_parent_folder.access_ids
+                    for access in move.new_parent_folder.access_ids
                     if access.role
                 },
             )
             if "company_id" not in vals:
-                documents_to_sync._update_company(new_parent_folder.company_id.id)
+                documents_to_sync._update_company(move.new_parent_folder.company_id.id)
 
-        if documents_to_move:
-            for folder, documents in documents_to_move.grouped("folder_id").items():
-                if folder:
-                    folder.message_post_with_source(
-                        source_ref="document.folder_notification_move_in",
-                        render_values={"documents": documents},
-                    )
-            for folder, documents in documents_to_move_per_initial_folder.items():
-                if folder:
-                    folder.message_post_with_source(
-                        source_ref="document.folder_notification_move_out",
-                        render_values={"documents": documents},
-                    )
-
-        if "url" in vals:
-            self._mark_url_preview_pending(self)
-
-        _debug.pipeline(
-            "write_done",
-            documents=self,
-            moved=len(documents_to_move),
-            versioned=len(versioned),
-        )
-        return write_result
+        if not move.documents_to_move:
+            return
+        for folder, documents in move.documents_to_move.grouped("folder_id").items():
+            if folder:
+                folder.message_post_with_source(
+                    source_ref="document.folder_notification_move_in",
+                    render_values={"documents": documents},
+                )
+        for folder, documents in move.documents_to_move_per_initial_folder.items():
+            if folder:
+                folder.message_post_with_source(
+                    source_ref="document.folder_notification_move_out",
+                    render_values={"documents": documents},
+                )
 
     def copy(self, default: dict | None = None) -> DocumentsDocument:
         if not self:
@@ -1324,7 +1463,9 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _cron_update_url_preview(self, limit: int = 200) -> None:
-        documents = self.search(
+        # sudo for the same reason `_cron_refresh_expiration_state` needs it:
+        # a system sweep must not be scoped to the cron user's readable set.
+        documents = self.sudo().search(
             [("url_preview_pending", "=", True), ("type", "=", "url")], limit=limit
         )
         if not documents:
@@ -1435,14 +1576,49 @@ class DocumentsDocument(models.Model):
                 document.thumbnail_status = "client_generated"
             elif document.mimetype and document.mimetype.startswith("image/"):
                 content = document.attachment_id.sudo()._get_content_prefix()
+                # Any decoding failure is an ERROR THUMBNAIL, never an
+                # exception. This compute is stored, so it runs inside the
+                # `create`/`write` that carried the file: whatever escapes here
+                # aborts that write and loses the upload. The two exceptions
+                # named before were the two `odoo.tools.image` raises on its
+                # own; Pillow raises its own types straight through, and
+                # `DecompressionBombError` is the one that is reachable on
+                # purpose -- a uniform 16000x16000 PNG is 250 KB on the wire and
+                # 256 Mpx once decoded, so no upload size limit bounds it, and
+                # `/documents/upload/<token>` accepts it from an unauthenticated
+                # visitor holding an edit link.
                 try:
                     thumbnail = (
-                        image_process(content, size=(200, 140), crop="center")
+                        image_process(
+                            content,
+                            size=(200, 140),
+                            crop="center",
+                            # Bound the DECODE, not just the download. Pillow
+                            # only refuses above twice its own MAX_IMAGE_PIXELS;
+                            # between one and two times it warns and decodes
+                            # anyway, so a 410 KB, 12000x12000 RGB PNG arriving
+                            # on the public upload route allocated ~550 MB and
+                            # SUCCEEDED -- a better denial primitive than the
+                            # one that raised, because it can be repeated and
+                            # logs nothing. `verify_resolution` reads the header
+                            # and refuses past `IMAGE_MAX_RESOLUTION` (50 Mpx)
+                            # before any pixel is decoded, as `html_editor` and
+                            # `web_unsplash` already do on their upload paths.
+                            # Past it the file is still stored and served; only
+                            # its preview is skipped.
+                            verify_resolution=True,
+                        )
                         if content
                         else None
                     )
-                except UserError, TypeError:
+                except Exception:
                     thumbnail = None
+                    _logger.warning(
+                        "Documents: could not build a thumbnail for %r (%s)",
+                        document.name,
+                        document.mimetype,
+                        exc_info=True,
+                    )
                 document.thumbnail = base64.b64encode(thumbnail) if thumbnail else False
                 document.thumbnail_status = "present" if thumbnail else "error"
                 if _debug.logic.enabled and not thumbnail:

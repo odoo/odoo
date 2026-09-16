@@ -88,6 +88,7 @@ class DocumentsDocument(models.Model):
         if max_versions <= 0:
             return
         _debug.pipeline("version_trim", documents=self, max_versions=max_versions)
+        excess = self.env["ir.attachment"]
         for document in self:
             versions = document.previous_attachment_ids.sorted(
                 key=lambda attachment: (attachment.create_date, attachment.id),
@@ -99,4 +100,8 @@ class DocumentsDocument(models.Model):
                     document=document,
                     dropped=len(versions) - max_versions,
                 )
-                versions[max_versions:].sudo().unlink()
+                excess |= versions[max_versions:]
+        # One unlink for every document being trimmed: `unlink` is a delete
+        # plus its filestore work, and calling it per document made trimming N
+        # documents cost N round-trips.
+        excess.sudo().unlink()

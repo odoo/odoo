@@ -1823,3 +1823,160 @@ class TestDocumentsCopy(TransactionCase):
         self.assertEqual(len(copies), len(copies.ids), "no placeholder slots")
         self.assertEqual(len(copies), 1, "only the folder is copied")
         self.assertTrue(all(copies.mapped("name")), "the result must be readable")
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsCreateBatching(TransactionCaseDocuments):
+    """Creating N documents that carry content costs one attachment insert.
+
+    `assertQueryCount` only fails ABOVE its budget, so the guard that matters
+    here is the SHAPE: the same budget has to hold for one document and for
+    twenty, which is what a per-document insert cannot do. A budget alone would
+    pass at N=1 and go on passing while the cost grew.
+    """
+
+    def _create_with_content(self, count, tag):
+        return self.env["document.document"].create(
+            [
+                {
+                    "name": f"{tag}-{index}.txt",
+                    "type": "binary",
+                    "raw": b"payload",
+                    "folder_id": self.folder_a.id,
+                }
+                for index in range(count)
+            ]
+        )
+
+    def test_the_cost_of_creating_documents_does_not_follow_their_number(self):
+        self._create_with_content(1, "warmup")  # fill the caches the first call fills
+        self.env.flush_all()
+
+        before = self.env.cr.sql_log_count
+        self._create_with_content(1, "one")
+        self.env.flush_all()
+        cost_of_one = self.env.cr.sql_log_count - before
+
+        before = self.env.cr.sql_log_count
+        documents = self._create_with_content(20, "twenty")
+        self.env.flush_all()
+        cost_of_twenty = self.env.cr.sql_log_count - before
+
+        self.assertEqual(len(documents), 20)
+        self.assertTrue(all(documents.mapped("attachment_id")))
+        self.assertEqual(
+            documents.mapped("name"), [f"twenty-{i}.txt" for i in range(20)]
+        )
+        self.assertLessEqual(
+            cost_of_twenty,
+            cost_of_one + 4,
+            f"creating 20 documents cost {cost_of_twenty} queries against "
+            f"{cost_of_one} for one: the attachment insert is running per "
+            f"document again",
+        )
+
+    def test_a_batch_mixing_content_and_ready_attachments_keeps_them_paired(self):
+        """The batch create must not shift an attachment onto the wrong vals."""
+        existing = (
+            self.env["ir.attachment"]
+            .with_context(no_document=True)
+            .create({"name": "ready.txt", "raw": b"ready"})
+        )
+
+        documents = self.env["document.document"].create(
+            [
+                {"name": "first.txt", "type": "binary", "raw": b"first"},
+                {"type": "binary", "attachment_id": existing.id},
+                {"name": "third.txt", "type": "binary", "raw": b"third"},
+                {"name": "no-content.txt", "type": "binary"},
+            ]
+        )
+
+        self.assertEqual(documents[1].attachment_id, existing)
+        self.assertEqual(documents[1].name, "ready.txt", "name falls back to the file")
+        self.assertEqual(documents[0].attachment_id.raw, b"first")
+        self.assertEqual(documents[2].attachment_id.raw, b"third")
+        self.assertFalse(documents[3].attachment_id)
+        self.assertEqual(
+            documents.mapped("name"),
+            ["first.txt", "ready.txt", "third.txt", "no-content.txt"],
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsResModelConstraint(TransactionCaseDocuments):
+    """A document is never linked to a document, archived or not.
+
+    The rule used to be enforced with `search_count`, which goes through
+    `_search` and therefore applies `active_test`: it simply did not exist for
+    an archived record. Archive, link, restore, and the forbidden state was
+    live -- including `res_id == id`, a document linked to itself.
+    """
+
+    def _link_to(self, document, target):
+        document.write({"res_model": "document.document", "res_id": target.id})
+
+    def test_an_active_document_may_not_be_linked_to_a_document(self):
+        target = self.env["document.document"].create(
+            {"name": "target.txt", "type": "binary", "raw": b"t"}
+        )
+        document = self.env["document.document"].create(
+            {"name": "source.txt", "type": "binary", "raw": b"s"}
+        )
+
+        with self.assertRaises(ValidationError):
+            self._link_to(document, target)
+
+    def test_an_archived_document_may_not_be_linked_either(self):
+        target = self.env["document.document"].create(
+            {"name": "target.txt", "type": "binary", "raw": b"t"}
+        )
+        document = self.env["document.document"].create(
+            {"name": "sneak.txt", "type": "binary", "raw": b"s"}
+        )
+        self.env.flush_all()
+        document.with_context(documents_archiving=True).write({"active": False})
+        self.env.flush_all()
+
+        with self.assertRaises(ValidationError):
+            self._link_to(document, target)
+
+    def test_an_archived_document_may_not_be_linked_to_itself(self):
+        document = self.env["document.document"].create(
+            {"name": "self.txt", "type": "binary", "raw": b"s"}
+        )
+        self.env.flush_all()
+        document.with_context(documents_archiving=True).write({"active": False})
+        self.env.flush_all()
+
+        with self.assertRaises(ValidationError):
+            self._link_to(document, document)
+
+    def test_creating_an_archived_linked_document_is_refused(self):
+        target = self.env["document.document"].create(
+            {"name": "target.txt", "type": "binary", "raw": b"t"}
+        )
+
+        with self.assertRaises(ValidationError):
+            self.env["document.document"].create(
+                {
+                    "name": "born-archived.txt",
+                    "type": "binary",
+                    "raw": b"s",
+                    "active": False,
+                    "res_model": "document.document",
+                    "res_id": target.id,
+                }
+            )
+
+    def test_a_document_linked_to_another_model_is_fine(self):
+        """Negative control: the constraint targets one model, not all links."""
+        partner = self.env["res.partner"].create({"name": "Linkable"})
+        document = self.env["document.document"].create(
+            {"name": "ok.txt", "type": "binary", "raw": b"s"}
+        )
+
+        document.write({"res_model": "res.partner", "res_id": partner.id})
+
+        self.assertEqual(document.res_model, "res.partner")
+        self.assertEqual(document.res_id, partner.id)

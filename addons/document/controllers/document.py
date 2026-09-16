@@ -1125,9 +1125,16 @@ class ShareRoute(http.Controller):
                 if UserFolder.parse(user_folder_id) == UserFolder(UserFolder.COMPANY)
                 else []
             )
+            # The attachments are created one per file because
+            # `_create_from_request_file` is per-file by construction -- it may
+            # stream a large upload straight to the filestore. The DOCUMENTS are
+            # not: they are prepared per file and created in ONE call, so a
+            # thirty-file drop pays one document INSERT, one `parent_path`
+            # maintenance pass and one recompute flush instead of thirty of
+            # each.
+            pending_vals = []
             for file in files:
-                created_sudo |= self._documents_upload_create_write(
-                    folder_sudo,
+                vals = (
                     {
                         "attachment_id": AttachmentSudo._create_from_request_file(
                             file, mimetype="TRUST" if is_internal_user else "GUESS"
@@ -1142,23 +1149,64 @@ class ShareRoute(http.Controller):
                         "res_id": res_id,
                     }
                     | ({"partner_id": partner_id} if partner_id is not None else {})
-                    | ({"access_ids": uploader_access} if uploader_access else {}),
+                    | ({"access_ids": uploader_access} if uploader_access else {})
                 )
+                prepared = self._documents_upload_prepare(folder_sudo, vals)
+                if prepared is None:
+                    continue
+                if isinstance(prepared, dict):
+                    prepared.setdefault("folder_id", folder_sudo.id)
+                    pending_vals.append(prepared)
+                else:
+                    created_sudo |= prepared
+            if pending_vals:
+                new_documents_sudo = folder_sudo.create(pending_vals)
+                for new_document_sudo, new_vals in zip(
+                    new_documents_sudo, pending_vals, strict=True
+                ):
+                    self._documents_upload_post(new_document_sudo, new_vals)
+                created_sudo |= new_documents_sudo
 
         return created_sudo.ids
 
-    def _documents_upload_create_write(self, document_sudo: Any, vals: dict) -> Any:
-        if document_sudo.type == "binary":
-            document_sudo.write(vals)
-        else:
-            vals.setdefault("folder_id", document_sudo.id)
-            document_sudo = document_sudo.create(vals)
+    def _documents_upload_prepare(self, document_sudo: Any, vals: dict) -> Any:
+        """Decide what one uploaded file becomes, before anything is created.
+
+        Return the values to create (or write), `None` to drop the file, or an
+        existing `document.document` to report instead of creating one. This
+        runs per file; creation is batched behind it, so an override that needs
+        to inspect or refuse an upload belongs here rather than around the
+        create itself.
+        """
+        return vals
+
+    def _documents_upload_post(self, document_sudo: Any, vals: dict) -> None:
+        """React to one document that an upload just created or replaced."""
         _debug.lifecycle("uploaded", document=document_sudo, fields=sorted(vals))
         if any(field_name in vals for field_name in ["raw", "datas", "attachment_id"]):
             document_sudo.message_post(
                 body=_("Document uploaded by %(user)s", user=request.env.user.name)
             )
 
+    def _documents_upload_create_write(self, document_sudo: Any, vals: dict) -> Any:
+        """Single-document upload: replacing a binary, or one file into a folder.
+
+        The multi-file folder path does not come through here -- it batches the
+        create and calls `_documents_upload_prepare` / `_documents_upload_post`
+        directly, which is why those two, not this one, are the extension
+        points.
+        """
+        prepared = self._documents_upload_prepare(document_sudo, vals)
+        if prepared is None:
+            return request.env["document.document"].sudo()
+        if not isinstance(prepared, dict):
+            return prepared
+        if document_sudo.type == "binary":
+            document_sudo.write(prepared)
+        else:
+            prepared.setdefault("folder_id", document_sudo.id)
+            document_sudo = document_sudo.create(prepared)
+        self._documents_upload_post(document_sudo, prepared)
         return document_sudo
 
     @http.route("/documents/upload/success", type="http", auth="public")

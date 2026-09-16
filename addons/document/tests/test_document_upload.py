@@ -3,11 +3,13 @@ from io import BytesIO
 from unittest.mock import patch
 
 from odoo import Command, http
+from odoo.db.cursor import Cursor
 from odoo.tests.common import HttpCase, RecordCapturer, tagged
 from odoo.tools import mute_logger
 
 from .test_document_common import TEXT, TransactionCaseDocuments
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.document.controllers.document import ShareRoute
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -214,3 +216,190 @@ class TestDocumentsPdfSplitInput(TransactionCaseDocuments):
                 ],
                 open_files=[],
             )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsMultiFileUpload(HttpCase):
+    """Dropping several files into a folder in ONE request.
+
+    Nothing covered this path before, and it is the one the Documents kanban
+    uses for a drag-and-drop of more than one file. Its documents are now
+    created in a single `create()` rather than one per file, so the thing worth
+    pinning is that batching keeps each file paired with its own values.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.uploader = mail_new_test_user(
+            cls.env,
+            login="multi_uploader",
+            password="multi_uploader",
+            groups="base.group_user,document.group_documents_user",
+        )
+        cls.folder = (
+            cls.env["document.document"]
+            .with_user(cls.uploader)
+            .create({"name": "Drop Zone", "type": "folder"})
+        )
+
+    def _upload(self, payloads):
+        return self.url_open(
+            f"/documents/upload/{self.folder.access_token}",
+            data={"csrf_token": http.Request.csrf_token(self)},
+            files=[
+                ("ufile", (name, BytesIO(body), "text/plain"))
+                for name, body in payloads
+            ],
+        )
+
+    def test_every_file_becomes_its_own_document_with_its_own_content(self):
+        self.authenticate("multi_uploader", "multi_uploader")
+        payloads = [
+            (f"file-{index}.txt", f"body-{index}".encode()) for index in range(5)
+        ]
+
+        with RecordCapturer(self.env["document.document"], []) as capture:
+            response = self._upload(payloads)
+        response.raise_for_status()
+
+        documents = capture.records
+        self.assertEqual(len(documents), 5)
+        # Pairing is the whole risk of batching: a shifted zip would still
+        # create five documents, each holding the wrong file.
+        self.assertEqual(
+            [(d.name, d.attachment_id.raw) for d in documents.sorted("name")],
+            payloads,
+        )
+        self.assertEqual(
+            documents.mapped("folder_id"),
+            self.folder,
+            "every one lands in the folder that was uploaded to",
+        )
+        self.assertEqual(set(response.json()), set(documents.ids))
+
+    def test_each_uploaded_document_is_announced_on_its_own_thread(self):
+        self.authenticate("multi_uploader", "multi_uploader")
+
+        with RecordCapturer(self.env["document.document"], []) as capture:
+            self._upload([("one.txt", b"1"), ("two.txt", b"2")]).raise_for_status()
+
+        for document in capture.records:
+            self.assertTrue(
+                self.env["mail.message"].search_count(
+                    [
+                        ("model", "=", "document.document"),
+                        ("res_id", "=", document.id),
+                        ("body", "like", "Document uploaded by"),
+                    ]
+                ),
+                f"{document.name} got no upload message of its own",
+            )
+
+    def test_the_post_hook_receives_each_document_with_its_own_values(self):
+        """The contract batching introduced, pinned directly.
+
+        `_documents_upload_post(document, vals)` promises that `vals` is the
+        one `document` was created from. Nothing observable through the default
+        hook depends on that -- its message is the same for every file -- so a
+        misaligned pairing passes every end-to-end assertion while quietly
+        handing an override the wrong record. Checked at the hook itself.
+        """
+        self.authenticate("multi_uploader", "multi_uploader")
+        seen = []
+        original = ShareRoute._documents_upload_post
+
+        def spy(controller, document_sudo, vals):
+            seen.append((document_sudo.attachment_id.id, vals.get("attachment_id")))
+            return original(controller, document_sudo, vals)
+
+        with patch.object(ShareRoute, "_documents_upload_post", spy):
+            self._upload(
+                [(f"pair-{index}.txt", f"body-{index}".encode()) for index in range(4)]
+            ).raise_for_status()
+
+        self.assertEqual(len(seen), 4, "the hook runs once per uploaded file")
+        for document_attachment, vals_attachment in seen:
+            self.assertEqual(
+                document_attachment,
+                vals_attachment,
+                "the hook was handed a document that does not match its values",
+            )
+
+    def test_a_single_file_still_works(self):
+        """Negative control: the batched path must not need a crowd."""
+        self.authenticate("multi_uploader", "multi_uploader")
+
+        with RecordCapturer(self.env["document.document"], []) as capture:
+            self._upload([("alone.txt", b"solo")]).raise_for_status()
+
+        document = capture.records.check_singleton()
+        self.assertEqual(document.name, "alone.txt")
+        self.assertEqual(document.attachment_id.raw, b"solo")
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsMultiFileUploadCost(HttpCase):
+    """Uploading N files must not cost N times uploading one.
+
+    A budget would be the wrong guard here: it only fails ABOVE itself, so it
+    passes both when the code improves and, at a loose enough value, when it
+    regresses. What is asserted instead is the SHAPE -- the marginal cost of
+    one extra file in the same request. Per-file document creation measured
+    13.1 queries per extra file through this route; batching the creates
+    measured 4.0, the remainder being the attachment insert and its res_model
+    write, which are per-file by construction.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.uploader = mail_new_test_user(
+            cls.env,
+            login="cost_uploader",
+            password="cost_uploader",
+            groups="base.group_user,document.group_documents_user",
+        )
+        cls.folder = (
+            cls.env["document.document"]
+            .with_user(cls.uploader)
+            .create({"name": "Cost Zone", "type": "folder"})
+        )
+
+    def _cost_of_uploading(self, count, tag):
+        """Queries the SERVER runs for one upload request, not the test's."""
+        calls = {"n": 0}
+        original = Cursor.execute
+
+        def spy(cursor, *args, **kwargs):
+            calls["n"] += 1
+            return original(cursor, *args, **kwargs)
+
+        with patch.object(Cursor, "execute", spy):
+            response = self.url_open(
+                f"/documents/upload/{self.folder.access_token}",
+                data={"csrf_token": http.Request.csrf_token(self)},
+                files=[
+                    ("ufile", (f"{tag}{index}.txt", BytesIO(b"payload"), "text/plain"))
+                    for index in range(count)
+                ],
+            )
+        response.raise_for_status()
+        self.assertEqual(len(response.json()), count)
+        return calls["n"]
+
+    def test_the_marginal_cost_of_one_more_file_is_small(self):
+        self.authenticate("cost_uploader", "cost_uploader")
+        self._cost_of_uploading(1, "warm")  # the caches a first request fills
+
+        one = self._cost_of_uploading(1, "one")
+        eleven = self._cost_of_uploading(11, "eleven")
+        marginal = (eleven - one) / 10
+
+        self.assertLess(
+            marginal,
+            7,
+            f"one extra file in the same request costs {marginal:.1f} queries "
+            f"({one} for 1, {eleven} for 11): the documents are being created "
+            f"one per file again",
+        )

@@ -341,10 +341,9 @@ class DocumentsDocument(models.Model):
     def _is_download_allowed(self) -> bool:
         self.check_singleton()
         target = self.shortcut_document_id or self
-        return not target.is_download_blocked or target.user_permission == "edit"
-
-    def _filtered_downloadable(self) -> DocumentsDocument:
-        return self.filtered(lambda document: document._is_download_allowed())
+        if not target.is_download_blocked:
+            return True
+        return target.user_permission == "edit" or target.access_via_link == "edit"
 
     def action_update_access_rights(
         self,

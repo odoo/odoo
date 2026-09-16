@@ -147,12 +147,16 @@ class IrAttachment(models.Model):
         if self.env.context.get("no_document"):
             _debug.logic("auto_document_skipped", reason="no_document_context")
             return super().write(vals)
+        # Decided before `super().write`, because only a write that moves
+        # res_model/res_id can create a document and `a.res_field` is about to
+        # change. Reading it at all costs a fetch, so the cheap test that
+        # rules the whole thing out comes first.
+        if not {"res_model", "res_id"} & vals.keys():
+            return super().write(vals)
         to_document = self.filtered(
             lambda a: not (vals.get("res_field") or a.res_field)
         )
         result = super().write(vals)
-        if not {"res_model", "res_id"} & vals.keys():
-            return result
         _debug.pipeline("auto_document_rescan", attachments=to_document)
         for (res_model, res_id), attachments in to_document.grouped(
             lambda attachment: (attachment.res_model, attachment.res_id)

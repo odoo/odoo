@@ -529,3 +529,113 @@ class TestRenewalState(DocumentTypeCase):
             self.env.invalidate_all()
             self.env["document.document"]._cron_refresh_expiration_state()
             self.assertEqual(self._stored_renewal_state(doc), "due")
+
+
+@tagged("post_install", "-at_install")
+class TestExpirationRefreshCronIsUserIndependent(DocumentTypeCase):
+    """The refresh sweep must not be scoped to whoever runs the cron.
+
+    `expiration_state` is stored and its value is a function of today's date,
+    so a daily sweep is the only thing keeping it true. That sweep used to run
+    a plain `self.search()`, gated by the `user_permission != 'none'` record
+    rule. The shipped `ir.cron` runs as `__system__` -- SUPERUSER_ID, which
+    bypasses every rule -- so the dependency was invisible. Point it at an
+    ordinary account, which `ir_cron.user_id` exists to allow, and the sweep
+    silently refreshed nothing and still returned True.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_company = cls.env["res.company"].create({"name": "Cron Co"})
+        cls.cron_user = cls.env["res.users"].create(
+            {
+                "name": "Cron Bot",
+                "login": "document_cron_bot",
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [
+                            cls.env.ref("base.group_user").id,
+                            cls.env.ref("document.group_documents_manager").id,
+                        ],
+                    )
+                ],
+                "company_ids": [(6, 0, [cls.env.company.id, cls.other_company.id])],
+                "company_id": cls.env.company.id,
+            }
+        )
+
+    def _stale_documents(self):
+        """Two documents whose stored state disagrees with their date.
+
+        Written behind the ORM's back on purpose: going through `write` would
+        recompute the field and leave nothing for the cron to find.
+        """
+        document_type = self.env["document.type"].create(
+            {
+                "name": "Cron Type",
+                "code": "crontype",
+                "has_expiration": True,
+                # company-less: the documents below deliberately straddle two
+                # companies, and `_check_document_type_company` refuses a typed
+                # document whose company differs from its type's.
+                "company_id": False,
+            }
+        )
+        today = date.today()
+        documents = self.env["document.document"].create(
+            [
+                {
+                    "name": f"expiring-{index}.pdf",
+                    "type": "binary",
+                    "document_type_id": document_type.id,
+                    "company_id": company.id,
+                    "date_expiration": today + timedelta(days=90),
+                }
+                for index, company in enumerate((self.env.company, self.other_company))
+            ]
+        )
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE document_document SET date_expiration = %s WHERE id = ANY(%s)",
+            (today + timedelta(days=10), documents.ids),
+        )
+        self.env.invalidate_all()
+        self.assertEqual(
+            documents.mapped("expiration_state"),
+            ["valid", "valid"],
+            "the fixture must start stale, or the cron has nothing to do",
+        )
+        return documents
+
+    def test_an_ordinary_cron_user_refreshes_every_company(self):
+        documents = self._stale_documents()
+
+        self.env["document.document"].with_user(self.cron_user).with_context(
+            {}
+        )._cron_refresh_expiration_state()
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(
+            documents.mapped("expiration_state"),
+            ["expiring_soon", "expiring_soon"],
+            "the sweep is scoped to the cron user's readable set again",
+        )
+
+    def test_the_shipped_superuser_cron_still_refreshes(self):
+        """Negative control: the arm that always worked must keep working."""
+        documents = self._stale_documents()
+
+        self.env["document.document"].with_user(
+            self.env.ref("base.user_root")
+        ).with_context({})._cron_refresh_expiration_state()
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(
+            documents.mapped("expiration_state"),
+            ["expiring_soon", "expiring_soon"],
+        )
