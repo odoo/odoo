@@ -2138,7 +2138,7 @@ class CalendarEvent(models.Model):
         # fallback here the two halves of the pair disagree: the predicate calls such
         # an event public while the domain hides it from everyone, so it vanishes
         # from any search that touches a non-public field even for its own attendees.
-        if self.env["res.users"]._default_user_calendar_default_privacy() != "private":
+        if self.env["res.users"]._get_user_calendar_default_privacy() != "private":
             owner_default_is_public |= Domain(
                 "user_id", "not in", settings._search([]).select("user_id")
             )

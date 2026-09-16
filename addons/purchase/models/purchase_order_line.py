@@ -322,9 +322,9 @@ class PurchaseOrderLine(models.Model):
     )
     def _compute_invoice_amounts(self):
         for line in self:
-            line._compute_invoice_amounts_single()
+            line._update_invoice_amounts_single()
 
-    def _compute_invoice_amounts_single(self):
+    def _update_invoice_amounts_single(self):
         if self.display_type:
             self._reset_invoice_amounts()
             return

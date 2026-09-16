@@ -749,7 +749,7 @@ class AccountMoveLine(models.Model):
     def _compute_account_id(self):
         self._compute_account_id_on_term_lines()
         self._compute_account_id_on_product_lines()
-        self._compute_account_id_fallback()
+        self._update_account_id_fallback()
 
     @_debug.perf.timed
     def _compute_account_id_on_term_lines(self):
@@ -880,7 +880,7 @@ class AccountMoveLine(models.Model):
                 hits=sum(1 for account in partner_account_per_key.values() if account),
             )
 
-    def _compute_account_id_fallback(self):
+    def _update_account_id_fallback(self):
         for line in self:
             non_accountable = line.display_type in NON_ACCOUNTABLE_DISPLAY_TYPES
             if line.account_id or non_accountable:

@@ -283,10 +283,10 @@ class IrActionsServer(models.Model):
                 "followers_partner_field_name", "res.partner"
             ):
                 action.followers_partner_field_name = (
-                    action._default_partner_field_name()
+                    action._get_partner_field_name()
                 )
 
-    def _default_partner_field_name(self) -> str | Literal[False]:
+    def _get_partner_field_name(self) -> str | Literal[False]:
         self.check_singleton()
         model = self._get_target_model()
         if model is None:
@@ -336,9 +336,9 @@ class IrActionsServer(models.Model):
             if action.activity_user_type != "generic":
                 action.activity_user_field_name = False
             elif not action._path_leads_to("activity_user_field_name", "res.users"):
-                action.activity_user_field_name = action._default_user_field_name()
+                action.activity_user_field_name = action._get_user_field_name()
 
-    def _default_user_field_name(self) -> str | Literal[False]:
+    def _get_user_field_name(self) -> str | Literal[False]:
         self.check_singleton()
         model = self._get_target_model()
         if model is None:

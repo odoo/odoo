@@ -99,7 +99,7 @@ class ResUsers(models.Model):
         return partner_ids
 
     @api.model
-    def _default_user_calendar_default_privacy(self):
+    def _get_user_calendar_default_privacy(self):
         return (
             self.env["ir.config_parameter"]
             .sudo()
@@ -108,7 +108,7 @@ class ResUsers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        default_privacy = self._default_user_calendar_default_privacy()
+        default_privacy = self._get_user_calendar_default_privacy()
         for vals_dict in vals_list:
             if not vals_dict.get("calendar_default_privacy"):
                 vals_dict.update(calendar_default_privacy=default_privacy)
@@ -139,7 +139,7 @@ class ResUsers(models.Model):
             not user.sudo().res_users_settings_id.calendar_default_privacy
             for user in self
         ):
-            fallback_default_privacy = self._default_user_calendar_default_privacy()
+            fallback_default_privacy = self._get_user_calendar_default_privacy()
 
         for user in self:
             user.calendar_default_privacy = (

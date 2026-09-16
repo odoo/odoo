@@ -28,11 +28,11 @@ class ResPartner(models.Model):
     )
 
     def _compute_meeting_count(self):
-        result = self._compute_meeting()
+        result = self._get_meetings_by_partner()
         for p in self:
             p.meeting_count = len(result.get(p.id, []))
 
-    def _compute_meeting(self):
+    def _get_meetings_by_partner(self):
         if self.ids:
             # prefetch 'parent_id'
             all_partners = self.with_context(active_test=False).search_fetch(
@@ -150,7 +150,7 @@ class ResPartner(models.Model):
         # which the second cannot express as a domain.
         action["domain"] = [
             "|",
-            ("id", "in", self._compute_meeting()[self.id]),
+            ("id", "in", self._get_meetings_by_partner()[self.id]),
             ("partner_ids", "in", self.ids),
         ]
         return action
