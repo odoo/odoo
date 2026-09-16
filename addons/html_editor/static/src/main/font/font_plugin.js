@@ -196,6 +196,11 @@ export class FontPlugin extends Plugin {
                     },
                     onBlur: () => this.dependencies.selection.focusEditable(),
                     document: this.document,
+                    isSelectionInEditable: () =>
+                        this.dependencies.selection.isSelectionInEditable(
+                            this.document.getSelection()
+                        ),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
                 isAvailable: isHtmlContentSupported,
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
