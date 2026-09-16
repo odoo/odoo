@@ -6344,7 +6344,7 @@ class TestPermitsSurviveKilledBackendsUnderLoad(BaseCase):
                     cr.close()
                     with lock:
                         outcomes["ok"] += 1
-                except (psycopg.OperationalError, psycopg.InterfaceError):
+                except psycopg.OperationalError, psycopg.InterfaceError:
                     with lock:
                         outcomes["killed"] += 1
                     cr.close()
