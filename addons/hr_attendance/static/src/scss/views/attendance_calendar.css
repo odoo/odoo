@@ -1,15 +1,12 @@
 .o_attendance_calendar {
-    background-color: var(--o-view-background-color);
     flex-grow: 1;
+
+    .o_calendar_renderer {
+        border-top: 1px solid var(--o-calendar-border);
+    }
 }
 
 .o_attendance_calendar .o_attendance_info_bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--o-webclient-background-color);
-    border-bottom: 1px solid var(--border-color);
-
     .o_attendance_entry_card {
         min-height: 80px;
 
