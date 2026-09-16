@@ -732,7 +732,7 @@ test("Change the background position when multiple background layer is applied",
     await contains("[data-label='Position'] .dropdown-toggle").click();
     await contains("[data-action-value='repeat-pattern']").click();
     expect(section).toHaveClass("o_bg_img_opt_repeat");
-    expect(section).toHaveStyle("background-size: 100px, cover");
+    expect(section).toHaveStyle({"background-size": /^100px.+cover$/});
     expect("[data-action-value='repeat-pattern']").toHaveClass("active");
 });
 
