@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.53
+:Version: 6.54
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -8051,6 +8051,18 @@ The ORM defers writes, so bracket raw SQL accordingly:
    self.env.cr.execute(...)
    self.invalidate_model()     # drop the cache after writing behind the ORM's back
 
+**An expression that carries a parameter and appears twice is two expressions**
+``[review]``. psycopg 3 binds server-side, so each ``%s`` reaches PostgreSQL as its
+own ``$N``. When the same SQL object is interpolated into the SELECT list and into
+GROUP BY, the server sees ``"tag"."name"->>$2`` and ``->>$4``, and it refuses the
+query with ``GroupingError: column ... must appear in the GROUP BY clause`` whatever
+the values. psycopg2 inlined parameters, so upstream code of this shape worked. A
+translated field is the usual carrier, because ``_field_to_sql`` renders it with the
+language as a parameter; a company-dependent field inlines its company key and is
+safe. Repeat such an expression only after ``.inlined(self.env.cr)``, or group by
+the raw column or the select alias. ``l10n_ph_reports`` and ``l10n_vn_reports`` were
+red on this until enterprise ``669855605fa``.
+
 11.7 Cron batching
 ------------------
 
@@ -8613,6 +8625,10 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.54
+     - 2026-09-16
+     - §11.6: an expression with a bound parameter used twice (SELECT and GROUP BY)
+       reaches the server as two expressions under psycopg 3; inline it first.
    * - 6.53
      - 2026-09-16
      - §2.4.1: a zero-argument ``_compute_`` assigning a field no model declares is
