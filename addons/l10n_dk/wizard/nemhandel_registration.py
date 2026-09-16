@@ -37,7 +37,7 @@ class NemhandelRegistration(models.TransientModel):
         string='EDI user',
         compute='_compute_edi_user_id',
     )
-    phone_number = fields.Char(related='company_id.nemhandel_phone_number', readonly=False, inverse='_inverse_phone_number')
+    phone_number = fields.Char(related='company_id.nemhandel_phone_number', readonly=False)
     l10n_dk_nemhandel_proxy_state = fields.Selection(related='company_id.l10n_dk_nemhandel_proxy_state', readonly=False)
     verification_code = fields.Char(related='edi_user_id.nemhandel_verification_code', readonly=False)
     identifier_type = fields.Selection(related='company_id.nemhandel_identifier_type', readonly=False, required=True)
