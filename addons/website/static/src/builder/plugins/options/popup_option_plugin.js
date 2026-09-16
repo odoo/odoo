@@ -118,7 +118,9 @@ export class MoveBlockAction extends BuilderAction {
 export class SetBackdropAction extends BuilderAction {
     static id = "setBackdrop";
     isApplied({ editingElement }) {
-        const hasBackdropColor = !!editingElement.style.getPropertyValue("background-color").trim();
+        const hasBackdropColor =
+            !!editingElement.style.getPropertyValue("background-color").trim() ||
+            [...editingElement.classList].filter((c) => c.match(/bg-o-color-\d{1}/)).length;
         const hasNoBackdropClass = editingElement.classList.contains("s_popup_no_backdrop");
         return hasBackdropColor && !hasNoBackdropClass;
     }
