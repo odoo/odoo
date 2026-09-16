@@ -75,7 +75,7 @@ class AccountMove(models.Model):
                 ).mapped("amount")
             )
 
-    def _get_online_payment_context(self):
+    def _prepare_online_payment_context(self):
         """Return the transactions and config relevant to online payment eligibility checks.
 
         Shared by :meth:`_has_to_be_paid` and :meth:`_get_online_payment_error` to avoid
@@ -104,7 +104,7 @@ class AccountMove(models.Model):
 
     def _has_to_be_paid(self):
         _transactions, pending_transactions, enabled_feature = (
-            self._get_online_payment_context()
+            self._prepare_online_payment_context()
         )
         return enabled_feature and bool(
             self.state == "posted"
@@ -120,7 +120,7 @@ class AccountMove(models.Model):
         Returns the appropriate error message to be displayed if _has_to_be_paid() method returns False.
         """
         transactions, pending_transactions, enabled_feature = (
-            self._get_online_payment_context()
+            self._prepare_online_payment_context()
         )
         errors = []
         if not enabled_feature:
