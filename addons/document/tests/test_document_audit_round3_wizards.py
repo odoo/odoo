@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from io import BytesIO
 
 from odoo import Command, fields
-from odoo.exceptions import UserError
-from odoo.tests.common import HttpCase, TransactionCase, tagged
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests.common import HttpCase, TransactionCase, new_test_user, tagged
 
 from odoo.addons.document.tests.test_document_common import (
     TEXT,
@@ -352,3 +352,139 @@ class TestDocumentsInboxAlias(TransactionCase):
             alias.alias_parent_thread_id,
             self.env.ref("document.document_inbox_folder").id,
         )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsOperationWizard(TransactionCaseDocuments):
+    """`document.operation.action_confirm`, which nothing reached.
+
+    Coverage over `document` and nine bridge modules -- 691 tests -- executed
+    none of this method's four branches. It is what the Documents UI runs for
+    Move, Duplicate to, Create shortcuts and Add attachment to Documents.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.operator = new_test_user(
+            cls.env,
+            login="operation_user",
+            groups="base.group_user,document.group_documents_user",
+        )
+        cls.Operation = cls.env["document.operation"].with_user(cls.operator)
+        cls.target_folder = (
+            cls.env["document.document"]
+            .with_user(cls.operator)
+            .create({"name": "Target", "type": "folder"})
+        )
+
+    def _document(self, name="movable.txt"):
+        return (
+            self.env["document.document"]
+            .with_user(self.operator)
+            .create({"name": name, "type": "binary", "raw": b"payload"})
+        )
+
+    def _run(self, **values):
+        wizard = self.Operation.create(
+            {"destination": str(self.target_folder.id), **values}
+        )
+        wizard.action_confirm()
+        return wizard
+
+    def test_move_puts_the_documents_in_the_destination(self):
+        document = self._document()
+
+        self._run(operation="move", document_ids=[Command.set(document.ids)])
+
+        self.assertEqual(document.folder_id, self.target_folder)
+
+    def test_copy_leaves_the_original_where_it_was(self):
+        document = self._document()
+
+        self._run(operation="copy", document_ids=[Command.set(document.ids)])
+
+        self.assertFalse(document.folder_id, "the original does not move")
+        copies = self.env["document.document"].search(
+            [("folder_id", "=", self.target_folder.id)]
+        )
+        self.assertEqual(len(copies), 1)
+        self.assertEqual(copies.attachment_id.raw, b"payload")
+
+    def test_shortcut_points_at_the_original(self):
+        document = self._document()
+
+        self._run(operation="shortcut", document_ids=[Command.set(document.ids)])
+
+        shortcut = self.env["document.document"].search(
+            [("folder_id", "=", self.target_folder.id)]
+        )
+        self.assertEqual(shortcut.shortcut_document_id, document)
+
+    def test_add_a_file_attachment_copies_it_in(self):
+        attachment = (
+            self.env["ir.attachment"]
+            .with_context(no_document=True)
+            .create({"name": "report.txt", "type": "binary", "raw": b"content"})
+        )
+
+        self._run(operation="add", attachment_id=attachment.id)
+
+        document = self.env["document.document"].search(
+            [("folder_id", "=", self.target_folder.id)]
+        )
+        self.assertEqual(document.type, "binary")
+        self.assertEqual(document.attachment_id.raw, b"content")
+        self.assertNotEqual(
+            document.attachment_id,
+            attachment,
+            "the source attachment is copied, not moved",
+        )
+
+    def test_add_a_url_attachment_keeps_its_address(self):
+        """A url document keeps its address in its OWN url field.
+
+        Copying only the attachment's `type` produced `type = "url"` with
+        `url = False`: `/documents/content` then answers 404 because
+        `_is_safe_redirect_url(False)` is False, and the entry silently points
+        nowhere.
+        """
+        attachment = (
+            self.env["ir.attachment"]
+            .with_context(no_document=True)
+            .create(
+                {
+                    "name": "Odoo",
+                    "type": "url",
+                    "url": "https://www.odoo.com/page/x",
+                }
+            )
+        )
+
+        self._run(operation="add", attachment_id=attachment.id)
+
+        document = self.env["document.document"].search(
+            [("folder_id", "=", self.target_folder.id)]
+        )
+        self.assertEqual(document.type, "url")
+        self.assertEqual(document.url, "https://www.odoo.com/page/x")
+
+    def test_add_a_url_attachment_odoo_cannot_serve_is_refused(self):
+        """An `ir.attachment` may hold a relative url; a document may not.
+
+        `_check_url` says a document url must be complete. Before, such an
+        attachment became a url document with no url at all -- broken, and
+        silently so. Refusing names the reason.
+        """
+        attachment = (
+            self.env["ir.attachment"]
+            .with_context(no_document=True)
+            .create({"name": "Internal", "type": "url", "url": "/web/content/42"})
+        )
+
+        with self.assertRaises(ValidationError):
+            self._run(operation="add", attachment_id=attachment.id)
+
+    def test_add_without_an_attachment_is_refused(self):
+        with self.assertRaises(UserError):
+            self._run(operation="add")

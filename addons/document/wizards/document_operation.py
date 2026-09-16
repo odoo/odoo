@@ -152,13 +152,25 @@ class DocumentsOperation(models.TransientModel):
             attachment_copy = self.attachment_id.copy(
                 {"res_model": False, "res_id": False}
             )
-            self.env["document.document"].create(
-                {
-                    "attachment_id": attachment_copy.id,
-                    "type": attachment_copy.type,
-                    "user_folder_id": self.destination,
-                }
-            )
+            values = {
+                "attachment_id": attachment_copy.id,
+                "type": attachment_copy.type,
+                "user_folder_id": self.destination,
+            }
+            if attachment_copy.type == "url":
+                # A `document.document` of type url keeps its address in its OWN
+                # `url` field; an `ir.attachment` keeps it in the attachment's.
+                # Copying only the type produced a url document with no url --
+                # `_is_safe_redirect_url(False)` is False, so `/documents/content`
+                # answered 404 and the entry pointed nowhere, silently.
+                #
+                # Carrying it also re-imposes `_check_url`, which is the point
+                # rather than a side effect: a document url must be complete, so
+                # an attachment holding a relative one (`/web/content/42`, which
+                # is how Odoo links its own files) is now refused with that
+                # constraint's own message instead of becoming a broken entry.
+                values["url"] = attachment_copy.url
+            self.env["document.document"].create(values)
         elif self.operation == "shortcut":
             self.document_ids.action_create_shortcut(
                 location_user_folder_id=self.destination
