@@ -17,7 +17,15 @@ export class PortalAdditionalIdentifiers extends Interaction {
     };
 
     setup() {
+        this.vatInput = this.el.closest('form')?.elements.vat;
         this._syncDropdown();
+        this._syncVatExclusivity();
+    }
+
+    start() {
+        if (this.vatInput) {
+            this.addListener(this.vatInput, 'input', this._syncVatExclusivity);
+        }
     }
 
     /**
@@ -51,7 +59,7 @@ export class PortalAdditionalIdentifiers extends Interaction {
      * @param {Event} ev
      */
     onChangeValue(ev) {
-        if (ev.currentTarget.value.trim() !== '') return;
+        if (ev.currentTarget.value.trim() !== '' || ev.currentTarget.required) return;
         this._removeField(ev.currentTarget.closest('.o_additional_identifier_field'));
     }
 
@@ -73,6 +81,26 @@ export class PortalAdditionalIdentifiers extends Interaction {
         }
         this.updateContent();
         this._syncDropdown();
+        this._syncVatExclusivity();
+    }
+
+    /** Require every mandatory identifier, except the individual ones while a VAT number is set. */
+    _syncVatExclusivity() {
+        const hasVat = this.vatInput ? !!this.vatInput.value.trim() : !!this.el.dataset.hasVat;
+        this.el.querySelectorAll('.o_additional_identifier_field[data-required]').forEach((field) => {
+            const input = field.querySelector('input');
+            const required = !(hasVat && field.dataset.individual);
+            input.required = required;
+            field.querySelector('label').classList.toggle('label-optional', !required);
+            field.querySelector('.o_remove_identifier').classList.toggle('d-none', required);
+            if (required) {
+                field.style.display = '';
+                this._toggleDropdownItem(field.dataset.identifierKey, false);
+            } else if (!input.value.trim()) {
+                this._removeField(field);
+            }
+        });
+        this._updateDropdownVisibility();
     }
 
     _removeField(field) {
@@ -113,12 +141,19 @@ export class PortalAdditionalIdentifiers extends Interaction {
         this._updateDropdownVisibility();
     }
 
-    /** Build an empty, hidden identifier field. Mirrors the QWeb template. */
+    /** Build an empty identifier field, hidden unless required. Mirrors the QWeb template. */
     _buildField(key, meta) {
         const field = document.createElement('div');
         field.className = 'o_additional_identifier_field mb-2';
         field.dataset.identifierKey = key;
-        field.style.display = 'none';
+        if (meta.required) {
+            field.dataset.required = '1';
+        } else {
+            field.style.display = 'none';
+        }
+        if (meta.individual) {
+            field.dataset.individual = '1';
+        }
 
         const label = document.createElement('label');
         label.className = 'col-form-label fw-normal label-optional';
