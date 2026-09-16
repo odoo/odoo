@@ -14,11 +14,8 @@ class TestResetPassword(HttpCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestResetPassword, cls).setUpClass()
-        cls.test_user = cls.env['res.users'].create({
-            'login': 'test',
-            'name': 'The King',
-            'email': 'noop@example.com',
-        })
+        cls.test_user = cls.env.ref('base.test_user')
+        cls.test_user.email = 'noop@example.com'
 
     def test_reset_password(self):
         """

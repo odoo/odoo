@@ -1,0 +1,87 @@
+{
+    "name": "Parallel testing",
+    "vars": [
+        {"module_filter": "*,-hw_*,-*l10n_*,-theme_*,-account_bacs,-account_reports_cash_basis,-auth_ldap,-base_gengo,-document_ftp,-iot_drivers,-note_pad,-odoo_referral,-odoo_referral_portal,-pad,-pad_project,-pos_blackbox_be,-pos_cache,-pos_six,-social_demo,-website_gengo,-website_instantclick,test_l10n_be_hr_payroll_account,test_l10n_us_hr_payroll_account,-test_translation_mode"},
+        {"_modified_modules": "{{*|filter_all_modules|modified_modules('base')}}"},
+        {"_modules_dependencies": "{{_modified_modules|get_dependencies(1)}}"},
+        {"_dependant_modules": "{{_modified_modules|get_dependant(1)}}"},
+        {"_test_modules": "{{_modified_modules|prepend('test_')|select_existing_modules}}"},
+        {"modules_to_test": "{{_modified_modules|union(_test_modules)|union(_dependant_modules)|union(_modules_dependencies)}}"}
+    ],
+    "steps": [
+        {
+            "name": "Create at install",
+            "job_type": "create_build",
+            "log": "Modified modules: {{_modified_modules}}\nDependencies: {{_modules_dependencies}}\nDependant: {{_dependant_modules}}\nTest modules: {{_test_modules}}",
+            "if": "{{modules_to_test}}",
+            "children": [
+                {
+                    "name": "Test at install",
+                    "steps":[{
+                        "name": "Start at install",
+                        "job_type": "odoo",
+                        "install_modules": "{{module_filter}},-test_lint",
+                        "test_tags": "-post_install,{{modules_to_test|make_module_test_tags}},-/test_lint",
+                        "extra_params": "--log-handler=odoo.tests.result:ERROR"
+                        }]
+                },
+                {
+                    "name": "Test pylint",
+                    "steps":[{
+                        "name": "Start test lint",
+                        "job_type": "odoo",
+                        "install_modules": "test_lint",
+                        "test_tags": "-post_install,/test_lint"
+                    }]
+                }
+            ]
+        },
+        {
+            "name": "Install all",
+            "db_name": "all",
+            "job_type": "odoo",
+            "install_modules": "{{module_filter}}",
+            "extra_params": "--with-test-data"
+        },
+        {
+            "name": "Create post install",
+            "job_type": "create_build",
+            "for_each_vars": [
+                {"_test_module_filter": "{{modules_to_test}},-> !account_auto_transfer"},
+                {"_test_module_filter": "{{modules_to_test}},account_auto_transfer -> !auth_totp"},
+                {"_test_module_filter": "{{modules_to_test}},auth_totp -> !html_builder"},
+                {"_test_module_filter": "{{modules_to_test}},html_builder -> !mail"},
+                {"_test_module_filter": "{{modules_to_test}},mail -> !partner_autocomplete"},
+                {"_test_module_filter": "{{modules_to_test}},partner_autocomplete -> !pos"},
+                {"_test_module_filter": "{{modules_to_test}},pos -> !pos_sale"},
+                {"_test_module_filter": "{{modules_to_test}},pos_sale -> !sale"},
+                {"_test_module_filter": "{{modules_to_test}},sale -> !sale_timesheet"},
+                {"_test_module_filter": "{{modules_to_test}},sale_timesheet -> !stock_barcode_mrp_subcontracting"},
+                {"_test_module_filter": "{{modules_to_test}},stock_barcode_mrp_subcontracting -> !test_main_flows"},
+                {"_test_module_filter": "{{modules_to_test}},test_main_flows -> !web"},
+                {"_test_module_filter": "{{modules_to_test}},web -> web"},
+                {"_test_module_filter": "{{modules_to_test}},!web -> !website"},
+                {"_test_module_filter": "{{modules_to_test}},website -> website"},
+                {"_test_module_filter": "{{modules_to_test}},!website -> "}
+            ],
+            "if": "{{child_modules_to_test}}",
+            "children": [{
+                "vars": {
+                    "child_modules_to_test": "{{_test_module_filter|select_existing_modules}}"
+                },
+                "name": "Test Post Install",
+                "description": "Post install tests for **{{child_modules_to_test}}**",
+                "steps": [
+                    {"name": "restore", "job_type": "restore", "db_name": "all"},
+                    {
+                        "name": "Start post install tests",
+                        "job_type": "odoo",
+                        "test_tags": "-at_install,{{child_modules_to_test|make_module_test_tags}}",
+                        "db_name": "all",
+                        "extra_params": "--log-handler=odoo.tests.result:ERROR"
+                    }
+                ]
+            }]
+        }
+    ]
+}
