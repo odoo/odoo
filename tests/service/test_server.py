@@ -2358,3 +2358,41 @@ class TestAWatchdogKillOfAWorkerThatNeverGotReadyIsACrash:
         assert prefork_server._killed_workers
         prefork_server._record_worker_exit(4244, signal.SIGKILL)
         assert not prefork_server._killed_workers, "kept a worker after its reap"
+
+
+class TestTheMasterNamesWhatATimedOutWorkerWasDoing:
+    def test_a_titled_worker_is_read_from_proc(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(
+            _prefork.Path,
+            "read_bytes",
+            lambda self: b"odoo: WorkerHTTP 4242 GET /web/report/pdf\x00",
+        )
+        assert (
+            _prefork._read_process_title(4242) == "WorkerHTTP 4242 GET /web/report/pdf"
+        )
+
+    def test_a_plain_argv_says_nothing(self, monkeypatch):
+        monkeypatch.setattr(
+            _prefork.Path,
+            "read_bytes",
+            lambda self: b"python\x00odoo-bin\x00-c\x00x.conf",
+        )
+        assert _prefork._read_process_title(4242) == ""
+
+    def test_a_vanished_process_says_nothing(self):
+        assert _prefork._read_process_title(2**22 + 12345) == ""
+
+    def test_the_timeout_line_carries_it(self, prefork_server, monkeypatch):
+        worker = MagicMock()
+        worker.__class__.__name__ = "WorkerHTTP"
+        worker.watchdog_timeout = 1
+        worker.watchdog_time = time.monotonic() - 10
+        prefork_server.workers[4242] = worker
+        prefork_server.logger = MagicMock()
+        monkeypatch.setattr(
+            _prefork, "_read_process_title", lambda pid: "WorkerHTTP 4242 POST /x"
+        )
+        with patch.object(_prefork.os, "kill"):
+            prefork_server.kill_timed_out_workers()
+        said = str(prefork_server.logger.error.call_args)
+        assert "while WorkerHTTP 4242 POST /x" in said

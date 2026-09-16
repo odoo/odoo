@@ -249,6 +249,7 @@ def log_access(
 def _reset_request_attributes() -> None:
     worker = current_worker_thread()
     worker.rpc_model_method = ""
+    worker.request_line = ""
     if hasattr(worker, "query_count"):
         del worker.query_count
 
@@ -260,6 +261,11 @@ class ServerIdentity:
     multithread: bool
     multiprocess: bool
     exposes_socket: bool
+    on_request: Callable[[str], None] | None = None
+    """Told the request line as each exchange starts, and "" as it ends.  A
+    prefork worker puts it in its process title, where the master's timeout
+    log and `ps` can read it; a threaded server needs nothing, the thread
+    carries it."""
 
 
 def prepare_wsgi_environ(
@@ -581,6 +587,10 @@ def _run_exchange(
     )
     exchange.reader = _open_reader(conn, head, limits, exchange)
     environ = prepare_wsgi_environ(head, conn, exchange.reader, identity)
+    request_line = f"{head.method} {head.target}"
+    current_worker_thread().request_line = request_line
+    if identity.on_request is not None:
+        identity.on_request(request_line)
     iterable: Iterable[bytes] | None = None
     try:
         iterable = app(environ, exchange.start_response)
@@ -630,6 +640,8 @@ def _run_exchange(
             bytes_sent=exchange.bytes_sent,
             body_read=exchange.reader.exhausted,
         )
+    if identity.on_request is not None:
+        identity.on_request("")
     if exchange.upgraded:
         if _debug.logic.enabled and conn.source.buffer:
             _debug.logic(

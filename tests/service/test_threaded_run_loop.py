@@ -377,3 +377,50 @@ class TestHasOtherHttpRequests:
             "getattr(t, 'type', None) — a plain library thread has no `type`, "
             "and treating it as a request holds off every reload"
         )
+
+
+class TestAnOverLimitThreadIsNamedByItsWork:
+    def _thread(self, kind, **attrs):
+        t = MagicMock()
+        t.type = kind
+        for name, value in attrs.items():
+            setattr(t, name, value)
+        return t
+
+    def test_an_http_thread_by_its_url_and_rpc_target(self):
+        t = self._thread(
+            "http",
+            url="http://h/web/dataset/call_kw",
+            rpc_model_method="res.partner.read",
+        )
+        assert _threaded._describe_thread_work(t) == (
+            "serving http://h/web/dataset/call_kw (res.partner.read)"
+        )
+
+    def test_an_http_thread_before_the_http_layer_stamped_it(self):
+        t = self._thread("http", url="", rpc_model_method="")
+        assert _threaded._describe_thread_work(t) == ""
+
+    def test_a_cron_thread_by_the_database_it_sweeps(self):
+        assert _threaded._describe_thread_work(self._thread("cron", dbname="prod")) == (
+            "sweeping prod"
+        )
+        assert _threaded._describe_thread_work(self._thread("job", dbname=None)) == ""
+
+    def test_the_warning_carries_it(self, server, caplog):
+        import logging
+        import time
+
+        thread = self._thread("cron", dbname="prod")
+        thread.start_time = time.monotonic() - 500
+        thread.is_alive.return_value = True
+        server.logger = logging.getLogger("odoo.service.server.test")
+        with (
+            server_settings.override(limit_time_real=120, limit_time_real_cron=60),
+            patch.object(_threaded.threading, "enumerate", return_value=[thread]),
+            patch.object(_threaded.Registry, "_evict_idle_registries"),
+            patch.object(server, "get_memory_over_soft_limit", return_value=None),
+            caplog.at_level(logging.WARNING, logger=server.logger.name),
+        ):
+            server.check_limits()
+        assert any("while sweeping prod" in r.getMessage() for r in caplog.records)

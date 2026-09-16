@@ -80,6 +80,21 @@ they were invisible while the two lists were one.
 _SIGXCPU_EXIT_CODE = 128 + getattr(signal, "SIGXCPU", 24)
 
 
+def _describe_thread_work(thread: threading.Thread) -> str:
+    # What the operator will want beside the thread name: the request it is
+    # serving (the http layer stamps `url`, the RPC dispatcher stamps
+    # `rpc_model_method`) or the database a cron/job pass is sweeping.
+    kind = getattr(thread, "type", None)
+    if kind == "http":
+        url = getattr(thread, "url", "")
+        method = getattr(thread, "rpc_model_method", "")
+        if url and method:
+            return f"serving {url} ({method})"
+        return f"serving {url}" if url else ""
+    db_name = getattr(thread, "dbname", None)
+    return f"sweeping {db_name}" if db_name else ""
+
+
 def _get_http_server_metrics(httpd: ThreadedHTTPServer | None) -> dict[str, Any]:
     by_type: dict[str, int] = {}
     for thread in threading.enumerate():
@@ -173,8 +188,13 @@ class ThreadedServer(CommonServer):
             budget = settings.get_real_time_budget(thread_type)
             if budget <= 0 or elapsed <= budget:
                 continue
+            doing = _describe_thread_work(thread)
             self.logger.warning(
-                "Thread %s real time limit (%.1f/%ds) reached.", thread, elapsed, budget
+                "Thread %s real time limit (%.1f/%ds) reached%s.",
+                thread,
+                elapsed,
+                budget,
+                f" while {doing}" if doing else "",
             )
             _debug.logic(
                 "server.thread_over_limit",
@@ -182,6 +202,7 @@ class ThreadedServer(CommonServer):
                 type=thread_type,
                 elapsed_s=elapsed,
                 limit_s=budget,
+                doing=doing,
             )
             self.limits_reached_threads.add(thread)
             self._overrun_start_times[thread] = start_time

@@ -374,7 +374,12 @@ class WorkerHTTP(Worker):
     def _get_identity(self, sock: socket.socket) -> ServerIdentity:
         name, port = sock.getsockname()[:2]
         return ServerIdentity(
-            name, port, multithread=False, multiprocess=True, exposes_socket=False
+            name,
+            port,
+            multithread=False,
+            multiprocess=True,
+            exposes_socket=False,
+            on_request=self.setproctitle,
         )
 
     def process_work(self) -> None:

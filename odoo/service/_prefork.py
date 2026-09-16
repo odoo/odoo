@@ -58,6 +58,20 @@ deployment whose preload genuinely needs longer raises `ODOO_RELOAD_TIMEOUT`.
 """
 
 
+def _read_process_title(pid: int) -> str:
+    # The worker titles itself with the request or database it is on
+    # (`Worker.setproctitle`); this is the one thing the master can still
+    # read of a child it is about to kill.
+    try:
+        title = Path(f"/proc/{pid}/cmdline").read_bytes()
+    except OSError:
+        return ""
+    words = title.replace(b"\0", b" ").decode(errors="replace").strip()
+    # Without the setproctitle package the cmdline is argv, which says
+    # nothing about the request.
+    return words.removeprefix("odoo: ") if words.startswith("odoo: ") else ""
+
+
 class RespawnHold:
     """How long one population's respawn waits after consecutive early deaths."""
 
@@ -543,11 +557,13 @@ class PreforkServer(CommonServer):
                 worker.watchdog_timeout is not None
                 and (now - worker.watchdog_time) >= worker.watchdog_timeout
             ):
+                doing = _read_process_title(pid)
                 self.logger.error(
-                    "%s (%s) timeout after %ss",
+                    "%s (%s) timeout after %ss%s",
                     worker.__class__.__name__,
                     pid,
                     worker.watchdog_timeout,
+                    f" while {doing}" if doing else "",
                 )
                 _debug.lifecycle(
                     "prefork.worker_timed_out",
