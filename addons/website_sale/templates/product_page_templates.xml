@@ -74,7 +74,7 @@
                                 </li>
                                 <li class="breadcrumb-item d-lg-none">
                                     <a t-att-href="keep(category.website_url or shop_path)">
-                                        <i class="oi me-2" data-icon="chevron_backward" role="img"/>
+                                        <i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>
                                         <t t-if="category.name" t-out="category.name"/>
                                         <t t-else="" t-call="website_sale.all_products_link_name"/>
                                     </a>
@@ -559,7 +559,7 @@
                     t-att-data-product-type="product.type"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
-                    <i class="oi me-2" data-icon="shopping_cart"/>
+                    <i class="oi me-2" data-icon="shopping_cart" role="img" aria-hidden="true"/>
                     Add to cart
                 </button>
             </div>
@@ -573,7 +573,7 @@
                     t-attf-class="{{'d-none' if combination_info.get('has_stock_notification') else ''}} btn btn-primary flex-grow-1 align-items-center"
                     t-att-data-product-id="product.id"
                 >
-                    <i class="oi me-2" data-icon="mail"/>
+                    <i class="oi me-2" data-icon="mail" role="img" aria-hidden="true"/>
                     Notify me
                 </button>
                 <button
@@ -581,7 +581,7 @@
                     t-attf-class="{{'' if combination_info.get('has_stock_notification') else 'd-none'}} btn btn-outline-primary flex-grow-1 align-items-center"
                     disabled=""
                 >
-                    <i class="oi oi-filled me-2" data-icon="notifications"/>
+                    <i class="oi oi-filled me-2" data-icon="notifications" role="img" aria-hidden="true"/>
                     Subscribed
                 </button>
             </div>
@@ -939,7 +939,7 @@
                     t-att-title="minus_button_title"
                     t-att-data-min-qty-message="combination_info.get('minimum_qty_reached_message')"
                 >
-                    <i class="oi text-600" data-icon="remove"/>
+                    <i class="oi text-600" data-icon="remove" role="img" aria-hidden="true"/>
                 </button>
                 <t t-set="minimum_qty" t-value="combination_info.get('minimum_qty') or 1"/>
                 <input
@@ -955,7 +955,7 @@
                     aria-label="Add one"
                     title="Add one"
                 >
-                    <i class="oi text-600" data-icon="add"/>
+                    <i class="oi text-600" data-icon="add" role="img" aria-hidden="true"/>
                 </button>
             </div>
         </div>
@@ -992,7 +992,7 @@
                 t-att-data-product-type="product.type"
                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
             >
-                <i class="oi me-2" data-icon="flash_on"/>
+                <i class="oi me-2" data-icon="flash_on" role="img" aria-hidden="true"/>
                 Buy now
             </button>
         </xpath>
@@ -1110,7 +1110,7 @@
                         class="list-group-item list-group-item-action"
                         t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)"
                         t-att-target="target">
-                        <i class="oi me-2" t-att-data-icon="icon"/>
+                        <i class="oi me-2" t-att-data-icon="icon" role="img" aria-hidden="true"/>
                         <t t-out="attachment_sudo.name"/>
                     </a>
                 </t>
@@ -1346,7 +1346,7 @@
                         </t>
                         <t t-else=''>
                             <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
-                                <i class='oi oi-filled' data-icon='description'></i>
+                                <i class='oi oi-filled' data-icon='description' role='img'></i>
                             </a>
                         </t>
                         <br/>
@@ -1387,7 +1387,7 @@
                     t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                 >
-                    <span class="oi" data-icon="swap_horiz"/>
+                    <span class="oi" data-icon="swap_horiz" role="img" aria-hidden="true"/>
                     <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
                 </button>
             </t>

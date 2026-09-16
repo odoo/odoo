@@ -70,9 +70,9 @@
                         </small>
                     </span>
                     <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(this.selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}">
-                        <i class="oi" data-icon="schedule" role="img"/>
+                        <i class="oi" data-icon="schedule" role="img" aria-label="Opening hours"/>
                         <t t-out="this.openingHoursLabel"/>
-                        <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up"/>
+                        <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
                     </span>
 
                     <!-- Schedule -->

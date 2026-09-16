@@ -27,7 +27,7 @@ const searchTemplate = /* html */ `
                 <small class="o_search_found_results d-none">
                     <span class="o_search_count"></span>
                 </small>
-                <i class="oi" data-icon="search"></i>
+                <i class="oi" data-icon="search" role="img" aria-hidden="true"></i>
             </button>
         </div>
         <input name="order" type="hidden" class="o_search_order_by" value="test desc"/>

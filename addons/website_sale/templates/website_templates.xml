@@ -15,7 +15,7 @@
         <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
             <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                 <div t-attf-class="#{_icon_wrap_class}">
-                    <i t-if="_icon" class="oi oi-stack" data-icon="shopping_cart"/>
+                    <i t-if="_icon" class="oi oi-stack" data-icon="shopping_cart" role="img" aria-label="Shopping cart"/>
                     <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
                 </div>
                 <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
@@ -40,7 +40,7 @@
         <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
             <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                 <div t-attf-class="#{_icon_wrap_class}">
-                    <i t-if="_icon" class="oi oi-1x oi-filled oi-stack" data-icon="favorite"/>
+                    <i t-if="_icon" class="oi oi-1x oi-filled oi-stack" data-icon="favorite" role="img" aria-hidden="true"/>
                     <sup
                         t-out="wishcount"
                         t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
@@ -116,7 +116,7 @@
                                 <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
                                     <hr class="w-100 mx-auto"/>
                                 </div>
-                                <a href="/shop"><i class="oi" data-icon="east"/> All Products</a>
+                                <a href="/shop"><i class="oi" data-icon="east" role="img" aria-hidden="true"/> All Products</a>
                                 <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
                                     <hr class="w-100 mx-auto"/>
                                 </div>
@@ -161,20 +161,20 @@
                                     class="s_badge badge text-bg-primary o_animable"
                                     data-name="Badge"
                                 >
-                                    <i class="oi oi-fw o_not-animable" data-icon="attach_money"/> Low Prices
+                                    <i class="oi oi-fw o_not-animable" data-icon="attach_money" role="img" aria-hidden="true"/> Low Prices
                                 </span>
                                 <span
                                     class="s_badge badge text-bg-primary o_animable"
                                     data-name="Badge"
                                 >
-                                    <i class="oi oi-fw o_not-animable" data-icon="shopping_basket"/>
+                                    <i class="oi oi-fw o_not-animable" data-icon="shopping_basket" role="img" aria-hidden="true"/>
                                     Easy Returns
                                 </span>
                                 <span
                                     class="s_badge badge text-bg-primary o_animable"
                                     data-name="Badge"
                                 >
-                                    <i class="oi oi-fw o_not-animable" data-icon="local_shipping"/> Fast Shipping
+                                    <i class="oi oi-fw o_not-animable" data-icon="local_shipping" role="img" aria-hidden="true"/> Fast Shipping
                                 </span>
                                 <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
                                     <hr class="w-100 mx-auto" style="border-top-color: rgba(255, 255, 255, 0);"/>
@@ -195,7 +195,7 @@
                                         target="_blank"
                                         aria-label="Instagram"
                                     >
-                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_instagram"/>
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_instagram" role="img" aria-hidden="true"/>
                                     </a>
                                     <a
                                         href="#"
@@ -203,7 +203,7 @@
                                         target="_blank"
                                         aria-label="YouTube"
                                     >
-                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_youtube-play"/>
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_youtube-play" role="img" aria-hidden="true"/>
                                     </a>
                                     <a
                                         href="#"
@@ -211,14 +211,14 @@
                                         target="_blank"
                                         aria-label="TikTok"
                                     >
-                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_tiktok"/>
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_tiktok" role="img" aria-hidden="true"/>
                                     </a>
                                     <a
                                         href="#"
                                         class="s_social_media_twitter"
                                         aria-label="Twitter"
                                     >
-                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_x"/>
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_x" role="img" aria-hidden="true"/>
                                     </a>
                                 </div>
                             </div>

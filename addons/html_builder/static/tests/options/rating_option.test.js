@@ -8,15 +8,15 @@ describe.current.tags("desktop");
 const websiteContent = `
     <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating" data-name="Rating">
         <strong class="s_rating_title">Quality</strong>
-        <div class="s_rating_icons o_not_editable">
+        <div class="s_rating_icons o_not_editable" role="img" aria-label="3 out of 5 stars">
             <span class="s_rating_active_icons">
-                <i class="oi oi-filled" data-icon="star"></i>
-                <i class="oi oi-filled" data-icon="star"></i>
-                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation" aria-hidden="true"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation" aria-hidden="true"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation" aria-hidden="true"></i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="oi" data-icon="star"></i>
-                <i class="oi" data-icon="star"></i>
+                <i class="oi" data-icon="star" role="presentation" aria-hidden="true"></i>
+                <i class="oi" data-icon="star" role="presentation" aria-hidden="true"></i>
             </span>
         </div>
     </div>`;
@@ -38,20 +38,20 @@ test("change rating score", async () => {
     expect(":iframe .s_rating .s_rating_inactive_icons i").toHaveCount(3);
     expect(":iframe .s_rating").toHaveInnerHTML(
         `<strong class="s_rating_title">Quality</strong>
-        <div class="s_rating_icons o_not_editable" contenteditable="false" aria-label="1 out of 4 stars">
+        <div class="s_rating_icons o_not_editable" role="img" aria-label="1 out of 4 stars" contenteditable="false">
             <span class="s_rating_active_icons">
-                <i class="oi oi-filled" data-icon="star" contenteditable="false">
+                <i role="presentation" aria-hidden="true" class="oi oi-filled" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i role="presentation" aria-hidden="true" class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i role="presentation" aria-hidden="true" class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i role="presentation" aria-hidden="true" class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
