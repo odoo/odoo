@@ -1,6 +1,6 @@
 .o_control_panel {
-    border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
-    background-color: $o-control-panel-background-color;
+    border-bottom: var(--ControlPanel-border-bottom, 0);
+
     @include media-only(screen) {
         .o_control_panel_breadcrumbs {
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
@@ -10,6 +10,7 @@
             &.o_mobile_sticky {
                 @include o-position-sticky();
                 z-index: 10;
+                background-color: $o-webclient-background-color;
             }
         }
 

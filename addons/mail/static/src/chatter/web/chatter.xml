@@ -9,20 +9,20 @@
                     <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
                 </div>
                 <div t-else="" class="d-flex gap-1">
-                    <button class="o-mail-Chatter-sendMessage btn text-nowrap my-2" t-att-class="{
+                    <button class="o-mail-Chatter-sendMessage btn text-nowrap" t-att-class="{
                         'btn-primary': this.state.composerType !== 'note',
                         'btn-secondary': this.state.composerType === 'note',
                         'active': this.state.composerType === 'message',
                     }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
-                    <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
+                    <button class="o-mail-Chatter-logNote btn text-nowrap" t-att-class="{
                         'btn-primary active': this.state.composerType === 'note',
                         'btn-secondary': this.state.composerType !== 'note',
                     }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id and this.thread().id" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
-                    <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
+                    <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap"
                             t-att-disabled="!this.state.thread.canPostMessage and this.thread().id"
                             data-hotkey="shift+a" t-on-click="this.scheduleActivity">
                         <span>Activity</span>
@@ -46,7 +46,7 @@
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this)" state="this.followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
+                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
                             <i class="oi oi-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'oi-filled' : '' }}" t-attf-data-icon="person"/>
                             <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="oi oi-spin" data-icon="autorenew"/>
                             <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>

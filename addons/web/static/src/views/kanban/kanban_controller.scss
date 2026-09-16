@@ -163,10 +163,20 @@
         }
     }
 
-    &.o_kanban_ungrouped .o_kanban_record {
-        flex-grow: 1;
-        @include media-breakpoint-down(md) {
-            flex-shrink: 0;
+    &.o_kanban_ungrouped {
+        @include media-breakpoint-up(md) {
+            --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)};
+        }
+
+        .o_search_panel_resize + &, .o_search_panel_sidebar + & {
+            --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)} 0;
+        }
+
+        .o_kanban_record {
+            flex-grow: 1;
+            @include media-breakpoint-down(md) {
+                flex-shrink: 0;
+            }
         }
     }
 
