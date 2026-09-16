@@ -3,7 +3,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 import { ProductLine } from "./product_line/product_line";
 
