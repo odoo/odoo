@@ -521,7 +521,11 @@ class StockPickingType(models.Model):
         # field is empty, and when what it holds contradicts the new code.
         self.check_singleton()
         if PARTNER_USAGE_BY_PICKING_CODE.get(self.code) == partner_usage:
-            return location.usage == partner_usage
+            # a transit location is the inter-warehouse and inter-company
+            # stand-in for the partner one: an incoming type resupplied from
+            # another warehouse receives from transit, not from Vendors, and
+            # re-deriving it would undo that configuration
+            return location.usage in (partner_usage, "transit")
         return location.usage not in PARTNER_LOCATION_USAGES
 
     def _raise_undecidable_default_locations(self):

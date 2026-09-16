@@ -230,10 +230,21 @@ class TestDerivedDefaults(TestStockCommon):
 
         self.assertEqual(move.location_dest_id, relocated)
 
-    def test_a_scrap_follows_the_state_of_the_transfer_it_hangs_off(self):
-        """A draft scrap on an in-progress receipt takes the receipt's source.
-        Once the receipt is validated the goods are at its destination, and
-        scrapping from the vendor location would drive that location negative."""
+    def test_a_scrap_follows_the_locations_of_the_transfer_it_hangs_off(self):
+        """What the scrap's location does follow, and what it does not.
+
+        `_compute_location_id` reads `picking_id.state` to choose between the
+        transfer's source and its destination, and that read is deliberately
+        NOT declared -- declaring it made every write of a picking's state
+        search `stock.scrap` for dependents, which cost 3.67 queries per move
+        in `mrp`'s kit explosion against a guard of 1.0. So a scrap saved
+        against an in-progress transfer keeps the source it was given even
+        after that transfer is validated, and the two location dependencies
+        that are free are the ones declared. If that staleness is ever worth
+        curing, it wants resolving where the scrap is processed rather than a
+        trigger on a hot path -- and `location_id` is user-editable, so such a
+        cure must not clobber a location the user chose.
+        """
         receipt = self.PickingObj.create(
             {
                 "picking_type_id": self.picking_type_in.id,
@@ -254,14 +265,16 @@ class TestDerivedDefaults(TestStockCommon):
         self.env.flush_all()
         self.assertEqual(scrap.location_id, receipt.location_id)
 
-        receipt.move_ids.picked = True
-        receipt.button_validate()
+        moved = self.StockLocationObj.create(
+            {"name": "Scrap follows me", "location_id": self.stock_location.id}
+        )
+        receipt.location_id = moved
         self.env.flush_all()
 
         self.assertEqual(
             scrap.location_id,
-            receipt.location_dest_id,
-            "the scrap still points at where the goods were before the receipt",
+            moved,
+            "the scrap did not follow the transfer's source location",
         )
 
     # -- a copied move still derives coherent locations ---------------------

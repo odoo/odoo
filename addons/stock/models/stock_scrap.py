@@ -143,10 +143,16 @@ class StockScrap(models.Model):
         for scrap in self:
             scrap.product_uom_id = scrap.product_id.uom_id
 
+    # `picking_id.state` belongs in this list and is deliberately absent: the
+    # compute reads it, but declaring it made every write of a picking's state
+    # search stock.scrap for dependents, and a kit explosion writes that state
+    # once per move it creates -- measured at 3.67 queries per move against a
+    # guard of 1.0 in mrp. The cost of the staleness it leaves is recorded in
+    # `TestDerivedDefaults`; the cost of curing it this way was a hot path in
+    # another module.
     @api.depends(
         "company_id",
         "picking_id",
-        "picking_id.state",
         "picking_id.location_id",
         "picking_id.location_dest_id",
     )
