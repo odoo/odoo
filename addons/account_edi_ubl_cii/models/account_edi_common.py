@@ -1824,11 +1824,10 @@ class AccountEdiCommon(models.AbstractModel):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 
-    def _generate_pdf_attachment(self, invoice, tree):
+    def _generate_pdf_attachment(self, invoice, additional_docs):
         """ ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
         disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
-        additional_docs = self._import_attachments(invoice, tree)
         if (
             additional_docs or
             invoice.message_main_attachment_id or
