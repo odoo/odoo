@@ -9,7 +9,7 @@
                         id="start_certification"
                         t-att-href="'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id)"
                         target="_blank">
-                        <i class="oi oi-fw" data-icon="school" role="img"/>
+                        <i class="oi oi-fw" data-icon="school" role="img" aria-hidden="true"/>
                         <t t-if="slide.channel_id.is_member and slide.channel_id.active">Begin Certification</t>
                         <t t-else="">Test Certification</t>
                     </a>
@@ -22,7 +22,7 @@
                 </div>
                 <div t-if="slide.slide_category == 'certification' and slide.channel_id.can_upload" class="col mb8 d-flex justify-content-center">
                     <a class="my-4" t-att-href="'/odoo/survey.survey/' + str(slide.survey_id.id)">
-                        <i class="oi me-1" data-icon="east"/>Add Questions to this Survey
+                        <i class="oi me-1" data-icon="east" role="img" aria-hidden="true"/>Add Questions to this Survey
                     </a>
                 </div>
             </xpath>

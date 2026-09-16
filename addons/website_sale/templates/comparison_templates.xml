@@ -98,7 +98,7 @@
                                         aria-label="Remove product from comparison"
                                         t-att-data-product-id="product.id"
                                     >
-                                        <i class="oi" data-icon="close_small"/>
+                                        <i class="oi" data-icon="close_small" role="img" aria-hidden="true"/>
                                     </button>
                                 </li>
                             </ul>
@@ -123,7 +123,7 @@
                                             t-if="product._is_sold_out()"
                                             class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
                                         >
-                                            <i class="oi oi-filled me-2 text-danger" data-icon="circle" aria-hidden="true"/>
+                                            <i class="oi oi-filled me-2 text-danger" data-icon="circle" role="img" aria-hidden="true"/>
                                             Out of stock
                                         </span>
                                         <span t-if="not combination_info['hide_price']">
@@ -166,7 +166,7 @@
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                                 t-att-disabled="product._is_sold_out()"
                                             >
-                                                <i class="oi me-2" data-icon="shopping_cart" aria-hidden="true"/>Add to Cart
+                                                <i class="oi me-2" data-icon="shopping_cart" role="img" aria-hidden="true"/>Add to Cart
                                             </button>
                                         </div>
                                     </div>
@@ -238,7 +238,7 @@
                                 class="btn btn-link ps-0 text-decoration-none"
                                 aria-label="Continue shopping"
                             >
-                                <i class="oi me-1" data-icon="chevron_backward"/> Back to shop
+                                <i class="oi me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/> Back to shop
                             </a>
                             <button
                                 class="button btn btn-light ms-auto"
@@ -264,7 +264,7 @@
             t-att-data-product-id="product_variant.id"
             t-att-data-product-template-id="product.id"
         >
-            <span class="oi oi-fw o_not-animable" data-icon="swap_horiz"/>
+            <span class="oi oi-fw o_not-animable" data-icon="swap_horiz" role="img" aria-hidden="true"/>
             <span class="o_label small ms-2">Compare</span>
         </button>
     </template>

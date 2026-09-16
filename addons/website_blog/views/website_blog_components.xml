@@ -26,13 +26,14 @@
             </ul>
             <!-- Mobile menu (toggle button + bottom sheet) -->
             <a t-if="len(blogs) > 1 and blog" href="/blog" t-attf-class="btn btn-link d-lg-none flex-shrink-0 me-auto ps-0">
-                <i class="oi me-1" data-icon="chevron_backward" role="img"/>All blogs
+                <i class="oi me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/>All blogs
             </a>
             <button t-if="len(blogs) > 1" class="o_wblog_sheet_trigger btn btn-light order-last d-lg-none flex-shrink-0 o_not_editable"
                     type="button"
                     t-att-title="blog.name if blog else wblog_all_title_string"
+                    t-att-aria-label="blog.name if blog else wblog_all_title_string"
                     aria-haspopup="dialog">
-                <i class="oi" data-icon="menu" role="img"/>
+                <i class="oi" data-icon="menu" role="img" aria-hidden="true"/>
             </button>
 
             <!-- Search Box -->
@@ -75,9 +76,9 @@
         <div t-if="not hide_title and categ_title" class="small text-muted fw-bold" t-out="categ_title"/>
         <t t-foreach="tags" t-as="tag">
             <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
-                <i class="oi oi-filled me-2" data-icon="sell" role="presentation"/>
+                <i class="oi oi-filled me-2" data-icon="sell" role="img" aria-hidden="true"/>
                 <t t-out="tag.name"/>
-                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'"><i class="oi" data-icon="close" role="presentation"/></a>
+                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'"><i class="oi" data-icon="close" role="img" aria-hidden="true"/></a>
             </span>
             <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
         </t>
@@ -152,14 +153,14 @@
 ============================================================================ -->
 <template id="post_breadcrumbs">
     <a t-if="single_breadcrumb" t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" class="o_wblog_single_breadcrumb_item my-4">
-        <i class="oi me-1" data-icon="chevron_backward" role="presentation"/><t t-out="blog.name"/>
+        <i class="oi me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/><t t-out="blog.name"/>
     </a>
     <nav t-else="" aria-label="breadcrumb">
         <ol t-attf-class="breadcrumb my-4 p-0 o_not_editable #{additional_classes}">
             <li t-if="len(blogs) > 1" class="breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
             <li class="breadcrumb-item">
                 <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
-                    <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="presentation"/><t t-out="blog.name"/>
+                    <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/><t t-out="blog.name"/>
                 </a>
             </li>
             <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-field="blog_post.name"/></li>
@@ -171,7 +172,7 @@
 ============================================================================ -->
 <template id="blog_post_comment_count" name="Blog Post Comment Count">
     <a id="o_wblog_post_comment_count" href="#discussion" class="o_not_editable">
-        <i class="oi oi-filled me-1" data-icon="chat_bubble"/>
+        <i class="oi oi-filled me-1" data-icon="chat_bubble" role="img" aria-hidden="true"/>
         <t t-out="len(blog_post.message_ids)"/>
         <span t-attf-class="#{hideText and 'd-md-none'}">
             <t t-if="len(blog_post.message_ids) > 1">Comments</t>
@@ -192,7 +193,7 @@ Options:
 <template id="sidebar_blog_index" name="Sidebar - Blog page">
     <div id="o_wblog_sidebar">
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_1"/>
-        <a t-if="blog" title="RSS" t-attf-href="/blog/#{slug(blog)}/feed" class="oi float-end" data-icon="rss_feed"/>
+        <a t-if="blog" title="RSS" t-attf-href="/blog/#{slug(blog)}/feed" class="oi float-end" data-icon="rss_feed" aria-label="RSS Feed"/>
         <div class="o_wblog_sidebar_block pb-4">
             <h2 class="h6">About us</h2>
             <div>

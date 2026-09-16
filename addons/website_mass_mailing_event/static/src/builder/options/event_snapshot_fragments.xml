@@ -113,7 +113,7 @@
         <t t-set="has_city" t-value="addressData.address.city"/>
         <t t-set="has_state" t-value="addressData.state and addressData.country and addressData.country.state_required"/>
 
-        <span class="oi" data-icon="location_on"></span> <t t-if="has_city">
+        <span class="oi" data-icon="location_on" role="img" aria-label="Location"></span> <t t-if="has_city">
             <t t-out="addressData.address.city"/><t t-if="addressData.address.country_id">, </t>
         </t>
         <t t-if="has_state">

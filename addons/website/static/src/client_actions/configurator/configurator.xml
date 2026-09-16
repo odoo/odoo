@@ -130,7 +130,7 @@
                                     <i class="text-primary" t-if="this.state.selectedType">
                                         <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
                                     </i>
-                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
+                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img" aria-hidden="true"/>
                                 </span>
                             </button>
                             <div id="selectTypeMenu"
@@ -182,12 +182,12 @@
                                     aria-controls="selectPurposeMenu">
                                 <span class="d-flex align-items-center">
                                     <t t-if="this.state.selectedPositioning" t-out="this.state.selectedPositioning"/>
-                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
+                                    <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img" aria-hidden="true"/>
                                 </span>
                             </button>
                             <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
                                 <t t-if="this.state.positioningsLoading">
-                                    <div class="dropdown-item text-muted"><i class="oi oi-spin me-2" data-icon="progress_activity" role="img"/>Analyzing trends...</div>
+                                    <div class="dropdown-item text-muted"><i class="oi oi-spin me-2" data-icon="progress_activity" role="img" aria-hidden="true"/>Analyzing trends...</div>
                                 </t>
                                 <t t-else="" t-foreach="this.state.positionings" t-as="positioning" t-key="positioning_index">
                                     <button t-on-click="() => this.selectPositioning(positioning)"
@@ -239,11 +239,11 @@
                                             class="small opacity-0 opacity-100-hover btn bg-white text-black border position-absolute top-0 start-100 rounded-circle px-2 py-1 translate-middle transition-base"
                                             title="Remove Logo"
                                             t-on-click.stop="this.removeLogo">
-                                        <i class="oi" data-icon="close_small" role="presentation"/>
+                                        <i class="oi" data-icon="close_small" role="presentation" aria-hidden="true"/>
                                     </button>
                                 </div>
                                 <t t-if="this.state.recommendedPalette">
-                                    <i class="oi fs-4 text-muted me-1" data-icon="east" aria-hidden="true"/>
+                                    <i class="oi fs-4 text-muted me-1" data-icon="east" role="img" aria-hidden="true"/>
                                     <t t-set="logoPalette" t-value="this.state.recommendedPalette"/>
                                     <button t-attf-class="palette_card o_palette_selection_logo_palette o_btn_reset cursor-pointer d-flex align-items-center gap-2 h-100 w-auto position-relative flex-shrink-0 px-3 py-2 rounded border {{this.state.getSelectedPaletteName() === 'recommendedPalette' ? 'selected' : ''}}"
                                             t-attf-style="background-color: {{logoPalette.color3}}; color: {{logoPalette.color5}};"
@@ -260,7 +260,7 @@
                         </t>
                         <t t-else="">
                             <button type="button" class="o_palette_selection_logo_upload btn btn-light border d-flex gap-2 align-items-center justify-content-center text-start mt-3 py-2 px-3" t-on-click="this.uploadLogo">
-                                <i class="oi oi-filled fs-1 flex-shrink-0 me-1" data-icon="cloud_upload"/>
+                                <i class="oi oi-filled fs-1 flex-shrink-0 me-1" data-icon="cloud_upload" role="img" aria-hidden="true"/>
                                 <span class="lh-sm">Upload your <b>Logo</b></span>
                             </button>
                         </t>
@@ -276,7 +276,7 @@
                                         t-on-click="() => this.selectPalette(palette.name, true)">
                                     <span class="flex-grow-1 overflow-hidden text-start text-truncate fw-semibold" t-out="palette.label"/>
                                     <span t-if="isAiRecommended" class="o_palette_card_recommendation_icon bg-success text-white position-absolute top-0 start-100 translate-middle rounded-circle d-flex align-items-center justify-content-center" data-tooltip="AI recommended" data-tooltip-position="top" role="img" aria-label="AI recommended">
-                                        <i class="oi" data-icon="check"/>
+                                        <i class="oi" data-icon="check" role="presentation" aria-hidden="true"/>
                                     </span>
                                     <span class="d-flex gap-1 flex-shrink-0" aria-hidden="true">
                                         <span class="o_palette_card_swatch rounded-1" t-attf-style="background-color: {{palette.color1}};"/>
@@ -313,13 +313,13 @@
                                      role="button">
                                     <div class="h3 card-body py-3 px-4 mb-0">
                                         <t t-if="isInstalled">
-                                            <i t-attf-class="oi oi-filled o_configurator_feature_status text-success" data-icon="check_circle" title="Already installed"/>
+                                            <i t-attf-class="oi oi-filled o_configurator_feature_status text-success" data-icon="check_circle" role="img" aria-label="Already installed" title="Already installed"/>
                                         </t>
                                         <t t-else="">
-                                            <i t-attf-class="oi o_configurator_feature_status {{feature.selected ? 'text-success' : 'text-300'}}"  t-attf-data-icon="{{feature.selected ? 'check_circle' : 'circle'}}"/>
+                                            <i t-attf-class="oi o_configurator_feature_status {{feature.selected ? 'text-success' : 'text-300'}}"  t-attf-data-icon="{{feature.selected ? 'check_circle' : 'circle'}}" role="img" aria-hidden="true"/>
                                         </t>
                                         <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
-                                            <i t-attf-class="me-2 oi {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}} {{feature.icon_class}}" t-attf-data-icon="{{feature.icon}}"/>
+                                            <i t-attf-class="me-2 oi {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}} {{feature.icon_class}}" t-attf-data-icon="{{feature.icon}}" role="img" aria-hidden="true"/>
                                             <h3 class="m-1">
                                                 <t t-out="feature.name"/>
                                             </h3>
