@@ -109,7 +109,7 @@
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">
-                                            2324.amount_untaxed_0 + 2324.amount_untaxed_5 + 2324.amount_untaxed_8 + 2324.amount_untaxed_10 + 2324.amount_untaxed_exempt + 2324.amount_untaxed_import_exempt + 23a24a.amount_untaxed
+                                            2324.amount_untaxed_0 + 2324.amount_untaxed_5 + 2324.amount_untaxed_8 + 2324.amount_untaxed_10 + 2324.amount_untaxed_nondeductible_5 + 2324.amount_untaxed_nondeductible_8 + 2324.amount_untaxed_nondeductible_10 + 2324.amount_untaxed_exempt + 2324.amount_untaxed_import_exempt + 23a24a.amount_untaxed
                                         </field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_I_1_amount_untaxed_exempt" model="account.report.expression">
@@ -136,6 +136,21 @@
                                         <field name="label">amount_untaxed_10</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">MHND_NET_10</field>
+                                    </record>
+                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_nondeductible_5" model="account.report.expression">
+                                        <field name="label">amount_untaxed_nondeductible_5</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">MHND_NET_KKT_5</field>
+                                    </record>
+                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_nondeductible_8" model="account.report.expression">
+                                        <field name="label">amount_untaxed_nondeductible_8</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">MHND_NET_KKT_8</field>
+                                    </record>
+                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_nondeductible_10" model="account.report.expression">
+                                        <field name="label">amount_untaxed_nondeductible_10</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">MHND_NET_KKT_10</field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_I_1_amount_untaxed_import_exempt" model="account.report.expression">
                                         <field name="label">amount_untaxed_import_exempt</field>
@@ -193,7 +208,7 @@
                                             <record id="form_01_gtgt_report_C_I_a_amount_untaxed" model="account.report.expression">
                                                 <field name="label">amount_untaxed</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">23a24a.amount_untaxed_0 + 23a24a.amount_untaxed_5 + 23a24a.amount_untaxed_8 + 23a24a.amount_untaxed_10</field>
+                                                <field name="formula">23a24a.amount_untaxed_0 + 23a24a.amount_untaxed_5 + 23a24a.amount_untaxed_8 + 23a24a.amount_untaxed_10 + 23a24a.amount_untaxed_nondeductible_5 + 23a24a.amount_untaxed_nondeductible_8 + 23a24a.amount_untaxed_nondeductible_10</field>
                                             </record>
                                             <record id="form_01_gtgt_report_C_I_a_amount_untaxed_0" model="account.report.expression">
                                                 <field name="label">amount_untaxed_0</field>
@@ -214,6 +229,21 @@
                                                 <field name="label">amount_untaxed_10</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">MHNK_NET_10</field>
+                                            </record>
+                                            <record id="form_01_gtgt_report_C_I_a_amount_untaxed_nondeductible_5" model="account.report.expression">
+                                                <field name="label">amount_untaxed_nondeductible_5</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">MHNK_NET_KKT_5</field>
+                                            </record>
+                                            <record id="form_01_gtgt_report_C_I_a_amount_untaxed_nondeductible_8" model="account.report.expression">
+                                                <field name="label">amount_untaxed_nondeductible_8</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">MHNK_NET_KKT_8</field>
+                                            </record>
+                                            <record id="form_01_gtgt_report_C_I_a_amount_untaxed_nondeductible_10" model="account.report.expression">
+                                                <field name="label">amount_untaxed_nondeductible_10</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">MHNK_NET_KKT_10</field>
                                             </record>
                                             <record id="form_01_gtgt_report_C_I_a_code_2" model="account.report.expression">
                                                 <field name="label">code_2</field>

@@ -2,6 +2,7 @@
 
 from . import res_config_settings
 from . import res_company
+from . import sinvoice
 from . import stock_warehouse
 from . import stock_move
 from . import stock_picking
