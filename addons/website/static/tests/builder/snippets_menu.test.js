@@ -130,15 +130,22 @@ test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", as
     expect(".o_customize_tab .options-container").toHaveCount(1);
 });
 
-test("Hotkeys on Theme and Blocks tab", async () => {
+test("Hotkeys on Blocks, Style and Theme tab", async () => {
     await setupWebsiteBuilder("<section><p>TEST</p></section>");
     await waitFor(":iframe section");
     expect("[data-name=blocks]").toHaveClass("active");
+    expect("[data-name=customize]").not.toHaveClass("active");
     expect("[data-name=theme]").not.toHaveClass("active");
     await press(["alt", "2"]);
     await waitFor("[data-name=blocks]:not(.active)");
+    expect("[data-name=theme]").not.toHaveClass("active");
+    expect("[data-name=customize]").toHaveClass("active");
+    await press(["alt", "3"]);
+    await waitFor("[data-name=customize]:not(.active)");
+    expect("[data-name=blocks]").not.toHaveClass("active");
     expect("[data-name=theme]").toHaveClass("active");
     await press(["alt", "1"]);
     await waitFor("[data-name=theme]:not(.active)");
+    expect("[data-name=customize]").not.toHaveClass("active");
     expect("[data-name=blocks]").toHaveClass("active");
 });
