@@ -40,4 +40,5 @@ Main Features
         "demo/fleet_demo.xml",
     ],
     "application": True,
+    "pre_init_hook": "pre_init_hook",
 }
