@@ -402,7 +402,8 @@ class CalendarEvent(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            if event.calendar_id and event.calendar_id.id in self.env.user.writable_calendar_ids.ids:
+            if (event.calendar_id and event.calendar_id.owner_id == self.env.user or
+                    (event.calendar_id.id in self.env.user.writable_calendar_ids.ids and event.privacy != 'private')):
                 event.user_can_edit = True
                 continue
             # By default, only current attendees, the organizer and the creator can edit the event.
