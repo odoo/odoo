@@ -753,13 +753,19 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             [100, 100],
         )
         receipts = purchase_orders.picking_ids
-        receipts[1].move_line_ids.filtered(
+        # Name the receipts by the order they belong to, not by position:
+        # `picking_ids` gains the backorder in the middle of its own ordering,
+        # so `receipts[2]` was the second order's receipt -- already done -- and
+        # the backorder was left `assigned`, valued at 0.
+        purchase_orders[1].picking_ids.move_line_ids.filtered(
             lambda ml: ml.product_id.id == component01.id
         ).quantity = 3
         res = receipts.button_validate()
         self.env[res["res_model"]].with_context(res["context"]).create({}).process()
         receipts = purchase_orders.picking_ids
-        receipts[2].button_validate()
+        receipts.filtered(
+            lambda picking: picking.state not in ("done", "cancel")
+        ).button_validate()
 
         self.assertEqual(
             sum(purchase_orders[0].line_ids.move_ids.mapped("cost_share")), 100.0
@@ -825,8 +831,12 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         ]
 
         self.assertRecordValues(
+            # `m.picking_id.id`, not `m.picking_id`: `BaseModel.__lt__` is strict
+            # subset, so two distinct singletons are incomparable and `sorted`
+            # silently keeps the input order. The sort twenty lines above already
+            # spells it with `.id`.
             receipts.move_ids.sorted(
-                lambda m: (m.picking_id, m.product_id.id, m.cost_share)
+                lambda m: (m.picking_id.id, m.product_id.id, m.cost_share)
             ),
             expected_values,
         )
@@ -842,7 +852,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         move.action_post()
         self.assertRecordValues(
             receipts.move_ids.sorted(
-                lambda m: (m.picking_id, m.product_id.id, m.cost_share)
+                lambda m: (m.picking_id.id, m.product_id.id, m.cost_share)
             ),
             expected_values,
         )
