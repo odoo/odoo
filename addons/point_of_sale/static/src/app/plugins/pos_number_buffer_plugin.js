@@ -1,6 +1,6 @@
 import { usePlugin, Plugin, onWillDestroy, useScope, proxy, signal, EventBus } from "@odoo/owl";
 import { services } from "@web/core/services";
-import { barcodeService } from "@barcodes/barcode_service";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 import { session } from "@web/session";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
@@ -162,7 +162,7 @@ export class PosNumberBufferPlugin extends Plugin {
         this.config = config;
         this.decimalPoint = config.decimalPoint || getDecimalPoint();
         this.maxTimeBetweenKeys = this.config.useWithBarcode
-            ? barcodeService.maxTimeBetweenKeysInMs
+            ? BarcodePlugin.maxTimeBetweenKeysInMs
             : 0;
     }
     _onKeyboardInput(event) {
