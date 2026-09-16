@@ -147,6 +147,8 @@ Run **both presets** — desktop (`WebSuite`) and mobile (`MobileWebSuite`) sele
 
 Each rule names the gate that catches it — `[ruff CODE]`, `[test_lint CODE]`, `[fixer NAME]` or `[review]`; see *How rules are enforced* at the top of the guide.
 
+**A marker is not evidence the gate exists.** §2.4 (method naming) carries 31 `[ratchet …]` / `[gate …]` markers and 30 of them name a tool deleted with `tooling/` in `7b0f58cb517f` — `naming_vocabulary.py`, `naming_core_vocabulary.py`, `field_hook_naming.py`, `collection_head_order`, `py_function_length.py`, `ratchet.py`, `doc_restated_counts.py`. The survivor is `[ruff RUF022]`. `doc/architecture/gates.md` is the list of what still runs and no entry of it reads a method name; `test_lint`'s `test_naming.py` checks one property, that no public method takes `ids` or `context`. Read §2.4's naming markers as `[review]`, and **re-derive any figure there before relying on it** — measured 2026-09-15, 10 of its 59 census rows were still true, and 7 can no longer be re-derived by anyone, their population having lived inside the deleted classifier rather than in the prose.
+
 Sections: 1. Module Structure · 2. Python · 3. XML · 4. JavaScript (OWL) · 5. CSS/SCSS · 6. Tests · 7. Git (commits, branch naming, task IDs, PRs) · 8. Translations · 9. Code Review Checklist · 10. Security · 11. Performance · 12. Migration Scripts · Appendices A–D (fork field renames, references, retired patterns, document history).
 
 ### `ruff.toml` (repo root)

@@ -4,8 +4,8 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.46
-:Date: 2026-09-14
+:Version: 6.47
+:Date: 2026-09-15
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
 
@@ -8430,6 +8430,11 @@ file.
    * - wkhtmltopdf workarounds; ``dpi`` / ``header_spacing`` /
        ``disable_shrinking`` on paperformats
      - WeasyPrint paged media (§3.6.1)
+   * - ``_sanitize_*``
+     - The row the body belongs to, per §2.4.20's table -- ``_normalize_`` when
+       it reshapes a value, ``_filter_`` a subset, ``_update_`` an in-place
+       mutation, ``_prepare_`` a payload, ``_check_`` when it raises. Reserved
+       for HTML sanitisation and for a hook named after a ``sanitized_*`` field
 
 Appendix D — Document history
 ==============================
@@ -8443,6 +8448,15 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.47
+     - 2026-09-15
+     - §2.4 head: thirty of its thirty-one gate markers name a tool deleted with
+       ``odoo/tooling/``, so the section is review-held and its census table is a
+       frozen reading -- 10 of 59 rows still true, 7 unre-derivable. §2.4.3 gains
+       the measured limit of the redundancy claim; §2.4.4's first-token frequency
+       heuristic is replaced by a grammar test; §2.4.5 reserves ``convert_to_*``;
+       §2.4.20 abolishes ``_sanitize_``; §2.4.21 asks for a return annotation
+       wherever the name makes a type claim; §2.1's length ratchet is gone.
    * - 6.46
      - 2026-09-14
      - §3.6.1: the PDF engine, ``report.layout``, the company document-layout
