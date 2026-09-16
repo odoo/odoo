@@ -42,6 +42,10 @@ _RESET_SESSION_STATE_SQL = (
 )
 
 
+def get_backend_pid(conn: object) -> int | None:
+    return getattr(getattr(conn, "info", None), "backend_pid", None)
+
+
 def clear_prepared_cache(conn: psycopg.Connection) -> bool:
     prepared = getattr(conn, "_prepared", None)
     if prepared is None:
@@ -101,7 +105,7 @@ def _configure_connection(conn: psycopg.Connection, *, readonly: bool = False) -
     _mark_idle(conn)
     _debug.lifecycle(
         "connection.configured",
-        backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+        backend_pid=get_backend_pid(conn),
         readonly=readonly,
         prepare_threshold=_PREPARE_THRESHOLD,
         prepared_max=_PREPARED_MAX,
@@ -132,7 +136,7 @@ def _probe_liveness(conn: psycopg.Connection) -> None:
         # psycopg_pool discards the connection and says nothing at our level.
         _debug.lifecycle(
             "connection.liveness_failed",
-            backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+            backend_pid=get_backend_pid(conn),
             error=type(exc).__name__,
         )
         raise
@@ -155,7 +159,7 @@ def _reset_connection(
         "connection.returned_idle",
         discard=discard,
         readonly=readonly,
-        backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+        backend_pid=get_backend_pid(conn),
     )
 
 

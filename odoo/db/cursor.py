@@ -31,7 +31,7 @@ from .errors import (
     mark_handled_by_seam,
     mark_stale_cached_plan,
 )
-from .lifecycle import clear_prepared_cache
+from .lifecycle import clear_prepared_cache, get_backend_pid
 from .metrics import _MetricsMixin, classify_query
 from .pipeline import _PipelineMixin
 from .pool import ConnectionPool, _get_borrow_caller
@@ -361,10 +361,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
 
     @property
     def _backend_pid(self) -> int | None:  # debuglog
-        try:
-            return self._cnx.info.backend_pid
-        except Exception:
-            return None
+        return get_backend_pid(vars(self).get("_cnx"))
 
     def _fetchall(self) -> list[tuple[Any, ...]]:
         obj = self._obj

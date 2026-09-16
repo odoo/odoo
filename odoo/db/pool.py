@@ -23,6 +23,7 @@ from .lifecycle import (
     _check_connection,
     _configure_connection,
     _reset_connection,
+    get_backend_pid,
 )
 from .probe import PROBE_CONNECT_TIMEOUT, ReachabilityProbe, get_libpq_connect_timeout
 from .reaper import IdlePoolReaper, mark_active, trim_idle_to_ceiling
@@ -479,9 +480,7 @@ class ConnectionPool:
                     available=pool_stats.get("pool_available", 0),
                     waiting=pool_stats.get("requests_waiting", 0),
                     checked_out=len(self._checkouts),
-                    backend_pid=getattr(
-                        getattr(conn, "info", None), "backend_pid", None
-                    ),
+                    backend_pid=get_backend_pid(conn),
                     thread=threading.current_thread().name,
                 )
             return conn
@@ -842,7 +841,7 @@ class ConnectionPool:
     def cancel_queries_of(self, thread_name: str) -> int:
         cancelled = 0
         for conn in self._checkouts.get_connections_of(thread_name):
-            pid = getattr(getattr(conn, "info", None), "backend_pid", None)  # debuglog
+            pid = get_backend_pid(conn)  # debuglog
             # A cancel reaches whoever runs on the backend now: the previous
             # cancel may have waited up to _CANCEL_TIMEOUT, in which time this
             # connection can have been returned and borrowed by another thread.

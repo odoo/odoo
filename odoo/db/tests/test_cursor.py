@@ -1,4 +1,5 @@
 import logging
+import os
 import subprocess
 import threading
 import typing
@@ -406,7 +407,10 @@ class TestTheDiscardPathTellsAnOutageFromAFault(unittest.TestCase):
 
 
 class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
-    DBNAME = "test_cursor_pipeline_sync_cost"
+    # Per process: two Tier-2 runs at once (peer sessions, the pre-push hook)
+    # would otherwise race on one name, and a killed run's leftover would
+    # skip every later one.
+    DBNAME = f"test_cursor_pipeline_sync_cost_{os.getpid()}"
 
     @classmethod
     def setUpClass(cls):
