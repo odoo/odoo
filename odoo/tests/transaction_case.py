@@ -869,6 +869,42 @@ class BaseCase(TestCase):
                 self.env.flush_all()
                 self.env.cr.flush()
 
+    def assertQueriesConstant(
+        self, run: Callable[[int], object], small: int = 2, large: int = 10
+    ) -> None:
+        # the query count of run(n) does not depend on n: an N+1 fails here
+        # whatever the pinned number, and a constant-cost change passes here
+        # whatever the pinned number. Each run gets a savepoint and a cold
+        # record cache; the first run is a warm-up that pays the one-off
+        # costs (rules, users, ormcaches) neither measured run then meets
+        counts = {}
+        for index, size in enumerate((small, small, large)):
+            with (
+                contextlib.closing(self.cr.savepoint(flush=True)),
+                patch("random.random", lambda: 1),
+            ):
+                self.env.flush_all()
+                self.env.invalidate_all()
+                count0 = self.cr.sql_statement_count
+                run(size)
+                self.env.flush_all()
+                self.env.cr.flush()
+                if index:
+                    counts[size] = self.cr.sql_statement_count - count0
+        _debug.logic(
+            "test.assert.queries_constant",
+            test=self.canonical_tag,
+            small=small,
+            large=large,
+            counts=counts,
+        )
+        self.assertEqual(
+            counts[small],
+            counts[large],
+            f"the query count grows with the batch: {counts[small]} at {small} "
+            f"records, {counts[large]} at {large}",
+        )
+
     def assertRecordValues(
         self,
         records: odoo.models.BaseModel,

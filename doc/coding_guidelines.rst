@@ -6853,6 +6853,14 @@ Structure each test as setup → action → assertion, separated by blank lines.
 * Use the ``Form`` simulator (``from odoo.tests import Form``) to test onchange
   behaviour without HTTP.
 * **Lock hot paths with ``assertQueryCount``.** ``@warmup`` primes caches first.
+* **Pin the shape before the number** ``[review]``. An absolute count moves
+  with the installed modules, the demo data and every constant-cost change;
+  what a batch must never do is grow with its size.
+  ``self.assertQueriesConstant(run, small=2, large=40)`` runs ``run(n)`` at
+  both sizes (each in a savepoint, after a warm-up run) and fails when the
+  counts differ, so an N+1 fails whatever the pin says and a constant-cost
+  change passes whatever the pin says. Keep the absolute pin beside it for
+  the constant itself.
 * **A moved count is a question, not a verdict** ``[review]``. A count changes
   when the work *moves* as readily as when it grows, and only the stack of the
   extra calls tells those apart: a pin asserting *exactly* one QWeb compile per
@@ -8795,6 +8803,10 @@ One row per change, one clause. The argument lives in the section it moved.
      - 2026-08-22
      - Full rewrite into a direct, rule-first style; §2.4 gains numbered
        subsections §2.4.1--§2.4.17.
+   * - 5.44
+     - 2026-09-16
+     - §6.4: ``assertQueriesConstant`` pins the shape of a batch's query count;
+       the gates run as one command (``./gates.sh``) with a pre-push hook.
    * - 5.43
      - 2026-09-04
      - Every gate runs by hand: the CI workflows are gone, and the gate table

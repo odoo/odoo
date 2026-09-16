@@ -916,9 +916,8 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         One INSERT either way: below ``COPY_THRESHOLD`` the backend inserts the
         rows in one statement. The property worth pinning is that nothing
-        multiplies, and an absolute count at a single scale cannot say that -- it
-        reads a constant-cost change as a regression and an N+1 as a number to
-        raise.
+        multiplies; ``assertQueriesConstant`` says that, and the absolute pin
+        says how much the constant is.
         """
         records = self.env["mail.test.simple"].create(
             [{"name": f"Test_{idx}"} for idx in range(10)]
@@ -932,16 +931,18 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 message_type="comment",
             )
 
-        more = self.env["mail.test.simple"].create(
-            [{"name": f"More_{idx}"} for idx in range(40)]
-        )
-        with self.assertQueryCount(admin=1, employee=1):
+        def log_batch(size):
+            more = self.env["mail.test.simple"].create(
+                [{"name": f"More_{idx}"} for idx in range(size)]
+            )
             more._message_log_batch(
                 bodies={
                     record.id: Markup("<p>Test _message_log</p>") for record in more
                 },
                 message_type="comment",
             )
+
+        self.assertQueriesConstant(log_batch, small=10, large=40)
 
     @users("admin", "employee")
     @warmup
