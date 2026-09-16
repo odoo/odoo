@@ -53,23 +53,20 @@ class MassMailController(main.MassMailController):
         :param int list_id: id of the `mailing.list` to subscribe to.
         :param str value: the email address or phone number to subscribe.
         :param str subscription_type: 'email' or 'mobile', matching the type of `value`.
-        :return: {'toast_type': 'success'|'danger', 'toast_content': message to show}
+        :return: ``{'status': 'success'}``, or ``{'status': 'error', 'content': error message}``
         :rtype: dict
         """
         try:
             request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe')
         except UserError as e:
             return {
-                'toast_type': 'danger',
-                'toast_content': str(e),
+                'status': 'error',
+                'content': str(e),
             }
 
         fname = self._get_fname(subscription_type)
         self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
-        return {
-            'toast_type': 'success',
-            'toast_content': _("Thanks for subscribing!"),
-        }
+        return {'status': 'success'}
 
     @staticmethod
     def subscribe_to_newsletter(subscription_type, value, list_id, fname, address_name=None):
@@ -94,8 +91,8 @@ class MassMailController(main.MassMailController):
         mailing_list = MailingList.browse(int(list_id)).exists()
         if mailing_list and not request.env.user._is_internal() and not mailing_list.is_public:
             return {
-                'toast_type': 'danger',
-                'toast_content': _("Invalid mailing list."),
+                'status': 'error',
+                'content': _("Invalid mailing list."),
             }
 
         subscription = ContactSubscription.search(

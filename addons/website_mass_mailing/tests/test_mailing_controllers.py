@@ -19,7 +19,7 @@ class TestMassMailingSubscribeController(HttpCase):
             data=json.dumps(payload),
             headers={'Content-Type': 'application/json'},
         )
-        return response.json().get('result', {'toast_type': 'error'})
+        return response.json().get('result', {'status': 'error'})
 
     def test_private_list_requires_internal_user(self):
         private_list = self.env['mailing.list'].create({'name': 'Private', 'is_public': False})
@@ -28,9 +28,9 @@ class TestMassMailingSubscribeController(HttpCase):
         self.assertFalse(private_list.contact_ids)
 
         self.authenticate('admin', 'admin')
-        self.assertEqual(self._subscribe(private_list)['toast_type'], 'success')
+        self.assertEqual(self._subscribe(private_list)['status'], 'success')
         self.assertTrue(private_list.contact_ids)
 
     def test_public_list_accepts_public_user(self):
         public_list = self.env['mailing.list'].create({'name': 'Public', 'is_public': True})
-        self.assertEqual(self._subscribe(public_list)['toast_type'], 'success')
+        self.assertEqual(self._subscribe(public_list)['status'], 'success')
