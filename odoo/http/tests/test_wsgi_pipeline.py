@@ -167,9 +167,13 @@ def test_an_unmatched_path_is_negotiated_by_media_type(harness):
         environ("/nope", content_type="application/json", body=b"{}")
     )
     assert as_json.status_code == 404
-    assert (as_json.header("Content-Type") or "").startswith("application/json")
+    assert (as_json.header("Content-Type") or "").startswith("application/problem+json")
     payload = json.loads(as_json.body)
     assert payload["name"].endswith("NotFound")
+    assert payload["type"] == "about:blank"
+    assert payload["title"] == "Not Found"
+    assert payload["status"] == 404
+    assert payload["detail"] == payload["message"]
     assert [type(e).__name__ for e in harness.ir_http.errors_handled] == [
         "NotFound",
         "NotFound",

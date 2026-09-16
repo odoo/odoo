@@ -39,8 +39,25 @@ class TestHttpWebJson_2(TestHttpBase):
             raise
         self.assertIsInstance(body, dict, body)
         self.assertEqual(
-            list(body), ["name", "message", "arguments", "context", "debug"]
+            list(body),
+            [
+                "type",
+                "title",
+                "status",
+                "detail",
+                "name",
+                "message",
+                "arguments",
+                "context",
+                "debug",
+            ],
         )
+        self.assertTrue(
+            response.headers["Content-Type"].startswith("application/problem+json"),
+            response.headers["Content-Type"],
+        )
+        self.assertEqual(body["status"], response.status_code)
+        self.assertEqual(body["detail"], body["message"])
         self.assertEqual(submap(body, expected_error), expected_error)
 
     def test_webjson2_multi_db_no_header(self):
@@ -52,7 +69,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
         self.assertIn("not found in the server-wide controllers", res.json()["message"])
 
@@ -79,7 +96,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
         self.assertIn("not found in the server-wide controllers", res.json()["message"])
 
@@ -136,7 +153,7 @@ class TestHttpWebJson_2(TestHttpBase):
         self.assertEqual(body["arguments"], [body["message"], HTTPStatus.BAD_REQUEST])
         self.assertEqual(res.status_code, HTTPStatus.BAD_REQUEST)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_not_json_object(self):
@@ -156,7 +173,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_missing_auth(self):
@@ -176,7 +193,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
         self.assertEqual(
             res.headers.get("WWW-Authenticate", "").lower().strip(), "bearer"
@@ -199,7 +216,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_bad_domain(self):
@@ -220,7 +237,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.INTERNAL_SERVER_ERROR)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_access_error(self):
@@ -247,7 +264,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_good(self):
@@ -279,7 +296,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_missing_method(self):
@@ -299,7 +316,7 @@ class TestHttpWebJson_2(TestHttpBase):
         )
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(
-            res.headers.get("Content-Type"), "application/json; charset=utf-8"
+            res.headers.get("Content-Type"), "application/problem+json; charset=utf-8"
         )
 
     def test_webjson2_url_params_vs_body_params(self):

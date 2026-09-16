@@ -41,6 +41,26 @@ _debug = DebugLog(__name__)
 
 _dispatchers: dict[str, type[Dispatcher]] = {}
 
+PROBLEM_JSON_MIMETYPE = "application/problem+json; charset=utf-8"
+
+
+def _prepare_problem_details(
+    body: dict[str, Any], status: int, generic: bool
+) -> dict[str, Any]:
+    # RFC 9457 members first, Odoo's own after them, so a client that knows
+    # one shape or the other reads what it expects.
+    try:
+        title = HTTPStatus(status).phrase
+    except ValueError:
+        title = "Error"
+    return {
+        "type": "about:blank" if generic else f"urn:odoo:exception:{body['name']}",
+        "title": title,
+        "status": status,
+        "detail": body["message"],
+        **body,
+    }
+
 
 def get_dispatcher_for_unmatched_route(request: RequestState) -> type[Dispatcher]:
     mimetype = request.httprequest.mimetype
@@ -535,4 +555,8 @@ class Json2Dispatcher(Dispatcher):
         _debug.logic(
             "http.json2.error", status=int(status), error=type(exc).__name__, kind=kind
         )
-        return self.request.prepare_json_response(body, headers=headers, status=status)
+        return self.request.prepare_json_response(
+            _prepare_problem_details(body, int(status), kind == "http_exception"),
+            headers=[*(headers or []), ("Content-Type", PROBLEM_JSON_MIMETYPE)],
+            status=status,
+        )

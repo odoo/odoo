@@ -117,6 +117,7 @@ from .wrappers import (
 from .request_class import Request
 
 from .dispatcher import (
+    PROBLEM_JSON_MIMETYPE,
     Dispatcher,
     HttpDispatcher,
     JsonRPCDispatcher,
@@ -139,6 +140,7 @@ __all__ = [
     "GEOIP_EMPTY_COUNTRY",
     "MISSING_CSRF_WARNING",
     "NOT_FOUND_NODB",
+    "PROBLEM_JSON_MIMETYPE",
     "REJECTED_HTTP_METHODS",
     "ROUTING_KEYS",
     "SAFE_HTTP_METHODS",

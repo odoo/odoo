@@ -75,7 +75,7 @@ def test_a_json_client_gets_the_nodb_message_as_json(nodb_app):
     status, headers, body = _serve(nodb_app, _environ(content_type="application/json"))
 
     assert status.startswith("404")
-    assert headers["content-type"].startswith("application/json")
+    assert headers["content-type"].startswith("application/problem+json")
     assert NOT_FOUND_NODB_TEXT.encode() in body
     assert b"<!DOCTYPE html>" not in body
 
