@@ -123,7 +123,7 @@ export class FormOptionPlugin extends Plugin {
             if (el.classList.contains("s_website_form_model_required")) {
                 reasons.push(
                     _t(
-                        "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
+                        "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility Rule' option instead and add it a default value."
                     )
                 );
             }
@@ -375,7 +375,7 @@ export class FormOptionPlugin extends Plugin {
             // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
             // For example, this may force the 'email_to' value to a dummy/default one on the
             // contact us form just by interacting with it.
-            formInfo.fields?.forEach(field => {
+            formInfo.fields?.forEach((field) => {
                 if (field.defaultValue) {
                     this.addHiddenField(el, field.defaultValue, field.name);
                 }
@@ -440,9 +440,7 @@ export class FormOptionPlugin extends Plugin {
         const field = getCustomField("char", _t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
-        let locationEl = formEl.querySelector(
-            ".s_website_form_submit, .s_website_form_recaptcha"
-        );
+        let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
         if (!locationEl) {
             locationEl = formEl.querySelector(".s_website_form_rows");
             locationEl.insertAdjacentElement("beforeend", fieldEl);
