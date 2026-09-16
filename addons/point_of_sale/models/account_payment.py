@@ -27,7 +27,7 @@ class AccountPayment(models.Model):
         # a specific customer. We ensure that account.payment are not created using the sepa_ct
         # account.payment.method.line. If not, closing the session would not be possible unless
         # having an account.payment.method.line with a smaller sequence than sepa_ct.
-        account_sepa = self.env['ir.module.module'].search([('name', '=', 'account_iso20022')])
+        account_sepa = self.env['ir.module.module'].sudo().search([('name', '=', 'account_iso20022')])
         if account_sepa.state == 'installed':
             sepa_ct = self.env.ref('account_iso20022.account_payment_method_sepa_ct', raise_if_not_found=False)
             if sepa_ct and 'pos_payment' in self.env.context and sepa_ct.code not in res:
