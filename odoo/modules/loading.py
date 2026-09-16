@@ -834,9 +834,15 @@ class _PackageLoader:
             self.package.module_graph, self.name, self.registry.loaded_modules
         )
 
+    # odoo.db.sql_counter counts every cursor's statements, this one's included;
+    # "other" is what ran elsewhere: registry setup cursors, hooks, the tests.
     def log_cost(self) -> None:
+        cursor_queries = self.cr.sql_log_count - self.cursor_queries_at_start
         extra_queries = (
-            odoo.db.sql_counter - self.extra_queries_at_start - self.test_queries
+            odoo.db.sql_counter
+            - self.extra_queries_at_start
+            - cursor_queries
+            - self.test_queries
         )
         extras = []
         if self.test_queries:
@@ -849,7 +855,7 @@ class _PackageLoader:
             self.name,
             time.time() - self.started_at,
             f" (incl. {self.test_time:.2f}s test)" if self.test_time else "",
-            self.cr.sql_log_count - self.cursor_queries_at_start,
+            cursor_queries,
             f" ({', '.join(extras)})" if extras else "",
         )
         _debug.perf.count(
@@ -858,7 +864,7 @@ class _PackageLoader:
             index=self.index,
             operation=self.operation,
             ms=(time.time() - self.started_at) * 1000.0,
-            queries=self.cr.sql_log_count - self.cursor_queries_at_start,
+            queries=cursor_queries,
             extra_queries=extra_queries,
             test_ms=self.test_time * 1000.0,
             test_queries=self.test_queries,
@@ -997,21 +1003,23 @@ def load_module_graph(
     finally:
         gc.unfreeze()
 
+    cursor_queries = cr.sql_log_count - cursor_queries_at_start
+    extra_queries = odoo.db.sql_counter - extra_queries_at_start - cursor_queries
     _logger.log(
         RUNBOT,
         "%s modules loaded in %.2fs, %s queries (+%s extra)",
         len(graph),
         time.time() - t0,
-        cr.sql_log_count - cursor_queries_at_start,
-        odoo.db.sql_counter - extra_queries_at_start,
+        cursor_queries,
+        extra_queries,
     )
     _debug.perf.count(
         "modules.load_graph.done",
         modules=module_count,
         skipped=skipped,
         ms=(time.time() - t0) * 1000.0,
-        queries=cr.sql_log_count - cursor_queries_at_start,
-        extra_queries=odoo.db.sql_counter - extra_queries_at_start,
+        queries=cursor_queries,
+        extra_queries=extra_queries,
         gc_cycles=gc_cycles,
         models_updated=len(models_updated),
         to_check=len(models_to_check),
