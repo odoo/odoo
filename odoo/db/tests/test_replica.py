@@ -1,4 +1,3 @@
-import time
 import typing
 import unittest
 
@@ -289,11 +288,14 @@ if __name__ == "__main__":
 
 class TestWritePins(unittest.TestCase):
     def test_a_pinned_key_expires_after_the_window(self):
-        pins = WritePins(0.05)
+        now = [100.0]
+        pins = WritePins(2.0, clock=lambda: now[0])
         pins.pin("sid")
         self.assertTrue(pins.is_pinned("sid"))
         self.assertFalse(pins.is_pinned("other"))
-        time.sleep(0.06)
+        now[0] = 101.9
+        self.assertTrue(pins.is_pinned("sid"))
+        now[0] = 102.0
         self.assertFalse(pins.is_pinned("sid"))
         self.assertEqual(len(pins), 0, "an expired pin is dropped when it is read")
 

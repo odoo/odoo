@@ -1113,6 +1113,18 @@ campaign ends; the recipe, the cost figures and the first findings are in
   against `registry().cursor()` failed under `odoo-bin` while the same logic
   passed as a standalone script.
 
+- **A real standby, built and torn down by the test** —
+  `tests/contract/test_replica_standby.py` runs `pg_basebackup -R` against
+  the reachable primary into a temp directory, starts it on a scratch port
+  with its own socket directory, and exercises the router against it:
+  read-only routing lands on the standby, a write there raises
+  `ReadOnlySqlTransaction`, apply lag past the ceiling demotes and catching
+  up restores (replay paused with `pg_wal_replay_pause()` — and waited for,
+  `pg_get_wal_replay_pause_state() = 'paused'`, because the pause is only
+  *requested* and a commit sent before recovery honours it is replayed
+  anyway), a session that wrote reads from the primary for the pin window
+  and one that only read keeps the standby. Skips without `pg_basebackup`.
+  ~4 s; run with `ODOO_CONTRACT_REQUIRE_DEPS=1 pytest tests/contract`.
 - **Integration (live DB)** —
   `odoo/addons/base/tests/test_db_cursor.py` (run with
   `--test-file … --stop-after-init` on a DB with `base` installed): cursor

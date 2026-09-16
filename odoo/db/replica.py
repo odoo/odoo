@@ -38,19 +38,22 @@ CursorMode = typing.Literal["ro", "ro->rw", "rw"]
 # `_PRUNE_ABOVE` entries so an idle server does not keep every session ever
 # seen.
 class WritePins:
-    __slots__ = ("_deadlines", "_lock", "window")
+    __slots__ = ("_clock", "_deadlines", "_lock", "window")
 
     _PRUNE_ABOVE = 1024
 
-    def __init__(self, window: float) -> None:
+    def __init__(
+        self, window: float, *, clock: typing.Callable[[], float] = monotonic
+    ) -> None:
         self.window = window
+        self._clock = clock
         self._deadlines: dict[typing.Hashable, float] = {}
         self._lock = threading.Lock()
 
     def pin(self, key: typing.Hashable) -> None:
         if not self.window:
             return
-        now = monotonic()
+        now = self._clock()
         with self._lock:
             self._deadlines[key] = now + self.window
             if len(self._deadlines) > self._PRUNE_ABOVE:
@@ -61,7 +64,7 @@ class WritePins:
         deadline = self._deadlines.get(key)
         if deadline is None:
             return False
-        if deadline > monotonic():
+        if deadline > self._clock():
             return True
         with self._lock:
             if self._deadlines.get(key) == deadline:
