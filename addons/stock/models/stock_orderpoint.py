@@ -475,6 +475,20 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.company_id.id,
                 self.env["stock.warehouse"],
             )
+            current = orderpoint.location_id
+            # An editable default, so a stored location that still sits inside
+            # the warehouse is the user's and is kept. Assigning unconditionally
+            # reset a rule pointed at a particular shelf back to the warehouse's
+            # stock location on any write of `warehouse_id` -- including one
+            # that changed nothing, since `modified()` fires on the key and not
+            # on a change. A location outside the warehouse is re-derived,
+            # because that is what a real warehouse change invalidates.
+            if (
+                current
+                and warehouse
+                and current._is_child_of(warehouse.view_location_id)
+            ):
+                continue
             orderpoint.location_id = warehouse.lot_stock_id.id
 
     @api.depends("product_id", "qty_to_order", "product_max_qty")

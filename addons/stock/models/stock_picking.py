@@ -565,8 +565,17 @@ class StockPicking(models.Model):
 
     @api.depends("picking_type_id")
     def _compute_move_type(self):
+        # An editable default: `precompute` places it and the user owns it
+        # afterwards. Every value is valid for every operation type, so there
+        # is nothing for a later trigger to invalidate -- and `modified()`
+        # fires on the key written, not on a change, so re-deriving here reset
+        # a deliberately chosen shipping policy on a write of `picking_type_id`
+        # that changed nothing. Measured: a picking set to "When all products
+        # are ready" came back "As soon as possible" after
+        # `write({"picking_type_id": <its own type>})`.
         for record in self:
-            record.move_type = record.picking_type_id.move_type
+            if not record.move_type:
+                record.move_type = record.picking_type_id.move_type
 
     @api.depends("signature")
     def _compute_is_signed(self):

@@ -649,3 +649,182 @@ class TestCategoryRouteInheritance(TestStockCommon):
             ),
             "the search returned a link the field's own domain hides",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestLotCompanyIsNotDecidedByTheReader(TestStockCommon):
+    """`stock.lot.company_id` is stored and its compute reads `self.env`.
+
+    That makes the stored value a function of who last recomputed it, and
+    `company_id` drives record-rule visibility and `check_company` on the lot's
+    quants and move lines.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Company = cls.env["res.company"]
+        cls.parent_co = Company.create({"name": "Lot parent co"})
+        cls.child_co = Company.create(
+            {"name": "Lot child co", "parent_id": cls.parent_co.id}
+        )
+        cls.unrelated_co = Company.create({"name": "Lot unrelated co"})
+        cls.owned = (
+            cls.env["product.product"]
+            .with_company(cls.parent_co)
+            .create(
+                {
+                    "name": "Lot owned product",
+                    "is_storable": True,
+                    "tracking": "lot",
+                    "company_id": cls.parent_co.id,
+                }
+            )
+        )
+
+    def _as_child(self, model):
+        return model.with_company(self.child_co).with_context(
+            allowed_company_ids=[self.child_co.id]
+        )
+
+    def _recompute_as(self, lot, companies):
+        scoped = lot.with_company(companies[0]).with_context(
+            allowed_company_ids=[company.id for company in companies]
+        )
+        scoped.invalidate_recordset(["company_id"])
+        self.env.add_to_compute(scoped._fields["company_id"], scoped)
+        scoped.flush_recordset(["company_id"])
+        scoped.invalidate_recordset(["company_id"])
+
+    def test_a_lot_does_not_move_company_because_someone_else_recomputed_it(self):
+        lot = self._as_child(self.LotObj).create(
+            {"name": "LOT-WHO", "product_id": self.owned.id}
+        )
+        self.env.flush_all()
+        self.assertEqual(
+            lot.company_id,
+            self.child_co,
+            "the premise: a child-only user places the lot in the child company",
+        )
+
+        self._recompute_as(lot, [self.parent_co, self.child_co])
+
+        self.assertEqual(
+            lot.company_id,
+            self.child_co,
+            "a recompute by a user allowed in one more company moved the lot",
+        )
+
+    def test_a_lot_still_follows_its_product_to_an_unrelated_company(self):
+        lot = self._as_child(self.LotObj).create(
+            {"name": "LOT-MOVE", "product_id": self.owned.id}
+        )
+        self.env.flush_all()
+        self.assertEqual(lot.company_id, self.child_co)
+
+        self.owned.company_id = self.unrelated_co
+        self.env.flush_all()
+
+        self.assertEqual(
+            lot.company_id,
+            self.unrelated_co,
+            "the kept value must not survive its product leaving the tree",
+        )
+
+    def test_clearing_a_products_company_still_clears_its_lots(self):
+        lot = self.LotObj.create({"name": "LOT-CLEAR", "product_id": self.owned.id})
+        self.env.flush_all()
+
+        self.owned.company_id = False
+        self.env.flush_all()
+
+        self.assertFalse(
+            lot.company_id, "a shared product's lot is no longer company-bound"
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestEditableDefaultsSurviveANoOpTrigger(TestStockCommon):
+    """`store=True, readonly=False, precompute=True` is an editable default.
+
+    `modified()` fires on the key a write carries, not on a change, so a
+    compute that assigns unconditionally resets whatever the user chose on any
+    write that merely mentions its trigger.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product = cls.env["product.product"].create(
+            {"name": "Editable default probe", "is_storable": True}
+        )
+
+    def test_a_shipping_policy_survives_a_no_op_operation_type_write(self):
+        picking = self.PickingObj.create(
+            {
+                "picking_type_id": self.picking_type_out.id,
+                "move_ids": [
+                    (0, 0, {"product_id": self.product.id, "product_uom_qty": 1})
+                ],
+            }
+        )
+        self.env.flush_all()
+        picking.move_type = "one" if picking.move_type == "direct" else "direct"
+        self.env.flush_all()
+        chosen = picking.move_type
+
+        picking.write({"picking_type_id": picking.picking_type_id.id})
+        self.env.flush_all()
+
+        self.assertEqual(
+            picking.move_type,
+            chosen,
+            "a write of the operation type it already had reset the policy",
+        )
+
+    def test_a_new_picking_still_takes_the_policy_from_its_type(self):
+        self.picking_type_out.move_type = "one"
+        picking = self.PickingObj.create({"picking_type_id": self.picking_type_out.id})
+        self.env.flush_all()
+        self.assertEqual(picking.move_type, "one", "the default must still be derived")
+
+    def test_a_reordering_rule_keeps_the_shelf_it_was_pointed_at(self):
+        orderpoint = self.env["stock.warehouse.orderpoint"].create(
+            {"product_id": self.product.id, "warehouse_id": self.warehouse_1.id}
+        )
+        self.env.flush_all()
+        shelf = self.StockLocationObj.create(
+            {"name": "Reorder shelf", "location_id": self.stock_location.id}
+        )
+        orderpoint.location_id = shelf
+        self.env.flush_all()
+
+        orderpoint.write({"warehouse_id": self.warehouse_1.id})
+        self.env.flush_all()
+
+        self.assertEqual(
+            orderpoint.location_id,
+            shelf,
+            "a write of the warehouse it already had reset the location",
+        )
+
+    def test_a_real_warehouse_change_still_moves_the_rule(self):
+        """The guard keeps a location that is still inside the warehouse. One
+        that is not is exactly what a genuine warehouse change invalidates."""
+        other = self.env["stock.warehouse"].create(
+            {"name": "Reorder other WH", "code": "ROW"}
+        )
+        orderpoint = self.env["stock.warehouse.orderpoint"].create(
+            {"product_id": self.product.id, "warehouse_id": self.warehouse_1.id}
+        )
+        self.env.flush_all()
+        self.assertEqual(orderpoint.location_id, self.warehouse_1.lot_stock_id)
+
+        orderpoint.warehouse_id = other
+        self.env.flush_all()
+
+        self.assertEqual(
+            orderpoint.location_id,
+            other.lot_stock_id,
+            "the rule kept a location belonging to the previous warehouse",
+        )
