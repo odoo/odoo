@@ -6,6 +6,7 @@ import logging
 import os
 import selectors
 import signal
+import socket
 import sys
 import time
 from types import SimpleNamespace
@@ -294,6 +295,23 @@ def test_only_the_master_creates_the_configured_databases(monkeypatch, evented):
     assert exit_info.value.code == 0
     assert calls == ([] if evented else ["one", "two"])
     assert init.get("base") is (None if evented else True)
+
+
+def test_a_forked_worker_closes_the_websocket_listener(master):
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(1)
+    master.websocket_socket = listener
+    worker = _worker.Worker(master)
+    try:
+        master._close_inherited_pipe_fds_in_child(worker)
+        assert master.websocket_socket is None
+        assert listener.fileno() == -1, "the child's copy of the listener is closed"
+    finally:
+        # This exercises child cleanup in-process, so replace its closed pipe.
+        worker.close()
+        listener.close()
+        master.pipe = master.open_pipe()
 
 
 def test_respawned_worker_closes_inherited_reload_reader(master):

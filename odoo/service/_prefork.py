@@ -225,6 +225,12 @@ class PreforkServer(CommonServer):
                     os.close(fd)
         self._close_watchdog_selector()
         self.handoff.close_in_child()
+        # The websocket listener is the evented child's, handed over at its
+        # spawn; a forked worker holding a copy would keep the port bound
+        # past this master's death.
+        if self.websocket_socket is not None:
+            self.websocket_socket.close()
+            self.websocket_socket = None
         _debug.lifecycle(
             "prefork.child_fds_closed",
             kind=new_worker.__class__.__name__,
