@@ -8,6 +8,7 @@
 """,
     'depends': [
         'l10n_fr_account',
+        'account_edi_ubl_cii',
         'account_peppol_response',
         'auth_totp_mail',
         'iap',
