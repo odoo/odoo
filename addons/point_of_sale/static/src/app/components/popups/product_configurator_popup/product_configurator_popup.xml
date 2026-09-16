@@ -96,7 +96,7 @@
                     <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.template.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>
                     <t t-set="color_style" t-value="value.is_custom ? '' : 'background-color: ' + value.html_color" />
                     <span class="d-flex flex-row justify-content-center align-items-center">
-                        <label role="button" t-attf-class="configurator_color rounded-circle border position-relative {{ value.id == this.props.selected.id ? 'active border-3' : 'border-3 border-secondary' }}"
+                        <label role="button" t-attf-class="configurator_color rounded-circle border position-relative {{ value.id == this.props.selected.id ? 'active border-3' : 'border-3' }}"
                             t-att-class="{'ptav-not-available' : value.excluded}"
                             t-attf-style="{{ img_style or color_style }}" t-att-data-color="value.name" t-att-title="value.name">
                             <input
@@ -160,7 +160,7 @@
                     <span class="d-flex flex-column justify-content-center align-items-center">
                         <label
                             role="button"
-                            t-attf-class="configurator_color rounded-3 border position-relative {{ value.id == this.props.selected.id ? 'active border-3' : 'border-3 border-secondary' }}"
+                            t-attf-class="configurator_color rounded-3 border position-relative {{ value.id == this.props.selected.id ? 'active border-3' : 'border-3' }}"
                             t-att-class="{'ptav-not-available' : value.excluded}"
                             t-attf-style="height: 62px; aspect-ratio: 1; {{ img_style or color_style }}"
                             t-att-data-color="value.name">
