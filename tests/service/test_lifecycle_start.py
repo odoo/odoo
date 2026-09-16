@@ -303,3 +303,68 @@ class TestTheReadyLineNamesTheDeploymentShape:
             server = prefork_server()
             said = self._said(server)
         assert "no HTTP" in said and "websocket" not in said
+
+
+class TestReadinessFollowsThePreload:
+    def test_no_server_is_not_ready(self):
+        with patch.object(_process_state, "server", None):
+            assert _process_state.is_ready() is False
+
+    def test_a_registered_server_is_ready_once_nothing_preloads(self):
+        with (
+            patch.object(_process_state, "server", MagicMock()),
+            patch.object(_process_state, "preloading", set()),
+        ):
+            assert _process_state.is_ready() is True
+            with _process_state.preloading_database("prod"):
+                assert _process_state.is_ready() is False
+                with _process_state.preloading_database("other"):
+                    assert _process_state.preloading == {"prod", "other"}
+                assert _process_state.is_ready() is False
+            assert _process_state.is_ready() is True
+
+    def test_a_failed_preload_does_not_stay_pending(self):
+        with patch.object(_process_state, "preloading", set()):
+            with pytest.raises(RuntimeError), _process_state.preloading_database("x"):
+                raise RuntimeError("load failed")
+            assert not _process_state.preloading
+
+    def test_preload_registries_marks_the_database_while_it_loads(self):
+        from odoo.service import lifecycle
+
+        seen = []
+
+        def new(dbname, **kwargs):
+            seen.append(set(_process_state.preloading))
+            return MagicMock()
+
+        with (
+            patch.object(_process_state, "preloading", set()),
+            patch.object(lifecycle.Registry, "new", side_effect=new),
+            patch.object(lifecycle, "_limit_resident_registries"),
+            server_settings.override(test_enable=False, db_name=("a",)),
+        ):
+            lifecycle.preload_registries(["a"])
+        assert seen == [{"a"}]
+        assert not _process_state.preloading
+
+    def test_a_test_run_serves_its_client_mid_load_so_it_does_not_gate(self):
+        from odoo.service import lifecycle
+
+        seen = []
+
+        def new(dbname, **kwargs):
+            seen.append(set(_process_state.preloading))
+            return MagicMock()
+
+        with (
+            patch.object(_process_state, "preloading", set()),
+            patch.object(lifecycle.Registry, "new", side_effect=new),
+            patch.object(lifecycle, "_limit_resident_registries"),
+            patch.object(lifecycle, "_run_post_install_tests", return_value=0),
+            patch.object(lifecycle, "_get_test_run_rc", return_value=0),
+            patch.object(lifecycle, "_get_assertion_report"),
+            server_settings.override(test_enable=True, db_name=("a",)),
+        ):
+            lifecycle.preload_registries(["a"])
+        assert seen == [set()]

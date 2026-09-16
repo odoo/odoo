@@ -60,6 +60,18 @@ class TestWebController(HttpCase):
             self.assertEqual(payload["status"], "fail")
             self.assertEqual(payload["checks"]["db"], "fail")
 
+    def test_readyz_registries_pass_once_the_preload_is_done(self):
+        response = self.url_open("/web/readyz")
+        self.assertEqual(response.json()["checks"]["registries"], "pass")
+
+    def test_readyz_loading_while_a_registry_preloads(self):
+        with patch("odoo.service.server.is_ready", return_value=False):
+            response = self.url_open("/web/readyz")
+            self.assertEqual(response.status_code, 503)
+            payload = response.json()
+            self.assertEqual(payload["status"], "fail")
+            self.assertEqual(payload["checks"]["registries"], "loading")
+
     def test_readyz_data_dir_fail(self):
         with patch(
             "odoo.addons.web.controllers.health.os.access",

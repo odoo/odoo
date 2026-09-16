@@ -1,7 +1,7 @@
 from ._base_server import CommonServer
 from ._factory import start
 from ._prefork import PreforkServer
-from ._process_state import get_server
+from ._process_state import get_server, is_ready
 from ._threaded import ThreadedServer, WebsocketServer
 from ._transport import serve_prefork_connection
 from ._worker import (
@@ -30,6 +30,7 @@ __all__ = (
     "WorkerHTTP",
     "WorkerJob",
     "get_server",
+    "is_ready",
     "load_server_wide_modules",
     "preload_registries",
     "restart",

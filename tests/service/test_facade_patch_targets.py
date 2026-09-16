@@ -24,7 +24,9 @@ FACADE_TARGETS_OK = {
         "dispatch": "read off the package by the RPC entry point",
         "dump_db": "read off the package by the controller, per call",
     },
-    "odoo.service.server": {},
+    "odoo.service.server": {
+        "is_ready": "web/controllers/health.py does `service_server.is_ready()`",
+    },
     "odoo.api": {
         "Environment": "service/common.py and service/model.py read it per call",
     },

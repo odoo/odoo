@@ -280,7 +280,14 @@ def preload_registries(dbnames: list[str] | None) -> int:
                     init=len(settings.init),
                     update=len(settings.update),
                 ):
-                    with Registry._lock:
+                    # Under --test-enable the server exists to serve the test
+                    # client mid-load, so the load does not gate readiness.
+                    marking = (
+                        contextlib.nullcontext()
+                        if settings.test_enable
+                        else _process_state.preloading_database(dbname)
+                    )
+                    with marking, Registry._lock:
                         registry = Registry.new(
                             dbname,
                             update_module=update_module,

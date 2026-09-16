@@ -8,6 +8,7 @@ import odoo.db
 from odoo import http
 from odoo.http import Response, request
 from odoo.libs.json import dumps as json_dumps
+from odoo.service import server as service_server
 from odoo.service.metrics import CONTENT_TYPE as METRICS_CONTENT_TYPE
 from odoo.service.metrics import get_metrics_token, render_prometheus_exposition
 from odoo.tools import config, str2bool
@@ -63,6 +64,14 @@ class Health(http.Controller):
         else:
             dbg.logic.debug("[readyz] data_dir %s not writable", config["data_dir"])
             checks["data_dir"] = "fail"
+            status = 503
+        # A request for a database still being preloaded waits on the
+        # registry lock until the load ends; a balancer should not send one.
+        if service_server.is_ready():
+            checks["registries"] = "pass"
+        else:
+            dbg.logic.debug("[readyz] a registry preload is in progress")
+            checks["registries"] = "loading"
             status = 503
         dbg.lifecycle.debug("[readyz] %s -> %d %s", dbg.req(), status, checks)
         return self._get_health_response(

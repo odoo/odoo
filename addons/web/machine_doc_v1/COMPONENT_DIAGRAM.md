@@ -224,7 +224,7 @@ prose must not reach for them.
 - Model/method names validated before dispatch
 - RPC cache invalidation triggered on write/unlink/create
 
-> **Error serialization** (`odoo/http/helpers.py:290-347`). Gate:
+> **Error serialization** (`odoo/http/_error_serialization.py`). Gate:
 > `_is_exception_detail_hidden()` = `bool(request) and not config["dev_mode"]`.
 >
 > - `data.debug` = full traceback in `dev_mode`, else `_TRACEBACK_HIDDEN`.
