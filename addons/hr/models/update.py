@@ -9,6 +9,8 @@ class Publisher_WarrantyContract(models.AbstractModel):
         msg = super()._get_message()
         msg['nbr_employees_wo_user'] = self.env["hr.employee"].search_count([
             ('active', '=', True),
-            '|', ('user_id', '=', False), ('user_id.active', '=', False),
+            '|', ('user_id', '=', False),
+                '|', ('user_id.active', '=', False),
+                     ('user_id.share', '=', True),
         ])
         return msg
