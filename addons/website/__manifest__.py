@@ -307,6 +307,7 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/compatibility.js',
+            'website/static/src/js/content/generate_video_iframe.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/js/text_processing.js',
@@ -320,7 +321,6 @@
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
-            'website/static/src/js/content/generate_video_iframe.js',
             'website/static/src/js/content/age_verification_content_blur.js',
         ],
         'web.assets_frontend_lazy': [
@@ -330,7 +330,6 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
-            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
