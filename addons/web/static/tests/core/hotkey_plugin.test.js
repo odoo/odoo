@@ -391,7 +391,6 @@ test("overlays can be toggled multiple times in a row", async () => {
 test("overlay modifier does not preventDefault when there are no hotkeys to overlay", async () => {
     class MyComponent extends Component {
         static template = xml`<div><button>no hotkey</button></div>`;
-        static props = ["*"];
     }
 
     await mountWithCleanup(MyComponent);
@@ -404,7 +403,6 @@ test("overlay modifier does not preventDefault when there are no hotkeys to over
 test("overlay modifier prevents default when hotkey overlays are shown", async () => {
     class MyComponent extends Component {
         static template = xml`<button data-hotkey="a">a</button>`;
-        static props = ["*"];
     }
 
     await mountWithCleanup(MyComponent);

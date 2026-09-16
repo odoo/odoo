@@ -1,15 +1,14 @@
-import { Component } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class InvoiceGuide extends Component {
     static template = "account.InvoiceGuide";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         this.action = useService("action");

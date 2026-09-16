@@ -1,7 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, expect, test, waitUntil } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { IrUiView, ResCompany } from "@mass_mailing/../tests/mass_mailing_test_helpers";
+import { animationFrame, beforeEach, click, describe, expect, test, waitFor } from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -12,15 +11,13 @@ import {
     models,
     mountView,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { user } from "@web/core/user";
+import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
-import { ThemeSelector } from "../src/themes/theme_selector/theme_selector";
 import { ThemeSelectorIframe } from "../src/themes/theme_selector/theme_selector_iframe";
-import { IrUiView, ResCompany } from "@mass_mailing/../tests/mass_mailing_test_helpers";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -184,24 +181,15 @@ const mailViewArch = `
 </form>
 `;
 
-/**
- * @type {MassMailingHtmlField}
- */
-let htmlField, themeSelector;
+/** @type {MassMailingHtmlField | null} */
+let htmlField = null;
 describe.current.tags("desktop");
 beforeEach(() => {
-    htmlField = undefined;
-    themeSelector = undefined;
-    patchWithCleanup(MassMailingHtmlField.prototype, {
+    htmlField = null;
+    patch(MassMailingHtmlField.prototype, {
         setup() {
             super.setup();
             htmlField = this;
-        },
-    });
-    patchWithCleanup(ThemeSelector.prototype, {
-        setup() {
-            super.setup();
-            themeSelector = this;
         },
     });
 });
@@ -216,13 +204,6 @@ async function waitForThemeSelector() {
     await waitFor(".o_mass_mailing_theme_selector_iframe_container iframe:not([hidden])", {
         timeout: 3000,
     });
-    await waitUntil(
-        () =>
-            themeSelector &&
-            themeSelector.props.templateThemes.promise &&
-            !themeSelector.state.loading,
-        { timeout: 3000 }
-    );
     await waitFor(":iframe .o_mailing_template_preview_wrapper [data-name]", {
         timeout: 3000,
     });
@@ -231,7 +212,7 @@ async function waitForThemeSelector() {
 describe("field HTML", () => {
     beforeEach(() => {
         // Css assets are not needed for these tests.
-        patchWithCleanup(MassMailingIframe.prototype, {
+        patch(MassMailingIframe.prototype, {
             loadIframeAssets() {
                 return {
                     "mass_mailing.assets_iframe_style": {
@@ -246,11 +227,8 @@ describe("field HTML", () => {
                 };
             },
         });
-        patchWithCleanup(ThemeSelectorIframe.prototype, {
-            loadIframeAssets() {},
-            getStyleSheets() {
-                return Promise.resolve([]);
-            },
+        patch(ThemeSelectorIframe.prototype, {
+            async loadIframeAssets() {},
         });
     });
     test("save arch and html", async () => {
@@ -347,10 +325,10 @@ describe("field HTML", () => {
     });
     test("beforeLeave a FormController with html field should save the record", async () => {
         let formController;
-        patchWithCleanup(FormController.prototype, {
+        patch(FormController.prototype, {
             setup() {
-                formController = this;
                 super.setup();
+                formController = this;
             },
         });
         await mountView({
@@ -387,7 +365,7 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
-        patchWithCleanup(user, {
+        patch(user, {
             checkAccessRight() {
                 return true;
             },
@@ -463,7 +441,9 @@ describe("field HTML", () => {
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
         htmlField.editor.config.onChange({ isPreviewing: false });
         await waitFor(".o-snippets-menu [data-label='Domain']", { timeout: 3000 });
-        expect(".o-snippets-menu [data-label='Domain'] span[data-icon='filter_alt'] + span").toHaveText("Id = 1");
+        expect(
+            ".o-snippets-menu [data-label='Domain'] span[data-icon='filter_alt'] + span"
+        ).toHaveText("Id = 1");
         await clickSave();
         const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
         expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');

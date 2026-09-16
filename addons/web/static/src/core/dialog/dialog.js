@@ -57,8 +57,10 @@ export const dialogProps = {
 
 export class Dialog extends Component {
     static template = "web.Dialog";
-    // don't do this, it is only temporary to allow the dialog props to be
-    // overridden.
+    /**
+     * /!\ DO NOT DO THIS: PROPS SHOULD NOT BE OVERRIDDEN BY CHILD COMPONENTS
+     * This is a temporary measure as converting each dialog extension is tedious
+     */
     static props = dialogProps;
     props = useProps(this.constructor.props);
     // Ref on the modal element, either owned by the parent (`modalRef` prop) or local.
