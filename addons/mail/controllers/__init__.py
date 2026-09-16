@@ -8,6 +8,7 @@ from . import link_preview
 from . import mail
 from . import mailbox
 from . import message_reaction
+from . import res_partner
 from . import thread
 from . import webclient
 from . import webmanifest
