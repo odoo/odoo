@@ -167,11 +167,17 @@ describe("pos.order - loyalty", () => {
         const order = store.addNewOrder();
 
         await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
             qty: 2,
+            tax_ids: [],
         });
 
         await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
             price_unit: 5,
+            tax_ids: [],
         });
 
         // Get loyalty reward #1 - type = "discount"
@@ -238,6 +244,32 @@ describe("pos.order - loyalty", () => {
         const taxIds = taxKeys[0].split(",").map(Number);
         expect(taxIds).toInclude(percentTax.id);
         expect(taxIds).not.toInclude(fixedTax.id);
+    });
+
+    test("discount does not apply on tips", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+            price_unit: 100,
+        });
+
+        await addProductLineToOrder(store, order, {
+            templateId: 1,
+            productId: 1,
+            price_unit: 10,
+        });
+
+        // Tip not discountable
+        const discountReward = models["loyalty.reward"].get(1);
+        expect(order._getDiscountableOnOrder(discountReward).discountable).toBe(115);
+
+        // Tip payable with ewallet/giftcards
+        const paymentReward = models["loyalty.reward"].get(2);
+        expect(order._getDiscountableOnOrder(paymentReward).discountable).toBe(125);
     });
 
     test("_computeNItems", async () => {
