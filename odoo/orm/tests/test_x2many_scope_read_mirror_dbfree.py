@@ -159,8 +159,11 @@ class TestAUserReadFillsTheSuperuserSlot:
             field._get_cache(env)[order.id] = (line.id,)
 
 
-class TestTheWriterSlotListsWhatTheWriterMayRead:
-    def test_a_line_the_creator_may_not_read_leaves_its_slot(self):
+class TestTheWriterSlotListsWhatTheWriterWrote:
+    def test_a_line_the_creator_may_not_read_stays_in_its_slot_until_a_search(self):
+        # the writer's slot appends what the writer wrote, judged by nobody:
+        # judging would cost the comodel's read check on every write, and the
+        # writer's own write is visible to the writer inside its transaction
         with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
@@ -169,23 +172,19 @@ class TestTheWriterSlotListsWhatTheWriterMayRead:
                 .with_env(as_user.env)
                 .create({"order_id": order.id, "value": 1})
             )
-            field = order._fields["line_ids"]
-            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
-                order.id: (shown.id,)
-            }
             hidden = (
                 env["mirror.line"]
                 .with_env(as_user.env)
                 .create({"order_id": order.id, "value": 2, "secret": True})
             )
-            # the writer's slot is evicted: its next read searches and hides
-            assert order.id not in _slots(env, field).get(
-                as_user.env.get_cache_key(field), {}
-            )
-            assert order.line_ids == shown
-            # the superuser's slot took both, as the superuser reads both
+            field = order._fields["line_ids"]
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: (shown.id, hidden.id)
+            }
             assert order.sudo().line_ids._ids == (shown.id, hidden.id)
             assert order.sudo().total == 3
+            order.invalidate_recordset(["line_ids"])
+            assert order.line_ids == shown
 
     def test_a_line_the_creator_may_read_stays_in_its_slot(self):
         with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
@@ -217,55 +216,50 @@ class TestTheWriterSlotListsWhatTheWriterMayRead:
             assert order.sudo().held_ids == line.sudo()
 
 
-def _count_readability_checks(monkeypatch, env):
-    from odoo.orm.fields.relational._base import _RelationalMulti
+def _count_access_filters(monkeypatch):
+    from odoo.orm.models import BaseModel
 
     calls = []
-    original = _RelationalMulti._scope_readable_ids
+    original = BaseModel._filtered_access
 
-    def counted(self, env, key, comodel_ids):
-        calls.append(tuple(comodel_ids))
-        return original(self, env, key, comodel_ids)
+    def counted(self, operation):
+        calls.append((self._name, operation))
+        return original(self, operation)
 
-    monkeypatch.setattr(_RelationalMulti, "_scope_readable_ids", counted)
+    monkeypatch.setattr(BaseModel, "_filtered_access", counted)
     return calls
 
 
-class TestABatchIsJudgedOncePerScope:
-    def test_a_superuser_batch_over_many_hosts_checks_the_user_scope_once(
-        self, monkeypatch
-    ):
+class TestABatchJudgesNoScope:
+    def test_a_superuser_batch_over_many_hosts_evicts_the_user_scope(self, monkeypatch):
         # _message_log_batch: N messages on N threads, created under sudo,
         # while the user's slot holds every thread's x2many
         with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
-            calls = _count_readability_checks(monkeypatch, env)
+            calls = _count_access_filters(monkeypatch)
             lines = env["mirror.line"].create(
                 [
                     {"order_id": order.id, "value": i, "secret": i == 3}
                     for i, order in enumerate(orders)
                 ]
             )
-            assert len(calls) == 1
-            assert sorted(calls[0]) == sorted(lines._ids)
+            assert calls == []
             field = orders._fields["line_ids"]
-            user_slot = _slots(env, field)[as_user.env.get_cache_key(field)]
-            assert orders[3].id not in user_slot
-            assert {
-                order.id: user_slot[order.id] for order in orders if order != orders[3]
-            } == {
-                order.id: (line.id,)
-                for order, line in zip(orders, lines, strict=True)
-                if order != orders[3]
+            slots = _slots(env, field)
+            assert slots[as_user.env.get_cache_key(field)] == {}
+            assert slots[env.get_cache_key(field)] == {
+                order.id: (line.id,) for order, line in zip(orders, lines, strict=True)
             }
+            # the user's next read searches, and the search hides the secret
             assert orders[3].with_env(as_user.env).line_ids._ids == ()
+            assert orders[0].with_env(as_user.env).line_ids == lines[0]
 
-    def test_a_user_batch_over_many_hosts_checks_its_own_scope_once(self, monkeypatch):
+    def test_a_user_batch_over_many_hosts_appends_to_its_own_scope(self, monkeypatch):
         with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             orders = as_user.create([{"name": f"o{i}"} for i in range(10)])
-            calls = _count_readability_checks(monkeypatch, env)
+            calls = _count_access_filters(monkeypatch)
             lines = (
                 env["mirror.line"]
                 .with_env(as_user.env)
@@ -276,9 +270,12 @@ class TestABatchIsJudgedOncePerScope:
                     ]
                 )
             )
-            assert len(calls) == 1
+            assert calls == []
             field = orders._fields["line_ids"]
-            user_slot = _slots(env, field)[as_user.env.get_cache_key(field)]
-            assert orders[3].id not in user_slot
-            assert user_slot[orders[0].id] == (lines[0].id,)
+            slots = _slots(env, field)
+            expected = {
+                order.id: (line.id,) for order, line in zip(orders, lines, strict=True)
+            }
+            assert slots[as_user.env.get_cache_key(field)] == expected
+            assert slots[env.get_cache_key(field)] == expected
             assert orders.sudo()[3].line_ids == lines[3].sudo()

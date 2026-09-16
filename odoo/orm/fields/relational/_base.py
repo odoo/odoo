@@ -490,57 +490,20 @@ class _RelationalMulti(_Relational):
         index = env._field_depends_context[self].index("access")
         return key[index] is True or key[index] is None
 
-    def _scope_readable_ids(
-        self, env: Environment, key: tuple, comodel_ids: Collection[IdType]
-    ) -> set[IdType]:
-        index = env._field_depends_context[self].index("access")
-        uid, company_ids = key[index]
-        context = dict(env.context)
-        if company_ids:
-            context["allowed_company_ids"] = list(company_ids)
-        else:
-            context.pop("allowed_company_ids", None)
-        try:
-            scope_env = env(user=uid, context=context, su=False)
-            records = scope_env[self.comodel_name].browse(comodel_ids)
-            return set(records._filtered_access("read")._ids)
-        except AccessError, NotImplementedError:
-            return set()
-
     def _reads_as_superuser(self, env: Environment) -> bool:
+        # a user's read equals the superuser's only when nothing narrows it:
+        # a static field domain, a comodel whose _search is not overridden,
+        # model access, and no read rule for the user on the comodel
         comodel = env[self.comodel_name]
         if callable(self.domain) or is_search_overridden(type(comodel)):
             return False
+        policy = env.registry.access_policy
         try:
-            return not env.registry.access_policy.record_domain(
-                env, self.comodel_name, "read"
+            return policy.model_allowed(env, self.comodel_name, "read") and (
+                not policy.record_domain(env, self.comodel_name, "read")
             )
         except NotImplementedError:
             return False
-
-    def _writer_scope_readable(
-        self, env: Environment, added: Collection[IdType]
-    ) -> set[IdType] | None:
-        # the writer's own slot lists what the writer wrote only when the
-        # writer's search would list it too: a create or write rule may admit
-        # a record the read rule hides, and the slot answers reads; None
-        # means the scope keeps everything
-        if env.su:
-            return None
-        key = env.get_cache_key(self)
-        if self._is_superuser_scope(env, key):
-            # a computed x2many keeps one slot for every scope
-            return None
-        stored = [id_ for id_ in added if isinstance(id_, int)]
-        return self._scope_readable_ids(env, key, stored) if stored else set()
-
-    @staticmethod
-    def _scope_keeps(
-        readable: Collection[IdType] | None, added: Collection[IdType]
-    ) -> bool:
-        return readable is None or all(
-            id_ in readable for id_ in added if isinstance(id_, int)
-        )
 
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
@@ -570,16 +533,6 @@ class _RelationalMulti(_Relational):
                 writer_su=env.su,
             )
 
-    def _get_created_caches(
-        self, env: Environment
-    ) -> list[MutableMapping[IdType, typing.Any]]:
-        caches = [self._get_cache(env)]
-        if not env.su:
-            caches.append(
-                env.core.get_context_data(self, self._superuser_scope_key(env))
-            )
-        return caches
-
     def _mirror_to_superuser_scope(
         self, env: Environment, ids: Collection[IdType], cache_value: typing.Any
     ) -> None:
@@ -589,40 +542,6 @@ class _RelationalMulti(_Relational):
         for id_ in ids:
             if isinstance(id_, int):
                 slot[id_] = cache_value
-
-    def _insert_read_cache(
-        self, records: ModelLike, values: Sequence[tuple[IdType, ...]]
-    ) -> None:
-        # a read no record rule narrows answers what the superuser's own
-        # search would: the value fills the reader's slot and the superuser's,
-        # so a compute_sudo compute that follows serves from the cache instead
-        # of fetching the relation once more for its scope
-        self._insert_cache(records, values)
-        env = records.env
-        if env.su:
-            return
-        policy = env.registry.access_policy
-        if not policy.model_allowed(env, self.comodel_name, "read"):
-            # a bypass_search_access read filters the ids to none for a
-            # reader without model access: that emptiness is the reader's
-            return
-        if not policy.record_domain(env, self.comodel_name, "read").is_true():
-            return
-        slot = env.core.get_context_data(self, self._superuser_scope_key(env))
-        mirrored = 0
-        for id_, value in zip(records._ids, values, strict=True):
-            if isinstance(id_, int) and id_ not in slot:
-                slot[id_] = value
-                mirrored += 1
-        if mirrored and _debug.logic.enabled:
-            _debug.logic(
-                "field.x2many.read_mirrored_to_superuser",
-                model=self.model_name,
-                field=self.name,
-                records=len(records),
-                mirrored=mirrored,
-                uid=env.uid,
-            )
 
     def _sync_other_scopes(
         self,
@@ -662,8 +581,10 @@ class _RelationalMulti(_Relational):
     def _sync_added_to_other_scopes(
         self, env: Environment, additions: Mapping[IdType, tuple[IdType, ...]]
     ) -> None:
-        # one readability check per scope, not one per record: a batch create
-        # of N messages on N threads reaches here once with N additions
+        # the superuser's slot takes every addition, it reads everything; a
+        # user's slot is evicted rather than judged: judging costs the
+        # comodel's read check now, evicting costs a search only if that user
+        # reads the record again, and a direct x2many write evicts the same way
         additions = {
             id_: added
             for id_, added in additions.items()
@@ -677,24 +598,18 @@ class _RelationalMulti(_Relational):
         for key, slot in list(env.core.iter_context_caches(self)):
             if key in (own, PENDING_SCOPE_KEY):
                 continue
-            held = {
-                id_: added
-                for id_, added in additions.items()
-                if id_ in slot and slot[id_] is not PENDING
-            }
+            held = [
+                id_ for id_ in additions if id_ in slot and slot[id_] is not PENDING
+            ]
             if not held:
                 continue
-            readable: set[IdType] | None = None
             if not self._is_superuser_scope(env, key):
-                readable = self._scope_readable_ids(
-                    env, key, list(unique(itertools.chain.from_iterable(held.values())))
-                )
-            for id_, added in held.items():
-                if not self._scope_keeps(readable, added):
+                for id_ in held:
                     del slot[id_]
-                    evicted += 1
-                    continue
-                ids = tuple(unique(itertools.chain(slot[id_], added)))
+                evicted += len(held)
+                continue
+            for id_ in held:
+                ids = tuple(unique(itertools.chain(slot[id_], additions[id_])))
                 if not _is_cache_order_stable(comodel, ids):
                     sorted_ids = comodel.browse(ids)._sorted_by_ids(
                         comodel._order, False
@@ -702,7 +617,7 @@ class _RelationalMulti(_Relational):
                     if sorted_ids is not None:
                         ids = sorted_ids
                 slot[id_] = ids
-                synced += 1
+            synced += len(held)
         if _debug.logic.enabled and (synced or evicted):
             _debug.logic(
                 "field.x2many.scope_sync",
@@ -738,6 +653,10 @@ class _RelationalMulti(_Relational):
 
     @override
     def _insert_cache(self, records: ModelLike, values: Iterable) -> None:
+        # a read nothing narrows answers what the superuser's own search
+        # would: the value fills the reader's slot and the superuser's, so a
+        # compute_sudo compute that follows serves from the cache instead of
+        # fetching the relation once more for its scope
         env = records.env
         if env.su or not self._reads_as_superuser(env):
             super()._insert_cache(records, values)
@@ -745,9 +664,20 @@ class _RelationalMulti(_Relational):
         values = list(values)
         super()._insert_cache(records, values)
         slot = env.core.get_context_data(self, self._superuser_scope_key(env))
+        mirrored = 0
         for id_, value in zip(records._ids, values, strict=True):
-            if isinstance(id_, int):
-                slot.setdefault(id_, value)
+            if isinstance(id_, int) and id_ not in slot:
+                slot[id_] = value
+                mirrored += 1
+        if mirrored and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.read_mirrored_to_superuser",
+                model=self.model_name,
+                field=self.name,
+                records=len(records),
+                mirrored=mirrored,
+                uid=env.uid,
+            )
 
     @override
     def _update_cache(

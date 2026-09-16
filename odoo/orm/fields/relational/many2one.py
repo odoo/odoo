@@ -1,4 +1,3 @@
-import itertools
 import typing
 from collections.abc import (
     Iterable,
@@ -444,32 +443,9 @@ class Many2one(_Relational):
                 continue
             invf._sync_added_to_other_scopes(env, additions)
             inv_cache = invf._get_cache(env)
-            readable = invf._writer_scope_readable(
-                env,
-                list(
-                    unique(
-                        itertools.chain.from_iterable(
-                            added
-                            for coid, added in additions.items()
-                            if coid and coid in inv_cache
-                        )
-                    )
-                ),
-            )
             for coid, added in additions.items():
                 ids0 = inv_cache.get(coid)
                 if ids0 is None and coid:
-                    continue
-                if coid and not invf._scope_keeps(readable, added):
-                    _debug.logic(
-                        "field.many2one.inverse_evicted_from_writer_scope",
-                        model=self.model_name,
-                        field=self.name,
-                        inverse=f"{invf.model_name}.{invf.name}",
-                        corecord=coid,
-                        uid=env.uid,
-                    )
-                    inv_cache.pop(coid, None)
                     continue
                 ids1 = tuple(unique((ids0 or ()) + added))
                 if coid and not _is_cache_order_stable(model, ids1):
