@@ -1399,6 +1399,18 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_template_image_ids.sorted("sequence") or self
 
+    def _get_shop_images(self):
+        """Return the primary and secondary images to display on the shop page.
+
+        If the template has no primary or secondary images, fall back on `_get_images`.
+        """
+        self.ensure_one()
+        all_images = self._get_images()
+        images_with_type = self.product_template_image_ids.filtered("type").sorted("sequence")
+        primary_image = images_with_type.filtered(lambda i: i.type == "primary")[:1]
+        secondary_image = images_with_type.filtered(lambda i: i.type == "secondary")[:1]
+        return (primary_image or all_images[:1]) + (secondary_image or all_images[1:2])
+
     def _get_product_page_documents(self, variant=None):
         self.ensure_one()
         docs = self.sudo().product_document_ids
@@ -1414,12 +1426,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-            "barcode",
-            "product_variant_ids.barcode",
-        ]
+        search_fields = ["name", "variants_default_code", "barcode", "product_variant_ids.barcode"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
