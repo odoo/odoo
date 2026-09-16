@@ -17,7 +17,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_website_form .s_website_form_input[name=name]",
             run: "click",
         },
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
             content: "Open model selector",
             trigger: "button[id='hidden_condition_record_opt']:contains('Test Tag')",
