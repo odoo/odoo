@@ -675,6 +675,13 @@ class PostgresSessionStore(SessionStore):
             return
         cr = odoo.db.db_connect(self.dbname).cursor()
         try:
+            # The pool runs REPEATABLE READ, whose snapshot is taken at the
+            # first statement -- the lock wait -- so a writer that queued
+            # behind another would read the row as it was before the other
+            # committed and fail to serialize its own update. The advisory
+            # lock is this store's serialization; READ COMMITTED lets the
+            # locked section see what the previous holder wrote.
+            cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
             self._ensure_schema(cr)
             yield cr
             cr.commit()
