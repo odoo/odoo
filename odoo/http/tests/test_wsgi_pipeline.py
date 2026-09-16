@@ -8,6 +8,7 @@ from odoo.http.tests._wsgi import Harness, environ
 ADDON = "wsgi_probe"
 
 PROBE = """
+import psycopg.errors
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, Response, request, route
