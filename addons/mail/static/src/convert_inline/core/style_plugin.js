@@ -7,12 +7,15 @@ import { DYNAMIC_CSS_EVAL_EXPRESSIONS } from "./utils";
 
 export class StylePlugin extends Plugin {
     static id = "style";
-    static dependencies = ["measurementSnapshot", "responsive"];
+    static dependencies = ["measurementSnapshot", "responsive", "referenceNode"];
     static shared = ["getRawStyleInfo"];
     resources = {
         on_load_reference_content_handlers: this.loadAllFonts.bind(this),
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
-        on_parse_layout_with_dimensions_handlers: this.registerCSSRules.bind(this),
+        on_parse_layout_with_dimensions_handlers: [
+            this.registerCSSRules.bind(this),
+            this.cacheRawStyleInfo.bind(this),
+        ],
     };
 
     setup() {
@@ -359,6 +362,19 @@ export class StylePlugin extends Plugin {
                 }
             }
         }
+    }
+
+    cacheRawStyleInfo() {
+        const treeWalker = this.createReferenceTreeWalker({
+            filter: (node) =>
+                node.nodeType === Node.ELEMENT_NODE
+                    ? NodeFilter.FILTER_ACCEPT
+                    : NodeFilter.FILTER_REJECT,
+        });
+        let element = treeWalker.root;
+        do {
+            this.getRawStyleInfo(element);
+        } while ((element = treeWalker.nextNode()));
     }
 }
 

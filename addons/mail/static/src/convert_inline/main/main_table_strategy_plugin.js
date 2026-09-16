@@ -146,9 +146,8 @@ export class MainTableStrategyPlugin extends Plugin {
         }
         refs.td ??= {};
         const tdStyle = refs.td.style ?? {};
-        refs.td.style = this.getTableContextStyleInfo(this.config.referenceDocument.body).merge(
-            StyleInfo.from(tdStyle)
-        );
+        // TODO EGGMAIL: evaluate if body has to be taken as the context Node
+        refs.td.style = this.getTableContextStyleInfo(referenceNode).merge(StyleInfo.from(tdStyle));
         return new MainTableModel({ refs });
     }
 

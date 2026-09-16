@@ -40,7 +40,6 @@ export class SpacingPlugin extends Plugin {
     static dependencies = [
         "contextStyle",
         "measurementSnapshot",
-        "referenceNode",
         "responsiveBlock",
         "rules",
         "style",
@@ -56,7 +55,6 @@ export class SpacingPlugin extends Plugin {
         "validateSpacingValue",
     ];
     resources = {
-        on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
         refine_layout_processors: withSequence(
             DEFAULT_SPACING_SEQUENCE,
@@ -356,19 +354,6 @@ export class SpacingPlugin extends Plugin {
             }
         }
         return layout;
-    }
-
-    cacheSpacingStyleInfo() {
-        const treeWalker = this.createReferenceTreeWalker({
-            filter: (node) =>
-                node.nodeType === Node.ELEMENT_NODE
-                    ? NodeFilter.FILTER_ACCEPT
-                    : NodeFilter.FILTER_REJECT,
-        });
-        let element = treeWalker.root;
-        do {
-            this.getRawStyleInfo(element);
-        } while ((element = treeWalker.nextNode()));
     }
 
     decomposeSpacingShorthandValue(value) {
