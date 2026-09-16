@@ -67,6 +67,10 @@ class FakeCursor:
         self.postcommit = Callbacks()
         self.postrollback = Callbacks()
         self.pin_key: object = None
+        self.statement_timeouts: list[float | None] = []
+
+    def set_statement_timeout(self, seconds: float | None) -> None:
+        self.statement_timeouts.append(seconds)
 
     def commit(self) -> None:
         self.commit_count += 1
@@ -188,7 +192,7 @@ class FakeIrHttp:
             raise AccessDenied(f"unknown auth {auth!r}")
 
     def _pre_dispatch(self, rule: Any, args: dict[str, Any]) -> None:
-        pass
+        request.dispatcher.pre_dispatch(rule, args)
 
     def _dispatch(self, endpoint: Any) -> Any:
         result = endpoint(**request.params)

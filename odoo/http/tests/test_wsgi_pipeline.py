@@ -81,6 +81,10 @@ class Probe(Controller):
     @route("/probe/boom", auth="public", methods=["GET"])
     def boom(self):
         raise RuntimeError("controller bug")
+
+    @route("/probe/budgeted", auth="public", methods=["GET"], statement_timeout=2.5)
+    def budgeted(self):
+        return "budgeted"
 """
 
 
@@ -280,6 +284,19 @@ def test_a_controller_bug_is_a_500_built_by_ir_http(harness):
     assert type(harness.ir_http.errors_handled[-1]).__name__ == "RuntimeError"
     (cr,) = harness.registry.cursors
     assert cr.commit_count == 0
+
+
+def test_a_route_statement_budget_is_set_on_the_request_transaction(harness):
+    served = harness.serve(environ("/probe/budgeted"))
+    assert served.status_code == 200
+    (cr,) = harness.registry.cursors
+    assert cr.statement_timeouts == [2.5]
+
+    plain = harness.serve(environ("/probe/public"))
+    assert plain.status_code == 200
+    assert harness.registry.cursors[-1].statement_timeouts == [], (
+        "no route budget and no dispatcher default: the server default stands"
+    )
 
 
 def test_a_rejected_method_never_reaches_the_router(harness):

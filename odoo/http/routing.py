@@ -40,6 +40,7 @@ _KNOWN_ROUTING_PARAMETERS: set[str] = {
     "max_content_length",
     "readonly",
     "save_session",
+    "statement_timeout",
     "type",
     "typed",
     *ROUTING_KEYS,

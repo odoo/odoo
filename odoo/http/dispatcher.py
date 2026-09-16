@@ -63,6 +63,8 @@ class Dispatcher(ABC):
 
     serializes_errors_in_dev_mode: bool = False
 
+    statement_timeout: float | None = None
+
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         routing_type = getattr(cls, "routing_type", None)
@@ -116,6 +118,7 @@ class Dispatcher(ABC):
         )
         self._answer_options_request(routing, is_preflight)
         self._apply_max_content_length(rule, routing)
+        self._apply_statement_timeout(routing)
 
     def _answer_options_request(
         self, routing: collections.abc.Mapping[str, Any], is_preflight: bool
@@ -143,6 +146,24 @@ class Dispatcher(ABC):
                 limit=max_content_length,
                 resolved=callable(routing["max_content_length"]),
             )
+
+    def _apply_statement_timeout(
+        self, routing: collections.abc.Mapping[str, Any]
+    ) -> None:
+        seconds = routing.get("statement_timeout", self.statement_timeout)
+        if seconds is None:
+            return
+        env = getattr(self.request, "env", None)
+        if env is None or env.cr.closed:
+            return
+        # SET LOCAL: the budget lives with this transaction and dies with it,
+        # so a replay or the next request starts from the server default.
+        env.cr.set_statement_timeout(seconds)
+        _debug.logic(
+            "http.dispatch.statement_timeout",
+            seconds=seconds,
+            source="route" if "statement_timeout" in routing else self.routing_type,
+        )
 
     @abstractmethod
     def dispatch(self, endpoint: Endpoint, args: dict[str, Any]) -> Any:
