@@ -238,7 +238,7 @@ class StockQuant(models.Model):
                 )
             )
 
-    @api.constrains("lot_id")
+    @api.constrains("lot_id", "product_id")
     def _check_lot_id(self):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:

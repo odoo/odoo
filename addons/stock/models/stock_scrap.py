@@ -143,7 +143,13 @@ class StockScrap(models.Model):
         for scrap in self:
             scrap.product_uom_id = scrap.product_id.uom_id
 
-    @api.depends("company_id", "picking_id")
+    @api.depends(
+        "company_id",
+        "picking_id",
+        "picking_id.state",
+        "picking_id.location_id",
+        "picking_id.location_dest_id",
+    )
     def _compute_location_id(self):
         company_warehouses = self.env["stock.warehouse"].search(
             [("company_id", "in", self.company_id.ids)]

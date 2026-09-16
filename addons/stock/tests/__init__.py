@@ -83,3 +83,4 @@ from . import test_group_readonly
 from . import test_consignment_interface
 from . import test_create_computes
 from . import test_move_line_done_access
+from . import test_derived_defaults

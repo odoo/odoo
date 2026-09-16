@@ -52,7 +52,10 @@ class StockMoveDone(models.Model):
             lambda m: (
                 not (
                     m.state == "cancel"
-                    or (m.quantity <= 0 and not m.is_inventory)
+                    or (
+                        m.product_uom_id.compare(m.quantity, 0.0) <= 0
+                        and not m.is_inventory
+                    )
                     or not m.picked
                 )
             ),
@@ -223,7 +226,10 @@ class StockMoveDone(models.Model):
                     lambda ml: not ml.picked,
                 ).ids
             if (
-                (move.quantity <= 0 or not move.picked)
+                (
+                    move.product_uom_id.compare(move.quantity, 0.0) <= 0
+                    or not move.picked
+                )
                 and not move.is_inventory
                 and (
                     move.product_uom_id.compare(move.product_uom_qty, 0.0) == 0

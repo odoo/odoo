@@ -61,15 +61,18 @@ class ProductCategory(models.Model):
     )
 
     @dbg.timed
-    @api.depends("parent_id")
+    @api.depends("parent_id", "parent_id.total_route_ids", "route_ids")
     def _compute_parent_route_ids(self):
+        # the parent's total is already every ancestor's routes, so recursing
+        # is both one read instead of one per level and a depends the ORM can
+        # follow: with only `parent_id` declared, editing a category's routes
+        # left its descendants on the previous set until the cache was dropped.
+        # `modified()` does not cascade through non-stored computes, so this
+        # reaches the children; deeper still waits for a cache miss.
         for category in self:
-            base_cat = category
-            routes = self.env["stock.route"]
-            while base_cat.parent_id:
-                base_cat = base_cat.parent_id
-                routes |= base_cat.route_ids
-            category.parent_route_ids = routes - category.route_ids
+            category.parent_route_ids = (
+                category.parent_id.total_route_ids - category.route_ids
+            )
 
     @api.depends("route_ids", "parent_route_ids")
     def _compute_total_route_ids(self):

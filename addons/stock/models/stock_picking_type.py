@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
+from ..const import PARTNER_LOCATION_USAGES, PARTNER_USAGE_BY_PICKING_CODE
 from ..tools import debug_log as dbg
 
 
@@ -488,16 +489,40 @@ class StockPickingType(models.Model):
             elif picking_type.code == "outgoing":
                 picking_type.print_label = True
 
-    def _update_derived_default_location(self, field_name, derive):
+    def _update_derived_default_location(self, field_name, derive, partner_usage):
         undecidable = self.browse()
         for picking_type in self:
+            current = picking_type[field_name]
+            if current and picking_type._is_default_location_suitable(
+                current, partner_usage
+            ):
+                continue
             location = derive(picking_type)
             if location:
+                dbg.logic.debug(
+                    "[picking_type:%s] %s: %s -> %s (code=%s)",
+                    picking_type.id,
+                    field_name,
+                    current.id,
+                    location.id,
+                    picking_type.code,
+                )
                 picking_type[field_name] = location.id
-            elif not picking_type[field_name]:
+            elif not current:
                 undecidable |= picking_type
         if undecidable:
             undecidable._raise_undecidable_default_locations()
+
+    def _is_default_location_suitable(self, location, partner_usage):
+        # `code` is the derivation's only trigger, so assigning unconditionally
+        # reset Pack's (Packing Zone -> Output), Receipts' Input and Delivery's
+        # Output on any write of `code`, including one that changed nothing.
+        # The derivation is a default, not a definition: it applies when the
+        # field is empty, and when what it holds contradicts the new code.
+        self.check_singleton()
+        if PARTNER_USAGE_BY_PICKING_CODE.get(self.code) == partner_usage:
+            return location.usage == partner_usage
+        return location.usage not in PARTNER_LOCATION_USAGES
 
     def _raise_undecidable_default_locations(self):
         companies = self.company_id or self.env.company
@@ -528,6 +553,7 @@ class StockPickingType(models.Model):
                 if picking_type.code == "incoming"
                 else picking_type.warehouse_id.lot_stock_id
             ),
+            "supplier",
         )
 
     @api.depends("code")
@@ -544,6 +570,7 @@ class StockPickingType(models.Model):
                 if picking_type.code == "outgoing"
                 else picking_type.warehouse_id.lot_stock_id
             ),
+            "customer",
         )
 
     @api.depends("company_id")

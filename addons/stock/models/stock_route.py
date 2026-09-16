@@ -109,7 +109,7 @@ class StockRoute(models.Model):
                 memo[route.id] = frozenset(actions)
         return any(action in memo[route_id] for route_id in self.ids)
 
-    @api.constrains("company_id")
+    @api.constrains("company_id", "rule_ids")
     def _check_company_consistency(self):
         for route in self:
             if not route.company_id:

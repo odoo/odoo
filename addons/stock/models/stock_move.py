@@ -50,6 +50,7 @@ class StockMove(models.Model):
         comodel_name="stock.picking.type",
         string="Operation Type",
         compute="_compute_picking_type_id",
+        precompute=True,
         store=True,
         readonly=False,
         check_company=True,
@@ -668,7 +669,7 @@ class StockMove(models.Model):
         for move in self:
             move.product_uom_id = move.product_id.uom_id.id
 
-    @api.depends("picking_id.location_id")
+    @api.depends("picking_id.location_id", "picking_type_id.default_location_src_id")
     def _compute_location_id(self):
         for move in self:
             location = move.location_id
@@ -681,7 +682,13 @@ class StockMove(models.Model):
                     location = move.picking_type_id.default_location_src_id
             move.location_id = location
 
-    @api.depends("picking_id.location_dest_id", "location_final_id")
+    @api.depends(
+        "picking_id.location_dest_id",
+        "location_final_id",
+        "picking_type_id.default_location_dest_id",
+        "rule_id.location_dest_id",
+        "rule_id.location_dest_from_rule",
+    )
     def _compute_location_dest_id(self):
         customer_loc, __ = self.env["stock.warehouse"]._get_partner_locations()
         inter_comp_location = self.env.ref(

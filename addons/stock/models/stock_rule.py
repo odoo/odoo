@@ -169,7 +169,7 @@ class StockRule(models.Model):
                     ),
                 ) from error
 
-    @api.constrains("company_id")
+    @api.constrains("company_id", "route_id")
     def _check_company_consistency(self):
         for rule in self:
             route = rule.route_id

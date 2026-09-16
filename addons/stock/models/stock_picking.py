@@ -597,6 +597,7 @@ class StockPicking(models.Model):
         "move_ids.picking_id",
         "move_ids.procure_method",
         "location_id",
+        "location_id.usage",
         "is_cancelled",
     )
     @dbg.timed
@@ -686,7 +687,12 @@ class StockPicking(models.Model):
                     default=False,
                 )
 
-    @api.depends("picking_type_id", "partner_id")
+    @api.depends(
+        "picking_type_id",
+        "picking_type_id.default_location_src_id",
+        "partner_id",
+        "partner_id.property_stock_supplier",
+    )
     def _compute_location_id(self):
         for picking in self:
             if picking.location_id and (
@@ -696,7 +702,12 @@ class StockPicking(models.Model):
             if picking.picking_type_id:
                 picking.location_id = picking._get_type_default_location_id()
 
-    @api.depends("picking_type_id", "partner_id")
+    @api.depends(
+        "picking_type_id",
+        "picking_type_id.default_location_dest_id",
+        "partner_id",
+        "partner_id.property_stock_customer",
+    )
     def _compute_location_dest_id(self):
         for picking in self:
             if picking.location_dest_id and (

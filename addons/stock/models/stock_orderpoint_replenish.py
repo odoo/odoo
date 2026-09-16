@@ -160,10 +160,6 @@ class StockWarehouseOrderpointReplenish(models.Model):
             },
         )
 
-    def _get_default_route(self):
-        self.check_singleton()
-        return self._get_default_route_map().get(self.id, self.env["stock.route"])
-
     def _get_default_route_map(self):
         to_compute = self.filtered("location_id")
         empty_route = self.env["stock.route"]
@@ -241,10 +237,6 @@ class StockWarehouseOrderpointReplenish(models.Model):
                 result[orderpoint.id],
             )
         return result
-
-    def _get_qty_to_order(self):
-        self.check_singleton()
-        return self._get_qty_to_order_map()[self.id]
 
     def _prepare_lead_time_params(self):
         self.check_singleton()
