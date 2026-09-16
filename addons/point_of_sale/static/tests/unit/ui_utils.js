@@ -1,4 +1,12 @@
-import { animationFrame, press, tick, waitFor, queryAll, advanceTime } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    press,
+    tick,
+    waitFor,
+    queryAll,
+    advanceTime,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -785,4 +793,14 @@ export async function closeNotifications() {
         await contains(button).click();
     }
     await animationFrame();
+}
+
+export async function selectUomOption(uomName) {
+    await contains(`.uom-selection-value:contains("${uomName}")`).click();
+}
+
+export function getOrderlineElByPrice(productName, price) {
+    return queryOne(
+        `.orderline:has(.product-name:contains(${productName})):has(.product-price:contains(${price}))`
+    );
 }
