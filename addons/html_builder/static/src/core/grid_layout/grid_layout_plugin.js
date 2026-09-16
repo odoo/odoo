@@ -5,6 +5,8 @@ import { clamp } from "@web/core/utils/numbers";
 import {
     addBackgroundGrid,
     additionalRowLimit,
+    adjustGrid,
+    adjustGridItem,
     checkIfImageColumn,
     cleanUpGrid,
     convertColumnToGrid,
@@ -27,7 +29,7 @@ function isGridItem(el) {
 
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
-    static dependencies = ["selection", "builderOptions"];
+    static dependencies = ["selection", "builderOptions", "domReferenceMap", "domObserver"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(0, {
@@ -35,6 +37,7 @@ export class GridLayoutPlugin extends Plugin {
         }),
         on_cloned_handlers: this.onCloned.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
+        on_prepare_drag_handlers: this.prepareDrag.bind(this),
         // Drag and drop from sidebar
         on_snippet_dragged_handlers: this.onSnippetDragged.bind(this),
         on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
@@ -59,12 +62,19 @@ export class GridLayoutPlugin extends Plugin {
         // versions).
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
+        // Adjust the grids/grid items to the changes.
+        on_current_options_containers_changed_handlers: this.onContainersChange.bind(this),
+        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
+        normalize_processors: this.onNormalize.bind(this),
+        on_history_will_undo_handlers: this.onWillUndoOrRedo.bind(this),
+        on_history_will_redo_handlers: this.onWillUndoOrRedo.bind(this),
     };
 
     setup() {
         this.overlayTarget = null;
         this.isRtl = this.config.isEditableRTL;
         this.iframe = this.document.defaultView.frameElement;
+        this.mobileBreakpoint = this.config.mobileBreakpoint;
     }
 
     /**
@@ -158,6 +168,80 @@ export class GridLayoutPlugin extends Plugin {
     }
 
     /**
+     *
+     * @param {*} optionsContainer
+     * @returns
+     */
+    onContainersChange(optionsContainer) {
+        if (this.config.isMobileView(this.editable)) {
+            return;
+        }
+        optionsContainer.forEach(({ element }) => {
+            if (element.classList.contains("o_grid_item")) {
+                this.dependencies.domObserver.ignore(() => {
+                    const rowEl = element.parentElement;
+                    adjustGrid(rowEl);
+                });
+                return;
+            }
+        });
+    }
+
+    /**
+     *
+     * @param {*} mutations
+     * @returns
+     */
+    handleMutations(mutations) {
+        if (this.config.isMobileView(this.editable)) {
+            return;
+        }
+        mutations.forEach((mutation) => {
+            if (mutation.type === "remove") {
+                return;
+            }
+            const node = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
+            if (node) {
+                const targetEl = isElement(node) ? node : node.parentNode;
+                if (targetEl) {
+                    this.modifiedGridItemEl = targetEl.closest(".o_grid_item");
+                    this.modifiedGridEl = targetEl.matches(".row.o_grid_mode") && targetEl;
+                }
+            }
+        });
+    }
+
+    onWillUndoOrRedo() {
+        this.isUndoingOrRedoing = true;
+    }
+
+    /**
+     *
+     * @param {*} rootEl
+     */
+    onNormalize(rootEl) {
+        if (!this.isUndoingOrRedoing) {
+            // console.warn("NORMALIZE", rootEl, this.modifiedGridItemEl, this.modifiedGridEl);
+            if (this.modifiedGridItemEl && !this.modifiedGridEl) {
+                // console.log("GRID ITEM");
+                // Lock the row size and adjust the height of the modified grid item.
+                const rowEl = this.modifiedGridItemEl.parentElement;
+                const { rowSize } = getGridProperties(rowEl);
+                rowEl.style["grid-auto-rows"] = `${rowSize}px`;
+                adjustGridItem(this.modifiedGridItemEl);
+                rowEl.style.removeProperty("grid-auto-rows");
+            } else if (this.modifiedGridEl) {
+                // console.log("GRID ONLY");
+                adjustGrid(this.modifiedGridEl);
+            }
+        }
+        this.isUndoingOrRedoing = false;
+        this.modifiedGridItemEl = null;
+        this.modifiedGridEl = null;
+        return rootEl;
+    }
+
+    /**
      * Puts the grid item behind all the others (minimum z-index).
      */
     sendGridItemToBack() {
@@ -196,37 +280,42 @@ export class GridLayoutPlugin extends Plugin {
     adjustGridItem(el, shouldResizeGrid = true) {
         const gridItemEl = el.closest(".o_grid_item");
         if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
-            const rowEl = gridItemEl.parentElement;
-            const { rowGap, rowSize } = getGridProperties(rowEl);
-            const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
-            const oldRowSpan = rowEnd - rowStart;
-
-            // Compute the new height.
-            const { borderTop, borderBottom, paddingTop, paddingBottom } =
-                window.getComputedStyle(gridItemEl);
-            const borderY = parseFloat(borderTop) + parseFloat(borderBottom);
-            const paddingY = parseFloat(paddingTop) + parseFloat(paddingBottom);
-            const height = gridItemEl.scrollHeight + borderY + paddingY;
-
-            const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-            gridItemEl.style.gridRowEnd = rowStart + rowSpan;
-            gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
-            gridItemEl.classList.add(`g-height-${rowSpan}`);
-            if (shouldResizeGrid) {
-                resizeGrid(rowEl);
-            }
-
-            return () => {
-                // Restore the grid item height.
-                gridItemEl.style.gridRowEnd = rowEnd;
-                gridItemEl.classList.remove(`g-height-${rowSpan}`);
-                gridItemEl.classList.add(`g-height-${oldRowSpan}`);
-                if (shouldResizeGrid) {
-                    resizeGrid(rowEl);
-                }
-            };
+            adjustGridItem(gridItemEl, shouldResizeGrid);
+            // // Check if the grid item content is overflowing.
+            // const rowEl = gridItemEl.parentElement;
+            // const { rowGap, rowSize } = getGridProperties(rowEl);
+            // rowEl.style.gridAutoRows = `${rowSize}px`;
+            // const overflow = isContentOverflowing(gridItemEl);
+            // rowEl.style.removeProperty("grid-auto-rows");
+            // if (!overflow) {
+            //     return () => {};
+            // }
+            // const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
+            // const oldRowSpan = rowEnd - rowStart;
+            // // Compute the new height.
+            // const rowOverflow = Math.ceil((overflow + rowGap) / (rowSize + rowGap));
+            // const rowSpan = oldRowSpan + rowOverflow;
+            // gridItemEl.style.gridRowEnd = rowStart + rowSpan;
+            // gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
+            // gridItemEl.classList.add(`g-height-${rowSpan}`);
+            // if (shouldResizeGrid) {
+            //     resizeGrid(rowEl);
+            // }
+            // return () => {
+            //     // Restore the grid item height.
+            //     gridItemEl.style.gridRowEnd = rowEnd;
+            //     gridItemEl.classList.remove(`g-height-${rowSpan}`);
+            //     gridItemEl.classList.add(`g-height-${oldRowSpan}`);
+            //     if (shouldResizeGrid) {
+            //         resizeGrid(rowEl);
+            //     }
+            // };
         }
 
+        return () => {};
+    }
+
+    prepareDrag() {
         return () => {};
     }
 
@@ -261,8 +350,8 @@ export class GridLayoutPlugin extends Plugin {
         const columnSpan = dragState.snippet.gridColumnSpan || 6;
         columnEl.classList.add(
             "o_grid_item",
-            `col-lg-${columnSpan}`,
-            `g-col-lg-${columnSpan}`,
+            `col-${this.mobileBreakpoint}-${columnSpan}`,
+            `g-col-${this.mobileBreakpoint}-${columnSpan}`,
             "g-height-1"
         );
         columnEl.style.gridArea = `1 / 1 / 2 / ${columnSpan + 1}`;
@@ -463,7 +552,7 @@ export class GridLayoutPlugin extends Plugin {
                 // Toggle the grid mode if it is not already on.
                 if (!isRowInGridMode) {
                     const preserveSelection = this.dependencies.selection.preserveSelection;
-                    toggleGridMode(containerEl, preserveSelection, this.config.mobileBreakpoint);
+                    toggleGridMode(containerEl, preserveSelection, this.mobileBreakpoint);
                 }
                 const gridItemProps = getGridItemProperties(columnEl);
 
@@ -518,7 +607,7 @@ export class GridLayoutPlugin extends Plugin {
                 columnEl,
                 columnWidth,
                 columnHeight,
-                this.config.mobileBreakpoint
+                this.mobileBreakpoint
             );
             dragState.columnSpan = spans.columnSpan;
             dragState.rowSpan = spans.rowSpan;
@@ -624,7 +713,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when dropping a grid item in a non-grid dropzone.
-            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
+            convertToNormalColumn(columnEl, this.mobileBreakpoint);
         }
     }
 
@@ -648,7 +737,7 @@ export class GridLayoutPlugin extends Plugin {
                     columnEl,
                     columnWidth,
                     columnHeight,
-                    this.config.mobileBreakpoint
+                    this.mobileBreakpoint
                 );
                 dragState.columnSpan = spans.columnSpan;
                 dragState.rowSpan = spans.rowSpan;
@@ -667,7 +756,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when a grid item is dropped near a non-grid dropzone.
-            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
+            convertToNormalColumn(columnEl, this.mobileBreakpoint);
         }
     }
 
