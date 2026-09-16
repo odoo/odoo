@@ -15,8 +15,24 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
 class MessagePostSubTestData:
-    def __init__(self, user, allowed, /, *, partners=None, partner_emails=None, add_mention_token=False, route_kw=None,
-                 exp_author=None, exp_partners=None, exp_emails=None):
+    def __init__(
+        self,
+        user,
+        allowed,
+        /,
+        *,
+        partners=None,
+        partner_emails=None,
+        add_mention_token=False,
+        route_kw=None,
+        exp_author=None,
+        exp_partners=None,
+        exp_emails=None,
+        message_type="comment",
+        subtype_xmlid="mail.mt_comment",
+        exp_message_type=None,
+        exp_subtype_xmlid=None,
+    ):
         self.user = user if user._name == "res.users" else user.env.ref("base.public_user")
         self.guest = user if user._name == "mail.guest" else user.env["mail.guest"]
         self.allowed = allowed
@@ -26,8 +42,8 @@ class MessagePostSubTestData:
         }
         self.post_data = {
             "body": "<p>Hello</p>",
-            "message_type": "comment",
-            "subtype_xmlid": "mail.mt_comment",
+            "message_type": message_type,
+            "subtype_xmlid": subtype_xmlid,
         }
         if partner_emails is not None:
             self.post_data["partner_emails"] = partner_emails
@@ -40,6 +56,8 @@ class MessagePostSubTestData:
         self.exp_author = exp_author
         self.exp_partners = exp_partners
         self.exp_emails = exp_emails
+        self.exp_message_type = exp_message_type
+        self.exp_subtype_xmlid = exp_subtype_xmlid
 
 
 class MailControllerCommon(HttpCase, MailCommon):
@@ -274,6 +292,10 @@ class MailControllerThreadCommon(MailControllerCommon):
                         self.assertEqual(message.partner_ids, test.exp_partners)
                     if test.exp_emails is not None:
                         self.assertEqual(message.partner_ids.mapped("email"), test.exp_emails)
+                    if test.exp_message_type is not None:
+                        self.assertEqual(message.message_type, test.exp_message_type)
+                    if test.exp_subtype_xmlid is not None:
+                        self.assertEqual(message.subtype_id, self.env.ref(test.exp_subtype_xmlid))
                 else:
                     with self.assertRaises(JsonRpcException, msg="werkzeug.exceptions.NotFound"):
                         self._message_post(record, test.post_data, test.route_kw)
