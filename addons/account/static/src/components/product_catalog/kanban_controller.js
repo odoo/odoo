@@ -12,6 +12,10 @@ patch(ProductCatalogKanbanController.prototype, {
             this.buttonString = _t("Back to Invoice");
         } else if (this.orderStateInfo.move_type === "in_invoice") {
             this.buttonString = _t("Back to Bill");
+        } else if (this.orderStateInfo.move_type === "out_refund") {
+            this.buttonString = _t("Back to Credit Note");
+        } else if (this.orderStateInfo.move_type === "in_refund") {
+            this.buttonString = _t("Back to Refund");
         } else {
             super._defineButtonContent();
         }
