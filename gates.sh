@@ -102,7 +102,9 @@ run "pytest tier 2"               tier2
 if [ "$FAST" -eq 0 ]; then
     run "mypy core packages"      bare_mypy -p odoo.orm -p odoo.db -p odoo.libs -p odoo.http -p odoo.service -p odoo.modules
     run "mypy tools, cli, tests"  bare_mypy -p odoo.tools -p odoo.cli -p odoo.tests
-    run "doc/architecture figures" bash doc/architecture/factcheck.sh
+    # factcheck_env.sh finds the venv beside the checkout; a --ref worktree
+    # under /tmp has none beside it and would fall back to the system python3
+    run "doc/architecture figures" env ODOO_VENV_PYTHON="$PYTHON" bash doc/architecture/factcheck.sh
 fi
 if [ "$RUST" -eq 1 ]; then
     run "cargo fmt"               cargo fmt --all --check --manifest-path crates/Cargo.toml
