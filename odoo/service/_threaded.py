@@ -634,6 +634,8 @@ class ThreadedServer(CommonServer):
         if self.httpd:
             self.httpd.shutdown()
             self.httpd.drain(timeout, stuck=self._count_stuck_http_threads())
+            if _process_state.server_phoenix and IS_POSIX:
+                self.httpd.bequeath_listener()
             self.httpd.server_close()
 
         super().stop()

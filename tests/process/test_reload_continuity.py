@@ -253,6 +253,33 @@ class TestSighupReloadKeepsServing:
             "no longer exercising the socket handoff"
         )
 
+    def test_a_threaded_reexec_refuses_no_connection_either(self, server):
+        srv = server("--workers", "0")
+        assert srv.is_serving()
+        with Poller(srv.port) as poller:
+            time.sleep(1.0)
+            baseline = poller.served
+            assert baseline > 0
+
+            os.kill(srv.proc.pid, signal.SIGHUP)
+            done = srv.wait_until(
+                lambda: (
+                    "inherited from the server this one replaced" in srv.log_text()
+                    and srv.is_serving(3)
+                ),
+                timeout=RELOAD_TIMEOUT_S,
+                interval=0.5,
+            )
+
+        assert poller.refused == 0, (
+            f"{poller.refused} connection(s) REFUSED across the threaded re-exec "
+            f"({poller.served} served, other errors: {set(poller.other)}); the "
+            f"listening socket was closed before execve instead of bequeathed"
+        )
+        assert done, srv.log_text()[-2000:]
+        assert poller.served > baseline
+        assert srv.proc.poll() is None, "a re-exec keeps the pid"
+
     def test_the_poller_would_notice_a_dead_port(self, server):
         with socket.socket() as s:
             s.bind(("127.0.0.1", 0))

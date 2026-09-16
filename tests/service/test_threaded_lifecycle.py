@@ -303,3 +303,38 @@ class TestGracefulStop:
         assert server._listener_stop_pipe is None
         for fd in pipe:
             os.close(fd)
+
+
+class TestAReloadKeepsTheListeningSocket:
+    @pytest.fixture
+    def stopped(self, server):
+        def _run(*, phoenix):
+            server.httpd = MagicMock(busy_workers=0)
+            with (
+                patch.object(_threaded.db, "close_all"),
+                patch.object(_threaded, "logging"),
+                patch.object(_threaded.psutil, "Process") as proc,
+                patch.object(_threaded.CommonServer, "stop"),
+                patch.object(_process_state, "server_phoenix", phoenix),
+            ):
+                proc.return_value.children.return_value = []
+                server.stop()
+            return server.httpd
+
+        return _run
+
+    def test_a_reload_bequeaths_the_listener_after_the_drain_and_before_the_close(
+        self, stopped
+    ):
+        httpd = stopped(phoenix=True)
+        names = [name for name, _, _ in httpd.mock_calls]
+        assert (
+            names.index("drain")
+            < names.index("bequeath_listener")
+            < names.index("server_close")
+        )
+
+    def test_a_shutdown_closes_the_listener_outright(self, stopped):
+        httpd = stopped(phoenix=False)
+        httpd.bequeath_listener.assert_not_called()
+        httpd.server_close.assert_called_once_with()

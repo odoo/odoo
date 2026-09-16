@@ -93,6 +93,15 @@ the pools. A second signal forces an immediate exit. The evented
 process drains the same way. Before 2026-09-15 the socket closed under every
 in-flight request and the listener sessions were left to the kernel.
 
+On a SIGHUP the listening socket is not closed at all: after the drain,
+`ThreadedHTTPServer.bequeath_listener()` marks it inheritable and names its
+descriptor in `ODOO_HTTP_SOCKET_FD` — the same handoff the prefork master
+gives its reload candidate — so the `execve` that follows keeps the port bound
+through the interpreter restart and the next `ThreadedHTTPServer` adopts it.
+Connections that arrive meanwhile wait in the kernel backlog; none is refused
+(`tests/process/test_reload_continuity.py`, 41 refused before, 0 after). A
+socket-activated listener already survives as `LISTEN_FDS`.
+
 ## The limits that end a request or a worker
 
 Defaults, from `odoo/tools/config.py`:

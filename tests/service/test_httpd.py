@@ -964,3 +964,56 @@ class TestTheEnvironIsWsgiCompliant:
             )
             assert raw.startswith(b"HTTP/1.1 200")
             assert _json_body(raw)["len"] == 3
+
+
+class TestTheListenerSurvivesAReexec:
+    def test_bequeath_leaves_the_bound_port_open_after_server_close(self):
+        with _server() as srv, patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
+            port = srv.server_port
+            srv.bequeath_listener()
+            fd = int(os.environ["ODOO_HTTP_SOCKET_FD"])
+            assert os.get_inheritable(fd)
+            srv.server_close()
+            try:
+                kept = socket.socket(fileno=fd)
+                assert kept.getsockname()[1] == port
+                with socket.socket() as probe:
+                    probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    with pytest.raises(OSError):
+                        probe.bind(("127.0.0.1", port))
+            finally:
+                kept.close()
+
+    def test_a_socket_activated_listener_is_left_to_listen_fds(self):
+        with _server() as srv, patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
+            srv.reload_socket = True
+            srv.bequeath_listener()
+            assert "ODOO_HTTP_SOCKET_FD" not in os.environ
+            assert not os.get_inheritable(srv.socket.fileno())
+
+    def test_the_next_server_adopts_the_inherited_listener(self):
+        with socket.socket() as listener:
+            listener.bind(("127.0.0.1", 0))
+            listener.listen(8)
+            port = listener.getsockname()[1]
+            fd = os.dup(listener.fileno())
+            env = {"ODOO_HTTP_SOCKET_FD": str(fd), "ODOO_MAX_HTTP_THREADS": "4"}
+            with (
+                patch.dict(os.environ, env),
+                server_settings.override(
+                    db_maxconn=64, max_cron_threads=0, job_workers=0, test_enable=False
+                ),
+            ):
+                srv = httpd.ThreadedHTTPServer("127.0.0.1", 0, _app)
+            try:
+                assert srv.server_port == port
+                assert srv.reload_socket, (
+                    "an inherited listener is kept on the next reload too"
+                )
+                assert srv.socket.fileno() == fd
+                assert not os.get_inheritable(fd)
+                assert "ODOO_HTTP_SOCKET_FD" not in os.environ
+            finally:
+                srv.server_close()

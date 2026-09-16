@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import errno
 import logging
+import os
 import selectors
 import socket
 import sys
@@ -16,7 +17,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.http1 import ProtocolError, find_head
 from odoo.libs.worker_thread import as_worker_thread
 
-from ._env import get_env_int
+from ._env import bequeath_socket, get_env_int, take_inherited_socket
 from ._transport import (
     REQUEST_THREAD_PREFIX,
     Connection,
@@ -282,6 +283,16 @@ class ThreadedHTTPServer:
     def _bind(
         host: str, port: int, *, announce: bool = True
     ) -> tuple[socket.socket, bool]:
+        if inherited := take_inherited_socket():
+            inherited.setblocking(False)
+            if announce:
+                _logger.info(
+                    "HTTP service serving %s:%s on the listening socket inherited "
+                    "from the server this one replaced; the port was never closed",
+                    *inherited.getsockname()[:2],
+                )
+            _debug.lifecycle("httpd.bound", source="inherited", fd=inherited.fileno())
+            return inherited, True
         if current().http_socket_activation:
             sock = socket.socket(fileno=SD_LISTEN_FDS_START)
             if announce:
@@ -703,6 +714,17 @@ class ThreadedHTTPServer:
         with contextlib.suppress(OSError):
             self._wake_w.send(b"\0")
         self._stopped.wait()
+
+    def bequeath_listener(self) -> None:
+        # A re-exec keeps this process, its pid and every inheritable fd:
+        # the listener stays bound through the interpreter restart and the
+        # connections that arrive meanwhile wait in its backlog.  A
+        # socket-activated listener already survives as LISTEN_FDS.
+        if self.reload_socket:
+            return
+        fd = bequeath_socket(self.socket, os.environ)
+        self.reload_socket = True
+        _debug.lifecycle("httpd.listener_bequeathed", port=self.server_port, fd=fd)
 
     def server_close(self) -> None:
         _debug.lifecycle("httpd.server_closed", port=self.server_port)

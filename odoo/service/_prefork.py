@@ -16,9 +16,6 @@ from typing import Any
 
 import psutil
 
-if os.name == "posix":
-    import fcntl
-
 from odoo import db
 from odoo.libs import backoff
 from odoo.libs.debug_log import DebugLog
@@ -29,7 +26,7 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
-from ._env import IS_POSIX, get_env_float
+from ._env import get_env_float, take_inherited_socket
 from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._reload import GenerationHandoff
 from ._sdnotify import Watchdog, notify, notify_ready
@@ -167,13 +164,6 @@ class PreforkServer(CommonServer):
 
     def open_pipe(self) -> tuple[int, int]:
         return os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
-
-    def _set_socket_cloexec(self) -> None:
-        if not IS_POSIX or self.socket is None:
-            return
-        fd = self.socket.fileno()
-        flags = fcntl.fcntl(fd, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
-        fcntl.fcntl(fd, fcntl.F_SETFD, flags)
 
     def ping_pipe(self, pipe: tuple[int, int]) -> None:
         try:
@@ -719,12 +709,10 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if self.settings.http_enable:
-            inherited_fd = os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
-            if inherited_fd:
-                self.socket = socket.socket(fileno=int(inherited_fd))
-                self._set_socket_cloexec()
+            if inherited := take_inherited_socket():
+                self.socket = inherited
                 _debug.lifecycle(
-                    "prefork.socket_bound", source="inherited", fd=int(inherited_fd)
+                    "prefork.socket_bound", source="inherited", fd=inherited.fileno()
                 )
                 self.logger.info(
                     "HTTP service serving %s:%s on the listening "
@@ -735,7 +723,7 @@ class PreforkServer(CommonServer):
                 )
             elif self.settings.http_socket_activation:
                 self.socket = socket.socket(fileno=SD_LISTEN_FDS_START)
-                self._set_socket_cloexec()
+                os.set_inheritable(self.socket.fileno(), False)
                 _debug.lifecycle("prefork.socket_bound", source="socket_activation")
                 self.logger.info("HTTP service running through socket activation")
             else:

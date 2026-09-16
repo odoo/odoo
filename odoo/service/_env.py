@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import math
 import os
-from collections.abc import Callable
+import socket
+from collections.abc import Callable, MutableMapping
 
 IS_POSIX = os.name == "posix"
 IS_WINDOWS = os.name == "nt"
@@ -69,4 +70,36 @@ def _parse[T: (int, float)](
     return value
 
 
-__all__ = ("get_env_float", "get_env_int", "get_env_str")
+INHERITED_SOCKET_FD = "ODOO_HTTP_SOCKET_FD"
+"""The listening socket a server hands to the process that replaces it.
+
+The prefork master passes it to its reload candidate; a threaded server
+leaves it open across its own re-exec.  Either way the port is never
+unbound, and the connections that arrive meanwhile wait in the kernel's
+backlog instead of being refused."""
+
+
+def take_inherited_socket() -> socket.socket | None:
+    fd = os.environ.pop(INHERITED_SOCKET_FD, None)
+    if not fd:
+        return None
+    sock = socket.socket(fileno=int(fd))
+    os.set_inheritable(sock.fileno(), False)
+    return sock
+
+
+def bequeath_socket(sock: socket.socket, env: MutableMapping[str, str]) -> int:
+    fd = sock.detach()
+    os.set_inheritable(fd, True)
+    env[INHERITED_SOCKET_FD] = str(fd)
+    return fd
+
+
+__all__ = (
+    "INHERITED_SOCKET_FD",
+    "bequeath_socket",
+    "get_env_float",
+    "get_env_int",
+    "get_env_str",
+    "take_inherited_socket",
+)

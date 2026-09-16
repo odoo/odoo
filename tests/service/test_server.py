@@ -2326,11 +2326,12 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
             ),
             patch.object(signal, "signal"),
             patch.object(_prefork.socket, "socket") as mock_sock,
-            patch.dict(os.environ, env, clear=False),
+            patch.object(
+                _prefork,
+                "take_inherited_socket",
+                return_value=MagicMock() if env else None,
+            ),
         ):
-            if "ODOO_HTTP_SOCKET_FD" not in env:
-                os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
-            server._set_socket_cloexec = MagicMock()
             server.start()
         said = " ".join(str(c.args[0]) for c in server.logger.info.call_args_list)
         return said, mock_sock
