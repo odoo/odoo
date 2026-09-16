@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from odoo.exceptions import AccessError
-from odoo.service import _cron, _prefork, _process_state, _worker, model
+from odoo.service import _cron, _prefork, _process_state, _reload, _worker, model
 from odoo.service.db import _dump_scanner, dump, lifecycle
 from odoo.service.settings import override
 from odoo.tools import frozendict, lazy
@@ -65,8 +65,8 @@ def master():
         try:
             yield srv
         finally:
-            if srv._replacement is not None:
-                srv._stop_generation(srv._replacement)
+            if srv.handoff.replacement is not None:
+                srv.handoff.stop_generation(srv.handoff.replacement)
             srv._close_watchdog_selector()
             for fd in srv.pipe:
                 os.close(fd)
@@ -110,14 +110,14 @@ def test_drain_defers_scaling_to_the_serving_replacement(master, sig):
     assert list(master.queue) == [signal.SIGTERM, sig]
     with pytest.raises(KeyboardInterrupt):
         master.apply_pending_signals()
-    replacement = master._replacement = MagicMock()
+    replacement = master.handoff.replacement = MagicMock()
     try:
         master.apply_pending_signals()
         replacement.send_signal.assert_called_once_with(sig)
         assert master.population == population + (1 if sig == signal.SIGTTIN else -1)
         assert not master.queue
     finally:
-        master._replacement = None
+        master.handoff.replacement = None
 
 
 @pytest.mark.parametrize(
@@ -145,7 +145,7 @@ def test_reload_preparation_failure_releases_its_pipe(master, monkeypatch, failu
         return pipe
 
     monkeypatch.setattr(os, "pipe2", open_pipe)
-    target = _prefork if failure == "arguments" else _prefork.subprocess
+    target = _reload if failure == "arguments" else _reload.subprocess
     name = "stripped_sys_argv" if failure == "arguments" else "Popen"
     try:
         with patch.object(
@@ -157,7 +157,7 @@ def test_reload_preparation_failure_releases_its_pipe(master, monkeypatch, failu
             with pytest.raises(OSError) as error:
                 os.fstat(fd)
             assert error.value.errno == errno.EBADF
-        assert master._candidate is None
+        assert master.handoff.candidate is None
     finally:
         for fd in allocated:
             with contextlib.suppress(OSError):
@@ -166,7 +166,7 @@ def test_reload_preparation_failure_releases_its_pipe(master, monkeypatch, failu
 
 def test_exited_candidate_is_not_promoted_even_if_it_wrote_ready(master, monkeypatch):
     monkeypatch.setattr(
-        _prefork,
+        _reload,
         "stripped_sys_argv",
         lambda: [
             sys.executable,
@@ -174,10 +174,12 @@ def test_exited_candidate_is_not_promoted_even_if_it_wrote_ready(master, monkeyp
             'import os; os.write(int(os.environ["ODOO_RELOAD_READY_FD"]), b"1"); raise SystemExit(3)',
         ],
     )
-    monkeypatch.setattr(master, "sleep", lambda **kw: master._candidate.wait(timeout=5))
+    monkeypatch.setattr(
+        master, "sleep", lambda **kw: master.handoff.candidate.wait(timeout=5)
+    )
     assert not master.reload()
     master.stop_workers_gracefully.assert_not_called()
-    assert master._replacement is None
+    assert master.handoff.replacement is None
 
 
 def test_a_replacement_reaped_by_the_master_keeps_its_real_exit_code(master):
@@ -187,24 +189,24 @@ def test_a_replacement_reaped_by_the_master_keeps_its_real_exit_code(master):
     end the supervisor with a success code."""
     import subprocess
 
-    master._replacement = subprocess.Popen(
+    master.handoff.replacement = subprocess.Popen(
         [sys.executable, "-c", "raise SystemExit(7)"]
     )
     deadline = time.monotonic() + 10
-    while master._replacement.returncode is None and time.monotonic() < deadline:
+    while master.handoff.replacement.returncode is None and time.monotonic() < deadline:
         master.reap_exited_workers()
         time.sleep(0.02)
-    assert master._replacement.poll() == 7
-    master._replacement = None
+    assert master.handoff.replacement.poll() == 7
+    master.handoff.replacement = None
 
 
 def test_unready_candidate_cancellation_does_not_wait_for_graceful_shutdown(
     master, monkeypatch
 ):
     monkeypatch.setenv("ODOO_RELOAD_TIMEOUT", "1")
-    monkeypatch.setattr(_prefork, "get_graceful_stop_timeout", lambda logger: 0)
+    monkeypatch.setattr(_reload, "get_graceful_stop_timeout", lambda logger: 0)
     monkeypatch.setattr(
-        _prefork,
+        _reload,
         "stripped_sys_argv",
         lambda: [
             sys.executable,
@@ -298,7 +300,7 @@ def test_respawned_worker_closes_inherited_reload_reader(master):
     read_fd, write_fd = master.open_pipe()
     selector = selectors.DefaultSelector()
     selector.register(read_fd, selectors.EVENT_READ)
-    master._reload_reader = (read_fd, selector)
+    master.handoff.reader = (read_fd, selector)
     worker = _worker.Worker(master)
     try:
         master._close_inherited_pipe_fds_in_child(worker)
@@ -312,7 +314,7 @@ def test_respawned_worker_closes_inherited_reload_reader(master):
         # This exercises child cleanup in-process, so replace its closed pipe.
         worker.close()
         selector.close()
-        master._reload_reader = None
+        master.handoff.reader = None
         for fd in (read_fd, write_fd):
             with contextlib.suppress(OSError):
                 os.close(fd)
@@ -332,7 +334,7 @@ def test_reload_keeps_reading_heartbeats_and_enforcing_timeouts(
     )
     master.workers = {123: worker}
     monkeypatch.setattr(
-        _prefork,
+        _reload,
         "stripped_sys_argv",
         lambda: [
             sys.executable,
@@ -366,38 +368,38 @@ def test_reload_promotes_only_a_ready_process(master, monkeypatch, outcome):
         "timeout": "import time; time.sleep(60)",
     }[outcome]
     monkeypatch.setattr(
-        _prefork, "stripped_sys_argv", lambda: [sys.executable, "-c", code]
+        _reload, "stripped_sys_argv", lambda: [sys.executable, "-c", code]
     )
     assert master.reload() is (outcome == "ready")
     assert master.stop_workers_gracefully.call_count == (outcome == "ready")
-    assert master._candidate is None
+    assert master.handoff.candidate is None
     if outcome == "ready":
-        assert master._replacement.poll() is None
+        assert master.handoff.replacement.poll() is None
     else:
-        assert master._replacement is None
+        assert master.handoff.replacement is None
 
 
 def test_failed_second_reload_keeps_the_running_generation(master, monkeypatch):
     ready = 'import os,time; os.write(int(os.environ["ODOO_RELOAD_READY_FD"]), b"1"); time.sleep(60)'
     monkeypatch.setattr(
-        _prefork, "stripped_sys_argv", lambda: [sys.executable, "-c", ready]
+        _reload, "stripped_sys_argv", lambda: [sys.executable, "-c", ready]
     )
     assert master.reload()
-    first = master._replacement
+    first = master.handoff.replacement
     monkeypatch.setattr(
-        _prefork,
+        _reload,
         "stripped_sys_argv",
         lambda: [sys.executable, "-c", "raise SystemExit(3)"],
     )
     assert not master.reload()
-    assert master._replacement is first
+    assert master.handoff.replacement is first
     assert first.poll() is None
     monkeypatch.setattr(
-        _prefork, "stripped_sys_argv", lambda: [sys.executable, "-c", ready]
+        _reload, "stripped_sys_argv", lambda: [sys.executable, "-c", ready]
     )
     assert master.reload()
     assert first.poll() is not None
-    assert master._replacement.poll() is None
+    assert master.handoff.replacement.poll() is None
     assert master.stop_workers_gracefully.call_count == 1
 
 
@@ -689,7 +691,7 @@ def test_reload_readiness_requires_worker_startup_not_just_a_pid(master):
     import os
 
     read_fd, write_fd = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
-    master._ready_fd = str(write_fd)
+    master.handoff.ready_fd = write_fd
     worker = SimpleNamespace(ready=False)
     master.workers = {123: worker}
     try:
@@ -702,9 +704,9 @@ def test_reload_readiness_requires_worker_startup_not_just_a_pid(master):
         assert os.read(read_fd, 1) == b""
     finally:
         os.close(read_fd)
-        if master._ready_fd is not None:
+        if master.handoff.ready_fd is not None:
             os.close(write_fd)
-            master._ready_fd = None
+            master.handoff.ready_fd = None
 
 
 def test_scale_up_replaces_capacity_still_draining(master):

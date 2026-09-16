@@ -80,7 +80,15 @@ class TestTheServersReadInOneDirection:
         assert knowing == {f"{ROOT}._factory", f"{ROOT}.server"}
 
     def test_the_leaves_import_no_server(self, graph):
-        for leaf in ("settings", "_env", "_limits", "_base_server", "_cron", "_census"):
+        for leaf in (
+            "settings",
+            "_env",
+            "_limits",
+            "_base_server",
+            "_cron",
+            "_census",
+            "_reload",
+        ):
             for flavour in ("_threaded", "_prefork", "_worker", "httpd", "_factory"):
                 assert not _imports(graph, f"{ROOT}.{leaf}", f"{ROOT}.{flavour}"), (
                     f"{leaf} reads upward into {flavour}"

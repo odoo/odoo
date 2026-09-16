@@ -48,7 +48,8 @@ odoo/
 │                   geoip
 ├── service/        Process lifecycle + the servers
 │   ├── server, _base_server, _threaded (ThreadedServer + WebsocketServer),
-│   │   _prefork, _census (the master's worker counts, a file its
+│   │   _prefork, _reload (the master's other generation across a SIGHUP:
+│   │   candidate, promotion, replacement), _census (the master's worker counts, a file its
 │   │   children read for /web/metrics), _worker, _watcher (on libs/inotify), _transport (one
 │   │   HTTP/1.1 exchange: head, body reader, WSGI environ, response framing,
 │   │   the access log; what a prefork worker serves a connection with),
