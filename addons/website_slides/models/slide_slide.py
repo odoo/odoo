@@ -1338,7 +1338,7 @@ class Slide(models.Model):
         if data_bytes.startswith(b'%PDF-'):
             try:
                 pdf = PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
-                return (5 * len(pdf.pages)) / 60
+                return (5 * pdf.getNumPages()) / 60
             except Exception:
                 pass  # as this is a nice to have, fail silently
 
