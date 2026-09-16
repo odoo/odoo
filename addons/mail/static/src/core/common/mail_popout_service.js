@@ -60,12 +60,16 @@ export const mailPopoutService = {
          * If the external window does not exist, it is created.
          * @param {class} component: The component to be mounted.
          * @param {Props} props: The props of the component.
-         * @returns {Window} The external window
+         * @returns {Window|null} The external window, or null if the browser refused to open it
          */
         function popout(component, props) {
             if (!externalWindow || externalWindow.closed) {
                 beforeFn();
                 externalWindow = browser.open("about:blank", "_blank", "popup=yes");
+                if (!externalWindow) {
+                    // The browser can refuse to open the popup (e.g. popup blocker).
+                    return null;
+                }
                 window.addEventListener("beforeunload", () => {
                     if (externalWindow && !externalWindow.closed) {
                         externalWindow.close();

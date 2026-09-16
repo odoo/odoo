@@ -4,11 +4,12 @@ import {
     defineMailModels,
     onRpcBefore,
     openFormView,
+    registerArchs,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Deferred, advanceTime } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, mockUserAgent } from "@odoo/hoot-mock";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
@@ -27,6 +28,62 @@ test("base rendering", async () => {
     await contains("button", { text: "Activities" });
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-Followers");
+});
+
+async function hasAttachmentPopoutButton(count) {
+    await contains("button i[title='Pop out Attachments']", { count });
+}
+
+function registerPartnerFormWithAttachmentPreview() {
+    registerArchs({
+        "res.partner,false,form": `
+            <form string="Partner">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+}
+
+function createPartnerWithAttachment(pyEnv) {
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    return partnerId;
+}
+
+test("Attachment popout button is shown on desktop", async () => {
+    registerPartnerFormWithAttachmentPreview();
+    const pyEnv = await startServer();
+    const partnerId = createPartnerWithAttachment(pyEnv);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await hasAttachmentPopoutButton(1);
+});
+
+test("Attachment popout button is hidden on mobile", async () => {
+    registerPartnerFormWithAttachmentPreview();
+    const pyEnv = await startServer();
+    const partnerId_mobileBrowser = createPartnerWithAttachment(pyEnv);
+    const partnerId_mobileApp = createPartnerWithAttachment(pyEnv);
+    await start();
+
+    // Mobile browser (e.g. Chrome on Android)
+    mockUserAgent("android");
+    await openFormView("res.partner", partnerId_mobileBrowser);
+    await contains(".o-mail-Chatter-topbar");
+    await hasAttachmentPopoutButton(0);
+
+    // Odoo Mobile App (native WebView wrapper)
+    mockUserAgent("OdooMobile (iOS)");
+    await openFormView("res.partner", partnerId_mobileApp);
+    await contains(".o-mail-Chatter-topbar");
+    await hasAttachmentPopoutButton(0);
 });
 
 test("rendering with multiple partner followers", async () => {
