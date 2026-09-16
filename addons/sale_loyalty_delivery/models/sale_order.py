@@ -8,8 +8,8 @@ _debug = DebugLog(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _compute_amount_total_without_delivery(self):
-        res = super()._compute_amount_total_without_delivery()
+    def _get_amount_total_without_delivery(self):
+        res = super()._get_amount_total_without_delivery()
         return res - sum(
             self.line_ids.filtered(
                 lambda l: (

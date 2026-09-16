@@ -552,7 +552,7 @@ class DeliveryCarrier(models.Model):
             # save the real price in case a free_over rule overide it to 0
             res["carrier_price"] = res["price"]
             # free when order is large enough
-            amount_without_delivery = order._compute_amount_total_without_delivery()
+            amount_without_delivery = order._get_amount_total_without_delivery()
             if (
                 res["success"]
                 and self.free_over
@@ -764,7 +764,7 @@ class DeliveryCarrier(models.Model):
                 (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             )
             quantity += qty
-        total = order._compute_amount_total_without_delivery()
+        total = order._get_amount_total_without_delivery()
 
         total = self._compute_currency_id(order, total, "pricelist_to_company")
         # weight is either,

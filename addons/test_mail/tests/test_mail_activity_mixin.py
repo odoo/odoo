@@ -1466,7 +1466,7 @@ class TestActivityMixinProjection(TestActivityCommon):
         ) as logs:
             activity = record.activity_schedule("test_mail.no_such_activity_type")
         self.assertIn("no_such_activity_type", logs.output[0])
-        self.assertEqual(activity.activity_type_id, record._default_activity_type())
+        self.assertEqual(activity.activity_type_id, record._get_default_activity_type())
 
     @users("employee")
     @mute_logger(
@@ -2048,9 +2048,9 @@ class TestNextActivityProjectionAgreement(TestActivityCommon):
         record = self.env["mail.test.activity"].create({"name": "foreign"})
 
         by_xmlid = record.activity_schedule("test_mail.act_type_of_another_model")
-        self.assertEqual(by_xmlid.activity_type_id, record._default_activity_type())
+        self.assertEqual(by_xmlid.activity_type_id, record._get_default_activity_type())
         by_value = record.activity_schedule(activity_type_id=foreign.id)
-        self.assertEqual(by_value.activity_type_id, record._default_activity_type())
+        self.assertEqual(by_value.activity_type_id, record._get_default_activity_type())
 
         allowed = self.env["mail.activity.type"].create(
             {"name": "allowed", "res_model": "mail.test.activity"}
@@ -2076,7 +2076,7 @@ class TestNextActivityProjectionAgreement(TestActivityCommon):
         record = self.env["mail.test.activity"].create({"name": "mistyped"})
 
         activity = record.activity_schedule("test_mail.not_an_activity_type")
-        self.assertEqual(activity.activity_type_id, record._default_activity_type())
+        self.assertEqual(activity.activity_type_id, record._get_default_activity_type())
         self.assertEqual(
             record._get_activity_type_ids(["test_mail.not_an_activity_type"]), []
         )

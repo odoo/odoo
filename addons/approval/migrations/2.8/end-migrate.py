@@ -158,7 +158,7 @@ def _adopt_list_routed_requests(env):
     )
     adopted = env["approval.request"]
     for request in pending.filtered(lambda request: not request.approver_ids.step_ids):
-        desired = request._compute_desired_approvers()
+        desired = request._get_desired_approvers()
         for row in request.approver_ids:
             vals = desired.staging.get(row.user_id.id)
             if vals is None:

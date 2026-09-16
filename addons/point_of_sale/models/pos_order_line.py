@@ -388,10 +388,10 @@ class PosOrderLine(models.Model):
     @api.onchange("price_unit", "tax_ids", "qty", "discount", "product_id")
     def _onchange_amount_line_all(self):
         for line in self:
-            res = line._compute_amount_line_all()
+            res = line._get_amount_line_all()
             line.update(res)
 
-    def _compute_amount_line_all(self):
+    def _get_amount_line_all(self):
         self.check_singleton()
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)

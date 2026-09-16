@@ -39,7 +39,7 @@ dashboards.
 | `approval_request.py` | `approval.request` | Core request: fields, CRUD, smart-copy defaults, `ESCALATION_RULES` constant |
 | `approval_request_access.py` | extends `approval.request` | Who may write, unlink, decide or re-route: the `_check_access_*` and locked-field rules |
 | `approval_request_lifecycle.py` | extends `approval.request` | The transitions: confirm, approve/refuse (`_apply_decision` funnel), withdraw, cancel, reset, change requests, `_force_terminal`, activities and row locking |
-| `approval_request_routing.py` | extends `approval.request` | Who approves: `_sync_approvers`, `_compute_desired_approvers` over the applicable steps, live rerouting, auto-action rules, category snapshot |
+| `approval_request_routing.py` | extends `approval.request` | Who approves: `_sync_approvers`, `_get_desired_approvers` over the applicable steps, live rerouting, auto-action rules, category snapshot |
 | `approval_request_escalation.py` | extends `approval.request` | When: deadline, overdue, SLA (compute + search), the three crons, reminders and escalation |
 | `approval_request_prediction.py` | extends `approval.request` | On-demand outcome prediction (`action_predict_outcome`) |
 | `approval_approver.py` | `approval.approver` | Individual approver: state, delegation, CRUD access control |
@@ -320,7 +320,7 @@ what makes the CATEGORY's current configuration authoritative: every other
 trigger is a write to the request, so a draft that already existed when an
 approver was added to (or removed from) the category would otherwise confirm
 with the set computed at its creation. The pure "who should approve" decision step is
-extracted to `_compute_desired_approvers()` (unit-testable, no writes).
+extracted to `_get_desired_approvers()` (unit-testable, no writes).
 Sources: category approvers, conditional rules (adding or replacing), security groups,
 HR manager (via extension hook).
 

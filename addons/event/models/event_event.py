@@ -71,7 +71,7 @@ class EventEvent(models.Model):
             ._render_template("event.event_default_descripton")
         )
 
-    def _default_event_mail_ids(self):
+    def _get_default_event_mail_ids(self):
         return self.env["event.type"]._default_event_type_mail_ids()
 
     @api.model
@@ -751,7 +751,7 @@ class EventEvent(models.Model):
         """
         for event in self:
             if not event.event_type_id and not event.event_mail_ids:
-                event.event_mail_ids = self._default_event_mail_ids()
+                event.event_mail_ids = self._get_default_event_mail_ids()
                 continue
 
             # lines to keep: those with already sent emails or registrations

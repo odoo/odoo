@@ -1731,8 +1731,8 @@ class SlideSlide(models.Model):
 
         return slide_metadata, None
 
-    def _default_website_meta(self):
-        res = super()._default_website_meta()
+    def _get_default_website_meta(self):
+        res = super()._get_default_website_meta()
         res["default_opengraph"]["og:title"] = res["default_twitter"][
             "twitter:title"
         ] = self.name

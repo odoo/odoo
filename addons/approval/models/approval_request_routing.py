@@ -311,7 +311,7 @@ class ApprovalRequestRouting(models.Model):
                     request.id: request._get_step_rule_matches(step_rules).ids,
                 }
             )
-            desired = request._compute_desired_approvers()
+            desired = request._get_desired_approvers()
             approver_staging = desired.staging
             users_to_approver = desired.existing_by_user
 
@@ -413,7 +413,7 @@ class ApprovalRequestRouting(models.Model):
             request._lock_and_reload()
             if request.state != "pending" or request.pending_change_field:
                 continue
-            added |= request._reroute_steps_live(request._compute_desired_approvers())
+            added |= request._reroute_steps_live(request._get_desired_approvers())
         return added
 
     def _reroute_steps_live(self, desired) -> models.BaseModel:
@@ -619,7 +619,7 @@ class ApprovalRequestRouting(models.Model):
                 message_type="notification",
             )
 
-    def _compute_desired_approvers(self) -> DesiredApprovers:
+    def _get_desired_approvers(self) -> DesiredApprovers:
         self.check_singleton()
         users_to_approver: dict[int, Any] = {}
         duplicate_approvers_to_delete: list[Any] = []

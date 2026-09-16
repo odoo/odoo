@@ -566,11 +566,11 @@ class TestApproverSyncTriggerFields(ApprovalCommon):
         request.sudo().write({"applied_rule_ids": [(5, 0, 0)]})
         self.env.flush_all()
 
-        result = request._compute_desired_approvers()
+        result = request._get_desired_approvers()
 
         self.assertFalse(
             request.applied_rule_ids,
-            "_compute_desired_approvers must not write applied_rule_ids; "
+            "_get_desired_approvers must not write applied_rule_ids; "
             "the caller persists what it returns.",
         )
         self.assertEqual(

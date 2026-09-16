@@ -333,7 +333,7 @@ at `date`). `action_confirm` then froze the stale set in and snapshotted
 it as intended. A satellite adding a `condition_field` extends its own
 model's mapping and is picked up here automatically.
 
-**Purity (19.0.1.0.17).** `_compute_desired_approvers()` is write-free:
+**Purity (19.0.1.0.17).** `_get_desired_approvers()` is write-free:
 `_sync_approvers` persists the `matched_rules` it returns on its
 `DesiredApprovers` result, which are the applicable steps' `when_rule_ids`.
 
@@ -354,7 +354,7 @@ _sync_approvers()   [batch-level]
     +-- Prefetch the batch's categories' steps in one query:
     |       category_id.fetch(["step_ids"])
     |
-    +-- Per request: _compute_desired_approvers()  [PURE — no writes]
+    +-- Per request: _get_desired_approvers()  [PURE — no writes]
     |   |
     |   +-- Map existing approvers {user_id: row}, mark duplicates
     |   +-- Rows always stage as 'new' — the sync is DRAFT-ONLY

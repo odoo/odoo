@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
                 for line in so.line_ids.filtered(lambda x: not x.display_type)
             )
 
-    def _compute_amount_total_without_delivery(self):
+    def _get_amount_total_without_delivery(self):
         self.check_singleton()
         delivery_cost = sum(l.price_total for l in self.line_ids if l.is_delivery)
         return self.amount_total - delivery_cost

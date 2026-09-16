@@ -253,7 +253,9 @@ class AccountAnalyticLine(models.Model):
     def _compute_user_id(self):
         for line in self:
             line.user_id = (
-                line.employee_id.user_id if line.employee_id else self._default_user()
+                line.employee_id.user_id
+                if line.employee_id
+                else self._get_default_user_id()
             )
 
     @api.depends("employee_id")
@@ -329,7 +331,7 @@ class AccountAnalyticLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         user_timezone = self.env.tz
-        default_user_id = self._default_user()
+        default_user_id = self._get_default_user_id()
         user_ids = []
         employee_ids = []
         if self.env.context.get("timesheet_calendar"):
@@ -717,7 +719,7 @@ class AccountAnalyticLine(models.Model):
             return _("Timesheets - %s", task_ids.name)
         return _("Timesheets")
 
-    def _default_user(self):
+    def _get_default_user_id(self):
         return self.env.context.get("user_id", self.env.user.id)
 
     @api.model

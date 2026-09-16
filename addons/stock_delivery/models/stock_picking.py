@@ -238,9 +238,7 @@ class StockPicking(models.Model):
         self.check_singleton()
         res = self.carrier_id.send_shipping(self)[0]
         if self.carrier_id.free_over and self.sale_id:
-            amount_without_delivery = (
-                self.sale_id._compute_amount_total_without_delivery()
-            )
+            amount_without_delivery = self.sale_id._get_amount_total_without_delivery()
             if (
                 self.carrier_id._compute_currency_id(
                     self.sale_id, amount_without_delivery, "pricelist_to_company"

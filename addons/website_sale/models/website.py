@@ -1120,7 +1120,7 @@ class Website(models.Model):
             ]
         )
 
-    def _default_feed_is_valid(self):
+    def _is_default_feed_valid(self):
         self.check_singleton()
         product_count = self.env["product.product"].search_count(
             self._get_domain_basic_feed_product(),
@@ -1135,6 +1135,6 @@ class Website(models.Model):
                     "name": website.env._("GMC 1"),
                     "website_id": website.id,
                 }
-                for website in self.filtered(lambda w: w._default_feed_is_valid())
+                for website in self.filtered(lambda w: w._is_default_feed_valid())
             ]
         )

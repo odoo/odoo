@@ -7,7 +7,7 @@ from odoo.libs.web import urljoin as url_join
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _default_company_token(self):
+    def _get_new_attendance_kiosk_key(self):
         # `.hex` to match the field default and `_regenerate_attendance_kiosk_key`;
         # a company whose key is back-filled at column-init must not end up with a
         # differently shaped token from every other company's.
@@ -81,7 +81,7 @@ class ResCompany(models.Model):
             )
             attendance_ids = self.env.cr.dictfetchall()
             values_args = [
-                (attendance_id["id"], self._default_company_token())
+                (attendance_id["id"], self._get_new_attendance_kiosk_key())
                 for attendance_id in attendance_ids
             ]
             query = f"""

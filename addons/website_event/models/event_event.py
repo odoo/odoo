@@ -544,8 +544,8 @@ class EventEvent(models.Model):
             iCal_url += "?" + urlencode({"slot_id": slot.id})
         return {"google_url": google_url, "iCal_url": iCal_url}
 
-    def _default_website_meta(self):
-        res = super()._default_website_meta()
+    def _get_default_website_meta(self):
+        res = super()._get_default_website_meta()
         event_cover_properties = json.loads(self.cover_properties)
         res["default_opengraph"]["og:image"] = res["default_twitter"][
             "twitter:image"

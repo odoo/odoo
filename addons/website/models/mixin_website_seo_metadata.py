@@ -51,7 +51,7 @@ class MixinWebsiteSeoMetadata(models.AbstractModel):
                 and record.website_meta_keywords
             )
 
-    def _default_website_meta(self):
+    def _get_default_website_meta(self):
         self.check_singleton()
         company = request.website.company_id.sudo()
         title = request.website.name
@@ -93,7 +93,7 @@ class MixinWebsiteSeoMetadata(models.AbstractModel):
 
     def get_website_meta(self):
         root_url = request.website.domain or request.httprequest.url_root.strip("/")
-        default_meta = self._default_website_meta()
+        default_meta = self._get_default_website_meta()
         opengraph_meta, twitter_meta = (
             default_meta["default_opengraph"],
             default_meta["default_twitter"],

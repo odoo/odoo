@@ -143,12 +143,12 @@ class PosPreset(models.Model):
 
     def get_available_slots(self):
         self.check_singleton()
-        usage = self._compute_slots_usage()
+        usage = self._get_slots_usage()
         return {
             "usage_utc": usage,
         }
 
-    def _compute_slots_usage(self):
+    def _get_slots_usage(self):
         self.check_singleton()
         usage = defaultdict(list)
         now = fields.Datetime.now()

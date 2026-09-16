@@ -36,19 +36,19 @@ class TestPosDataIntegrity(TestPoSCommon):
                 "preset_time": now + timedelta(days=2, hours=2),
             }
         )
-        self.assertTrue(preset._compute_slots_usage())
+        self.assertTrue(preset._get_slots_usage())
         with freeze_time(now + timedelta(days=2)):
-            self.assertTrue(preset._compute_slots_usage())
+            self.assertTrue(preset._get_slots_usage())
             order.session_id = False
-            self.assertTrue(preset._compute_slots_usage())
+            self.assertTrue(preset._get_slots_usage())
             order.state = "cancel"
-            self.assertFalse(preset._compute_slots_usage())
+            self.assertFalse(preset._get_slots_usage())
             order.write({"state": "draft", "preset_time": now + timedelta(days=30)})
-            self.assertFalse(preset._compute_slots_usage())
+            self.assertFalse(preset._get_slots_usage())
             order.preset_time = now + timedelta(days=2, hours=2)
             for state in ("paid", "done"):
                 order.state = state
-                self.assertTrue(preset._compute_slots_usage())
+                self.assertTrue(preset._get_slots_usage())
 
     def test_timed_presets_require_positive_capacity_and_interval(self):
         for values in (

@@ -21,7 +21,7 @@ class PosConfig(models.Model):
     )
 
     @api.model
-    def _default_discount_value_on_module_install(self):
+    def _update_discount_product_on_module_install(self):
         configs = self.env["pos.config"].search([])
         open_configs = (
             self.env["pos.session"]

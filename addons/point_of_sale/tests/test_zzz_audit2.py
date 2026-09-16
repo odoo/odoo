@@ -50,7 +50,7 @@ class TestAuditVerification2(TestPoSCommon):
 
     def test_R2_preset_slot_usage_lists(self):
         preset = self.env["pos.preset"].create({"name": "AuditPreset2"})
-        usage = preset._compute_slots_usage()
+        usage = preset._get_slots_usage()
         _logger.info("R2 empty usage: %r", usage)
         self.assertEqual(usage["2099-01-01 12:00:00"], [])
         self.assertIsInstance(usage["2099-01-01 12:00:00"], list)

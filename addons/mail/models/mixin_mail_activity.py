@@ -26,7 +26,7 @@ class MixinMailActivity(models.AbstractModel):
     _name = "mixin.mail.activity"
     _description = "Activity Mixin"
 
-    def _default_activity_type(self) -> MailActivityType:
+    def _get_default_activity_type(self) -> MailActivityType:
         return self.env["mail.activity"]._default_activity_type_for_model(self._name)
 
     activity_ids: MailActivity = fields.One2many(
@@ -600,7 +600,7 @@ class MixinMailActivity(models.AbstractModel):
                 act_type_xmlid or "",
             )
             activity_type = self.env["mail.activity.type"]
-        return activity_type or self._default_activity_type()
+        return activity_type or self._get_default_activity_type()
 
     def _activity_create(
         self,

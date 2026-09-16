@@ -424,7 +424,7 @@ factories) instead of rebuilding user fixtures.
 | `approval.category` fields (has_* from `approval_app`, approval_minimum) | Existing drafts are not rewritten on the spot, but `approval_minimum` is re-derived from the category at `action_confirm()`; `has_*` are related fields, so they follow immediately |
 | `_compute_state()` logic | The action methods that call `_notify_if_terminal_transition()` -- the compute itself must stay side-effect free |
 | `_compute_sla_status()` logic | `_search_sla_status()` -- its SQL CASE mirrors the compute exactly; update both together |
-| `_sync_approvers()` / `_compute_desired_approvers()` sources | `_merge_approver_to_staging()` merge rules (required OR, sequence MIN); rows always stage 'new' (sync is draft-only) |
+| `_sync_approvers()` / `_get_desired_approvers()` sources | `_merge_approver_to_staging()` merge rules (required OR, sequence MIN); rows always stage 'new' (sync is draft-only) |
 | `ESCALATION_RULES` constant (`approval_request.py`) | `_get_escalation_rules()` overlays `approval.escalation.<priority>.<kind>` system parameters on top of it -- do not restate the numbers elsewhere |
 | `action_confirm()` validation | `_check_confirm()`, which calls `_check_enough_approvers()`; `approval_app` extends it with `_check_has_document_has_attachment()` and `_check_category_required_fields()` |
 | `_LOCKED_FIELDS` / `_get_fields_locked()` | `_PENDING_CHANGE_EDITABLE` (fields reopened by the change flow) and the form view `readonly` attrs |
@@ -464,7 +464,7 @@ factories) instead of rebuilding user fixtures.
 | `approval_request.py` | Fields, CRUD, copy, the state machine and the small computes, `_TERMINAL_STATES` / `_DECISION_STATES` | `_compute_*`, `create`/`write` |
 | `approval_request_access.py` | Who may write, unlink, decide, re-route, reopen a refusal, withdraw another's decision; locked and compute-only fields | `_check_access_*`, `_check_locked_fields`, `_check_reset_actor`, `_check_withdraw_actor`, `_is_later_step_member` |
 | `approval_request_lifecycle.py` | Every transition and what it touches: decisions, withdraw, cancel, reset, change requests, `_force_terminal`, activities, row locks | `action_*`, `_apply_decision`, `_force_terminal` |
-| `approval_request_routing.py` | Who approves: `_sync_approvers`, `_compute_desired_approvers` from the applicable steps, live rerouting, auto-action rules, list adoption, category snapshot | `_sync_*`, `_get_applicable_steps`, `_reroute_steps_live` |
+| `approval_request_routing.py` | Who approves: `_sync_approvers`, `_get_desired_approvers` from the applicable steps, live rerouting, auto-action rules, list adoption, category snapshot | `_sync_*`, `_get_applicable_steps`, `_reroute_steps_live` |
 | `approval_request_escalation.py` | When: deadline, overdue, SLA compute and search, the three crons, reminders and escalation | `cron_*`, `_compute_sla_*`, `_send_reminder` |
 | `approval_request_prediction.py` | On-demand outcome prediction | `_predict_*` |
 

@@ -79,7 +79,7 @@ SEO-aware. All ABSTRACT.
 
 | Mixin (`_name`) | Adds | Notes |
 |---|---|---|
-| `mixin.website.seo.metadata` | `is_seo_optimized`, `website_meta_title/description/keywords/og_img`, `seo_name` | Override `_default_website_meta()` to change defaults; call `get_website_meta()` (do NOT override it). Inherited notably by `ir.ui.view`. |
+| `mixin.website.seo.metadata` | `is_seo_optimized`, `website_meta_title/description/keywords/og_img`, `seo_name` | Override `_get_default_website_meta()` to change defaults; call `get_website_meta()` (do NOT override it). Inherited notably by `ir.ui.view`. |
 | `mixin.website.cover_properties` | `cover_properties` (Text/JSON) | `_get_background(h,w)`; malformed JSON → `ValidationError`, not 500. |
 | `mixin.website.page_visibility_options` | `header_visible`, `footer_visible` | |
 | `mixin.website.page_options` | `header_overlay`, `header_color`, `header_text_color` | `_inherit`s the visibility mixin. |

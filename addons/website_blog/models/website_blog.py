@@ -460,8 +460,8 @@ class BlogPost(models.Model):
             message, recipients_data, msg_vals=msg_vals, **kwargs
         )
 
-    def _default_website_meta(self):
-        res = super()._default_website_meta()
+    def _get_default_website_meta(self):
+        res = super()._get_default_website_meta()
         res["default_opengraph"]["og:description"] = res["default_twitter"][
             "twitter:description"
         ] = self.subtitle

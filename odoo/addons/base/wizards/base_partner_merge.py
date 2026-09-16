@@ -553,7 +553,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         ]
 
     @api.model
-    def _compute_selected_groupby(self) -> list[str]:
+    def _get_selected_groupby(self) -> list[str]:
         groups = self._get_selected_groupby_fields()
 
         if not groups:
@@ -701,7 +701,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         groups: list[tuple[int, list[int]]] = []
 
         if self._get_selected_groupby_fields() or not self.match_similar_names:
-            exact_fields = self._compute_selected_groupby()
+            exact_fields = self._get_selected_groupby()
             query = self._generate_query(exact_fields, self.maximum_group)
             self.env.cr.execute(query)  # noqa: E8501  built via SQL() by _generate_query
             groups.extend(self.env.cr.fetchall())

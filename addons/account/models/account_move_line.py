@@ -747,12 +747,12 @@ class AccountMoveLine(models.Model):
             ).display_name
 
     def _compute_account_id(self):
-        self._compute_account_id_on_term_lines()
-        self._compute_account_id_on_product_lines()
+        self._update_account_id_on_term_lines()
+        self._update_account_id_on_product_lines()
         self._update_account_id_fallback()
 
     @_debug.perf.timed
-    def _compute_account_id_on_term_lines(self):
+    def _update_account_id_on_term_lines(self):
         term_lines = self.filtered(lambda line: line.display_type == "payment_term")
         if not term_lines:
             _debug.logic("term_accounts_skipped", lines=self, reason="no_term_lines")
@@ -830,7 +830,7 @@ class AccountMoveLine(models.Model):
         return result
 
     @_debug.perf.timed
-    def _compute_account_id_on_product_lines(self):
+    def _update_account_id_on_product_lines(self):
         product_lines = self.filtered(
             lambda line: (
                 line.display_type == "product" and line.move_id.is_invoice(True)

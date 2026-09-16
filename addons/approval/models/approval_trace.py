@@ -515,7 +515,7 @@ CALL_TRACES: dict[str, dict[str, str]] = {
         "_get_managed_approver_user_ids": "routing",
         "_get_rows_decidable_by": "access",
         "_get_default_escalation_manager": "escalation",
-        "_compute_desired_approvers": "routing",
+        "_get_desired_approvers": "routing",
         "_prepare_category_snapshot": "snapshot",
         "_check_auto_action_rules": "rules",
         "_get_applicable_steps": "steps",

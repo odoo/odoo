@@ -68,7 +68,7 @@ Making a model publishable on the website is done by inheriting mixins
 
 - **`mixin.website.published`** → `is_published`, `can_publish`, `website_url`. Override `website_url` per model. `create`/`write` raise `AccessError` if publishing without `can_publish` (which routes through `website._check_access_to_modify`).
 - **`mixin.website.published.multi`** → the above + `website_id`-context-aware publish state (a record bound to another website reads unpublished). Use this, not the plain published mixin, for multi-website-scoped content.
-- **`mixin.website.seo.metadata`** → `website_meta_*` fields. Override `_default_website_meta()` to set defaults; call `get_website_meta()` (never override it).
+- **`mixin.website.seo.metadata`** → `website_meta_*` fields. Override `_get_default_website_meta()` to set defaults; call `get_website_meta()` (never override it).
 - **`mixin.website.searchable`** → override `_search_get_detail()` (returns model/base_domain/search_fields/fetch_fields/mapping/icon) to appear in frontend fuzzy search.
 
 ## Interaction & Builder Registration

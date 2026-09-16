@@ -323,7 +323,7 @@ class Cart(PaymentPortal):
                 ).id,
                 "shipping_info_required": order._has_deliverable_products(),
                 "delivery_amount": payment_utils.major_to_minor_currency_units(
-                    order.amount_total - order._compute_amount_total_without_delivery(),
+                    order.amount_total - order._get_amount_total_without_delivery(),
                     order.currency_id,
                 ),
                 "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
