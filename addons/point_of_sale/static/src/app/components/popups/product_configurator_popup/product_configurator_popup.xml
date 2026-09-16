@@ -148,6 +148,28 @@
         </div>
     </t>
 
+    <t t-name="point_of_sale.UomSelection">
+        <div class="mb-2 fw-bolder">Packaging</div>
+        <div class="d-flex gap-2 flex-wrap">
+            <div t-foreach="this.props.availableUoMs" t-as="uom" t-key="uom.id">
+                <input
+                    class="form-check-input d-none"
+                    type="radio"
+                    name="uom"
+                    t-attf-id="uom-{{uom.id}}"
+                    t-on-change="() => this.onChange(uom)"
+                    />
+                <label
+                    role="button"
+                    t-attf-class="form-check-label uom-selection-value btn btn-secondary btn-lg lh-lg d-flex {{ uom.id == this.props.selectedUomId ? 'active' : '' }}"
+                    t-attf-name="uom-{{uom.id}}"
+                    t-attf-for="uom-{{uom.id}}">
+                    <span t-out="uom.name"/>
+                </label>
+            </div>
+        </div>
+    </t>
+
     <t t-name="point_of_sale.ImageProductAttribute">
         <div>
             <t t-set="is_custom" t-value="false"/>
@@ -232,6 +254,7 @@
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues"/>
                 </div>
+                <UomSelection t-if="this.availableUoMs.length" availableUoMs="this.availableUoMs" setSelected="this.setSelectedUom.bind(this)" selectedUomId="this.state.selectedUomId"/>
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
@@ -241,7 +264,7 @@
                             t-on-click="this.confirm">
                             Add
                         </button>
-                    <button class="btn btn-secondary w-50" t-on-click="this.props.close">Discard</button>
+                    <button class="btn btn-secondary w-50" t-on-click="this.onDiscard">Discard</button>
                 </div>
             </t>
         </Dialog>
