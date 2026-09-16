@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.52
+:Version: 6.53
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -1251,6 +1251,22 @@ with no ``default=`` at all, while two were live helpers called by the field's
 *compute* and named for what they return to it. **When a name and the tree
 disagree, the question is which of them is wrong**, and only reading both
 answers it.
+
+**A third reading: the field exists nowhere, and the body is dead** ``[review]``.
+An ``@api.depends`` body that assigns a field no model declares, and that nothing
+binds or calls, serves nothing. Delete it rather than rename it, since a rename
+gives dead code a better name. Read in full on 2026-09-16 over the four
+repositories, the survivors were **73** definitions under 49 names. Five computed a
+field that exists nowhere and were deleted. Two sat beside a real field and were
+unbound in upstream 19.0 as well (``account_intrastat``'s
+``_compute_intrastat_supplementary_unit_amount``, ``pos_self_order``'s
+``_compute_self_order``); binding either changes what a database stores, so both
+are left for a decision. Twenty definitions under four names were reached by a
+constructed name, three were not on a model, and ``document_sign``'s
+``_default_folder_id`` is its owner's question. The other 42, under 34 names, were
+helpers and were renamed. **Constructed dispatch counts as a binding**:
+``"_default_%s_template_fields" % res_model_name`` binds as surely as ``default=``,
+and the whole family renames together or not at all.
 
 2.4.2 Decorator-bound families the gate cannot reach
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8597,6 +8613,10 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.53
+     - 2026-09-16
+     - §2.4.1: a zero-argument ``_compute_`` assigning a field no model declares is
+       dead and is deleted, not renamed; constructed dispatch counts as a binding.
    * - 6.52
      - 2026-09-16
      - §2.4.3: an accumulator — a body writing into a container its caller passes in
