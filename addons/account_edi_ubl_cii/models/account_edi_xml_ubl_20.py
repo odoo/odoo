@@ -464,11 +464,21 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _add_invoice_line_item_nodes(self, line_node, vals):
         self._add_document_line_item_nodes(line_node, vals)
 
+        item = line_node['cac:Item']
         line_name = vals['base_line']['_line_name']
         if line_name:
-            line_node['cac:Item']['cbc:Description']['_text'] = line_name
-            if not line_node['cac:Item']['cbc:Name']['_text']:
-                line_node['cac:Item']['cbc:Name']['_text'] = line_name
+            item['cbc:Description']['_text'] = line_name
+            if not item['cbc:Name']['_text']:
+                item['cbc:Name']['_text'] = line_name
+
+        if (
+            self._invoice_line_item_node_require_description(vals)
+            and not item['cbc:Description']['_text']
+        ):
+            item['cbc:Description']['_text'] = item['cbc:Name']['_text']
+
+    def _invoice_line_item_node_require_description(self, vals):
+        return False
 
     def _add_invoice_line_tax_category_nodes(self, line_node, vals):
         self._add_document_line_tax_category_nodes(line_node, vals)
