@@ -145,6 +145,9 @@ def _fmt_str(s: str) -> str:
         s.encode("utf-8")
     except UnicodeEncodeError:
         return json.dumps(s)
+    if '"' in s and "'" not in s and s.isprintable():
+        # the quote that needs no escape, which is what ruff format leaves
+        return "'" + s.replace("\\", "\\\\") + "'"
     return json.dumps(s, ensure_ascii=False)
 
 
