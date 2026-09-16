@@ -63,7 +63,7 @@ patch(PosStore.prototype, {
                 // We set the cashier on that order to the currently set employee.
                 o.employee_id = employee;
             }
-            if (this.accessRight.disablePriceButton && this.numpadMode === "price") {
+            if (!this.accessRight.canEditPrice && this.numpadMode === "price") {
                 this.numpadMode = "quantity";
             }
         }

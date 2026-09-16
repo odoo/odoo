@@ -25,7 +25,7 @@ export class ResUsers extends MailResUsers {
         },
     ];
 
-    _post_read_pos_data(records) {
+    _load_pos_data_read(records) {
         records.forEach((user) => {
             if (user.id === 2) {
                 user._role = "manager";
