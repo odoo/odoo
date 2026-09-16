@@ -22,20 +22,20 @@ def check_qr_iban(qr_iban):
     # Check first if it's a valid IBAN.
     check_iban(qr_iban)
 
-    # We sanitize first so that check_qr_iban_range() can extract correct IID from IBAN to validate it.
+    # We sanitize first so that is_qr_iban_range() can extract correct IID from IBAN to validate it.
     sanitized_qr_iban = sanitize_account_number(qr_iban)
 
     if sanitized_qr_iban[:2] not in ["CH", "LI"]:
         raise ValidationError(_lt("QR-IBAN numbers are only available in Switzerland."))
 
     # Now, check if it's valid QR-IBAN (based on its IID).
-    if not check_qr_iban_range(sanitized_qr_iban):
+    if not is_qr_iban_range(sanitized_qr_iban):
         raise ValidationError(_lt("QR-IBAN “%s” is invalid.", qr_iban))
 
     return True
 
 
-def check_qr_iban_range(iban):
+def is_qr_iban_range(iban):
     if not iban or len(iban) < 9:
         return False
     iid = get_iban_part(iban, "bank")

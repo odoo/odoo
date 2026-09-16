@@ -6341,7 +6341,7 @@ class AccountMove(models.Model):
         return self
 
     @_debug.perf.timed
-    def _check_sequence_gap_around(self, previous, current, next_move):
+    def _has_sequence_gap_around(self, previous, current, next_move):
         return (
             current.name
             and current.name != "/"
@@ -6425,7 +6425,7 @@ class AccountMove(models.Model):
                     not is_computed_with_mixin(current_move)
                     or current_move.state != "posted"
                 )
-                and self._check_sequence_gap_around(move_p1, current_move, move_n1)
+                and self._has_sequence_gap_around(move_p1, current_move, move_n1)
             )
             if current_move.made_sequence_gap != current_made_gap:
                 gap_flags_changed += 1  # debuglog
@@ -6434,7 +6434,7 @@ class AccountMove(models.Model):
             if move_n1:
                 n1_made_gap = bool(
                     invalidate_current
-                    or self._check_sequence_gap_around(
+                    or self._has_sequence_gap_around(
                         self.browse() if invalidate_current else current_move,
                         move_n1,
                         move_n2,
@@ -6449,7 +6449,7 @@ class AccountMove(models.Model):
                 or current_move.state != "posted"
             ):
                 p1_made_gap = bool(
-                    self._check_sequence_gap_around(
+                    self._has_sequence_gap_around(
                         move_p2,
                         move_p1,
                         self.browse() if invalidate_current else current_move,

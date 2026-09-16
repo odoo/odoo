@@ -22,7 +22,7 @@ class AuthorizeController(http.Controller):
         :return: None
         """
         # Check that the transaction details have not been altered
-        if not payment_utils.check_access_token(access_token, reference, partner_id):
+        if not payment_utils.is_access_token_valid(access_token, reference, partner_id):
             raise ValidationError(_("Received tampered payment request data."))
 
         # Send the payment request to Authorize.Net.

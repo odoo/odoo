@@ -94,4 +94,4 @@ class TestSubmitGuards(common.TestSurveyCommon, HttpCase):
         from odoo.addons.survey.controllers.main import Survey
 
         answer = self._answer()
-        self.assertFalse(Survey()._check_time_limit_exceeded(self.form, answer))
+        self.assertFalse(Survey()._is_time_limit_exceeded(self.form, answer))

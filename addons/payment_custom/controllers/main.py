@@ -30,7 +30,7 @@ class CustomController(Controller):
 
     @staticmethod
     def _check_access_token(data, tx_sudo):
-        if not payment_utils.check_access_token(
+        if not payment_utils.is_access_token_valid(
             data.get("access_token"), tx_sudo.reference, tx_sudo.amount
         ):
             _logger.warning(

@@ -982,7 +982,7 @@ class Survey(http.Controller):
 
         return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
-    def _check_time_limit_exceeded(self, survey_sudo: Any, answer_sudo: Any) -> bool:
+    def _is_time_limit_exceeded(self, survey_sudo: Any, answer_sudo: Any) -> bool:
         if not (
             answer_sudo.survey_time_limit_reached
             or answer_sudo.question_time_limit_reached
@@ -1092,7 +1092,7 @@ class Survey(http.Controller):
         ):
             return {}, {"error": "unauthorized"}
 
-        if self._check_time_limit_exceeded(survey_sudo, answer_sudo):
+        if self._is_time_limit_exceeded(survey_sudo, answer_sudo):
             return {}, {"error": "unauthorized"}
 
         errors = self._save_page_answers(survey_sudo, answer_sudo, questions, post)

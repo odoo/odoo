@@ -89,7 +89,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
                 CustomerPortal, "_document_check_access", _document_check_access_mock
             ),
             patch(
-                "odoo.addons.payment.utils.check_access_token",
+                "odoo.addons.payment.utils.is_access_token_valid",
                 return_value=False,
             ) as check_payment_access_token_mock,
         ):

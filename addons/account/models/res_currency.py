@@ -84,7 +84,7 @@ class ResCurrency(models.Model):
         )
 
     def _get_simple_currency_table(self, companies) -> SQL:
-        if self._check_currency_table_monocurrency(companies):
+        if self._is_currency_table_monocurrency(companies):
             return self._get_monocurrency_currency_table_sql(companies)
 
         self._create_currency_table(
@@ -93,7 +93,7 @@ class ResCurrency(models.Model):
         return SQL("account_currency_table")
 
     @_debug.perf.timed
-    def _check_currency_table_monocurrency(self, companies):
+    def _is_currency_table_monocurrency(self, companies):
         return len(companies.currency_id) == 1
 
     def _currency_table_rate_types(self, use_cta_rates):

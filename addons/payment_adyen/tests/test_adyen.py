@@ -37,7 +37,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             new=self._generate_test_access_token,
         ):
             self.assertTrue(
-                payment_utils.check_access_token(
+                payment_utils.is_access_token_valid(
                     processing_values["access_token"],
                     self.reference,
                     converted_amount,
@@ -321,7 +321,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction("direct")
         with (
             patch(
-                "odoo.addons.payment.utils.check_access_token",
+                "odoo.addons.payment.utils.is_access_token_valid",
                 return_value="dummy_token",
             ),
             patch(

@@ -74,7 +74,7 @@ class XenditController(http.Controller):
                     limit=1,
                 )
             )
-            if tx_sudo and payment_utils.check_access_token(
+            if tx_sudo and payment_utils.is_access_token_valid(
                 access_token, tx_ref, tx_sudo.amount
             ):
                 tx_sudo._set_pending()

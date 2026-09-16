@@ -33,7 +33,7 @@ def generate_access_token(*values, env=None):
     return hmac_tool(env(su=True), "generate_access_token", token_str)
 
 
-def check_access_token(access_token, *values):
+def is_access_token_valid(access_token, *values):
     """Check the validity of the access token for the provided values.
 
     The values must be provided in the exact same order as they were to `generate_access_token`.

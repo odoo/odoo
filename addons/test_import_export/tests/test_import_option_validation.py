@@ -464,7 +464,7 @@ class ParsedFileCache(TransactionCase):
 class SpreadsheetDateColumnTyping(TransactionCase):
     """A column the reader already resolved to native `datetime.date` objects.
 
-    `check_patterns` skips date instances, so every candidate pattern matches
+    `get_matching_pattern` skips date instances, so every candidate pattern matches
     vacuously over such a column and the first one is returned as if confirmed
     -- then written into `options["date_format"]` and shown to the user as the
     format their file is in.

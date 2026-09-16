@@ -89,7 +89,7 @@ class NuveiController(http.Controller):
         ):  # The access token is not included when the payment goes through.
             # Verify the request based on the provided access token.
             ref = tx_sudo.reference
-            if not payment_utils.check_access_token(error_access_token, ref):
+            if not payment_utils.is_access_token_valid(error_access_token, ref):
                 _logger.warning("Received cancel/error with invalid access token.")
                 raise Forbidden
         else:  # The payment went through.

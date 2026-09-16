@@ -555,7 +555,7 @@ class AccountReportExpressionEval(models.Model):
             # Wrong subformula; the KeyError is caught in the function below
             raise KeyError
 
-        def _check_is_float(to_test):
+        def _is_float(to_test):
             try:
                 float(to_test)
                 return True
@@ -757,7 +757,7 @@ class AccountReportExpressionEval(models.Model):
             terms_to_eval = [
                 term
                 for term in re.split(term_separator_regex, formula)
-                if term and not _check_is_float(term)
+                if term and not _is_float(term)
             ]
             if terms_to_eval:
                 # The formula can't be evaluated as-is. Replace the terms by their value or formula,

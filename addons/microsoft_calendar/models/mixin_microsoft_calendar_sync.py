@@ -432,7 +432,7 @@ class MixinMicrosoftCalendarSync(models.AbstractModel):
                 if lower_bound_day_range:
                     update_time_diff = ms_event_updated_time - odoo_event_updated_time
                     old_event_update_condition = (
-                        odoo_event._check_old_event_update_required(
+                        odoo_event._is_old_event_update_required(
                             int(lower_bound_day_range), update_time_diff
                         )
                     )
@@ -459,7 +459,7 @@ class MixinMicrosoftCalendarSync(models.AbstractModel):
 
         return synced_events, synced_recurrences
 
-    def _check_old_event_update_required(self, lower_bound_day_range, update_time_diff):
+    def _is_old_event_update_required(self, lower_bound_day_range, update_time_diff):
         """
         Checks if an old event in Odoo should be updated locally. This verification is necessary because
         sometimes events in Odoo have the same state in Microsoft and even so they trigger updates locally

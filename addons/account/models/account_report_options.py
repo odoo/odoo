@@ -1112,7 +1112,7 @@ class AccountReportOptions(models.Model):
         companies = self.env["res.company"].browse(self.get_report_company_ids(options))
         table_type = (
             "monocurrency"
-            if self.env["res.currency"]._check_currency_table_monocurrency(companies)
+            if self.env["res.currency"]._is_currency_table_monocurrency(companies)
             else self.currency_translation
         )
 

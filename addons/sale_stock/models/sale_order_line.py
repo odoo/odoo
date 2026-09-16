@@ -101,7 +101,7 @@ class SaleOrderLine(models.Model):
         return res
 
     def _compute_invoice_state(self):
-        def check_moves_state(moves):
+        def is_moves_done(moves):
             at_least_one_done = False
             for move in moves:
                 if move.state not in ["done", "cancel"]:
@@ -118,7 +118,7 @@ class SaleOrderLine(models.Model):
                 and line.product_id.type == "consu"
                 and line.product_id.invoice_policy == "transferred"
                 and line.move_ids
-                and check_moves_state(line.move_ids)
+                and is_moves_done(line.move_ids)
                 and not float_is_zero(
                     line.qty_transferred,
                     precision_rounding=line.product_uom_id.rounding,

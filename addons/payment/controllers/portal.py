@@ -83,7 +83,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
-            if not payment_utils.check_access_token(
+            if not payment_utils.is_access_token_valid(
                 access_token, partner_id, amount, currency_id
             ):
                 raise NotFound  # Don't leak information about ids.
@@ -319,7 +319,7 @@ class PaymentPortal(portal.CustomerPortal):
         amount = amount and float(
             amount
         )  # Cast as float in case the JS stripped the '.0'
-        if not payment_utils.check_access_token(
+        if not payment_utils.is_access_token_valid(
             access_token, partner_id, amount, currency_id
         ):
             raise Forbidden
@@ -498,7 +498,7 @@ class PaymentPortal(portal.CustomerPortal):
             tx_sudo = request.env["payment.transaction"].sudo().browse(tx_id)
 
             # Raise an HTTP 404 if the access token is invalid
-            if not payment_utils.check_access_token(
+            if not payment_utils.is_access_token_valid(
                 access_token,
                 tx_sudo.partner_id.id,
                 tx_sudo.amount,

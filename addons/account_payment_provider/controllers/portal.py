@@ -213,7 +213,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         # EXTENDS account
 
         # If we have a custom payment amount, make sure it hasn't been tampered with
-        if amount and not payment_utils.check_access_token(
+        if amount and not payment_utils.is_access_token_valid(
             payment_token, invoice_id, amount
         ):
             return request.redirect("/my")

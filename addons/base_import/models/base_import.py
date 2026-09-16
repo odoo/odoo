@@ -1140,7 +1140,7 @@ class Base_ImportImport(models.TransientModel):
             except KeyError:
                 pass
         date_patterns.extend(DATE_PATTERNS)
-        match = check_patterns(date_patterns, preview_values)
+        match = get_matching_pattern(date_patterns, preview_values)
         if match:
             options["date_format"] = match
             return ["date", "datetime"]
@@ -1151,7 +1151,7 @@ class Base_ImportImport(models.TransientModel):
         datetime_patterns.extend(
             "%s %s" % (d, t) for d in date_patterns for t in TIME_PATTERNS
         )
-        match = check_patterns(datetime_patterns, preview_values)
+        match = get_matching_pattern(datetime_patterns, preview_values)
         if match:
             options["datetime_format"] = match
             return ["datetime"]
@@ -2493,7 +2493,7 @@ def _is_native_date_column(values):
 
     The xls/xlsx readers hand back native ``datetime.date`` /
     ``datetime.datetime`` for date-formatted cells, and such a column must not
-    be put through :func:`check_patterns`: that function *skips* date
+    be put through :func:`get_matching_pattern`: that function *skips* date
     instances, so every candidate pattern matches vacuously over the column and
     the FIRST one is returned as though it had been confirmed. The answer is
     then written into ``options["date_format"]`` -- measured, a sheet of native
@@ -2525,7 +2525,7 @@ def _is_integer_literal(value):
     return bool(_INTEGER_RE.match(value))
 
 
-def check_patterns(patterns, values):
+def get_matching_pattern(patterns, values):
     for pattern in patterns:
         p = to_re(pattern)
         for val in values:
@@ -2544,7 +2544,7 @@ def check_patterns(patterns, values):
 def to_re(pattern):
     """cut down version of TimeRE converting strptime patterns to regex
 
-    Memoized: `check_patterns` walks ~280 candidate date/datetime patterns per
+    Memoized: `get_matching_pattern` walks ~280 candidate date/datetime patterns per
     column per preview, and the pattern set is a module-level constant.
     """
     pattern = re.sub(r"\s+", r"\\s+", pattern)

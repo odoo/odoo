@@ -120,7 +120,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the invoice values. Done after fetching the invoice
             # as we need the invoice fields to check the access token.
-            if not payment_utils.check_access_token(
+            if not payment_utils.is_access_token_valid(
                 access_token,
                 invoice_sudo.partner_id.id,
                 amount,
@@ -168,7 +168,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             except (
                 AccessError
             ):  # It is a payment access token computed on the payment context.
-                if not payment_utils.check_access_token(
+                if not payment_utils.is_access_token_valid(
                     access_token,
                     kwargs.get("partner_id"),
                     kwargs.get("amount"),
