@@ -46,7 +46,7 @@ class TestSqlIdentifierValidation(unittest.TestCase):
 
 class TestSqlInlined(unittest.TestCase):
     class _Cursor:
-        _cnx = None
+        connection = None
 
     def test_preserves_to_flush(self):
         field = object()

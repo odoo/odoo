@@ -146,7 +146,7 @@ class SQL:
             if directive == "%":
                 return "%%"
             if directive == "s":
-                literal = _sql.Literal(next(params)).as_string(cr._cnx)
+                literal = _sql.Literal(next(params)).as_string(cr.connection)
                 return literal.replace("%", "%%")
             raise ValueError(
                 f"SQL.inlined(): unsupported format directive "
