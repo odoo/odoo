@@ -804,7 +804,6 @@ test.tags("desktop");
 test("SelectCreateDialog doesn't display the cog menu", async () => {
     class CogItem extends Component {
         static template = xml`<span class="test-cog"/>`;
-        static props = {};
     }
     registry.category("cogMenu").add("test-cog", { Component: CogItem, isDisplayed: () => true });
     Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;

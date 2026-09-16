@@ -1,11 +1,10 @@
-import { useProps, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
 
 /**
@@ -35,21 +34,12 @@ class QuestionPageOneToManyField extends X2ManyField {
         ...X2ManyField.components,
         ListRenderer: QuestionPageListRenderer,
     };
-    // Inline conversion of X2ManyField's static props (not yet exported as a
-    // schema const), with the "editable" default applied.
+
     props = useProps({
-        ...standardFieldProps,
-        addLabel: t.string().optional(),
+        ...x2ManyFieldProps,
         editable: t.string().optional("bottom"),
-        viewMode: t.string().optional(),
-        widget: t.string().optional(),
-        crudOptions: t.object().optional(),
-        string: t.string().optional(),
-        relatedFields: t.object().optional(),
-        views: t.object().optional(),
-        domain: t.or([t.array(), t.function()]).optional(),
-        context: t.object(),
     });
+
     setup() {
         super.setup();
         useSubEnv({
@@ -97,12 +87,14 @@ class QuestionPageOneToManyField extends X2ManyField {
         });
         this._openRecord = async (params) => {
             const { record, name } = this.props;
-            if (!await record.save()) {
+            if (!(await record.save())) {
                 // do not open question form as it won't be savable either.
                 return;
             }
             if (params.record) {
-                params.record = record.data[name].records.find(r => r.resId === params.record.resId);
+                params.record = record.data[name].records.find(
+                    (r) => r.resId === params.record.resId
+                );
             }
             await openRecord(params);
         };
@@ -113,8 +105,7 @@ class QuestionPageOneToManyField extends X2ManyField {
 export const questionPageOneToManyField = {
     ...x2ManyField,
     component: QuestionPageOneToManyField,
-    additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_one2many"],
-    
+    additionalClasses: [...(x2ManyField.additionalClasses || []), "o_field_one2many"],
 };
 
 registry.category("fields").add("question_page_one2many", questionPageOneToManyField);
