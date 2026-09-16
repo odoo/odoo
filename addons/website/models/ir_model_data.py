@@ -3,6 +3,7 @@
 import logging
 
 from odoo import api, models
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 
@@ -16,8 +17,24 @@ class IrModelData(models.Model):
             theme_records = self.env['ir.module.module']._theme_model_names.values()
             if record._name in theme_records:
                 # use active_test to also unlink archived models
+<<<<<<< 8c71e985e0dff6c9030d390a6d2452d909e11449
                 copy_ids = record.with_context(active_test=False).copy_ids
                 if website_restriction := int(self.env['ir.config_parameter'].sudo().get_int('website.apply_new_theme', 0)):
+||||||| ea81dfe10b0615e5c309c7677f6b6e8b28f50451
+                # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
+                copy_ids = record.with_context({
+                    'active_test': False,
+                    'MODULE_UNINSTALL_FLAG': True
+                }).copy_ids
+                if website_restriction := int(self.env['ir.config_parameter'].sudo().get_param('website.apply_new_theme', 0)):
+=======
+                # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
+                copy_ids = record.with_context(**{
+                    'active_test': False,
+                    MODULE_UNINSTALL_FLAG: True,
+                }).copy_ids
+                if website_restriction := int(self.env['ir.config_parameter'].sudo().get_param('website.apply_new_theme', 0)):
+>>>>>>> 976910f07ab8991efde94f9e715635c82bd94d68
                     # we are in a website context, see `write()` override of
                     # ir.module.module in website
                     copy_ids = copy_ids.filtered(lambda c: c.website_id.id == website_restriction)
