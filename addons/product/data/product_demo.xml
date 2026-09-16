@@ -766,7 +766,86 @@
             <field name="list_price">2000.00</field>
             <field name="standard_price">2500.00</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">Professional furniture assembly service</field>
+        </record>
+
+        <record id="acoustic_wall_insulation" model="product.product">
+            <field name="name">Acoustic wall insulation</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">45.00</field>
+            <field name="uom_id" ref="uom.product_uom_square_meter"/>
+        </record>
+
+        <record id="acoustic_ceiling" model="product.product">
+            <field name="name">Acoustic ceiling</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">60.00</field>
+            <field name="uom_id" ref="uom.product_uom_square_meter"/>
+        </record>
+
+        <record id="subfloor_preparation" model="product.product">
+            <field name="name">Subfloor preparation</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">12.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="acoustic_underlay" model="product.product">
+            <field name="name">Acoustic underlay</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">8.00</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="parquet_installation" model="product.product">
+            <field name="name">Parquet installation</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">55.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="whiteboard" model="product.product">
+            <field name="name">Whiteboard</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">180.00</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="whiteboard_pen" model="product.product">
+            <field name="name">Whiteboard Pen</field>
+            <field name="default_code">CONS_0003</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">1.20</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="display_tv" model="product.product">
+            <field name="name">Display / TV</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">1800.00</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">65" 4K screen + wall mount + HDMI/USB-C inputs</field>
+        </record>
+
+        <record id="microphone_system" model="product.product">
+            <field name="name">Microphone system</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">2500.00</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">Ceiling/table array mic with echo cancellation</field>
+        </record>
+
+        <record id="camera" model="product.product">
+            <field name="name">Camera</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">1500.00</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">PTZ conference camera, auto-framing</field>
         </record>
 
         <record id="product_template_dining_table" model="product.template">

@@ -213,37 +213,75 @@ class SaleOrderTemplate(models.Model):
         ).product_variant_id
         demo_template.sale_order_template_line_ids = [
             Command.create({
-                "name": self.env._("Regular Section"),
+                "name": self.env._("Open Space Renovation"),
                 "display_type": "line_section",
+                "product_uom_qty": 0,
+                "section_qty": 250,
+                "section_uom_id": self.env.ref("uom.product_uom_square_meter").id,
+            }),
+            Command.create({
+                "product_id": self.env.ref("product.acoustic_wall_insulation").id,
+                "product_uom_qty": 187.5,
+            }),
+            Command.create({
+                "product_id": self.env.ref("product.acoustic_ceiling").id,
+                "product_uom_qty": 250,
+            }),
+            Command.create({
+                "name": self.env._("Flooring parquet"),
+                "display_type": "line_subsection",
+                "collapse_composition": True,
                 "product_uom_qty": 0,
             }),
             Command.create({
-                "product_id": self.env.ref(
-                    "product.product_template_dining_table"
-                ).product_variant_id.id
+                "product_id": self.env.ref("product.subfloor_preparation").id,
+                "product_uom_qty": 250,
             }),
-            Command.create({"product_id": self.env.ref("product.monitor_stand").id}),
             Command.create({
-                "name": self.env._("Hidden Composition Section"),
+                "product_id": self.env.ref("product.acoustic_underlay").id,
+                "product_uom_qty": 250,
+            }),
+            Command.create({
+                "product_id": self.env.ref("product.parquet_installation").id,
+                "product_uom_qty": 250,
+            }),
+            Command.create({
+                "name": self.env._("Conference Room"),
                 "display_type": "line_section",
-                "collapse_composition": True,
                 "product_uom_qty": 0,
             }),
             Command.create({"product_id": self.env.ref("product.consu_delivery_02").id}),
             Command.create({
-                "product_id": self.env.ref("product.product_delivery_01").id,
-                "product_uom_qty": 8,
+                "product_id": self.env.ref(
+                    "product.product_product_11_product_template"
+                ).product_variant_id.id,
+                "product_uom_qty": 10,
             }),
             Command.create({
-                "name": self.env._("Hidden Prices Section"),
+                "name": self.env._("Connectivity"),
+                "display_type": "line_subsection",
+                "product_uom_qty": 0,
+            }),
+            Command.create({"product_id": self.env.ref("product.display_tv").id}),
+            Command.create({"product_id": self.env.ref("product.microphone_system").id}),
+            Command.create({"product_id": self.env.ref("product.camera").id}),
+            Command.create({
+                "name": self.env._("Individual Work Station"),
                 "display_type": "line_section",
                 "collapse_prices": True,
                 "product_uom_qty": 0,
             }),
-            Command.create({"product_id": acoustic_bloc_screen_product.id}),
-            Command.create({"product_id": chair_protection_product.id, "product_uom_qty": 8}),
             Command.create({
-                "name": self.env._("Optional Section"),
+                "product_id": self.env.ref("product.product_product_4c").id,
+                "product_uom_qty": 25,
+            }),
+            Command.create({"product_id": acoustic_bloc_screen_product.id, "product_uom_qty": 25}),
+            Command.create({
+                "product_id": self.env.ref("product.product_delivery_01").id,
+                "product_uom_qty": 25,
+            }),
+            Command.create({
+                "name": self.env._("Options"),
                 "display_type": "line_section",
                 "is_optional": True,
                 "product_uom_qty": 0,
@@ -253,13 +291,22 @@ class SaleOrderTemplate(models.Model):
                 "product_uom_qty": 0,
             }),
             Command.create({
-                "name": self.env._("Subsection"),
+                "product_id": self.env.ref("product.monitor_stand").id,
+                "product_uom_qty": 0,
+            }),
+            Command.create({"product_id": chair_protection_product.id, "product_uom_qty": 0}),
+            Command.create({
+                "name": self.env._("Brainstorm Whiteboard"),
                 "display_type": "line_subsection",
                 "product_uom_qty": 0,
             }),
             Command.create({
-                "product_id": self.env.ref("product.product_product_12").id,
-                "product_uom_qty": 0,
+                "product_id": self.env.ref("product.whiteboard").id,
+                "product_uom_qty": 2,
+            }),
+            Command.create({
+                "product_id": self.env.ref("product.whiteboard_pen").id,
+                "product_uom_qty": 20,
             }),
         ]
 
