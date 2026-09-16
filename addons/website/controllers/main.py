@@ -622,9 +622,16 @@ class Website(WebsiteSeoRoutes, WebsiteThemeRoutes, Home):
         readonly=True,
     )
     def get_dynamic_snippet_templates(self, filter_name=False):
-        domain = [["key", "ilike", ".dynamic_filter_template_"], ["type", "=", "qweb"]]
+        # Scoped to this website, like every other route here and like its own
+        # sibling `get_dynamic_snippet_filters` three routes up. Without it this
+        # public route answered with every website's templates: on a two-site
+        # database, site A's visitors were handed the keys, names and layout of
+        # templates belonging only to site B.
+        domain = request.website.website_domain() & Domain(
+            [["key", "ilike", ".dynamic_filter_template_"], ["type", "=", "qweb"]]
+        )
         if filter_name:
-            domain.append(["key", "ilike", escape_psql("_%s_" % filter_name)])
+            domain &= Domain("key", "ilike", escape_psql("_%s_" % filter_name))
         templates = (
             request.env["ir.ui.view"]
             .sudo()
@@ -632,8 +639,14 @@ class Website(WebsiteSeoRoutes, WebsiteThemeRoutes, Home):
         )
 
         for t in templates:
-            children = list(etree.fromstring(t.pop("arch_db")))
-            attribs = (children and children[0].attrib) or {}
+            # The first ELEMENT child, not the first child: lxml counts comments
+            # and processing instructions as children, and a leading comment --
+            # ordinary in a view arch -- made `children[0].attrib` empty, so the
+            # snippet silently rendered with default columns, counts and thumb
+            # instead of the ones its template declares. No shipped template
+            # starts with one today; nothing would have said so if one did.
+            first = etree.fromstring(t.pop("arch_db")).find("*")
+            attribs = first.attrib if first is not None else {}
             t["numOfEl"] = attribs.get("data-number-of-elements")
             t["numOfElSm"] = attribs.get("data-number-of-elements-sm")
             t["numOfElFetch"] = attribs.get("data-number-of-elements-fetch")

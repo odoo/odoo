@@ -466,14 +466,22 @@ class WebsiteVisitor(models.Model):
         self.check_singleton()
         domain = Domain.AND([domain, Domain("visitor_id", "=", self.id)])
         last_view = self.env["website.track"].sudo().search(domain, limit=1)
-        if not last_view or last_view.visit_datetime < datetime.now() - timedelta(
-            minutes=30
-        ):
-            _debug.lifecycle(
-                "visitor_track_created",
-                visitor=self.id,
-                by="new" if not last_view else "stale",
-            )
+        recorded = (
+            not last_view
+            or last_view.visit_datetime < datetime.now() - timedelta(minutes=30)
+        )
+        # Logged before the branch, with the inputs, so one site answers both
+        # outcomes. Logging only the taken side made "this page view was not
+        # counted" -- an ordinary complaint about visitor analytics --
+        # indistinguishable from "_add_tracking was never called".
+        _debug.lifecycle(
+            "visitor_track",
+            visitor=self.id,
+            recorded=recorded,
+            by="new" if not last_view else ("stale" if recorded else "within_window"),
+            last_seen=last_view.visit_datetime or None,
+        )
+        if recorded:
             self.env["website.track"].create(
                 {**website_track_values, "visitor_id": self.id}
             )

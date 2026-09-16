@@ -73,24 +73,54 @@ class IrHttp(models.AbstractModel):
         path, qmark, query = head.partition("?")
         suffix = qmark + query + hash_ + fragment
 
-        if (
-            path
-            and request.env["ir.http"]._get_rewrite_count(request.website_routing)
-            and (
-                len(path) > 1
-                and path.startswith("/")
-                and "/static/" not in path
-                and not path.startswith("/web/")
-            )
-        ):
+        rewrite_count = (
+            request.env["ir.http"]._get_rewrite_count(request.website_routing)
+            if path
+            else 0
+        )
+        eligible = (
+            len(path) > 1
+            and path.startswith("/")
+            and "/static/" not in path
+            and not path.startswith("/web/")
+        )
+        rewriting = bool(path and rewrite_count and eligible)
+        rewritten = path
+        if rewriting:
+            # url_rewrite consults the routing map, not website.rewrite: it
+            # answers `path` unchanged whenever no rule redirects it, which is
+            # the common case even on a website that has rewrites. Comparing is
+            # the only way to tell "the rewriter ran" from "the URL changed".
             rewritten, _ = request.env["ir.http"].url_rewrite(path)
+            url_from = rewritten + suffix
+
+        if _debug.logic.enabled and rewritten != path:
             _debug.logic(
                 "url_for_rewritten",
                 path=path,
                 to=rewritten,
                 website=request.website_routing,
             )
-            url_from = rewritten + suffix
+        # The four ways of not rewriting are indistinguishable from the caller
+        # and from a log that only speaks on success -- "this website has no
+        # rewrites", "this path is excluded" and "no rule matched it" are
+        # different diagnoses for the same complaint. Guarded because this runs
+        # once per URL in every rendered page.
+        if _debug.logic.enabled and rewritten == path:
+            _debug.logic(
+                "url_for_not_rewritten",
+                path=path,
+                website=request.website_routing,
+                by=(
+                    "empty_path"
+                    if not path
+                    else "no_rewrite_on_website"
+                    if not rewrite_count
+                    else "path_excluded"
+                    if not eligible
+                    else "no_rule_matched"
+                ),
+            )
 
         return super()._url_for(url_from, lang_code)
 

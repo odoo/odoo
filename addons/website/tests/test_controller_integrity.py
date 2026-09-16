@@ -938,3 +938,90 @@ class TestControllerChallenge(HttpCase):
         self.assertEqual([row[0] for row in result], ["website.challenge_selected"])
         self.assertEqual([file["url"] for row in result for file in row[1]], [path])
         self.assertGreater(len(result[0][1][0]["arch"]), 100)
+
+
+@tagged("post_install", "-at_install")
+class TestDynamicSnippetTemplates(HttpCase):
+    """`/website/snippet/filter_templates` is public, and answers per website."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        cls.other = cls.env["website"].create({"name": "Other site"})
+        View = cls.env["ir.ui.view"]
+        cls.plain = View.create(
+            {
+                "name": "dft plain",
+                "type": "qweb",
+                "key": "website.dynamic_filter_template_probe_plain",
+                "arch": '<t t-name="website.dynamic_filter_template_probe_plain">'
+                '<section data-thumb="plain.png" data-number-of-elements="4">x</section></t>',
+            }
+        )
+        cls.commented = View.create(
+            {
+                "name": "dft commented",
+                "type": "qweb",
+                "key": "website.dynamic_filter_template_probe_commented",
+                "arch": '<t t-name="website.dynamic_filter_template_probe_commented">'
+                "<!-- a perfectly ordinary leading comment -->"
+                '<section data-thumb="commented.png" data-number-of-elements="6">x</section></t>',
+            }
+        )
+        cls.foreign = View.create(
+            {
+                "name": "dft foreign",
+                "type": "qweb",
+                "website_id": cls.other.id,
+                "key": "website.dynamic_filter_template_probe_foreign",
+                "arch": '<t t-name="website.dynamic_filter_template_probe_foreign">'
+                '<section data-thumb="foreign.png">x</section></t>',
+            }
+        )
+        cls.env.flush_all()
+
+    def _templates(self):
+        with MockRequest(self.env, website=self.website):
+            return {t["key"]: t for t in Website().get_dynamic_snippet_templates()}
+
+    def test_a_leading_comment_does_not_erase_the_data_attributes(self):
+        """lxml counts a comment as a child, so `children[0]` was the comment and
+        every `data-*` came back None -- the snippet rendered with defaults and
+        nothing said so."""
+        templates = self._templates()
+        plain = templates["website.dynamic_filter_template_probe_plain"]
+        commented = templates["website.dynamic_filter_template_probe_commented"]
+        self.assertEqual(plain["thumb"], "plain.png")
+        self.assertEqual(plain["numOfEl"], "4")
+        self.assertEqual(commented["thumb"], "commented.png")
+        self.assertEqual(commented["numOfEl"], "6")
+
+    def test_another_website_s_templates_are_not_offered(self):
+        keys = self._templates()
+        self.assertIn("website.dynamic_filter_template_probe_plain", keys)
+        self.assertNotIn(
+            "website.dynamic_filter_template_probe_foreign",
+            keys,
+            "a public route must not hand one site's templates to another's",
+        )
+
+    def test_a_website_still_sees_its_own_specific_template(self):
+        with MockRequest(self.env, website=self.other):
+            keys = {t["key"] for t in Website().get_dynamic_snippet_templates()}
+        self.assertIn("website.dynamic_filter_template_probe_foreign", keys)
+        self.assertIn("website.dynamic_filter_template_probe_plain", keys)
+
+    def test_a_template_with_no_element_child_is_not_an_error(self):
+        self.env["ir.ui.view"].create(
+            {
+                "name": "dft textonly",
+                "type": "qweb",
+                "key": "website.dynamic_filter_template_probe_textonly",
+                "arch": '<t t-name="website.dynamic_filter_template_probe_textonly">'
+                "text and nothing else</t>",
+            }
+        )
+        self.env.flush_all()
+        entry = self._templates()["website.dynamic_filter_template_probe_textonly"]
+        self.assertIsNone(entry["thumb"])

@@ -118,14 +118,31 @@ class IrQweb(models.AbstractModel):
         )
         irQweb = irQweb.with_context(cookies_allowed=is_allowed_optional_cookies)
 
-        _debug.pipeline(
-            "frontend_environment",
-            website=current_website.id,
-            editable=editable,
-            translatable=translatable,
-            restricted_editor=has_group_restricted_editor,
-            cookies_allowed=is_allowed_optional_cookies,
-        )
+        # Guarded, and that is not stylistic: kwargs are evaluated BEFORE the
+        # call, so `_Channel.__call__`'s own isEnabledFor check comes too late to
+        # stop the two website field reads below. Unguarded they cost one extra
+        # SELECT on `website` per render with the channel OFF, which
+        # `TestWebsitePerformance.test_30_perf_sql_queries_page_no_layout`
+        # measures and refuses.
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "frontend_environment",
+                website=current_website.id,
+                editable=editable,
+                translatable=translatable,
+                restricted_editor=has_group_restricted_editor,
+                cookies_allowed=is_allowed_optional_cookies,
+                # The last two are the remaining inputs of the third-party
+                # blocking gate in `_post_processing_att`, which logs only when
+                # it blocks. Its other two inputs were already here, so "was
+                # blocking even active for this render?" -- the question behind
+                # any complaint that an embed loaded without consent, or that one
+                # failed to load -- needed these to be answerable. Logged here
+                # rather than at the gate because the gate runs once per element
+                # and this runs once per render.
+                cookies_bar=current_website.cookies_bar,
+                block_third_party=current_website.block_third_party_domains,
+            )
         return irQweb
 
     def _add_multi_website_values(self, values, irQweb, current_website):
