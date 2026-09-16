@@ -214,6 +214,39 @@ class MailTestActivity(models.Model):
                                attachment_ids=attachment_ids)
 
 
+class MailTestActivityComputedName(models.Model):
+    """Model with somewhat convoluted display_name dependencies to check activities are properly renamed."""
+
+    _description = 'Activity Model with Computed Name'
+    _name = 'mail.test.activity.computed.name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(compute='_compute_name', store=True)
+    code = fields.Char(required=True)
+    code_short = fields.Char(compute='_compute_code_short', inverse='_inverse_code_short')
+    container_id = fields.Many2one('mail.test.container')
+    move_date = fields.Date()
+    reference = fields.Char(compute='_compute_reference', store=True)
+
+    @api.depends('code')
+    def _compute_code_short(self):
+        for record in self:
+            record.code_short = record.code.replace('code_', '')
+
+    def _inverse_code_short(self):
+        for record in self:
+            record.code = f'code_{record.code_short}'
+
+    @api.depends('reference', 'container_id.name')
+    def _compute_name(self):
+        for record in self:
+            record.name = f'{record.container_id.name or "No Container"} / {record.reference}'
+
+    @api.depends('code')
+    def _compute_reference(self):
+        for record in self:
+            record.reference = f'MACN-REF-{record.code}'
+
 class MailTestTicket(models.Model):
     """ This model can be used in tests when complex chatter features are
     required like modeling tasks or tickets. """
