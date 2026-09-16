@@ -66,7 +66,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         payment_vals_list = []
 
         pay_method_line = self.journal_id._get_available_payment_method_lines('outbound').filtered(
-            lambda x: x.code == 'out_third_party_checks')
+            lambda x: x.code == 'out_third_party_checks')[:1]
 
         for check in checks:
             payment_vals_list.append({
