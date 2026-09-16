@@ -2,7 +2,11 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
+import {
+    applyOpacityToGradient,
+    isColorGradient,
+    standardizeGradient,
+} from "@web/core/utils/colors";
 import { GradientPicker } from "../../gradient_picker/gradient_picker";
 
 const DEFAULT_GRADIENT_COLORS = [
@@ -33,6 +37,7 @@ export class ColorPickerGradientTab extends Component {
         noTransparency: t.boolean().optional(),
         selectedColor: t.string().optional(),
         currentColorPreview: t.string().optional(),
+        getUsedCustomColors: t.function().optional(() => () => []),
     });
 
     customGradientButton = signal.ref();
@@ -42,6 +47,7 @@ export class ColorPickerGradientTab extends Component {
             showGradientPicker: false,
         });
         this.applyOpacityToGradient = applyOpacityToGradient;
+        this.standardizeGradient = standardizeGradient;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         useLayoutEffect(
             () => {
@@ -50,6 +56,9 @@ export class ColorPickerGradientTab extends Component {
                 }
             },
             () => [this.state.showGradientPicker]
+        );
+        this.usedCustomColors = Array.from(this.props.getUsedCustomColors()).filter(
+            isColorGradient
         );
     }
 
