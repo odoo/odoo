@@ -449,7 +449,7 @@ patch(PosStore.prototype, {
         }
         return order;
     },
-    createOrderIfNeeded(data) {
+    createOrderIfNeeded(data = {}) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find(
                 (order) => order.isDirectSale && !order.isSynced
