@@ -237,11 +237,14 @@ class TestGracefulStop:
         server, _, _, _ = stopped()
         assert server.httpd.drain.call_args.args == (7.0,)
 
-    def test_a_listener_thread_mid_job_cannot_stall_the_stop(self, stopped):
+    def test_a_listener_thread_mid_job_gets_the_graceful_bound_then_is_left(
+        self, stopped, monkeypatch
+    ):
+        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "1")
         busy = threading.Event()
         released = threading.Event()
         thread = threading.Thread(
-            target=lambda: (busy.set(), released.wait(5)), daemon=True
+            target=lambda: (busy.set(), released.wait(10)), daemon=True
         )
         thread.start()
         busy.wait(1)
@@ -251,8 +254,24 @@ class TestGracefulStop:
         released.set()
         assert server._listener_stop.is_set()
         assert _threaded.LISTENER_JOIN_TIMEOUT_S <= elapsed < 3
-        said = " ".join(str(c) for c in server.logger.info.call_args_list)
-        assert "still busy at shutdown" in said
+        said = " ".join(str(c) for c in server.logger.warning.call_args_list)
+        assert "still mid-job at shutdown" in said
+        assert "ODOO_GRACEFUL_STOP_TIMEOUT" in said
+
+    def test_a_listener_thread_that_finishes_its_job_in_time_is_joined(
+        self, stopped, monkeypatch
+    ):
+        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "5")
+        released = threading.Event()
+        thread = threading.Thread(target=lambda: released.wait(10), daemon=True)
+        thread.start()
+        threading.Timer(0.3, released.set).start()
+        t0 = time.monotonic()
+        server, _, _, _ = stopped(_listener_threads=[thread])
+        elapsed = time.monotonic() - t0
+        assert 0.2 < elapsed < 3
+        assert not thread.is_alive()
+        server.logger.warning.assert_not_called()
 
     def test_the_listener_wakeup_pipe_is_written_and_closed(self, stopped):
         pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)

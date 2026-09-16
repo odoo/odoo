@@ -87,8 +87,9 @@ stops accepting and closes idle connections (`shutdown()`), then **waits for
 the busy request threads** (`ThreadedHTTPServer.drain()`, bounded by
 `ODOO_GRACEFUL_STOP_TIMEOUT`, 60 s; a request already over `limit_time_real`
 is not waited for), closes the listening socket, runs the stop hooks, joins
-the listener threads for up to 1 s so each closes its own PostgreSQL session,
-and closes the pools. A second signal forces an immediate exit. The evented
+the listener threads for whatever is left of that same bound (at least 1 s)
+so each finishes its job and closes its own PostgreSQL session, and closes
+the pools. A second signal forces an immediate exit. The evented
 process drains the same way. Before 2026-09-15 the socket closed under every
 in-flight request and the listener sessions were left to the kernel.
 

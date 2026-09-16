@@ -45,8 +45,9 @@ _RECYCLE_CONN_LOST = "connection_lost"
 _RECYCLE_STOP = "stop"
 
 LISTENER_JOIN_TIMEOUT_S = 1.0
-"""How long `stop()` waits for the cron and job threads to close their
-listener sessions.  One mid-job is left to die with the process."""
+"""The least `stop()` waits for the cron and job threads to close their
+listener sessions once the HTTP drain has spent the graceful-stop bound; a
+thread mid-job gets the rest of that bound, as a prefork cron worker does."""
 
 LIMIT_MONITOR_INTERVAL_S = 5.0
 
@@ -404,18 +405,26 @@ class ThreadedServer(CommonServer):
             self._listener_stop_pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
         return self._listener_stop_pipe[0]
 
-    def _stop_listener_threads(self) -> None:
+    def _stop_listener_threads(self, deadline: float) -> None:
         self._listener_stop.set()
         if self._listener_stop_pipe is not None:
             with contextlib.suppress(OSError):
                 os.write(self._listener_stop_pipe[1], b".")
-        deadline = time.monotonic() + LISTENER_JOIN_TIMEOUT_S
+        deadline = max(deadline, time.monotonic() + LISTENER_JOIN_TIMEOUT_S)
+        busy = [t.name for t in self._listener_threads if t.is_alive()]
+        if busy and deadline - time.monotonic() > LISTENER_JOIN_TIMEOUT_S:
+            self.logger.info(
+                "Waiting up to %.0fs for %d listener thread(s) to finish their job",
+                deadline - time.monotonic(),
+                len(busy),
+            )
         for thread in self._listener_threads:
             thread.join(max(deadline - time.monotonic(), 0))
         alive = [t.name for t in self._listener_threads if t.is_alive()]
         if alive:
-            self.logger.info(
-                "%d listener thread(s) still busy at shutdown: %s",
+            self.logger.warning(
+                "%d listener thread(s) still mid-job at shutdown, left to the "
+                "process exit (ODOO_GRACEFUL_STOP_TIMEOUT): %s",
                 len(alive),
                 ", ".join(alive),
             )
@@ -532,19 +541,20 @@ class ThreadedServer(CommonServer):
                 "Hit CTRL-C again or send a second signal to force the shutdown."
             )
 
+        # One graceful-stop bound covers the HTTP drain and the listener
+        # threads together, as the prefork master gives all its workers one.
         # Listeners are told first so their sessions close while the HTTP
-        # drain runs; they are joined after it.
+        # drain runs; they are joined after it, for whatever is left.
+        timeout = get_graceful_stop_timeout(self.logger)
+        deadline = time.monotonic() + timeout
         self._listener_stop.set()
         if self.httpd:
             self.httpd.shutdown()
-            self.httpd.drain(
-                get_graceful_stop_timeout(self.logger),
-                stuck=self._count_stuck_http_threads(),
-            )
+            self.httpd.drain(timeout, stuck=self._count_stuck_http_threads())
             self.httpd.server_close()
 
         super().stop()
-        self._stop_listener_threads()
+        self._stop_listener_threads(deadline)
 
         db.close_all()
 
