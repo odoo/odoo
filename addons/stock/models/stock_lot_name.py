@@ -152,7 +152,20 @@ class StockLotName(models.Model):
         if not last_serial:
             dbg.logic.debug("_get_next_serial: no lot yet for product %s", product.id)
             return False
-        return self._get_free_lot_name(company, product, last_serial.name)
+        proposal = self._get_free_lot_name(company, product, last_serial.name)
+        # The anchor is the most recently CREATED lot, not the highest-named
+        # one, so an out-of-order import moves the proposal back into the low
+        # range. That is deliberate, and it is the question anyone debugging a
+        # surprising serial asks first -- it used to be answerable only by
+        # reading the `order="id DESC"` above.
+        dbg.logic.debug(
+            "_get_next_serial: product %s anchored on %s (id %s) -> %s",
+            product.id,
+            last_serial.name,
+            last_serial.id,
+            proposal,
+        )
+        return proposal
 
     @api.model
     def _prepare_next_lot_vals(self, company, product) -> dict:

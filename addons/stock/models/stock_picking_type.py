@@ -496,6 +496,16 @@ class StockPickingType(models.Model):
             if current and picking_type._is_default_location_suitable(
                 current, partner_usage
             ):
+                # the silent half of this gate used to be the one people ask
+                # about: "why did my operation type NOT pick up the new
+                # default?" produced nothing in any trace
+                dbg.logic.debug(
+                    "[picking_type:%s] %s: kept %s, still suitable for code=%s",
+                    picking_type.id,
+                    field_name,
+                    current.id,
+                    picking_type.code,
+                )
                 continue
             location = derive(picking_type)
             if location:
