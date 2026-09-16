@@ -218,22 +218,16 @@ export class RecordListInternal {
             }
             return res;
         }
-        if (this.isComputeField() && !this.isEager()) {
-            this.setComputeInNeed();
-            if (this.isComputeOnNeed()) {
-                this.computeField();
-            }
-        }
         if (name === "length") {
-            return this.data().length;
+            return this.records().length;
         }
         const index = parseInt(name);
         if (!window.isNaN(index)) {
             // support for "array[index]" syntax
-            return this.data()[index]?._proxy;
+            return this.records()[index]?._proxy;
         }
         // Attempt an unimplemented array method call
-        const array = [...recordList];
+        const array = this.records().map((record) => record._proxy);
         return array[name]?.bind(array);
     }
     /**
@@ -286,6 +280,16 @@ export class RecordListInternal {
             }
             return true;
         });
+    }
+    /** @returns {Record[]} */
+    records() {
+        if (this.isComputeField() && !this.isEager()) {
+            this.setComputeInNeed();
+            if (this.isComputeOnNeed()) {
+                this.computeField();
+            }
+        }
+        return this.data();
     }
     setComputeInNeed() {
         this.owner._.fieldsComputeInNeed.set(this.name, true);
