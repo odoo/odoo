@@ -81,5 +81,5 @@ class AccountChartTemplate(models.AbstractModel):
             # We call these helper methods again in _post_load_data to ensure all payment method lines
             # are correctly assigned once all COA data is fully available.
             bank_journals = company.bank_journal_ids
-            bank_journals._assign_outsanding_account_to_payment_method_lines('inbound', chart_template='ma')
-            bank_journals._assign_outsanding_account_to_payment_method_lines('outbound', chart_template='ma')
+            bank_journals._assign_outstanding_account_to_payment_method_lines('inbound', chart_template='ma')
+            bank_journals._assign_outstanding_account_to_payment_method_lines('outbound', chart_template='ma')

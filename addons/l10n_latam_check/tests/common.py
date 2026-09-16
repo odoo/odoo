@@ -23,7 +23,7 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
             Command.create({'payment_method_id': cls.env.ref('l10n_latam_check.account_payment_method_own_checks').id, 'name': 'Own Checks'}),
             Command.create({'payment_method_id': cls.env.ref('l10n_latam_check.account_payment_method_out_third_party_checks').id, 'name': 'Rejected Check'}),
         ]
-        bank_journal._assign_outsanding_account_to_payment_method_lines(
+        bank_journal._assign_outstanding_account_to_payment_method_lines(
             'outbound',
             payment_method_codes=('own_checks', 'out_third_party_checks'),
             chart_template=bank_journal.company_id.chart_template,
