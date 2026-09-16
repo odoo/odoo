@@ -114,14 +114,12 @@
                             name="th_line_no"
                             class="text-start"
                             style="width: 1%; white-space: nowrap;"
-                        />
-                        <th name="th_description" class="text-start">
+                        >#</th>
+                        <th name="th_description" class="text-start" aria-label="Description">
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                            Description
                         </th>
-                        <th name="th_quantity" class="text-end text-nowrap">
+                        <th name="th_quantity" class="text-end text-nowrap" aria-label="Quantity">
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                            Quantity
                         </th>
                         <th name="th_priceunit" class="text-end text-nowrap">
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
