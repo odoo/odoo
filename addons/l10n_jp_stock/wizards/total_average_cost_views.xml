@@ -16,11 +16,12 @@
                 </div>
                 <button name="action_preview_total_average_cost" string="Preview" type="object" class="float-end btn-secondary"/>
                 <field name="evaluation_line_ids" invisible="not evaluation_line_ids">
-                    <list string="Evaluation" create="0" delete="0" edit="0">
+                    <list string="Evaluation" create="0" delete="0" edit="0" decoration-muted="excluded_reason">
                         <field name="product_id" readonly="1"/>
                         <field name="pulled_in" readonly="1"/>
                         <field name="current_cost" readonly="1"/>
-                        <field name="evaluated_cost" readonly="1"/>
+                        <field name="evaluated_cost" readonly="1" invisible="excluded_reason"/>
+                        <field name="excluded_reason" readonly="1"/>
                         <field name="currency_id" column_invisible="1"/>
                     </list>
                 </field>
