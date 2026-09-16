@@ -9,6 +9,7 @@ _lt = LazyTranslate(__name__, default_lang="en_US")
 SHOP_PAGE_STYLE_MAPPING = {
     "classic_grid": {
         "title": _lt("Classic Grid"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/classic_grid.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/classic_grid.webp",
         "views": {"enable": [], "disable": []},
         "website_fields": {
@@ -33,6 +34,7 @@ SHOP_PAGE_STYLE_MAPPING = {
     },
     "modern_grid": {
         "title": _lt("Modern Grid"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/modern_grid.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/modern_grid.webp",
         "views": {
             "enable": [
@@ -68,6 +70,7 @@ SHOP_PAGE_STYLE_MAPPING = {
     },
     "showcase": {
         "title": _lt("Showcase"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/showcase.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/showcase.webp",
         "views": {
             "enable": [
@@ -102,6 +105,7 @@ SHOP_PAGE_STYLE_MAPPING = {
     },
     "chips_contained": {
         "title": _lt("Minimal Cards"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/chips_contained.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/chips_contained.webp",
         "views": {
             "enable": [
@@ -138,6 +142,7 @@ SHOP_PAGE_STYLE_MAPPING = {
     },
     "condensed_list": {
         "title": _lt("Condensed List"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/condensed_list.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/condensed_list.webp",
         "views": {
             "enable": [
@@ -165,6 +170,7 @@ SHOP_PAGE_STYLE_MAPPING = {
     },
     "cards": {
         "title": _lt("Visual Cards"),
+        "preview_url": "/website_sale/static/src/img/configurator/shop/cards.html",
         "img_src": "/website_sale/static/src/img/configurator/shop/cards.webp",
         "views": {
             "enable": [
@@ -202,12 +208,14 @@ SHOP_PAGE_STYLE_MAPPING = {
 PRODUCT_PAGE_STYLE_MAPPING = {
     "classic": {
         "title": _lt("Classic"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/classic.html",
         "img_src": "/website_sale/static/src/img/configurator/product/classic.webp",
         "views": {"enable": [], "disable": []},
         "website_fields": {"product_page_image_roundness": "medium"},
     },
     "image_grid": {
         "title": _lt("Image Grid"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/image_grid.html",
         "img_src": "/website_sale/static/src/img/configurator/product/image_grid.webp",
         "views": {"enable": [], "disable": []},
         "website_fields": {
@@ -221,6 +229,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
     "large_grid": {
         "title": _lt("Showcase Grid"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/large_grid.html",
         "img_src": "/website_sale/static/src/img/configurator/product/large_grid.webp",
         "views": {
             "enable": [
@@ -244,6 +253,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
     "focused": {
         "title": _lt("Focused"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/focused.html",
         "img_src": "/website_sale/static/src/img/configurator/product/focused.webp",
         "views": {
             "enable": [
@@ -266,6 +276,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
     "functional": {
         "title": _lt("Functional"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/functional.html",
         "img_src": "/website_sale/static/src/img/configurator/product/functional.webp",
         "views": {
             "enable": [
@@ -287,6 +298,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
     "large_image": {
         "title": _lt("Large Image"),
+        "preview_url": "/website_sale/static/src/img/configurator/product/large_image.html",
         "img_src": "/website_sale/static/src/img/configurator/product/large_image.webp",
         "views": {
             "enable": [
