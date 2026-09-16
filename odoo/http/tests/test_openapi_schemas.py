@@ -60,12 +60,20 @@ def test_a_return_annotation_documents_the_response_for_json_routes():
     assert result["type"] == "object"
 
 
-def test_http_routes_and_unannotated_returns_document_no_body():
+def test_http_routes_document_no_body_and_unannotated_json_routes_any_json():
     def ep(self, p: Point): ...
 
     doc = prepare_openapi_document([_route("/h", ep, type="http")])
     assert "content" not in doc["paths"]["/h"]["post"]["responses"]["200"]
     assert get_response_schema(ep) is None
+
+    j2 = prepare_openapi_document([_route("/j2", ep)])
+    body = j2["paths"]["/j2"]["post"]["responses"]["200"]["content"]
+    assert body["application/json"]["schema"] == {}, "any JSON value, stated as such"
+
+    rpc = prepare_openapi_document([_route("/rpc", ep, type="jsonrpc")])
+    envelope = rpc["paths"]["/rpc"]["post"]["responses"]["200"]["content"]
+    assert envelope["application/json"]["schema"]["properties"]["result"] == {}
 
 
 def test_dict_and_list_returns_are_described():

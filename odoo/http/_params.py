@@ -33,6 +33,10 @@ class Pattern(NamedTuple):
     regex: str
 
 
+class Discriminator(NamedTuple):
+    field: str
+
+
 class Constraints(NamedTuple):
     choices: tuple[Any, ...] | None = None
     ge: float | None = None
@@ -48,6 +52,8 @@ class ParamSpec(NamedTuple):
     fields: dict[str, ParamSpec] | None = None
     item_fields: dict[str, ParamSpec] | None = None
     constraints: Constraints | None = None
+    discriminator: str | None = None
+    variants: dict[Any, ParamSpec] | None = None
 
 
 def _is_enum(annotation: Any) -> bool:
@@ -75,21 +81,61 @@ def _get_choices_spec(
     )
 
 
-def _split_annotated(annotation: Any) -> tuple[Any, Constraints | None]:
+def _split_annotated(
+    annotation: Any,
+) -> tuple[Any, Constraints | None, str | None]:
     if typing.get_origin(annotation) is not typing.Annotated:
-        return annotation, None
+        return annotation, None, None
     base, *metadata = typing.get_args(annotation)
     ge = le = None
     pattern = None
+    discriminator = None
     for marker in metadata:
         if isinstance(marker, Range):
             ge, le = marker.ge, marker.le
         elif isinstance(marker, Pattern):
             re.compile(marker.regex)
             pattern = marker.regex
+        elif isinstance(marker, Discriminator):
+            discriminator = marker.field
     if ge is None and le is None and pattern is None:
-        return base, None
-    return base, Constraints(ge=ge, le=le, pattern=pattern)
+        return base, None, discriminator
+    return base, Constraints(ge=ge, le=le, pattern=pattern), discriminator
+
+
+def _get_union_spec(
+    annotation: Any, discriminator: str, required: bool, seen: frozenset[type]
+) -> ParamSpec | None:
+    members = list(typing.get_args(annotation))
+    allow_none = type(None) in members
+    members = [member for member in members if member is not type(None)]
+    if len(members) < 2:
+        return None
+    variants: dict[Any, ParamSpec] = {}
+    for member in members:
+        spec = _get_spec(member, True, seen)
+        if spec is None or spec.fields is None:
+            _debug.logic(
+                "http.params.union_declined",
+                reason="member_not_object",
+                field=discriminator,
+            )
+            return None
+        tag_spec = spec.fields.get(discriminator)
+        choices = (
+            tag_spec.constraints.choices if tag_spec and tag_spec.constraints else None
+        )
+        if not choices or len(choices) != 1 or choices[0] in variants:
+            _debug.logic(
+                "http.params.union_declined",
+                reason="tag_not_unique",
+                field=discriminator,
+            )
+            return None
+        variants[choices[0]] = spec
+    return ParamSpec(
+        dict, None, allow_none, required, discriminator=discriminator, variants=variants
+    )
 
 
 def _unwrap_optional(annotation: Any) -> tuple[Any, bool]:
@@ -150,7 +196,14 @@ def _get_spec(
     annotation: Any, required: bool, seen: frozenset[type] = frozenset()
 ) -> ParamSpec | None:
     inner, optional = _unwrap_optional(annotation)
-    inner, constraints = _split_annotated(inner)
+    inner, constraints, discriminator = _split_annotated(inner)
+    if discriminator is not None:
+        union = _get_union_spec(inner, discriminator, required, seen)
+        return (
+            None
+            if union is None
+            else union._replace(allow_none=union.allow_none or optional)
+        )
     if optional or constraints is not None:
         base = _get_spec(inner, required, seen)
         if base is None:
@@ -387,6 +440,25 @@ def _coerce_constrained_scalar(name: str, value: Any, spec: ParamSpec) -> Any:
     return coerced
 
 
+def _coerce_union(name: str, value: Any, spec: ParamSpec) -> Any:
+    variants = spec.variants or {}
+    if not isinstance(value, dict):
+        raise ParameterError(f"parameter {name!r} must be an object")
+    if spec.discriminator not in value:
+        raise ParameterError(
+            f"parameter {name!r} must carry {spec.discriminator!r} to say which "
+            f"of {sorted(map(str, variants))} it is"
+        )
+    tag = value[spec.discriminator]
+    variant = variants.get(tag)
+    if variant is None:
+        raise ParameterError(
+            f"parameter {name!r}: {spec.discriminator!r} must be one of "
+            f"{sorted(map(str, variants))}"
+        )
+    return _coerce_object(name, value, variant)
+
+
 def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
     if value is None:
         if spec.allow_none:
@@ -394,6 +466,8 @@ def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
         raise ParameterError(f"parameter {name!r} must not be null")
     if spec.fields is not None:
         return _coerce_object(name, value, spec)
+    if spec.variants is not None:
+        return _coerce_union(name, value, spec)
     if spec.constraints is not None:
         return _coerce_constrained_scalar(name, value, spec)
     if spec.target is list:

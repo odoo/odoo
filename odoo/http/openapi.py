@@ -120,6 +120,12 @@ def _apply_constraints(schema: dict[str, Any], spec: ParamSpec) -> dict[str, Any
 
 
 def param_spec_to_schema(spec: ParamSpec) -> dict[str, Any]:
+    if spec.variants is not None:
+        schema: dict[str, Any] = {
+            "oneOf": [param_spec_to_schema(v) for v in spec.variants.values()],
+            "discriminator": {"propertyName": spec.discriminator},
+        }
+        return {**schema, "nullable": True} if spec.allow_none else schema
     if spec.fields is not None:
         schema = _prepare_object_schema(spec.fields)
     elif spec.constraints is not None:
@@ -248,20 +254,23 @@ def prepare_openapi_operation(
         operation["responses"]["400"] = {"description": "Invalid request parameters"}
 
     if route_type in ("jsonrpc", "json2"):
+        # A JSON route always answers JSON; without a return annotation the
+        # body is any JSON value, which {} states truthfully.
         result_schema = get_response_schema(route.handler)
-        if result_schema is not None:
-            if route_type == "jsonrpc":
-                result_schema = {
-                    "type": "object",
-                    "properties": {
-                        "jsonrpc": {"type": "string", "const": "2.0"},
-                        "id": {"type": ["integer", "string", "null"]},
-                        "result": result_schema,
-                    },
-                }
-            operation["responses"]["200"]["content"] = {
-                "application/json": {"schema": result_schema}
+        if result_schema is None:
+            result_schema = {}
+        if route_type == "jsonrpc":
+            result_schema = {
+                "type": "object",
+                "properties": {
+                    "jsonrpc": {"type": "string", "const": "2.0"},
+                    "id": {"type": ["integer", "string", "null"]},
+                    "result": result_schema,
+                },
             }
+        operation["responses"]["200"]["content"] = {
+            "application/json": {"schema": result_schema}
+        }
 
     if parameters:
         operation["parameters"] = parameters

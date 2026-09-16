@@ -48,6 +48,7 @@ from .exceptions import (
 
 from ._params import (
     Constraints,
+    Discriminator,
     ParamSpec,
     Pattern,
     Range,
@@ -163,6 +164,7 @@ __all__ = [
     "BadRequest",
     "Constraints",
     "Controller",
+    "Discriminator",
     "Dispatcher",
     "FasterRule",
     "FilesystemSessionStore",
