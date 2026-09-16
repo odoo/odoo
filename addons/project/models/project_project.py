@@ -156,7 +156,14 @@ class ProjectProject(models.Model):
     task_completion_percentage = fields.Float(compute="_compute_task_completion_percentage", export_string_translation=False)
 
     # Project Sharing fields
-    collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False, export_string_translation=False)
+    collaborator_ids = fields.One2many(
+        'project.collaborator',
+        'project_id',
+        string='Collaborators',
+        copy=False,
+        export_string_translation=False,
+        search='_search_collaborator_ids',
+    )
     collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True, export_string_translation=False)
 
     # Not `required` since this is an option to enable in project settings.
@@ -197,6 +204,35 @@ class ProjectProject(models.Model):
         'check(date >= date_start)',
         "The project's start date must be before its end date.",
     )
+
+    def _search_collaborator_ids(self, operator, value):
+        """`project_task_rule_portal` OR's two sub-queries, which makes postgresql
+        seq-scan project_task instead of using its indexes. Materialize the ids of
+        each branch when there are few enough, so that it can BitmapOr them.
+        """
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        Collaborator = self.env['project.collaborator']
+        if operator == 'in' and False in value:
+            # matches the projects without any collaborator, together with the
+            # ones matching the remaining values
+            all_collaborators_query = Collaborator._search([], bypass_access=True, active_test=False)
+            domain = Domain('id', 'not in', all_collaborators_query.subselect('project_id'))
+            if remaining_value := [v for v in value if v is not False]:
+                domain |= self._search_collaborator_ids(operator, remaining_value)
+            return domain
+        collaborator_project_query = Collaborator._search(
+            Domain('id', operator, value), bypass_access=True, active_test=False
+        ).subselect('project_id')
+        project_ids = self._search(
+            [('id', 'in', collaborator_project_query)],
+            limit=self.env.cr.IN_MAX,
+            active_test=False,
+            bypass_access=True
+        ).get_result_ids()
+        if len(project_ids) < self.env.cr.IN_MAX:
+            return Domain('id', 'in', project_ids)
+        return Domain('id', 'in', collaborator_project_query)
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
