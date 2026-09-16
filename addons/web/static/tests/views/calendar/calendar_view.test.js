@@ -13,6 +13,7 @@ import {
     queryFirst,
     queryOne,
     queryRect,
+    resize,
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
@@ -5254,6 +5255,66 @@ test(`calendar sidebar state is saved on session storage`, async () => {
     await contains(`.o_sidebar_toggler .oi-panel-right`).click();
     expect(`.o_calendar_sidebar`).toHaveCount(1);
     expect.verifySteps(["calendar.showSideBar-read", "calendar.showSideBar-true"]);
+});
+
+test.tags("desktop");
+test("calendar sidebar reacts to isSmall changes", async () => {
+    patchWithCleanup(sessionStorage, {
+        getItem(key) {
+            if (key === "calendar.showSideBar") {
+                return null;
+            }
+        },
+        setItem() {},
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+    });
+    expect(".o_calendar_renderer").toHaveCount(1);
+    expect(".o_calendar_sidebar").toHaveCount(1);
+    expect(".o_sidebar_toggler").toHaveCount(1);
+    expect(".o_other_calendar_panel").toHaveCount(0);
+
+    // Reduce the viewport to a mobile size (isSmall = true)
+    // The sidebar (which actually takes the entire screen) should be hidden without interaction,
+    // and swapped for the mobile filter panel's toggle bar instead of the desktop sidebar.
+    await resize({ width: 500 });
+    await animationFrame();
+    expect(".o_calendar_renderer").toHaveCount(1);
+    expect(".o_calendar_sidebar").toHaveCount(0);
+    expect(".o_sidebar_toggler").toHaveCount(0);
+    expect(".o_other_calendar_panel").toHaveCount(1);
+
+    // Expand the viewport to desktop size, the sidebar should show (unless previously hidden),
+    // and the mobile filter panel's should be removed.
+    await resize({ width: 1200 });
+    await animationFrame();
+    expect(".o_calendar_renderer").toHaveCount(1);
+    expect(".o_calendar_sidebar").toHaveCount(1);
+    expect(".o_sidebar_toggler").toHaveCount(1);
+    expect(".o_other_calendar_panel").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("calendar should keep displaying its content after widening from a mobile viewport", async () => {
+    // Reduce the viewport to a mobile size (isSmall = true)
+    await resize({ width: 500 });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+    });
+    expect(".o_calendar_renderer").toHaveCount(1);
+
+    await resize({ width: 1200 });
+    await animationFrame();
+
+    expect(".o_calendar_renderer").toHaveCount(1);
+    expect(".fc-view-harness").toBeVisible();
 });
 
 test(`calendar should show date information on header`, async () => {
