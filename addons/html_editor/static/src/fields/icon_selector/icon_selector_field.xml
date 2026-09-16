@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="html_editor.IconSelectorField">
+        <t t-set="selectedIcon" t-value="this.selectedIcon"/>
+        <t t-if="this.props.readonly">
+            <i
+                t-if="selectedIcon"
+                class="oi"
+                t-att-class="{ 'oi-filled': selectedIcon.filled }"
+                t-att-data-icon="selectedIcon.dataIcon"
+                t-att-title="this.iconValue"
+                t-att-aria-label="this.iconValue"
+            />
+        </t>
+        <t t-else="">
+            <Dropdown state="this.dropdown">
+                <button
+                    class="o_field_icon_selector o_input d-inline-flex align-items-center w-auto"
+                    type="button"
+                    t-att-id="this.props.id"
+                    t-att-title="this.iconValue"
+                    t-att-aria-label="this.iconValue || 'Search a pictogram'"
+                >
+                    <i
+                        t-if="selectedIcon"
+                        class="oi"
+                        t-att-class="{ 'oi-filled': selectedIcon.filled }"
+                        t-att-data-icon="selectedIcon.dataIcon"
+                    />
+                    <span t-else="" class="text-muted">Search a pictogram</span>
+                    <span class="o_field_icon_selector_caret o_caret_down ms-2"/>
+                    <i
+                        t-if="selectedIcon"
+                        class="oi ms-2"
+                        data-icon="close"
+                        title="Clear"
+                        aria-label="Clear"
+                        t-on-click.stop="this.clear"
+                    />
+                </button>
+                <t t-set-slot="content">
+                    <div class="o_field_icon_selector_menu">
+                        <IconSelector
+                            id="'icons'"
+                            selectedMedia="this.selectedMedia()"
+                            selectMedia.bind="this.onIconSelect"
+                            save="() => {}"
+                        />
+                    </div>
+                </t>
+            </Dropdown>
+        </t>
+    </t>
+
+</templates>

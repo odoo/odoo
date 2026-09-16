@@ -1,0 +1,56 @@
+.o_field_icon_selector {
+    min-height: var(--o-input-height);
+}
+
+.o_field_icon_selector_caret {
+    visibility: hidden;
+}
+
+.o_field_icon_selector:hover,
+.o_field_icon_selector:focus {
+    .o_field_icon_selector_caret {
+        visibility: visible;
+    }
+}
+
+.o_field_icon_selector_menu {
+    width: 330px;
+    max-height: 350px;
+    overflow-y: auto;
+
+    .o_we_file_selector_control_panel {
+        background-color: var(--o-bs-popover-bg);
+        padding-top: var(--o-bs-spacer-2);
+        padding-bottom: var(--o-bs-spacer-2);
+
+        > div {
+            max-width: none !important;
+        }
+    }
+
+    .font-icons-icon {
+        padding: 0.5rem !important;
+    }
+}
+
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+    .o_field_icon_selector {
+        width: 100% !important;
+    }
+
+    .o_field_icon_selector_caret {
+        margin-left: auto !important;
+        visibility: visible;
+    }
+
+    .o_bottom_sheet .o_field_icon_selector_menu {
+        width: 100%;
+        max-height: 75dvh;
+        overflow-y: hidden;
+    }
+
+    .o_bottom_sheet .o_field_icon_selector_menu .font-icons-icons {
+        max-height: calc(75dvh - 4rem);
+        overflow-y: auto;
+    }
+}

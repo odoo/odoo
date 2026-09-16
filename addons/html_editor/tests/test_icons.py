@@ -31,6 +31,19 @@ class TestIconsSearch(TransactionCase):
         self.assertEqual(list(search_icons(self.env, 'SHOPPING Cart')), expected)
         self.assertEqual(list(search_icons(self.env, 'shöpping cârt')), expected)
 
+    def test_icons_search_rank(self):
+        phone_results = list(search_icons(self.env, 'phone'))
+        self.assertEqual(
+            phone_results[0],
+            'phone',
+            "an exact icon name match comes before tag-only matches",
+        )
+        self.assertIn(
+            'headphones',
+            phone_results,
+            "a needle matches anywhere in an icon name",
+        )
+
     def test_icons_search_translated(self):
         """Translated tags are searched on top of the English ones, and are
         normalized the same way, so an unaccented needle matches them."""
