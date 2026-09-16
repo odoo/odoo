@@ -18,6 +18,9 @@ class ActionsOne2ManyField extends Component {
             () => [adaptCounter]
         );
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
+            if (!this.root.el) {
+                return;
+            }
             adaptCounter++;
             render(this);
         });
