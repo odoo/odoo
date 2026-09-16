@@ -28,16 +28,18 @@ patch(PaymentForm.prototype, {
         await super.submitForm(...arguments);
     },
 
-        /**
+    /**
      * Prepare the params for the RPC to the transaction route.
      *
      * @override method from payment.payment_form
      * @private
      * @return {object} The transaction route params.
      */
-        _prepareTransactionRouteParams() {
-            const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
-            transactionRouteParams.payment_reference = this.paymentContext.paymentReference;
-            return transactionRouteParams;
-        },
+    _prepareTransactionRouteParams() {
+        const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
+        transactionRouteParams.payment_reference = this.paymentContext.paymentReference;
+        transactionRouteParams.overdue_invoice_ids = this.paymentContext.overdueInvoiceIds;
+        transactionRouteParams.partner_id = this.paymentContext.partnerId;
+        return transactionRouteParams;
+    },
 });
