@@ -544,6 +544,10 @@
                 decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                 <header>
+                    <!-- "show_certificate" is not a real context key: its only purpose is to be
+                         a stable marker for CertificationListController.evalViewModifier, which
+                         decides this button's visibility live instead (see
+                         certification_list_renderer.js for why). -->
                     <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always" invisible="not context.get('show_certificate')"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>

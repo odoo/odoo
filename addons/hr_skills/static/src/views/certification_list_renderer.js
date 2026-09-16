@@ -2,7 +2,38 @@ import { markup, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
+import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
+
+// The certification-type check must be redone live every time this view is (re)mounted,
+// including when the user navigates back to it through the breadcrumb: at that point the
+// window action is only restored from the client-side action stack, never re-dispatched, so
+// anything decided once in Python at the initial dispatch (e.g. the action's `help` or
+// `context`) would otherwise stay stale even though the DB state changed in the meantime
+// (typically: the user just created a certification-type Skill Type from this same screen).
+async function hasCertificationSkillType(orm) {
+    return Boolean(await orm.searchCount("hr.skill.type", [["is_certification", "=", true]]));
+}
+
+export class CertificationListController extends ListController {
+    setup() {
+        super.setup();
+        this.certificationState = proxy({ hasCertificationSkillType: null });
+        onWillStart(async () => {
+            this.certificationState.hasCertificationSkillType = await hasCertificationSkillType(this.orm);
+        });
+    }
+
+    // The "New" header button's `invisible="not context.get('show_certificate')"` is kept
+    // as a stable marker for this override, not as a real context key: it is decided here,
+    // live, instead of from the action's (potentially stale) context.
+    evalViewModifier(modifier) {
+        if (modifier === "not context.get('show_certificate')") {
+            return !this.certificationState.hasCertificationSkillType;
+        }
+        return super.evalViewModifier(modifier);
+    }
+}
 
 export class CertificationListRenderer extends ListRenderer {
     static template = "hr_skills.CertificationListRenderer";
@@ -11,9 +42,7 @@ export class CertificationListRenderer extends ListRenderer {
         super.setup();
         this.certificationState = proxy({ hasCertificationSkillType: null });
         onWillStart(async () => {
-            this.certificationState.hasCertificationSkillType = Boolean(
-                await this.orm.searchCount("hr.skill.type", [["is_certification", "=", true]])
-            );
+            this.certificationState.hasCertificationSkillType = await hasCertificationSkillType(this.orm);
         });
     }
 
@@ -32,6 +61,7 @@ export class CertificationListRenderer extends ListRenderer {
 
 export const certificationListView = {
     ...listView,
+    Controller: CertificationListController,
     Renderer: CertificationListRenderer,
 };
 
