@@ -942,6 +942,7 @@ class IrUiView(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         if not vals_list:
             return self.browse()
+        vals_list = [dict(vals) for vals in vals_list]
         valid_types = self._get_view_type_tags()
         inherit_ids = {
             v["inherit_id"]
@@ -1046,7 +1047,7 @@ class IrUiView(models.Model):
             and ("arch" in vals or "arch_base" in vals)
             and "install_filename" not in self.env.context
         ):
-            vals["arch_updated"] = True
+            vals = {**vals, "arch_updated": True}
 
         if _TEMPLATE_CACHE_FIELDS.intersection(vals):
             custom_view = (
@@ -1070,8 +1071,6 @@ class IrUiView(models.Model):
 
         revalidate = not _REVALIDATE_ALWAYS.isdisjoint(vals)
         recombines = not revalidate and self._is_recombination_required(vals)
-        if recombines:
-            recombines = self._can_combine()
         _debug.lifecycle(
             "write",
             count=len(self),
@@ -1079,14 +1078,33 @@ class IrUiView(models.Model):
             revalidate=revalidate,
             recombines=recombines,
         )
-
-        res = super().write(self._prepare_view_defaults(vals))
+        vals = self._prepare_view_defaults(vals)
 
         if revalidate:
+            res = super().write(vals)
             self._check_xml()
-        elif recombines:
-            self._check_recombination()
+            return res
+        if not recombines:
+            return super().write(vals)
 
+        # combine once on the written tree; only a tree that fails is asked
+        # whether it combined before the write, and one that did not is
+        # written without a verdict, the way a repair of a broken view needs
+        try:
+            with self.env.cr.savepoint():
+                res = super().write(vals)
+                self._check_xml()
+        except _COMBINATION_ERRORS as error:
+            combined_before = self._can_combine()
+            _debug.logic(
+                "recombination_failed",
+                views=self.ids,
+                error=type(error).__name__,
+                combined_before=combined_before,
+            )
+            res = super().write(vals)
+            if combined_before:
+                self._refuse_recombination(error)
         return res
 
     def _can_combine(self) -> bool:
@@ -1097,21 +1115,17 @@ class IrUiView(models.Model):
             return False
         return True
 
-    def _check_recombination(self) -> None:
+    def _refuse_recombination(self, error: Exception) -> None:
         if not self.env.context.get("ir_ui_view_loading_records"):
-            self._check_xml()
-            return
-        try:
-            self._check_xml()
-        except _COMBINATION_ERRORS as e:
-            _logger.warning(
-                "Loading records left view(s) %s unable to combine: %s",
-                ", ".join(str(view.key or view.id) for view in self),
-                e,
-            )
-            _debug.logic(
-                "recombination_deferred", views=self.ids, error=type(e).__name__
-            )
+            raise error
+        _logger.warning(
+            "Loading records left view(s) %s unable to combine: %s",
+            ", ".join(str(view.key or view.id) for view in self),
+            error,
+        )
+        _debug.logic(
+            "recombination_deferred", views=self.ids, error=type(error).__name__
+        )
 
     def _is_recombination_required(self, vals: dict[str, Any]) -> bool:
         for fname in _REVALIDATE_ON_CHANGE.intersection(vals):

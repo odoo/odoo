@@ -310,7 +310,7 @@ class ResCompany(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        vals_list = [self._normalize_vals(vals) for vals in vals_list]
+        vals_list = [dict(self._normalize_vals(vals)) for vals in vals_list]
 
         no_partner_vals_list = [
             vals

@@ -111,3 +111,31 @@ class TestResPartner(TransactionCase):
         self.assertEqual(test_partner_5.meeting_count, 2)
         self.assertEqual(test_partner_6.meeting_count, 1)
         self.assertEqual(test_partner_7.meeting_count, 1)
+
+    def test_merging_partners_repoints_the_events_that_document_the_source(self):
+        Partner = self.env["res.partner"]
+        src = Partner.create({"name": "merge src", "email": "merge@example.com"})
+        dst = Partner.create({"name": "merge dst", "email": "merge@example.com"})
+        event = self.env["calendar.event"].create(
+            {
+                "name": "about the source",
+                "start": "2026-01-05 09:00:00",
+                "stop": "2026-01-05 10:00:00",
+                "res_model_id": self.env["ir.model"]._get_id("res.partner"),
+                "res_id": src.id,
+            }
+        )
+        self.env.flush_all()
+
+        self.env["base.partner.merge.automatic.wizard"].create({})._merge(
+            [src.id, dst.id], dst
+        )
+        self.env.invalidate_all()
+
+        self.assertFalse(src.exists())
+        self.assertEqual(
+            (event.res_model, event.res_id),
+            ("res.partner", dst.id),
+            "the registry finds calendar.event's stored reference pair on its "
+            "own; no module has to name it",
+        )

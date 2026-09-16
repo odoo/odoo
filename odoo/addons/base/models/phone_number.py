@@ -85,7 +85,9 @@ class PhoneNumber(models.Model):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         wanted = [
-            self._normalize_number(vals.get("number"), self._get_country_from_vals(vals))
+            self._normalize_number(
+                vals.get("number"), self._get_country_from_vals(vals)
+            )
             for vals in vals_list
         ]
         existing = {

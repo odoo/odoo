@@ -55,7 +55,6 @@ class IrUiMenu(models.Model):
         compute="_compute_complete_name",
         recursive=True,
     )
-    display_name = fields.Char(recursive=True)
     web_icon = fields.Char(string="Web Icon File")
     web_keywords = fields.Char(
         string="Search Keywords",
@@ -220,15 +219,18 @@ class IrUiMenu(models.Model):
         )
         return frozenset(visible_ids)
 
-    def _filter_visible_menus(self) -> Self:
-        visible_ids = self._get_visible_menu_ids(self._get_session_debug())
+    def _filter_visible_menus(self, debug: str | bool | None = None) -> Self:
+        if debug is None:
+            debug = self._get_session_debug()
+        visible_ids = self._get_visible_menu_ids(debug)
         visible = self.filtered(lambda menu: menu.id in visible_ids)
         _debug.logic("menus_filtered", candidates=len(self), visible=len(visible))
         return visible
 
-    @api.depends("name", "parent_id.display_name")
+    @api.depends("complete_name")
     def _compute_display_name(self) -> None:
-        self._update_full_name("display_name")
+        for menu in self:
+            menu.display_name = menu.complete_name
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -340,7 +342,7 @@ class IrUiMenu(models.Model):
             visible_menus = self.search_fetch(
                 [("id", "not in", blacklisted_menu_ids)],
                 ["name", "parent_id", "action", "web_icon", "web_keywords"],
-            )._filter_visible_menus()
+            )._filter_visible_menus(debug)
 
         children_dict = defaultdict(list)
         for menu in visible_menus:

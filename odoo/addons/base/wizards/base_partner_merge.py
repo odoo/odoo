@@ -128,12 +128,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _update_reference_fields(
         self, src_partners: models.BaseModel, dst_partner: models.BaseModel
     ) -> None:
-        additional_update_records = [
-            {"model": "calendar.event", "field_model": "res_model"}
-        ]
-        self._update_reference_fields_generic(
-            "res.partner", src_partners, dst_partner, additional_update_records
-        )
+        self._update_reference_fields_generic("res.partner", src_partners, dst_partner)
 
     def _get_fields_summable(self) -> list[str]:
         return []

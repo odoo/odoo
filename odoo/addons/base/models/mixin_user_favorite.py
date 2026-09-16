@@ -110,8 +110,13 @@ class MixinUserFavorite(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        wanted = [bool(vals.pop("is_user_favorite", False)) for vals in vals_list]
-        records = super().create(vals_list)
+        wanted = [bool(vals.get("is_user_favorite")) for vals in vals_list]
+        records = super().create(
+            [
+                {k: v for k, v in vals.items() if k != "is_user_favorite"}
+                for vals in vals_list
+            ]
+        )
         favorited = records.browse(
             [
                 record.id
@@ -127,6 +132,7 @@ class MixinUserFavorite(models.AbstractModel):
 
     def write(self, vals):
         if "is_user_favorite" in vals:
+            vals = dict(vals)
             self._update_user_favorite(vals.pop("is_user_favorite"))
             if not vals:
                 _debug.logic("write_favorite_only", model=self._name, count=len(self))

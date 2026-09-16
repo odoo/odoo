@@ -217,11 +217,17 @@ class IrActionsActions(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        for vals in vals_list:
-            if "binding_view_types" in vals:
-                vals["binding_view_types"] = self._normalize_binding_view_types(
+        vals_list = [
+            {
+                **vals,
+                "binding_view_types": self._normalize_binding_view_types(
                     vals["binding_view_types"]
-                )
+                ),
+            }
+            if "binding_view_types" in vals
+            else vals
+            for vals in vals_list
+        ]
         res = super().create(vals_list)
         if any(action.path for action in res):
             _debug.pipeline("paths_reserved_on_create", actions=len(res))

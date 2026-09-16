@@ -74,7 +74,7 @@ class ResBank(models.Model):
 
     def _normalize_vals(self, vals: ValuesType) -> ValuesType:
         if bic := vals.get("bic"):
-            vals["bic"] = bic.upper()
+            return {**vals, "bic": bic.upper()}
         return vals
 
     @api.model_create_multi
@@ -321,9 +321,13 @@ class ResPartnerBank(models.Model):
     def _normalize_vals(self, vals: ValuesType) -> ValuesType:
         if "acc_number" not in vals and "sanitized_acc_number" in vals:
             _debug.logic("acc_number_taken_from_sanitized")
+            vals = dict(vals)
             vals["acc_number"] = vals.pop("sanitized_acc_number")
         if "acc_number" in vals:
-            vals["sanitized_acc_number"] = sanitize_account_number(vals["acc_number"])
+            vals = {
+                **vals,
+                "sanitized_acc_number": sanitize_account_number(vals["acc_number"]),
+            }
         return vals
 
     @api.model_create_multi

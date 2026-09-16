@@ -406,10 +406,14 @@ class ResLang(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         _debug.lifecycle("create", codes=[vals.get("code") for vals in vals_list])
         self.env.registry.clear_cache("stable")
-        for vals in vals_list:
-            if not vals.get("url_code"):
-                vals["url_code"] = vals.get("iso_code") or vals["code"]
-        return super().create(vals_list)
+        return super().create(
+            [
+                vals
+                if vals.get("url_code")
+                else {**vals, "url_code": vals.get("iso_code") or vals["code"]}
+                for vals in vals_list
+            ]
+        )
 
     def write(self, vals: dict[str, Any]) -> bool:
         lang_codes = self.mapped("code")

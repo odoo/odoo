@@ -74,15 +74,15 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
             .sudo()
             ._get_or_create_definition_id_for_property_field(self._name, "properties")
         )
-        for vals in vals_list:
-            vals["properties_base_definition_id"] = parent
         _debug.lifecycle(
             "definition_attached",
             model=self._name,
             definition=parent,
             count=len(vals_list),
         )
-        return super().create(vals_list)
+        return super().create(
+            [{**vals, "properties_base_definition_id": parent} for vals in vals_list]
+        )
 
     def _field_to_sql(self, alias: str, fname: str, query: Any = None) -> SQL:
         if fname == "properties_base_definition_id":

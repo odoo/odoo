@@ -324,7 +324,6 @@ class MixinMerge(models.AbstractModel):
         referenced_model: str,
         src_records: models.BaseModel,
         dst_record: models.BaseModel,
-        additional_update_records: list[dict[str, str]] | None = None,
     ) -> None:
         _logger.debug(
             "_update_reference_fields_generic for dst_record: %s for src_records: %r",
@@ -337,17 +336,11 @@ class MixinMerge(models.AbstractModel):
             model=referenced_model,
             sources=len(src_records),
             destination=dst_record.id,
-            additional=len(additional_update_records or []),
         )
         with _debug.perf(
             "repoint_sidecar_rows", cr=self.env.cr, model=referenced_model
         ):
-            self._repoint_sidecar_rows(
-                referenced_model,
-                src_records,
-                dst_record,
-                additional_update_records or [],
-            )
+            self._repoint_sidecar_rows(referenced_model, src_records, dst_record)
         with _debug.perf(
             "repoint_reference_fields", cr=self.env.cr, model=referenced_model
         ):
@@ -377,17 +370,12 @@ class MixinMerge(models.AbstractModel):
         referenced_model: str,
         src_records: models.BaseModel,
         dst_record: models.BaseModel,
-        additional_update_records: list[dict[str, str]],
     ) -> None:
-        sidecars = self._get_sidecar_reference_fields() + [
-            (update_record["model"], update_record["field_model"], "res_id")
-            for update_record in additional_update_records
-        ]
+        sidecars = self._get_sidecar_reference_fields()
         _debug.perf.count(
             "sidecar_fields",
             model=referenced_model,
             sidecars=len(sidecars),
-            additional=len(additional_update_records),
             sources=len(src_records),
         )
         for record in src_records:

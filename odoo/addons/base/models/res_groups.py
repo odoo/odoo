@@ -301,9 +301,6 @@ class ResGroups(models.Model):
                     self.env._('The name of the group can not start with "-"')
                 )
 
-        if self.ids:
-            self.env["ir.model.access"].call_cache_clearing_methods()
-
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
 

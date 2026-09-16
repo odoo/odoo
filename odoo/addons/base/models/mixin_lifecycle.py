@@ -315,22 +315,7 @@ class MixinLifecycle(models.AbstractModel):
                 )
 
     def _get_field_labels(self, field_names):
-        fields_info = (
-            self.env["ir.model.fields"]
-            .sudo()
-            .search(
-                [
-                    ("name", "in", list(field_names)),
-                    ("model", "=", self._name),
-                ],
-            )
-        )
-        _debug.perf.count(
-            "field_labels_fetched",
-            model=self._name,
-            requested=len(field_names),
-            found=len(fields_info),
-        )
-        return ", ".join(fields_info.mapped("field_description")) or ", ".join(
-            sorted(field_names),
+        return ", ".join(
+            self._fields[name]._description_string(self.env) or name
+            for name in sorted(field_names)
         )

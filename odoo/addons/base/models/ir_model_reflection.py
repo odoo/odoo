@@ -389,8 +389,6 @@ class IrModelRelation(models.Model):
         required=True,
         ondelete="cascade",
     )
-    write_date = fields.Datetime()
-    create_date = fields.Datetime()
 
     def _uninstall_module_data(self) -> None:
         if not self.env.is_system():

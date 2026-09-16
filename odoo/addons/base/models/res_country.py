@@ -35,6 +35,12 @@ NO_FLAG_COUNTRIES = [
 ]
 
 
+def _normalize_code(vals: dict[str, Any]) -> dict[str, Any]:
+    if code := vals.get("code"):
+        return {**vals, "code": code.upper()}
+    return vals
+
+
 class ResCountry(models.Model):
     _name = "res.country"
     _description = "Country"
@@ -165,15 +171,12 @@ class ResCountry(models.Model):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         self.env.registry.clear_cache("stable")
-        for vals in vals_list:
-            if vals.get("code"):
-                vals["code"] = vals["code"].upper()
+        vals_list = [_normalize_code(vals) for vals in vals_list]
         _debug.lifecycle("create", codes=[vals.get("code") for vals in vals_list])
         return super().create(vals_list)
 
     def write(self, vals: dict[str, Any]) -> bool:
-        if vals.get("code"):
-            vals["code"] = vals["code"].upper()
+        vals = _normalize_code(vals)
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
         if "code" in vals or "phone_code" in vals:
@@ -255,21 +258,16 @@ class ResCountryGroup(models.Model):
         "The country group code must be unique!",
     )
 
-    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
-        if code := vals.get("code"):
-            vals["code"] = code.upper()
-        return vals
-
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         _debug.lifecycle(
             "country_group_create", codes=[vals.get("code") for vals in vals_list]
         )
-        return super().create([self._normalize_vals(vals) for vals in vals_list])
+        return super().create([_normalize_code(vals) for vals in vals_list])
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("country_group_write", count=len(self), fields=list(vals))
-        return super().write(self._normalize_vals(vals))
+        return super().write(_normalize_code(vals))
 
 
 class ResCountryState(models.Model):

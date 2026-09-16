@@ -226,6 +226,33 @@ class TestMenuVisibility(TransactionCase):
         roots_again = self.Menu.load_menus_root()
         self.assertNotIn(debug_root.id, roots_again["all_menu_ids"])
 
+    def test_load_menus_answers_the_debug_flag_it_is_keyed_on(self):
+        action = self._act_window("res.partner")
+        debug_root = self.Menu.create(
+            {
+                "name": "Debug only root",
+                "group_ids": [Command.set(self.env.ref("base.group_no_one").ids)],
+                "action": f"{action._name},{action.id}",
+            }
+        )
+        self.assertFalse(self.Menu._get_session_debug())
+
+        self.assertIn(
+            debug_root.id,
+            self.Menu.load_menus(True),
+            "load_menus(True) outside a debug session is cached under the debug "
+            "key, so it must be the debug answer",
+        )
+        self.assertNotIn(debug_root.id, self.Menu.load_menus(False))
+        with self.debug_mode():
+            self.assertNotIn(
+                debug_root.id,
+                self.Menu.load_menus(False),
+                "load_menus(False) inside a debug session must not leak the "
+                "debug-only menus into the non-debug cache entry",
+            )
+            self.assertIn(debug_root.id, self.Menu.load_menus(True))
+
 
 class TestMenuMisc(TransactionCase):
     def setUp(self):
