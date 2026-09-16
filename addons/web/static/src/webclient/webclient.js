@@ -10,12 +10,14 @@ import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "@web/webclient/actions/action_container";
+import { AppsSidebar } from "@web/webclient/apps_sidebar/apps_sidebar";
 import { NavBar } from "@web/webclient/navbar/navbar";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
     static components = {
         ActionContainer,
+        AppsSidebar,
         NavBar,
         MainComponentsContainer,
     };
