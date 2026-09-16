@@ -1322,6 +1322,16 @@ $-product-radius-map: (
 #o_wsale_cta_wrapper {
     &.o_wsale_cta_wrapper_boxed {
         max-width: 26rem;
+
+        .product_price {
+            label {
+                overflow-wrap: anywhere;
+            }
+
+            td > .d-flex {
+                flex-wrap: wrap;
+            }
+        }
     }
 
     &.o_wsale_cta_wrapper_large .css_quantity {
