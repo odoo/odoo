@@ -55,6 +55,36 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             if k not in readable_fields and k not in field_exception
         ])
 
+    def test_collaborator_search_any_respects_portal_record_rules(self):
+        projects = self.env['project.project'].create([{
+            'name': "Own collaborator",
+            'privacy_visibility': 'portal',
+            'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})],
+        }, {
+            'name': "Other collaborator",
+            'privacy_visibility': 'portal',
+            'collaborator_ids': [Command.create({'partner_id': self.user_projectuser.partner_id.id})],
+        }, {
+            'name': "No collaborators",
+            'privacy_visibility': 'portal',
+        }])
+        projects.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        own_collaborator, other_collaborator, no_collaborators = projects
+        Project = self.env['project.project'].with_user(self.user_portal)
+        domain = [('id', 'in', projects.ids)]
+        self.assertCountEqual(Project.search(domain).ids, projects.ids)
+
+        # Ordinary 'any' must only consider collaborators visible to the portal user.
+        for operator, expected in (
+            ('any', own_collaborator),
+            ('not any', other_collaborator | no_collaborators),
+        ):
+            with self.subTest(operator=operator):
+                self.assertCountEqual(
+                    Project.search(domain + [('collaborator_ids', operator, [])]).ids,
+                    expected.ids,
+                )
+
     def test_mention_suggestions(self):
         data = (
             self.task_portal.with_user(self.user_portal)
