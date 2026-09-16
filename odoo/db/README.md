@@ -796,9 +796,13 @@ one exception, and the scanner has a control showing it tells the two apart.
   pool, rebuilds the psycopg cursor and re-issues the statement — `execute`
   and `executemany` both. It is refused once a statement has run
   (`_transaction_touched`, set by `_statement_done` and cleared with the
-  transaction caches), inside a savepoint, or inside a pipeline block; those
-  transactions have state only the caller can rebuild, and the loss
-  propagates as before. Eligible losses are `OperationalError`s that left the
+  transaction caches), inside a savepoint, or once psycopg's pipeline has
+  been entered — the block's *second* statement; its first is an ordinary
+  statement on an idle connection, and the ORM's flush opens such a block, so
+  it is replayed like any other first statement (measured: the block's first
+  statement on a killed backend replayed, its third with the pipeline entered
+  propagated). Those transactions have state only the caller can rebuild,
+  and the loss propagates as before. Eligible losses are `OperationalError`s that left the
   connection closed or never reached the server (a terminated backend, a
   dead idle connection handed out inside `db_healthcheck_grace`, a broken
   socket). Measured: a backend killed before the first statement → replayed

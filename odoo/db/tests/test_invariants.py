@@ -949,7 +949,7 @@ class TestALostConnectionIsReplacedBeforeTheFirstStatementOnly(unittest.TestCase
             cr.execute("SELECT 2")
         self.assertEqual(len(fake_pool.handed), 1, "the transaction had state")
 
-    def test_not_inside_a_savepoint_or_a_pipeline_block(self):
+    def test_not_inside_a_savepoint_or_an_entered_pipeline(self):
         cr, _fake_pool = self._cursor()
         cr._savepoint_depth = 1
         self._kill(cr)
@@ -957,9 +957,18 @@ class TestALostConnectionIsReplacedBeforeTheFirstStatementOnly(unittest.TestCase
             cr.execute("SELECT 1")
         cr, _fake_pool = self._cursor()
         cr._pipeline_stack = contextlib.ExitStack()
+        cr._pipeline = object()  # entered: the block's second statement onwards
         self._kill(cr)
         with self.assertRaises(psycopg.OperationalError):
             cr.execute("SELECT 1")
+
+    def test_the_first_statement_of_a_pipeline_block_is_still_replayed(self):
+        cr, fake_pool = self._cursor()
+        self._kill(cr)
+        with cr.pipeline():
+            cr.execute("SELECT 1")
+        self.assertEqual(len(fake_pool.handed), 2)
+        self.assertEqual(cr._pipeline_statements, 1, "the arming count is untouched")
 
     def test_a_replacement_that_cannot_be_borrowed_leaves_the_loss_to_propagate(self):
         cr, fake_pool = self._cursor()

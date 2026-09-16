@@ -520,13 +520,15 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     # A connection lost before the transaction's first statement completed is
     # replayed on a fresh borrow: nothing has happened server-side, so the
     # statement is the same request it was. Once a statement has run, a
-    # savepoint is open or a pipeline block is armed, the transaction has
-    # state only the caller can rebuild, and the loss propagates as it did.
+    # savepoint is open or psycopg's pipeline has been entered (the block's
+    # second statement; the first is an ordinary statement, and the ORM's
+    # flush opens such a block), the transaction has state only the caller
+    # can rebuild, and the loss propagates as it did.
     def _replace_lost_connection(self, exc: Exception) -> bool:
         if (
             self._transaction_touched
             or self._savepoint_depth
-            or self._pipeline_stack is not None
+            or self._pipeline is not None
             or not isinstance(exc, psycopg.OperationalError)
             or not (self._cnx.closed or not has_reached_server(exc))
         ):
