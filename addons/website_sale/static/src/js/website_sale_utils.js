@@ -51,7 +51,10 @@ function updateCartSummary(data) {
         const newShorterCartSummaryEl = createElementWithContent(
             'div', data['website_sale.shorter_cart_summary'],
         );
-        shorterCartSummaryEl.replaceWith(...newShorterCartSummaryEl.childNodes);
+        const firstElement = newShorterCartSummaryEl.firstElementChild;
+        // Update the existing cart summary
+        shorterCartSummaryEl.className = firstElement.className;
+        shorterCartSummaryEl.replaceChildren(...firstElement.childNodes);
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(
