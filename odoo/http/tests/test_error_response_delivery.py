@@ -44,7 +44,7 @@ def nodb_app(tmp_path):
     app = Application()
     app.__dict__["nodb_routing_map"] = prepare_routing_map([])
     app.__dict__["session_store"] = FilesystemSessionStore(
-        str(tmp_path), session_class=Session, renew_missing=True
+        str(tmp_path), session_class=Session
     )
     return app
 

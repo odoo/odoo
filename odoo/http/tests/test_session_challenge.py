@@ -5,16 +5,18 @@ from types import SimpleNamespace
 import pytest
 
 from odoo.http._cookies import get_cookie_identity
-from odoo.http._session_store import FilesystemSessionStore
+from odoo.http._session_store import FilesystemSessionStore, MemorySessionStore
 from odoo.http.constants import prepare_default_session
 from odoo.http.exceptions import SessionExpiredException
 from odoo.http.session import Session
 from odoo.http.wrappers import Response
 
 
-@pytest.fixture
-def store(tmp_path):
-    return FilesystemSessionStore(str(tmp_path), Session, renew_missing=True)
+@pytest.fixture(params=["filesystem", "memory"])
+def store(request, tmp_path):
+    if request.param == "memory":
+        return MemorySessionStore(Session)
+    return FilesystemSessionStore(str(tmp_path), Session)
 
 
 def token_env():

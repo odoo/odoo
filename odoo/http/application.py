@@ -189,7 +189,7 @@ class Application:
         path = prepare_session_dir(current_settings().session_dir)
         _logger.debug("HTTP sessions stored in: %s", path)
         _debug.lifecycle("http.session_store.opened", path=path)
-        return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
+        return FilesystemSessionStore(path, session_class=Session)
 
     def get_routing_map(self, db: str | None, env: Any = None) -> werkzeug.routing.Map:
         if not db:

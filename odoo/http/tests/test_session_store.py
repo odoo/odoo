@@ -14,9 +14,7 @@ from odoo.http.session import Session, _coerce_session_value
 
 @pytest.fixture
 def store(tmp_path):
-    return FilesystemSessionStore(
-        str(tmp_path), session_class=Session, renew_missing=True
-    )
+    return FilesystemSessionStore(str(tmp_path), session_class=Session)
 
 
 def _anon(store):
@@ -102,7 +100,7 @@ def test_vacuum_operates_on_own_path(store, tmp_path):
 
 
 def test_vacuum_reaps_orphaned_tmp_files(store, tmp_path):
-    from odoo.libs._vendor.sessions import _fs_transaction_suffix
+    from odoo.http._session_store import _TEMPORARY_SUFFIX as _fs_transaction_suffix
 
     orphan = tmp_path / f"tmpabc123{_fs_transaction_suffix}"
     orphan.write_bytes(b"{}")
@@ -350,16 +348,6 @@ def test_session_files_are_readable_only_by_their_owner(store):
 
     mode = pathlib.Path(store.get_session_filename(session.sid)).stat().st_mode
     assert mode & 0o777 == 0o600
-
-
-def test_the_vendored_store_defines_no_on_disk_layout_of_its_own():
-    from odoo.libs._vendor import sessions
-
-    base = sessions.FilesystemSessionStore(path="/tmp", session_class=Session)
-    with pytest.raises(NotImplementedError):
-        base.get_session_filename("x" * 84)
-
-    assert not hasattr(base, "filename_template")
 
 
 def test_the_odoo_store_shards_by_the_first_two_characters(store):

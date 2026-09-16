@@ -9,7 +9,7 @@ from unittest import mock
 import pytest
 from werkzeug.test import EnvironBuilder
 
-from odoo.http._session_store import FilesystemSessionStore
+from odoo.http._session_store import FilesystemSessionStore, MemorySessionStore
 from odoo.http.constants import prepare_default_session
 from odoo.http.exceptions import SessionExpiredException
 from odoo.http.request_class import Request
@@ -18,9 +18,11 @@ from odoo.http.wrappers import HTTPRequest, Response
 from odoo.libs.func import Callbacks
 
 
-@pytest.fixture
-def store(tmp_path):
-    return FilesystemSessionStore(str(tmp_path), Session, renew_missing=True)
+@pytest.fixture(params=["filesystem", "memory"])
+def store(request, tmp_path):
+    if request.param == "memory":
+        return MemorySessionStore(Session)
+    return FilesystemSessionStore(str(tmp_path), Session)
 
 
 def saved_session(store):
@@ -101,7 +103,9 @@ def test_concurrent_disjoint_changes_survive(store):
     sessions = [store.get(original.sid) for _ in range(16)]
 
     def save_one(index):
-        peer_store = FilesystemSessionStore(store.path, Session, renew_missing=True)
+        if not isinstance(store, FilesystemSessionStore):
+            pytest.skip("a second process sharing the store is a filesystem case")
+        peer_store = FilesystemSessionStore(store.path, Session)
         sessions[index][f"key_{index}"] = index
         peer_store.save(sessions[index])
 
@@ -158,6 +162,8 @@ def test_failed_rotation_restores_in_memory_identity(store, monkeypatch, soft):
 
 def test_vacuum_never_removes_lock_inodes(store):
     session = saved_session(store)
+    if not isinstance(store, FilesystemSessionStore):
+        pytest.skip("lock stripes are the filesystem store's")
     lock_path = Path(store.path, ".locks", session.sid[:2])
     inode = lock_path.stat().st_ino
     old = time.time() - 1000

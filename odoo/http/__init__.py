@@ -73,7 +73,7 @@ from .routing import (
     _prepare_route_fragment,
 )
 
-from ._session_store import FilesystemSessionStore
+from ._session_store import FilesystemSessionStore, MemorySessionStore, SessionStore
 from .session import Session
 
 from .geoip import (
@@ -166,6 +166,7 @@ __all__ = [
     "JsonRPCDispatcher",
     "LazyCompiledBuilder",
     "Locked",
+    "MemorySessionStore",
     "MethodNotAllowed",
     "NotFound",
     "ParamSpec",
@@ -180,6 +181,7 @@ __all__ = [
     "ServiceUnavailable",
     "Session",
     "SessionExpiredException",
+    "SessionStore",
     "Stream",
     "TooManyRequests",
     "Unauthorized",

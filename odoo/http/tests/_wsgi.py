@@ -300,9 +300,7 @@ class Harness:
     def __init__(self, tmp_path: Any, addon: str, *, replica: bool = False) -> None:
         self.addon = addon
         self.app = Application()
-        self.store = FilesystemSessionStore(
-            str(tmp_path), session_class=Session, renew_missing=True
-        )
+        self.store = FilesystemSessionStore(str(tmp_path), session_class=Session)
         self.app.__dict__["session_store"] = self.store
         self.app.__dict__["nodb_routing_map"] = prepare_routing_map(
             _generate_routing_rules([addon], nodb_only=True)

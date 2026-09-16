@@ -8,14 +8,15 @@ import re
 import tempfile
 import threading
 import time
+from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 from stat import S_ISREG
 from typing import Any
 
-from odoo.libs._vendor import sessions
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps_bytes as _dumps_bytes
+from odoo.libs.json import loads as _loads
 
 from .constants import SESSION_DELETION_TIMER, SESSION_LIFETIME, STORED_SESSION_BYTES
 from .exceptions import SessionExpiredException
@@ -32,6 +33,7 @@ assert STORED_SESSION_BYTES < _SESSION_KEY_LENGTH, (
 _base64_urlsafe_re = re.compile(rf"^[A-Za-z0-9_-]{{{_SESSION_KEY_LENGTH}}}$")
 _session_identifier_re = re.compile(rf"^[A-Za-z0-9_-]{{{STORED_SESSION_BYTES}}}$")
 _session_stripe_re = re.compile(r"^[A-Za-z0-9_-]{2}$")
+_TEMPORARY_SUFFIX = ".__odoo_sess"
 
 
 def _fsync_directory(path: Path) -> None:
@@ -53,54 +55,46 @@ def prepare_session_dir(path: str) -> str:
     return path
 
 
-class FilesystemSessionStore(sessions.FilesystemSessionStore):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-        self._held_locks = threading.local()
+class SessionStore(ABC):
+    def __init__(self, session_class: type[Session] = Session) -> None:
+        self.session_class = session_class
         self._durability = threading.local()
-        self._lock_directory_ready = False
 
-    @contextlib.contextmanager
-    def _locked_sid(self, sid: str) -> Iterator[None]:
-        self.get_session_filename(sid)
-        # Fixed stripes bound lock-file growth. Never unlink them: replacing a
-        # locked inode would let two workers enter the same critical section.
-        stripe = sid[:2]
-        held = getattr(self._held_locks, "stripes", None)
-        if held is None:
-            held = self._held_locks.stripes = set()
-        if stripe in held:
-            _debug.lifecycle("http.session.lock_reentered", stripe=stripe)
-            yield
-            return
-        # A fresh descriptor per acquisition, not a cached one: flock belongs to
-        # the open file description, so a shared descriptor would let two
-        # threads of this process, or a forked child, into the same section.
-        lock_fd = self._open_lock_file(stripe)
-        try:
-            with _debug.perf("http.session.lock_wait", stripe=stripe):
-                fcntl.flock(lock_fd, fcntl.LOCK_EX)
-            held.add(stripe)
-            _debug.lifecycle("http.session.lock_acquired", stripe=stripe)
-            try:
-                yield
-            finally:
-                held.remove(stripe)
-                fcntl.flock(lock_fd, fcntl.LOCK_UN)
-        finally:
-            os.close(lock_fd)
+    # -- the storage surface a backend implements ---------------------------
 
-    def _open_lock_file(self, stripe: str) -> int:
-        directory = Path(self.path, ".locks")
-        if not self._lock_directory_ready:
-            directory.mkdir(mode=0o700, exist_ok=True)
-            self._lock_directory_ready = True
-        flags = os.O_RDWR | os.O_CREAT | os.O_CLOEXEC
-        try:
-            return os.open(directory / stripe, flags, 0o600)
-        except FileNotFoundError:
-            directory.mkdir(mode=0o700, exist_ok=True)
-            return os.open(directory / stripe, flags, 0o600)
+    @abstractmethod
+    def _lock(self, sid: str) -> contextlib.AbstractContextManager[None]: ...
+
+    @abstractmethod
+    def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None: ...
+
+    @abstractmethod
+    def _write(self, session: Session, durable: bool) -> None: ...
+
+    @abstractmethod
+    def _unlink(self, sid: str) -> None: ...
+
+    @abstractmethod
+    def _touch(self, sid: str) -> bool: ...
+
+    @abstractmethod
+    def _sids_in_family(self, identifier: str) -> list[str]: ...
+
+    @abstractmethod
+    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None: ...
+
+    # -- keys ----------------------------------------------------------------
+
+    def generate_key(self, salt: bytes | None = None) -> str:
+        return base64.urlsafe_b64encode(os.urandom(63)).decode("ascii")
+
+    def is_valid_key(self, key: str) -> bool:
+        return _base64_urlsafe_re.fullmatch(key) is not None
+
+    def _require_key(self, sid: str) -> str:
+        if not self.is_valid_key(sid):
+            raise ValueError(f"Invalid session id {sid!r}")
+        return sid
 
     @contextlib.contextmanager
     def _durably(self) -> Iterator[None]:
@@ -111,44 +105,102 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         finally:
             self._durability.enabled = previous
 
-    def _write(self, session: Session) -> None:
-        filename = Path(self.get_session_filename(session.sid))
-        durable = getattr(self._durability, "enabled", False)
-        fd, tmp = tempfile.mkstemp(
-            suffix=sessions._fs_transaction_suffix, dir=self.path
-        )
-        try:
-            os.fchmod(fd, self.mode)
-            with os.fdopen(fd, "wb") as handle:
-                handle.write(_dumps_bytes(dict(session)))
-                if durable:
-                    handle.flush()
-                    os.fsync(handle.fileno())
-            Path(tmp).replace(filename)
-            if durable:
-                _fsync_directory(filename.parent)
-        except OSError:
-            _logger.warning(
-                "Failed to persist session %r to %r",
-                session.sid,
-                str(filename),
-                exc_info=True,
-            )
-            _debug.logic(
-                "http.session.write_failed", sid=session.sid[:8], durable=durable
-            )
-            with contextlib.suppress(OSError):
-                Path(tmp).unlink()
-            raise
+    def _is_durable(self) -> bool:
+        return getattr(self._durability, "enabled", False)
 
-    def get_session_filename(self, sid: str) -> str:
+    # -- load and store ------------------------------------------------------
+
+    def new(self) -> Session:
+        session = self.session_class({}, self.generate_key(), True)
+        session.store = self
+        _debug.lifecycle("http.session.new", sid=session.sid[:8])
+        return session
+
+    def get(self, sid: str) -> Session:
         if not self.is_valid_key(sid):
-            raise ValueError(f"Invalid session id {sid!r}")
-        return str(Path(self.path, sid[:2], sid))
+            _debug.logic("http.session.get", sid=sid[:8], found=False, invalid_key=True)
+            return self.new()
+        with self._lock(sid), _debug.perf("http.session.read", sid=sid[:8]) as span:
+            stored = self._read(sid)
+            span.set(found=stored is not None)
+        if stored is None:
+            session = self.new()
+        else:
+            data, mtime = stored
+            session = self.session_class(data, sid, False)
+            session.store = self
+            session.mtime = mtime
+        session.mark_clean()
+        _debug.logic(
+            "http.session.get", sid=sid[:8], found=not session.is_new, uid=session.uid
+        )
+        return session
+
+    def _save_unlocked(self, session: Session) -> None:
+        with _debug.perf(
+            "http.session.write",
+            sid=session.sid[:8],
+            was_new=session.is_new,
+            durable=self._is_durable(),
+        ):
+            self._write(session, self._is_durable())
+        session.is_new = False
+        session.mtime = time.time()
+        session.mark_clean()
+
+    def _remove_sid(self, sid: str) -> None:
+        with self._lock(sid):
+            self._unlink(sid)
+        _debug.lifecycle("http.session.removed", sid=sid[:8])
+
+    def delete(self, session: Session) -> None:
+        self._remove_sid(session.sid)
+
+    def keep_alive(self, session: Session) -> None:
+        with self._lock(session.sid):
+            if self._touch(session.sid):
+                session.mtime = time.time()
+                _debug.lifecycle("http.session.kept_alive", sid=session.sid[:8])
+                return
+            if not session.is_new:
+                _debug.logic("http.session.keep_alive_revoked", sid=session.sid[:8])
+                raise SessionExpiredException("Session was revoked")
+            self.save(session)
+
+    def get_missing_session_identifiers(self, identifiers: Iterable[str]) -> set[str]:
+        identifiers = set(identifiers)
+        asked = len(identifiers)  # debuglog
+        missing = {i for i in identifiers if not self._sids_in_family(i)}
+        _debug.pipeline(
+            "http.session.missing_identifiers", asked=asked, missing=len(missing)
+        )
+        return missing
+
+    def remove_sessions_for_identifiers(
+        self,
+        identifiers: list[str],
+        exclude_sid: str | None = None,
+    ) -> None:
+        _debug.pipeline(
+            "http.session.remove_family",
+            identifiers=len(identifiers),
+            excluding=exclude_sid is not None,
+        )
+        for identifier in identifiers:
+            if not _session_identifier_re.fullmatch(identifier):
+                msg = "Identifier format incorrect, did you pass in a string instead of a list?"
+                raise ValueError(msg)
+            with self._lock(identifier.ljust(_SESSION_KEY_LENGTH, "_")):
+                for sid in self._sids_in_family(identifier):
+                    if exclude_sid is not None and sid == exclude_sid:
+                        continue
+                    self._remove_sid(sid)
+
+    # -- merge, rotation, adoption ------------------------------------------
 
     def save(self, session: Session) -> None:
         origin = session.rotation[0].sid if session.rotation else session.sid
-        with self._locked_sid(origin):
+        with self._lock(origin):
             if not session.is_new:
                 current = self.get(session.sid)
                 if current.is_new:
@@ -186,71 +238,6 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 raise SessionExpiredException("Rotated session was revoked")
         _debug.logic("http.session.rotation_chain", hops=len(seen) - 1)
         return session
-
-    def _save_unlocked(self, session: Session) -> None:
-        dirname = Path(self.get_session_filename(session.sid)).parent
-        if not dirname.is_dir():
-            with contextlib.suppress(OSError):
-                dirname.mkdir(mode=0o0700)
-        with _debug.perf(
-            "http.session.write",
-            sid=session.sid[:8],
-            was_new=session.is_new,
-            durable=getattr(self._durability, "enabled", False),
-        ):
-            self._write(session)
-        session.is_new = False
-        session.mtime = time.time()
-        session.mark_clean()
-
-    def new(self) -> Session:
-        session = super().new()
-        session.store = self
-        _debug.lifecycle("http.session.new", sid=session.sid[:8])
-        return session
-
-    def get(self, sid: str) -> Session:
-        if not self.is_valid_key(sid):
-            _debug.logic("http.session.get", sid=sid[:8], found=False, invalid_key=True)
-            return self.new()
-        with self._locked_sid(sid):
-            with _debug.perf("http.session.read", sid=sid[:8]) as span:
-                session = super().get(sid)
-                span.set(found=not session.is_new)
-        session.store = self
-        session.mark_clean()
-        if not session.is_new:
-            with contextlib.suppress(OSError):
-                session.mtime = (
-                    Path(self.get_session_filename(session.sid)).stat().st_mtime
-                )
-        _debug.logic(
-            "http.session.get", sid=sid[:8], found=not session.is_new, uid=session.uid
-        )
-        return session
-
-    def _remove_sid(self, sid: str) -> None:
-        path = Path(self.get_session_filename(sid))
-        with self._locked_sid(sid), contextlib.suppress(FileNotFoundError):
-            path.unlink()
-            # A revocation that a crash can undo is not a revocation.
-            _fsync_directory(path.parent)
-        _debug.lifecycle("http.session.removed", sid=sid[:8])
-
-    def delete(self, session: Session) -> None:
-        self._remove_sid(session.sid)
-
-    def keep_alive(self, session: Session) -> None:
-        with self._locked_sid(session.sid):
-            try:
-                os.utime(self.get_session_filename(session.sid))
-                session.mtime = time.time()
-                _debug.lifecycle("http.session.kept_alive", sid=session.sid[:8])
-            except FileNotFoundError:
-                if not session.is_new:
-                    _debug.logic("http.session.keep_alive_revoked", sid=session.sid[:8])
-                    raise SessionExpiredException("Session was revoked") from None
-                self.save(session)
 
     def remove_old_sessions(self, session: Session) -> None:
         if "gc_previous_sessions" in session:
@@ -308,7 +295,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
     def rotate(self, session: Session, env: Any, soft: bool = False) -> None:
         if soft and session.rotation is None:
-            with self._locked_sid(session.sid):
+            with self._lock(session.sid):
                 recent = self.get(session.sid)
                 if "next_sid" in recent:
                     _debug.logic("http.session.rotate", strategy="adopt_before_stage")
@@ -318,7 +305,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         assert session.rotation is not None
         original, soft = session.rotation
         try:
-            with self._locked_sid(original.sid):
+            with self._lock(original.sid):
                 current = self.get(original.sid)
                 if not original.is_new and current.is_new:
                     _debug.logic("http.session.rotation_refused", reason="revoked")
@@ -408,37 +395,138 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.should_rotate = False
         _debug.lifecycle("http.session.rotation_adopted", sid=peer.sid[:8])
 
-    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
-        threshold = time.time() - max_lifetime
-        base_path = Path(self.path)
-        removed = 0  # debuglog
-        with _debug.perf("http.session.vacuum", max_lifetime=max_lifetime) as span:
-            for stripe_dir in base_path.iterdir():
-                stripe = stripe_dir.name
-                if not _session_stripe_re.fullmatch(stripe) or not stripe_dir.is_dir():
-                    continue
-                with self._locked_sid(stripe.ljust(_SESSION_KEY_LENGTH, "_")):
-                    for path in stripe_dir.iterdir():
-                        if not self.is_valid_key(path.name):
-                            continue
-                        with contextlib.suppress(OSError):
-                            st = path.stat()
-                            if S_ISREG(st.st_mode) and st.st_mtime < threshold:
-                                path.unlink()
-                                removed += 1  # debuglog
-            for path in base_path.glob(f"*{sessions._fs_transaction_suffix}"):
-                with contextlib.suppress(OSError):
-                    st = path.stat()
-                    if S_ISREG(st.st_mode) and st.st_mtime < threshold:
-                        path.unlink()
-                        removed += 1  # debuglog
-            span.set(removed=removed)
 
-    def generate_key(self, salt: bytes | None = None) -> str:
-        return base64.urlsafe_b64encode(os.urandom(63)).decode("ascii")
+class FilesystemSessionStore(SessionStore):
+    def __init__(
+        self,
+        path: str,
+        session_class: type[Session] = Session,
+        mode: int = 0o600,
+    ) -> None:
+        super().__init__(session_class)
+        self.path = path
+        self.mode = mode
+        self._held_locks = threading.local()
+        self._lock_directory_ready = False
 
-    def is_valid_key(self, key: str) -> bool:
-        return _base64_urlsafe_re.fullmatch(key) is not None
+    def get_session_filename(self, sid: str) -> str:
+        return str(Path(self.path, sid[:2], self._require_key(sid)))
+
+    @contextlib.contextmanager
+    def _lock(self, sid: str) -> Iterator[None]:
+        self._require_key(sid)
+        # Fixed stripes bound lock-file growth. Never unlink them: replacing a
+        # locked inode would let two workers enter the same critical section.
+        stripe = sid[:2]
+        held = getattr(self._held_locks, "stripes", None)
+        if held is None:
+            held = self._held_locks.stripes = set()
+        if stripe in held:
+            _debug.lifecycle("http.session.lock_reentered", stripe=stripe)
+            yield
+            return
+        # A fresh descriptor per acquisition, not a cached one: flock belongs to
+        # the open file description, so a shared descriptor would let two
+        # threads of this process, or a forked child, into the same section.
+        lock_fd = self._open_lock_file(stripe)
+        try:
+            with _debug.perf("http.session.lock_wait", stripe=stripe):
+                fcntl.flock(lock_fd, fcntl.LOCK_EX)
+            held.add(stripe)
+            _debug.lifecycle("http.session.lock_acquired", stripe=stripe)
+            try:
+                yield
+            finally:
+                held.remove(stripe)
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        finally:
+            os.close(lock_fd)
+
+    def _open_lock_file(self, stripe: str) -> int:
+        directory = Path(self.path, ".locks")
+        if not self._lock_directory_ready:
+            directory.mkdir(mode=0o700, exist_ok=True)
+            self._lock_directory_ready = True
+        flags = os.O_RDWR | os.O_CREAT | os.O_CLOEXEC
+        try:
+            return os.open(directory / stripe, flags, 0o600)
+        except FileNotFoundError:
+            directory.mkdir(mode=0o700, exist_ok=True)
+            return os.open(directory / stripe, flags, 0o600)
+
+    def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None:
+        path = Path(self.get_session_filename(sid))
+        try:
+            data = _loads(path.read_bytes())
+            if not isinstance(data, dict):
+                raise TypeError(f"session payload is {type(data).__name__}, not dict")
+        except OSError:
+            _debug.logic("http.session.read_missing", sid=sid[:8])
+            return None
+        except Exception as exc:
+            _logger.warning(
+                "Corrupt session file %r; discarding it.", str(path), exc_info=True
+            )
+            _debug.logic(
+                "http.session.read_corrupt", sid=sid[:8], error=type(exc).__name__
+            )
+            with contextlib.suppress(OSError):
+                path.unlink()
+            return None
+        mtime: float | None = None
+        with contextlib.suppress(OSError):
+            mtime = path.stat().st_mtime
+        return data, mtime
+
+    def _write(self, session: Session, durable: bool) -> None:
+        filename = Path(self.get_session_filename(session.sid))
+        if not filename.parent.is_dir():
+            with contextlib.suppress(OSError):
+                filename.parent.mkdir(mode=0o0700)
+        fd, tmp = tempfile.mkstemp(suffix=_TEMPORARY_SUFFIX, dir=self.path)
+        try:
+            os.fchmod(fd, self.mode)
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(_dumps_bytes(dict(session)))
+                if durable:
+                    handle.flush()
+                    os.fsync(handle.fileno())
+            Path(tmp).replace(filename)
+            if durable:
+                _fsync_directory(filename.parent)
+        except OSError:
+            _logger.warning(
+                "Failed to persist session %r to %r",
+                session.sid,
+                str(filename),
+                exc_info=True,
+            )
+            _debug.logic(
+                "http.session.write_failed", sid=session.sid[:8], durable=durable
+            )
+            with contextlib.suppress(OSError):
+                Path(tmp).unlink()
+            raise
+
+    def _unlink(self, sid: str) -> None:
+        path = Path(self.get_session_filename(sid))
+        with contextlib.suppress(FileNotFoundError):
+            path.unlink()
+            # A revocation that a crash can undo is not a revocation.
+            _fsync_directory(path.parent)
+
+    def _touch(self, sid: str) -> bool:
+        try:
+            os.utime(self.get_session_filename(sid))
+        except FileNotFoundError:
+            return False
+        return True
+
+    def _sids_in_family(self, identifier: str) -> list[str]:
+        return [
+            entry.name
+            for entry in (Path(self.path) / identifier[:2]).glob(identifier + "*")
+        ]
 
     def get_missing_session_identifiers(self, identifiers: Iterable[str]) -> set[str]:
         identifiers = set(identifiers)
@@ -461,23 +549,84 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         )
         return identifiers
 
-    def remove_sessions_for_identifiers(
-        self,
-        identifiers: list[str],
-        exclude_sid: str | None = None,
-    ) -> None:
+    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
+        threshold = time.time() - max_lifetime
         base_path = Path(self.path)
-        _debug.pipeline(
-            "http.session.remove_family",
-            identifiers=len(identifiers),
-            excluding=exclude_sid is not None,
-        )
-        for identifier in identifiers:
-            if not _session_identifier_re.fullmatch(identifier):
-                msg = "Identifier format incorrect, did you pass in a string instead of a list?"
-                raise ValueError(msg)
-            with self._locked_sid(identifier.ljust(_SESSION_KEY_LENGTH, "_")):
-                for fn in (base_path / identifier[:2]).glob(identifier + "*"):
-                    if exclude_sid is not None and fn.name == exclude_sid:
-                        continue
-                    self._remove_sid(fn.name)
+        removed = 0  # debuglog
+        with _debug.perf("http.session.vacuum", max_lifetime=max_lifetime) as span:
+            for stripe_dir in base_path.iterdir():
+                stripe = stripe_dir.name
+                if not _session_stripe_re.fullmatch(stripe) or not stripe_dir.is_dir():
+                    continue
+                with self._lock(stripe.ljust(_SESSION_KEY_LENGTH, "_")):
+                    for path in stripe_dir.iterdir():
+                        if not self.is_valid_key(path.name):
+                            continue
+                        with contextlib.suppress(OSError):
+                            st = path.stat()
+                            if S_ISREG(st.st_mode) and st.st_mtime < threshold:
+                                path.unlink()
+                                removed += 1  # debuglog
+            for path in base_path.glob(f"*{_TEMPORARY_SUFFIX}"):
+                with contextlib.suppress(OSError):
+                    st = path.stat()
+                    if S_ISREG(st.st_mode) and st.st_mtime < threshold:
+                        path.unlink()
+                        removed += 1  # debuglog
+            span.set(removed=removed)
+
+
+class MemorySessionStore(SessionStore):
+    def __init__(self, session_class: type[Session] = Session) -> None:
+        super().__init__(session_class)
+        self._entries: dict[str, tuple[bytes, float]] = {}
+        self._guard = threading.RLock()
+
+    @contextlib.contextmanager
+    def _lock(self, sid: str) -> Iterator[None]:
+        self._require_key(sid)
+        with self._guard:
+            yield
+
+    def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None:
+        entry = self._entries.get(sid)
+        if entry is None:
+            return None
+        payload, mtime = entry
+        return _loads(payload), mtime
+
+    def _write(self, session: Session, durable: bool) -> None:
+        self._entries[session.sid] = (_dumps_bytes(dict(session)), time.time())
+
+    def _unlink(self, sid: str) -> None:
+        self._entries.pop(sid, None)
+
+    def _touch(self, sid: str) -> bool:
+        entry = self._entries.get(sid)
+        if entry is None:
+            return False
+        self._entries[sid] = (entry[0], time.time())
+        return True
+
+    def _sids_in_family(self, identifier: str) -> list[str]:
+        return [sid for sid in self._entries if sid.startswith(identifier)]
+
+    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
+        threshold = time.time() - max_lifetime
+        with self._guard:
+            stale = [
+                sid for sid, (_, mtime) in self._entries.items() if mtime < threshold
+            ]
+            for sid in stale:
+                del self._entries[sid]
+        _debug.perf.count("http.session.vacuum", removed=len(stale), memory=True)
+
+    def __len__(self) -> int:
+        return len(self._entries)
+
+    def __contains__(self, sid: object) -> bool:
+        return sid in self._entries
+
+    def clear(self) -> None:
+        with self._guard:
+            self._entries.clear()

@@ -36,7 +36,7 @@ class TestHttpBase(HttpCaseWithUserDemo):
 
     def setUp(self):
         super().setUp()
-        odoo.http.root.session_store.store.clear()
+        odoo.http.root.session_store.clear()
         odoo.http.invalidate_db_catalog_cache()
         self.addCleanup(odoo.http.invalidate_db_catalog_cache)
 

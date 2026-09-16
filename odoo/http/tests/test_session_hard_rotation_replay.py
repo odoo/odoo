@@ -8,9 +8,7 @@ from odoo.http.session import Session
 
 @pytest.fixture
 def store(tmp_path):
-    return FilesystemSessionStore(
-        str(tmp_path), session_class=Session, renew_missing=True
-    )
+    return FilesystemSessionStore(str(tmp_path), session_class=Session)
 
 
 def _saved_session(store, login):
@@ -24,9 +22,7 @@ def _saved_session(store, login):
 def test_soft_rotation_keeps_the_old_sid_resolvable():
     import tempfile
 
-    store = FilesystemSessionStore(
-        tempfile.mkdtemp(), session_class=Session, renew_missing=True
-    )
+    store = FilesystemSessionStore(tempfile.mkdtemp(), session_class=Session)
     sess = _saved_session(store, "bob")
     cookie_sid = sess.sid
 
