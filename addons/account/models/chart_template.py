@@ -413,14 +413,21 @@ class AccountChartTemplate(models.AbstractModel):
 
     @_debug.perf.timed
     def _pre_reload_data(self, company, template_data, data, force_create=True):
-        for prop in self._get_property_accounts():
-            template_data.pop(prop, None)
+        for prop, model in self._get_property_accounts().items():
+            if model == "res.company":
+                is_set = bool(company[prop])
+            else:
+                is_set = self.env["ir.default"]._get(model, prop, company_id=company.id)
+            if is_set:
+                template_data.pop(prop, None)
         data.pop("account.reconcile.model", None)
         if "res.company" in data:
-            data["res.company"][company.id].clear()
-            data["res.company"][company.id].setdefault(
-                "anglo_saxon_accounting", company.anglo_saxon_accounting
-            )
+            company_vals = data["res.company"][company.id]
+            for fname in list(company_vals):
+                field = company._fields.get(fname)
+                if not field or field.type != "many2one" or company[fname]:
+                    del company_vals[fname]
+            company_vals["anglo_saxon_accounting"] = company.anglo_saxon_accounting
         self._pre_reload_journals(company, data)
         if self.env["account.group"].search_count(
             [] if company.parent_id else [("company_id", "=", company.id)],

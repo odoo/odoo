@@ -1111,6 +1111,58 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             data_after = self.env[model].search(get_domain(model))
             self.assertEqual(data_before[model], data_after)
 
+    def test_first_load_of_a_preset_template_sets_the_company_defaults(self):
+        company = self.env["res.company"].create(
+            {"name": "Preset Co", "country_id": self.country_be.id}
+        )
+        company.chart_template = "test"
+        self._use_chart_template(company)
+
+        ChartTemplate = self.env["account.chart.template"].with_company(company)
+        receivable = self.env["ir.default"]._get(
+            "res.partner", "property_account_receivable_id", company_id=company.id
+        )
+        payable = self.env["ir.default"]._get(
+            "res.partner", "property_account_payable_id", company_id=company.id
+        )
+        self.assertEqual(
+            receivable, ChartTemplate.ref("test_account_receivable_template").id
+        )
+        self.assertEqual(payable, ChartTemplate.ref("test_account_payable_template").id)
+        self.assertEqual(
+            company.income_account_id,
+            ChartTemplate.ref("test_account_income_template"),
+        )
+
+    def test_reload_keeps_the_company_defaults_already_set(self):
+        other_receivable = self.env["account.account"].create(
+            {
+                "name": "Chosen receivable",
+                "code": "411999",
+                "account_type": "asset_receivable",
+                "company_ids": [Command.set(self.company.ids)],
+            }
+        )
+        self.env["ir.default"].set(
+            "res.partner",
+            "property_account_receivable_id",
+            other_receivable.id,
+            company_id=self.company.id,
+        )
+        income_before = self.company.income_account_id
+
+        self._use_chart_template(self.company)
+
+        self.assertEqual(
+            self.env["ir.default"]._get(
+                "res.partner",
+                "property_account_receivable_id",
+                company_id=self.company.id,
+            ),
+            other_receivable.id,
+        )
+        self.assertEqual(self.company.income_account_id, income_before)
+
     def test_unknown_company_fields(self):
         def local_get_data(self, template_code):
             data = test_get_data(self, template_code)
