@@ -86,7 +86,30 @@ class ProductTemplateAttributeValue(models.Model):
             # Force write on this relation from `product.product` to properly
             # trigger `_compute_combination_indices`.
             raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
-        return super().create(vals_list)
+        # Reuse an archived value with the same (line, value) pair instead
+        # of inserting a new row that would hit the unique constraint
+        lines = self.env['product.template.attribute.line'].browse(
+            {vals['attribute_line_id'] for vals in vals_list if vals.get('attribute_line_id')},
+        )
+        archived_ptavs = {
+            (ptav.attribute_line_id.id, ptav.product_attribute_value_id.id): ptav
+            for ptav in lines.product_template_value_ids
+            if not ptav.ptav_active
+        }
+        activated = self.env['product.template.attribute.value']
+        to_create = []
+        for value in vals_list:
+            vals = dict(value, ptav_active=True)
+            archived = archived_ptavs.pop(
+                (vals.pop('attribute_line_id', 0), vals.pop('product_attribute_value_id', 0)),
+                None,
+            )
+            if archived:
+                archived.write(vals)
+                activated += archived
+            else:
+                to_create.append(value)
+        return activated + super().create(to_create)
 
     def write(self, values):
         if 'ptav_product_variant_ids' in values:

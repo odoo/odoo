@@ -1075,6 +1075,31 @@ class TestVariantsArchive(ProductVariantsCommon):
         self._assert_2color_x_0size(archived_variants)
         self.assertEqual(archived_variants, variants_2x0)
 
+    def test_create_archived_attribute_value(self):
+        """Values archived because their variants could not be deleted
+        should be reused when created again"""
+        def unlink_error(self):
+            raise Exception('simulate an issue during unlink')
+        self.patch(self.env.registry['product.product'], 'unlink', unlink_error)
+
+        ptavs = self.ptav_size_s + self.ptav_size_m
+        self._remove_ptal_size()
+        self.assertEqual(ptavs.mapped('ptav_active'), [False, False])
+
+        self.env['product.template.attribute.line'].with_context(create_product_product=False).create({
+            'product_tmpl_id': self.template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set((self.size_attribute_s + self.size_attribute_m).ids)],
+        })
+        recreated = self.env['product.template.attribute.value'].create([{
+            'attribute_line_id': self.ptal_size.id,
+            'product_attribute_value_id': pav.id,
+            'price_extra': 7.5,
+        } for pav in self.size_attribute_s + self.size_attribute_m])
+        self.assertEqual(recreated, ptavs)
+        self.assertEqual(recreated.mapped('ptav_active'), [True, True])
+        self.assertEqual(recreated.mapped('price_extra'), [7.5, 7.5])
+
     def test_name_search_dynamic_attributes(self):
         # To be able to test dynamic variant "variants" feature must be set up
         self.env.user.write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
