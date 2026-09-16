@@ -214,8 +214,8 @@ class StockMove(models.Model):
                 move.picked = False
 
     def _inverse_picked(self):
-        for move in self:
-            move.move_line_ids.picked = move.picked
+        for picked_value in (True, False):
+            self.filtered(lambda m, v=picked_value: m.picked == v).move_line_ids.write({'picked': picked_value})
 
     @api.depends('picking_id.priority')
     def _compute_priority(self):
