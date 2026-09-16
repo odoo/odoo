@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import _
+from odoo import _, Command
 from odoo.http import request
 from odoo.addons.website.controllers.form import WebsiteForm
 
@@ -24,3 +24,20 @@ class WebsiteNewsletterForm(WebsiteForm):
                                ', '.join(private_list_ids.mapped('name')))
                 })
         return super()._handle_website_form(model_name, **kwargs)
+
+    def extract_data(self, model, values):
+        data = super().extract_data(model, values)
+        list_ids = data['record'].get('list_ids')
+        if (
+            model.model == 'mailing.contact'
+            and list_ids
+            and list_ids[0][0] == Command.SET
+        ):
+            # The `mailing.subscription` model uses the same table as `list_ids`.
+            # Creating the relation through `list_ids` bypasses that model and
+            # leaves its automatic fields, notably `create_date`, empty.
+            data['record']['subscription_ids'] = [
+                Command.create({'list_id': list_id})
+                for list_id in data['record'].pop('list_ids')[0][2]
+            ]
+        return data
