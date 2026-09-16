@@ -13,7 +13,7 @@ from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
 
-siren_siret_re = re.compile(r'\d{9}|\d{14}', flags=re.ASCII)
+siren_siret_re = re.compile(r'(?:\d{9}|\d{14})(?:_.*)?', flags=re.ASCII)
 
 
 class ResPartner(models.Model):
@@ -236,7 +236,7 @@ class ResPartner(models.Model):
             raise UserError(self.env._("Set up your routing endpoint to enable the lookup"))
 
         if not siren_siret_re.fullmatch(self.routing_endpoint):
-            raise UserError(self.env._("endpoint must be 9 or 14 characters long and they must be numbers to enable the lookup (ie: siren, siret)"))
+            raise UserError(self.env._("endpoint must begin with a 9 or 14 digits number to enable the lookup (ie: siren, siret), followed by an optional suffix starting with an underscore (ie: 123456789_ABC)"))
 
         edi_mode = self.env.company._get_peppol_edi_mode()
         origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
