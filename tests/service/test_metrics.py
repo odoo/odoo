@@ -6,7 +6,7 @@ import pytest
 
 from odoo.service import _process_state
 
-from .conftest import common_server, event_server, prefork_server, threaded_server
+from .conftest import common_server, prefork_server, threaded_server, websocket_server
 
 
 @pytest.fixture(scope="module")
@@ -156,11 +156,11 @@ class TestEveryServerAnswersForItself:
 
     def test_each_flavour_names_itself(self):
         from odoo.service._prefork import PreforkServer
-        from odoo.service._threaded import EventServer, ThreadedServer
+        from odoo.service._threaded import ThreadedServer, WebsocketServer
 
         assert PreforkServer.flavor == "prefork"
         assert ThreadedServer.flavor == "threaded"
-        assert EventServer.flavor == "evented"
+        assert WebsocketServer.flavor == "evented"
 
     def test_the_base_answers_unknown_rather_than_a_class_name(self):
         from odoo.service._base_server import CommonServer
@@ -182,7 +182,7 @@ class TestEveryServerAnswersForItself:
     def test_the_evented_server_reports_its_pool_but_no_time_limits(self, mod):
         """It runs the same threaded HTTP server as --workers 0, so its
         threads are real; it has no limit monitor, so that count is not."""
-        server = event_server()
+        server = websocket_server()
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
         assert out["flavor"] == "evented"
@@ -420,7 +420,7 @@ class TestReportingAndRecyclingAreDifferentQuestions:
     def test_the_evented_port_counts_its_threads_too(self, mod):
         import threading
 
-        server = event_server(httpd=MagicMock(max_http_threads=7))
+        server = websocket_server(httpd=MagicMock(max_http_threads=7))
         stop = threading.Event()
         ws = threading.Thread(target=stop.wait, args=(10,), daemon=True)
         ws.type = "websocket"

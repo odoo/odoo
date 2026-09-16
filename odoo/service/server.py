@@ -2,7 +2,7 @@ from ._base_server import CommonServer
 from ._factory import start
 from ._prefork import PreforkServer
 from ._process_state import get_server
-from ._threaded import EventServer, ThreadedServer
+from ._threaded import ThreadedServer, WebsocketServer
 from ._transport import serve_prefork_connection
 from ._worker import (
     CpuTimeLimitExceeded,
@@ -21,10 +21,10 @@ from .lifecycle import (
 __all__ = (
     "CommonServer",
     "CpuTimeLimitExceeded",
-    "EventServer",
     "PreforkServer",
     "ThreadedHTTPServer",
     "ThreadedServer",
+    "WebsocketServer",
     "Worker",
     "WorkerCron",
     "WorkerHTTP",

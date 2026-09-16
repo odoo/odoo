@@ -773,7 +773,10 @@ class ThreadedServer(CommonServer):
         restart()
 
 
-class EventServer(CommonServer):
+class WebsocketServer(CommonServer):
+    # `evented` is the `odoo-bin evented` subcommand, the `odoo.evented` flag
+    # and the metric label; the name says what the process is: the
+    # websocket port, on threads.  Gevent left the fork with the http rewrite.
     flavor = "evented"
     port_setting = "gevent_port"
 

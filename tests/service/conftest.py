@@ -195,14 +195,14 @@ def threaded_server(**attrs):
     return server
 
 
-def event_server(**attrs):
+def websocket_server(**attrs):
     from unittest.mock import MagicMock
 
     from odoo.service import _threaded
     from odoo.service import settings as server_settings
 
     with server_settings.override(http_interface="127.0.0.1", gevent_port=8072):
-        server = _threaded.EventServer(MagicMock())
+        server = _threaded.WebsocketServer(MagicMock())
     server.logger = MagicMock()
     for name, value in attrs.items():
         setattr(server, name, value)

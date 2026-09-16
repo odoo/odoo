@@ -9,7 +9,7 @@ from . import _process_state
 from ._base_server import CommonServer
 from ._prefork import PreforkServer
 from ._process_state import set_server
-from ._threaded import EventServer, ThreadedServer
+from ._threaded import ThreadedServer, WebsocketServer
 from ._watcher import (
     FSWatcherInotify,
     FSWatcherWatchdog,
@@ -67,7 +67,7 @@ def _prepare_server(app: Any, settings: ServerSettings) -> CommonServer:
 
     if odoo.evented:
         _debug.logic("server.flavor_chosen", flavor="evented")
-        return EventServer(app)
+        return WebsocketServer(app)
     if settings.workers:
         if settings.test_enable:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")

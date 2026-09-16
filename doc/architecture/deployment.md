@@ -15,7 +15,7 @@ runbook — most of all in whether memory is shared.
 
 | Condition | Server | Concurrency | Shared memory |
 |---|---|---|---|
-| `odoo.evented` | `EventServer` | Python threads on the websocket port (`gevent_port`); no gevent anywhere in the fork | one process |
+| `odoo.evented` | `WebsocketServer` | Python threads on the websocket port (`gevent_port`); no gevent anywhere in the fork | one process |
 | `workers > 0` | `PreforkServer` | forked OS processes | **none** |
 | otherwise (default) | `ThreadedServer` | Python threads | one process |
 
@@ -103,9 +103,9 @@ Defaults, from `odoo/tools/config.py`:
 | `max_cron_threads` | `2` | cron workers |
 | `limit_request` | `65536` | requests a worker serves before it is recycled |
 | `limit_memory_soft` | `2048 MB` | RSS above this stops the worker *after* the current request; the only memory limit the process enforces |
-| `limit_memory_soft_gevent` | `None` | overrides `limit_memory_soft` on the `EventServer` path only |
+| `limit_memory_soft_gevent` | `None` | overrides `limit_memory_soft` on the `WebsocketServer` path only |
 | `limit_memory_hard` | `2560 MB` | **deprecated, enforced by nothing in-process** — see below |
-| `limit_memory_hard_gevent` | `None` | the `EventServer` twin of the row above, and enforced by nothing for the same reason |
+| `limit_memory_hard_gevent` | `None` | the `WebsocketServer` twin of the row above, and enforced by nothing for the same reason |
 | `limit_time_cpu` | `60 s` | CPU time per request |
 | `limit_time_real` | `120 s` | wall time per request |
 | `limit_time_real_cron` | `-1` | wall time per cron job; `-1` defers to `limit_time_real` |
@@ -138,6 +138,72 @@ table.
 A deployment whose steady-state RSS is near the soft limit recycles constantly
 and pays a registry rebuild each time. `limit_request` exists because a
 long-lived Python process accumulates; recycling is the design, not a workaround.
+
+### Over the wall-clock budget: cancel first, then recycle
+
+A request or job past `limit_time_real` is not killed on the spot. Both
+flavours act in two steps, one budget apart:
+
+1. **Cancel the queries.** The supervisor (the worker's own monitor thread in
+   prefork, `_worker.py`; the server's `check_limits` pass in threaded,
+   `_threaded.py`) calls `odoo.db.cancel_queries_of(<thread>)`, a client-side
+   `pg_cancel` on every connection that thread has checked out, and logs
+   `cancelled N running quer(y|ies)` together with what the thread was doing
+   (`serving GET /path (model.method)` or `sweeping <db>`). A request stuck in
+   PostgreSQL fails with `QueryCanceled`, answers `500`, and the process that
+   served it survives: no registry rebuild, no back-off, no lost in-flight
+   neighbours.
+2. **Recycle only what did not return.** Work still on the *same* unit
+   afterwards — a Python stall, a lock no query holds — is the case a cancel
+   cannot reach. A prefork worker ends itself after `_CANCEL_GRACE_S` (5 s),
+   logging `Work did not return … recycling worker`, and exits `0` so the
+   master's respawn back-off never engages; the master's own `timeout after
+   Ns while <title>` SIGKILL stays as the backstop for a worker whose monitor
+   thread is itself wedged. The threaded server, which has no worker to
+   drop, reloads the process, logging `still on the same work … reloading`.
+
+Keep `limit_time_real` at or above `SUPERVISION_BEAT_S` (4 s): an idle prefork
+worker pings the master once per beat, so a smaller budget times out idle
+workers before they serve anything.
+
+### Descriptor budget
+
+`lifecycle.py::_ensure_descriptor_budget` computes what the configuration can
+open at once — threaded: `db_maxconn` + HTTP threads + idle connections +
+listeners; prefork: the larger of a worker (`db_maxconn` + 1) and the websocket
+child (`db_maxconn_gevent` or `db_maxconn`, plus its threads) — adds
+`DESCRIPTOR_HEADROOM` (128), and raises the soft `RLIMIT_NOFILE` to the hard
+one when that demand exceeds it. When even the hard limit is short it warns
+naming `LimitNOFILE=`, the unit-file key that lifts it; nothing lowers a
+configured value.
+
+### systemd integration
+
+Every flavour speaks `sd_notify` (`_sdnotify.py`) when `NOTIFY_SOCKET` is
+set, and does nothing otherwise:
+
+| State | When |
+|---|---|
+| `READY=1` | the threaded server after its cron and job threads are spawned; the prefork master before its first supervision pass |
+| `RELOADING=1` + `MONOTONIC_USEC=` | a threaded `--dev=reload` re-exec, and a prefork SIGHUP, with `READY=1` again once the new generation serves |
+| `STOPPING=1` | the stop path of either flavour |
+| `WATCHDOG=1` | every supervision beat, at half the `WATCHDOG_USEC` interval when `WATCHDOG_PID` names this process |
+
+A unit that wants the whole contract:
+
+```ini
+[Service]
+Type=notify-reload
+NotifyAccess=main
+WatchdogSec=30
+LimitNOFILE=65536
+ExecStart=/opt/odoo/venv/bin/python /opt/odoo/odoo-bin -c /etc/odoo/odoo.conf
+```
+
+The prefork master's beat is 4 s, so any `WatchdogSec` above ~10 s is
+comfortable; a threaded server bounds its sleeps to the same half-interval.
+A prefork master running under its own reload supervisor (`_reload_supervisor`)
+sends nothing — the supervisor is the process systemd sees.
 
 ## Degradation — the `db/` resilience tier
 

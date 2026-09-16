@@ -25,7 +25,7 @@ from odoo.service import settings as server_settings
 from odoo.tools import SQL
 
 from .conftest import build_worker, common_server, threaded_server
-from .conftest import event_server as build_event_server
+from .conftest import websocket_server as build_websocket_server
 
 
 @pytest.fixture(scope="module")
@@ -102,9 +102,11 @@ class TestEmptyPipe:
             os.close(w)
 
 
-class TestEventServerWatchdogSurvivesErrors:
+class TestWebsocketServerWatchdogSurvivesErrors:
     def test_transient_failure_does_not_retire_the_watchdog(self, srv):
-        server = build_event_server(logger=logging.getLogger("test.evented.watchdog"))
+        server = build_websocket_server(
+            logger=logging.getLogger("test.evented.watchdog")
+        )
         calls = []
 
         def flaky():
@@ -717,10 +719,10 @@ class TestIdleRegistryEvictionRunsOnEveryPulse:
         evict.assert_called_once_with()
 
     def test_evented_check_limits_sweeps(self, srv):
-        es = build_event_server()
+        es = build_websocket_server()
         with (
             patch.object(
-                srv.EventServer, "get_memory_over_soft_limit", return_value=None
+                srv.WebsocketServer, "get_memory_over_soft_limit", return_value=None
             ),
             patch("odoo.service._threaded.Registry._evict_idle_registries") as evict,
         ):
@@ -1703,18 +1705,18 @@ class TestMemoryLogStrings:
         assert "RSS" in message
         assert "irtual" not in message and "VMS" not in message
 
-    def test_event_server_process_limits_reports_RSS(self, event_server):
-        event_server.ppid = os.getppid()
-        event_server._process_handle = MagicMock()
+    def test_event_server_process_limits_reports_RSS(self, websocket_server):
+        websocket_server.ppid = os.getppid()
+        websocket_server._process_handle = MagicMock()
         cfg = {"limit_memory_soft_gevent": 100, "limit_memory_soft": 0}
         with (
             server_settings.override(**cfg),
             patch("odoo.service._limits.get_memory_rss", return_value=500),
             patch.object(_threaded.os, "kill"),
         ):
-            event_server.check_limits()
+            websocket_server.check_limits()
 
-        message = self._only_message(event_server.logger)
+        message = self._only_message(websocket_server.logger)
         assert "RSS" in message
         assert "irtual" not in message and "VMS" not in message
 
@@ -1734,14 +1736,14 @@ class TestMemoryLogStrings:
 
 
 @pytest.fixture
-def event_server(srv):
-    obj = build_event_server(port=0)
+def websocket_server(srv):
+    obj = build_websocket_server(port=0)
     obj.httpd = None
     obj.pid = os.getpid()
     return obj
 
 
-class TestEventServerGracefulStop:
+class TestWebsocketServerGracefulStop:
     @pytest.fixture(autouse=True)
     def _restore_callbacks(self, srv):
         original = list(_base_server._on_stop_hooks)
@@ -1749,18 +1751,18 @@ class TestEventServerGracefulStop:
         _base_server._on_stop_hooks[:] = original
 
     @pytest.mark.parametrize("sig", [signal.SIGINT, signal.SIGTERM])
-    def test_quit_handler_raises_keyboard_interrupt(self, event_server, sig):
+    def test_quit_handler_raises_keyboard_interrupt(self, websocket_server, sig):
         with pytest.raises(KeyboardInterrupt):
-            event_server._quit_signal_handler(sig, None)
+            websocket_server._quit_signal_handler(sig, None)
 
     @pytest.mark.skipif(os.name != "posix", reason="POSIX signal handlers")
-    def test_start_installs_sigint_and_sigterm(self, event_server):
+    def test_start_installs_sigint_and_sigterm(self, websocket_server):
         with (
             patch.object(signal, "signal") as mock_signal,
             patch.object(_threaded, "ThreadedHTTPServer", return_value=MagicMock()),
             patch.object(threading, "Thread"),
         ):
-            event_server.start()
+            websocket_server.start()
 
         wired = {
             c.args[0]: c.args[1]
@@ -1769,11 +1771,13 @@ class TestEventServerGracefulStop:
         }
         assert signal.SIGINT in wired, "SIGINT handler not installed"
         assert signal.SIGTERM in wired, "SIGTERM handler not installed"
-        assert wired[signal.SIGINT] == event_server._quit_signal_handler
-        assert wired[signal.SIGTERM] == event_server._quit_signal_handler
+        assert wired[signal.SIGINT] == websocket_server._quit_signal_handler
+        assert wired[signal.SIGTERM] == websocket_server._quit_signal_handler
 
     @pytest.mark.skipif(os.name != "posix", reason="POSIX signal handlers")
-    def test_the_watchdog_starts_only_once_the_server_is_serving(self, event_server):
+    def test_the_watchdog_starts_only_once_the_server_is_serving(
+        self, websocket_server
+    ):
         """Measured 2026-09-15 under a memory limit the process was already
         over at boot: the watchdog's SIGTERM landed while `start()` was still
         creating the HTTP server, the KeyboardInterrupt escaped `run()` as an
@@ -1799,55 +1803,55 @@ class TestEventServerGracefulStop:
             ),
             patch.object(threading, "Thread", _Thread),
         ):
-            event_server.start()
+            websocket_server.start()
         assert order == ["httpd", ("watchdog", "run_watchdog"), "serve"]
-        assert event_server.httpd is httpd
+        assert websocket_server.httpd is httpd
 
-    def test_stop_tolerates_unstarted_httpd_and_runs_hooks(self, srv, event_server):
+    def test_stop_tolerates_unstarted_httpd_and_runs_hooks(self, srv, websocket_server):
         sentinel = MagicMock()
         sentinel.__name__ = "sentinel"
         srv.CommonServer.register_on_stop_hook(sentinel)
-        event_server.httpd = None
-        event_server.stop()
+        websocket_server.httpd = None
+        websocket_server.stop()
         sentinel.assert_called_once()
 
-    def test_run_runs_stop_even_when_start_raises(self, srv, event_server):
+    def test_run_runs_stop_even_when_start_raises(self, srv, websocket_server):
         sentinel = MagicMock()
         sentinel.__name__ = "sentinel"
         srv.CommonServer.register_on_stop_hook(sentinel)
-        event_server.httpd = MagicMock()
-        with patch.object(event_server, "start", side_effect=RuntimeError("boom")):
+        websocket_server.httpd = MagicMock()
+        with patch.object(websocket_server, "start", side_effect=RuntimeError("boom")):
             with pytest.raises(RuntimeError, match="boom"):
-                event_server.run()
+                websocket_server.run()
         sentinel.assert_called_once()
-        event_server.httpd.server_close.assert_called_once()
-        event_server.httpd.shutdown.assert_not_called()
+        websocket_server.httpd.server_close.assert_called_once()
+        websocket_server.httpd.shutdown.assert_not_called()
 
-    def test_stop_completes_if_serve_forever_never_started(self, event_server):
-        event_server.httpd = _threaded.ThreadedHTTPServer(
+    def test_stop_completes_if_serve_forever_never_started(self, websocket_server):
+        websocket_server.httpd = _threaded.ThreadedHTTPServer(
             "127.0.0.1", 0, lambda e, s: []
         )
         try:
             done = threading.Event()
             threading.Thread(
-                target=lambda: (event_server.stop(), done.set()), daemon=True
+                target=lambda: (websocket_server.stop(), done.set()), daemon=True
             ).start()
             assert done.wait(5), (
                 "stop() hung on a never-started serve loop (shutdown deadlock)"
             )
         finally:
-            event_server.httpd.server_close()
+            websocket_server.httpd.server_close()
 
-    def test_stop_after_completed_serve_loop_double_close_ok(self, event_server):
-        event_server.httpd = _threaded.ThreadedHTTPServer(
+    def test_stop_after_completed_serve_loop_double_close_ok(self, websocket_server):
+        websocket_server.httpd = _threaded.ThreadedHTTPServer(
             "127.0.0.1", 0, lambda e, s: []
         )
-        t = threading.Thread(target=event_server.httpd.serve_forever, daemon=True)
+        t = threading.Thread(target=websocket_server.httpd.serve_forever, daemon=True)
         t.start()
-        event_server.httpd.shutdown()
+        websocket_server.httpd.shutdown()
         t.join(5)
         assert not t.is_alive()
-        event_server.stop()
+        websocket_server.stop()
 
 
 class TestProcessLimitRealTimeLog:

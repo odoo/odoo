@@ -27,7 +27,7 @@ def start(monkeypatch):
     ):
         classes = {
             name: MagicMock(name=name)
-            for name in ("EventServer", "PreforkServer", "ThreadedServer")
+            for name in ("WebsocketServer", "PreforkServer", "ThreadedServer")
         }
         for cls in classes.values():
             cls.return_value.is_reload_watcher_owner = watcher_owner
@@ -82,9 +82,9 @@ def start(monkeypatch):
 
 
 class TestServerSelection:
-    def test_evented_gets_the_event_server(self, start):
+    def test_evented_gets_the_websocket_server(self, start):
         _, classes, _, arenas, _ = start(evented=True, workers=4)
-        classes["EventServer"].assert_called_once()
+        classes["WebsocketServer"].assert_called_once()
         assert not classes["PreforkServer"].called, (
             "`--workers` is meaningless under gevent; choosing prefork there "
             "forks a longpolling server into worker processes"
