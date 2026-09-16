@@ -1153,7 +1153,8 @@ class StockMoveLine(models.Model):
         move_lines = self
         if package_capacity and package_capacity != self.quantity:
             # Split the move line if `package_capacity` is not equal to its quantity.
-            return move_lines._split_in_chunk(package_capacity, package_type_id, package_id=package_id)
+            splitted_lines = move_lines._split_in_chunk(package_capacity, package_type_id, package_id=package_id)
+            return splitted_lines._post_put_in_pack_hook(splitted_lines.result_package_id)
 
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
