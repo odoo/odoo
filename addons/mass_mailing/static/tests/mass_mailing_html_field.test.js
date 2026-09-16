@@ -197,7 +197,8 @@ const mailViewArch = `
         options="{
             'inline_field': 'body_html',
             'dynamic_placeholder': true,
-            'dynamic_placeholder_model_reference_field': 'mailing_model_real'
+            'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+            'allowScrollableTables': false,
             }" readonly="state in ('sending', 'done')"/>
 </form>
 `;

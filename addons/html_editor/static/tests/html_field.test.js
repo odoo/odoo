@@ -1690,6 +1690,48 @@ test("'Upload a file' command is not available when 'allowFile' = false", async 
     expect(queryAllTexts(".o-we-command-name")).not.toInclude("Upload a file");
 });
 
+test.tags("desktop");
+test("'Table wrapper' is not available when 'allowScrollableTables' = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowScrollableTables': False}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/table");
+    await expectElementCount(".o-we-powerbox", 1);
+    await press("Enter");
+    await expectElementCount(".o-we-tablepicker", 1);
+    await press("Enter");
+    await expectElementCount("table", 1);
+    await expectElementCount(".o_table_wrapper", 0);
+});
+
+test.tags("mobile");
+test("'Table wrapper' is not available when 'allowScrollableTables' = false (mobile)", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowScrollableTables': False}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/table");
+    await expectElementCount(".o-we-powerbox", 1);
+    await press("Enter");
+    await expectElementCount(".o-we-tablesizepopover", 1);
+    await press("Enter");
+    await expectElementCount("table", 1);
+    await expectElementCount(".o_table_wrapper", 0);
+});
+
 test("codeview is not available by default", async () => {
     await mountView({
         type: "form",

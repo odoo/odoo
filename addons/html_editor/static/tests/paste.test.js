@@ -4986,7 +4986,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x1</p></td>
@@ -4997,7 +4997,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b2</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -5029,7 +5029,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p><strong>[x11</strong></p></td>
@@ -5040,7 +5040,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x22]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -5071,7 +5071,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -5086,7 +5086,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -5118,7 +5118,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x11</p></td>
@@ -5129,7 +5129,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x22]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -5160,7 +5160,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x1</p></td>
@@ -5171,7 +5171,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b2</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -5203,7 +5203,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p>a1</p></td>
@@ -5221,7 +5221,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x23]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );

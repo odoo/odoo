@@ -291,7 +291,7 @@ describe("Range collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_selected_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td"><ul class="o_checklist"><li>[<br></li></ul></td>
@@ -304,7 +304,7 @@ describe("Range collapsed", () => {
                                 <td class="o_selected_td"><ul class="o_checklist"><li>]<br></li></ul></td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
@@ -595,7 +595,7 @@ describe("Range collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_selected_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">[<p><br></p></td>
@@ -608,7 +608,7 @@ describe("Range collapsed", () => {
                                 <td class="o_selected_td"><p><br></p>]</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`

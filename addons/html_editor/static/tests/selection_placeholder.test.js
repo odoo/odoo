@@ -48,7 +48,7 @@ test("a selection placeholder is inserted before a contenteditable=false as firs
 test("a selection placeholder is inserted before a table as first element, and removed on clean", async () => {
     await testEditor({
         contentBefore: `<table><tbody><tr><td>a</td></tr></tbody></table><p>b</p>`,
-        contentBeforeEdit: `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>a</td></tr></tbody></table><p>b</p>`,
+        contentBeforeEdit: `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div><p>b</p>`,
         contentAfter: `<table><tbody><tr><td>a</td></tr></tbody></table><p>b</p>`,
     });
 });
@@ -64,7 +64,7 @@ test("a selection placeholder is inserted after a contenteditable=false as last 
 test("a selection placeholder is inserted after a table as last element, and removed on clean", async () => {
     await testEditor({
         contentBefore: `<p>a</p><table><tbody><tr><td>b</td></tr></tbody></table>`,
-        contentBeforeEdit: `<p>a</p><table><tbody><tr><td>b</td></tr></tbody></table><p data-selection-placeholder=""><br></p>`,
+        contentBeforeEdit: `<p>a</p><div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`,
         contentAfter: `<p>a</p><table><tbody><tr><td>b</td></tr></tbody></table>`,
     });
 });
@@ -77,10 +77,10 @@ test("a selection placeholder is inserted between two tables, and removed on cle
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>a</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>b</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: unformat(
             `<table><tbody><tr><td>a</td></tr></tbody></table>
@@ -98,13 +98,13 @@ test("a selection placeholder is inserted inside a <td> before and after a conte
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table o_table table-bordered">
+            <div class="o_table_wrapper"><table class="table o_table table-bordered">
                 <tbody><tr><td>
                     <p data-selection-placeholder=""><br></p>
                     <div contenteditable="false">X</div>
                     <p data-selection-placeholder=""><br></p>
                 </td></tr></tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: unformat(
@@ -124,13 +124,13 @@ test("a selection placeholder is inserted inside a <th> before and after a conte
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table o_table table-bordered">
+            <div class="o_table_wrapper"><table class="table o_table table-bordered">
                 <tbody><tr><th>
                     <p data-selection-placeholder=""><br></p>
                     <div contenteditable="false">X</div>
                     <p data-selection-placeholder=""><br></p>
                 </th></tr></tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: unformat(
@@ -138,6 +138,39 @@ test("a selection placeholder is inserted inside a <th> before and after a conte
                 <tbody><tr><th><div contenteditable="false">X</div></th></tr></tbody>
             </table>`
         ),
+    });
+});
+
+test("selection placeholders are inserted around a contenteditable=false element in a <blockquote>", async () => {
+    await testEditor({
+        contentBefore: `<blockquote><div contenteditable="false">X</div></blockquote>`,
+        contentBeforeEdit: unformat(
+            `<blockquote>
+                <p data-selection-placeholder=""><br></p>
+                <div contenteditable="false">X</div>
+                <p data-selection-placeholder=""><br></p>
+            </blockquote>`
+        ),
+        contentAfter: `<blockquote><div contenteditable="false">X</div></blockquote>`,
+    });
+});
+
+test("selection placeholders are inserted around a wrapped table in a <blockquote>", async () => {
+    await testEditor({
+        config: {
+            allowScrollableTables: true,
+        },
+        contentBefore: `<blockquote><table><tbody><tr><td></td></tr></tbody></table></blockquote>`,
+        contentBeforeEdit: unformat(
+            `<blockquote>
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table><tbody><tr><td></td></tr></tbody></table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </blockquote>`
+        ),
+        contentAfter: `<blockquote><table><tbody><tr><td></td></tr></tbody></table></blockquote>`,
     });
 });
 
@@ -152,9 +185,9 @@ test("can navigate in and out of selection placeholders", async () => {
         ),
         contentBeforeEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>d</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
             <p>e</p>`
         ),
         stepFunction: async (editor) => {
@@ -162,9 +195,9 @@ test("can navigate in and out of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p>a</p>
-                    <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-                    <table><tbody><tr><td>d</td></tr></tbody></table>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
                     <p>e</p>`
                 ),
                 { message: "Stepped down into the placeholder." }
@@ -173,9 +206,9 @@ test("can navigate in and out of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p>a</p>
-                    <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder=""><br></p>
-                    <table><tbody><tr><td>[]d</td></tr></tbody></table>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>[]d</td></tr></tbody></table></div>
                     <p>e</p>`
                 ),
                 { message: "Stepped down out of the placeholder." }
@@ -184,9 +217,9 @@ test("can navigate in and out of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p>a</p>
-                    <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-                    <table><tbody><tr><td>d</td></tr></tbody></table>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
                     <p>e</p>`
                 ),
                 { message: "Stepped up into the placeholder." }
@@ -195,9 +228,9 @@ test("can navigate in and out of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p>a</p>
-                    <table><tbody><tr><td>b[]</td></tr></tbody></table>
-                    <p data-selection-placeholder=""><br></p>
-                    <table><tbody><tr><td>d</td></tr></tbody></table>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
                     <p>e</p>`
                 ),
                 { message: "Stepped up out of the placeholder." }
@@ -205,9 +238,9 @@ test("can navigate in and out of selection placeholders", async () => {
         },
         contentAfterEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>d</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
             <p>e</p>`
         ),
         contentAfter: unformat(
@@ -223,10 +256,10 @@ test.tags("focus required");
 test("moving the caret into a selection placeholder shows a horizontal caret", async () => {
     const focusedResult = unformat(
         `<p data-selection-placeholder=""><br></p>
-        <table><tbody><tr><td>a</td></tr></tbody></table>
-        <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-        <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
-        <p data-selection-placeholder=""><br></p>`
+        <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+        <div class="o_table_wrapper"><table><tbody><tr><td><textarea></textarea></td></tr></tbody></table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
     await testEditor({
         contentBefore: unformat(
@@ -235,10 +268,10 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>a[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td>a[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td><textarea></textarea></td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         stepFunction: async (editor) => {
             await pressArrowKey(editor, "ArrowDown");
@@ -251,10 +284,10 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p data-selection-placeholder=""><br></p>
-                    <table><tbody><tr><td>a</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
-                    <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
-                    <p data-selection-placeholder=""><br></p>`
+                    <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td><textarea></textarea></td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
                 ),
                 {
                     message: "The placeholder stopped blinking when taking the focus out.",
@@ -272,10 +305,10 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p data-selection-placeholder=""><br></p>
-                    <table><tbody><tr><td>a</td></tr></tbody></table>
-                    <p data-selection-placeholder=""><br></p>
-                    <table><tbody><tr><td>[]<textarea></textarea></td></tr></tbody></table>
-                    <p data-selection-placeholder=""><br></p>`
+                    <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>[]<textarea></textarea></td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
                 ),
                 {
                     message:
@@ -289,10 +322,10 @@ test("moving the caret into a selection placeholder shows a horizontal caret", a
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
-            <table><tbody><tr><td>a</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td><textarea></textarea></td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td><textarea></textarea></td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: unformat(
             `[]<table><tbody><tr><td>a</td></tr></tbody></table>
@@ -312,9 +345,9 @@ test("typing in a selection placeholder persists it", async () => {
         ),
         contentBeforeEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>d</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
             <p>e</p>`
         ),
         stepFunction: async (editor) => {
@@ -323,9 +356,9 @@ test("typing in a selection placeholder persists it", async () => {
         },
         contentAfterEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
             <p>c[]</p>
-            <table><tbody><tr><td>d</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>d</td></tr></tbody></table></div>
             <p>e</p>`
         ),
         contentAfter: unformat(
@@ -347,8 +380,8 @@ test("moving the caret into a trailing selection placeholder in the root persist
         ),
         contentBeforeEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         stepFunction: async (editor) => {
             await pressArrowKey(editor, "ArrowDown");
@@ -356,7 +389,7 @@ test("moving the caret into a trailing selection placeholder in the root persist
         },
         contentAfterEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
             <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         ),
         contentAfter: unformat(
@@ -381,8 +414,8 @@ test("moving the caret into a trailing selection placeholder not in the root doe
             `<p>a</p>
             <div contenteditable="true">
                 <p data-selection-placeholder=""><br></p>
-                <table><tbody><tr><td>b[]</td></tr></tbody></table>
-                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             </div>
             <p>c</p>`
         ),
@@ -394,8 +427,8 @@ test("moving the caret into a trailing selection placeholder not in the root doe
             `<p>a</p>
             <div contenteditable="true">
                 <p data-selection-placeholder=""><br></p>
-                <table><tbody><tr><td>b</td></tr></tbody></table>
-                <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
             </div>
             <p>c</p>`
         ),
@@ -421,9 +454,9 @@ test("enter in a selection placeholder persists it", async () => {
         ),
         contentBeforeEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b[]</td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td>c</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b[]</td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td>c</td></tr></tbody></table></div>
             <p>d</p>`
         ),
         stepFunction: async (editor) => {
@@ -431,9 +464,9 @@ test("enter in a selection placeholder persists it", async () => {
             expect(getContent(editor.editable)).toBe(
                 unformat(
                     `<p>a</p>
-                    <table><tbody><tr><td>b</td></tr></tbody></table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-                    <table><tbody><tr><td>c</td></tr></tbody></table>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <div class="o_table_wrapper"><table><tbody><tr><td>c</td></tr></tbody></table></div>
                     <p>d</p>`
                 ),
                 { message: "The placeholder was selected." }
@@ -443,9 +476,9 @@ test("enter in a selection placeholder persists it", async () => {
         },
         contentAfterEdit: unformat(
             `<p>a</p>
-            <table><tbody><tr><td>b</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>b</td></tr></tbody></table></div>
             <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
-            <table><tbody><tr><td>c</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>c</td></tr></tbody></table></div>
             <p>d</p>`
         ),
         contentAfter: unformat(
@@ -463,9 +496,9 @@ test("can undo/redo the persisting of selection placeholders", async () => {
     const makeContent = (inTable = "", placeholder = "") =>
         unformat(
             `<p>a</p>
-            <table><tbody><tr><td>${inTable}</td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td>${inTable}</td></tr></tbody></table></div>
             ${placeholder}
-            <table><tbody><tr><td>e</td></tr></tbody></table><p>f</p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td>e</td></tr></tbody></table></div><p>f</p>`
         );
     const [undo, redo] = ["Z", "Y"].map((key) => async () => {
         await press(["Ctrl", key]);
@@ -473,12 +506,18 @@ test("can undo/redo the persisting of selection placeholders", async () => {
     });
     await testEditor({
         contentBefore: makeContent("b[]"),
-        contentBeforeEdit: makeContent("b[]", '<p data-selection-placeholder=""><br></p>'),
+        contentBeforeEdit: makeContent(
+            "b[]",
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
+        ),
         stepFunction: async (editor) => {
             await insertText(editor, "c");
             await ensureDistinctHistoryStep();
             expect(getContent(editor.editable)).toBe(
-                makeContent("bc[]", '<p data-selection-placeholder=""><br></p>'),
+                makeContent(
+                    "bc[]",
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
+                ),
                 {
                     message: 'The letter "c" was inserted.',
                 }
@@ -492,7 +531,7 @@ test("can undo/redo the persisting of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 makeContent(
                     "bc",
-                    `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
+                    `<p style="margin: -9px 0px 8px;" data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
                 ),
                 { message: "Undo un-persisted the placeholder." }
             );
@@ -504,26 +543,36 @@ test("can undo/redo the persisting of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 makeContent(
                     "bc",
-                    `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
+                    `<p style="margin: -9px 0px 8px;" data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
                 ),
                 { message: "Undo un-persisted the placeholder again." }
             );
             await undo();
             expect(getContent(editor.editable)).toBe(
-                makeContent("b[]", '<p data-selection-placeholder=""><br></p>'),
+                makeContent(
+                    "b[]",
+                    '<p style="margin: -9px 0px 8px;" data-selection-placeholder=""><br></p>'
+                ),
                 {
                     message: 'Undo removed the letter "c".',
                 }
             );
             await undo();
             expect(getContent(editor.editable)).toBe(
-                makeContent("b[]", '<p data-selection-placeholder=""><br></p>'),
+                makeContent(
+                    "b[]",
+                    '<p style="margin: -9px 0px 8px;" data-selection-placeholder=""><br></p>'
+                ),
                 {
                     message: "Undo did nothing.",
                 }
             );
         },
-        contentAfter: makeContent("b[]"),
+        contentAfter: unformat(`
+            <p>a</p>
+            <table><tbody><tr><td>b[]</td></tr></tbody></table>
+            <table><tbody><tr><td>e</td></tr></tbody></table>
+            <p>f</p>`),
     });
 });
 
@@ -532,20 +581,20 @@ test("a selection placeholder is restored after deletion from within", async () 
         contentBefore: `<table><tbody><tr><td>[]a</td></tr></tbody></table>`,
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
-            `<table><tbody><tr><td>[]a</td></tr></tbody></table>` +
-            '<p data-selection-placeholder=""><br></p>',
+            `<div class="o_table_wrapper"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>` +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         stepFunction: async (editor) => {
             await pressArrowKey(editor, "ArrowUp");
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
-                    `<table><tbody><tr><td>a</td></tr></tbody></table>` +
-                    '<p data-selection-placeholder=""><br></p>',
+                    `<div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>` +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                 { message: "The top placeholder was selected." }
             );
             await press("Delete");
             await tick();
         },
-        contentAfterEdit: `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]a</td></tr></tbody></table><p data-selection-placeholder=""><br></p>`,
+        contentAfterEdit: `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td>[]a</td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`,
         contentAfter: `<table><tbody><tr><td>[]a</td></tr></tbody></table>`,
     });
 });
@@ -555,13 +604,13 @@ test("a selection placeholder is restored after deletion from without", async ()
         contentBefore: `<table><tbody><tr><td>[]a</td></tr></tbody></table>`,
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
-            `<table><tbody><tr><td>[]a</td></tr></tbody></table>` +
-            '<p data-selection-placeholder=""><br></p>',
+            `<div class="o_table_wrapper"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>` +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         stepFunction: async () => {
             await press("Backspace");
             await tick();
         },
-        contentAfterEdit: `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]a</td></tr></tbody></table><p data-selection-placeholder=""><br></p>`,
+        contentAfterEdit: `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td>[]a</td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`,
         contentAfter: `<table><tbody><tr><td>[]a</td></tr></tbody></table>`,
     });
 });
@@ -570,14 +619,14 @@ test("selection placeholders are vertically positioned in the middle between it 
     const style = document.createElement("style");
     await testEditor({
         contentBefore: unformat(
-            `<table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+            `<div class="o_table_wrapper" style="margin: 50px"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+            <div class="o_table_wrapper" style="margin: 10px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>`
         ),
         contentBeforeEdit: unformat(
             `<p data-selection-placeholder="" style="margin: 25px 0px -26px;"><br></p>
-            <table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
+            <div class="o_table_wrapper" style="margin: 50px"><table><tbody><tr><td>a</td></tr></tbody></table></div>
             <p data-selection-placeholder="" style="margin: -21px 0px 30px;"><br></p>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <div class="o_table_wrapper" style="margin: 10px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>
             <p data-selection-placeholder="" style="margin: -6px 0px 5px;"><br></p>`
         ),
         stepFunction: async (editor) => {
@@ -603,8 +652,8 @@ test("selection placeholder margins remain correct when an element gets added", 
     const style = document.createElement("style");
     await testEditor({
         contentBefore: unformat(
-            `<table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+            `<div class="o_table_wrapper" style="margin: 50px"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+            <div class="o_table_wrapper" style="margin: 10px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>`
         ),
         stepFunction: async (editor) => {
             style.innerText = `
@@ -621,7 +670,7 @@ test("selection placeholder margins remain correct when an element gets added", 
             editor.document.head.append(style);
             const table = parseHTML(
                 editor.document,
-                `<table style="margin: 100px"><tbody><tr><td>[]a</td></tr></tbody></table>`
+                `<div class="o_table_wrapper" style="margin: 100px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>`
             ).firstChild;
             editor.editable.append(table);
             editor.shared.history.addStep();
@@ -629,11 +678,11 @@ test("selection placeholder margins remain correct when an element gets added", 
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder="" style="margin: 25px 0px -26px;"><br></p>
-            <table style="margin: 50px"><tbody><tr><td>a</td></tr></tbody></table>
+            <div class="o_table_wrapper" style="margin: 50px"><table><tbody><tr><td>a</td></tr></tbody></table></div>
             <p data-selection-placeholder="" style="margin: -21px 0px 30px;"><br></p>
-            <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <div class="o_table_wrapper" style="margin: 10px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>
             <p data-selection-placeholder="" style="margin: 55px 0px -46px;"><br></p>
-            <table style="margin: 100px"><tbody><tr><td>[]a</td></tr></tbody></table>
+            <div class="o_table_wrapper" style="margin: 100px"><table><tbody><tr><td>[]a</td></tr></tbody></table></div>
             <p data-selection-placeholder="" style="margin: -51px 0px 50px;"><br></p>`
         ),
     });
