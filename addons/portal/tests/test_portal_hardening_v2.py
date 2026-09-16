@@ -100,7 +100,7 @@ class TestPagerTokenMinting(TransactionCase):
             def __bool__(self):
                 return True
 
-            def _portal_ensure_token(self):
+            def _portal_get_or_create_token(self):
                 calls.append(1)
                 return "tok"
 

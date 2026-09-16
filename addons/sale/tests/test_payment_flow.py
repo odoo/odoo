@@ -31,7 +31,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         res = self._make_http_get_request(
             f"/my/orders/{self.sale_order.id}",
             params={
-                "access_token": self.sale_order._portal_ensure_token(),
+                "access_token": self.sale_order._portal_get_or_create_token(),
                 "payment_amount": 1,
             },
         )
@@ -444,7 +444,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     def test_transaction_route_rejects_unexpected_kwarg(self):
         url = self._build_url(f"/my/orders/{self.sale_order.id}/transaction")
         route_kwargs = {
-            "access_token": self.sale_order._portal_ensure_token(),
+            "access_token": self.sale_order._portal_get_or_create_token(),
             "partner_id": self.partner.id,
         }
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):

@@ -907,7 +907,7 @@ class AccountMove(models.Model):
             if self.l10n_tw_edi_refund_agreement_type == "online":
                 json_data["ReturnURL"] = urljoin(
                     self.get_base_url(),
-                    f"/invoice/ecpay/agreed_invoice_allowance/{self.id}?access_token={self._portal_ensure_token()}",
+                    f"/invoice/ecpay/agreed_invoice_allowance/{self.id}?access_token={self._portal_get_or_create_token()}",
                 )
             if (
                 self.l10n_tw_edi_allowance_notify_way == "email"

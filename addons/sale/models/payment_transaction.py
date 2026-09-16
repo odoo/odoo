@@ -253,7 +253,7 @@ class PaymentTransaction(models.Model):
                 invoices = downpayment_invoices + final_invoices
 
                 for invoice in invoices:
-                    invoice._portal_ensure_token()
+                    invoice._portal_get_or_create_token()
                 _debug.pipeline(
                     "tx_invoice_sale_orders",
                     transaction=tx,

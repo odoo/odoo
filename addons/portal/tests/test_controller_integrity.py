@@ -227,7 +227,7 @@ class TestPortalPagerQuery(TransactionCase):
             def __getitem__(self, key):
                 return "/my/document/1?tag=a&tag=b&access_token=old#details"
 
-            def _portal_ensure_token(self):
+            def _portal_get_or_create_token(self):
                 return "new+token"
 
         parsed = urlsplit(_pager_url(Record(), "access_url"))

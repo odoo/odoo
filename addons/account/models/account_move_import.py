@@ -36,7 +36,7 @@ class AccountMove(models.Model):
                     _logger.exception("Failed to link bill to purchase order")
 
         if new and res:
-            self._portal_ensure_token()
+            self._portal_get_or_create_token()
             self.flush_recordset(["access_token"])
             try:
                 attachments = set(

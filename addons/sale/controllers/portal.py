@@ -344,7 +344,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             "availability_report": availability_report,
             "transaction_route": order_sudo.get_portal_url(suffix="/transaction"),
             "landing_route": order_sudo.get_portal_url(),
-            "access_token": order_sudo._portal_ensure_token(),
+            "access_token": order_sudo._portal_get_or_create_token(),
         }
         return {
             **portal_page_values,

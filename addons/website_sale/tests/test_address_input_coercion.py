@@ -172,7 +172,7 @@ class TestShopCompanyNameBoundary(HttpCase, WebsiteSaleCommon):
         params = {
             "thread_model": "sale.order",
             "thread_id": self.cart.id,
-            "token": self.cart._portal_ensure_token(),
+            "token": self.cart._portal_get_or_create_token(),
         }
 
         result = self.call_jsonrpc("/mail/chatter_fetch", params)

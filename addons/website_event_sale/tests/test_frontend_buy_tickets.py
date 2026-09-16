@@ -217,7 +217,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
             "flow": "direct",
             "tokenization_requested": False,
             "landing_route": "/shop/payment/validate",
-            "access_token": sale_order._portal_ensure_token(),
+            "access_token": sale_order._portal_get_or_create_token(),
         }
 
         with self.assertRaisesRegex(

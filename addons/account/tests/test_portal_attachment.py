@@ -61,7 +61,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     "csrf_token": http.Request.csrf_token(self),
                     "thread_id": self.out_invoice.id,
                     "thread_model": self.out_invoice._name,
-                    "token": self.out_invoice._portal_ensure_token(),
+                    "token": self.out_invoice._portal_get_or_create_token(),
                 },
                 files={"ufile": file},
             )
@@ -93,7 +93,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 "is_pending": True,
                 "thread_id": self.out_invoice.id,
                 "thread_model": self.out_invoice._name,
-                "token": self.out_invoice._portal_ensure_token(),
+                "token": self.out_invoice._portal_get_or_create_token(),
             },
             files={"ufile": ("test.svg", b"<svg></svg>", "image/svg+xml")},
         )
@@ -215,7 +215,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                         "attachment_ids": [attachment.id],
                         "attachment_tokens": ["false"],
                     },
-                    "token": self.out_invoice._portal_ensure_token(),
+                    "token": self.out_invoice._portal_get_or_create_token(),
                 },
             },
         )
@@ -259,7 +259,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                         "attachment_ids": [attachment.id],
                         "attachment_tokens": [attachment._get_ownership_token()],
                     },
-                    "token": self.out_invoice._portal_ensure_token(),
+                    "token": self.out_invoice._portal_get_or_create_token(),
                 },
             },
         )
@@ -284,7 +284,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                         "attachment_ids": [attachment.id],
                         "attachment_tokens": [attachment._get_ownership_token()],
                     },
-                    "token": self.out_invoice._portal_ensure_token(),
+                    "token": self.out_invoice._portal_get_or_create_token(),
                 },
             },
         )
@@ -306,7 +306,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 "is_pending": True,
                 "thread_id": self.out_invoice.id,
                 "thread_model": self.out_invoice._name,
-                "token": self.out_invoice._portal_ensure_token(),
+                "token": self.out_invoice._portal_get_or_create_token(),
             },
             files={"ufile": ("final attachment", b"test", "plain/text")},
         )
@@ -331,7 +331,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                         "attachment_ids": [create_res["id"]],
                         "attachment_tokens": [create_res["ownership_token"]],
                     },
-                    "token": self.out_invoice._portal_ensure_token(),
+                    "token": self.out_invoice._portal_get_or_create_token(),
                 },
             },
         )

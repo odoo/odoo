@@ -102,7 +102,7 @@ def _pager_url(record, attr_name, with_token=True):
         return False
     if attr_name == "access_url" and with_token:
         return _get_url_with_params(
-            record[attr_name], {"access_token": record._portal_ensure_token()}
+            record[attr_name], {"access_token": record._portal_get_or_create_token()}
         )
     return record[attr_name]
 

@@ -37,7 +37,7 @@ class MixinPortal(models.AbstractModel):
         for record in self:
             record.access_url = "#"
 
-    def _portal_ensure_token(self) -> str:
+    def _portal_get_or_create_token(self) -> str:
         self.check_singleton()
         if not self.access_token:
             self.sudo().write({"access_token": str(uuid.uuid4())})
@@ -50,7 +50,7 @@ class MixinPortal(models.AbstractModel):
         params = {"model": self._name, "res_id": self.id} if redirect else {}
         if share_token:
             self.check_access("read")
-            params["access_token"] = self._portal_ensure_token()
+            params["access_token"] = self._portal_get_or_create_token()
         if pid:
             params["pid"] = pid
             params["hash"] = self._sign_token(pid)
@@ -131,7 +131,7 @@ class MixinPortal(models.AbstractModel):
         anchor=None,
     ) -> str:
         self.check_singleton()
-        params = {"access_token": self._portal_ensure_token()}
+        params = {"access_token": self._portal_get_or_create_token()}
         if report_type:
             params["report_type"] = report_type
         if download:

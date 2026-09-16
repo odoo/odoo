@@ -35,7 +35,7 @@ class TestPortalDeliveryReports(HttpCase):
         )
         cls.order.action_confirm()
         cls.picking = cls.order.picking_ids[:1]
-        cls.token = cls.order._portal_ensure_token()
+        cls.token = cls.order._portal_get_or_create_token()
 
     def test_delivery_pdf_with_valid_token(self):
         self.assertTrue(self.picking)

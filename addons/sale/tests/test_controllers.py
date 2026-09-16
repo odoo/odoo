@@ -145,7 +145,7 @@ class TestPortalDocumentLinks(HttpCase, SaleCommon):
         recipient = self.env["res.partner"].create(
             {"name": "Live signed recipient", "email": "signed@example.com"}
         )
-        self.sale_order._portal_ensure_token()
+        self.sale_order._portal_get_or_create_token()
         credentials = {
             "hash": self.sale_order._sign_token(recipient.id),
             "pid": recipient.id,
@@ -199,7 +199,7 @@ class TestPortalDocumentLinks(HttpCase, SaleCommon):
         recipient = self.env["res.partner"].create(
             {"name": "Deleted posting recipient"}
         )
-        self.sale_order._portal_ensure_token()
+        self.sale_order._portal_get_or_create_token()
         credentials = {
             "hash": self.sale_order._sign_token(recipient.id),
             "pid": recipient.id,
@@ -284,7 +284,7 @@ class TestPortalDocumentLinks(HttpCase, SaleCommon):
 
     def test_deleted_share_recipient_is_not_resolved_as_an_author(self):
         recipient = self.env["res.partner"].create({"name": "Removed share recipient"})
-        self.sale_order._portal_ensure_token()
+        self.sale_order._portal_get_or_create_token()
         pid, signature = recipient.id, self.sale_order._sign_token(recipient.id)
         recipient.unlink()
         resolved = get_portal_partner(self.sale_order, signature, pid, None)
@@ -302,7 +302,7 @@ class TestPortalDocumentLinks(HttpCase, SaleCommon):
                 "subtype_id": self.env.ref("mail.mt_comment").id,
             }
         )
-        self.sale_order._portal_ensure_token()
+        self.sale_order._portal_get_or_create_token()
         credentials = {
             "hash": self.sale_order._sign_token(recipient.id),
             "pid": recipient.id,
@@ -476,7 +476,7 @@ class TestAccessRightsControllers(HttpCase, SaleCommon):
         portal_so = self.sale_order.copy()
         portal_so.partner_id = self.user_portal.partner_id.id
 
-        portal_so._portal_ensure_token()
+        portal_so._portal_get_or_create_token()
         token = portal_so.access_token
 
         self.authenticate(None, None)
@@ -589,7 +589,7 @@ class TestSalesControllers(HttpCase, SaleCommon):
     def test_signature_acceptance_propagates_signature_context(self):
         self.sale_order.require_signature = True
         self.sale_order.require_payment = False
-        self.sale_order._portal_ensure_token()
+        self.sale_order._portal_get_or_create_token()
 
         seen_contexts = []
         original_confirm_order = type(self.sale_order)._confirm_order

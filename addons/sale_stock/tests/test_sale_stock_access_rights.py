@@ -29,7 +29,7 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
             self.authenticate(login, login)
 
             if not login:
-                so._portal_ensure_token()
+                so._portal_get_or_create_token()
                 so_token = so.access_token
                 so_url = "%s?access_token=%s" % (so_url, so_token)
                 picking_url = "%s?access_token=%s" % (picking_url, so_token)

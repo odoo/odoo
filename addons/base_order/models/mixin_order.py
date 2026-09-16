@@ -957,7 +957,7 @@ class MixinOrder(models.AbstractModel):
         self.check_singleton()
         ctx = {"force_email": True}
         if self.env.context.get("hide_default_template"):
-            self._portal_ensure_token()
+            self._portal_get_or_create_token()
             return ctx
         if mail_template := self._get_mail_template():
             ctx["default_template_id"] = mail_template.id

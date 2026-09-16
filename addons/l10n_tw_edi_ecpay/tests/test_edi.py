@@ -236,7 +236,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         # test the step that the customer agrees invoice allowance
         api_url = urljoin(
             credit_note.get_base_url(),
-            f"/invoice/ecpay/agreed_invoice_allowance/{credit_note.id}?access_token={credit_note._portal_ensure_token()}",
+            f"/invoice/ecpay/agreed_invoice_allowance/{credit_note.id}?access_token={credit_note._portal_get_or_create_token()}",
         )
         response = self.url_open(api_url, data={"RtnCode": "1"})
         self.assertEqual(response.status_code, 200)

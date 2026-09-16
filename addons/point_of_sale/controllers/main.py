@@ -576,5 +576,5 @@ class PosController(PortalAccount):
     def _redirect_to_invoice(self, invoice):
         return request.redirect(
             "/my/invoices/%s?access_token=%s"
-            % (invoice.id, invoice._portal_ensure_token())
+            % (invoice.id, invoice._portal_get_or_create_token())
         )

@@ -23,12 +23,12 @@ class TestPortalMixinSharing(TransactionCase):
         """The first call mints a token; later calls return the same one."""
         self.assertFalse(self.record.access_token)
 
-        token = self.record._portal_ensure_token()
+        token = self.record._portal_get_or_create_token()
 
         self.assertTrue(token)
         # visible in the caller's env, not just in sudo (cache invalidation)
         self.assertEqual(self.record.access_token, token)
-        self.assertEqual(self.record._portal_ensure_token(), token)
+        self.assertEqual(self.record._portal_get_or_create_token(), token)
 
     def test_share_url_direct_carries_token(self):
         """The direct URL points at access_url and carries the token."""

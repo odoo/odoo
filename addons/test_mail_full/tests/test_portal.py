@@ -23,7 +23,7 @@ class TestPortal(TestMailFullCommon, TestSMSRecipients):
                 "name": "Test Portal Record",
             }
         )
-        self.record_portal._portal_ensure_token()
+        self.record_portal._portal_get_or_create_token()
 
 
 @tagged("-at_install", "post_install", "portal", "mail_controller")
@@ -661,5 +661,5 @@ class TestPortalMixin(TestPortal):
             record_portal.access_url, "/my/test_portal/%s" % record_portal.id
         )
 
-        record_portal._portal_ensure_token()
+        record_portal._portal_get_or_create_token()
         self.assertTrue(record_portal.access_token)

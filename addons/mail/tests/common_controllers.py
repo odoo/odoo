@@ -95,7 +95,7 @@ class MailControllerCommon(HttpCase, MailCommon):
     def _get_sign_token_params(self, record):
         if "access_token" not in record:
             raise ValueError("Test should run with portal installed")
-        access_token = record._portal_ensure_token()
+        access_token = record._portal_get_or_create_token()
         partner = record.env["res.partner"].create({"name": "Sign Partner"})
         _hash = record._sign_token(partner.id)
         token = {"token": access_token}

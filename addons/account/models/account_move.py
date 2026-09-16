@@ -7183,7 +7183,7 @@ class AccountMove(models.Model):
                 if "partner_ids" in local_msg_vals
                 else message.partner_ids.ids
             )
-            self._portal_ensure_token()
+            self._portal_get_or_create_token()
             access_link = self._notify_get_action_link(
                 "view", **local_msg_vals, access_token=self.access_token
             )

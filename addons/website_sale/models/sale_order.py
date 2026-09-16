@@ -217,7 +217,7 @@ class SaleOrder(models.Model):
 
     def action_recovery_email_send(self):
         for order in self:
-            order._portal_ensure_token()
+            order._portal_get_or_create_token()
         composer_form_view_id = self.env.ref(
             "mail.email_compose_message_wizard_form"
         ).id
@@ -744,7 +744,7 @@ class SaleOrder(models.Model):
         for order in self:
             template = order._get_cart_recovery_template()
             if template:
-                order._portal_ensure_token()
+                order._portal_get_or_create_token()
                 template.send_mail(order.id)
                 sent_orders |= order
         _debug.lifecycle(

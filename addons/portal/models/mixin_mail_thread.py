@@ -63,7 +63,7 @@ class MixinMailThread(models.AbstractModel):
 
         customer = self._mail_get_partners(introspect_fields=False)[self.id]
         if customer:
-            access_token = self.sudo()._portal_ensure_token()
+            access_token = self.sudo()._portal_get_or_create_token()
             local_msg_vals = dict(msg_vals or {})
             local_msg_vals["access_token"] = access_token
             local_msg_vals["pid"] = customer.id

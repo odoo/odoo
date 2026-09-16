@@ -192,7 +192,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 {
                     "transaction_route": f"/invoice/transaction/{invoice_id}",
                     "landing_route": f"{invoice_sudo.access_url}"
-                    f"?access_token={invoice_sudo._portal_ensure_token()}",
+                    f"?access_token={invoice_sudo._portal_get_or_create_token()}",
                     "access_token": invoice_sudo.access_token,
                 }
             )

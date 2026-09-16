@@ -108,7 +108,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
     def test_transaction_route_rejects_unexpected_kwarg(self):
         url = self._build_url(f"/invoice/transaction/{self.misc_entry.id}/")
         route_kwargs = {
-            "access_token": self.misc_entry._portal_ensure_token(),
+            "access_token": self.misc_entry._portal_get_or_create_token(),
             "partner_id": self.partner.id,  # This should be rejected.
         }
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):

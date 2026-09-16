@@ -57,7 +57,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
     def test_transaction_route_rejects_unexpected_kwarg(self):
         url = self._build_url(f"/shop/payment/transaction/{self.cart.id}")
         route_kwargs = {
-            "access_token": self.cart._portal_ensure_token(),
+            "access_token": self.cart._portal_get_or_create_token(),
             "partner_id": self.partner.id,
         }
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):

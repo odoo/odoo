@@ -23,7 +23,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
                 ],
             }
         )
-        cls.token = cls.order._portal_ensure_token()
+        cls.token = cls.order._portal_get_or_create_token()
         cls.line = cls.order.line_ids[:1]
 
     def test_order_page_without_token_redirects_home(self):

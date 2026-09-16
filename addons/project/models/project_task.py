@@ -2561,7 +2561,7 @@ class ProjectTask(models.Model):
                 "invited_users",
                 "portal",
             ]:
-                task._portal_ensure_token()
+                task._portal_get_or_create_token()
             for follower in task.parent_id.message_follower_ids:
                 task.message_subscribe(
                     follower.partner_id.ids, follower.subtype_ids.ids

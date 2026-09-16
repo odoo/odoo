@@ -63,7 +63,7 @@ class TestUIPortal(TestPortal):
 
     def test_message_actions_without_login(self):
         self.start_tour(
-            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
+            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_get_or_create_token()}",
             "message_actions_tour",
         )
 
@@ -78,7 +78,7 @@ class TestUIPortal(TestPortal):
             subtype_xmlid="mail.mt_comment",
         )
         self.start_tour(
-            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_ensure_token()}",
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_get_or_create_token()}",
             "portal_rating_tour",
         )
 
@@ -93,11 +93,11 @@ class TestUIPortal(TestPortal):
             subtype_xmlid="mail.mt_comment",
         )
         self.start_tour(
-            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_ensure_token()}",
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_get_or_create_token()}",
             "portal_display_rating_tour",
         )
         self.start_tour(
-            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=False&token={record_rating._portal_ensure_token()}",
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=False&token={record_rating._portal_get_or_create_token()}",
             "portal_not_display_rating_tour",
         )
 
@@ -108,6 +108,6 @@ class TestUIPortal(TestPortal):
             login=self.user_employee.login,
         )
         self.start_tour(
-            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
+            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_get_or_create_token()}",
             "portal_composer_actions_tour_portal_user",
         )

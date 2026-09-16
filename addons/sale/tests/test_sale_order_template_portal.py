@@ -29,7 +29,7 @@ class TestPortalQuoteOptionUpdate(HttpCase, SaleOrderTemplateCommon):
                 ],
             }
         )
-        cls.sale_order_with_option._portal_ensure_token()
+        cls.sale_order_with_option._portal_get_or_create_token()
         cls.optional_line = cls._get_optional_product_lines(cls.sale_order_with_option)
 
     def test_negative_input_quantity_is_clamped_to_zero(self):
