@@ -2103,6 +2103,45 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
 
+    def test_aal_billable_type_service_revenue_per_policy(self):
+        products = {
+            '01_revenues_fixed': self.product_service_ordered_prepaid,
+            '05_revenues_milestones': self.product_service_delivered_milestone,
+            '07_revenues_manual': self.product_service_delivered_manual,
+        }
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': product.id}) for product in products.values()],
+        })
+        vals = {
+            'account_id': self.project_global.account_id.id,
+            'name': 'revenue',
+            'amount': 100,
+            'unit_amount': 1,
+        }
+        from_product = self.env['account.analytic.line'].create([
+            {**vals, 'product_id': product.id} for product in products.values()
+        ])
+        from_so_line = self.env['account.analytic.line'].create([
+            {**vals, 'so_line': so_line.id} for so_line in sale_order.order_line
+        ])
+        self.assertEqual(from_product.mapped('billable_type'), list(products))
+        self.assertEqual(
+            from_so_line.mapped('billable_type'), list(products),
+            "The invoicing policy of the service decides, whether the line carries the product or the sales order item",
+        )
+
+    def test_aal_billable_type_materials(self):
+        line = self.env['account.analytic.line'].create({
+            'account_id': self.project_global.account_id.id,
+            'name': 'materials',
+            'amount': 500,
+            'unit_amount': 1,
+            'product_id': self.product_consumable.id,
+        })
+        self.assertEqual(line.billable_type, '19_materials', "Revenue on a goods product should be reported as materials")
+        self.assertEqual(line.category_report, 'revenues')
+
     def test_compute_project_required(self):
         """
             Ensure a Sales Order doesn't require a project when any order line

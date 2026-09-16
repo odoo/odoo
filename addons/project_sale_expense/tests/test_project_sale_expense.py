@@ -12,7 +12,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
     def test_company_paid_expense_from_project_no_phantom_revenue(self):
         """ The liquidity line of a company-paid expense created from a project must not get
-            the project analytic distribution, else it shows as a positive 'Other Revenues'.
+            the project analytic distribution, else it shows as a positive 'Expenses (Revenue)'.
         """
         project = self.env['project.project'].sudo().create({
             'name': 'Project',
@@ -33,6 +33,39 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             expense.account_move_id.line_ids.analytic_line_ids.mapped('billable_type'),
             ['13_expense']
         )
+
+    def test_analytic_line_billable_type_expense_revenue(self):
+        line = self.env['account.analytic.line'].create({
+            'account_id': self.analytic_account_1.id,
+            'name': 'Refunded expense',
+            'category': 'expense',
+            'amount': 321.0,
+            'unit_amount': 1,
+        })
+        self.assertEqual(line.billable_type, '18_expense_revenues', "A positive expense line is an expense revenue, not a generic other revenue")
+        self.assertEqual(line.category_report, 'revenues')
+
+    def test_analytic_line_billable_type_reinvoiced_expense(self):
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        so_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_a.id,
+            'is_expense': True,
+        })
+        line = self.env['account.analytic.line'].create({
+            'account_id': self.analytic_account_1.id,
+            'name': 'Reinvoiced expense',
+            'category': 'invoice',
+            'so_line': so_line.id,
+            'product_id': self.product_a.id,
+            'amount': 321.0,
+            'unit_amount': 1,
+        })
+        self.assertEqual(
+            line.billable_type, '18_expense_revenues',
+            "Revenue reinvoiced from an expense is an expense revenue, not a service revenue",
+        )
+        self.assertEqual(line.category_report, 'revenues')
 
     def test_analytic_account_reinvoice_policy(self):
         product_form = Form(self.product_a.product_tmpl_id)
