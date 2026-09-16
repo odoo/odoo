@@ -982,3 +982,91 @@ class TestBatchIsCompanyScoped(TransactionCase):
             seen_batches,
             "a user of one company can search another company's batch transfers",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestGatherPathsAgree(TestStockCommon):
+    """`_gather` answers from `quants_cache` when it covers the request and
+    searches otherwise. Two implementations of one question, and reservation
+    correctness rests on them agreeing.
+    """
+
+    def test_the_cached_and_searched_paths_return_the_same_quants(self):
+        Quant = self.StockQuantObj
+        stock = self.stock_location
+        shelf_a, shelf_b = self.StockLocationObj.create(
+            [
+                {"name": "Gather shelf A", "location_id": stock.id},
+                {"name": "Gather shelf B", "location_id": stock.id},
+            ]
+        )
+        tracked, plain = self.env["product.product"].create(
+            [
+                {"name": "Gather tracked", "is_storable": True, "tracking": "lot"},
+                {"name": "Gather plain", "is_storable": True},
+            ]
+        )
+        lot_1, lot_2 = self.LotObj.create(
+            [
+                {"name": "GATHER-1", "product_id": tracked.id},
+                {"name": "GATHER-2", "product_id": tracked.id},
+            ]
+        )
+        owner = self.env["res.partner"].create({"name": "Gather owner"})
+        package = self.env["stock.package"].create({})
+        Quant._update_available_quantity(tracked, shelf_a, 5, lot_id=lot_1)
+        Quant._update_available_quantity(tracked, shelf_a, 3, lot_id=lot_2)
+        Quant._update_available_quantity(tracked, shelf_b, 7, lot_id=lot_1)
+        Quant._update_available_quantity(plain, shelf_a, 11)
+        Quant._update_available_quantity(plain, shelf_b, 13, package_id=package)
+        Quant._update_available_quantity(plain, stock, 17, owner_id=owner)
+        self.env.flush_all()
+
+        cache = Quant._get_quants_by_products_locations(
+            tracked + plain, stock + shelf_a + shelf_b
+        )
+
+        combinations = covered = 0
+        for product in (tracked, plain):
+            for location in (stock, shelf_a, shelf_b):
+                for lot in (None, lot_1, lot_2):
+                    for pack in (None, package):
+                        for holder in (None, owner):
+                            for strict in (False, True):
+                                combinations += 1
+                                # the necessary condition for the cache path;
+                                # without it both sides would search and the
+                                # comparison below would compare nothing
+                                if cache.is_covering(product, location, lot):
+                                    covered += 1
+                                self.env.invalidate_all()
+                                searched = Quant._gather(
+                                    product,
+                                    location,
+                                    lot_id=lot,
+                                    package_id=pack,
+                                    owner_id=holder,
+                                    strict=strict,
+                                )
+                                cached = Quant.with_context(quants_cache=cache)._gather(
+                                    product,
+                                    location,
+                                    lot_id=lot,
+                                    package_id=pack,
+                                    owner_id=holder,
+                                    strict=strict,
+                                )
+                                self.assertEqual(
+                                    set(cached.ids),
+                                    set(searched.ids),
+                                    f"product={product.name} location={location.name} "
+                                    f"lot={lot and lot.name} package={bool(pack)} "
+                                    f"owner={bool(holder)} strict={strict}",
+                                )
+        self.assertEqual(
+            covered,
+            combinations,
+            "the cache did not cover every request, so some comparisons ran "
+            "search against search and proved nothing",
+        )
+        self.assertGreaterEqual(combinations, 144)
