@@ -106,7 +106,7 @@ class AccountReconcileWizard(models.TransientModel):
             wizard.transfer_from_account_id = wizard.transfer_warning_message = False
             wizard.is_transfer_required = len(accounts) == 2
             if wizard.is_transfer_required:
-                wizard.update(wizard._get_transfer_data(amls))
+                wizard.update(wizard._prepare_transfer_data(amls))
             else:
                 wizard.reco_account_id = accounts
 

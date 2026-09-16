@@ -12,7 +12,7 @@ class AccountReconcileWizard(models.TransientModel):
     _inherit = "account.reconcile.wizard"
 
     @_debug.perf.timed
-    def _get_transfer_data(self, amls):
+    def _prepare_transfer_data(self, amls):
         self.check_singleton()
         accounts = amls.account_id
         amounts_per_account = defaultdict(float)
