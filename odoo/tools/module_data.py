@@ -28,8 +28,8 @@ if TYPE_CHECKING:
         exercises the statements without a database.
         """
 
-        rowcount: int
-
+        @property
+        def rowcount(self) -> int: ...
         def execute(self, query: Any, params: Any = None) -> Any: ...
         def fetchall(self) -> list[tuple[Any, ...]]: ...
         def fetchone(self) -> tuple[Any, ...] | None: ...
@@ -148,7 +148,7 @@ def retire_empty_module(cr: _SqlCursor, module: str) -> None:
         _logger.info("%s retired: every record it shipped now lives elsewhere", module)
 
 
-def rename_module(cr: _SqlCursor, old: str, new: str) -> bool:
+def rename_module(cr: BaseCursor, old: str, new: str) -> bool:
     cr.execute(SQL("SELECT id FROM ir_module_module WHERE name = %s", old))
     if not cr.fetchone():
         return False
