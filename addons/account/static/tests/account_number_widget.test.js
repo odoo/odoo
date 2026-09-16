@@ -39,7 +39,7 @@ test("Account Number Widget full flow", async () => {
         arch: `<form>
                 <sheet>
                     <group>
-                        <field name="account_number" widget="account_number"/>
+                        <field name="formatted_account_number" widget="account_number"/>
                     </group>
                 </sheet>
             </form>`,
