@@ -18,11 +18,25 @@ class SmsTracker(models.Model):
     mailing_trace_id = fields.Many2one('mailing.trace', ondelete='cascade', index='btree_not_null')
 
     def _action_update_from_provider_error(self, provider_error):
+        mailing_ids = sorted(set(self.mailing_trace_id.mass_mailing_id.ids))
+        if mailing_ids:
+            self.env.cr.execute(
+                "SELECT id FROM mailing_mailing WHERE id IN %s ORDER BY id FOR UPDATE",
+                [tuple(mailing_ids)],
+            )
+
         error_status, failure_type, failure_reason = super()._action_update_from_provider_error(provider_error)
         self._update_sms_traces(error_status or 'error', failure_type=failure_type, failure_reason=failure_reason)
         return error_status, failure_type, failure_reason
 
     def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
+        mailing_ids = sorted(set(self.mailing_trace_id.mass_mailing_id.ids))
+        if mailing_ids:
+            self.env.cr.execute(
+                "SELECT id FROM mailing_mailing WHERE id IN %s ORDER BY id FOR UPDATE",
+                [tuple(mailing_ids)],
+            )
+
         super()._action_update_from_sms_state(sms_state, failure_type=failure_type, failure_reason=failure_reason)
         trace_status = self.SMS_STATE_TO_TRACE_STATUS[sms_state]
         traces = self._update_sms_traces(trace_status, failure_type=failure_type, failure_reason=failure_reason)
