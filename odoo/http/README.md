@@ -221,7 +221,7 @@ review does.
 | `_cookies.py` | serving | `FutureResponse` (the headers and cookies staged before a response exists), `get_cookie_identity`, the `set_cookie` defaults (consent, `Secure`, `SameSite`) and the same-identity de-duplication both `_Response` and `FutureResponse` set cookies through |
 | `core.py` | serving | `_request_stack` (a werkzeug `LocalStack`), the `request` proxy bound to it, and `borrow_request` |
 | `_dbfilter.py` | serving | `get_dbs_served` — the package's one database-listing entry point, cached and read by both the selector and `_RequestSessionMixin._select_dbname` — `filter_dbs_served` and the `dbfilter` machinery |
-| `_cors.py` | serving | `is_cors_preflight`, `resolve_cors_same_host` |
+| `_cors.py` | serving | `is_cors_preflight`, `resolve_cors_same_host`, and the header staging every dispatcher runs in `pre_dispatch`: `stage_cors_headers` (origin, credentials, methods, exposed headers) and `stage_preflight_headers` (max-age, allowed headers) |
 | `_rpc.py` | serving | `dispatch_rpc` — the XML-RPC / JSON-RPC service dispatcher behind `/RPC2` and `/jsonrpc`, run with the request borrowed off the stack |
 | `_error_serialization.py` | serving | `serialize_exception` and the dev-mode rule for what an error body may reveal |
 | `_retry.py` | serving | `RequestRetryParticipant`: restores the session and rewinds uploads (`rewind_uploaded_files`) when `retrying()` replays a handler; passed explicitly by the request |

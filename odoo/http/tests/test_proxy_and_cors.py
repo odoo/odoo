@@ -187,8 +187,8 @@ def test_the_abstract_dispatcher_still_declares_no_expose_headers():
 
 
 def test_cors_methods_resolves_each_step_with_is_none():
+    from odoo.http._cors import _get_cors_methods
     from odoo.http.constants import CORS_DEFAULT_ALLOWED_METHODS
-    from odoo.http.dispatcher import _get_cors_methods
 
     assert tuple(_get_cors_methods(None, {})) == tuple(CORS_DEFAULT_ALLOWED_METHODS)
     assert tuple(_get_cors_methods(None, {"methods": None})) == tuple(

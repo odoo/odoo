@@ -1,8 +1,19 @@
+import logging
+from collections.abc import Collection, Mapping
 from typing import Any
 from urllib.parse import urlsplit
 
 from odoo.libs.debug_log import DebugLog
 
+from ._protocols import RequestState
+from .constants import (
+    CORS_DEFAULT_ALLOWED_HEADERS,
+    CORS_DEFAULT_ALLOWED_METHODS,
+    CORS_MAX_AGE,
+    WILDCARD_CORS_CREDENTIALS_WARNING,
+)
+
+_logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
@@ -43,3 +54,92 @@ def resolve_cors_same_host(request: Any) -> str | None:
         return None
     _debug.logic("http.cors.same_host", allowed=True, origin=origin)
     return origin
+
+
+def _get_cors_methods(
+    dispatcher_methods: Collection[str] | None,
+    routing: Mapping[str, Any],
+) -> Collection[str]:
+    if dispatcher_methods is not None:
+        return dispatcher_methods
+    routed = routing.get("methods")
+    if routed is not None:
+        return routed
+    return CORS_DEFAULT_ALLOWED_METHODS
+
+
+def stage_cors_headers(
+    request: RequestState,
+    routing: Mapping[str, Any],
+    dispatcher_methods: Collection[str] | None,
+) -> list[str]:
+    cors = routing.get("cors")
+    if not cors:
+        return []
+
+    set_header = request.future_response.headers.set
+    vary: list[str] = []
+    if callable(cors):
+        vary.append("Origin")
+        allow_origin = cors(request)
+    else:
+        allow_origin = cors
+    if routing.get("cors_credentials"):
+        if "Origin" not in vary:
+            vary.append("Origin")
+        origin = request.httprequest.headers.get("Origin")
+        if allow_origin == "*":
+            _logger.warning(WILDCARD_CORS_CREDENTIALS_WARNING, request.httprequest.path)
+            _debug.logic(
+                "http.cors.wildcard_credentials_refused",
+                path=request.httprequest.path,
+            )
+            allow_origin = None
+        elif origin and allow_origin == origin:
+            set_header("Access-Control-Allow-Credentials", "true")
+        else:
+            allow_origin = None
+    if allow_origin:
+        set_header("Access-Control-Allow-Origin", allow_origin)
+        set_header(
+            "Access-Control-Allow-Methods",
+            ", ".join(_get_cors_methods(dispatcher_methods, routing)),
+        )
+        expose = routing.get("cors_expose_headers")
+        if expose:
+            set_header(
+                "Access-Control-Expose-Headers",
+                expose if isinstance(expose, str) else ", ".join(expose),
+            )
+    _debug.logic(
+        "http.cors.headers",
+        allow_origin=bool(allow_origin),
+        resolver=callable(cors),
+        credentials=bool(routing.get("cors_credentials")),
+        vary=len(vary),
+    )
+    return vary
+
+
+def stage_preflight_headers(
+    request: RequestState, routing: Mapping[str, Any]
+) -> list[str]:
+    set_header = request.future_response.headers.set
+    set_header("Access-Control-Max-Age", CORS_MAX_AGE)
+    allow_headers = routing.get("cors_allow_headers")
+    _debug.logic(
+        "http.cors.preflight",
+        allow_headers="declared" if allow_headers is not None else "echoed",
+    )
+    if allow_headers is None:
+        set_header(
+            "Access-Control-Allow-Headers",
+            request.httprequest.headers.get("Access-Control-Request-Headers")
+            or CORS_DEFAULT_ALLOWED_HEADERS,
+        )
+        return ["Access-Control-Request-Headers"]
+    set_header(
+        "Access-Control-Allow-Headers",
+        allow_headers if isinstance(allow_headers, str) else ", ".join(allow_headers),
+    )
+    return []

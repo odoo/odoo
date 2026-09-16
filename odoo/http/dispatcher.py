@@ -21,17 +21,13 @@ from werkzeug.exceptions import (
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
-from ._cors import is_cors_preflight
+from ._cors import is_cors_preflight, stage_cors_headers, stage_preflight_headers
 from ._error_serialization import serialize_exception
 from ._params import coerce_params
 from ._protocols import get_ir_http
 from .constants import (
-    CORS_DEFAULT_ALLOWED_HEADERS,
-    CORS_DEFAULT_ALLOWED_METHODS,
-    CORS_MAX_AGE,
     MISSING_CSRF_WARNING,
     SAFE_HTTP_METHODS,
-    WILDCARD_CORS_CREDENTIALS_WARNING,
     prepare_allow_header,
 )
 from .exceptions import ParameterError, SessionExpiredException
@@ -57,18 +53,6 @@ def get_dispatcher_for_unmatched_route(request: RequestState) -> type[Dispatcher
             return dispatcher
     _debug.logic("http.dispatcher.inferred", mimetype=mimetype, routing_type="http")
     return _dispatchers["http"]
-
-
-def _get_cors_methods(
-    dispatcher_methods: collections.abc.Collection[str] | None,
-    routing: collections.abc.Mapping[str, Any],
-) -> collections.abc.Collection[str]:
-    if dispatcher_methods is not None:
-        return dispatcher_methods
-    routed = routing.get("methods")
-    if routed is not None:
-        return routed
-    return CORS_DEFAULT_ALLOWED_METHODS
 
 
 class Dispatcher(ABC):
@@ -116,9 +100,9 @@ class Dispatcher(ABC):
         self.request.session.can_save &= routing.get("save_session", True)
 
         is_preflight = is_cors_preflight(self.request, rule.endpoint)
-        vary = self._stage_cors_headers(routing)
+        vary = stage_cors_headers(self.request, routing, self.cors_allowed_methods)
         if is_preflight:
-            vary += self._stage_preflight_headers(routing)
+            vary += stage_preflight_headers(self.request, routing)
         if vary:
             self.request.future_response.headers.set("Vary", ", ".join(vary))
 
@@ -132,83 +116,6 @@ class Dispatcher(ABC):
         )
         self._answer_options_request(routing, is_preflight)
         self._apply_max_content_length(rule, routing)
-
-    def _stage_cors_headers(
-        self, routing: collections.abc.Mapping[str, Any]
-    ) -> list[str]:
-        cors = routing.get("cors")
-        if not cors:
-            return []
-
-        set_header = self.request.future_response.headers.set
-        vary: list[str] = []
-        if callable(cors):
-            vary.append("Origin")
-            allow_origin = cors(self.request)
-        else:
-            allow_origin = cors
-        if routing.get("cors_credentials"):
-            if "Origin" not in vary:
-                vary.append("Origin")
-            origin = self.request.httprequest.headers.get("Origin")
-            if allow_origin == "*":
-                _logger.warning(
-                    WILDCARD_CORS_CREDENTIALS_WARNING, self.request.httprequest.path
-                )
-                _debug.logic(
-                    "http.cors.wildcard_credentials_refused",
-                    path=self.request.httprequest.path,
-                )
-                allow_origin = None
-            elif origin and allow_origin == origin:
-                set_header("Access-Control-Allow-Credentials", "true")
-            else:
-                allow_origin = None
-        if allow_origin:
-            set_header("Access-Control-Allow-Origin", allow_origin)
-            set_header(
-                "Access-Control-Allow-Methods",
-                ", ".join(_get_cors_methods(self.cors_allowed_methods, routing)),
-            )
-            expose = routing.get("cors_expose_headers")
-            if expose:
-                set_header(
-                    "Access-Control-Expose-Headers",
-                    expose if isinstance(expose, str) else ", ".join(expose),
-                )
-        _debug.logic(
-            "http.cors.headers",
-            allow_origin=bool(allow_origin),
-            resolver=callable(cors),
-            credentials=bool(routing.get("cors_credentials")),
-            vary=len(vary),
-        )
-        return vary
-
-    def _stage_preflight_headers(
-        self, routing: collections.abc.Mapping[str, Any]
-    ) -> list[str]:
-        set_header = self.request.future_response.headers.set
-        set_header("Access-Control-Max-Age", CORS_MAX_AGE)
-        allow_headers = routing.get("cors_allow_headers")
-        _debug.logic(
-            "http.cors.preflight",
-            allow_headers="declared" if allow_headers is not None else "echoed",
-        )
-        if allow_headers is None:
-            set_header(
-                "Access-Control-Allow-Headers",
-                self.request.httprequest.headers.get("Access-Control-Request-Headers")
-                or CORS_DEFAULT_ALLOWED_HEADERS,
-            )
-            return ["Access-Control-Request-Headers"]
-        set_header(
-            "Access-Control-Allow-Headers",
-            allow_headers
-            if isinstance(allow_headers, str)
-            else ", ".join(allow_headers),
-        )
-        return []
 
     def _answer_options_request(
         self, routing: collections.abc.Mapping[str, Any], is_preflight: bool
