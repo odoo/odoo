@@ -129,13 +129,20 @@ class WebsitePage(models.Model):
     def _get_most_specific_pages(self):
         ids = []
         previous_page = None
+        # Only the keys carried by `self` are ever looked up below, so the count
+        # is taken over those keys and not over every page of the website: this
+        # runs behind site search, the sitemap and the page list, where the
+        # candidate set is a handful of rows and the table is the whole site.
+        website_domain = (
+            self.env["website"]
+            .browse(self.env.context.get("website_id"))
+            .website_domain()
+        )
         page_keys = (
             self.sudo()
             .with_context(prefetch_fields=False)
             .search_fetch(
-                self.env["website"]
-                .browse(self.env.context.get("website_id"))
-                .website_domain(),
+                website_domain & Domain("key", "in", list(set(self.mapped("key")))),
                 field_names=["key"],
             )
             .mapped("key")
@@ -329,6 +336,7 @@ class WebsitePage(models.Model):
 
         search_fields = ["name", "url"]
         fetch_fields = ["id", "name", "url"]
+        html_fields = set()
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
             "website_url": {"name": "url", "type": "text", "truncate": False},
@@ -336,6 +344,9 @@ class WebsitePage(models.Model):
         if with_description:
             search_fields.append("arch_db")
             fetch_fields.append("arch")
+            # A page searches its stored `arch_db` and renders the related
+            # `arch`, so the mapping cannot name the field the enumerators read.
+            html_fields.add("arch_db")
             mapping["description"] = {
                 "name": "arch",
                 "type": "text",
@@ -348,6 +359,7 @@ class WebsitePage(models.Model):
             "requires_sudo": requires_sudo,
             "search_fields": search_fields,
             "fetch_fields": fetch_fields,
+            "html_fields": html_fields,
             "mapping": mapping,
             "icon": "fa-regular fa-file",
         }
@@ -394,31 +406,29 @@ class WebsitePage(models.Model):
                     domain, limit=len(ids), order=search_detail.get("order", order)
                 )
 
-        def is_page_accessible(search, page, all_pages):
-            Rule = page.env["ir.rule"].sudo(False)
-            if not page.filtered_domain(
-                Rule._get_domain_accessible_records("website.page", "read")
-            ):
+        # The reader's record rules do not change between two pages, so they are
+        # resolved once for the whole candidate set rather than per page.
+        Rule = self.env["ir.rule"].sudo(False)
+        page_rule_domain = Rule._get_domain_accessible_records("website.page", "read")
+        view_rule_domain = Rule._get_domain_accessible_records("ir.ui.view", "read")
+        search_pattern = None
+        if search and with_description:
+            terms = "|".join(re.escape(term) for term in search.split())
+            search_pattern = terms and re.compile(f"({terms})", re.IGNORECASE)
+
+        def is_page_accessible(page):
+            if not page.filtered_domain(page_rule_domain):
                 return False
-            if not page.view_id.filtered_domain(
-                Rule._get_domain_accessible_records("ir.ui.view", "read")
-            ):
+            if not page.view_id.filtered_domain(view_rule_domain):
                 return False
             if search and with_description:
+                if not search_pattern:
+                    return False
                 text = "%s %s %s" % (page.name, page.url, text_from_html(page.arch))
-                pattern = "|".join(
-                    [re.escape(search_term) for search_term in search.split()]
-                )
-                return (
-                    re.findall("(%s)" % pattern, text, flags=re.IGNORECASE)
-                    if pattern
-                    else False
-                )
+                return bool(search_pattern.search(text))
             return True
 
-        results = results.filtered(
-            lambda result: is_page_accessible(search, result, results)
-        )
+        results = results.filtered(is_page_accessible)
         _debug.pipeline(
             "page_search",
             search=search or None,

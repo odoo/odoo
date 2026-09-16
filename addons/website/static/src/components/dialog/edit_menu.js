@@ -19,7 +19,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
-import wUtils from "@website/js/utils";
+import { autocompleteWithPages, slugify } from "@website/js/utils";
 
 import { WebsiteDialog } from "./dialog.js";
 
@@ -125,7 +125,7 @@ export class MenuDialog extends Component {
                         this.state.pageNotFound = false;
                     },
                 };
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                const unmountAutocompleteWithPages = autocompleteWithPages(
                     input,
                     options,
                     this.env,
@@ -167,7 +167,7 @@ export class MenuDialog extends Component {
         this.state.invalidName = false;
         if (!this.urlInputEdited && !this.props.isMegaMenu) {
             const title = ev.target.value;
-            this.state.url = title ? "/" + wUtils.slugify(title) : "";
+            this.state.url = title ? "/" + slugify(title) : "";
         }
     }
 }

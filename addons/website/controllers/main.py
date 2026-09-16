@@ -49,6 +49,10 @@ MAX_FONT_ARCHIVE_SIZE = 100 * 1024 * 1024
 MAX_FONT_ARCHIVE_ENTRIES = 1000
 SUPPORTED_FONT_EXTENSIONS = ["ttf", "woff", "woff2", "otf"]
 MAX_PAGE_SEARCH_RESULTS = 500
+# textwrap.shorten refuses a width below its placeholder, and the width comes
+# straight off a public route, so it is clamped rather than trusted.
+MIN_AUTOCOMPLETE_CHARS = 8
+MAX_AUTOCOMPLETE_CHARS = 10000
 
 
 class QueryURL:
@@ -737,7 +741,11 @@ class Website(Home):
         max_nb_chars=999,
         options=None,
     ):
-        limit = min(max(int(limit or 0), 0), MAX_PAGE_SEARCH_RESULTS)
+        limit = min(max(int(limit or 0), 1), MAX_PAGE_SEARCH_RESULTS)
+        max_nb_chars = min(
+            max(int(max_nb_chars or 0), MIN_AUTOCOMPLETE_CHARS),
+            MAX_AUTOCOMPLETE_CHARS,
+        )
         options = self._get_page_search_options() | (options or {})
         try:
             results_count, search_results, fuzzy_term = (
@@ -1594,7 +1602,9 @@ class Website(Home):
         self, is_view_data, enable=None, disable=None, reset_view_arch=False
     ):
         if disable:
-            records = self._get_customization_records(disable, is_view_data).filtered("active")
+            records = self._get_customization_records(disable, is_view_data).filtered(
+                "active"
+            )
             _debug.lifecycle(
                 "theme_customize",
                 action="disable",
@@ -1642,7 +1652,9 @@ class Website(Home):
             "o_container_small": "website.footer_copyright_content_width_small",
         }
 
-        new_template = self._get_customization_records([template_key], is_view_data=True)
+        new_template = self._get_customization_records(
+            [template_key], is_view_data=True
+        )
         if not new_template or not new_template[0].arch:
             return
 

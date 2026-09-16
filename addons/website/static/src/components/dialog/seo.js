@@ -20,7 +20,7 @@ import { _t } from "@web/core/translation";
 import { isVisible } from "@web/core/utils/dom/ui";
 import { escapeRegExp } from "@web/core/utils/format/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import wUtils from "@website/js/utils";
+import { autocompleteWithPages, slugify } from "@website/js/utils";
 
 import { WebsiteDialog } from "./dialog.js";
 
@@ -735,7 +735,7 @@ class TitleDescription extends Component {
      * @param {InputEvent} ev
      */
     _updateInputValue(ev) {
-        this.seoContext.seoName = wUtils.slugify(ev.target.value);
+        this.seoContext.seoName = slugify(ev.target.value);
     }
 }
 
@@ -770,7 +770,7 @@ export class BrokenLink extends Component {
                         this.link.newLink = input.value;
                     },
                 };
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                const unmountAutocompleteWithPages = autocompleteWithPages(
                     input,
                     options,
                     this.env,

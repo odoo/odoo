@@ -90,6 +90,60 @@ class Website(models.Model):
             search_detail["results_data"] = results_data
         return search_details
 
+    @staticmethod
+    def _search_get_html_fields(search_detail):
+        """Names, among a detail's `search_fields`, whose stored value is markup.
+
+        The fuzzy word enumerators index words, and words live in the text a
+        visitor reads, not in the tag and class names around it. A detail that
+        declares `html_fields` answers for itself; otherwise the answer is read
+        off the mapping, which already says which rendered field is HTML. The
+        detail is the contract here, not the model: these enumerators run over
+        whatever `_search_get_detail` names, including models that carry no
+        website mixin at all.
+        """
+        declared = search_detail.get("html_fields")
+        if declared is not None:
+            return frozenset(declared)
+        return frozenset(
+            config["name"]
+            for config in (search_detail.get("mapping") or {}).values()
+            if config.get("html")
+        )
+
+    @staticmethod
+    def _search_enumerate_value_words(value, field_name, html_fields, match_pattern):
+        """The words a single searchable value contributes to the fuzzy index.
+
+        One spelling for every field of every enumerator: a markup field is
+        reduced to the text a visitor reads before the words are cut out of it,
+        so a typo is never corrected to a tag name or a CSS class.
+        """
+        if not isinstance(value, str):
+            return ()
+        if field_name in html_fields:
+            value = text_from_html(value)
+        return re.findall(match_pattern, value.lower())
+
+    def _search_enumerate_words(
+        self, rows, records, indirect_fields, html_fields, match_pattern
+    ):
+        """Every word the candidate set contributes, direct fields then paths.
+
+        `rows` are the `search_read` dicts carrying the direct fields; `records`
+        is the same candidate set as a recordset, walked once per indirect path.
+        """
+        for row in rows:
+            for field_name, value in row.items():
+                yield from self._search_enumerate_value_words(
+                    value, field_name, html_fields, match_pattern
+                )
+        for field_name in indirect_fields:
+            for value in records.mapped(field_name):
+                yield from self._search_enumerate_value_words(
+                    value, field_name, html_fields, match_pattern
+                )
+
     def _search_find_fuzzy_term(
         self, search_details, search, limit=1000, word_list=None
     ):
@@ -342,23 +396,23 @@ class Website(models.Model):
                 subqueries=len(subqueries),
             )
             domain = Domain.AND([domain, Domain([("id", "in", list(ids))])])
-            records = (
+            rows = (
                 model.search_read(domain, direct_fields, limit=limit)  # noqa: E8507 - one query per searched model
                 if direct_fields
                 else []
             )
-            for record in records:
-                for value in record.values():
-                    if isinstance(value, str):
-                        value = value.lower()
-                        yield from re.findall(match_pattern, value)
-            if indirect_fields:
-                records = model.search(domain, limit=limit)
-                for indirect_field in indirect_fields:
-                    for value in records.mapped(indirect_field):
-                        if isinstance(value, str):
-                            value = value.lower()
-                            yield from re.findall(match_pattern, value)
+            candidates = (
+                model.search(domain, limit=limit)  # noqa: E8507 - one query per searched model
+                if indirect_fields
+                else model.browse()
+            )
+            yield from self._search_enumerate_words(
+                rows,
+                candidates,
+                indirect_fields,
+                self._search_get_html_fields(search_detail),
+                match_pattern,
+            )
 
     def _basic_enumerate_words(self, search_details, search, limit):
         match_pattern = r"[\w./-]{%s,}" % min(4, len(search) - 3)
@@ -397,19 +451,15 @@ class Website(models.Model):
                 )
                 if exact_records:
                     yield search
-            for record in records:
-                for field, value in record.items():
-                    if isinstance(value, str):
-                        value = value.lower()
-                        if field == "arch_db":
-                            value = text_from_html(value)
-                        for word in re.findall(match_pattern, value):
-                            if word[0] == search[0]:
-                                yield word.lower()
-            if indirect_fields:
-                records = model.search(domain, limit=limit)
-                for indirect_field in indirect_fields:
-                    for value in records.mapped(indirect_field):
-                        if isinstance(value, str):
-                            value = value.lower()
-                            yield from re.findall(match_pattern, value)
+            candidates = (
+                model.search(domain, limit=limit)  # noqa: E8507 - one query per searched model
+                if indirect_fields
+                else model.browse()
+            )
+            yield from self._search_enumerate_words(
+                records,
+                candidates,
+                indirect_fields,
+                self._search_get_html_fields(search_detail),
+                match_pattern,
+            )

@@ -20,7 +20,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { Popover } from "@web/libs/bootstrap";
 import { Interaction } from "@web/public/interaction";
 import { session } from "@web/session";
-import wUtils from "@website/js/utils";
+import { getParsedDataFor } from "@website/js/utils";
 
 const { DateTime } = luxon;
 
@@ -248,7 +248,7 @@ export class Form extends Interaction {
             .querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)")
             .forEach((el) => el.classList.add("d-none"));
 
-        const dataForValues = wUtils.getParsedDataFor(this.el.id, document) || {};
+        const dataForValues = getParsedDataFor(this.el.id, document) || {};
         const initialValuesToReset = new Map(
             [...this.initialValues.entries()].filter(
                 ([input]) => !dataForValues[input.name] || input.name === "email_to",
@@ -296,7 +296,7 @@ export class Form extends Interaction {
     }
 
     prefillValues() {
-        let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
+        let dataForValues = getParsedDataFor(this.el.id, document);
         log.logic("prefillValues", () => ({
             hasDataFor: !!dataForValues,
             userPrefill: Object.keys(this.preFillValues),

@@ -5,7 +5,7 @@ import { useEffect } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { registry } from "@web/core/registry";
-import wUtils from "@website/js/utils";
+import { autocompleteWithPages } from "@website/js/utils";
 
 const log = makeLogger("website.builder.plugin.url_picker_plugin");
 
@@ -20,7 +20,7 @@ export class WebsiteUrlPicker extends BuilderUrlPicker {
                     return;
                 }
                 log.lifecycle("WebsiteUrlPicker autocomplete attached");
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                const unmountAutocompleteWithPages = autocompleteWithPages(
                     inputEl,
                     {
                         classes: {

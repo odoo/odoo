@@ -14,7 +14,7 @@ const log = makeLogger("website.utils.wutils");
  * @param {Node} body
  * @returns {Deferred<string[]>}
  */
-function loadAnchors(url, body) {
+export function loadAnchors(url, body) {
     const endAnchors = log.perf("loadAnchors", () => ({ url }));
     return new Promise(function (resolve, reject) {
         if (url === window.location.pathname || url[0] === "#") {
@@ -67,7 +67,7 @@ function loadAnchors(url, body) {
 /**
  * @param {HTMLInputElement} input
  */
-function autocompleteWithPages(input, options = {}, env = undefined) {
+export function autocompleteWithPages(input, options = {}, env = undefined) {
     const owlApp = new App(UrlAutoComplete, {
         env: env || Component.env,
         dev: env ? env.debug : Component.env.debug,
@@ -100,54 +100,6 @@ function autocompleteWithPages(input, options = {}, env = undefined) {
         owlApp.destroy();
         container.remove();
     };
-}
-
-/**
- * @param {HTMLElement} element
- * @param {HTMLElement} [excluded]
- */
-function onceAllImagesLoaded(element, excluded) {
-    const imgs = [...element.querySelectorAll("img")];
-    if (element.tagName === "IMG") {
-        imgs.push(element);
-    }
-    const defs = imgs.map((img) => {
-        if (
-            img.complete ||
-            (excluded && (excluded === img || excluded.contains(img)))
-        ) {
-            return;
-        }
-        return new Promise(function (resolve) {
-            img.addEventListener("load", resolve, { once: true });
-        });
-    });
-    log.pipeline("onceAllImagesLoaded", () => ({
-        root: element.tagName,
-        images: imgs.length,
-        pending: defs.filter(Boolean).length,
-        hasExcluded: !!excluded,
-    }));
-    return Promise.all(defs);
-}
-
-/**
- * @param {string} url1
- * @param {string} url2
- * @returns {Boolean}
- */
-function isHTTPSorNakedDomainRedirection(url1, url2) {
-    try {
-        url1 = new URL(url1).host;
-        url2 = new URL(url2).host;
-    } catch {
-        log.logic("isHTTPSorNakedDomainRedirection: unparsable url", () => ({
-            url1,
-            url2,
-        }));
-        return false;
-    }
-    return url1 === url2 || url1.replace(/^www\./, "") === url2.replace(/^www\./, "");
 }
 
 export function sendRequest(route, params) {
@@ -325,7 +277,7 @@ export function generateGMapLink(dataset) {
  * @param {Object} self
  * @returns {boolean}
  */
-function isMobile(self) {
+export function isMobile(self) {
     let isMobile;
     self.trigger_up("service_context_get", {
         callback: (ctx) => {
@@ -341,7 +293,7 @@ function isMobile(self) {
  * @param {HTMLElement} parentEl
  * @returns {Object|undefined}
  */
-function getParsedDataFor(formId, parentEl) {
+export function getParsedDataFor(formId, parentEl) {
     const dataForEl = parentEl.querySelector(`[data-for='${formId}']`);
     if (!dataForEl) {
         log.logic("getParsedDataFor: no data-for element", () => ({ formId }));
@@ -459,20 +411,3 @@ patch(urlFunctions, {
         return `${origin}/`.startsWith(w.domain);
     },
 });
-
-export default {
-    loadAnchors: loadAnchors,
-    autocompleteWithPages: autocompleteWithPages,
-    onceAllImagesLoaded: onceAllImagesLoaded,
-    sendRequest: sendRequest,
-    isHTTPSorNakedDomainRedirection: isHTTPSorNakedDomainRedirection,
-    svgToPNG: svgToPNG,
-    webpToPNG: webpToPNG,
-    generateGMapIframe: generateGMapIframe,
-    generateGMapLink: generateGMapLink,
-    isMobile: isMobile,
-    getParsedDataFor: getParsedDataFor,
-    cloneContentEls: cloneContentEls,
-    checkAndNotifySEO: checkAndNotifySEO,
-    slugify: slugify,
-};

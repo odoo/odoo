@@ -273,3 +273,61 @@ class TestControllers(tests.HttpCase):
                 actual_srcs,
                 "XPath should filter out dynamic images, include only static",
             )
+
+
+@tests.tagged("post_install", "-at_install")
+class TestAutocompleteInputBounds(tests.HttpCase):
+    """`/website/snippet/autocomplete` is open to anyone, so its numbers are clamped.
+
+    `limit` was clamped and `max_nb_chars` was not, although the latter reaches
+    `textwrap.shorten`, which refuses a width smaller than its placeholder. A
+    visitor could turn a search box into a 500 with a JSON field.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.url = (
+            self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+            + "/website/snippet/autocomplete"
+        )
+        self.env["website.page"].create(
+            {
+                "name": "Autocomplete Bound",
+                "type": "qweb",
+                "key": "website.autocomplete_bound",
+                "url": "/autocomplete-bound",
+                "is_published": True,
+                "arch": '<t t-name="website.autocomplete_bound">'
+                "<div>autocompleteboundbody</div></t>",
+            }
+        )
+        self.env.flush_all()
+
+    def _call(self, **params):
+        params.setdefault("search_type", "pages")
+        params.setdefault("term", "autocompleteboundbody")
+        params.setdefault("options", {"displayDescription": True})
+        return self.url_open(self.url, json={"params": params}).json()
+
+    def test_a_narrow_width_does_not_raise(self):
+        for max_nb_chars in (0, 1, -5):
+            with self.subTest(max_nb_chars=max_nb_chars):
+                payload = self._call(max_nb_chars=max_nb_chars)
+                self.assertNotIn("error", payload)
+                self.assertIn("result", payload)
+
+    def test_a_result_count_never_promises_rows_the_payload_omits(self):
+        for limit in (0, None, []):
+            with self.subTest(limit=limit):
+                payload = self._call(limit=limit)["result"]
+                self.assertEqual(
+                    bool(payload["results"]),
+                    bool(payload["results_count"]),
+                    "a non-zero count with no rows makes the widget claim results "
+                    "it never renders",
+                )
+
+    def test_a_wide_width_is_still_honoured(self):
+        payload = self._call(max_nb_chars=999)["result"]
+        self.assertTrue(payload["results"])
+        self.assertNotIn("...", payload["results"][0]["name"])

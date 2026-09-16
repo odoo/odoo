@@ -1090,3 +1090,110 @@ class TestErrorPageFallback(HttpCase):
         self.assertEqual(response.status_code, 403)
         self.assertNotIn("TOPSECRETBODY", response.text)
         self.assertIn("visibility_password", response.text)
+
+
+@tagged("-at_install", "post_install")
+class TestMostSpecificPagesScan(common.TransactionCase):
+    """`_get_most_specific_pages` counts keys, and only the keys it will read.
+
+    It sits behind site search, the sitemap, `is_page_existing` and the backend
+    page list, where the candidate set is a handful of rows and the table is the
+    whole site. Counting every page's key there made each of those O(site).
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        template = cls.env.ref("website.default_page")
+        pages = []
+        for index in range(12):
+            view = template.copy(
+                {"website_id": cls.website.id, "key": f"website.scan_probe_{index}"}
+            )
+            pages.append(
+                {
+                    "url": f"/scan-probe-{index}",
+                    "view_id": view.id,
+                    "website_id": cls.website.id,
+                    "is_published": True,
+                }
+            )
+        cls.pages = cls.env["website.page"].create(pages)
+        cls.env.flush_all()
+
+    def _fetched_keys(self, records):
+        """How many rows the key-count query brings back for `records`."""
+        seen = []
+        original = type(self.env["website.page"]).search_fetch
+
+        def counting_search_fetch(model, domain, field_names, *args, **kwargs):
+            result = original(model, domain, field_names, *args, **kwargs)
+            if field_names == ["key"]:
+                seen.append(len(result))
+            return result
+
+        with patch.object(
+            type(self.env["website.page"]), "search_fetch", counting_search_fetch
+        ):
+            kept = records._get_most_specific_pages()
+        return kept, seen
+
+    def test_the_key_count_is_bounded_by_the_candidate_set(self):
+        one = self.pages[:1].with_context(website_id=self.website.id)
+        kept, fetched = self._fetched_keys(one)
+        self.assertEqual(kept, one)
+        self.assertEqual(
+            fetched,
+            [1],
+            "a one-page candidate set must not read every key on the site",
+        )
+
+    def test_a_generic_page_shadowed_by_a_specific_one_is_still_dropped(self):
+        generic_view = self.env["ir.ui.view"].create(
+            {
+                "name": "Shadowed",
+                "type": "qweb",
+                "key": "website.shadowed_page",
+                "arch": '<t t-name="website.shadowed_page">'
+                '<t t-call="website.layout">SHADOWED</t></t>',
+            }
+        )
+        generic = self.env["website.page"].create(
+            {"url": "/shadowed", "view_id": generic_view.id, "is_published": True}
+        )
+        specific = self.env["website.page"].create(
+            {
+                "url": "/shadowed",
+                "view_id": generic_view.copy(
+                    {"website_id": self.website.id, "key": "website.shadowed_page"}
+                ).id,
+                "website_id": self.website.id,
+                "is_published": True,
+            }
+        )
+        self.env.flush_all()
+        candidates = (generic | specific).with_context(website_id=self.website.id)
+        self.assertEqual(candidates._get_most_specific_pages(), specific)
+
+    def test_an_unshadowed_generic_page_is_kept(self):
+        generic_view = self.env["ir.ui.view"].create(
+            {
+                "name": "Lonely",
+                "type": "qweb",
+                "key": "website.lonely_page",
+                "arch": '<t t-name="website.lonely_page">'
+                '<t t-call="website.layout">LONELY</t></t>',
+            }
+        )
+        generic = self.env["website.page"].create(
+            {"url": "/lonely", "view_id": generic_view.id, "is_published": True}
+        )
+        self.env.flush_all()
+        candidates = generic.with_context(website_id=self.website.id)
+        self.assertEqual(candidates._get_most_specific_pages(), generic)
+
+    def test_an_empty_candidate_set_reads_nothing(self):
+        empty = self.env["website.page"].with_context(website_id=self.website.id)
+        kept, _fetched = self._fetched_keys(empty)
+        self.assertFalse(kept)

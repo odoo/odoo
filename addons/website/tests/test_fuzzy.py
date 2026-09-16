@@ -244,6 +244,109 @@ class TestFuzzy(TransactionCase):
 
 
 @odoo.tests.tagged("-at_install", "post_install")
+class TestFuzzyWordSource(TransactionCase):
+    """The fuzzy dictionary is the text a visitor reads, not the markup around it.
+
+    Two enumerators answer the same question -- `_trigram_enumerate_words` on a
+    pg_trgm database, `_basic_enumerate_words` everywhere else -- so they must
+    return the same words. They did not: only the basic one reduced a page's
+    `arch_db` to its text, so on every real deployment a typo was "corrected"
+    to a CSS class or a tag name, and the correction then matched no page,
+    because the result filter reads the text.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        view = cls.env["ir.ui.view"].create(
+            {
+                "name": "Fuzzy markup page",
+                "type": "qweb",
+                "key": "website.fuzzy_markup_page",
+                "website_id": cls.website.id,
+                "arch": """
+                    <t t-name="website.fuzzy_markup_page">
+                      <div class="zzmarkupclass" data-snippet="zzmarkupattr">
+                        <span>zzvisibletext appears in the page</span>
+                      </div>
+                    </t>
+                """,
+            }
+        )
+        cls.page = cls.env["website.page"].create(
+            {
+                "url": "/fuzzy-markup",
+                "view_id": view.id,
+                "is_published": True,
+                "website_id": cls.website.id,
+            }
+        )
+        cls.detail = cls.env["website.page"]._search_get_detail(
+            cls.website,
+            "name asc",
+            {
+                "displayDescription": True,
+                "displayDetail": False,
+                "displayExtraDetail": False,
+                "displayExtraLink": False,
+                "displayImage": False,
+            },
+        )
+        cls.detail["base_domain"] = [[("id", "=", cls.page.id)]]
+
+    def _words(self, enumerator, term):
+        return set(enumerator([dict(self.detail)], term, 1000))
+
+    def test_markup_tokens_are_not_offered_as_corrections(self):
+        for name in ("_trigram_enumerate_words", "_basic_enumerate_words"):
+            with self.subTest(enumerator=name):
+                words = self._words(getattr(self.website, name), "zzvisibletxet")
+                self.assertIn("zzvisibletext", words)
+                self.assertNotIn("zzmarkupclass", words)
+                self.assertNotIn("zzmarkupattr", words)
+
+    def test_the_two_enumerators_agree_on_a_page(self):
+        term = "zzvisibletxet"
+        self.assertEqual(
+            self._words(self.website._trigram_enumerate_words, term),
+            self._words(self.website._basic_enumerate_words, term),
+        )
+
+    def test_a_correction_the_search_can_honour(self):
+        # The banner promises "Results are displayed for X"; X has to be a term
+        # the very next search can find, which a class name never is.
+        options = {
+            "displayDescription": True,
+            "displayDetail": False,
+            "displayExtraDetail": False,
+            "displayExtraLink": False,
+            "displayImage": False,
+            "allowFuzzy": True,
+        }
+        # A dropped letter, not a truncation: `search in word` would otherwise
+        # answer before the candidate list is even scored.
+        count, _results, fuzzy = self.website._search_with_fuzzy(
+            "pages", "zzmarkupclss", 5, "name asc", options
+        )
+        self.assertFalse(
+            fuzzy,
+            "a token that exists only in the markup must not be offered as a correction",
+        )
+        self.assertEqual(count, 0)
+
+    def test_a_detail_without_a_mapping_declares_no_html_field(self):
+        # `_trigram_words` above builds a bare detail; the html declaration is
+        # optional and its absence must not raise.
+        self.assertEqual(
+            self.env["website"]._search_get_html_fields(
+                {"model": "website.page", "search_fields": ["name"], "base_domain": []}
+            ),
+            frozenset(),
+        )
+
+
+@odoo.tests.tagged("-at_install", "post_install")
 class TestTextFromHtml(TransactionCase):
     def test_keeps_text_following_a_stripped_element(self):
         self.assertEqual(

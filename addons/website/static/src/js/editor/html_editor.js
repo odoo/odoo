@@ -10,7 +10,7 @@ import { _t } from "@web/core/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import wUtils from "@website/js/utils";
+import { loadAnchors } from "@website/js/utils";
 
 const log = makeLogger("website.editor.html_editor");
 
@@ -84,7 +84,7 @@ patch(LinkPopover.prototype, {
         if (term[0] === "#") {
             log.logic("loadOptionsSource: anchor term", () => ({ term }));
             const endAnchors = log.perf("loadOptionsSource loadAnchors");
-            const anchors = await wUtils.loadAnchors(
+            const anchors = await loadAnchors(
                 term,
                 this.props.linkElement.ownerDocument.body,
             );
