@@ -540,15 +540,26 @@
     }
 
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
-        &.o_required_modifier,
-        > .o_column_group_field.o_required_modifier:not(.o_readonly_modifier) {
+        /* a regular field, and a lone stacked one, are marked on the cell... */
+        &.o_required_modifier {
             border-bottom: 1px solid var(--o-input-border-required);
         }
 
-        &.o_invalid_cell:not(:focus-within),
-        > .o_column_group_field.o_invalid_cell:not(.o_readonly_modifier):not(:focus-within) {
+        &.o_invalid_cell:not(:focus-within) {
             border-bottom: 1px solid var(--danger);
             background-color: var(--o-input-invalid-bg);
+        }
+
+        /* ...stacked ones on their own input, to keep it off the many2one buttons */
+        &.o_stacked_fields > .o_column_group_field:not(.o_readonly_modifier) {
+            &.o_required_modifier .o_input {
+                border-bottom: 1px solid var(--o-input-border-required);
+            }
+
+            &.o_invalid_cell:not(:focus-within) .o_input {
+                border-bottom: 1px solid var(--danger);
+                background-color: var(--o-input-invalid-bg);
+            }
         }
     }
 
