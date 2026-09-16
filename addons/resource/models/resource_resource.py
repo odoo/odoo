@@ -377,8 +377,19 @@ class ResourceResource(models.Model):
             if party.name != resource.name:
                 party.name = resource.name
 
-    @api.depends("calendar_id")
     def _compute_tz(self):
+        """Seed the work zone once, at creation; never move it afterwards.
+
+        The chain below is guarded by `resource.tz or ...` and the field is
+        `required`, so once a value exists this can only reassign it. That is
+        the intent -- a calendar states hours and the resource states the zone
+        they are read in -- but it is why there is no `@api.depends` on
+        `calendar_id`: the dependency fired a recompute that could not change
+        anything, while telling every reader that the zone follows the calendar.
+        Two tests in two repositories were written against that reading and were
+        wrong. Changing an existing resource's zone is a write, not a side
+        effect of repointing its calendar.
+        """
         for resource in self:
             resource.tz = (
                 resource.tz
