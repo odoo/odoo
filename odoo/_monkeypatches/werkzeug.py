@@ -10,7 +10,7 @@ import typing as t
 from shutil import copyfileobj
 from types import CodeType
 
-from werkzeug import urls
+from werkzeug import urls, utils
 from werkzeug.datastructures import FileStorage, MultiDict, iter_multi_items
 from werkzeug.routing import Rule
 from werkzeug.urls import _decode_idna
@@ -1040,6 +1040,16 @@ def patch_module():
             assert isinstance(code, CodeType)
             return Rule_get_func_code(code, name)
         Rule._get_func_code = _get_func_code
+
+    if hasattr(utils, 'url_quote'):
+        # Werkzeug < 2.3 percent-encodes the RFC 5987 extended value of the
+        # ``Content-Disposition`` header with a safe-set that keeps the RFC 3986
+        # sub-delims ($!'()*+,;) literal. They are not ``attr-char``, so the
+        # header ``send_file`` builds is rejected by our own parser
+        # (EXT_VALUE_REGEXP in web/static/src/core/network/download.js) and the
+        # file cannot be downloaded. ``werkzeug.utils`` binds ``url_quote`` at
+        # import time, so patching ``urls.url_quote`` below does not reach it.
+        utils.url_quote = url_quote
 
     if hasattr(urls, 'url_join'):
         # URLs are already patched

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from os.path import basename, join as opj
 from unittest.mock import patch
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 
 from freezegun import freeze_time
 
@@ -199,6 +199,27 @@ class TestHttpStatic(TestHttpStaticCommon):
                 '/web/content/test_http.earth?field=glyph_inline&filename_field=address',
                 assert_filename='sq5Abt.png',
             )
+
+        # A non-ascii name is sent twice: an ascii approximation in
+        # ``filename``, and the real name in the :rfc:`5987` extended
+        # parameter ``filename*``. The extended value may only hold
+        # ``attr-char`` and percent-encoded bytes, see EXT_VALUE_REGEXP in
+        # web/static/src/core/network/download.js, so the RFC 3986 sub-delims
+        # ``' ( ) * , ;`` must be percent-encoded there too.
+        for filename, content_disposition in [
+            ('račun.png', "inline; filename=racun.png; filename*=UTF-8''ra%C4%8Dun.png"),
+            ('račun (1).png', 'inline; filename="racun (1).png"; filename*=UTF-8\'\'ra%C4%8Dun%20%281%29.png'),
+            ("rač'un.png", "inline; filename=rac'un.png; filename*=UTF-8''ra%C4%8D%27un.png"),
+            ('rač*un.png', "inline; filename=rac*un.png; filename*=UTF-8''ra%C4%8D%2Aun.png"),
+            ('a,b č.png', 'inline; filename="a,b c.png"; filename*=UTF-8\'\'a%2Cb%20%C4%8D.png'),
+            ('a;b č.png', 'inline; filename="a;b c.png"; filename*=UTF-8\'\'a%3Bb%20%C4%8D.png'),
+        ]:
+            with self.subTest("non-ascii name", filename=filename):
+                self.assertDownload(
+                    f'/web/content/test_http.gizeh_png?filename={quote(filename)}',
+                    {}, 200, {'Content-Disposition': content_disposition},
+                    self.gizeh_data,
+                )
 
     def test_static11_bad_filenames(self):
         with self.subTest("missing record name"):
