@@ -110,6 +110,10 @@ export function checkIsNoCategoryBtn(name) {
     expect(`.category_btn:contains('${name}')`).toHaveCount(0);
 }
 
+export function checkIsNoChildCategoryBtn(name) {
+    expect(`.child_category_btn:contains('${name}')`).toHaveCount(0);
+}
+
 export async function clickChildCategory(name) {
     await contains(`.child_category_btn:contains('${name}')`).click();
     await animationFrame();
