@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import islice
 from random import randint
 
 from odoo import api, fields, models, tools, _
@@ -194,5 +195,6 @@ class ProductTemplateAttributeValue(models.Model):
         self.ensure_one()
         all_values = self.attribute_line_id.product_template_value_ids
         if only_active:
-            all_values = all_values._only_active()
+            active_values = (v for v in all_values if v.ptav_active)
+            return len(list(islice(active_values, 2))) == 1
         return len(all_values) == 1
