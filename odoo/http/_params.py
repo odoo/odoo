@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import annotationlib
 import dataclasses
+import enum
 import inspect
 import logging
 import math
+import re
 import types
 import typing
 from typing import Any, NamedTuple
@@ -22,6 +24,22 @@ _TRUE_TOKENS: frozenset[str] = frozenset({"true", "1", "on", "yes", "t"})
 _FALSE_TOKENS: frozenset[str] = frozenset({"false", "0", "off", "no", "f", ""})
 
 
+class Range(NamedTuple):
+    ge: float | None = None
+    le: float | None = None
+
+
+class Pattern(NamedTuple):
+    regex: str
+
+
+class Constraints(NamedTuple):
+    choices: tuple[Any, ...] | None = None
+    ge: float | None = None
+    le: float | None = None
+    pattern: str | None = None
+
+
 class ParamSpec(NamedTuple):
     target: type
     item: type | None
@@ -29,6 +47,49 @@ class ParamSpec(NamedTuple):
     required: bool
     fields: dict[str, ParamSpec] | None = None
     item_fields: dict[str, ParamSpec] | None = None
+    constraints: Constraints | None = None
+
+
+def _is_enum(annotation: Any) -> bool:
+    return isinstance(annotation, type) and issubclass(annotation, enum.Enum)
+
+
+def _get_choices_spec(
+    annotation: Any, allow_none: bool, required: bool
+) -> ParamSpec | None:
+    if typing.get_origin(annotation) is typing.Literal:
+        choices = typing.get_args(annotation)
+        target: Any = str
+    elif _is_enum(annotation):
+        choices = tuple(member.value for member in annotation)
+        target = annotation
+    else:
+        return None
+    value_types = {type(choice) for choice in choices}
+    if len(value_types) != 1 or value_types & {bool} or not value_types <= _PRIMITIVES:
+        return None
+    if target is str:
+        target = value_types.pop()
+    return ParamSpec(
+        target, None, allow_none, required, constraints=Constraints(choices=choices)
+    )
+
+
+def _split_annotated(annotation: Any) -> tuple[Any, Constraints | None]:
+    if typing.get_origin(annotation) is not typing.Annotated:
+        return annotation, None
+    base, *metadata = typing.get_args(annotation)
+    ge = le = None
+    pattern = None
+    for marker in metadata:
+        if isinstance(marker, Range):
+            ge, le = marker.ge, marker.le
+        elif isinstance(marker, Pattern):
+            re.compile(marker.regex)
+            pattern = marker.regex
+    if ge is None and le is None and pattern is None:
+        return base, None
+    return base, Constraints(ge=ge, le=le, pattern=pattern)
 
 
 def _unwrap_optional(annotation: Any) -> tuple[Any, bool]:
@@ -40,39 +101,74 @@ def _unwrap_optional(annotation: Any) -> tuple[Any, bool]:
     return annotation, False
 
 
+def _get_object_members(cls: Any) -> list[tuple[str, Any, bool]] | None:
+    if not isinstance(cls, type):
+        return None
+    try:
+        hints = typing.get_type_hints(cls, include_extras=True)
+    except Exception:
+        _debug.logic("http.params.object_unresolved", cls=cls.__qualname__)
+        return None
+    if dataclasses.is_dataclass(cls):
+        return [
+            (
+                field.name,
+                hints.get(field.name, field.type),
+                field.default is dataclasses.MISSING
+                and field.default_factory is dataclasses.MISSING,
+            )
+            for field in dataclasses.fields(cls)
+            if field.init
+        ]
+    if typing.is_typeddict(cls):
+        required_keys: frozenset[str] = getattr(cls, "__required_keys__", frozenset())
+        return [(name, hint, name in required_keys) for name, hint in hints.items()]
+    return None
+
+
 def _get_dataclass_fields(
     cls: Any, seen: frozenset[type]
 ) -> dict[str, ParamSpec] | None:
-    if not (isinstance(cls, type) and dataclasses.is_dataclass(cls)) or cls in seen:
+    if cls in seen:
         return None
-    try:
-        hints = typing.get_type_hints(cls)
-    except Exception:
-        _debug.logic("http.params.dataclass_unresolved", cls=cls.__qualname__)
+    members = _get_object_members(cls)
+    if members is None:
         return None
     fields: dict[str, ParamSpec] = {}
-    for field in dataclasses.fields(cls):
-        if not field.init:
-            continue
-        required = (
-            field.default is dataclasses.MISSING
-            and field.default_factory is dataclasses.MISSING
-        )
-        spec = _get_spec(hints.get(field.name, field.type), required, seen | {cls})
+    for name, hint, required in members:
+        spec = _get_spec(hint, required, seen | {cls})
         if spec is None:
             _debug.logic(
-                "http.params.dataclass_uncoerced",
-                cls=cls.__qualname__,
-                field=field.name,
+                "http.params.object_uncoerced", cls=cls.__qualname__, field=name
             )
             return None
-        fields[field.name] = spec
+        fields[name] = spec
     return fields
 
 
 def _get_spec(
     annotation: Any, required: bool, seen: frozenset[type] = frozenset()
 ) -> ParamSpec | None:
+    inner, optional = _unwrap_optional(annotation)
+    inner, constraints = _split_annotated(inner)
+    if optional or constraints is not None:
+        base = _get_spec(inner, required, seen)
+        if base is None:
+            return None
+        if constraints is not None and (base.fields is not None or base.target is list):
+            return None
+        merged = constraints
+        if base.constraints is not None:
+            merged = Constraints(
+                choices=base.constraints.choices,
+                ge=constraints.ge if constraints else None,
+                le=constraints.le if constraints else None,
+                pattern=constraints.pattern if constraints else None,
+            )
+        return base._replace(allow_none=base.allow_none or optional, constraints=merged)
+    choices_spec = _get_choices_spec(annotation, False, required)
+    if choices_spec is not None:
+        return choices_spec
     target, item, allow_none = _get_param_spec_fields(annotation)
     if target is list and item is None:
         inner, _ = _unwrap_optional(annotation)
@@ -263,6 +359,34 @@ def _coerce_object(name: str, value: Any, spec: ParamSpec) -> Any:
     return spec.target(**coerced)
 
 
+def _check_constraints(name: str, value: Any, constraints: Constraints) -> None:
+    if constraints.choices is not None and value not in constraints.choices:
+        raise ParameterError(
+            f"parameter {name!r} must be one of {list(constraints.choices)}"
+        )
+    if constraints.ge is not None and value < constraints.ge:
+        raise ParameterError(f"parameter {name!r} must be >= {constraints.ge}")
+    if constraints.le is not None and value > constraints.le:
+        raise ParameterError(f"parameter {name!r} must be <= {constraints.le}")
+    if constraints.pattern is not None and not re.fullmatch(
+        constraints.pattern, str(value)
+    ):
+        raise ParameterError(f"parameter {name!r} must match {constraints.pattern!r}")
+
+
+def _coerce_constrained_scalar(name: str, value: Any, spec: ParamSpec) -> Any:
+    target = spec.target
+    if _is_enum(target):
+        assert spec.constraints is not None and spec.constraints.choices
+        raw = _coerce_scalar(name, value, type(spec.constraints.choices[0]))
+        _check_constraints(name, raw, spec.constraints)
+        return target(raw)
+    coerced = _coerce_scalar(name, value, target)
+    if spec.constraints is not None:
+        _check_constraints(name, coerced, spec.constraints)
+    return coerced
+
+
 def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
     if value is None:
         if spec.allow_none:
@@ -270,6 +394,8 @@ def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
         raise ParameterError(f"parameter {name!r} must not be null")
     if spec.fields is not None:
         return _coerce_object(name, value, spec)
+    if spec.constraints is not None:
+        return _coerce_constrained_scalar(name, value, spec)
     if spec.target is list:
         items = value if isinstance(value, (list, tuple)) else [value]
         if spec.item_fields is not None and spec.item is not None:

@@ -79,3 +79,29 @@ def test_dict_and_list_returns_are_described():
     as_list_schema = get_response_schema(as_list)
     assert as_list_schema is not None
     assert as_list_schema["type"] == "array"
+
+
+def test_choices_ranges_and_patterns_are_documented():
+    import enum
+    from typing import Annotated, Literal
+
+    from odoo.http._params import Pattern, Range
+
+    class Color(enum.Enum):
+        RED = "red"
+        BLUE = "blue"
+
+    def ep(
+        self,
+        order: Literal["asc", "desc"],
+        color: Color,
+        n: Annotated[int, Range(ge=1, le=10)],
+        code: Annotated[str, Pattern(r"[A-Z]{3}")],
+    ): ...
+
+    doc = prepare_openapi_document([_route("/q", ep, type="http")])
+    by_name = {p["name"]: p["schema"] for p in doc["paths"]["/q"]["post"]["parameters"]}
+    assert by_name["order"] == {"type": "string", "enum": ["asc", "desc"]}
+    assert by_name["color"] == {"type": "string", "enum": ["red", "blue"]}
+    assert by_name["n"] == {"type": "integer", "minimum": 1, "maximum": 10}
+    assert by_name["code"] == {"type": "string", "pattern": "[A-Z]{3}"}

@@ -103,9 +103,27 @@ def _prepare_object_schema(fields: dict[str, ParamSpec]) -> dict[str, Any]:
     return schema
 
 
+def _apply_constraints(schema: dict[str, Any], spec: ParamSpec) -> dict[str, Any]:
+    constraints = spec.constraints
+    if constraints is None:
+        return schema
+    if constraints.choices is not None:
+        schema = dict(_PRIMITIVE_SCHEMA.get(type(constraints.choices[0]), {}))
+        schema["enum"] = list(constraints.choices)
+    if constraints.ge is not None:
+        schema["minimum"] = constraints.ge
+    if constraints.le is not None:
+        schema["maximum"] = constraints.le
+    if constraints.pattern is not None:
+        schema["pattern"] = constraints.pattern
+    return schema
+
+
 def param_spec_to_schema(spec: ParamSpec) -> dict[str, Any]:
     if spec.fields is not None:
         schema = _prepare_object_schema(spec.fields)
+    elif spec.constraints is not None:
+        schema = _apply_constraints(dict(_PRIMITIVE_SCHEMA.get(spec.target, {})), spec)
     elif spec.target is list:
         if spec.item_fields is not None:
             items: dict[str, Any] = _prepare_object_schema(spec.item_fields)

@@ -46,7 +46,14 @@ from .exceptions import (
     is_http_answer,
 )
 
-from ._params import ParamSpec, coerce_params, get_param_specs
+from ._params import (
+    Constraints,
+    ParamSpec,
+    Pattern,
+    Range,
+    coerce_params,
+    get_param_specs,
+)
 
 from ._protocols import HttpExtension
 
@@ -154,6 +161,7 @@ __all__ = [
     "Application",
     "BadGateway",
     "BadRequest",
+    "Constraints",
     "Controller",
     "Dispatcher",
     "FasterRule",
@@ -178,7 +186,9 @@ __all__ = [
     "NotFound",
     "ParamSpec",
     "ParameterError",
+    "Pattern",
     "PostgresSessionStore",
+    "Range",
     "RegistryError",
     "Request",
     "RequestEntityTooLarge",
