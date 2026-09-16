@@ -120,6 +120,7 @@ class MailTemplatePreview(models.TransientModel):
                                 'share': True,
                                 'type': 'customer',
                                 'uid': None,
+                                'uids': [],
                                 'ushare': False,
                             })
                         _lang, render_values, recipients_group = next(

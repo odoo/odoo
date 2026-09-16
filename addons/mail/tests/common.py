@@ -1511,6 +1511,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
              'share': partner.partner_share,
              'type': 'user' if partner.main_user_id and partner.main_user_id._is_internal() else 'customer',
              'uid': partner.main_user_id.id,
+             'uids': partner.user_ids.sorted(lambda user: (user.share, user.id)).ids,
              'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]
