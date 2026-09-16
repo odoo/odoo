@@ -47,6 +47,7 @@ describe("button style", () => {
         el.setAttribute("contenteditable", "false");
         expect(queryOne(".test-btn")).toHaveStyle({ userSelect: "none" });
     });
+    test.tags("desktop");
     test("Button styling should not override inner font size", async () => {
         onRpc("/test", () => ({}));
         onRpc("/html_editor/link_preview_internal", () => ({
@@ -78,6 +79,42 @@ describe("button style", () => {
             unformat(`
                 <div class="o-paragraph">
                     <span class="display-1-fs">a\ufeff<a href="/test" class="btn btn-primary">\ufeffb\ufeff</a>\ufeffc</span>
+                </div>
+            `)
+        );
+    });
+    test.tags("mobile");
+    test("Button styling should not override inner font size (mobile)", async () => {
+        onRpc("/test", () => ({}));
+        onRpc("/html_editor/link_preview_internal", () => ({
+            description: "test",
+            link_preview_name: "test",
+        }));
+        const { el } = await setupEditor(
+            unformat(`
+                <div>
+                    <span class="display-1-fs">a[b]c</span>
+                </div>
+            `)
+        );
+        await waitFor(".o-we-toolbar");
+        await click("button[name='link']");
+        await animationFrame();
+        await click("button[name='link_type']");
+        await animationFrame();
+        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
+        await animationFrame();
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("/test");
+
+        // Ensure `.display-1-fs` overrides the `.btn`'s default font size.
+        const link = el.querySelector("a.btn");
+        const span = el.querySelector("span.display-1-fs");
+        expect(getComputedStyle(link).fontSize).toBe(getComputedStyle(span).fontSize);
+
+        expect(el).toHaveInnerHTML(
+            unformat(`
+                <div class="o-paragraph">
+                    <span class="display-1-fs">a\ufeff<a class="btn btn-primary" href="/test">\ufeffb\ufeff</a>\ufeffc</span>
                 </div>
             `)
         );
