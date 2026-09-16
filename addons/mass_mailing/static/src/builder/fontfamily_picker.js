@@ -1,8 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { MassMailingBuilderSelectLabel } from "./components/mass_mailing_builder_select_label";
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { GOOGLE_FONTS } from "../iframe/mass_mailing_iframe_utils";
+import { MassMailingBuilderSelectLabel } from "./components/mass_mailing_builder_select_label";
 
 const EMAIL_SAFE_FONTS = {
     Arial: "Arial,Helvetica Neue,Helvetica,sans-serif",
@@ -46,10 +47,12 @@ export class FontFamilyPicker extends BaseOptionComponent {
         ...BaseOptionComponent.components,
         BuilderSelectLabel: MassMailingBuilderSelectLabel,
     };
-    static props = {
-        action: String,
-        actionParam: Object,
-        extraClass: { type: String, optional: true },
-    };
+
+    props = useProps({
+        action: t.string(),
+        actionParam: t.object(),
+        extraClass: t.string().optional(),
+    });
+
     FONT_FAMILIES = FONT_FAMILIES;
 }

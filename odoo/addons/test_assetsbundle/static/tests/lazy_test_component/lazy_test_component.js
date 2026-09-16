@@ -1,9 +1,13 @@
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
 
 export class LazyTestComponent extends Component {
     static template = "test_assetsbundle.LazyTestComponent";
-    static props = ["*"];
+
+    props = useProps({
+        onCreated: t.function(),
+    });
+
     setup() {
         this.props.onCreated();
     }
