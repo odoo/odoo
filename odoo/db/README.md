@@ -1181,8 +1181,8 @@ campaign ends; the recipe, the cost figures and the first findings are in
 - **Tier 2 real-import, no DB (ms)** — `odoo/db/tests/`, run from `odoo/` as
   `pytest odoo/db/tests` (it is in no `testpaths` and shares the Tier-2
   invocation of `pytest.ini`, because a handful of its tests reach state in the
-  package `__init__.py` that the Tier-1 stubs replace; measured 2026-09-15,
-  640 passed + 203 subtests named alone). One class, `TestPipelineAccountsForTheSyncCost`,
+  package `__init__.py` that the Tier-1 stubs replace; measured 2026-09-16,
+  708 passed + 206 subtests named alone). One class, `TestPipelineAccountsForTheSyncCost`,
   needs a local `createdb` and skips without it:
   pure modules (`ddl`, `dsn`, `errors`, `schema_cache` bookkeeping, `savepoint`
   depth accounting, `bulk`'s argument validation and encoding cost model,
