@@ -24,7 +24,7 @@ class ResPartner(models.Model):
                 in partner.nemhandel_supported_documents
             )
 
-    def _nemhandel_fill_participant_supported_documents(self):
+    def _nemhandel_update_participant_supported_documents(self):
         self.check_singleton()
         edi_identification = f"{self.nemhandel_identifier_type}:{self.nemhandel_identifier_value}".lower()
         participant_info = self._nemhandel_get_participant(edi_identification)
@@ -46,5 +46,5 @@ class ResPartner(models.Model):
             company = self.env.company
         self_partner = self.with_company(company)
         if self_partner.nemhandel_verification_state == "valid":
-            self_partner._nemhandel_fill_participant_supported_documents()
+            self_partner._nemhandel_update_participant_supported_documents()
         return False

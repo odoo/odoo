@@ -2410,7 +2410,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
             slots = [
                 {"UTC": (self.start, self.stop), "slot": slot} for _ in range(count)
             ]
-            self.managed._slots_fill_resources_availability(
+            self.managed._slots_add_resources_availability(
                 slots, start, stop, self.counter
             )
             self.assertTrue(all(item.get("available_resource_ids") for item in slots))

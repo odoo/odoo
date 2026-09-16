@@ -457,7 +457,7 @@ class AppointmentCommon(MailCase, common.HttpCase):
             if slot["UTC"]
             == (start_dt.replace(tzinfo=None), end_dt.replace(tzinfo=None))
         ]
-        appointment_type._slots_fill_resources_availability(
+        appointment_type._slots_add_resources_availability(
             slots,
             start_dt,
             end_dt,

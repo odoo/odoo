@@ -1088,7 +1088,7 @@ class AccountMove(models.Model):
         )
 
         # === invoice_line_ids ===
-        logs += self._import_invoice_fill_lines(invoice, tree, ref_multiplier)
+        logs += self._import_invoice_add_lines(invoice, tree, ref_multiplier)
 
         body = Markup("<strong>%s</strong>") % _(
             "Invoice imported from Factura-E XML file."
@@ -1103,7 +1103,7 @@ class AccountMove(models.Model):
 
         return logs
 
-    def _import_invoice_fill_lines(self, invoice, tree, ref_multiplier):
+    def _import_invoice_add_lines(self, invoice, tree, ref_multiplier):
         lines = tree.xpath(".//InvoiceLine")
         logs = []
         vals_list = []
@@ -1149,10 +1149,10 @@ class AccountMove(models.Model):
             taxes_outputs_nodes = line.xpath(".//TaxesOutputs/Tax")
             is_purchase = invoice.move_type.startswith("in")
             tax_ids = []
-            logs += self._import_fill_invoice_line_taxes(
+            logs += self._import_add_invoice_line_taxes(
                 invoice, line_vals, tax_ids, taxes_outputs_nodes, False, is_purchase
             )
-            logs += self._import_fill_invoice_line_taxes(
+            logs += self._import_add_invoice_line_taxes(
                 invoice, line_vals, tax_ids, taxes_withheld_nodes, True, is_purchase
             )
             line_vals["tax_ids"] = [Command.set(tax_ids)]
@@ -1161,7 +1161,7 @@ class AccountMove(models.Model):
         invoice.invoice_line_ids = self.env["account.move.line"].create(vals_list)
         return logs
 
-    def _import_fill_invoice_line_taxes(
+    def _import_add_invoice_line_taxes(
         self, invoice, line_vals, tax_ids, tax_nodes, is_withheld, is_purchase
     ):
         logs = []

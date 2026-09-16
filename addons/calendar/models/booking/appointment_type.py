@@ -1270,7 +1270,7 @@ class AppointmentType(models.Model):
             last_day.astimezone(get_timezone(self.appointment_tz)), time.max
         ).replace(tzinfo=get_timezone(self.appointment_tz))
         if self.schedule_based_on == "users":
-            self._slots_fill_users_availability(
+            self._slots_add_users_availability(
                 slots,
                 first_day.astimezone(UTC),
                 last_day_end_of_day.astimezone(UTC),
@@ -1283,7 +1283,7 @@ class AppointmentType(models.Model):
                 else "staff_user_id"
             )
         else:
-            self._slots_fill_resources_availability(
+            self._slots_add_resources_availability(
                 slots,
                 first_day.astimezone(UTC),
                 last_day_end_of_day.astimezone(UTC),
@@ -1518,7 +1518,7 @@ class AppointmentType(models.Model):
             and self_sudo.schedule_based_on == "users"
             and (not staff_user or staff_user in self_sudo.staff_user_ids)
         ):
-            self_sudo._slots_fill_users_availability(
+            self_sudo._slots_add_users_availability(
                 slots, start_dt, end_dt, staff_user, asked_capacity=asked_capacity
             )
         elif (
@@ -1526,7 +1526,7 @@ class AppointmentType(models.Model):
             and self_sudo.schedule_based_on == "resources"
             and (not resources or all(r in self_sudo.resource_ids for r in resources))
         ):
-            self_sudo._slots_fill_resources_availability(
+            self_sudo._slots_add_resources_availability(
                 slots,
                 start_dt,
                 end_dt,
@@ -1676,7 +1676,7 @@ class AppointmentType(models.Model):
     # Staff Users - Slots Availability
     # --------------------------------------
 
-    def _slots_fill_users_availability(
+    def _slots_add_users_availability(
         self, slots, start_dt, end_dt, filter_users=None, asked_capacity=1
     ):
         """Fills the slot structure with an available user
@@ -1970,7 +1970,7 @@ class AppointmentType(models.Model):
     def _slot_availability_prepare_users_values(self, staff_users, start_dt, end_dt):
         """Hook method used to prepare useful values in the computation of slots
         availability. Purpose is to prepare values (event meetings notably)
-        in batch instead of doing it in a loop in ``_slots_fill_users_availability``.
+        in batch instead of doing it in a loop in ``_slots_add_users_availability``.
 
         Can be overridden to add custom values preparation to be used in custom
         overrides of ``_slot_availability_is_user_available()``.
@@ -2031,7 +2031,7 @@ class AppointmentType(models.Model):
     # Resources - Slots Availability
     # --------------------------------------
 
-    def _slots_fill_resources_availability(
+    def _slots_add_resources_availability(
         self, slots, start_dt_utc, end_dt_utc, filter_resources=None, asked_capacity=1
     ):
         """Fills the slot structure with a list of available resources
