@@ -32,21 +32,28 @@ def _get_first_owned_limit(*limits: int) -> int:
     return next((limit for limit in limits if not _is_inherited(limit)), limits[-1])
 
 
-def _is_socket_activated(config: OptionSource) -> bool:
-    activated = bool(
-        config["http_enable"]
-        and os.getenv("LISTEN_FDS") == "1"
+def _count_activated_sockets(config: OptionSource) -> int:
+    # sd_listen_fds(3): the unit's sockets arrive as fds 3.. in the order
+    # its [Socket] section lists them -- the HTTP port first, the websocket
+    # port second when the unit has one -- and only for the pid named.
+    listen_fds = os.getenv("LISTEN_FDS") or "0"
+    count = (
+        int(listen_fds)
+        if config["http_enable"]
+        and listen_fds.isdigit()
         and os.getenv("LISTEN_PID") == str(os.getpid())
+        else 0
     )
     if _debug.logic.enabled and os.getenv("LISTEN_FDS"):
         _debug.logic(
             "settings.socket_activation",
-            activated=activated,
+            activated=count > 0,
+            sockets=count,
             http_enable=bool(config["http_enable"]),
-            listen_fds=os.getenv("LISTEN_FDS"),
+            listen_fds=listen_fds,
             pid_matches=os.getenv("LISTEN_PID") == str(os.getpid()),
         )
-    return activated
+    return count
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,6 +64,7 @@ class ServerSettings:
     http_port: int = 8069
     gevent_port: int = 8072
     http_socket_activation: bool = False
+    websocket_socket_activation: bool = False
     max_cron_threads: int = 2
     job_workers: int = 1
     limit_request: int = 2**16
@@ -85,14 +93,15 @@ class ServerSettings:
 
     @classmethod
     def from_config(cls, config: OptionSource) -> Self:
-        socket_activation = _is_socket_activated(config)
+        activated_sockets = _count_activated_sockets(config)
         return cls(
             workers=int(config["workers"] or 0),
             http_enable=bool(config["http_enable"]),
             http_interface=config["http_interface"] or "0.0.0.0",
             http_port=int(config["http_port"]),
             gevent_port=int(config["gevent_port"]),
-            http_socket_activation=socket_activation,
+            http_socket_activation=activated_sockets >= 1,
+            websocket_socket_activation=activated_sockets >= 2,
             max_cron_threads=int(config["max_cron_threads"] or 0),
             job_workers=int(config["job_workers"] or 0),
             limit_request=int(config["limit_request"] or 0),

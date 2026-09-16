@@ -216,6 +216,12 @@ LimitNOFILE=65536
 ExecStart=/opt/odoo/venv/bin/python /opt/odoo/odoo-bin -c /etc/odoo/odoo.conf
 ```
 
+Socket activation (`LISTEN_FDS`/`LISTEN_PID`, `settings.py`) takes the
+unit's sockets in the order its `[Socket]` section lists them: the first is
+the HTTP port; a second, when the unit declares one, is the websocket port
+and the prefork master adopts it as its own (`websocket_socket_activation`).
+A unit that names the pid of another process activates nothing.
+
 The prefork master's beat is 4 s, so any `WatchdogSec` above ~10 s is
 comfortable; a threaded server bounds its sleeps to the same half-interval.
 A prefork master running under its own reload supervisor (`_reload_supervisor`)
@@ -252,9 +258,16 @@ connection is idle the moment `putconn` files it. With the reset in
 psycopg_pool's worker instead, the next `getconn` found nothing idle and
 grew the pool by every return in flight: measured against a running server,
 16 request threads held **64** backends — the `db_maxconn` ceiling — and hold
-**16** now (`db/README.md`, the entry on `reset=None`). Size
-`max_connections` against threads × databases plus `db_pool_reap_idle`'s
-residue, not against the ceiling.
+**16** now (`db/README.md`, the entry on `reset=None`). Idle connections
+count against the same ceiling: every return trims the oldest idle
+connections of the least recently borrowed per-database pools until a
+`ConnectionPool` holds no more than `db_maxconn` in total
+(`db/reaper.py::trim_idle_to_ceiling`; four databases under `db_maxconn = 2`
+hold two backends, not four). Size `max_connections` against
+`db_maxconn` × workers × (one, or two once the read-only pool is a separate
+`ConnectionPool`), and read `odoo_pool_connections_trimmed_total`: a working
+set wider than `db_maxconn` reconnects on every switch, and the counter is
+the signal to raise it.
 
 **The replica is optional and self-demoting, and never waits the budget out.**
 Lag is sampled, and reads that would be too stale go to the primary instead

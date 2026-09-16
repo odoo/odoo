@@ -71,4 +71,23 @@ class TestTheSnapshotIsDerivedOncePerChange:
             during = server_settings.current()
             assert during is not before
             assert during.http_socket_activation is True
+            assert during.websocket_socket_activation is False
         assert server_settings.current().http_socket_activation is False
+
+    def test_a_two_socket_unit_activates_the_websocket_port_too(self):
+        import os
+
+        with patch.dict(
+            os.environ, {"LISTEN_FDS": "2", "LISTEN_PID": str(os.getpid())}
+        ):
+            during = server_settings.current()
+            assert during.http_socket_activation is True
+            assert during.websocket_socket_activation is True
+        with patch.dict(
+            os.environ, {"LISTEN_FDS": "2", "LISTEN_PID": str(os.getpid() + 1)}
+        ):
+            assert server_settings.current().http_socket_activation is False
+        with patch.dict(
+            os.environ, {"LISTEN_FDS": "two", "LISTEN_PID": str(os.getpid())}
+        ):
+            assert server_settings.current().http_socket_activation is False

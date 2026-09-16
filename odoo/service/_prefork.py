@@ -772,6 +772,13 @@ class PreforkServer(CommonServer):
                     source="inherited",
                     fd=inherited.fileno(),
                 )
+            elif self.settings.websocket_socket_activation:
+                self.websocket_socket = socket.socket(fileno=SD_LISTEN_FDS_START + 1)
+                os.set_inheritable(self.websocket_socket.fileno(), False)
+                _debug.lifecycle(
+                    "prefork.websocket_socket_bound", source="socket_activation"
+                )
+                self.logger.info("Websocket service running through socket activation")
             else:
                 self.websocket_socket = self._bind_listener(
                     self.settings.gevent_port, backlog=socket.SOMAXCONN

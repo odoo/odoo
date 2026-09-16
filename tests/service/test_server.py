@@ -1173,6 +1173,38 @@ class TestTheWebsocketPortIsTheMastersToo:
         assert kwargs["env"]["ODOO_HTTP_SOCKET_FD"] == "7"
         assert kwargs["env"]["ODOO_WEBSOCKET_SOCKET_FD"] == "8"
 
+    @pytest.mark.parametrize(
+        "inherited_listener", [(socket.AF_INET, ("127.0.0.1", 0))], indirect=True
+    )
+    def test_a_two_socket_unit_hands_the_master_the_websocket_port(
+        self, prefork_server, inherited_listener, monkeypatch
+    ):
+        expected = inherited_listener.getsockname()
+        saved_fd4 = os.dup(4)
+        try:
+            os.dup2(inherited_listener.fileno(), 4, inheritable=True)
+            prefork_server.interface, prefork_server.port = "127.0.0.1", 0
+            prefork_server.open_pipe = MagicMock(return_value=(0, 0))
+            with (
+                server_settings.override(
+                    http_enable=True,
+                    http_socket_activation=False,
+                    websocket_socket_activation=True,
+                    gevent_port=0,
+                ),
+                patch.object(signal, "signal"),
+            ):
+                prefork_server.start()
+            try:
+                assert prefork_server.websocket_socket.getsockname() == expected
+                assert not os.get_inheritable(4)
+            finally:
+                prefork_server.websocket_socket.detach()
+                prefork_server.socket.close()
+        finally:
+            os.dup2(saved_fd4, 4)
+            os.close(saved_fd4)
+
     def test_stop_closes_both_listeners(self, prefork_server):
         prefork_server.socket = MagicMock()
         prefork_server.websocket_socket = MagicMock()
