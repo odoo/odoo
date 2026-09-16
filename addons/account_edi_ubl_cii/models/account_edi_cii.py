@@ -1082,7 +1082,8 @@ class AccountEdiCii(models.AbstractModel):
             tax_category_tree = element.find('./{*}CategoryTradeTax')
             tax_values = self._import_cii_invoice_line_prepare_classified_tax_category_tax_values(collected_values, tax_category_tree)
             if tax_values:
-                allowance_charge_values['taxes_values'] = tax_values
+                if not reason_code == 'AEO':
+                    allowance_charge_values['taxes_values'] = tax_values
                 global_tax_values = tax_total_values.get(tax_values['_tax_key'])
                 global_tax_values['related_taxes_values'].append(tax_values)
 
@@ -1090,6 +1091,16 @@ class AccountEdiCii(models.AbstractModel):
                 charges.append(allowance_charge_values)
             else:
                 allowances.append(allowance_charge_values)
+
+            if reason_code == 'AEO':
+                allowance_charge_values['attempt_tax_values'] = tax_values = {
+                    'name': reason,
+                    'amount_type': 'fixed',
+                    'type_tax_use': collected_values['odoo_document_type'],
+                    'amount': amount,
+                    'tax_amount_currency': amount,
+                }
+                collected_values.setdefault('taxes_values', []).append(tax_values)
 
     def _import_cii_invoice_add_invoice_line_values(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values'] = []
