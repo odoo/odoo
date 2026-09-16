@@ -100,9 +100,9 @@ export class ProductPageOptionPlugin extends Plugin {
     setup() {
         const mainEl = this.document.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
         if (mainEl) {
-            const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
+            const productProduct = mainEl.querySelector('.js_product [data-product-id]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
-            this.productProductID = productProduct ? productProduct.dataset.oeId : null;
+            this.productProductID = productProduct ? productProduct.dataset.productId : null;
             this.productTemplateID = productTemplate ? productTemplate.dataset.oeId : null;
             this.model = "product.template";
             if (this.productProductID) {
@@ -205,9 +205,9 @@ export class BaseProductPageAction extends BuilderAction {
         this.reload = {};
         const mainEl = this.document.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
         if (mainEl) {
-            const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
+            const productProduct = mainEl.querySelector('.js_product [data-product-id]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
-            this.productProductID = productProduct ? productProduct.dataset.oeId : null;
+            this.productProductID = productProduct ? productProduct.dataset.productId : null;
             this.productTemplateID = productTemplate ? productTemplate.dataset.oeId : null;
             this.model = "product.template";
             if (this.productProductID) {
