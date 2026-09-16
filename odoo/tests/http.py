@@ -568,9 +568,10 @@ class HttpCase(TransactionCase):
             ) as span,
             contextlib.ExitStack() as atexit,
         ):
-            atexit.callback(browser.stop)
             atexit.enter_context(self.allow_requests(browser=browser))
             atexit.push(self._wait_for_requests_unless_already_failing)
+            # Registered last so it runs first: the browser is gone before the
+            # wait for its requests starts, and before the cookie is withdrawn.
             atexit.callback(browser.stop)
             self._browser_js_patch_bus(atexit)
 
