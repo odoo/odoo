@@ -1150,7 +1150,6 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     getThemePreviewUrl(theme) {
         const previewUrl = new URL("/website/configurator/preview", location.origin);
         const palette = this.state.selectedPalette || {};
-        previewUrl.searchParams.set("preview_url", theme.preview_url);
         previewUrl.searchParams.set("theme_name", theme.name);
         previewUrl.searchParams.set("industry_id", this.state.selectedIndustry?.id || -1);
         previewUrl.searchParams.set("is_dark", palette.isDark ? "1" : "0");
