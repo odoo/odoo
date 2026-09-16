@@ -20,18 +20,16 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
             partner=self.partner_b,
             taxes=self.igst_sale_18,
             line_vals={'price_unit': 1000, 'quantity': 1},
+            post=False,
         )
-        invoice_label = regular_taxable_invoice._get_l10n_in_invoice_label()
-        self.assertEqual(invoice_label, 'Tax Invoice')
 
         # Regular with exempt items
         regular_exempt_invoice = self._init_inv(
             partner=self.partner_b,
             taxes=self.exempt,
             line_vals={'price_unit': 1000, 'quantity': 1},
+            post=False,
         )
-        invoice_label = regular_exempt_invoice._get_l10n_in_invoice_label()
-        self.assertEqual(invoice_label, 'Bill of Supply')
 
         # Regular with taxable and exempt items
         regular_mix_invoice = self._init_inv(
@@ -49,9 +47,6 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
                 'tax_ids': [(6, 0, [self.exempt.id])],
             })],
         })
-        regular_mix_invoice.action_post()
-        invoice_label = regular_mix_invoice._get_l10n_in_invoice_label()
-        self.assertEqual(invoice_label, 'Invoice')
 
         # unregistered with taxable and exempt items
         unregistered_invoice = self._init_inv(
@@ -69,6 +64,72 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
                 'tax_ids': [(6, 0, [self.exempt.id])],
             })],
         })
-        unregistered_invoice.action_post()
-        invoice_label = unregistered_invoice._get_l10n_in_invoice_label()
-        self.assertEqual(invoice_label, 'Invoice-cum-Bill of Supply')
+
+        # Sale Documents
+        sale_moves = (
+            regular_taxable_invoice
+            | regular_exempt_invoice
+            | regular_mix_invoice
+            | unregistered_invoice
+            | self._create_invoice('out_refund')
+        )
+
+        # Draft documents
+        self._assert_document_titles(
+            sale_moves,
+            [
+                'Draft Tax Invoice',
+                'Draft Bill of Supply',
+                'Draft Invoice',
+                'Draft Invoice-cum-Bill of Supply',
+                'Draft Credit Note',
+
+            ],
+        )
+
+        # Posted documents
+        sale_moves.action_post()
+        self._assert_document_titles(
+            sale_moves,
+            [
+                'Tax Invoice',
+                'Bill of Supply',
+                'Invoice',
+                'Invoice-cum-Bill of Supply',
+                'Credit Note',
+
+            ],
+        )
+
+        # Cencelled documents
+        sale_moves.button_cancel()
+        self._assert_document_titles(
+            sale_moves,
+            [
+                'Cancelled Tax Invoice',
+                'Cancelled Bill of Supply',
+                'Cancelled Invoice',
+                'Cancelled Invoice-cum-Bill of Supply',
+                'Cancelled Credit Note',
+
+            ],
+        )
+
+        # Purchase Documents
+        purchase_moves = (
+            self._create_invoice('in_invoice')
+            | self._create_invoice('in_refund')
+        )
+
+        self._assert_document_titles(
+            purchase_moves,
+            [
+                'Vendor Bill',
+                'Vendor Credit Note',
+            ],
+        )
+
+        # Self-Invoice documents
+        vendor_bill = purchase_moves[0]
+        vendor_bill.journal_id.l10n_in_self_invoice = True
+        self._assert_document_titles(vendor_bill, ['Tax Invoice'])

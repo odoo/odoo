@@ -1116,6 +1116,25 @@ class AccountTestInvoicingCommon(ProductCommon):
                 fix_monetary_value(current_tax_group, expected_tax_group, monetary_fields)
                 self.assertDictEqual(current_tax_group, expected_tax_group)
 
+    def _assert_document_titles(self, moves, expected_titles):
+        """Assert document titles for the given moves.
+
+        :param moves: Account moves to check.
+        :param expected_titles: Expected document titles in the same order as moves.
+        """
+        self.assertEqual(
+            len(moves),
+            len(expected_titles),
+            "The number of moves must match the number of expected titles.",
+        )
+
+        for move, expected_title in zip(moves, expected_titles):
+            self.assertEqual(
+                move._get_document_title(),
+                expected_title,
+                f"Unexpected document title for move {move.name}",
+            )
+
     ####################################################
     # Xml / JSON Comparison
     ####################################################
