@@ -751,6 +751,27 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertGoogleEventInserted({'conferenceData': False})
 
     @patch_api
+    def test_discuss_videocall_synced_in_description(self):
+        """ Google cannot render an Odoo Discuss meeting natively, so its join link must be
+        exposed in the description sent to Google, without requesting a Google Meet. """
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'need_sync': False,
+            'videocall_location': f"{self.env['calendar.event'].get_base_url()}/{self.env['calendar.event'].DISCUSS_ROUTE}/azerty",
+        })
+        event._sync_odoo2google(self.google_service)
+        inserted_values = self._gsync_insert_values[0][0]
+        self.assertIn(event.videocall_location, inserted_values['description'])
+        self.assertFalse(inserted_values.get('conferenceData', False),
+            "No Google Meet must be requested for an Odoo Discuss meeting")
+
+        # The join link appears exactly once after the description round-trips back from Google.
+        event.with_context(dont_notify=True).write({'description': tools.html_sanitize(str(inserted_values['description']))})
+        self.assertEqual(event._google_values()['description'].count(event.videocall_location), 1)
+
+    @patch_api
     def test_event_available_privacy(self):
         """ Create an event with "Available" value for 'show_as' and assert value is properly sync in google calendar. """
         event = self.env['calendar.event'].create({
