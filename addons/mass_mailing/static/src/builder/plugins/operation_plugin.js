@@ -23,5 +23,5 @@ export class MassMailingOperationPlugin extends OperationPlugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MassMailingOperationPlugin.id, MassMailingOperationPlugin);

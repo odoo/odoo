@@ -24,4 +24,4 @@ export class SaveSnippetPlugin extends Plugin {
         return true;
     }
 }
-registry.category("mass_mailing-plugins").add(SaveSnippetPlugin.id, SaveSnippetPlugin);
+registry.category("mass_mailing-builder-plugins").add(SaveSnippetPlugin.id, SaveSnippetPlugin);
