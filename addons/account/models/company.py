@@ -170,7 +170,7 @@ class ResCompany(models.Model):
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
     invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
-                                     sanitize_attributes=False,
+                                     sanitize=False,
                                      compute='_compute_invoice_terms_html', store=True, readonly=False)
 
     # Needed in the Point of Sale
