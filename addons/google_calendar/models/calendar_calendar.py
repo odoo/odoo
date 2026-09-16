@@ -26,6 +26,11 @@ class CalendarCalendar(models.Model):
     _name = 'calendar.calendar'
     _inherit = ['calendar.calendar', 'google.sync']
 
+    def _get_default_calendar_user_values(self, user):
+        result = super()._get_default_calendar_user_values(user)
+        result['google_sync_enabled'] = bool(user.sudo().google_calendar_token)
+        return result
+
     google_sync_token = fields.Char(related='calendar_user_id.google_sync_token')
     google_sync_enabled = fields.Boolean(related='calendar_user_id.google_sync_enabled', readonly=False)
     # When we first create new calendars from Google, we don't want to import them immediately. Calendars with

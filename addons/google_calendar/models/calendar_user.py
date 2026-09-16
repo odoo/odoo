@@ -10,16 +10,11 @@ class CalendarUser(models.Model):
         ('freeBusyReader', 'Free Busy Reader'),  # can only see event timeslots marked as Busy, without any event details
     ], ondelete={'reader': 'cascade', 'freeBusyReader': 'cascade'})
 
-    google_sync_enabled = fields.Boolean(compute='_compute_google_sync_enabled', store=True, readonly=False)
+    google_sync_enabled = fields.Boolean(string="Google Sync")
     google_sync_token = fields.Char('Sync Token')
 
     is_filter_active = fields.Boolean(string="Shown in Filters List", compute='_compute_filters', store=True, readonly=False)
     is_filter_checked = fields.Boolean(string="Filter Enabled", compute='_compute_filters', store=True, readonly=False)
-
-    def _compute_google_sync_enabled(self):
-        # This compute is needed when the module is installed/upgraded to ensure that the primary calendar is synced
-        for record in self:
-            record.google_sync_enabled = record.is_primary
 
     @api.model_create_multi
     def create(self, vals_list):

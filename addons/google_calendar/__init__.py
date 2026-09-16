@@ -6,6 +6,14 @@ from . import utils
 from . import wizard
 
 
+def enable_primary_calendar_sync(env):
+    env.cr.execute("""
+        UPDATE calendar_user
+           SET google_sync_enabled = TRUE
+         WHERE is_primary = TRUE
+    """)
+
+
 def remove_unimported_calendars(env):
     # When syncing calendars from google to odoo, we first create 'ghost records', and only import them once the user
     # enables their sync. These ghost records should be removed otherwise they will be visible in the UI after the uninstall.
