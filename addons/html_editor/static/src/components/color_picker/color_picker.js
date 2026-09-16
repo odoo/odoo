@@ -9,6 +9,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 import { registry } from "@web/core/registry";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
+import { useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
@@ -67,6 +68,7 @@ export class ColorPicker extends Component {
         onEscape: t.function().optional(() => () => {}),
     });
     rootRef = signal.ref();
+    tabListRef = signal.ref();
 
     setup() {
         this.tabs = registry
@@ -79,6 +81,10 @@ export class ColorPicker extends Component {
         this.DEFAULT_THEME_COLOR_VARS = this.props.useDefaultThemeColors
             ? DEFAULT_THEME_COLOR_VARS
             : [];
+        useTabsKeyboardNavigation({
+            ref: this.tabListRef,
+            isTabActive: (el) => el.classList.contains(`${this.state.activeTab}-tab`),
+        });
         onWillRender(() => {
             this.defaultColorSet = this.getDefaultColorSet();
         });
