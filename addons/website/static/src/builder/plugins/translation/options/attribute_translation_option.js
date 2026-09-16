@@ -10,15 +10,11 @@ export class TranslateAttributeOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => {
-            const elTranslationInfo =
-                this.dependencies.translation.getTranslationInfo(editingElement);
-            return {
-                availableAttributes: TRANSLATABLE_ATTRIBUTES.filter(
-                    (attr) => !!elTranslationInfo[attr.attribute]
-                ),
-            };
-        });
+        this.state = useDomState((editingElement) => ({
+            availableAttributes: TRANSLATABLE_ATTRIBUTES.filter((attr) =>
+                this.dependencies.translation.hasTranslatedAttribute(editingElement, attr.attribute)
+            ),
+        }));
     }
 }
 
