@@ -7367,6 +7367,17 @@ only when stored.) Do not reason from the field type; pick one of:
 * restrict it with ``groups="..."``, or
 * replace the related field with an explicit, ACL-respecting compute.
 
+**A ``_search`` override that narrows what a user sees declares
+``_search_visibility_fields``** ``[review]`` -- the tuple of field names the
+override reads to decide visibility (``ir.attachment``: ``res_model``,
+``res_id``, ``res_field``, ``public``, ``create_uid``). The ORM keeps one x2many
+cache slot per access scope and evicts a user's slots on the model's records
+when a write touches a field the user's read rule tests; a rule written in
+Python is invisible to it, so the override names its fields. An override that
+declares nothing is read as "every field", which is correct and costs a
+refetch on every write to the model. ``base/tests/test_x2many_cache_scope.py``
+checks each declared name is a field.
+
 10.6 Controllers
 ----------------
 
@@ -8803,6 +8814,10 @@ One row per change, one clause. The argument lives in the section it moved.
      - 2026-08-22
      - Full rewrite into a direct, rule-first style; §2.4 gains numbered
        subsections §2.4.1--§2.4.17.
+   * - 5.45
+     - 2026-09-16
+     - §10.5: a ``_search`` override that narrows visibility declares
+       ``_search_visibility_fields``.
    * - 5.44
      - 2026-09-16
      - §6.4: ``assertQueriesConstant`` pins the shape of a batch's query count;

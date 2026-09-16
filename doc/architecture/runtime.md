@@ -356,9 +356,10 @@ mutation is one for everyone); at create the given value is the truth for every
 scope; an inverse-side addition (a many2one write, a create, a many2many link)
 appends to the superuser's slot and the writer's and evicts every other user's
 entry; an inverse-side removal applies to every scope; a write to a field a
-scope's read rule tests (`_evict_user_scopes_reading_through`, from
-`WriteMixin.write`) empties that scope's slots of every x2many whose comodel was
-written — the rule's verdict may have changed, and the next read searches. None
+scope's read rule tests, or one a comodel's `_search` override declares in
+`_search_visibility_fields` (`_evict_user_scopes_reading_through`, from
+`WriteMixin.write`), empties that scope's slots of every x2many whose comodel
+was written — the verdict may have changed, and the next read searches. None
 of it fetches mid-write (`Many2one._update_inverses` documents why there must
 be none). Three shapes are structural, not special cases: a *pending* record
 (`NewId`) has no search to decide anything, so `_ScopedSlot` routes it to one
