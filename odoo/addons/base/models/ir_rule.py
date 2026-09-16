@@ -141,6 +141,11 @@ class IrRule(models.Model):
             Model.search_count(group_domains & Domain("id", "in", for_records.ids))
             == distinct_count
         ):
+            _debug.logic(
+                "failing_rules.group_grants_cover",
+                model=Model._name,
+                group_rules=len(group_rules),
+            )
             group_rules = self.browse(())
 
         def is_failing(r, ids=for_records.ids):
@@ -170,6 +175,7 @@ class IrRule(models.Model):
         check_access_mode(mode)
 
         if self.env.su:
+            _debug.logic("rules_skipped", model=model_name, mode=mode, reason="sudo")
             return self.browse(())
 
         sql = SQL(
@@ -227,6 +233,12 @@ class IrRule(models.Model):
             if not model._fields[parent_field_name].store:
                 continue
             if domain := self._get_domain_accessible_records(parent_model_name, mode):
+                _debug.logic(
+                    "rule_domain_inherited",
+                    model=model_name,
+                    parent=parent_model_name,
+                    field=parent_field_name,
+                )
                 global_domains.append(Domain(parent_field_name, "any", domain))
 
         rules = self._get_rules(model_name, mode=mode)
@@ -241,6 +253,9 @@ class IrRule(models.Model):
         group_domains: list[Domain] = []
         for rule in rules.sudo():
             if rule.groups and not (rule.groups & user_groups):
+                _debug.logic(
+                    "rule_skipped", rule=rule.id, model=model_name, reason="no_group"
+                )
                 continue
             dom = (
                 Domain(safe_eval(rule.domain_force, eval_context))
@@ -332,6 +347,15 @@ class IrRule(models.Model):
 
         display_records = records[:6].sudo()
         company_related = any("company_id" in (r.domain_force or "") for r in rules)
+        _debug.logic(
+            "access_error.prepared",
+            model=model,
+            operation=operation,
+            uid=self.env.uid,
+            records=len(records),
+            rules=len(rules),
+            company_related=company_related,
+        )
 
         def get_record_description(rec):
             if (
@@ -352,6 +376,9 @@ class IrRule(models.Model):
             not self.env.user.has_group("base.group_no_one")
             or not self.env.user._is_internal()
         ):
+            _debug.logic(
+                "access_error.terse", uid=self.env.uid, reason="not_debug_user"
+            )
             msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"
         else:
             failing_records = "\n".join(

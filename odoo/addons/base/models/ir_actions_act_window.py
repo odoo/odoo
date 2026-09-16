@@ -111,6 +111,7 @@ class IrActionsAct_Window(models.Model):
     def _check_model(self) -> None:
         for action in self:
             if action.res_model not in self.env:
+                _debug.logic("model_unknown", action=action.id, model=action.res_model)
                 raise ValidationError(
                     _(
                         "Invalid model name “%s” in action definition.",
@@ -123,10 +124,12 @@ class IrActionsAct_Window(models.Model):
         for rec in self:
             modes = rec.view_mode.split(",")
             if not all(modes):
+                _debug.logic("view_mode_refused", action=rec.id, reason="empty_mode")
                 raise ValidationError(
                     _("Empty view mode in view_mode: “%s”", rec.view_mode)
                 )
             if len(modes) != len(set(modes)):
+                _debug.logic("view_mode_refused", action=rec.id, reason="duplicate")
                 raise ValidationError(
                     _(
                         "The modes in view_mode must not be duplicated: %s",
@@ -134,6 +137,7 @@ class IrActionsAct_Window(models.Model):
                     )
                 )
             if any(" " in mode for mode in modes):
+                _debug.logic("view_mode_refused", action=rec.id, reason="spaces")
                 raise ValidationError(_("No spaces allowed in view_mode: “%s”", modes))
         self._check_view_type_vocabulary("view_mode")
         self._check_view_type_vocabulary("mobile_view_mode")
@@ -159,9 +163,14 @@ class IrActionsAct_Window(models.Model):
     @api.depends_context("active_id", "active_model", "uid")
     def _compute_embedded_action_ids(self) -> None:
         for action in self:
-            action.embedded_action_ids = action.all_embedded_action_ids.filtered(
-                "is_visible"
+            visible = action.all_embedded_action_ids.filtered("is_visible")
+            _debug.logic(
+                "embedded_visible",
+                action=action.id,
+                total=len(action.all_embedded_action_ids),
+                visible=len(visible),
             )
+            action.embedded_action_ids = visible
 
     @api.depends(
         "view_ids.view_mode",
@@ -181,6 +190,7 @@ class IrActionsAct_Window(models.Model):
             if act.view_id and act.view_id.type in missing_modes:
                 missing_modes.remove(act.view_id.type)
                 views.append((act.view_id.id, act.view_id.type))
+                _debug.logic("reference_view_used", action=act.id, view=act.view_id.id)
             views.extend((False, mode) for mode in missing_modes)
             _debug.logic(
                 "views_computed",
@@ -196,6 +206,12 @@ class IrActionsAct_Window(models.Model):
             _debug.logic("empty_list_help_stored", action=self.id, model=self.res_model)
             return stored_help
         ctx = self.env["ir.actions.actions"]._eval_action_context(self.context)
+        _debug.logic(
+            "empty_list_help_delegated",
+            action=self.id,
+            model=self.res_model,
+            context_keys=len(ctx),
+        )
         return (
             self.with_context({**self.env.context, **ctx})
             .env[self.res_model]
@@ -270,6 +286,11 @@ class IrActionsAct_Window(models.Model):
         actions_by_model = self.search(
             [("res_model", "in", [model for model, _type in missing])]
         ).grouped("res_model")
+        _debug.perf.count(
+            "view_modes_actions",
+            models=len(actions_by_model),
+            actions=sum(len(acts) for acts in actions_by_model.values()),
+        )
         for model, view_type in missing:
             for action in actions_by_model.get(model, self.browse()):
                 modes = action.view_mode.split(",")

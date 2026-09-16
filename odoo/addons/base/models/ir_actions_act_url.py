@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrActionsAct_Url(models.Model):
@@ -26,10 +29,14 @@ class IrActionsAct_Url(models.Model):
     )
 
     def _get_fields_readable(self) -> frozenset[str]:
-        return super()._get_fields_readable() | {
+        readable = super()._get_fields_readable() | {
             "target",
             "url",
         }
+        _debug.logic("readable_fields", type=self._name, count=len(readable))
+        return readable
 
     def _get_keys_client_only(self) -> frozenset[str]:
-        return super()._get_keys_client_only() | {"close"}
+        keys = super()._get_keys_client_only() | {"close"}
+        _debug.logic("client_only_keys", type=self._name, count=len(keys))
+        return keys

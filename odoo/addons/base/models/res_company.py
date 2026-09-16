@@ -242,6 +242,7 @@ class ResCompany(models.Model):
         inactive_companies = self.filtered(lambda c: not c.active)
         if not inactive_companies:
             return
+        _debug.logic("archive_checked", companies=inactive_companies.ids)
         offenders = self.env["res.users"]._read_group(
             [
                 ("company_id", "in", inactive_companies.ids),
@@ -304,6 +305,7 @@ class ResCompany(models.Model):
         if "code" not in vals:
             return vals
         code = (vals["code"] or "").strip().upper()
+        _debug.logic("code_sanitized", code=code or False, changed=code != vals["code"])
         return {**vals, "code": code or False}
 
     @api.model_create_multi
@@ -336,6 +338,11 @@ class ResCompany(models.Model):
                 )
             )
             partners.flush_model()
+            _debug.pipeline(
+                "partners_created_for_companies",
+                partners=partners.ids,
+                companies=len(vals_list),
+            )
             for vals, partner in zip(no_partner_vals_list, partners, strict=True):
                 vals["partner_id"] = partner.id
 
@@ -346,8 +353,14 @@ class ResCompany(models.Model):
                         fname,
                         self._fields[fname].convert_to_write(parent[fname], parent),
                     )
+                _debug.logic(
+                    "delegated_fields_inherited",
+                    parent=parent.id,
+                    fields=len(self._get_field_names_delegated_to_root()),
+                )
 
         self.env.registry.clear_cache()
+        _debug.lifecycle("registry_cache_cleared", by="create")
         companies = super().create(vals_list)
         _debug.lifecycle(
             "create",
@@ -363,9 +376,19 @@ class ResCompany(models.Model):
                 }
             )
 
-        companies.currency_id.sudo().filtered(lambda c: not c.active).active = True
+        inactive_currencies = companies.currency_id.sudo().filtered(
+            lambda c: not c.active
+        )
+        if inactive_currencies:
+            _debug.lifecycle("currencies_activated", currencies=inactive_currencies.ids)
+            inactive_currencies.active = True
 
         companies_needs_l10n = companies.filtered("country_id")
+        _debug.pipeline(
+            "create_l10n",
+            companies=len(companies),
+            with_country=len(companies_needs_l10n),
+        )
         if companies_needs_l10n:
             companies_needs_l10n.install_l10n_modules()
 
@@ -376,11 +399,13 @@ class ResCompany(models.Model):
         if "parent_id" in vals and any(
             c.parent_id.id != vals["parent_id"] for c in self
         ):
+            _debug.logic("write_refused", companies=self.ids, reason="parent_change")
             raise UserError(self.env._("The company hierarchy cannot be changed."))
 
         if vals.get("currency_id"):
             currency = self.env["res.currency"].browse(vals["currency_id"])
             if not currency.active:
+                _debug.lifecycle("currencies_activated", currencies=currency.ids)
                 currency.write({"active": True})
 
         companies_needs_l10n = (
@@ -392,9 +417,17 @@ class ResCompany(models.Model):
         res = super().write(vals)
         invalidation_fields = self._get_cache_invalidation_fields()
         if not invalidation_fields.isdisjoint(vals):
+            _debug.lifecycle(
+                "registry_cache_cleared",
+                by="write",
+                fields=sorted(invalidation_fields & set(vals)),
+            )
             self.env.registry.clear_cache()
 
         if vals.get("active") is False:
+            _debug.lifecycle(
+                "branches_archived", companies=self.ids, branches=len(self.child_ids)
+            )
             self.child_ids.active = False
 
         delegated_changed = set(vals) & set(self._get_field_names_delegated_to_root())
@@ -422,11 +455,13 @@ class ResCompany(models.Model):
                 branches.write(changed_vals)
 
         if companies_needs_l10n:
+            _debug.pipeline("write_l10n", companies=companies_needs_l10n.ids)
             companies_needs_l10n.install_l10n_modules()
 
         return res
 
     def copy(self, default: ValuesType | None = None) -> Self:
+        _debug.logic("copy_refused", companies=self.ids)
         raise UserError(
             self.env._(
                 "Duplicating a company is not allowed. Please create a new company instead."
@@ -446,14 +481,19 @@ class ResCompany(models.Model):
                 self.browse(company._get_ancestor_ids(include_self=True)) or company
             )
             company.root_id = company.parent_ids[0]
+        _debug.perf.count("hierarchy_computed", companies=len(self))
 
     @api.depends("partner_id.image_1920")
     def _compute_logo_web(self) -> None:
-        for company in self:
-            img = company.partner_id.image_1920
-            company.logo_web = img and base64.b64encode(
-                image_process(base64.b64decode(img), size=(180, 0))
-            )
+        with _debug.perf("logo_web_computed", companies=len(self)) as span:
+            resized = 0  # debuglog
+            for company in self:
+                img = company.partner_id.image_1920
+                resized += bool(img)  # debuglog
+                company.logo_web = img and base64.b64encode(
+                    image_process(base64.b64decode(img), size=(180, 0))
+                )
+            span.set(resized=resized)
 
     @api.depends("partner_id.image_1920")
     def _compute_uses_default_logo(self) -> None:
@@ -470,6 +510,11 @@ class ResCompany(models.Model):
 
     @api.depends("country_id")
     def _compute_uninstalled_l10n_module_ids(self) -> None:
+        _debug.pipeline(
+            "uninstalled_l10n_modules_lookup",
+            companies=len(self),
+            countries=len(self.country_id),
+        )
         self.env["ir.module.module"].flush_model(
             ["auto_install", "country_ids", "dependencies_id"]
         )
@@ -552,9 +597,14 @@ class ResCompany(models.Model):
     @api.onchange("parent_id")
     def _onchange_parent_id(self) -> None:
         if self.parent_id:
+            synced = 0  # debuglog
             for fname in self._get_field_names_delegated_to_root():
                 if self[fname] != self.parent_id[fname]:
                     self[fname] = self.parent_id[fname]
+                    synced += 1  # debuglog
+            _debug.logic(
+                "onchange_parent_delegated", parent=self.parent_id.id, synced=synced
+            )
 
     def install_l10n_modules(self) -> Any:
         uninstalled_modules = self.uninstalled_l10n_module_ids
@@ -572,7 +622,12 @@ class ResCompany(models.Model):
             ready=is_ready_and_not_test,
         )
         if uninstalled_modules and is_ready_and_not_test:
-            return uninstalled_modules.button_immediate_install()
+            with _debug.perf(
+                "l10n_modules_installed",
+                cr=self.env.cr,
+                modules=len(uninstalled_modules),
+            ):
+                return uninstalled_modules.button_immediate_install()
         return is_ready_and_not_test
 
     @api.model
@@ -584,6 +639,12 @@ class ResCompany(models.Model):
             companies = self.env.user.company_ids
             constraint = Domain("id", "in", companies.ids)
             newself = newself.sudo()
+            _debug.logic(
+                "display_name_search_user_preference",
+                uid=self.env.uid,
+                companies=len(companies),
+                operator=operator,
+            )
         newself = newself.with_context(context)
         domain = super(ResCompany, newself)._search_display_name(operator, value)
         return domain & constraint
@@ -647,13 +708,15 @@ class ResCompany(models.Model):
 
     @ormcache()
     def _get_company_partner_ids(self):
-        return tuple(
+        partner_ids = tuple(
             self.env["res.company"]
             .sudo()
             .with_context(active_test=False)
             .search([])
             .partner_id.ids
         )
+        _debug.perf.count("company_partner_ids_computed", partners=len(partner_ids))
+        return partner_ids
 
     @api.model
     def _get_main_company(self) -> Self:
@@ -701,10 +764,20 @@ class ResCompany(models.Model):
     ) -> tuple:
         delegated_fnames = set(self._get_field_names_delegated_to_root())
         arch, view = super()._get_view(view_id, view_type, **options)
+        marked = 0  # debuglog
         for f in arch.iter("field"):
             if f.get("name") in delegated_fnames:
                 f.set("readonly", "parent_id != False")
+                marked += 1  # debuglog
+        _debug.logic("delegated_fields_readonly", view_type=view_type, fields=marked)
         return arch, view
 
     def _is_every_branch_selected(self) -> bool:
-        return self == self.sudo().search([("id", "child_of", self.root_id.ids)])
+        every = self == self.sudo().search([("id", "child_of", self.root_id.ids)])
+        _debug.logic(
+            "every_branch_selected",
+            companies=len(self),
+            roots=len(self.root_id),
+            result=every,
+        )
+        return every

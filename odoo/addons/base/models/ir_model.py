@@ -143,6 +143,11 @@ class IrModel(models.Model):
             rec.model: rec
             for rec in self.search([("model", "in", list(all_parent_names))])
         }
+        _debug.perf.count(
+            "inherited_models.resolved",
+            models=len(inherits_by_model),
+            parents=len(parent_records),
+        )
         for model in self:
             if parent_names := inherits_by_model.get(model.model):
                 model.inherited_model_ids = self.browse(
@@ -163,6 +168,11 @@ class IrModel(models.Model):
         if model_names:
             for view in View.search([("model", "in", model_names)]):
                 views_by_model[view.model].append(view.id)
+        _debug.perf.count(
+            "view_ids.collected",
+            models=len(model_names),
+            with_views=len(views_by_model),
+        )
         for model in self:
             model.view_ids = View.browse(views_by_model.get(model.model, []))
 
@@ -199,9 +209,11 @@ class IrModel(models.Model):
             if table in existing
         ]
         if not parts:
+            _debug.logic("count.skipped", models=len(table_models), reason="no_table")
             return
         query = SQL(" UNION ALL ").join(parts)
-        counts = dict(self.env.execute_query(query))
+        with _debug.perf("count.query", cr=self.env.cr, tables=len(parts)):
+            counts = dict(self.env.execute_query(query))
         for model in self:
             if model.model in counts:
                 model.count = counts[model.model]
@@ -212,6 +224,9 @@ class IrModel(models.Model):
             if model.state == "manual":
                 self._check_manual_name(model.model)
             if not models.is_valid_object_name(model.model):
+                _debug.logic(
+                    "constraint.rejected", model=model.model, reason="invalid_name"
+                )
                 raise ValidationError(
                     _(
                         "The model name can only contain lowercase characters, digits, underscores and dots."
@@ -224,6 +239,9 @@ class IrModel(models.Model):
             try:
                 model._check_qorder(model.order)
             except UserError as e:
+                _debug.logic(
+                    "constraint.rejected", model=model.model, reason="invalid_order"
+                )
                 raise ValidationError(str(e)) from None
             stored_fields = set(
                 model.field_id.filtered("store").mapped("name") + models.MAGIC_COLUMNS
@@ -239,6 +257,12 @@ class IrModel(models.Model):
                 order_match = models.regex_order.match(order_part)
                 field = order_match["field"] if order_match else None
                 if field and field not in stored_fields:
+                    _debug.logic(
+                        "constraint.rejected",
+                        model=model.model,
+                        field=field,
+                        reason="order_field_not_stored",
+                    )
                     raise ValidationError(
                         _(
                             "Unable to order by %s: fields used for ordering must be present on the model and stored.",
@@ -250,6 +274,12 @@ class IrModel(models.Model):
     def _check_fold_name(self) -> None:
         for model in self:
             if model.fold_name and model.fold_name not in model.field_id.mapped("name"):
+                _debug.logic(
+                    "constraint.rejected",
+                    model=model.model,
+                    fold_name=model.fold_name,
+                    reason="fold_field_unknown",
+                )
                 raise ValidationError(
                     _("The value of 'Fold Field' should be a field name of the model.")
                 )
@@ -264,12 +294,17 @@ class IrModel(models.Model):
 
     @tools.ormcache("name", cache="stable")
     def _get_id(self, name: str) -> int | None:
-        return self.sudo().search([("model", "=", name)], limit=1).id or None
+        model_id = self.sudo().search([("model", "=", name)], limit=1).id or None
+        _debug.perf.count("model_id.cache_miss", model=name, found=bool(model_id))
+        return model_id
 
     def _drop_table(self) -> None:
         for model in self:
             if (current_model := self.env.get(model.model)) is not None:
                 if current_model._abstract:
+                    _debug.logic(
+                        "drop_table.skipped", model=model.model, reason="abstract"
+                    )
                     continue
 
                 table = current_model._table
@@ -284,6 +319,12 @@ class IrModel(models.Model):
                         SQL("DROP TABLE %s CASCADE", SQL.identifier(table))
                     )
                 elif kind is not None:
+                    _debug.logic(
+                        "drop_table.skipped",
+                        model=model.model,
+                        table=table,
+                        reason="unmanaged_kind",
+                    )
                     _logger.warning(
                         "Unable to drop table %r of model %r: unmanaged or unknown table type %r",
                         table,
@@ -291,6 +332,9 @@ class IrModel(models.Model):
                         kind,
                     )
             else:
+                _debug.logic(
+                    "drop_table.skipped", model=model.model, reason="not_in_registry"
+                )
                 _logger.warning(
                     "The model %s could not be dropped because it did not exist in the registry.",
                     model.model,
@@ -300,6 +344,7 @@ class IrModel(models.Model):
     def _unlink_except_module_data(self) -> None:
         for model in self:
             if model.state != "manual":
+                _debug.logic("unlink.rejected", model=model.model, reason="base_model")
                 raise UserError(
                     _(
                         "Model “%s” contains module data and cannot be removed.",
@@ -321,9 +366,11 @@ class IrModel(models.Model):
         manual_models.field_id.filtered(lambda f: f.state == "manual")._prepare_update()
         (self - manual_models).field_id._prepare_update()
 
-        self.env["ir.model.fields"].search(
+        relational_fields = self.env["ir.model.fields"].search(
             [("relation", "in", self.mapped("model"))]
-        ).unlink()
+        )
+        _debug.pipeline("unlink.relational_fields", count=len(relational_fields))
+        relational_fields.unlink()
 
         crons = (
             self.env["ir.cron"]
@@ -357,6 +404,12 @@ class IrModel(models.Model):
             if unmodifiable_field in vals and any(
                 rec[unmodifiable_field] != vals[unmodifiable_field] for rec in self
             ):
+                _debug.logic(
+                    "write.rejected",
+                    models=self.mapped("model"),
+                    field=unmodifiable_field,
+                    reason="unmodifiable",
+                )
                 raise UserError(
                     _(
                         "Field %s cannot be modified on models.",
@@ -365,7 +418,9 @@ class IrModel(models.Model):
                 )
         if "field_id" in vals:
             vals = dict(vals, field_id=[op for op in vals["field_id"] if op[0] != 4])
-        _debug.lifecycle("write", models=self.mapped("model"), fields=list(vals))
+            _debug.logic("write.field_links_dropped", commands=len(vals["field_id"]))
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle("write", models=self.mapped("model"), fields=list(vals))
         res = super().write(vals)
         if "order" in vals or "fold_name" in vals:
             self.env.flush_all()
@@ -398,6 +453,7 @@ class IrModel(models.Model):
                 "model": f"x_{slug}" if slug else "x_",
             }
         )
+        _debug.lifecycle("name_create", model=ir_model.model, slug=bool(slug))
         return ir_model.id, ir_model.display_name
 
     def _prepare_model_vals(self, model: models.BaseModel) -> dict[str, Any]:
@@ -438,10 +494,12 @@ class IrModel(models.Model):
     @api.model
     def _prewarm_names(self, model_names: list[str]) -> None:
         model_ids = self._prewarm_ids(model_names)
-        self.sudo().browse(model_ids).fetch(["name"])
+        with _debug.perf("prewarm_names", cr=self.env.cr, models=len(model_ids)):
+            self.sudo().browse(model_ids).fetch(["name"])
 
     def _reflect_models(self, model_names: list[str]) -> None:
         if not model_names:
+            _debug.logic("reflect_models.skipped", reason="no_models")
             return
         id_cache_generation = self._get_id.__cache__.get_cache_generation(self)
         rows = [
@@ -464,7 +522,8 @@ class IrModel(models.Model):
             changed=[row[0] for row in rows],
         )
         if rows:
-            ids = upsert_en(self, cols, rows, ["model"])
+            with _debug.perf("reflect_models.upsert", cr=self.env.cr, rows=len(rows)):
+                ids = upsert_en(self, cols, rows, ["model"])
             for row, id_ in zip(rows, ids, strict=True):
                 model_ids[row[0]] = id_
             self.pool.post_init(mark_modified, self.browse(ids), cols[1:])
@@ -475,6 +534,7 @@ class IrModel(models.Model):
 
         module = self.env.context.get("module")
         if not module:
+            _debug.logic("reflect_models.no_xmlids", reason="no_module_in_context")
             return
 
         data_list = []
@@ -493,7 +553,9 @@ class IrModel(models.Model):
             "SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'",
             prepare=False,
         )
-        return self.env.cr.dictfetchall()
+        manual_models = self.env.cr.dictfetchall()
+        _debug.perf.count("manual_model_data.loaded", count=len(manual_models))
+        return manual_models
 
     @api.model
     def _prepare_class_attrs(self, model_data: dict[str, Any]) -> dict[str, Any]:
@@ -516,6 +578,7 @@ class IrModel(models.Model):
     @api.model
     def _check_manual_name(self, name: str) -> None:
         if not self._is_manual_name(name):
+            _debug.logic("constraint.rejected", model=name, reason="not_manual_name")
             raise ValidationError(_("The model name must start with 'x_'."))
 
 
@@ -575,6 +638,7 @@ class IrModelInherit(models.Model):
                 for module in modules
             ]
 
+        _debug.pipeline("reflect_inherits.xmlids", xmlids=len(data_list))
         self.env["ir.model.data"]._update_xmlids(data_list)
 
     def _prepare_inherit_mapping(
@@ -646,6 +710,11 @@ class IrModelInherit(models.Model):
                     model_name,
                     parent_name,
                 )
+                _debug.logic(
+                    "inherit_skipped_no_parent_row",
+                    model=model_name,
+                    parent=parent_name,
+                )
                 continue
             parent_ids[parent_name] = parent_id
 
@@ -653,6 +722,12 @@ class IrModelInherit(models.Model):
         delegated = [name for name in definition._inherits if name in parent_ids]
 
         if overlap := set(inherit_parents) & set(delegated):
+            _debug.logic(
+                "inherit.rejected",
+                model=model_name,
+                overlap=sorted(overlap),
+                reason="inherit_and_delegate",
+            )
             raise ValueError(
                 f"Model {model_name!r} both inherits from and delegates "
                 f"to {sorted(overlap)}: ir_model_inherit is unique on "

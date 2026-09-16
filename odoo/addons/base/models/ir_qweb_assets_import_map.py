@@ -206,9 +206,13 @@ class IrQweb(models.AbstractModel):
         sec_ab: AssetsBundle | None = None,
     ) -> tuple[frozenset[str], frozenset[str]]:
         if not esm_registry().secondary_parents.get(bundle):
+            _debug.logic(
+                "importmap.secondary_reach", bundle=bundle, reason="no_parents"
+            )
             return frozenset(), frozenset()
         shared = self._get_secondary_provider_specs(bundle, assets_params, page_scope)
         if not shared:
+            _debug.logic("importmap.secondary_reach", bundle=bundle, reason="no_shared")
             return frozenset(), frozenset()
         if sec_ab is None:
             sec_ab = self._get_asset_bundle(
@@ -261,6 +265,13 @@ class IrQweb(models.AbstractModel):
             self._warn_on_late_secondary_providers(
                 bundle, assets_params, stubbed | inlined, stubbed
             )
+        _debug.logic(
+            "importmap.secondary_shared",
+            bundle=bundle,
+            page_scoped=bool(page_scope),
+            stubbed=len(stubbed),
+            inlined=len(inlined),
+        )
         return stubbed
 
     def _get_secondary_inlined_reach(
@@ -277,7 +288,7 @@ class IrQweb(models.AbstractModel):
         )
         ext_libs = self._external_libs()
         urls = {spec: resolve_specifier_url(spec, ext_libs) for spec in sorted(inlined)}
-        if len(urls) != sum(1 for url in urls.values() if url):
+        if _debug.logic.enabled and len(urls) != sum(1 for url in urls.values() if url):
             _debug.logic(
                 "importmap.inlined_unresolved",
                 bundle=bundle,
@@ -297,6 +308,12 @@ class IrQweb(models.AbstractModel):
         late = sorted((set(discovered) & declared) - stubbed)
         if not late:
             return
+        _debug.logic(
+            "importmap.late_providers",
+            bundle=bundle,
+            declared=len(declared),
+            late=len(late),
+        )
         log_event(
             _esm_log,
             logging.WARNING,
@@ -324,6 +341,7 @@ class IrQweb(models.AbstractModel):
             bundle, assets_params, page_scope, sec_ab=sec_ab
         )
         if not shared:
+            _debug.logic("importmap.parent_stubs", bundle=bundle, shared=0)
             return {}
         with _debug.perf(
             "importmap.parent_stubs", bundle=bundle, shared=len(shared)

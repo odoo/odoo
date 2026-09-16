@@ -157,6 +157,11 @@ class ResGroups(models.Model):
 
     @api.constrains("view_access")
     def _check_inherited_view_groups(self) -> None:
+        _debug.logic(
+            "inherited_view_groups_checked",
+            groups=self.ids,
+            views=len(self.view_access),
+        )
         self.view_access._check_groups()
 
     @api.constrains("user_ids")
@@ -204,6 +209,7 @@ class ResGroups(models.Model):
 
     def _search_full_name(self, operator: str, operand: Any) -> Domain:
         if operator in Domain.NEGATIVE_OPERATORS:
+            _debug.logic("full_name_search_unsupported", operator=operator)
             return NotImplemented
 
         if isinstance(operand, str):
@@ -244,6 +250,12 @@ class ResGroups(models.Model):
                     domain &= Domain("name", operator, value_to_operand(group_name))
                 where_domains.append(domain)
 
+        _debug.logic(
+            "full_name_search",
+            operator=operator,
+            operands=len(operands),
+            domains=len(where_domains),
+        )
         return Domain.OR(where_domains)
 
     @api.model
@@ -257,6 +269,13 @@ class ResGroups(models.Model):
     ) -> Any:
         if order and order.startswith("full_name"):
             groups = super().search(domain)
+            _debug.perf.count(
+                "search_sorted_in_python",
+                by="full_name",
+                groups=len(groups),
+                offset=offset,
+                limit=limit,
+            )
             groups = groups.sorted(
                 "full_name", reverse=order.strip().upper().endswith("DESC")
             )
@@ -280,6 +299,7 @@ class ResGroups(models.Model):
     def write(self, vals: dict[str, Any]) -> bool:
         if "name" in vals:
             if vals["name"].startswith("-"):
+                _debug.logic("write_refused", groups=self.ids, reason="name_dash")
                 raise UserError(
                     self.env._('The name of the group can not start with "-"')
                 )
@@ -293,6 +313,7 @@ class ResGroups(models.Model):
         if self.ids:
             self.env["ir.model.access"].call_cache_clearing_methods()
             self.env.registry.clear_cache("groups")
+            _debug.lifecycle("groups_cache_cleared", groups=self.ids, by="write")
 
         return res
 
@@ -324,6 +345,11 @@ class ResGroups(models.Model):
     def _compute_all_user_ids(self) -> None:
         groups = self.with_context(active_test=False)
         groups.all_implied_by_ids.fetch(["user_ids"])
+        _debug.perf.count(
+            "all_user_ids_computed",
+            groups=len(groups),
+            implying=len(groups.all_implied_by_ids),
+        )
         for group in groups:
             group.all_user_ids = group.all_implied_by_ids.user_ids
 
@@ -334,6 +360,11 @@ class ResGroups(models.Model):
             user_to_remove = implied_by_users - group.all_user_ids
 
             if user_to_remove:
+                _debug.logic(
+                    "implied_users_removal_refused",
+                    group=group.id,
+                    users=user_to_remove.ids,
+                )
                 raise UserError(
                     self.env._(
                         "It is not possible to remove implied group %(group)s from users %(users)s",
@@ -357,9 +388,16 @@ class ResGroups(models.Model):
 
     def _search_all_implied_ids(self, operator: str, value: Any) -> list:
         if operator not in ("in", "not in"):
+            _debug.logic("all_implied_ids_search_unsupported", operator=operator)
             return NotImplemented
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
+        _debug.logic(
+            "all_implied_ids_search",
+            operator=operator,
+            given=len(value),
+            expanded=len(ids),
+        )
         return [("id", operator, ids)]
 
     @api.depends("implied_by_ids.all_implied_by_ids")
@@ -374,10 +412,17 @@ class ResGroups(models.Model):
             value = self.search(value).ids
             operator = "in" if operator == "any" else "not in"
         elif operator not in ("in", "not in"):
+            _debug.logic("all_implied_by_ids_search_unsupported", operator=operator)
             return NotImplemented
 
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_superset_ids(value)]
+        _debug.logic(
+            "all_implied_by_ids_search",
+            operator=operator,
+            given=len(value),
+            expanded=len(ids),
+        )
 
         return [("id", operator, ids)]
 
@@ -399,6 +444,11 @@ class ResGroups(models.Model):
 
     def _compute_disjoint_ids(self) -> None:
         user_type_groups = self._get_user_type_groups()
+        _debug.perf.count(
+            "disjoint_ids_computed",
+            groups=len(self),
+            user_type_groups=len(user_type_groups),
+        )
         for group in self:
             if group in user_type_groups:
                 group.disjoint_ids = user_type_groups - group
@@ -440,7 +490,7 @@ class ResGroups(models.Model):
     @api.model
     @tools.ormcache("self.env.lang", cache="groups")
     def _get_view_group_hierarchy(self) -> dict[str, Any]:
-        return {
+        hierarchy = {
             "groups": {
                 group.id: {
                     "id": group.id,
@@ -478,6 +528,14 @@ class ResGroups(models.Model):
                 )
             ],
         }
+        _debug.perf.count(
+            "view_group_hierarchy_computed",
+            lang=self.env.lang,
+            groups=len(hierarchy["groups"]),
+            privileges=len(hierarchy["privileges"]),
+            categories=len(hierarchy["categories"]),
+        )
+        return hierarchy
 
     @api.model
     def _get_privilege_group_ids_sorted(self, privilege: Any) -> list[int]:
@@ -515,18 +573,21 @@ class ResGroups(models.Model):
 
     @api.model
     def _is_feature_enabled(self, group_reference: str) -> bool:
-        return (
+        enabled = (
             self.env["res.users"]
             .sudo()
             .browse(api.SUPERUSER_ID)
             ._has_group(group_reference)
         )
+        _debug.logic("feature_enabled", group=group_reference, enabled=enabled)
+        return enabled
 
     @api.depends("all_user_ids")
     def _compute_all_users_count(self) -> None:
         self.all_implied_by_ids.fetch(["user_ids"])
         for group in self:
             group.all_users_count = len(group.all_implied_by_ids.user_ids)
+        _debug.perf.count("all_users_count_computed", groups=len(self))
 
     def action_show_all_users(self) -> dict[str, Any]:
         self.check_singleton()

@@ -49,5 +49,7 @@ class IrActionsAct_WindowView(models.Model):
             ._description_selection(self.env)
             if value not in NON_WINDOW_VIEW_TYPES
         ]
-        _debug.logic("view_modes_resolved", count=len(modes))
+        _debug.logic(
+            "view_modes_resolved", count=len(modes), excluded=NON_WINDOW_VIEW_TYPES
+        )
         return modes

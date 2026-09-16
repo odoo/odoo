@@ -92,12 +92,14 @@ class IrModelData(models.Model):
                 try:
                     xid.display_name = target_record.display_name or xid.complete_name
                 except AccessError, MissingError:
+                    _debug.logic("display_name.fallback", xmlid=xid.id, model=model)
                     xid.display_name = xid.complete_name
 
     @api.model
     @tools.ormcache("xmlid", cache="xmlid")
     def _xmlid_target(self, xmlid: str) -> tuple[str, int] | None:
         if "." not in xmlid:
+            _debug.logic("xmlid_miss", xmlid=xmlid, reason="no_module_prefix")
             return None
         module, name = xmlid.split(".", 1)
         data = self.sudo().search_fetch(
@@ -106,6 +108,7 @@ class IrModelData(models.Model):
         if not (data and data.res_id):
             _debug.logic("xmlid_miss", xmlid=xmlid)
             return None
+        _debug.perf.count("xmlid.cache_miss", xmlid=xmlid, model=data.model)
         return data.model, data.res_id
 
     @api.model
@@ -137,6 +140,7 @@ class IrModelData(models.Model):
         for model, vals in zip(self, vals_list, strict=True):
             rand = f"{random.getrandbits(16):04x}"
             vals["name"] = f"{model.name}_{rand}"
+        _debug.lifecycle("copy_data", count=len(vals_list))
         return vals_list
 
     @api.model_create_multi
@@ -155,6 +159,13 @@ class IrModelData(models.Model):
         bust_xmlid = not (set(vals) <= {"noupdate"})
         touch_groups = vals.get("model") == "res.groups" or any(
             data.model == "res.groups" for data in self
+        )
+        _debug.lifecycle(
+            "write",
+            count=len(self),
+            fields=list(vals),
+            bust_xmlid=bust_xmlid,
+            touch_groups=touch_groups,
         )
         res = super().write(vals)
         if bust_xmlid:
@@ -177,6 +188,7 @@ class IrModelData(models.Model):
 
     def _get_xmlids(self, xml_ids: list[str], model: Any) -> list[tuple]:
         if not xml_ids:
+            _debug.logic("get_xmlids.skipped", model=model._name, reason="empty")
             return []
 
         bymodule = defaultdict(set)
@@ -222,6 +234,7 @@ class IrModelData(models.Model):
         self, data_list: list[dict[str, Any]], update: bool = False
     ) -> None:
         if not data_list:
+            _debug.logic("update_xmlids.skipped", reason="empty")
             return
 
         rows: dict[tuple[str, str], tuple[str, int, bool]] = {}
@@ -263,6 +276,14 @@ class IrModelData(models.Model):
             elif (data.model, data.res_id) != (model_name, res_id) and not (
                 update and data.noupdate
             ):
+                _debug.logic(
+                    "update_xmlids.repointed",
+                    xmlid=data.id,
+                    old_model=data.model,
+                    old_res_id=data.res_id,
+                    model=model_name,
+                    res_id=res_id,
+                )
                 data.write({"model": model_name, "res_id": res_id})
                 repointed = True
         if to_create:
@@ -286,6 +307,7 @@ class IrModelData(models.Model):
     @api.model
     def _load_xmlid(self, xml_id: str) -> Any:
         record = self.env.ref(xml_id, raise_if_not_found=False)
+        _debug.logic("load_xmlid", xmlid=xml_id, found=bool(record))
         if record:
             self.pool.loaded_xmlids.add(xml_id)
             self.pool.record_xmlids_written((xml_id,))
@@ -294,6 +316,9 @@ class IrModelData(models.Model):
     @api.model
     def _uninstall_module_data(self, modules_to_remove: list[str]) -> None:
         if not self.env.is_system():
+            _debug.logic(
+                "uninstall_module_data.rejected", uid=self.env.uid, reason="not_system"
+            )
             raise AccessError(
                 _("Administrator access is required to uninstall a module")
             )
@@ -330,6 +355,9 @@ class IrModelData(models.Model):
                     self.env[model].browse(ids), module_data, undeletable_ids
                 )
             else:
+                _debug.logic(
+                    "uninstall_module_data.orphans", model=model, count=len(ids)
+                )
                 _logger.info(
                     "Orphan ir.model.data records %s refer to unavailable model '%s'",
                     ids,
@@ -361,6 +389,7 @@ class IrModelData(models.Model):
         relations = self.env["ir.model.relation"].search(
             [("module", "in", modules.ids)]
         )
+        _debug.pipeline("uninstall_module_data.relations", count=len(relations))
         relations._uninstall_module_data()
 
         self._remove_uninstalled(
@@ -406,14 +435,21 @@ class IrModelData(models.Model):
             if field is None or not field.prefetch:
                 continue
             if field._toplevel:
+                _debug.logic(
+                    "unshare_prefetch.toplevel", model=ir_field.model, field=field.name
+                )
                 field.prefetch = False
             else:
+                _debug.logic(
+                    "unshare_prefetch.shared", model=ir_field.model, field=field.name
+                )
                 Field = type(field)
                 field_ = Field(_base_fields__=(field, Field(prefetch=False)))
                 add_field(self.env.registry[ir_field.model], ir_field.name, field_)
                 field_.setup(model)
                 has_shared_field = True
         if has_shared_field:
+            _debug.lifecycle("unshare_prefetch.registry_reset", fields=len(field_ids))
             reset_cached_properties(self.env.registry)
 
     def _remove_uninstalled(
@@ -449,14 +485,28 @@ class IrModelData(models.Model):
         try:
             with self.env.cr.savepoint():
                 cloc_exclude_data.unlink()
-                records.unlink()
+                with _debug.perf(
+                    "remove_uninstalled.unlink",
+                    cr=self.env.cr,
+                    model=records._name,
+                    count=len(records),
+                ):
+                    records.unlink()
         except Exception:
             _debug.logic(
                 "remove_uninstalled_failed", model=records._name, count=len(records)
             )
             if len(records) <= 1:
+                _debug.logic(
+                    "remove_uninstalled.undeletable",
+                    model=records._name,
+                    xmlids=len(ref_data),
+                )
                 undeletable_ids.extend(ref_data._ids)
             else:
+                _debug.logic(
+                    "remove_uninstalled.bisect", model=records._name, count=len(records)
+                )
                 half_size = len(records) // 2
                 self._remove_uninstalled(
                     records[:half_size], module_data, undeletable_ids
@@ -471,6 +521,9 @@ class IrModelData(models.Model):
         missing = records - records.exists()
         if missing:
             orphans = ref_data.filtered(lambda r: r.res_id in missing._ids)
+            _debug.lifecycle(
+                "undeletable_fields.orphans", missing=len(missing), orphans=len(orphans)
+            )
             _logger.info("Deleting orphan ir_model_data %s", orphans)
             orphans.unlink()
             records -= missing
@@ -489,6 +542,8 @@ class IrModelData(models.Model):
     def _remove_uninstalled_xmlids(
         self, module_data: models.BaseModel, undeletable_ids: list[int]
     ) -> None:
+        kept = 0  # debuglog
+        unprobed = 0  # debuglog
         for data in self.browse(undeletable_ids).exists():
             if data.model not in self.env.registry:
                 continue
@@ -496,10 +551,21 @@ class IrModelData(models.Model):
             try:
                 with self.env.cr.savepoint():
                     if record.exists():
+                        kept += 1  # debuglog
                         module_data -= data
                         continue
             except psycopg.ProgrammingError:
-                pass
+                unprobed += 1  # debuglog
+                _debug.logic(
+                    "remove_xmlids.exists_failed", model=data.model, res_id=data.res_id
+                )
+        _debug.lifecycle(
+            "remove_xmlids",
+            undeletable=len(undeletable_ids),
+            kept=kept,
+            unprobed=unprobed,
+            removed=len(module_data),
+        )
         module_data.unlink()
 
     def _count_xmlids_per_record(
@@ -531,6 +597,10 @@ class IrModelData(models.Model):
     @api.model
     def _process_end(self, modules: list[str]) -> None:
         if not modules or tools.config.get("import_partial"):
+            _debug.logic(
+                "process_end.skipped",
+                reason="no_modules" if not modules else "import_partial",
+            )
             return
 
         bad_imd_ids = []
@@ -578,9 +648,15 @@ class IrModelData(models.Model):
                     keep = True
                     break
             if keep:
+                _debug.logic(
+                    "process_end.kept", xmlid=xmlid, reason="inheriting_child_loaded"
+                )
                 continue
 
             if xmlids_per_record.get((model, res_id), 1) > 1:
+                _debug.logic(
+                    "process_end.stale_xmlid", xmlid=xmlid, reason="other_xmlid_remains"
+                )
                 xmlids_per_record[(model, res_id)] -= 1
                 bad_imd_ids.append(id)
                 continue
@@ -589,6 +665,9 @@ class IrModelData(models.Model):
                 cons = Model.browse(res_id)
                 target = self.env.get(cons.model.model) if cons.exists() else None
                 if target is not None and cons.name in target._table_objects:
+                    _debug.logic(
+                        "process_end.kept", xmlid=xmlid, reason="constraint_declared"
+                    )
                     continue
 
             _logger.info("Deleting %s@%s (%s)", res_id, model, xmlid)
@@ -596,8 +675,12 @@ class IrModelData(models.Model):
             if record.exists():
                 module = xmlid.split(".", 1)[0]
                 record = record.with_context(module=module)
+                _debug.lifecycle("process_end.record_deleted", xmlid=xmlid, model=model)
                 self._process_end_unlink_record(record)
             else:
+                _debug.logic(
+                    "process_end.stale_xmlid", xmlid=xmlid, reason="record_missing"
+                )
                 xmlids_per_record[(model, res_id)] = (
                     xmlids_per_record.get((model, res_id), 1) - 1
                 )
@@ -615,4 +698,11 @@ class IrModelData(models.Model):
         self.env[model].browse(res_id).check_access("write")
         xids = self.search([("model", "=", model), ("res_id", "=", res_id)])
         for noupdate, group in xids.grouped("noupdate").items():
+            _debug.lifecycle(
+                "toggle_noupdate",
+                model=model,
+                res_id=res_id,
+                count=len(group),
+                noupdate=not noupdate,
+            )
             group.write({"noupdate": not noupdate})

@@ -26,12 +26,19 @@ def register_storage(cls: type[AttachmentStorage]) -> type[AttachmentStorage]:
         msg = f"{cls.__name__} must define a location name to be registered"
         raise ValueError(msg)
     if (current := STORAGE_BACKENDS.get(cls.location)) not in (None, cls):
+        _debug.logic(
+            "backend_registration_refused",
+            location=cls.location,
+            holder=current.__name__,
+            claimant=cls.__name__,
+        )
         msg = (
             f"storage location {cls.location!r} is already registered by "
             f"{current.__name__}; {cls.__name__} cannot claim it too"
         )
         raise ValueError(msg)
     STORAGE_BACKENDS[cls.location] = cls
+    _debug.lifecycle("backend_registered", location=cls.location, backend=cls.__name__)
     return cls
 
 
@@ -39,8 +46,14 @@ def backend_for_key(env: Environment, key: str) -> AttachmentStorage:
     if "://" in key:
         for backend_cls in STORAGE_BACKENDS.values():
             if backend_cls.owns_key(key):
+                _debug.logic(
+                    "backend_for_key",
+                    scheme=backend_cls.key_scheme,
+                    backend=backend_cls.__name__,
+                )
                 return backend_cls(env)
         scheme = key.split("://", 1)[0]
+        _debug.logic("backend_for_key", scheme=scheme, backend="UnknownSchemeStorage")
         if (seen_key := (env.cr.dbname, scheme)) not in _UNKNOWN_SCHEMES_WARNED:
             _UNKNOWN_SCHEMES_WARNED.add(seen_key)
             _logger.warning(
@@ -79,6 +92,9 @@ class AttachmentStorage:
         if isinstance(data, str):
             data = data.encode()
         checksum = model._get_content_checksum(data)
+        _debug.perf.count(
+            "stream_buffered", backend=type(self).__name__, size=len(data)
+        )
         return {
             "checksum": checksum,
             "file_size": len(data),
@@ -114,6 +130,7 @@ class UnknownSchemeStorage(AttachmentStorage):
         _debug.logic("unknown_scheme", op="delete", key=key)
 
     def to_stream(self, attachment: Any, stream: Stream) -> Stream:
+        _debug.logic("unknown_scheme", op="stream", attachment=attachment.id)
         raise MissingError(
             attachment.env._(
                 "The content of attachment %(id)s is held by a storage backend "
@@ -129,6 +146,7 @@ class DbStorage(AttachmentStorage):
     location = "db"
 
     def write(self, data: bytes, checksum: str) -> dict[str, Any]:
+        _debug.lifecycle("db_write", size=len(data))
         return self._inline_datas_values(data)
 
 
@@ -143,10 +161,9 @@ class FileStorage(AttachmentStorage):
         if not data:
             _debug.logic("file_write_inlined", reason="empty")
             return self._inline_datas_values(data)
-        return {
-            "store_fname": self._model()._write_file(data, checksum),
-            "db_datas": False,
-        }
+        with _debug.perf("file_write", size=len(data)):
+            fname = self._model()._write_file(data, checksum)
+        return {"store_fname": fname, "db_datas": False}
 
     def write_stream(self, fileobj: Any) -> dict[str, Any]:
         fname, size, checksum = self._model()._write_file_stream(fileobj)
@@ -165,7 +182,9 @@ class FileStorage(AttachmentStorage):
         }
 
     def read(self, key: str, size: int | None = None) -> bytes:
-        return self._model()._read_file(key, size=size)
+        data = self._model()._read_file(key, size=size)
+        _debug.perf.count("file_read", key=key, requested=size, bytes=len(data))
+        return data
 
     def remove(self, key: str) -> None:
         _debug.lifecycle("file_marked_for_gc", key=key)
@@ -187,7 +206,9 @@ class FileStorage(AttachmentStorage):
             )
 
         removed = 0
+        batches = 0
         for names in batched(checklist, cr.BATCH_SIZE, strict=False):
+            batches += 1
             cr.execute("SET LOCAL lock_timeout TO '10s'")
             try:
                 cr.execute("LOCK ir_attachment IN SHARE MODE")
@@ -207,6 +228,13 @@ class FileStorage(AttachmentStorage):
             )
             cr.commit()
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
+        _debug.lifecycle(
+            "filestore_gc_done",
+            checked=len(checklist),
+            removed=removed,
+            batches=batches,
+            capped=capped,
+        )
         return removed, capped
 
     def to_stream(self, attachment: Any, stream: Stream) -> Stream:
@@ -214,6 +242,11 @@ class FileStorage(AttachmentStorage):
         try:
             stream.path = attachment._get_full_path(attachment.store_fname)
         except ValueError:
+            _debug.logic(
+                "stream_key_refused",
+                attachment=attachment.id,
+                reason="escapes_filestore",
+            )
             stream.path = None
         stat = None
         if stream.path:
@@ -236,4 +269,5 @@ class FileStorage(AttachmentStorage):
             return stream
         stream.last_modified = stat.st_mtime
         stream.size = stat.st_size
+        _debug.pipeline("stream_from_file", attachment=attachment.id, size=stat.st_size)
         return stream

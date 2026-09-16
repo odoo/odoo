@@ -91,6 +91,7 @@ class IrProfile(models.Model):
         self.check_access("read")
         memory_graph = []
         memory_limit = params.get("memory_limit", 0)
+        _debug.pipeline("memory_profile", profiles=len(self), memory_limit=memory_limit)
         for profile in self:
             if profile.others:
                 memory = json.loads(profile.others).get("memory", "[]")
@@ -123,6 +124,9 @@ class IrProfile(models.Model):
     def _prepare_profile_params_default(self) -> dict[str, bool]:
         has_sql = any(profile.sql for profile in self)
         has_traces = any(profile.traces_async for profile in self)
+        _debug.logic(
+            "profile_defaults", profiles=len(self), sql=has_sql, traces=has_traces
+        )
         return {
             "combined_profile": has_sql and has_traces,
             "sql_no_gap_profile": has_sql and not has_traces,
@@ -178,6 +182,9 @@ class IrProfile(models.Model):
             return b"{}"
         for record in self:
             if record.init_stack_trace != init_stack_trace:
+                _debug.logic(
+                    "speedscope_refused", reason="stack_mismatch", profiles=self.ids
+                )
                 raise UserError(
                     self.env._(
                         "All profiles must have the same initial stack trace to be displayed together."
@@ -205,7 +212,9 @@ class IrProfile(models.Model):
         if params["profile_aggregation_mode"] == "temporal":
             self._add_outputs(sp, "all", params)
 
-        result = json.dumps(sp.prepare_document(**params))
+        with _debug.perf("speedscope_document", profiles=len(self)) as span:
+            result = json.dumps(sp.prepare_document(**params))
+            span.set(bytes=len(result))
         return result.encode("utf-8")
 
     def _add_outputs(self, sp: Speedscope, suffix: str, params: dict[str, Any]) -> None:
@@ -242,7 +251,9 @@ class IrProfile(models.Model):
             .get_param("base.profiling_enabled_until", "")
         )
         limit_dt = fields.Datetime.from_string(limit)
-        return limit if limit_dt and fields.Datetime.now() < limit_dt else None
+        enabled = bool(limit_dt and fields.Datetime.now() < limit_dt)
+        _debug.logic("profiling_window", enabled=enabled, until=limit or None)
+        return limit if enabled else None
 
     @api.model
     def set_profiling(
@@ -252,6 +263,7 @@ class IrProfile(models.Model):
         params: dict | None = None,
     ) -> dict[str, Any]:
         if not request:
+            _debug.logic("profiling_refused", reason="no_request")
             raise UserError(
                 self.env._("Profiling can only be toggled from an HTTP request.")
             )
@@ -279,6 +291,7 @@ class IrProfile(models.Model):
                     )
                 )
             if not request.session.get("profile_session"):
+                _debug.lifecycle("profile_session_opened", uid=self.env.uid)
                 request.session["profile_session"] = get_session_name(
                     self.env.user.name
                 )
@@ -288,6 +301,7 @@ class IrProfile(models.Model):
                 if request.session.get("profile_params") is None:
                     request.session["profile_params"] = {}
         elif profile is not None:
+            _debug.lifecycle("profile_session_closed", uid=self.env.uid)
             request.session["profile_session"] = None
 
         if collectors is not None:

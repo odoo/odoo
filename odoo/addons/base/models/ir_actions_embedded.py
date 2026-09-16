@@ -93,8 +93,13 @@ class IrEmbeddedActions(models.Model):
             if "name" not in vals:
                 vals["name"] = action_names.get(vals.get("action_id"), "")
             if "python_method" in vals and "action_id" in vals:
+                _debug.logic(
+                    "target_disambiguated",
+                    kept="python_method" if vals.get("python_method") else "action_id",
+                )
                 vals.pop("action_id" if vals.get("python_method") else "python_method")
             if not (vals.get("python_method") or vals.get("action_id")):
+                _debug.logic("create_refused", reason="no_target")
                 raise ValidationError(
                     self.env._(
                         "An embedded action needs either an action or a python "
@@ -102,6 +107,7 @@ class IrEmbeddedActions(models.Model):
                     )
                 )
             if not vals.get("parent_res_model"):
+                _debug.logic("create_refused", reason="no_parent_model")
                 raise ValidationError(
                     self.env._("An embedded action needs the model it is shown on.")
                 )
@@ -126,12 +132,16 @@ class IrEmbeddedActions(models.Model):
 
     def _compute_is_deletable(self) -> None:
         external_ids = self._get_external_ids()
+        protected = 0
         for record in self:
             record_external_ids = external_ids[record.id]
             record.is_deletable = all(
                 ex_id.startswith(("__export__", "__custom__"))
                 for ex_id in record_external_ids
             )
+            if not record.is_deletable:
+                protected += 1
+        _debug.logic("deletable_computed", count=len(self), protected=protected)
 
     @api.depends(
         "domain",
@@ -164,6 +174,13 @@ class IrEmbeddedActions(models.Model):
                 continue
             parent_model = self.env[parent_res_model]
             active_model_record = parent_model.search(domain_id, order="id")
+            _debug.pipeline(
+                "visibility_evaluated",
+                parent_model=parent_res_model,
+                active_id=active_id,
+                found=bool(active_model_record),
+                count=len(records),
+            )
             for record in records:
                 action_groups = record.group_ids
                 is_valid_method = not record.python_method or hasattr(
@@ -184,6 +201,11 @@ class IrEmbeddedActions(models.Model):
                         and active_model_record.filtered_domain(domain_model)
                     )
                 else:
+                    _debug.logic(
+                        "visibility_denied",
+                        action=record.id,
+                        reason="method" if not is_valid_method else "groups",
+                    )
                     record.is_visible = False
 
     def _get_fields_readable(self) -> frozenset[str]:

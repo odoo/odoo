@@ -53,6 +53,7 @@ class IrActionsPath(models.Model):
                 SQL.identifier(self._table),
             )
         )
+        _debug.lifecycle("init_paths_checked", unbacked=self.env.cr.rowcount)
         if unbacked := self.env.cr.fetchall():
             _debug.lifecycle("init_unbacked_paths_cleared", count=len(unbacked))
             self.env.cr.execute(

@@ -439,11 +439,17 @@ class IrQweb(models.AbstractModel):
         qweb_hooks = getattr(current_thread, "qweb_hooks", ())
         if execution_context_enabled or qweb_hooks:
             options["profile"] = True
+            _debug.logic(
+                "render.profile_enabled",
+                execution_context=bool(execution_context_enabled),
+                hooks=len(qweb_hooks),
+            )
 
         if T_CALL_SLOT in values or 0 in values:
             _logger.warning(
                 "values[0] should be unset when call the _render method and only set into the template."
             )
+            _debug.logic("render.slot_value_dropped", reason="set_by_caller")
             values.pop(T_CALL_SLOT, None)
             values.pop(0, None)
 
@@ -457,6 +463,12 @@ class IrQweb(models.AbstractModel):
         )
 
         safe_eval.check_values(values)
+        _debug.pipeline(
+            "render.prepared",
+            cache_shared=_compiled_cache is not None,
+            values=len(values),
+            options=sorted(options),
+        )
         return irQweb
 
     def _render_prepared(
@@ -494,6 +506,11 @@ class IrQweb(models.AbstractModel):
         try:
             while stack:
                 if len(stack) > QWEB_MAX_RENDER_DEPTH:
+                    _debug.logic(
+                        "render.recursion_exceeded",
+                        depth=len(stack),
+                        limit=QWEB_MAX_RENDER_DEPTH,
+                    )
                     msg = "Qweb template infinite recursion"
                     raise RecursionError(msg)
 
@@ -553,6 +570,16 @@ class IrQweb(models.AbstractModel):
         render_template, options = self._resolve_render_template(
             irQweb, params, compiled_cache
         )
+        _debug.pipeline(
+            "render.frame_pushed",
+            template=params.view_ref
+            if isinstance(params.view_ref, int | str)
+            else "etree",
+            directive=params.directive,
+            scope=params.scope,
+            depth=len(stack),
+            content=is_content,
+        )
 
         if params.scope:
             if params.scope == "root":
@@ -580,6 +607,7 @@ class IrQweb(models.AbstractModel):
         compiled_cache: dict[Any, Any],
     ) -> tuple[Any, dict[str, Any] | None]:
         if callable(params.method):
+            _debug.logic("render.method_callable", directive=params.directive)
             return params.method, None
 
         compile_key = (params.view_ref, irQweb._get_template_cache_signature())
@@ -608,6 +636,11 @@ class IrQweb(models.AbstractModel):
             qweb_error_info.ref = view_ref
 
         if hasattr(error, "qweb"):
+            _debug.logic(
+                "render_error_rewrapped",
+                error=type(error).__name__,
+                sources=len(qweb_error_info.source or ()),
+            )
             if qweb_error_info.source:
                 error.qweb.source = qweb_error_info.source + error.qweb.source
             if not error.qweb.ref and frame.params.view_ref:
@@ -623,6 +656,12 @@ class IrQweb(models.AbstractModel):
                 )
                 raise QWebError(qweb_error_info) from error
 
+        _debug.logic(
+            "render_error_annotated",
+            error=type(error).__name__,
+            template=str(qweb_error_info.ref)[:80],
+            user_error=isinstance(error, UserError),
+        )
         error.qweb = qweb_error_info
         raise error
 
@@ -669,6 +708,14 @@ class IrQweb(models.AbstractModel):
         if self.env.context.get("dev_mode") and line_nb:
             surrounding = self._get_error_surrounding_code(code_lines, line_nb, html)
 
+        _debug.logic(
+            "render_error_located",
+            template=str(ref)[:80],
+            line=line_nb,
+            path=path,
+            sources=len(source),
+            surrounding=surrounding is not None,
+        )
         return QWebErrorInfo(
             f"{error.__class__.__name__}: {error}",
             ref if ref_name is None else ref_name,
@@ -708,6 +755,14 @@ class IrQweb(models.AbstractModel):
             if ref == self.env.context["_qweb_error_path_xml"][0]:
                 path = self.env.context["_qweb_error_path_xml"][1]
                 html = self.env.context["_qweb_error_path_xml"][2]
+            _debug.logic(
+                "render_error_frame",
+                ref=ref,
+                via="frame",
+                has_code=code is not None,
+                has_path=path is not None,
+                depth=len(stack),
+            )
         else:
             options = stack[-2].options or frame.options or {}
             ref = options.get("ref")
@@ -716,6 +771,14 @@ class IrQweb(models.AbstractModel):
             if frame.params.path_xml:
                 path = frame.params.path_xml[1]
                 html = frame.params.path_xml[2]
+            _debug.logic(
+                "render_error_frame",
+                ref=ref,
+                via="parent",
+                has_code=code is not None,
+                has_path=path is not None,
+                depth=len(stack),
+            )
         return ref, ref_name, code, path, html
 
     def _get_error_line_number(self, ref: Any) -> int:
@@ -726,7 +789,13 @@ class IrQweb(models.AbstractModel):
             ):
                 line_function = error_line.split(", line ")[1]
                 wrapped_line = int(line_function.split(",")[0])
+                _debug.logic(
+                    "render_error_line",
+                    ref=ref,
+                    line=wrapped_line - GENERATED_CODE_PREAMBLE_LINES,
+                )
                 return wrapped_line - GENERATED_CODE_PREAMBLE_LINES
+        _debug.logic("render_error_line", ref=ref, line=0, reason="not_in_trace")
         return 0
 
     def _get_error_source(
@@ -756,6 +825,7 @@ class IrQweb(models.AbstractModel):
                 found = True
                 path = marker_path
                 html = marker_xml
+        _debug.logic("render_error_source", ref=ref, found=found, sources=len(source))
         return path, html
 
     def _get_error_surrounding_code(
@@ -807,16 +877,23 @@ class IrQweb(models.AbstractModel):
         self, template: int | str | etree._Element
     ) -> tuple[dict[str, Any], str, frozendict]:
         if isinstance(template, str) and template.endswith(".xml"):
+            _debug.logic("compile.route", route="file", template=template)
             template_functions, def_name, options = self._generate_code_file_cached(
                 template
             )
         elif isinstance(template, etree._Element) or not (
             ref := self._get_template_info(template)["id"]
         ):
+            _debug.logic(
+                "compile.route",
+                route="uncached",
+                template=template if isinstance(template, int | str) else "etree",
+            )
             template_functions, def_name, options = self._generate_code_uncached(
                 template
             )
         else:
+            _debug.logic("compile.route", route="cached", template=ref)
             template_functions, def_name, options = self._generate_code_cached(ref)
 
         render_template = template_functions[def_name]
@@ -842,6 +919,11 @@ class IrQweb(models.AbstractModel):
                 key: wrap(function) if isinstance(function, FunctionType) else function
                 for key, function in template_functions.items()
             }
+            _debug.logic(
+                "compile.profiled_wrap",
+                template=ref,
+                functions=len(template_functions),
+            )
 
         return (template_functions, def_name, options)
 
@@ -881,6 +963,9 @@ class IrQweb(models.AbstractModel):
                 f"The templates file {path!r} must be under a subfolder "
                 "'templates' of a module"
             )
+            _debug.logic(
+                "template_file_rejected", path=path, reason="outside_templates"
+            )
             raise ValueError(msg)
         with file_open(path, "rb", filter_ext=(".xml",)) as file:
             element = etree.fromstring(memoryview(file.read()))
@@ -904,6 +989,11 @@ class IrQweb(models.AbstractModel):
 
         if code is None:
             Error, message, stack = options["error"]
+            _debug.logic(
+                "compile.not_found",
+                template=template if isinstance(template, int | str) else "etree",
+                error=Error.__name__,
+            )
 
             def not_found_template(self: Any, values: dict[str, Any]) -> str:
                 if tools.config["dev_mode"]:
@@ -927,10 +1017,13 @@ class IrQweb(models.AbstractModel):
                 "    return template_functions",
             ]
         )
-        compiled = compile(wrap_code, f"<{options.get('ref', ref)}>", "exec")
-        globals_dict = self._prepare_globals()
-        globals_dict["__builtins__"] = globals_dict
-        unsafe_eval(compiled, globals_dict)
+        with _debug.perf(
+            "compile.exec", template=options.get("ref", ref), chars=len(wrap_code)
+        ):
+            compiled = compile(wrap_code, f"<{options.get('ref', ref)}>", "exec")
+            globals_dict = self._prepare_globals()
+            globals_dict["__builtins__"] = globals_dict
+            unsafe_eval(compiled, globals_dict)
         return (
             globals_dict["generate_functions"](),
             def_name,
@@ -943,6 +1036,11 @@ class IrQweb(models.AbstractModel):
         if template is not None and not isinstance(
             template, (int, str, etree._Element)
         ):
+            _debug.logic(
+                "compile.rejected",
+                reason="bad_template_type",
+                type=type(template).__name__,
+            )
             raise TypeError(
                 "A qweb template is an id, an xml id/key or an etree element, "
                 f"got {type(template).__name__}: {template!r}"
@@ -952,6 +1050,11 @@ class IrQweb(models.AbstractModel):
         try:
             element, document, ref = self._get_template(template)
         except (ValueError, UserError) as e:
+            _debug.logic(
+                "compile.template_missing",
+                template=template if isinstance(template, int | str) else "etree",
+                error=type(e).__name__,
+            )
             return (None, self._get_not_found_options(context, e), "not_found_template")
 
         context.pop("raise_if_not_found", None)
@@ -973,6 +1076,13 @@ class IrQweb(models.AbstractModel):
 
         compile_context.template_functions[def_name] = self._compile_entry_point(
             def_name, options
+        )
+        _debug.pipeline(
+            "compile.functions_generated",
+            template=ref,
+            def_name=def_name,
+            functions=len(compile_context.template_functions),
+            expr_cache=len(self._compile_expr_cache),
         )
 
         if options.get("profile"):
@@ -1046,6 +1156,14 @@ class IrQweb(models.AbstractModel):
         compile_context.make_name = lambda prefix: (
             f"{def_name}_{prefix}_{next(name_gen)}"
         )
+        _debug.logic(
+            "compile.context_prepared",
+            template=ref,
+            ref_name=ref_name,
+            etree=isinstance(template, etree._Element),
+            nsmap=len(compile_context.nsmap),
+            profile=bool(options.get("profile")),
+        )
         return compile_context, options, def_name
 
     @staticmethod
@@ -1085,6 +1203,7 @@ class IrQweb(models.AbstractModel):
         self, template: int | str | etree._Element
     ) -> tuple[etree._Element, str, str | int]:
         if template in (False, None, ""):
+            _debug.logic("template.rejected", reason="empty")
             raise ValueError("template is required")
 
         if isinstance(template, etree._Element):
@@ -1094,11 +1213,14 @@ class IrQweb(models.AbstractModel):
             for node in element.iter():
                 ref = node.get("t-name")
                 if ref:
+                    _debug.logic("template.etree_named", ref=ref)
                     return (node, document, _id_or_xmlid(ref))
 
+            _debug.logic("template.etree_anonymous", tag=element.tag)
             return (element, document, ETREE_REF)
 
         if isinstance(template, str) and "<" in template:
+            _debug.logic("template.rejected", reason="inline_string")
             msg = "Inline templates must be passed as `etree` documents"
             raise ValueError(msg)
 
@@ -1127,6 +1249,7 @@ class IrQweb(models.AbstractModel):
             if "template" not in compile_batch[ref] and not compile_batch[ref]["error"]
         }
         if not missing_refs:
+            _debug.perf.count("preload_trees.all_cached", refs=len(refs))
             return compile_batch
 
         views = (
@@ -1162,6 +1285,11 @@ class IrQweb(models.AbstractModel):
                         continue
                     sub_ref = el.get(ref_name)
                     if not sub_ref:
+                        _debug.logic(
+                            "preload_trees.empty_ref",
+                            attribute=ref_name,
+                            view=view.key or view.id,
+                        )
                         raise ValueError(
                             f"template is required: empty {ref_name!r} value "
                             f"in template {view.key or view.id!r}"
@@ -1197,6 +1325,9 @@ class IrQweb(models.AbstractModel):
                 checksum = Attachment._get_content_checksum(bin_source)
                 converted_cache = self.env.cr.cache.setdefault(
                     "_webp_as_jpg_datas_", {}
+                )
+                _debug.perf.count(
+                    "webp_as_jpg_checked", cached=checksum in converted_cache
                 )
                 if checksum not in converted_cache:
                     origins_query = Attachment.sudo()._search(
@@ -1258,6 +1389,12 @@ class IrQweb(models.AbstractModel):
             )
 
         context = {"dev_mode": "qweb" in tools.config["dev_mode"]}
+        _debug.logic(
+            "render.environment_prepared",
+            minimal=bool(self.env.context.get("minimal_qcontext")),
+            dev_mode=context["dev_mode"],
+            values=len(values),
+        )
         return self.with_context(**context)
 
     def _prepare_globals(self) -> dict[str, Any]:
@@ -1437,6 +1574,7 @@ class IrQweb(models.AbstractModel):
         index = 0
         open_bracket_index = -1
         bracket_depth = 0
+        folded = 0  # debuglog
         while index < len(tokens):
             t = tokens[index]
             if t.exact_type in (token.LPAR, token.LSQB, token.LBRACE):
@@ -1463,7 +1601,11 @@ class IrQweb(models.AbstractModel):
                         )
                     ]
                     index = open_bracket_index
+                    folded += 1  # debuglog
             index += 1
+        _debug.perf.count(
+            "compile_expr.brackets_folded", folded=folded, tokens=len(tokens)
+        )
 
     def _emit_expr_tokens(
         self,
@@ -1488,10 +1630,14 @@ class IrQweb(models.AbstractModel):
 
             if t.exact_type == token.NAME:
                 if "__" in string:
+                    _debug.logic(
+                        "compile_expr.rejected", reason="dunder_name", name=string
+                    )
                     raise SyntaxError(
                         f"Using variable names with '__' is not allowed: {string!r}"
                     )
                 if string == "lambda":
+                    _debug.logic("compile_expr.lambda", args=len(argument_names))
                     code.append("lambda ")
                     index, t = self._emit_lambda_parameters(
                         tokens, index, argument_names, code
@@ -1573,7 +1719,14 @@ class IrQweb(models.AbstractModel):
             QWEB_TOKEN_TYPE,
         )
         if raise_on_missing or is_walked_into:
+            _debug.logic(
+                "compile_expr.name_resolved",
+                name=string,
+                strict=True,
+                walked_into=is_walked_into,
+            )
             return f"values[{string!r}]"
+        _debug.logic("compile_expr.name_resolved", name=string, strict=False)
         return f"values.get({string!r})"
 
     @staticmethod
@@ -1597,10 +1750,12 @@ class IrQweb(models.AbstractModel):
         if result is not None:
             return result
 
+        _debug.perf.count("compile_expr.cache_miss", chars=len(expr or ""))
         readable = io.BytesIO(f"({expr or ''})".encode())
         try:
             tokens = list(tokenize.tokenize(readable.readline))
         except tokenize.TokenError as e:
+            _debug.logic("compile_expr.rejected", reason="tokenize", chars=len(expr))
             raise ValueError(f"Can not compile expression: {expr} ({e.args[0]})") from e
 
         expression = self._compile_expr_tokens(
@@ -1608,6 +1763,7 @@ class IrQweb(models.AbstractModel):
         )
 
         if "\n" in expression:
+            _debug.logic("compile_expr.rejected", reason="multiline", chars=len(expr))
             raise SyntaxError(
                 "QWeb expressions must compile to a single line; "
                 f"cannot flatten a multi-line literal in: {expr!r}"
@@ -1663,6 +1819,7 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         if "t-qweb-skip" in el.attrib:
+            _debug.logic("compile_node.skipped", tag=el.tag)
             return []
 
         self._normalize_deprecated_attributes(el, compile_context)
@@ -1739,6 +1896,13 @@ class IrQweb(models.AbstractModel):
 
             attrib = self._post_processing_att(el.tag, attrib, is_static=True)
 
+        _debug.pipeline(
+            "compile_static_node",
+            tag=el_tag,
+            attributes=len(attrib),
+            namespaced=bool(el.nsmap),
+            void=el_tag in VOID_ELEMENTS,
+        )
         if unqualified_el_tag != "t":
             attributes = "".join(
                 f' {escape(str(name))}="{escape(str(value))}"'
@@ -1808,6 +1972,12 @@ class IrQweb(models.AbstractModel):
 
         remaining = set(el.attrib) - SPECIAL_DIRECTIVES
         if remaining:
+            _debug.logic(
+                "compile_directives.unknown",
+                tag=el.tag,
+                attributes=sorted(remaining),
+                template=compile_context.ref,
+            )
             _logger.warning(
                 "Unknown directives or unused attributes: %s in %s",
                 remaining,
@@ -1846,8 +2016,10 @@ class IrQweb(models.AbstractModel):
         debugger = el.attrib.pop("t-debug")
         code = []
         if compile_context.get("dev_mode"):
+            _debug.logic("directive_debug.emitted", debugger=debugger or "builtin")
             code.append(indent_code(f"self._debug_trace({debugger!r}, values)", level))
         else:
+            _debug.logic("directive_debug.ignored", reason="not_dev_mode")
             _logger.warning("@t-debug in template is only available in qweb dev mode")
         return code
 
@@ -1863,6 +2035,12 @@ class IrQweb(models.AbstractModel):
                 dict_options.append(f"{option_name!r}:{self._compile_expr(value)}")
 
         t_options = el.attrib.pop("t-options", None)
+        _debug.logic(
+            "directive_options.compiled",
+            tag=el.tag,
+            dict_options=len(dict_options),
+            t_options=bool(t_options),
+        )
         if t_options and dict_options:
             code.append(
                 indent_code(
@@ -1895,6 +2073,7 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         msg = "the t-options must be on the same tag as a directive that consumes it (for example: t-out, t-field, t-call)"
+        _debug.logic("directive_options.rejected", reason="unconsumed", tag=el.tag)
         raise SyntaxError(msg)
 
     def _compile_directive_att(
@@ -1939,6 +2118,7 @@ class IrQweb(models.AbstractModel):
                 value = el.attrib.pop(key)
                 code.append(self._compile_dict_merge("attrs", value, level))
 
+        _debug.pipeline("directive_att.compiled", tag=el.tag, statements=len(code) - 1)
         return code
 
     def _compile_directive_tag_open(
@@ -1947,6 +2127,7 @@ class IrQweb(models.AbstractModel):
 
         el_tag = el.attrib.pop("t-tag-open", None)
         if not el_tag:
+            _debug.logic("directive_tag_open.skipped", tag=el.tag)
             return []
 
         self._add_text(f"<{el_tag}", compile_context)
@@ -1973,6 +2154,11 @@ class IrQweb(models.AbstractModel):
         else:
             self._add_text("/>", compile_context)
 
+        _debug.pipeline(
+            "directive_tag_open.compiled",
+            tag=el_tag,
+            closed="t-tag-close" in el.attrib,
+        )
         return code
 
     def _compile_directive_tag_close(
@@ -1990,6 +2176,7 @@ class IrQweb(models.AbstractModel):
         code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == "t")
 
         if "t-set" not in el.attrib:
+            _debug.logic("directive_set.passthrough", tag=el.tag)
             return code
 
         varname = el.attrib.pop("t-set")
@@ -2004,6 +2191,11 @@ class IrQweb(models.AbstractModel):
             self._check_set_owns_its_node(el, varname)
 
         value_code = self._compile_set_value(el, varname, level)
+        _debug.logic(
+            "directive_set.compiled",
+            varname=varname if varname[0] != "{" else "{dict}",
+            mode="value" if value_code is not None else "content",
+        )
         code.extend(
             value_code
             if value_code is not None
@@ -2015,6 +2207,7 @@ class IrQweb(models.AbstractModel):
     @staticmethod
     def _check_set_varname(varname: str) -> None:
         if varname == "":
+            _debug.logic("directive_set.rejected", reason="empty_varname")
             msg = "t-set"
             raise KeyError(msg)
         if (
@@ -2025,8 +2218,14 @@ class IrQweb(models.AbstractModel):
             msg = (
                 "The varname can only contain alphanumeric characters and underscores."
             )
+            _debug.logic(
+                "directive_set.rejected", reason="invalid_varname", varname=varname
+            )
             raise SyntaxError(msg)
         if "__" in varname:
+            _debug.logic(
+                "directive_set.rejected", reason="dunder_varname", varname=varname
+            )
             raise SyntaxError(
                 f"Using variable names with '__' is not allowed: {varname!r}"
             )
@@ -2039,8 +2238,12 @@ class IrQweb(models.AbstractModel):
                 "t-raw: the node content is already claimed by the output "
                 "directive"
             )
+            _debug.logic(
+                "directive_set.rejected", reason="shares_output_node", varname=varname
+            )
             raise SyntaxError(msg)
         if varname == T_CALL_SLOT:
+            _debug.logic("directive_set.rejected", reason="slot_from_value")
             msg = 't-set="0" should not be set from t-value or t-valuef'
             raise SyntaxError(msg)
 
@@ -2049,6 +2252,7 @@ class IrQweb(models.AbstractModel):
     ) -> list[str] | None:
         if "t-value" in el.attrib:
             expr = el.attrib.pop("t-value") or "None"
+            _debug.logic("directive_set.value", varname=varname, mode="expr")
             return [
                 indent_code(
                     f"values[{varname!r}] = {self._compile_expr(expr)}",
@@ -2057,6 +2261,7 @@ class IrQweb(models.AbstractModel):
             ]
         if "t-valuef" in el.attrib:
             exprf = el.attrib.pop("t-valuef")
+            _debug.logic("directive_set.value", varname=varname, mode="format")
             return [
                 indent_code(
                     f"values[{varname!r}] = {self._compile_format(exprf)}",
@@ -2065,6 +2270,12 @@ class IrQweb(models.AbstractModel):
             ]
         if "t-valuef.translate" in el.attrib:
             exprf = el.attrib.pop("t-valuef.translate")
+            _debug.logic(
+                "directive_set.value",
+                varname=varname,
+                mode="translate",
+                editing=bool(self.env.context.get("edit_translations")),
+            )
             if self.env.context.get("edit_translations"):
                 return [
                     indent_code(
@@ -2079,6 +2290,7 @@ class IrQweb(models.AbstractModel):
                 )
             ]
         if varname[0] == "{":
+            _debug.logic("directive_set.value", varname="{dict}", mode="dict")
             return [indent_code(f"values.update({self._compile_expr(varname)})", level)]
         return None
 
@@ -2094,6 +2306,7 @@ class IrQweb(models.AbstractModel):
             el, compile_context, "inner-content", 1
         ) + self._flush_text(compile_context, 1)
         if not content:
+            _debug.logic("directive_set.empty_content", varname=varname)
             return [indent_code(f"values[{varname!r}] = ''", level)]
 
         def_name = compile_context.make_name("t_set")
@@ -2101,6 +2314,12 @@ class IrQweb(models.AbstractModel):
         def_code.append(indent_code(self._get_element_marker(path, xml), 1))
         def_code.extend(content)
         compile_context.template_functions[def_name] = def_code
+        _debug.pipeline(
+            "directive_set.content_function",
+            varname=varname,
+            function=def_name,
+            lines=len(content),
+        )
 
         return [
             indent_code(
@@ -2114,12 +2333,14 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_value(
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
+        _debug.logic("directive_value.rejected", tag=el.tag, reason="not_on_t_set")
         msg = "t-value must be on the same node of t-set"
         raise SyntaxError(msg)
 
     def _compile_directive_valuef(
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
+        _debug.logic("directive_valuef.rejected", tag=el.tag, reason="not_on_t_set")
         msg = "t-valuef must be on the same node of t-set"
         raise SyntaxError(msg)
 
@@ -2136,6 +2357,10 @@ class IrQweb(models.AbstractModel):
         body = []
         for item in list(el):
             if isinstance(item, etree._Comment):
+                _debug.logic(
+                    "inner_content.comment",
+                    preserved=bool(compile_context.get("preserve_comments")),
+                )
                 if compile_context.get("preserve_comments"):
                     self._add_text(f"<!--{item.text}-->", compile_context)
                 else:
@@ -2156,6 +2381,13 @@ class IrQweb(models.AbstractModel):
                 body.extend(self._compile_node(item, compile_context, level))
             if item.tail is not None:
                 self._add_text(item.tail, compile_context)
+        _debug.pipeline(
+            "inner_content.compiled",
+            tag=el.tag,
+            children=len(el),
+            lines=len(body),
+            namespaced=bool(el.nsmap),
+        )
         return body
 
     def _compile_directive_if(
@@ -2166,6 +2398,7 @@ class IrQweb(models.AbstractModel):
             expr = el.attrib.pop("t-elif", None)
 
         if not expr or not expr.strip():
+            _debug.logic("directive_if.rejected", reason="empty_expr", tag=el.tag)
             raise ValueError("t-if or t-elif expression should not be empty.")
 
         strip = self._rstrip_text(compile_context)
@@ -2195,6 +2428,11 @@ class IrQweb(models.AbstractModel):
             parent = el.getparent()
             tails = [el.tail, *(comment.tail for comment in comments_to_remove)]
             if any(tail and not tail.isspace() for tail in tails):
+                _debug.logic(
+                    "directive_if.rejected",
+                    reason="text_before_else",
+                    comments=len(comments_to_remove),
+                )
                 msg = "Unexpected non-whitespace characters between t-if and t-else directives"
                 raise SyntaxError(msg)
             for comment in comments_to_remove:
@@ -2219,6 +2457,7 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         if not el.attrib.pop("t-else-valid", None):
+            _debug.logic("directive_elif.rejected", reason="no_preceding_if")
             msg = "t-elif directive must be preceded by t-if or t-elif directive"
             raise SyntaxError(msg)
 
@@ -2228,6 +2467,7 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         if not el.attrib.pop("t-else-valid", None):
+            _debug.logic("directive_else.rejected", reason="no_preceding_if")
             msg = "t-else directive must be preceded by t-if or t-elif directive"
             raise SyntaxError(msg)
         el.attrib.pop("t-else")
@@ -2245,6 +2485,7 @@ class IrQweb(models.AbstractModel):
             if groups
         ]
 
+        _debug.logic("directive_groups.compiled", tag=el.tag, groups=conditions)
         strip = self._rstrip_text(compile_context)
         code = self._flush_text(compile_context, level)
         test = " and ".join(
@@ -2269,10 +2510,14 @@ class IrQweb(models.AbstractModel):
         expr_as = el.attrib.pop("t-as")
 
         if not expr_as:
+            _debug.logic("directive_foreach.rejected", reason="missing_as")
             msg = "t-as"
             raise KeyError(msg)
 
         if not VARNAME_REGEXP.match(expr_as):
+            _debug.logic(
+                "directive_foreach.rejected", reason="invalid_as", varname=expr_as
+            )
             raise ValueError(
                 f"The varname {expr_as!r} can only contain alphanumeric characters and underscores."
             )
@@ -2300,6 +2545,12 @@ class IrQweb(models.AbstractModel):
         )
 
         code.extend(content_foreach or [indent_code("continue", level + 1)])
+        _debug.pipeline(
+            "directive_foreach.compiled",
+            varname=expr_as,
+            numeric=expr_foreach.isdigit(),
+            body_lines=len(content_foreach),
+        )
 
         return code
 
@@ -2313,6 +2564,12 @@ class IrQweb(models.AbstractModel):
         level: int,
     ) -> str:
         if expr_foreach.isdigit():
+            _debug.logic(
+                "directive_foreach.iterable",
+                kind="range",
+                size=int(expr_foreach),
+                alias=expr_as,
+            )
             return indent_code(
                 f"""
             values[{expr_as + "_size"!r}] = {size} = {int(expr_foreach)}
@@ -2321,6 +2578,7 @@ class IrQweb(models.AbstractModel):
         """,
                 level,
             )
+        _debug.logic("directive_foreach.iterable", kind="expr", alias=expr_as)
         return indent_code(
             f"""
         {t_foreach} = {self._compile_expr(expr_foreach)} or []
@@ -2396,6 +2654,7 @@ class IrQweb(models.AbstractModel):
         ) + self._flush_text(compile_context, level + 1)
 
         if expr == T_CALL_SLOT and not has_options:
+            _debug.logic("directive_out.slot_passthrough", ttype=ttype, tag=el.tag)
             code.append(indent_code("if True:", level))
             code.extend(tag_open)
             code.append(
@@ -2425,6 +2684,9 @@ class IrQweb(models.AbstractModel):
     def _compile_out_target(self, el: etree._Element) -> tuple[str, str]:
         present = [name for name in OUTPUT_DIRECTIVES if name in el.attrib]
         if len(present) > 1:
+            _debug.logic(
+                "directive_out.rejected", reason="multiple_outputs", present=present
+            )
             raise SyntaxError(
                 f"A node can carry only one output directive, got {', '.join(present)}"
             )
@@ -2444,6 +2706,7 @@ class IrQweb(models.AbstractModel):
     ) -> tuple[list[str], bool]:
         if ttype == "t-field":
             record, field_name = expr.rsplit(".", 1)
+            _debug.logic("directive_out.field", field=field_name, tag=el.tag)
             return [
                 indent_code(
                     f"""
@@ -2464,6 +2727,13 @@ class IrQweb(models.AbstractModel):
         else:
             code = [indent_code(f"content = {self._compile_expr(expr)}", level)]
 
+        _debug.logic(
+            "directive_out.content",
+            tag=el.tag,
+            source="slot" if expr == T_CALL_SLOT else "expr",
+            widget=has_options,
+            raw=ttype == "t-raw",
+        )
         force_display_dependent = has_options
         if force_display_dependent:
             code.append(
@@ -2539,6 +2809,12 @@ class IrQweb(models.AbstractModel):
                 indent_code("""else: values.pop('__qweb_attrs__', None)""", level)
             )
 
+        _debug.logic(
+            "directive_out.emitted",
+            default_body=bool(default_body),
+            force_display=force_display_dependent,
+            wrapped=bool(tag_open),
+        )
         return code
 
     def _compile_directive_esc(
@@ -2590,6 +2866,7 @@ class IrQweb(models.AbstractModel):
 
         el_tag, _prefixed = self._get_tag_names(el)
         if el_tag != "t":
+            _debug.logic("directive_call.rejected", reason="not_t_element", tag=el_tag)
             raise SyntaxError(
                 f"t-call must be on a <t> element (actually on <{el_tag}>)."
             )
@@ -2603,6 +2880,13 @@ class IrQweb(models.AbstractModel):
         code.extend(self._compile_call_values(el, level))
 
         template = expr if expr.isnumeric() else self._compile_format(expr)
+        _debug.pipeline(
+            "directive_call.compiled",
+            target=expr[:80],
+            numeric=expr.isnumeric(),
+            dynamic="%" in template,
+            nsmap=len(compile_context.nsmap),
+        )
 
         code.append(
             indent_code(
@@ -2661,6 +2945,7 @@ class IrQweb(models.AbstractModel):
         _ref, path, xml = compile_context.error_path_xml
 
         if not (list(el) or el.text):
+            _debug.logic("directive_call.empty_content", tag=el.tag)
             return [indent_code(f"t_call_values = {{{T_CALL_SLOT!r}: '' }}", level)]
 
         is_deprecated_version = not any(
@@ -2677,6 +2962,12 @@ class IrQweb(models.AbstractModel):
         code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context.template_functions[def_name] = code_content
+        _debug.pipeline(
+            "directive_call.content_function",
+            function=def_name,
+            deprecated=is_deprecated_version,
+            lines=len(code_content),
+        )
 
         code = [
             indent_code(
@@ -2742,6 +3033,7 @@ class IrQweb(models.AbstractModel):
             elif key == "t-args":
                 value = el.attrib.pop(key)
                 code.append(self._compile_dict_merge("t_call_values", value, level))
+        _debug.pipeline("directive_call.values_compiled", tag=el.tag, values=len(code))
         return code
 
     def _compile_directive_lang(
@@ -2757,6 +3049,9 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         if len(el) > 0:
+            _debug.logic(
+                "call_assets_rejected", reason="has_children", children=len(el)
+            )
             msg = "t-call-assets cannot contain children nodes"
             raise SyntaxError(msg)
 
@@ -2847,6 +3142,7 @@ class IrQweb(models.AbstractModel):
             )
             __import__(debugger).set_trace()
         else:
+            _debug.logic("debug_trace.rejected", debugger=debugger)
             raise ValueError(f"unsupported t-debug value: {debugger}")
 
     def _post_processing_att(
@@ -2857,6 +3153,7 @@ class IrQweb(models.AbstractModel):
                 if (value := atts.get(attr)) and MALICIOUS_SCHEMES(
                     _normalize_url_for_scheme_check(value)
                 ):
+                    _debug.logic("attribute_scheme_stripped", tag=tagName, attr=attr)
                     atts[attr] = ""
         return atts
 
@@ -2865,7 +3162,10 @@ class IrQweb(models.AbstractModel):
 
     def _get_field_converter(self, widget_type: str) -> models.BaseModel:
         model = "ir.qweb.field." + widget_type
-        return self.env[model] if model in self.env else self.env["ir.qweb.field"]
+        if model in self.env:
+            return self.env[model]
+        _debug.logic("field_converter_fallback", widget=widget_type)
+        return self.env["ir.qweb.field"]
 
     def _get_field(
         self,
@@ -2898,6 +3198,15 @@ class IrQweb(models.AbstractModel):
         converter = self._get_field_converter(field_options["type"])
         content = converter.record_to_html(record, field_name, field_options)
         attributes = converter.attributes(record, field_name, field_options, values)
+        _debug.pipeline(
+            "field_rendered",
+            model=record._name,
+            field=field_name,
+            widget=field_options["type"],
+            branding=bool(inherit_branding),
+            translate=bool(translate),
+            attributes=len(attributes),
+        )
 
         return (attributes, content, inherit_branding or translate)
 
@@ -2911,6 +3220,7 @@ class IrQweb(models.AbstractModel):
     ) -> tuple[dict[str, Any], str | Markup | bool | None, bool | None]:
         widget = field_options.get("widget")
         if not widget:
+            _debug.logic("widget_rejected", reason="no_widget", expression=expression)
             msg = (
                 f"t-options on the t-out/t-esc {expression!r} requires a "
                 "'widget' option, e.g. t-options-widget=\"'date'\" or "
@@ -2929,6 +3239,13 @@ class IrQweb(models.AbstractModel):
         if inherit_branding:
             attributes["data-oe-type"] = field_options["type"]
             attributes["data-oe-expression"] = field_options["expression"]
+        _debug.pipeline(
+            "widget_rendered",
+            widget=widget,
+            tag=tagName,
+            branding=bool(inherit_branding),
+            value_type=type(value).__name__,
+        )
 
         return (attributes, content, inherit_branding)
 

@@ -32,4 +32,9 @@ class IrDemo_FailureWizard(models.TransientModel):
 
     def done(self) -> dict[str, Any]:
         _debug.lifecycle("demo_failures_acknowledged", failures=self.failures_count)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "demo_failures_modules",
+                modules=sorted(self.failure_ids.mapped("module_id.name")),
+            )
         return self.env["ir.module.module"]._next_todo_action()

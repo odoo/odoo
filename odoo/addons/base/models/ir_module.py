@@ -109,6 +109,7 @@ def assert_log_admin_access[T](method: T, /) -> T:
             origin,
         )
         if not allowed:
+            _debug.logic("admin_access.denied", method=method.__name__, uid=user.id)
             raise AccessDenied
         return method(self, *args, **kwargs)
 
@@ -172,23 +173,32 @@ class IrModuleCategory(models.Model):
     @api.constrains("parent_id")
     def _check_parent_not_circular(self) -> None:
         if self._has_cycle():
+            _debug.logic("category.cycle_rejected", categories=self.ids)
             raise ValidationError(_("Error ! You cannot create recursive categories."))
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         records = super().create(vals_list)
         self.env.registry.clear_cache("groups")
+        _debug.lifecycle("category.create", count=len(records))
         return records
 
     def write(self, vals: dict[str, Any]) -> bool:
         res = super().write(vals)
         if not GROUP_HIERARCHY_FIELDS.isdisjoint(vals):
             self.env.registry.clear_cache("groups")
+        _debug.lifecycle(
+            "category.write",
+            count=len(self),
+            fields=list(vals),
+            groups_cache_cleared=not GROUP_HIERARCHY_FIELDS.isdisjoint(vals),
+        )
         return res
 
     def unlink(self) -> bool:
         res = super().unlink()
         self.env.registry.clear_cache("groups")
+        _debug.lifecycle("category.unlink", count=len(self))
         return res
 
 
@@ -377,6 +387,7 @@ class IrModuleModule(models.Model):
             with tools.file_open(path, "rb", filter_ext=(".html",)) as desc_file:
                 return desc_file.read().decode(errors="replace").strip()
         except FileNotFoundError:
+            _debug.logic("description.index_html_missing", module=self.name)
             return ""
 
     def _render_description_rst(self) -> str:
@@ -385,6 +396,7 @@ class IrModuleModule(models.Model):
         try:
             html, messages = render_rst_html(raw_description)
         except Exception as e:
+            _debug.logic("description.rst_unrenderable", module=self.name)
             _logger.warning(
                 "module %s: description is not renderable (%s), showing it raw",
                 self.name,
@@ -397,20 +409,23 @@ class IrModuleModule(models.Model):
 
     @api.depends("name", "description")
     def _compute_description_html(self) -> None:
-        for module in self:
-            if not module.name:
-                module.description_html = False
-                continue
-            doc = module._read_description_index_html() or (
-                module._render_description_rst()
-            )
-            module.description_html = localize_description_images(module.name, doc)
+        with _debug.perf("description.compute", count=len(self)):
+            for module in self:
+                if not module.name:
+                    module.description_html = False
+                    continue
+                doc = module._read_description_index_html() or (
+                    module._render_description_rst()
+                )
+                module.description_html = localize_description_images(module.name, doc)
 
     @api.depends("name")
     def _compute_manifest_version(self) -> None:
         default_version = modules.adapt_version("1.0")
         for module in self:
             manifest = self.get_module_info(module.name)
+            if _debug.logic.enabled and not manifest:
+                _debug.logic("manifest.missing", module=module.name)
             module.manifest_version = (
                 manifest["version"] if manifest else default_version
             )
@@ -455,6 +470,13 @@ class IrModuleModule(models.Model):
         views = {v.id: format_view(v) for v in existing("ir.ui.view")}
         reports = {r.id: r.name for r in existing("ir.actions.report")}
         menus = {m.id: m.complete_name for m in existing("ir.ui.menu")}
+        _debug.perf.count(
+            "records_by_module.collected",
+            modules=len(active_mods),
+            views=len(views),
+            reports=len(reports),
+            menus=len(menus),
+        )
 
         for module in active_mods:
             imd_models = imd_per_module[module.name]
@@ -483,6 +505,7 @@ class IrModuleModule(models.Model):
             elif manifest:
                 path = manifest.icon
             else:
+                _debug.logic("icon.fallback_base", module=module.name)
                 path = Manifest.for_addon("base").icon
             path = path.removeprefix("/")
             if path:
@@ -494,6 +517,7 @@ class IrModuleModule(models.Model):
                     ) as image_file:
                         module.icon_image = base64.b64encode(image_file.read())
                 except OSError, ValueError:
+                    _debug.logic("icon.unreadable", module=module.name, path=path)
                     module.icon_image = ""
             countries = manifest["countries"] if manifest else []
             if len(countries) == 1:
@@ -504,6 +528,7 @@ class IrModuleModule(models.Model):
     def _compute_has_iap(self) -> None:
         iap = self.browse(self._get_id("iap") or [])
         iap_ids = set((iap | iap.downstream_dependencies(exclude_states=()))._ids)
+        _debug.perf.count("has_iap.closure", iap_modules=len(iap_ids))
         for module in self:
             module.has_iap = bool(module.id) and module.id in iap_ids
 
@@ -516,6 +541,12 @@ class IrModuleModule(models.Model):
                 "to remove",
                 "to install",
             ):
+                _debug.logic(
+                    "unlink.rejected",
+                    module=module.name,
+                    state=module.state,
+                    reason="installed_or_pending",
+                )
                 raise UserError(
                     _(
                         "You are trying to remove a module that is installed or will be installed."
@@ -534,6 +565,8 @@ class IrModuleModule(models.Model):
 
     def unlink(self) -> bool:
         self.env.registry.clear_cache("stable")
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle("unlink", modules=self.mapped("name"))
         return super().unlink()
 
     def _get_domain_modules_to_load(self) -> list[tuple[str, str, str]]:
@@ -545,6 +578,7 @@ class IrModuleModule(models.Model):
     ) -> None:
         manifest = modules.Manifest.for_addon(module_name)
         if not manifest:
+            _debug.logic("external_dependencies.skipped", module=module_name)
             return
         try:
             manifest.check_manifest_dependencies()
@@ -587,12 +621,22 @@ class IrModuleModule(models.Model):
             if install_package:
                 msg += _("\nIt can be installed running: %s", install_package)
 
+            _debug.logic(
+                "external_dependency.missing",
+                module=module_name,
+                dependency=e.dependency,
+                newstate=newstate,
+                apt_hint=bool(install_package),
+            )
             raise UserError(msg) from e
 
     def _update_module_state(
         self, newstate: str, states_to_update: list[str], level: int = 100
     ) -> None:
         if level < 1:
+            _debug.logic(
+                "module_state.recursion_exhausted", modules=self.mapped("name")
+            )
             raise UserError(
                 _(
                     "Recursion error in modules dependencies (while processing: %s)!",
@@ -607,6 +651,12 @@ class IrModuleModule(models.Model):
             update_ids = []
             for dep in module.dependencies_id:
                 if dep.state in UNSATISFIABLE_DEPENDENCY_STATES:
+                    _debug.logic(
+                        "module_state.unsatisfiable_dependency",
+                        module=module.name,
+                        dependency=dep.name,
+                        state=dep.state,
+                    )
                     raise UserError(
                         self._get_unsatisfiable_dependency_error(module, dep)
                     )
@@ -661,13 +711,28 @@ class IrModuleModule(models.Model):
 
         def is_install_required(module):
             if not module._is_auto_install_satisfiable():
+                _debug.logic(
+                    "auto_install.skipped", module=module.name, reason="unsatisfiable"
+                )
                 return False
             if module.country_ids and not (module.country_ids & company_countries):
+                _debug.logic(
+                    "auto_install.skipped", module=module.name, reason="country"
+                )
                 return False
             triggers = {
                 dep.state for dep in module.dependencies_id if dep.auto_install_required
             }
-            return triggers <= AUTO_INSTALL_TRIGGER_STATES and "to install" in triggers
+            required = (
+                triggers <= AUTO_INSTALL_TRIGGER_STATES and "to install" in triggers
+            )
+            _debug.logic(
+                "auto_install.evaluated",
+                module=module.name,
+                triggers=sorted(triggers),
+                required=required,
+            )
+            return required
 
         to_install = self
         rounds = 0  # debuglog
@@ -679,6 +744,7 @@ class IrModuleModule(models.Model):
             to_install._update_module_state("to install", ["uninstalled"])
 
             if config.get("skip_auto_install"):
+                _debug.logic("auto_install.disabled", reason="skip_auto_install")
                 to_install = self.browse()
             else:
                 to_install = self.search(auto_domain).filtered(is_install_required)
@@ -692,6 +758,12 @@ class IrModuleModule(models.Model):
         for module in install_mods:
             for exclusion in module.exclusion_ids:
                 if exclusion.name in install_names:
+                    _debug.logic(
+                        "install.rejected",
+                        module=module.name,
+                        excluded=exclusion.name,
+                        reason="exclusion",
+                    )
                     raise UserError(
                         _(
                             'Modules "%(module)s" and "%(incompatible_module)s" are incompatible.',
@@ -712,6 +784,12 @@ class IrModuleModule(models.Model):
                 for module in category_mods
             ):
                 labels = dict(self.fields_get(["state"])["state"]["selection"])
+                _debug.logic(
+                    "install.rejected",
+                    category=category.name,
+                    modules=category_mods.mapped("name"),
+                    reason="exclusive_category",
+                )
                 raise UserError(
                     _(
                         'You are trying to install incompatible modules in category "%(category)s":%(module_list)s',
@@ -737,8 +815,13 @@ class IrModuleModule(models.Model):
     @assert_log_admin_access
     @api.model
     def button_reset_state(self) -> bool:
-        self.search([("state", "=", "to install")]).state = "uninstalled"
-        self.search([("state", "in", ("to upgrade", "to remove"))]).state = "installed"
+        to_install = self.search([("state", "=", "to install")])
+        to_install.state = "uninstalled"
+        pending = self.search([("state", "in", ("to upgrade", "to remove"))])
+        pending.state = "installed"
+        _debug.lifecycle(
+            "state_reset", to_uninstalled=len(to_install), to_installed=len(pending)
+        )
         return True
 
     @api.model
@@ -769,6 +852,10 @@ class IrModuleModule(models.Model):
             .with_context(**{"active_test": False, MODULE_UNINSTALL_FLAG: True})
             .search(domain)
         )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "copied_views.removed", modules=self.mapped("name"), views=len(orphans)
+            )
         orphans.unlink()
 
     def _get_dependency_closure(
@@ -785,7 +872,9 @@ class IrModuleModule(models.Model):
         blocked = set(known_deps.ids) | set(self.ids)
         closure: set[int] = set()
         frontier = Module.browse(self.ids)
+        rounds = 0  # debuglog
         while frontier:
+            rounds += 1  # debuglog
             if direction == "downstream":
                 step = Dependency.search(
                     [("name", "in", frontier.mapped("name"))]
@@ -811,6 +900,14 @@ class IrModuleModule(models.Model):
             )
             closure.update(step.ids)
             frontier = step
+        _debug.perf.count(
+            "dependency_closure.computed",
+            direction=direction,
+            seeds=len(self),
+            known=len(known_deps),
+            closure=len(closure),
+            rounds=rounds,
+        )
         return known_deps | self.browse(sorted(closure))
 
     def downstream_dependencies(
@@ -841,7 +938,9 @@ class IrModuleModule(models.Model):
         active_todo = Todos.search([("state", "=", "open")], limit=1)
         if active_todo:
             _logger.info('next action is "%s"', active_todo.name)
+            _debug.logic("next_action.todo", todo=active_todo.id)
             return active_todo.action_launch()
+        _debug.logic("next_action.home")
         return {
             "type": "ir.actions.act_url",
             "target": "self",
@@ -856,7 +955,9 @@ class IrModuleModule(models.Model):
                     tuple(PENDING_STATES),
                 )
             )
-            return bool(check_cr.rowcount)
+            pending = bool(check_cr.rowcount)
+            _debug.logic("pending_operation.checked", pending=pending)
+            return pending
 
     def _lock_against_concurrent_module_operations(self) -> None:
         busy = _(
@@ -880,6 +981,7 @@ class IrModuleModule(models.Model):
             cr.execute("SELECT FROM ir_cron FOR UPDATE")
         except psycopg.OperationalError:
             cr.rollback()
+            _debug.logic("module_lock_busy", reason="cron_lock_timeout")
             raise UserError(
                 _(
                     "Odoo is currently processing a scheduled action.\n"
@@ -887,11 +989,14 @@ class IrModuleModule(models.Model):
                     "please try again later or contact your system administrator."
                 )
             ) from None
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle("module_lock.acquired", modules=self.mapped("name"))
 
     def _button_immediate_function(
         self, function: Callable[..., Any]
     ) -> dict[str, Any]:
         if not self.env.registry.ready:
+            _debug.logic("immediate_function.rejected", reason="registry_not_ready")
             raise UserError(
                 _(
                     "Immediate module operations cannot be performed on an init or non-loaded registry. Please use button_install instead."
@@ -899,6 +1004,7 @@ class IrModuleModule(models.Model):
             )
 
         if modules.module.current_test:
+            _debug.logic("immediate_function.rejected", reason="inside_test")
             msg = (
                 "Module operations inside tests are not transactional and thus forbidden.\n"
                 "If you really need to perform module operations to test a specific behavior, it "
@@ -935,6 +1041,11 @@ class IrModuleModule(models.Model):
             )
 
         next_action = self.env["ir.module.module"]._next_todo_action() or {}
+        _debug.pipeline(
+            "immediate_function.done",
+            function=function.__name__,
+            next_action=next_action.get("type"),
+        )
         if next_action.get("type") != "ir.actions.act_window_close":
             return next_action
 
@@ -958,6 +1069,11 @@ class IrModuleModule(models.Model):
             self.mapped("name")
         )
         if un_installable_modules:
+            _debug.logic(
+                "uninstall.rejected",
+                modules=sorted(un_installable_modules),
+                reason="server_wide",
+            )
             raise UserError(
                 _(
                     "Those modules cannot be uninstalled: %s",
@@ -967,6 +1083,11 @@ class IrModuleModule(models.Model):
         if any(
             state not in ("installed", "to upgrade") for state in self.mapped("state")
         ):
+            _debug.logic(
+                "uninstall.rejected",
+                modules=self.mapped("name"),
+                reason="not_installed",
+            )
             raise UserError(
                 _(
                     "One or more of the selected modules have already been uninstalled, if you "
@@ -1013,6 +1134,7 @@ class IrModuleModule(models.Model):
             )
             todo.extend(others)
             seen_ids.update(others._ids)
+            _debug.pipeline("upgrade_cascade.base_pulls_installed", others=len(others))
 
         dependents_by_name = defaultdict(list)
         for dep in Dependency.search([]):
@@ -1023,6 +1145,12 @@ class IrModuleModule(models.Model):
             module = todo[i]
             i += 1
             if module.state not in ("installed", "to upgrade"):
+                _debug.logic(
+                    "upgrade.rejected",
+                    module=module.name,
+                    state=module.state,
+                    reason="not_installed",
+                )
                 raise UserError(
                     _(
                         "Cannot upgrade module “%s”. It is not installed.",
@@ -1046,6 +1174,13 @@ class IrModuleModule(models.Model):
         if not config["skip_unchanged_modules"] or not column_exists(
             self.env.cr, "ir_module_module", "content_checksum"
         ):
+            _debug.logic(
+                "upgrade_checksum.disabled",
+                cascade=len(cascade),
+                reason="config"
+                if not config["skip_unchanged_modules"]
+                else "no_column",
+            )
             return [module.id for module in cascade]
 
         self.env.cr.execute(
@@ -1096,6 +1231,7 @@ class IrModuleModule(models.Model):
                     )
                     or "unknown, no data-file checksums stored yet",
                 )
+                _debug.logic("upgrade_checksum.reapplied", module=module.name)
                 marked_ids.append(module.id)
                 marked_names.add(module.name)
                 unchanged.remove(module)
@@ -1118,6 +1254,12 @@ class IrModuleModule(models.Model):
                 continue
             for dep in module.dependencies_id:
                 if dep.state == "unknown":
+                    _debug.logic(
+                        "upgrade.rejected",
+                        module=module.name,
+                        dependency=dep.name,
+                        reason="unknown_dependency",
+                    )
                     raise UserError(
                         _(
                             "You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\nBut this module is not available in your system.",
@@ -1127,18 +1269,25 @@ class IrModuleModule(models.Model):
                     )
                 if dep.state == "uninstalled":
                     names.append(dep.name)
+        _debug.logic("upgrade.uninstalled_dependencies", count=len(names))
         return names
 
     @assert_log_admin_access
     def button_upgrade(self) -> dict[str, Any] | None:
         if not self:
+            _debug.logic("upgrade.skipped", reason="empty_recordset")
             return None
+        if _debug.pipeline.enabled:
+            _debug.pipeline("upgrade.requested", modules=self.mapped("name"))
         self.update_list()
         cascade = self._upgrade_cascade()
         self.browse(self._get_module_ids_to_upgrade(cascade)).write(
             {"state": "to upgrade"}
         )
         if uninstalled_dep_names := self._get_uninstalled_dependency_names(cascade):
+            _debug.pipeline(
+                "upgrade.installing_dependencies", modules=uninstalled_dep_names
+            )
             self.search([("name", "in", uninstalled_dep_names)]).button_install()
         return dict(ACTION_DICT, name=_("Apply Schedule Upgrade"))
 
@@ -1211,12 +1360,20 @@ class IrModuleModule(models.Model):
                 ) > parse_version(mod.db_version):
                     updated += 1
                 if updated_values:
+                    _debug.lifecycle(
+                        "update_list.module_updated",
+                        module=manifest.name,
+                        fields=sorted(updated_values),
+                    )
                     mod.write(updated_values)
             else:
                 state = (
                     "uninstalled"
                     if manifest.get("installable", True)
                     else "uninstallable"
+                )
+                _debug.lifecycle(
+                    "update_list.module_discovered", module=manifest.name, state=state
                 )
                 mod = self.create(dict(name=manifest.name, state=state, **values))
                 added += 1
@@ -1272,6 +1429,14 @@ class IrModuleModule(models.Model):
                     to_remove,
                 )
             )
+        if _debug.perf.enabled and (to_add or to_remove):
+            _debug.perf.count(
+                "link_rows.synced",
+                module=self.name,
+                table=table,
+                added=len(to_add),
+                removed=len(to_remove),
+            )
         return bool(to_add or to_remove)
 
     def _update_dependencies(self, depends: list[str] | None = None) -> None:
@@ -1290,6 +1455,7 @@ class IrModuleModule(models.Model):
         self, requirements: dict[int, Collection[str]]
     ) -> None:
         if not requirements:
+            _debug.logic("auto_install_required.skipped", reason="no_requirements")
             return
         Dependency = self.env["ir.module.module.dependency"]
         Dependency.flush_model(["auto_install_required"])
@@ -1297,17 +1463,21 @@ class IrModuleModule(models.Model):
             SQL("(%s, %s::varchar[])", module_id, list(names or ()))
             for module_id, names in requirements.items()
         )
-        self.env.cr.execute(
-            SQL(
-                """ UPDATE ir_module_module_dependency d
-                    SET auto_install_required = (d.name = ANY(v.required))
-                    FROM (VALUES %s) AS v(module_id, required)
-                    WHERE d.module_id = v.module_id
-                      AND d.auto_install_required
-                          IS DISTINCT FROM (d.name = ANY(v.required)) """,
-                values,
+        with _debug.perf(
+            "auto_install_required.synced", cr=self.env.cr, modules=len(requirements)
+        ) as span:
+            self.env.cr.execute(
+                SQL(
+                    """ UPDATE ir_module_module_dependency d
+                        SET auto_install_required = (d.name = ANY(v.required))
+                        FROM (VALUES %s) AS v(module_id, required)
+                        WHERE d.module_id = v.module_id
+                          AND d.auto_install_required
+                              IS DISTINCT FROM (d.name = ANY(v.required)) """,
+                    values,
+                )
             )
-        )
+            span.set(rows=self.env.cr.rowcount)
         Dependency.invalidate_model(["auto_install_required"])
 
     def _update_countries(self, countries: tuple[str, ...] | list[str] = ()) -> None:
@@ -1318,6 +1488,12 @@ class IrModuleModule(models.Model):
             for code in countries
             if (country_id := id_by_code.get(code.upper()))
         }
+        if _debug.logic.enabled and len(needed) != len(countries):
+            _debug.logic(
+                "countries.unresolved",
+                module=self.name,
+                codes=[code for code in countries if code.upper() not in id_by_code],
+            )
         if self._sync_link_rows(
             "module_country", "country_id", existing, needed, SQL("integer[]")
         ):
@@ -1346,6 +1522,11 @@ class IrModuleModule(models.Model):
             seen.add(current_category.id)
             if current_category.parent_id.id in seen:
                 current_category.parent_id = False
+                _debug.lifecycle(
+                    "category.loop_fixed",
+                    module=self.name,
+                    category=current_category.id,
+                )
                 _logger.warning(
                     "category %r ancestry loop has been detected and fixed",
                     current_category,
@@ -1356,6 +1537,12 @@ class IrModuleModule(models.Model):
             self.env.cr, category.split("/"), category_cache
         )
         if cat_id != self.category_id.id:
+            _debug.lifecycle(
+                "category.changed",
+                module=self.name,
+                old=self.category_id.id,
+                new=cat_id,
+            )
             self.write({"category_id": cat_id})
 
     def _update_translations(
@@ -1374,6 +1561,13 @@ class IrModuleModule(models.Model):
         )
         mod_dict = {mod.name: mod.dependencies_id.mapped("name") for mod in update_mods}
         mod_names = topological_sort(mod_dict)
+        _debug.pipeline(
+            "translations.update",
+            requested=len(self),
+            modules=len(mod_names),
+            langs=len(filter_lang),
+            overwrite=overwrite,
+        )
         self._load_module_terms(mod_names, filter_lang, overwrite)
 
     def _check(self) -> None:
@@ -1390,15 +1584,18 @@ class IrModuleModule(models.Model):
         self.flush_model(["name"])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
         result = self.env.cr.fetchone()
+        _debug.perf.count("module_id.cache_miss", name=name, found=bool(result))
         return result[0] if result else None
 
     @api.model
     @tools.ormcache(cache="stable")
     def _get_installed_module_ids(self) -> dict[str, int]:
-        return {
+        installed = {
             module.name: module.id
             for module in self.sudo().search([("state", "=", "installed")])
         }
+        _debug.perf.count("installed_module_ids.cache_miss", count=len(installed))
+        return installed
 
     @api.model
     def search_panel_select_range(
@@ -1434,6 +1631,12 @@ class IrModuleModule(models.Model):
 
             records = self.env["ir.module.category"].search_read(
                 domain, ["display_name"], order="sequence"
+            )
+            _debug.logic(
+                "search_panel.categories",
+                records=len(records),
+                excluded=len(excluded_category_ids),
+                counters=enable_counters,
             )
 
             if enable_counters and records:
@@ -1487,6 +1690,9 @@ class IrModuleModule(models.Model):
         ):
             if root := get_root_category_id(category.id):
                 counts[root] += count
+        _debug.perf.count(
+            "category_counts.computed", roots=len(root_ids), counted=len(counts)
+        )
         for record in records:
             record["__count"] = counts[record["id"]]
 
@@ -1514,6 +1720,7 @@ class IrModuleModule(models.Model):
     ) -> None:
         for module_name in module_names:
             if not Manifest.for_addon(module_name, display_warning=False):
+                _debug.logic("terms.module_skipped", module=module_name)
                 continue
             code_translations.clear(module_name)
             data_paths = list(get_datafile_translation_path(module_name))
@@ -1531,6 +1738,7 @@ class IrModuleModule(models.Model):
                     translation_importer.load_file(data_path, lang, module=module_name)
                 imported_here = translation_importer.imported_langs - seen_before
                 if lang != "en_US" and lang not in imported_here:
+                    _debug.logic("terms.lang_missing", module=module_name, lang=lang)
                     _logger.info(
                         "module %s: no translation for language %s",
                         module_name,

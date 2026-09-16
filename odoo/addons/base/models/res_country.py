@@ -147,7 +147,9 @@ class ResCountry(models.Model):
     @api.model
     @tools.ormcache("code", cache="stable")
     def _get_phone_code_by_code(self, code: str) -> int:
-        return self.search([("code", "=", code)]).phone_code
+        phone_code = self.search([("code", "=", code)]).phone_code
+        _debug.perf.count("phone_code_computed", code=code, phone_code=phone_code)
+        return phone_code
 
     @api.model
     @tools.ormcache(cache="stable")
@@ -175,6 +177,7 @@ class ResCountry(models.Model):
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
         if "code" in vals or "phone_code" in vals:
+            _debug.lifecycle("stable_cache_cleared", by="write", count=len(self))
             self.env.registry.clear_cache("stable")
         return res
 
@@ -189,12 +192,15 @@ class ResCountry(models.Model):
 
     @api.depends("code")
     def _compute_image_url(self) -> None:
+        flagless = 0  # debuglog
         for country in self:
             if not country.code or country.code in NO_FLAG_COUNTRIES:
                 country.image_url = False
+                flagless += 1  # debuglog
             else:
                 code = FLAG_MAPPING.get(country.code, country.code.lower())
                 country.image_url = f"/base/static/img/country_flags/{code}.png"
+        _debug.perf.count("image_urls_computed", countries=len(self), flagless=flagless)
 
     @api.constrains("address_format")
     def _check_address_format(self) -> None:
@@ -206,6 +212,9 @@ class ResCountry(models.Model):
             "company_name",
         ]
         test_values = dict.fromkeys(address_fields, "test")
+        _debug.logic(
+            "address_format_checked", countries=len(self), keys=len(address_fields)
+        )
         for record in self:
             if record.address_format:
                 try:
@@ -303,6 +312,7 @@ class ResCountryState(models.Model):
         if operator == "in":
             if limit is None:
                 limit = 100
+            _debug.logic("state_name_search", by="terms", terms=len(name), limit=limit)
             for item in name:
                 result.extend(
                     self.name_search(  # noqa: E8507  one match per term by design
@@ -351,6 +361,11 @@ class ResCountryState(models.Model):
 
     def _get_domain_name_search(self, name: str, operator: str) -> Domain:
         if m := re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name):
+            _debug.logic(
+                "state_name_with_country_parsed",
+                operator=operator,
+                country=m["country"].strip(),
+            )
             return Domain(
                 [
                     ("name", operator, m["name"].strip()),

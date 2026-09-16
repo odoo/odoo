@@ -103,7 +103,7 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                 and record.repeat_month
             ):
                 clamped = self._clamp_day(record.repeat_day, record.repeat_month)
-                if clamped != record.repeat_day:
+                if _debug.logic.enabled and clamped != record.repeat_day:
                     _debug.logic(
                         "recurrence.anchor_day_clamped",
                         record=record.id,
@@ -137,7 +137,7 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                 clamped = self._clamp_day(
                     record.repeat_second_day, record.repeat_second_month
                 )
-                if clamped != record.repeat_second_day:
+                if _debug.logic.enabled and clamped != record.repeat_second_day:
                     _debug.logic(
                         "recurrence.anchor_day_clamped",
                         record=record.id,
@@ -160,6 +160,11 @@ class MixinRecurrenceAnchored(models.AbstractModel):
     def _check_repeat_anchors(self):
         for record in self:
             if record.repeat_unit == "week" and not record.repeat_weekday:
+                _debug.logic(
+                    "recurrence.anchors_rejected",
+                    record=record.id,
+                    reason="weekday_missing",
+                )
                 raise ValidationError(self.env._("A weekly schedule needs a weekday."))
             if not record.repeat_twice or record.repeat_unit not in ("month", "year"):
                 continue
@@ -178,6 +183,11 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                 first,
                 first + one_period,
             ):
+                _debug.logic(
+                    "recurrence.anchors_rejected",
+                    record=record.id,
+                    reason="same_period_closed",
+                )
                 raise ValidationError(
                     self.env._(
                         "The last day of a month and the first day of the next one "
@@ -185,6 +195,12 @@ class MixinRecurrenceAnchored(models.AbstractModel):
                     )
                 )
             if first >= second:
+                _debug.logic(
+                    "recurrence.anchors_rejected",
+                    record=record.id,
+                    reason="unordered",
+                    unit=record.repeat_unit,
+                )
                 raise ValidationError(
                     self.env._("The first day must be lower than the second day.")
                     if record.repeat_unit == "month"
@@ -222,6 +238,13 @@ class MixinRecurrenceAnchored(models.AbstractModel):
             anchors.append(
                 self._prepare_day_anchor(self.repeat_second_day, second_month)
             )
+        _debug.logic(
+            "recurrence.anchors_built",
+            record=self.id,
+            unit=unit,
+            anchors=len(anchors),
+            twice=bool(self.repeat_twice),
+        )
         return anchors
 
     def _get_next_anchor(self, after):

@@ -280,9 +280,15 @@ class ReportPaperformat(models.Model):
 
     @api.constrains("format", "page_width", "page_height")
     def _check_format_or_page(self) -> None:
-        if self.filtered(
+        _debug.perf.count("format_or_page_checked", paperformats=len(self))
+        if conflicting := self.filtered(
             lambda x: x.format != "custom" and (x.page_width or x.page_height)
         ):
+            _debug.logic(
+                "format_rejected",
+                paperformats=conflicting.ids,
+                reason="format_and_page",
+            )
             raise ValidationError(
                 self.env._(
                     "You can select either a format or a specific page width/height, but not both."
@@ -291,15 +297,29 @@ class ReportPaperformat(models.Model):
 
     @api.depends("format", "orientation", "page_width", "page_height")
     def _compute_print_page_size(self) -> None:
+        _debug.perf.count("print_page_size_computed", paperformats=len(self))
         for record in self:
             width = height = 0.0
+            if _debug.logic.enabled and not record.format:
+                _debug.logic("page_size_missing_format", paperformat=record.id)
             if record.format:
                 if record.format == "custom":
                     width = record.page_width
                     height = record.page_height
+                    _debug.logic(
+                        "page_size_custom",
+                        paperformat=record.id,
+                        width=width,
+                        height=height,
+                    )
                 else:
                     paper_size = PAPER_SIZE_BY_KEY.get(record.format)
                     if paper_size is None:
+                        _debug.logic(
+                            "page_size_unknown",
+                            paperformat=record.id,
+                            format=record.format,
+                        )
                         record.print_page_width = 0.0
                         record.print_page_height = 0.0
                         continue

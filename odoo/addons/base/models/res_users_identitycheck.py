@@ -47,10 +47,12 @@ class ResUsersIdentitycheck(models.TransientModel):
 
     def run_check(self) -> Any:
         if not request:
+            _debug.logic("identity_check_refused", reason="no_request")
             raise UserError(_("This method can only be accessed over HTTP."))
         self._check_identity()
 
         if not self.sudo().request:
+            _debug.logic("identity_check_refused", reason="no_pending_method")
             raise UserError(_("There is no method to run after the identity check."))
         ctx, model, ids, method_name, args, kwargs = json_loads(self.sudo().request)
         _debug.logic(
@@ -58,6 +60,9 @@ class ResUsersIdentitycheck(models.TransientModel):
         )
         method = getattr(self.env(context=ctx)[model].browse(ids), method_name)
         if not getattr(method, "__has_check_identity", False):
+            _debug.logic(
+                "identity_check_refused", reason="unmarked_method", method=method_name
+            )
             raise UserError(
                 _("This method is not allowed for identity-checked execution.")
             )

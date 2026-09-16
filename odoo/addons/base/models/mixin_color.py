@@ -72,6 +72,12 @@ class MixinColor(models.AbstractModel):
         try:
             return get_palette_color(value, palette)
         except IndexError:
+            _debug.logic(
+                "palette_index_fallback",
+                model=self._name,
+                value=value,
+                palette=len(palette),
+            )
             return fallback
 
     @api.model

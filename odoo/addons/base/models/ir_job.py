@@ -172,6 +172,7 @@ def _job_session_lock(cr, job_id: int, *, blocking: bool = True) -> Iterator[boo
     else:
         cr.execute(SQL("SELECT pg_try_advisory_lock(%s)", _advisory_key_sql(job_id)))
         acquired = cr.fetchone()[0]
+        _debug.logic("session_lock.tried", job=job_id, acquired=acquired)
     try:
         yield acquired
     finally:
@@ -189,6 +190,7 @@ def _release_job_session_lock(cr, job_id: int) -> None:
             "after the rollback",
             job_id,
         )
+        _debug.logic("session_lock.release_deferred", job=job_id, reason="aborted")
         cr.postrollback.add(partial(cr.execute, unlock))
     except psycopg.Error:
         _logger.warning(
@@ -196,6 +198,7 @@ def _release_job_session_lock(cr, job_id: int) -> None:
             "leaving it to the connection pool",
             job_id,
         )
+        _debug.logic("session_lock.release_failed", job=job_id, reason="pg_error")
 
 
 class DelayedProxy:
@@ -299,6 +302,7 @@ class IrJobChannel(models.Model):
                 ["__count"],
             )
         }
+        _debug.perf.count("channel.counts_read", channels=len(self), rows=len(counts))
         for record in self:
             record.running_count = counts.get((record.name, JobState.STARTED), 0)
             record.pending_count = counts.get((record.name, JobState.PENDING), 0)
@@ -501,6 +505,9 @@ class IrJob(models.Model):
                 records, method_name, identity_key, dep_ids
             )
         elif dep_ids:
+            _debug.pipeline(
+                "enqueue.dependencies_linked", job=row[0], count=len(dep_ids)
+            )
             env.cr.execute(
                 SQL(
                     "INSERT INTO ir_job_dependency (job_id, depends_on_id)"
@@ -510,6 +517,7 @@ class IrJob(models.Model):
                 )
             )
         if state == JobState.PENDING:
+            _debug.pipeline("enqueue.notify_scheduled", job=row[0] if row else None)
             self._notify_after_commit(env.cr)
         return self.browse(row[0])
 
@@ -518,6 +526,12 @@ class IrJob(models.Model):
     ) -> dict[str, Any]:
         job_config = _get_job_config(type(records), method_name)
         if job_config is None:
+            _debug.logic(
+                "enqueue.refused",
+                reason="not_job_method",
+                model=records._name,
+                method=method_name,
+            )
             raise UserError(
                 self.env._(
                     "Method %(model)s.%(method)s cannot be enqueued: it is not "
@@ -527,6 +541,12 @@ class IrJob(models.Model):
                 )
             )
         if len(records) != len(records.ids):
+            _debug.logic(
+                "enqueue.refused",
+                reason="unsaved_records",
+                model=records._name,
+                method=method_name,
+            )
             raise UserError(
                 self.env._(
                     "Cannot enqueue %(model)s.%(method)s on unsaved records: "
@@ -547,6 +567,13 @@ class IrJob(models.Model):
         try:
             return json.dumps(list(args)), json.dumps(dict(kwargs or {}))
         except (TypeError, ValueError) as exc:
+            _debug.logic(
+                "enqueue.refused",
+                reason="args_not_json",
+                model=records._name,
+                method=method_name,
+                error=type(exc).__name__,
+            )
             raise UserError(
                 self.env._(
                     "Job arguments for %(model)s.%(method)s must be "
@@ -567,12 +594,16 @@ class IrJob(models.Model):
                 eta = clock_now.replace(microsecond=0) + timedelta(seconds=eta)
             if eta and eta > clock_now:
                 state = JobState.SCHEDULED
+                _debug.logic("enqueue.scheduled", eta=eta)
 
         dep_ids: list[int] = []
         if not after:
             return state, eta, dep_ids
 
         if after._name != self._name:
+            _debug.logic(
+                "enqueue.refused", reason="dependency_model", model=after._name
+            )
             raise UserError(self.env._("Job dependencies must be ir.job records."))
         self.env.cr.execute(
             SQL(
@@ -584,6 +615,9 @@ class IrJob(models.Model):
         dep_ids = [row[0] for row in dep_rows]
         dep_states = {row[1] for row in dep_rows}
         if dep_states & set(DEAD_DEPENDENCY_STATES):
+            _debug.logic(
+                "enqueue.refused", reason="dead_dependency", dependencies=len(dep_ids)
+            )
             raise UserError(
                 self.env._(
                     "Cannot enqueue after a failed or cancelled job; "
@@ -592,6 +626,11 @@ class IrJob(models.Model):
             )
         if dep_states - {JobState.DONE}:
             state = JobState.WAIT_DEPS
+        _debug.logic(
+            "enqueue.dependencies",
+            count=len(dep_ids),
+            waiting=state == JobState.WAIT_DEPS,
+        )
         return state, eta, dep_ids
 
     def _insert_job_row(self, values: list) -> tuple | None:
@@ -638,6 +677,11 @@ class IrJob(models.Model):
             )
         )
         row = self.env.cr.fetchone()
+        _debug.logic(
+            "enqueue.deduplicated",
+            existing=row[0] if row else None,
+            chained_lost=bool(dep_ids),
+        )
         if dep_ids:
             _logger.warning(
                 "ir.job %s.%s deduplicated on identity key %r: the job it "
@@ -655,10 +699,17 @@ class IrJob(models.Model):
     def _defer(self, seconds: int, reason: str = "") -> None:
         job = _current_job()
         if job is None:
+            _debug.logic("defer.refused", reason="not_in_job")
             raise UserError(
                 self.env._("_defer() can only be called from inside a running job.")
             )
         if job["defer_count"] >= job["max_defers"]:
+            _debug.logic(
+                "defer.refused",
+                reason="budget_exhausted",
+                job=job["id"],
+                count=job["defer_count"],
+            )
             raise TerminalJobError(
                 self.env._(
                     "Job %(id)s asked to be deferred %(count)s times, its "
@@ -702,27 +753,34 @@ class IrJob(models.Model):
                         "SELECT EXISTS (SELECT 1 FROM ir_job WHERE state = 'pending')"
                     )
                     if not pre_cr.fetchone()[0]:
+                        _debug.logic("process.idle", db=db_name)
                         return
+                _debug.pipeline("process.drain", db=db_name)
                 IrJob._claim_and_run_loop(db_name, deadline=IrJob._drain_deadline())
             except BadVersionError:
                 _logger.warning(
                     "Skipping database %s as its base version is not current.", db_name
                 )
+                _debug.logic("process.skipped", db=db_name, reason="bad_version")
             except BadModuleStateError:
                 _logger.warning(
                     "Skipping database %s because of modules to install/upgrade/remove.",
                     db_name,
                 )
+                _debug.logic("process.skipped", db=db_name, reason="modules_changing")
             except psycopg.errors.UndefinedTable:
                 _logger.debug("No ir_job table on database %s.", db_name)
+                _debug.logic("process.skipped", db=db_name, reason="no_table")
             except db.PoolError:
                 _logger.info("Skipping database %s: could not connect.", db_name)
+                _debug.logic("process.skipped", db=db_name, reason="pool_error")
             except Exception:
                 _logger.exception("Unexpected exception in job queue for %s:", db_name)
 
     @staticmethod
     def _drain_deadline() -> float | None:
         budget = get_job_real_time_budget()
+        _debug.logic("drain.budget", seconds=budget, ratio=DRAIN_BUDGET_RATIO)
         return time.monotonic() + budget * DRAIN_BUDGET_RATIO if budget else None
 
     @staticmethod
@@ -746,6 +804,7 @@ class IrJob(models.Model):
                 "hashtextextended('ir_job_promote', 0))"
             )
             if not cr.fetchone()[0]:
+                _debug.logic("promotion.skipped", db=db_conn.dbname, reason="lock_held")
                 return 0
             promoted = IrJob._promote_due_jobs(cr)
             cr.commit()
@@ -758,6 +817,7 @@ class IrJob(models.Model):
             now - _last_maintenance.get(db_conn.dbname, float("-inf"))
             < MAINTENANCE_INTERVAL_S
         ):
+            _debug.logic("maintenance.skipped", db=db_conn.dbname, reason="interval")
             return
         _last_maintenance[db_conn.dbname] = now
         with db_conn.cursor() as cr:
@@ -765,6 +825,9 @@ class IrJob(models.Model):
                 "SELECT pg_try_advisory_xact_lock(hashtextextended('ir_job_gc', 0))"
             )
             if not cr.fetchone()[0]:
+                _debug.logic(
+                    "maintenance.skipped", db=db_conn.dbname, reason="lock_held"
+                )
                 return
             try:
                 with _debug.perf("maintenance", cr=cr, db=db_conn.dbname):
@@ -779,6 +842,11 @@ class IrJob(models.Model):
                     db_conn.dbname,
                     type(exc).__name__,
                 )
+                _debug.logic(
+                    "maintenance.lost_race",
+                    db=db_conn.dbname,
+                    error=type(exc).__name__,
+                )
 
     @staticmethod
     def _claim_and_run_loop(
@@ -792,12 +860,20 @@ class IrJob(models.Model):
         with registry.cursor() as cr:
             serialise = IrJob._has_job_channel(cr)
             cr.rollback()
+            _debug.pipeline(
+                "drain.begin",
+                db=db_name,
+                worker=worker_ident,
+                serialise=serialise,
+                channels=len(channels) if channels else 0,
+            )
             while True:
                 if deadline is not None and time.monotonic() >= deadline:
                     _logger.info(
                         "Job drain of %s yielded on its time budget; notifying",
                         db_name,
                     )
+                    _debug.logic("drain.yielded", db=db_name, reason="deadline")
                     IrJob._notify_workers(db_name)
                     return True
                 try:
@@ -811,9 +887,11 @@ class IrJob(models.Model):
                         db_name,
                         exc,
                     )
+                    _debug.logic("drain.yielded", db=db_name, reason="contended")
                     IrJob._notify_workers(db_name)
                     return True
                 if job is None:
+                    _debug.pipeline("drain.done", db=db_name)
                     cr.rollback()
                     return False
                 _debug.lifecycle(
@@ -825,6 +903,7 @@ class IrJob(models.Model):
                     retry=job["retry"],
                 )
                 if (reloaded := registry.check_signaling()) is not registry:
+                    _debug.lifecycle("drain.registry_reloaded", db=db_name)
                     registry = reloaded
                     cr.transaction.reset()
                 cr.commit()
@@ -852,6 +931,12 @@ class IrJob(models.Model):
                 registry.reset_changes()
                 cr.rollback()
                 if not isinstance(exc, JOB_CONCURRENCY_EXCEPTIONS):
+                    _debug.logic(
+                        "job.raised",
+                        job=job["id"],
+                        attempt=attempt,
+                        error=type(exc).__name__,
+                    )
                     return exc
                 _debug.logic(
                     "job_concurrency_replay",
@@ -925,7 +1010,13 @@ class IrJob(models.Model):
                 ),
             )
         )
-        return [row[0] for row in cr.fetchall()]
+        runnable = [row[0] for row in cr.fetchall()]
+        _debug.perf.count(
+            "claim.runnable_channels",
+            count=len(runnable),
+            filtered=channels is not None,
+        )
+        return runnable
 
     @staticmethod
     def _has_job_channel(cr) -> bool:
@@ -948,6 +1039,7 @@ class IrJob(models.Model):
                     )
                 runnable = IrJob._get_runnable_channels(cr, channels)
                 if not runnable:
+                    _debug.logic("claim.none", reason="no_runnable_channel")
                     return None
                 cr.execute(
                     SQL(
@@ -972,6 +1064,9 @@ class IrJob(models.Model):
                 )
                 picked = cr.fetchone()
                 if picked is None:
+                    _debug.logic(
+                        "claim.none", reason="nothing_due", channels=len(runnable)
+                    )
                     return None
                 cr.execute(
                     SQL(
@@ -1003,10 +1098,12 @@ class IrJob(models.Model):
                 continue
             row = cr.fetchone()
             if row is not None:
+                _debug.perf.count("claim.won", attempt=attempt, serialise=serialise)
                 return dict(zip([d.name for d in cr.description], row, strict=True))
             _debug.logic("claim_retry", attempt=attempt, reason="lost_race")
             if attempt < CLAIM_MAX_ATTEMPTS:
                 continue
+        _debug.logic("claim.contended", attempts=CLAIM_MAX_ATTEMPTS)
         raise ClaimContended(
             f"job claim lost {CLAIM_MAX_ATTEMPTS} serialization races in a row"
         )
@@ -1018,6 +1115,7 @@ class IrJob(models.Model):
         env = api.Environment(cr, job["user_id"], dict(job["context"] or {}))
         env.transaction.default_env = env
         if is_user_archived(env):
+            _debug.logic("job.terminal", job=job["id"], reason="user_archived")
             raise TerminalJobError(
                 env._(
                     "Job %(id)s runs as %(login)s, whose account has been "
@@ -1030,6 +1128,12 @@ class IrJob(models.Model):
         try:
             model = env[job["model_name"]]
         except KeyError:
+            _debug.logic(
+                "job.terminal",
+                job=job["id"],
+                reason="model_missing",
+                model=job["model_name"],
+            )
             raise TerminalJobError(
                 env._(
                     "Job %(id)s targets model %(model)s, which no longer exists "
@@ -1040,6 +1144,12 @@ class IrJob(models.Model):
             ) from None
         records = model.browse(job["record_ids"] or [])
         if _get_job_config(type(records), job["method_name"]) is None:
+            _debug.logic(
+                "job.terminal",
+                job=job["id"],
+                reason="not_job_method",
+                method=job["method_name"],
+            )
             raise TerminalJobError(
                 env._(
                     "Job %(id)s calls %(model)s.%(method)s, which is not "
@@ -1049,11 +1159,25 @@ class IrJob(models.Model):
                     method=job["method_name"],
                 )
             )
+        _debug.pipeline(
+            "job.target_resolved",
+            job=job["id"],
+            model=job["model_name"],
+            records=len(records),
+            uid=job["user_id"],
+        )
         return env, records
 
     @staticmethod
     def _run_claimed(cr, job: dict[str, Any]) -> None:
         env, records = IrJob._get_claimed_target(cr, job)
+        _debug.pipeline(
+            "job.started",
+            job=job["id"],
+            method=job["method_name"],
+            retry=job["retry"],
+            defer_count=job["defer_count"],
+        )
         _logger.info(
             "Job %s: %s%s.%s() starting (retry %s/%s)",
             job["id"],
@@ -1072,6 +1196,7 @@ class IrJob(models.Model):
             env.flush_all()
         except MissingError:
             if records and not records.exists():
+                _debug.logic("job.terminal", job=job["id"], reason="records_missing")
                 raise TerminalJobError(
                     env._(
                         "Job %(id)s targets %(model)s %(ids)s, and none of those "
@@ -1081,6 +1206,7 @@ class IrJob(models.Model):
                         ids=job["record_ids"],
                     )
                 ) from None
+            _debug.logic("job.missing_error_reraised", job=job["id"])
             raise
         if defer := job.get("defer"):
             _debug.lifecycle("job_deferred", job=job["id"], seconds=defer["seconds"])
@@ -1102,8 +1228,10 @@ class IrJob(models.Model):
                 " work commits without being marked done and may run again",
                 job["id"],
             )
+            _debug.logic("job.row_lost", job=job["id"], at="done")
         released = IrJob._release_dependents(cr, job["id"])
         if released:
+            _debug.pipeline("job.dependents_released", job=job["id"], count=released)
             IrJob._notify_after_commit(cr)
         _logger.info("Job %s: done", job["id"])
         _debug.lifecycle("job_done", job=job["id"], released_dependents=released)
@@ -1130,12 +1258,20 @@ class IrJob(models.Model):
                 job["id"],
             )
         )
+        _debug.lifecycle(
+            "job.deferral_recorded",
+            job=job["id"],
+            seconds=seconds,
+            state="scheduled" if seconds > 0 else "pending",
+            defer_count=job["defer_count"] + 1,
+        )
         if not cr.rowcount:
             _logger.error(
                 "Job %s: asked to be deferred but its row was no longer"
                 " 'started'; the work commits and the job may run again",
                 job["id"],
             )
+            _debug.logic("job.row_lost", job=job["id"], at="defer")
         _logger.info(
             "Job %s: deferred %ss (%s/%s), %s",
             job["id"],
@@ -1160,6 +1296,12 @@ class IrJob(models.Model):
             sorted(set(allowed) - available),
             env.user.login,
         )
+        _debug.logic(
+            "job.company_scope_narrowed",
+            job=job["id"],
+            requested=len(allowed),
+            kept=len(kept),
+        )
         context = dict(env.context)
         if kept:
             context["allowed_company_ids"] = kept
@@ -1171,6 +1313,15 @@ class IrJob(models.Model):
     def _record_failure(cls, cr, job: dict[str, Any], exc: BaseException) -> None:
         retry = job["retry"]
         exc_info = _format_exception(exc)
+        _debug.logic(
+            "job.failure_classified",
+            job=job["id"],
+            retry=retry,
+            max_retries=job["max_retries"],
+            terminal=isinstance(exc, TerminalJobError),
+            retryable=isinstance(exc, RetryableJobError),
+            error=type(exc).__name__,
+        )
         if retry < job["max_retries"] and not isinstance(exc, TerminalJobError):
             seconds = exc.seconds if isinstance(exc, RetryableJobError) else None
             delay = (
@@ -1272,6 +1423,7 @@ class IrJob(models.Model):
             return 0
         requeue_ids = [job_id for job_id, requeue in rows if requeue]
         fail_ids = [job_id for job_id, requeue in rows if not requeue]
+        _debug.logic("reap.classified", candidates=len(rows), requeue=len(requeue_ids))
         reaped = 0
         if requeue_ids:
             cr.execute(
@@ -1333,7 +1485,9 @@ class IrJob(models.Model):
                 job_id,
             )
         )
-        return sum(1 for (state,) in cr.fetchall() if state == JobState.PENDING)
+        released = sum(1 for (state,) in cr.fetchall() if state == JobState.PENDING)
+        _debug.pipeline("dependents.released", job=job_id, pending=released)
+        return released
 
     @staticmethod
     def _cancel_dependents(cr, job_ids: list[int]) -> int:
@@ -1366,6 +1520,9 @@ class IrJob(models.Model):
                 cr.rowcount,
                 job_ids,
             )
+            _debug.lifecycle(
+                "dependents.cancelled", count=cr.rowcount, parents=len(job_ids)
+            )
         return cr.rowcount
 
     @staticmethod
@@ -1395,6 +1552,9 @@ class IrJob(models.Model):
             " AND cj.state = 'wait_deps'"
         )
         dead = [r[0] for r in cr.fetchall()]
+        _debug.lifecycle(
+            "maintenance.dependents_swept", promoted=promoted, dead_parents=len(dead)
+        )
         if dead:
             IrJob._cancel_dependents(cr, dead)
         if promoted:
@@ -1414,12 +1574,16 @@ class IrJob(models.Model):
         ]
         records = self.sudo().search(domain, limit=GC_UNLINK_LIMIT)
         records.unlink()
-        _debug.lifecycle("gc_jobs", count=len(records))
+        _debug.lifecycle(
+            "gc_jobs", count=len(records), more=len(records) == GC_UNLINK_LIMIT
+        )
         return len(records), len(records) == GC_UNLINK_LIMIT
 
     def write(self, vals: dict[str, Any]) -> bool:
+        _debug.lifecycle("write", count=len(self), fields=list(vals))
         result = super().write(vals)
         if "eta" in vals and "state" not in vals:
+            _debug.logic("write.eta_realigns_state", count=len(self))
             self._align_state_with_eta()
         return result
 
@@ -1428,11 +1592,13 @@ class IrJob(models.Model):
         queued = self.filtered(lambda job: job.state in RUNNABLE_STATES)
         due = queued.filtered(lambda job: not job.eta or job.eta <= now)
         if promote := due.filtered(lambda job: job.state != JobState.PENDING):
+            _debug.lifecycle("eta.promoted", count=len(promote))
             promote.write({"state": JobState.PENDING})
             self._notify_after_commit(self.env.cr)
         if postpone := (queued - due).filtered(
             lambda job: job.state != JobState.SCHEDULED
         ):
+            _debug.lifecycle("eta.postponed", count=len(postpone))
             postpone.write({"state": JobState.SCHEDULED})
 
     @api.depends("name", "model_name", "method_name")
@@ -1449,6 +1615,7 @@ class IrJob(models.Model):
         cr = self.env.cr
         with _job_session_lock(cr, self.id, blocking=False) as acquired:
             if not acquired:
+                _debug.logic("run_now.refused", job=self.id, reason="already_running")
                 raise UserError(self.env._("This job is already running."))
             try:
                 self._run_now_claimed(cr)
@@ -1475,8 +1642,10 @@ class IrJob(models.Model):
         )
         row = cr.fetchone()
         if row is None:
+            _debug.logic("run_now.refused", job=self.id, reason="not_queued")
             raise UserError(self.env._("Only a queued job can be run manually."))
         job = dict(zip([d.name for d in cr.description], row, strict=True))
+        _debug.lifecycle("run_now.claimed", job=self.id, uid=self.env.uid)
         self.invalidate_recordset()
         type(self)._run_claimed(cr, job)
 
@@ -1484,6 +1653,7 @@ class IrJob(models.Model):
         self.browse().check_access("write")
         for job in self:
             if job.state not in REQUEUABLE_STATES:
+                _debug.logic("requeue.refused", job=job.id, state=job.state)
                 raise UserError(
                     self.env._("Only failed or cancelled jobs can be requeued.")
                 )
@@ -1502,6 +1672,7 @@ class IrJob(models.Model):
         waiting = self.filtered(
             lambda job: any(dep.state != JobState.DONE for dep in job.depends_on_ids)
         )
+        _debug.lifecycle("requeued", count=len(self), waiting=len(waiting))
         if waiting:
             waiting.sudo().write({"state": JobState.WAIT_DEPS, **cleared})
         if runnable := self - waiting:
@@ -1512,9 +1683,11 @@ class IrJob(models.Model):
         self.browse().check_access("write")
         for job in self:
             if job.state not in CANCELLABLE_STATES:
+                _debug.logic("cancel.refused", job=job.id, state=job.state)
                 raise UserError(
                     self.env._("Only jobs that have not started yet can be cancelled.")
                 )
         self.sudo().write({"state": JobState.CANCELLED, "done_at": self.env.cr.now()})
+        _debug.lifecycle("cancelled", count=len(self))
         self.env.flush_all()
         type(self)._cancel_dependents(self.env.cr, self.ids)

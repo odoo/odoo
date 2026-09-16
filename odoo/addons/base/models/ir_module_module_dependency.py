@@ -27,7 +27,9 @@ class IrModuleModuleDependency(models.Model):
         searched: set[str] = set()
         to_search = set(module_names)
         res: dict[str, list[str]] = {}
+        rounds = 0  # debuglog
         while to_search:
+            rounds += 1  # debuglog
             searched |= to_search
             groups = self._read_group(
                 [("module_id.name", "in", list(to_search))],
@@ -39,6 +41,9 @@ class IrModuleModuleDependency(models.Model):
                 res[module.name] = dep_names
                 to_search.update(set(dep_names) - searched)
         _debug.perf.count(
-            "all_dependencies", requested=len(module_names), resolved=len(res)
+            "all_dependencies",
+            requested=len(module_names),
+            resolved=len(res),
+            rounds=rounds,
         )
         return res

@@ -34,6 +34,12 @@ class NameManager:
         self.children = []
         if self.parent:
             self.parent.children.append(self)
+        _debug.lifecycle(
+            "name_manager.created",
+            model=model._name,
+            nested=parent is not None,
+            scoped_groups=model_groups is not None,
+        )
 
         if group_definitions is None:
             group_definitions = self.model.env["res.groups"]._get_group_definitions()
@@ -49,7 +55,9 @@ class NameManager:
 
     @functools.cached_property
     def field_info(self) -> dict[str, Any]:
-        return self.model.fields_get(attributes=())
+        info = self.model.fields_get(attributes=())
+        _debug.perf.count("field_info_loaded", model=self.model._name, fields=len(info))
+        return info
 
     def add_available_field(
         self,
@@ -87,6 +95,12 @@ class NameManager:
             if not name.startswith("parent."):
                 self.used_fields[name][access_groups] = (use, node)
             elif self.parent:
+                _debug.logic(
+                    "used_field.delegated_to_parent",
+                    model=self.model._name,
+                    field=name[7:],
+                    attribute=use[0],
+                )
                 self.parent.add_used_fields(node, {name[7:]}, node_info, use)
 
     def add_used_name(self, name: str, use: str) -> None:
@@ -110,6 +124,9 @@ class NameManager:
             and name not in self.available_names
             and name not in self.field_info
         ):
+            _debug.logic(
+                "field_groups.unknown_field", model=self.model._name, field=name
+            )
             access_groups = self.group_definitions.empty
         elif field and field.groups:
             access_groups &= self.group_definitions.parse(
@@ -193,6 +210,13 @@ class NameManager:
                     )
                     raise view._prepare_view_error(msg, node) from None
                 if not issubclass(view.pool[model], view.pool["ir.actions.actions"]):
+                    _debug.logic(
+                        "action_check_failed",
+                        view=view.id,
+                        action=name,
+                        model=model,
+                        reason="not_an_action",
+                    )
                     msg = _(
                         "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions.actions",
                         xmlid=name,
@@ -225,6 +249,12 @@ class NameManager:
         for name, groups_uses in self.used_fields.items():
             use, node = next(iter(groups_uses.values()))
             if "." in name:
+                _debug.logic(
+                    "used_field_refused",
+                    view=view.id,
+                    field=name,
+                    reason="composed",
+                )
                 msg = _(
                     "Invalid composed field %(definition)s in %(use)s",
                     definition=name,
@@ -235,6 +265,7 @@ class NameManager:
 
             if info is None:
                 if name in ["false", "true"]:
+                    _debug.logic("used_field.js_literal", view=view.id, name=name)
                     _logger.warning(
                         "Using Javascript syntax 'true, 'false' in expressions is deprecated, found %s",
                         name,
@@ -355,6 +386,11 @@ class NameManager:
     def update_available_fields(self) -> None:
         for name, info in self.available_fields.items():
             info.update(self.field_info.get(name, {}))
+        _debug.pipeline(
+            "available_fields_updated",
+            model=self.model._name,
+            fields=len(self.available_fields),
+        )
 
     def get_fields_missing(self) -> dict[str, tuple[Any, list[tuple]]]:
 
@@ -383,6 +419,12 @@ class NameManager:
                     used.append((used_groups, use, node))
 
             if errors:
+                _debug.logic(
+                    "field_missing.access_error",
+                    model=self.model._name,
+                    field=name,
+                    uses=len(errors),
+                )
                 missing_fields[name] = (False, errors)
                 continue
 

@@ -101,6 +101,7 @@ class IrQweb(models.AbstractModel):
         # the specifiers the first one already mapped in a different document.
         if not request or getattr(request, "_esm_document_open", False):
             return super()._render(template, values, **options)
+        _debug.lifecycle("esm_document_opened", template=template)
         request._esm_import_map_rendered = False
         request._esm_import_map_specs = frozenset()
         request._esm_page_bundles = ()
@@ -158,6 +159,15 @@ class IrQweb(models.AbstractModel):
             post=len(post_nodes),
             native=has_native,
         )
+        _debug.pipeline(
+            "asset_nodes",
+            bundle=bundle,
+            debug=bool(debug),
+            links=len(nodes),
+            pre=len(pre_nodes),
+            post=len(post_nodes),
+            native=has_native,
+        )
         if has_native:
             return pre_nodes + nodes + post_nodes
 
@@ -177,6 +187,7 @@ class IrQweb(models.AbstractModel):
             url = attrs.get("src") or attrs.get("href")
             if url and url not in urls:
                 urls.append(url)
+        _debug.perf.count("asset_urls", bundle=bundle, urls=len(urls))
         return urls
 
     def _get_asset_links(
@@ -192,6 +203,7 @@ class IrQweb(models.AbstractModel):
         assets_params = self.env["ir.asset"]._prepare_assets_params()
 
         if self._is_debug_assets(debug):
+            _debug.logic("asset_links_uncached_path", bundle=bundle, reason="debug")
             return self._get_asset_links_uncached(
                 bundle,
                 css=css,
@@ -266,6 +278,12 @@ class IrQweb(models.AbstractModel):
                         "last_modified": asset.last_modified,
                     }
                 )
+        _debug.pipeline(
+            "asset_content",
+            bundle=bundle,
+            files=len(files),
+            external=len(external_asset),
+        )
         return (files, external_asset)
 
     def _get_asset_bundle(
@@ -311,6 +329,7 @@ class IrQweb(models.AbstractModel):
                     "Asset path %r has no renderable node (unrecognized extension); skipped.",
                     path,
                 )
+                _debug.logic("link_skipped", path=path, reason="no_node")
                 continue
             nodes.append(node)
         return nodes
@@ -391,7 +410,10 @@ class IrQweb(models.AbstractModel):
             debug_assets=False,
             assets_params=assets_params,
         )
-        return asset_bundle.get_native_module_data()
+        with _debug.perf("native_module_data_uncached", bundle=bundle) as span:
+            data = asset_bundle.get_native_module_data()
+            span.set(specifiers=len(data.get("import_map", ())))
+        return data
 
     def _get_standalone_bundle(self, bundle: str) -> tuple[str, str] | None:
         assets_params = self.env["ir.asset"]._prepare_assets_params()
@@ -420,6 +442,9 @@ class IrQweb(models.AbstractModel):
                 bundle, asset_bundle, assets_params, standalone=True
             )
             if not esbuild_result.code:
+                _debug.logic(
+                    "standalone_bundle_declined", bundle=bundle, reason="no_code"
+                )
                 raise _StandaloneBundleDeclined
             code = self._combine_bundle_with_templates(
                 esbuild_result.code,
@@ -455,6 +480,13 @@ class IrQweb(models.AbstractModel):
             with_test_satellites = self._has_esm_test_satellites("")
         carried = bool(page) and self._page_carries_bundle(
             page, bundle, assets_params, with_test_satellites
+        )
+        _debug.logic(
+            "esm_payload_route",
+            bundle=bundle,
+            page=page,
+            carried=carried,
+            debug=debug_assets,
         )
         if debug_assets:
             return self._get_esm_bundle_payload_uncached(
@@ -528,9 +560,18 @@ class IrQweb(models.AbstractModel):
         if page in declared or self._page_carries_bundle(
             page, bundle, assets_params, with_test_satellites
         ):
+            _debug.logic("runtime_group_parents", bundle=bundle, page=page, by="page")
             return (page,)
         contributors = set(self._get_dynamic_parent_bundles(page, assets_params))
         matches = [parent for parent in declared if parent in contributors]
+        _debug.logic(
+            "runtime_group_parents",
+            bundle=bundle,
+            page=page,
+            by="contributors",
+            declared=len(declared),
+            matches=len(matches),
+        )
         if len(matches) == 1:
             return (matches[0],)
         return declared
@@ -563,9 +604,20 @@ class IrQweb(models.AbstractModel):
             ).native_modules
         }
         if not own:
+            _debug.logic(
+                "page_carries_bundle", page=page, bundle=bundle, reason="no_own"
+            )
             return False
         carried = self._get_runtime_parent_specs(
             (page,), assets_params, with_test_satellites
+        )
+        _debug.logic(
+            "page_carries_bundle",
+            page=page,
+            bundle=bundle,
+            own=len(own),
+            carried=len(carried),
+            result=own <= carried,
         )
         return own <= carried
 
@@ -650,8 +702,18 @@ class IrQweb(models.AbstractModel):
                 bundle=group,
                 children=len(reused),
             )
+            _debug.logic("runtime_group_reused", group=group, children=len(reused))
             return reused
-        result = self._compile_runtime_group(group, children, entries, stubs)
+        with _debug.perf(
+            "runtime_group_compile",
+            cr=self.env.cr,
+            group=group,
+            children=len(children),
+            entries=len(entries),
+            stubs=len(stubs),
+        ) as span:
+            result = self._compile_runtime_group(group, children, entries, stubs)
+            span.set(files=len(result.files))
         if not result.files:
             log_event(
                 _fallback_log, logging.INFO, "runtime_group_per_file", bundle=group
@@ -672,6 +734,7 @@ class IrQweb(models.AbstractModel):
             )
             return urls
         except ReadOnlySqlTransaction:
+            _debug.logic("runtime_group_save_declined", group=group, reason="readonly")
             raise
         except Exception as exc:
             log_event(
@@ -715,6 +778,13 @@ class IrQweb(models.AbstractModel):
             if f"{prefix}{filename}" not in present
         ]
         self._save_esm_attachment_rows(vals_list, touch_ids=existing.ids, bundle=group)
+        _debug.lifecycle(
+            "esm_group_saved",
+            group=group,
+            files=len(files),
+            new=len(vals_list),
+            reused=len(existing),
+        )
         log_event(
             _attach_log,
             logging.INFO,
@@ -740,6 +810,7 @@ class IrQweb(models.AbstractModel):
         with_test_satellites: bool = False,
     ) -> dict | None:
         if not parents:
+            _debug.logic("compiled_runtime_payload", bundle=bundle, reason="no_parents")
             return None
         urls = self._get_runtime_group_urls_cached(
             parents, assets_params or {}, with_test_satellites
@@ -748,6 +819,7 @@ class IrQweb(models.AbstractModel):
             log_event(
                 _fallback_log, logging.INFO, "runtime_child_per_file", bundle=bundle
             )
+            _debug.logic("compiled_runtime_payload", bundle=bundle, reason="no_urls")
             return None
         asset_bundle = self._get_asset_bundle(
             bundle,
@@ -762,6 +834,12 @@ class IrQweb(models.AbstractModel):
             "template_url": None,
         }
         url = urls.get(bundle)
+        _debug.logic(
+            "compiled_runtime_payload",
+            bundle=bundle,
+            in_group=bool(url),
+            specifiers=len(payload["specifiers"]),
+        )
         if url:
             payload["esm_url"] = url
             return payload
@@ -785,6 +863,12 @@ class IrQweb(models.AbstractModel):
             payload["template_url"] = self._save_esm_attachment(
                 f"{bundle}.templates", esm_tpl
             )
+        _debug.pipeline(
+            "carried_bundle_payload",
+            bundle=bundle,
+            specifiers=len(payload["specifiers"]),
+            templates=bool(esm_tpl),
+        )
         return payload
 
     def _get_esm_bundle_payload_uncached(
@@ -813,6 +897,7 @@ class IrQweb(models.AbstractModel):
             )
             if payload is not None:
                 return payload
+            _debug.logic("esm_payload_fallback", bundle=bundle, reason="no_group")
         asset_bundle = self._get_asset_bundle(
             bundle,
             js=True,
@@ -830,6 +915,14 @@ class IrQweb(models.AbstractModel):
         esm_tpl = asset_bundle.generate_esm_template_bundle(use_import=False)
         if esm_tpl:
             template_url = self._save_esm_attachment(f"{bundle}.templates", esm_tpl)
+        _debug.pipeline(
+            "esm_payload",
+            bundle=bundle,
+            compiled=compiled,
+            specifiers=len(native_data["import_map"]),
+            import_map=len(import_map),
+            templates=bool(esm_tpl),
+        )
         return {
             "specifiers": sorted(native_data["import_map"]),
             "import_map": import_map,
@@ -860,7 +953,9 @@ class IrQweb(models.AbstractModel):
         if cached and cached[0] == mtime:
             return cached[1]
         source = src_path.read_text(encoding="utf-8")
-        minified = _rjsmin(source)
+        with _debug.perf("loader_shim_minify", source_bytes=len(source)) as span:
+            minified = _rjsmin(source)
+            span.set(minified_bytes=len(minified))
         cls._loader_shim_cache = (mtime, minified)
         log_event(
             _loader_log,
@@ -926,6 +1021,14 @@ class IrQweb(models.AbstractModel):
         satellites = self._has_esm_test_satellites(debug)
         page_scope = self._get_esm_page_scope(bundle)
         esbuild_ok = not debug_assets and self._can_compile_with_esbuild(bundle)
+        _debug.logic(
+            "native_module_nodes_route",
+            bundle=bundle,
+            debug=debug_assets,
+            esbuild_ok=esbuild_ok,
+            satellites=satellites,
+            page_scope=len(page_scope),
+        )
         if not debug_assets:
             try:
                 pre, post = self._get_page_scoped_nodes_cached(
@@ -936,6 +1039,9 @@ class IrQweb(models.AbstractModel):
                     esbuild_ok=esbuild_ok,
                 )
             except _EsmReadonlyDeclined:
+                _debug.logic(
+                    "native_module_nodes_fallback", bundle=bundle, reason="readonly"
+                )
                 pre, post = self._get_native_module_nodes_cached(
                     bundle,
                     assets_params=assets_params,
@@ -944,6 +1050,9 @@ class IrQweb(models.AbstractModel):
                     esbuild_ok=False,
                 )
             except _EsmFallbackError:
+                _debug.logic(
+                    "native_module_nodes_fallback", bundle=bundle, reason="esbuild"
+                )
                 pre, post = self._get_native_module_nodes_uncached(
                     bundle,
                     debug=debug,
@@ -992,6 +1101,7 @@ class IrQweb(models.AbstractModel):
             bundle=bundle,
             page=",".join(page_scope),
         )
+        _debug.logic("page_scope_dropped", bundle=bundle, page_scope=len(page_scope))
         return self._get_esm_variant_nodes_cached(
             bundle,
             assets_params=assets_params,
@@ -1028,9 +1138,13 @@ class IrQweb(models.AbstractModel):
         )
 
     def _remove_esm_readonly_declines(self, bundle: str) -> None:
-        self.pool.ormcache_lrus["assets"].pop(
+        removed = self.pool.ormcache_lrus["assets"].pop(
             (self._ESM_READONLY_DECLINES_KEY, bundle), None
         )
+        if _debug.lifecycle.enabled and removed:
+            _debug.lifecycle(
+                "readonly_declines_cleared", bundle=bundle, declines=len(removed)
+            )
 
     def _get_esm_variant_nodes_cached(
         self,
@@ -1047,6 +1161,7 @@ class IrQweb(models.AbstractModel):
             page_scope,
         )
         if remembered and variant in self._get_esm_readonly_declines(bundle):
+            _debug.logic("readonly_decline_remembered", bundle=bundle)
             raise _EsmReadonlyDeclined
         generation = self.pool.ormcache_lrus["assets"].generation
         try:
@@ -1104,11 +1219,20 @@ class IrQweb(models.AbstractModel):
                 "no_native_modules",
                 bundle=bundle,
             )
+            _debug.logic("native_module_nodes", bundle=bundle, reason="no_modules")
             return [], []
 
         if not debug_assets and esbuild_ok:
             esbuild_result, child_bundles = self._compile_with_esbuild_locked(
                 bundle, asset_bundle, assets_params, page_scope
+            )
+            _debug.pipeline(
+                "esbuild_compiled",
+                bundle=bundle,
+                code=bool(esbuild_result.code),
+                bytes=len(esbuild_result.code) if esbuild_result.code else 0,
+                children=len(child_bundles) if child_bundles else 0,
+                page_scope=len(page_scope),
             )
             if esbuild_result.code:
                 return self._get_esm_nodes_prod(
@@ -1121,7 +1245,9 @@ class IrQweb(models.AbstractModel):
                     with_test_satellites=with_test_satellites,
                 )
             if _raise_on_decline:
+                _debug.logic("native_module_nodes", bundle=bundle, reason="declined")
                 raise _EsmFallbackError
+        _debug.logic("native_module_nodes", bundle=bundle, branch="debug")
         return self._get_esm_nodes_debug(
             bundle,
             asset_bundle,
@@ -1147,6 +1273,9 @@ class IrQweb(models.AbstractModel):
             ),
         ):
             contributors.setdefault(asset.bundle)
+        _debug.perf.count(
+            "dynamic_parent_bundles", bundle=bundle, contributors=len(contributors)
+        )
         return tuple(contributors)
 
     def _get_dynamic_child_bundles(
@@ -1161,6 +1290,12 @@ class IrQweb(models.AbstractModel):
             child_name
             for parent_name in self._get_dynamic_parent_bundles(bundle, assets_params)
             for child_name in registry.dynamic_children.get(parent_name, ())
+        )
+        _debug.pipeline(
+            "dynamic_child_bundles",
+            bundle=bundle,
+            children=len(child_names),
+            debug=debug_assets,
         )
         return [
             self._get_asset_bundle(
@@ -1220,10 +1355,13 @@ class IrQweb(models.AbstractModel):
                 )
             if raise_on_decline:
                 if isinstance(exc, ReadOnlySqlTransaction) and self.env.cr.readonly:
+                    _debug.logic("esm_script_declined", bundle=name, reason="readonly")
                     raise _EsmReadonlyDeclined from None
+                _debug.logic("esm_script_declined", bundle=name, reason="save_failed")
                 raise _EsmFallbackError from None
         else:
             savepoint.close(rollback=False)
+        _debug.logic("esm_script_node", bundle=name, inline=url is None)
         node: dict[str, str] = {"type": "module"}
         node["src" if url else "text"] = url or code
         node.update(attrs)
@@ -1281,6 +1419,13 @@ class IrQweb(models.AbstractModel):
                 modules=combined_modules,
             )
             import_map.update(bridge_map)
+            _debug.pipeline(
+                "prod_import_map_bridged",
+                bundle=bundle,
+                dynamic=len(dynamic_bundles),
+                modules=len(combined_modules),
+                bridges=len(bridge_map),
+            )
 
         include_names = self._merge_include_import_maps(
             bundle,
@@ -1299,6 +1444,13 @@ class IrQweb(models.AbstractModel):
             self._add_import_map_parent_self_bridges(
                 asset_bundle, import_map, served_by_children=child_specifiers
             )
+        _debug.pipeline(
+            "prod_import_map",
+            bundle=bundle,
+            entries=len(import_map),
+            includes=len(include_names) if include_names else 0,
+            satellites=with_test_satellites,
+        )
         return import_map, dynamic_bundles, include_names
 
     @staticmethod
@@ -1325,6 +1477,7 @@ class IrQweb(models.AbstractModel):
             shim = self_bridges.get(asset.module_path)
             if shim:
                 import_map[alias] = shim
+                _debug.logic("parent_self_bridge_aliased", alias=alias)
 
     def _get_esm_nodes_prod(
         self,
@@ -1393,6 +1546,15 @@ class IrQweb(models.AbstractModel):
                     raise_on_decline=raise_on_decline,
                 )
             )
+        _debug.pipeline(
+            "esm_nodes_prod",
+            bundle=bundle,
+            pre=len(pre),
+            post=len(post),
+            code_bytes=len(esbuild_code),
+            templates=bool(esm_tpl),
+            satellites=_has_satellites,
+        )
         self._log_esm_render(
             bundle,
             "prod",
@@ -1411,6 +1573,7 @@ class IrQweb(models.AbstractModel):
         try:
             outputs = json.loads(metafile).get("outputs", {})
         except ValueError:
+            _debug.logic("static_external_imports", reason="metafile_invalid")
             return []
         specs: dict[str, None] = {}
         for output in outputs.values():
@@ -1423,11 +1586,13 @@ class IrQweb(models.AbstractModel):
         self, metafile: str | None, import_map: dict[str, str]
     ) -> list[AssetNode]:
         served = self._served_external_libs_table()
-        return [
+        links = [
             ("link", {"rel": "modulepreload", "href": import_map[spec]})
             for spec in self._get_static_external_imports(metafile)
             if spec in served and import_map.get(spec) == served[spec]
         ]
+        _debug.perf.count("library_preload_links", links=len(links))
+        return links
 
     def _get_esm_preload_links(
         self, bundle: str, native_data: dict[str, Any]
@@ -1438,11 +1603,19 @@ class IrQweb(models.AbstractModel):
             for spec, url in native_data["import_map"].items()
             if spec not in hoot_owned
         }
-        return [
+        links = [
             ("link", {"rel": "modulepreload", "href": url})
             for url in native_data["preload_urls"]
             if url in reachable_without_hoot
         ]
+        _debug.perf.count(
+            "esm_preload_links",
+            bundle=bundle,
+            hoot=len(hoot_owned),
+            candidates=len(native_data["preload_urls"]),
+            links=len(links),
+        )
+        return links
 
     def _get_esm_import_map_debug(
         self,
@@ -1502,6 +1675,16 @@ class IrQweb(models.AbstractModel):
         resolved_bridges = self._add_import_map_bridge_urls(
             import_map, discovered, drop_unresolved=False, bundle=bundle
         )
+        _debug.pipeline(
+            "debug_import_map",
+            bundle=bundle,
+            entries=len(import_map),
+            lazy=len(lazy_bundles),
+            native=len(all_native_specifiers),
+            provided=len(provided),
+            discovered=len(discovered),
+            resolved=len(resolved_bridges),
+        )
         return import_map, resolved_bridges
 
     _prepare_register_native_modules_js = staticmethod(
@@ -1527,6 +1710,13 @@ class IrQweb(models.AbstractModel):
 
         start_hoot = [s for s in hoot_specs if s.endswith("/start.hoot")]
         other_tests = [s for s in hoot_specs if s not in start_hoot]
+        _debug.logic(
+            "esm_bridge_js",
+            bundle=bundle,
+            registered=len(non_hoot_specs),
+            hoot=len(hoot_specs),
+            start_hoot=bool(start_hoot),
+        )
         if start_hoot and any(".test" in spec for spec in other_tests):
             specifier_list = ",\n".join(f"  {json.dumps(s)}" for s in other_tests)
             bridge_code += (
@@ -1597,6 +1787,14 @@ class IrQweb(models.AbstractModel):
         if esm_tpl:
             post_nodes.append(inline_module_node("data-templates", bundle, esm_tpl))
 
+        _debug.pipeline(
+            "esm_nodes_debug",
+            bundle=bundle,
+            pre=len(pre_nodes),
+            post=len(post_nodes),
+            bridges=len(bridge_specifiers),
+            templates=bool(esm_tpl),
+        )
         self._log_esm_render(
             bundle,
             "debug",
@@ -1648,6 +1846,16 @@ class IrQweb(models.AbstractModel):
 
         self._save_esm_attachment_rows(rows, touch_ids=touch_ids, bundle=bundle)
         self._remove_esm_readonly_declines(bundle)
+        _debug.lifecycle(
+            "esm_attachment_saved",
+            bundle=bundle,
+            new=code_is_new,
+            bytes=len(content_bytes),
+            rows=len(rows),
+            touched=len(touch_ids),
+            sidecars=len(sidecar_saved),
+            indexed=bool(source_key),
+        )
         if code_is_new:
             self._log_esm_artifacts_superseded(bundle, url)
         log_event(
@@ -1677,12 +1885,14 @@ class IrQweb(models.AbstractModel):
         )
         if existing:
             touch_ids.extend(existing.ids)
+            _debug.logic("esm_row_planned", name=name, action="touch")
             return False
         rows.append(
             IrAttachment._prepare_generated_asset_vals(
                 name=name, mimetype=mimetype, raw=content, url=url
             )
         )
+        _debug.logic("esm_row_planned", name=name, action="insert", bytes=len(content))
         return True
 
     def _log_esm_artifacts_superseded(self, bundle: str, keep_url: str) -> None:
@@ -1724,7 +1934,8 @@ class IrQweb(models.AbstractModel):
         if lock_timeout:
             cr.execute("SELECT set_config('lock_timeout', %s, true)", (lock_timeout,))
         started = time.monotonic()
-        cr.execute("SELECT pg_advisory_xact_lock(hashtext('esm:publication'))")
+        with _debug.perf("esm_publication_lock", cr=cr, timeout=lock_timeout):
+            cr.execute("SELECT pg_advisory_xact_lock(hashtext('esm:publication'))")
         log_event(
             _attach_log,
             logging.DEBUG,
@@ -1739,6 +1950,7 @@ class IrQweb(models.AbstractModel):
             return vals_list
         cr.execute("SELECT url FROM ir_attachment WHERE url = ANY(%s)", (urls,))
         present = {row[0] for row in cr.fetchall()}
+        _debug.perf.count("esm_rows_present", checked=len(urls), present=len(present))
         return [vals for vals in vals_list if vals.get("url") not in present]
 
     @staticmethod
@@ -1761,6 +1973,12 @@ class IrQweb(models.AbstractModel):
                         fresh
                     )
                 own_cr.commit()
+                _debug.lifecycle(
+                    "esm_rows_saved",
+                    by="autonomous",
+                    rows=len(vals_list),
+                    fresh=len(fresh),
+                )
             except LockNotAvailable:
                 own_cr.rollback()
                 _debug.lifecycle(
@@ -1786,6 +2004,12 @@ class IrQweb(models.AbstractModel):
                 # persisted for the next process, but not for this
                 # transaction, which cannot see the commit: the caller's
                 # read-only fallback stands, as it did before
+                _debug.logic(
+                    "esm_rows_declined",
+                    by="test",
+                    reason="readonly",
+                    rows=len(vals_list),
+                )
                 raise ReadOnlySqlTransaction(
                     "cannot persist ESM attachments on a read-only test cursor"
                 )
@@ -1817,6 +2041,12 @@ class IrQweb(models.AbstractModel):
         if not request:
             if vals_list:
                 if self.env.cr.readonly:
+                    _debug.logic(
+                        "esm_rows_declined",
+                        by="own_cursor",
+                        reason="readonly",
+                        rows=len(vals_list),
+                    )
                     raise ReadOnlySqlTransaction(
                         "cannot persist ESM attachments on a read-only cursor"
                     )
@@ -1841,6 +2071,12 @@ class IrQweb(models.AbstractModel):
                     if fresh:
                         rw_env = api.Environment(rw_cr, SUPERUSER_ID, {})
                         rw_env["ir.attachment"].create(fresh)
+                    _debug.pipeline(
+                        "esm_rows_escalated",
+                        bundle=bundle,
+                        rows=len(vals_list),
+                        fresh=len(fresh),
+                    )
                 if touch_ids:
                     self._touch_esm_attachment_rows(rw_cr, touch_ids)
             _debug.lifecycle(
@@ -1865,6 +2101,12 @@ class IrQweb(models.AbstractModel):
                 exc_info=True,
             )
             if self.env.cr.readonly:
+                _debug.logic(
+                    "esm_rows_declined",
+                    by="request_cursor",
+                    reason="readonly",
+                    rows=len(vals_list),
+                )
                 raise ReadOnlySqlTransaction(
                     "no writable cursor reachable for ESM attachments"
                 ) from None
@@ -1885,40 +2127,61 @@ class IrQweb(models.AbstractModel):
         start = time.time()
         links = list(self._get_external_libs_served(debug_assets=False).values())
         for bundle in sorted(js_bundles):
-            asset_bundle = self._get_asset_bundle(bundle, css=False, js=True)
-            if asset_bundle.has_js_content:
-                links.append(asset_bundle.js().url)
-            if asset_bundle.native_modules:
-                links.extend(
-                    url
-                    for url in self._get_asset_urls(bundle, css=False, js=True)
-                    if url.startswith("/web/assets/esm/") and url not in links
+            with _debug.perf(
+                "pregenerate_js_bundle", cr=self.env.cr, bundle=bundle
+            ) as span:
+                asset_bundle = self._get_asset_bundle(bundle, css=False, js=True)
+                if asset_bundle.has_js_content:
+                    links.append(asset_bundle.js().url)
+                if asset_bundle.native_modules:
+                    links.extend(
+                        url
+                        for url in self._get_asset_urls(bundle, css=False, js=True)
+                        if url.startswith("/web/assets/esm/") and url not in links
+                    )
+                    self._pregenerate_secondary_page_scopes(bundle)
+                span.set(
+                    js=asset_bundle.has_js_content,
+                    native=len(asset_bundle.native_modules),
                 )
-                self._pregenerate_secondary_page_scopes(bundle)
         installed = self.env["ir.asset"]._get_addons_installed()
         assets_params = self.env["ir.asset"]._prepare_assets_params()
         satellites = self._has_esm_test_satellites("")
         registry = esm_registry()
         for parent in sorted(registry.dynamic_children):
             if registry.bundle_addon(parent) not in installed:
+                _debug.logic(
+                    "pregenerate_group_skipped", parent=parent, reason="not_installed"
+                )
                 continue
             urls = self._get_runtime_group_urls_cached(
                 (parent,), assets_params, satellites
             )
+            _debug.pipeline("pregenerate_group", parent=parent, urls=len(urls))
             links.extend(url for url in sorted(urls.values()) if url not in links)
         _logger.info("JS Assets bundles generated in %s seconds", time.time() - start)
         start = time.time()
         for bundle in sorted(css_bundles):
-            asset_bundle = self._get_asset_bundle(bundle, css=True, js=False)
-            if asset_bundle.has_css_content:
-                links.append(asset_bundle.css().url)
+            with _debug.perf(
+                "pregenerate_css_bundle", cr=self.env.cr, bundle=bundle
+            ) as span:
+                asset_bundle = self._get_asset_bundle(bundle, css=True, js=False)
+                if asset_bundle.has_css_content:
+                    links.append(asset_bundle.css().url)
+                span.set(css=asset_bundle.has_css_content)
         _logger.info("CSS Assets bundles generated in %s seconds", time.time() - start)
+        _debug.pipeline("pregenerate_done", links=len(links))
         return links
 
     def _pregenerate_secondary_page_scopes(self, bundle: str) -> None:
         registry = esm_registry()
         parents = registry.secondary_parents.get(bundle)
         if not parents or not self._can_compile_with_esbuild(bundle):
+            _debug.logic(
+                "pregenerate_page_scopes_skipped",
+                bundle=bundle,
+                reason="no_parents" if not parents else "no_esbuild",
+            )
             return
         installed = self.env["ir.asset"]._get_addons_installed()
         assets_params = self.env["ir.asset"]._prepare_assets_params()
@@ -1941,6 +2204,9 @@ class IrQweb(models.AbstractModel):
                     "page_scope_declined",
                     bundle=bundle,
                     page=parent,
+                )
+                _debug.logic(
+                    "pregenerate_page_scope_declined", bundle=bundle, page=parent
                 )
 
     def _log_pregeneration_coverage(self, js_bundles: set[str]) -> None:
@@ -2005,9 +2271,20 @@ class IrQweb(models.AbstractModel):
                 return pre_nodes
             request._esm_import_map_rendered = True
             request._esm_import_map_specs = self._get_import_map_specs(pre_nodes)
+            _debug.lifecycle(
+                "page_import_map_rendered",
+                bundle=bundle,
+                specs=len(request._esm_import_map_specs),
+            )
             return pre_nodes
         rendered = getattr(request, "_esm_import_map_specs", frozenset())
         nodes, added = self._narrow_import_map_nodes(pre_nodes, rendered)
+        _debug.logic(
+            "page_import_map_narrowed",
+            bundle=bundle,
+            rendered=len(rendered),
+            added=len(added) if added else 0,
+        )
         if added:
             request._esm_import_map_specs = rendered | added
         self._log_narrowed_import_map(bundle, added)
@@ -2031,3 +2308,6 @@ class IrQweb(models.AbstractModel):
         rendered = tuple(getattr(request, "_esm_page_bundles", ()))
         if bundle not in rendered:
             request._esm_page_bundles = (*rendered, bundle)
+            _debug.lifecycle(
+                "page_bundle_recorded", bundle=bundle, page=len(rendered) + 1
+            )

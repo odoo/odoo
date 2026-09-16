@@ -63,6 +63,12 @@ class IrDefault(models.Model):
             model = self.env.get(model_name)
             field = None if model is None else model._fields.get(field_rec.name)
             if field is None:
+                _debug.logic(
+                    "constraint.rejected",
+                    model=model_name,
+                    field=field_rec.name,
+                    reason="unknown_field",
+                )
                 raise ValidationError(
                     self.env._(
                         "Invalid field %(model)s.%(field)s",
@@ -73,12 +79,24 @@ class IrDefault(models.Model):
             try:
                 value = json.loads(record.json_value)
             except json.JSONDecodeError:
+                _debug.logic(
+                    "constraint.rejected",
+                    model=model_name,
+                    field=field_rec.name,
+                    reason="invalid_json",
+                )
                 raise ValidationError(
                     self.env._("Invalid JSON format in Default Value field.")
                 ) from None
             try:
                 parsed = field.convert_to_cache(value, model)
             except ValueError, TypeError:
+                _debug.logic(
+                    "constraint.rejected",
+                    model=model_name,
+                    field=field_rec.name,
+                    reason="type_mismatch",
+                )
                 raise ValidationError(
                     self.env._(
                         "Invalid value in Default Value field. Expected type '%(field_type)s' for '%(model_name)s.%(field_name)s'.",
@@ -88,6 +106,12 @@ class IrDefault(models.Model):
                     )
                 ) from None
             if not self._is_value_fitting_column(field, parsed):
+                _debug.logic(
+                    "constraint.rejected",
+                    model=model_name,
+                    field=field_rec.name,
+                    reason="out_of_bounds",
+                )
                 raise ValidationError(
                     self.env._(
                         "Invalid value in Default Value field. %(value)s is out of bounds for '%(model_name)s.%(field_name)s' (integers should be between -2,147,483,648 and 2,147,483,647).",
@@ -103,6 +127,12 @@ class IrDefault(models.Model):
         for record in self:
             if field := record.field_id:
                 model = self.env[field.model]
+                _debug.logic(
+                    "field_access_checked",
+                    model=field.model,
+                    field=field.name,
+                    uid=self.env.uid,
+                )
                 model._check_field_access(model._fields[field.name], "write")
 
     def _invalidate_defaults_cache(self) -> None:
@@ -180,6 +210,12 @@ class IrDefault(models.Model):
             model = self.env[model_name]
             orm_field = model._fields[field_name]
         except KeyError:
+            _debug.logic(
+                "set_default.rejected",
+                model=model_name,
+                field=field_name,
+                reason="unknown_field",
+            )
             raise ValidationError(
                 self.env._(
                     "Invalid field %(model)s.%(field)s",
@@ -196,6 +232,12 @@ class IrDefault(models.Model):
             )
             json_value = json.dumps(stored_value, ensure_ascii=False)
         except ValueError, TypeError:
+            _debug.logic(
+                "set_default.rejected",
+                model=model_name,
+                field=field_name,
+                reason="type_mismatch",
+            )
             raise ValidationError(
                 self.env._(
                     "Invalid value for %(model)s.%(field)s: %(value)s",
@@ -205,6 +247,12 @@ class IrDefault(models.Model):
                 )
             ) from None
         if not self._is_value_fitting_column(orm_field, parsed):
+            _debug.logic(
+                "set_default.rejected",
+                model=model_name,
+                field=field_name,
+                reason="out_of_bounds",
+            )
             raise ValidationError(
                 self.env._(
                     "Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)",
@@ -253,6 +301,15 @@ class IrDefault(models.Model):
         user_id, company_id = self._get_scope(user_id, company_id)
         field = self.env["ir.model.fields"]._get(model_name, field_name)
         default = self._get_default_record(field.id, user_id, company_id, condition)
+        _debug.logic(
+            "get_default",
+            model=model_name,
+            field=field_name,
+            user=user_id,
+            company=company_id,
+            conditional=bool(condition),
+            found=bool(default),
+        )
         return json.loads(default.json_value) if default else None
 
     @api.model
@@ -354,6 +411,12 @@ class IrDefault(models.Model):
         )
         field = self.env[model_name]._fields[field_name]
         self_super = self.with_user(SUPERUSER_ID)
+        _debug.perf.count(
+            "column_fallbacks.cache_miss",
+            model=model_name,
+            field=field_name,
+            companies=len(company_ids),
+        )
         return json.dumps(
             {
                 id_: field._to_json_value(
@@ -379,4 +442,10 @@ class IrDefault(models.Model):
             record = model.new({field_name: field.convert_to_write(fallback, model)})
             return bool(record.filtered_domain(Domain(field_expr, operator, value)))
         except ValueError:
+            _debug.logic(
+                "condition_fallback.unevaluable",
+                model=model_name,
+                field=field_name,
+                operator=operator,
+            )
             return None

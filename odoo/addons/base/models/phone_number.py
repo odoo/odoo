@@ -61,6 +61,7 @@ class PhoneNumber(models.Model):
     def _sanitize_number(self, number: str, country=None) -> str:
         number = PHONE_NOISE_PATTERN.sub("", number or "")
         if number.startswith("00"):
+            _debug.logic("sanitize_prefix_rewritten", country=bool(country))
             number = "+" + number[2:]
         return number
 
@@ -69,6 +70,7 @@ class PhoneNumber(models.Model):
 
     @api.depends("number", "country_id", "partner_ids.country_id")
     def _compute_sanitized(self) -> None:
+        _debug.perf.count("sanitized_computed", phones=len(self))
         for phone in self:
             phone.sanitized = self._sanitize_number(
                 phone.number, phone._get_phone_country()
@@ -99,9 +101,15 @@ class PhoneNumber(models.Model):
             zip(vals_list, wanted, strict=True)
         ):
             if phone := existing.get(sanitized):
+                _debug.logic("create_reused", position=position, phone=phone.id)
                 phone._link_existing(vals)
                 by_position[position] = phone
             elif sanitized and sanitized in first_position:
+                _debug.logic(
+                    "create_deduplicated",
+                    position=position,
+                    first=first_position[sanitized],
+                )
                 deferred.append((position, first_position[sanitized], vals))
             else:
                 to_create.append((position, vals))
@@ -169,10 +177,17 @@ class PhoneNumber(models.Model):
         grouped = defaultdict(self.browse)
         for phone in self:
             grouped[phone.type] |= phone
+        _debug.perf.count("grouped_by_type", phones=len(self), types=len(grouped))
         return grouped
 
     def _primary(self, *types: str) -> Self:
         candidates = (
             self.filtered(lambda p: p.type in types) if types else self
         ) or self
+        _debug.logic(
+            "primary_resolved",
+            phones=len(self),
+            types=list(types),
+            fallback=bool(types) and candidates is self,
+        )
         return candidates[:1]

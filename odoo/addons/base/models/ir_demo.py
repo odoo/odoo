@@ -14,7 +14,9 @@ class IrDemo(models.TransientModel):
     @assert_log_admin_access
     def install_demo(self) -> dict[str, str]:
         _debug.lifecycle("install_demo", uid=self.env.uid, db=self.env.cr.dbname)
-        odoo.modules.loading.force_demo(self.env)
+        with _debug.perf("force_demo", cr=self.env.cr, db=self.env.cr.dbname):
+            odoo.modules.loading.force_demo(self.env)
+        _debug.pipeline("install_demo_redirect", url="/odoo")
         return {
             "type": "ir.actions.act_url",
             "target": "self",

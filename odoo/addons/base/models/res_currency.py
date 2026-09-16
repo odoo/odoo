@@ -123,6 +123,7 @@ class ResCurrency(models.Model):
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
         if vals.keys() & {"active", "name", "position", "symbol", "rounding"}:
+            _debug.lifecycle("stable_cache_cleared", by="write", count=len(self))
             self.env.registry.clear_cache("stable")
         if "active" not in vals:
             return res
@@ -142,6 +143,11 @@ class ResCurrency(models.Model):
     def _activate_group_multi_currency(self) -> None:
         group_user = self.env.ref("base.group_user", raise_if_not_found=False)
         group_mc = self.env.ref("base.group_multi_currency", raise_if_not_found=False)
+        _debug.lifecycle(
+            "multi_currency_group_toggled",
+            enabled=True,
+            applied=bool(group_user and group_mc),
+        )
         if group_user and group_mc:
             group_user.sudo()._add_implied_group(group_mc)
 
@@ -149,6 +155,11 @@ class ResCurrency(models.Model):
     def _deactivate_group_multi_currency(self) -> None:
         group_user = self.env.ref("base.group_user", raise_if_not_found=False)
         group_mc = self.env.ref("base.group_multi_currency", raise_if_not_found=False)
+        _debug.lifecycle(
+            "multi_currency_group_toggled",
+            enabled=False,
+            applied=bool(group_user and group_mc),
+        )
         if group_user and group_mc:
             group_user.sudo()._remove_group(group_mc.sudo())
 
@@ -157,6 +168,11 @@ class ResCurrency(models.Model):
         if self.env.context.get("install_mode") or self.env.context.get(
             "force_deactivate"
         ):
+            _debug.logic(
+                "deactivation_check_skipped",
+                currencies=self.ids,
+                reason="install_or_forced",
+            )
             return
 
         currencies = self.filtered(lambda c: not c.active)
@@ -175,6 +191,7 @@ class ResCurrency(models.Model):
             return {}
         rates = self._get_rates_from_memo(company, date)
         if rates is not None:
+            _debug.perf.count("rates_via_memo", currencies=len(self), date=date)
             return rates
         _debug.logic("rates_via_sql", currencies=self.ids, date=date)
         return self._get_rates_sql(company, date)
@@ -238,8 +255,10 @@ class ResCurrency(models.Model):
         try:
             date = fields.Date.to_date(date)
         except ValueError, TypeError:
+            _debug.logic("rate_memo_bypassed", reason="unparseable_date")
             return None
         if not date:
+            _debug.logic("rate_memo_bypassed", reason="no_date")
             return None
         root_id = company.root_id.id
         scope = self._get_rate_history_scope()
@@ -315,6 +334,14 @@ class ResCurrency(models.Model):
         currency_rates = (self + to_currency)._get_rates(company, date)
         to_rate = currency_rates.get(to_currency.id) or 1.0
         to_name = to_currency.name
+        _debug.pipeline(
+            "current_rate_computed",
+            currencies=len(self),
+            to_currency=to_currency.id,
+            company=company.id,
+            date=str(date),
+            rates=len(currency_rates),
+        )
         for currency in self:
             rate = (currency_rates.get(currency.id) or 1.0) / to_rate
             currency.rate = rate
@@ -354,6 +381,13 @@ class ResCurrency(models.Model):
         integral, _sep, fractional = f"{amount:.{self.decimal_places}f}".partition(".")
         integer_value = int(integral)
         lang = tools.get_lang(self.env)
+        _debug.logic(
+            "amount_to_text",
+            currency=self.name,
+            lang=lang.iso_code,
+            negative=amount < 0,
+            has_fraction=not self.is_zero(amount - integer_value),
+        )
         integral_text = _num2words(integer_value, lang=lang.iso_code)
         if amount < 0 and integer_value == 0:
             integral_text = self.env._("Minus %s", integral_text)
@@ -395,6 +429,7 @@ class ResCurrency(models.Model):
             [("active", "=", True)],
             ["name", "symbol", "position", "decimal_places"],
         )
+        _debug.perf.count("all_currencies_computed", currencies=len(currencies))
         return {
             c.id: {
                 "name": c.name,
@@ -417,11 +452,20 @@ class ResCurrency(models.Model):
             return 1
         company = company or self.env.company
         date = date or fields.Date.context_today(self)
-        return (
+        rate = (
             from_currency.with_company(company)
             .with_context(to_currency=to_currency.id, date=str(date))
             .inverse_rate
         )
+        _debug.logic(
+            "conversion_rate",
+            from_currency=from_currency.id,
+            to_currency=to_currency.id,
+            company=company.id,
+            date=str(date),
+            rate=rate,
+        )
+        return rate
 
     def _convert(
         self,
@@ -436,16 +480,19 @@ class ResCurrency(models.Model):
             raise ValueError(msg)
         self, to_currency = self or to_currency, to_currency or self
         if not self:
+            _debug.logic("convert_refused", reason="no_source_currency")
             raise UserError(
                 self.env._("Cannot convert amount: source currency is not set.")
             )
         if not to_currency:
+            _debug.logic("convert_refused", reason="no_target_currency")
             raise UserError(
                 self.env._("Cannot convert amount: target currency is not set.")
             )
         self.check_singleton()
         to_currency.check_singleton()
         if not from_amount:
+            _debug.logic("convert_shortcut", reason="zero_amount")
             return 0.0
         to_amount = from_amount * self._get_conversion_rate(
             self, to_currency, company, date
@@ -578,6 +625,7 @@ class ResCurrencyRate(models.Model):
         if "company_rate" in vals and "rate" in vals:
             drop.add("company_rate")
         if drop:
+            _debug.logic("rate_vals_dropped", fields=sorted(drop))
             return {name: value for name, value in vals.items() if name not in drop}
         return vals
 
@@ -608,6 +656,7 @@ class ResCurrencyRate(models.Model):
 
     def _get_latest_rate(self) -> Self:
         if not self.name:
+            _debug.logic("latest_rate_refused", rate=self.id, reason="no_date")
             raise UserError(
                 self.env._("The name for the current rate is empty.\nPlease set it.")
             )
@@ -636,6 +685,7 @@ class ResCurrencyRate(models.Model):
                 default=None,
             )
             result[company] = (last.rate if last else 0) or 1
+        _debug.perf.count("last_rates_for_companies", companies=len(result))
         return result
 
     @api.depends(
@@ -648,11 +698,16 @@ class ResCurrencyRate(models.Model):
             self.company_id | env_company_root
         )
         rates_per_key = {}
+        derived = 0  # debuglog
         for currency_rate in self:
             company = currency_rate.company_id or env_company_root
             rate = currency_rate.rate
             if not rate:
+                derived += 1  # debuglog
                 if not currency_rate.name:
+                    _debug.logic(
+                        "company_rate_refused", rate=currency_rate.id, reason="no_date"
+                    )
                     raise UserError(
                         self.env._(
                             "The name for the current rate is empty.\nPlease set it."
@@ -670,6 +725,12 @@ class ResCurrencyRate(models.Model):
                 index = bisect_left(candidates, (currency_rate.name,)) - 1
                 rate = candidates[index][1] if index >= 0 else 1.0
             currency_rate.company_rate = rate / last_rate[company]
+        _debug.perf.count(
+            "company_rates_computed",
+            rates=len(self),
+            derived=derived,
+            keys=len(rates_per_key),
+        )
 
     @api.onchange("company_rate")
     def _inverse_company_rate(self) -> None:
@@ -700,6 +761,12 @@ class ResCurrencyRate(models.Model):
         if latest_rate:
             diff = (latest_rate.rate - self.rate) / latest_rate.rate
             if abs(diff) > 0.2:
+                _debug.logic(
+                    "rate_jump_warned",
+                    currency=self.currency_id.id,
+                    previous=latest_rate.rate,
+                    diff=diff,
+                )
                 return {
                     "warning": {
                         "title": self.env._("Warning for %s", self.currency_id.name),
@@ -730,6 +797,7 @@ class ResCurrencyRate(models.Model):
             value = [parse_date(self.env, v) for v in value]
         else:
             value = parse_date(self.env, value)
+        _debug.logic("rate_display_name_search", operator=operator, by="parsed_date")
         return super()._search_display_name(operator, value)
 
     @api.model
@@ -772,4 +840,9 @@ class ResCurrencyRate(models.Model):
             ]:
                 if (node := arch.find(f"./field[@name='{name}']")) is not None:
                     node.set("string", label)
+            _debug.logic(
+                "rate_list_labels_applied",
+                company_currency=names["company_currency_name"],
+                rate_currency=names["rate_currency_name"],
+            )
         return arch, view

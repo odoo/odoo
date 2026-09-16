@@ -31,6 +31,7 @@ class DecimalPrecision(models.Model):
     @api.constrains("digits")
     def _check_digits(self) -> None:
         if any(record.digits < 0 for record in self):
+            _debug.logic("digits_rejected", names=self.mapped("name"))
             raise ValidationError(
                 self.env._("The number of digits cannot be negative.")
             )
@@ -76,6 +77,12 @@ class DecimalPrecision(models.Model):
     @api.onchange("digits")
     def _onchange_digits(self) -> dict[str, Any] | None:
         if self.digits < self._origin.digits:
+            _debug.logic(
+                "digits_reduced",
+                name=self.name,
+                old=self._origin.digits,
+                new=self.digits,
+            )
             return {
                 "warning": {
                     "title": self.env._("Warning for %s", self.name),

@@ -58,9 +58,11 @@ class MixinAvatar(models.AbstractModel):
         self._update_avatar("avatar_128", "image_128")
 
     def _update_avatar(self, avatar_field: _FieldName, image_field: _FieldName) -> None:
+        fallbacks = 0  # debuglog
         for record in self:
             avatar = record[image_field]
             if not avatar:
+                fallbacks += 1  # debuglog
                 name = record[record._avatar_name_field]
                 generated = bool(record.id and name and name.strip())
                 _debug.logic(
@@ -75,10 +77,24 @@ class MixinAvatar(models.AbstractModel):
                 else:
                     avatar = b64encode(record._get_avatar_placeholder())
             record[avatar_field] = avatar
+        _debug.perf.count(
+            "avatar_updated",
+            model=self._name,
+            field=avatar_field,
+            records=len(self),
+            fallbacks=fallbacks,
+        )
 
     def _prepare_avatar_svg(self) -> bytes:
         self.check_singleton()
         initial = html_escape(self[self._avatar_name_field].strip()[0].upper())
+        _debug.logic(
+            "avatar_svg_generated",
+            model=self._name,
+            record=self.id,
+            initial=initial,
+            seeded_by_date=bool(self.create_date),
+        )
         bgcolor = get_hsl_from_seed(
             self[self._avatar_name_field]
             + str(

@@ -10,12 +10,14 @@ import logging
 import typing
 from hashlib import sha256
 
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.password import _MAX_ROUNDS, CryptContext
 
 if typing.TYPE_CHECKING:
     from odoo.orm.runtime import Environment
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 MIN_ROUNDS = 600_000
 
@@ -37,10 +39,17 @@ class PasswordStore:
                 MIN_ROUNDS,
             )
             configured = 0
+        rounds = min(_MAX_ROUNDS, max(MIN_ROUNDS, configured))
+        _debug.logic(
+            "crypt_context_built",
+            configured=configured,
+            rounds=rounds,
+            clamped=rounds != configured,
+        )
         return CryptContext(
             ["pbkdf2_sha512", "plaintext"],
             deprecated=["auto"],
-            pbkdf2_sha512__rounds=min(_MAX_ROUNDS, max(MIN_ROUNDS, configured)),
+            pbkdf2_sha512__rounds=rounds,
         )
 
     def stored_hash(self, users, uid: int) -> str | None:
@@ -52,19 +61,30 @@ class PasswordStore:
     ) -> tuple[bool, str | None]:
         hashed = self.stored_hash(users, uid)
         if hashed is None:
+            _debug.logic("password_match_skipped", uid=uid, reason="no_hash")
             return False, None
-        return users._get_crypt_context().match_and_update(password, hashed or "")
+        with _debug.perf("password_matched", uid=uid) as span:
+            valid, replacement = users._get_crypt_context().match_and_update(
+                password, hashed or ""
+            )
+            span.set(valid=valid, rehashed=replacement is not None)
+        return valid, replacement
 
     def store(self, users, hashed: typing.Collection[tuple[int, str]]) -> None:
         if not hashed:
             return
         ctx = users._get_crypt_context()
         if any(ctx.identify(pw) == "plaintext" for _uid, pw in hashed):
+            _debug.logic(
+                "password_store_refused", reason="plaintext", count=len(hashed)
+            )
             msg = "Refusing to store a plaintext password -- encrypt first."
             raise ValueError(msg)
+        _debug.lifecycle("password_hashes_stored", count=len(hashed))
         self.env.backend.columns.write(users.sudo(), "password", hashed)
 
     def clear(self, users) -> None:
+        _debug.lifecycle("password_hashes_cleared", users=users.ids)
         self.env.backend.columns.write(
             users.sudo(), "password", [(uid, None) for uid in users.ids]
         )
@@ -74,6 +94,7 @@ def session_token(
     sid: str, field_values: tuple[tuple[str, typing.Any], ...] | bool
 ) -> str | bool:
     if not field_values:
+        _debug.logic("session_token_skipped", reason="no_field_values")
         return False
     key_tuple = tuple((k, v) for k, v in field_values if v is not None)
     key = str(key_tuple).encode()

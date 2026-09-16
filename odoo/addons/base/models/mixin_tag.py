@@ -41,6 +41,9 @@ class MixinTag(models.AbstractModel):
         pending = self.filtered(lambda tag: not tag.code and tag.name)
         self.filtered(lambda tag: not tag.code and not tag.name).code = False
         if not pending:
+            _debug.logic(
+                "codes_kept", model=self._name, tags=len(self), reason="none_pending"
+            )
             return
         taken = {
             code

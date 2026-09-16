@@ -39,6 +39,12 @@ class XmlTemplatePipeline:
                     inherit_mode = template_tree.get("t-inherit-mode", "primary")
                     if inherit_mode not in {"primary", "extension"}:
                         addon = asset.url.split("/")[1] if asset.url else asset.name
+                        _debug.logic(
+                            "xml_inherit_mode_invalid",
+                            bundle=bundle.name,
+                            template=template_name,
+                            mode=inherit_mode,
+                        )
                         raise asset._prepare_asset_error(
                             bundle.env._(
                                 'Invalid inherit mode. Module "%(module)s" and template name "%(template_name)s"',
@@ -62,6 +68,9 @@ class XmlTemplatePipeline:
                         blocks.append(block)
                     block["templates"].append((template_tree, asset.url, inherit_from))
                 else:
+                    _debug.logic(
+                        "xml_template_name_missing", bundle=bundle.name, url=asset.url
+                    )
                     raise asset._prepare_asset_error(
                         bundle.env._("Template name is missing.")
                     )
@@ -88,6 +97,7 @@ class XmlTemplatePipeline:
             blocks = self.xml()
         except XMLAssetError as e:
             content.append(f"throw new Error({json.dumps(str(e))});")
+            _debug.logic("xml_bundle_error_inlined", bundle=self._bundle.name)
 
         def get_template(element: etree._Element) -> str:
             element = deepcopy(element)
@@ -148,6 +158,7 @@ class XmlTemplatePipeline:
     def generate_esm_template_bundle(self, use_import=True) -> str:
         bundle = self._bundle
         if not bundle.templates:
+            _debug.logic("esm_template_bundle_skipped", bundle=bundle.name)
             return ""
         templates = self.generate_xml_bundle()
         if not templates:
@@ -173,6 +184,9 @@ class XmlTemplatePipeline:
 
     def legacy_template_iife(self) -> str:
         templates = self.generate_xml_bundle()
+        _debug.pipeline(
+            "legacy_template_iife", bundle=self._bundle.name, bytes=len(templates)
+        )
         return (
             "\n\n"
             "/*******************************************\n"

@@ -137,6 +137,7 @@ class ResDeviceLog(models.Model):
         query: Any,
     ) -> SQL:
         if field_name == "is_current" and request and request.session.sid:
+            _debug.logic("order_by_is_current", direction=str(direction))
             return SQL(
                 "%s = %s %s",
                 SQL.identifier(alias, "session_identifier"),
@@ -154,6 +155,7 @@ class ResDeviceLog(models.Model):
     def _update_device(self, request: Any) -> None:
         trace = request.session.update_trace(request)
         if not trace:
+            _debug.logic("device_log_skipped", reason="trace_unchanged")
             return
 
         geoip = GeoIP(trace["ip_address"], app=request.app)
@@ -257,6 +259,7 @@ class ResDeviceLog(models.Model):
                 offset=offset,
             )
             if not candidate_device_log_ids:
+                _debug.lifecycle("revoke_sweep_done", offset=offset)
                 break
             offset += batch_size
             revoked_session_identifiers = (
@@ -278,6 +281,7 @@ class ResDeviceLog(models.Model):
                 to_revoke.write({"revoked": True})
                 self.env.cr.commit()
                 offset -= len(to_revoke)
+                _debug.lifecycle("device_logs_revoked", count=len(to_revoke), by="gc")
 
 
 class ResDevice(models.Model):
@@ -293,6 +297,7 @@ class ResDevice(models.Model):
 
     def _revoke(self) -> None:
         if not self:
+            _debug.logic("revoke_skipped", uid=self.env.uid, reason="empty_recordset")
             return
         if not self.env.is_system() and self.mapped("user_id") != self.env.user:
             _debug.logic("revoke_refused", uid=self.env.uid, devices=self.ids)
@@ -359,6 +364,7 @@ class ResDevice(models.Model):
 
     def init(self) -> None:
         drop_view_if_exists(self.env.cr, self._table)
+        _debug.lifecycle("view_recreated", table=self._table)
         self.env.cr.execute(
             SQL(
                 """

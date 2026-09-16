@@ -194,6 +194,7 @@ class IrFieldsConverter(models.AbstractModel):
         self, exception: Exception, fname: str, value: Any, in_import_file: Any
     ) -> Exception:
         if isinstance(exception, (UnicodeEncodeError, UnicodeDecodeError)):
+            _debug.logic("import_error.classified", field=fname, kind="unicode")
             return ValueError(escape_import_message(str(exception)))
         if isinstance(exception, ValueError):
             if in_import_file:
@@ -208,6 +209,12 @@ class IrFieldsConverter(models.AbstractModel):
             fname,
             type(value).__name__,
             exc_info=exception,
+        )
+        _debug.logic(
+            "import_error.classified",
+            field=fname,
+            kind="unexpected",
+            error=type(exception).__name__,
         )
         return self._prepare_import_error(
             ValueError,
@@ -242,12 +249,19 @@ class IrFieldsConverter(models.AbstractModel):
         def convert_one(fname: str, value: Any, log: Callable) -> Any:
             field = model_fields.get(fname)
             if field is None:
+                _debug.logic("convert_skipped", field=fname, reason="unknown_field")
                 log(fname, self._prepare_unknown_field_error(model))
                 return _UNCONVERTED
             if not value:
                 return False
             converter = resolve_converter(fname, field)
             if converter is None:
+                _debug.logic(
+                    "convert_skipped",
+                    field=fname,
+                    reason="unsupported",
+                    type=field.type,
+                )
                 log(fname, self._prepare_unsupported_type_error(field))
                 return _UNCONVERTED
             try:
@@ -255,6 +269,9 @@ class IrFieldsConverter(models.AbstractModel):
             except psycopg.Error as e:
                 if not isinstance(e, psycopg.DataError):
                     raise
+                _debug.logic(
+                    "convert_failed", field=fname, type=field.type, error="DataError"
+                )
                 log(fname, ValueError(escape_import_message(str(e))))
                 return _UNCONVERTED
             except Exception as e:
@@ -271,6 +288,8 @@ class IrFieldsConverter(models.AbstractModel):
                     ),
                 )
                 return _UNCONVERTED
+            if _debug.logic.enabled and warnings:
+                _debug.logic("convert_warned", field=fname, warnings=len(warnings))
             for warning in warnings:
                 if isinstance(warning, str):
                     warning = OdooImportWarning(warning)
@@ -284,9 +303,16 @@ class IrFieldsConverter(models.AbstractModel):
                     continue
                 value = convert_one(fname, value, log)
                 if value is SKIP:
+                    _debug.logic("record_skipped", model=model._name, field=fname)
                     return None
                 if value is not _UNCONVERTED:
                     converted[fname] = value
+            _debug.pipeline(
+                "record_converted",
+                model=model._name,
+                given=len(record),
+                converted=len(converted),
+            )
             return converted
 
         return convert_record
@@ -310,6 +336,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             return json_loads(value), []
         except ValueError:
+            _debug.logic("json_rejected", field=field.name)
             msg = self.env._(
                 "'%s' does not seem to be a valid JSON for field '%%(field)s'"
             )
@@ -360,10 +387,16 @@ class IrFieldsConverter(models.AbstractModel):
             )
             coerce = self._PROPERTY_CONVERTERS.get(property_dict["type"])
             if coerce is None:
+                _debug.logic(
+                    "property_uncoerced",
+                    field=sub_field.name,
+                    type=property_dict["type"],
+                )
                 continue
             coerced, ws = getattr(self, coerce)(sub_field, val, property_dict)
             warnings.extend(ws)
             if coerced is SKIP:
+                _debug.logic("properties_skip_record", field=sub_field.name)
                 return SKIP, warnings
             property_dict["value"] = coerced
 
@@ -391,6 +424,7 @@ class IrFieldsConverter(models.AbstractModel):
         if not (property_dict.keys() >= {"name", "type", "string"}) or not isinstance(
             property_dict["type"], str
         ):
+            _debug.logic("property_definition_rejected", reason="missing_keys")
             msg = self.env._(
                 "'%(value)s' does not seem to be a valid Property value for field '%%(field)s'. Each property need at least 'name', 'type' and 'string' attribute."
             )
@@ -398,11 +432,21 @@ class IrFieldsConverter(models.AbstractModel):
 
         required, width = self._PROPERTY_TYPE_KEYS.get(property_dict["type"], (None, 0))
         if required and required not in property_dict:
+            _debug.logic(
+                "property_definition_rejected",
+                reason="missing_definition",
+                type=property_dict["type"],
+            )
             msg = self.env._(
                 "The '%(label_property)s' property (subfield of '%%(field)s' field) is missing its '%(value)s' definition."
             )
             raise self._prepare_property_error(msg, required, property_dict)
         if width and not self._is_definition_rows(property_dict[required], width):
+            _debug.logic(
+                "property_definition_rejected",
+                reason="malformed_rows",
+                type=property_dict["type"],
+            )
             msg = self.env._(
                 "The '%(label_property)s' property (subfield of '%%(field)s' field) has a malformed '%(value)s' definition."
             )
@@ -410,6 +454,11 @@ class IrFieldsConverter(models.AbstractModel):
         if required == "comodel" and not self._is_importable_model(
             property_dict[required]
         ):
+            _debug.logic(
+                "property_definition_rejected",
+                reason="unknown_comodel",
+                type=property_dict["type"],
+            )
             msg = self.env._(
                 "The '%(label_property)s' property (subfield of '%%(field)s' field) targets unknown model '%(value)s'."
             )
@@ -445,6 +494,7 @@ class IrFieldsConverter(models.AbstractModel):
         skipped = self._get_policy_fallback_value(field)
         if skipped is not None:
             return skipped, []
+        _debug.logic("property_rejected", field=field.name, kind="selection")
         msg = self.env._(
             "'%(value)s' does not seem to be a valid Selection value for '%(label_property)s' (subfield of '%%(field)s' field)."
         )
@@ -469,11 +519,13 @@ class IrFieldsConverter(models.AbstractModel):
                 skipped = self._get_policy_fallback_value(field)
                 if skipped is not None:
                     return skipped, []
+                _debug.logic("property_rejected", field=field.name, kind="tag")
                 msg = self.env._(
                     "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' (subfield of '%%(field)s' field)."
                 )
                 raise self._prepare_property_error(msg, tag, property_dict)
             new_val.append(val_tag)
+        _debug.perf.count("property_tags_matched", field=field.name, tags=len(new_val))
         return new_val, []
 
     @api.model
@@ -485,6 +537,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             return self._str_to_boolean(field, str(val))
         except ValueError:
+            _debug.logic("property_rejected", field=field.name, kind="boolean")
             msg = self.env._(
                 "Unknown value '%(value)s' for boolean '%(label_property)s' property (subfield of '%%(field)s' field)."
             )
@@ -499,6 +552,7 @@ class IrFieldsConverter(models.AbstractModel):
         except TypeError, ValueError:
             record = None
         if not isinstance(record, dict):
+            _debug.logic("property_rejected", field=field.name, kind="relational")
             msg = self.env._(
                 "'%(value)s' is not a valid value for the '%(label_property)s' "
                 "relational property (subfield of '%%(field)s' field)."
@@ -507,6 +561,12 @@ class IrFieldsConverter(models.AbstractModel):
         multi = property_dict["type"] == "many2many"
         ids, warnings = self._get_reference_ids(field, record, multi=multi)
         if any(id_ is None for id_ in ids):
+            _debug.logic(
+                "property_reference_unresolved",
+                field=field.name,
+                multi=multi,
+                unresolved=sum(1 for id_ in ids if id_ is None),
+            )
             if self._get_policy(field) is ImportPolicy.SKIP_RECORD:
                 return SKIP, warnings
             ids = [id_ for id_ in ids if id_]
@@ -522,6 +582,7 @@ class IrFieldsConverter(models.AbstractModel):
             skipped = self._get_policy_fallback_value(field)
             if skipped is not None:
                 return skipped, []
+            _debug.logic("property_rejected", field=field.name, kind="integer")
             msg = self.env._(
                 "'%(value)s' does not seem to be an integer for field '%(label_property)s' property (subfield of '%%(field)s' field)."
             )
@@ -541,6 +602,7 @@ class IrFieldsConverter(models.AbstractModel):
         skipped = self._get_policy_fallback_value(field)
         if skipped is not None:
             return skipped, []
+        _debug.logic("property_rejected", field=field.name, kind="float")
         msg = self.env._(
             "'%(value)s' does not seem to be a number for field '%(label_property)s' property (subfield of '%%(field)s' field)."
         )
@@ -585,6 +647,9 @@ class IrFieldsConverter(models.AbstractModel):
                 )
             )
             tnx_cache[cache_key] = (trues, falses)
+            _debug.perf.count(
+                "boolean_tokens_built", trues=len(trues), falses=len(falses)
+            )
         return tnx_cache[cache_key]
 
     @api.model
@@ -604,6 +669,7 @@ class IrFieldsConverter(models.AbstractModel):
         if self._get_policy(field) is ImportPolicy.SKIP_RECORD:
             return SKIP, []
 
+        _debug.logic("value_rejected", field=field.name, kind="boolean")
         raise self._prepare_import_error(
             ValueError,
             self.env._("Unknown value '%s' for boolean field '%%(field)s'"),
@@ -616,6 +682,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             return parse_number(value, int), []
         except ValueError:
+            _debug.logic("value_rejected", field=field.name, kind="integer")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -632,6 +699,7 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             valid = False
         if not valid:
+            _debug.logic("value_rejected", field=field.name, kind="float")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._("'%s' does not seem to be a number for field '%%(field)s'"),
@@ -659,6 +727,7 @@ class IrFieldsConverter(models.AbstractModel):
             parsed_value = fields.Date.from_string(value)
             return fields.Date.to_string(parsed_value), []
         except ValueError:
+            _debug.logic("value_rejected", field=field.name, kind="date")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -688,6 +757,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             parsed_value, tz_aware = self._parse_datetime(value)
         except ValueError:
+            _debug.logic("value_rejected", field=field.name, kind="datetime")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -700,6 +770,7 @@ class IrFieldsConverter(models.AbstractModel):
         if tz_aware:
             return fields.Datetime.to_string(parsed_value), []
 
+        _debug.logic("datetime_localized", field=field.name, tz=str(self.env.tz))
         dt = parsed_value.replace(tzinfo=self._get_timezone_input())
         return fields.Datetime.to_string(dt.astimezone(utc)), []
 
@@ -717,6 +788,7 @@ class IrFieldsConverter(models.AbstractModel):
                 values.add(translations[src])
 
         result = tnx_cache[cache_key] = list(values)
+        _debug.perf.count("boolean_translations_read", translations=len(result))
         return result
 
     @api.model
@@ -734,6 +806,13 @@ class IrFieldsConverter(models.AbstractModel):
                 dict(field._description_selection(self.env)) if dynamic else None
             )
             tnx_cache[cache_key] = (selection, current_lang_labels)
+            _debug.perf.count(
+                "selection_read",
+                model=field.model_name,
+                field=field.name,
+                dynamic=dynamic,
+                items=len(selection),
+            )
         return tnx_cache[cache_key]
 
     @staticmethod
@@ -761,10 +840,12 @@ class IrFieldsConverter(models.AbstractModel):
                 translated = current_lang_labels.get(item, label)
                 put(translated, item)
                 labels[item] = translated
+            _debug.logic("selection_index_dynamic", field=field.name, tokens=len(index))
             return index, labels
 
         lang = self.env.lang or "en_US"
         if "ir.model.fields.selection" not in self.env.registry:
+            _debug.logic("selection_index_untranslated", field=field.name, lang=lang)
             # no translated labels without the table: the keys and the
             # declared labels answer (the DB-free tier)
             return index, labels
@@ -824,6 +905,9 @@ class IrFieldsConverter(models.AbstractModel):
 
         skipped = self._get_policy_fallback_value(field)
         if skipped is not None:
+            _debug.logic(
+                "selection_value_fallback", field=field.name, skip=skipped is SKIP
+            )
             return skipped, []
         _debug.logic(
             "selection_value_unknown",
@@ -884,6 +968,7 @@ class IrFieldsConverter(models.AbstractModel):
         if cache is not None:
             if (cached := cache.get(cache_key)) is not None:
                 cached_id, cached_warnings = cached
+                _debug.perf.count("ref_cache_hit", field=field.name, subfield=subfield)
                 return cached_id, list(cached_warnings)
 
         if subfield == ".id":
@@ -893,6 +978,7 @@ class IrFieldsConverter(models.AbstractModel):
         elif subfield is None:
             lookup = self._get_ref_from_name(field, value)
         else:
+            _debug.logic("ref_subfield_unknown", field=field.name, subfield=subfield)
             raise self._prepare_import_error(
                 ValueError,
                 self.env._("Unknown sub-field “%s”"),
@@ -910,6 +996,12 @@ class IrFieldsConverter(models.AbstractModel):
         )
 
         if lookup.id is None and self._get_policy(field) is ImportPolicy.REPORT:
+            _debug.logic(
+                "ref_not_found",
+                field=field.name,
+                subfield=subfield,
+                created_failed=bool(lookup.error_msg),
+            )
             raise self._prepare_ref_not_found_error(
                 field, subfield, lookup.field_type, value, lookup.error_msg
             )
@@ -923,6 +1015,7 @@ class IrFieldsConverter(models.AbstractModel):
         try:
             tentative_id = int(value)
         except ValueError:
+            _debug.logic("ref_dbid_invalid", field=field.name)
             raise self._prepare_import_error(
                 ValueError,
                 self.env._("Invalid database id '%s' for the field '%%(field)s'"),
@@ -930,6 +1023,12 @@ class IrFieldsConverter(models.AbstractModel):
                 {"moreinfo": self._prepare_action_possible_values(field, ".id")},
             ) from None
         exists = self.env[field.comodel_name].browse(tentative_id).exists()
+        _debug.logic(
+            "ref_dbid_checked",
+            model=field.comodel_name,
+            id=tentative_id,
+            exists=bool(exists),
+        )
         return RefLookup((tentative_id if exists else None), field_type, "", [])
 
     @api.model
@@ -945,6 +1044,12 @@ class IrFieldsConverter(models.AbstractModel):
         flush = self.env.context.get("import_flush", lambda **kw: None)
         flush(xml_id=xmlid)
         id = self._xmlid_to_record_id(xmlid, self.env[field.comodel_name])
+        _debug.logic(
+            "ref_xmlid_resolved",
+            model=field.comodel_name,
+            qualified="." in value,
+            found=id is not None,
+        )
         return RefLookup(id, field_type, "", [])
 
     @api.model
@@ -957,6 +1062,9 @@ class IrFieldsConverter(models.AbstractModel):
         flush = self.env.context.get("import_flush", lambda **kw: None)
         flush(model=field.comodel_name)
         ids = RelatedModel.name_search(name=value, operator="=")
+        _debug.perf.count(
+            "ref_name_searched", model=RelatedModel._name, matches=len(ids)
+        )
         if ids:
             if len(ids) > 1:
                 warnings.append(
@@ -980,12 +1088,22 @@ class IrFieldsConverter(models.AbstractModel):
                     id, _name = RelatedModel.name_create(name=value)
                 _debug.lifecycle("ref_name_created", model=RelatedModel._name, id=id)
                 return RefLookup(id, field_type, "", warnings)
-            except UserError, ValueError, psycopg.Error:
+            except (UserError, ValueError, psycopg.Error) as exc:
+                _debug.logic(
+                    "ref_name_create_failed",
+                    model=RelatedModel._name,
+                    error=type(exc).__name__,
+                )
                 error_msg = self.env._(
                     "Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.",
                     RelatedModel._description,
                 )
                 return RefLookup(None, field_type, error_msg, warnings)
+        _debug.logic(
+            "ref_name_unresolved",
+            model=RelatedModel._name,
+            name_create_allowed=False,
+        )
         return RefLookup(None, field_type, "", warnings)
 
     @api.model
@@ -1030,6 +1148,7 @@ class IrFieldsConverter(models.AbstractModel):
         if cached := import_cache.get(xmlid):
             cached_model, res_id = cached
             self._check_xmlid_model(xmlid, cached_model, model)
+            _debug.perf.count("xmlid_cache_hit", model=model._name)
             return res_id
 
         module, name = xmlid.split(".", 1)
@@ -1043,10 +1162,12 @@ class IrFieldsConverter(models.AbstractModel):
             )
         )
         if not data:
+            _debug.logic("xmlid_unresolved", model=model._name, reason="no_data")
             return None
         res_model, res_id = data.model, data.res_id
         self._check_xmlid_model(xmlid, res_model, model)
         if not model.browse(res_id).exists():
+            _debug.logic("xmlid_unresolved", model=model._name, reason="record_gone")
             return None
         import_cache[xmlid] = (res_model, res_id)
         return res_id
@@ -1057,6 +1178,7 @@ class IrFieldsConverter(models.AbstractModel):
     ) -> None:
         if found_model == model._name:
             return
+        _debug.logic("xmlid_model_mismatch", found=found_model, expected=model._name)
         raise self._prepare_import_error(
             ValueError,
             self.env._(
@@ -1075,6 +1197,7 @@ class IrFieldsConverter(models.AbstractModel):
     def _get_subfield_referencing(self, record: dict) -> str | None:
         fieldset = set(record)
         if fieldset - REFERENCING_FIELDS:
+            _debug.logic("reference_rejected", reason="indirect_create")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -1082,6 +1205,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ),
             )
         if not fieldset:
+            _debug.logic("reference_rejected", reason="missing")
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -1089,6 +1213,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ),
             )
         if len(fieldset) > 1:
+            _debug.logic("reference_rejected", reason="ambiguous", given=len(fieldset))
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -1102,6 +1227,7 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _split_references(self, raw: str) -> list[str]:
         if not isinstance(raw, str):
+            _debug.logic("references_rejected", type=type(raw).__name__)
             raise self._prepare_import_error(
                 ValueError,
                 self.env._(
@@ -1166,6 +1292,13 @@ class IrFieldsConverter(models.AbstractModel):
             id_, ws = self._get_db_id(field, subfield, reference)
             ids.append(id_)
             warnings.extend(ws)
+        _debug.pipeline(
+            "references_resolved",
+            field=field.name,
+            subfield=subfield,
+            references=len(references),
+            unresolved=sum(1 for id_ in ids if id_ is None),
+        )
         return ids, warnings
 
     @api.model
@@ -1177,6 +1310,7 @@ class IrFieldsConverter(models.AbstractModel):
         id_ = ids[0]
         if id_ is None:
             fallback = self._get_policy_fallback_value(field)
+            _debug.logic("many2one_fallback", field=field.name, skip=fallback is SKIP)
             return (False if fallback is None else fallback), warnings
         return id_, warnings
 
@@ -1197,6 +1331,7 @@ class IrFieldsConverter(models.AbstractModel):
         if any(id is None for id in ids) and (
             self._get_policy(field) is ImportPolicy.SKIP_RECORD
         ):
+            _debug.logic("many2many_skip_record", field=field.name)
             return SKIP, warnings
 
         ids = [id for id in ids if id]
@@ -1249,6 +1384,12 @@ class IrFieldsConverter(models.AbstractModel):
         if cache is not None and (cached := cache.get(key)) is not None:
             return cached
 
+        _debug.perf.count(
+            "nested_converter_built",
+            field=field.name,
+            comodel=field.comodel_name,
+            depth=len(hierarchy),
+        )
         convert = self.with_context(
             parent_fields_hierarchy=list(hierarchy)
         )._get_converter_record(self.env[field.comodel_name])
@@ -1267,6 +1408,12 @@ class IrFieldsConverter(models.AbstractModel):
             records = [
                 {subfield: item} for item in self._split_references(record[subfield])
             ]
+            _debug.logic(
+                "one2many_references_split",
+                field=field.name,
+                subfield=subfield,
+                records=len(records),
+            )
         commands, warnings = self._subrecords_to_commands(field, records)
         if commands is SKIP:
             return SKIP, warnings
@@ -1299,11 +1446,13 @@ class IrFieldsConverter(models.AbstractModel):
 
         convert = self._get_converter_nested(field, parent_fields_hierarchy)
 
+        linked = 0
         for record in records:
             id = None
             refs = get_ref_values(record)
             writable = convert(get_non_ref_values(record), log)
             if writable is None:
+                _debug.logic("subrecords_skip_record", field=field.name)
                 return SKIP, warnings
             if refs:
                 subfield = self._get_subfield_referencing(refs)
@@ -1313,12 +1462,21 @@ class IrFieldsConverter(models.AbstractModel):
                 except ImportReferenceNotFound:
                     if subfield != "id":
                         raise
+                    _debug.logic("subrecord_xmlid_deferred", field=field.name)
                     writable["id"] = record["id"]
 
             if id:
+                linked += 1
                 commands.append(Command.link(id))
                 if writable:
                     commands.append(Command.update(id, writable))
             else:
                 commands.append(Command.create(writable))
+        _debug.pipeline(
+            "subrecords_to_commands",
+            field=field.name,
+            records=len(records),
+            linked=linked,
+            commands=len(commands),
+        )
         return commands, warnings

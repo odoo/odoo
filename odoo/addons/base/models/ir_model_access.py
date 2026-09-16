@@ -71,6 +71,12 @@ class IrModelAccess(models.Model):
             ((privilege or None, group) for _group, privilege, group in rows),
             key=lambda pair: (pair[0] is None, pair[0] or "", pair[1]),
         )
+        _debug.perf.count(
+            "group_names_with_access",
+            model=model_name,
+            mode=access_mode,
+            groups=len(names),
+        )
         return [
             f"{privilege}/{group}" if privilege else group for privilege, group in names
         ]
@@ -91,9 +97,25 @@ class IrModelAccess(models.Model):
 
         group_definitions = self.env["res.groups"]._get_group_definitions()
         if not accesses:
+            _debug.logic(
+                "groups_with_access", model=model_name, mode=access_mode, result="empty"
+            )
             return group_definitions.empty
         if not all(access.group_id for access in accesses):
+            _debug.logic(
+                "groups_with_access",
+                model=model_name,
+                mode=access_mode,
+                result="universe",
+            )
             return group_definitions.universe
+        _debug.logic(
+            "groups_with_access",
+            model=model_name,
+            mode=access_mode,
+            result="groups",
+            groups=len(accesses.group_id),
+        )
         return group_definitions.from_ids(accesses.group_id.ids)
 
     @tools.ormcache(
@@ -145,11 +167,18 @@ class IrModelAccess(models.Model):
             return True
 
         if not isinstance(model, str):
+            _debug.logic("acl_check.rejected", mode=mode, reason="model_not_str")
             raise TypeError(
                 f"Model name must be a string, got {type(model).__name__}: {model!r}"
             )
 
         if model not in self.env:
+            _debug.logic(
+                "acl_check.unknown_model",
+                model=model,
+                mode=mode,
+                raise_exception=raise_exception,
+            )
             if raise_exception:
                 raise ValueError(
                     f"Unknown model {model!r}: it does not exist in the registry"
@@ -190,6 +219,7 @@ class IrModelAccess(models.Model):
         if groups:
             group_info = str(ACCESS_ERROR_GROUPS) % {"groups_list": groups}
         else:
+            _debug.logic("access_error.no_group_grants", model=model, mode=mode)
             group_info = str(ACCESS_ERROR_NOGROUP)
 
         resolution_info = str(ACCESS_ERROR_RESOLUTION)
@@ -210,6 +240,7 @@ class IrModelAccess(models.Model):
             if not vals.get("group_id") and any(
                 vals.get(f"perm_{mode}") for mode in self._PERM_COLUMNS
             ):
+                _debug.logic("create.groupless_acl", name=vals.get("name"))
                 _logger.warning(
                     "Rule %s has no group, this is a deprecated feature. Every access-granting rule should specify a group.",
                     vals.get("name"),

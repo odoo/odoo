@@ -10,6 +10,7 @@ from lxml import etree
 from lxml.builder import E
 from lxml.etree import _Element
 
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import _
 from odoo.tools.view_validation import (
     att_names,
@@ -18,6 +19,8 @@ from odoo.tools.view_validation import (
 )
 
 from .ir_ui_view_name_manager import NameManager
+
+_debug = DebugLog(__name__)
 
 _NESTED_VIEW_TAGS = frozenset({"form", "list", "graph", "kanban", "calendar"})
 
@@ -87,6 +90,7 @@ def register(tag: str):
     def wrap(cls):
         cls.tag = tag
         ELEMENT_HANDLERS[tag] = cls()
+        _debug.lifecycle("handler.registered", tag=tag, handler=cls.__name__)
         return cls
 
     return wrap
@@ -99,6 +103,12 @@ def register_attribute(*attrs: str, pattern=None):
             ATTRIBUTE_CHECKS[attr] = instance
         if pattern is not None:
             _ATTRIBUTE_CHECK_PATTERNS.append((pattern, instance))
+        _debug.lifecycle(
+            "attribute_check.registered",
+            attrs=len(attrs),
+            pattern=pattern is not None,
+            check=cls.__name__,
+        )
         return cls
 
     return wrap
@@ -152,6 +162,7 @@ class FieldHandler(ElementHandler):
 
         name = node.get("name")
         if not name:
+            _debug.logic("field.refused", view=view.id, reason="no_name")
             raise view._prepare_view_error(
                 _('Field tag must have a "name" attribute defined'), node
             )
@@ -180,6 +191,12 @@ class FieldHandler(ElementHandler):
                     )
 
             elif validate and node.get("domain"):
+                _debug.logic(
+                    "field.refused",
+                    view=view.id,
+                    field=name,
+                    reason="domain_on_non_relational",
+                )
                 msg = _(
                     'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
                     name=name,
@@ -199,6 +216,13 @@ class FieldHandler(ElementHandler):
                 if child.tag not in _NESTED_VIEW_TAGS:
                     continue
                 node.remove(child)
+                _debug.pipeline(
+                    "field.subview_check",
+                    view=view.id,
+                    field=name,
+                    comodel=field.comodel_name,
+                    view_type=child.tag,
+                )
                 view._check_view(
                     child,
                     field.comodel_name,
@@ -209,6 +233,13 @@ class FieldHandler(ElementHandler):
                 view._check_subview_schema(child, field.comodel_name)
 
         elif validate and name not in name_manager.field_info:
+            _debug.logic(
+                "field.refused",
+                view=view.id,
+                field=name,
+                model=name_manager.model._name,
+                reason="unknown_field",
+            )
             msg = _(
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
                 field_name=name,
@@ -241,8 +272,17 @@ class FieldHandler(ElementHandler):
                 and node.get("invisible") not in ("1", "True")
                 and not name_manager.parent
             ):
+                appended = 0
                 for arch in view._get_x2many_missing_view_archs(field, node, node_info):
                     node.append(arch)
+                    appended += 1
+                _debug.pipeline(
+                    "field.x2many_subviews_added",
+                    view=view.id,
+                    field=name,
+                    comodel=field.comodel_name,
+                    added=appended,
+                )
 
             if field.relational:
                 domain = node.get("domain") or (
@@ -277,6 +317,13 @@ class FieldHandler(ElementHandler):
             for child in node:
                 if child.tag in _NESTED_VIEW_TAGS:
                     node_info["children"] = []
+                    _debug.pipeline(
+                        "field.subview_postprocess",
+                        view=view.id,
+                        field=name,
+                        comodel=field.comodel_name,
+                        view_type=child.tag,
+                    )
                     view._postprocess_view(
                         child,
                         field.comodel_name,
@@ -317,6 +364,13 @@ class GroupbyHandler(ElementHandler):
         if field:
             if node_info["validate"]:
                 if field.type != "many2one":
+                    _debug.logic(
+                        "groupby.refused",
+                        view=view.id,
+                        field=name,
+                        type=field.type,
+                        reason="not_many2one",
+                    )
                     msg = _(
                         "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
                         name=field.name,
@@ -337,6 +391,13 @@ class GroupbyHandler(ElementHandler):
 
             groupby_node = E.groupby(*node)
             node_info["children"] = []
+            _debug.pipeline(
+                "groupby.subview_check",
+                view=view.id,
+                field=name,
+                comodel=field.comodel_name,
+                children=len(groupby_node),
+            )
             try:
                 view._check_view(
                     groupby_node,
@@ -350,6 +411,13 @@ class GroupbyHandler(ElementHandler):
             name_manager.add_available_field(node, name, node_info)
 
         elif node_info["validate"]:
+            _debug.logic(
+                "groupby.refused",
+                view=view.id,
+                field=name,
+                model=name_manager.model._name,
+                reason="unknown_field",
+            )
             msg = _(
                 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
                 field=name,
@@ -369,6 +437,12 @@ class GroupbyHandler(ElementHandler):
             return
         field = name_manager.model._fields.get(name)
         if not field or not field.comodel_name:
+            _debug.logic(
+                "groupby.postprocess_skipped",
+                view=view.id,
+                field=name,
+                reason="no_field" if not field else "not_relational",
+            )
             return
         node_info["children"] = []
         scope = E.groupby(*node)
@@ -395,6 +469,7 @@ class LabelHandler(ElementHandler):
             return
         for_ = node.get("for")
         if not for_:
+            _debug.logic("label.refused", view=view.id, reason="no_for")
             msg = _(
                 'Label tag must contain a "for". To match label style '
                 "without corresponding field or button, use 'class=\"o_form_label\"'."
@@ -430,12 +505,23 @@ class SearchHandler(ElementHandler):
         searchpanels = [child for child in node if child.tag == "searchpanel"]
         if searchpanels:
             if len(searchpanels) > 1:
+                _debug.logic(
+                    "search.refused",
+                    view=view.id,
+                    searchpanels=len(searchpanels),
+                    reason="multiple_searchpanels",
+                )
                 raise view._prepare_view_error(
                     _("Search tag can only contain one search panel"), node
                 )
             node_info["children"] = [
                 child for child in node if child.tag != "searchpanel"
             ]
+            _debug.pipeline(
+                "search.searchpanel_check",
+                view=view.id,
+                siblings=len(node_info["children"]),
+            )
             view._check_view(
                 searchpanels[0],
                 name_manager.model._name,
@@ -490,6 +576,12 @@ class ListHandler(ElementHandler):
             return
         editable_attr = node.get("editable")
         if editable_attr and editable_attr not in ["top", "bottom"]:
+            _debug.logic(
+                "list.refused",
+                view=view.id,
+                editable=editable_attr,
+                reason="bad_editable",
+            )
             msg = _(
                 'The "editable" attribute of list views must be "top" or "bottom", received %(value)s',
                 value=editable_attr,
@@ -505,6 +597,12 @@ class ListHandler(ElementHandler):
         )
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags:
+                _debug.logic(
+                    "list.refused",
+                    view=view.id,
+                    tag=child.tag,
+                    reason="bad_child_tag",
+                )
                 msg = _(
                     "List child can only have one of %(tags)s tag (not %(wrong_tag)s)",
                     tags=", ".join(allowed_tags),
@@ -542,6 +640,12 @@ class GraphHandler(ElementHandler):
             return
         for child in node.iterchildren(tag=etree.Element):
             if child.tag != "field":
+                _debug.logic(
+                    "graph.refused",
+                    view=view.id,
+                    tag=child.tag,
+                    reason="bad_child_tag",
+                )
                 msg = _(
                     "A <graph> can only contains <field> nodes, found a <%s>",
                     child.tag,
@@ -566,6 +670,7 @@ class FilterHandler(ElementHandler):
         if domain:
             name = node.get("name")
             desc = f'domain of <filter name="{name}">' if name else "domain of <filter>"
+            _debug.pipeline("filter.domain_check", view=view.id, filter=name)
             view._check_domain_identifiers(
                 node,
                 name_manager,
@@ -589,6 +694,13 @@ class FilterHandler(ElementHandler):
                     "third_quarter",
                     "fourth_quarter",
                 }:
+                    _debug.logic(
+                        "filter.refused",
+                        view=view.id,
+                        filter=node.get("name"),
+                        default_period=default_period,
+                        reason="bad_default_period",
+                    )
                     msg = _(
                         "Invalid default period %(default_period)s for date filter",
                         default_period=default_period,
@@ -614,6 +726,12 @@ class ButtonHandler(ElementHandler):
         type_ = node.get("type")
         if special:
             if special not in ("cancel", "save", "add"):
+                _debug.logic(
+                    "button.refused",
+                    view=view.id,
+                    special=special,
+                    reason="bad_special",
+                )
                 raise view._prepare_view_error(
                     _("Invalid special '%(value)s' in button", value=special),
                     node,
@@ -622,6 +740,13 @@ class ButtonHandler(ElementHandler):
             if name:
                 func = getattr(name_manager.model, name, None)
                 if not callable(func):
+                    _debug.logic(
+                        "button.refused",
+                        view=view.id,
+                        name=name,
+                        model=name_manager.model._name,
+                        reason="not_callable",
+                    )
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
                         action_name=name,
@@ -629,6 +754,13 @@ class ButtonHandler(ElementHandler):
                     )
                     raise view._prepare_view_error(msg, node)
                 if name.startswith("_") or getattr(func, "_api_private", False):
+                    _debug.logic(
+                        "button.refused",
+                        view=view.id,
+                        name=name,
+                        model=name_manager.model._name,
+                        reason="private_method",
+                    )
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name,
@@ -640,6 +772,12 @@ class ButtonHandler(ElementHandler):
                         func, annotation_format=annotationlib.Format.FORWARDREF
                     ).bind()
                 except TypeError:
+                    _debug.logic(
+                        "button.warned",
+                        view=view.id,
+                        name=name,
+                        reason="has_parameters",
+                    )
                     msg = "%s on %s has parameters and cannot be called from a button"
                     view._log_view_warning(msg % (name, name_manager.model._name), node)
                 name_manager.add_available_action(name)
@@ -650,6 +788,13 @@ class ButtonHandler(ElementHandler):
         elif type_ and type_ not in view._get_client_button_types(
             node_info["view_type"]
         ):
+            _debug.logic(
+                "button.warned",
+                view=view.id,
+                type=type_,
+                view_type=node_info["view_type"],
+                reason="unknown_type",
+            )
             view._log_view_warning(f"Unknown button type {type_!r}", node)
 
         if node.get("icon"):
@@ -672,6 +817,12 @@ class SearchpanelHandler(ElementHandler):
             return
         for child in node.iterchildren(tag=etree.Element):
             if child.get("domain") and child.get("select") != "multi":
+                _debug.logic(
+                    "searchpanel.refused",
+                    view=view.id,
+                    field=child.get("name"),
+                    reason="domain_without_multi",
+                )
                 msg = _(
                     "Searchpanel items with a domain attribute must have select='multi'."
                 )
@@ -692,6 +843,7 @@ class PageHandler(ElementHandler):
         if not node_info["validate"]:
             return
         if node.getparent() is None or node.getparent().tag != "notebook":
+            _debug.logic("page.refused", view=view.id, reason="parent_not_notebook")
             raise view._prepare_view_error(
                 _("Page direct ancestor must be notebook"), node
             )
@@ -709,6 +861,7 @@ class ImgHandler(ElementHandler):
         node_info: dict[str, Any],
     ) -> None:
         if node_info["validate"] and not any(node.get(alt) for alt in att_names("alt")):
+            _debug.logic("img.warned", view=view.id, reason="no_alt")
             view._log_view_warning("<img> tag must contain an alt attribute", node)
 
 
@@ -727,6 +880,7 @@ class AHandler(ElementHandler):
             "btn" in node.get(cl, "") for cl in att_names("class")
         ):
             if node.get("role") != "button":
+                _debug.logic("a.warned", view=view.id, reason="btn_without_role")
                 msg = '"<a>" tag with "btn" class must have "button" role'
                 view._log_view_warning(msg, node)
 
@@ -794,6 +948,7 @@ class ContextAttributeCheck(AttributeCheck):
         try:
             vnames = get_expression_field_names(expr)
         except SyntaxError as e:
+            _debug.logic("context.refused", view=view.id, reason="syntax_error")
             message = _(
                 "Invalid context: \u201c%(expr)s\u201d is not a valid Python expression \n\n %(error)s",
                 expr=expr,
@@ -808,6 +963,12 @@ class ContextAttributeCheck(AttributeCheck):
             if not isinstance(val_ast, ast.Constant) or not isinstance(
                 val_ast.value, str
             ):
+                _debug.logic(
+                    "context.refused",
+                    view=view.id,
+                    attribute=attr,
+                    reason="group_by_not_string",
+                )
                 msg = _(
                     '"group_by" value must be a string %(attribute)s=\u201c%(value)s\u201d',
                     attribute=attr,
@@ -816,6 +977,13 @@ class ContextAttributeCheck(AttributeCheck):
                 raise view._prepare_view_error(msg, node)
             fname = val_ast.value.split(":")[0]
             if fname not in name_manager.model._fields:
+                _debug.logic(
+                    "context.refused",
+                    view=view.id,
+                    attribute=attr,
+                    field=fname,
+                    reason="group_by_unknown_field",
+                )
                 msg = _(
                     'Unknown field \u201c%(field)s\u201d in "group_by" value in %(attribute)s=\u201c%(value)s\u201d',
                     field=fname,
@@ -839,6 +1007,9 @@ class IntegerAttributeCheck(AttributeCheck):
         node_info: dict[str, Any],
     ) -> None:
         if not expr.isdigit():
+            _debug.logic(
+                "attribute.refused", view=view.id, attribute=attr, reason="not_integer"
+            )
             raise view._prepare_view_error(
                 _(
                     "\u201c%(attribute)s\u201d value must be an integer (%(value)s)",
@@ -883,16 +1054,19 @@ class DataBsToggleAttributeCheck(AttributeCheck):
         if expr != "tab":
             return
         if node.get("role") != "tab":
+            _debug.logic("tab.warned", view=view.id, reason="no_tab_role")
             view._log_view_warning(
                 'tab link (data-bs-toggle="tab") must have "tab" role', node
             )
         aria_control = node.get("aria-controls") or node.get("t-att-aria-controls")
         if not aria_control and not node.get("t-attf-aria-controls"):
+            _debug.logic("tab.warned", view=view.id, reason="no_aria_controls")
             view._log_view_warning(
                 'tab link (data-bs-toggle="tab") must have "aria_control" defined',
                 node,
             )
         if aria_control and "#" in aria_control:
+            _debug.logic("tab.warned", view=view.id, reason="hash_in_aria_controls")
             view._log_view_warning('aria-controls in tablink cannot contains "#"', node)
 
 
@@ -910,6 +1084,7 @@ class RoleAttributeCheck(AttributeCheck):
         node_info: dict[str, Any],
     ) -> None:
         if expr in ("presentation", "none"):
+            _debug.logic("role.warned", view=view.id, role=expr, reason="hidden_role")
             view._log_view_warning(
                 "A role cannot be `none` or `presentation`. "
                 "All your elements must be accessible with screen readers, "
@@ -931,6 +1106,7 @@ class GroupAttributeCheck(AttributeCheck):
         expr: str,
         node_info: dict[str, Any],
     ) -> None:
+        _debug.logic("attribute.warned", view=view.id, attribute=attr, reason="group")
         view._log_view_warning(
             "attribute 'group' is not valid.  Did you mean 'groups'?", node
         )
@@ -949,6 +1125,9 @@ class TooltipAttributeCheck(AttributeCheck):
         expr: str,
         node_info: dict[str, Any],
     ) -> None:
+        _debug.logic(
+            "attribute.refused", view=view.id, attribute=attr, reason="tooltip"
+        )
         raise view._prepare_view_error(
             _("Forbidden attribute used in arch (%s).", attr), node
         )
@@ -969,6 +1148,9 @@ class QwebAttributeCheck(AttributeCheck):
     ) -> None:
         view._check_qweb_directive(node, attr, node_info["view_type"])
         if COMP_REGEX.search(expr):
+            _debug.logic(
+                "attribute.refused", view=view.id, attribute=attr, reason="comp"
+            )
             raise view._prepare_view_error(
                 _("Forbidden use of `__comp__` in arch."), node
             )

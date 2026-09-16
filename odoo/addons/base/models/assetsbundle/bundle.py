@@ -63,6 +63,7 @@ def _check_external_libs_once() -> None:
             "external_libs_invalid",
             error=str(exc).replace("\n", " ")[:400],
         )
+        _debug.logic("external_libs_invalid_tolerated", error=type(exc).__name__)
 
 
 class AssetsBundle:
@@ -144,6 +145,13 @@ class AssetsBundle:
                     bundle=self.name,
                     url=url,
                 )
+                _debug.logic("external_asset_skipped", bundle=self.name, ext=ext)
+        _debug.perf.count(
+            "external_assets_matched",
+            bundle=self.name,
+            given=len(external_assets),
+            kept=len(kept),
+        )
         return kept
 
     def _collect_files(self, files: list[BundleFileSpec], css: bool, js: bool) -> None:
@@ -178,6 +186,9 @@ class AssetsBundle:
                     "bundle_file_skipped",
                     bundle=self.name,
                     url=spec["url"],
+                )
+                _debug.logic(
+                    "bundle_file_skipped", bundle=self.name, extension=extension
                 )
         _debug.pipeline(
             "files_collected",
@@ -234,6 +245,16 @@ class AssetsBundle:
             "js": tuple(self.javascripts + self.templates + self.native_modules),
         }
 
+        _debug.lifecycle(
+            "bundle_init",
+            bundle=name,
+            esm=self._is_esm_bundle,
+            debug=debug_assets,
+            rtl=rtl,
+            css=css,
+            js=js,
+            external=len(self.external_assets),
+        )
         log_event(
             _bundle_log,
             logging.DEBUG,
@@ -273,10 +294,19 @@ class AssetsBundle:
         if self.has_js and self.has_js_content:
             response.append(self.get_link("js"))
 
+        _debug.pipeline(
+            "links",
+            bundle=self.name,
+            external=len(self.external_assets),
+            links=len(response),
+        )
         return self.external_assets + response
 
     def get_native_module_data(self, with_bridges: bool = True) -> NativeModuleData:
         if with_bridges not in self._native_module_data_cache:
+            _debug.perf.count(
+                "native_module_data_miss", bundle=self.name, bridges=with_bridges
+            )
             self._native_module_data_cache[with_bridges] = self._native_module_data(
                 with_bridges
             )
@@ -312,6 +342,9 @@ class AssetsBundle:
                     previous=prior,
                     replaced_with=url,
                 )
+                _debug.logic(
+                    "import_map_spec_collision", bundle=self.name, spec=spec, kind=kind
+                )
             import_map[spec] = url
 
         for asset in self.native_modules:
@@ -328,6 +361,14 @@ class AssetsBundle:
             self._bridges._prepare_native_to_legacy_bridge(set(import_map))
             if with_bridges
             else {}
+        )
+        _debug.pipeline(
+            "native_module_data",
+            bundle=self.name,
+            modules=len(self.native_modules),
+            specs=len(import_map),
+            preload=len(preload_urls),
+            bridges=len(bridge_import_map),
         )
         log_event(
             _bundle_log,
@@ -350,6 +391,7 @@ class AssetsBundle:
         EsbuildCompiler.invalidate_addon_scan_cache()
         invalidate_esm_registry()
         _check_external_libs_once.cache_clear()
+        _debug.lifecycle("addon_scan_cache_invalidated")
 
     @classmethod
     def _get_esbuild_addon_flags(cls, odoo_root: Path) -> tuple[list, list]:
@@ -369,6 +411,14 @@ class AssetsBundle:
                 for asset in native_modules
                 if asset.module_path not in excluded_specs
             ]
+        _debug.logic(
+            "esbuild_compiler_prepared",
+            bundle=self.name,
+            modules=len(native_modules),
+            legacy=len(self.javascripts),
+            included=self.name in registry.import_map_included_bundles,
+            standalone=self.name in registry.standalone_bundles,
+        )
         return EsbuildCompiler(
             self.name,
             native_modules,
@@ -428,6 +478,9 @@ class AssetsBundle:
     def get_checksum(self, asset_type: str) -> str:
         if asset_type not in self._checksum_cache:
             if asset_type not in self._version_assets:
+                _debug.logic(
+                    "checksum_rejected", bundle=self.name, asset_type=asset_type
+                )
                 raise ValueError(f"Asset type {asset_type} not known")
             h = hashlib.sha256()
             h.update(_pipeline_fingerprint().encode())
@@ -473,6 +526,7 @@ class AssetsBundle:
                 asset._filename,
                 asset.last_modified,
             )
+        _debug.logic("module_js_classified_inline", bundle=self.name, url=asset.url)
         return asset.is_native or is_odoo_module(asset.url or "", asset.raw_content)
 
     @functools.cached_property
@@ -485,6 +539,7 @@ class AssetsBundle:
 
     def js(self) -> IrAttachment:
         if not self.has_js_content:
+            _debug.logic("js_attachment", bundle=self.name, reason="no_content")
             return self._no_attachment()
         is_minified = not self.is_debug_assets
         extension = "min.js" if is_minified else "js"
@@ -530,11 +585,22 @@ class AssetsBundle:
         generator = SourceMapGenerator(
             source_root=_sourcemap_source_root(self.get_asset_url("debug", extension)),
         )
-        content_bundle = body_builder(generator, map_attachment.url)
+        with _debug.perf(
+            "sourcemap_build", cr=self.env.cr, bundle=self.name, extension=extension
+        ) as span:
+            content_bundle = body_builder(generator, map_attachment.url)
+            span.set(bytes=len(content_bundle))
         attachment = self.save_attachment(extension, content_bundle)
 
         generator.file = attachment.url
         map_attachment.write({"raw": generator.get_content()})
+        _debug.lifecycle(
+            "sourcemap_saved",
+            bundle=self.name,
+            extension=extension,
+            attachment=attachment.id,
+            map=map_attachment.id,
+        )
 
         return attachment
 
@@ -560,6 +626,7 @@ class AssetsBundle:
 
     def css(self) -> IrAttachment:
         if not self.has_css_content:
+            _debug.logic("css_attachment", bundle=self.name, reason="no_content")
             return self._no_attachment()
         is_minified = not self.is_debug_assets
         extension = "min.css" if is_minified else "css"
@@ -588,10 +655,22 @@ class AssetsBundle:
             previous_css = (
                 previous_attachment.raw.decode() if previous_attachment else ""
             )
+            _debug.logic(
+                "css_error_banner",
+                bundle=self.name,
+                errors=len(self.css_errors),
+                previous=bool(previous_attachment),
+            )
             banner = self._render_css_error_banner(self.css_errors, previous_css)
             return self.save_attachment(extension, banner)
 
         import_rules, css = self._css.hoist_import_rules(css)
+        _debug.pipeline(
+            "css_import_rules_hoisted",
+            bundle=self.name,
+            imports=len(import_rules),
+            bytes=len(css),
+        )
 
         if is_minified:
             return self.save_attachment(extension, "\n".join(import_rules + [css]))

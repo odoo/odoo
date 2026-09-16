@@ -57,6 +57,12 @@ def _get_specs_imported_by_consumers(
             )
             if resolved in members
         )
+    _debug.perf.count(
+        "consumer_imports",
+        consumers=len(consumers),
+        members=len(members),
+        imported=len(imported),
+    )
     return imported
 
 
@@ -70,6 +76,12 @@ class IrQweb(models.AbstractModel):
         escapes = get_escaping_relative_imports(asset_bundle.native_modules)
         if not escapes:
             return
+        _debug.logic(
+            "lazy_bundle_rejected",
+            bundle=asset_bundle.name,
+            reason="escaping_relative_imports",
+            escapes=len(escapes),
+        )
         details = "; ".join(
             f"{module_path} imports {spec!r} (-> {resolved})"
             for module_path, spec, resolved in escapes
@@ -84,6 +96,7 @@ class IrQweb(models.AbstractModel):
 
     def _can_compile_with_esbuild(self, bundle: str) -> bool:
         if bundle in self._get_esbuild_bundles_forced_fallback():
+            _debug.logic("esbuild_declined", bundle=bundle, reason="admin_override")
             log_event(_fallback_log, logging.INFO, "admin_override", bundle=bundle)
             return False
         allow, circuit_reason = self._get_esbuild_circuit_state(bundle)
@@ -115,6 +128,13 @@ class IrQweb(models.AbstractModel):
             bundle, assets_params, page_scope
         )
         if not child_specs:
+            _debug.logic(
+                "child_externals",
+                bundle=bundle,
+                children=len(child_bundles),
+                child_specs=0,
+                stubs=len(secondary_stubs),
+            )
             return None, secondary_stubs
 
         aliasable = {
@@ -183,6 +203,12 @@ class IrQweb(models.AbstractModel):
                 err=type(exc).__name__,
                 msg=str(exc)[:200],
             )
+            _debug.logic(
+                "esbuild_failed",
+                bundle=bundle,
+                error=type(exc).__name__,
+                fail_closed=self._is_esbuild_fail_closed(),
+            )
             if self._is_esbuild_fail_closed():
                 raise EsbuildBundleError(
                     f"esbuild failed for bundle {bundle!r}: {exc}"
@@ -210,6 +236,7 @@ class IrQweb(models.AbstractModel):
 
         with self._get_esbuild_lock_cursor(bundle) as lock_cr:
             if lock_cr is None:
+                _debug.logic("esbuild_declined", bundle=bundle, reason="no_lock_cursor")
                 log_event(
                     _fallback_log, logging.INFO, "lock_unavailable", bundle=bundle
                 )
@@ -218,6 +245,13 @@ class IrQweb(models.AbstractModel):
 
             child_bundles = self._get_dynamic_child_bundles(
                 bundle, assets_params, debug_assets=False
+            )
+            _debug.pipeline(
+                "esbuild_children_resolved",
+                bundle=bundle,
+                children=len(child_bundles),
+                standalone=standalone,
+                page_scope=len(page_scope),
             )
             exported_specs = None
             registered_reach = None
@@ -234,9 +268,21 @@ class IrQweb(models.AbstractModel):
                     registered_reach = self._get_secondary_inlined_reach(
                         bundle, assets_params, page_scope, sec_ab=asset_bundle
                     )
+                    _debug.logic(
+                        "esbuild_bundle_kind",
+                        bundle=bundle,
+                        kind="secondary",
+                        registered_reach=len(registered_reach),
+                    )
                 elif bundle not in registry.import_map_included_bundles:
                     exported_specs = self._get_exported_specs(
                         bundle, asset_bundle, assets_params, child_bundles
+                    )
+                    _debug.logic(
+                        "esbuild_bundle_kind",
+                        bundle=bundle,
+                        kind="exporting",
+                        exported=len(exported_specs),
                     )
             source_key = self._esm_source_key(
                 bundle,
@@ -305,6 +351,7 @@ class IrQweb(models.AbstractModel):
     ) -> EsbuildResult | None:
         found = esm_index.resolve_index(self._read_generated_asset, bundle, source_key)
         if found is None:
+            _debug.perf.count("esbuild_index_miss", bundle=bundle)
             return None
         url, code, metafile, sourcemap = found
         log_event(
@@ -375,6 +422,13 @@ class IrQweb(models.AbstractModel):
         }
         for name in sorted(registry.runtime_bundle_names - declared_children):
             add_consumer(name)
+        _debug.pipeline(
+            "export_consumers",
+            bundle=bundle,
+            children=len(child_bundles),
+            consumers=len(consumers),
+            members=len(member_paths),
+        )
         return consumers
 
     def _get_exported_specs(
@@ -470,8 +524,17 @@ class IrQweb(models.AbstractModel):
             if specs:
                 spec_sets.append(specs)
         if not spec_sets:
+            _debug.logic("runtime_parent_specs", parents=parents, counted=0)
             return frozenset()
-        return frozenset(set.intersection(*spec_sets))
+        shared = frozenset(set.intersection(*spec_sets))
+        _debug.logic(
+            "runtime_parent_specs",
+            parents=parents,
+            counted=len(spec_sets),
+            shared=len(shared),
+            with_test_satellites=with_test_satellites,
+        )
+        return shared
 
     def _get_runtime_child_own_modules(
         self,
@@ -535,7 +598,15 @@ class IrQweb(models.AbstractModel):
             entries[name] = own_modules
             stubbed |= child_stubs
         reference = next(iter(children.values()))
-        stubs = reference._bridges.prepare_shim_sources(stubbed, strict=True)
+        with _debug.perf(
+            "runtime_group_prepared",
+            parents=parents,
+            children=len(children),
+            parent_specs=len(parent_specs),
+            stubbed=len(stubbed),
+        ) as span:
+            stubs = reference._bridges.prepare_shim_sources(stubbed, strict=True)
+            span.set(stubs=len(stubs))
         return entries, stubs, parent_specs
 
     def _get_runtime_group_source_key(
@@ -572,9 +643,13 @@ class IrQweb(models.AbstractModel):
     ) -> EsbuildGroupResult:
         empty = EsbuildGroupResult({}, None)
         if not self._can_compile_with_esbuild(group):
+            _debug.logic("esbuild_group_declined", group=group, reason="circuit")
             return empty
         with self._get_esbuild_lock_cursor(group) as lock_cr:
             if lock_cr is None:
+                _debug.logic(
+                    "esbuild_group_declined", group=group, reason="no_lock_cursor"
+                )
                 log_event(_fallback_log, logging.INFO, "lock_unavailable", bundle=group)
                 return empty
             self._acquire_esbuild_lock(group, cr=lock_cr)
@@ -613,6 +688,9 @@ class IrQweb(models.AbstractModel):
                     err=type(exc).__name__,
                     msg=str(exc)[:200],
                 )
+                _debug.logic(
+                    "esbuild_group_failed", group=group, error=type(exc).__name__
+                )
                 if self._is_esbuild_fail_closed():
                     raise EsbuildBundleError(
                         f"esbuild failed for runtime group {group!r}: {exc}"
@@ -620,4 +698,9 @@ class IrQweb(models.AbstractModel):
                 self._open_esbuild_circuit(group, reason=type(exc).__name__)
                 return empty
             self._close_esbuild_circuit(group)
+            _debug.lifecycle(
+                "esbuild_group_compiled",
+                group=group,
+                outputs=len(getattr(result, "outputs", None) or ()),
+            )
             return result

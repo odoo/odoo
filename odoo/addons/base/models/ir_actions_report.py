@@ -151,7 +151,9 @@ class IrActionsReport(models.Model):
                 )
             )
         else:
+            _debug.logic("model_search_unsupported", operator=operator)
             return NotImplemented
+        _debug.logic("model_search", operator=operator, models=len(model_records))
         return Domain("model", "in", model_records.mapped("model"))
 
     def _get_field_target_model(self) -> str:
@@ -176,6 +178,11 @@ class IrActionsReport(models.Model):
         self.check_singleton()
         action_ref = self.env.ref("base.action_ui_view", raise_if_not_found=False)
         if not action_ref or len(self.report_name.split(".")) < 2:
+            _debug.logic(
+                "qweb_views_unavailable",
+                report=self.id,
+                reason="no_action" if not action_ref else "unqualified_name",
+            )
             return False
         action_data = action_ref.read()[0]
         action_data["domain"] = [
@@ -186,6 +193,7 @@ class IrActionsReport(models.Model):
 
     def create_action(self) -> bool:
         self.check_access("write")
+        _debug.lifecycle("bindings_created", reports=self.ids)
         for model, reports in self.grouped("model").items():
             model_id = self.env["ir.model"]._get(model).id
             reports.write({"binding_model_id": model_id, "binding_type": "report"})
@@ -193,18 +201,25 @@ class IrActionsReport(models.Model):
 
     def unlink_action(self) -> bool:
         self.check_access("write")
-        self.filtered("binding_model_id").write({"binding_model_id": False})
+        bound = self.filtered("binding_model_id")
+        _debug.lifecycle("bindings_removed", reports=self.ids, bound=len(bound))
+        bound.write({"binding_model_id": False})
         return True
 
     def _get_attachment_filenames(self, records: Any) -> dict[int, Any]:
         self.check_singleton()
         if not self.attachment:
             return dict.fromkeys(records.ids, "")
-        return {
-            record.id: safe_eval(self.attachment, {"object": record, "time": time})
-            or ""
-            for record in records
-        }
+        with _debug.perf(
+            "attachment_filenames", report=self.id, records=len(records)
+        ) as span:
+            filenames = {
+                record.id: safe_eval(self.attachment, {"object": record, "time": time})
+                or ""
+                for record in records
+            }
+            span.set(named=sum(1 for name in filenames.values() if name))
+        return filenames
 
     def _get_attachments(
         self, records: Any, filenames: dict[int, Any] | None = None
@@ -237,11 +252,14 @@ class IrActionsReport(models.Model):
         return result
 
     def get_paperformat(self) -> Any:
-        return (
-            self.paperformat_id
-            or self.env.company.paperformat_id
-            or self.env.ref("base.paperformat_euro", raise_if_not_found=False)
-        )
+        if self.paperformat_id:
+            _debug.logic("paperformat", report=self.id, source="report")
+            return self.paperformat_id
+        if self.env.company.paperformat_id:
+            _debug.logic("paperformat", report=self.id, source="company")
+            return self.env.company.paperformat_id
+        _debug.logic("paperformat", report=self.id, source="default")
+        return self.env.ref("base.paperformat_euro", raise_if_not_found=False)
 
     def get_paperformat_by_xmlid(self, xml_id: str) -> Any:
         return (
@@ -257,21 +275,28 @@ class IrActionsReport(models.Model):
         try:
             return self._get_report(report_name)
         except ValueError:
+            _debug.logic("report_from_name_missing", name=report_name)
             return self.env["ir.actions.report"]
 
     @api.model
     def _get_report(self, report_ref: int | str | Any) -> Self:
         ReportSudo = self.env["ir.actions.report"].sudo()
         if isinstance(report_ref, bool):
+            _debug.logic("report_ref_refused", reason="bool")
             raise ValueError(
                 f"Fetching report {report_ref!r}: invalid report reference"
             )
         if isinstance(report_ref, int):
+            _debug.logic("report_resolved", ref=report_ref, by="id")
             report = ReportSudo.browse(report_ref)
         elif isinstance(report_ref, models.Model):
             if report_ref._name != self._name:
+                _debug.logic(
+                    "report_ref_refused", reason="wrong_model", model=report_ref._name
+                )
                 msg = f"Expected report of type {self._name}, got {report_ref._name}"
                 raise ValueError(msg)
+            _debug.logic("report_resolved", ref=report_ref.id, by="record")
             report = report_ref.sudo()
         else:
             report = ReportSudo.search([("report_name", "=", report_ref)], limit=1)
@@ -283,10 +308,19 @@ class IrActionsReport(models.Model):
             if not report:
                 report = self.env.ref(report_ref, raise_if_not_found=False)
                 if not report:
+                    _debug.logic(
+                        "report_ref_refused", ref=report_ref, reason="not_found"
+                    )
                     raise ValueError(
                         f"Fetching report {report_ref!r}: report not found"
                     )
                 if report._name != "ir.actions.report":
+                    _debug.logic(
+                        "report_ref_refused",
+                        ref=report_ref,
+                        reason="wrong_model",
+                        model=report._name,
+                    )
                     raise ValueError(
                         f"Fetching report {report_ref!r}: type {report._name}, expected ir.actions.report"
                     )
@@ -318,8 +352,16 @@ class IrActionsReport(models.Model):
             kwargs["width"] * kwargs["height"] > 1200000
             or max(kwargs["width"], kwargs["height"]) > 10000
         ):
+            _debug.logic(
+                "barcode_refused",
+                type=barcode_type,
+                width=kwargs["width"],
+                height=kwargs["height"],
+                reason="too_large",
+            )
             msg = "Barcode too large"
             raise ValueError(msg)
+        requested_type = barcode_type
 
         if barcode_type == "UPCA" and len(value) in (11, 12, 13):
             barcode_type = "EAN13"
@@ -338,14 +380,23 @@ class IrActionsReport(models.Model):
             barcode_type = "Code128"
 
         mask_name = kwargs.pop("mask")
+        _debug.logic(
+            "barcode_type_resolved",
+            requested=requested_type,
+            resolved=barcode_type,
+            length=len(value),
+            mask=mask_name,
+        )
         try:
             barcode = createBarcodeDrawing(
                 barcode_type, value=value, format="png", **kwargs
             )
         except ValueError, AttributeError:
             if barcode_type in ("Code128", "QR"):
+                _debug.logic("barcode_refused", type=barcode_type, reason="unencodable")
                 msg = f"Cannot convert into {barcode_type} barcode."
                 raise ValueError(msg) from None
+            _debug.logic("barcode_fallback", requested=barcode_type, resolved="Code128")
             _logger.warning(
                 "Cannot draw a %s barcode, falling back to Code128.",
                 barcode_type,
@@ -363,6 +414,7 @@ class IrActionsReport(models.Model):
                     try:
                         mask_to_apply(kwargs["width"], kwargs["height"], barcode)
                     except ValueError, AttributeError:
+                        _debug.logic("barcode_mask_failed", mask=mask_name)
                         _logger.warning(
                             "Cannot apply barcode mask %r, returning the "
                             "unmasked %s barcode.",
@@ -416,24 +468,30 @@ class IrActionsReport(models.Model):
         if on_stream_error is None:
             on_stream_error = self._prepare_merge_pdfs_error
         writer = BrandedFileWriter()
-        for stream in streams:
+        failed = 0
+        with _debug.perf("merge_pdfs", streams=len(streams)) as span:
+            for stream in streams:
+                try:
+                    reader = PdfReader(stream)
+                    writer.append_pages_from_reader(reader)
+                except (
+                    PdfReadError,
+                    TypeError,
+                    NotImplementedError,
+                    ValueError,
+                ) as e:
+                    failed += 1
+                    to_raise = on_stream_error(error=e, error_stream=stream)
+                    if to_raise is not None:
+                        _debug.logic("merge_pdfs_refused", error=type(e).__name__)
+                        raise to_raise from e
+            result_stream = io.BytesIO()
             try:
-                reader = PdfReader(stream)
-                writer.append_pages_from_reader(reader)
-            except (
-                PdfReadError,
-                TypeError,
-                NotImplementedError,
-                ValueError,
-            ) as e:
-                to_raise = on_stream_error(error=e, error_stream=stream)
-                if to_raise is not None:
-                    raise to_raise from e
-        result_stream = io.BytesIO()
-        try:
-            writer.write(result_stream)
-        except PdfReadError:
-            raise self._prepare_merge_pdfs_error() from None
+                writer.write(result_stream)
+            except PdfReadError:
+                _debug.logic("merge_pdfs_refused", stage="write")
+                raise self._prepare_merge_pdfs_error() from None
+            span.set(tolerated=failed, bytes=result_stream.getbuffer().nbytes)
         return result_stream
 
     @api.model
@@ -483,9 +541,18 @@ class IrActionsReport(models.Model):
         report_model = self._get_rendering_context_model(report)
 
         data = (data and dict(data)) or {}
+        _debug.pipeline(
+            "rendering_context",
+            report=report.report_name,
+            records=len(docids or ()),
+            custom_model=report_model is not None,
+        )
 
         if report_model is not None:
-            data.update(report_model._get_report_values(docids, data=data))
+            with _debug.perf(
+                "report_values", cr=self.env.cr, report=report.report_name
+            ):
+                data.update(report_model._get_report_values(docids, data=data))
         else:
             docs = self.env[report.model].browse(docids)
             docs.check_access("read")
@@ -510,6 +577,7 @@ class IrActionsReport(models.Model):
         report_type = report.report_type.lower().replace("-", "_")
         render_func = getattr(self, "_render_" + report_type, None)
         if not render_func:
+            _debug.logic("render_refused", report=report.report_name, type=report_type)
             raise UserError(
                 _(
                     "Unknown report type %(type)s for report %(report)s.",
@@ -541,6 +609,13 @@ class IrActionsReport(models.Model):
             else:
                 active_ids = list(docids)
             context = dict(self.env.context, active_ids=active_ids)
+        _debug.pipeline(
+            "report_action",
+            report=self.report_name,
+            type=self.report_type,
+            records=len(context.get("active_ids") or ()),
+            configured=config,
+        )
 
         return {
             "context": context,
@@ -585,17 +660,24 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _migrate_attachments_to_local(self, attachments: Any) -> Any:
+        remote = 0
+        failed = 0
         for attachment in attachments:
             if attachment._is_remote_source():
+                remote += 1
                 try:
                     attachment._migrate_remote_to_local()
                 except (
                     ValidationError,
                     requests.exceptions.RequestException,
                 ) as e:
+                    failed += 1
                     _logger.error(
                         "Failed to migrate attachment %s to local: %s",
                         attachment.id,
                         e,
                     )
+        _debug.lifecycle(
+            "attachments_migrated", total=len(attachments), remote=remote, failed=failed
+        )
         return attachments.filtered(lambda a: not a._is_remote_source())

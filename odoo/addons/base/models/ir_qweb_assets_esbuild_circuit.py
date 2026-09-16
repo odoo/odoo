@@ -39,7 +39,10 @@ class IrQweb(models.AbstractModel):
         forced_raw = self._get_esbuild_config().get_param(
             "web.esbuild.force_fallback_bundles", ""
         )
-        return {s.strip() for s in forced_raw.split(",") if s.strip()}
+        forced = {s.strip() for s in forced_raw.split(",") if s.strip()}
+        if _debug.logic.enabled and forced:
+            _debug.logic("esbuild.forced_fallback", bundles=sorted(forced))
+        return forced
 
     def _get_esbuild_cooldown_key(self, bundle: str) -> tuple[str, str]:
         return (self.env.cr.dbname, bundle)
@@ -67,6 +70,13 @@ class IrQweb(models.AbstractModel):
                 "web.esbuild.extended_cooldown_s", self._ESBUILD_EXTENDED_COOLDOWN_S
             ),
         )
+        _debug.lifecycle(
+            "esbuild.circuit_opened",
+            bundle=bundle,
+            reason=reason,
+            failures=entry.failures,
+            cooldown_s=entry.expiry - now,
+        )
         log_event(
             _fallback_log,
             logging.WARNING,
@@ -79,6 +89,7 @@ class IrQweb(models.AbstractModel):
 
     def _close_esbuild_circuit(self, bundle: str) -> None:
         if _esbuild_circuit.record_success(self._get_esbuild_cooldown_key(bundle)):
+            _debug.lifecycle("esbuild.circuit_closed", bundle=bundle)
             log_event(
                 _fallback_log,
                 logging.INFO,
@@ -95,6 +106,7 @@ class IrQweb(models.AbstractModel):
         try:
             rw_cr = self.env.registry.cursor(readonly=False)
         except Exception:
+            _debug.logic("esbuild.lock_cursor", bundle=bundle, mode="unavailable")
             log_event(
                 _lock_log,
                 logging.WARNING,
@@ -120,7 +132,10 @@ class IrQweb(models.AbstractModel):
             cr = self.env.cr
         started = time.monotonic()
         log_event(_lock_log, logging.DEBUG, "waiting", bundle=bundle)
-        cr.execute("SELECT pg_advisory_xact_lock(hashtext(%s))", (f"esbuild:{bundle}",))
+        with _debug.perf("esbuild.lock_wait", cr=cr, bundle=bundle):
+            cr.execute(
+                "SELECT pg_advisory_xact_lock(hashtext(%s))", (f"esbuild:{bundle}",)
+            )
         log_event(
             _lock_log,
             logging.DEBUG,

@@ -43,9 +43,11 @@ def _eval_dict_or_default(
     except Exception as exc:
         if not isinstance(exc.__cause__, NameError):
             _logger.warning("Malformed action expression %r: %s", expr, exc)
+        _debug.logic("expression_defaulted", kind="dict", error=type(exc).__name__)
         return default
     if isinstance(result, dict):
         return result
+    _debug.logic("expression_defaulted", kind="dict", got=type(result).__name__)
     _logger.warning(
         "Action expression %r evaluates to %s, not a dict", expr, type(result).__name__
     )
@@ -57,9 +59,13 @@ def _eval_list_or_default(
 ) -> Any:
     try:
         result = safe_eval(expr or "[]", eval_ctx)
-    except Exception:
+    except Exception as exc:
+        _debug.logic("expression_defaulted", kind="list", error=type(exc).__name__)
         return default
-    return result if isinstance(result, list) else default
+    if not isinstance(result, list):
+        _debug.logic("expression_defaulted", kind="list", got=type(result).__name__)
+        return default
+    return result
 
 
 class IrActionsActions(models.Model):
@@ -139,6 +145,12 @@ class IrActionsActions(models.Model):
     def _check_type(self) -> None:
         for action in self:
             if action.type != action._name:
+                _debug.logic(
+                    "type_mismatch",
+                    action=action.id,
+                    type=action.type,
+                    model=action._name,
+                )
                 raise ValidationError(
                     _(
                         "Action type “%(type)s” does not match the model this action "
@@ -153,6 +165,7 @@ class IrActionsActions(models.Model):
         for action in self:
             model = action.binding_model_id.model
             if model and model not in self.env:
+                _debug.logic("binding_model_unknown", action=action.id, model=model)
                 raise ValidationError(
                     _("Invalid model name “%s” in action definition.", model)
                 )
@@ -163,6 +176,9 @@ class IrActionsActions(models.Model):
             if not action.path:
                 continue
             if not _RX_ACTION_PATH.fullmatch(action.path):
+                _debug.logic(
+                    "path_rejected", action=action.id, path=action.path, reason="syntax"
+                )
                 raise ValidationError(
                     _(
                         "The path should contain only lowercase alphanumeric characters, underscore, and dash, and it should start with a letter."
@@ -192,7 +208,12 @@ class IrActionsActions(models.Model):
         modes = dict.fromkeys(
             mode.strip() for mode in view_types.split(",") if mode.strip()
         )
-        return ",".join(sorted(modes, key=lambda mode: order.get(mode, len(order))))
+        normalized = ",".join(
+            sorted(modes, key=lambda mode: order.get(mode, len(order)))
+        )
+        if _debug.logic.enabled and normalized != view_types:
+            _debug.logic("view_types_normalized", given=view_types, result=normalized)
+        return normalized
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -203,6 +224,7 @@ class IrActionsActions(models.Model):
                 )
         res = super().create(vals_list)
         if any(action.path for action in res):
+            _debug.pipeline("paths_reserved_on_create", actions=len(res))
             res._sync_path_reservations()
         groups = res._get_cache_groups_holding()
         _debug.lifecycle(
@@ -237,6 +259,7 @@ class IrActionsActions(models.Model):
 
     def unlink(self) -> bool:
         if self._name == "ir.actions.actions":
+            _debug.logic("unlink_dispatched_to_concrete", count=len(self))
             return self._unlink_as_concrete_types()
         groups = self._get_cache_groups_holding() | {"actions"}
         _debug.lifecycle("unlink", model=self._name, count=len(self))
@@ -278,15 +301,20 @@ class IrActionsActions(models.Model):
         if not self:
             return
         found = defaultdict(list)
-        for model_name, field_name, ondelete in self._get_fields_ondelete_unenforced():
-            references = (
-                self.env[model_name]
-                .sudo()
-                .with_context(active_test=False)
-                .search([(field_name, "in", self.ids)])  # noqa: E8507  model varies
-            )
-            if references:
-                found[ondelete].append((model_name, field_name, references))
+        with _debug.perf(
+            "ondelete_references_scanned", cr=self.env.cr, actions=len(self)
+        ) as span:
+            fields_scanned = self._get_fields_ondelete_unenforced()
+            for model_name, field_name, ondelete in fields_scanned:
+                references = (
+                    self.env[model_name]
+                    .sudo()
+                    .with_context(active_test=False)
+                    .search([(field_name, "in", self.ids)])  # noqa: E8507  model varies
+                )
+                if references:
+                    found[ondelete].append((model_name, field_name, references))
+            span.set(fields=len(fields_scanned))
         _debug.logic(
             "ondelete_unenforced",
             actions=self.ids,
@@ -294,6 +322,11 @@ class IrActionsActions(models.Model):
         )
 
         if restricted := found.get("restrict"):
+            _debug.logic(
+                "unlink_restricted",
+                actions=self.ids,
+                referrers=[model_name for model_name, __, __ in restricted],
+            )
             raise ValidationError(
                 _(
                     "Cannot delete this action: %s",
@@ -325,6 +358,12 @@ class IrActionsActions(models.Model):
                 .search([(field_name, "in", values)])  # noqa: E8507  model varies
             )
             if referring:
+                _debug.lifecycle(
+                    "reference_fields_cleared",
+                    model=model_name,
+                    field=field_name,
+                    count=len(referring),
+                )
                 referring.write({field_name: False})
 
         for (
@@ -340,6 +379,12 @@ class IrActionsActions(models.Model):
                     SQL.identifier(column),
                     tuple(self.ids),
                 )
+            )
+            _debug.lifecycle(
+                "relation_rows_deleted",
+                relation=relation,
+                column=column,
+                rows=self.env.cr.rowcount,
             )
             self.env[model_name].invalidate_model([field_name])
 
@@ -397,6 +442,7 @@ class IrActionsActions(models.Model):
     @tools.ormcache(cache="stable")
     def _get_fields_ondelete_unenforced(self) -> tuple[tuple[str, str, str], ...]:
         root_models = self._get_model_names_in_root_table()
+        _debug.perf.count("ondelete_fields_scanned", root_models=len(root_models))
         return tuple(
             sorted(
                 (model_name, field.name, field.ondelete)
@@ -498,6 +544,7 @@ class IrActionsActions(models.Model):
     def _get_action_concrete(self) -> Self:
         self.check_singleton()
         [model_name] = self._get_model_names_concrete().values()
+        _debug.logic("action_concrete", action=self.id, model=model_name)
         return self.env[model_name].browse(self.id)
 
     @api.model
@@ -551,6 +598,12 @@ class IrActionsActions(models.Model):
         if model_name not in self.env or not Access.check(
             model_name, mode="read", raise_exception=False
         ):
+            _debug.logic(
+                "bindings_refused",
+                model=model_name,
+                uid=self.env.uid,
+                reason="unknown_model" if model_name not in self.env else "no_read",
+            )
             return {}
 
         result = {}
@@ -606,11 +659,17 @@ class IrActionsActions(models.Model):
 
         for action_model, entries in by_model.items():
             if action_model not in self.env.registry:
+                _debug.logic(
+                    "binding_type_skipped", type=action_model, reason="not_in_registry"
+                )
                 continue
             binding_map = dict(entries)
 
             actions = self.env[action_model].sudo().browse(binding_map.keys()).exists()
             if not actions:
+                _debug.logic(
+                    "binding_type_skipped", type=action_model, reason="missing"
+                )
                 continue
             opens_field = actions._get_field_target_model()
             read_fields = [
@@ -650,7 +709,11 @@ class IrActionsActions(models.Model):
 
     def _get_action_dict(self) -> dict[str, Any]:
         self.check_singleton()
-        return self.sudo().read(sorted(self._get_fields_readable()))[0]
+        readable = sorted(self._get_fields_readable())
+        _debug.perf.count(
+            "action_dict", action=self.id, type=self._name, fields=len(readable)
+        )
+        return self.sudo().read(readable)[0]
 
     def _get_fields_readable(self) -> frozenset[str]:
         return frozenset(
@@ -746,4 +809,10 @@ class IrActionsActions(models.Model):
             groups.add("actions")
         if not self._get_fields_invalidating_menus().isdisjoint(vals):
             groups.add("default")
+        _debug.logic(
+            "cache_groups_invalidated",
+            actions=len(self),
+            fields=sorted(vals),
+            groups=sorted(groups),
+        )
         return groups

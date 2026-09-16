@@ -503,8 +503,14 @@ class ResPartner(models.Model):
         if "company_id" in fields and "parent_id" in fields and values.get("parent_id"):
             parent = self.browse(values.get("parent_id"))
             values["company_id"] = parent.company_id.id
+            _debug.logic(
+                "default_company_from_parent",
+                parent=parent.id,
+                company=values["company_id"],
+            )
         if "type" in fields and values.get("type"):
             if values["type"] not in self._fields["type"].get_values(self.env):
+                _debug.logic("default_type_reset", requested=values["type"])
                 values["type"] = self._fields["type"].default(self)
         return values
 
@@ -526,6 +532,13 @@ class ResPartner(models.Model):
 
         for partner in self - partners_with_internal_user - partners_without_image:
             partner[avatar_field] = partner[image_field]
+        _debug.perf.count(
+            "avatar_updated",
+            field=avatar_field,
+            partners=len(self),
+            internal=len(partners_with_internal_user),
+            placeholder=len(partners_without_image),
+        )
 
     def _get_avatar_placeholder_path(self) -> str:
         if self.is_company:
@@ -569,6 +582,7 @@ class ResPartner(models.Model):
             partner.complete_name = _RE_WHITESPACE_BEFORE_NEWLINE.sub(
                 "\n", partner._get_complete_name(type_description)
             ).strip()
+        _debug.perf.count("complete_name_computed", partners=len(clean_self))
 
     @api.depends("parent_id")
     def _compute_lang(self) -> None:
@@ -580,6 +594,12 @@ class ResPartner(models.Model):
         if not self:
             return
         default_lang = self.default_get(["lang"]).get("lang")
+        _debug.logic(
+            "lang_from_parent",
+            partners=len(self),
+            with_parent=len(self.filtered("parent_id")),
+            default_lang=default_lang,
+        )
         for partner in self:
             if partner.parent_id:
                 partner.lang = partner.parent_id.lang or default_lang or self.env.lang
@@ -599,6 +619,7 @@ class ResPartner(models.Model):
             if (offset := tz_cache.get(tz)) is None:
                 offset = tz_cache[tz] = now(get_timezone(tz)).strftime("%z")
             partner.tz_offset = offset
+        _debug.perf.count("tz_offset_computed", partners=len(self), zones=len(tz_cache))
 
     @api.depends("parent_id")
     def _compute_user_id(self) -> None:
@@ -633,6 +654,12 @@ class ResPartner(models.Model):
                 order="share ASC, id ASC",
             ):
                 best_user.setdefault(user.partner_id.id, user)
+        _debug.perf.count(
+            "main_user_resolved",
+            partners=len(self),
+            searched=len(other_partner_ids),
+            found=len(best_user),
+        )
 
         for partner in self:
             if partner.id == current_partner_id:
@@ -656,6 +683,12 @@ class ResPartner(models.Model):
                 partner.preferred_phone_id
                 and partner.preferred_phone_id not in partner.phone_ids
             ):
+                _debug.logic(
+                    "preferred_phone_refused",
+                    partner=partner.id,
+                    phone=partner.preferred_phone_id.id,
+                    reason="not_linked",
+                )
                 raise ValidationError(
                     _("The preferred phone must belong to this contact.")
                 )
@@ -711,6 +744,11 @@ class ResPartner(models.Model):
                 groupby=["partner_id"],
             )
         }
+        _debug.perf.count(
+            "partner_share_computed",
+            partners=len(partners),
+            internal=len(internal_partner_ids),
+        )
         if internal_partner_ids:
             partners.filtered(
                 lambda p: p.id in internal_partner_ids
@@ -766,6 +804,14 @@ class ResPartner(models.Model):
             )
             for c in candidates.with_env(self.env)._filtered_access("read"):
                 reg_by_value[c.company_registry].append(c)
+        _debug.perf.count(
+            "same_identifier_candidates",
+            partners=len(self),
+            vats=len(all_vats),
+            registries=len(all_registries),
+            vat_matches=sum(len(c) for c in vat_by_value.values()),
+            registry_matches=sum(len(c) for c in reg_by_value.values()),
+        )
 
         for partner in self:
             partner_id = partner._origin.id
@@ -781,6 +827,12 @@ class ResPartner(models.Model):
                     country_id,
                     company_id,
                 )
+                if _debug.logic.enabled and partner.same_vat_partner_id:
+                    _debug.logic(
+                        "same_vat_partner",
+                        partner=partner_id,
+                        duplicate=partner.same_vat_partner_id.id,
+                    )
             else:
                 partner.same_vat_partner_id = False
 
@@ -813,9 +865,15 @@ class ResPartner(models.Model):
     def _get_similar_named_partners(self) -> dict[int, ResPartner]:
         named = self.filtered(lambda partner: partner.complete_name)
         if not named or not self.env.registry.has_trigram:
+            _debug.logic(
+                "similar_names_skipped",
+                partners=len(self),
+                reason="unnamed" if not named else "no_trigram",
+            )
             return {}
         recalled_by_index = self._get_similar_name_recall(named)
         if not recalled_by_index:
+            _debug.logic("similar_names_skipped", named=len(named), reason="no_recall")
             return {}
 
         readable = self.browse(
@@ -887,9 +945,10 @@ class ResPartner(models.Model):
                 (partner._origin.id, partner.complete_name) for partner in named
             )
         )
-        self.env.cr.execute(  # noqa: E8501  built via SQL(), no user input
-            SQL(
-                """
+        with _debug.perf("similar_name_recall", cr=self.env.cr, named=len(named)):
+            self.env.cr.execute(  # noqa: E8501  built via SQL(), no user input
+                SQL(
+                    """
                 SELECT source.index, candidate.id
                   FROM (VALUES %s) AS source(index, id, name)
                  CROSS JOIN LATERAL (
@@ -902,12 +961,12 @@ class ResPartner(models.Model):
                         LIMIT %s
                        ) AS candidate
                 """,
-                sources,
-                stored,
-                searched,
-                SIMILAR_NAME_RECALL_LIMIT,
+                    sources,
+                    stored,
+                    searched,
+                    SIMILAR_NAME_RECALL_LIMIT,
+                )
             )
-        )
         recalled_by_index: dict[int, list[int]] = defaultdict(list)
         for index, candidate_id in self.env.cr.fetchall():
             recalled_by_index[index].append(candidate_id)
@@ -923,8 +982,12 @@ class ResPartner(models.Model):
         try:
             value = float(raw)
         except TypeError, ValueError:
+            _debug.logic("similar_name_threshold_defaulted", reason="not_a_number")
             return DEFAULT_SIMILAR_NAME_THRESHOLD
         if not 0 < value <= 1:
+            _debug.logic(
+                "similar_name_threshold_defaulted", reason="out_of_range", value=value
+            )
             return DEFAULT_SIMILAR_NAME_THRESHOLD
         return value
 
@@ -956,6 +1019,12 @@ class ResPartner(models.Model):
         if identifier_type.synced_with_commercial:
             commercial = self.commercial_partner_id
             if commercial != self:
+                _debug.logic(
+                    "identifier_from_commercial",
+                    partner=self.id,
+                    commercial=commercial.id,
+                    type=code,
+                )
                 return commercial._get_identifier(code)
         return False
 
@@ -965,6 +1034,7 @@ class ResPartner(models.Model):
             code
         )
         if not identifier_type:
+            _debug.logic("identifier_type_unknown", partner=self.id, type=code)
             raise UserError(
                 self.env._("There is no identifier type with code %(code)s.", code=code)
             )
@@ -1034,7 +1104,14 @@ class ResPartner(models.Model):
         """Replace this contact's selected number, preserving other linked numbers."""
         current = self._phone_get_number()
         if current == number:
+            _debug.logic("phone_replacement_noop", partner=self.id, phone=number.id)
             return {}
+        _debug.logic(
+            "phone_replacement",
+            partner=self.id,
+            current=current.id,
+            replacement=number.id,
+        )
         commands = [Command.unlink(current.id)] if current else []
         if number:
             commands.append(Command.link(number.id))
@@ -1083,6 +1160,7 @@ class ResPartner(models.Model):
     @api.constrains("parent_id")
     def _check_parent_id(self) -> None:
         if self._has_cycle():
+            _debug.logic("parent_cycle_refused", partners=self.ids)
             raise ValidationError(_("You cannot create recursive Partner hierarchies."))
 
     @api.constrains("company_id")
@@ -1093,6 +1171,12 @@ class ResPartner(models.Model):
         )
         for company in companies:
             if company != company.partner_id.company_id:
+                _debug.logic(
+                    "partner_company_mismatch",
+                    partner=company.partner_id.id,
+                    represented=company.id,
+                    assigned=company.partner_id.company_id.id,
+                )
                 raise ValidationError(
                     _(
                         "The company assigned to this partner does not match the company this partner represents."
@@ -1118,6 +1202,11 @@ class ResPartner(models.Model):
         if (partner.type or self.type) == "contact":
             if address_values := self.parent_id._prepare_address_vals():
                 result["value"] = address_values
+        _debug.logic(
+            "onchange_parent_address",
+            parent=self.parent_id.id,
+            proposed=bool(result),
+        )
         return result
 
     @api.onchange("country_id")
@@ -1219,6 +1308,9 @@ class ResPartner(models.Model):
                 if self._fields[field_name].type == "many2one":
                     current = current.id
                 if (current or False) != (vals[field_name] or False):
+                    _debug.logic(
+                        "geolocation_stale", partner=partner.id, field=field_name
+                    )
                     return True
         return False
 
@@ -1271,6 +1363,12 @@ class ResPartner(models.Model):
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
             sync_vals = commercial_partner._prepare_commercial_vals()
+            _debug.pipeline(
+                "commercial_fields_from_company",
+                partner=self.id,
+                commercial=commercial_partner.id,
+                fields=list(sync_vals),
+            )
             if sync_vals:
                 self.write(sync_vals)
                 self._sync_commercial_fields_to_descendants(list(sync_vals))
@@ -1303,10 +1401,17 @@ class ResPartner(models.Model):
             return
 
         if not (company_ids := self._get_stored_company_ids(fields_to_sync)):
+            _debug.logic("company_dependent_sync_skipped", reason="no_stored_company")
             return
         other_companies = (
             self.env["res.company"].sudo().search([("id", "in", sorted(company_ids))])
             - self.env.company
+        )
+        _debug.perf.count(
+            "company_dependent_sync",
+            partners=len(self),
+            fields=fields_to_sync,
+            companies=len(other_companies),
         )
         for company_sudo in other_companies:
             self_in_company = self.with_company(company_sudo)
@@ -1380,7 +1485,14 @@ class ResPartner(models.Model):
         if values.get("parent_id"):
             self.sudo()._sync_commercial_fields_from_company()
         if self.parent_id and self.type == "contact":
-            if address_values := self.parent_id._prepare_address_vals():
+            address_values = self.parent_id._prepare_address_vals()
+            _debug.pipeline(
+                "address_from_parent",
+                partner=self.id,
+                parent=self.parent_id.id,
+                fields=list(address_values),
+            )
+            if address_values:
                 self._update_address(address_values)
 
     def _sync_to_parent(self, values: dict[str, Any]) -> None:
@@ -1465,6 +1577,9 @@ class ResPartner(models.Model):
                 groupby=["partner_id"],
             )
         }
+        _debug.perf.count(
+            "is_public_computed", partners=len(self), public=len(public_partner_ids)
+        )
         if public_partner_ids:
             self.filtered(lambda p: p.id in public_partner_ids).is_public = True
 
@@ -1508,12 +1623,16 @@ class ResPartner(models.Model):
                 self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
             )
             if users:
+                _debug.logic("archive_refused", partners=self.ids, users=len(users))
                 raise self._prepare_linked_user_error(users, "archive")
         if vals.get("website"):
             vals["website"] = self._clean_website(vals["website"])
         if vals.get("name"):
             banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
                 lambda bank: bank.acc_holder_name == bank.partner_id.name
+            )
+            _debug.logic(
+                "bank_holders_renamed", partners=self.ids, banks=len(banks_to_sync)
             )
             if banks_to_sync:
                 banks_to_sync.acc_holder_name = vals["name"]
@@ -1536,6 +1655,12 @@ class ResPartner(models.Model):
                     if partner.user_ids:
                         companies = {user.company_id for user in partner.user_ids}
                         if len(companies) > 1 or company not in companies:
+                            _debug.logic(
+                                "company_change_refused",
+                                partner=partner.id,
+                                company=company.id,
+                                user_companies=len(companies),
+                            )
                             raise UserError(
                                 self.env._(
                                     "The selected company is not compatible with the companies of the related user(s)"
@@ -1543,6 +1668,12 @@ class ResPartner(models.Model):
                             )
             children = self.with_context(active_test=False).search(
                 [("parent_id", "in", self.ids)]
+            )
+            _debug.pipeline(
+                "company_propagated_to_children",
+                partners=self.ids,
+                company=company_id,
+                children=len(children),
             )
             if children:
                 children.write({"company_id": company_id})
@@ -1560,6 +1691,7 @@ class ResPartner(models.Model):
             and not self.env.su
             and self.env.user.has_group("base.group_partner_manager")
         ):
+            _debug.logic("is_company_written_elevated", partners=self.ids)
             result = super(ResPartner, self.sudo()).write(
                 {"is_company": vals.get("is_company")}
             )
@@ -1569,7 +1701,9 @@ class ResPartner(models.Model):
         if {"lang", "tz"} & vals.keys() and self.sudo().with_context(
             active_test=False
         ).user_ids:
+            _debug.lifecycle("write_cache_cleared", reason="user_lang_or_tz")
             self.env.registry.clear_cache()
+        synced = 0
         for partner, pre_values in zip(self, pre_values_list, strict=True):
             updated = {
                 fname: vals[fname]
@@ -1577,13 +1711,21 @@ class ResPartner(models.Model):
                 if partner[fname] != pre_values[fname]
             }
             if updated:
+                synced += 1
                 partner._fields_sync(updated)
+        _debug.pipeline(
+            "write_fields_synced",
+            partners=len(self),
+            tracked=tracked_fields,
+            synced=synced,
+        )
         return result
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         vals_list = [dict(vals) for vals in vals_list]
         if self.env.context.get("import_file"):
+            _debug.pipeline("create_import_checked", records=len(vals_list))
             self._check_import_consistency(vals_list)
         for vals in vals_list:
             if vals.get("website"):
@@ -1620,6 +1762,7 @@ class ResPartner(models.Model):
     def _unlink_except_user(self) -> None:
         users = self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
         if users:
+            _debug.logic("unlink_refused", partners=self.ids, users=len(users))
             raise self._prepare_linked_user_error(users, "delete")
 
     def _load_records_create(self, vals_list: list[ValuesType]) -> Self:
@@ -1763,6 +1906,12 @@ class ResPartner(models.Model):
                         name = f"{name} - {partner.vat}"
 
             partner.display_name = ws_re.sub("\n", name).strip()
+        _debug.perf.count(
+            "display_name_computed",
+            partners=len(self),
+            formatted=bool(is_formatted),
+            show_address=bool(show_address),
+        )
 
     @api.model
     def name_create(self, name: str) -> tuple[int, str]:
@@ -1773,8 +1922,10 @@ class ResPartner(models.Model):
             context = dict(self.env.context)
             context.pop("default_type")
             self = self.with_context(context)
+            _debug.logic("name_create_default_type_dropped", type=default_type)
         name, email_normalized = tools.parse_contact_from_email(name)
         if self.env.context.get("force_email") and not email_normalized:
+            _debug.logic("name_create_refused", reason="no_email")
             raise ValidationError(_("Couldn't create contact without email address!"))
 
         create_values = {self._rec_name: name or email_normalized}
@@ -1887,6 +2038,12 @@ class ResPartner(models.Model):
                     return result
 
         default = result.get("contact", self[:1].id or False)
+        _debug.logic(
+            "address_get_defaulted",
+            partners=len(self),
+            found=sorted(result),
+            missing=sorted(adr_pref - result.keys()),
+        )
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default
         return result
@@ -1956,6 +2113,11 @@ class ResPartner(models.Model):
         try:
             return address_format % args
         except KeyError, ValueError:
+            _debug.logic(
+                "address_format_fallback",
+                partner=self.id,
+                country=self.country_id.id,
+            )
             memo_key = (self.env.cr.dbname, address_format)
             if memo_key not in _FAILED_ADDRESS_FORMATS:
                 _FAILED_ADDRESS_FORMATS.add(memo_key)
@@ -2023,6 +2185,11 @@ class ResPartner(models.Model):
             if state_info["country_id"][0] != vals["country_id"]:
                 mismatches.append((vals, (state_info["code"], vals["country_id"])))
         if not mismatches:
+            _debug.logic(
+                "import_state_country_consistent",
+                records=len(vals_list),
+                states=len(states_ids),
+            )
             return
 
         mismatch_keys = {key for _vals, key in mismatches}

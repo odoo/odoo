@@ -105,6 +105,11 @@ class ResUsersDeletion(models.Model):
 
             try:
                 if not partner.exists():
+                    _debug.logic(
+                        "partner_deletion_skipped",
+                        request=delete_request.id,
+                        reason="already_gone",
+                    )
                     if not commit_progress():
                         break
                     continue
@@ -128,6 +133,12 @@ class ResUsersDeletion(models.Model):
                     user_name,
                     requester_name,
                     e,
+                )
+                _debug.lifecycle(
+                    "partner_deletion_failed",
+                    request=delete_request.id,
+                    partner=partner.id,
+                    error=type(e).__name__,
                 )
                 if not commit_progress():
                     break

@@ -93,6 +93,7 @@ class IrFilters(models.Model):
     def create_filter(self, vals: dict[str, Any]) -> Self:
         embedded_action_id = vals.get("embedded_action_id")
         if not embedded_action_id and "embedded_parent_res_id" in vals:
+            _debug.logic("create_filter_parent_dropped", reason="no_embedded_action")
             del vals["embedded_parent_res_id"]
         self._check_serialized_vals(vals)
         _debug.lifecycle(
@@ -113,10 +114,13 @@ class IrFilters(models.Model):
                 lang,
             )
         )
-        return self.env.cr.fetchall()
+        rows = self.env.cr.fetchall()
+        _debug.perf.count("selection_models_read", lang=lang, models=len(rows))
+        return rows
 
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
         vals_list = super().copy_data(default=default)
+        _debug.lifecycle("copy_data", filters=self.ids)
         for vals in vals_list:
             if vals.get("embedded_parent_res_id") == 0:
                 del vals["embedded_parent_res_id"]
@@ -221,6 +225,7 @@ class IrFilters(models.Model):
         if raw is None or isinstance(raw, dict):
             return
         if not isinstance(raw, str):
+            _debug.logic("context_rejected", reason="type", type=type(raw).__name__)
             raise ValidationError(
                 self.env._(
                     "Filter %(field)s must be a %(type)s.", field="context", type="dict"
@@ -229,12 +234,16 @@ class IrFilters(models.Model):
         try:
             parsed = ast.literal_eval(raw)
         except (ValueError, SyntaxError) as e:
+            _debug.logic(
+                "context_rejected", reason="unparsable", error=type(e).__name__
+            )
             raise ValidationError(
                 self.env._(
                     "Invalid filter %(field)s: %(error)s", field="context", error=e
                 )
             ) from e
         if not isinstance(parsed, dict):
+            _debug.logic("context_rejected", reason="not_dict")
             raise ValidationError(
                 self.env._(
                     "Filter %(field)s must be a %(type)s.", field="context", type="dict"
@@ -248,6 +257,7 @@ class IrFilters(models.Model):
         if isinstance(raw, (list, tuple)):
             parsed = list(raw)
         elif not isinstance(raw, str):
+            _debug.logic("sort_rejected", reason="type", type=type(raw).__name__)
             raise ValidationError(
                 self.env._(
                     "Filter %(field)s must be a %(type)s.", field="sort", type="list"
@@ -257,12 +267,14 @@ class IrFilters(models.Model):
             try:
                 parsed = json.loads(raw)
             except json.JSONDecodeError as e:
+                _debug.logic("sort_rejected", reason="unparsable")
                 raise ValidationError(
                     self.env._(
                         "Invalid filter %(field)s: %(error)s", field="sort", error=e
                     )
                 ) from e
             if not isinstance(parsed, list):
+                _debug.logic("sort_rejected", reason="not_list")
                 raise ValidationError(
                     self.env._(
                         "Filter %(field)s must be a %(type)s.",
@@ -271,6 +283,7 @@ class IrFilters(models.Model):
                     )
                 )
         if not all(isinstance(item, str) for item in parsed):
+            _debug.logic("sort_rejected", reason="non_string_item", items=len(parsed))
             raise ValidationError(self.env._("Filter sort must be a list of strings."))
 
     @api.model
@@ -278,6 +291,7 @@ class IrFilters(models.Model):
         if raw is None or isinstance(raw, (list, tuple)):
             return
         if not isinstance(raw, str):
+            _debug.logic("domain_rejected", reason="type", type=type(raw).__name__)
             raise ValidationError(
                 self.env._(
                     "Filter %(field)s must be a %(type)s.", field="domain", type="list"
@@ -286,12 +300,14 @@ class IrFilters(models.Model):
         try:
             tree = ast.parse(raw, mode="eval")
         except (ValueError, SyntaxError) as e:
+            _debug.logic("domain_rejected", reason="unparsable", error=type(e).__name__)
             raise ValidationError(
                 self.env._(
                     "Invalid filter %(field)s: %(error)s", field="domain", error=e
                 )
             ) from e
         if not isinstance(tree.body, (ast.List, ast.Tuple)):
+            _debug.logic("domain_rejected", reason="not_list")
             raise ValidationError(
                 self.env._(
                     "Filter %(field)s must be a %(type)s.", field="domain", type="list"

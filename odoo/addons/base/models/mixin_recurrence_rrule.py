@@ -262,6 +262,12 @@ class MixinRecurrenceRrule(models.AbstractModel):
         return _("Every %(interval)s Years", interval=self.repeat_interval)
 
     def get_recurrence_name(self):
+        _debug.logic(
+            "recurrence.name",
+            record=self.id,
+            unit=self.repeat_unit,
+            repeat_type=self.repeat_type,
+        )
         if self.repeat_unit == "day":
             return self._get_daily_recurrence_name()
         if self.repeat_unit == "week":
@@ -311,6 +317,12 @@ class MixinRecurrenceRrule(models.AbstractModel):
 
     def _inverse_rrule(self):
         for recurrence in self:
+            if _debug.logic.enabled and not recurrence.rrule:
+                _debug.logic(
+                    "recurrence.rrule_inverse_skipped",
+                    record=recurrence.id,
+                    reason="empty_rule",
+                )
             if recurrence.rrule:
                 values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
                 _debug.pipeline(
@@ -322,13 +334,30 @@ class MixinRecurrenceRrule(models.AbstractModel):
 
     def _rrule_serialize(self):
         if self.repeat_interval <= 0:
+            _debug.logic(
+                "recurrence.serialize_rejected",
+                record=self.id,
+                reason="interval_not_positive",
+            )
             raise UserError(_("The interval cannot be negative."))
         if self.repeat_type == "count" and self.repeat_number <= 0:
+            _debug.logic(
+                "recurrence.serialize_rejected",
+                record=self.id,
+                reason="count_not_positive",
+            )
             raise UserError(_("The number of repetitions cannot be negative."))
         if (
             self.repeat_type == "count"
             and self.repeat_number > MAX_RECURRENT_OCCURRENCES
         ):
+            _debug.logic(
+                "recurrence.serialize_rejected",
+                record=self.id,
+                reason="count_over_maximum",
+                count=self.repeat_number,
+                maximum=MAX_RECURRENT_OCCURRENCES,
+            )
             raise UserError(
                 _(
                     "A recurrence cannot repeat more than %(maximum)s times.",
@@ -347,6 +376,7 @@ class MixinRecurrenceRrule(models.AbstractModel):
         for line in lines:
             if line.startswith("RRULE:"):
                 return line[len("RRULE:") :]
+        _debug.logic("recurrence.rrule_value_bare", lines=len(lines))
         # No RRULE line: a bare ``FREQ=...`` is already the payload; a lone
         # DTSTART is not a rule at all.
         return next((line for line in lines if not line.startswith("DTSTART:")), "")
@@ -436,6 +466,12 @@ class MixinRecurrenceRrule(models.AbstractModel):
             dst_dt = dt.replace(tzinfo=tz).dst()
             dst_start = start.replace(tzinfo=tz).dst()
             if dst_dt != dst_start:
+                _debug.logic(
+                    "recurrence.period_start_kept",
+                    record=self.id,
+                    unit=self.repeat_unit,
+                    reason="dst_boundary",
+                )
                 start = dt
         return start
 
@@ -450,7 +486,8 @@ class MixinRecurrenceRrule(models.AbstractModel):
                 and occurrence_stop.date() >= start.date()
             }
 
-        ranges = only_future(self._get_ranges(start, duration))
+        with _debug.perf("recurrence.ranges", record=self.id, unit=self.repeat_unit):
+            ranges = only_future(self._get_ranges(start, duration))
         original_count = self.repeat_type == "count" and self.repeat_number
         if original_count and len(ranges) < original_count:
             inflated_count = (2 * original_count) - len(ranges)
@@ -538,6 +575,9 @@ class MixinRecurrenceRrule(models.AbstractModel):
         elif freq == "week":
             weekdays = self._get_week_days()
             if not weekdays:
+                _debug.logic(
+                    "recurrence.rrule_rejected", record=self.id, reason="no_weekday"
+                )
                 raise UserError(_("You have to choose at least one day in the week"))
             rrule_params["byweekday"] = weekdays
             rrule_params["wkst"] = self._get_lang_week_start()
@@ -553,4 +593,13 @@ class MixinRecurrenceRrule(models.AbstractModel):
             rrule_params["count"] = MAX_RECURRENT_OCCURRENCES
         elif self.repeat_type == "until":  # e.g. stop after 12/10/2020
             rrule_params["until"] = datetime.combine(self.repeat_until, time.max)
+        _debug.logic(
+            "recurrence.rrule_built",
+            record=self.id,
+            freq=freq,
+            repeat_type=self.repeat_type,
+            bounded=bounded,
+            count=rrule_params.get("count"),
+            has_until="until" in rrule_params,
+        )
         return rrule.rrule(freq_to_rrule(freq), **rrule_params)

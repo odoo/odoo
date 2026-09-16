@@ -42,6 +42,9 @@ class PropertiesBaseDefinition(models.Model):
         if invalid_fields := self.mapped("properties_field_id").filtered(
             lambda f: f.ttype != "properties"
         ):
+            _debug.logic(
+                "definition_field_rejected", fields=invalid_fields.mapped("name")
+            )
             raise ValidationError(
                 _(
                     "The definition needs to be linked to a properties field. Those fields are not: %s.",
@@ -57,7 +60,9 @@ class PropertiesBaseDefinition(models.Model):
 
     def unlink(self) -> bool:
         memo = self.env.cr.cache.get(DEFINITION_MEMO_CACHE_KEY) or {}
-        for key in [key for key, value in memo.items() if value in self.ids]:
+        stale = [key for key, value in memo.items() if value in self.ids]
+        _debug.logic("definition_memo_evicted", entries=len(stale))
+        for key in stale:
             del memo[key]
         result = super().unlink()
         self.env.registry.clear_cache("stable")
@@ -85,6 +90,9 @@ class PropertiesBaseDefinition(models.Model):
                 model_name, field_name
             )
         except ValueError:
+            _debug.logic(
+                "definition_resolved", model=model_name, field=field_name, by="none"
+            )
             return None
 
     def _get_or_create_definition_id_for_property_field(
@@ -102,6 +110,7 @@ class PropertiesBaseDefinition(models.Model):
         field_ids = self.env["ir.model.fields"]._get_ids_by_name(model_name)
         field_id = field_ids.get(field_name)
         if not field_id:
+            _debug.logic("definition_field_fetched", model=model_name, field=field_name)
             field = self.env["ir.model.fields"].sudo()._get(model_name, field_name)
             field_id = field.id
 

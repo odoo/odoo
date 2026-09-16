@@ -294,6 +294,12 @@ class IrModelFields(models.Model):
     def _inverse_selection(self) -> None:
         for rec in self:
             selection = literal_eval(rec.selection or "[]")
+            _debug.lifecycle(
+                "selection.inverse",
+                model=rec.model,
+                field=rec.name,
+                count=len(selection),
+            )
             self.env["ir.model.fields.selection"]._update_selection(
                 rec.model, rec.name, selection
             )
@@ -313,6 +319,12 @@ class IrModelFields(models.Model):
             try:
                 safe_eval(field.domain or "[]")
             except (ValueError, SyntaxError) as e:
+                _debug.logic(
+                    "constraint.rejected",
+                    model=field.model,
+                    field=field.name,
+                    reason="domain_unparseable",
+                )
                 raise ValidationError(
                     _(
                         "An error occurred while evaluating the domain:\n%(error)s",
@@ -326,6 +338,12 @@ class IrModelFields(models.Model):
             try:
                 models.check_column_name(field.name)
             except ValidationError as e:
+                _debug.logic(
+                    "constraint.rejected",
+                    model=field.model,
+                    field=field.name,
+                    reason="invalid_name",
+                )
                 raise ValidationError(
                     _(
                         "Field names can only contain characters, digits and underscores (up to 63)."
@@ -350,6 +368,12 @@ class IrModelFields(models.Model):
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
+                _debug.logic(
+                    "related.rejected",
+                    related=self.related,
+                    step=name,
+                    reason="unknown_field",
+                )
                 raise ValidationError(
                     _(
                         'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
@@ -359,6 +383,12 @@ class IrModelFields(models.Model):
                 )
             model_name = field.relation
             if index < last and not field.relation:
+                _debug.logic(
+                    "related.rejected",
+                    related=self.related,
+                    step=name,
+                    reason="non_relational",
+                )
                 raise ValidationError(
                     _(
                         'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
@@ -367,6 +397,12 @@ class IrModelFields(models.Model):
                     )
                 )
             if index < last and not field.store:
+                _debug.logic(
+                    "related.rejected",
+                    related=self.related,
+                    step=name,
+                    reason="not_stored",
+                )
                 raise ValidationError(
                     _(
                         'Field "%(field_name)s" in related path "%(related_field)s" is not '
@@ -383,6 +419,9 @@ class IrModelFields(models.Model):
             if rec.state == "manual" and rec.related:
                 field = rec._get_related_target_field()
                 if field.ttype != rec.ttype:
+                    _debug.logic(
+                        "related.rejected", related=rec.related, reason="type_mismatch"
+                    )
                     raise ValidationError(
                         _(
                             'Related field "%(related_field)s" does not have type "%(type)s"',
@@ -391,6 +430,11 @@ class IrModelFields(models.Model):
                         )
                     )
                 if field.relation != rec.relation:
+                    _debug.logic(
+                        "related.rejected",
+                        related=rec.related,
+                        reason="comodel_mismatch",
+                    )
                     raise ValidationError(
                         _(
                             'Related field "%(related_field)s" does not have comodel "%(comodel)s"',
@@ -405,7 +449,14 @@ class IrModelFields(models.Model):
             try:
                 field = self._get_related_target_field()
             except ValidationError as e:
+                _debug.logic("onchange_related.warning", related=self.related)
                 return {"warning": {"title": _("Warning"), "message": e}}
+            _debug.logic(
+                "onchange_related.applied",
+                related=self.related,
+                ttype=field.ttype,
+                relation=field.relation,
+            )
             self.ttype = field.ttype
             self.relation = field.relation
             self.readonly = True
@@ -431,6 +482,12 @@ class IrModelFields(models.Model):
                 and rec.relation
                 and not rec.env["ir.model"]._get_id(rec.relation)
             ):
+                _debug.logic(
+                    "constraint.rejected",
+                    field=rec.name,
+                    relation=rec.relation,
+                    reason="unknown_relation",
+                )
                 raise ValidationError(
                     _("Unknown model name '%s' in Related Model", rec.relation)
                 )
@@ -441,6 +498,12 @@ class IrModelFields(models.Model):
             if rec.state != "manual" or rec.ttype not in RELATIONAL_TTYPES:
                 continue
             if not rec.relation:
+                _debug.logic(
+                    "constraint.rejected",
+                    field=rec.name,
+                    ttype=rec.ttype,
+                    reason="relation_missing",
+                )
                 raise ValidationError(
                     _(
                         "The %(type)s field \u201c%(field)s\u201d has no Related "
@@ -450,6 +513,11 @@ class IrModelFields(models.Model):
                     )
                 )
             if rec.ttype == "one2many" and rec.store and not rec.relation_field:
+                _debug.logic(
+                    "constraint.rejected",
+                    field=rec.name,
+                    reason="relation_field_missing",
+                )
                 raise ValidationError(
                     _(
                         "The stored one2many field \u201c%(field)s\u201d has no "
@@ -467,6 +535,7 @@ class IrModelFields(models.Model):
             if not record.depends:
                 continue
             if record.state == "manual" and not record.compute:
+                _debug.logic("depends.rejected", field=record.name, reason="no_compute")
                 raise ValidationError(
                     _(
                         "Dependencies are only read for a computed field, so "
@@ -479,6 +548,12 @@ class IrModelFields(models.Model):
                 )
             base_model = self.env.get(record.model)
             if base_model is None:
+                _debug.logic(
+                    "depends.rejected",
+                    field=record.name,
+                    model=record.model,
+                    reason="model_not_in_registry",
+                )
                 raise ValidationError(
                     _(
                         "Cannot check the dependencies of \u201c%(field)s\u201d: "
@@ -503,6 +578,13 @@ class IrModelFields(models.Model):
                         )
                     field = model._fields.get(name)
                     if field is None:
+                        _debug.logic(
+                            "depends.rejected",
+                            field=record.name,
+                            dependency=seq,
+                            step=name,
+                            reason="unknown_field",
+                        )
                         raise ValidationError(
                             _(
                                 "Unknown field \u201c%(field)s\u201d in dependency \u201c%(dependency)s\u201d",
@@ -513,6 +595,13 @@ class IrModelFields(models.Model):
                     if index == last:
                         break
                     if not field.relational:
+                        _debug.logic(
+                            "depends.rejected",
+                            field=record.name,
+                            dependency=seq,
+                            step=name,
+                            reason="non_relational",
+                        )
                         raise ValidationError(
                             _(
                                 "Non-relational field \u201c%(field)s\u201d in dependency \u201c%(dependency)s\u201d",
@@ -549,6 +638,12 @@ class IrModelFields(models.Model):
                         rec.model, "x_currency_id"
                     )
                     if not currency_field:
+                        _debug.logic(
+                            "currency_field.rejected",
+                            model=rec.model,
+                            field=rec.name,
+                            reason="no_fallback",
+                        )
                         raise ValidationError(
                             _(
                                 "Currency field is empty and there is no fallback field in the model"
@@ -557,6 +652,13 @@ class IrModelFields(models.Model):
                 else:
                     currency_field = self._get(rec.model, rec.currency_field)
                     if not currency_field:
+                        _debug.logic(
+                            "currency_field.rejected",
+                            model=rec.model,
+                            field=rec.name,
+                            currency_field=rec.currency_field,
+                            reason="unknown",
+                        )
                         raise ValidationError(
                             _(
                                 "Unknown field specified \u201c%s\u201d in currency_field",
@@ -565,10 +667,22 @@ class IrModelFields(models.Model):
                         )
 
                 if currency_field.ttype != "many2one":
+                    _debug.logic(
+                        "currency_field.rejected",
+                        model=rec.model,
+                        field=rec.name,
+                        reason="not_many2one",
+                    )
                     raise ValidationError(
                         _("Currency field does not have type many2one")
                     )
                 if currency_field.relation != "res.currency":
+                    _debug.logic(
+                        "currency_field.rejected",
+                        model=rec.model,
+                        field=rec.name,
+                        reason="not_res_currency",
+                    )
                     raise ValidationError(
                         _("Currency field should have a res.currency relation")
                     )
@@ -590,8 +704,14 @@ class IrModelFields(models.Model):
     def _onchange_relation_definition(self) -> None:
         if self.ttype == "many2many" and self.model_id and self.relation:
             if self.relation not in self.env:
+                _debug.logic(
+                    "onchange_relation_definition.skipped",
+                    relation=self.relation,
+                    reason="unknown_comodel",
+                )
                 return
             names = self._get_custom_many2many_names(self.model_id.model, self.relation)
+            _debug.logic("onchange_relation_definition.derived", table=names[0])
             self.relation_table, self.column1, self.column2 = names
         else:
             self.relation_table = False
@@ -614,9 +734,21 @@ class IrModelFields(models.Model):
                         self.relation,
                         self.model,
                     ):
+                        _debug.logic(
+                            "relation_table.shared",
+                            table=self.relation_table,
+                            other=other.id,
+                            reason="inverse_pair",
+                        )
                         self.column1 = other.column2
                         self.column2 = other.column1
                         return None
+                _debug.logic(
+                    "relation_table.shared",
+                    table=self.relation_table,
+                    others=len(others),
+                    reason="incompatible",
+                )
                 return {
                     "warning": {
                         "title": _("Warning"),
@@ -632,6 +764,9 @@ class IrModelFields(models.Model):
     def _check_on_delete_required_m2o(self) -> None:
         for rec in self:
             if rec.ttype == "many2one" and rec.required and rec.on_delete == "set null":
+                _debug.logic(
+                    "constraint.rejected", field=rec.name, reason="required_set_null"
+                )
                 raise ValidationError(
                     _(
                         "The m2o field %s is required but declares its ondelete policy "
@@ -649,6 +784,9 @@ class IrModelFields(models.Model):
     @tools.ormcache("model_name", cache="stable")
     def _get_ids_by_name(self, model_name: str) -> dict[str, int]:
         fields_ = self.sudo().search_fetch([("model", "=", model_name)], ["name"])
+        _debug.perf.count(
+            "ids_by_name.cache_miss", model=model_name, fields=len(fields_)
+        )
         return {field.name: field.id for field in fields_}
 
     def _drop_columns(self) -> bool:
@@ -659,6 +797,12 @@ class IrModelFields(models.Model):
                 continue
             model = self.env.get(field.model)
             if model is None:
+                _debug.logic(
+                    "drop_columns.skipped",
+                    model=field.model,
+                    field=field.name,
+                    reason="model_not_in_registry",
+                )
                 continue
             if field.store:
                 columns_by_table[model._table].add(field.name)
@@ -667,6 +811,7 @@ class IrModelFields(models.Model):
 
         for table, names in columns_by_table.items():
             if sql.get_table_kind(cr, table) != sql.TableKind.Regular:
+                _debug.logic("drop_columns.skipped", table=table, reason="not_regular")
                 continue
             existing = sql.get_table_columns(cr, table)
             dropped = [name for name in names if name in existing]
@@ -697,6 +842,9 @@ class IrModelFields(models.Model):
             if rel_name:
                 tables_to_drop.add(rel_name)
             else:
+                _debug.logic(
+                    "drop_m2m_tables.unresolved", model=field.model, field=field.name
+                )
                 _logger.warning(
                     "Cannot determine the relation table of %s.%s; its "
                     "many2many table is left in the database",
@@ -724,6 +872,7 @@ class IrModelFields(models.Model):
 
     def _get_views_mentioning(self, field_names: list[str]) -> models.BaseModel:
         if not field_names:
+            _debug.logic("views_mentioning.skipped", reason="no_field_names")
             return self.env["ir.ui.view"].browse()
         View = self.env["ir.ui.view"]
         View.flush_model(["arch_db"])
@@ -740,6 +889,9 @@ class IrModelFields(models.Model):
                 )
             )
         ]
+        _debug.perf.count(
+            "views_mentioning.scanned", fields=len(field_names), views=len(view_ids)
+        )
         return View.search([("id", "in", view_ids)])
 
     def _get_m2m_table_name(self, field: Self) -> str | None:
@@ -754,6 +906,7 @@ class IrModelFields(models.Model):
     def _prepare_update(self, setup_models: bool = True) -> Self:
         uninstalling = self.env.context.get(MODULE_UNINSTALL_FLAG)
         if not uninstalling and any(record.state != "manual" for record in self):
+            _debug.logic("prepare_update.rejected", reason="base_field")
             raise UserError(
                 _("This column contains module data and cannot be removed!")
             )
@@ -771,6 +924,12 @@ class IrModelFields(models.Model):
         if failed_dependencies:
             if not uninstalling:
                 field, dep = failed_dependencies[0]
+                _debug.logic(
+                    "prepare_update.rejected",
+                    field=field.name,
+                    dependent=dep.name,
+                    reason="manual_dependent",
+                )
                 raise UserError(
                     _(
                         "The field '%(field)s' cannot be removed because the field '%(other_field)s' depends on it.",
@@ -789,6 +948,7 @@ class IrModelFields(models.Model):
             lambda record: record.state == "manual" and record.model in self.pool
         )
         if not records:
+            _debug.logic("prepare_update.no_registry_fields", fields=len(self))
             return self
 
         for record in records:
@@ -805,6 +965,11 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
+            _debug.logic(
+                "prepare_update.view_broken",
+                view=view.id,
+                uninstalling=bool(uninstalling),
+            )
             if not uninstalling:
                 self.pool.setup_models(self.env.cr, OrderedSet(records.mapped("model")))
                 raise UserError(
@@ -820,7 +985,12 @@ class IrModelFields(models.Model):
                 view.name,
             )
         if not uninstalling and setup_models:
-            self.pool.setup_models(self.env.cr, OrderedSet(records.mapped("model")))
+            with _debug.perf(
+                "prepare_update.setup_models",
+                cr=self.env.cr,
+                models=sorted(set(records.mapped("model"))),
+            ):
+                self.pool.setup_models(self.env.cr, OrderedSet(records.mapped("model")))
 
         return self
 
@@ -836,7 +1006,13 @@ class IrModelFields(models.Model):
             & Domain("res_field", "in", records.mapped("name"))
             for model, records in binaries.grouped("model").items()
         )
-        return Attachment.search(domain)
+        attachments = Attachment.search(domain)
+        _debug.perf.count(
+            "binary_attachments.found",
+            fields=len(binaries),
+            attachments=len(attachments),
+        )
+        return attachments
 
     def _rename_attachments_of_binary_field(self, old_name: str) -> None:
         self.check_singleton()
@@ -844,6 +1020,13 @@ class IrModelFields(models.Model):
             self.env["ir.attachment"]
             .sudo()
             .search([("res_model", "=", self.model), ("res_field", "=", old_name)])
+        )
+        _debug.lifecycle(
+            "binary_attachments.renamed",
+            model=self.model,
+            old=old_name,
+            new=self.name,
+            count=len(attachments),
         )
         if attachments:
             attachments.write({"res_field": self.name})
@@ -875,10 +1058,18 @@ class IrModelFields(models.Model):
                 if inverse.manual and inverse.type == "one2many"
             )
 
+        _debug.logic(
+            "dependent_fields.resolved",
+            requested=len(self),
+            records=len(records),
+            registry_fields=len(fields_),
+            failed=len(failed_dependencies),
+        )
         return records, failed_dependencies
 
     def unlink(self) -> bool:
         if not self:
+            _debug.logic("unlink.skipped", reason="empty_recordset")
             return True
 
         self = self._prepare_update()
@@ -934,6 +1125,12 @@ class IrModelFields(models.Model):
             if vals.get("state", "manual") != "manual":
                 continue
             if (relation := vals.get("relation")) and not IrModel._get_id(relation):
+                _debug.logic(
+                    "create.rejected",
+                    field=vals.get("name"),
+                    relation=relation,
+                    reason="unknown_relation",
+                )
                 raise UserError(_("Model %s does not exist!", relation))
             if (
                 vals.get("ttype") == "one2many"
@@ -978,8 +1175,15 @@ class IrModelFields(models.Model):
                 ]
             )
         }
+        _debug.logic("inverses.checked", wanted=len(inverses), found=len(found))
         for model_name, name in inverses:
             if (model_name, name) not in found:
+                _debug.logic(
+                    "create.rejected",
+                    model=model_name,
+                    inverse=name,
+                    reason="inverse_missing",
+                )
                 raise UserError(
                     _(
                         "Many2one %(field)s on model %(model)s does not exist!",
@@ -991,10 +1195,17 @@ class IrModelFields(models.Model):
     def _add_missing_group_xml_ids(self) -> None:
         groups = self.filtered(lambda field: field.state == "manual").groups
         if groups:
+            _debug.lifecycle("group_xml_ids.added", groups=len(groups))
             groups.sudo()._add_missing_xml_ids()
 
     def _check_immutable_attributes(self, item: Self, vals: dict[str, Any]) -> None:
         if item.state != "manual":
+            _debug.logic(
+                "write.rejected",
+                model=item.model,
+                field=item.name,
+                reason="base_field",
+            )
             raise UserError(
                 _(
                     "Properties of base fields cannot be altered in this manner! "
@@ -1006,8 +1217,20 @@ class IrModelFields(models.Model):
             vals.get("model_id", item.model_id.id) != item.model_id.id
             or vals.get("model", item.model) != item.model
         ):
+            _debug.logic(
+                "write.rejected",
+                model=item.model,
+                field=item.name,
+                reason="model_change",
+            )
             raise UserError(_("Changing the model of a field is forbidden!"))
         if vals.get("ttype", item.ttype) != item.ttype:
+            _debug.logic(
+                "write.rejected",
+                model=item.model,
+                field=item.name,
+                reason="ttype_change",
+            )
             raise UserError(
                 _(
                     "Changing the type of a field is not yet supported. "
@@ -1029,8 +1252,19 @@ class IrModelFields(models.Model):
                 renamed |= item
                 if item.ttype not in ("one2many", "many2many", "binary"):
                     if column_rename:
+                        _debug.logic(
+                            "write.rejected",
+                            field=item.name,
+                            reason="multiple_renames",
+                        )
                         raise UserError(_("Can only rename one field at a time!"))
                     if model_cls is None:
+                        _debug.logic(
+                            "write.rejected",
+                            model=item.model,
+                            field=item.name,
+                            reason="model_not_in_registry",
+                        )
                         raise UserError(
                             _(
                                 "Cannot rename field \u201c%(field)s\u201d: its model "
@@ -1059,16 +1293,23 @@ class IrModelFields(models.Model):
             .search([("model", "=", self._name), ("res_id", "in", list(old_names))])
         )
         if not entries:
+            _debug.logic("rename_xml_ids.skipped", fields=len(old_names))
             return
         by_id = {record.id: record for record in self}
+        renamed = 0  # debuglog
         for entry in entries:
             record = by_id[entry.res_id]
             derived = field_xmlid(entry.module, record.model, old_names[entry.res_id])
             if entry.name != derived.partition(".")[2]:
+                _debug.logic(
+                    "rename_xml_ids.kept", xmlid=entry.id, reason="custom_name"
+                )
                 continue
+            renamed += 1  # debuglog
             entry.name = field_xmlid(entry.module, record.model, record.name).partition(
                 "."
             )[2]
+        _debug.lifecycle("rename_xml_ids.done", entries=len(entries), renamed=renamed)
 
     def _rename_column(self, column_rename: ColumnRename) -> None:
         table, oldname, newname, index, stored = column_rename
@@ -1087,6 +1328,7 @@ class IrModelFields(models.Model):
             )
         )
         if index:
+            _debug.lifecycle("rename_index", table=table, old=oldname, new=newname)
             self.env.cr.execute(
                 SQL(
                     "ALTER INDEX IF EXISTS %s RENAME TO %s",
@@ -1097,10 +1339,14 @@ class IrModelFields(models.Model):
 
     def write(self, vals: dict[str, Any]) -> bool:
         if not self or not vals:
+            _debug.logic("write.skipped", count=len(self), fields=len(vals))
             return True
 
         for field_name in vals:
             if field_name not in self._fields:
+                _debug.logic(
+                    "write.rejected", field=field_name, reason="unknown_attribute"
+                )
                 raise ValueError(f"Invalid field {field_name!r} in {self._name!r}")
 
         translate_only = all(self._fields[field_name].translate for field_name in vals)
@@ -1136,6 +1382,11 @@ class IrModelFields(models.Model):
 
         if renamed:
             dependents = renamed._prepare_update(setup_models=False) - self
+            _debug.pipeline(
+                "write.rename_dependents_unlinked",
+                renamed=len(renamed),
+                dependents=len(dependents),
+            )
             dependents.with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
 
         res = super().write(vals)
@@ -1167,12 +1418,14 @@ class IrModelFields(models.Model):
     @api.depends("field_description", "model")
     def _compute_display_name(self) -> None:
         if self.env.context.get("hide_model"):
+            _debug.logic("display_name.hide_model", count=len(self))
             for field in self:
                 field.display_name = field.field_description
             return
 
         IrModel = self.env["ir.model"]
-        IrModel._prewarm_names(list({field.model for field in self if field.model}))
+        with _debug.perf("display_name.prewarm", cr=self.env.cr, count=len(self)):
+            IrModel._prewarm_names(list({field.model for field in self if field.model}))
         for field in self:
             model_string = IrModel._get(field.model).name
             field.display_name = f"{field.field_description} ({model_string})"
@@ -1229,6 +1482,12 @@ class IrModelFields(models.Model):
             for field in model._fields.values():
                 if field.string in by_label:
                     other = by_label[field.string]
+                    _debug.logic(
+                        "reflect_fields.duplicate_label",
+                        model=model_name,
+                        field=field.name,
+                        other=other.name,
+                    )
                     _logger.warning(
                         "Two fields (%s, %s) of %s have the same label: %s. [Modules: %s and %s]",
                         field.name,
@@ -1252,6 +1511,7 @@ class IrModelFields(models.Model):
                 for field in self.env[model_name]._fields.values()
             )
         if not rows:
+            _debug.logic("reflect_fields.skipped", models=len(model_names))
             return
         cols = list(unique(["model", "name", *(key for row in rows for key in row)]))
         expected = [tuple(row.get(col) for col in cols) for row in rows]
@@ -1271,7 +1531,8 @@ class IrModelFields(models.Model):
             changed=len(rows),
         )
         if rows:
-            ids = upsert_en(self, cols, rows, ["model", "name"])
+            with _debug.perf("reflect_fields.upsert", cr=self.env.cr, rows=len(rows)):
+                ids = upsert_en(self, cols, rows, ["model", "name"])
             for row, id_ in zip(rows, ids, strict=True):
                 field_ids[row[:2]] = id_
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
@@ -1292,6 +1553,7 @@ class IrModelFields(models.Model):
 
         module = self.env.context.get("module")
         if not module:
+            _debug.logic("reflect_fields.no_xmlids", reason="no_module_in_context")
             return
 
         data_list = []
@@ -1406,6 +1668,13 @@ class IrModelFields(models.Model):
             known = field_data.get("group_known") or 0
             attrs["groups"] = group_xmlids or NO_ACCESS
             if known != group_count:
+                _debug.logic(
+                    "field_attrs.groups_partial",
+                    model=field_data["model"],
+                    field=field_data["name"],
+                    groups=group_count,
+                    known=known,
+                )
                 _logger.error(
                     "Field %s.%s is restricted to %d group(s) but only %d of them "
                     "have an external id; the field is %s. Give every restricting "
@@ -1445,6 +1714,11 @@ class IrModelFields(models.Model):
             if all(stored):
                 attrs["relation"], attrs["column1"], attrs["column2"] = stored
             else:
+                _debug.logic(
+                    "field_attrs.m2m_names_derived",
+                    model=field_data["model"],
+                    field=field_data["name"],
+                )
                 derived = self._get_custom_many2many_names(
                     field_data["model"], field_data["relation"]
                 )
@@ -1456,6 +1730,11 @@ class IrModelFields(models.Model):
         elif field_data["ttype"] == "monetary":
             attrs["currency_field"] = field_data["currency_field"]
         if field_data["compute"]:
+            _debug.logic(
+                "field_attrs.compute_prepared",
+                model=field_data["model"],
+                field=field_data["name"],
+            )
             attrs["compute"] = prepare_compute(
                 field_data["compute"],
                 field_data["depends"],
@@ -1520,4 +1799,7 @@ class IrModelFields(models.Model):
             result[field.name]["selection"] = [
                 (sel.value, sel.name) for sel in field.selection_ids
             ]
+        _debug.perf.count(
+            "fields_cached.cache_miss", model=model_name, fields=len(result)
+        )
         return frozendict(result)

@@ -29,7 +29,9 @@ class IrAttachment(models.Model):
         )
         res = super().unlink()
         if clear_assets:
-            _debug.lifecycle("assets_cache_cleared", reason="attachment_unlink")
+            _debug.lifecycle(
+                "assets_cache_cleared", reason="attachment_unlink", count=len(self)
+            )
             self.env.registry.clear_cache("assets")
         return res
 
@@ -61,9 +63,10 @@ class IrAttachment(models.Model):
     def _should_index_content(self, values: dict) -> bool:
         # nobody searches a compiled bundle by its words; indexing one costs
         # the text extraction of a megabyte of minified code per row
-        return not self._is_generated_asset_vals(
-            values
-        ) and super()._should_index_content(values)
+        if self._is_generated_asset_vals(values):
+            _debug.logic("index_skipped", reason="generated_asset")
+            return False
+        return super()._should_index_content(values)
 
     @api.model
     def _get_domain_generated_assets(
@@ -106,6 +109,11 @@ class IrAttachment(models.Model):
                 "web.esm.bridge_gc_grace_days", self._ESM_BRIDGE_GC_GRACE_DAYS
             )
         )
+        _debug.logic(
+            "esm_bridge_gc_grace",
+            configured=configured,
+            floor=int(2 * ESM_BRIDGE_REFRESH_DAYS) + 1,
+        )
         return max(int(2 * ESM_BRIDGE_REFRESH_DAYS) + 1, configured)
 
     @api.model
@@ -134,14 +142,19 @@ class IrAttachment(models.Model):
         deleted_artifacts = deleted_bridges = 0
         offset = 0
         more = False
+        _debug.lifecycle(
+            "esm_gc_started", grace_days=grace_days, batch=self._ESM_GC_BATCH
+        )
         while True:
             if deleted_artifacts + deleted_bridges >= self._ESM_GC_BATCH:
                 more = True
+                _debug.logic("esm_gc_stopped", reason="batch_full", offset=offset)
                 break
             candidates = self.sudo().search(
                 aged, order="id", limit=self._ESM_GC_BATCH, offset=offset
             )
             if not candidates:
+                _debug.logic("esm_gc_stopped", reason="exhausted", offset=offset)
                 break
             stale_artifacts, bridges = self._get_esm_gc_collectable(candidates)
             to_gc = stale_artifacts | bridges
@@ -154,10 +167,17 @@ class IrAttachment(models.Model):
             offset += len(candidates) - len(to_gc)
             if not to_gc:
                 continue
-            to_gc.unlink()
+            with _debug.perf("esm_gc_unlink", cr=self.env.cr, count=len(to_gc)):
+                to_gc.unlink()
             deleted_artifacts += len(stale_artifacts)
             deleted_bridges += len(bridges)
 
+        _debug.lifecycle(
+            "esm_gc_done",
+            artifacts=deleted_artifacts,
+            bridges=deleted_bridges,
+            more=more,
+        )
         if not deleted_artifacts and not deleted_bridges:
             return 0, 0
         _logger.info(
@@ -175,6 +195,9 @@ class IrAttachment(models.Model):
         )
         artifacts = candidates - bridges
         if not artifacts:
+            _debug.logic(
+                "esm_gc_collectable", reason="bridges_only", bridges=len(bridges)
+            )
             return self.browse(), bridges
         live_ids = set()
         seen_names = set()
@@ -189,14 +212,18 @@ class IrAttachment(models.Model):
                 seen_names.add(att.name)
                 live_ids.add(att.id)
                 live_dirs.add(att.url.rpartition("/")[0])
-        return (
-            artifacts.filtered(
-                lambda a: (
-                    a.id not in live_ids and a.url.rpartition("/")[0] not in live_dirs
-                )
-            ),
-            bridges,
+        stale = artifacts.filtered(
+            lambda a: a.id not in live_ids and a.url.rpartition("/")[0] not in live_dirs
         )
+        _debug.logic(
+            "esm_gc_collectable",
+            artifacts=len(artifacts),
+            live=len(live_ids),
+            live_dirs=len(live_dirs),
+            stale=len(stale),
+            bridges=len(bridges),
+        )
+        return stale, bridges
 
     @api.model
     def regenerate_assets_bundles(self) -> None:
@@ -204,6 +231,10 @@ class IrAttachment(models.Model):
         generated = self.search(self._get_domain_generated_assets())
         _debug.lifecycle("regenerate_assets_bundles", generated=len(generated))
         if generated:
-            generated.unlink()
+            with _debug.perf(
+                "regenerate_unlink", cr=self.env.cr, generated=len(generated)
+            ):
+                generated.unlink()
         else:
+            _debug.lifecycle("assets_cache_cleared", reason="regenerate_no_generated")
             self.env.registry.clear_cache("assets")

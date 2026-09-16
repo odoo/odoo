@@ -69,6 +69,7 @@ class ResPartnerIdentifier(models.Model):
 
     @api.constrains("type_id", "value")
     def _check_value_is_valid(self):
+        _debug.logic("identifier_values_checked", count=len(self))
         for identifier in self:
             identifier.type_id.check_value(identifier.value)
 
@@ -76,6 +77,7 @@ class ResPartnerIdentifier(models.Model):
     def _check_one_per_contact(self):
         candidates = self.filtered(lambda i: not i.type_id.multiple_per_contact)
         if not candidates:
+            _debug.logic("one_per_contact_skipped", count=len(self))
             return
         held = defaultdict(list)
         for other in self.search(
@@ -135,6 +137,12 @@ class ResPartnerIdentifier(models.Model):
                 )
             )
             if taken:
+                _debug.logic(
+                    "identifier_taken",
+                    identifier=identifier.id,
+                    type=identifier.type_id.id,
+                    holder=taken[0].partner_id.id,
+                )
                 raise ValidationError(
                     self.env._(
                         "%(value)s is already the %(type)s of %(other)s.",

@@ -94,6 +94,7 @@ class IrModelConstraint(models.Model):
 
             hname = normalize_identifier(name)
             if data.type not in ("f", "u", "i"):
+                _debug.logic("constraint_kept_unknown_type", name=name, type=data.type)
                 continue
 
             tables = [
@@ -112,6 +113,7 @@ class IrModelConstraint(models.Model):
                 )
             ]
             for table in tables:
+                _debug.lifecycle("constraint_dropped", name=name, table=table)
                 self.env.execute_query(
                     SQL(
                         "ALTER TABLE %s DROP CONSTRAINT %s",
@@ -126,6 +128,7 @@ class IrModelConstraint(models.Model):
                     table,
                 )
             if not tables:
+                _debug.lifecycle("index_dropped", name=name)
                 self.env.execute_query(
                     SQL("DROP INDEX IF EXISTS %s", SQL.identifier(hname))
                 )
@@ -150,8 +153,12 @@ class IrModelConstraint(models.Model):
         message: str | None = None,
     ) -> Self | None:
         if not module:
+            _debug.logic("reflect_constraint.skipped", name=conname, reason="no_module")
             return None
         if type not in ("f", "u", "i"):
+            _debug.logic(
+                "reflect_constraint.rejected", name=conname, reason="invalid_type"
+            )
             raise ValueError(
                 f"Invalid constraint type {type!r}: expected 'f', 'u', or 'i'."
             )
@@ -215,11 +222,13 @@ class IrModelConstraint(models.Model):
                 )
             )
             return self.browse(cons_id)
+        _debug.logic("constraint_unchanged", name=conname, module=module)
         return None
 
     def _reflect_constraints(self, model_names: list[str]) -> None:
         expected = self._prepare_expected_constraints(model_names)
         if not expected:
+            _debug.logic("reflect_constraints.skipped", models=len(model_names))
             return
 
         changed = self._get_changed_constraints(expected)
@@ -239,6 +248,11 @@ class IrModelConstraint(models.Model):
                 data_list.append({"xml_id": xml_id, "record": self.browse(cons_id)})
             else:
                 self.env["ir.model.data"]._load_xmlid(xml_id)
+        _debug.pipeline(
+            "reflect_constraints.xmlids",
+            updated=len(data_list),
+            loaded=len(expected) - len(data_list),
+        )
         if data_list:
             self.env["ir.model.data"]._update_xmlids(data_list)
 
@@ -251,6 +265,12 @@ class IrModelConstraint(models.Model):
             for conname, cons in model._table_objects.items():
                 module = cons._module
                 if not conname or not module:
+                    _debug.logic(
+                        "expected_constraint.skipped",
+                        model=model_name,
+                        name=conname,
+                        reason="missing_name_or_module",
+                    )
                     _logger.warning("Missing module or constraint name for %s", cons)
                     continue
                 message = cons.message
@@ -338,6 +358,7 @@ class IrModelConstraint(models.Model):
             )
         )
         module_names = {mid: mname for mname, mid in module_ids.items()}
+        _debug.perf.count("merge_constraints", changed=len(changed), merged=len(result))
         return {
             (name, module_names[module_id]): cons_id
             for cons_id, name, module_id in result
@@ -373,6 +394,9 @@ class IrModelRelation(models.Model):
 
     def _uninstall_module_data(self) -> None:
         if not self.env.is_system():
+            _debug.logic(
+                "uninstall_relations.rejected", uid=self.env.uid, reason="not_system"
+            )
             raise AccessError(
                 _("Administrator access is required to uninstall a module")
             )
@@ -383,6 +407,7 @@ class IrModelRelation(models.Model):
         for data in self.sorted(key="id", reverse=True):
             name = data.name
             if not owners[name].issubset(self._ids):
+                _debug.logic("relation_kept_shared_owner", name=name)
                 continue
             if sql.table_exists(self.env.cr, name):
                 to_drop.add(name)
@@ -404,13 +429,20 @@ class IrModelRelation(models.Model):
         # Many2many relation. Remove that metadata without uninstalling its table,
         # including on passes which have no new field-owned relations to reflect.
         if model_tables:
-            self.search([("name", "in", model_tables)]).unlink()
+            stale = self.search([("name", "in", model_tables)])
+            _debug.lifecycle(
+                "reflect_relations.model_tables_unlinked",
+                tables=len(model_tables),
+                stale=len(stale),
+            )
+            stale.unlink()
         expected: dict[tuple[str, str], str] = {}
         for model_name, table, module in items:
             if table in model_tables:
                 continue
             expected.setdefault((table, module), model_name)
         if not expected:
+            _debug.logic("reflect_relations.skipped", items=len(items))
             return
 
         existing = set(
@@ -448,6 +480,12 @@ class IrModelRelation(models.Model):
             module_id = module_ids.get(module)
             model_id = get_model_id(model_name)
             if module_id is None or model_id is None:
+                _debug.logic(
+                    "reflect_relations.unresolved",
+                    table=table,
+                    model=model_name,
+                    reason="unknown_module" if module_id is None else "unknown_model",
+                )
                 _logger.warning(
                     "Cannot reflect m2m table %r of %r: unknown %s",
                     table,
@@ -464,8 +502,10 @@ class IrModelRelation(models.Model):
                 )
             )
         if not rows:
+            _debug.logic("reflect_relations.nothing_to_insert", missing=len(missing))
             return
 
+        _debug.lifecycle("reflect_relations.inserted", rows=len(rows))
         self.env.execute_query(
             SQL(
                 """INSERT INTO ir_model_relation

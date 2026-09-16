@@ -24,6 +24,7 @@ _bundle_log = get_asset_logger("bundle")
 def _pipeline_sources() -> tuple[Path, ...]:
     tools_file = getattr(odoo.tools, "__file__", None)
     if not tools_file or not __file__:
+        _debug.logic("pipeline_sources_unknown", reason="no_file")
         return ()
     tools_dir = Path(tools_file).resolve().parent
     package_dir = Path(__file__).resolve().parent
@@ -42,12 +43,14 @@ _OUTPUT_AFFECTING_NPM_TOOLS = ("sass-embedded", "rtlcss", "esbuild")
 def _toolchain_versions() -> str:
     root = _repo_root()
     if root is None:
+        _debug.logic("toolchain_versions_unknown", reason="no_root")
         return "unknown"
     lock_versions: dict[str, str] = {}
     try:
         packages = json.loads((root / "package-lock.json").read_text())["packages"]
     except OSError, ValueError, KeyError, TypeError:
         packages = {}
+        _debug.logic("toolchain_lock_unreadable")
     for name in _OUTPUT_AFFECTING_NPM_TOOLS:
         entry = packages.get(f"node_modules/{name}")
         if isinstance(entry, dict) and entry.get("version"):
@@ -94,6 +97,7 @@ def _pipeline_fingerprint() -> str:
                     "not invalidate cached bundles.",
                     source,
                 )
+                _debug.logic("pipeline_source_missing", source=source.name)
         try:
             for path in sorted(files):
                 digest.update(path.name.encode())
@@ -175,18 +179,30 @@ def _run_cli_pipe(argv: Sequence[str], source: str, timeout_s: int) -> str:
                 errors="replace",
             )
         except OSError:
+            _debug.logic("cli_pipe_failed", tool=argv[0], reason="not_executable")
             raise CompileError(f"Could not execute command {argv[0]!r}") from None
         try:
             out, err = proc.communicate(input=source, timeout=timeout_s)
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.communicate()
+            _debug.logic(
+                "cli_pipe_failed", tool=argv[0], reason="timeout", timeout_s=timeout_s
+            )
             raise CompileError(f"{argv[0]!r} timed out after {timeout_s}s") from None
         if proc.returncode:
             cmd_output = out + err
             if not cmd_output:
                 cmd_output = f"Process exited with return code {proc.returncode}\n"
+            _debug.logic(
+                "cli_pipe_failed",
+                tool=argv[0],
+                reason="returncode",
+                returncode=proc.returncode,
+                stderr_len=len(err),
+            )
             raise CompileError(f"{argv[0]!r}: {cmd_output}")
+
         span.set(returncode=proc.returncode, out_len=len(out))
         return out
 

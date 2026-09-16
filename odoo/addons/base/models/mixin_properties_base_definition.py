@@ -25,16 +25,26 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
     )
 
     def _compute_properties_base_definition_id(self) -> None:
-        self.properties_base_definition_id = (
+        definition = (
             self.env["properties.base.definition"]
             .sudo()
             ._get_definition_for_property_field(self._name, "properties")
         )
+        _debug.logic(
+            "definition_computed",
+            model=self._name,
+            definition=definition.id,
+            records=len(self),
+        )
+        self.properties_base_definition_id = definition
 
     def _search_properties_base_definition_id(
         self, operator: str, value: Any
     ) -> Domain:
         if operator not in ("in", "not in"):
+            _debug.logic(
+                "definition_search_unsupported", model=self._name, operator=operator
+            )
             raise NotImplementedError(
                 f"Unsupported operator {operator!r} for properties_base_definition_id"
             )
@@ -81,6 +91,7 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
                 .sudo()
                 ._get_definition_id_for_property_field(self._name, "properties")
             )
+            _debug.logic("definition_to_sql", model=self._name, definition=parent)
             return SQL("%s::int4", parent)
 
         return super()._field_to_sql(alias, fname, query)

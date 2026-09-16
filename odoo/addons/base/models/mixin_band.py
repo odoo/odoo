@@ -47,6 +47,12 @@ class MixinBand(models.AbstractModel):
         for record in self:
             if not record._is_band():
                 if record.min_value or record.max_value:
+                    _debug.logic(
+                        "band_rejected",
+                        model=self._name,
+                        record=record.id,
+                        reason="bounds_on_non_band",
+                    )
                     raise ValidationError(
                         self.env._(
                             "%(name)s: bounds only apply to a band.",
@@ -55,6 +61,12 @@ class MixinBand(models.AbstractModel):
                     )
                 continue
             if record.min_value < 0:
+                _debug.logic(
+                    "band_rejected",
+                    model=self._name,
+                    record=record.id,
+                    reason="negative_lower_bound",
+                )
                 raise ValidationError(
                     self.env._(
                         "%(name)s: the lower bound cannot be negative.",
@@ -62,6 +74,12 @@ class MixinBand(models.AbstractModel):
                     )
                 )
             if record.max_value and record.max_value <= record.min_value:
+                _debug.logic(
+                    "band_rejected",
+                    model=self._name,
+                    record=record.id,
+                    reason="upper_not_above_lower",
+                )
                 raise ValidationError(
                     self.env._(
                         "%(name)s: the upper bound (%(max)s) must be greater "
@@ -92,6 +110,13 @@ class MixinBand(models.AbstractModel):
                     if other == record or not other._is_band():
                         continue
                     if record._is_range_overlapping(record, other):
+                        _debug.logic(
+                            "band_rejected",
+                            model=self._name,
+                            record=record.id,
+                            other=other.id,
+                            reason="overlap",
+                        )
                         raise ValidationError(
                             self.env._(
                                 "%(a)s overlaps with %(b)s.",

@@ -62,7 +62,9 @@ class ModelConverter(werkzeug.routing.BaseConverter):
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.env.cr, _uid, request.env.context)
-        return env[self.model].browse(self.unslug(value)[1])
+        record_id = self.unslug(value)[1]
+        _debug.logic("route_model_converted", model=self.model, id=record_id)
+        return env[self.model].browse(record_id)
 
     def to_url(self, value: models.BaseModel) -> str:
         return self.slug(value)
@@ -78,7 +80,9 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.env.cr, _uid, request.env.context)
-        return env[self.model].browse([int(v) for v in value.split(",") if v])
+        ids = [int(v) for v in value.split(",") if v]
+        _debug.logic("route_models_converted", model=self.model, count=len(ids))
+        return env[self.model].browse(ids)
 
     def to_url(self, value: models.BaseModel) -> str:
         return ",".join(str(i) for i in value.ids)
@@ -120,6 +124,7 @@ class IrHttp(models.AbstractModel):
             ext = p.suffix
             if ext in EXTENSION_TO_WEB_MIMETYPES and res:
                 res[-1] = cls._slugify_one(p.stem) + ext
+                _debug.logic("slug_extension_kept", ext=ext, segments=len(res))
             return "/".join(res)
 
     @classmethod
@@ -133,6 +138,7 @@ class IrHttp(models.AbstractModel):
         try:
             return None, int(value)
         except ValueError:
+            _debug.logic("unslug_failed", value=value)
             return None, None
 
     @api.model
@@ -156,6 +162,12 @@ class IrHttp(models.AbstractModel):
             .routing_map()
             .bind_to_environ(request.httprequest.environ)
             .match(path_info=path_info, return_rule=True)
+        )
+        _debug.pipeline(
+            "route_matched",
+            path=path_info,
+            rule=rule.rule,
+            args=sorted(args),
         )
         return rule, args
 
@@ -191,9 +203,16 @@ class IrHttp(models.AbstractModel):
             )
             _debug.logic("bearer_auth", uid=uid, session_uid=request.env.uid)
             if not uid:
+                _debug.logic("bearer_auth_refused", reason="invalid_apikey")
                 e = "Invalid apikey"
                 raise Unauthorized(e, www_authenticate=WWWAuthenticate("bearer"))
             if request.env.uid and request.env.uid != uid:
+                _debug.logic(
+                    "bearer_auth_refused",
+                    reason="session_mismatch",
+                    session_uid=request.env.uid,
+                    key_uid=uid,
+                )
                 e = "Session user does not match the used apikey."
                 raise AccessDenied(e)
             request.update_env(user=uid)
@@ -217,21 +236,21 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _auth_method_none(cls) -> None:
+        _debug.logic("auth_none", previous_uid=request.env.uid)
         request.update_env(anonymous=True)
 
     @classmethod
     def _auth_method_public(cls) -> None:
         if request.env.uid is None:
             public_user = request.env.ref("base.public_user")
+            _debug.logic("auth_public_assigned", public_uid=public_user.id)
             request.update_env(user=public_user.id)
 
     @classmethod
     def _authenticate(cls, endpoint: Any) -> None:
-        auth = (
-            "none"
-            if http.is_cors_preflight(request, endpoint)
-            else endpoint.routing["auth"]
-        )
+        preflight = http.is_cors_preflight(request, endpoint)
+        auth = "none" if preflight else endpoint.routing["auth"]
+        _debug.pipeline("authenticate", auth=auth, cors_preflight=preflight)
         cls._authenticate_explicit(auth)
 
     @classmethod
@@ -244,6 +263,7 @@ class IrHttp(models.AbstractModel):
                     request.update_env(anonymous=True, context=request.session.context)
             auth_method = getattr(cls, f"_auth_method_{auth}", None)
             if auth_method is None:
+                _debug.logic("auth_method_unknown", auth=auth)
                 msg = f"Unknown authentication method: {auth!r}"
                 raise AccessDenied(msg)
             with _debug.perf("authenticate", auth=auth, uid=request.env.uid):
@@ -255,6 +275,7 @@ class IrHttp(models.AbstractModel):
         ):
             raise
         except Exception as exc:
+            _debug.logic("auth_failed", auth=auth, error=type(exc).__name__)
             _logger.info("Exception during request Authentication.", exc_info=True)
             raise AccessDenied from exc
 
@@ -269,6 +290,7 @@ class IrHttp(models.AbstractModel):
         if (value := ICP.get_param(key, None)) is not None:
             try:
                 request.httprequest.max_content_length = int(value)
+                _debug.logic("max_upload_size_applied", bytes=int(value))
             except ValueError:
                 _logger.error(
                     "invalid %s: %r, using %s instead",
@@ -290,11 +312,20 @@ class IrHttp(models.AbstractModel):
         )
         request.update_context(lang=get_lang(env).code)
 
+        model_params = 0
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
                 continue
 
             args[key] = val.with_env(request.env)
+            model_params += 1
+        _debug.pipeline(
+            "pre_dispatch",
+            rule=rule.rule,
+            uid=request.env.uid,
+            params=len(args),
+            model_params=model_params,
+        )
 
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
@@ -320,6 +351,7 @@ class IrHttp(models.AbstractModel):
                 if request.env.user.is_public or isinstance(
                     e, odoo.exceptions.MissingError
                 ):
+                    _debug.logic("route_param_hidden_as_404", param=key)
                     raise NotFound from e
                 raise
 
@@ -328,6 +360,7 @@ class IrHttp(models.AbstractModel):
         if (
             captcha := endpoint.routing.get("captcha")
         ) and request.httprequest.method not in SAFE_HTTP_METHODS:
+            _debug.logic("captcha_checked", method=request.httprequest.method)
             request.env["ir.http"]._check_request_recaptcha_token(captcha)
         with _debug.perf(
             "dispatch",
@@ -351,6 +384,11 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _handle_error(cls, exception: Exception) -> Any:
+        _debug.pipeline(
+            "handle_error",
+            error=type(exception).__name__,
+            dispatcher=type(request.dispatcher).__name__,
+        )
         return request.dispatcher.prepare_error_response(exception)
 
     @classmethod
@@ -364,6 +402,8 @@ class IrHttp(models.AbstractModel):
         )
         if attach and (attach.store_fname or attach.db_datas):
             return attach._to_http_stream().prepare_response()
+        if _debug.logic.enabled and attach:
+            _debug.logic("serve_fallback_empty", attachment=attach.id)
         return None
 
     @classmethod
@@ -391,10 +431,11 @@ class IrHttp(models.AbstractModel):
     @api.autovacuum
     def _gc_sessions(self) -> None:
         if str2bool(os.getenv("ODOO_SKIP_GC_SESSIONS", ""), default=False):
+            _debug.logic("gc_sessions_skipped", reason="env_flag")
             return
-        http.root.session_store.vacuum(
-            max_lifetime=http.get_session_max_inactivity(self.env)
-        )
+        max_lifetime = http.get_session_max_inactivity(self.env)
+        with _debug.perf("gc_sessions", max_lifetime=max_lifetime):
+            http.root.session_store.vacuum(max_lifetime=max_lifetime)
 
     @api.model
     def _get_translations_for_webclient(
@@ -403,6 +444,8 @@ class IrHttp(models.AbstractModel):
         if not lang:
             lang = self.env.context.get("lang")
         lang_data = self.env["res.lang"]._get_data(code=lang)
+        if _debug.logic.enabled and not lang_data:
+            _debug.logic("web_translations_lang_unknown", lang=lang)
         lang_params = (
             {
                 "name": lang_data.name,
@@ -440,6 +483,12 @@ class IrHttp(models.AbstractModel):
         }
         if self.env.context.get("cache_translation_data"):
             self.env.cr.cache["translation_data"] = translation_cache
+        _debug.perf.count(
+            "web_translations_hashed",
+            lang=lang,
+            modules=len(translations),
+            multi_lang=translation_cache["multi_lang"],
+        )
         return cache_hash(
             json_dumps_bytes(
                 translation_cache, default=json_default, option=OPT_SORT_KEYS

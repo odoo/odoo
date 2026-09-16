@@ -60,6 +60,7 @@ class WebAsset:
         self._last_modified = last_modified
         if not inline and not url:
             bundle_name = bundle.name if bundle is not None else "<no bundle>"
+            _debug.logic("asset_rejected", bundle=bundle_name, reason="no_source")
             raise ValueError(
                 f"An asset should either be inlined or url linked, defined in bundle {bundle_name!r}"
             )
@@ -111,6 +112,7 @@ class WebAsset:
                 ).timestamp()
             if self._last_modified is None:
                 self._last_modified = -1
+                _debug.logic("last_modified_unknown", name=self.name)
         return self._last_modified
 
     @property
@@ -139,6 +141,7 @@ class WebAsset:
         except AssetError:
             raise
         except ValueError as e:
+            _debug.logic("asset_content_invalid", name=self.name, url=self.url)
             raise AssetError(f"Could not get content for {self.name}.") from e
 
     def minify(self) -> str:
@@ -177,14 +180,18 @@ class JavascriptAsset(WebAsset):
     def minify(self) -> str:
         content = self.content
         if not has_nested_template_literal(content):
-            return self.with_header(rjsmin(content, keep_bang_comments=True))
-        minified = minify_js(content, label=self.url or self.name)
+            with _debug.perf("js_minify", name=self.name, tool="rjsmin"):
+                return self.with_header(rjsmin(content, keep_bang_comments=True))
+        with _debug.perf("js_minify", name=self.name, tool="esbuild") as span:
+            minified = minify_js(content, label=self.url or self.name)
+            span.set(minified=minified is not None)
         return self.with_header(minified if minified is not None else content)
 
     def _get_content(self) -> str:
         try:
             return super()._get_content()
         except AssetError as e:
+            _debug.logic("js_asset_error_inlined", name=self.name, url=self.url)
             return self.generate_error(str(e))
 
     def with_header(self, content: str | None = None, minimal: bool = True) -> str:
@@ -238,7 +245,12 @@ class XMLAsset(WebAsset):
     def template_elements(self) -> list[etree._Element]:
         root = self._parsed_root
         if root.tag in ("templates", "template", "odoo"):
-            return [el for el in root if isinstance(el.tag, str)]
+            elements = [el for el in root if isinstance(el.tag, str)]
+            _debug.perf.count(
+                "xml_templates_parsed", name=self.name, elements=len(elements)
+            )
+            return elements
+        _debug.logic("xml_single_root", name=self.name, tag=root.tag)
         return [root]
 
     def _prepare_asset_error(self, msg: str) -> XMLAssetError:
@@ -330,6 +342,7 @@ class StylesheetAsset(WebAsset):
         masked = cls._CSS_TOKEN_RE.sub(_mask, content)
         masked = re.sub(r"\s+", " ", masked)
         masked = re.sub(r" *([{}]) *", r"\1", masked)
+        _debug.perf.count("css_minified", chars=len(content), minified=len(masked))
         return re.sub(r"\x00(\d+)\x00", lambda m: protected[int(m.group(1))], masked)
 
     def minify(self) -> str:
@@ -366,6 +379,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
             _logger.debug("Dart Sass embedded unavailable, using CLI", exc_info=exc)
             return
         ScssStylesheetAsset._embedded_fallback_warned = True
+        _debug.lifecycle("sass_embedded_fallback_warned", error=type(exc).__name__)
         _logger.warning(
             "Embedded Dart Sass unavailable (%s); falling back to the Dart Sass "
             "CLI for every SCSS compile. The CLI path is markedly slower (a "
@@ -431,6 +445,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
 
         sass = get_sass_path()
         if sass is None:
+            _debug.logic("sass_cli_missing", syntax=self._sass_syntax)
             raise SassNotFoundError(
                 "Dart Sass not found. It is a required dependency of this fork: "
                 "run `npm install` in the Odoo root (declared in package.json) "

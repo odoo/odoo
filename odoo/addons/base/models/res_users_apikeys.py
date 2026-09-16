@@ -92,6 +92,7 @@ class ResUsersApikeys(models.Model):
 
     def _remove(self) -> dict[str, str]:
         if not self:
+            _debug.logic("apikeys_remove_noop", uid=self.env.uid)
             return {"type": "ir.actions.act_window_close"}
         if self.env.is_system() or self.mapped("user_id") == self.env.user:
             ip = request.httprequest.environ["REMOTE_ADDR"] if request else "n/a"
@@ -105,6 +106,11 @@ class ResUsersApikeys(models.Model):
             _debug.lifecycle("apikeys_removed", count=len(self), by=self.env.uid)
             self.sudo().unlink()
             return {"type": "ir.actions.act_window_close"}
+        _debug.logic(
+            "apikeys_remove_refused",
+            uid=self.env.uid,
+            owners=self.mapped("user_id").ids,
+        )
         raise AccessError(
             _(
                 "You can not remove API keys unless they're yours or you are a system user"
@@ -112,12 +118,14 @@ class ResUsersApikeys(models.Model):
         )
 
     def unlink(self) -> bool:
+        _debug.lifecycle("apikeys_unlinked", count=len(self))
         res = super().unlink()
         self.env.registry.clear_cache()
         return res
 
     def _check_credentials(self, *, scope: str, key: str) -> int | None:
         if not scope or not key:
+            _debug.logic("apikey_check_refused", reason="missing_scope_or_key")
             msg = "scope and key required"
             raise ValueError(msg)
         index = key[:INDEX_SIZE]
@@ -140,6 +148,7 @@ class ResUsersApikeys(models.Model):
             )
         )
         candidates = self.env.cr.fetchall()
+        _debug.perf.count("apikey_candidates", scope=scope, candidates=len(candidates))
         for user_id, current_key in candidates:
             if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
                 _debug.logic("apikey_matched", scope=scope, uid=user_id)
@@ -165,6 +174,9 @@ class ResUsersApikeys(models.Model):
         )
         for current_key, expiration_date in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
+                _debug.logic(
+                    "apikey_expiration_found", scope=scope, expires=expiration_date
+                )
                 return expiration_date
         _debug.logic("apikey_expiration_unknown", scope=scope)
         return None
@@ -180,6 +192,9 @@ class ResUsersApikeys(models.Model):
 
     def _check_expiration_date(self, date: datetime.datetime | None) -> None:
         if self.env.is_system():
+            _debug.logic(
+                "apikey_expiration_unchecked", uid=self.env.uid, reason="system"
+            )
             return
         if not date:
             _debug.logic("apikey_expiration_rejected", uid=self.env.uid, reason="unset")
@@ -227,6 +242,7 @@ class ResUsersApikeys(models.Model):
         )
 
         self.env.user.invalidate_recordset(["api_key_ids"])
+        _debug.pipeline("apikey_inserted", uid=self.env.uid, scope=scope)
 
         ip = request.httprequest.environ["REMOTE_ADDR"] if request else "n/a"
         _logger.info(
@@ -287,9 +303,16 @@ class ResUsersApikeysDescription(models.TransientModel):
         if self.env.is_system():
             return durations + [persistent_duration, custom_duration]
         max_duration = self.env["res.users.apikeys"]._get_max_duration()
-        return list(
+        offered = list(
             filter(lambda duration: int(duration[0]) <= max_duration, durations)
         ) + [custom_duration]
+        _debug.logic(
+            "apikey_durations_offered",
+            uid=self.env.uid,
+            max_days=max_duration,
+            offered=len(offered),
+        )
+        return offered
 
     name = fields.Char(
         string="Description",
@@ -322,6 +345,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         try:
             self.env["res.users.apikeys"]._check_expiration_date(self.expiration_date)
         except UserError as error:
+            _debug.logic("apikey_expiration_onchange_warned", uid=self.env.uid)
             warning = {
                 "type": "notification",
                 "title": _("The API key duration is not correct."),
@@ -332,6 +356,7 @@ class ResUsersApikeysDescription(models.TransientModel):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         records = super().create(vals_list)
+        _debug.lifecycle("apikey_description_created", count=len(records))
         apikeys = self.env["res.users.apikeys"]
         for record in records:
             apikeys._check_expiration_date(record.expiration_date)

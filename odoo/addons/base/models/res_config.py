@@ -59,6 +59,7 @@ class ResConfigSettings(models.TransientModel):
         )
 
     def copy(self, default: ValuesType | None = None) -> Self:
+        _debug.logic("settings_copy_refused", model=self._name)
         raise UserError(_("Cannot duplicate configuration!"))
 
     @api.model
@@ -138,6 +139,16 @@ class ResConfigSettings(models.TransientModel):
                 others.append(name)
 
         modules = IrModule.concat(*module_recs) if module_recs else IrModule
+        _debug.perf.count(
+            "settings_fields_classified",
+            model=self._name,
+            fields=len(fnames),
+            defaults=len(defaults),
+            groups=len(groups),
+            modules=len(modules),
+            config=len(configs),
+            other=len(others),
+        )
         return {
             "default": defaults,
             "group": groups,
@@ -154,6 +165,7 @@ class ResConfigSettings(models.TransientModel):
     def default_get(self, fields: list[str]) -> dict[str, Any]:
         res = super().default_get(fields)
         if not fields:
+            _debug.logic("settings_defaults_skipped", model=self._name)
             return res
 
         IrDefault = self.env["ir.default"]
@@ -198,6 +210,9 @@ class ResConfigSettings(models.TransientModel):
                             )
                         except ValueError, TypeError:
                             _logger.warning(WARNING_MESSAGE, value, field, icp)
+                            _debug.logic(
+                                "config_param_unconvertible", setting=name, key=icp
+                            )
                             value = False
                     case "integer":
                         try:
@@ -233,6 +248,7 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self) -> None:
         if not self.env.is_admin():
+            _debug.logic("set_values_refused", model=self._name, uid=self.env.uid)
             raise AccessError(
                 self.env._("Only administrators can change system settings.")
             )
@@ -243,6 +259,12 @@ class ResConfigSettings(models.TransientModel):
         compared_names = [name for name, _model, _field in classified["default"]]
         compared_names += [name for name, _groups, _implied in classified["group"]]
         current_settings = self.default_get(compared_names)
+        _debug.pipeline(
+            "settings_set_values",
+            model=self._name,
+            stashed=bool(stash and stash.get(self._name)),
+            compared=len(compared_names),
+        )
 
         IrDefault = self.env["ir.default"].sudo()
         for name, model, field in classified["default"]:
@@ -276,6 +298,7 @@ class ResConfigSettings(models.TransientModel):
                 groups._remove_group(implied_group)
 
         IrConfigParameter = self.env["ir.config_parameter"].sudo()
+        changed_params = 0  # debuglog
         for name, icp in classified["config"]:
             field = self._fields[name]
             value = self[name]
@@ -294,10 +317,18 @@ class ResConfigSettings(models.TransientModel):
                 continue
             _debug.logic("setting_config_param", setting=name, key=icp)
             IrConfigParameter.set_param(icp, value)
+            changed_params += 1  # debuglog
+        _debug.perf.count(
+            "settings_config_params_written",
+            model=self._name,
+            checked=len(classified["config"]),
+            changed=changed_params,
+        )
 
     def execute(self) -> dict[str, Any]:
         self.check_singleton()
         if not self.env.is_admin():
+            _debug.logic("execute_refused", model=self._name, uid=self.env.uid)
             raise AccessError(_("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
@@ -343,6 +374,7 @@ class ResConfigSettings(models.TransientModel):
         installation_status = self._install_modules(to_install)
 
         if installation_status:
+            _debug.lifecycle("transaction_reset", model=self._name, by="install")
             self.env.transaction.reset()
 
         return self.env["res.config"]._next_todo_action()
@@ -351,6 +383,7 @@ class ResConfigSettings(models.TransientModel):
         actions = self.env["ir.actions.act_window"].search(
             [("res_model", "=", self._name)], limit=1
         )
+        _debug.logic("settings_cancel", model=self._name, action=actions.id)
         if actions:
             return actions.read()[0]
         return {}
@@ -398,6 +431,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        dropped = 0  # debuglog
         for vals in vals_list:
             for field in self._fields.values():
                 if not (field.name in vals and field.related and not field.readonly):
@@ -419,8 +453,11 @@ class ResConfigSettings(models.TransientModel):
 
                 if old_value == new_value:
                     vals.pop(field.name)
+                    dropped += 1  # debuglog
 
-        _debug.lifecycle("settings_create", count=len(vals_list))
+        _debug.lifecycle(
+            "settings_create", count=len(vals_list), unchanged_related_dropped=dropped
+        )
         return super().create(vals_list)
 
     def action_view_template_user(self) -> dict[str, Any]:
@@ -437,6 +474,7 @@ class ResConfigSettings(models.TransientModel):
             template_user_id = False
         template_user = self.env["res.users"].browse(template_user_id)
         if not template_user.exists():
+            _debug.logic("template_user_missing", user=template_user_id)
             raise UserError(_("Invalid template user. It seems it has been deleted."))
         action["res_id"] = template_user_id
         action["views"] = [[self.env.ref("base.view_users_form").id, "form"]]

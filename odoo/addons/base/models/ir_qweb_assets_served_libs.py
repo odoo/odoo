@@ -22,6 +22,7 @@ class IrQweb(models.AbstractModel):
 
     def _get_external_libs_served(self, *, debug_assets: bool) -> dict[str, str]:
         if debug_assets:
+            _debug.logic("served_libs_fallback", reason="debug_assets")
             return dict(self._external_libs())
         try:
             self._create_served_libs()
@@ -43,6 +44,7 @@ class IrQweb(models.AbstractModel):
     def _create_served_libs(self) -> None:
         files = self._served_lib_files()
         if not files:
+            _debug.logic("served_libs_skipped", reason="no_files")
             return
         IrAttachment = self.env["ir.attachment"].sudo()
         present = set(
@@ -79,6 +81,11 @@ class IrQweb(models.AbstractModel):
         try:
             self._save_esm_attachment_rows(vals_list, bundle="esm.libs")
         except ReadOnlySqlTransaction:
+            _debug.logic(
+                "served_libs_save_failed",
+                readonly=self.env.cr.readonly,
+                files=len(vals_list),
+            )
             if not self.env.cr.readonly:
                 raise
             log_event(

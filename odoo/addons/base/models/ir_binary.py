@@ -42,6 +42,13 @@ class IrBinary(models.AbstractModel):
         elif res_id is not None and res_model in self.env:
             record = self.env[res_model].browse(res_id).exists()
         if not record:
+            _debug.logic(
+                "record_missing",
+                xmlid=xmlid,
+                model=res_model,
+                res_id=res_id,
+                field=field_name,
+            )
             raise MissingError(
                 _(
                     "No record found for xmlid=%(xmlid)s, res_model=%(model)s, "
@@ -69,12 +76,19 @@ class IrBinary(models.AbstractModel):
             "datas",
             "db_datas",
         ):
+            _debug.logic("record_stream", source="attachment", field=field_name)
             return record._to_http_stream()
 
         field = record._fields[field_name]
         record._check_field_access(field, "read")
 
         if field.attachment:
+            _debug.logic(
+                "record_stream",
+                source="field_attachment",
+                model=record._name,
+                field=field_name,
+            )
             field_attachment = (
                 self.env["ir.attachment"]
                 .sudo()
@@ -88,9 +102,15 @@ class IrBinary(models.AbstractModel):
                 )
             )
             if not field_attachment:
+                _debug.logic(
+                    "field_attachment_missing", model=record._name, field=field_name
+                )
                 raise MissingError(self.env._("The related attachment does not exist."))
             return field_attachment._to_http_stream()
 
+        _debug.logic(
+            "record_stream", source="column", model=record._name, field=field_name
+        )
         return Stream.from_binary_field(record, field_name)
 
     def _get_stream_from_record(
@@ -111,10 +131,23 @@ class IrBinary(models.AbstractModel):
         try:
             field = record._fields[field_name]
         except KeyError:
+            _debug.logic(
+                "stream_refused",
+                model=record._name,
+                field=field_name,
+                reason="no_field",
+            )
             raise UserError(
                 _('Record has no field "%(field_name)s".', field_name=field_name)
             ) from None
         if field.type != "binary":
+            _debug.logic(
+                "stream_refused",
+                model=record._name,
+                field=field_name,
+                reason="not_binary",
+                type=field.type,
+            )
             raise UserError(
                 _(
                     'Field "%(field)s" is type "%(type)s" but it is only possible '
@@ -143,6 +176,12 @@ class IrBinary(models.AbstractModel):
                     with pathlib.Path(stream.path).open("rb") as file:
                         head = file.read(MIMETYPE_HEAD_SIZE)
                 stream.mimetype = guess_mimetype(head, default=default_mimetype)
+                _debug.logic(
+                    "stream_mimetype_sniffed",
+                    model=record._name,
+                    field=field_name,
+                    mimetype=stream.mimetype,
+                )
 
             if filename:
                 stream.download_name = filename
@@ -161,6 +200,13 @@ class IrBinary(models.AbstractModel):
                 and stream.mimetype != "application/octet-stream"
             ):
                 stream.download_name += guess_extension(stream.mimetype) or ""
+            _debug.pipeline(
+                "stream_named",
+                model=record._name,
+                field=field_name,
+                mimetype=stream.mimetype,
+                named_by="argument" if filename else filename_field,
+            )
 
         return stream
 
@@ -199,6 +245,12 @@ class IrBinary(models.AbstractModel):
             )
         except (UserError, MissingError) as exc:
             if request and request.params.get("download"):
+                _debug.logic(
+                    "image_placeholder_refused",
+                    model=record._name,
+                    field=field_name,
+                    reason="download",
+                )
                 raise
             _logger.debug(
                 "Falling back to the image placeholder for %s.%s: %s",
@@ -214,8 +266,15 @@ class IrBinary(models.AbstractModel):
             stream = self._get_stream_placeholder(placeholder)
 
         if stream.type == "url":
+            _debug.logic("image_stream_url", model=record._name, field=field_name)
             return stream
         if not stream.mimetype.startswith("image/"):
+            _debug.logic(
+                "image_mimetype_rejected",
+                model=record._name,
+                field=field_name,
+                mimetype=stream.mimetype,
+            )
             stream.mimetype = "application/octet-stream"
 
         if (width, height) == (0, 0):
@@ -235,6 +294,14 @@ class IrBinary(models.AbstractModel):
                 etag=stream.etag if isinstance(stream.etag, str) else None,
                 last_modified=stream.last_modified,
             )
+        _debug.logic(
+            "image_stream_decided",
+            model=record._name,
+            field=field_name,
+            modified=modified,
+            resize=bool(width or height or crop),
+            source=stream.type,
+        )
 
         if modified and (width or height or crop):
             if stream.type == "path":
@@ -258,6 +325,7 @@ class IrBinary(models.AbstractModel):
     def _get_stream_placeholder(self, path: str | None = None) -> Stream:
         if not path:
             path = DEFAULT_PLACEHOLDER_PATH
+        _debug.logic("placeholder_stream", path=path)
         return Stream.from_path(path, filter_ext=(".png", ".jpg"))
 
     def _get_placeholder_bytes(self, path: str | bool = False) -> bytes:

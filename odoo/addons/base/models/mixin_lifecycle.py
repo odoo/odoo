@@ -21,7 +21,10 @@ class MixinLifecycle(models.AbstractModel):
     )
 
     def write(self, vals):
-        self._check_write_guards(vals)
+        with _debug.perf(
+            "write_guards", cr=self.env.cr, records=self, fields=len(vals)
+        ):
+            self._check_write_guards(vals)
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -38,6 +41,7 @@ class MixinLifecycle(models.AbstractModel):
             )
 
     def _run_check_registry(self, method_names, *args):
+        _debug.pipeline("check_registry", records=self, checks=",".join(method_names))
         for method_name in method_names:
             getattr(self, method_name)(*args)
 
@@ -153,6 +157,7 @@ class MixinLifecycle(models.AbstractModel):
 
     def action_cancel(self):
         self._check_cancel_allowed()
+        _debug.lifecycle("cancel_allowed", records=self)
         return self._action_cancel()
 
     def action_draft(self):
@@ -185,6 +190,7 @@ class MixinLifecycle(models.AbstractModel):
 
     def _check_write_locked_order(self, vals):
         if self.env.context.get("bypass_locked_check"):
+            _debug.logic("locked_check_skipped", records=self, reason="bypass_context")
             return
         locked = self.filtered("locked")
         if not locked:
@@ -192,6 +198,12 @@ class MixinLifecycle(models.AbstractModel):
         candidate = (
             set(vals) & locked._get_fields_user_editable()
         ) - self._LOCKED_WRITABLE_FIELDS
+        _debug.logic(
+            "locked_check",
+            locked=locked,
+            fields=len(vals),
+            candidates=len(candidate),
+        )
         if not candidate:
             return
         for record in locked:
@@ -243,6 +255,13 @@ class MixinLifecycle(models.AbstractModel):
             return
         changed = set(vals)
         target_state = vals.get("state")
+        _debug.logic(
+            "frozen_fields_check",
+            records=self,
+            states=len(frozen_map),
+            changed=len(changed),
+            target=target_state,
+        )
         for record in self:
             relevant_states = {record.state, target_state} - {None}
             frozen = (
@@ -275,6 +294,9 @@ class MixinLifecycle(models.AbstractModel):
         for record in self:
             if record.state == target:
                 continue
+            _debug.lifecycle(
+                "state_transition", record=record, src=record.state, dst=target
+            )
             if target not in self._STATE_TRANSITIONS.get(record.state, set()):
                 _debug.logic(
                     "write_refused",
@@ -302,6 +324,12 @@ class MixinLifecycle(models.AbstractModel):
                     ("model", "=", self._name),
                 ],
             )
+        )
+        _debug.perf.count(
+            "field_labels_fetched",
+            model=self._name,
+            requested=len(field_names),
+            found=len(fields_info),
         )
         return ", ".join(fields_info.mapped("field_description")) or ", ".join(
             sorted(field_names),

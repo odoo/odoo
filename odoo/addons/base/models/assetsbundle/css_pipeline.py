@@ -55,17 +55,20 @@ def _is_rtlcss_available() -> bool:
         _logger.warning(
             "rtlcss is required for RTL CSS support. Install with: npm install -g rtlcss"
         )
+        _debug.logic("rtlcss_unavailable", reason="not_found")
         return False
     except subprocess.TimeoutExpired:
         check.kill()
         check.communicate()
         _logger.warning("rtlcss --version probe timed out; disabling RTL support")
+        _debug.logic("rtlcss_unavailable", reason="timeout")
         return False
     if check.returncode:
         _logger.warning(
             "rtlcss --version exited with %s; disabling RTL support",
             check.returncode,
         )
+        _debug.logic("rtlcss_unavailable", reason="exit", returncode=check.returncode)
         return False
     _debug.logic("rtlcss_available", bin=_rtlcss_bin())
     return True
@@ -108,6 +111,7 @@ class CssPipeline:
         bundle.css_errors.clear()
         self._rendered_assets = []
         if not bundle.stylesheets:
+            _debug.logic("css_preprocess_skipped", bundle=self._log_name)
             return ""
 
         for asset in bundle.stylesheets:
@@ -146,7 +150,15 @@ class CssPipeline:
                 type(assets[0]).__name__,
                 len(assets),
             )
-            compiled = self.compile_css(assets[0].compile, source)
+            with _debug.perf(
+                "css_compile",
+                bundle=self._log_name,
+                dialect=type(assets[0]).__name__,
+                assets=len(assets),
+                lines=source.count("\n") + 1,
+            ) as span:
+                compiled = self.compile_css(assets[0].compile, source)
+                span.set(compiled=len(compiled))
 
         if bundle.rtl:
             plain_css_assets = [
@@ -155,6 +167,12 @@ class CssPipeline:
                 if not isinstance(asset, PreprocessedCSS)
             ]
             compiled += "\n".join(asset.get_source() for asset in plain_css_assets)
+            _debug.pipeline(
+                "css_rtl_conversion",
+                bundle=self._log_name,
+                plain=len(plain_css_assets),
+                chars=len(compiled),
+            )
             compiled = self.convert_css_to_rtl(compiled)
 
         compile_failed = bool(bundle.css_errors)
@@ -172,12 +190,22 @@ class CssPipeline:
         if at_rules:
             rendered.insert(0, StylesheetAsset(bundle, inline=at_rules))
         self._rendered_assets = rendered
+        _debug.pipeline(
+            "css_split",
+            bundle=self._log_name,
+            fragments=len(fragments) // 2,
+            at_rules=len(at_rules),
+            rendered=len(rendered),
+        )
 
         assets_by_id = {a.id: a for a in bundle.stylesheets}
         marker_iter = iter(fragments)
         for asset_id, content in zip(marker_iter, marker_iter, strict=True):
             asset = assets_by_id.get(asset_id)
             if asset is None:
+                _debug.logic(
+                    "css_split_out_of_sync", bundle=self._log_name, asset_id=asset_id
+                )
                 raise RuntimeError(
                     f"CSS asset {asset_id!r} not found in stylesheets — "
                     "compiled output is out of sync with the asset list"
@@ -185,12 +213,25 @@ class CssPipeline:
             asset._content = content
 
         if bundle.autoprefix:
-            for asset in bundle.stylesheets:
-                asset._content = self._autoprefix_css(asset.content)
+            with _debug.perf(
+                "css_autoprefix", bundle=self._log_name, assets=len(bundle.stylesheets)
+            ):
+                for asset in bundle.stylesheets:
+                    asset._content = self._autoprefix_css(asset.content)
 
-        bundle_css = "\n".join(asset.minify() for asset in self._rendered_assets)
+        with _debug.perf(
+            "css_minify", bundle=self._log_name, assets=len(self._rendered_assets)
+        ) as span:
+            bundle_css = "\n".join(asset.minify() for asset in self._rendered_assets)
+            span.set(bytes=len(bundle_css))
         for asset in bundle.stylesheets:
             bundle.css_errors.extend(asset.errors)
+        _debug.pipeline(
+            "css_preprocessed",
+            bundle=self._log_name,
+            bytes=len(bundle_css),
+            errors=len(bundle.css_errors),
+        )
         return bundle_css
 
     def sourcemap_bundle(
@@ -213,6 +254,13 @@ class CssPipeline:
                 )
                 content_bundle_list.append(content)
                 content_line_count += content.count("\n") + 1
+        _debug.pipeline(
+            "css_sourcemap_bundle",
+            bundle=self._log_name,
+            assets=len(self._rendered_assets),
+            parts=len(content_bundle_list),
+            lines=content_line_count,
+        )
         return (
             "\n".join(content_bundle_list)
             + f"\n/*# sourceMappingURL={sourcemap_url} */"
@@ -226,6 +274,9 @@ class CssPipeline:
             return ""
 
         remainder = _rewrite_css_outside_strings(self.rx_css_import, _hoist, css)
+        _debug.perf.count(
+            "css_imports_hoisted", bundle=self._log_name, imports=len(import_rules)
+        )
         return import_rules, remainder
 
     def compile_css(self, compiler: Callable[[str], str], source: str) -> str:
@@ -236,6 +287,7 @@ class CssPipeline:
             ref = matchobj.group("ref")
             line = f'@import "{ref}"{matchobj.group("tail")}'
             if line in seen_imports:
+                _debug.logic("scss_import_deduplicated", bundle=self._log_name, ref=ref)
                 return ""
             seen_imports.add(line)
             if "." in ref or ref.startswith((".", "/", "~")):
@@ -246,6 +298,7 @@ class CssPipeline:
                 )
                 _logger.warning(msg)
                 bundle.css_errors.append(msg)
+                _debug.logic("scss_import_forbidden", bundle=self._log_name, ref=ref)
                 return ""
             return line
 
@@ -256,12 +309,18 @@ class CssPipeline:
             _SCSS_STATEMENT_SPANS,
         )
 
+        _debug.perf.count(
+            "scss_imports_sanitized", bundle=self._log_name, imports=len(seen_imports)
+        )
         try:
             return self._compile_memoized(compiler, source)
         except (CompileError, SassCompileError) as e:
             error = self._format_compiler_error(str(e), source)
             _logger.warning(error)
             bundle.css_errors.append(error)
+            _debug.logic(
+                "scss_compile_failed", bundle=self._log_name, error=type(e).__name__
+            )
             return ""
 
     _compiled_cache: OrderedDict[tuple, str] = OrderedDict()
@@ -273,6 +332,7 @@ class CssPipeline:
         cls, key: tuple, source: str, transform: Callable[[str], str]
     ) -> str:
         if config["dev_mode"]:
+            _debug.logic("css_cache", stage=key[0], hit=False, reason="dev_mode")
             return transform(source)
         cache = cls._compiled_cache
         key = (*key, hashlib.sha256(source.encode()).hexdigest())
@@ -288,8 +348,13 @@ class CssPipeline:
         with cls._compiled_cache_lock:
             cache[key] = result
             cache.move_to_end(key)
+            evicted = 0  # debuglog
             while len(cache) > cls._COMPILED_CACHE_SIZE:
                 cache.popitem(last=False)
+                evicted += 1  # debuglog
+        _debug.lifecycle(
+            "css_cache_stored", stage=key[0], size=len(cache), evicted=evicted
+        )
         return result
 
     @classmethod
@@ -329,6 +394,7 @@ class CssPipeline:
         def _transform(src: str) -> str:
             out = _run_cli_pipe(cmd, src, self._RTLCSS_TIMEOUT_S).strip()
             if src.strip() and not out:
+                _debug.logic("rtl_empty_output", bundle=self._log_name, chars=len(src))
                 raise CompileError("rtlcss: error processing payload\n")
             return out
 
@@ -358,12 +424,19 @@ class CssPipeline:
         """
         lines = source.split("\n")
         if not 1 <= line_no <= len(lines):
+            _debug.logic("css_error_line_out_of_range", line=line_no, lines=len(lines))
             return ""
         assets_by_id = {asset.id: asset for asset in self._bundle.stylesheets}
         for index in range(line_no - 1, -1, -1):
             if match := self.rx_css_split.search(lines[index]):  # noqa: E8507  a regex, not the ORM
                 asset = assets_by_id.get(match.group(1))
                 url = (asset.url or "<inline sass>") if asset else "<unknown asset>"
+                _debug.logic(
+                    "css_error_located",
+                    url=url,
+                    line=line_no - index - 1,
+                    known=asset is not None,
+                )
                 return (
                     f"\nThe failing line is {url} line {line_no - index - 1}:"
                     f"\n    {lines[line_no - 1].strip()}\n"
@@ -380,6 +453,11 @@ class CssPipeline:
             or self._RX_ERROR_GUTTER.search(stderr)
         ):
             error += self._locate_source_line(source, int(match.group("line")))
+        _debug.logic(
+            "css_compiler_error_formatted",
+            bundle=self._log_name,
+            located=bool(source and match),
+        )
         error += f"This error occurred while compiling the bundle {bundle.name!r} containing:"
         for asset in bundle.stylesheets:
             if isinstance(asset, PreprocessedCSS):
@@ -404,7 +482,13 @@ class CssPipeline:
             len(previous_css),
         )
         carried_over = previous_css.split(cls._CSS_ERROR_HEADER, maxsplit=1)[0]
+        _debug.logic(
+            "css_error_banner_rendered",
+            errors=len(css_errors),
+            carried=len(carried_over),
+        )
         banner = f"""
+
 body::before {{
   font-weight: bold;
   content: "A css error occurred, using an old style to render this page";

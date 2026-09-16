@@ -87,6 +87,7 @@ def _is_reachable_without_symlink(
     parent = directory.rpartition(os.sep)[0]
     if not parent or not directory.startswith(root + os.sep):
         memo[root, directory] = False
+        _debug.logic("directory_outside_root", directory=directory, root=root)
         return False
     result = not _is_symlink(directory) and _is_reachable_without_symlink(
         parent, root, memo
@@ -103,12 +104,16 @@ def _get_static_files(
     result: set[tuple[str, float]] = set()
     if symlink_memo is None:
         symlink_memo = {}
+    skipped_ext = 0  # debuglog
+    skipped_stat = 0  # debuglog
     for file in glob(pattern, recursive=True):
         if file.rsplit(".", 1)[-1] not in ASSET_EXTENSIONS:
+            skipped_ext += 1  # debuglog
             continue
         try:
             status = os.lstat(file)
         except OSError:
+            skipped_stat += 1  # debuglog
             continue
         directory = file.rpartition(os.sep)[0]
         if S_ISLNK(status.st_mode) or not _is_reachable_without_symlink(
@@ -123,14 +128,23 @@ def _get_static_files(
                     file,
                     real,
                 )
+                _debug.logic("symlink_escapes_static", file=file, real=real)
                 continue
             try:
                 status = os.lstat(real)
             except OSError:
+                skipped_stat += 1  # debuglog
                 continue
+            _debug.logic("symlink_followed", file=file, real=real)
             file = real
         result.add((file, status.st_mtime))
-    _debug.perf.count("static_files_globbed", pattern=pattern, files=len(result))
+    _debug.perf.count(
+        "static_files_globbed",
+        pattern=pattern,
+        files=len(result),
+        skipped_ext=skipped_ext,
+        skipped_stat=skipped_stat,
+    )
     return sorted(result)
 
 
@@ -164,9 +178,11 @@ class AssetPaths:
                 for index, asset in enumerate(self.list):
                     if asset.path == path:
                         return index
+                _debug.logic("asset_state_inconsistent", bundle=bundle, path=path)
                 raise RuntimeError(
                     f"Inconsistent asset state: {path!r} in memo but not in list"
                 )
+        _debug.logic("target_not_found", bundle=bundle, candidates=len(paths))
         raise self._prepare_not_found_error(
             paths[0] if len(paths) == 1 else list(paths), bundle
         )
@@ -183,11 +199,20 @@ class AssetPaths:
                 to_insert.append(AssetEntry(path, full_path, bundle, last_modified))
                 self.memo.add(path)
         if not to_insert:
+            _debug.logic("insert_paths_all_present", bundle=bundle, paths=len(paths))
             return
         self.list[index:index] = to_insert
         for anchor in self.anchors:
             if anchor.index > index:
                 anchor.index += len(to_insert)
+        _debug.pipeline(
+            "paths_inserted",
+            bundle=bundle,
+            index=index,
+            inserted=len(to_insert),
+            duplicates=len(paths) - len(to_insert),
+            total=len(self.list),
+        )
 
     def remove_paths(
         self, paths_to_remove: Sequence[ResolvedPath], bundle: str, strict: bool = True
@@ -196,6 +221,9 @@ class AssetPaths:
         present = {path for path in requested if path in self.memo}
         if not present:
             if requested and strict:
+                _debug.logic(
+                    "remove_paths_missing", bundle=bundle, requested=len(requested)
+                )
                 raise self._prepare_not_found_error(requested, bundle)
             return
 
@@ -220,6 +248,14 @@ class AssetPaths:
         self.memo.difference_update(present)
         for anchor in self.anchors:
             anchor.index -= sum(1 for index in dropped_indexes if index < anchor.index)
+        _debug.pipeline(
+            "paths_removed",
+            bundle=bundle,
+            removed=len(dropped_indexes),
+            absent=len(absent),
+            strict=strict,
+            total=len(self.list),
+        )
 
     def _prepare_not_found_error(
         self, path: str | list[str], bundle: str
@@ -262,6 +298,7 @@ class BundleWalk:
                 "Bundle %r already walked in this traversal; skipping re-include.",
                 bundle,
             )
+            _debug.logic("bundle_already_walked", bundle=bundle, depth=len(seen))
             return
         self.walked.add(bundle)
 
@@ -281,6 +318,12 @@ class BundleWalk:
         except AssetDirectiveError:
             raise
         except ValueError as exc:
+            _debug.logic(
+                "directive_failed",
+                bundle=frame.bundle,
+                directive=entry.directive,
+                error=type(exc).__name__,
+            )
             raise AssetDirectiveError(
                 f"{exc} — raised by {entry.origin}, declared for bundle "
                 f"{frame.bundle!r}"
@@ -290,6 +333,7 @@ class BundleWalk:
         directive, target, path_def = entry.directive, entry.target, entry.path
         bundle = frame.bundle
         if directive == INCLUDE_DIRECTIVE:
+            _debug.pipeline("bundle_included", bundle=bundle, included=path_def)
             self.walk(path_def, (*frame.seen, bundle))
             return
 
@@ -345,6 +389,7 @@ class BundleWalk:
             )
         else:
             msg = f"Unexpected directive: {directive!r}"
+            _debug.logic("directive_unknown", bundle=bundle, directive=directive)
             raise ValueError(msg)
 
     def _get_target_paths(
@@ -445,6 +490,8 @@ class BundleWalk:
                 bundle,
                 targets,
             )
+            _debug.logic("replace_without_source", bundle=bundle, targets=len(targets))
+
         surviving = {entry[0] for entry in paths if entry[0] in target_set}
         sources = [entry for entry in paths if entry[0] not in target_set]
         present = [entry for entry in sources if entry[0] in asset_paths.memo]

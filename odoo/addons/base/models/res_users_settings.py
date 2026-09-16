@@ -77,6 +77,11 @@ class ResUsersSettings(models.Model):
                 continue
             field = self._fields.get(setting)
             if not field or (field.compute and not field.inverse):
+                _debug.logic(
+                    "setting_ignored",
+                    setting=setting,
+                    reason="unknown" if not field else "computed",
+                )
                 continue
             if self._is_setting_changed(setting, new_value):
                 changed_settings[setting] = new_value
@@ -98,6 +103,13 @@ class ResUsersSettings(models.Model):
             case "one2many" | "many2many":
                 current_ids = set(current_value.ids)
                 target_ids = self._get_x2many_command_target_ids(current_ids, new_value)
+                _debug.logic(
+                    "x2many_setting_compared",
+                    setting=fname,
+                    resolvable=target_ids is not None,
+                    current=len(current_ids),
+                    target=len(target_ids) if target_ids is not None else None,
+                )
                 return target_ids is None or target_ids != current_ids
             case _:
                 return new_value != current_value

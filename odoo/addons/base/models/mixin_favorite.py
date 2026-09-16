@@ -11,6 +11,11 @@ class MixinFavorite(models.AbstractModel):
     is_favorite = fields.Boolean(string="Favorite")
 
     def action_toggle_favorite(self) -> None:
-        _debug.lifecycle("favorite_toggled", model=self._name, count=len(self))
+        _debug.lifecycle(
+            "favorite_toggled",
+            model=self._name,
+            count=len(self),
+            favorited=len(self.filtered("is_favorite")),
+        )
         for record in self:
             record.is_favorite = not record.is_favorite

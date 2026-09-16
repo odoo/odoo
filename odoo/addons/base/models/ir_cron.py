@@ -289,11 +289,15 @@ class IrCron(models.Model):
         cron_cr = self.env.cr
         job = self._acquire_job(cron_cr, self.id, include_not_ready=True)
         if not job:
+            _debug.logic("direct_trigger_refused", job=self.id, reason="executing")
             raise UserError(self.env._("Job '%s' already executing", self.name))
 
         _debug.lifecycle("direct_trigger", job=job.id, name=job.cron_name)
         self._run_job(cron_cr, job)
         if exception := job.run_exception:
+            _debug.logic(
+                "direct_trigger_failed", job=job.id, error=type(exception).__name__
+            )
             e = RuntimeError()
             e.__cause__ = exception
             error = {
@@ -320,6 +324,7 @@ class IrCron(models.Model):
                     cls._check_modules_state(cron_cr, jobs)
                     _debug.pipeline("cron_pass", db=db_name, ready=len(jobs))
                     if not jobs:
+                        _debug.logic("cron_pass_idle", db=db_name)
                         return
                     cls._run_jobs_until_deadline(
                         cron_cr,
@@ -332,17 +337,21 @@ class IrCron(models.Model):
                     db_name,
                     BASE_VERSION,
                 )
+                _debug.logic("cron_pass_skipped", db=db_name, reason="bad_version")
             except BadModuleStateError:
                 _logger.warning(
                     "Skipping database %s because of modules to install/upgrade/remove.",
                     db_name,
                 )
+                _debug.logic("cron_pass_skipped", db=db_name, reason="modules_changing")
             except psycopg.errors.UndefinedTable:
                 _logger.warning(
                     "Tried to poll an undefined table on database %s.", db_name
                 )
+                _debug.logic("cron_pass_skipped", db=db_name, reason="no_table")
             except db.PoolError:
                 _logger.info("Skipping database %s: could not connect.", db_name)
+                _debug.logic("cron_pass_skipped", db=db_name, reason="pool_error")
             except psycopg.ProgrammingError:
                 raise
             except Exception:
@@ -379,6 +388,9 @@ class IrCron(models.Model):
                 return True
             registry = registry.check_signaling()
             IrCronModel = registry[IrCron._name]
+            _debug.pipeline(
+                "cron_pass_job", db=db_name, job=job_id, index=index, of=len(job_ids)
+            )
             try:
                 job = IrCronModel._acquire_job(cron_cr, job_id)
             except PG_CONCURRENCY_ERRORS:
@@ -400,11 +412,14 @@ class IrCron(models.Model):
                 with _debug.perf("job_run", cr=cron_cr, job=job_id, name=job.cron_name):
                     IrCronModel._run_job(cron_cr, job, deadline=deadline)
                 cron_cr.commit()
-            except Exception:
+            except Exception as exc:
                 cron_cr.rollback()
                 _logger.exception("job %s failed to process, skip", job_id)
+                _debug.logic("job_process_failed", job=job_id, error=type(exc).__name__)
                 continue
             _logger.debug("job %s updated and released", job_id)
+            _debug.lifecycle("job_released", job=job_id)
+        _debug.pipeline("cron_pass_done", db=db_name, jobs=len(job_ids))
         return False
 
     @staticmethod
@@ -416,8 +431,12 @@ class IrCron(models.Model):
         """)
         row = cron_cr.fetchone()
         if row is None or row[0] is None:
+            _debug.logic("version_check", db=cron_cr.dbname, reason="no_base_row")
             raise BadModuleStateError
         if row[0] != BASE_VERSION:
+            _debug.logic(
+                "version_check", db=cron_cr.dbname, reason="mismatch", found=row[0]
+            )
             raise BadVersionError
 
     @staticmethod
@@ -434,11 +453,15 @@ class IrCron(models.Model):
             return
 
         if not jobs:
+            _debug.logic("modules_changing", db=cr.dbname, decision="skip_no_jobs")
             raise BadModuleStateError
 
         oldest = min(max(job.nextcall, job.write_date or job.nextcall) for job in jobs)
         if cr.now() - oldest < MAX_FAIL_TIME:
+            _debug.logic("modules_changing", db=cr.dbname, decision="skip_recent")
             raise BadModuleStateError
+
+        _debug.logic("modules_changing", db=cr.dbname, decision="reset_states")
 
         _logger.warning(
             "Database %s has been mid-install/upgrade for over %s with cron work"
@@ -478,7 +501,9 @@ class IrCron(models.Model):
                 IrCron._get_sql_condition_ready(cr),
             )
         )
-        return list(starmap(ReadyJob, cr.fetchall()))
+        ready = list(starmap(ReadyJob, cr.fetchall()))
+        _debug.perf.count("jobs_ready_read", db=cr.dbname, count=len(ready))
+        return ready
 
     @staticmethod
     def _acquire_job(
@@ -492,6 +517,7 @@ class IrCron(models.Model):
             )
         )
         if not cr.fetchone()[0]:
+            _debug.logic("job_lock_held", job=job_id)
             return None
         where_clause = SQL("id = %s", job_id)
         if not include_not_ready:
@@ -553,6 +579,12 @@ class IrCron(models.Model):
 
         ir_cron._remove_triggers_due(job)
         failed_by_timeout = job.timed_out_counter >= CONSECUTIVE_TIMEOUT_FOR_FAILURE
+        _debug.logic(
+            "job_run_decision",
+            job=job.id,
+            timed_out_counter=job.timed_out_counter,
+            failed_by_timeout=failed_by_timeout,
+        )
 
         if not failed_by_timeout:
             cls._run_job_within_budget(job, deadline=deadline)
@@ -583,6 +615,7 @@ class IrCron(models.Model):
         if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
             vals |= ir_cron._prepare_reschedule_vals(job)
         elif status == CompletionStatus.PARTIALLY_DONE:
+            _debug.pipeline("job_rescheduled_asap", job=job.id)
             ir_cron._reschedule_job_asap(job)
             if NOTIFY_CRON_CHANGES:
                 cls._notify_after_commit(cr)
@@ -628,12 +661,17 @@ class IrCron(models.Model):
         if status is not None:
             return False
         if hard_deadline is not None and loop_count and now >= hard_deadline:
+            _debug.logic("job_loop_stopped", reason="hard_deadline", loops=loop_count)
             return False
-        return loop_count < MIN_RUNS_PER_JOB or now < end_time
+        keep = loop_count < MIN_RUNS_PER_JOB or now < end_time
+        if _debug.logic.enabled and not keep:
+            _debug.logic("job_loop_stopped", reason="end_time", loops=loop_count)
+        return keep
 
     @staticmethod
     def _get_deadline_run(start_time: float) -> float | None:
         budget = get_cron_real_time_budget()
+        _debug.logic("run_budget", seconds=budget, ratio=RUN_BUDGET_RATIO)
         return start_time + budget * RUN_BUDGET_RATIO if budget else None
 
     @staticmethod
@@ -660,6 +698,15 @@ class IrCron(models.Model):
         status = cls._resolve_completion_status(
             success=success, done=done, remaining=remaining
         )
+        _debug.logic(
+            "attempt_resolved",
+            job=job.id,
+            loop=loop_count,
+            success=success,
+            done=done,
+            remaining=remaining,
+            status=str(status) if status else None,
+        )
         if success:
             progress_watermark.record_success()
         elif status is None and progress_watermark.record_failure(remaining):
@@ -674,9 +721,11 @@ class IrCron(models.Model):
                 remaining,
             )
         if status is CompletionStatus.FULLY_DONE and deactivate:
+            _debug.lifecycle("job_deactivation_requested", job=job.id)
             job.deactivate = True
         elif status is CompletionStatus.PARTIALLY_DONE and not loop_count:
             _logger.warning("Job %r (%s) processed no record", job.cron_name, job.id)
+            _debug.logic("job_no_record_processed", job=job.id)
         return status
 
     @staticmethod
@@ -689,6 +738,11 @@ class IrCron(models.Model):
         end_time = start_time + MIN_TIME_PER_JOB
         if hard_deadline is not None:
             end_time = min(end_time, hard_deadline)
+        _debug.logic(
+            "job_budget",
+            soft=end_time - start_time,
+            hard=hard_deadline - start_time if hard_deadline is not None else None,
+        )
         return end_time, hard_deadline
 
     @staticmethod
@@ -700,6 +754,7 @@ class IrCron(models.Model):
             job.cron_name,
             env.user.login,
         )
+        _debug.logic("job_user_archived", job=job.id, uid=job.user_id)
         return True
 
     @classmethod
@@ -743,6 +798,15 @@ class IrCron(models.Model):
                 time.monotonic() - start_time,
             )
 
+            _debug.perf.count(
+                "job_run_summary",
+                job=job.id,
+                status=str(status),
+                loops=loop_count,
+                done=done_total,
+                remaining=remaining,
+                seconds=time.monotonic() - start_time,
+            )
             cls._apply_job_completion(job_cr, cron, job, status)
 
         return status
@@ -772,6 +836,12 @@ class IrCron(models.Model):
         ):
             if progress is None:
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
+                _debug.lifecycle(
+                    "progress_opened",
+                    job=job.id,
+                    progress=progress.id,
+                    timed_out_counter=timed_out_counter,
+                )
                 job_cr.commit()
             done_before = progress.done
 
@@ -789,6 +859,12 @@ class IrCron(models.Model):
                     job.id,
                     job.ir_actions_server_id,
                 )
+                _debug.logic(
+                    "server_action_failed",
+                    job=job.id,
+                    loop=loop_count,
+                    error=type(exc).__name__,
+                )
                 if job.run_exception is None:
                     job.run_exception = exc
             finally:
@@ -804,6 +880,7 @@ class IrCron(models.Model):
                 )
                 loop_count += 1
                 if progress.timed_out_counter:
+                    _debug.lifecycle("timed_out_counter_reset", job=job.id)
                     progress.timed_out_counter = 0
                 job_cr.commit()
 
@@ -864,6 +941,13 @@ class IrCron(models.Model):
             job.active,
         ):
             return {}
+        _debug.lifecycle(
+            "failure_vals",
+            job=job.id,
+            status=str(status),
+            failure_count=failure_count,
+            active=active,
+        )
         return {
             "failure_count": failure_count,
             "first_failure_date": first_failure_date,
@@ -881,6 +965,7 @@ class IrCron(models.Model):
         """,
             [job.id, now],
         )
+        _debug.lifecycle("triggers_due_removed", job=job.id, count=self.env.cr.rowcount)
 
     @staticmethod
     def _get_next_call(
@@ -895,12 +980,17 @@ class IrCron(models.Model):
     @api.model
     def _prepare_reschedule_vals(self, job: CronJob) -> dict[str, Any]:
         now = self._get_now()
-        return {
-            "nextcall": self._get_next_call(
-                self, job.nextcall, now, job.repeat_unit, job.repeat_interval
-            ),
-            "lastcall": now,
-        }
+        nextcall = self._get_next_call(
+            self, job.nextcall, now, job.repeat_unit, job.repeat_interval
+        )
+        _debug.logic(
+            "job_rescheduled",
+            job=job.id,
+            nextcall=nextcall,
+            unit=job.repeat_unit,
+            interval=job.repeat_interval,
+        )
+        return {"nextcall": nextcall, "lastcall": now}
 
     @api.model
     def _write_job_row(self, job: CronJob, vals: dict[str, Any]) -> None:
@@ -914,6 +1004,9 @@ class IrCron(models.Model):
             SQL("UPDATE ir_cron SET %s WHERE id = %s", assignments, job.id)
         )
         waited = time.monotonic() - started
+        _debug.perf.count(
+            "job_row_written", job=job.id, fields=list(vals), seconds=waited
+        )
         if waited > SLOW_COMPLETION_WRITE:
             _logger.warning(
                 "cron %s: the completion row took %.1fs to write. A single-row "
@@ -939,6 +1032,7 @@ class IrCron(models.Model):
         self.check_singleton()
         try:
             if self.pool is not self.pool.check_signaling(self.env.cr):
+                _debug.lifecycle("registry_reloaded", cron=cron_name)
                 self.env.transaction.reset()
 
             _logger.debug(
@@ -952,7 +1046,13 @@ class IrCron(models.Model):
             self.env.flush_all()
             self.pool.signal_changes()
             self.env.cr.commit()
-        except Exception:
+        except Exception as exc:
+            _debug.logic(
+                "server_action_rolled_back",
+                cron=cron_name,
+                action=server_action_id,
+                error=type(exc).__name__,
+            )
             self.pool.reset_changes()
             self.env.cr.rollback()
             raise
@@ -970,6 +1070,7 @@ class IrCron(models.Model):
         try:
             self.lock_for_update(allow_referencing=allow_referencing)
         except LockError:
+            _debug.logic("lock_refused", records=self, reason="row_locked")
             self._raise_currently_executing()
         for record in self:
             self.env.cr.execute(
@@ -980,10 +1081,12 @@ class IrCron(models.Model):
                 )
             )
             if not self.env.cr.fetchone()[0]:
+                _debug.logic("lock_refused", job=record.id, reason="advisory_held")
                 record._raise_currently_executing()
 
     def write(self, vals: dict[str, Any]) -> bool:
         self._lock_for_update_or_raise(allow_referencing=True)
+        _debug.lifecycle("write", count=len(self), fields=list(vals))
         if ("nextcall" in vals or vals.get("active")) and NOTIFY_CRON_CHANGES:
             self._notify_after_commit(self.env.cr)
         return super().write(vals)
@@ -991,16 +1094,20 @@ class IrCron(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_running(self) -> None:
         self._lock_for_update_or_raise()
+        _debug.lifecycle("unlink", count=len(self))
 
     @api.model
     def toggle(self, model: str, domain: list[Any]) -> bool:
         if self.env["ir.config_parameter"].sudo().get_param("database.is_neutralized"):
+            _debug.logic("toggle_skipped", reason="neutralized")
             return True
 
         active = bool(self.env[model].search_count(domain, limit=1))
+        _debug.logic("toggle", job=self.id, model=model, active=active)
         try:
             return self.write({"active": active})
         except UserError:
+            _debug.logic("toggle_skipped", job=self.id, reason="executing")
             return True
 
     def _trigger(
@@ -1017,6 +1124,7 @@ class IrCron(models.Model):
                 raise TypeError("all items in 'at' must be datetime objects")
 
         if coalesce:
+            _debug.logic("trigger_coalesced", job=self.id, minutes=coalesce)
             factor = coalesce * 60
             at_list = [
                 datetime.fromtimestamp(
@@ -1033,6 +1141,7 @@ class IrCron(models.Model):
         now = self._get_now()
 
         if not self.sudo().active:
+            _debug.logic("triggers_filtered_inactive", job=self.id)
             at_list = [at for at in at_list if at > now]
 
         _debug.lifecycle("triggers_added", job=self.id, count=len(at_list))
@@ -1051,6 +1160,7 @@ class IrCron(models.Model):
             )
 
         if min(at_list) <= now or NOTIFY_CRON_CHANGES:
+            _debug.pipeline("trigger_notify_scheduled", job=self.id)
             self._notify_after_commit(self.env.cr)
         return triggers
 
@@ -1096,13 +1206,17 @@ class IrCron(models.Model):
             self.env["ir.cron.progress"].sudo().browse(ctx.get("ir_cron_progress_id"))
         )
         if not progress:
+            _debug.logic("progress_commit_unscoped", cron=ctx.get("cron_id"))
             self.env.cr.commit()
             return float("inf")
         if processed < 0:
+            _debug.logic("progress_rejected", reason="negative_processed")
             raise ValueError("processed must be non-negative")
         if remaining is not None and remaining < 0:
+            _debug.logic("progress_rejected", reason="negative_remaining")
             raise ValueError("remaining must be non-negative")
         if progress.cron_id.id != ctx.get("cron_id"):
+            _debug.logic("progress_rejected", reason="wrong_cron")
             raise ValueError("Progress on the wrong cron_id")
         if remaining is None:
             remaining = max(progress.remaining - processed, 0)
@@ -1194,7 +1308,9 @@ class IrCronProgress(models.Model):
             " WHERE cron_id = ANY(%s) GROUP BY cron_id",
             [records.cron_id.ids],
         )
-        records -= self.browse(row[0] for row in self.env.cr.fetchall())
+        kept = self.browse(row[0] for row in self.env.cr.fetchall())
+        _debug.logic("gc_progress_latest_kept", kept=len(kept))
+        records -= kept
         records.unlink()
         _debug.lifecycle("gc_progress", count=len(records), full_batch=full_batch)
         return len(records), full_batch

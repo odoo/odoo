@@ -1092,11 +1092,6 @@ class TestBrowserIsStoppedBeforeTheLockIsTakenBack(BaseCase):
         stops = [
             i for i, line in enumerate(lines) if "atexit.callback(browser.stop)" in line
         ]
-        allow = next(
-            i
-            for i, line in enumerate(lines)
-            if "self.allow_requests(browser=browser)" in line
-        )
         drain = next(
             i
             for i, line in enumerate(lines)
@@ -1104,19 +1099,12 @@ class TestBrowserIsStoppedBeforeTheLockIsTakenBack(BaseCase):
         )
         self.assertEqual(
             len(stops),
-            2,
-            "browser.stop is registered twice on purpose: once before "
-            "allow_requests as the safety net, once after the drain so it "
-            "actually runs first",
-        )
-        self.assertLess(
-            stops[0],
-            allow,
-            "the safety-net registration must precede allow_requests, or a "
-            "failure entering it leaks the chrome process",
+            1,
+            "browser.stop is registered once, after the drain, so it runs "
+            "first; a second registration would stop the browser twice",
         )
         self.assertGreater(
-            stops[-1],
+            stops[0],
             drain,
             "an ExitStack unwinds last-registered-first, so stopping the "
             "browser must be registered AFTER the drain to run BEFORE it -- "

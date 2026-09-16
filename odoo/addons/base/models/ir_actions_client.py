@@ -63,12 +63,14 @@ class IrActionsClient(models.Model):
         for record, record_bin in zip(self, self_bin, strict=True):
             stored = record_bin.params_store
             if not stored:
+                _debug.logic("params_empty", action=record.id)
                 record.params = stored
                 continue
             if isinstance(stored, bytes):
                 stored = stored.decode()
             try:
                 record.params = safe_eval(stored, {"uid": self.env.uid})
+                _debug.logic("params_evaluated", action=record.id, bytes=len(stored))
             except Exception as exc:
                 _debug.logic(
                     "params_unparsable", action=record.id, error=type(exc).__name__
@@ -104,7 +106,8 @@ class IrActionsClient(models.Model):
             source = source.decode()
         try:
             return safe_eval(source, {"uid": self.env.uid})
-        except Exception:
+        except Exception as exc:
+            _debug.logic("params_kept_as_source", error=type(exc).__name__)
             return source
 
     def _get_field_target_model(self) -> str:

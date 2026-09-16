@@ -132,4 +132,8 @@ class ResPartnerIdentifierType(models.Model):
 
     @api.model
     def _get_type_by_code(self, code):
-        return self.search([("code", "=", code)], limit=1)
+        identifier_type = self.search([("code", "=", code)], limit=1)
+        _debug.perf.count(
+            "identifier_type_by_code", code=code, found=bool(identifier_type)
+        )
+        return identifier_type

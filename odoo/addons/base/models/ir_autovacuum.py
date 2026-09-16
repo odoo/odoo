@@ -27,6 +27,11 @@ class IrAutovacuum(models.AbstractModel):
 
     def _run_vacuum_cleaner(self) -> None:
         if not self.env.is_admin() or not self.env.context.get("cron_id"):
+            _debug.logic(
+                "vacuum_refused",
+                admin=self.env.is_admin(),
+                cron=self.env.context.get("cron_id"),
+            )
             raise AccessDenied
 
         all_methods = [
@@ -51,6 +56,7 @@ class IrAutovacuum(models.AbstractModel):
                     (model._name, attr, remaining)
                     for model, attr, _f, remaining in queue
                 )
+                _debug.logic("vacuum_stopped", reason="hard_deadline", left=len(queue))
                 break
             model, attr, func, _remaining = queue.pop()
             _logger.debug("Calling %s.%s()", model, attr)
@@ -65,8 +71,14 @@ class IrAutovacuum(models.AbstractModel):
                 self.env["ir.cron"]._commit_progress()
                 if remaining := self._get_remaining_work(model, attr, result):
                     if time.monotonic() - vacuum_start >= MAX_VACUUM_RUNTIME:
+                        _debug.logic(
+                            "vacuum_method_deferred", model=model._name, method=attr
+                        )
                         deferred.append((model._name, attr, remaining))
                     else:
+                        _debug.logic(
+                            "vacuum_method_requeued", model=model._name, method=attr
+                        )
                         queue.appendleft((model, attr, func, remaining))
                 _logger.debug(
                     "%s.%s  took %.2fs",
@@ -74,8 +86,14 @@ class IrAutovacuum(models.AbstractModel):
                     attr,
                     time.monotonic() - start_time,
                 )
-            except Exception:
+            except Exception as exc:
                 _logger.exception("Failed %s.%s()", model, attr)
+                _debug.logic(
+                    "vacuum_method_failed",
+                    model=model._name,
+                    method=attr,
+                    error=type(exc).__name__,
+                )
                 self.env.cr.rollback()
                 self.env.invalidate_all()
         _debug.pipeline("vacuum_end", calls=calls, deferred=len(deferred))
@@ -95,6 +113,12 @@ class IrAutovacuum(models.AbstractModel):
         if result is None:
             return None
         if not (isinstance(result, tuple) and len(result) == 2):
+            _debug.logic(
+                "vacuum_result_ignored",
+                model=model._name,
+                method=attr,
+                type=type(result).__name__,
+            )
             _logger.warning(
                 "%s.%s returned %r; an autovacuum reports (done, remaining) "
                 "or None, so this result is ignored",
@@ -123,4 +147,7 @@ class IrAutovacuum(models.AbstractModel):
                     SQL.identifier(table),
                     SQL.identifier(table),
                 )
+            )
+            _debug.lifecycle(
+                "gc_orm_signaling", table=table, deleted=self.env.cr.rowcount
             )

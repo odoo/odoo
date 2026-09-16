@@ -33,9 +33,11 @@ class IrEgress(models.AbstractModel):
             or ""
         )
         networks = configured.replace(",", " ").split()
+        _debug.logic("egress_policy", policy=policy, extra_networks=len(networks))
         try:
             return base.with_networks(*networks)
         except ValueError:
+            _debug.logic("egress_networks_ignored", policy=policy, reason="malformed")
             _logger.error(
                 "Ignoring the system parameter %s: %r is not a list of networks, "
                 "so no extra network is allowed",
@@ -49,7 +51,9 @@ class IrEgress(models.AbstractModel):
     def check_url(
         self, url: str, *, policy: PolicyName = "public"
     ) -> netguard.Destination:
-        return netguard.check_url(url, policy=self._get_policy(policy))
+        destination = netguard.check_url(url, policy=self._get_policy(policy))
+        _debug.logic("egress_url_allowed", policy=policy, host=urlsplit(url).hostname)
+        return destination
 
     @api.private
     @api.model
@@ -75,6 +79,13 @@ class IrEgress(models.AbstractModel):
             **adapter_options,
         )
         self._prepare_session(session, purpose=purpose, policy=policy)
+        _debug.lifecycle(
+            "egress_session",
+            purpose=purpose,
+            policy=policy,
+            max_bytes=max_bytes,
+            max_redirects=max_redirects,
+        )
         return session
 
     @api.model
@@ -82,13 +93,14 @@ class IrEgress(models.AbstractModel):
         self, session: requests.Session, *, purpose: str, policy: PolicyName
     ) -> None:
         def trace(response: requests.Response, *args: Any, **kwargs: Any) -> None:
-            _debug.pipeline(
-                "egress_response",
-                purpose=purpose,
-                policy=policy,
-                host=urlsplit(response.url).hostname,
-                status=response.status_code,
-            )
+            if _debug.pipeline.enabled:
+                _debug.pipeline(
+                    "egress_response",
+                    purpose=purpose,
+                    policy=policy,
+                    host=urlsplit(response.url).hostname,
+                    status=response.status_code,
+                )
 
         session.hooks["response"].append(trace)
 
@@ -114,6 +126,10 @@ class IrEgress(models.AbstractModel):
             max_redirects=max_redirects,
         )
         if kwargs.get("stream"):
+            _debug.pipeline(
+                "egress_request", purpose=purpose, method=method, streamed=True
+            )
             return session.request(method, url, **kwargs)
-        with session:
-            return session.request(method, url, **kwargs)
+        with _debug.perf("egress_request", purpose=purpose, method=method):
+            with session:
+                return session.request(method, url, **kwargs)

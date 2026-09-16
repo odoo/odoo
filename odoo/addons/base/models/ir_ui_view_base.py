@@ -129,6 +129,12 @@ class Base(models.AbstractModel):
             main_group.append(right_group)
         sheet.append(main_group)
         sheet.append(E.group(E.separator()))
+        _debug.logic(
+            "default_form_view",
+            model=self._name,
+            fields=sum(1 for _ in sheet.iter("field")),
+            groups=len(sheet),
+        )
         return E.form(sheet)
 
     @api.model
@@ -261,11 +267,24 @@ class Base(models.AbstractModel):
                 )
             }
 
+        _debug.perf.count(
+            "get_views.models",
+            model=self._name,
+            models=len(view_models),
+            fields=sum(len(names) for names in view_models.values()),
+        )
+
         if options.get("toolbar"):
             for view in result["views"].values():
                 view["toolbar"] = {}
 
             bindings = self.env["ir.actions.actions"].get_bindings(self._name)
+            _debug.pipeline(
+                "get_views.toolbar",
+                model=self._name,
+                reports=len(bindings.get("report", [])),
+                actions=len(bindings.get("action", [])),
+            )
             for action_type, key in (("report", "print"), ("action", "action")):
                 for action in bindings.get(action_type, []):
                     view_types = (
@@ -285,6 +304,12 @@ class Base(models.AbstractModel):
                 options.get("action_id"),
                 options.get("embedded_action_id"),
                 options.get("embedded_parent_res_id"),
+            )
+            _debug.pipeline(
+                "get_views.filters",
+                model=self._name,
+                action=options.get("action_id"),
+                filters=len(result["views"]["search"]["filters"]),
             )
 
         if not with_arch:
@@ -312,7 +337,20 @@ class Base(models.AbstractModel):
                     ]._xmlid_to_res_model_res_id(view_ref, raise_if_not_found=False)
                     if ref_model == "ir.ui.view":
                         view_id = ref_res_id
+                        _debug.logic(
+                            "view_ref_resolved",
+                            model=self._name,
+                            key=view_ref_key,
+                            view=view_id,
+                        )
                     elif ref_model:
+                        _debug.logic(
+                            "view_ref_ignored",
+                            model=self._name,
+                            key=view_ref_key,
+                            ref_model=ref_model,
+                            reason="not_a_view",
+                        )
                         _logger.warning(
                             "%r=%r for model %s refers to a %s record, not an "
                             "ir.ui.view; falling back on the default view.",
@@ -322,6 +360,12 @@ class Base(models.AbstractModel):
                             ref_model,
                         )
                     else:
+                        _debug.logic(
+                            "view_ref_ignored",
+                            model=self._name,
+                            key=view_ref_key,
+                            reason="unknown_xmlid",
+                        )
                         _logger.warning(
                             "%r=%r for model %s does not match any record; "
                             "falling back on the default view.",
@@ -330,6 +374,12 @@ class Base(models.AbstractModel):
                             self._name,
                         )
                 else:
+                    _debug.logic(
+                        "view_ref_ignored",
+                        model=self._name,
+                        key=view_ref_key,
+                        reason="unqualified_xmlid",
+                    )
                     _logger.warning(
                         "%r requires a fully-qualified external id (got: %r for model %s). "
                         "Please use the complete `module.view_id` form instead.",
@@ -355,6 +405,9 @@ class Base(models.AbstractModel):
             view = IrUiView.browse()
             method = getattr(self, f"_get_default_{view_type}_view", None)
             if method is None:
+                _debug.logic(
+                    "default_view_refused", model=self._name, view_type=view_type
+                )
                 raise UserError(
                     _("No default view of type '%s' could be found!", view_type)
                 )
@@ -450,6 +503,14 @@ class Base(models.AbstractModel):
             group_by_field = self.env[model_name]._fields.get(group_by_name)
             if group_by_field and group_by_field.type == "many2one":
                 accesses.append(access(group_by_field.comodel_name))
+        _debug.perf.count(
+            "capability_signature",
+            model=self._name,
+            uid=self.env.uid,
+            group_keys=len(group_keys),
+            accesses=len(accesses),
+            memoized=len(accessed),
+        )
         return (
             tuple(
                 definitions.from_key(key).matches(user_group_ids) for key in group_keys
@@ -478,13 +539,19 @@ class Base(models.AbstractModel):
         rights and debug nodes resolved, the arch serialised and the IR
         built — once per (view, signature), not once per request."""
         cached = self._get_view_cache(view_id, view_type, **options)
+        _debug.perf.count(
+            "view_projection_miss",
+            model=self._name,
+            view=cached["id"],
+            view_type=view_type,
+            uid=self.env.uid,
+        )
         node = etree.fromstring(cached["arch"])
         node = self.env["ir.ui.view"]._postprocess_access_rights(node)
         node = self.env["ir.ui.view"]._postprocess_debug(node)
         with _debug.perf("ir_build", model=self._name, view_type=node.tag) as span:
             ir = from_arch(node)
-            if _debug.perf.enabled:
-                span.set(nodes=sum(1 for _ in ir.walk()))
+            span.set(nodes=sum(1 for _ in ir.walk()) if _debug.perf.enabled else 0)
         return frozendict(
             {
                 "arch": etree.tostring(node, encoding="unicode"),
@@ -513,6 +580,7 @@ class Base(models.AbstractModel):
         if view_type in ("form", "list") and (
             header := self.view_header_get(result["id"], view_type)
         ):
+            _debug.logic("view_header_applied", model=self._name, view=result["id"])
             node = etree.fromstring(result["arch"])
             node.set("string", header)
             result["arch"] = etree.tostring(node, encoding="unicode")
@@ -539,6 +607,9 @@ class Base(models.AbstractModel):
                         model_fields.add("write_date")
             case "search":
                 view_models[self._name] = set(self._fields)
+                _debug.logic(
+                    "fields_view.all_fields", model=self._name, fields=len(self._fields)
+                )
             case "graph":
                 view_models[self._name].update(
                     fname
@@ -648,6 +719,12 @@ class Base(models.AbstractModel):
         if view_info is None:
             view_info = self.get_view()
         process(etree.fromstring(view_info["arch"]), view_info, "")
+        _debug.perf.count(
+            "onchange_spec",
+            model=self._name,
+            fields=len(result),
+            on_change=sum(1 for value in result.values() if value),
+        )
         return result
 
     @api.model
@@ -683,4 +760,10 @@ class Base(models.AbstractModel):
 
         result = {}
         update_spec(etree.fromstring(view_info["arch"]), self, result)
+        _debug.perf.count(
+            "fields_spec",
+            model=self._name,
+            fields=len(result),
+            nested=sum(1 for spec in result.values() if "fields" in spec),
+        )
         return result

@@ -427,6 +427,12 @@ class IrActionsServer(models.Model):
             if action.state != "webhook":
                 continue
             if not 1 <= action.webhook_timeout <= self._WEBHOOK_TIMEOUT_CEILING:
+                _debug.logic(
+                    "webhook_timeout_refused",
+                    action=action.id,
+                    timeout=action.webhook_timeout,
+                    ceiling=self._WEBHOOK_TIMEOUT_CEILING,
+                )
                 raise ValidationError(
                     _(
                         "Webhook timeout must be between 1 and %(ceiling)s "
@@ -443,6 +449,7 @@ class IrActionsServer(models.Model):
         for action in self.sudo().filtered("code"):
             msg = test_python_expr(expr=action.code.strip(), mode="exec")
             if msg:
+                _debug.logic("python_code_refused", action=action.id, reason="syntax")
                 raise ValidationError(msg)
 
     @api.constrains("update_path", "model_id", "state")
@@ -458,9 +465,16 @@ class IrActionsServer(models.Model):
     @api.constrains("parent_id", "child_ids")
     def _check_children(self) -> None:
         if self._has_cycle():
+            _debug.logic("children_refused", actions=self.ids, reason="cycle")
             raise ValidationError(_("Recursion found in child server actions"))
 
         if children_with_warnings := self.child_ids.filtered("warning"):
+            _debug.logic(
+                "children_refused",
+                actions=self.ids,
+                reason="child_warnings",
+                children=children_with_warnings.ids,
+            )
             raise ValidationError(
                 _(
                     "Following child actions have warnings: %(children)s",
@@ -484,7 +498,9 @@ class IrActionsServer(models.Model):
         ]
         for field_name in sensible_default_fields:
             if field_name in model._fields and not model._fields[field_name].readonly:
+                _debug.logic("default_update_path", model=model._name, field=field_name)
                 return field_name
+        _debug.logic("default_update_path", model=model._name, field=None)
         return ""
 
     @api.model_create_multi
@@ -501,12 +517,20 @@ class IrActionsServer(models.Model):
             }
 
         vals_list = [with_inherited(vals) for vals in vals_list]
+        automated_names = 0
         for vals in vals_list:
             if vals.get("name"):
                 vals.setdefault("name_is_custom", True)
             else:
                 vals["name"] = self.new(vals)._prepare_automated_name()
                 vals["name_is_custom"] = False
+                automated_names += 1
+        _debug.pipeline(
+            "create_prepared",
+            count=len(vals_list),
+            inherited=sum(1 for vals in vals_list if vals.get("parent_id")),
+            automated_names=automated_names,
+        )
         actions = super().create(vals_list)
 
         history_vals = []
@@ -537,6 +561,9 @@ class IrActionsServer(models.Model):
                 for action in self
                 if new_code != action.code
             ]
+            _debug.lifecycle(
+                "code_history", actions=len(self), changed=len(history_vals)
+            )
             if history_vals:
                 self.env["ir.actions.server.history"].create(history_vals)
         _debug.lifecycle("write", count=len(self), fields=list(vals))
@@ -585,6 +612,12 @@ class IrActionsServer(models.Model):
     def _compute_warning(self) -> None:
         for action in self:
             if warnings := action._get_warning_messages():
+                _debug.logic(
+                    "warnings_computed",
+                    action=action.id,
+                    state=action.state,
+                    warnings=len(warnings),
+                )
                 action.warning = "\n\n".join(warnings)
             else:
                 action.warning = False
@@ -592,24 +625,31 @@ class IrActionsServer(models.Model):
     @api.depends(lambda self: self._get_fields_name_depends())
     def _compute_names(self) -> None:
         self._prefetch_automated_name_sources()
+        renamed = 0
         for action in self:
             action.automated_name = action._prepare_automated_name()
             if not action.name_is_custom:
                 action.name = action.automated_name
+                renamed += 1
+        _debug.perf.count("names_computed", count=len(self), automated=renamed)
 
     @api.depends_context("uid")
     def _compute_available_model_ids(self) -> None:
         if not self:
             return
-        allowed_models = self.env["ir.model"].search(
-            [
-                (
-                    "model",
-                    "in",
-                    list(self.env["ir.model.access"]._get_models_allowed()),
-                )
-            ]
-        )
+        with _debug.perf(
+            "available_models", cr=self.env.cr, uid=self.env.uid, actions=len(self)
+        ) as span:
+            allowed_models = self.env["ir.model"].search(
+                [
+                    (
+                        "model",
+                        "in",
+                        list(self.env["ir.model.access"]._get_models_allowed()),
+                    )
+                ]
+            )
+            span.set(models=len(allowed_models))
         self.available_model_ids = allowed_models.ids
 
     @api.depends("model_id", "update_path", "state", "evaluation_type")
@@ -625,6 +665,12 @@ class IrActionsServer(models.Model):
                 action.update_field_id = False
             elif action.update_path:
                 model, field = action._get_update_path_target()
+                _debug.logic(
+                    "crud_relations_resolved",
+                    action=action.id,
+                    depth=len(action.update_path.split(".")),
+                    resolved=bool(field),
+                )
                 action.crud_model_id = model
                 action.update_field_id = field
                 if action.evaluation_type == "value" and field and field.relation:
@@ -674,6 +720,17 @@ class IrActionsServer(models.Model):
                 children_wrong_groups |= child
             if child.warning:
                 children_with_warnings |= child
+        if _debug.logic.enabled and (
+            children_wrong_model or children_wrong_groups or children_with_warnings
+        ):
+            _debug.logic(
+                "child_warnings",
+                action=self.id,
+                children=len(self.child_ids),
+                wrong_model=len(children_wrong_model),
+                wrong_groups=len(children_wrong_groups),
+                with_warnings=len(children_with_warnings),
+            )
 
         if children_wrong_model:
             warnings.append(
@@ -720,6 +777,7 @@ class IrActionsServer(models.Model):
             )
 
         if self.usage == "ir_cron" and self._is_live_record_required():
+            _debug.logic("cron_needs_record", action=self.id, state=self.state)
             warnings.append(
                 _(
                     "A scheduled action runs on no record, and this one needs "
@@ -743,6 +801,12 @@ class IrActionsServer(models.Model):
                 if field and field.groups:
                     restricted_fields.append(f"- {model_field.field_description}")
             if restricted_fields:
+                _debug.logic(
+                    "webhook_fields_restricted",
+                    action=self.id,
+                    restricted=len(restricted_fields),
+                    total=len(self.webhook_field_ids),
+                )
                 warnings.append(
                     _(
                         "Group-restricted fields cannot be included in "
@@ -827,6 +891,13 @@ class IrActionsServer(models.Model):
         for i, field_name in enumerate(path):
             is_last_field = i == len(path) - 1
             if not field_name:
+                _debug.logic(
+                    "relation_chain_broken",
+                    action=self.id,
+                    field=searched_field_name,
+                    segment=i,
+                    reason="empty_segment",
+                )
                 if raise_on_error:
                     raise ValidationError(
                         _(
@@ -837,6 +908,14 @@ class IrActionsServer(models.Model):
                     )
                 return []
             if field_name not in model._fields:
+                _debug.logic(
+                    "relation_chain_broken",
+                    action=self.id,
+                    field=searched_field_name,
+                    segment=i,
+                    model=model._name,
+                    reason="unknown_field",
+                )
                 if raise_on_error:
                     raise ValidationError(
                         _(
@@ -849,6 +928,14 @@ class IrActionsServer(models.Model):
             field = model._fields[field_name]
             if not is_last_field:
                 if not field.relational:
+                    _debug.logic(
+                        "relation_chain_broken",
+                        action=self.id,
+                        field=searched_field_name,
+                        segment=i,
+                        model=model._name,
+                        reason="non_relational",
+                    )
                     if raise_on_error:
                         current_field = field.get_description(self.env)["string"]
                         searched_field = self._fields[
@@ -864,6 +951,13 @@ class IrActionsServer(models.Model):
                     return []
                 model = self.env[field.comodel_name]
             chain.append(field)
+        _debug.logic(
+            "relation_chain_resolved",
+            action=self.id,
+            field=searched_field_name,
+            depth=len(chain),
+            target=model._name,
+        )
         return chain
 
     def _get_relation_chain_label(self, chain: list[fields.Field]) -> str:
@@ -881,6 +975,12 @@ class IrActionsServer(models.Model):
                 record.read(self.webhook_field_ids.mapped("name"), load=None)[0]
             )
         payload["id"] = record.id
+        _debug.pipeline(
+            "webhook_payload_built",
+            action=self.id,
+            record=record.id,
+            fields=len(self.webhook_field_ids),
+        )
         return payload
 
     def _dump_webhook_payload(
@@ -898,6 +998,7 @@ class IrActionsServer(models.Model):
             samples[model_name] = (
                 self.env[model_name].with_context(active_test=False).search([], limit=1)
             )  # noqa: E8507  loop variable is the model -- a different table each time
+        _debug.perf.count("webhook_samples", actions=len(webhooks), models=len(samples))
         for model_name, actions in webhooks.grouped("model_name").items():
             sample = samples.get(model_name, self.env["ir.model"].browse())
             if sample:
@@ -908,6 +1009,9 @@ class IrActionsServer(models.Model):
                 if sample:
                     payload = action._get_webhook_payload(sample)
                 else:
+                    _debug.logic(
+                        "webhook_sample_synthetic", action=action.id, model=model_name
+                    )
                     payload = action._get_webhook_payload(self.env[model_name])
                     payload["_id"] = payload["id"] = 1
                     for field in action.webhook_field_ids:
@@ -962,6 +1066,8 @@ class IrActionsServer(models.Model):
             fn_multi = fn
         if fn_multi and self._is_batch_safe():
             return fn_multi, True
+        if _debug.logic.enabled and fn_multi:
+            _debug.logic("batch_runner_declined", action=self.id, state=self.state)
         return fn, False
 
     def _is_batch_safe(self) -> bool:
@@ -972,13 +1078,16 @@ class IrActionsServer(models.Model):
 
     def create_action(self) -> bool:
         self.check_access("write")
+        _debug.lifecycle("bindings_created", actions=self.ids)
         for model_id, actions in self.grouped("model_id").items():
             actions.write({"binding_model_id": model_id.id, "binding_type": "action"})
         return True
 
     def unlink_action(self) -> bool:
         self.check_access("write")
-        self.filtered("binding_model_id").write({"binding_model_id": False})
+        bound = self.filtered("binding_model_id")
+        _debug.lifecycle("bindings_removed", actions=self.ids, bound=len(bound))
+        bound.write({"binding_model_id": False})
         return True
 
     def action_view_code_history(self) -> dict[str, Any]:
@@ -994,9 +1103,13 @@ class IrActionsServer(models.Model):
 
     def _run_action_code_multi(self, eval_context: dict[str, Any]) -> Any:
         if not self.code:
+            _debug.logic("action_code_skipped", action=self.id, reason="no_code")
             return None
-        with _debug.perf("action_code", cr=self.env.cr, action=self.id, name=self.name):
+        with _debug.perf(
+            "action_code", cr=self.env.cr, action=self.id, name=self.name
+        ) as span:
             safe_eval(self.code.strip(), eval_context, mode="exec", filename=str(self))
+            span.set(returned_action=eval_context.get("action") is not None)
         return eval_context.get("action")
 
     def _run_action_multi(self, eval_context: dict[str, Any] | None = None) -> Any:
@@ -1007,6 +1120,12 @@ class IrActionsServer(models.Model):
         _debug.pipeline("action_multi", action=self.id, children=children.ids)
         for act in children:
             res = act.run() or res
+        _debug.pipeline(
+            "action_multi_done",
+            action=self.id,
+            children=len(children),
+            returned_action=bool(res),
+        )
         return res
 
     def _get_records_from_eval_context(
@@ -1014,6 +1133,7 @@ class IrActionsServer(models.Model):
     ) -> Any:
         records = (eval_context or {}).get("records")
         if records is None:
+            _debug.logic("records_from_context", action=self.id, source="targeted")
             return self._get_records_targeted()
         return records
 
@@ -1028,6 +1148,7 @@ class IrActionsServer(models.Model):
     def _write_update_path(self, records: Any, vals: dict[int, Any]) -> None:
         self.check_singleton()
         if not self.update_path:
+            _debug.logic("update_path_refused", action=self.id, reason="no_path")
             raise UserError(
                 _(
                     "The 'Update Record' action '%(name)s' has no field to update. "
@@ -1074,8 +1195,10 @@ class IrActionsServer(models.Model):
         record = self._get_records_from_eval_context(eval_context)[:1]
         url = self.webhook_url
         if not record:
+            _debug.logic("webhook_skipped", action=self.id, reason="no_record")
             return
         if not url:
+            _debug.logic("webhook_skipped", action=self.id, reason="no_url")
             raise UserError(
                 _(
                     "The webhook action '%(name)s' has no URL to send the request "
@@ -1124,6 +1247,7 @@ class IrActionsServer(models.Model):
 
         @self.env.cr.postrollback.add
         def _warn_webhook_rolled_back():
+            _debug.lifecycle("webhook_cancelled", target=target, reason="rollback")
             _logger.warning(
                 "Webhook %s to %s cancelled: the transaction rolled back",
                 action_label,
@@ -1152,14 +1276,15 @@ class IrActionsServer(models.Model):
     ):
         _logger.debug("Webhook %s to %s - start", action_label, target)
         try:
-            with session:
-                response = session.post(
-                    url,
-                    data=json_values,
-                    headers={"Content-Type": "application/json"},
-                    timeout=timeout,
-                    allow_redirects=False,
-                )
+            with _debug.perf("webhook_post", target=target, timeout=timeout):
+                with session:
+                    response = session.post(
+                        url,
+                        data=json_values,
+                        headers={"Content-Type": "application/json"},
+                        timeout=timeout,
+                        allow_redirects=False,
+                    )
             response.raise_for_status()
             _logger.info("Webhook %s to %s - succeeded", action_label, target)
             _debug.pipeline(
@@ -1178,6 +1303,7 @@ class IrActionsServer(models.Model):
                 refusal,
             )
         except requests.exceptions.ReadTimeout:
+            _debug.logic("webhook_failed", target=target, reason="timeout")
             _logger.warning(
                 "Webhook %s to %s timed out after %ss. The receiver may or "
                 "may not have processed it. Raise 'Webhook Timeout (s)' on "
@@ -1188,6 +1314,7 @@ class IrActionsServer(models.Model):
                 timeout,
             )
         except requests.exceptions.RequestException as e:
+            _debug.logic("webhook_failed", target=target, reason=type(e).__name__)
             _logger.error(
                 "Webhook %s to %s failed and will NOT be retried: %s",
                 action_label,
@@ -1199,6 +1326,7 @@ class IrActionsServer(models.Model):
         self, new_id: int, eval_context: dict[str, Any] | None = None
     ) -> None:
         if not self.link_field_id:
+            _debug.logic("link_skipped_no_field", action=self.id, new_id=new_id)
             return
         record = self._get_records_from_eval_context(eval_context)[:1]
         if not record:
@@ -1220,14 +1348,28 @@ class IrActionsServer(models.Model):
         self, eval_context: dict[str, Any] | None = None
     ) -> None:
         if not self.resource_ref:
+            _debug.logic("copy_refused", action=self.id, reason="no_resource_ref")
             raise UserError(_("No record selected to duplicate."))
-        dupe = self.resource_ref.copy()
+        with _debug.perf(
+            "action_copy", cr=self.env.cr, action=self.id, source=self.resource_ref
+        ) as span:
+            dupe = self.resource_ref.copy()
+            span.set(new_id=dupe.id)
         self._link_to_active_record(dupe.id, eval_context)
 
     def _run_action_object_create(
         self, eval_context: dict[str, Any] | None = None
     ) -> None:
-        res_id, _res_name = self.env[self.crud_model_id.model].name_create(self.value)
+        with _debug.perf(
+            "action_create",
+            cr=self.env.cr,
+            action=self.id,
+            model=self.crud_model_id.model,
+        ) as span:
+            res_id, _res_name = self.env[self.crud_model_id.model].name_create(
+                self.value
+            )
+            span.set(new_id=res_id)
         self._link_to_active_record(res_id, eval_context)
 
     def _prepare_eval_context(self, action: Self) -> dict[str, Any]:
@@ -1260,6 +1402,13 @@ class IrActionsServer(models.Model):
         record = targets[:1] or None
         if onchange_self := self.env.context.get("onchange_self"):
             record = onchange_self
+        _debug.pipeline(
+            "eval_context_prepared",
+            action=action.id,
+            model=model_name,
+            records=len(targets),
+            onchange=onchange_self is not None,
+        )
         eval_context.update(
             {
                 "env": self.env,
@@ -1289,11 +1438,20 @@ class IrActionsServer(models.Model):
             )
             return model
         if active_ids := context.get("active_ids"):
+            _debug.logic(
+                "targets_resolved",
+                action=action.id,
+                by="active_ids",
+                count=len(active_ids),
+            )
             return model.browse(active_ids)
         if active_id := context.get("active_id"):
+            _debug.logic("targets_resolved", action=action.id, by="active_id")
             return model.browse(active_id)
         if onchange_self := context.get("onchange_self"):
+            _debug.logic("targets_resolved", action=action.id, by="onchange_self")
             return model.browse(onchange_self._origin.id or ())
+        _debug.logic("targets_resolved", action=action.id, by="none")
         return model
 
     def run(self) -> dict[str, Any] | bool:
@@ -1315,6 +1473,13 @@ class IrActionsServer(models.Model):
         return res
 
     def _log_missing_target(self, runner: Any) -> None:
+        _debug.logic(
+            "run_skipped",
+            action=self.id,
+            state=self.state,
+            runner=runner.__name__,
+            reason="no_target",
+        )
         _logger.warning(
             "Server action %r (type %r) was triggered with no target record "
             "(no active_id/active_ids in context, or they name another model); "
@@ -1331,6 +1496,7 @@ class IrActionsServer(models.Model):
     def _run(self, records: Any, eval_context: dict[str, Any]) -> dict[str, Any] | bool:
         self.check_singleton()
         if self.warning:
+            _debug.logic("run_refused", action=self.id, reason="warnings")
             raise ServerActionWithWarningsError(
                 _(
                     "Server action %(action_name)s has one or more warnings, address them first.",
@@ -1370,9 +1536,13 @@ class IrActionsServer(models.Model):
             return runner(run_self, eval_context=eval_context) or False
 
         if not records:
+            _debug.logic("run_without_records", action=self.id, state=self.state)
             return runner(self, eval_context=eval_context) or False
 
         res = False
+        _debug.pipeline(
+            "run_per_record", action=self.id, state=self.state, records=len(records)
+        )
         for record in records:
             run_self = self.with_context(active_ids=record.ids, active_id=record.id)
             env = eval_context["env"](context=run_self.env.context)
@@ -1403,6 +1573,9 @@ class IrActionsServer(models.Model):
         try:
             self.env[model_name].check_access("write")
         except AccessError:
+            _debug.logic(
+                "run_denied", action=self.id, uid=self.env.uid, by="model_write"
+            )
             _logger.warning(
                 "Forbidden server action %r executed while the user %s does not have access to %s.",
                 config.name,
@@ -1415,6 +1588,13 @@ class IrActionsServer(models.Model):
             try:
                 records.check_access("write")
             except AccessError:
+                _debug.logic(
+                    "run_denied",
+                    action=self.id,
+                    uid=self.env.uid,
+                    by="record_write",
+                    records=len(records),
+                )
                 _logger.warning(
                     "Forbidden server action %r executed while the user %s does not have access to %s.",
                     config.name,
@@ -1481,6 +1661,7 @@ class IrActionsServer(models.Model):
             )
         )
         invalid.resource_ref = False
+        _debug.logic("crud_model_changed", actions=self.ids, cleared_refs=len(invalid))
         invalid = self.filtered(
             lambda a: (
                 a.link_field_id
@@ -1513,6 +1694,12 @@ class IrActionsServer(models.Model):
         try:
             return converter(self.value)
         except ValueError, TypeError:
+            _debug.logic(
+                "value_coercion_refused",
+                action=self.id,
+                converter=converter.__name__,
+                field=self.update_field_id.name,
+            )
             raise UserError(
                 _(
                     "The value '%(value)s' configured on action '%(action)s' is not a "
@@ -1562,6 +1749,13 @@ class IrActionsServer(models.Model):
             elif action.update_field_id.ttype == "html":
                 expr = action.html_value or action.value
             result[action.id] = expr
+            _debug.logic(
+                "value_evaluated",
+                action=action.id,
+                evaluation_type=action.evaluation_type,
+                ttype=action.update_field_id.ttype,
+                m2m_operation=action.update_m2m_operation,
+            )
         return result
 
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
@@ -1591,6 +1785,7 @@ class IrActionsServer(models.Model):
     def action_view_scheduled_action(self) -> dict[str, Any]:
         self.check_singleton()
         if not self.ir_cron_ids:
+            _debug.logic("scheduled_action_missing", action=self.id)
             raise UserError(
                 _("No scheduled action is associated with this server action.")
             )

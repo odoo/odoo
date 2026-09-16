@@ -175,6 +175,7 @@ class ResLang(models.Model):
         if self.env.registry.ready and not self.search_count(
             [("active", "=", True)], limit=1
         ):
+            _debug.logic("active_check_refused", langs=self.mapped("code"))
             raise ValidationError(_("At least one language must be active."))
 
     @api.constrains("time_format", "date_format")
@@ -209,6 +210,7 @@ class ResLang(models.Model):
                 and "%p" in lang.date_format
             ):
                 lang.date_format = lang.date_format.replace("%H", "%I")
+                _debug.logic("clock_format_fixed", lang=lang.code, field="date_format")
                 return warning
             if (
                 lang.time_format
@@ -216,6 +218,7 @@ class ResLang(models.Model):
                 and "%p" in lang.time_format
             ):
                 lang.time_format = lang.time_format.replace("%H", "%I")
+                _debug.logic("clock_format_fixed", lang=lang.code, field="time_format")
                 return warning
         return None
 
@@ -269,6 +272,13 @@ class ResLang(models.Model):
                 conv = locale.localeconv()
                 grouping = str(conv.get("grouping") or "[3,0]").replace(" ", "")
                 grouping_options = {v for v, _ in self._fields["grouping"].selection}
+                _debug.logic(
+                    "locale_resolved",
+                    code=lang,
+                    locale_found=not fail,
+                    grouping=grouping,
+                    grouping_known=grouping in grouping_options,
+                )
                 lang_info = {
                     "code": lang,
                     "iso_code": iso_lang,
@@ -296,6 +306,12 @@ class ResLang(models.Model):
         self._activate_lang(lang_code) or self._create_lang(lang_code)
         IrDefault = self.env["ir.default"]
         default_value = IrDefault._get("res.partner", "lang")
+        _debug.logic(
+            "partner_lang_default",
+            code=lang_code,
+            existing=default_value,
+            set_default=default_value is None,
+        )
         if default_value is None:
             IrDefault.set("res.partner", "lang", lang_code)
             partner = self.env.company.partner_id
@@ -347,6 +363,7 @@ class ResLang(models.Model):
     @tools.ormcache("field", cache="stable")
     def _get_active_by_field(self, field: str) -> LangDataDict:
         if field not in self.CACHED_FIELDS:
+            _debug.logic("active_by_field_refused", field=field)
             raise UserError(_('Field "%s" is not cached', field))
         if field == "code":
             langs = (
@@ -361,12 +378,17 @@ class ResLang(models.Model):
                     for lang in langs
                 }
             )
+        _debug.perf.count("active_langs_reindexed", field=field)
         return LangDataDict(
             {data[field]: data for data in self._get_active_by_field("code").values()}
         )
 
     def action_unarchive(self) -> bool:
         activated = self.filtered(lambda rec: not rec.active)
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "unarchive", langs=self.mapped("code"), activated=len(activated)
+            )
         res = super(ResLang, activated).action_unarchive()
         if activated:
             active_lang = activated.mapped("code")
@@ -393,6 +415,7 @@ class ResLang(models.Model):
         lang_codes = self.mapped("code")
         _debug.lifecycle("write", codes=lang_codes, fields=list(vals))
         if "code" in vals and any(code != vals["code"] for code in lang_codes):
+            _debug.logic("write_refused", codes=lang_codes, reason="code_change")
             raise UserError(_("Language code cannot be modified."))
         if "active" in vals and not vals["active"]:
             if (
@@ -400,6 +423,7 @@ class ResLang(models.Model):
                 .with_context(active_test=True)
                 .search_count([("lang", "in", lang_codes)], limit=1)
             ):
+                _debug.logic("deactivate_refused", codes=lang_codes, reason="users")
                 raise UserError(
                     _("Cannot deactivate a language that is currently used by users.")
                 )
@@ -408,6 +432,7 @@ class ResLang(models.Model):
                 .with_context(active_test=True)
                 .search_count([("lang", "in", lang_codes)], limit=1)
             ):
+                _debug.logic("deactivate_refused", codes=lang_codes, reason="partners")
                 raise UserError(
                     _(
                         "Cannot deactivate a language that is currently used by contacts."
@@ -418,6 +443,9 @@ class ResLang(models.Model):
                 .with_context(active_test=False)
                 .search_count([("lang", "in", lang_codes)], limit=1)
             ):
+                _debug.logic(
+                    "deactivate_refused", codes=lang_codes, reason="archived_users"
+                )
                 raise UserError(
                     _(
                         "Cannot deactivate a language that is used by archived users, "
@@ -429,12 +457,16 @@ class ResLang(models.Model):
                 .with_context(active_test=False)
                 .search_count([("lang", "in", lang_codes)], limit=1)
             ):
+                _debug.logic(
+                    "deactivate_refused", codes=lang_codes, reason="archived_partners"
+                )
                 raise UserError(
                     _(
                         "Cannot deactivate a language that is used by archived contacts. "
                         "Reactivating those contacts would leave them with an inactive language."
                     )
                 )
+            _debug.lifecycle("partner_lang_defaults_discarded", codes=lang_codes)
             self.env["ir.default"].discard_values("res.partner", "lang", lang_codes)
 
         res = super().write(vals)
@@ -442,6 +474,12 @@ class ResLang(models.Model):
         if vals.get("active"):
             long_langs = self.filtered(lambda lang: "_" in lang.url_code)
             short_codes = {lang.code.split("_")[0] for lang in long_langs}
+            _debug.logic(
+                "url_code_shortening",
+                codes=lang_codes,
+                long_langs=len(long_langs),
+                short_codes=len(short_codes),
+            )
             by_url_code = {}
             if short_codes:
                 for candidate in self.with_context(active_test=False).search(
@@ -465,6 +503,7 @@ class ResLang(models.Model):
 
         self.env.flush_all()
         self.env.registry.clear_cache("stable")
+        _debug.lifecycle("stable_cache_cleared", by="write", codes=lang_codes)
         if "active" in vals:
             self._reset_environment_languages()
         return res
@@ -473,7 +512,9 @@ class ResLang(models.Model):
         # Environment.lang caches whether its context language is installed;
         # the transaction keeps recent environments alive, so a toggled
         # language must not be answered from that cache
-        for env in list(self.env.transaction.envs):
+        envs = list(self.env.transaction.envs)
+        _debug.lifecycle("environment_languages_reset", envs=len(envs))
+        for env in envs:
             reset_cached_properties(env)
 
     @api.ondelete(at_uninstall=True)
@@ -484,6 +525,9 @@ class ResLang(models.Model):
                 raise UserError(_("Base Language 'en_US' can not be deleted."))
             ctx_lang = self.env.context.get("lang")
             if ctx_lang and (language.code == ctx_lang):
+                _debug.logic(
+                    "unlink_refused", lang=language.code, reason="user_preferred"
+                )
                 raise UserError(
                     _(
                         "You cannot delete the language which is the user's preferred language."
@@ -524,12 +568,16 @@ class ResLang(models.Model):
         while Lang.search_count([(fname, "=", candidate)], limit=1):
             candidate = f"{value}_copy{counter}"
             counter += 1
+        _debug.perf.count(
+            "unique_copy_value", field=fname, probes=counter - 1, candidate=candidate
+        )
         return candidate
 
     def format(self, percent: str, value, grouping: bool = False) -> str:
         self.check_singleton()
         data = self._get_data(id=self.id)
         if not data:
+            _debug.logic("format_refused", lang=self.code, reason="not_installed")
             raise UserError(_("The language %s is not installed.", self.name))
         return format_number(percent, value, data, grouping=grouping)
 

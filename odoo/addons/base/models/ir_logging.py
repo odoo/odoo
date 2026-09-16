@@ -77,6 +77,7 @@ class IrLogging(models.Model):
         try:
             retention_days = int(param)
         except TypeError, ValueError:
+            _debug.logic("gc_logging_param_invalid", type=type(param).__name__)
             retention_days = 0
         if retention_days <= 0:
             _debug.logic("gc_logging_skipped", param=param)

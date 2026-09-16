@@ -84,7 +84,9 @@ def check_identity(
             raise UserError(_("This method can only be accessed over HTTP"))
 
         if request.session.get("identity-check-last", 0) > time.time() - 10 * 60:
+            _debug.logic("identity_check_recent", uid=self.env.uid, method=fn.__name__)
             return fn(self, *args, **kwargs)
+        _debug.pipeline("identity_check_required", uid=self.env.uid, method=fn.__name__)
 
         w = (
             self.sudo()
@@ -210,6 +212,7 @@ class ResUsers(models.Model):
         try:
             context = user.read(["lang", "tz"], load=False)[0]
         except IndexError:
+            _debug.logic("context_user_missing", uid=self.env.uid)
             return frozendict(), False
         context.pop("id")
 
@@ -241,7 +244,11 @@ class ResUsers(models.Model):
     @tools.ormcache("self.id")
     def _get_company_ids(self) -> tuple[int, ...]:
         domain = [("active", "=", True), ("user_ids", "in", [self.id])]
-        return self.env["res.company"].search(domain)._ids
+        company_ids = self.env["res.company"].search(domain)._ids
+        _debug.perf.count(
+            "company_ids_computed", uid=self.id, companies=len(company_ids)
+        )
+        return company_ids
 
     @api.model
     @tools.ormcache("uid", "passwd_hash")
@@ -250,6 +257,7 @@ class ResUsers(models.Model):
     ) -> datetime.datetime | None:
         user = self.with_user(uid).env.user
         if not user.active:
+            _debug.logic("uid_passwd_refused", uid=uid, reason="inactive")
             raise AccessDenied
         credential = {
             "login": user.login,
@@ -257,6 +265,9 @@ class ResUsers(models.Model):
             "type": "password",
         }
         result = user._check_credentials(credential, {"interactive": False})
+        _debug.perf.count(
+            "uid_passwd_cached", uid=uid, method=result.get("auth_method")
+        )
         if result.get("auth_method") == "apikey":
             return self.env["res.users.apikeys"]._get_key_expiration(
                 scope="rpc", key=passwd
@@ -266,6 +277,9 @@ class ResUsers(models.Model):
     @tools.ormcache("self.id", "sid")
     def _get_session_token(self, sid: str) -> str | bool:
         field_values = self._get_session_token_values()
+        _debug.perf.count(
+            "session_token_computed", uid=self.id, has_values=bool(field_values)
+        )
         return self._hash_session_token(sid, field_values)
 
     @tools.ormcache("self.id")
@@ -301,6 +315,9 @@ class ResUsers(models.Model):
         )
         if default_group:
             groups += default_group.implied_ids
+        _debug.logic(
+            "default_groups", default_group=bool(default_group), groups=len(groups)
+        )
         return groups
 
     def _default_view_group_hierarchy(self) -> dict[str, Any]:
@@ -493,6 +510,7 @@ class ResUsers(models.Model):
             """
         )
         rows = cr.fetchall()
+        _debug.lifecycle("init_plaintext_passwords_hashed", count=len(rows))
         if rows:
             ctx = self._get_crypt_context()
             hashed = [(ctx.hash(pw), uid) for uid, pw in rows]
@@ -529,6 +547,7 @@ class ResUsers(models.Model):
         if action_view_website and any(
             user.action_id.id == action_view_website.id for user in self
         ):
+            _debug.logic("home_action_refused", users=self.ids, reason="app_launcher")
             raise ValidationError(
                 _('The "App Launcher" action cannot be selected as home action.')
             )
@@ -544,6 +563,9 @@ class ResUsers(models.Model):
         if client_ids:
             for action in self.env["ir.actions.client"].sudo().browse(client_ids):
                 if action.tag == "reload":
+                    _debug.logic(
+                        "home_action_refused", action=action.id, reason="reload_tag"
+                    )
                     raise ValidationError(
                         _(
                             'The "%s" action cannot be selected as home action.',
@@ -553,6 +575,11 @@ class ResUsers(models.Model):
         if window_ids:
             for action in self.env["ir.actions.act_window"].sudo().browse(window_ids):
                 if action.context and "active_id" in action.context:
+                    _debug.logic(
+                        "home_action_refused",
+                        action=action.id,
+                        reason="needs_active_id",
+                    )
                     raise ValidationError(
                         _(
                             'The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.',
@@ -580,6 +607,7 @@ class ResUsers(models.Model):
     @api.constrains("group_ids", "active")
     def _check_at_least_one_administrator(self) -> None:
         if not self.env.registry.loaded_modules:
+            _debug.logic("administrator_check_skipped", reason="registry_loading")
             return
         has_admin = (
             self.env["res.users"]
@@ -598,7 +626,11 @@ class ResUsers(models.Model):
 
     def _inverse_password(self) -> None:
         ctx = self._get_crypt_context()
-        hashed = [(user.id, ctx.hash(user.password)) for user in self if user.password]
+        with _debug.perf("passwords_hashed", users=len(self)) as span:
+            hashed = [
+                (user.id, ctx.hash(user.password)) for user in self if user.password
+            ]
+            span.set(hashed=len(hashed))
         self.filtered(lambda user: not user.password)._clear_password()
         self._update_encrypted_passwords(hashed)
 
@@ -606,6 +638,7 @@ class ResUsers(models.Model):
         if not self:
             return
         self.flush_recordset(["password"])
+        _debug.lifecycle("passwords_cleared", users=self.ids)
         self._password_store().clear(self)
         self.invalidate_recordset(["password"])
         self._invalidate_session_tokens()
@@ -616,11 +649,13 @@ class ResUsers(models.Model):
     def _update_encrypted_passwords(self, hashed: list[tuple[int, str]]) -> None:
         if not hashed:
             return
+        _debug.lifecycle("passwords_stored", users=[uid for uid, _pw in hashed])
         self._password_store().store(self, hashed)
         self.browse([uid for uid, _pw in hashed]).invalidate_recordset(["password"])
         self._invalidate_session_tokens()
 
     def _invalidate_session_tokens(self) -> None:
+        _debug.lifecycle("session_tokens_invalidated", users=self.ids)
         self.env.registry.clear_cache()
 
     def _is_rpc_api_key_only(self) -> bool:
@@ -631,6 +666,12 @@ class ResUsers(models.Model):
     ) -> dict[str, Any]:
         self.check_singleton()
         if not (credential["type"] == "password" and credential.get("password")):
+            _debug.logic(
+                "credentials_refused",
+                uid=self.id,
+                reason="no_password",
+                type=credential.get("type"),
+            )
             raise AccessDenied
 
         interactive = env.get("interactive", True)
@@ -644,6 +685,7 @@ class ResUsers(models.Model):
                 )
 
             if self._password_store().stored_hash(self, self.id) is None:
+                _debug.logic("credentials_refused", uid=self.id, reason="no_hash")
                 raise AccessDenied
             valid, replacement = self._password_store().match_and_update(
                 self, self.id, credential["password"]
@@ -658,6 +700,7 @@ class ResUsers(models.Model):
             if replacement is not None:
                 self._update_encrypted_password(self.id, replacement)
                 if request and self == self.env.user:
+                    _debug.pipeline("session_token_rotated", uid=self.id)
                     self.env.flush_all()
                     self.env.registry.clear_cache()
                     new_token = self._get_session_token(request.session.sid)
@@ -690,6 +733,12 @@ class ResUsers(models.Model):
                     "context that requires API key authentication only."
                 )
 
+        _debug.logic(
+            "credentials_refused",
+            uid=self.id,
+            reason="no_method_matched",
+            interactive=interactive,
+        )
         raise AccessDenied
 
     @api.depends_context("uid")
@@ -711,11 +760,13 @@ class ResUsers(models.Model):
             if not user.new_password:
                 continue
             if user == self.env.user:
+                _debug.logic("new_password_refused", uid=user.id, reason="own_user")
                 raise UserError(
                     _(
                         "Please use the change password wizard (in User Preferences or User menu) to change your own password."
                     )
                 )
+            _debug.lifecycle("new_password_applied", uid=user.id, by=self.env.uid)
             user.password = user.new_password
 
     @api.depends("group_ids")
@@ -730,6 +781,7 @@ class ResUsers(models.Model):
                 user.role = "group_user"
             else:
                 user.role = False
+        _debug.perf.count("role_computed", users=len(self))
 
     def _inverse_role(self) -> None:
         admin_id = self._group_id("base.group_system")
@@ -755,6 +807,7 @@ class ResUsers(models.Model):
         for user in self:
             if user.role and user.has_group("base.group_user"):
                 groups = user.group_ids - (group_admin + group_user)
+                _debug.logic("onchange_role", user=user.id, role=user.role)
                 user.group_ids = groups + (
                     group_admin if user.role == "group_system" else group_user
                 )
@@ -779,6 +832,11 @@ class ResUsers(models.Model):
         user_group_id = self._group_id("base.group_user")
         for user in self:
             user.share = user_group_id not in user.all_group_ids.ids
+        _debug.perf.count(
+            "share_computed",
+            users=len(self),
+            shared=sum(1 for user in self if user.share),
+        )
 
     def _compute_companies_count(self) -> None:
         self.companies_count = self.env["res.company"].sudo().search_count([])
@@ -800,6 +858,13 @@ class ResUsers(models.Model):
                     if group_id in rules_per_group:
                         rules_per_group[group_id].add(rule.id)
 
+        _debug.perf.count(
+            "access_counts_computed",
+            users=len(self),
+            groups=len(all_groups),
+            accesses=sum(accesses_per_group.values()),
+            rules=len(set().union(*rules_per_group.values())),
+        )
         for user in self:
             group_ids = user.all_group_ids.ids
             user.accesses_count = sum(accesses_per_group[gid] for gid in group_ids)
@@ -856,6 +921,7 @@ class ResUsers(models.Model):
         if self == self.env.user:
             user_sudo = self.sudo()
             fields_ = self._fields
+            _debug.logic("onchange_self_prefetched", uid=self.env.uid)
             for field_name in self._get_self_accessible_fields()[0]:
                 field = fields_[field_name]
                 if field.type in ("binary", "one2many", "many2many"):
@@ -874,6 +940,7 @@ class ResUsers(models.Model):
             and self == self.env.user
             and all(key in readable or key.startswith("context_") for key in fields)
         ):
+            _debug.logic("self_read_elevated", uid=self.env.uid, fields=list(fields))
             self = self.sudo()
         return super().read(fields=fields, load=load)
 
@@ -887,6 +954,7 @@ class ResUsers(models.Model):
     def _add_missing_settings_records(self) -> None:
         missing = self.sudo().filtered(lambda user: not user.res_users_settings_ids)
         if missing:
+            _debug.lifecycle("settings_records_added", users=missing.ids)
             self.env["res.users.settings"].sudo().create(
                 [{"user_id": user.id} for user in missing]
             )
@@ -897,6 +965,9 @@ class ResUsers(models.Model):
             partner = user.partner_id
             if partner.company_id and partner.company_id != user.company_id:
                 by_company[user.company_id.id] |= partner
+        _debug.pipeline(
+            "partner_company_synced", users=len(self), companies=len(by_company)
+        )
         for company_id, partners in by_company.items():
             partners.write({"company_id": company_id})
 
@@ -912,6 +983,11 @@ class ResUsers(models.Model):
             for vals in vals_list
         ]
         if any(k in backed for vals in vals_list for k in vals):
+            _debug.logic(
+                "create_settings_fields_deferred",
+                count=len(vals_list),
+                fields=sorted({k for vals in vals_list for k in vals if k in backed}),
+            )
             vals_list = [
                 {k: v for k, v in vals.items() if k not in backed} for vals in vals_list
             ]
@@ -924,6 +1000,9 @@ class ResUsers(models.Model):
         )
         users._sync_partner_company()
         inactive = users.filtered(lambda u: not u.active)
+        _debug.pipeline(
+            "create_partners_activated", users=len(users), inactive=len(inactive)
+        )
         (users - inactive).partner_id.active = True
         inactive.partner_id.active = False
         users._update_missing_avatars()
@@ -934,10 +1013,13 @@ class ResUsers(models.Model):
         return users
 
     def _update_missing_avatars(self) -> None:
+        generated = 0
         for user in self:
             if user.image_1920 or user.share or not (user.name or "").strip():
                 continue
+            generated += 1
             user.image_1920 = user.partner_id._prepare_avatar_svg()
+        _debug.perf.count("avatars_generated", users=len(self), generated=generated)
 
     def _is_escaping_own_record(self, vals: dict[str, Any]) -> bool:
         for fname, value in vals.items():
@@ -945,28 +1027,37 @@ class ResUsers(models.Model):
             if field is None or field.type not in ("one2many", "many2many"):
                 continue
             if field.type == "one2many":
+                _debug.logic("own_record_escape", field=fname, reason="one2many")
                 return True
             if isinstance(value, models.BaseModel) or not value:
                 continue
             if not isinstance(value, (list, tuple)):
+                _debug.logic("own_record_escape", field=fname, reason="not_commands")
                 return True
             for command in value:
                 if isinstance(command, (list, tuple)):
                     if not command or command[0] not in _RELATION_ONLY_COMMANDS:
+                        _debug.logic(
+                            "own_record_escape", field=fname, reason="write_command"
+                        )
                         return True
                 elif not isinstance(command, int):
+                    _debug.logic("own_record_escape", field=fname, reason="not_an_id")
                     return True
         return False
 
     def write(self, vals: dict[str, Any]) -> bool:
         if vals.get("active") and SUPERUSER_ID in self._ids:
+            _debug.logic("write_refused", users=self.ids, reason="activate_superuser")
             raise UserError(_("You cannot activate the superuser."))
         if vals.get("active") is False and self.env.uid in self._ids:
+            _debug.logic("write_refused", users=self.ids, reason="deactivate_self")
             raise UserError(
                 _("You cannot deactivate the user you're currently logged in as.")
             )
 
         if vals.get("active"):
+            _debug.lifecycle("partners_unarchived", users=self.ids)
             self.partner_id.action_unarchive()
 
         if not self._get_settings_backed_fields().isdisjoint(vals):
@@ -989,6 +1080,7 @@ class ResUsers(models.Model):
         if "company_id" in vals or "company_ids" in vals:
             for env in list(self.env.transaction.envs):
                 if env.user in self:
+                    _debug.lifecycle("env_properties_reset", uid=env.uid)
                     reset_cached_properties(env)
 
         if "group_ids" in vals and self.ids:
@@ -1029,6 +1121,7 @@ class ResUsers(models.Model):
                 )
             )
         if public_user and public_user in self:
+            _debug.logic("unlink_refused", users=self.ids, reason="public_user")
             raise UserError(
                 _(
                     "Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."
@@ -1053,6 +1146,7 @@ class ResUsers(models.Model):
                 )
             )
         ):
+            _debug.logic("name_search_by_login", found=len(user))
             return [(u.id, u.display_name) for u in user]
         return super().name_search(name, domain, operator, limit)
 
@@ -1064,6 +1158,7 @@ class ResUsers(models.Model):
                 ("login", "in", [value] if isinstance(value, str) else value)
             ]
             if users := self.search(name_domain):
+                _debug.logic("display_name_search_by_login", found=len(users))
                 domain = [("id", "in", users.ids)]
         return domain
 
@@ -1122,14 +1217,17 @@ class ResUsers(models.Model):
                     limit=1,
                 )
                 if not user:
+                    _debug.logic("login_unknown", ip=ip)
                     self._get_crypt_context().match_and_update(
                         credential.get("password") or "", _DUMMY_PASSWORD_HASH
                     )
                     raise AccessDenied
                 user = user.with_user(user).sudo()
+                _debug.pipeline("login_credentials_check", uid=user.id, ip=ip)
                 auth_info = user._check_credentials(credential, user_agent_env)
                 tz = request.cookies.get("tz") if request else None
                 if tz in all_timezones() and (not user.tz or not user.login_date):
+                    _debug.logic("login_tz_adopted", uid=user.id, tz=tz)
                     user.tz = tz
                 user._update_last_login()
         except AccessDenied:
@@ -1154,7 +1252,11 @@ class ResUsers(models.Model):
                 try:
                     base = user_agent_env["base_location"]
                     ICP = env["ir.config_parameter"]
-                    if not ICP.get_param("web.base.url.freeze"):
+                    frozen = bool(ICP.get_param("web.base.url.freeze"))
+                    _debug.logic(
+                        "base_url_from_login", uid=auth_info["uid"], frozen=frozen
+                    )
+                    if not frozen:
                         ICP.set_param("web.base.url", base)
                 except Exception:
                     _logger.exception(
@@ -1165,11 +1267,13 @@ class ResUsers(models.Model):
     @api.model
     def _check_uid_passwd(self, uid: int, passwd: str) -> None:
         if not passwd:
+            _debug.logic("uid_passwd_refused", uid=uid, reason="empty")
             raise AccessDenied
         with self._assert_can_auth(user=uid):
             passwd_hash = sha256(passwd.encode()).hexdigest()
             key_expiration = self._check_uid_passwd_cached(uid, passwd, passwd_hash)
             if key_expiration is not None and key_expiration <= fields.Datetime.now():
+                _debug.logic("uid_passwd_refused", uid=uid, reason="apikey_expired")
                 raise AccessDenied
 
     def _get_fields_session_token(self) -> set[str]:
@@ -1201,6 +1305,9 @@ class ResUsers(models.Model):
             )
         )
         if self.env.cr.rowcount != 1:
+            _debug.logic(
+                "session_token_values_missing", uid=self.id, rows=self.env.cr.rowcount
+            )
             return False
         data_fields = self.env.cr.fetchone()
         cr_description = self.env.cr.description
@@ -1217,6 +1324,7 @@ class ResUsers(models.Model):
     @api.model
     def change_password(self, old_passwd: str, new_passwd: str) -> bool:
         if not old_passwd:
+            _debug.logic("change_password_refused", uid=self.env.uid, reason="no_old")
             raise AccessDenied
 
         user = self.env.user
@@ -1233,6 +1341,7 @@ class ResUsers(models.Model):
 
     def _change_password(self, new_passwd: str) -> None:
         if not new_passwd.strip():
+            _debug.logic("change_password_refused", uid=self.id, reason="empty")
             raise UserError(
                 _("Setting empty passwords is not allowed for security reasons!")
             )
@@ -1278,6 +1387,9 @@ class ResUsers(models.Model):
                     "login": f"__deleted_user_{user.id}_{uuid.uuid4().hex}",
                     "password": "",
                 }
+            )
+            _debug.lifecycle(
+                "portal_user_scrubbed", uid=user.id, apikeys=len(user.api_key_ids)
             )
             user.api_key_ids._remove()
 
@@ -1363,6 +1475,7 @@ class ResUsers(models.Model):
     def _group_id(self, group_ext_id: str) -> int | None:
         group_id = self.env["res.groups"]._get_group_definitions().get_id(group_ext_id)
         if group_id is None:
+            _debug.logic("group_id_missing", group=group_ext_id)
             self._warn_unresolved_group(group_ext_id)
         return group_id
 
@@ -1386,6 +1499,7 @@ class ResUsers(models.Model):
         result = self._has_group(group_ext_id)
         if group_ext_id == DEBUG_GROUP:
             result = result and bool(request and request.session.debug)
+            _debug.logic("debug_group_effective", uid=self.id, result=result)
         return result
 
     @api.readonly
@@ -1406,9 +1520,11 @@ class ResUsers(models.Model):
             target.append(token.removeprefix("!"))
 
         if not (positives or negatives):
+            _debug.logic("has_groups_empty_spec", uid=self.id)
             return False
 
         if any(self._has_group_effective(ext_id) for ext_id in negatives):
+            _debug.logic("has_groups_denied", uid=self.id, negatives=negatives)
             return False
         if any(self._has_group_effective(ext_id) for ext_id in positives):
             return True
@@ -1431,7 +1547,9 @@ class ResUsers(models.Model):
         group_ids = set(group_ids)
         if not (request and request.session.debug):
             group_ids.discard(self._group_id(DEBUG_GROUP))
-        return not group_ids.isdisjoint(self._get_effective_group_ids())
+        result = not group_ids.isdisjoint(self._get_effective_group_ids())
+        _debug.logic("has_any_group", uid=self.id, groups=len(group_ids), result=result)
+        return result
 
     def _action_show(self) -> dict[str, Any]:
         view_id = self.env.ref("base.view_users_form").id
@@ -1537,14 +1655,17 @@ class ResUsers(models.Model):
             .sudo()
             .get_param("base.login_cooldown_duration", 60)
         )
+        _debug.lifecycle("login_failure_recorded", source=source, delay_s=delay)
         self._login_cooldown().record_failure(source, datetime.timedelta(seconds=delay))
 
     def _clear_login_failures(self, source: str) -> None:
+        _debug.lifecycle("login_failures_cleared", source=source)
         self._login_cooldown().clear(source)
 
     @contextlib.contextmanager
     def _assert_can_auth(self, user: int | str | None = None) -> Generator[None]:
         if not request:
+            _debug.logic("auth_cooldown_skipped", reason="no_request")
             yield
             return
 
@@ -1590,12 +1711,21 @@ class ResUsers(models.Model):
         cfg = self.env["ir.config_parameter"].sudo()
         min_failures = int(cfg.get_param("base.login_cooldown_after", 5))
         if min_failures == 0:
+            _debug.logic("login_cooldown_disabled")
             return False
 
         delay = int(cfg.get_param("base.login_cooldown_duration", 60))
-        return failures >= min_failures and (
+        on_cooldown = failures >= min_failures and (
             datetime.datetime.now(datetime.UTC) - previous
         ) < datetime.timedelta(seconds=delay)
+        _debug.logic(
+            "login_cooldown_evaluated",
+            failures=failures,
+            min_failures=min_failures,
+            delay_s=delay,
+            on_cooldown=on_cooldown,
+        )
+        return on_cooldown
 
     def _get_mfa_type(self) -> str | None:
         return
@@ -1616,6 +1746,7 @@ class ResUsers(models.Model):
         if allfields:
             missing = missing.intersection(allfields)
         if missing:
+            _debug.logic("fields_get_self_fields_added", fields=sorted(missing))
             self = self.sudo()
             res.update(
                 {
@@ -1638,9 +1769,12 @@ class ResUsers(models.Model):
         if view == self.env.ref("base.view_users_form_simple_modif"):
             tree = etree.fromstring(arch)
             readable = self._get_self_accessible_fields()[0]
+            ungrouped = 0
             for node_field in tree.xpath("//field[@__groups_key__]"):
                 if node_field.get("name") in readable:
+                    ungrouped += 1
                     node_field.attrib.pop("__groups_key__")
+            _debug.pipeline("preferences_view_postprocessed", ungrouped=ungrouped)
             arch = etree.tostring(tree)
         return arch, models
 
@@ -1661,6 +1795,7 @@ class UsersMultiCompany(models.Model):
     def _sync_multi_company_group(self) -> None:
         group_id = self._group_id("base.group_multi_company")
         if not group_id:
+            _debug.logic("multi_company_sync_skipped", reason="no_group")
             return
         to_add = to_remove = self.browse()
         for user in self:
@@ -1706,6 +1841,7 @@ class UsersMultiCompany(models.Model):
         if group_id:
             wanted = user._resolve_multi_company_group_membership(group_id)
             if wanted is not None:
+                _debug.logic("multi_company_group_on_new", wanted=wanted)
                 command = Command.link(group_id) if wanted else Command.unlink(group_id)
                 user.update({"group_ids": [command]})
         return user

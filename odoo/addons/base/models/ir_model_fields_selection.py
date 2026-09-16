@@ -59,7 +59,9 @@ class IrModelFieldsSelection(models.Model):
         """,
             (field_id,),
         )
-        return self.env.cr.fetchall()
+        rows = self.env.cr.fetchall()
+        _debug.perf.count("selection_data.loaded", field=field_id, values=len(rows))
+        return rows
 
     def _reflect_selections(self, model_names: list[str]) -> None:
         selection_fields = [
@@ -70,6 +72,7 @@ class IrModelFieldsSelection(models.Model):
             if isinstance(field.selection, list)
         ]
         if not selection_fields:
+            _debug.logic("reflect_selections.skipped", models=len(model_names))
             return
         if invalid_fields := OrderedSet(
             field
@@ -78,6 +81,11 @@ class IrModelFieldsSelection(models.Model):
             for value_label in selection
             if not isinstance(value_label, str)
         ):
+            _debug.logic(
+                "reflect_selections.rejected",
+                fields=len(invalid_fields),
+                reason="non_str_value_label",
+            )
             raise ValidationError(
                 _(
                     "Fields %s contain a non-str value/label in selection",
@@ -115,11 +123,15 @@ class IrModelFieldsSelection(models.Model):
             changed=len(rows),
         )
         if rows:
-            ids = upsert_en(self, cols, rows, ["field_id", "value"])
+            with _debug.perf(
+                "reflect_selections.upsert", cr=self.env.cr, rows=len(rows)
+            ):
+                ids = upsert_en(self, cols, rows, ["field_id", "value"])
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         module = self.env.context.get("module")
         if not module:
+            _debug.logic("reflect_selections.no_xmlids", reason="no_module_in_context")
             return
 
         query = """
@@ -177,6 +189,22 @@ class IrModelFieldsSelection(models.Model):
                 new_row["name"] = Json({"en_US": new_row["name"]})
                 rows_to_update.append(dict(new_row, id=cur_row["id"]))
 
+        _debug.lifecycle(
+            "update_selection",
+            model=model_name,
+            field=field_name,
+            inserted=len(rows_to_insert),
+            updated=len(rows_to_update),
+            removed=len(rows_to_remove),
+        )
+        _debug.lifecycle(
+            "update_selection",
+            model=model_name,
+            field=field_name,
+            inserted=len(rows_to_insert),
+            updated=len(rows_to_update),
+            removed=len(rows_to_remove),
+        )
         if rows_to_insert:
             query_insert(self.env.cr, self._table, rows_to_insert)
 
@@ -209,6 +237,7 @@ class IrModelFieldsSelection(models.Model):
 
     def _check_base_field_mutation(self, fields_: Any) -> None:
         if any(field.state != "manual" for field in fields_):
+            _debug.logic("mutation.rejected", fields=len(fields_), reason="base_field")
             raise self._prepare_base_field_error()
 
     @api.model_create_multi
@@ -229,6 +258,18 @@ class IrModelFieldsSelection(models.Model):
                     "field not in registry",
                     model,
                     name,
+                )
+                _debug.logic(
+                    "create.setup_skipped",
+                    model=model,
+                    field=name,
+                    reason="field_not_in_registry",
+                )
+                _debug.logic(
+                    "create.setup_skipped",
+                    model=model,
+                    field=name,
+                    reason="field_not_in_registry",
                 )
         _debug.lifecycle("create", count=len(recs), setup_models=list(model_names))
         if model_names:
@@ -261,6 +302,20 @@ class IrModelFieldsSelection(models.Model):
         fname = field.name
         column = SQL.identifier(fname)
         model.invalidate_model([fname])
+        _debug.logic(
+            "rename_stored_values.strategy",
+            model=field.model,
+            field=fname,
+            jsonb=self._is_jsonb_stored(field),
+            reference=self._is_reference(field),
+        )
+        _debug.logic(
+            "rename_stored_values.strategy",
+            model=field.model,
+            field=fname,
+            jsonb=self._is_jsonb_stored(field),
+            reference=self._is_reference(field),
+        )
         if self._is_jsonb_stored(field):
             stored = SQL("(e.value #>> '{}')")
             query = SQL(
@@ -290,7 +345,11 @@ class IrModelFieldsSelection(models.Model):
                 self._prepare_renamed_stored_value(field, column, old_value, new_value),
                 self._prepare_stored_value_match(field, column, old_value),
             )
-        self.env.cr.execute(query)
+        with _debug.perf(
+            "rename_stored_values.query", cr=self.env.cr, table=model._table
+        ) as span:
+            self.env.cr.execute(query)
+            span.set(rows=self.env.cr.rowcount)
 
     def write(self, vals: dict[str, Any]) -> bool:
         if not self:
@@ -301,6 +360,12 @@ class IrModelFieldsSelection(models.Model):
 
         if "value" in vals:
             if len(self) > len(self.field_id):
+                _debug.logic(
+                    "write.rejected",
+                    count=len(self),
+                    fields=len(self.field_id),
+                    reason="duplicate_value_per_field",
+                )
                 raise UserError(
                     _(
                         "Cannot set the same value on several selection options "
@@ -328,8 +393,12 @@ class IrModelFieldsSelection(models.Model):
         self.env.flush_all()
         if {"value", "sequence", "field_id"} & vals.keys():
             model_names = self.field_id.model_id.mapped("model")
-            self.pool.setup_models(self.env.cr, model_names)
+            with _debug.perf(
+                "registry_setup_after_write", cr=self.env.cr, models=model_names
+            ):
+                self.pool.setup_models(self.env.cr, model_names)
         elif "name" in vals:
+            _debug.logic("write.cache_cleared", reason="label_only")
             self.env.registry.clear_cache("stable")
 
         if "value" in vals:
@@ -341,6 +410,11 @@ class IrModelFieldsSelection(models.Model):
         IrDefault = self.env["ir.default"]
         for selection in self:
             if old_values[selection.id] != selection.value:
+                _debug.pipeline(
+                    "rename_defaults",
+                    model=selection.field_id.model,
+                    field=selection.field_id.name,
+                )
                 IrDefault.rename_value(
                     selection.field_id.model,
                     selection.field_id.name,
@@ -369,7 +443,10 @@ class IrModelFieldsSelection(models.Model):
 
         if not uninstalling:
             self.env.flush_all()
-            self.pool.setup_models(self.env.cr, model_names)
+            with _debug.perf(
+                "registry_setup_after_unlink", cr=self.env.cr, models=model_names
+            ):
+                self.pool.setup_models(self.env.cr, model_names)
 
         return result
 
@@ -377,6 +454,12 @@ class IrModelFieldsSelection(models.Model):
         IrDefault = self.env["ir.default"]
         for field_record, selections in self.grouped("field_id").items():
             if field_record.model in self.env:
+                _debug.pipeline(
+                    "discard_defaults",
+                    model=field_record.model,
+                    field=field_record.name,
+                    values=len(selections),
+                )
                 IrDefault.discard_values(
                     field_record.model, field_record.name, selections.mapped("value")
                 )
@@ -412,12 +495,30 @@ class IrModelFieldsSelection(models.Model):
         for field_record, selections in self.grouped("field_id").items():
             Model = self.env.get(field_record.model)
             if Model is None:
+                _debug.logic(
+                    "ondelete.skipped",
+                    model=field_record.model,
+                    field=field_record.name,
+                    reason="model_not_in_registry",
+                )
                 continue
             field = Model._fields.get(field_record.name)
             if not field or not field.store or not Model._auto:
+                _debug.logic(
+                    "ondelete.skipped",
+                    model=field_record.model,
+                    field=field_record.name,
+                    reason="not_stored",
+                )
                 continue
 
             if field.type not in ("selection", "reference"):
+                _debug.logic(
+                    "ondelete.skipped",
+                    model=field_record.model,
+                    field=field_record.name,
+                    reason="not_selection",
+                )
                 continue
 
             policies = {}
@@ -443,6 +544,22 @@ class IrModelFieldsSelection(models.Model):
                 )
                 for value, ondelete in policies.items():
                     records = records_by_value.get(value, company_model.browse())
+                    _debug.logic(
+                        "ondelete.applied",
+                        model=Model._name,
+                        field=field.name,
+                        company=company.id,
+                        policy=ondelete if isinstance(ondelete, str) else "callable",
+                        records=len(records),
+                    )
+                    _debug.logic(
+                        "ondelete.applied",
+                        model=Model._name,
+                        field=field.name,
+                        company=company.id,
+                        policy=ondelete if isinstance(ondelete, str) else "callable",
+                        records=len(records),
+                    )
                     if callable(ondelete):
                         ondelete(records)
                     elif ondelete == "set null":
@@ -516,6 +633,14 @@ class IrModelFieldsSelection(models.Model):
             values,
         )
         self.env.cr.execute(query)
-        return {
+        by_value = {
             value: company_model.browse(ids) for value, ids in self.env.cr.fetchall()
         }
+        _debug.perf.count(
+            "records_by_value.fetched",
+            model=company_model._name,
+            field=fname,
+            values=len(values),
+            matched=len(by_value),
+        )
+        return by_value

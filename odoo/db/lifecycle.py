@@ -43,7 +43,10 @@ _RESET_SESSION_STATE_SQL = (
 
 
 def get_backend_pid(conn: object) -> int | None:
-    return getattr(getattr(conn, "info", None), "backend_pid", None)
+    try:
+        return getattr(getattr(conn, "info", None), "backend_pid", None)
+    except psycopg.OperationalError:
+        return None
 
 
 def clear_prepared_cache(conn: psycopg.Connection) -> bool:

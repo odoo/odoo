@@ -99,11 +99,20 @@ class MixinMerge(models.AbstractModel):
 
     def _get_relations_to_repoint(self, model: str) -> list[tuple[str, str]]:
         skipped_tables = self._get_merge_tables_excluded(model)
-        return [
+        foreign_keys = self._get_foreign_keys_on_table(self.env[model]._table)
+        relations = [
             (table, column)
-            for table, column in self._get_foreign_keys_on_table(self.env[model]._table)
+            for table, column in foreign_keys
             if table not in skipped_tables
         ]
+        _debug.perf.count(
+            "relations_to_repoint",
+            model=model,
+            foreign_keys=len(foreign_keys),
+            excluded_tables=len(skipped_tables),
+            relations=len(relations),
+        )
+        return relations
 
     @api.model
     def _update_foreign_keys_generic(
@@ -158,6 +167,9 @@ class MixinMerge(models.AbstractModel):
             )
         )
         if self.env.cr.fetchone() is None:
+            _debug.logic(
+                "repoint_table_skipped", table=table, column=column, reason="no_rows"
+            )
             return
 
         if len(other_columns) <= 1:
@@ -242,6 +254,13 @@ class MixinMerge(models.AbstractModel):
         tbl = SQL.identifier(table)
         col = SQL.identifier(column)
         if "id" not in sql_tools.get_table_columns(self.env.cr, table):
+            _debug.logic(
+                "repoint_one_by_one",
+                table=table,
+                column=column,
+                by="source_record",
+                sources=len(src_records),
+            )
             for record in src_records:
                 try:
                     with mute_logger("odoo.db"), self.env.cr.savepoint():
@@ -267,6 +286,13 @@ class MixinMerge(models.AbstractModel):
             SQL("SELECT id FROM %s WHERE %s = ANY(%s)", tbl, col, list(src_records.ids))
         )
         row_ids = [row_id for (row_id,) in self.env.cr.fetchall()]
+        _debug.logic(
+            "repoint_one_by_one",
+            table=table,
+            column=column,
+            by="row",
+            rows=len(row_ids),
+        )
         for row_id in row_ids:
             try:
                 with mute_logger("odoo.db"), self.env.cr.savepoint():
@@ -313,15 +339,28 @@ class MixinMerge(models.AbstractModel):
             destination=dst_record.id,
             additional=len(additional_update_records or []),
         )
-        self._repoint_sidecar_rows(
-            referenced_model, src_records, dst_record, additional_update_records or []
-        )
-        self._repoint_reference_fields(referenced_model, src_records, dst_record)
-        self._repoint_company_dependent_many2ones(src_records, dst_record)
-        self._repoint_company_dependent_defaults(src_records, dst_record)
+        with _debug.perf(
+            "repoint_sidecar_rows", cr=self.env.cr, model=referenced_model
+        ):
+            self._repoint_sidecar_rows(
+                referenced_model,
+                src_records,
+                dst_record,
+                additional_update_records or [],
+            )
+        with _debug.perf(
+            "repoint_reference_fields", cr=self.env.cr, model=referenced_model
+        ):
+            self._repoint_reference_fields(referenced_model, src_records, dst_record)
+        with _debug.perf(
+            "repoint_company_dependent", cr=self.env.cr, model=referenced_model
+        ):
+            self._repoint_company_dependent_many2ones(src_records, dst_record)
+            self._repoint_company_dependent_defaults(src_records, dst_record)
 
         self.env.flush_all()
         self.env["ir.default"]._invalidate_defaults_cache()
+        _debug.lifecycle("defaults_cache_invalidated", model=referenced_model)
 
     @api.model
     def _get_sidecar_reference_fields(self) -> list[tuple[str, str, str]]:
@@ -344,6 +383,13 @@ class MixinMerge(models.AbstractModel):
             (update_record["model"], update_record["field_model"], "res_id")
             for update_record in additional_update_records
         ]
+        _debug.perf.count(
+            "sidecar_fields",
+            model=referenced_model,
+            sidecars=len(sidecars),
+            additional=len(additional_update_records),
+            sources=len(src_records),
+        )
         for record in src_records:
             for model, field_model, field_id in sidecars:
                 self._repoint_model_rows(
@@ -361,6 +407,7 @@ class MixinMerge(models.AbstractModel):
     ) -> None:
         Model = self.env.get(model, None)
         if Model is None:
+            _debug.logic("repoint_model_rows_skipped", model=model, reason="no_model")
             return
         records = (
             Model.sudo()
@@ -370,6 +417,13 @@ class MixinMerge(models.AbstractModel):
         if not records:
             return
         if not self._has_check_or_unique_constraint(records._table, field_id):
+            _debug.logic(
+                "repoint_model_rows",
+                model=model,
+                field=field_id,
+                rows=len(records),
+                strategy="bulk",
+            )
             records.write({field_id: dst_record.id})
             records.env.flush_all()
             return
@@ -377,7 +431,21 @@ class MixinMerge(models.AbstractModel):
             with mute_logger("odoo.db"), self.env.cr.savepoint():
                 records.write({field_id: dst_record.id})
                 records.env.flush_all()
+            _debug.logic(
+                "repoint_model_rows",
+                model=model,
+                field=field_id,
+                rows=len(records),
+                strategy="bulk_constrained",
+            )
         except psycopg.Error:
+            _debug.logic(
+                "repoint_model_rows",
+                model=model,
+                field=field_id,
+                rows=len(records),
+                strategy="one_by_one",
+            )
             self._repoint_model_rows_one_by_one(records, field_id, src, dst_record)
 
     def _repoint_model_rows_one_by_one(
@@ -418,6 +486,12 @@ class MixinMerge(models.AbstractModel):
         )
         src_values = [f"{referenced_model},{src.id}" for src in src_records]
         new_value = f"{referenced_model},{dst_record.id}"
+        _debug.perf.count(
+            "reference_declarations",
+            model=referenced_model,
+            declarations=len(declarations),
+            sources=len(src_values),
+        )
         for declaration in declarations:
             try:
                 Model = self.env[declaration.model]
@@ -439,7 +513,21 @@ class MixinMerge(models.AbstractModel):
                 with mute_logger("odoo.db"), self.env.cr.savepoint():
                     records_ref.sudo().write({declaration.name: new_value})
                     records_ref.env.flush_all()
+                _debug.logic(
+                    "repoint_reference",
+                    model=declaration.model,
+                    field=declaration.name,
+                    rows=len(records_ref),
+                    strategy="bulk",
+                )
             except psycopg.Error:
+                _debug.logic(
+                    "repoint_reference",
+                    model=declaration.model,
+                    field=declaration.name,
+                    rows=len(records_ref),
+                    strategy="one_by_one",
+                )
                 self._repoint_reference_rows_one_by_one(
                     records_ref, declaration, new_value, src_records, dst_record
                 )
@@ -476,7 +564,11 @@ class MixinMerge(models.AbstractModel):
         src_records: models.BaseModel,
         dst_record: models.BaseModel,
     ) -> None:
-        for field in self.env.registry.many2one_company_dependents[dst_record._name]:
+        fields = self.env.registry.many2one_company_dependents[dst_record._name]
+        _debug.perf.count(
+            "company_dependent_many2ones", model=dst_record._name, fields=len(fields)
+        )
+        for field in fields:
             self.env.cr.execute(
                 SQL(
                     """
@@ -531,6 +623,11 @@ class MixinMerge(models.AbstractModel):
                 model_name=dst_record._name,
             )
         )
+        _debug.perf.count(
+            "company_dependent_defaults_repointed",
+            model=dst_record._name,
+            rows=self.env.cr.rowcount,
+        )
 
     @api.model
     def _update_company_dependent_values_generic(
@@ -540,9 +637,11 @@ class MixinMerge(models.AbstractModel):
     ) -> None:
         self.env.flush_all()
 
+        merged = 0  # debuglog
         for fname, field in dst_record._fields.items():
             if not field.company_dependent:
                 continue
+            merged += 1  # debuglog
             self.env.execute_query(
                 SQL(
                     """
@@ -567,6 +666,12 @@ class MixinMerge(models.AbstractModel):
                 )
             )
         self.env.invalidate_all()
+        _debug.lifecycle(
+            "company_dependent_values_merged",
+            model=dst_record._name,
+            destination=dst_record.id,
+            fields=merged,
+        )
 
     @api.model
     def _update_values_generic(
@@ -597,6 +702,14 @@ class MixinMerge(models.AbstractModel):
         values = {}
         values_by_company = defaultdict(dict)
         companies = self.env["res.company"].sudo().search([])
+        _debug.perf.count(
+            "merge_values_scan",
+            model=dst_record._name,
+            fields=len(model_fields),
+            sources=len(src_records),
+            companies=len(companies),
+            summable=len(summable_fields),
+        )
         for column in model_fields:
             field = dst_record._fields[column]
             if (

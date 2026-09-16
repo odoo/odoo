@@ -89,6 +89,11 @@ class ResBank(models.Model):
     @api.onchange("country")
     def _onchange_country(self) -> None:
         if self.country and self.country != self.state.country_id:
+            _debug.logic(
+                "state_cleared_on_country_change",
+                country=self.country.id,
+                state=self.state.id,
+            )
             self.state = False
 
     @api.onchange("state")
@@ -191,6 +196,11 @@ class ResPartnerBank(models.Model):
             value = [sanitize_account_number(i) for i in value]
         else:
             value = sanitize_account_number(value)
+        _debug.logic(
+            "acc_number_search",
+            operator=operator,
+            values=len(value) if isinstance(value, list) else 1,
+        )
         return [("sanitized_acc_number", operator, value)]
 
     def _can_user_trust(self):
@@ -229,14 +239,21 @@ class ResPartnerBank(models.Model):
             and bank_account
             and not bank_account.filtered("active")
         ):
-            bank_account.filtered(lambda b: b.partner_id == partner).sudo(
-                False
-            ).action_unarchive()
+            revived = bank_account.filtered(lambda b: b.partner_id == partner)
+            _debug.lifecycle(
+                "bank_account_revived", partner=partner.id, accounts=revived.ids
+            )
+            revived.sudo(False).action_unarchive()
         if not bank_account:
             if (
                 not allow_company_account_creation
                 and partner.id in self.env["res.company"]._get_company_partner_ids()
             ):
+                _debug.logic(
+                    "bank_account_creation_refused",
+                    partner=partner.id,
+                    reason="company_partner",
+                )
                 raise UserError(
                     _(
                         "Please add your own bank account manually: %(account_number)s (%(partner)s)",
@@ -259,16 +276,20 @@ class ResPartnerBank(models.Model):
             _debug.lifecycle(
                 "bank_account_created", partner=partner.id, account=bank_account.id
             )
-        return (
-            bank_account.filtered_domain(
-                [
-                    *self.env["res.partner.bank"]._check_company_domain(company),
-                    ("active", "=", True),
-                ]
-            )
-            .sorted(lambda b: b.partner_id != partner)
-            .sudo(False)[:1]
+        usable = bank_account.filtered_domain(
+            [
+                *self.env["res.partner.bank"]._check_company_domain(company),
+                ("active", "=", True),
+            ]
         )
+        _debug.logic(
+            "bank_account_resolved",
+            partner=partner.id,
+            company=company.id if company else False,
+            candidates=len(bank_account),
+            usable=len(usable),
+        )
+        return usable.sorted(lambda b: b.partner_id != partner).sudo(False)[:1]
 
     @api.depends("acc_number")
     def _compute_acc_type(self) -> None:
@@ -299,6 +320,7 @@ class ResPartnerBank(models.Model):
 
     def _sanitize_vals(self, vals: ValuesType) -> ValuesType:
         if "acc_number" not in vals and "sanitized_acc_number" in vals:
+            _debug.logic("acc_number_taken_from_sanitized")
             vals["acc_number"] = vals.pop("sanitized_acc_number")
         if "acc_number" in vals:
             vals["sanitized_acc_number"] = sanitize_account_number(vals["acc_number"])

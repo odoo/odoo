@@ -23,6 +23,7 @@ class AssetAttachmentStore:
     @classmethod
     def register_tracked_bundle(cls, name: str) -> None:
         cls.TRACKED_BUNDLES.add(name)
+        _debug.lifecycle("tracked_bundle_registered", bundle=name)
 
     _ATTACHMENT_MIMETYPES = MappingProxyType(
         {
@@ -102,6 +103,12 @@ class AssetAttachmentStore:
             )
         )
         deleted_ids = {row[0] for row in self.env.cr.fetchall()}
+        if _debug.logic.enabled and len(deleted_ids) < len(attachments):
+            _debug.logic(
+                "attachments_skipped_locked",
+                bundle=self.name,
+                skipped=len(attachments) - len(deleted_ids),
+            )
         to_delete = {
             fname
             for attach_id, fname in fname_by_id.items()
@@ -154,6 +161,12 @@ class AssetAttachmentStore:
             else self._version("css" if self.is_css(extension) else "js")
         )
         url_pattern = self.get_asset_url_pattern(unique=unique, extension=extension)
+        _debug.logic(
+            "attachment_lookup",
+            bundle=self.name,
+            extension=extension,
+            versioned=not ignore_version,
+        )
         query = """
              SELECT max(id)
                FROM ir_attachment
@@ -180,6 +193,9 @@ class AssetAttachmentStore:
     def save_attachment(self, extension: str, content: str) -> IrAttachment:
         mimetype = self._ATTACHMENT_MIMETYPES.get(extension)
         if mimetype is None:
+            _debug.logic(
+                "attachment_save_rejected", bundle=self.name, extension=extension
+            )
             raise ValueError(f"Invalid asset extension {extension!r}")
         ira = self.env["ir.attachment"]
 
@@ -192,7 +208,10 @@ class AssetAttachmentStore:
         values = self._attachment_values(
             name=fname, mimetype=mimetype, raw=content.encode("utf-8"), url=url
         )
-        attachment = ira.with_user(SUPERUSER_ID).create(values)
+        with _debug.perf(
+            "attachment_create", cr=self.env.cr, bundle=self.name, extension=extension
+        ):
+            attachment = ira.with_user(SUPERUSER_ID).create(values)
 
         _logger.info(
             "Generating a new asset bundle attachment %s (id:%s)",
@@ -209,8 +228,16 @@ class AssetAttachmentStore:
 
         self._clean_attachments(extension, url)
 
-        if "bus.bus" in self.env and self.name in self.TRACKED_BUNDLES:
+        broadcast = "bus.bus" in self.env and self.name in self.TRACKED_BUNDLES
+        if broadcast:
             self._broadcast_bundle_changed(unique)
+        if _debug.logic.enabled and not broadcast:
+            _debug.logic(
+                "bundle_changed_not_broadcast",
+                bundle=self.name,
+                tracked=self.name in self.TRACKED_BUNDLES,
+                bus="bus.bus" in self.env,
+            )
 
         return attachment
 
