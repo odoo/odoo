@@ -16,6 +16,17 @@ class IrQweb(models.AbstractModel):
     def _get_preload_attribute_xmlids(self):
         return super()._get_preload_attribute_xmlids() + ['t-snippet', 't-snippet-call']
 
+    def _compile_root(self, element, compile_context):
+        install_keys = {
+            el.get('t-install')
+            for el in element.iter()
+            if el.get('t-install')
+        }
+        if install_keys and self.env.user.has_group('base.group_system'):
+            modules = self.env['ir.module.module'].search([('name', 'in', list(install_keys))])
+            compile_context['_t_install_modules'] = {module.name: module for module in modules}
+        return super()._compile_root(element, compile_context)
+
     # compile directives
 
     def _compile_directive_snippet(self, el, compile_context, indent):
@@ -116,7 +127,7 @@ class IrQweb(models.AbstractModel):
         label = el.attrib.pop('label', None)
         name = el.attrib.pop('string', 'Snippet')
         if self.env.user.has_group('base.group_system'):
-            module = self.env['ir.module.module'].search([('name', '=', key)])
+            module = compile_context.get('_t_install_modules', {}).get(key)
             if not module or module.state == 'installed':
                 return []
             div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s %s><section/></div>') % (
