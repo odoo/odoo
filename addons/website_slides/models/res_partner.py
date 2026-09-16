@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
 
 
 class ResPartner(models.Model):
@@ -21,6 +20,8 @@ class ResPartner(models.Model):
     slide_channel_count = fields.Integer(
         'Course Count', compute='_compute_slide_channel_values',
         groups="website_slides.group_website_slides_officer")
+    # slide_channel_company_count has been generalized to descendant channel count
+    # To be renamed in master
     slide_channel_company_count = fields.Integer(
         'Company Course Count', compute='_compute_slide_channel_company_count',
         groups="website_slides.group_website_slides_officer")
@@ -58,25 +59,18 @@ class ResPartner(models.Model):
     @api.depends('is_company', 'child_ids.slide_channel_count')
     def _compute_slide_channel_company_count(self):
         for partner in self:
-            if partner.is_company:
-                partner.slide_channel_company_count = self.env['slide.channel'].sudo().search_count(
-                    [('partner_ids', 'in', partner.child_ids.ids)]
-                )
-            else:
-                partner.slide_channel_company_count = 0
+            partner.slide_channel_company_count = self.env['slide.channel'].sudo().search_count(
+                [('partner_ids', 'child_of', partner.ids)]
+            )
 
     def action_view_courses(self):
-        """ View partners courses. In singleton mode, return courses followed
-        by all its contacts (if company) or by themselves (if not a company).
-        Otherwise simply set a domain on required partners. The courses to which
-        the partner(s) is not enrolled (e.g. invited) are not shown. """
+        """ View partners courses. Return courses followed
+        by themselves and all its descendants. The courses to which
+        the partner(s) is not enrolled (e.g. invited) are not shown."""
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['display_name'] = _('Courses')
-        action['domain'] = [('member_status', '!=', 'invited')]
-        if len(self) == 1 and self.is_company:
-            action['domain'] = expression.AND([action['domain'], [('partner_id', 'in', self.child_ids.ids)]])
-        elif len(self) == 1:
-            action['context'] = {'search_default_partner_id': self.id}
-        else:
-            action['domain'] = expression.AND([action['domain'], [('partner_id', 'in', self.ids)]])
+        action['domain'] = [
+            ('member_status', '!=', 'invited'),
+            ('partner_id', 'child_of', self.ids),
+        ]
         return action
