@@ -353,6 +353,22 @@ class MrpProduction(models.Model):
         readonly=False,
         domain=_NON_INVENTORY_MOVE_DOMAIN,
     )
+    # Undomained siblings of `move_raw_ids` and `move_finished_ids`, and the
+    # reason they are declared is not that anything reads them. `modified()`
+    # navigates from a written `stock.move` back to the productions whose
+    # dependent fields need recomputing, and it does that through an inverse
+    # One2many; the domained pair cannot serve, so without these two the ORM
+    # falls back to one query per production on every move written. Measured on
+    # a fresh database, `mrp.production.create()` of 20 orders: 4 queries per
+    # order with them, 6 without.
+    all_move_raw_ids = fields.One2many(
+        comodel_name="stock.move",
+        inverse_name="raw_material_production_id",
+    )
+    all_move_ids = fields.One2many(
+        comodel_name="stock.move",
+        inverse_name="production_id",
+    )
     move_byproduct_ids = fields.One2many(
         comodel_name="stock.move",
         compute="_compute_move_byproduct_ids",

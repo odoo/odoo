@@ -1016,6 +1016,60 @@ class TestMrpAuditFixes(TestMrpCommon):
         self.assertAlmostEqual(workorder.duration, 12.0, delta=0.1)
         self.assertAlmostEqual(workorder.duration_live, workorder.duration)
 
+    def test_creating_orders_costs_no_query_per_order_for_its_moves(self):
+        """`all_move_raw_ids` and `all_move_ids` are read by nothing and load-bearing.
+
+        They are the undomained siblings of `move_raw_ids` and
+        `move_finished_ids`. `modified()` navigates from a written `stock.move`
+        back to the productions whose dependent fields need recomputing, and it
+        does that through an inverse One2many — which the domained pair cannot
+        serve. Deleting them as dead (no reference in odoo, enterprise,
+        agromarin or design-themes, and none in any stored expression) cost two
+        queries per order created, and no test said so.
+
+        The guard is the marginal cost of one more order, not a total: a total
+        moves with every unrelated change and a budget only fails above itself.
+        """
+        component = self.env["product.product"].create(
+            {"name": "Marginal component", "is_storable": True}
+        )
+        product = self.env["product.product"].create(
+            {"name": "Marginal", "is_storable": True}
+        )
+        bom = self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 2})
+                ],
+            }
+        )
+
+        def cost(count):
+            self.env.flush_all()
+            self.env.invalidate_all()
+            before = self.env.cr.sql_statement_count
+            self.env["mrp.production"].create(
+                [
+                    {"product_id": product.id, "product_qty": 1.0, "bom_id": bom.id}
+                    for _ in range(count)
+                ]
+            )
+            self.env.flush_all()
+            return self.env.cr.sql_statement_count - before
+
+        few, many = cost(2), cost(12)
+        per_order = (many - few) / 10
+        self.assertLess(
+            per_order,
+            5.0,
+            "creating a manufacturing order must not cost a query per order for "
+            "its own moves: %s queries for 2 orders, %s for 12, %.2f per order"
+            % (few, many, per_order),
+        )
+
     def test_a_timer_that_starts_after_the_transaction_did_still_accrues(self):
         """The bound on a running timer must be the clock that stamped its start.
 

@@ -236,7 +236,9 @@ class StockRule(models.Model):
             procurement.product_qty, uom, round=False
         )
         if not is_batch_size:
-            yield uom.round(quantity)
+            yield procurement.product_uom_id._compute_quantity(
+                procurement.product_qty, uom
+            )
             return
         batch_size = bom.batch_size
         if uom.compare(batch_size, 0) <= 0:
@@ -286,7 +288,11 @@ class StockRule(models.Model):
             batches=batches,
         )
         for _batch in range(batches):
-            yield uom.round(batch_size)
+            # `uom.round` is the 'Product Unit' decimal precision rounded
+            # HALF-UP; sizing a record wants the unit's own `rounding`, rounded
+            # UP, which is what `_compute_quantity` does and what the caller
+            # this replaced did.
+            yield uom._compute_quantity(batch_size, uom)
 
     def _prepare_stock_move_vals(self, procurement):
         res = super()._prepare_stock_move_vals(procurement)

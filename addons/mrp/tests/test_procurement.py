@@ -1385,6 +1385,53 @@ class TestProcurement(TestMrpCommon):
         )
         self.assertEqual(sum(orders.mapped("product_qty")), 1000.0)
 
+    def test_an_unbatched_procurement_rounds_the_way_it_always_did(self):
+        """The path almost every procurement takes must not have moved.
+
+        `uom.round` rounds HALF-UP at the 'Product Unit' decimal precision and
+        never reads the unit; `_compute_quantity` rounds UP at the unit's own
+        `rounding`. Sizing a record wants the second -- `uom_uom.py` says so in
+        as many words -- and a first draft of this method used the first, which
+        rounds a converted quantity below the unit's precision DOWN TO ZERO
+        where the original rounded it up. Across every convertible unit pair in
+        the database the two disagreed on 176 of 536 conversions.
+
+        A gram of a kilogram-based product is one of them, and the point of
+        choosing it is that it discriminates: 1 g is 0.001 kg, which rounds UP
+        to 0.01 kg and HALF-UP to nothing. An hour/minute pair, which was this
+        test's first draft, agrees under both and pins nothing.
+        """
+        kg = self.env.ref("uom.product_uom_kgm")
+        gram = self.env.ref("uom.product_uom_gram")
+        self.assertEqual(gram._compute_quantity(1.0, kg), 0.01)
+        self.assertEqual(kg.round(gram._compute_quantity(1.0, kg, round=False)), 0.0)
+
+        product = self.env["product.product"].create(
+            {"name": "Rounded", "is_storable": True, "uom_id": kg.id}
+        )
+        component = self.env["product.product"].create(
+            {"name": "Rounded component", "is_storable": True}
+        )
+        self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_uom_id": kg.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 1})
+                ],
+            }
+        )
+        orders = self._run_batched_manufacture(product, 1.0, gram)
+        self.assertEqual(orders.product_uom_id, kg)
+        self.assertEqual(
+            orders.mapped("product_qty"),
+            [0.01],
+            "a gram of a kilogram-based product must round up to the unit's own"
+            " precision, not down to nothing",
+        )
+
     def test_a_batch_size_too_small_for_the_demand_is_refused_not_obeyed(self):
         """A thousand-order answer is worse than saying the configuration is wrong.
 
