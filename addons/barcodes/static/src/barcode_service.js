@@ -121,6 +121,12 @@ export const barcodeService = {
             if (isMobileChrome) {
                 barcodeInput = makeBarcodeInput();
                 document.body.appendChild(barcodeInput);
+                // IME typing only fires "Unidentified" keydowns: postpone the scan end on input
+                barcodeInput.addEventListener("input", () => {
+                    currentTarget ??= barcodeInput;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);
+                });
             }
             const handler = isMobileChrome ? mobileChromeHandler : keydownHandler;
             document.body.addEventListener('keydown', handler);
