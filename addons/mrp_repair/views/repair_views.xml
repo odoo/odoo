@@ -16,6 +16,13 @@
                         </div>
                     </button>
                 </xpath>
+                <xpath expr="//field[@name='move_ids']/list/field[@name='product_id']" position="attributes">
+                    <attribute name="context">{
+                        'default_is_storable': True,
+                        'search_default_bom_parts': parent.filter_on_components,
+                        'catalog_bom_product_ids': parent.component_product_ids,
+                    }</attribute>
+                </xpath>
             </field>
         </record>
     </data>
