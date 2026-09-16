@@ -316,6 +316,8 @@
                 <field name="source_stale" invisible="1"/>
                 <field name="source_attendance_id" invisible="1"/>
                 <popover>
+                    <field name="source_stale"/>
+                    <field name="source_attendance_id"/>
                     <templates>
                         <t t-name="popover-body" class="gap-3">
                             <div class="alert alert-warning py-1 px-2 mb-0 small" role="status" invisible="not source_stale">
