@@ -806,6 +806,12 @@ one exception, and the scanner has a control showing it tells the two apart.
   a savepoint → propagates; permits and checkouts balanced through all of it.
   This closes the grace window's one failure mode for the common case — a
   request's first statement — and leaves `retrying`'s contract untouched.
+  The dead connection goes back **before** the replacement is borrowed: its
+  permit is the one the replacement needs when the budget is spent, and
+  `maxconn=1` is the limit case (measured: replayed in 0.01 s there). A
+  replacement that still cannot be had ends the cursor — its connection is
+  gone and nothing is left to give back — and the loss propagates, not a
+  `PoolError` dressed as a statement error.
 - **A running statement can be cancelled from another thread, and a
   transaction's statements bounded**: `db.cancel_queries_of(thread_name)`
   walks every pool's `CheckoutTracker` for that thread's checkouts and calls

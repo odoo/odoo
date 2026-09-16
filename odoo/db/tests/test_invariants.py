@@ -961,6 +961,27 @@ class TestALostConnectionIsReplacedBeforeTheFirstStatementOnly(unittest.TestCase
         with self.assertRaises(psycopg.OperationalError):
             cr.execute("SELECT 1")
 
+    def test_a_replacement_that_cannot_be_borrowed_leaves_the_loss_to_propagate(self):
+        cr, fake_pool = self._cursor()
+        first = cr._cnx
+
+        def refuse(dsn, key=None, **kw):
+            raise pool.PoolError("budget spent")
+
+        fake_pool.borrow = refuse
+        self._kill(cr)
+        with self.assertRaises(psycopg.OperationalError):
+            cr.execute("SELECT 1")
+        self.assertEqual(
+            fake_pool.given_back,
+            [(first, False)],
+            "the dead connection's permit goes back before the replacement is "
+            "asked for -- at maxconn=1 it is the only permit there is",
+        )
+        self.assertTrue(cr.closed, "a cursor whose connection is gone is over")
+        cr.close()
+        self.assertEqual(len(fake_pool.given_back), 1, "and closes as a no-op")
+
     def test_a_server_side_error_is_never_a_lost_connection(self):
         cr, fake_pool = self._cursor()
         cr._obj.raise_next = psycopg.errors.UniqueViolation("dup")

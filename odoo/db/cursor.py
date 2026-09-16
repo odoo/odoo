@@ -532,27 +532,41 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         ):
             return False
         pool = self.__pool
-        old = self._cnx
+        old, old_obj = self._cnx, self._obj
+        with suppress(Exception):
+            old_obj.close()
+        del self._obj
+        # The dead connection goes back first: its permit is the one the
+        # replacement needs when the budget is spent (maxconn=1 is the limit
+        # case). A replacement that still cannot be had ends the cursor --
+        # its connection is gone and nothing is left to give back -- and the
+        # loss propagates, not a PoolError dressed as a statement error.
+        pool.give_back(old, keep_in_pool=False)
+        try:
+            replacement = pool.borrow(self._dsn, key=self._key)
+        except Exception as borrow_exc:
+            self._closed = True
+            _debug.logic(
+                "cursor.connection_not_replaced",
+                db=self.dbname,
+                error=type(borrow_exc).__name__,
+            )
+            return False
+        try:
+            obj = replacement.cursor()
+            if self._readonly and not pool.readonly:
+                replacement.read_only = True
+        except BaseException:
+            pool.give_back(replacement, keep_in_pool=False)
+            self._closed = True
+            raise
+        self._cnx, self._obj = replacement, obj
         _debug.lifecycle(
             "cursor.connection_replaced",
             db=self.dbname,
             error=type(exc).__name__,
             sqlstate=getattr(exc, "sqlstate", None),
         )
-        with suppress(Exception):
-            self._obj.close()
-        del self._obj
-        pool.give_back(old, keep_in_pool=False)
-        self._cnx = pool.borrow(self._dsn, key=self._key)
-        try:
-            self._obj = self._cnx.cursor()
-            if self._readonly and not pool.readonly:
-                self._cnx.read_only = True
-        except BaseException:
-            keep = self._is_connection_clean()
-            pool.give_back(self._cnx, keep_in_pool=keep)
-            self._closed = True
-            raise
         self._reset_transaction_caches()
         self._pipeline_pending = False
         _logger.warning(
