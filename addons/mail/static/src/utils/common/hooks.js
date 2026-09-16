@@ -572,7 +572,15 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
  * the current bookmark; call `reset()` to drop it (e.g. on context change).
  */
 export class SearchState extends Reactive {
-    searchTerm = "";
+    /**
+     * Backing store of {@link searchTerm}, a local signal unless the parent
+     * passed one through the `searchTerm` option.
+     *
+     * @type {import("@odoo/owl").Signal<string>}
+     */
+    _searchTerm = signal("");
+    /** Whether {@link _searchTerm} is ours to clear, i.e. not the parent's. */
+    _ownsSearchTerm = true;
     searching = false;
     loading = false;
     /** @type {any} */
@@ -606,9 +614,17 @@ export class SearchState extends Reactive {
      *  search is active. Defaults to "term is non-empty". Override when a
      *  non-empty term is not the right signal (e.g. a mention popover stays
      *  active for an empty term as long as a delimiter is set).
+     * @param {import("@odoo/owl").Signal<string>} [options.searchTerm] Signal
+     *  holding the term when it is owned elsewhere (e.g. a field of a record
+     *  the rest of the UI reads). Reads and writes go straight through to it,
+     *  so there is no second copy to keep in sync. Defaults to a local signal.
      */
-    constructor({ initialResults = [], fetch, filter, isActive, deps } = {}) {
+    constructor({ initialResults = [], fetch, filter, isActive, deps, searchTerm } = {}) {
         super();
+        if (searchTerm) {
+            this._searchTerm = searchTerm;
+            this._ownsSearchTerm = false;
+        }
         this.initialResults = initialResults;
         this.results = initialResults;
         if (fetch) {
@@ -640,6 +656,14 @@ export class SearchState extends Reactive {
         onWillUnmount(() => this.reset());
     }
 
+    get searchTerm() {
+        return this._searchTerm();
+    }
+
+    set searchTerm(value) {
+        this._searchTerm.set(value);
+    }
+
     get isActive() {
         return this.isActiveGetter ? this.isActiveGetter() : !!this.searchTerm;
     }
@@ -649,7 +673,11 @@ export class SearchState extends Reactive {
     }
 
     reset() {
-        this.searchTerm = "";
+        if (this._ownsSearchTerm) {
+            // A term owned by the parent outlives this state (it is still on
+            // screen after unmount), so clearing it is the parent's call.
+            this.searchTerm = "";
+        }
         this.searching = false;
         this.loading = false;
         this.results = this.initialResults;

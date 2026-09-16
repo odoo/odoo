@@ -177,7 +177,7 @@ test("Display highlighted search in Discuss", async () => {
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "empty");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "empty");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
@@ -197,7 +197,7 @@ test("Display multiple highlighted search in Discuss", async () => {
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "not empty");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "not empty");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
         count: 2,
     });
@@ -219,11 +219,15 @@ test("Search update keeps embedded code block rendering in Discuss", async () =>
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchInput input", "prefix");
-    await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix')`);
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "prefix");
+    await contains(
+        `.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix')`
+    );
     await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
-    await insertText(".o-mail-SearchInput input", " suffix");
-    await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix')`);
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", " suffix");
+    await contains(
+        `.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix')`
+    );
     await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
 });
 
