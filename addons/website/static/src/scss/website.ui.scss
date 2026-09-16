@@ -85,10 +85,16 @@ body {
 }
 
 // LOGIN FORM
-.oe_login_form, .oe_reset_password_form {
+.oe_login_form, .oe_signup_form, .oe_reset_password_form {
     max-width: 300px;
     position: relative;
     margin: 50px auto;
+}
+// The standard signup fields are not form builder fields: they get the mark of
+// the fields added from the website editor (see `SignupFormMarks`).
+.oe_signup_form .mb-3:has(input[required]) > label.form-label::after {
+    content: var(--signup-form-mark, none);
+    color: var(--signup-form-mark-color, inherit);
 }
 
 // POPOVER NAVIGATION

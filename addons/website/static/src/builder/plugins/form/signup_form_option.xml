@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- The settings of the form snippets that apply to the fields added in the
+     signup form, saved on their area: the signup form itself is not saved. -->
+<t t-name="website.s_website_form_signup_fields_option">
+    <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
+        <BuilderSelect id="'signup_field_mark_select'" action="'updateLabelsMark'" applyTo="'#oe_structure_signup_fields'">
+            <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_required'" id="'signup_form_required_opt'">Required</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_optional'" id="'signup_form_optional_opt'">Optional</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Marker" level="1" t-if="this.isActiveItem('signup_form_required_opt') || this.isActiveItem('signup_form_optional_opt')">
+        <BuilderTextInput action="'setMark'" default="''" applyTo="'#oe_structure_signup_fields'"/>
+        <BuilderColorPicker enabledTabs="['solid', 'custom']" action="'markColor'" applyTo="'#oe_structure_signup_fields'"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <!-- The area of the signup fields uses the form snippet styles but holds no
+         form: the form options do not apply to it. -->
+    <xpath expr="//form_option" position="attributes">
+        <attribute name="exclude">#oe_structure_signup_fields</attribute>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <!-- The signup form is not a form snippet: fields are only added in its
+             dedicated area (see `website.signup_extra_fields`). -->
+        <website_signup_fields_option
+            template="website.s_website_form_signup_fields_option"
+            selector="form.oe_signup_form:has(#oe_structure_signup_fields)"
+            title="Sign Up Fields"
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>

@@ -2,12 +2,10 @@
 
 import base64
 import json
-import contextlib
 
 from markupsafe import Markup
 from psycopg2 import IntegrityError
 import re
-import werkzeug
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID
@@ -20,6 +18,15 @@ from odoo.tools.translate import _, LazyTranslate
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
 _lt = LazyTranslate(__name__)
+
+# Values handled by `auth_signup` itself: the inputs of the standard signup form
+# and the ones it derives from them (`email` is the `login`). Anything else
+# posted on `/web/signup` comes from a field added on the form through the
+# website editor.
+SIGNUP_FORM_INPUTS = {
+    'confirm_password', 'csrf_token', 'db', 'email', 'login', 'name', 'password', 'redirect',
+    'token',
+}
 
 
 class WebsiteForm(http.Controller):
@@ -332,134 +339,90 @@ class WebsiteForm(http.Controller):
 
 
 class WebsiteAuthSignupHome(AuthSignupHome):
+    """ Handle the fields added on the signup form through the website editor.
+
+    Those fields are posted along with the standard signup form (see the
+    `oe_structure` of `website.website_signup_extra_fields`): the ones matching
+    a `res.partner` field allowed in the form builder are written on the partner
+    created by the signup, the other ones are logged in its chatter.
+    """
 
     @http.route()
-    def web_auth_signup(self, *args, **kwargs):
+    def web_auth_signup(self, *args, **kw):
+        # `do_signup` is also used by the reset password route, which must not
+        # take the fields of the signup form into account.
+        request.update_context(website_signup_extra_fields=True)
+        return super().web_auth_signup(*args, **kw)
+
+    def do_signup(self, qcontext, do_login=True):
+        # Extract before the signup, so that an invalid value does not create
+        # a user that would be missing the values of its extra fields.
+        data = self._extract_signup_extra_data()
+        super().do_signup(qcontext, do_login=do_login)
+        if data:
+            self._apply_signup_extra_data(qcontext.get('login'), data)
+
+    def _extract_signup_extra_data(self):
+        """ Extract the values posted by the extra fields of the signup form.
+
+        The values are extracted as for any other website form, so that only the
+        fields opted in the form builder (see `formbuilder_whitelist`) can be
+        written on the partner.
+
+        :return: the data extracted by :meth:`WebsiteForm.extract_data`, empty if
+            the form has no extra field
+        :rtype: dict
         """
-        Override to handle the signup form submitted via the website form
-        builder.
+        if not self.env.context.get('website_signup_extra_fields'):
+            return {}
+        # The form is submitted by the browser, not by the form interaction
+        # (`form.js`), so the values are prepared the same way: `request.params`
+        # only keeps the first value of the inputs sharing a name (e.g. multiple
+        # checkboxes), which are joined, and multiple files are indexed.
+        httprequest = request.httprequest
+        values = {
+            name: ",".join(field_values)
+            for name, field_values in httprequest.form.lists()
+            if name not in SIGNUP_FORM_INPUTS
+        }
+        for name, files in httprequest.files.lists():
+            for index, file in enumerate(files):
+                values[f"{name}[0][{index}]"] = file
+        if not values:
+            return {}
+        model_sudo = self.env['ir.model'].sudo()._get('res.partner')
+        try:
+            # The values are the ones of a form built with the form builder, so
+            # they are extracted by the controller handling those forms.
+            return WebsiteForm().extract_data(model_sudo, values)
+        except ValidationError as e:
+            raise UserError(_(
+                "Invalid value for the field(s): %(fields)s",
+                fields=", ".join(e.args[0]),
+            )) from e
 
-        Returns a JSON response that the JavaScript form handler uses to process
-        the result (redirect on success, display inline errors on failure).
+    def _apply_signup_extra_data(self, login, data):
+        """ Write the extracted data on the partner created by the signup.
 
-        Custom fields (i.e., fields not defined on ``res.users``) are logged as
-        chatter messages on the related ``res.partner`` record.
+        :param str login: login of the signed up user
+        :param dict data: data returned by :meth:`_extract_signup_extra_data`
         """
-        response = super().web_auth_signup(*args, **kwargs)
-
-        if "error" in response.qcontext:
-            error_data = response.qcontext.get("error")
-            if isinstance(error_data, str):
-                with contextlib.suppress(json.JSONDecodeError):
-                    error_data = json.loads(error_data)
-            return request.make_response(
-                json.dumps({"error": error_data}),
-                headers=[("Content-Type", "application/json")],
-            )
-
-        login = kwargs.get("login")
-        User = self.env['res.users']
-        user = User.search(User._get_login_domain(login), limit=1)
-        if not user:
-            return response
-
-        # Prepare and log a message for fields not present in the `res.users`.
-        partner = user.partner_id
-        message_body, attachment_vals_list = self._prepare_message_for_non_existing_field(partner, kwargs)
-
-        attachment_ids = []
-        if attachment_vals_list:
-            attachment_ids = self.env["ir.attachment"].sudo().create(attachment_vals_list).ids
-
-        if message_body or attachment_ids:
+        User = self.env['res.users'].sudo()
+        partner = User.search(
+            User._get_login_domain(login), order=User._get_login_order(), limit=1,
+        ).partner_id
+        if not partner:
+            return
+        if data['record']:
+            partner.write(data['record'])
+        if data['custom']:
             partner._message_log(
-                body=message_body,
-                attachment_ids=[(6, 0, attachment_ids)] if attachment_ids else [],
-                message_type="comment",
+                body=nl2br_enclose(
+                    "%s\n___________\n\n%s" % (_("Other Information:"), data['custom']), 'p',
+                ),
+                message_type='comment',
             )
-
-        return request.make_response(
-            json.dumps({"id": user.id}),
-            headers=[("Content-Type", "application/json")]
-        )
-
-    def _prepare_signup_values(self, qcontext, *, validate_email=False):
-        """
-        Extend the signup value preparation:
-        - Update existing user fields with the values submitted by the user.
-
-        :param dict qcontext: the signup form context
-        :returns: dict of values ready to update a `res.users` record
-        :raises UserError: if a non-image file is provided for an image field
-        """
-        values = super()._prepare_signup_values(qcontext, validate_email=validate_email)
-
-        # This method is also called when the user is redirected to the reset
-        # password page. In that case, we do not want to update the values.
-        if request.httprequest.path == "/web/reset_password":
-            return values
-
-        existing_fields = self.env["res.users"]._fields
-        filtered_params = {}
-        for key, value in request.params.items():
-            if isinstance(value, werkzeug.datastructures.FileStorage):
-                # Normalize the key to remove any indexing (e.g.,
-                # image_1920[0][0] → image_1920/image_1024[0][0] → image_1024).
-                normalized_key = key.split('[')[0]
-                if existing_fields.get(normalized_key):
-                    if not value.mimetype.startswith("image/"):
-                        raise UserError(_("Only image files are allowed."))
-                    filtered_params[normalized_key] = base64.b64encode(value.read()).decode("utf-8")
-
-            field = existing_fields.get(key)
-            if field:
-                if field.type in ("many2many", "one2many"):
-                    filtered_params[key] = [int(v) for v in str(value).split(",") if v]
-                else:
-                    filtered_params[key] = value
-        values.update(filtered_params)
-        return values
-
-    def _prepare_message_for_non_existing_field(self, partner, kwargs):
-        """Prepare the message body and attachment values for fields in kwargs
-        that do not exist on res.users model.
-
-        :param partner: current user's res.partner record
-        :param kwargs: dict of form values
-        :returns: tuple (Markup body, list of attachments value dicts)
-        """
-        existing_fields = set(self.env["res.users"]._fields.keys())
-        text_fields = {}
-        attachment_vals_list = []
-
-        for key, value in kwargs.items():
-            if key == "confirm_password":
-                continue
-            if isinstance(value, werkzeug.datastructures.FileStorage):
-                # Normalize key to remove index pattern
-                # (e.g., 'image_1920[0][0]' → 'image_1920').
-                normalized_key = key.split('[')[0]
-                if normalized_key not in existing_fields:
-                    attachment_vals_list.append({
-                        "name": value.filename,
-                        "raw": BinaryBytes(value.read()),
-                        "res_model": "res.partner",
-                        "res_id": partner.id,
-                        "mimetype": value.content_type,
-                    })
-            elif key not in existing_fields:
-                text_fields[key] = value
-
-        # Build message body.
-        message_body = Markup("")
-        if text_fields:
-            items = Markup().join(
-                Markup("<li><strong>%s:</strong> %s</li>") % (key, value)
-                for key, value in text_fields.items()
+        if data['attachments']:
+            WebsiteForm().insert_attachment(
+                self.env['ir.model'].sudo()._get('res.partner'), partner.id, data['attachments'],
             )
-            message_body += Markup("<p><strong>%s</strong></p><ul>%s</ul>") % (
-                _("Other Information:"), items
-            )
-        if attachment_vals_list:
-            message_body += Markup("<p><strong>📎 %s</strong></p>") % _("Attachment Files")
-        return message_body, attachment_vals_list
