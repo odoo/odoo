@@ -24,7 +24,7 @@ defineWebsiteModels();
 test("click on invisible elements in the invisible elements tab (check eye icon)", async () => {
     await setupWebsiteBuilder(`${invisibleEl}`);
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry")).toHaveText(
-        "Invisible Element"
+        "Invisible Element\n(Click to show)"
     );
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveAttribute(
         "data-icon",
@@ -108,13 +108,13 @@ test("mobile and desktop invisible elements panel", async () => {
         <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
     `);
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
-        "Popup1",
-        "Popup3",
+        "Popup1\n(Click to hide)",
+        "Popup3\n(Click to show)",
     ]);
     await toggleMobilePreview();
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
-        "Popup1",
-        "Popup2",
+        "Popup1\n(Click to hide)",
+        "Popup2\n(Click to show)",
     ]);
 });
 

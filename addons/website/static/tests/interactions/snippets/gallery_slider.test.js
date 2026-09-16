@@ -39,7 +39,7 @@ const defaultLightbox = /*xml*/ `
         <div style="margin: 0 12px;" id="slideshow_3" class="carousel slide" data-bs-ride="false" data-bs-interval="0">
             <div class="o_carousel_controllers">
                 <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="prev" aria-label="Previous" title="Previous" data-bs-target="#slideshow_3">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-prev-icon" role="img" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators s_image_gallery_indicators_bars">
@@ -69,7 +69,7 @@ const defaultLightbox = /*xml*/ `
                     </button>
                 </div>
                 <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="next" aria-label="Next" title="Next" data-bs-target="#slideshow_3">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-next-icon" role="img" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
@@ -125,7 +125,7 @@ const defaultOldLightbox = `
             </div>
             <ul class="carousel-indicators">
                 <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                    <i class="oi" data-icon="chevron_backward"></i>
+                    <i class="oi" data-icon="chevron_backward" role="img" aria-hidden="true"></i>
                 </li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="0" class="" style="background-image: url(/web/image/website.set_2_square_md_1)"></li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="1" style="background-image: url(/web/image/website.set_2_square_md_3)" class=""></li>
@@ -133,7 +133,7 @@ const defaultOldLightbox = `
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="3" style="background-image: url(/web/image/website.set_2_square_md_4)" class="active" aria-current="true"></li><li data-bs-target="#slideshow_3" data-bs-slide-to="4" style="background-image: url(/web/image/website.set_2_square_md_6)"></li>
                 <li data-bs-target="#slideshow_3" data-bs-slide-to="5" style="background-image: url(/web/image/website.set_2_square_md_2)" class=""></li>
                 <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                    <i class="oi" data-icon="chevron_forward"></i>
+                    <i class="oi" data-icon="chevron_forward" role="img" aria-hidden="true"></i>
                 </li>
             </ul>
         </div>

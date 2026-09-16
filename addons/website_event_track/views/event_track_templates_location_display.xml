@@ -129,14 +129,14 @@
                     t-att-title="website.name"/>
                 <div class="text-end">
                     <time class="o_wevent_location_display_now d-block fs-5 font-monospace mb-1" t-out="current_time_label"/>
-                    <h1 class="h2 mb-0"><i class="oi me-2" data-icon="location_on" aria-hidden="true"/><t t-out="location_name"/></h1>
+                    <h1 class="h2 mb-0"><i class="oi me-2" data-icon="location_on" role="img" aria-hidden="true"/><t t-out="location_name"/></h1>
                 </div>
             </header>
             <t t-call="website_event_track.event_track_location_display_content"/>
             <div class="o_wevent_location_display_fade position-fixed bottom-0 start-0 end-0" aria-hidden="true"/>
             <div class="o_wevent_location_display_refresh_status position-fixed end-0 bottom-0 z-1 m-2 px-2 py-1 text-warning-emphasis small fw-semibold d-none"
                 role="status">
-                <i class="oi me-1 align-middle" data-icon="link_off" aria-hidden="true"/>
+                <i class="oi me-1 align-middle" data-icon="link_off" role="img" aria-hidden="true"/>
                 <span>Last updated at</span>
                 <time/>
             </div>

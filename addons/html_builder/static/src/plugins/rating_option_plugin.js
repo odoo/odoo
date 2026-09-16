@@ -116,7 +116,10 @@ function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
     [...iconEls].forEach((iconEl) => iconEl.remove());
     for (let i = 0; i < nbTotalIcons; i++) {
         const targetEl = i < nbActiveIcons ? activeIconEl : inactiveIconEl;
-        targetEl.appendChild(document.createElement("i"));
+        const starEl = document.createElement("i");
+        starEl.role = "presentation";
+        starEl.setAttribute("aria-hidden", "true");
+        targetEl.appendChild(starEl);
         targetEl.appendChild(document.createTextNode(" "));
     }
     renderIcons(editingElement);

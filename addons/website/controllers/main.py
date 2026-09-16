@@ -1307,6 +1307,7 @@ class Website(Home):
                 mapping = record['_mapping']
                 mapped = {
                     '_icon': record.get('_icon'),
+                    'group_name': group_name,
                 }
                 skip_matching_area = False
                 for mapped_name, field_meta in mapping.items():

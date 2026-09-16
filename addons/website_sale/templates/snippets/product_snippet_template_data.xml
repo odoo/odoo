@@ -81,8 +81,9 @@
                         t-att-data-product-selected="product.is_product_variant"
                         t-att-data-product-template-id="product_template.id"
                         title="Remove from recently viewed"
+                        aria-label="Remove from recently viewed"
                     >
-                        <i class="oi" data-icon="close_small" role="presentation"/>
+                        <i class="oi" data-icon="close_small" role="img" aria-hidden="true"/>
                     </button>
                     <div class="o_wsale_product_information flex-grow-1 flex-shrink-1">
                         <t
@@ -111,7 +112,7 @@
                                             t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                         >
                                             <!-- Avoid whitespaces undesired gaps -->
-                                            <i class="oi oi-fw" data-icon="shopping_cart" role="presentation"/><span class="o_label small ms-1">Add to Cart</span>
+                                            <i class="oi oi-fw" data-icon="shopping_cart" role="img" aria-hidden="true"/><span class="o_label small ms-1">Add to Cart</span>
                                         </button>
                                     </t>
                                     <t t-elif="data.get('prevent_sale')">
@@ -121,7 +122,7 @@
                                             t-att-href="website._get_contact_us_url(product.display_name)"
                                             class="o_wsale_product_btn_primary btn btn-outline-primary"
                                         >
-                                            <i class="oi oi-fw oi-filled"  data-icon="mail" role="presentation"/>
+                                            <i class="oi oi-fw oi-filled"  data-icon="mail" role="img" aria-hidden="true"/>
                                             <span class="o_label small ms-1">Contact Us</span>
                                         </a>
                                     </t>

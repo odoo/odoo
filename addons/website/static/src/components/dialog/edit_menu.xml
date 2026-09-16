@@ -31,7 +31,9 @@
                     <i t-if="this.state.pageNotFound and !this.state.invalidUrl"
                         class="oi text-warning position-absolute top-50 end-0 translate-middle-y me-2"
                         data-icon="info"
-                        data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0">
+                        role="img"
+                        data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0"
+                        aria-label="Page not found">
                     </i>
                 </div>
                 <small class="form-text">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
@@ -83,11 +85,11 @@
         <div class="d-flex mt-4 justify-content-between align-items-end">
             <div class="d-flex flex-column">
                 <a href="#" t-on-click="this.addMenu">
-                    <i class="oi me-1" data-icon="add_circle"/> Add Menu Item
+                    <i class="oi me-1" data-icon="add_circle" role="img" aria-hidden="true"/> Add Menu Item
                 </a>
             </div>
             <small class="text-muted">
-                <i class="oi me-1" data-icon="info"/> Drag to the right to get a submenu
+                <i class="oi me-1" data-icon="info" role="img" aria-hidden="true"/> Drag to the right to get a submenu
             </small>
         </div>
     </WebsiteDialog>

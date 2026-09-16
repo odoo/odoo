@@ -25,9 +25,9 @@ test("links with _target='blank' have a visually-hidden indicator", async () => 
 test("links with _target='blank' and aria-label have an indicator in the aria-label", async () => {
     const { core } = await startInteractions(
         `<div>
-            <a id="link1" href="odoo.com" target="_blank" aria-label="Go to homepage"><i class="oi" data-icon="home"></i></a>
-            <a id="link2" href="odoo.com" aria-label="Go to homepage"><i class="oi" data-icon="home"/></i></a>
-            <a id="link3" href="odoo.com" target="_blank" aria-label=""><i class="oi" data-icon="home"></i></a>
+            <a id="link1" href="odoo.com" target="_blank" aria-label="Go to homepage"><i class="oi" data-icon="home" role="img" aria-hidden="true"></i></a>
+            <a id="link2" href="odoo.com" aria-label="Go to homepage"><i class="oi" data-icon="home" role="img" aria-hidden="true"/></i></a>
+            <a id="link3" href="odoo.com" target="_blank" aria-label=""><i class="oi" data-icon="home" role="img" aria-hidden="true"></i></a>
         </div>`
     );
     expect(core.interactions).toHaveLength(2);
