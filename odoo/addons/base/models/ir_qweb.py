@@ -404,7 +404,7 @@ from odoo.tools.profiler import ExecutionContext
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
-from odoo.exceptions import UserError, MissingError
+from odoo.exceptions import UserError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
@@ -1235,7 +1235,7 @@ class IrQweb(models.AbstractModel):
         id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
         value = self._preload_trees([id_or_xmlid]).get(id_or_xmlid)
         if value.get('error'):
-            raise value['error']
+            self.env['ir.ui.view']._raise_error(value['error'])
 
         # The compiled template cache can evict entries during a render, causing
         # the same preloaded tree to be processed several times.
@@ -1304,7 +1304,7 @@ class IrQweb(models.AbstractModel):
                 compile_batch[ref] = {
                     'xmlid': ref,
                     'ref': ref,
-                    'error': MissingError(self.env._("External ID can not be loaded: %s", ref)),
+                    'error': ('missing_external', ref),
                 }
 
         return compile_batch
