@@ -3,6 +3,7 @@ from typing import Any
 from odoo import SUPERUSER_ID, api, models
 
 from . import approval_trace as trace
+from .approval_utils import ApprovalStepUnstaffed
 
 SYNC_CONTEXT_KEY = "approval_state_sync"
 
@@ -227,7 +228,44 @@ class MixinApprovalStateSync(models.AbstractModel):
                 raises=needs,
             )
             if needs:
-                record.action_create_approval_request()
+                record._raise_approval_request_on_create()
+
+    def _raise_approval_request_on_create(self) -> None:
+        """Raise this record's request, and survive a company that staffs no step.
+
+        Whoever creates a document rarely governs who may approve it: an employee
+        asking for time off in a company that has named no time-off officer cannot
+        appoint one. A step every one of whose approvers works in another company
+        is that gap, and it belongs to the configuration, not to the document being
+        recorded -- the refusal used to travel out of the automatic create and
+        refuse the document itself. The document is kept, says why it has no
+        request yet, and the backfill raises one once the company staffs the step.
+
+        Every other refusal still reaches the caller, the document's own approval
+        policy emptying a step included: that one is the document's to answer for.
+        """
+        self.check_singleton()
+        # Flush before the savepoint, so what is already pending is checked in the
+        # env that produced it rather than by the savepoint's own flush.
+        self.env.flush_all()
+        try:
+            with self.env.cr.savepoint():
+                self.action_create_approval_request()
+        except ApprovalStepUnstaffed as error:
+            trace.SYNC.event(
+                "raise_on_create_refused",
+                record=self,
+                kind=self._get_approval_sync_kind(),
+                reason=str(error),
+            )
+            self.message_post(
+                body=self.env._(
+                    "No approval request could be raised for this document yet: "
+                    "%(reason)s",
+                    reason=str(error),
+                ),
+                message_type="notification",
+            )
 
     def _get_synced_approval_request(self):
         self.check_singleton()

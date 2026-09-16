@@ -14,6 +14,7 @@ from . import (
     test_step_advisory,
     test_step_document_policy,
     test_step_progress,
+    test_step_without_approvers,
     test_subject_integrity,
 )
 from . import test_gate

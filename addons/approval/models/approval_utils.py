@@ -1,6 +1,15 @@
 from typing import Any
 
+from odoo.exceptions import UserError
+
 from . import approval_trace as trace
+
+
+class ApprovalStepUnstaffed(UserError):
+    def __init__(self, message, step=None, company=None):
+        super().__init__(message)
+        self.step = step
+        self.company = company
 
 
 def is_approval_manager(env) -> bool:

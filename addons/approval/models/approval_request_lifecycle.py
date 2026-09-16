@@ -7,7 +7,7 @@ from odoo.fields import Command
 from odoo.libs.text import nl2br
 
 from . import approval_trace as trace
-from .approval_utils import is_approval_manager
+from .approval_utils import ApprovalStepUnstaffed, is_approval_manager
 
 _logger = logging.getLogger(__name__)
 
@@ -1158,22 +1158,30 @@ class ApprovalRequestLifecycle(models.Model):
                 if not self._allows_self_approval() and not self.binding_id:
                     pool.discard(self.request_owner_id.id)
             if len(pool) < step.minimum:
+                candidates = step._get_candidate_user_ids(document, self)
+                unstaffed = bool(candidates) and not step._filter_company_user_ids(
+                    candidates, self.company_id
+                )
+                message = self.env._(
+                    "Step '%(step)s' needs %(minimum)d approval(s) but only "
+                    "%(count)d user(s) can give one, so this request could never "
+                    "be approved. Add members to the step or lower its quorum.",
+                    step=step.name,
+                    minimum=step.minimum,
+                    count=len(pool),
+                )
                 trace.REFUSAL.event(
                     "step_unmeetable",
                     request=self.id,
                     step=step.id,
                     pool=len(pool),
                     minimum=step.minimum,
+                    unstaffed=unstaffed,
                 )
-                raise UserError(
-                    self.env._(
-                        "Step '%(step)s' needs %(minimum)d approval(s) but only "
-                        "%(count)d user(s) can give one, so this request could never "
-                        "be approved. Add members to the step or lower its quorum.",
-                        step=step.name,
-                        minimum=step.minimum,
-                        count=len(pool),
-                    ),
+                raise (
+                    ApprovalStepUnstaffed(message, step=step, company=self.company_id)
+                    if unstaffed
+                    else UserError(message)
                 )
 
     def action_withdraw_approver(
