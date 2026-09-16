@@ -1547,7 +1547,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         return order;
     }
-    createOrderIfNeeded(data) {
+    createOrderIfNeeded(data = {}) {
         return this.createNewOrder(data);
     }
     setNextOrderRefs(order) {
