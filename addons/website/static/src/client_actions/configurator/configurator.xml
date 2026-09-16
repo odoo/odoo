@@ -348,7 +348,7 @@
                     <div class="o_configurator_theme_preview_loader position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center pe-none">
                         <span class="spinner-border" role="status"/>
                     </div>
-                    <iframe class="o_configurator_theme_preview_iframe position-absolute top-0 start-0 d-block border-0 pe-none" t-att-src="this.getThemePreviewUrl(previewTheme)" t-on-load="this.onPreviewIframeLoad" title="Theme preview" loading="lazy" scrolling="no" tabindex="-1"/>
+                    <iframe class="o_configurator_theme_preview_iframe position-absolute top-0 start-0 d-block border-0 pe-none" sandbox="allow-same-origin" t-att-src="this.getThemePreviewUrl(previewTheme)" t-on-load="this.onPreviewIframeLoad" title="Theme preview" loading="lazy" scrolling="no" tabindex="-1"/>
                 </div>
                 <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(previewTheme.name)"/>
             </div>
