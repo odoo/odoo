@@ -149,7 +149,7 @@ class ApprovalBinding(models.Model):
         "approvals behave.",
     )
     observation_ids = fields.One2many(
-        comodel_name="approval.binding.observation",
+        comodel_name="approval.observation",
         inverse_name="binding_id",
     )
     observation_count = fields.Count(
@@ -178,7 +178,7 @@ class ApprovalBinding(models.Model):
             )
 
     def _compute_elevation_counts(self) -> None:
-        grouped = self.env["approval.binding.observation"]._read_group(
+        grouped = self.env["approval.observation"]._read_group(
             [("binding_id", "in", self.ids)],
             ["binding_id", "elevation"],
             ["__count"],
@@ -599,6 +599,8 @@ class ApprovalBinding(models.Model):
         self.check_singleton()
         return {
             "binding_id": self.id,
+            "model_name": record._name,
+            "operation": self.method or self.action_id.name or "?",
             "res_id": record.id,
             "user_id": self.env.uid,
             "elevation": elevation,
@@ -1159,7 +1161,7 @@ class ApprovalBinding(models.Model):
                     wanting[binding] = wanting.get(binding, records.browse()) | record
 
         if observations:
-            records.env["approval.binding.observation"].sudo().create(observations)
+            records.env["approval.observation"].sudo().create(observations)
         if not wanting:
             return call(records)
         if records.env.context.get(REPLAY_CONTEXT_KEY):
@@ -1344,7 +1346,7 @@ class ApprovalBinding(models.Model):
                 if binding._enforce(record, elevation, observations, covered_ids):
                     refused |= record
         if observations:
-            records.env["approval.binding.observation"].sudo().create(observations)
+            records.env["approval.observation"].sudo().create(observations)
         if refused:
             trace.REFUSAL.event(
                 "checkpoint_blocked",

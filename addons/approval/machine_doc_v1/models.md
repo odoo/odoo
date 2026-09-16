@@ -55,7 +55,7 @@ mixin.approval.domain (Abstract)      — base of approval.rule, approval.bindin
 approval.binding                        [inherits mixin.approval.domain]
     +-- model_id ----------> ir.model
     +-- category_id -------> approval.category
-    +-- observation_ids ---> approval.binding.observation (o2m)
+    +-- observation_ids ---> approval.observation (o2m)
                                 +-- user_id -----> res.users
 
 mixin.approval.source (Abstract)
@@ -270,6 +270,9 @@ so category names are unique per company, archived rows included.
 | `binding_snapshot` | Json | Yes | No | readonly, copy=False. The values the binding's condition read from the source document when the request was raised. The approval covers the record only while they still match |
 | `subject_key` | Char | Yes | No | readonly, copy=False, indexed. What the request asks about when its record holds one request per subject (`mixin.approval.subjects`): `access:<partner>` on a course, `stage:<stage>` on an engineering change. Only a request carrying one reaches such a record |
 | `date_binding_replayed` | Datetime | Yes | No | readonly, copy=False. When the gated operation ran after approval. Set once, so a withdrawal and a second approval do not run it again |
+| `operation` | Char | Yes | No | readonly, copy=False, index=btree_not_null. The gated operation a document's own `mixin.approval.gate` raised this request for. A grant clears that operation and no other |
+| `operation_snapshot` | Json | Yes | No | "Approved Subject": what the document looked like when the request was raised, as its `_get_approval_snapshot` describes it. The grant covers that version and no other |
+| `date_operation_run` | Datetime | Yes | No | readonly, copy=False. When the grant ran that operation, so it runs once |
 | `binding_replay_error` | Text | Yes | No | readonly, copy=False. Why the gated operation did not run. The approval itself stands |
 
 Removed in 19.0.1.0.7 (or earlier): `revision_count`, `cloned_from_id`,
@@ -727,26 +730,48 @@ For a record that holds one request per subject rather than one in all: a course
 
 ---
 
+## mixin.approval.gate (Abstract)
+
+| Key | Value |
+|-----|-------|
+| Model | `mixin.approval.gate` |
+| File | `models/mixin_approval_gate.py` |
+| Inherits | `mixin.approval` |
+
+For a document that gates its own terminal transitions — confirming, posting, validating — without owning a `mixin.lifecycle` state machine. The adopter declares `_approval_operations` (the gated methods) and, through the registry's `_operation_checkpoints`, where each one's validations live.
+
+| Method | What it does |
+|--------|--------------|
+| `_run_through_approval(operation, run)` | Splits the records, calls `run(ready)` on what needs no approval or already holds it, raises a request for the rest (one record: returns that request's action), and carries the run's own action as the notification's `next` |
+| `_split_for_approval(operation)` | ready / needs-approval. A waiting request always refuses; a refused or cancelled one refuses while the document still requires approval; an approved one is checked by `_check_approval_covers` |
+| `_approval_request_gates(operation)` | Whether the linked request was raised for this operation. A grant clears the operation it was asked for and no other |
+| `_check_approval_covers(operation)` | Hook: raises when the grant no longer covers what the operation would do |
+| `_check_approval_admits(operation)` | Called from the operation's checkpoint, so a caller that did not come through the gate is caught. Records an `approval.observation` and refuses only once `approval.gate_enforced` is set |
+| `_is_operation_run_on_approval(operation)` / `_run_operation_on_approval()` | Whether a grant re-enters the transition, and the re-entry itself: once, as superuser, through the gated method so its validations run again |
+| `_refuse_pending_approval()` | Refuses a waiting request, for an adopter's cancel path |
+
+Adopted by `mixin.approval.lifecycle`. Covered by `test_approval/tests/test_gate.py` against `approval.test.gated`.
+
+---
+
 ## mixin.approval.lifecycle (Abstract)
 
 | Key | Value |
 |-----|-------|
 | Model | `mixin.approval.lifecycle` |
 | File | `models/mixin_approval_lifecycle.py` |
-| Inherits | `mixin.approval`, `mixin.lifecycle` |
+| Inherits | `mixin.approval.gate`, `mixin.lifecycle` |
 
-For a document with a declared lifecycle whose confirmation is the approval gate. The adopter supplies `_get_domain_approval_category`; with no category matching, confirming is the plain lifecycle.
+For a document with a declared lifecycle whose confirmation is the approval gate. It is `mixin.approval.gate` with `_approval_operations = ("action_confirm",)`, so the split, the coverage check and the re-entry are the gate's; only the lifecycle's own wiring lives here. The adopter supplies `_get_domain_approval_category`; with no category matching, confirming is the plain lifecycle.
 
 | Method | What it does |
 |--------|--------------|
-| `action_confirm` | Runs the confirm checks and `_confirm_through_approval` |
-| `_confirm_through_approval(confirm)` | Confirms, through `confirm(records)`, the records that hold an approved request or need none; raises a request for the others (one record: returns that request's action). Refuses a record whose request is waiting, and one whose refused or cancelled request it still needs |
-| `_check_approval_still_valid` | Hook run on an approved record before it confirms; raises when the grant no longer covers the document |
-| `_on_approval_approved` | Calls `_confirm_on_approval`: when `_is_confirmed_on_approval` (a draft, by default), confirms as superuser, and a failure is noted on the document instead of undoing the grant |
+| `action_confirm` | Runs the confirm checks, then `_run_through_approval("action_confirm", ...)` |
+| `_is_operation_run_on_approval` | A grant re-enters `action_confirm` while the document is still a draft |
 | `action_cancel` | Cancels, then `_refuse_pending_approval`, so an adopter whose refusal callback cancels meets an already cancelled document |
 | `action_draft` | Clears a refused or cancelled request's link, so confirming asks again |
 
-An adopter that gains the mixin after its model's own `action_confirm` (sale and purchase orders in `approval_product`) sits below that method in the MRO. It overrides `action_confirm` to call `_confirm_through_approval` with its own `super()`, so nothing the order does on confirmation runs before the gate.
+An adopter that gains the mixin after its model's own `action_confirm` (sale and purchase orders in `approval_product`) sits below that method in the MRO. It overrides `action_confirm` to call `_run_through_approval` with its own `super()`, so nothing the order does on confirmation runs before the gate.
 
 Adopted by `maintenance.order` and agromarin's `mixin.approval.document`. Covered by `maintenance`'s `TestMaintenanceOrderApproval`.
 
@@ -845,7 +870,7 @@ Kill switch: `ir.config_parameter` `approval.binding_enabled`.
 | `subject_domain` | Char | Yes | No | string="Applies When"; empty means every record |
 | `mode` | Selection(advise/block/request) | Yes | **Yes** | default="advise". `advise` (labelled Observe) runs the operation and records it; `block` refuses unless an approved request covers the record; `request` raises the approval instead of running — and, with `run_on_approval`, runs the operation exactly once when it is approved, as the person who called it |
 | `sudo_policy` | Selection(enforce/superuser/bypass) | Yes | **Yes** | default="superuser". Who the gate does NOT apply to. `sudo()` flips `su` and keeps `uid`, so the real superuser and an ordinary user elevated by `sudo()` are separate risks and separate settings |
-| `observation_ids` | One2many(`approval.binding.observation`) | — | No | |
+| `observation_ids` | One2many(`approval.observation`) | — | No | |
 | `observation_count` | Count | — | No | |
 | `elevated_count` | Integer | No | No | computed by one grouped read over observations |
 | `self_elevated_count` | Integer | No | No | same read; callers elevated by `sudo()`, not the superuser |
@@ -907,12 +932,12 @@ Kill switch: `ir.config_parameter` `approval.binding_enabled`.
 
 ---
 
-## approval.binding.observation
+## approval.observation
 
 | Key | Value |
 |-----|-------|
-| Model | `approval.binding.observation` |
-| File | `models/approval_binding_observation.py` |
+| Model | `approval.observation` |
+| File | `models/approval_observation.py` |
 | Type | Model |
 | Order | `id desc` |
 
@@ -925,7 +950,9 @@ question the table answers needs the breakdown rather than a total.
 
 | Field | Type | Stored | Required | Key Attributes |
 |-------|------|--------|----------|----------------|
-| `binding_id` | Many2one(`approval.binding`) | Yes | **Yes** | ondelete=cascade, index |
+| `binding_id` | Many2one(`approval.binding`) | Yes | No | ondelete=cascade, index=btree_not_null. Empty for a gate a model declares in code |
+| `model_name` | Char | Yes | **Yes** | index. The gated model |
+| `operation` | Char | Yes | **Yes** | index. The gated method the call was reaching |
 | `res_id` | Integer | Yes | No | index |
 | `user_id` | Many2one(`res.users`) | Yes | No | the caller's uid, which `sudo()` preserves |
 | `elevation` | Selection(none/superuser/self_elevated) | Yes | **Yes** | index |

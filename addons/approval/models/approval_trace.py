@@ -628,7 +628,7 @@ CALL_TRACES: dict[str, dict[str, str]] = {
     "approval.refusal.reason": {
         "_compute_usage_count": "compute",
     },
-    "approval.binding.observation": {
+    "approval.observation": {
         "create": "crud",
     },
     "approval.metrics": {

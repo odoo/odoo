@@ -14,7 +14,7 @@ dashboards.
 | Key | Value |
 |-----|-------|
 | Technical name | `approval` |
-| Version | 19.0.2.8.0 (matches `__manifest__.py`) |
+| Version | 19.0.2.9.0 (matches `__manifest__.py`) |
 | Category | Human Resources/Approvals |
 | Dependencies | `mail`, and nothing else. `approval_automation` (which needs `automation`) and `approval_analytics` (which needs `mixin_report_sql`) were split out at 19.0.2.0.0 so that adopting `mixin.approval` costs one manifest row rather than nineteen prerequisites; both auto-install |
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
@@ -46,6 +46,7 @@ dashboards.
 | `approval_decision_log.py` | `approval.decision.log`, extends `approval.request` | The append-only decision ledger: one `verdict` per fact (approved, refused, withdrawn, granted, revoked, cancelled, reset) with the acting user, the `principal_id` a delegate acted for, the caller's elevation and the `state_after`. Written by every funnel through `_append_decision_log`; `write` and `unlink` refuse always. Read through `approval.request.decision_log_ids` |
 | `mixin_approval_source.py` | `mixin.approval.source` (Abstract) | What every record an approval request is raised for may answer: `_filter_approval_step_user_ids()` (who its own policy lets decide) and `_get_approval_activity_type()` (which activity asks them). Parent of both adopter shapes |
 | `mixin_approval.py` | `mixin.approval` (Abstract) | Mixin for source documents (PO, SO, etc.) to integrate with approvals: one request per document, `approval_request_id` |
+| `mixin_approval_gate.py` | `mixin.approval.gate` (Abstract) | A document that gates its own terminal transitions: `_run_through_approval(operation, run)` splits the records, runs what needs no approval, raises a request for the rest, and re-runs the operation once when the grant arrives. `_check_approval_admits` holds the gate at the operation's checkpoint, watching before it enforces |
 | `mixin_approval_lifecycle.py` | `mixin.approval.lifecycle` (Abstract) | A `mixin.lifecycle` document whose confirmation waits for approval when a category applies: `action_confirm` confirms what needs none or holds a grant, raises a request for what does, and refuses while one is waiting or while a refused one is still needed. The grant confirms a draft; cancelling refuses a waiting request; a reset clears a refused link |
 | `mixin_approval_access.py` | `mixin.approval.access` (Abstract) | A record whose access a partner asks for: the subject is the partner and role, and the adopter says whether the access is held and writes the grant on approval |
 | `mixin_approval_subjects.py` | `mixin.approval.subjects` (Abstract) | A record holding one request per subject (`subject_key`): a course and each partner asking to join it, an engineering change and each stage it passes. Raises, looks up and is told about each subject's request |
@@ -56,7 +57,7 @@ dashboards.
 | `mixin_approval_domain.py` | `mixin.approval.domain` (Abstract) | Base of `approval.rule` and `approval.binding`: parses a subject domain and walks every dotted path in it against the registry at save time, because a condition that never matches reads as "approval was not required" |
 | `approval_category_step.py` | `approval.category.step`, `approval.category.step.member` | Steps: a category that needs several pools, each with its own quorum, declares them. A pool is its members (each with an optional end date, so a delegation is a membership that expires) together with a group. Every request routes by the steps that apply to it |
 | `approval_binding.py` | `approval.binding` | Gates a model's method on an approval by wrapping it at registry load: Observe, Block or Request, with a `sudo_policy` that tells the real superuser apart from an ordinary user elevated by `sudo()` |
-| `approval_binding_observation.py` | `approval.binding.observation` | Append-only record of each gated call with the caller's elevation and whether Block would have refused it — how a binding is sized before it is switched on |
+| `approval_observation.py` | `approval.observation` | Append-only record of each gated call with the caller's elevation and whether Block would have refused it — how a binding is sized before it is switched on |
 | `approval_binding_client.py` | extends `approval.binding` | What the approval button asks: `get_button_approvals`, `check_button_approval`, `action_decide_approval`, `action_withdraw_decision`, and the gated-model set `get_views` reads |
 | `approval_binding_editor.py` | extends `approval.binding` | What Studio's editor asks: `create_step_for_button` (binds the button on its first step), `action_open_button_steps` (a kanban of the button's steps first) |
 | `ir_actions_server.py` | `ir.actions.server` (extended) | `run()` consults the bindings on the action before running, on the server. web_studio gated a server action only in the browser, so any RPC caller ran it unchecked |
@@ -212,7 +213,7 @@ approval/
 |   +-- approval_refusal_reason.py    # Refusal reasons
 |   +-- approval_rule.py              # Conditional rules
 |   +-- approval_binding.py           # Method gates wrapped at registry load
-|   +-- approval_binding_observation.py # Observed gated calls
+|   +-- approval_observation.py        # Observed gated calls, both gates
 |   +-- ir_actions_server.py          # Server actions consult bindings in run()
 |   +-- ir_actions_report.py          # Report render entry points consult bindings
 |   +-- approval_utils.py             # Module-level helpers (no model)
@@ -227,7 +228,7 @@ approval/
 |   +-- approval_delegate_wizard.py   # Delegation setup
 +-- reports/
 |   +-- approval_request_report.xml   # QWeb PDF report action
-+-- migrations/                       # 28 script directories (1.0.1 .. 2.8)
++-- migrations/                       # 29 script directories (1.0.1 .. 2.9)
 +-- tests/                            # 44 test modules + common.py
 +-- views/                            # 10 XML view files
 +-- data/                             # 6 XML data files
@@ -245,14 +246,14 @@ approval/
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 18 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 19 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
-| Abstract models | 8 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.lifecycle, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
+| Abstract models | 9 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.gate, mixin.approval.lifecycle, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |
 | Transient models | 2 |
 | Test-only models | 3 |
 | Cron jobs | 4 |
-| Migration script directories | 28 |
+| Migration script directories | 29 |
 
 Re-measure rather than trusting these: `find . -name '*.py' -not -path './tests/*'
 -not -path './migrations/*' -not -path '*__pycache__*' -not -path './machine_doc_v1/*'

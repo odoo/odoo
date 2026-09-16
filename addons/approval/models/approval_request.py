@@ -357,6 +357,26 @@ class ApprovalRequest(models.Model):
         help="Reference to the source document that requested this "
         "approval. Never copied (see res_model).",
     )
+    operation = fields.Char(
+        index="btree_not_null",
+        copy=False,
+        readonly=True,
+        help="The gated operation this request was raised for, when a document's own "
+        "gate raised it. A grant clears that operation and no other.",
+    )
+    operation_snapshot = fields.Json(
+        string="Approved Subject",
+        copy=False,
+        readonly=True,
+        help="What the document looked like when the request was raised, as its own "
+        "gate described it. The grant covers the document only while it still matches.",
+    )
+    date_operation_run = fields.Datetime(
+        string="Operation Run On",
+        copy=False,
+        readonly=True,
+        help="When the grant ran the gated operation, so it runs once.",
+    )
     binding_id = fields.Many2one(
         comodel_name="approval.binding",
         index="btree_not_null",

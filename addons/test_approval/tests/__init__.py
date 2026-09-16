@@ -16,3 +16,4 @@ from . import (
     test_step_progress,
     test_subject_integrity,
 )
+from . import test_gate

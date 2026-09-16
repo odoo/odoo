@@ -1,8 +1,11 @@
 from odoo import fields, models
 
 
-class ApprovalBindingObservation(models.Model):
-    """One row per gated call, written by a binding in Observe mode.
+class ApprovalObservation(models.Model):
+    """One row per gated call let through while its gate is only watching.
+
+    Written by an `approval.binding` in Observe mode and by a document gate whose
+    checkpoint is not enforcing yet. Append-only on purpose.
 
     Append-only on purpose. A counter on the binding would have been smaller,
     but every gated call would then contend for the same row's lock, and the
@@ -10,15 +13,26 @@ class ApprovalBindingObservation(models.Model):
     and how many of them arrive elevated -- needs the breakdown, not a total.
     """
 
-    _name = "approval.binding.observation"
-    _description = "Approval Binding Observation"
+    _name = "approval.observation"
+    _description = "Approval Observation"
     _order = "id desc"
 
     binding_id = fields.Many2one(
         comodel_name="approval.binding",
+        index="btree_not_null",
+        ondelete="cascade",
+        help="The configured gate that observed the call, when one did. Empty for a "
+        "gate a model declares in code.",
+    )
+    model_name = fields.Char(
+        string="Model",
         index=True,
         required=True,
-        ondelete="cascade",
+    )
+    operation = fields.Char(
+        index=True,
+        required=True,
+        help="The gated method the call was reaching.",
     )
     res_id = fields.Integer(
         string="Record ID",
@@ -41,8 +55,8 @@ class ApprovalBindingObservation(models.Model):
         "risks and the point of observing is to count them separately.",
     )
     would_block = fields.Boolean(
-        help="Whether this call would have been refused had the binding been "
-        "in Block mode. This is the number that decides whether switching it "
+        help="Whether this call would have been refused had the gate been "
+        "enforcing. This is the number that decides whether switching it "
         "on is a small correction or a large one."
     )
     date = fields.Datetime(
