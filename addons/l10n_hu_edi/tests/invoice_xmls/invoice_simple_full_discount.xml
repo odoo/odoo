@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<InvoiceData xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd">
+<InvoiceData xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common"
+    xmlns="http://schemas.nav.gov.hu/OSA/3.0/data"
+    xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd">
     <invoiceNumber>INV/2024/00001</invoiceNumber>
     <invoiceIssueDate>2024-02-01</invoiceIssueDate>
     <completenessIndicator>false</completenessIndicator>
@@ -18,7 +22,7 @@
                             <base:countryCode>HU</base:countryCode>
                             <base:postalCode>1073</base:postalCode>
                             <base:city>Budapest</base:city>
-                            <base:additionalAddressDetail>Ak&#225;cfa utca 74.</base:additionalAddressDetail>
+                            <base:additionalAddressDetail>Akácfa utca 74.</base:additionalAddressDetail>
                         </base:simpleAddress>
                     </supplierAddress>
                     <supplierBankAccountNumber>HU0123456789</supplierBankAccountNumber>
@@ -33,13 +37,13 @@
                             <base:countyCode>13</base:countyCode>
                         </customerTaxNumber>
                     </customerVatData>
-                    <customerName>Magyar Vev&#337; Kft.</customerName>
+                    <customerName>Magyar Vevő Kft.</customerName>
                     <customerAddress>
                         <base:simpleAddress>
                             <base:countryCode>HU</base:countryCode>
                             <base:postalCode>4000</base:postalCode>
                             <base:city>Debrecen</base:city>
-                            <base:additionalAddressDetail>Alkotm&#225;ny utca 11.</base:additionalAddressDetail>
+                            <base:additionalAddressDetail>Alkotmány utca 11.</base:additionalAddressDetail>
                         </base:simpleAddress>
                     </customerAddress>
                     <customerBankAccountNumber>HU6666666666</customerBankAccountNumber>
@@ -64,54 +68,23 @@
                     <lineDescription>product_a</lineDescription>
                     <quantity>1.0</quantity>
                     <unitOfMeasure>PIECE</unitOfMeasure>
-                    <unitPrice>769.230769</unitPrice>
-                    <unitPriceHUF>769.230000</unitPriceHUF>
-                    <lineAmountsNormal>
-                        <lineNetAmountData>
-                            <lineNetAmount>769.23</lineNetAmount>
-                            <lineNetAmountHUF>769.23</lineNetAmountHUF>
-                        </lineNetAmountData>
-                        <lineVatRate>
-                            <vatPercentage>0.3000</vatPercentage>
-                        </lineVatRate>
-                        <lineVatData>
-                            <lineVatAmount>230.77</lineVatAmount>
-                            <lineVatAmountHUF>230.77</lineVatAmountHUF>
-                        </lineVatData>
-                        <lineGrossAmountData>
-                            <lineGrossAmountNormal>1000.00</lineGrossAmountNormal>
-                            <lineGrossAmountNormalHUF>1000.00</lineGrossAmountNormalHUF>
-                        </lineGrossAmountData>
-                    </lineAmountsNormal>
-                </line>
-                <line>
-                    <lineNumber>2</lineNumber>
-                    <lineExpressionIndicator>true</lineExpressionIndicator>
-                    <lineNatureIndicator>PRODUCT</lineNatureIndicator>
-                    <lineDescription>product_a</lineDescription>
-                    <quantity>1.0</quantity>
-                    <unitOfMeasure>PIECE</unitOfMeasure>
-                    <unitPrice>769.230769</unitPrice>
-                    <unitPriceHUF>769.230000</unitPriceHUF>
+                    <unitPrice>0.000000</unitPrice>
+                    <unitPriceHUF>0.000000</unitPriceHUF>
                     <lineDiscountData>
-                        <discountValue>153.85</discountValue>
-                        <discountRate>0.2000</discountRate>
+                        <discountValue>10000.00</discountValue>
+                        <discountRate>1.0000</discountRate>
                     </lineDiscountData>
                     <lineAmountsNormal>
                         <lineNetAmountData>
-                            <lineNetAmount>615.38</lineNetAmount>
-                            <lineNetAmountHUF>615.38</lineNetAmountHUF>
+                            <lineNetAmount>0.00</lineNetAmount>
+                            <lineNetAmountHUF>0.00</lineNetAmountHUF>
                         </lineNetAmountData>
                         <lineVatRate>
-                            <vatPercentage>0.3000</vatPercentage>
+                            <vatPercentage>0.2700</vatPercentage>
                         </lineVatRate>
-                        <lineVatData>
-                            <lineVatAmount>184.62</lineVatAmount>
-                            <lineVatAmountHUF>184.62</lineVatAmountHUF>
-                        </lineVatData>
                         <lineGrossAmountData>
-                            <lineGrossAmountNormal>800.00</lineGrossAmountNormal>
-                            <lineGrossAmountNormalHUF>800.00</lineGrossAmountNormalHUF>
+                            <lineGrossAmountNormal>0.00</lineGrossAmountNormal>
+                            <lineGrossAmountNormalHUF>0.00</lineGrossAmountNormalHUF>
                         </lineGrossAmountData>
                     </lineAmountsNormal>
                 </line>
@@ -120,25 +93,25 @@
                 <summaryNormal>
                     <summaryByVatRate>
                         <vatRate>
-                            <vatPercentage>0.3000</vatPercentage>
+                            <vatPercentage>0.2700</vatPercentage>
                         </vatRate>
                         <vatRateNetData>
-                            <vatRateNetAmount>1384.61</vatRateNetAmount>
-                            <vatRateNetAmountHUF>1384.61</vatRateNetAmountHUF>
+                            <vatRateNetAmount>0.00</vatRateNetAmount>
+                            <vatRateNetAmountHUF>0.00</vatRateNetAmountHUF>
                         </vatRateNetData>
                         <vatRateVatData>
-                            <vatRateVatAmount>415.38</vatRateVatAmount>
-                            <vatRateVatAmountHUF>415.38</vatRateVatAmountHUF>
+                            <vatRateVatAmount>0.00</vatRateVatAmount>
+                            <vatRateVatAmountHUF>0.00</vatRateVatAmountHUF>
                         </vatRateVatData>
                     </summaryByVatRate>
-                    <invoiceNetAmount>1384.62</invoiceNetAmount>
-                    <invoiceNetAmountHUF>1384.62</invoiceNetAmountHUF>
-                    <invoiceVatAmount>415.38</invoiceVatAmount>
-                    <invoiceVatAmountHUF>415.38</invoiceVatAmountHUF>
+                    <invoiceNetAmount>0.00</invoiceNetAmount>
+                    <invoiceNetAmountHUF>0.00</invoiceNetAmountHUF>
+                    <invoiceVatAmount>0.00</invoiceVatAmount>
+                    <invoiceVatAmountHUF>0.00</invoiceVatAmountHUF>
                 </summaryNormal>
                 <summaryGrossData>
-                    <invoiceGrossAmount>1800.00</invoiceGrossAmount>
-                    <invoiceGrossAmountHUF>1800.00</invoiceGrossAmountHUF>
+                    <invoiceGrossAmount>0.00</invoiceGrossAmount>
+                    <invoiceGrossAmountHUF>0.00</invoiceGrossAmountHUF>
                 </summaryGrossData>
             </invoiceSummary>
         </invoice>
