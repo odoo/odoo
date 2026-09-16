@@ -18,7 +18,8 @@ MEMBER_CATEGORIES.push(
     },
     {
         sequence: 8,
-        label: _t("Also invited"),
+        /** @param {import("models").DiscussChannel} channel */
+        label: (channel) => (channel.rtc_session_ids.length ? _t("Also invited") : _t("Invited")),
         sequenceGroup: 10,
         icon: "schedule",
         headerClass: "text-warning pt-3",

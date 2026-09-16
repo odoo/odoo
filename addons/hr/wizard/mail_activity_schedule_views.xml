@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="mail.mail_activity_log_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='contact_id']" position="after">
-                    <field name="employee_id" nolabel="1" class="w-100"
+                    <field name="employee_id" nolabel="1" class="w-100" widget="many2one_log_document"
                         domain="employee_id_domain"
                         required="res_model_selection == 'hr.employee'"
                         invisible="res_model_selection != 'hr.employee'"
