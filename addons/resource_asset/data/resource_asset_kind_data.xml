@@ -62,4 +62,13 @@
             eval="[Command.set([ref('identifier_type_imei')])]" />
     </record>
 
+    <record id="kind_telecom" model="resource.asset.kind">
+        <field name="name">Telecom Equipment</field>
+        <field name="code">telecom</field>
+        <field name="sequence">9</field>
+        <field
+            name="identifier_type_ids"
+            eval="[Command.set([ref('identifier_type_serial'), ref('identifier_type_imei')])]" />
+    </record>
+
 </odoo>

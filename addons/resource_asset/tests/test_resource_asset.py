@@ -91,6 +91,18 @@ class TestResourceAsset(TransactionCase):
             self.Asset.search([("missing_identifier_type_ids", "in", self.vin.ids)]),
         )
 
+    def test_telecom_equipment_wants_a_serial_and_an_imei(self):
+        radio = self.Asset.create(
+            {
+                "name": "Base radio",
+                "kind_id": self.env.ref("resource_asset.kind_telecom").id,
+            }
+        )
+        self.assertEqual(
+            radio.missing_identifier_type_ids,
+            self.serial | self.env.ref("resource_asset.identifier_type_imei"),
+        )
+
     def test_assets_are_searched_by_what_identifiers_they_miss(self):
         complete = self._truck("Complete")
         complete.identifier_ids = [
