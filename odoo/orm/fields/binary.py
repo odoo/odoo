@@ -282,7 +282,8 @@ class Binary(Field[bytes | typing.Literal[False]]):
                 real_records if not_null else records.browse(), self.name
             )
             if value:
-                atts.write({"datas": value})
+                if atts:
+                    atts.write({"datas": value})
                 atts_records = records.browse(atts.mapped("res_id"))
                 missing = real_records - atts_records
                 _debug.logic(

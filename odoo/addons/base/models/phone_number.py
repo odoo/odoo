@@ -1,5 +1,4 @@
 import re
-from collections import defaultdict
 from typing import Self
 
 from odoo import Command, api, fields, models
@@ -172,13 +171,6 @@ class PhoneNumber(models.Model):
         )
         if relational:
             self.write(relational)
-
-    def _get_numbers_by_type(self) -> dict[str, Self]:
-        grouped = defaultdict(self.browse)
-        for phone in self:
-            grouped[phone.type] |= phone
-        _debug.perf.count("grouped_by_type", phones=len(self), types=len(grouped))
-        return grouped
 
     def _primary(self, *types: str) -> Self:
         candidates = (

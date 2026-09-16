@@ -285,19 +285,15 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _apply_max_upload_size(cls) -> None:
-        ICP = request.env["ir.config_parameter"].with_user(SUPERUSER_ID)
-        key = "web.max_file_upload_size"
-        if (value := ICP.get_param(key, None)) is not None:
-            try:
-                request.httprequest.max_content_length = int(value)
-                _debug.logic("max_upload_size_applied", bytes=int(value))
-            except ValueError:
-                _logger.error(
-                    "invalid %s: %r, using %s instead",
-                    key,
-                    value,
-                    request.httprequest.max_content_length,
-                )
+        current = request.httprequest.max_content_length
+        value = (
+            request.env["ir.config_parameter"]
+            .with_user(SUPERUSER_ID)
+            .get_param_int("web.max_file_upload_size", current)
+        )
+        if value != current:
+            request.httprequest.max_content_length = value
+            _debug.logic("max_upload_size_applied", bytes=value)
 
     @classmethod
     def _pre_dispatch(cls, rule: werkzeug.routing.Rule, args: dict[str, Any]) -> None:

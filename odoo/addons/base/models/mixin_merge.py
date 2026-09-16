@@ -713,27 +713,31 @@ class MixinMerge(models.AbstractModel):
         for column in model_fields:
             field = dst_record._fields[column]
             if (
-                field.type not in ("many2many", "one2many")
-                and field.store
-                and not field.related
-                and not (field.compute and field.readonly)
+                field.type in ("many2many", "one2many")
+                or not field.store
+                or field.related
+                or (field.compute and field.readonly)
             ):
-                for item in itertools.chain(src_records, [dst_record]):
-                    if not item._has_field_access(field, "read"):
-                        continue
-                    if item[column]:
-                        if field.type == "reference":
-                            values[column] = item[column]
-                        elif column in summable_fields and values.get(column):
-                            values[column] += write_serializer(item[column])
-                        else:
-                            values[column] = write_serializer(item[column])
-            elif field.company_dependent and column in summable_fields:
+                continue
+            if field.company_dependent and column in summable_fields:
+                # a company-dependent column is stored too, so this has to be
+                # decided before the generic branch sums the current company only
                 records = (src_records + dst_record).sudo()
                 for company in companies:
                     values_by_company[company][column] = sum(
                         records.with_company(company).mapped(column)
                     )
+                continue
+            for item in itertools.chain(src_records, [dst_record]):
+                if not item._has_field_access(field, "read"):
+                    continue
+                if item[column]:
+                    if field.type == "reference":
+                        values[column] = item[column]
+                    elif column in summable_fields and values.get(column):
+                        values[column] += write_serializer(item[column])
+                    else:
+                        values[column] = write_serializer(item[column])
 
         values.pop("id", None)
         for name in excluded_fields:

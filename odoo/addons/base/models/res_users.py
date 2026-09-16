@@ -1637,10 +1637,6 @@ class ResUsers(models.Model):
         self.check_singleton()
         return self.id == SUPERUSER_ID
 
-    @api.model
-    def get_company_currency_id(self) -> int:
-        return self.env.company.currency_id.id
-
     def _login_cooldown(self) -> LoginCooldown:
         return LoginCooldown(self.pool)
 
@@ -1650,11 +1646,7 @@ class ResUsers(models.Model):
         return failures, last_failure
 
     def _record_login_failure(self, source: str) -> None:
-        delay = int(
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("base.login_cooldown_duration", 60)
-        )
+        delay = self._get_login_cooldown_duration()
         _debug.lifecycle("login_failure_recorded", source=source, delay_s=delay)
         self._login_cooldown().record_failure(source, datetime.timedelta(seconds=delay))
 
@@ -1707,14 +1699,24 @@ class ResUsers(models.Model):
         else:
             self._clear_login_failures(source)
 
+    def _get_login_cooldown_duration(self) -> int:
+        return (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param_int("base.login_cooldown_duration", 60)
+        )
+
     def _is_login_on_cooldown(self, failures: int, previous: datetime.datetime) -> bool:
-        cfg = self.env["ir.config_parameter"].sudo()
-        min_failures = int(cfg.get_param("base.login_cooldown_after", 5))
-        if min_failures == 0:
+        min_failures = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param_int("base.login_cooldown_after", 10)
+        )
+        if min_failures <= 0:
             _debug.logic("login_cooldown_disabled")
             return False
 
-        delay = int(cfg.get_param("base.login_cooldown_duration", 60))
+        delay = self._get_login_cooldown_duration()
         on_cooldown = failures >= min_failures and (
             datetime.datetime.now(datetime.UTC) - previous
         ) < datetime.timedelta(seconds=delay)

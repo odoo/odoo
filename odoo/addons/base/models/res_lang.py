@@ -3,7 +3,7 @@ import logging
 import threading
 from typing import Any, Literal, Self
 
-from odoo import _, api, fields, models, tools
+from odoo import _, _lt, api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
@@ -418,54 +418,7 @@ class ResLang(models.Model):
             _debug.logic("write_refused", codes=lang_codes, reason="code_change")
             raise UserError(_("Language code cannot be modified."))
         if "active" in vals and not vals["active"]:
-            if (
-                self.env["res.users"]
-                .with_context(active_test=True)
-                .search_count([("lang", "in", lang_codes)], limit=1)
-            ):
-                _debug.logic("deactivate_refused", codes=lang_codes, reason="users")
-                raise UserError(
-                    _("Cannot deactivate a language that is currently used by users.")
-                )
-            if (
-                self.env["res.partner"]
-                .with_context(active_test=True)
-                .search_count([("lang", "in", lang_codes)], limit=1)
-            ):
-                _debug.logic("deactivate_refused", codes=lang_codes, reason="partners")
-                raise UserError(
-                    _(
-                        "Cannot deactivate a language that is currently used by contacts."
-                    )
-                )
-            if (
-                self.env["res.users"]
-                .with_context(active_test=False)
-                .search_count([("lang", "in", lang_codes)], limit=1)
-            ):
-                _debug.logic(
-                    "deactivate_refused", codes=lang_codes, reason="archived_users"
-                )
-                raise UserError(
-                    _(
-                        "Cannot deactivate a language that is used by archived users, "
-                        "such as the ones automated processes run as."
-                    )
-                )
-            if (
-                self.env["res.partner"]
-                .with_context(active_test=False)
-                .search_count([("lang", "in", lang_codes)], limit=1)
-            ):
-                _debug.logic(
-                    "deactivate_refused", codes=lang_codes, reason="archived_partners"
-                )
-                raise UserError(
-                    _(
-                        "Cannot deactivate a language that is used by archived contacts. "
-                        "Reactivating those contacts would leave them with an inactive language."
-                    )
-                )
+            self._check_deactivation_allowed(lang_codes)
             _debug.lifecycle("partner_lang_defaults_discarded", codes=lang_codes)
             self.env["ir.default"].discard_values("res.partner", "lang", lang_codes)
 
@@ -507,6 +460,48 @@ class ResLang(models.Model):
         if "active" in vals:
             self._reset_environment_languages()
         return res
+
+    _DEACTIVATION_REFUSALS = {
+        ("res.users", True): _lt(
+            "Cannot deactivate a language that is currently used by users."
+        ),
+        ("res.users", False): _lt(
+            "Cannot deactivate a language that is used by archived users, "
+            "such as the ones automated processes run as."
+        ),
+        ("res.partner", True): _lt(
+            "Cannot deactivate a language that is currently used by contacts."
+        ),
+        ("res.partner", False): _lt(
+            "Cannot deactivate a language that is used by archived contacts. "
+            "Reactivating those contacts would leave them with an inactive language."
+        ),
+    }
+
+    def _check_deactivation_allowed(self, lang_codes: list[str]) -> None:
+        # one query per model: an active holder outranks an archived one in
+        # the message, so the first row by `active desc` decides
+        for model_name in ("res.users", "res.partner"):
+            holder = (
+                self.env[model_name]
+                .with_context(active_test=False)
+                .search_fetch(
+                    [("lang", "in", lang_codes)],
+                    ["active"],
+                    order="active desc, id",
+                    limit=1,
+                )
+            )
+            if holder:
+                _debug.logic(
+                    "deactivate_refused",
+                    codes=lang_codes,
+                    model=model_name,
+                    active=holder.active,
+                )
+                raise UserError(
+                    str(self._DEACTIVATION_REFUSALS[model_name, holder.active])
+                )
 
     def _reset_environment_languages(self) -> None:
         # Environment.lang caches whether its context language is installed;

@@ -974,16 +974,13 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_similar_name_threshold(self) -> float:
-        raw = (
+        value = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(SIMILAR_NAME_THRESHOLD_PARAM)
+            .get_param_float(
+                SIMILAR_NAME_THRESHOLD_PARAM, DEFAULT_SIMILAR_NAME_THRESHOLD
+            )
         )
-        try:
-            value = float(raw)
-        except TypeError, ValueError:
-            _debug.logic("similar_name_threshold_defaulted", reason="not_a_number")
-            return DEFAULT_SIMILAR_NAME_THRESHOLD
         if not 0 < value <= 1:
             _debug.logic(
                 "similar_name_threshold_defaulted", reason="out_of_range", value=value

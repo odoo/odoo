@@ -197,14 +197,6 @@ class IrModelFieldsSelection(models.Model):
             updated=len(rows_to_update),
             removed=len(rows_to_remove),
         )
-        _debug.lifecycle(
-            "update_selection",
-            model=model_name,
-            field=field_name,
-            inserted=len(rows_to_insert),
-            updated=len(rows_to_update),
-            removed=len(rows_to_remove),
-        )
         if rows_to_insert:
             query_insert(self.env.cr, self._table, rows_to_insert)
 
@@ -265,12 +257,6 @@ class IrModelFieldsSelection(models.Model):
                     field=name,
                     reason="field_not_in_registry",
                 )
-                _debug.logic(
-                    "create.setup_skipped",
-                    model=model,
-                    field=name,
-                    reason="field_not_in_registry",
-                )
         _debug.lifecycle("create", count=len(recs), setup_models=list(model_names))
         if model_names:
             self.env.flush_all()
@@ -302,13 +288,6 @@ class IrModelFieldsSelection(models.Model):
         fname = field.name
         column = SQL.identifier(fname)
         model.invalidate_model([fname])
-        _debug.logic(
-            "rename_stored_values.strategy",
-            model=field.model,
-            field=fname,
-            jsonb=self._is_jsonb_stored(field),
-            reference=self._is_reference(field),
-        )
         _debug.logic(
             "rename_stored_values.strategy",
             model=field.model,
@@ -544,14 +523,6 @@ class IrModelFieldsSelection(models.Model):
                 )
                 for value, ondelete in policies.items():
                     records = records_by_value.get(value, company_model.browse())
-                    _debug.logic(
-                        "ondelete.applied",
-                        model=Model._name,
-                        field=field.name,
-                        company=company.id,
-                        policy=ondelete if isinstance(ondelete, str) else "callable",
-                        records=len(records),
-                    )
                     _debug.logic(
                         "ondelete.applied",
                         model=Model._name,

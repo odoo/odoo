@@ -229,9 +229,6 @@ class ResGroups(models.Model):
         for group in operands:
             if not group:
                 continue
-            domain = Domain("name", operator, value_to_operand(group))
-            where_domains.append(domain)
-
             if "/" in group:
                 privilege_name, _, group_name = group.partition("/")
                 group_name = group_name.strip()

@@ -117,3 +117,48 @@ class TestMixinMergeSidecars(TransactionCase):
         src.unlink()
         self.env.invalidate_all()
         self.assertEqual(both.tag_ids, dst)
+
+
+@tagged("post_install", "-at_install")
+class TestMixinMergeSummableCompanyDependent(TransactionCase):
+    def _company_dependent_integer(self):
+        model = self.env["ir.model"].sudo().search([("model", "=", "res.partner")])
+        self.env["ir.model.fields"].sudo().create(
+            {
+                "name": "x_merge_sum_probe",
+                "field_description": "Merge Sum Probe",
+                "model_id": model.id,
+                "ttype": "integer",
+                "company_dependent": True,
+                "state": "manual",
+            }
+        )
+        self.env.flush_all()
+        self.env.registry.setup_models(self.env.cr, [])
+        return "x_merge_sum_probe"
+
+    def test_a_summable_company_dependent_field_is_summed_per_company(self):
+        fname = self._company_dependent_integer()
+        company_a = self.env.company
+        company_b = self.env["res.company"].create({"name": "merge sum company b"})
+        Partner = self.env["res.partner"]
+        src = Partner.create({"name": "sum src"})
+        dst = Partner.create({"name": "sum dst"})
+        src.with_company(company_a)[fname] = 5
+        src.with_company(company_b)[fname] = 7
+        dst.with_company(company_a)[fname] = 10
+        dst.with_company(company_b)[fname] = 3
+        self.env.flush_all()
+
+        self.env["base.partner.merge.automatic.wizard"].create(
+            {}
+        )._update_values_generic(src, dst, summable_fields=[fname])
+        self.env.invalidate_all()
+
+        self.assertEqual(dst.with_company(company_a)[fname], 15)
+        self.assertEqual(
+            dst.with_company(company_b)[fname],
+            10,
+            "a summable company-dependent field is summed in every company, "
+            "not only the current one",
+        )

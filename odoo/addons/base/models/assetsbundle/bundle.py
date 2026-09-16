@@ -111,17 +111,6 @@ class AssetsBundle:
         return url.partition("#")[0].partition("?")[0].rpartition(".")[2].lower()
 
     @staticmethod
-    def _is_addon_present(rel: str) -> bool:
-        module = rel.partition("/")[0]
-        if not module:
-            return False
-        try:
-            file_path(module)
-        except ValueError, FileNotFoundError:
-            return False
-        return True
-
-    @staticmethod
     def _is_addon_path_present(rel: str) -> bool:
         try:
             file_path(rel)

@@ -123,63 +123,56 @@ class ResUsersApikeys(models.Model):
         self.env.registry.clear_cache()
         return res
 
+    def _match_key(
+        self, scope: str, key: str, *, include_expired: bool
+    ) -> tuple[int, datetime.datetime | None] | None:
+        self.env.cr.execute(
+            SQL(
+                """
+                SELECT user_id, key, expiration_date
+                FROM %s INNER JOIN res_users u ON (u.id = user_id)
+                WHERE u.active AND index = %s AND (scope IS NULL OR scope = %s) %s
+                """,
+                SQL.identifier(self._table),
+                key[:INDEX_SIZE],
+                scope,
+                SQL()
+                if include_expired
+                else SQL(
+                    "AND (expiration_date IS NULL"
+                    " OR expiration_date >= now() at time zone 'utc')"
+                ),
+            )
+        )
+        candidates = self.env.cr.fetchall()
+        _debug.perf.count(
+            "apikey_candidates",
+            scope=scope,
+            candidates=len(candidates),
+            include_expired=include_expired,
+        )
+        for user_id, current_key, expiration_date in candidates:
+            if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
+                _debug.logic(
+                    "apikey_matched", scope=scope, uid=user_id, expires=expiration_date
+                )
+                return user_id, expiration_date
+        _debug.logic("apikey_rejected", scope=scope, candidates=len(candidates))
+        return None
+
     def _check_credentials(self, *, scope: str, key: str) -> int | None:
         if not scope or not key:
             _debug.logic("apikey_check_refused", reason="missing_scope_or_key")
             msg = "scope and key required"
             raise ValueError(msg)
-        index = key[:INDEX_SIZE]
-        self.env.cr.execute(
-            SQL(
-                """
-                SELECT user_id, key
-                FROM %s INNER JOIN res_users u ON (u.id = user_id)
-                WHERE
-                    u.active and index = %s
-                    AND (scope IS NULL OR scope = %s)
-                    AND (
-                        expiration_date IS NULL OR
-                        expiration_date >= now() at time zone 'utc'
-                    )
-                """,
-                SQL.identifier(self._table),
-                index,
-                scope,
-            )
-        )
-        candidates = self.env.cr.fetchall()
-        _debug.perf.count("apikey_candidates", scope=scope, candidates=len(candidates))
-        for user_id, current_key in candidates:
-            if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
-                _debug.logic("apikey_matched", scope=scope, uid=user_id)
-                return user_id
-        _debug.logic("apikey_rejected", scope=scope, candidates=len(candidates))
-        return None
+        match = self._match_key(scope, key, include_expired=False)
+        return match[0] if match else None
 
     def _get_key_expiration(self, *, scope: str, key: str) -> datetime.datetime | None:
         if not scope or not key:
             return None
-        index = key[:INDEX_SIZE]
-        self.env.cr.execute(
-            SQL(
-                """
-                SELECT key, expiration_date
-                FROM %s INNER JOIN res_users u ON (u.id = user_id)
-                WHERE u.active AND index = %s AND (scope IS NULL OR scope = %s)
-                """,
-                SQL.identifier(self._table),
-                index,
-                scope,
-            )
-        )
-        for current_key, expiration_date in self.env.cr.fetchall():
-            if KEY_CRYPT_CONTEXT.is_password_valid(key, current_key):
-                _debug.logic(
-                    "apikey_expiration_found", scope=scope, expires=expiration_date
-                )
-                return expiration_date
-        _debug.logic("apikey_expiration_unknown", scope=scope)
-        return None
+        match = self._match_key(scope, key, include_expired=True)
+        return match[1] if match else None
 
     def _get_max_duration(self) -> float:
         return (

@@ -363,6 +363,9 @@ class IrAttachment(models.Model):
         return records
 
     def write(self, vals: dict[str, Any]) -> bool:
+        if not self:
+            _debug.logic("write.skipped", reason="empty_recordset", fields=list(vals))
+            return True
         if "res_model" in vals or "res_id" in vals:
             model_and_ids = defaultdict(OrderedSet)
             new_model = self._coerce_model_name(vals.get("res_model"))
@@ -1805,11 +1808,10 @@ class IrAttachment(models.Model):
         if ALGO_TAG == "s1":
             return 0, 0
         if limit is None:
-            limit = int(
+            limit = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("ir_attachment.rehash_legacy_keys_limit", 0)
-                or 0
+                .get_param_int("ir_attachment.rehash_legacy_keys_limit", 0)
             )
         if limit <= 0:
             _debug.logic("rehash_skipped", reason="no_limit")

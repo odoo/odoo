@@ -270,7 +270,6 @@ class IrModuleModule(models.Model):
         string="Installed Version",
         readonly=True,
     )
-    published_version = fields.Char(readonly=True)
 
     url = fields.Char(
         string="URL",
