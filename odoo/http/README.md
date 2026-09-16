@@ -194,6 +194,22 @@ post_dispatch out of band. A request refused before its session was read (a
 rejected method, a NUL in the path, a failing `_post_init`) has no session to
 save and no dispatcher state to publish; it gets the security headers alone.
 
+## Testing the pipeline without a database
+
+`tests/_wsgi.py` runs `Application.__call__` end to end in the one-second tier: a
+`Harness` owns a real `FilesystemSessionStore` on a temp directory, real routing
+maps generated from controllers installed as a fake addon, and an in-memory
+registry whose cursor commits and rolls back through the same `postcommit` /
+`postrollback` callbacks the real one runs, with a fake `ir.http` that
+authenticates, dispatches and renders errors the way `base`'s does. `Registry`,
+`odoo.api.Environment` and the two database-list seams are patched for the call.
+`tests/test_wsgi_pipeline.py` drives it: nodb and db routes, the committed
+transaction, session publication after commit and rollback restore, login, the
+negotiated 404, CSRF, JSON-RPC and json2, typed coercion, read-only promotion
+with and without a replica, a controller bug, a rejected method, the header/
+session database conflict. `test_http` on a real database remains the
+integration gate; this is what runs before it.
+
 ## Module map
 
 `doc/architecture/module.md` groups these modules into `[foundation]`,
