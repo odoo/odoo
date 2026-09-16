@@ -61,8 +61,8 @@ export class Dialog extends Component {
      * /!\ DO NOT DO THIS: PROPS SHOULD NOT BE OVERRIDDEN BY CHILD COMPONENTS
      * This is a temporary measure as converting each dialog extension is tedious
      */
-    static props = dialogProps;
-    props = useProps(this.constructor.props);
+    static propsSchema = dialogProps;
+    props = useProps(this.constructor.propsSchema);
     // Ref on the modal element, either owned by the parent (`modalRef` prop) or local.
     modalRef = useProps.static(
         "modalRef",
