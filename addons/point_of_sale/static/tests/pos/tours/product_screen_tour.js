@@ -28,6 +28,11 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
 
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            // Wait for the opening control modal to close to avoid warning if refreshing at wrong time
+            {
+                content: "Wait for the opening control modal to close",
+                trigger: "body:not(:has(.modal))",
+            },
             OfflineUtil.setOfflineMode(),
             // ensure that even after refreshing the page while being offline all data is correctly reloaded
             refresh(),
