@@ -2001,6 +2001,12 @@ class PosOrderLine(models.Model):
 
         if line.product_id.description_sale:
             product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
+
+        quantity = line.qty * (-1 if is_refund_order else 1)
+        extra_tax_data = line.extra_tax_data
+        if extra_tax_data and quantity * extra_tax_data.get('quantity', quantity) < 0:
+            extra_tax_data = self.env['account.tax']._reverse_quantity_base_line_extra_tax_data(extra_tax_data)
+
         return {
             **self.env['account.tax']._prepare_base_line_for_taxes_computation(
                 line,
@@ -2010,11 +2016,12 @@ class PosOrderLine(models.Model):
                 product_id=line.product_id,
                 tax_ids=line.tax_ids_after_fiscal_position,
                 price_unit=line.price_unit,
-                quantity=line.qty * (-1 if is_refund_order else 1),
+                quantity=quantity,
                 discount=line.discount,
                 account_id=account,
                 is_refund=is_refund_line,
                 sign=1 if is_refund_order else -1,
+                extra_tax_data=extra_tax_data,
             ),
             'uom_id': line.product_uom_id,
             'name': product_name,
