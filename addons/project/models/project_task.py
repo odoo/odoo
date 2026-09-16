@@ -94,6 +94,7 @@ class ProjectTask(models.Model):
     _inherit = [
         'portal.mixin',
         'mail.activity.mixin',
+        'discuss.call.log.mixin',
         'rating.mixin',
         'mail.tracking.duration.mixin',
         'html.field.history.mixin',
