@@ -121,6 +121,31 @@ class TestUser(MailCommon):
         self.assertEqual(admin.notification_type, 'email')
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), admin.group_ids)
 
+    def test_notification_type_preserves_user_role(self):
+        # MailCommon grants template editing to all internal users, which implies regular access.
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
+        inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
+        regular_group = self.env.ref('base.group_user_regular')
+        for role, groups in [
+            ('light_user', 'base.group_user'),
+            ('regular_user', 'base.group_user,base.group_user_regular'),
+        ]:
+            with self.subTest(role=role):
+                user = mail_new_test_user(
+                    self.env,
+                    login=f'notification_{role}',
+                    groups=groups,
+                    notification_type='email',
+                )
+                self.assertEqual(user.role, role)
+                self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
+                for notification_type in ('inbox', 'email'):
+                    user.with_user(user).write({'notification_type': notification_type})
+                    self.assertEqual(user.notification_type, notification_type)
+                    self.assertEqual(user.role, role)
+                    self.assertEqual(inbox_group in user.group_ids, notification_type == 'inbox')
+                    self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
+
     @freeze_time("2025-06-18 08:45:12")
     def test_out_of_office(self):
         """ Test Out-of-Office computation, defined on user itself. """
