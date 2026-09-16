@@ -1,51 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <data>
-        <record
-            id="fleet_vehicle_model_category_view_tree_stock_fleet"
-            model="ir.ui.view">
-            <field
-                name="name">fleet.vehicle.model.category.view.list.inherit.stock.fleet</field>
-            <field name="model">fleet.vehicle.model.category</field>
-            <field
-                name="inherit_id"
-                ref="fleet.fleet_vehicle_model_category_view_tree" />
-            <field name="arch" type="xml">
-                <data>
-                    <field name="name" position="after">
-                        <field name="weight_capacity" optional="show" />
-                        <field name="volume_capacity" optional="show" />
-                    </field>
-                </data>
-            </field>
-        </record>
-        <record
-            id="fleet_vehicle_model_category_view_form_stock_fleet"
-            model="ir.ui.view">
-            <field
-                name="name">fleet.vehicle.model.category.view.form.inherit.stock.fleet</field>
-            <field name="model">fleet.vehicle.model.category</field>
-            <field
-                name="inherit_id"
-                ref="fleet.fleet_vehicle_model_category_view_form" />
-            <field name="arch" type="xml">
-                <data>
-                    <field name="name" position="after">
-                        <label for="weight_capacity" />
-                        <div class="d-flex flex-row gap-1">
-                            <field name="weight_capacity" />
-                            <span><field name="weight_capacity_uom_name" /></span>
-                        </div>
-                        <label for="volume_capacity" />
-                        <div class="d-flex flex-row gap-1">
-                            <field name="volume_capacity" />
-                            <span><field name="volume_capacity_uom_name" /></span>
-                        </div>
-                    </field>
-                </data>
-            </field>
-        </record>
-    </data>
+    <record id="product_template_form_view_stock_fleet" model="ir.ui.view">
+        <field name="name">product.template.form.stock.fleet</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="fleet.product_template_form_view_fleet" />
+        <field name="arch" type="xml">
+            <group name="vehicle_body" position="inside">
+                <label for="weight_capacity" />
+                <div class="o_row">
+                    <field name="weight_capacity" class="oe_inline" />
+                    <field name="weight_capacity_uom_name" class="oe_inline" />
+                </div>
+                <label for="volume_capacity" />
+                <div class="o_row">
+                    <field name="volume_capacity" class="oe_inline" />
+                    <field name="volume_capacity_uom_name" class="oe_inline" />
+                </div>
+            </group>
+        </field>
+    </record>
 
 </odoo>

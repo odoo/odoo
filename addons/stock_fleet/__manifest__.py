@@ -1,6 +1,6 @@
 {
     "name": "Stock Transport",
-    "version": "1.0",
+    "version": "2.0",
     "category": "Supply Chain/Inventory",
     "summary": "Stock Transport: Dispatch Management System",
     "description": "Transport Management: organize packs in your fleet, or carriers.",

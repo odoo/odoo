@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_analytic_line_filter" model="ir.ui.view">
+        <field
+            name="name">account.analytic.line.select.inherit.resource_asset_account</field>
+        <field name="model">account.analytic.line</field>
+        <field
+            name="inherit_id"
+            ref="account.view_account_analytic_line_filter_inherit_account" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="asset_id" />
+            </xpath>
+            <xpath expr="//group[@name='groupby']" position="after">
+                <filter name="asset" string="Asset" context="{'group_by':'asset_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_pivot" model="ir.ui.view">
+        <field
+            name="name">account.analytic.line.pivot.inherit.resource_asset_account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot" />
+        <field name="arch" type="xml">
+            <field name="account_id" position="after">
+                <field name="asset_id" type="row" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_tree" model="ir.ui.view">
+        <field
+            name="name">account.analytic.line.list.inherit.resource_asset_account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="asset_id" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_form" model="ir.ui.view">
+        <field
+            name="name">account.analytic.line.form.inherit.resource_asset_account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="before">
+                <field name="asset_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

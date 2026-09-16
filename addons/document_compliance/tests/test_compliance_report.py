@@ -62,7 +62,7 @@ class TestComplianceReportScope(ComplianceCase):
         cls.other_model_type = cls._type(
             "SCOPE_OTHER",
             is_mandatory=True,
-            applies_to="fleet.vehicle" if "fleet.vehicle" in cls.env else "hr.employee",
+            applies_to="hr.employee",
         )
 
     def _partner(self, name):

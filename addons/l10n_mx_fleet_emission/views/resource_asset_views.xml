@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fleet_vehicle_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.form.fleet.l10n_mx_emission</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_l10n_mx_emission_inspections"
+                    type="object"
+                    icon="fa-check-square-o"
+                    invisible="not l10n_mx_emission_calendar_id"
+                    class="oe_stat_button">
+                    <field
+                        name="l10n_mx_emission_pending_count"
+                        string="Inspections Pending"
+                        widget="statinfo" />
+                </button>
+            </div>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <field name="l10n_mx_emission_calendar_id" invisible="1" />
+                <div
+                    class="d-flex align-items-center gap-3 flex-wrap mb-2"
+                    invisible="not l10n_mx_emission_calendar_id">
+                    <field name="l10n_mx_emission_period" invisible="1" />
+                    <field
+                        name="l10n_mx_emission_color"
+                        widget="emission_sticker_color"
+                        options="{'size': 'lg', 'period_field': 'l10n_mx_emission_period'}" />
+                    <field
+                        name="l10n_mx_emission_status"
+                        widget="badge"
+                        decoration-danger="l10n_mx_emission_status == 'overdue'"
+                        decoration-info="l10n_mx_emission_status == 'upcoming'"
+                        decoration-primary="l10n_mx_emission_status == 'scheduled'"
+                        decoration-success="l10n_mx_emission_status == 'passed'"
+                        decoration-warning="l10n_mx_emission_status == 'due'" />
+                </div>
+            </xpath>
+            <group name="where" position="inside">
+                <field
+                    name="l10n_mx_emission_last_date"
+                    invisible="not l10n_mx_emission_calendar_id" />
+                <field
+                    name="l10n_mx_emission_deadline"
+                    invisible="not l10n_mx_emission_calendar_id" />
+            </group>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_tree" model="ir.ui.view">
+        <field name="name">resource.asset.list.fleet.l10n_mx_emission</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
+        <field name="arch" type="xml">
+            <field name="license_plate" position="after">
+                <field name="l10n_mx_emission_period" column_invisible="1" />
+                <field
+                    name="l10n_mx_emission_color"
+                    widget="emission_sticker_color"
+                    optional="show"
+                    options="{'size': 'sm', 'period_field': 'l10n_mx_emission_period'}" />
+                <field name="l10n_mx_emission_deadline" optional="show" />
+                <field name="l10n_mx_emission_last_date" optional="hide" />
+                <field
+                    name="l10n_mx_emission_status"
+                    widget="badge"
+                    optional="show"
+                    decoration-danger="l10n_mx_emission_status == 'overdue'"
+                    decoration-info="l10n_mx_emission_status == 'upcoming'"
+                    decoration-primary="l10n_mx_emission_status == 'scheduled'"
+                    decoration-success="l10n_mx_emission_status == 'passed'"
+                    decoration-warning="l10n_mx_emission_status == 'due'" />
+            </field>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_kanban" model="ir.ui.view">
+        <field name="name">resource.asset.kanban.fleet.l10n_mx_emission</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban" />
+        <field name="arch" type="xml">
+            <field name="license_plate" position="after">
+                <field name="l10n_mx_emission_period" invisible="1" />
+                <field
+                    name="l10n_mx_emission_color"
+                    widget="emission_sticker_color"
+                    options="{'size': 'sm', 'period_field': 'l10n_mx_emission_period'}" />
+            </field>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_search" model="ir.ui.view">
+        <field name="name">resource.asset.search.fleet.l10n_mx_emission</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search" />
+        <field name="arch" type="xml">
+            <filter name="planned" position="after">
+                <separator />
+                <filter
+                    name="l10n_mx_emission_due"
+                    string="Inspection Due Now"
+                    domain="[('l10n_mx_emission_status', 'in', ['due'])]" />
+                <filter
+                    name="l10n_mx_emission_overdue"
+                    string="Inspection Overdue"
+                    domain="[('l10n_mx_emission_status', 'in', ['overdue'])]" />
+            </filter>
+            <filter name="groupby_product" position="after">
+                <filter
+                    name="groupby_l10n_mx_emission_color"
+                    string="Sticker Color"
+                    context="{'group_by': 'l10n_mx_emission_color'}" />
+            </filter>
+        </field>
+    </record>
+
+</odoo>

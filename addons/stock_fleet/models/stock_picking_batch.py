@@ -9,12 +9,17 @@ _debug = DebugLog(__name__)
 class StockPickingBatch(models.Model):
     _inherit = "stock.picking.batch"
 
-    vehicle_id = fields.Many2one(comodel_name="fleet.vehicle")
-    vehicle_category_id = fields.Many2one(
-        comodel_name="fleet.vehicle.model.category",
-        compute="_compute_vehicle_category_id",
+    vehicle_id = fields.Many2one(
+        comodel_name="resource.asset",
+        domain="[('is_vehicle', '=', True)]",
+    )
+    vehicle_model_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Vehicle Model",
+        compute="_compute_vehicle_model_id",
         store=True,
         readonly=False,
+        domain="[('is_vehicle', '=', True)]",
     )
     allowed_dock_ids = fields.Many2many(
         related="picking_type_id.dock_ids",
@@ -28,7 +33,7 @@ class StockPickingBatch(models.Model):
         domain="[('id', 'child_of', allowed_dock_ids)]",
     )
     vehicle_weight_capacity = fields.Float(
-        related="vehicle_category_id.weight_capacity",
+        related="vehicle_model_id.weight_capacity",
         string="Vehcilce Payload Capacity",
     )
     weight_uom_name = fields.Char(
@@ -36,7 +41,7 @@ class StockPickingBatch(models.Model):
         compute="_compute_weight_uom_name",
     )
     vehicle_volume_capacity = fields.Float(
-        related="vehicle_category_id.volume_capacity",
+        related="vehicle_model_id.volume_capacity",
         string="Max Volume (m³)",
     )
     volume_uom_name = fields.Char(
@@ -79,10 +84,10 @@ class StockPickingBatch(models.Model):
                 )
 
     @api.depends("vehicle_id")
-    def _compute_vehicle_category_id(self):
-        _debug.perf.count("batch_vehicle_category_compute", batches=self)
+    def _compute_vehicle_model_id(self):
         for rec in self:
-            rec.vehicle_category_id = rec.vehicle_id.category_id
+            if rec.vehicle_id:
+                rec.vehicle_model_id = rec.vehicle_id.product_id
 
     @api.depends(
         "picking_ids",
@@ -114,13 +119,13 @@ class StockPickingBatch(models.Model):
     @api.depends("vehicle_id")
     def _compute_driver_id(self):
         for rec in self:
-            rec.driver_id = rec.vehicle_id.driver_id
+            rec.driver_id = rec.vehicle_id.driver_id.partner_id
 
     @api.depends(
         "estimated_shipping_weight",
-        "vehicle_category_id.weight_capacity",
+        "vehicle_model_id.weight_capacity",
         "estimated_shipping_volume",
-        "vehicle_category_id.volume_capacity",
+        "vehicle_model_id.volume_capacity",
     )
     def _compute_capacity_percentage(self):
         _debug.perf.count("batch_capacity_compute", batches=self)

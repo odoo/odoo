@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fleet_vehicle_service_view_list" model="ir.ui.view">
+        <field name="name">resource.asset.log.list.fleet</field>
+        <field name="model">resource.asset.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list string="Services">
+                <field name="date" />
+                <field name="asset_id" string="Vehicle" />
+                <field name="product_id" string="Service" />
+                <field name="vendor_id" optional="show" />
+                <field name="inv_ref" optional="hide" />
+                <field name="notes" optional="hide" />
+                <field name="currency_id" column_invisible="True" />
+                <field name="amount" sum="Total" />
+                <field name="state" widget="badge" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_service_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.log.form.fleet</field>
+        <field name="model">resource.asset.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Service">
+                <header>
+                    <button
+                        name="action_set_done"
+                        type="object"
+                        string="Done"
+                        invisible="state in ('done', 'cancelled')"
+                        class="btn-primary" />
+                    <button
+                        name="action_set_cancelled"
+                        type="object"
+                        string="Cancel"
+                        invisible="state == 'cancelled'" />
+                    <button
+                        name="action_set_new"
+                        type="object"
+                        string="Reset"
+                        invisible="state == 'new'" />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="new,running,done" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field
+                                name="asset_id"
+                                string="Vehicle"
+                                domain="[('is_vehicle', '=', True)]" />
+                            <field
+                                name="product_id"
+                                string="Service"
+                                domain="[('categ_id.log_type', '=', 'service')]" />
+                            <field name="date" />
+                        </group>
+                        <group>
+                            <field name="vendor_id" />
+                            <field name="inv_ref" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes" />
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_service_view_search" model="ir.ui.view">
+        <field name="name">resource.asset.log.search.fleet</field>
+        <field name="model">resource.asset.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Services">
+                <field name="asset_id" string="Vehicle" />
+                <field name="product_id" string="Service" />
+                <field name="vendor_id" />
+                <filter
+                    name="filter_new"
+                    string="New"
+                    domain="[('state', '=', 'new')]" />
+                <filter
+                    name="filter_running"
+                    string="Running"
+                    domain="[('state', '=', 'running')]" />
+                <filter
+                    name="filter_done"
+                    string="Done"
+                    domain="[('state', '=', 'done')]" />
+                <separator />
+                <filter name="filter_date" string="Date" date="date" />
+                <separator />
+                <filter
+                    name="groupby_vehicle"
+                    string="Vehicle"
+                    context="{'group_by': 'asset_id'}" />
+                <filter
+                    name="groupby_product"
+                    string="Service"
+                    context="{'group_by': 'product_id'}" />
+                <filter
+                    name="groupby_category"
+                    string="Category"
+                    context="{'group_by': 'product_category_id'}" />
+                <filter
+                    name="groupby_date"
+                    string="Month"
+                    context="{'group_by': 'date:month'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_cost_view_pivot" model="ir.ui.view">
+        <field name="name">resource.asset.log.pivot.fleet</field>
+        <field name="model">resource.asset.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot string="Costs" sample="1">
+                <field name="date" type="col" interval="month" />
+                <field name="product_category_id" type="row" />
+                <field name="amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_cost_view_graph" model="ir.ui.view">
+        <field name="name">resource.asset.log.graph.fleet</field>
+        <field name="model">resource.asset.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Costs" sample="1" stacked="1">
+                <field name="date" interval="month" />
+                <field name="product_category_id" />
+                <field name="amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_service_action" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="res_model">resource.asset.log</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="search_view_id" ref="fleet_vehicle_service_view_search" />
+        <field
+            name="domain">[('asset_id.is_vehicle', '=', True), ('log_type', '=', 'service')]</field>
+        <field
+            name="context">{'default_product_id': ref('fleet.product_product_vehicle_service'), 'search_default_groupby_product': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new service entry
+            </p>
+            <p>
+                Track the services done on your vehicles: each one is a line of the vehicle's ledger, typed by its service product.
+            </p>
+        </field>
+        <field
+            name="view_ids"
+            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('fleet_vehicle_service_view_list')}), Command.create({'view_mode': 'form', 'view_id': ref('fleet_vehicle_service_view_form')}), Command.create({'view_mode': 'pivot', 'view_id': ref('fleet_vehicle_cost_view_pivot')}), Command.create({'view_mode': 'graph', 'view_id': ref('fleet_vehicle_cost_view_graph')})]" />
+    </record>
+
+    <record id="fleet_costs_reporting_action" model="ir.actions.act_window">
+        <field name="name">Costs</field>
+        <field name="res_model">resource.asset.log</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="fleet_vehicle_service_view_search" />
+        <field
+            name="domain">[('asset_id.is_vehicle', '=', True), ('state', '!=', 'cancelled')]</field>
+        <field name="context">{'search_default_filter_date': 1}</field>
+        <field
+            name="view_ids"
+            eval="[Command.clear(), Command.create({'view_mode': 'graph', 'view_id': ref('fleet_vehicle_cost_view_graph')}), Command.create({'view_mode': 'pivot', 'view_id': ref('fleet_vehicle_cost_view_pivot')})]" />
+    </record>
+
+    <record id="fleet_vehicle_odometer_view_tree" model="ir.ui.view">
+        <field name="name">resource.asset.meter.reading.list.fleet</field>
+        <field name="model">resource.asset.meter.reading</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list
+                string="Odometer Logs"
+                default_order="date desc, id desc"
+                editable="top">
+                <field name="date" />
+                <field name="asset_id" string="Vehicle" />
+                <field
+                    name="meter_id"
+                    domain="[('kind', '=', 'odometer'), ('asset_id.is_vehicle', '=', True)]" />
+                <field name="value" />
+                <field name="source" optional="hide" />
+                <field name="note" optional="show" />
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_view_graph" model="ir.ui.view">
+        <field name="name">resource.asset.meter.reading.graph.fleet</field>
+        <field name="model">resource.asset.meter.reading</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph type="line" string="Odometer" sample="1">
+                <field name="date" interval="month" />
+                <field name="asset_id" />
+                <field name="value" type="measure" operator="max" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_view_search" model="ir.ui.view">
+        <field name="name">resource.asset.meter.reading.search.fleet</field>
+        <field name="model">resource.asset.meter.reading</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Odometer Logs">
+                <field name="asset_id" string="Vehicle" />
+                <filter name="filter_date" string="Date" date="date" />
+                <separator />
+                <filter
+                    name="groupby_vehicle"
+                    string="Vehicle"
+                    context="{'group_by': 'asset_id'}" />
+                <filter
+                    name="groupby_date"
+                    string="Month"
+                    context="{'group_by': 'date:month'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_action" model="ir.actions.act_window">
+        <field name="name">Odometers</field>
+        <field name="res_model">resource.asset.meter.reading</field>
+        <field name="view_mode">list,graph</field>
+        <field name="search_view_id" ref="fleet_vehicle_odometer_view_search" />
+        <field
+            name="domain">[('meter_id.kind', '=', 'odometer'), ('asset_id.is_vehicle', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new odometer log
+            </p>
+        </field>
+        <field
+            name="view_ids"
+            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('fleet_vehicle_odometer_view_tree')}), Command.create({'view_mode': 'graph', 'view_id': ref('fleet_vehicle_odometer_view_graph')})]" />
+    </record>
+
+</odoo>

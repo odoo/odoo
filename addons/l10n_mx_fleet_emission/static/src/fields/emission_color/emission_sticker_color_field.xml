@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_mx_fleet_emission.EmissionStickerColorField">
+        <span
+            t-if="value"
+            class="o_l10n_mx_emission_sticker badge rounded-1"
+            t-att-class="colorClass + ' o_l10n_mx_emission_sticker_' + props.size"
+            t-att-title="period ? string + ' · ' + period : string">
+            <t t-out="string" />
+            <span t-if="period" class="o_l10n_mx_emission_sticker_period ms-1 fw-normal">· <t t-out="period" /></span>
+        </span>
+    </t>
+</templates>

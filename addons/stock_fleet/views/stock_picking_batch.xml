@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <graph string="Graph View" sample="1" class="oe_stock_picking_batch">
                 <field name="date_planned" type="row" interval="day" />
-                <field name="vehicle_category_id" type="row" />
+                <field name="vehicle_model_id" type="row" />
             </graph>
         </field>
     </record>
@@ -36,14 +36,17 @@
                         groups="stock.group_stock_multi_locations"
                         invisible="not allowed_dock_ids" />
                     <field name="vehicle_id" placeholder="Third Party Provider" />
-                    <field name="vehicle_category_id" placeholder="semi-truck" />
+                    <field
+                        name="vehicle_model_id"
+                        placeholder="semi-truck"
+                        context="{'show_load_capacity': True}" />
                     <label
                         for="used_weight_percentage"
                         string="Weight"
-                        invisible="not vehicle_category_id or not vehicle_weight_capacity" />
+                        invisible="not vehicle_model_id or not vehicle_weight_capacity" />
                         <div
                             class="d-flex flex-row gap-4"
-                            invisible="not vehicle_category_id or not vehicle_weight_capacity">
+                            invisible="not vehicle_model_id or not vehicle_weight_capacity">
                             <div class="d-flex flex-row gap-1">
                                 <field name="estimated_shipping_weight" />
                                 <span><field name="weight_uom_name" /></span>
@@ -54,10 +57,10 @@
                     <label
                         for="used_volume_percentage"
                         string="Volume"
-                        invisible="not vehicle_category_id or not vehicle_volume_capacity" />
+                        invisible="not vehicle_model_id or not vehicle_volume_capacity" />
                         <div
                             class="d-flex flex-row gap-4"
-                            invisible="not vehicle_category_id or not vehicle_volume_capacity">
+                            invisible="not vehicle_model_id or not vehicle_volume_capacity">
                             <div class="d-flex flex-row gap-1">
                                 <field name="estimated_shipping_volume" />
                                 <span><field name="volume_uom_name" /></span>
@@ -79,7 +82,7 @@
                     <attribute name="optional">show</attribute>
                 </field>
                 <field name="user_id" position="after">
-                    <field name="vehicle_category_id" optional="hide" />
+                    <field name="vehicle_model_id" optional="hide" />
                     <field name="vehicle_id" optional="hide" />
                     <field
                         name="dock_id"
@@ -108,9 +111,9 @@
                     string="Vehicle"
                     context="{'group_by':'vehicle_id'}" />
                 <filter
-                    name="group_by_vehicle_category_id"
+                    name="group_by_vehicle_model_id"
                     string="Vehicle Category"
-                    context="{'group_by':'vehicle_category_id'}" />
+                    context="{'group_by':'vehicle_model_id'}" />
                 <filter
                     name="group_by_scheduled_date"
                     string="Scheduled Date"
@@ -133,7 +136,7 @@
                 <filter
                     name="third_party_carrier"
                     string="Third Party Carrier"
-                    domain="[('vehicle_id', '=', False), ('vehicle_category_id', '!=', False)]" />
+                    domain="[('vehicle_id', '=', False), ('vehicle_model_id', '!=', False)]" />
             </xpath>
             <xpath expr="//filter[@name='my_transfers']" position="after">
                 <filter

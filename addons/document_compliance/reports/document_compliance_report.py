@@ -4,7 +4,6 @@ from odoo.tools import SQL
 ENTITY_ID_BITS = 28
 ENTITY_TABLES = {
     "res.partner": "res_partner",
-    "fleet.vehicle": "fleet_vehicle",
 }
 
 
@@ -25,7 +24,7 @@ class DocumentComplianceReport(models.Model):
     )
     entity_type = fields.Char(
         readonly=True,
-        help="Model name of the entity (res.partner, hr.employee, fleet.vehicle, etc.)",
+        help="Model name of the entity (res.partner, hr.employee, etc.)",
     )
     entity_id = fields.Integer(
         string="Entity ID",

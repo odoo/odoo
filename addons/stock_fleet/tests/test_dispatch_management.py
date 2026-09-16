@@ -22,21 +22,31 @@ class TestDispatchManagement(TransactionCase):
         cls.in_type = cls.warehouse.in_type_id
         cls.in_type.dock_ids = [Command.set(cls.dock.ids)]
 
-        cls.category = cls.env["fleet.vehicle.model.category"].create(
-            {"name": "Test Van", "weight_capacity": 100.0, "volume_capacity": 20.0}
-        )
-        model = cls.env["fleet.vehicle.model"].create(
+        cls.model = cls.env["product.product"].create(
             {
-                "name": "Test Model",
-                "brand_id": cls.env["fleet.vehicle.model.brand"]
-                .create({"name": "Test Brand"})
-                .id,
-                "category_id": cls.category.id,
+                "name": "Test Van",
+                "type": "consu",
+                "asset_kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
+                "weight_capacity": 100.0,
+                "volume_capacity": 20.0,
             }
         )
         cls.driver = cls.env["res.partner"].create({"name": "Driver"})
-        cls.vehicle = cls.env["fleet.vehicle"].create(
-            {"model_id": model.id, "driver_id": cls.driver.id}
+        cls.vehicle = cls.env["resource.asset"].create(
+            {
+                "name": "Van",
+                "kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
+                "product_id": cls.model.id,
+                "driver_id": cls.env["resource.resource"]
+                .create(
+                    {
+                        "name": "Driver",
+                        "resource_type": "user",
+                        "partner_id": cls.driver.id,
+                    }
+                )
+                .id,
+            }
         )
         cls.product = cls.env["product.product"].create(
             {
@@ -118,11 +128,11 @@ class TestDispatchManagement(TransactionCase):
         self.assertEqual(middle.batch_sequence, 1)
         self.assertEqual(far.batch_sequence, 2)
 
-    def test_the_load_is_measured_against_the_vehicle_category(self):
+    def test_the_load_is_measured_against_the_vehicle_model(self):
         picking = self._picking(quantity=5)
         picking.move_ids.quantity = 5
         batch = self._batch(picking, vehicle_id=self.vehicle.id)
-        self.assertEqual(batch.vehicle_category_id, self.category)
+        self.assertEqual(batch.vehicle_model_id, self.model)
         self.assertEqual(batch.driver_id, self.driver)
         self.assertEqual(batch.estimated_shipping_weight, 50.0)
         self.assertEqual(batch.used_weight_percentage, 50.0)

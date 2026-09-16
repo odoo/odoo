@@ -25,24 +25,23 @@ class TestActivitySchedule(ActivityScheduleHRCase):
                 ],
             }
         )
-        cls.brand = cls.env["fleet.vehicle.model.brand"].create({"name": "Audi"})
+        model = cls.env["product.product"].create(
+            {
+                "name": "A3",
+                "type": "consu",
+                "asset_kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
+            }
+        )
         for employee in (cls.employee_1, cls.employee_2):
-            car = cls.env["fleet.vehicle"].create(
+            cls.env["resource.asset"].create(
                 {
-                    "driver_id": employee.user_id.partner_id.id,
-                    "model_id": cls.env["fleet.vehicle.model"]
-                    .create(
-                        {
-                            "brand_id": cls.brand.id,
-                            "name": "A3",
-                        }
-                    )
-                    .id,
+                    "name": f"Car of {employee.name}",
+                    "kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
+                    "product_id": model.id,
+                    "driver_employee_id": employee.id,
                     "manager_id": cls.user_manager.id,
-                    "plan_to_change_car": False,
                 }
             )
-            employee.car_ids = car
 
     @users("admin")
     def test_responsible(self):
@@ -82,7 +81,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         )
         form.save()
 
-        self.employee_1.car_ids = self.env["fleet.vehicle"]
+        self.employee_1.car_ids.driver_id = False
         form = self._instantiate_activity_schedule_wizard(employees)
         form.plan_id = self.plan_fleet
         self.assertTrue(form.has_error)

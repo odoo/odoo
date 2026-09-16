@@ -1,44 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
 
-    <data noupdate="1">
-        <record
-            id="ir_cron_contract_costs_generator"
-            model="ir.cron"
-            forcecreate="True">
-            <field
-                name="name">Fleet: Generate contracts costs based on costs frequency</field>
-            <field name="model_id" ref="model_fleet_vehicle_log_contract" />
-            <field name="state">code</field>
-            <field name="code">model.run_scheduler()</field>
-            <field name="user_id" ref="base.user_root" />
-            <field name="repeat_interval">1</field>
-            <field name="repeat_unit">day</field>
-        </record>
-        <record id="fleet_vehicle_state_new_request" model="fleet.vehicle.state">
-            <field name="name">New Request</field>
-            <field name="sequence">4</field>
-        </record>
-        <record id="fleet_vehicle_state_to_order" model="fleet.vehicle.state">
-            <field name="name">To Order</field>
-            <field name="sequence">5</field>
-        </record>
-        <record id="fleet_vehicle_state_registered" model="fleet.vehicle.state">
-            <field name="name">Registered</field>
-            <field name="sequence">7</field>
-        </record>
-        <record id="fleet_vehicle_state_downgraded" model="fleet.vehicle.state">
-            <field name="name">Downgraded</field>
-            <field name="sequence">8</field>
-        </record>
-        <record id="type_contract_omnium" model="fleet.service.type">
-            <field name="name">Omnium</field>
-            <field name="category">contract</field>
-        </record>
-        <record id="type_contract_leasing" model="fleet.service.type">
-            <field name="name">Leasing</field>
-            <field name="category">contract</field>
-        </record>
-    </data>
+    <record id="product_category_vehicle_services" model="product.category">
+        <field name="name">Vehicle Services</field>
+        <field name="log_type">service</field>
+    </record>
+
+    <record id="product_product_vehicle_service" model="product.product">
+        <field name="name">Vehicle Service</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product_category_vehicle_services" />
+        <field name="sale_ok" eval="False" />
+    </record>
 
 </odoo>

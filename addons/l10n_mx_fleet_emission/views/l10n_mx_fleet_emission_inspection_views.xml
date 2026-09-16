@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_fleet_emission_inspection_view_list" model="ir.ui.view">
+        <field name="name">l10n_mx.fleet.emission.inspection.list</field>
+        <field name="model">l10n_mx.fleet.emission.inspection</field>
+        <field name="arch" type="xml">
+            <list
+                editable="bottom"
+                multi_edit="1"
+                decoration-danger="is_overdue"
+                decoration-info="state == 'scheduled'"
+                decoration-success="state == 'done'">
+                <field name="is_done" widget="boolean_toggle" />
+                <field name="asset_id" readonly="id" />
+                <field name="license_plate" />
+                <field
+                    name="sticker_color"
+                    widget="emission_sticker_color"
+                    options="{'size': 'sm', 'period_field': 'window_display'}" />
+                <field name="driver_id" widget="many2one_avatar" optional="show" />
+                <field name="year" options="{'enable_formatting': false}" />
+                <field name="period" />
+                <field name="window_display" />
+                <field name="deadline" />
+                <field name="date_scheduled" />
+                <field name="date_done" />
+                <field name="certificate_number" optional="hide" />
+                <field name="notes" optional="hide" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'scheduled'"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'pending'" />
+                <field name="is_overdue" column_invisible="1" />
+                <field name="company_id" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_mx_fleet_emission_inspection_view_form" model="ir.ui.view">
+        <field name="name">l10n_mx.fleet.emission.inspection.form</field>
+        <field name="model">l10n_mx.fleet.emission.inspection</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_mark_done"
+                        type="object"
+                        string="Mark as Passed"
+                        invisible="state == 'done'"
+                        class="btn-primary" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" />
+                        </h1>
+                        <field
+                            name="sticker_color"
+                            widget="emission_sticker_color"
+                            options="{'size': 'lg', 'period_field': 'window_display'}" />
+                    </div>
+                    <group>
+                        <group>
+                            <field name="asset_id" />
+                            <field name="license_plate" />
+                            <field name="driver_id" />
+                            <field name="year" options="{'enable_formatting': false}" />
+                            <field name="period" />
+                        </group>
+                        <group>
+                            <field name="window_display" />
+                            <field name="deadline" />
+                            <field name="date_scheduled" />
+                            <field name="is_done" />
+                            <field name="date_done" />
+                            <field name="certificate_number" />
+                            <field name="notes" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_mx_fleet_emission_inspection_view_calendar" model="ir.ui.view">
+        <field name="name">l10n_mx.fleet.emission.inspection.calendar</field>
+        <field name="model">l10n_mx.fleet.emission.inspection</field>
+        <field name="arch" type="xml">
+            <calendar
+                mode="month"
+                color="color"
+                date_start="date_scheduled"
+                event_open_popup="1"
+                quick_create="0">
+                <field name="asset_id" />
+                <field name="sticker_color" />
+                <field name="deadline" />
+                <field name="state" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="l10n_mx_fleet_emission_inspection_view_kanban" model="ir.ui.view">
+        <field name="name">l10n_mx.fleet.emission.inspection.kanban</field>
+        <field name="model">l10n_mx.fleet.emission.inspection</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" highlight_color="color">
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="asset_id" class="fw-bolder" />
+                            <field
+                                name="sticker_color"
+                                widget="emission_sticker_color"
+                                options="{'size': 'sm', 'period_field': 'window_display'}" />
+                        </div>
+                        <div>
+                            <field name="year" options="{'enable_formatting': false}" />/<field name="period" /> · <field name="window_display" />
+                        </div>
+                        <div class="small text-muted">Deadline: <field name="deadline" /></div>
+                        <div t-if="record.date_scheduled.raw_value" class="small">Appointment: <field name="date_scheduled" /></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="l10n_mx_fleet_emission_inspection_view_search" model="ir.ui.view">
+        <field name="name">l10n_mx.fleet.emission.inspection.search</field>
+        <field name="model">l10n_mx.fleet.emission.inspection</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="asset_id" />
+                <field name="license_plate" />
+                <field name="driver_id" />
+                <field name="certificate_number" />
+                <filter
+                    name="pending"
+                    string="Pending"
+                    domain="[('state', '=', 'pending')]" />
+                <filter
+                    name="scheduled"
+                    string="Scheduled"
+                    domain="[('state', '=', 'scheduled')]" />
+                <filter name="done" string="Passed" domain="[('state', '=', 'done')]" />
+                <filter
+                    name="overdue"
+                    string="Overdue"
+                    domain="[('is_overdue', '=', True)]" />
+                <separator />
+                <filter
+                    name="period_1"
+                    string="First Period"
+                    domain="[('period', '=', '1')]" />
+                <filter
+                    name="period_2"
+                    string="Second Period"
+                    domain="[('period', '=', '2')]" />
+                <separator />
+                <filter
+                    name="year"
+                    string="Current Year"
+                    domain="[('year', '=', context_today().year)]" />
+                <separator />
+                <filter
+                    name="no_driver"
+                    string="Without Driver"
+                    domain="[('driver_id', '=', False)]" />
+                <group>
+                    <filter
+                        name="groupby_color"
+                        string="Color"
+                        context="{'group_by': 'sticker_color'}" />
+                    <filter
+                        name="groupby_period"
+                        string="Period"
+                        context="{'group_by': 'period'}" />
+                    <filter
+                        name="groupby_year"
+                        string="Year"
+                        context="{'group_by': 'year'}" />
+                    <filter
+                        name="groupby_state"
+                        string="Status"
+                        context="{'group_by': 'state'}" />
+                    <filter
+                        name="groupby_vehicle"
+                        string="Vehicle"
+                        context="{'group_by': 'asset_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_mx_fleet_emission_inspection_action" model="ir.actions.act_window">
+        <field name="name">Emissions Inspections</field>
+        <field name="res_model">l10n_mx.fleet.emission.inspection</field>
+        <field name="view_mode">list,kanban,calendar,form</field>
+        <field
+            name="context">{'search_default_year': 1, 'search_default_groupby_period': 1, 'search_default_groupby_color': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No emissions inspections yet</p>
+            <p>Use <b>Generate Checklist</b> in the action menu to create this year's first and second period inspections for every vehicle with a license plate.</p>
+        </field>
+    </record>
+
+    <record
+        id="l10n_mx_fleet_emission_inspection_generate_action"
+        model="ir.actions.server">
+        <field name="name">Generate Checklist</field>
+        <field name="model_id" ref="model_l10n_mx_fleet_emission_inspection" />
+        <field name="binding_model_id" ref="model_l10n_mx_fleet_emission_inspection" />
+        <field name="binding_view_types">list,kanban,calendar</field>
+        <field name="state">code</field>
+        <field name="code">model.action_generate_current_year()</field>
+    </record>
+
+</odoo>

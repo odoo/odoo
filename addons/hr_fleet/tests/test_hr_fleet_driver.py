@@ -1,3 +1,4 @@
+from odoo import fields
 from odoo.tests import common
 
 
@@ -5,92 +6,64 @@ class TestHrFleetDriver(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.test_employee = cls.env["hr.employee"].create({"name": "Test Employee"})
-
-        cls.test_user = cls.env["res.users"].create(
+        cls.employee = cls.env["hr.employee"].create({"name": "Test Employee"})
+        cls.other_employee = cls.env["hr.employee"].create({"name": "Other Employee"})
+        cls.model = cls.env["product.product"].create(
             {
-                "login": "test",
-                "name": "The King",
-                "email": "noop@example.com",
-            }
-        )
-
-        cls.brand = cls.env["fleet.vehicle.model.brand"].create(
-            {
-                "name": "Audi",
-            }
-        )
-
-        cls.model = cls.env["fleet.vehicle.model"].create(
-            {
-                "brand_id": cls.brand.id,
                 "name": "A3",
+                "type": "consu",
+                "asset_kind_id": cls.env.ref("resource_asset.kind_vehicle").id,
             }
         )
 
-        cls.car = cls.env["fleet.vehicle"].create(
+    def _car(self, plate, **vals):
+        return self.env["resource.asset"].create(
             {
-                "model_id": cls.model.id,
-                "future_driver_id": cls.test_employee.partner_id.id,
-                "plan_to_change_car": False,
-                "fuel_type": "diesel",
+                "name": plate,
+                "kind_id": self.env.ref("resource_asset.kind_vehicle").id,
+                "product_id": self.model.id,
+                "license_plate": plate,
+                **vals,
             }
         )
 
-        cls.car2 = cls.env["fleet.vehicle"].create(
+    def test_an_employee_drives_through_their_resource(self):
+        car = self._car("HR-001", driver_employee_id=self.employee.id)
+        self.assertEqual(car.driver_id, self.employee.resource_id)
+        self.assertEqual(car.driver_employee_id, self.employee)
+        self.assertEqual(self.employee.car_ids, car)
+        self.assertEqual(self.employee.employee_cars_count, 1)
+        self.assertIn("HR-001", self.employee.license_plate)
+        self.assertEqual(
+            self.env["hr.employee"].search([("license_plate", "ilike", "HR-001")]),
+            self.employee,
+        )
+        self.assertEqual(
+            self.env["resource.asset"].search(
+                [("driver_employee_id", "=", self.employee.id)]
+            ),
+            car,
+        )
+
+    def test_a_future_employee_driver_takes_over(self):
+        car = self._car("HR-002", driver_employee_id=self.employee.id)
+        car.future_driver_employee_id = self.other_employee
+        self.assertEqual(car.future_driver_id, self.other_employee.resource_id)
+        car.action_accept_driver_change()
+        car.invalidate_recordset()
+        self.assertEqual(car.driver_employee_id, self.other_employee)
+        self.assertEqual(self.employee.employee_cars_count, 1)
+        self.assertFalse(self.employee.car_ids)
+
+    def test_departure_releases_the_company_car(self):
+        car = self._car("HR-003", driver_employee_id=self.employee.id)
+        wizard = self.env["hr.departure.wizard"].create(
             {
-                "model_id": cls.model.id,
-                "plan_to_change_car": False,
-                "fuel_type": "diesel",
+                "employee_ids": [(6, 0, self.employee.ids)],
+                "departure_date": fields.Date.today(),
+                "release_campany_car": True,
             }
         )
-
-    def test_driver_sync_with_employee(self):
-        self.assertEqual(self.car.future_driver_id, self.test_employee.partner_id)
-        self.test_employee.user_id = self.test_user
-        self.assertEqual(self.test_employee.partner_id, self.test_user.partner_id)
-        self.car.action_accept_driver_change()
-        self.assertEqual(self.car.driver_id, self.test_user.partner_id)
-
-    def test_driver_sync_with_employee_without_contact(self):
-        self.assertEqual(self.car2.future_driver_id.id, False)
-        self.assertEqual(self.car2.driver_id.id, False)
-        self.env["hr.employee"].create(
-            {
-                "name": "Test Employee 2",
-                "user_id": self.test_user.id,
-            }
-        )
-        self.assertEqual(self.car2.future_driver_id.id, False)
-        self.assertEqual(self.car2.driver_id.id, False)
-
-    def test_driver_employee_multi_company(self):
-        other_company = self.env["res.company"].create({"name": "Other Company"})
-        test_employee2 = (
-            self.env["hr.employee"]
-            .with_company(other_company)
-            .create(
-                {
-                    "name": "Test Employee 2",
-                    "partner_id": self.test_employee.partner_id.id,
-                }
-            )
-        )
-        car = (
-            self.env["fleet.vehicle"]
-            .with_company(other_company)
-            .create(
-                {
-                    "model_id": self.model.id,
-                    "driver_id": test_employee2.partner_id.id,
-                }
-            )
-        )
-        self.assertEqual(car.driver_employee_id, test_employee2)
-
-        assignation_log = self.env["fleet.vehicle.assignation.log"].search(
-            [("vehicle_id", "=", car.id)]
-        )
-        self.assertEqual(len(assignation_log), 1)
-        self.assertEqual(assignation_log.driver_employee_id, test_employee2)
+        wizard._free_company_car()
+        car.invalidate_recordset()
+        self.assertFalse(car.driver_id)

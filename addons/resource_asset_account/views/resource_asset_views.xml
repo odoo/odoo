@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_view_form_bills" model="ir.ui.view">
+        <field name="name">resource.asset.form.bills</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_bills"
+                    type="object"
+                    icon="fa-credit-card"
+                    groups="account.group_account_readonly"
+                    invisible="count_bill == 0"
+                    class="oe_stat_button">
+                    <field name="count_bill" string="Bills" widget="statinfo" />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

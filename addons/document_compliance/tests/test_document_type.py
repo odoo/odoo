@@ -20,7 +20,7 @@ class TestDocumentTypeDefaults(ComplianceCase):
 
         self.assertIn("all", selection)
         self.assertIn("res.partner", selection)
-        self.assertEqual("fleet.vehicle" in selection, "fleet.vehicle" in self.env)
+        self.assertNotIn("fleet.vehicle", selection)
 
 
 class TestNotificationDays(ComplianceCase):

@@ -403,10 +403,13 @@ class ResourceAsset(models.Model):
         self.write({"state": "out_of_service"})
 
     def action_dispose(self):
+        return self._dispose()
+
+    def _dispose(self, date=None):
         self.write(
             {
                 "state": "disposed",
-                "date_disposal": fields.Date.context_today(self),
+                "date_disposal": date or fields.Date.context_today(self),
                 "active": False,
             }
         )

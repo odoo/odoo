@@ -1,56 +1,44 @@
 {
     "name": "Fleet",
-    "version": "1.1",
+    "version": "2.0",
     "category": "Human Resources/Fleet",
     "sequence": 185,
-    "summary": "Manage your fleet and track car costs",
+    "summary": "Manage your company's vehicles, drivers, services and costs",
     "description": """
-Vehicle, leasing, insurances, cost
-==================================
-With this module, Odoo helps you managing all your vehicles, the
-contracts associated to those vehicle as well as services, costs
-and many other features necessary to the management of your fleet
-of vehicle(s)
+Company fleet management
+========================
+A vehicle is an asset of kind vehicle: its model is a product with the manufacturer and
+specifications, its drivers are driver assignments, its odometer is a meter, and its services
+and costs are lines of the asset's ledger.
 
 Main Features
 -------------
-* Add vehicles to your fleet
-* Manage contracts for vehicles
-* Reminder when a contract reach its expiration date
-* Add services, odometer values for all vehicles
-* Show all costs associated to a vehicle or to a type of service
-* Analysis graph for costs
+* Register vehicles with plate, VIN, model and manufacturer
+* Assign current and future drivers and apply the hand-over
+* Record odometer readings
+* Log services and analyse vehicle costs
 """,
     "author": "Odoo S.A.",
     "website": "https://www.odoo.com/app/fleet",
     "license": "LGPL-3",
     "depends": [
         "mail",
+        "resource_asset_product",
     ],
     "data": [
         "security/fleet_security.xml",
         "security/ir.model.access.csv",
-        "views/fleet_vehicle_model_views.xml",
-        "views/fleet_vehicle_views.xml",
-        "views/fleet_vehicle_cost_views.xml",
-        "views/fleet_board_view.xml",
-        "views/mail_activity_views.xml",
-        "views/res_config_settings_views.xml",
-        "views/fleet_vehicle_odometer_report.xml",
         "data/fleet_cars_data.xml",
         "data/fleet_data.xml",
         "data/mail_message_subtype_data.xml",
-        "data/mail_activity_type_data.xml",
+        "views/product_template_views.xml",
+        "views/fleet_vehicle_views.xml",
+        "views/fleet_service_views.xml",
         "wizards/fleet_vehicle_send_mail_views.xml",
         "views/fleet_menus.xml",
     ],
     "demo": [
         "demo/fleet_demo.xml",
     ],
-    "assets": {
-        "web.assets_backend": [
-            "fleet/static/src/**/*",
-        ],
-    },
     "application": True,
 }

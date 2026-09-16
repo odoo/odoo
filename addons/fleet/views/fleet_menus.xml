@@ -9,38 +9,6 @@
         web_icon="fleet,static/description/icon.png" />
 
     <menuitem
-        id="fleet_configuration"
-        name="Configuration"
-        parent="menu_root"
-        sequence="100"
-        groups="fleet_group_manager" />
-
-    <menuitem
-        id="fleet_models_configuration"
-        name="Models"
-        parent="fleet_configuration"
-        sequence="10"
-        groups="fleet_group_manager" />
-
-    <menuitem
-        id="fleet_vehicle_model_brand_menu"
-        parent="fleet_models_configuration"
-        action="fleet_vehicle_model_brand_action"
-        sequence="1" />
-
-    <menuitem
-        id="fleet_vehicle_model_menu"
-        parent="fleet_models_configuration"
-        action="fleet_vehicle_model_action"
-        sequence="5" />
-
-    <menuitem
-        id="fleet_vehicle_model_category_menu"
-        parent="fleet_models_configuration"
-        action="fleet_vehicle_model_category_action"
-        sequence="10" />
-
-    <menuitem
         id="fleet_vehicles"
         name="Fleet"
         parent="menu_root"
@@ -49,10 +17,16 @@
 
     <menuitem
         id="fleet_vehicle_menu"
-        name="Fleet"
         parent="fleet_vehicles"
         action="fleet_vehicle_action"
         sequence="0"
+        groups="fleet_group_user" />
+
+    <menuitem
+        id="fleet_vehicle_log_services_menu"
+        parent="fleet_vehicles"
+        action="fleet_vehicle_service_action"
+        sequence="3"
         groups="fleet_group_user" />
 
     <menuitem
@@ -60,56 +34,6 @@
         parent="fleet_vehicles"
         action="fleet_vehicle_odometer_action"
         sequence="10"
-        groups="fleet_group_user" />
-
-    <menuitem
-        id="fleet_services_configuration"
-        name="Services"
-        parent="fleet_configuration"
-        sequence="20"
-        groups="base.group_no_one" />
-
-    <menuitem
-        id="fleet_vehicle_service_types_menu"
-        name="Types"
-        parent="fleet_services_configuration"
-        action="fleet_vehicle_service_types_action"
-        sequence="1"
-        groups="base.group_no_one" />
-
-    <menuitem
-        id="fleet_vehicles_configuration"
-        name="Vehicle"
-        parent="fleet_configuration"
-        sequence="30"
-        groups="base.group_no_one" />
-
-    <menuitem
-        id="fleet_vehicle_state_menu"
-        parent="fleet_vehicles_configuration"
-        action="fleet_vehicle_state_action"
-        sequence="10"
-        groups="base.group_no_one" />
-
-    <menuitem
-        id="fleet_vehicle_tag_menu"
-        parent="fleet_vehicles_configuration"
-        action="fleet_vehicle_tag_action"
-        sequence="20"
-        groups="base.group_no_one" />
-
-    <menuitem
-        id="fleet_vehicle_log_contract_menu"
-        parent="fleet_vehicles"
-        action="fleet_vehicle_log_contract_action"
-        sequence="2"
-        groups="fleet_group_user" />
-
-    <menuitem
-        id="fleet_vehicle_log_services_menu"
-        parent="fleet_vehicles"
-        action="fleet_vehicle_log_services_action"
-        sequence="3"
         groups="fleet_group_user" />
 
     <menuitem
@@ -121,32 +45,50 @@
 
     <menuitem
         id="menu_fleet_reporting_costs"
-        name="Costs"
         parent="menu_fleet_reporting"
         action="fleet_costs_reporting_action"
         sequence="1"
         groups="fleet_group_manager" />
 
     <menuitem
-        id="fleet_menu_config_activity_type"
+        id="fleet_configuration"
+        name="Configuration"
+        parent="menu_root"
+        sequence="100"
+        groups="fleet_group_manager" />
+
+    <menuitem
+        id="fleet_models_configuration"
+        name="Models"
         parent="fleet_configuration"
-        action="mail_activity_type_action_config_fleet"
-        sequence="99"
+        sequence="2"
+        groups="fleet_group_manager" />
+
+    <menuitem
+        id="fleet_vehicle_model_brand_menu"
+        parent="fleet_models_configuration"
+        action="product.action_partner_manufacturers"
+        sequence="1"
+        groups="fleet_group_manager" />
+
+    <menuitem
+        id="fleet_vehicle_model_menu"
+        parent="fleet_models_configuration"
+        action="fleet_vehicle_model_action"
+        sequence="2"
+        groups="fleet_group_manager" />
+
+    <menuitem
+        id="fleet_vehicles_configuration"
+        name="Vehicle"
+        parent="fleet_configuration"
+        sequence="3"
         groups="base.group_no_one" />
 
     <menuitem
-        id="fleet_config_settings_menu"
-        name="Settings"
-        parent="fleet.fleet_configuration"
-        action="fleet_config_settings_action"
-        sequence="0"
-        groups="base.group_system" />
-
-    <menuitem
-        id="menu_fleet_odometer_reporting_odometer"
-        name="Odometers"
-        parent="menu_fleet_reporting"
-        action="fleet_vehicle_odometer_reporting_action"
+        id="fleet_vehicle_tag_menu"
+        parent="fleet_vehicles_configuration"
+        action="fleet_vehicle_tag_action"
         sequence="2"
         groups="fleet_group_manager" />
 
