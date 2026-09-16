@@ -8,10 +8,19 @@ from odoo.http.tests._wsgi import Harness, environ
 ADDON = "wsgi_probe"
 
 PROBE = """
+import dataclasses
+
 import psycopg.errors
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, Response, request, route
+
+
+@dataclasses.dataclass
+class Corner:
+    x: int
+    y: int = 1
+
 
 class Probe(Controller):
     @route("/probe/nodb", auth="none", methods=["GET"])
@@ -55,6 +64,10 @@ class Probe(Controller):
     @route("/probe/typed", auth="none", methods=["GET"], typed=True)
     def typed(self, n: int, flag: bool = False):
         return f"{n!r}:{flag!r}"
+
+    @route("/probe/shape", type="json2", auth="none", typed=True)
+    def shape(self, corners: list[Corner], label: str = "none") -> dict:
+        return {"label": label, "area": sum(c.x * c.y for c in corners)}
 
     @route("/probe/readonly-write", auth="public", methods=["GET"], readonly=True)
     def readonly_write(self):
@@ -217,6 +230,30 @@ def test_a_typed_route_coerces_and_refuses(harness):
     assert bad.status_code == 400
     missing = harness.serve(environ("/probe/typed"))
     assert missing.status_code == 400
+
+
+def test_a_json2_body_is_built_into_dataclasses_and_refused_when_malformed(harness):
+    ok = harness.serve(
+        environ(
+            "/probe/shape",
+            "POST",
+            body=json.dumps({"corners": [{"x": 2, "y": 3}, {"x": "4"}]}).encode(),
+            content_type="application/json",
+        )
+    )
+    assert ok.status_code == 200, ok.body
+    assert json.loads(ok.body) == {"label": "none", "area": 10}
+
+    bad = harness.serve(
+        environ(
+            "/probe/shape",
+            "POST",
+            body=json.dumps({"corners": [{"x": 1, "z": 9}]}).encode(),
+            content_type="application/json",
+        )
+    )
+    assert bad.status_code == 400
+    assert b"unknown field" in bad.body
 
 
 def test_a_readonly_route_that_writes_is_replayed_read_write(replica_harness):

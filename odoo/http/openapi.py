@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import annotationlib
+import inspect
 import logging
 import re
 import typing
@@ -7,7 +9,7 @@ from typing import Any, NamedTuple
 
 from odoo.libs.debug_log import DebugLog
 
-from ._params import ParamSpec, get_param_specs
+from ._params import ParamSpec, _get_spec, get_param_specs
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -89,13 +91,52 @@ def _prepare_schema_nullable(schema: dict[str, Any]) -> dict[str, Any]:
     return schema
 
 
+def _prepare_object_schema(fields: dict[str, ParamSpec]) -> dict[str, Any]:
+    schema: dict[str, Any] = {
+        "type": "object",
+        "properties": {name: param_spec_to_schema(s) for name, s in fields.items()},
+        "additionalProperties": False,
+    }
+    required = [name for name, s in fields.items() if s.required]
+    if required:
+        schema["required"] = required
+    return schema
+
+
 def param_spec_to_schema(spec: ParamSpec) -> dict[str, Any]:
-    if spec.target is list:
-        item = _PRIMITIVE_SCHEMA.get(spec.item) if spec.item else None
-        schema: dict[str, Any] = {"type": "array", "items": dict(item) if item else {}}
+    if spec.fields is not None:
+        schema = _prepare_object_schema(spec.fields)
+    elif spec.target is list:
+        if spec.item_fields is not None:
+            items: dict[str, Any] = _prepare_object_schema(spec.item_fields)
+        else:
+            item = _PRIMITIVE_SCHEMA.get(spec.item) if spec.item else None
+            items = dict(item) if item else {}
+        schema = {"type": "array", "items": items}
     else:
         schema = dict(_PRIMITIVE_SCHEMA.get(spec.target, {}))
     return _prepare_schema_nullable(schema) if spec.allow_none else schema
+
+
+def get_response_schema(handler: typing.Callable) -> dict[str, Any] | None:
+    try:
+        annotation = inspect.signature(
+            handler, annotation_format=annotationlib.Format.FORWARDREF
+        ).return_annotation
+    except TypeError, ValueError:
+        return None
+    if annotation is inspect.Signature.empty or annotation is None:
+        return None
+    if isinstance(annotation, str):
+        try:
+            annotation = eval(annotation, getattr(handler, "__globals__", None))  # noqa: S307  the route author's own return annotation, resolved against their module
+        except Exception:
+            return None
+    origin = typing.get_origin(annotation)
+    if annotation is dict or origin is dict:
+        return {"type": "object"}
+    spec = _get_spec(annotation, True)
+    return None if spec is None else param_spec_to_schema(spec)
 
 
 def _prepare_path_template_and_params(rule: str) -> tuple[str, list[dict[str, Any]]]:
@@ -187,6 +228,22 @@ def prepare_openapi_operation(
                 "content": {"application/json": {"schema": body}}
             }
         operation["responses"]["400"] = {"description": "Invalid request parameters"}
+
+    if route_type in ("jsonrpc", "json2"):
+        result_schema = get_response_schema(route.handler)
+        if result_schema is not None:
+            if route_type == "jsonrpc":
+                result_schema = {
+                    "type": "object",
+                    "properties": {
+                        "jsonrpc": {"type": "string", "const": "2.0"},
+                        "id": {"type": ["integer", "string", "null"]},
+                        "result": result_schema,
+                    },
+                }
+            operation["responses"]["200"]["content"] = {
+                "application/json": {"schema": result_schema}
+            }
 
     if parameters:
         operation["parameters"] = parameters

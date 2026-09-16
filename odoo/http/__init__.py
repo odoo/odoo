@@ -83,6 +83,7 @@ from .geoip import (
 )
 
 from .openapi import (
+    get_response_schema,
     prepare_openapi_document,
     iter_map_routes,
     prepare_openapi_from_map,
@@ -197,6 +198,7 @@ __all__ = [
     "fragment_to_query_string",
     "get_dbs_served",
     "get_param_specs",
+    "get_response_schema",
     "get_session_max_inactivity",
     "invalidate_db_catalog_cache",
     "is_cors_preflight",

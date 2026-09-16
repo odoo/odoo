@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import annotationlib
+import dataclasses
 import inspect
 import logging
 import math
@@ -26,6 +27,66 @@ class ParamSpec(NamedTuple):
     item: type | None
     allow_none: bool
     required: bool
+    fields: dict[str, ParamSpec] | None = None
+    item_fields: dict[str, ParamSpec] | None = None
+
+
+def _unwrap_optional(annotation: Any) -> tuple[Any, bool]:
+    if isinstance(annotation, types.UnionType):
+        args = typing.get_args(annotation)
+        non_none = [a for a in args if a is not type(None)]
+        if len(non_none) == 1:
+            return non_none[0], type(None) in args
+    return annotation, False
+
+
+def _get_dataclass_fields(
+    cls: Any, seen: frozenset[type]
+) -> dict[str, ParamSpec] | None:
+    if not (isinstance(cls, type) and dataclasses.is_dataclass(cls)) or cls in seen:
+        return None
+    try:
+        hints = typing.get_type_hints(cls)
+    except Exception:
+        _debug.logic("http.params.dataclass_unresolved", cls=cls.__qualname__)
+        return None
+    fields: dict[str, ParamSpec] = {}
+    for field in dataclasses.fields(cls):
+        if not field.init:
+            continue
+        required = (
+            field.default is dataclasses.MISSING
+            and field.default_factory is dataclasses.MISSING
+        )
+        spec = _get_spec(hints.get(field.name, field.type), required, seen | {cls})
+        if spec is None:
+            _debug.logic(
+                "http.params.dataclass_uncoerced",
+                cls=cls.__qualname__,
+                field=field.name,
+            )
+            return None
+        fields[field.name] = spec
+    return fields
+
+
+def _get_spec(
+    annotation: Any, required: bool, seen: frozenset[type] = frozenset()
+) -> ParamSpec | None:
+    target, item, allow_none = _get_param_spec_fields(annotation)
+    if target is list and item is None:
+        inner, _ = _unwrap_optional(annotation)
+        args = typing.get_args(inner)
+        item_fields = _get_dataclass_fields(args[0], seen) if args else None
+        if item_fields is not None:
+            return ParamSpec(list, args[0], allow_none, required, None, item_fields)
+    if target is not None:
+        return ParamSpec(target, item, allow_none, required)
+    inner, allow_none = _unwrap_optional(annotation)
+    fields = _get_dataclass_fields(inner, seen)
+    if fields is None:
+        return None
+    return ParamSpec(inner, None, allow_none, required, fields, None)
 
 
 def _get_param_spec_fields(
@@ -99,8 +160,8 @@ def get_param_specs(
                     "http.params.uncoerced", reason="unresolved", param=param.name
                 )
                 continue
-        target, item, allow_none = _get_param_spec_fields(annotation)
-        if target is None:
+        spec = _get_spec(annotation, param.default is inspect.Parameter.empty)
+        if spec is None:
             _logger.debug(
                 "%s: %r is annotated %r, which typed routes do not coerce; "
                 "the parameter is passed through and its absence is not caught",
@@ -112,12 +173,7 @@ def get_param_specs(
                 "http.params.uncoerced", reason="unsupported_type", param=param.name
             )
             continue
-        specs[param.name] = ParamSpec(
-            target=target,
-            item=item,
-            allow_none=allow_none,
-            required=param.default is inspect.Parameter.empty,
-        )
+        specs[param.name] = spec
     _debug.pipeline(
         "http.params.specs",
         endpoint=getattr(endpoint, "__qualname__", None),
@@ -186,13 +242,42 @@ def _coerce_scalar(name: str, value: Any, target: type) -> Any:
     return value
 
 
+def _coerce_object(name: str, value: Any, spec: ParamSpec) -> Any:
+    fields = spec.fields or {}
+    if not isinstance(value, dict):
+        raise ParameterError(f"parameter {name!r} must be an object")
+    unknown = sorted(value.keys() - fields.keys())
+    if unknown:
+        raise ParameterError(f"parameter {name!r} has unknown field(s) {unknown}")
+    coerced: dict[str, Any] = {}
+    for field_name, field_spec in fields.items():
+        if field_name not in value:
+            if field_spec.required:
+                raise ParameterError(
+                    f"parameter {name!r} is missing required field {field_name!r}"
+                )
+            continue
+        coerced[field_name] = _coerce_value(
+            f"{name}.{field_name}", value[field_name], field_spec
+        )
+    return spec.target(**coerced)
+
+
 def _coerce_value(name: str, value: Any, spec: ParamSpec) -> Any:
     if value is None:
         if spec.allow_none:
             return None
         raise ParameterError(f"parameter {name!r} must not be null")
+    if spec.fields is not None:
+        return _coerce_object(name, value, spec)
     if spec.target is list:
         items = value if isinstance(value, (list, tuple)) else [value]
+        if spec.item_fields is not None and spec.item is not None:
+            item_spec = ParamSpec(spec.item, None, False, True, spec.item_fields)
+            return [
+                _coerce_object(f"{name}[{i}]", item, item_spec)
+                for i, item in enumerate(items)
+            ]
         if spec.item is None:
             return list(items)
         return [_coerce_scalar(name, item, spec.item) for item in items]
@@ -220,6 +305,7 @@ def coerce_params(
                 target=spec.target.__name__,
                 item=None if spec.item is None else spec.item.__name__,
                 got=type(params[name]).__name__,
+                object=spec.fields is not None or spec.item_fields is not None,
             )
             raise
     _debug.pipeline(
