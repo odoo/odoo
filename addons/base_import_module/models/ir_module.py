@@ -112,12 +112,56 @@ class IrModuleModule(models.Model):
         self = self.with_context(website_id=None)  # noqa: PLW0642
 
         known_mods = self.search([])
-        known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
         terp = Manifest._from_path(path, env=self.env)
         if not terp:
             return False
+        values = self._get_imported_manifest_values(terp, with_demo)
+
+        dependencies_to_install = self._import_module_dependencies_to_install(terp, known_mods, installed_mods)
+        if dependencies_to_install:
+            _logger.info("Unmet dependencies during import of %s: %s", module, dependencies_to_install.mapped('name'))
+            dependencies_to_install.button_immediate_install()
+            # Rebrowse to use the new registry
+            return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
+        elif 'web_studio' not in installed_mods and _is_studio_custom(path):
+            raise UserError(_("Studio customizations require the Odoo Studio app."))
+
+        mod = known_mods.filtered(lambda m: m.name == module)
+        if mod:
+            mod.write(dict(state='installed', **values))
+            mode = 'update' if not force else 'init'
+        else:
+            assert terp.get('installable', True), "Module not installable"
+            mod = self.create(dict(name=module, state='installed', imported=True, **values))
+            mode = 'init'
+
+        base_dir = pathlib.Path(path)
+        exclude_list = set()
+        for pattern in terp.get('cloc_exclude', []):
+            exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
+
+        self._load_data_files(module, path, terp, mode, with_demo, exclude_list)
+        self._load_static_attachments(module, path, exclude_list, base_dir)
+        self._load_translation_attachments(module, path, mod)
+        self._load_assets(module, terp)
+
+        self.env['ir.module.module']._load_module_terms(
+            [module],
+            [lang for lang, _name in self.env['res.lang'].get_installed()],
+            overwrite=True,
+        )
+        self._setup_welcome_article(module)
+
+        mod._update_from_terp(terp)
+        self.env.cr.flush()
+        _logger.info("Successfully imported module '%s'", module)
+
+        return True
+
+    @api.model
+    def _get_imported_manifest_values(self, terp, with_demo):
         values = self.get_values_from_terp(terp)
         try:
             icon_path = terp.raw_value('icon') or opj(terp.name, 'static/description/icon.png')
@@ -130,36 +174,24 @@ class IrModuleModule(models.Model):
             values['module_type'] = 'industries'
         if with_demo:
             values['demo'] = True
+        return values
 
+    @api.model
+    def _import_module_dependencies_to_install(self, terp, known_mods, installed_mods):
+        """ Return the dependencies of the module described by ``terp``
+        that aren't installed yet, as an ``ir.module.module`` recordset
+        ready to install. Raises if any of them don't exist at all. """
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
+        if not unmet_dependencies:
+            return self.env['ir.module.module']
 
-        if unmet_dependencies:
-            wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
-            if wrong_dependencies:
-                err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
-                raise UserError(err)
-            to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
-            _logger.info("Unmet dependencies during import of %s: %s", module, to_install.mapped('name'))
-            to_install.button_immediate_install()
-            # Rebrowse to use the new registry
-            return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
-        elif 'web_studio' not in installed_mods and _is_studio_custom(path):
-            raise UserError(_("Studio customizations require the Odoo Studio app."))
+        wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
+        if wrong_dependencies:
+            raise UserError(_("Unknown module dependencies:\n - %s", "\n - ".join(wrong_dependencies)))
+        return known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
 
-        mod = known_mods_names.get(module)
-        if mod:
-            mod.write(dict(state='installed', **values))
-            mode = 'update' if not force else 'init'
-        else:
-            assert terp.get('installable', True), "Module not installable"
-            mod = self.create(dict(name=module, state='installed', imported=True, **values))
-            mode = 'init'
-
-        exclude_list = set()
-        base_dir = pathlib.Path(path)
-        for pattern in terp.get('cloc_exclude', []):
-            exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
-
+    @api.model
+    def _load_data_files(self, module, path, terp, mode, with_demo, exclude_list):
         kind_of_files = ['data', 'init_xml']
         if with_demo:
             kind_of_files.append('demo')
@@ -174,21 +206,26 @@ class IrModuleModule(models.Model):
                 pathname = opj(path, filename)
                 idref = {}
                 convert_file(self.env, module, filename, idref, mode, noupdate, pathname=pathname)
-                if filename in exclude_list:
+                if filename in exclude_list and idref:
+                    cloc_exclude_vals = []
                     for xml_id, rec_id in idref.items():
                         name = xml_id.replace('.', '_')
                         if self.env.ref(f"__cloc_exclude__.{name}", raise_if_not_found=False):
                             continue
-                        self.env['ir.model.data'].create([{
+                        cloc_exclude_vals.append({
                             'name': name,
                             'model': self.env['ir.model.data']._xmlid_lookup(xml_id)[0],
                             'module': "__cloc_exclude__",
                             'res_id': rec_id,
-                        }])
+                        })
+                    self.env['ir.model.data'].create(cloc_exclude_vals)
 
+    @api.model
+    def _load_static_attachments(self, module, path, exclude_list, base_dir):
         path_static = opj(path, 'static')
-        IrAttachment = self.env['ir.attachment']
         if os.path.isdir(path_static):
+            IrAttachment = self.env['ir.attachment']
+            static_files = []
             for root, _dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
@@ -209,28 +246,50 @@ class IrModuleModule(models.Model):
                     if 'public' in IrAttachment._fields:
                         # Static data is public and not website-specific.
                         values['public'] = True
-                    attachment = IrAttachment.sudo().search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
-                    if attachment:
-                        attachment.write(values)
-                    else:
-                        attachment = IrAttachment.create(values)
-                        self.env['ir.model.data'].create({
-                            'name': f"attachment_{url_path}".replace('.', '_').replace(' ', '_'),
-                            'model': 'ir.attachment',
-                            'module': module,
-                            'res_id': attachment.id,
-                        })
-                        if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
-                            self.env['ir.model.data'].create({
-                                'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
-                                'model': 'ir.attachment',
-                                'module': "__cloc_exclude__",
-                                'res_id': attachment.id,
-                            })
+                    static_files.append((full_path, url_path, values))
 
+            existing_attachments = {
+                attachment.url: attachment
+                for attachment in IrAttachment.sudo().search([
+                    ('url', 'in', [url_path for _fp, url_path, _values in static_files]),
+                    ('type', '=', 'binary'),
+                    ('res_model', '=', 'ir.ui.view'),
+                ])
+            }
+
+            attachments_to_create = []
+            for full_path, url_path, values in static_files:
+                existing = existing_attachments.get(url_path)
+                if existing:
+                    existing.write(values)
+                else:
+                    attachments_to_create.append((full_path, url_path, values))
+
+            created_attachments = IrAttachment.create([values for _fp, _up, values in attachments_to_create])
+            model_data_vals = []
+            for (full_path, url_path, _values), attachment in zip(attachments_to_create, created_attachments):
+                model_data_vals.append({
+                    'name': f"attachment_{url_path}".replace('.', '_').replace(' ', '_'),
+                    'model': 'ir.attachment',
+                    'module': module,
+                    'res_id': attachment.id,
+                })
+                if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
+                    model_data_vals.append({
+                        'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
+                        'model': 'ir.attachment',
+                        'module': "__cloc_exclude__",
+                        'res_id': attachment.id,
+                    })
+            self.env['ir.model.data'].create(model_data_vals)
+
+    @api.model
+    def _load_translation_attachments(self, module, path, mod):
         # store translation files as attachments to allow loading translations for webclient
         path_lang = opj(path, 'i18n')
         if os.path.isdir(path_lang):
+            IrAttachment = self.env['ir.attachment']
+            lang_files = []
             for entry in os.scandir(path_lang):
                 if not entry.is_file() or not entry.name.endswith('.po'):
                     # we don't support sub-directories in i18n
@@ -247,18 +306,35 @@ class IrModuleModule(models.Model):
                     'type': 'binary',
                     'raw': raw,
                 }
-                attachment = IrAttachment.sudo().search([('url', '=', values['url']), ('type', '=', 'binary'), ('name', '=', values['name'])])
-                if attachment:
-                    attachment.write(values)
-                else:
-                    attachment = IrAttachment.create(values)
-                    self.env['ir.model.data'].create({
-                        'name': f'attachment_{module}_{lang}'.replace('.', '_').replace(' ', '_'),
-                        'model': 'ir.attachment',
-                        'module': module,
-                        'res_id': attachment.id,
-                    })
+                lang_files.append((lang, values))
 
+            existing_lang_attachments = {
+                attachment.url: attachment
+                for attachment in IrAttachment.sudo().search([
+                    ('url', 'in', [values['url'] for _lang, values in lang_files]),
+                    ('type', '=', 'binary'),
+                    ('name', 'in', [values['name'] for _lang, values in lang_files]),
+                ])
+            }
+
+            lang_attachments_to_create = []
+            for lang, values in lang_files:
+                existing = existing_lang_attachments.get(values['url'])
+                if existing:
+                    existing.write(values)
+                else:
+                    lang_attachments_to_create.append((lang, values))
+
+            created_lang_attachments = IrAttachment.create([values for _lang, values in lang_attachments_to_create])
+            self.env['ir.model.data'].create([{
+                'name': f'attachment_{module}_{lang}'.replace('.', '_').replace(' ', '_'),
+                'model': 'ir.attachment',
+                'module': module,
+                'res_id': attachment.id,
+            } for (lang, _values), attachment in zip(lang_attachments_to_create, created_lang_attachments)])
+
+    @api.model
+    def _load_assets(self, module, terp):
         IrAsset = self.env['ir.asset']
         assets_vals = []
 
@@ -302,12 +378,8 @@ class IrModuleModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
-        self.env['ir.module.module']._load_module_terms(
-            [module],
-            [lang for lang, _name in self.env['res.lang'].get_installed()],
-            overwrite=True,
-        )
-
+    @api.model
+    def _setup_welcome_article(self, module):
         if ('knowledge.article' in self.env
             and (article_record := self.env.ref(f"{module}.welcome_article", raise_if_not_found=False))
             and article_record._name == 'knowledge.article'
@@ -315,12 +387,6 @@ class IrModuleModule(models.Model):
         ):
             body = self.env['ir.qweb']._render(f"{module}.welcome_article_body", lang=self.env.user.lang)
             article_record.write({'body': body})
-
-        mod._update_from_terp(terp)
-        self.env.cr.flush()
-        _logger.info("Successfully imported module '%s'", module)
-
-        return True
 
     @api.model
     def _import_zipfile(self, module_file, force=False, with_demo=False):
@@ -391,7 +457,7 @@ class IrModuleModule(models.Model):
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=traceback.format_exc(),
                         )) from e
-        return "", module_names
+        return module_names
 
     def module_uninstall(self):
         # Delete an ir_module_module record completely if it was an imported
