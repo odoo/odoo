@@ -209,6 +209,45 @@ class TestHrAttendanceOvertime(HttpCase):
         attendance.action_refuse_overtime()
         self.assertEqual(attendance.employee_id.total_overtime, 0, 0)
 
+    def test_manual_extra_hours_updates_overtime_line(self):
+        self.company.attendance_overtime_validation = "by_manager"
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 6, 8, 0),
+            'check_out': datetime(2021, 1, 6, 20, 0),
+        })
+
+        self.assertEqual(attendance.overtime_status, 'to_approve')
+        self.assertAlmostEqual(attendance.overtime_hours, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.duration, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.manual_duration, 3, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 0, 2)
+        self.assertEqual(attendance.employee_id.total_overtime, 0)
+
+        with Form(attendance.with_user(self.user)) as attendance_form:
+            attendance_form.validated_overtime_hours = 2
+        attendance = self.env['hr.attendance'].browse(attendance.id)
+
+        self.assertAlmostEqual(attendance.overtime_hours, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.duration, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.manual_duration, 2, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 0, 2)
+        self.assertEqual(attendance.employee_id.total_overtime, 0)
+
+        attendance.action_approve_overtime()
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2, 2)
+        self.assertAlmostEqual(attendance.employee_id.total_overtime, 2, 2)
+
+        with Form(attendance.with_user(self.user)) as attendance_form:
+            attendance_form.validated_overtime_hours = 1.5
+        attendance = self.env['hr.attendance'].browse(attendance.id)
+
+        self.assertAlmostEqual(attendance.overtime_hours, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.duration, 3, 2)
+        self.assertAlmostEqual(attendance.linked_overtime_ids.manual_duration, 1.5, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 1.5, 2)
+        self.assertAlmostEqual(attendance.employee_id.total_overtime, 1.5, 2)
+
     def test_simple_overtime(self):
         checkin_am = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
