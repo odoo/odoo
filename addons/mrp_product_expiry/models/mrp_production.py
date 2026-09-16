@@ -8,12 +8,12 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     def pre_button_mark_done(self):
-        confirm_expired_lots = self._check_expired_lots()
+        confirm_expired_lots = self._get_expired_lots_action()
         if confirm_expired_lots:
             return confirm_expired_lots
         return super().pre_button_mark_done()
 
-    def _check_expired_lots(self):
+    def _get_expired_lots_action(self):
         if self.env.context.get("skip_expired"):
             _debug.logic("expiry_check_skipped", productions=self, by="context")
             return False

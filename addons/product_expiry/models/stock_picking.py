@@ -21,10 +21,6 @@ class StockPicking(models.Model):
         _debug.logic("expired_move_lines", pickings=self)
         return self.move_line_ids._filtered_expired()
 
-    def _check_expired_lots(self):
-        _debug.logic("expired_lots_check", pickings=self)
-        return self._get_expired_move_lines().picking_id
-
     def _action_generate_expired_wizard(self, expired_lines=None):
         _debug.pipeline("expired_wizard_open", pickings=self)
         if expired_lines is None:

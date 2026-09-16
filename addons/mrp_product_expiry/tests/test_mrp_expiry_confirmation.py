@@ -25,9 +25,9 @@ class TestMrpExpiryConfirmation(TransactionCase):
             {"product_id": cls.product.id, "product_qty": 1.0}
         )
 
-    def test_check_expired_lots_skipped_by_context(self):
+    def test_expired_lots_action_skipped_by_context(self):
         self.assertFalse(
-            self.production.with_context(skip_expired=True)._check_expired_lots()
+            self.production.with_context(skip_expired=True)._get_expired_lots_action()
         )
 
     def test_expired_context_targets_production_and_lots(self):
