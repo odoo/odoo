@@ -74,7 +74,8 @@ class WritePins:
         return False
 
     def __len__(self) -> int:
-        return len(self._deadlines)
+        now = self._clock()
+        return sum(deadline > now for deadline in list(self._deadlines.values()))
 
 
 def is_readonly_cursor_enabled(settings: PoolSettings | None = None) -> bool:

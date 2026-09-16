@@ -304,6 +304,17 @@ class TestWritePins(unittest.TestCase):
         self.assertFalse(pins.is_pinned("sid"))
         self.assertEqual(len(pins), 0, "an expired pin is dropped when it is read")
 
+    def test_the_count_is_of_live_pins_not_of_table_entries(self):
+        now = [100.0]
+        pins = WritePins(2.0, clock=lambda: now[0])
+        pins.pin("a")
+        pins.pin("b")
+        now[0] = 101.0
+        pins.pin("c")
+        now[0] = 102.5
+        self.assertEqual(len(pins), 1, "a and b expired unread; c is live")
+        self.assertEqual(len(pins._deadlines), 3, "expiry is lazy, the count is not")
+
     def test_a_zero_window_pins_nothing(self):
         pins = WritePins(0.0)
         pins.pin("sid")
