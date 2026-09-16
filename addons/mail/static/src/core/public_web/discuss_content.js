@@ -1,6 +1,6 @@
 import { Component, computed, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
-import { useThreadActions } from "@mail/core/common/thread_actions";
+import { THREAD_ACTION_IDS, useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { ActionList } from "@mail/core/common/action_list";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -55,7 +55,9 @@ export class DiscussContent extends Component {
     }
 
     actionPanelAutoOpenFn() {
-        const memberListAction = this.threadActions.actions.find((a) => a.id === "member-list");
+        const memberListAction = this.threadActions.actions.find(
+            (a) => a.id === THREAD_ACTION_IDS.MEMBER_LIST
+        );
         if (memberListAction && this.store.discuss.isMemberPanelOpenByDefault) {
             memberListAction.actionPanelOpen();
         }
