@@ -9,10 +9,11 @@ from odoo.addons.l10n_jp_stock.tests.common import TestTotalAverageCostCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
-    def _create_mo(self, qty=3, byproduct_cost_share=None, operation=None):
+    def _create_mo(self, qty=3, byproduct_cost_share=None, operation=None, component_values=None):
         component = self.env['product.product'].create({
             'name': 'JP Component', 'categ_id': self.category.id,
             'standard_price': 20, 'is_storable': True,
+            **(component_values or {}),
         })
         self._create_move(10, 25, self.today, self.supplier_loc, self.stock_loc, product=component)
         bom = self.env['mrp.bom'].create({
@@ -52,6 +53,38 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
             worked = entry.date_end - entry.date_start
             entry.date_start = fields.Datetime.to_datetime(date)
             entry.date_end = entry.date_start + worked
+
+    def _assemble(self, product, component, component_qty=2):
+        """Make one ``product`` out of ``component_qty`` of ``component``, and finish the order."""
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id, 'product_qty': 1, 'type': 'normal',
+        })
+        self.env['mrp.bom.line'].create({
+            'bom_id': bom.id, 'product_id': component.id, 'product_qty': component_qty,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id, 'product_qty': 1, 'bom_id': bom.id,
+            'location_src_id': self.stock_loc.id, 'location_dest_id': self.stock_loc.id,
+        })
+        mo.action_confirm()
+        self._finish_mo(mo)
+        return mo
+
+    def _build_two_level_tree(self):
+        """Return the two levels under ``self.product``: a subassembly and its component."""
+        component = self.env['product.product'].create({
+            'name': 'JP Deep Component', 'categ_id': self.category.id,
+            'standard_price': 20, 'is_storable': True,
+        })
+        # the evaluation itself takes the component from 20 to 25
+        self._create_move(10, 25, self.today, self.supplier_loc, self.stock_loc, product=component)
+        subassembly = self.env['product.product'].create({
+            'name': 'JP Subassembly', 'categ_id': self.category.id,
+            'standard_price': 5, 'is_storable': True,
+        })
+        self._assemble(subassembly, component)
+        self._assemble(self.product, subassembly, component_qty=1)
+        return subassembly, component
 
     def test_byproduct_recycled_into_its_own_component_refused(self):
         ingot = self.env['product.product'].create({
@@ -113,32 +146,7 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         self.assertEqual(action['params']['type'], 'info')
 
     def test_each_level_reads_the_corrected_cost_of_the_one_below(self):
-        def assemble(product, component, component_qty=2):
-            bom = self.env['mrp.bom'].create({
-                'product_tmpl_id': product.product_tmpl_id.id, 'product_qty': 1, 'type': 'normal',
-            })
-            self.env['mrp.bom.line'].create({
-                'bom_id': bom.id, 'product_id': component.id, 'product_qty': component_qty,
-            })
-            mo = self.env['mrp.production'].create({
-                'product_id': product.id, 'product_qty': 1, 'bom_id': bom.id,
-                'location_src_id': self.stock_loc.id, 'location_dest_id': self.stock_loc.id,
-            })
-            mo.action_confirm()
-            self._finish_mo(mo)
-
-        component = self.env['product.product'].create({
-            'name': 'JP Deep Component', 'categ_id': self.category.id,
-            'standard_price': 20, 'is_storable': True,
-        })
-        # the evaluation itself takes the component from 20 to 25
-        self._create_move(10, 25, self.today, self.supplier_loc, self.stock_loc, product=component)
-        subassembly = self.env['product.product'].create({
-            'name': 'JP Subassembly', 'categ_id': self.category.id,
-            'standard_price': 5, 'is_storable': True,
-        })
-        assemble(subassembly, component)
-        assemble(self.product, subassembly, component_qty=1)
+        subassembly, component = self._build_two_level_tree()
         self._run_category_wizard()
         # each order is valued on what the level below was corrected to: 2 components at 25
         self.assertAlmostEqual(component.standard_price, 250 / 10, places=2)
@@ -315,3 +323,64 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         self._bill_subcontractor(line, 600)
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, 5 * 100 + 600, places=2)
+
+    def test_components_are_left_alone_unless_asked_for(self):
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        component = mo.move_raw_ids.product_id
+        self._run_wizard(product_ids=[self.product.id])
+        # nothing pulls the component in, so the order is valued at the 20 it still carries
+        self.assertAlmostEqual(component.standard_price, 20, places=2)
+        self.assertAlmostEqual(self.product.standard_price, 6 * 20 / 3, places=2)
+
+    def test_consumed_components_are_pulled_in(self):
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        component = mo.move_raw_ids.product_id
+        self._run_wizard(product_ids=[self.product.id], include_components=True)
+        # the component is evaluated first, and the order is valued on what it came to
+        self.assertAlmostEqual(component.standard_price, 10 * 25 / 10, places=2)
+        self.assertAlmostEqual(self.product.standard_price, 6 * 25 / 3, places=2)
+
+    def test_the_whole_tree_is_pulled_in_not_one_level(self):
+        subassembly, component = self._build_two_level_tree()
+        self._run_wizard(product_ids=[self.product.id], include_components=True)
+        # the subassembly is reached through the good and the component through it,
+        # so each level is valued on the one below it rather than on a stale price
+        self.assertAlmostEqual(component.standard_price, 10 * 25 / 10, places=2)
+        self.assertAlmostEqual(subassembly.standard_price, 2 * 25, places=2)
+        self.assertAlmostEqual(self.product.standard_price, 2 * 25, places=2)
+
+    def test_a_component_that_cannot_be_evaluated_is_dropped_not_refused(self):
+        fifo_category = self.env['product.category'].create({
+            'name': 'JP FIFO Category', 'property_cost_method': 'fifo',
+        })
+        mo, _byproduct = self._create_mo(component_values={'categ_id': fifo_category.id})
+        self._finish_mo(mo)
+        component = mo.move_raw_ids.product_id
+        wizard = self._create_wizard(product_ids=[self.product.id], include_components=True)
+        wizard.action_preview_total_average_cost()
+        # 先入先出法 is a reason to leave out a component the user never picked, not to
+        # refuse the run over a product they never named
+        self.assertEqual(wizard.evaluation_line_ids.product_id, self.product)
+        # naming it is asking for it, so the very same product is refused
+        with self.assertRaises(UserError):
+            self._run_wizard(product_ids=[self.product.id, component.id], include_components=True)
+
+    def test_preview_marks_what_it_pulled_in_and_writes_nothing(self):
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        component = mo.move_raw_ids.product_id
+        wizard = self._create_wizard(product_ids=[self.product.id], include_components=True)
+        wizard.action_preview_total_average_cost()
+        lines = wizard.evaluation_line_ids.grouped('product_id')
+        self.assertEqual(set(lines), {self.product, component})
+        self.assertFalse(lines[self.product].pulled_in)
+        self.assertTrue(lines[component].pulled_in, "the user is owed the ones they did not pick")
+        self.assertAlmostEqual(lines[component].current_cost, 20, places=2)
+        self.assertAlmostEqual(lines[component].evaluated_cost, 10 * 25 / 10, places=2)
+        self.assertAlmostEqual(lines[self.product].current_cost, 100, places=2)
+        # the good is previewed on the corrected component, the way applying would value it
+        self.assertAlmostEqual(lines[self.product].evaluated_cost, 6 * 25 / 3, places=2)
+        self.assertAlmostEqual(component.standard_price, 20, places=2)
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)

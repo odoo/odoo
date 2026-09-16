@@ -1,11 +1,31 @@
 from collections import defaultdict
 
-from odoo import models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
 class L10nJpTotalAverageCostWizard(models.TransientModel):
     _inherit = 'l10n_jp_stock.total.average.cost.wizard'
+
+    include_components = fields.Boolean(
+        string='Include Consumed Components',
+        help="Also evaluate the components the manufacturing orders of the period consumed, and the "
+             "components those were made out of in turn. A good is valued off what its components "
+             "cost, so one left at the price of an earlier period values the good on a stale figure.",
+    )
+
+    def _get_consumed_components(self, moves):
+        """
+        Return what the orders behind these moves consumed, when asked for it.
+
+        The orders say what actually went into the goods, which a BoM only
+        approximates; the same source the evaluation order is read off.
+        """
+        components = super()._get_consumed_components(moves)
+        if not self.include_components:
+            return components
+        productions = moves.production_id | moves.raw_material_production_id
+        return components | productions.move_raw_ids.product_id
 
     def _get_move_domain(self, products, period_start, period_end):
         # an unbuild reverses an issue, it does not acquire (施行令28条1項1号ハ)

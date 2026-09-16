@@ -7,6 +7,9 @@
         'l10n_jp_stock',
         'mrp_account',
     ],
+    'data': [
+        'wizards/total_average_cost_views.xml',
+    ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'auto_install': True,

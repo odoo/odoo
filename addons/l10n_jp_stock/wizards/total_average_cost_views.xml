@@ -10,6 +10,20 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                 </group>
+                <div class="alert alert-warning" role="alert">
+                    Applying an evaluation cannot be undone: the cost it replaces is only kept as
+                    history on the product, and nothing puts it back. Preview it first.
+                </div>
+                <button name="action_preview_total_average_cost" string="Preview" type="object" class="float-end btn-secondary"/>
+                <field name="evaluation_line_ids" invisible="not evaluation_line_ids">
+                    <list string="Evaluation" create="0" delete="0" edit="0">
+                        <field name="product_id" readonly="1"/>
+                        <field name="pulled_in" readonly="1"/>
+                        <field name="current_cost" readonly="1"/>
+                        <field name="evaluated_cost" readonly="1"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
                 <footer>
                     <button name="action_apply_total_average_cost" string="Apply Cost" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
