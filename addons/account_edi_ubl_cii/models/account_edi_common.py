@@ -11,7 +11,7 @@ from odoo import _, api, fields, models, Command
 from odoo.addons.account.tools import dict_to_xml
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf, str2bool
+from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.translate import _lt
@@ -628,7 +628,7 @@ class AccountEdiCommon(models.AbstractModel):
             })
 
         source_attachment = file_data['attachment'] or self.env['ir.attachment']
-        attachments = source_attachment + self._import_attachments(invoice, tree)
+        attachments = source_attachment + self._generate_pdf_attachment(invoice, tree)
 
         self._log_import_invoice_ubl_cii(invoice, invoice_logs=fill_invoice_logs, attachments=attachments)
 
@@ -648,43 +648,8 @@ class AccountEdiCommon(models.AbstractModel):
         invoice.message_post(body=body, attachment_ids=attachments.ids if attachments else None)
 
     def _import_attachments(self, invoice, tree):
-        # Import the embedded documents in the xml if some are found
-        attachments = self.env['ir.attachment']
-        if invoice.message_main_attachment_id.mimetype == 'application/pdf':
-            # Invoice look like it was already imported, don't import attachments again
-            return attachments
-        additional_docs = tree.findall('./{*}AdditionalDocumentReference')
-        for document in additional_docs:
-            attachment_name = document.find('{*}ID')
-            attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
-            if attachment_name is not None and attachment_data is not None:
-                mimetype = attachment_data.attrib.get('mimeCode')
-                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
-                    continue
-                # Strip internal newlines/spaces to prevent 'raw' field validation failure on create
-                text = ''.join((attachment_data.text or '').split())
-                # Normalize the name of the file : some e-fff emitters put the full path of the file
-                # (Windows or Linux style) and/or the name of the xml instead of the pdf.
-                # Get only the filename with the right extension.
-                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
-                attachment = self.env['ir.attachment'].create({
-                    'name': name,
-                    'res_id': invoice.id,
-                    'res_model': 'account.move',
-                    'raw': text + '=' * (len(text) % 4),  # Fix incorrect padding
-                    'type': 'binary',
-                    'mimetype': mimetype,
-                })
-                # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
-                # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
-                if invoice.message_main_attachment_id and \
-                        invoice.message_main_attachment_id.name.endswith('.xml') and \
-                        'pdf' not in invoice.message_main_attachment_id.mimetype and \
-                        mimetype == 'application/pdf':
-                    invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
-                attachments |= attachment
-
-        return attachments
+        # To be implemented by the different formats (UBL, CII), since the XML structure differs between them.
+        return self.env['ir.attachment']
 
     def _import_partner(self, company_id, name, phone, email, vat, *, routing_identifier=False, additional_identifiers=None, postal_address={}, **kwargs):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
@@ -1984,10 +1949,11 @@ class AccountEdiCommon(models.AbstractModel):
         if originator_pdf := collected_values['file_data'].get('originator_pdf'):
             invoice._message_set_main_attachment_id(originator_pdf)
 
-        # Collect the embedded documents.
+        # Collect the embedded documents, or generate a PDF when the XML file doesn't provide one.
         invoice = collected_values['invoice']
         source_attachment = collected_values['file_data']['attachment'] or self.env['ir.attachment']
-        attachments = source_attachment + self._import_attachments(invoice, collected_values['tree'])
+        embedded_attachments = self._import_attachments(invoice, collected_values['tree'])
+        attachments = source_attachment + self._generate_pdf_attachment(invoice, additional_docs=embedded_attachments)
 
         # Chatter.
         body = Markup("<strong>%s</strong>") % self.env._(
@@ -1998,14 +1964,15 @@ class AccountEdiCommon(models.AbstractModel):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 
-    def _generate_pdf_attachment(self, invoice, tree):
+    def _generate_pdf_attachment(self, invoice, tree=None, additional_docs=None):
         """ ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
+        if additional_docs is None:
+            additional_docs = self._import_attachments(invoice, tree)
         IrConfigParam = self.env['ir.config_parameter'].sudo()
-        disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
-        additional_docs = self._import_attachments(invoice, tree)
+        disable_pdf_in_xml = IrConfigParam.get_bool("account_edi_ubl_cii.disable_pdf_in_xml")
         if (
             additional_docs or
-            invoice.message_main_attachment_id or
+            invoice.message_main_attachment_id.mimetype == 'application/pdf' or
             not invoice.is_purchase_document() or
             disable_pdf_in_xml
         ):
