@@ -60,24 +60,15 @@
 
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
-    border: $border-width * 5 solid $body-bg;
-    outline: var(--o-wsale-css-attribute-image__outline-width) solid $border-color;
+    padding: $border-width * 5;
+    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+    border-radius: MIN(var(--o-wsale-product-image-radius, var(--o-wsale-opt-border-radius, var(--border-radius))), var(--border-radius));
+    outline: var(--o-wsale-css-attribute-image__outline-width) solid var(--wsale-product-thumb-bg, #{$gray-100});
+    overflow: hidden;
     transition: $input-transition;
-
-    &:hover, &.active {
-        outline-color: map-get($theme-colors, 'primary');
-    }
 
     &:where(:has(input:focus-visible)) {
         box-shadow: $focus-ring-box-shadow;
-    }
-
-    &.custom_value {
-        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
-    }
-
-    &.transparent {
-        background-image: url(/web/static/img/transparent.png);
     }
 
     &.size_small {
@@ -88,15 +79,12 @@
 
 .css_attribute_thumbnail {
     box-sizing: content-box;
-    border: 1px solid $body-bg;
+    padding: 1px;
+    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
     border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-    outline: $border-width solid $border-color;
+    outline: $border-width solid var(--wsale-product-thumb-bg, #{$gray-100});
     aspect-ratio: var(--o-wsale-product-image-ratio);
     width: 64px;
-
-    &:hover, &.active {
-        outline-color: $primary;
-    }
 
     &:where(:has(input:focus-visible)) {
         box-shadow: $focus-ring-box-shadow;

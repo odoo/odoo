@@ -38,7 +38,7 @@
                             <ol class="d-flex justify-content-start ps-0 pt-2 pt-lg-0 mx-auto my-0 text-start">
                                 <t t-foreach="this.images" t-as="image" t-key="image.thumbnailSrc">
                                     <li t-attf-class="align-top position-relative px-1 pb-1 {{image === this.selectedImage ? 'active' : ''}}" t-on-click="() => this.selectedImage = image">
-                                        <div class="bg-body">
+                                        <div>
                                             <img
                                                 t-att-src="image.thumbnailSrc"
                                                 class="img o_wsale_image_viewer_thumbnail object-fit-cover"
