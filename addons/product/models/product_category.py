@@ -101,3 +101,7 @@ class ProductCategory(models.Model):
     def name_create(self, name):
         category = self.create({'name': name})
         return category.id, category.display_name
+
+    def _child_of(self, other_category):
+        self.ensure_one()
+        return self.parent_path.startswith(other_category.parent_path)
