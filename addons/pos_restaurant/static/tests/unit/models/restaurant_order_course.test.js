@@ -43,3 +43,24 @@ test("isSynced", async () => {
     const course = store.addCourse();
     expect(course.isSynced).toBe(false);
 });
+
+test("canBeFired", async () => {
+    const store = await setupPosEnv();
+    await getFilledOrder(store);
+    const course = store.addCourse();
+    expect(course.canBeFired()).toBe(true);
+    course.fired = true;
+    expect(course.canBeFired()).toBe(false);
+});
+
+test("canBeFired without a preparation product", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    await store.addLineToOrder(
+        { product_tmpl_id: store.models["product.template"].get(12), qty: 1 },
+        order
+    );
+    const course = store.addCourse();
+    expect(course.isReadyToFire()).toBe(true);
+    expect(course.canBeFired()).toBe(false);
+});

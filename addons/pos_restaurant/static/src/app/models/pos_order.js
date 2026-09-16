@@ -172,9 +172,9 @@ patch(PosOrder.prototype, {
         if (!this.hasCourses()) {
             return;
         }
-        // Select the first non fired course
-        const nonFiredCourse = this.courses.find((course) => !course.fired);
-        this.selectCourse(nonFiredCourse ?? this.getLastCourse());
+        // Select the first course that can be fired
+        const nextCourse = this.courses.find((course) => course.canBeFired());
+        this.selectCourse(nextCourse ?? this.getLastCourse());
     },
     deselectCourse() {
         this.selectCourse(undefined);

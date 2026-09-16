@@ -16,6 +16,15 @@ export class RestaurantOrderCourse extends Base {
     isReadyToFire() {
         return !this.fired && !this.isEmpty();
     }
+    canBeFired() {
+        if (!this.isReadyToFire()) {
+            return false;
+        }
+        const categories = this.order_id.preparationCategories;
+        return this.line_ids.some((line) =>
+            line.getProduct().parentPosCategIds.some((id) => categories.has(id))
+        );
+    }
 }
 
 registry
