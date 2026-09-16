@@ -8277,6 +8277,53 @@ test("click on New while kanban is loading", async () => {
     expect.verifySteps(["create record"]);
 });
 
+test("middle click on New button opens a new record in a new window", async () => {
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        createRecord: (newWindow) => expect.step(`createRecord - newWindow: ${newWindow}`),
+    });
+
+    await contains(".o-kanban-button-new").click();
+    expect.verifySteps(["createRecord - newWindow: false"]);
+
+    await contains(".o-kanban-button-new").middleClick();
+    expect.verifySteps(["createRecord - newWindow: true"]);
+});
+
+test("middle click on New button of a kanban with quick create opens a new record in a new window", async () => {
+    await mountView({
+        arch: `
+            <kanban default_group_by="product_id" on_create="quick_create">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        createRecord: (newWindow) => expect.step(`createRecord - newWindow: ${newWindow}`),
+    });
+
+    await contains(".o-kanban-button-new").middleClick();
+    expect.verifySteps(["createRecord - newWindow: true"]);
+
+    await contains(".o-kanban-button-new").click();
+    await animationFrame();
+
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect.verifySteps([]);
+});
+
 test(`kanban with custom cog action that has a confirmation target="new" action`, async () => {
     const contextualAction = {
         id: 80,

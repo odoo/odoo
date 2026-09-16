@@ -754,7 +754,7 @@ export function makeActionManager(env, router = _router) {
             resModel: action.res_model,
             type: view.type,
             selectRecord: openFormView,
-            createRecord: () => openFormView(false),
+            createRecord: (newWindow) => openFormView(false, { newWindow }),
         });
         if (view.type === "form") {
             if (target === "new") {
