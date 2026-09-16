@@ -845,7 +845,10 @@ class Website(Home):
 
         industry_id = int(industry_id)
         is_dark_color_palette = is_dark == '1'
-        palette = [color1, color2, color3, color4, color5]
+        palette = [
+            color if re.fullmatch(r'#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?', color) else ''
+            for color in (color1, color2, color3, color4, color5)
+        ]
         palette_map = {
             f'o-color-{index}': color
             for index, color in enumerate(palette, start=1)
