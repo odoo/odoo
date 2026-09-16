@@ -49,6 +49,9 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design') and opt_blog_grid_view"/>
         <t t-set="opt_blog_promoted_post" t-value="is_view_active('website_blog.opt_blog_promoted_post') and opt_blog_grid_view"/>
 
+        <!-- Show the title -->
+        <t t-set="opt_blog_page_title" t-value="is_view_active('website_blog.opt_blog_page_title')"/>
+
         <!-- Container width -->
         <t t-set="opt_blog_fullwidth" t-value="not opt_blog_simple_list_view and is_view_active('website_blog.opt_blog_fullwidth')"/>
 
@@ -216,6 +219,9 @@ list of filtered posts (by date or tag).
 
 <!-- (Option) Blog: Full width posts container -->
 <template id="opt_blog_fullwidth" name="Full Width" inherit_id="website_blog.blog_post_short" active="False"/>
+
+<!-- (Option) Blog: Show a title on the "All" blogs page -->
+<template id="opt_blog_page_title" name="Blogs Page Title" inherit_id="website_blog.blog_post_short" active="True"/>
 
 <!-- TODO: Remove me
     (Option) Blog: Sidebar : Show
