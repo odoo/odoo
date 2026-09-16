@@ -288,6 +288,9 @@ class BaseCursor:
 
 class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     _closed: bool = True
+    _statement_timeout: float | None = None
+    _statement_timeout_armed: bool = False
+    _statement_timeout_depth: int = 0
 
     __caller: tuple[str | None, int | str] | Literal[False]
 
@@ -312,9 +315,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         self._key = key
         self._transaction_touched = False
         self._commit_write_observer: Callable[[], None] | None = None
-        self._statement_timeout: float | None = None
-        self._statement_timeout_armed = False
-        self._statement_timeout_depth = 0
 
         self._schema_cache = TransactionSchemaCache()
         self._schema_changed = False
