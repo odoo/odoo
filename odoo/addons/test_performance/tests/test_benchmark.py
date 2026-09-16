@@ -1,9 +1,14 @@
 import gc
 import json
 import logging
+import os
+import platform
 import statistics
+import subprocess
 from datetime import datetime
+from pathlib import Path
 
+import odoo
 from odoo.tests.benchmark import BenchmarkCase
 from odoo.tests.common import TransactionCase, tagged
 
@@ -48,6 +53,49 @@ class TestORMBenchmark(BenchmarkCase, TransactionCase):
         super().setUp()
         gc.collect()
         self.Model.search_count([])
+
+    @staticmethod
+    def _append_to_ledger(export_data):
+        # a reading nobody keeps is a reading nobody can compare: with
+        # ODOO_BENCHMARK_LEDGER naming a file, every run appends one JSON line
+        # carrying the commit, so a release knows its costs against the last
+        path = os.environ.get("ODOO_BENCHMARK_LEDGER")
+        if not path:
+            return
+        try:
+            commit = subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(Path(odoo.__file__).parent),
+                    "rev-parse",
+                    "--short",
+                    "HEAD",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=5,
+            ).stdout.strip()
+        except OSError, subprocess.SubprocessError:
+            commit = None
+        line = {
+            "timestamp": export_data["timestamp"],
+            "commit": commit,
+            "python": platform.python_version(),
+            "summary": export_data["summary"],
+            "results": {
+                stat["name"]: {
+                    key: stat[key]
+                    for key in ("mean_us", "median_us", "p95_us", "query_count")
+                    if key in stat
+                }
+                for stat in export_data["results"]
+            },
+        }
+        with Path(path).open("a", encoding="utf-8") as ledger:
+            ledger.write(json.dumps(line, default=str) + "\n")
+        _logger.info("[ORM_BENCHMARK] appended to %s", path)
 
     def test_01_browse_single(self):
         record = self.Model.search([], limit=1)
@@ -563,5 +611,6 @@ class TestORMBenchmark(BenchmarkCase, TransactionCase):
 
         _logger.info("\n[ORM_BENCHMARK] JSON Export:")
         _logger.info(json.dumps(export_data, indent=2, default=str))
+        self._append_to_ledger(export_data)
 
         _logger.info("\n[ORM_BENCHMARK] Benchmark complete.")
