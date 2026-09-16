@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.l10n_ph</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="QRPH" name="l10n_ph_qrph" invisible="country_code != 'PH'">
+                    <group>
+                        <field name="l10n_ph_qrph_public_key"/>
+                        <field name="l10n_ph_qrph_test_mode"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
