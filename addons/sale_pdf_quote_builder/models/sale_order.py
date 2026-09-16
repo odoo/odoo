@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         selected_footers = selected_documents - selected_headers
         lines_params = [
             {
-                "name": self.env._("Product > %s", line.label.splitlines()[0]),
+                "name": line.label.splitlines()[0],
                 "id": line.id,
                 "files": [
                     {
