@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
+                <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
+            </xpath>
+
+            <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+            </xpath>
+
+            <xpath expr="//th[@name='th_price_unit']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_price_unit']/strong" position="replace">
+                <strong>Unit Price<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
+            </xpath>
+
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/strong" position="replace">
+                <strong>Amount<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
+            </xpath>
+        </template>
+
+        <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
+            </xpath>
+
+            <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
