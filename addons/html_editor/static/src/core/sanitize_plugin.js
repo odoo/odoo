@@ -20,6 +20,16 @@ export class SanitizePlugin extends Plugin {
             throw new Error("DOMPurify is not available");
         }
         this.DOMPurify = DOMPurify(this.window);
+        this.DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+            if (
+                data.attrName === "name" &&
+                ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(node.tagName) &&
+                node.closest("form") &&
+                node.closest(".s_website_form")
+            ) {
+                data.forceKeepAttr = true;
+            }
+        });
     }
     /**
      * Sanitizes in place an html element. Current implementation uses the
