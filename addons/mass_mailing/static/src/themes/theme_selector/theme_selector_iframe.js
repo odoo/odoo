@@ -112,7 +112,7 @@ export class ThemeSelectorIframe extends Component {
                 });
                 return Promise.all([
                     this.loadIframeAssets(),
-                    this.themeSelectorRoot.mount(this.iframeRef().contentDocument.body),
+                    this.themeSelectorRoot.mount(iframe.contentDocument.body),
                 ]);
             });
         } catch (error) {
