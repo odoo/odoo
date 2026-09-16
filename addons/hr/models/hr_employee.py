@@ -103,7 +103,7 @@ class HrEmployeePrivate(models.Model):
         ('master', 'Master'),
         ('doctor', 'Doctor'),
         ('other', 'Other'),
-    ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
+    ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
