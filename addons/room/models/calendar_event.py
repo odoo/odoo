@@ -35,9 +35,13 @@ class CalendarEvent(models.Model):
         rooms_before = {event.id: event._get_kiosk_rooms() for event in self}
         res = super().write(vals)
         for event in self:
-            method = "update" if event.active else "delete"
-            for room in rooms_before[event.id] | event._get_kiosk_rooms():
-                room._notify_booking_view(method, event)
+            rooms_now = event._get_kiosk_rooms()
+            if not event.active:
+                rooms_now = rooms_now.browse()
+            for room in rooms_before[event.id] - rooms_now:
+                room._notify_booking_view("delete", event)
+            for room in rooms_now:
+                room._notify_booking_view("update", event)
         return res
 
     def unlink(self):

@@ -106,3 +106,9 @@ class TestRoomSecurity(RoomCommon, MailCase):
                 "stop": datetime(2023, 5, 15, 17, 0),
             }
         )
+
+    @users("room_manager")
+    def test_a_room_manager_writes_the_resource_of_a_room_and_not_of_a_vehicle(self):
+        self.rooms[0].with_env(self.env).resource_id.write({"name": "Room 2"})
+        with self.assertRaises(exceptions.AccessError):
+            self.vehicle.with_env(self.env).resource_id.write({"name": "Truck"})

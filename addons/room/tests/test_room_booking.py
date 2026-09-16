@@ -1,4 +1,5 @@
 from datetime import datetime
+from unittest.mock import patch
 
 from freezegun import freeze_time
 from psycopg import IntegrityError
@@ -92,6 +93,45 @@ class TestRoomBooking(RoomCommon):
             self.assertFalse(profile.is_available)
             self.assertEqual(profile.next_booking_start, datetime(2023, 5, 15, 11, 0))
             self.assertFalse(self.rooms[0].room_is_available)
+
+    def test_a_booking_moved_to_another_room_leaves_the_first_kiosk(self):
+        sent = []
+        with patch.object(
+            type(self.env["bus.bus"]),
+            "_sendone",
+            autospec=True,
+            side_effect=lambda _bus, channel, notification, payload: sent.append(
+                notification
+            ),
+        ):
+            self.bookings[0].write(
+                {"name": "moved", "resource_ids": self.profiles[1].ids}
+            )
+        left = f"room#{self.profiles[0].id}/booking/"
+        self.assertNotIn(
+            f"{left}update", sent, "the room the booking left must not keep showing it"
+        )
+        self.assertIn(f"{left}delete", sent)
+        self.assertIn(f"room#{self.profiles[1].id}/booking/create", sent)
+
+    def test_an_asset_with_a_booking_profile_gets_its_kiosk_when_it_becomes_a_room(
+        self,
+    ):
+        asset = self.env["resource.asset"].create(
+            {
+                "name": "Projector",
+                "kind_id": self.env.ref("resource_asset.kind_equipment").id,
+                "state": "in_service",
+            }
+        )
+        profile = asset._create_appointment_resources()
+        self.assertFalse(profile.access_token)
+        asset.kind_id = self.env.ref("room.kind_room")
+        self.assertEqual(asset.appointment_resource_id, profile)
+        self.assertTrue(profile.access_token)
+        self.assertTrue(profile.short_code)
+        self.assertIn(self.room_type, profile.appointment_type_ids)
+        self.assertTrue(asset.resource_id.enforce_booking_limit)
 
     @mute_logger("odoo.db.cursor")
     def test_kiosk_codes_are_unique(self):

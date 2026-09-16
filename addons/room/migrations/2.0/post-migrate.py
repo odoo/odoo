@@ -72,6 +72,34 @@ def _restore_xmlid(cr, parked, target_model, res_id):
     )
 
 
+def _adopt_or_create(env, parked, target_model, create):
+    """The module's own data and demo files reload before this script runs, so a
+    record this migration is about to convert may already exist under the xml id
+    parked in pre-migrate. Adopt that one instead of creating a second. With no
+    `create`, an unadopted record answers None and the caller creates it in batch."""
+    if parked:
+        existing = env.ref(parked[0], raise_if_not_found=False)
+        if existing and existing._name == target_model and existing.exists():
+            return existing
+    if create is None:
+        return None
+    record = create()
+    _restore_xmlid(env.cr, parked, target_model, record.id)
+    return record
+
+
+def _free_kiosk_code(env, field, value, keep):
+    if not value:
+        return
+    holder = (
+        env["appointment.resource"]
+        .with_context(active_test=False)
+        .search([(field, "=", value), ("id", "!=", keep.id)])
+    )
+    if holder:
+        holder.write({field: False})
+
+
 def _convert_offices(cr, env):
     cr.execute(
         """
@@ -89,15 +117,21 @@ def _convert_offices(cr, env):
     renames = {}
     partners = {}
     for office_id, name, company_id, company_partner_id, definition in rows:
-        partner = env["res.partner"].create(
-            {
-                "name": _name(name),
-                "type": "other",
-                "parent_id": company_partner_id,
-                "company_id": company_id,
-            }
+        partner = _adopt_or_create(
+            env,
+            parked.get(office_id),
+            "res.partner",
+            lambda name=name, company_id=company_id, parent=company_partner_id: env[
+                "res.partner"
+            ].create(
+                {
+                    "name": _name(name),
+                    "type": "other",
+                    "parent_id": parent,
+                    "company_id": company_id,
+                }
+            ),
         )
-        _restore_xmlid(cr, parked.get(office_id), "res.partner", partner.id)
         partners[office_id] = partner
         for prop in definition or []:
             known = next((d for d in definitions if d["name"] == prop["name"]), None)
@@ -143,14 +177,21 @@ def _convert_rooms(cr, env, partners, renames):
         properties,
     ) in rows:
         office_partner = partners.get(office_id)
-        asset = env["resource.asset"].create(
-            {
-                "name": name,
-                "kind_id": kind.id,
-                "state": "in_service",
-                "company_id": company_id,
-                "address_id": office_partner.id if office_partner else False,
-            }
+        asset = _adopt_or_create(
+            env,
+            parked.get(room_id),
+            "resource.asset",
+            lambda name=name, company_id=company_id, address=office_partner: env[
+                "resource.asset"
+            ].create(
+                {
+                    "name": name,
+                    "kind_id": kind.id,
+                    "state": "in_service",
+                    "company_id": company_id,
+                    "address_id": address.id if address else False,
+                }
+            ),
         )
         values = {
             renames.get((office_id, key), key): value
@@ -172,6 +213,8 @@ def _convert_rooms(cr, env, partners, renames):
             )
         )
         profile = asset.appointment_resource_id
+        _free_kiosk_code(env, "short_code", short_code, profile)
+        _free_kiosk_code(env, "access_token", access_token, profile)
         profile.write(
             {
                 "short_code": short_code,
@@ -182,7 +225,6 @@ def _convert_rooms(cr, env, partners, renames):
         )
         if not active:
             asset.active = False
-        _restore_xmlid(cr, parked.get(room_id), "resource.asset", asset.id)
         rooms[room_id] = (asset, profile)
     env.invalidate_all()
     return rooms
@@ -203,8 +245,13 @@ def _convert_bookings(cr, env, rooms):
     room_type = env.ref("room.appointment_type_room")
     vals_list = []
     booking_ids = []
+    bookings = {}
     for booking_id, name, room_id, start, stop, organizer_id, partner_id in rows:
         _asset, profile = rooms[room_id]
+        adopted = _adopt_or_create(env, parked.get(booking_id), "calendar.event", None)
+        if adopted is not None:
+            bookings[booking_id] = adopted
+            continue
         vals_list.append(
             {
                 "name": name,
@@ -221,10 +268,10 @@ def _convert_bookings(cr, env, rooms):
             }
         )
         booking_ids.append(booking_id)
-    events = env["calendar.event"].create(vals_list)
-    bookings = dict(zip(booking_ids, events, strict=True))
-    for booking_id, event in bookings.items():
+    events = env["calendar.event"].create(vals_list) if vals_list else []
+    for booking_id, event in zip(booking_ids, events, strict=True):
         _restore_xmlid(cr, parked.get(booking_id), "calendar.event", event.id)
+        bookings[booking_id] = event
     return bookings
 
 

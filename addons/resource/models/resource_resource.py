@@ -65,8 +65,8 @@ class ResourceResource(models.Model):
         compute="_compute_user_id",
         precompute=True,
         store=True,
-        readonly=False,
         index="btree_not_null",
+        readonly=False,
         help="The login of the person this resource is: their party's internal user. Choosing another user makes the resource that user's person.",
     )
     avatar_128 = fields.Image(compute="_compute_avatar_128")
@@ -104,6 +104,11 @@ class ResourceResource(models.Model):
         comodel_name="resource.assignment",
         inverse_name="resource_id",
         string="Assignments",
+    )
+    reservation_ids = fields.One2many(
+        comodel_name="resource.reservation",
+        inverse_name="resource_id",
+        string="Reservations",
     )
     holder_id = fields.Many2one(
         comodel_name="resource.resource",

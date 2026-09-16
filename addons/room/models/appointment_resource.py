@@ -47,6 +47,12 @@ class AppointmentResource(models.Model):
                 and f"{profile.get_base_url()}/room/{profile.short_code}/book"
             )
 
+    @api.depends(
+        "resource_id.reservation_ids.date_start",
+        "resource_id.reservation_ids.date_end",
+        "resource_id.reservation_ids.allocated_percentage",
+        "resource_id.reservation_ids.active",
+    )
     def _compute_booking_status(self):
         now = fields.Datetime.now()
         reservations = (

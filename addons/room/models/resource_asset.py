@@ -65,6 +65,7 @@ class ResourceAsset(models.Model):
         rooms = self.filtered(lambda asset: asset.kind_id.code == ROOM_KIND)
         if rooms:
             rooms.sudo()._create_appointment_resources()
+            rooms.appointment_resource_id.sudo()._setup_room_kiosk()
 
     def action_view_room_booking_view(self):
         self.check_singleton()

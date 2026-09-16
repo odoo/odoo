@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from werkzeug import exceptions
 
 from odoo import fields, http
@@ -23,7 +21,7 @@ class RoomController(http.Controller):
     )
     def get_existing_bookings(self, access_token):
         room_sudo = self._get_room_from_access_token(access_token)
-        now = datetime.now()
+        now = fields.Datetime.now()
         bookings = [
             event._get_room_booking_values()
             for event in room_sudo._get_room_bookings([("stop", ">", now)])
