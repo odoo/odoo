@@ -124,15 +124,12 @@ export class Subscribe extends Interaction {
         const toastType = result.toast_type;
         if (toastType === 'success') {
             this._updateSubscribeControlsStatus(true);
-            const modalEl = this.el.closest('.o_newsletter_modal');
-            if (modalEl) {
-                window.Modal.getOrCreateInstance(modalEl).hide();
-            }
+        } else {
+            this.notification.add(result.toast_content, {
+                type: toastType,
+                sticky: true,
+            });
         }
-        this.notification.add(result.toast_content, {
-            type: toastType,
-            sticky: true,
-        });
     }
 }
 
