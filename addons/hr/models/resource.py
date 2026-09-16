@@ -17,7 +17,7 @@ class ResourceResource(models.Model):
     employee_id = fields.One2many('hr.employee', 'resource_id', check_company=True, context={'active_test': False})
     tz = fields.Selection(compute='_compute_tz', inverse='_inverse_tz', store=True, readonly=False)
 
-    job_title = fields.Char(compute='_compute_job_title', compute_sudo=True)
+    job_id = fields.Many2one(related='employee_id.job_id')
     department_id = fields.Many2one('hr.department', compute='_compute_department_id', compute_sudo=True)
     work_location_id = fields.Many2one(related='employee_id.work_location_id')
     work_email = fields.Char(related='employee_id.work_email')
@@ -34,11 +34,6 @@ class ResourceResource(models.Model):
     def _inverse_tz(self):
         for resource in self.filtered('employee_id'):
             resource.employee_id.current_version_id.tz = resource.tz
-
-    @api.depends('employee_id')
-    def _compute_job_title(self):
-        for resource in self:
-            resource.job_title = resource.employee_id.job_title
 
     @api.depends('employee_id')
     def _compute_department_id(self):
