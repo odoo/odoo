@@ -381,7 +381,7 @@ class SlideSlide(models.Model):
                 slide.slide_type = False
 
     @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote', 'slide_partner_ids.completed')
-    @api.depends('uid')
+    @api.depends_context('uid')
     def _compute_user_membership_id(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids),
