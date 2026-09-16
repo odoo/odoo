@@ -173,8 +173,9 @@
             <field name="qty_delivered">10</field>
         </record>
 
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction_material')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction')]]"/>
+        <function model="sale.order" name="_action_confirm_demo">
+            <value model="sale.order" eval="[ref('sale_project.sale_order_construction_material'), ref('sale_project.sale_order_construction')]"/>
+        </function>
 
         <!-- Set users and state to task -->
         <function model="project.task" name="write">
