@@ -1027,6 +1027,13 @@ class TestMrpAuditFixes(TestMrpCommon):
         agromarin or design-themes, and none in any stored expression) cost two
         queries per order created, and no test said so.
 
+        The threshold also guards the batching in `_create_deferred_moves`: a
+        `Command.create` inside the x2many assignment is flushed by that
+        assignment, so a compute that assigns per record calls
+        `stock.move.create()` per record. Deferring the vals took the marginal
+        cost from 4.0 to 1.27, and 2.0 is below both the 4.0 that per-record
+        creates cost and the 6.0 that losing the undomained inverses cost.
+
         The guard is the marginal cost of one more order, not a total: a total
         moves with every unrelated change and a budget only fails above itself.
         """
@@ -1064,7 +1071,7 @@ class TestMrpAuditFixes(TestMrpCommon):
         per_order = (many - few) / 10
         self.assertLess(
             per_order,
-            5.0,
+            2.0,
             "creating a manufacturing order must not cost a query per order for "
             "its own moves: %s queries for 2 orders, %s for 12, %.2f per order"
             % (few, many, per_order),

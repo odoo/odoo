@@ -1523,6 +1523,7 @@ class MrpProduction(models.Model):
         batch = self.with_context(
             bom_cost_share_cache=self.env["mrp.bom"]._get_explosion_scratch()
         )
+        deferred_move_vals = []
         for production in batch:
             if production.state != "draft" or self.env.context.get(
                 "skip_compute_move_raw_ids"
@@ -1566,6 +1567,13 @@ class MrpProduction(models.Model):
                                 move_raw_values,
                             )
                         ]
+                    elif isinstance(production.id, int):
+                        # The vals already carry `raw_material_production_id`,
+                        # so the move can be created with every other
+                        # production's in one call instead of being flushed by
+                        # this record's own assignment. See
+                        # `_create_deferred_moves`.
+                        deferred_move_vals.append(move_raw_values)
                     else:
                         list_move_raw += [Command.create(move_raw_values)]
                 production.move_raw_ids = list_move_raw
@@ -1576,6 +1584,25 @@ class MrpProduction(models.Model):
                         lambda m: m.bom_line_id
                     )
                 ]
+        self._create_deferred_moves(deferred_move_vals)
+
+    def _create_deferred_moves(self, move_vals):
+        """Create in one call the moves an x2many assignment would flush singly.
+
+        `Command.create` inside `production.move_raw_ids = [...]` is written out
+        by that assignment: the ORM folds each record's commands on its own and
+        calls `stock.move.create()` once per record. Collecting the vals and
+        creating them here costs one call for the whole batch, and the rows are
+        identical -- they already carry the inverse, which is what the command
+        would have set. Measured on 25 orders of three components: 50 calls to
+        `stock.move.create()` became 2.
+
+        Deferring is only possible for a production that already has a real id.
+        A `NewId` parent -- a Form, an onchange -- keeps the command, because
+        the inverse cannot be written before the parent exists.
+        """
+        if move_vals:
+            self.env["stock.move"].create(move_vals)
 
     @api.depends(
         "product_id",
@@ -1624,15 +1651,17 @@ class MrpProduction(models.Model):
             Command.clear()
         ]
 
+        deferred_move_vals = []
         for production in production_with_move_finished_ids_to_unlink:
             if production.product_id:
-                production._create_update_move_finished()
+                production._create_update_move_finished(deferred_move_vals)
             else:
                 production.move_finished_ids = [
                     Command.delete(move.id)
                     for move in production.move_finished_ids
                     if move.bom_line_id
                 ]
+        self._create_deferred_moves(deferred_move_vals)
 
     @api.depends("bom_id", "product_id", "move_raw_ids.product_id", "workorder_ids")
     def _compute_show_generate_bom(self):
@@ -2034,12 +2063,23 @@ class MrpProduction(models.Model):
             new_groups=len(vals_needing_group),
         )
         reference_vals_list = []
+        # One write per distinct value rather than one per order: a procurement
+        # run creates orders that share a start date, and the moves the compute
+        # built already carry their production's group, so the regrouping set is
+        # usually empty.
+        moves_by_group = defaultdict(lambda: self.env["stock.move"])
+        raw_moves_by_date = defaultdict(lambda: self.env["stock.move"])
+        finished_moves_by_date = defaultdict(lambda: self.env["stock.move"])
         for rec, vals in zip(res, vals_list, strict=True):
             if vals.get("move_dest_ids"):
                 rec.move_finished_ids.move_dest_ids = vals.get("move_dest_ids")
-            (
-                rec.move_raw_ids | rec.move_finished_ids
-            ).production_group_id = rec.production_group_id
+            regrouped = (rec.move_raw_ids | rec.move_finished_ids).filtered(
+                lambda move, group=rec.production_group_id: (
+                    move.production_group_id != group
+                )
+            )
+            if regrouped:
+                moves_by_group[rec.production_group_id.id] |= regrouped
             if not rec.reference_ids:
                 reference_vals_list.append(
                     {
@@ -2058,23 +2098,27 @@ class MrpProduction(models.Model):
                 and vals.get("date_start")
                 and rec.move_raw_ids[0].date != vals["date_start"]
             ):
-                rec.move_raw_ids.write(
-                    {"date": vals["date_start"], "date_deadline": vals["date_start"]}
-                )
+                raw_moves_by_date[vals["date_start"]] |= rec.move_raw_ids
             if (
                 rec.move_finished_ids
                 and rec.move_finished_ids[0].date
                 and vals.get("date_end")
                 and rec.move_finished_ids[0].date != vals["date_end"]
             ):
-                rec.move_finished_ids.write({"date": vals["date_end"]})
+                finished_moves_by_date[vals["date_end"]] |= rec.move_finished_ids
             elif (
                 rec.move_finished_ids
                 and rec.date_end
                 and rec.move_finished_ids[0].date != rec.date_end
                 and not vals.get("date_end")
             ):
-                rec.move_finished_ids.write({"date": rec.date_end})
+                finished_moves_by_date[rec.date_end] |= rec.move_finished_ids
+        for group_id, moves in moves_by_group.items():
+            moves.production_group_id = group_id
+        for date, moves in raw_moves_by_date.items():
+            moves.write({"date": date, "date_deadline": date})
+        for date, moves in finished_moves_by_date.items():
+            moves.write({"date": date})
         if reference_vals_list:
             _debug.lifecycle("references_created", count=len(reference_vals_list))
             self.env["stock.reference"].sudo().create(reference_vals_list)
@@ -2336,7 +2380,7 @@ class MrpProduction(models.Model):
                 )
         return moves
 
-    def _create_update_move_finished(self):
+    def _create_update_move_finished(self, deferred_move_vals=None):
         list_move_finished = []
         moves_finished_values = self._prepare_moves_finished_vals()
         moves_byproduct_dict = {
@@ -2361,6 +2405,11 @@ class MrpProduction(models.Model):
                 list_move_finished += [
                     Command.update(move_finished.id, move_finished_values)
                 ]
+            elif deferred_move_vals is not None and isinstance(self.id, int):
+                # See `_create_deferred_moves`: the vals already carry
+                # `production_id`, so the row can be created with the rest of
+                # the batch instead of being flushed by this assignment.
+                deferred_move_vals.append(move_finished_values)
             else:
                 list_move_finished += [Command.create(move_finished_values)]
         self.move_finished_ids = list_move_finished
@@ -2511,6 +2560,7 @@ class MrpProduction(models.Model):
     def _update_raw_moves(self, factor):
         self.check_singleton()
         update_info = []
+        moves_to_reference = self.env["stock.move"]
         for move in self.move_raw_ids.filtered(
             lambda m: m.state not in ("done", "cancel")
         ):
@@ -2520,7 +2570,11 @@ class MrpProduction(models.Model):
                 move.write({"product_uom_qty": new_qty})
                 update_info.append((move, old_qty, new_qty))
             if move.reference_ids != self.reference_ids:
-                move.reference_ids = self.reference_ids.ids
+                moves_to_reference |= move
+        # The references are the production's own, so every move that needs them
+        # needs the same ones: one relational write, not one per move.
+        if moves_to_reference:
+            moves_to_reference.reference_ids = self.reference_ids.ids
         _debug.pipeline(
             "raw_moves_rescaled",
             production=self.id,
@@ -2843,15 +2897,15 @@ class MrpProduction(models.Model):
                     ]
                 previous_workorder = workorder
                 last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
+        moves_by_workorder = defaultdict(lambda: self.env["stock.move"])
         for move in self.move_raw_ids | self.move_finished_ids:
             if move.operation_id:
-                move.write(
-                    {
-                        "workorder_id": workorder_per_operation[move.operation_id].id
-                        if move.operation_id in workorder_per_operation
-                        else False
-                    }
-                )
+                workorder = workorder_per_operation.get(move.operation_id)
+                moves_by_workorder[workorder.id if workorder else False] |= move
+        # Several moves share one operation, so they share one work order: one
+        # write per work order rather than one per move.
+        for workorder_id, moves in moves_by_workorder.items():
+            moves.write({"workorder_id": workorder_id})
 
     def action_assign(self):
         with _debug.perf(

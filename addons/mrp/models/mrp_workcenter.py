@@ -1101,9 +1101,12 @@ class MrpWorkcenterProductivity(models.Model):
         now = fields.Datetime.now()
         underperformance_timers = self.browse()
         split_off = []
+        # Every timer closes at the same instant, so it is one write, not one
+        # per timer -- and the loop below reads `date_end` back, which is why it
+        # is set before rather than inside.
+        self.date_end = now
         for timer in self:
             wo = timer.workorder_id
-            timer.date_end = now
             if wo.duration <= wo.duration_expected:
                 continue
             productive_date_end = timer.date_end - timedelta(
