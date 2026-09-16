@@ -68,7 +68,7 @@ class _FieldStubs:
         definition_record_field: str | None
 
         def __get__(
-            self, records: typing.Any, owner: typing.Any = None
+            self, record: typing.Any, owner: typing.Any = None
         ) -> typing.Any: ...
 
         def _update_inverse(self, records: BaseModel, value: BaseModel) -> None: ...

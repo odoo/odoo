@@ -125,7 +125,9 @@ class _ModelStubs:
         def _evict_x2many_scopes_reading_through(
             self, fnames: Collection[str]
         ) -> None: ...
-        def update_field_translations(self, fname: str, translations: dict) -> bool: ...
+        def update_field_translations(
+            self, field_name: str, translations: dict, source_lang: str = ""
+        ) -> bool: ...
 
         def _read_format(
             self, *args: typing.Any, **kwargs: typing.Any
@@ -189,7 +191,13 @@ class _ModelStubs:
 
         def _check_computed(self, field: Field) -> None: ...
 
-        def _order_to_sql(self, order: str, query: typing.Any) -> typing.Any: ...
+        def _order_to_sql(
+            self,
+            order: str,
+            query: typing.Any,
+            alias: str | None = None,
+            reverse: bool = False,
+        ) -> typing.Any: ...
 
         def _traverse_related_sql(
             self, alias: str, field: Field, query: typing.Any
