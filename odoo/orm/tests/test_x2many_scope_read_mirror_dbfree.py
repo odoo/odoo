@@ -2,6 +2,7 @@ from odoo import api, fields, models
 from odoo.orm.domain import Domain
 from odoo.orm.fields.relational._base import PENDING_SCOPE_KEY
 from odoo.orm.model_test_env import model_test_env
+from odoo.orm.primitives import Command
 
 _MOD = "test_x2many_scope_read_mirror"
 
@@ -42,6 +43,7 @@ class Tag(models.Model):
     _name = "mirror.tag"
     _module = _MOD
     _description = "a tag"
+    _order = "name, id"
 
     name = fields.Char()
 
@@ -318,3 +320,25 @@ class TestAWriteToARuleFieldEvictsTheScopesThatReadThroughIt:
             assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
                 order.id: (line.id,)
             }
+
+
+class TestAStoredMany2manyWriteCachesTheComodelOrder:
+    def test_with_the_sort_keys_in_memory_the_slot_reads_as_a_fetch_would(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+            b, a = env["mirror.tag"].create([{"name": "b"}, {"name": "a"}])
+            order = env["mirror.order"].create({"name": "o"})
+            order.write({"tag_ids": [Command.set([b.id, a.id])]})
+            assert order.tag_ids._ids == (a.id, b.id)
+
+    def test_without_the_sort_keys_the_slot_keeps_the_written_order(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOpen) as env:
+            b, a = env["mirror.tag"].create([{"name": "b"}, {"name": "a"}])
+            order = env["mirror.order"].create({"name": "o"})
+            env.flush_all()
+            env.invalidate_all()
+            # no fetch inside a write: the names are not read to sort
+            order.write({"tag_ids": [Command.set([b.id, a.id])]})
+            field = order._fields["tag_ids"]
+            assert field._get_cache(env)[order.id] == (b.id, a.id)
+            order.invalidate_recordset(["tag_ids"])
+            assert order.tag_ids._ids == (a.id, b.id)

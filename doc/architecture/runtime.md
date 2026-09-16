@@ -327,8 +327,11 @@ starve sudo of the rows the rules had hidden.
 *The invariant.* For a stored x2many `F`, a record `r` with a real id and a scope
 `S`: **if `S`'s slot holds a value for `(F, r)`, that value is the set of ids
 `S`'s own search for `r`'s relation returns at that point of the transaction —
-in the comodel's order whenever the order keys are in memory, else in the order
-written — and a slot holding nothing says nothing; the next read searches.** One
+in the comodel's order as of the slot's last fill or append when the order keys
+were in memory then, else in the order written — and a slot holding nothing
+says nothing; the next read searches.** A later write to a member's order key
+(a rename under `complete_name`) does not re-sort the slots that hold it, as
+upstream does not either. One
 exception is stated rather than paid for: the writer's own slot lists what the
 writer itself wrote in this transaction even when its read rule would hide it (a
 create or write rule may admit what the read rule hides; checking would cost the

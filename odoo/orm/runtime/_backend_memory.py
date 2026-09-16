@@ -43,6 +43,7 @@ if typing.TYPE_CHECKING:
     from ..components.storage import DictBackend
     from ..fields import Field
     from ..models.base import BaseModel
+    from .environment import Environment
 
 _logger = logging.getLogger("odoo.orm.backend")
 _debug = DebugLog(__name__)
@@ -281,6 +282,30 @@ def _truncate(
             f"InMemoryBackend.read_group_rows: granularity {granularity!r} is not "
             "supported in memory"
         ) from None
+
+
+def _cache_snapshot(env: Environment) -> dict:
+    core = env.core
+    snapshot: dict = {}
+    for field in list(core.iter_cached_fields()):
+        data = core.get_field_data_or_none(field)
+        if data is not None:
+            snapshot[field, None] = set(data)
+        for key, slot in core.iter_context_caches(field):
+            snapshot[field, key] = set(slot)
+    return snapshot
+
+
+def _drop_cache_additions(env: Environment, snapshot: dict) -> None:
+    core = env.core
+    for field in list(core.iter_cached_fields()):
+        data = core.get_field_data_or_none(field)
+        if data is not None:
+            for id_ in set(data) - snapshot.get((field, None), set()):
+                del data[id_]
+        for key, slot in list(core.iter_context_caches(field)):
+            for id_ in set(slot) - snapshot.get((field, key), set()):
+                del slot[id_]
 
 
 class _InMemoryReadGroup:
@@ -1058,6 +1083,10 @@ class InMemoryBackend:
         prof: typing.Any = None,
     ) -> Query:
         searched_fnames = flush_search_dependencies(model, domain, order)
+        # a SQL search fills no field cache; the in-memory one evaluates the
+        # domain and the order through the records, so what it loads to do
+        # that is dropped again, and a test sees the cache PostgreSQL leaves
+        cached_before = _cache_snapshot(model.env)
         all_ids = self.storage.get_table_ids(model._table)
         all_records = model.browse(all_ids)
 
@@ -1101,6 +1130,7 @@ class InMemoryBackend:
             ids = ids[offset:]
         if limit is not None and limit is not False:
             ids = ids[:limit]
+        _drop_cache_additions(model.env, cached_before)
 
         _debug.pipeline(
             "backend.memory.search",

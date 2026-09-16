@@ -167,15 +167,12 @@ class TestX2manyScopeInvariant(TransactionCase):
                             f"{name}'s slot of {field} for {parent_id}; after:\n  "
                             + "\n  ".join(log)
                         )
+                        # membership only: this walk renames children, and a
+                        # rename moves a member in `complete_name` order without
+                        # re-sorting the slots that hold it (the invariant's
+                        # order clause dates from the slot's last fill); the
+                        # DB-free walk, which rewrites no order key, holds order
                         self.assertEqual(set(held), set(truth), why)
-                        # the order is the search's whenever the sort keys are in
-                        # memory; a write whose keys are not caches the written order
-                        comodel = self.env[field.comodel_name]
-                        if (
-                            comodel.browse(held)._sorted_by_ids(comodel._order, False)
-                            is not None
-                        ):
-                            self.assertEqual(held, truth, why)
 
     def _walk(self, seed, steps=40):
         rng = random.Random(seed)

@@ -233,6 +233,11 @@ def _walk(seed, steps):
                 ]
             )
             log.append(f"{step}: {name} {op} on {order.name}")
+            # the walk keeps the sort keys in memory, so the invariant's order
+            # clause is what it tests; a write whose keys are not cached keeps
+            # the written order, pinned by name in test_x2many_scope_read_mirror
+            env["inv.line"].search([]).mapped("value")
+            tags.mapped("name")
             try:
                 _apply(op, name, scope_env, order, orders, tags, rng, env, company_ids)
             except AccessError as exc:

@@ -244,6 +244,14 @@ class Many2many(_RelationalMulti):
                 sorted_ids = comodel.browse(ids)._sorted_by_ids(comodel._order, False)
                 if sorted_ids is not None:
                     ids = sorted_ids
+                elif _debug.logic.enabled:
+                    _debug.logic(
+                        "field.many2many.written_unsorted",
+                        model=self.model_name,
+                        field=self.name,
+                        record=record.id,
+                        ids=len(ids),
+                    )
             self._update_cache(record, ids, created=created)
 
         modified_corecord_ids = set()
