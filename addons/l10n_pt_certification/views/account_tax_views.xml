@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.pt</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='advanced_options']" position="inside">
+                    <group invisible="country_code != 'PT'">
+                        <group>
+                            <field name="l10n_pt_tax_exemption_reason" required="country_code == 'PT' and amount == 0"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_tax_group_tree_inherit_pt" model="ir.ui.view">
+            <field name="name">account.tax.group.tree.inherit.pt</field>
+            <field name="model">account.tax.group</field>
+            <field name="inherit_id" ref="account.view_tax_group_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_payable_account_id']" position="after">
+                    <field name="l10n_pt_tax_region"/>
+                    <field name="l10n_pt_tax_category"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_tax_group_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.tax.group.form.inherit.pt</field>
+            <field name="model">account.tax.group</field>
+            <field name="inherit_id" ref="account.view_tax_group_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group invisible="country_code != 'PT'">
+                        <field name="l10n_pt_tax_region" required="country_code == 'PT'"/>
+                        <field name="l10n_pt_tax_category" required="country_code == 'PT'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
