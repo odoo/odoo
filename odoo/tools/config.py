@@ -1470,6 +1470,23 @@ class configmanager:
             my_default="/usr/share/GeoIP/GeoLite2-Country.mmdb",
             help="Absolute path to the GeoIP Country database file.",
         )
+        group.add_option(
+            "--http-session-store",
+            dest="http_session_store",
+            my_default="filesystem",
+            metavar="BACKEND",
+            help="Where HTTP sessions live: filesystem (default, under data_dir/"
+            "sessions), postgres (the http_session table of --http-session-db, "
+            "shared by every host), or memory (this process only).",
+        )
+        group.add_option(
+            "--http-session-db",
+            dest="http_session_db",
+            my_default="",
+            metavar="DBNAME",
+            help="The database holding the http_session table when "
+            "--http-session-store=postgres.",
+        )
 
     def _add_advanced_options(
         self,

@@ -1,21 +1,34 @@
 """Regression contracts from the session and cookie correctness challenge."""
 
+import os
 from types import SimpleNamespace
 
 import pytest
 
 from odoo.http._cookies import get_cookie_identity
-from odoo.http._session_store import FilesystemSessionStore, MemorySessionStore
+from odoo.http._session_store import (
+    FilesystemSessionStore,
+    MemorySessionStore,
+    PostgresSessionStore,
+)
 from odoo.http.constants import prepare_default_session
 from odoo.http.exceptions import SessionExpiredException
 from odoo.http.session import Session
 from odoo.http.wrappers import Response
 
 
-@pytest.fixture(params=["filesystem", "memory"])
+@pytest.fixture(params=["filesystem", "memory", "postgres"])
 def store(request, tmp_path):
     if request.param == "memory":
         return MemorySessionStore(Session)
+    if request.param == "postgres":
+        dbname = os.environ.get("ODOO_HTTP_SESSION_TEST_DB")
+        if not dbname:
+            pytest.skip("set ODOO_HTTP_SESSION_TEST_DB to a scratch database")
+        assert dbname
+        pg_store = PostgresSessionStore(dbname, Session)
+        pg_store.clear()
+        return pg_store
     return FilesystemSessionStore(str(tmp_path), Session)
 
 

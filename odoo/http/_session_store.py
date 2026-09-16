@@ -2,6 +2,7 @@ import base64
 import contextlib
 import errno
 import fcntl
+import hashlib
 import logging
 import os
 import re
@@ -14,6 +15,7 @@ from pathlib import Path
 from stat import S_ISREG
 from typing import Any
 
+import odoo.db
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps_bytes as _dumps_bytes
 from odoo.libs.json import loads as _loads
@@ -630,3 +632,144 @@ class MemorySessionStore(SessionStore):
     def clear(self) -> None:
         with self._guard:
             self._entries.clear()
+
+
+def _advisory_lock_key(stripe: str) -> int:
+    digest = hashlib.blake2b(stripe.encode("ascii"), digest_size=8).digest()
+    return int.from_bytes(digest, "big", signed=True)
+
+
+_SESSION_TABLE_DDL = """
+    CREATE TABLE IF NOT EXISTS http_session (
+        sid varchar(84) PRIMARY KEY,
+        family varchar(42) NOT NULL,
+        payload bytea NOT NULL,
+        mtime double precision NOT NULL
+    )
+"""
+_SESSION_INDEX_DDL = (
+    "CREATE INDEX IF NOT EXISTS http_session_family_idx ON http_session (family)"
+)
+
+
+class PostgresSessionStore(SessionStore):
+    def __init__(self, dbname: str, session_class: type[Session] = Session) -> None:
+        super().__init__(session_class)
+        self.dbname = dbname
+        self._local = threading.local()
+        self._schema_ready = False
+
+    def _ensure_schema(self, cr: Any) -> None:
+        if self._schema_ready:
+            return
+        cr.execute(_SESSION_TABLE_DDL)
+        cr.execute(_SESSION_INDEX_DDL)
+        self._schema_ready = True
+        _debug.lifecycle("http.session.pg_schema_ready", db=self.dbname)
+
+    @contextlib.contextmanager
+    def _cursor(self) -> Iterator[Any]:
+        held = getattr(self._local, "cursor", None)
+        if held is not None:
+            yield held
+            return
+        cr = odoo.db.db_connect(self.dbname).cursor()
+        try:
+            self._ensure_schema(cr)
+            yield cr
+            cr.commit()
+        except BaseException:
+            cr.rollback()
+            raise
+        finally:
+            cr.close()
+
+    @contextlib.contextmanager
+    def _lock(self, sid: str) -> Iterator[None]:
+        self._require_key(sid)
+        outermost = getattr(self._local, "cursor", None) is None
+        with self._cursor() as cr:
+            if outermost:
+                self._local.cursor = cr
+            try:
+                # Released with the transaction, i.e. when the outermost lock
+                # exits and _cursor commits or rolls back.
+                cr.execute(
+                    "SELECT pg_advisory_xact_lock(%s)",
+                    (_advisory_lock_key(sid[:2]),),
+                )
+                _debug.lifecycle("http.session.pg_lock_acquired", stripe=sid[:2])
+                yield
+            finally:
+                if outermost:
+                    self._local.cursor = None
+
+    def _read(self, sid: str) -> tuple[dict[str, Any], float | None] | None:
+        with self._cursor() as cr:
+            cr.execute("SELECT payload, mtime FROM http_session WHERE sid = %s", (sid,))
+            row = cr.fetchone()
+            if row is None:
+                return None
+            payload, mtime = row
+            try:
+                data = _loads(bytes(payload))
+                if not isinstance(data, dict):
+                    raise TypeError(f"session payload is {type(data).__name__}")
+            except Exception as exc:
+                _logger.warning("Corrupt session row %r; discarding it.", sid[:8])
+                _debug.logic(
+                    "http.session.read_corrupt", sid=sid[:8], error=type(exc).__name__
+                )
+                cr.execute("DELETE FROM http_session WHERE sid = %s", (sid,))
+                return None
+            return data, mtime
+
+    def _write(self, session: Session, durable: bool) -> None:
+        with self._cursor() as cr:
+            cr.execute(
+                """
+                INSERT INTO http_session (sid, family, payload, mtime)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (sid) DO UPDATE
+                    SET payload = EXCLUDED.payload, mtime = EXCLUDED.mtime
+                """,
+                (
+                    session.sid,
+                    session.sid[:STORED_SESSION_BYTES],
+                    _dumps_bytes(dict(session)),
+                    time.time(),
+                ),
+            )
+
+    def _unlink(self, sid: str) -> None:
+        with self._cursor() as cr:
+            cr.execute("DELETE FROM http_session WHERE sid = %s", (sid,))
+
+    def _touch(self, sid: str) -> bool:
+        with self._cursor() as cr:
+            cr.execute(
+                "UPDATE http_session SET mtime = %s WHERE sid = %s", (time.time(), sid)
+            )
+            return bool(cr.rowcount)
+
+    def _sids_in_family(self, identifier: str) -> list[str]:
+        with self._cursor() as cr:
+            cr.execute("SELECT sid FROM http_session WHERE family = %s", (identifier,))
+            return [row[0] for row in cr.fetchall()]
+
+    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
+        threshold = time.time() - max_lifetime
+        with self._cursor() as cr:
+            cr.execute("DELETE FROM http_session WHERE mtime < %s", (threshold,))
+            removed = cr.rowcount
+        _debug.perf.count("http.session.vacuum", removed=removed, postgres=True)
+
+    def clear(self) -> None:
+        with self._cursor() as cr:
+            cr.execute("DELETE FROM http_session")
+
+    def __len__(self) -> int:
+        with self._cursor() as cr:
+            cr.execute("SELECT count(*) FROM http_session")
+            row = cr.fetchone()
+            return int(row[0]) if row else 0

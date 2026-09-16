@@ -66,6 +66,7 @@ class FakeCursor:
         self.sql_statement_count = 0
         self.postcommit = Callbacks()
         self.postrollback = Callbacks()
+        self.pin_key: object = None
 
     def commit(self) -> None:
         self.commit_count += 1

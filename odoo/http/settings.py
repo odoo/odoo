@@ -7,7 +7,28 @@ from typing import Self
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.settings import OptionSource, SettingsSlot
 
-__all__ = ["HttpSettings", "current", "installed", "override", "slot"]
+__all__ = [
+    "SESSION_STORE_BACKENDS",
+    "HttpSettings",
+    "current",
+    "installed",
+    "override",
+    "slot",
+]
+
+SESSION_STORE_BACKENDS = ("filesystem", "postgres", "memory")
+
+
+def _get_session_store_backend(config: OptionSource) -> str:
+    backend = str(config["http_session_store"] or "filesystem")
+    if backend not in SESSION_STORE_BACKENDS:
+        raise ValueError(
+            f"http_session_store={backend!r} is not one of {SESSION_STORE_BACKENDS}"
+        )
+    if backend == "postgres" and not config["http_session_db"]:
+        raise ValueError("http_session_store=postgres needs http_session_db")
+    return backend
+
 
 _debug = DebugLog(__name__)
 
@@ -24,6 +45,8 @@ class HttpSettings:
     geoip_country_db: str = ""
     proxy_mode: bool = False
     proxy_hops: int = 1
+    session_store: str = "filesystem"
+    session_db: str = ""
 
     @classmethod
     def from_config(cls, config: OptionSource) -> Self:
@@ -38,6 +61,8 @@ class HttpSettings:
             geoip_country_db=str(config["geoip_country_db"] or ""),
             proxy_mode=bool(config["proxy_mode"]),
             proxy_hops=max(1, int(config["proxy_hops"] or 1)),
+            session_store=_get_session_store_backend(config),
+            session_db=str(config["http_session_db"] or ""),
         )
 
     @property

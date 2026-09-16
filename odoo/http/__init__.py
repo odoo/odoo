@@ -73,7 +73,12 @@ from .routing import (
     _prepare_route_fragment,
 )
 
-from ._session_store import FilesystemSessionStore, MemorySessionStore, SessionStore
+from ._session_store import (
+    FilesystemSessionStore,
+    MemorySessionStore,
+    PostgresSessionStore,
+    SessionStore,
+)
 from .session import Session
 
 from .geoip import (
@@ -171,6 +176,7 @@ __all__ = [
     "NotFound",
     "ParamSpec",
     "ParameterError",
+    "PostgresSessionStore",
     "RegistryError",
     "Request",
     "RequestEntityTooLarge",

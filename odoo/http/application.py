@@ -26,7 +26,12 @@ from odoo.tools.misc import real_time
 
 from ._dbfilter import filter_dbs_served, get_dbs_served
 from ._protocols import get_ir_http
-from ._session_store import FilesystemSessionStore, prepare_session_dir
+from ._session_store import (
+    FilesystemSessionStore,
+    MemorySessionStore,
+    PostgresSessionStore,
+    prepare_session_dir,
+)
 from .constants import (
     REJECTED_HTTP_METHODS,
     STATIC_ALLOWED_METHODS,
@@ -186,9 +191,16 @@ class Application:
 
     @_locked_cached_property
     def session_store(self):
-        path = prepare_session_dir(current_settings().session_dir)
+        settings = current_settings()
+        if settings.session_store == "postgres":
+            _debug.lifecycle("http.session_store.opened", backend="postgres")
+            return PostgresSessionStore(settings.session_db, session_class=Session)
+        if settings.session_store == "memory":
+            _debug.lifecycle("http.session_store.opened", backend="memory")
+            return MemorySessionStore(Session)
+        path = prepare_session_dir(settings.session_dir)
         _logger.debug("HTTP sessions stored in: %s", path)
-        _debug.lifecycle("http.session_store.opened", path=path)
+        _debug.lifecycle("http.session_store.opened", backend="filesystem", path=path)
         return FilesystemSessionStore(path, session_class=Session)
 
     def get_routing_map(self, db: str | None, env: Any = None) -> werkzeug.routing.Map:
