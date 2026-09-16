@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.48
+:Version: 6.49
 :Date: 2026-09-15
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -1210,6 +1210,47 @@ Two readings of the gate itself:
   names, and the definitions under them, that wear one while no field
   declaration and no binding decorator names them (census table). A candidate
   population, not a violation count.
+
+**"Unbound" is a claim about a search, and three things hide a binding from one**
+``[review]``. Measured 2026-09-15 by sweeping it: a ``_compute_``/``_default_``
+candidate list of **268** came down to **72** renames, and the 196 that fell out
+are the interesting part.
+
+#. **The binding is not a string.** A declaration reads
+   ``default=_default_company_id`` (a bare name), ``default=lambda self:
+   self._default_x()``, or ``default=self._default_x``, and only the *quoted*
+   form answers a grep for ``default="_default_x"``. Resolve the keyword's
+   **value node** — ``Name``, ``Attribute``, ``Lambda`` — against the AST, not
+   its text. In ``addons/project`` and ``addons/project_hr`` the string form is
+   the minority of the three, and 68 candidates were bound this way.
+#. **The prefix opens a protocol namespace**, which the rule above already
+   permits where the continuation names no field.
+#. **The tail comes from data.** ``_compute_formula_batch_with_engine_domain``
+   is reached through ``f"_compute_formula_batch_with_engine_{engine}"`` where
+   the engine is a stored selection value, so no literal caller exists and the
+   suffix is not renameable at all (§2.4.14).
+
+**The signature settles it where the body cannot** ``[review]``. A ``compute=``
+calls its method with nothing to pass, so **a definition taking arguments is not
+the hook it claims to be** — the same reasoning this section already applies to
+``_selection_*``, and a fact about the ORM rather than a judgement about the
+body. Of the survivors above, the 84 taking arguments were renamed on that
+evidence alone.
+
+**A zero-argument survivor is ambiguous, and the two readings have opposite
+repairs** ``[review]``. ``_compute_x`` that nothing binds is either a helper
+wearing a reserved prefix -- rename it -- or **a field that lost its
+``compute=``**, which is a defect the name is the last surviving evidence of.
+**Renaming it makes that defect unfindable**: the field stays uncomputed and the
+name no longer even claims it should be. So a rename campaign must not answer
+this class by construction. Triage it by asking whether a field of that exact
+name is declared on the model, then read the body, because the triage is a
+filter and not a verdict: of five candidates where the field existed, one
+(``document_sign``'s ``_default_folder_id``) was a dead method beside a field
+with no ``default=`` at all, while two were live helpers called by the field's
+*compute* and named for what they return to it. **When a name and the tree
+disagree, the question is which of them is wrong**, and only reading both
+answers it.
 
 2.4.2 Decorator-bound families the gate cannot reach
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8473,6 +8514,14 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.49
+     - 2026-09-15
+     - §2.4.1: "unbound" is a claim about a search — a binding hides behind a
+       non-string ``default=``, a protocol namespace, or a data-derived tail. The
+       signature settles the rest (a ``compute=`` passes nothing, so a definition
+       taking arguments is not that hook), and a zero-argument survivor is left
+       alone because renaming a field that lost its ``compute=`` makes the defect
+       unfindable.
    * - 6.48
      - 2026-09-15
      - §12.4: no migration phase runs late enough to see rows a ``_register_hook``
