@@ -895,7 +895,7 @@ class MrpProduction(models.Model):
                 production_capacity = min(
                     moves.mapped(
                         lambda move: (
-                            move.product_id.uom_id._compute_quantity_estimate(
+                            move.product_id.uom_id._get_quantity_estimate(
                                 move.product_id.qty_available, move.product_uom_id
                             )
                             / move.unit_factor
@@ -4941,8 +4941,8 @@ class MrpProduction(models.Model):
             return self.env.ref("mrp.mrp_mo_in_cancelled")
         return super()._track_subtype(init_values)
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
+    def _get_order_line_values(self, child_field=False):
+        default_data = super()._get_order_line_values(child_field)
         new_default_data = self.env["stock.move"]._get_product_catalog_lines_data(
             parent_record=self
         )

@@ -77,7 +77,7 @@ class PurchaseOrderLine(models.Model):
         moves = self._get_kit_moves().filtered(
             lambda m: m.state == "done" and m.location_dest_usage != "inventory"
         )
-        order_qty = self.product_uom_id._compute_quantity_reconcile(
+        order_qty = self.product_uom_id._get_quantity_reconcile(
             self.product_qty, kit_bom.product_uom_id
         )
         filters = {

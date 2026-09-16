@@ -997,7 +997,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         record = self.env["mail.test.simple"].create({"name": "Test"})
 
         # +2: the ORM record-rule access check (see test_write_mail_simple).
-        # 8 -> 7: `_message_post_subscribe_author` reaches `_get_default_subtypes`
+        # 8 -> 7: `_message_post_subscribe_author` reaches `_get_get_subtypes`
         # only after reading `real_author.partner_share` and finding it False, so the
         # `partner_share = True` search that method runs when `customer_ids` is None
         # was asking the database to re-derive what the caller had just proved. The

@@ -13,7 +13,7 @@ class PaymentTransaction(models.Model):
     )
 
     @api.model
-    def _compute_reference_prefix(self, separator, **values):
+    def _get_reference_prefix(self, separator, **values):
         """Override of payment to compute the reference prefix based on POS-specific values.
 
         :return: The computed reference prefix if POS order id is found, the one of `super` otherwise
@@ -24,7 +24,7 @@ class PaymentTransaction(models.Model):
             pos_order = self.env["pos.order"].sudo().browse(pos_order_id).exists()
             if pos_order:
                 return pos_order.pos_reference
-        return super()._compute_reference_prefix(separator, **values)
+        return super()._get_reference_prefix(separator, **values)
 
     def _post_process(self):
         """Override of payment to process POS online payments automatically."""

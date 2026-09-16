@@ -39,11 +39,11 @@ class PurchasePriceResolver(models.AbstractModel):
             price_unit = seller.currency_id._convert(
                 price_unit, currency, company, date, round=False
             )
-            price_unit = seller.product_uom_id._compute_price_estimate(price_unit, uom)
+            price_unit = seller.product_uom_id._get_price_estimate(price_unit, uom)
             return PriceResolution(
                 seller, price_unit, seller.discount or 0.0, "supplierinfo"
             )
-        price_unit = product.uom_id._compute_price_estimate(product.standard_price, uom)
+        price_unit = product.uom_id._get_price_estimate(product.standard_price, uom)
         price_unit = AccountTax._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company
         )

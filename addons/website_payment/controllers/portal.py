@@ -180,8 +180,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return super()._get_payment_page_template_xmlid(**kwargs)
 
     @staticmethod
-    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
-        res = super(PaymentPortal, PaymentPortal)._compute_show_tokenize_input_mapping(
+    def _get_show_tokenize_input_mapping(providers_sudo, **kwargs):
+        res = super(PaymentPortal, PaymentPortal)._get_show_tokenize_input_mapping(
             providers_sudo, **kwargs
         )
         if kwargs.get("is_donation") and request.env.user._is_public():

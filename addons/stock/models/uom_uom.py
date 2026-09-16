@@ -85,7 +85,7 @@ class UomUom(models.Model):
                 "_get_procurement_qty_and_uom: propagate_uom keeps %s", self.id
             )
             return (qty, self)
-        computed_qty = self._compute_quantity_stored(qty, quant_uom)
+        computed_qty = self._get_quantity_stored(qty, quant_uom)
         if qty and quant_uom.is_zero(computed_qty):
             dbg.logic.debug(
                 "_get_procurement_qty_and_uom: %s %s rounds to zero in %s, kept",

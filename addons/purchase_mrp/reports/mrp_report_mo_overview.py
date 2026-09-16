@@ -24,7 +24,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                     continue
                 prod_qty = min(
                     line_qty,
-                    move.product_uom_id._compute_quantity_report(
+                    move.product_uom_id._get_quantity_report(
                         move.product_uom_qty, po_line.product_uom_id
                     ),
                 )
@@ -86,7 +86,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 return {
                     "delay": supplier.delay + rules_delay,
                     "cost": supplier.price
-                    * uom_id._compute_quantity_report(
+                    * uom_id._get_quantity_report(
                         quantity, supplier.product_uom_id
                     ),
                     "currency": supplier.currency_id,
@@ -114,7 +114,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             price = po_line.tax_ids.compute_all(
                 po_line.price_unit,
                 currency=po.currency_id,
-                quantity=uom_id._compute_quantity_report(
+                quantity=uom_id._get_quantity_report(
                     quantity, move_in.purchase_line_id.product_uom_id
                 ),
                 product=po_line.product_id,

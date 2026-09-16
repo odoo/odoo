@@ -213,7 +213,7 @@ class WebsiteSlides(WebsiteProfile):
         return render_values
 
     def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
-        return slide._compute_quiz_info(
+        return slide._get_quiz_info(
             request.env.user.partner_id, quiz_done=quiz_done
         )[slide.id]
 
@@ -315,7 +315,7 @@ class WebsiteSlides(WebsiteProfile):
                 channel_progress[slide_id].update(progress)
 
         if include_quiz:
-            quiz_info = slides._compute_quiz_info(
+            quiz_info = slides._get_quiz_info(
                 request.env.user.partner_id, quiz_done=False
             )
             for slide_id, slide_info in quiz_info.items():

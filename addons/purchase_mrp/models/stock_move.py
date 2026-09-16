@@ -8,7 +8,7 @@ class StockMove(models.Model):
         self.check_singleton()
         if self.bom_line_id.bom_id.type == "phantom":
             product_uom = self.product_id.uom_id
-            uom_quantity = self.product_uom_id._compute_quantity_stored(
+            uom_quantity = self.product_uom_id._get_quantity_stored(
                 self.quantity, product_uom
             )
             if not self.product_uom_id._is_zero_stored(uom_quantity, product_uom):
@@ -22,7 +22,7 @@ class StockMove(models.Model):
                         ),
                     )
                     active_quantity = quantity + sum(
-                        move.product_uom_id._compute_quantity_stored(
+                        move.product_uom_id._get_quantity_stored(
                             move.quantity, product_uom
                         )
                         for move in active_moves

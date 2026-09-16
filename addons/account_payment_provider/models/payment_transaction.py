@@ -92,7 +92,7 @@ class PaymentTransaction(models.Model):
     # === BUSINESS METHODS - PAYMENT FLOW ===#
 
     @api.model
-    def _compute_reference_prefix(self, separator, **values):
+    def _get_reference_prefix(self, separator, **values):
         """Compute the reference prefix from the invoice names in the transaction values.
 
         Note: This method should be called in sudo mode to give access to documents (INV, SO, ...).
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
                 if name := values.get("name_next_installment"):
                     prefix = name
                 return prefix
-        return super()._compute_reference_prefix(separator, **values)
+        return super()._get_reference_prefix(separator, **values)
 
     # === BUSINESS METHODS - POST-PROCESSING ===#
 

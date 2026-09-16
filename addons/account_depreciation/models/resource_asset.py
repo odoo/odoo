@@ -982,7 +982,7 @@ class ResourceAsset(models.Model):
             - sum(amount_of_decrease_spread_over_period)
         )
 
-    def _compute_board_amount(
+    def _get_board_amount(
         self,
         residual_amount,
         period_start_date,
@@ -1180,7 +1180,7 @@ class ResourceAsset(models.Model):
                     start_depreciation_date, last_day_asset
                 )
 
-                days, amount = self._compute_board_amount(
+                days, amount = self._get_board_amount(
                     residual_amount,
                     start_depreciation_date,
                     period_end_depreciation_date,
@@ -1873,7 +1873,7 @@ class ResourceAsset(models.Model):
         lifetime_left = self._get_delta_days(
             beginning_depreciation_date, last_day_asset
         )
-        days_depreciated, amount = self._compute_board_amount(
+        days_depreciated, amount = self._get_board_amount(
             self.value_depreciable_residual,
             beginning_depreciation_date,
             date,

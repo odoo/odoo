@@ -48,7 +48,7 @@ class HrLeave(models.Model):
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
-        defaults = self._default_get_request_dates(defaults)
+        defaults = self._get_get_request_dates(defaults)
         if (
             self.env.context.get("holiday_status_display_name", True)
             and "holiday_status_id" in fields
@@ -86,7 +86,7 @@ class HrLeave(models.Model):
 
         return defaults
 
-    def _default_get_request_dates(self, values):
+    def _get_get_request_dates(self, values):
 
         client_tz = self.env.tz
         if values.get("date_from"):

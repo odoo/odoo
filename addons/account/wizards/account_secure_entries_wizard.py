@@ -21,7 +21,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     hash_date = fields.Date(
         string="Hash All Entries",
-        compute="_compute_hash_date",
+        compute="_get_hash_date",
         store=True,
         readonly=False,
         required=True,
@@ -50,7 +50,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
     warnings = fields.Json(compute="_compute_warnings")
 
     @api.depends("max_hash_date")
-    def _compute_hash_date(self):
+    def _get_hash_date(self):
         for wizard in self:
             if not wizard.hash_date:
                 wizard.hash_date = wizard.max_hash_date or fields.Date.context_today(

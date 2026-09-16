@@ -4,8 +4,8 @@ from odoo import fields, models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
-        price = super()._compute_bom_price(bom, boms_to_recompute, byproduct_bom)
+    def _get_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
+        price = super()._get_bom_price(bom, boms_to_recompute, byproduct_bom)
         if bom and bom.type == "subcontract":
             seller = self._select_seller(
                 quantity=bom.product_qty,

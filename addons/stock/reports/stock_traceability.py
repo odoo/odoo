@@ -141,7 +141,7 @@ class StockTraceabilityReport(models.TransientModel):
 
     @api.model
     def _quantity_to_str(self, from_uom, to_uom, qty):
-        qty = from_uom._compute_quantity_report(qty, to_uom, rounding_method="HALF-UP")
+        qty = from_uom._get_quantity_report(qty, to_uom, rounding_method="HALF-UP")
         return self.env["ir.qweb.field.float"].value_to_html(
             qty, {"decimal_precision": "Product Unit"}
         )

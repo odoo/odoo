@@ -136,7 +136,7 @@
                                         <br />
                                         <span
                                             class="text-muted"
-                                            t-out="move.product_uom_id._compute_quantity_report(move.quantity, move.packaging_uom_id)">
+                                            t-out="move.product_uom_id._get_quantity_report(move.quantity, move.packaging_uom_id)">
                                             1.00</span>
                                         <span class="text-muted" t-field="move.packaging_uom_id">Pack
                                             of 6</span>
@@ -342,7 +342,7 @@
                 <br />
                 <span
                     class="text-muted"
-                    t-out="move_line.product_uom_id._compute_quantity_report(move_line.quantity, move_line.move_id.packaging_uom_id)">
+                    t-out="move_line.product_uom_id._get_quantity_report(move_line.quantity, move_line.move_id.packaging_uom_id)">
                     1.00</span>
                 <span class="text-muted" t-field="move_line.move_id.packaging_uom_id">Pack of 6</span>
             </t>

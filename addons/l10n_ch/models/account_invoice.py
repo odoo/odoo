@@ -56,12 +56,12 @@ class AccountMove(models.Model):
             and self.name
         ):
             invoice_ref = re.sub(r"[^\d]", "", self.name)
-            return self._compute_qrr_number(invoice_ref)
+            return self._get_qrr_number(invoice_ref)
         else:
             return False
 
     @api.model
-    def _compute_qrr_number(self, invoice_ref):
+    def _get_qrr_number(self, invoice_ref):
         # keep only the last digits if it exceed boundaries
         ref_payload_len = L10N_CH_QRR_NUMBER_LENGTH - 1
         extra = len(invoice_ref) - ref_payload_len

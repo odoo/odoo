@@ -163,7 +163,7 @@ class StockMoveReservation(models.Model):
             missing_uom_quantity = self.product_uom_qty - reserved_uom_qty
         if self.product_uom_id.compare(missing_uom_quantity, 0) <= 0:
             return None
-        return self.product_uom_id._compute_quantity_stored(
+        return self.product_uom_id._get_quantity_stored(
             missing_uom_quantity,
             self.product_id.uom_id,
         )

@@ -66,7 +66,7 @@ class ProductProduct(models.Model):
         self.check_singleton()
         bom = self.env["mrp.bom"]._get_bom_by_product(self)[self]
         if bom:
-            self.standard_price = self._compute_bom_price(
+            self.standard_price = self._get_bom_price(
                 bom, boms_to_recompute=boms_to_recompute
             )
         else:
@@ -76,13 +76,13 @@ class ProductProduct(models.Model):
                 limit=1,
             )
             if bom:
-                price = self._compute_bom_price(
+                price = self._get_bom_price(
                     bom, boms_to_recompute=boms_to_recompute, byproduct_bom=True
                 )
                 if price:
                     self.standard_price = price
 
-    def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
+    def _get_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         self.check_singleton()
         if not bom:
             _debug.logic("bom_price", product=self.id, by="no_bom")
@@ -101,7 +101,7 @@ class ProductProduct(models.Model):
                 continue
 
             if line.child_bom_id and line.child_bom_id in boms_to_recompute:
-                child_total = line.product_id._compute_bom_price(
+                child_total = line.product_id._get_bom_price(
                     line.child_bom_id, boms_to_recompute=boms_to_recompute
                 )
                 total += (

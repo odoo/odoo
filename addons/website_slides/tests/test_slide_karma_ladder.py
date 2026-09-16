@@ -54,7 +54,7 @@ class TestQuizRewardLadder(common.SlidesCase):
         slide._action_mark_completed()
         self.env.flush_all()
 
-        info = self.slide_3._compute_quiz_info(self.learner.partner_id)[self.slide_3.id]
+        info = self.slide_3._get_quiz_info(self.learner.partner_id)[self.slide_3.id]
         self.assertEqual(info["quiz_karma_won"], 40, "what attempt 1 earned")
         self.assertEqual(info["quiz_karma_gain"], 30, "what attempt 2 would earn")
         self.assertEqual(info["quiz_karma_max"], 40)

@@ -29,7 +29,7 @@ class MixinProductCatalog(models.AbstractModel):
             if not key.startswith("default_")
         }
 
-    def _default_order_line_values(self, child_field=False):
+    def _get_order_line_values(self, child_field=False):
         return {
             "quantity": 0,
             "readOnly": self._is_readonly() if self else False,
@@ -74,7 +74,7 @@ class MixinProductCatalog(models.AbstractModel):
                     product.uom_id.display_name
                 )
 
-        default_data = self._default_order_line_values(child_field)
+        default_data = self._get_order_line_values(child_field)
         products = self.env["product.product"].browse(product_ids)
         product_data = self._get_product_catalog_order_data(products, **kwargs)
 

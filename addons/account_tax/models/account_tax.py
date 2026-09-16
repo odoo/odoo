@@ -4067,7 +4067,7 @@ class AccountTax(models.Model):
                     aggregated_values[raw_base_field] += amount_to_distribute
                     values[raw_base_field] += amount_to_distribute
 
-    def _compute_all_special_mode(self, handle_price_include):
+    def _get_all_special_mode(self, handle_price_include):
         if "force_price_include" in self.env.context:
             return (
                 "total_included"
@@ -4110,7 +4110,7 @@ class AccountTax(models.Model):
         company = company._get_accessible_branches()[:1] or company
 
         currency = currency or company.currency_id
-        special_mode = self._compute_all_special_mode(handle_price_include)
+        special_mode = self._get_all_special_mode(handle_price_include)
 
         base_line = self._prepare_base_line_for_taxes_computation(
             None,

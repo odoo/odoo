@@ -123,7 +123,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         asset.invalidate_recordset(["depreciation_method"])
 
         with self.assertRaisesRegex(UserError, "no board computation"):
-            asset._compute_board_amount(
+            asset._get_board_amount(
                 1000.0,
                 datetime.date(2024, 1, 1),
                 datetime.date(2024, 12, 31),

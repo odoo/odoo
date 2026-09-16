@@ -51,7 +51,7 @@ BUCKET_OWNERS: dict[str, str] = {
     ),
     "mail": (
         "the `mail` addon — its small configuration snapshots: "
-        "mail.message.subtype._get_auto_subscription_subtypes and _default_subtypes, "
+        "mail.message.subtype._get_auto_subscription_subtypes and _get_subtypes, "
         "and mail.alias._get_alias_addresses, the set every inbound email's "
         "recipients and authors are matched against. One bucket for the three "
         "because every check_signaling SELECT costs one scalar subquery per bucket, "

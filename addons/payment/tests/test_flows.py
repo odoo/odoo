@@ -410,7 +410,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.portal_user
         self.provider.allow_tokenization = True
 
-        show_tokenize_input = PaymentPortal._compute_show_tokenize_input_mapping(
+        show_tokenize_input = PaymentPortal._get_show_tokenize_input_mapping(
             self.provider
         )
         self.assertDictEqual(show_tokenize_input, {self.provider.id: True})
@@ -418,7 +418,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.internal_user
         self.provider.allow_tokenization = True
 
-        show_tokenize_input = PaymentPortal._compute_show_tokenize_input_mapping(
+        show_tokenize_input = PaymentPortal._get_show_tokenize_input_mapping(
             self.provider
         )
         self.assertDictEqual(show_tokenize_input, {self.provider.id: True})
@@ -427,7 +427,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.public_user
         self.provider.allow_tokenization = True
 
-        show_tokenize_input = PaymentPortal._compute_show_tokenize_input_mapping(
+        show_tokenize_input = PaymentPortal._get_show_tokenize_input_mapping(
             self.provider
         )
         self.assertDictEqual(show_tokenize_input, {self.provider.id: True})

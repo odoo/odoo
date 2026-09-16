@@ -503,7 +503,7 @@ class PaymentTransaction(models.Model):
         - `{computed_prefix}` is:
 
           - The provided custom prefix, if any.
-          - The computation result of :meth:`_compute_reference_prefix` if the custom prefix is not
+          - The computation result of :meth:`_get_reference_prefix` if the custom prefix is not
             filled, but the kwargs are.
           - `'tx-{datetime}'` if neither the custom prefix nor the kwargs are filled.
 
@@ -528,7 +528,7 @@ class PaymentTransaction(models.Model):
         :param set references_in_use: References already assigned to sibling transactions in the
                                       same create batch and not yet persisted; treated as existing
                                       to avoid collisions.
-        :param dict kwargs: Optional values passed to :meth:`_compute_reference_prefix` if no custom
+        :param dict kwargs: Optional values passed to :meth:`_get_reference_prefix` if no custom
                             prefix is provided.
         :return: The unique reference for the transaction.
         :rtype: str
@@ -546,7 +546,7 @@ class PaymentTransaction(models.Model):
         if (
             not prefix
         ):  # Prefix not provided or voided above, compute it based on the kwargs.
-            prefix = self.sudo()._compute_reference_prefix(separator, **kwargs)
+            prefix = self.sudo()._get_reference_prefix(separator, **kwargs)
         if (
             not prefix
         ):  # Prefix not computed from the kwargs, fallback on time-based value
@@ -604,7 +604,7 @@ class PaymentTransaction(models.Model):
         return reference
 
     @api.model
-    def _compute_reference_prefix(self, separator, **values):
+    def _get_reference_prefix(self, separator, **values):
         """Compute the reference prefix from the transaction values.
 
         Note: This method should be called in sudo mode to give access to the documents (invoices,

@@ -95,4 +95,4 @@ class TestHash(CommonPosTest):
 
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
-        self.assertEqual(posted_order.l10n_fr_hash, posted_order._compute_hash(""))
+        self.assertEqual(posted_order.l10n_fr_hash, posted_order._get_hash(""))

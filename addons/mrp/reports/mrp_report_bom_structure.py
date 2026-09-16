@@ -34,7 +34,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         )
 
     @api.model
-    def _compute_current_production_capacity(self, bom_data):
+    def _get_current_production_capacity(self, bom_data):
         components_qty_to_produce = defaultdict(lambda: 0)
         components_qty_available = {}
         for comp in bom_data.get("components", []):
@@ -45,8 +45,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 continue
             components_qty_to_produce[product.id] += comp[
                 "uom"
-            ]._compute_quantity_report(comp["base_bom_line_qty"], product.uom_id)
-            components_qty_available[product.id] = comp["uom"]._compute_quantity_report(
+            ]._get_quantity_report(comp["base_bom_line_qty"], product.uom_id)
+            components_qty_available[product.id] = comp["uom"]._get_quantity_report(
                 comp["free_to_manufacture_qty"], product.uom_id
             )
         producibles = [
@@ -209,7 +209,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 bom.id,
                 product_info,
                 warehouse,
-                line.product_uom_id._compute_quantity_report(
+                line.product_uom_id._get_quantity_report(
                     line_quantity, line.product_id.uom_id
                 ),
                 bom=False,
@@ -378,7 +378,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         current_quantity = line_qty
         if bom_line:
             current_quantity = (
-                bom_line.product_uom_id._compute_quantity_report(
+                bom_line.product_uom_id._get_quantity_report(
                     line_qty, bom.product_uom_id
                 )
                 or 0
@@ -393,7 +393,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         key = product.id
         bom_key = bom.id
-        qty_product_uom = bom.product_uom_id._compute_quantity_report(
+        qty_product_uom = bom.product_uom_id._get_quantity_report(
             current_quantity, product.uom_id or bom.product_tmpl_id.uom_id
         )
         self._update_product_info(
@@ -477,7 +477,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             ):
                 component["status"] = status
         bom_report_line["components"] = components
-        bom_report_line["producible_qty"] = self._compute_current_production_capacity(
+        bom_report_line["producible_qty"] = self._get_current_production_capacity(
             bom_report_line
         )
 
@@ -688,16 +688,16 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     ):
         quantities_info = {
             "qty_free": max(
-                product.uom_id._compute_quantity_report(product.qty_free, bom_uom), 0
+                product.uom_id._get_quantity_report(product.qty_free, bom_uom), 0
             )
             if product.is_storable
             else 0,
-            "on_hand_qty": product.uom_id._compute_quantity_report(
+            "on_hand_qty": product.uom_id._get_quantity_report(
                 product.qty_available, bom_uom
             )
             if product.is_storable
             else 0,
-            "forecasted_qty": product.uom_id._compute_quantity_report(
+            "forecasted_qty": product.uom_id._get_quantity_report(
                 product.qty_available_virtual, bom_uom
             )
             if product.is_storable
@@ -799,10 +799,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             bom_report_line["availability_state"] in ["unavailable", "estimated"]
             and bom.operation_ids
         ):
-            qty_requested = bom.product_uom_id._compute_quantity_report(
+            qty_requested = bom.product_uom_id._get_quantity_report(
                 qty, bom.product_tmpl_id.uom_id
             )
-            qty_to_produce = bom.product_tmpl_id.uom_id._compute_quantity_report(
+            qty_to_produce = bom.product_tmpl_id.uom_id._get_quantity_report(
                 max(
                     0,
                     qty_requested - (product.qty_available_virtual if level > 1 else 0),

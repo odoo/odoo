@@ -732,7 +732,7 @@ class PurchaseOrderLine(models.Model):
     def _get_invoiced_qty(self, invoice_lines):
         return sum(
             inv_line.move_id.direction_sign
-            * inv_line.product_uom_id._compute_quantity_reconcile(
+            * inv_line.product_uom_id._get_quantity_reconcile(
                 inv_line.quantity,
                 self.product_uom_id,
             )

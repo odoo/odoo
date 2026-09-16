@@ -64,15 +64,15 @@ greppable per bucket rather than hidden behind a boolean:
 
 | wrapper | for values that feed |
 |---|---|
-| `_compute_quantity_report` / `_compute_price_report` | a screen, PDF or aggregate |
-| `_compute_quantity_estimate` / `_compute_price_estimate` | a forecast or pricing estimate |
-| `_compute_quantity_reconcile` | a stored reconciliation compute (`qty_transferred`/`qty_invoiced`) |
+| `_get_quantity_report` / `_get_price_report` | a screen, PDF or aggregate |
+| `_get_quantity_estimate` / `_get_price_estimate` | a forecast or pricing estimate |
+| `_get_quantity_reconcile` | a stored reconciliation compute (`qty_transferred`/`qty_invoiced`) |
 
 Anything that creates or sizes a real record — moves, MOs, order lines,
 valuation — stays on the strict base method. The opt-out is forced: a
 caller-supplied `raise_if_failure` is discarded by the wrappers.
 
-`_compute_quantity_reconcile` escalates back to strict under the
+`_get_quantity_reconcile` escalates back to strict under the
 `uom_reconcile_strict` context key, so a stored compute stays lenient while an
 order is browsed but fails loudly at the invoicing boundary.
 

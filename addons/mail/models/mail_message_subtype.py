@@ -111,7 +111,7 @@ class MailMessageSubtype(models.Model):
 
     @api.model
     def default_subtypes(self, model_name: str) -> tuple:
-        subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
+        subtype_ids, internal_ids, external_ids = self._get_subtypes(model_name)
         return (
             self.browse(subtype_ids),
             self.browse(internal_ids),
@@ -119,7 +119,7 @@ class MailMessageSubtype(models.Model):
         )
 
     @tools.ormcache("self.env.su", "self.env.user.share", "model_name", cache="mail")
-    def _default_subtypes(self, model_name: str) -> tuple:
+    def _get_subtypes(self, model_name: str) -> tuple:
         domain = [
             ("default", "=", True),
             "|",

@@ -336,7 +336,7 @@
                                                         <br />
                                                         <t
                                                             t-set="product_uom_qty"
-                                                            t-value="line.product_uom_id._compute_quantity_report(line.quantity, line.product_id.uom_id)" />
+                                                            t-value="line.product_uom_id._get_quantity_report(line.quantity, line.product_id.uom_id)" />
                                                         <span t-out="product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}" data-oe-demo="3.00" /> <span t-field="line.product_id.uom_id" data-oe-demo="units" />
                                                     </span>
                                                 </td>
@@ -476,7 +476,7 @@
                                                                 <br />
                                                                 <t
                                                                     t-set="product_uom_qty"
-                                                                    t-value="grouped_line['line_uom']._compute_quantity_report(grouped_line['quantity'], grouped_line['product_uom_id'])" />
+                                                                    t-value="grouped_line['line_uom']._get_quantity_report(grouped_line['quantity'], grouped_line['product_uom_id'])" />
                                                                 <span t-out="product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}" data-oe-demo="3.00" /> <span t-out="grouped_line['product_uom_id'].display_name" data-oe-demo="units" />
                                                             </span>
                                                         </t>

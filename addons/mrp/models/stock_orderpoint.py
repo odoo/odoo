@@ -329,7 +329,7 @@ class StockWarehouseOrderpoint(models.Model):
                 ):
                     continue
                 uom_qty_per_kit = bom_line_data["qty"] / bom_line_data["original_qty"]
-                qty_per_kit = bom_line.product_uom_id._compute_quantity_estimate(
+                qty_per_kit = bom_line.product_uom_id._get_quantity_estimate(
                     uom_qty_per_kit, bom_line.product_id.uom_id
                 )
                 if not qty_per_kit:
@@ -345,7 +345,7 @@ class StockWarehouseOrderpoint(models.Model):
                 ratios_total.append(qty_available + (qty_in_progress / qty_per_kit))
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
             res[orderpoint.id] = (
-                orderpoint.product_id.uom_id._compute_quantity_estimate(
+                orderpoint.product_id.uom_id._get_quantity_estimate(
                     product_qty, orderpoint.product_uom_id, round=False
                 )
             )
@@ -360,7 +360,7 @@ class StockWarehouseOrderpoint(models.Model):
             ["product_qty:sum"],
         )
         for orderpoint, uom, product_qty_sum in productions_group:
-            res[orderpoint.id] += uom._compute_quantity_estimate(
+            res[orderpoint.id] += uom._get_quantity_estimate(
                 product_qty_sum, orderpoint.product_uom_id, round=False
             )
 
@@ -379,7 +379,7 @@ class StockWarehouseOrderpoint(models.Model):
             )
             lead_horizon_date = datetime.combine(orderpoint.lead_horizon_date, time.max)
             if date_start <= lead_horizon_date < date_end:
-                res[orderpoint.id] += prod.product_uom_id._compute_quantity_estimate(
+                res[orderpoint.id] += prod.product_uom_id._get_quantity_estimate(
                     prod.product_qty, orderpoint.product_uom_id, round=False
                 )
         return res

@@ -1440,7 +1440,7 @@ class SlideSlide(models.Model):
             )
             slide.survey_id = survey
 
-    def _compute_quiz_info(self, target_partner, quiz_done=False):
+    def _get_quiz_info(self, target_partner, quiz_done=False):
         result = dict.fromkeys(self.ids, False)
         slide_partners = (
             self.env["slide.slide.partner"]

@@ -249,7 +249,7 @@ class AccountReportExpressionEval(models.Model):
         :param grouped_formulas: A dict(engine, formula_dict), where:
                                  - engine is a string identifying a report engine, in the same format as in account.report.expression's engine
                                    field's technical labels.
-                                 - formula_dict is a dict in the same format as _compute_formula_batch's formulas_dict parameter,
+                                 - formula_dict is a dict in the same format as _get_formula_batch's formulas_dict parameter,
                                    containing only aggregation formulas.
 
         :param forced_column_group_expression_totals: The expression totals previously computed, in the same format as this function's result.
@@ -430,7 +430,7 @@ class AccountReportExpressionEval(models.Model):
                 current_groupby,
                 next_groupby,
             ), formulas_dict in grouped_formulas.get(engine, {}).items():
-                formula_results = self._compute_formula_batch(
+                formula_results = self._get_formula_batch(
                     column_group_options,
                     engine,
                     date_scope,
@@ -494,7 +494,7 @@ class AccountReportExpressionEval(models.Model):
                 ),
             )
         if aggregation_formulas_dict:
-            aggregation_formula_results = self._compute_totals_no_batch_aggregation(
+            aggregation_formula_results = self._get_totals_no_batch_aggregation(
                 column_group_options,
                 aggregation_formulas_dict,
                 column_group_expression_totals,
@@ -513,7 +513,7 @@ class AccountReportExpressionEval(models.Model):
         return column_group_expression_totals
 
     @_debug.perf.timed
-    def _compute_totals_no_batch_aggregation(
+    def _get_totals_no_batch_aggregation(
         self,
         column_group_options,
         formulas_dict,
@@ -1095,7 +1095,7 @@ class AccountReportExpressionEval(models.Model):
         return unbounded_value
 
     @_debug.perf.timed
-    def _compute_formula_batch(
+    def _get_formula_batch(
         self,
         column_group_options,
         formula_engine,
@@ -1138,9 +1138,9 @@ class AccountReportExpressionEval(models.Model):
             'result' key is the default; different engines might use one or multiple other keys instead, depending of the subformulas they allow
             (e.g. 'sum', 'sum_if_pos', ...)
         """
-        engine_function_name = f"_compute_formula_batch_with_engine_{formula_engine}"
+        engine_function_name = f"_get_formula_batch_with_engine_{formula_engine}"
         with _debug.perf(
-            "_compute_formula_batch",
+            "_get_formula_batch",
             cr=self.env.cr,
             report=self,
             engine=formula_engine,
@@ -1161,7 +1161,7 @@ class AccountReportExpressionEval(models.Model):
             )
 
     @_debug.perf.timed
-    def _compute_formula_batch_with_engine_tax_tags(
+    def _get_formula_batch_with_engine_tax_tags(
         self,
         options,
         date_scope,
@@ -1291,7 +1291,7 @@ class AccountReportExpressionEval(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _compute_formula_batch_with_engine_domain(
+    def _get_formula_batch_with_engine_domain(
         self,
         options,
         date_scope,
@@ -1626,7 +1626,7 @@ class AccountReportExpressionEval(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _compute_formula_batch_with_engine_account_codes(
+    def _get_formula_batch_with_engine_account_codes(
         self,
         options,
         date_scope,
@@ -1928,7 +1928,7 @@ class AccountReportExpressionEval(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _compute_formula_batch_with_engine_external(
+    def _get_formula_batch_with_engine_external(
         self,
         options,
         date_scope,
@@ -2098,7 +2098,7 @@ class AccountReportExpressionEval(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _compute_formula_batch_with_engine_custom(
+    def _get_formula_batch_with_engine_custom(
         self,
         options,
         date_scope,

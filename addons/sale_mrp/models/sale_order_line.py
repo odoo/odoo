@@ -114,7 +114,7 @@ class SaleOrderLine(models.Model):
                 move.state == "done" and move.location_dest_usage != "inventory"
             )
         )
-        order_qty = self.product_uom_id._compute_quantity_reconcile(
+        order_qty = self.product_uom_id._get_quantity_reconcile(
             self.product_qty, kit_bom.product_uom_id
         )
         qty_transferred = moves._get_kit_quantity(
@@ -123,7 +123,7 @@ class SaleOrderLine(models.Model):
         _debug.logic(
             "kit_qty", line=self, by="bom_components", bom=kit_bom, qty=qty_transferred
         )
-        return kit_bom.product_uom_id._compute_quantity_reconcile(
+        return kit_bom.product_uom_id._get_quantity_reconcile(
             qty_transferred, self.product_uom_id
         )
 
@@ -138,7 +138,7 @@ class SaleOrderLine(models.Model):
                     return 0.0
                 continue
             returned_qty = sum(
-                returned.product_uom_id._compute_quantity_reconcile(
+                returned.product_uom_id._get_quantity_reconcile(
                     returned.quantity, move.product_uom_id
                 )
                 for returned in move.returned_move_ids

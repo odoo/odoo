@@ -148,9 +148,9 @@ class PosSelfOrderController(http.Controller):
                 if preset_id
                 else pos_config.default_fiscal_position_id
             )
-            self._compute_combo_price(line, pricelist, fiscal_pos)
+            self._update_combo_price(line, pricelist, fiscal_pos)
 
-    def _compute_combo_price(self, parent_line, pricelist, fiscal_position):
+    def _update_combo_price(self, parent_line, pricelist, fiscal_position):
         """
         This method is a python version of odoo/addons/point_of_sale/static/src/app/models/utils/compute_combo_items.js
         It is used to compute the price of combo items on the server side when an order is received from

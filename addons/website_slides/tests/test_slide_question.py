@@ -55,6 +55,6 @@ class TestSlideQuizSurvey(slides_common.SlidesCase):
 
     @users("user_officer")
     def test_quiz_info_uses_survey_questions(self):
-        quiz_info = self.slide_3._compute_quiz_info(self.user_officer.partner_id)
+        quiz_info = self.slide_3._get_quiz_info(self.user_officer.partner_id)
         self.assertEqual(quiz_info[self.slide_3.id]["quiz_karma_max"], 42)
         self.assertEqual(quiz_info[self.slide_3.id]["quiz_karma_gain"], 42)

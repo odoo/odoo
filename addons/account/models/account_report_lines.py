@@ -272,7 +272,7 @@ class AccountReportLines(models.Model):
                     green_on_positive = compared_expression.green_on_positive
 
                 line["column_percent_comparison_data"] = (
-                    self._compute_column_percent_comparison_data(
+                    self._get_column_percent_comparison_data(
                         options,
                         first_value,
                         second_value,
@@ -291,7 +291,7 @@ class AccountReportLines(models.Model):
                     line["columns"][1]["no_format"],
                 )
                 line["column_percent_comparison_data"] = (
-                    self._compute_column_percent_comparison_data(
+                    self._get_column_percent_comparison_data(
                         options, first_value, second_value, green_on_positive=False
                     )
                 )
@@ -2260,7 +2260,7 @@ class AccountReportLines(models.Model):
             return ("text", cell["name"])
 
     @_debug.perf.timed
-    def _compute_column_percent_comparison_data(
+    def _get_column_percent_comparison_data(
         self, options, value1, value2, green_on_positive=True
     ):
         """Build the additional percentage column requested by options['column_percent_comparison'].

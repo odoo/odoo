@@ -139,7 +139,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             "exit_route": exit_route,
             "reference_prefix": request.env["payment.transaction"]
             .sudo()
-            ._compute_reference_prefix(provider_code=None, separator="-", **kwargs),
+            ._get_reference_prefix(provider_code=None, separator="-", **kwargs),
             "partner_id": partner_sudo.id,
             "access_token": access_token,
             "transaction_route": f"/pos/pay/transaction/{pos_order_sudo.id}?"
@@ -182,7 +182,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 .sudo()
                 ._get_available_tokens(providers_sudo.ids, partner_sudo.id)
             )  # In sudo mode to be able to read the fields of providers.
-            show_tokenize_input_mapping = self._compute_show_tokenize_input_mapping(
+            show_tokenize_input_mapping = self._get_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             )
         else:

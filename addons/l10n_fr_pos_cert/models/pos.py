@@ -146,7 +146,7 @@ class PosOrder(models.Model):
         """Returns the hash to write on pos orders when they get posted"""
         self.check_singleton()
         # build and return the hash
-        computed_hash = self._compute_hash(
+        computed_hash = self._get_hash(
             self.previous_order_id.l10n_fr_hash if self.previous_order_id else ""
         )
         _logger.info(
@@ -158,7 +158,7 @@ class PosOrder(models.Model):
         )
         return computed_hash
 
-    def _compute_hash(self, previous_hash):
+    def _get_hash(self, previous_hash):
         """Computes the hash of the record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
         self.check_singleton()

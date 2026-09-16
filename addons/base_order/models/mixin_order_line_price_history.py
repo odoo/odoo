@@ -155,8 +155,8 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
     def _get_price_normalized(self, line) -> tuple[float, float]:
         sample = self._get_price_sample(line)
         reference_uom = line.product_id.uom_id
-        price = sample["uom"]._compute_price_report(sample["price"], reference_uom)
-        qty = sample["uom"]._compute_quantity_estimate(
+        price = sample["uom"]._get_price_report(sample["price"], reference_uom)
+        qty = sample["uom"]._get_quantity_estimate(
             sample["qty"], reference_uom, round=False
         )
         currency = sample["currency"]

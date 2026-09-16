@@ -1051,8 +1051,8 @@ class MixinOrder(models.AbstractModel):
     def _get_parent_field_on_child_model(self):
         return "order_id"
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
+    def _get_order_line_values(self, child_field=False):
+        default_data = super()._get_order_line_values(child_field)
         new_default_data = self.env[
             self._get_line_model()
         ]._get_product_catalog_lines_data()

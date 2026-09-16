@@ -66,7 +66,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         out_qty = {
             k.id: sum(
                 v.mapped(
-                    lambda line: line.product_uom_id._compute_quantity_report(
+                    lambda line: line.product_uom_id._get_quantity_report(
                         line.product_qty, line.product_id.uom_id
                     ),
                 ),

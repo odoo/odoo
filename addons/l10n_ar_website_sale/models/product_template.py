@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
 
         res = super()._get_sales_prices(website)
         fiscal_position_id = request.fiscal_position
-        pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
+        pricelist_prices = request.pricelist._get_price_rule(self, 1.0)
 
         if (
             website
@@ -66,7 +66,7 @@ class ProductTemplate(models.Model):
             mapped_taxes = request.fiscal_position.map_tax(product_taxes)
 
             # Compute price per unit of product or template
-            pricelist_prices = request.pricelist._compute_price_rule(
+            pricelist_prices = request.pricelist._get_price_rule(
                 product_or_template, quantity
             )
             unit_price = pricelist_prices[product_or_template.id][0]

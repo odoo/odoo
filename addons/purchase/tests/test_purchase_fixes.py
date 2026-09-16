@@ -690,7 +690,7 @@ class TestTransferredQtyPostingGuard(AccountTestInvoicingCommon):
             "_prepare_qty_transferred",
             lambda self: self.product_uom_id.with_context(
                 uom_reconcile_strict=True
-            )._compute_quantity_reconcile(1.0, hour),
+            )._get_quantity_reconcile(1.0, hour),
         ):
             with self.assertRaises(UserError):
                 line._assert_transferred_uom_convertible()

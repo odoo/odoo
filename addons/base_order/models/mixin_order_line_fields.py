@@ -728,7 +728,7 @@ class MixinOrderLineFields(models.AbstractModel):
             data = self[0]._get_catalog_multi_line_data(**kwargs)
             data["quantity"] = sum(
                 self.mapped(
-                    lambda line: line.product_uom_id._compute_quantity_report(
+                    lambda line: line.product_uom_id._get_quantity_report(
                         qty=line.product_qty,
                         to_unit=line.product_id.uom_id,
                     ),

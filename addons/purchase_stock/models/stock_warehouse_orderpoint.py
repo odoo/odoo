@@ -266,7 +266,7 @@ class StockWarehouseOrderpoint(models.Model):
                 (orderpoint.product_id.id, orderpoint.location_id.id),
                 0.0,
             )
-            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity_estimate(
+            product_uom_qty = orderpoint.product_id.uom_id._get_quantity_estimate(
                 product_qty,
                 orderpoint.product_uom_id,
                 round=False,

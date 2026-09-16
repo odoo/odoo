@@ -268,7 +268,7 @@ class BaseFollowersTest(MailCommon):
     def test_followers_subtypes_archived_customer(self):
         """An archived customer is still a customer.
 
-        `_get_default_subtypes` looked its customers up with a plain `search`,
+        `_get_get_subtypes` looked its customers up with a plain `search`,
         so `active_test` dropped the archived ones and they fell through to the
         *internal* default subtypes -- the branch reserved for employees. The
         low-level `_message_subscribe` subscribes archived partners on purpose
@@ -306,7 +306,7 @@ class BaseFollowersTest(MailCommon):
     def test_followers_subtypes_independent_of_subscriber(self):
         """The subtypes a partner gets depend on the partner, not on the caller.
 
-        `_get_default_subtypes` asked `default_subtypes` unsudoed, and
+        `_get_get_subtypes` asked `default_subtypes` unsudoed, and
         `mail.message.subtype` carries a record rule hiding internal subtypes
         from portal and public users. So the *same* internal partner, subscribed
         to the *same* record, came out with strictly fewer subtypes when a share

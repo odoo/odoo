@@ -21,7 +21,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 else 0
             )
             if supplier:
-                qty_supplier_uom = product.uom_id._compute_quantity_report(
+                qty_supplier_uom = product.uom_id._get_quantity_report(
                     quantity, supplier.product_uom_id
                 )
                 delay = supplier.delay + rules_delay + purchase_lead

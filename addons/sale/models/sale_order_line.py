@@ -703,7 +703,7 @@ class SaleOrderLine(models.Model):
             for invoice_line in line._get_open_invoice_lines():
                 qty_invoiced -= (
                     invoice_line.move_id.direction_sign
-                    * invoice_line.product_uom_id._compute_quantity_reconcile(
+                    * invoice_line.product_uom_id._get_quantity_reconcile(
                         invoice_line.quantity,
                         line.product_uom_id,
                     )
@@ -714,7 +714,7 @@ class SaleOrderLine(models.Model):
                 direction_sign = -invoice_line.move_id.direction_sign
                 qty_invoiced_posted += (
                     direction_sign
-                    * invoice_line.product_uom_id._compute_quantity_reconcile(
+                    * invoice_line.product_uom_id._get_quantity_reconcile(
                         invoice_line.quantity,
                         line.product_uom_id,
                     )
@@ -1246,7 +1246,7 @@ class SaleOrderLine(models.Model):
         _debug.perf.count(
             "pricelist_price_before_discount", line=self, rule=self.pricelist_item_id
         )
-        return self.pricelist_item_id._compute_price_before_discount(
+        return self.pricelist_item_id._get_price_before_discount(
             product=self.product_id.with_context(
                 **self._prepare_product_price_context()
             ),
@@ -1298,7 +1298,7 @@ class SaleOrderLine(models.Model):
                 qty = unit_amount_sum / count
             else:
                 qty = unit_amount_sum
-            qty = uom._compute_quantity_reconcile(
+            qty = uom._get_quantity_reconcile(
                 qty,
                 line.product_uom_id,
                 rounding_method="HALF-UP",

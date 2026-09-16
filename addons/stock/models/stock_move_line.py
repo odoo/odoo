@@ -620,7 +620,7 @@ class StockMoveLine(models.Model):
     @api.depends("quantity", "product_uom_id", "product_id.uom_id")
     def _compute_quantity_product_uom(self):
         for line in self:
-            line.quantity_product_uom = line.product_uom_id._compute_quantity_stored(
+            line.quantity_product_uom = line.product_uom_id._get_quantity_stored(
                 line.quantity, line.product_id.uom_id
             )
 

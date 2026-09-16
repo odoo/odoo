@@ -425,7 +425,7 @@ class MixinOrderLineAmount(models.AbstractModel):
             if line.display_type or line.is_downpayment:
                 line.price_unit_product_uom = False
                 continue
-            line.price_unit_product_uom = line.product_uom_id._compute_price_report(
+            line.price_unit_product_uom = line.product_uom_id._get_price_report(
                 line.price_unit,
                 line.product_id.uom_id,
             )

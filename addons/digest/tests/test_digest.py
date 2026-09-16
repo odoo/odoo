@@ -665,7 +665,7 @@ class TestDigestDefects(TestDigestCommon):
         """A KPI that collapsed to nothing is a plain -100%, and the old guard
         was the reason it showed no badge at all. Growth FROM zero stays
         badge-less on purpose: it has no percentage, and
-        `account._compute_column_percent_comparison_data` answers the
+        `account._get_column_percent_comparison_data` answers the
         same case with a muted n/a rather than a made-up figure."""
         digest = self.digest_1.with_user(self.env.user)
         for value, previous, expected in [

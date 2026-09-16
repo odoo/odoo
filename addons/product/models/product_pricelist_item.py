@@ -805,7 +805,7 @@ class ProductPricelistItem(models.Model):
 
         return price
 
-    def _compute_price_before_discount(
+    def _get_price_before_discount(
         self, product, quantity, uom, date, currency=None, **kwargs
     ):
         pricelist_item = self

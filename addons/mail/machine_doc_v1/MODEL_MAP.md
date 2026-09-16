@@ -379,7 +379,7 @@ Methods: `_prepare_tracking_values(...)`, `_prepare_tracking_values_property(...
 Fields: `name`, `description`, `internal`, `parent_id`, `relation_field`, `res_model`,
 `default`, `sequence`, `hidden`, `track_recipients`.
 Methods: `_get_auto_subscription_subtypes(model_name)`, `default_subtypes(model_name)`,
-`_default_subtypes(model_name)`.
+`_get_subtypes(model_name)`.
 
 ## Model Index (file → model → role)
 

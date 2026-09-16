@@ -1628,7 +1628,7 @@ class AccountReturn(models.Model):
 
         closing_move_vals = []
         for company in self.company_ids:
-            line_ids_vals, tax_group_subtotal = self.sudo()._compute_tax_closing_entry(
+            line_ids_vals, tax_group_subtotal = self.sudo()._get_tax_closing_entry(
                 company, options
             )
             line_ids_vals += self.sudo()._add_tax_group_closing_items(
@@ -1696,7 +1696,7 @@ class AccountReturn(models.Model):
             )
 
     @_debug.perf.timed
-    def _compute_tax_closing_entry(self, company, options):
+    def _get_tax_closing_entry(self, company, options):
         """Compute the tax closing entry.
 
         :return: the one2many commands balancing the tax accounts for the selected period, and the

@@ -6,13 +6,13 @@ class StockValuationReport(models.AbstractModel):
 
     def _get_report_data(self, date=False, product_category=False):
         data = super()._get_report_data(date, product_category)
-        not_invoiced_received_data = self._compute_goods_received_not_invoiced(
+        not_invoiced_received_data = self._get_goods_received_not_invoiced(
             date, product_category
         )
         data["not_invoiced_received_goods"] = not_invoiced_received_data
         return data
 
-    def _compute_goods_received_not_invoiced(self, date=False, product_category=False):
+    def _get_goods_received_not_invoiced(self, date=False, product_category=False):
         domain = [("qty_to_invoice", "!=", 0)]
         if product_category:
             domain += [("product_id.categ_id", "=", product_category.id)]

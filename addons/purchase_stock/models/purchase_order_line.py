@@ -190,7 +190,7 @@ class PurchaseOrderLine(models.Model):
             signed = self._get_move_transferred_sign(move)
             if not signed:
                 continue
-            qty += signed * move.product_uom_id._compute_quantity_reconcile(
+            qty += signed * move.product_uom_id._get_quantity_reconcile(
                 move.quantity,
                 self.product_uom_id,
                 rounding_method="HALF-UP",

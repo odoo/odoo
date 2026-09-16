@@ -86,7 +86,7 @@ class ProductSupplierinfo(models.Model):
                 self.env["stock.rule"].search(domain, limit=1).route_id.id
             )
         orderpoint.supplier_id = self
-        supplier_min_qty = self.product_uom_id._compute_quantity_estimate(
+        supplier_min_qty = self.product_uom_id._get_quantity_estimate(
             self.min_qty,
             orderpoint.product_id.uom_id,
         )

@@ -194,7 +194,7 @@ class ProductProduct(models.Model):
         mapped_data = collections.defaultdict(float)
         for product, uom, qty in read_group_res:
             if uom != product.uom_id:
-                qty = uom._compute_quantity_estimate(qty, product.uom_id)
+                qty = uom._get_quantity_estimate(qty, product.uom_id)
             mapped_data[product.id] += qty
         for product in self:
             product.mrp_product_qty = product.uom_id.round(
@@ -259,7 +259,7 @@ class ProductProduct(models.Model):
                     bom_line_data["qty"]
                 ):
                     continue
-                qty_per_bom += bom_line.product_uom_id._compute_quantity_estimate(
+                qty_per_bom += bom_line.product_uom_id._get_quantity_estimate(
                     bom_line_data["qty"] / bom_line_data["original_qty"],
                     bom_line.product_id.uom_id,
                     round=False,

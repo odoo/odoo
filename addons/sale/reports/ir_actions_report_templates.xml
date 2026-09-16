@@ -254,7 +254,7 @@
                                             class="text-muted small">
                                             <t
                                                 t-set="quantity_in_product_uom"
-                                                t-value="line.product_uom_id._compute_quantity_report(line.product_qty, line.product_id.uom_id)" />
+                                                t-value="line.product_uom_id._get_quantity_report(line.product_qty, line.product_id.uom_id)" />
                                             <br />
                                             <span
                                                 t-out="quantity_in_product_uom"

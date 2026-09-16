@@ -866,7 +866,7 @@ class StockMove(models.Model):
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_product_qty(self):
         for move in self:
-            move.product_qty = move.product_uom_id._compute_quantity_stored(
+            move.product_qty = move.product_uom_id._get_quantity_stored(
                 move.product_uom_qty,
                 move.product_id.uom_id,
             )

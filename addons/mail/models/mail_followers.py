@@ -423,7 +423,7 @@ class MailFollowers(models.Model):
     ) -> None:
         if not res_ids or not partner_ids:
             return
-        subtypes = self._get_default_subtypes(res_model, partner_ids, customer_ids)
+        subtypes = self._get_get_subtypes(res_model, partner_ids, customer_ids)
         self._add_followers_multi(
             res_model,
             dict.fromkeys(res_ids, subtypes),
@@ -543,7 +543,7 @@ class MailFollowers(models.Model):
         )
         return [key for key in subtype_ids_by_key if key not in created]
 
-    def _get_default_subtypes(
+    def _get_get_subtypes(
         self,
         res_model: str,
         partner_ids: Collection[int],

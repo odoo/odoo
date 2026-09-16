@@ -113,9 +113,9 @@ class TestUom(UomCommon):
         cannot be overridden by a caller passing raise_if_failure=True."""
         self.assertFalse(self.uom_gram._has_common_reference(self.uom_hour))
         for wrapper in (
-            self.uom_gram._compute_quantity_report,
-            self.uom_gram._compute_quantity_estimate,
-            self.uom_gram._compute_quantity_reconcile,
+            self.uom_gram._get_quantity_report,
+            self.uom_gram._get_quantity_estimate,
+            self.uom_gram._get_quantity_reconcile,
         ):
             with self.subTest(wrapper=wrapper.__name__):
                 self.assertEqual(
@@ -143,9 +143,9 @@ class TestUom(UomCommon):
             }
         )
         for wrapper_name in (
-            "_compute_quantity_report",
-            "_compute_quantity_estimate",
-            "_compute_quantity_reconcile",
+            "_get_quantity_report",
+            "_get_quantity_estimate",
+            "_get_quantity_reconcile",
         ):
             with self.subTest(wrapper=wrapper_name):
                 wrapper = getattr(self.uom_unit, wrapper_name)
@@ -173,9 +173,9 @@ class TestUom(UomCommon):
             (self.uom_dozen, 1, self.uom_unit),
         ]
         for wrapper_name in (
-            "_compute_quantity_report",
-            "_compute_quantity_estimate",
-            "_compute_quantity_reconcile",
+            "_get_quantity_report",
+            "_get_quantity_estimate",
+            "_get_quantity_reconcile",
         ):
             for src, qty, dst in cases:
                 with self.subTest(wrapper=wrapper_name, src=src.name, dst=dst.name):
@@ -184,30 +184,30 @@ class TestUom(UomCommon):
                         src._compute_quantity(qty, dst),
                     )
 
-    def test_compute_quantity_reconcile_strict_posting_context(self):
-        """`_compute_quantity_reconcile` degrades while an order is browsed but
+    def test_get_quantity_reconcile_strict_posting_context(self):
+        """`_get_quantity_reconcile` degrades while an order is browsed but
         escalates to a raising conversion under the `uom_reconcile_strict`
         context, so a delivered/received quantity is never posted unconverted.
         Only the reconcile wrapper escalates — report/estimate stay lenient."""
         self.assertFalse(self.uom_gram._has_common_reference(self.uom_hour))
         # Default (browse): degrades to the unconverted quantity.
         self.assertEqual(
-            self.uom_gram._compute_quantity_reconcile(1000, self.uom_hour),
+            self.uom_gram._get_quantity_reconcile(1000, self.uom_hour),
             1000,
         )
         # Posting boundary: escalates to strict and raises.
         with self.assertRaises(UserError):
             self.uom_gram.with_context(
                 uom_reconcile_strict=True
-            )._compute_quantity_reconcile(1000, self.uom_hour)
+            )._get_quantity_reconcile(1000, self.uom_hour)
         # A caller-passed raise_if_failure=False cannot re-open the escape hatch
         # once the posting context asked for strictness.
         with self.assertRaises(UserError):
             self.uom_gram.with_context(
                 uom_reconcile_strict=True
-            )._compute_quantity_reconcile(1000, self.uom_hour, raise_if_failure=False)
+            )._get_quantity_reconcile(1000, self.uom_hour, raise_if_failure=False)
         # The escalation is reconcile-only: report/estimate still degrade.
-        for wrapper in ("_compute_quantity_report", "_compute_quantity_estimate"):
+        for wrapper in ("_get_quantity_report", "_get_quantity_estimate"):
             with self.subTest(wrapper=wrapper):
                 self.assertEqual(
                     getattr(
@@ -578,7 +578,7 @@ class TestUomConversionScale(UomCommon):
     def test_round_false_is_the_escape_hatch(self):
         """A conversion whose result feeds a comparison rather than a stored
         quantity has to opt out of rounding, or the floor decides the
-        comparison for it. `product.pricelist._compute_price_rule` did not, and
+        comparison for it. `product.pricelist._get_price_rule` did not, and
         priced a 0.5 kg order at a 10 kg bulk tier."""
         for qty, expected in ((0.5, 0.0005), (1, 0.001), (9.9, 0.0099)):
             with self.subTest(qty=qty):
@@ -608,8 +608,8 @@ class TestUomPriceDegradeWrappers(UomCommon):
     def test_price_wrappers_degrade_on_incompatible_units(self):
         self.assertFalse(self.uom_gram._has_common_reference(self.uom_hour))
         for wrapper in (
-            self.uom_gram._compute_price_report,
-            self.uom_gram._compute_price_estimate,
+            self.uom_gram._get_price_report,
+            self.uom_gram._get_price_estimate,
         ):
             with self.subTest(wrapper=wrapper.__name__):
                 self.assertEqual(wrapper(100.0, self.uom_hour), 100.0)
@@ -624,7 +624,7 @@ class TestUomPriceDegradeWrappers(UomCommon):
             (self.uom_gram, 2.0, self.uom_ton),
             (self.uom_ton, 2000000.0, self.uom_gram),
         ]
-        for wrapper_name in ("_compute_price_report", "_compute_price_estimate"):
+        for wrapper_name in ("_get_price_report", "_get_price_estimate"):
             for src, price, dst in cases:
                 with self.subTest(wrapper=wrapper_name, src=src.name, dst=dst.name):
                     self.assertEqual(
@@ -637,7 +637,7 @@ class TestUomPriceDegradeWrappers(UomCommon):
         `uom_reconcile_strict`. There is no price equivalent, and the price
         wrappers must not acquire one by accident."""
         strict = self.uom_gram.with_context(uom_reconcile_strict=True)
-        for wrapper_name in ("_compute_price_report", "_compute_price_estimate"):
+        for wrapper_name in ("_get_price_report", "_get_price_estimate"):
             with self.subTest(wrapper=wrapper_name):
                 self.assertEqual(
                     getattr(strict, wrapper_name)(100.0, self.uom_hour), 100.0

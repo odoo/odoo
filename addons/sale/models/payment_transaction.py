@@ -30,7 +30,7 @@ class PaymentTransaction(models.Model):
     )
 
     @api.model
-    def _compute_reference_prefix(self, separator, **values):
+    def _get_reference_prefix(self, separator, **values):
         command_list = values.get("sale_order_ids")
         if command_list:
             order_ids = self._fields["sale_order_ids"].convert_to_cache(
@@ -40,9 +40,9 @@ class PaymentTransaction(models.Model):
             if len(orders) == len(order_ids):
                 _debug.logic("reference_prefix", by="sale_orders", orders=orders)
                 return separator.join(orders.mapped("name"))
-        return super()._compute_reference_prefix(separator, **values)
+        return super()._get_reference_prefix(separator, **values)
 
-    def _compute_sale_order_reference(self, order):
+    def _get_sale_order_reference(self, order):
         self.check_singleton()
         if self.provider_id.so_reference_type == "so_name":
             order_reference = order.name
@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
 
             if pending_tx.provider_id.code == "custom":
                 for order in pending_tx.sale_order_ids:
-                    order.reference = pending_tx._compute_sale_order_reference(order)
+                    order.reference = pending_tx._get_sale_order_reference(order)
 
             if pending_tx.operation == "validation":
                 continue

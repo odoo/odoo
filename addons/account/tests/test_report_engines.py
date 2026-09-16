@@ -1148,7 +1148,7 @@ class TestReportEngines(TestAccountReportsCommon):
             domain = [("account_id.code", "=", "101002")]
             domain_key = str(domain)
             formulas_dict = {domain_key: expressions}
-            domain_result = report._compute_formula_batch_with_engine_domain(
+            domain_result = report._get_formula_batch_with_engine_domain(
                 options,
                 date_scope,
                 formulas_dict,

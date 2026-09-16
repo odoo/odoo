@@ -390,7 +390,7 @@ class ProductTemplate(models.Model):
         fiscal_position_sudo = request.fiscal_position
         date = fields.Date.context_today(self)
 
-        pricelist_prices = pricelist._compute_price_rule(self, 1.0)
+        pricelist_prices = pricelist._get_price_rule(self, 1.0)
         comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_product_price_comparison"
         )
@@ -419,7 +419,7 @@ class ProductTemplate(models.Model):
                 pricelist_rule_id
             )
             if pricelist_item._show_discount_on_shop():
-                pricelist_base_price = pricelist_item._compute_price_before_discount(
+                pricelist_base_price = pricelist_item._get_price_before_discount(
                     product=template,
                     quantity=1.0,
                     date=date,
@@ -599,7 +599,7 @@ class ProductTemplate(models.Model):
         price_before_discount = pricelist_price
         pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
         if pricelist_item._show_discount_on_shop():
-            price_before_discount = pricelist_item._compute_price_before_discount(
+            price_before_discount = pricelist_item._get_price_before_discount(
                 product=product_or_template,
                 quantity=quantity or 1.0,
                 date=date,

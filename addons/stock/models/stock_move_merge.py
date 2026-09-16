@@ -389,7 +389,7 @@ class StockMoveMerge(models.Model):
                 )
                 < 0
             ):
-                qty_split = move.product_uom_id._compute_quantity_stored(
+                qty_split = move.product_uom_id._get_quantity_stored(
                     move.product_uom_qty - move.quantity,
                     move.product_id.uom_id,
                 )

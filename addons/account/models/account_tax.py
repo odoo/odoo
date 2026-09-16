@@ -626,7 +626,7 @@ class AccountTax(models.Model):
             return present[0]
         return Markup().join(Markup(body) for body in present)
 
-    def _default_repartition_lines(self, document_type):
+    def _get_repartition_lines(self, document_type):
         return [
             Command.create(
                 {
@@ -642,7 +642,7 @@ class AccountTax(models.Model):
     def _compute_invoice_repartition_line_ids(self):
         for tax in self:
             if not tax.invoice_repartition_line_ids:
-                tax.invoice_repartition_line_ids = tax._default_repartition_lines(
+                tax.invoice_repartition_line_ids = tax._get_repartition_lines(
                     "invoice"
                 )
 
@@ -650,7 +650,7 @@ class AccountTax(models.Model):
     def _compute_refund_repartition_line_ids(self):
         for tax in self:
             if not tax.refund_repartition_line_ids:
-                tax.refund_repartition_line_ids = tax._default_repartition_lines(
+                tax.refund_repartition_line_ids = tax._get_repartition_lines(
                     "refund"
                 )
 
@@ -1200,7 +1200,7 @@ class AccountTax(models.Model):
         ).mapped("tag_ids")
 
     @_debug.perf.timed
-    def _compute_all_tax_values(self, tax_details, currency, partner, round_base):
+    def _get_all_tax_values(self, tax_details, currency, partner, round_base):
         taxes = []
         void_amount = 0.0
         for tax_data in tax_details["taxes_data"]:
@@ -1253,7 +1253,7 @@ class AccountTax(models.Model):
         company = company._get_accessible_branches()[:1] or company
 
         currency = currency or company.currency_id
-        special_mode = self._compute_all_special_mode(handle_price_include)
+        special_mode = self._get_all_special_mode(handle_price_include)
         base_line = self._prepare_base_line_for_taxes_computation(
             None,
             partner_id=partner,
@@ -1277,7 +1277,7 @@ class AccountTax(models.Model):
         total_included = tax_details["raw_total_included_currency"]
         round_base = self.env.context.get("round_base", True)
 
-        taxes, void_amount = self._compute_all_tax_values(
+        taxes, void_amount = self._get_all_tax_values(
             tax_details, currency, partner, round_base
         )
         total_void += void_amount

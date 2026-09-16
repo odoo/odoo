@@ -102,14 +102,14 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             return report_data
 
         # Compute 'Cash and cash equivalents, beginning of period'
-        for aml_data in self._compute_liquidity_balance(
+        for aml_data in self._get_liquidity_balance(
             report, options, payment_account_ids, "to_beginning_of_period"
         ):
             self._add_report_data("opening_balance", aml_data, layout_data, report_data)
             self._add_report_data("closing_balance", aml_data, layout_data, report_data)
 
         # Compute 'Cash and cash equivalents, closing balance'
-        for aml_data in self._compute_liquidity_balance(
+        for aml_data in self._get_liquidity_balance(
             report, options, payment_account_ids, "strict_range"
         ):
             self._add_report_data("closing_balance", aml_data, layout_data, report_data)
@@ -369,7 +369,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         )
 
     @_debug.perf.timed
-    def _compute_liquidity_balance(
+    def _get_liquidity_balance(
         self, report, options, payment_account_ids, date_scope
     ):
         """Compute the balance of all liquidity accounts to populate the following sections:

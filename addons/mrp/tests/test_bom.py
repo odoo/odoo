@@ -4525,7 +4525,7 @@ class TestBoMAuditFixes(TestMrpCommon):
         bom = self.env["mrp.bom"].create(
             {"product_tmpl_id": self._product("CAT-D").product_tmpl_id.id}
         )
-        self.assertEqual(bom._default_order_line_values("bom_line_ids")["quantity"], 0)
+        self.assertEqual(bom._get_order_line_values("bom_line_ids")["quantity"], 0)
 
     def test_a_byproduct_quantity_cannot_be_negative(self):
         finished = self._product("NEG-F")

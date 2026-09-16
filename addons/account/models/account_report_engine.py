@@ -1252,7 +1252,7 @@ class AccountReport(models.Model):
                             budget_amount_col = line_col
                 if budget_base_col is None or budget_amount_col is None:
                     continue
-                value = self._compute_column_percent_comparison_data(
+                value = self._get_column_percent_comparison_data(
                     options,
                     budget_base_col["no_format"],
                     budget_amount_col["no_format"],
@@ -1963,7 +1963,7 @@ class AccountReportLine(models.Model):
                     )
 
                 group_line_dict["column_percent_comparison_data"] = (
-                    self.report_id._compute_column_percent_comparison_data(
+                    self.report_id._get_column_percent_comparison_data(
                         options,
                         first_value,
                         second_value,
@@ -1975,7 +1975,7 @@ class AccountReportLine(models.Model):
                 self.report_id._set_budget_column_comparisons(options, group_line_dict)
             elif options.get("column_percent_comparison") == "analytic_coverage":
                 group_line_dict["column_percent_comparison_data"] = (
-                    self.report_id._compute_column_percent_comparison_data(
+                    self.report_id._get_column_percent_comparison_data(
                         options,
                         group_line_dict["columns"][0]["no_format"],
                         group_line_dict["columns"][1]["no_format"],

@@ -1072,8 +1072,8 @@ class RepairOrder(models.Model):
         ]
         return res
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
+    def _get_order_line_values(self, child_field=False):
+        default_data = super()._get_order_line_values(child_field)
         new_default_data = self.env["stock.move"]._get_product_catalog_lines_data(
             parent_record=self
         )

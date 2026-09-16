@@ -879,7 +879,7 @@ class DigestDigest(models.Model):
         which the template reads as "no badge". Growth from zero has no
         percentage -- 0 -> 1 and 0 -> 1000 would both read 100% -- and this is
         the convention the rest of the tree already follows:
-        ``account._compute_column_percent_comparison_data`` returns a
+        ``account._get_column_percent_comparison_data`` returns a
         muted *n/a* when the compared period is zero rather than inventing a
         figure. An earlier draft of this method returned 100% there; that was
         an invention, and it is not made here.

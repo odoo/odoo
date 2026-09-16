@@ -814,7 +814,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             balance_end,
             unexplained_difference,
             general_ledger_not_matching,
-        ) = self._compute_journal_balances(report, options, journal, journal_currency)
+        ) = self._get_journal_balances(report, options, journal, journal_currency)
 
         _debug.logic(
             "bank_reco_warnings_inputs",
@@ -846,7 +846,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
                 }
 
     @_debug.perf.timed
-    def _compute_journal_balances(self, report, options, journal, journal_currency):
+    def _get_journal_balances(self, report, options, journal, journal_currency):
         """Compute the formatted balances used by the 'account.journal_balance' warning.
 
         :param report:           The bank reconciliation report.
@@ -861,7 +861,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         domain = report._get_domain_options(options, "from_beginning")
         balance_gl = journal._get_journal_bank_account_balance(domain=domain)[0]
         last_statement, balance_end, difference, general_ledger_not_matching = (
-            self._compute_balances(options, journal, balance_gl, journal_currency)
+            self._get_balances(options, journal, balance_gl, journal_currency)
         )
         _debug.pipeline(
             "journal_balances_computed",
@@ -903,7 +903,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         )
 
     @_debug.perf.timed
-    def _compute_balances(self, options, journal, balance_gl, report_currency):
+    def _get_balances(self, options, journal, balance_gl, report_currency):
         """Compute the balance of the last statement and the unexplained difference.
 
         :param options:         The report options.

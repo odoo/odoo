@@ -228,7 +228,7 @@ class TestStockMoveAudit20260831(TransactionCase):
         )
         self.assertNotEqual(
             units._compute_quantity(7, dozens),
-            units._compute_quantity_stored(7, dozens),
+            units._get_quantity_stored(7, dozens),
             "sanity: this configuration is one where the two conversions differ",
         )
         origin = self._internal_move(product, 1, product_uom_id=dozens.id)

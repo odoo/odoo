@@ -63,7 +63,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
         attrs = super()._get_attrs(model_class, name)
         attrs.pop("selection_add", None)
         if attrs.get("group_expand") is True:
-            attrs["group_expand"] = self._default_group_expand
+            attrs["group_expand"] = self._get_group_expand
         return attrs
 
     def _apply_selection_arg(self, field, values):
@@ -240,7 +240,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
         )
         return [(key, translations.get(key, label)) for key, label in selection]
 
-    def _default_group_expand(
+    def _get_group_expand(
         self, records: BaseModel, groups: typing.Any, domain: typing.Any
     ) -> list[str]:
         return self.get_values(records.env)

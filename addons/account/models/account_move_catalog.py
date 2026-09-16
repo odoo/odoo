@@ -41,8 +41,8 @@ class AccountMove(models.Model):
         else:
             return domain
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
+    def _get_order_line_values(self, child_field=False):
+        default_data = super()._get_order_line_values(child_field)
         new_default_data = self.env[
             "account.move.line"
         ]._get_product_catalog_lines_data()

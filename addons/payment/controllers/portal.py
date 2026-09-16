@@ -169,7 +169,7 @@ class PaymentPortal(portal.CustomerPortal):
             "partner_is_different": partner_is_different,
         }
         payment_form_values = {
-            "show_tokenize_input_mapping": self._compute_show_tokenize_input_mapping(
+            "show_tokenize_input_mapping": self._get_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
         }
@@ -199,7 +199,7 @@ class PaymentPortal(portal.CustomerPortal):
         )
 
     @staticmethod
-    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
+    def _get_show_tokenize_input_mapping(providers_sudo, **kwargs):
         """Determine for each provider whether the tokenization input should be shown or not.
 
         :param recordset providers_sudo: The providers for which to determine whether the

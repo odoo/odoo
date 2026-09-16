@@ -104,7 +104,7 @@ def accessed_attribute_names(func: Callable) -> set[str]:
     return names
 
 
-def _compute_functions(field: typing.Any, model_class: typing.Any) -> list[Callable]:
+def _get_functions(field: typing.Any, model_class: typing.Any) -> list[Callable]:
     compute = field.compute
     if not compute:
         return []
@@ -118,7 +118,7 @@ def _compute_functions(field: typing.Any, model_class: typing.Any) -> list[Calla
 def audit_field(
     registry: typing.Any, model_class: typing.Any, field: typing.Any
 ) -> DependsFinding | None:
-    functions = _compute_functions(field, model_class)
+    functions = _get_functions(field, model_class)
     if not functions:
         return None
 

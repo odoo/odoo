@@ -984,8 +984,8 @@ class MrpBom(models.Model):
             "product_catalog_currency_id": self.env.company.currency_id.id,
         }
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
+    def _get_order_line_values(self, child_field=False):
+        default_data = super()._get_order_line_values(child_field)
         model = (
             self._fields[child_field].comodel_name if child_field else "mrp.bom.line"
         )

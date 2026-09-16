@@ -177,7 +177,7 @@ class WebsiteSaleProductConfiguratorController(
 
         if pricelist_rule._show_discount_on_shop():
             pricelist_base_price = self._apply_taxes_to_price(
-                pricelist_rule._compute_price_before_discount(
+                pricelist_rule._get_price_before_discount(
                     product=product_or_template,
                     quantity=1.0,
                     uom=product_or_template.uom_id,
