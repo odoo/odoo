@@ -800,9 +800,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.location_id.name, move.location_dest_id.name)
 
     def _set_references(self):
-        for move in self:
-            if not move.reference_ids and move.picking_id:
-                move.reference_ids = move.picking_id.reference_ids
+        for picking, moves in self.grouped('picking_id').items():
+            if not picking or not picking.reference_ids:
+                continue
+            moves = moves.filtered(lambda m: not m.reference_ids)
+            if picking and moves:
+                moves.reference_ids = picking.reference_ids
 
     @api.depends('product_id', 'picking_type_id', 'description_picking_manual')
     def _compute_description_picking(self):
@@ -881,6 +884,9 @@ Please change the quantity done or the rounding precision in your settings.""",
             move_to_check_location = self.filtered(lambda m: m.location_id.id != vals.get('location_id'))
         if 'product_id' in vals or 'location_id' in vals or 'location_dest_id' in vals:
             self._update_orderpoints()
+        forecast_states = ('waiting', 'confirmed', 'partially_available', 'assigned')
+        state_updates_orderpoints = 'state' in vals and (
+            vals['state'] not in forecast_states or any(m.state not in forecast_states for m in self))
         res = super().write(vals)
         moves_done = self.filtered(lambda m: m.state == 'done')
         if 'date' in vals and moves_done:
@@ -906,8 +912,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                 moves.warehouse_id = warehouse.id
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
-        if ('product_id' in vals or 'state' in vals or 'date' in vals or 'product_uom_qty' in vals or
-                'location_id' in vals or 'location_dest_id' in vals):
+        if ('product_id' in vals or 'date' in vals or 'product_uom_qty' in vals or
+                'location_id' in vals or 'location_dest_id' in vals or state_updates_orderpoints):
             self._update_orderpoints()
         if 'picking_id' in vals:
             self._set_references()
@@ -2075,7 +2081,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
-        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+        quants_cache = self.env['stock.quant'].sudo()._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
             rounding = roundings[move]
@@ -2160,12 +2166,13 @@ Please change the quantity done or the rounding precision in your settings.""",
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         effective_need = move._get_quantity_to_assign() - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
+                        move_line_vals, taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity_vals(
+                            min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
                     if all_move_line_vals:
-                        self.env['stock.move.line'].create(all_move_line_vals)
+                        self.env['stock.move.line'].with_context(quants_cache=quants_cache).create(all_move_line_vals)
 
                     for (need, location_id, lot_id, package_id, owner_id), taken_quantity in taken_quantities.items():
                         # `quantity` is what is brought by chained done move lines. We double check

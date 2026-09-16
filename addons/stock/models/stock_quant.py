@@ -789,6 +789,7 @@ class StockQuant(models.Model):
             if lot_id:
                 res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
             res |= quants_cache[product_id.id, location_id.id, False, package_id.id, owner_id.id]
+            res = res.sorted(order or None)
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
