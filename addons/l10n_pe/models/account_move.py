@@ -55,3 +55,19 @@ class AccountMoveLine(models.Model):
                 WHERE account.id = line.account_id
             """)
         return super()._auto_init()
+
+    @api.depends('move_id.reversed_entry_id', 'move_id.debit_origin_id')
+    def _compute_currency_rate(self):
+        super()._compute_currency_rate()
+
+    def _get_rate_date(self):
+        # EXTENDS 'account'
+        self.ensure_one()
+        move = self.move_id
+        origin_move = move.reversed_entry_id or move.debit_origin_id
+        if move.country_code == 'PE' and move.is_invoice(include_receipts=True) and origin_move.invoice_date:
+            # In Peru, credit and debit notes use the currency rate of the document they modify, which can be a note too.
+            while (origin_move.reversed_entry_id or origin_move.debit_origin_id).invoice_date:
+                origin_move = origin_move.reversed_entry_id or origin_move.debit_origin_id
+            return origin_move.invoice_date
+        return super()._get_rate_date()
