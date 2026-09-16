@@ -36,8 +36,9 @@ class StockPicking(models.Model):
         return action
 
     def _get_subcontracting_source_purchase(self):
-        moves_subcontracted = self.reference_ids.move_ids.filtered(lambda m: m.is_subcontract)
-        return moves_subcontracted.purchase_line_id.order_id
+        resupply_moves = self.move_ids.filtered(lambda m: m.location_dest_id.is_subcontract())
+        related_subcontract_moves = resupply_moves.reference_ids.move_ids.filtered(lambda m: m.is_subcontract)
+        return related_subcontract_moves.purchase_line_id.order_id
 
     def _get_subcontract_mo_confirmation_ctx(self):
         res = super()._get_subcontract_mo_confirmation_ctx()

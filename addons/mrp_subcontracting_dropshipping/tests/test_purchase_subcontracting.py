@@ -566,3 +566,30 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         bill.action_post()
         # The AVCO cost must be updated to bill price + component cost = $10 + $2 = $12.
         self.assertAlmostEqual(final_product.standard_price, 12.0, places=2)
+
+    def test_dropshipped_resupply_source_purchase(self):
+        """
+        Dropship the subcontractor to resupply the component.
+        Check that the dropship transfer still refers to the subcontracted PO source.
+        """
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')], limit=1)
+        self.comp1.route_ids = [Command.link(dropship_route.id)]
+
+        subcontracted_po = self.env['purchase.order'].create({
+            "partner_id": self.subcontractor_partner1.id,
+            "picking_type_id": self.warehouse.in_type_id.id,
+            "order_line": [Command.create({
+                'product_id': self.finished.id,
+                'name': self.finished.name,
+                'product_qty': 1.0,
+            })],
+        })
+        subcontracted_po.button_confirm()
+
+        dropship_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        dropship_po.button_confirm()
+
+        dropship_picking = dropship_po.picking_ids
+        self.assertEqual(dropship_picking.subcontracting_source_purchase_count, 1)
+        action = dropship_picking.action_view_subcontracting_source_purchase()
+        self.assertEqual(self.env[action['res_model']].browse(action['res_id']), subcontracted_po)
