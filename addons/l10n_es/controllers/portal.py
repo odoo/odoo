@@ -19,7 +19,19 @@ class L10nESPortalAccount(PortalAccount):
         field_names = super()._get_mandatory_billing_address_fields(country_sudo)
 
         if request.env.company.country_code == country_sudo.code == 'ES':
-            field_names.add('vat')
+            # Above 3,000 total: https://sede.agenciatributaria.gob.es/Sede/iva/facturacion-registro/facturacion-iva/tipos-factura.html
+            if request.cart.amount_total >= 3000:
+                field_names.add('vat')
+                return field_names
+
+            # Regions that require VAT: https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740#a3
+            state_id = int(request.params.get('state_id') or 0)
+            state = request.env['res.country.state'].browse(state_id) if state_id else False
+            special_region_codes = ['GC', 'TF', 'CE', 'ME']
+            is_special_region = state and state.code in special_region_codes
+
+            if is_special_region:
+                field_names.add('vat')
 
         return field_names
 
