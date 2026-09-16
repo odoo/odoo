@@ -23,8 +23,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Object} TranslationShared
- * @property {TranslationPlugin["getTranslationInfo"]} getTranslationInfo
- * @property {TranslationPlugin["updateTranslationMap"]} updateTranslationMap
+ * @property {TranslationPlugin["hasTranslatedAttribute"]} hasTranslatedAttribute
  */
 
 /**
@@ -78,7 +77,7 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static shared = ["getTranslationInfo", "updateTranslationMap"];
+    static shared = ["hasTranslatedAttribute"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -187,16 +186,6 @@ export class TranslationPlugin extends Plugin {
                 continue;
             }
             this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
-        }
-        // Keep the original values of elToTranslationInfoMap so that we know
-        // which translations have been updated.
-        /** @type {ElToTranslationInfoMap} */
-        this.originalElToTranslationInfoMap = new Map();
-        for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
-            this.originalElToTranslationInfoMap.set(
-                translateEl,
-                JSON.parse(JSON.stringify(translationInfo))
-            );
         }
     }
     /**
@@ -348,11 +337,12 @@ export class TranslationPlugin extends Plugin {
     }
     /**
      * @param {HTMLElement} translateEl - the element whose attribute
-     * translations we want to get.
-     * @returns {ElementTranslationInfo} translationInfo
+     * translations we want to check.
+     * @param {string} attrName - attribute to translate
+     * @returns {boolean} whether the given attribute is in the translation map
      */
-    getTranslationInfo(translateEl) {
-        return this.elToTranslationInfoMap.get(translateEl);
+    hasTranslatedAttribute(translateEl, attrName) {
+        return attrName in this.elToTranslationInfoMap.get(translateEl);
     }
     /**
      * @param {HTMLElement} translateEl - element on which the translatable
@@ -369,20 +359,6 @@ export class TranslationPlugin extends Plugin {
         this.elToTranslationInfoMap.get(translateEl)[attrName].translation =
             translationEl.innerHTML;
     }
-    /**
-     * @param {HTMLElement} translateEl - element on which the translatable
-     * attribute is
-     * @param {string} translation - new translation
-     * @param {string} attrName - attribute to translate
-     */
-    updateTranslationMap(translateEl, translation, attrName) {
-        if (!this.elToTranslationInfoMap.get(translateEl)) {
-            throw new Error(
-                `Translation map was not set up: cannot update ${attrName} on ${translateEl.nodeName}`
-            );
-        }
-        this.elToTranslationInfoMap.get(translateEl)[attrName].translation = translation;
-    }
 
     /**
      * Gets the modified translations
@@ -392,15 +368,15 @@ export class TranslationPlugin extends Plugin {
         const dirtyEls = [];
         for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
             for (const [attr, data] of Object.entries(translationInfo)) {
-                if (
-                    this.originalElToTranslationInfoMap.get(translateEl)[attr].translation !==
-                    data.translation
-                ) {
+                const translation =
+                    attr === "textContent"
+                        ? translateEl.textContent
+                        : translateEl.getAttribute(attr);
+                if (data.translation !== translation) {
                     const spanEl = document.createElement("span");
                     for (const [name, value] of Object.entries(data)) {
                         spanEl.dataset[name] = value;
                     }
-                    const translation = spanEl.dataset.translation;
                     delete spanEl.dataset.translation;
                     spanEl.innerHTML = translation;
                     this.trigger("on_get_dirty_translations_handlers", translateEl, spanEl, attr);

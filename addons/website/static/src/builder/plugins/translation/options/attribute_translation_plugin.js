@@ -70,8 +70,6 @@ export class TranslateAttributeAction extends BuilderAction {
 
     apply({ editingElement, params: { mainParam: attr }, value }) {
         const isTextarea = editingElement.tagName === "TEXTAREA";
-        const oldValue =
-            attr === "value" ? editingElement.value : editingElement.getAttribute(attr);
         if (!isTextarea || attr !== "value") {
             editingElement.setAttribute(attr, value);
         }
@@ -79,19 +77,5 @@ export class TranslateAttributeAction extends BuilderAction {
             this.dependencies.valueHistory.setValue(editingElement, value);
         }
         editingElement.classList.add("oe_translated");
-
-        const setCustomHistory = (value) => {
-            const attrKey = attr === "value" && isTextarea ? "textContent" : attr;
-            this.dependencies.translation.updateTranslationMap(editingElement, value, attrKey);
-        };
-
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                setCustomHistory(value);
-            },
-            revert: () => {
-                setCustomHistory(oldValue);
-            },
-        });
     }
 }

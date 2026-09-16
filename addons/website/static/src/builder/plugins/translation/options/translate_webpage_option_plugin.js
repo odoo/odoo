@@ -262,14 +262,12 @@ export class TranslateToAction extends BuilderAction {
                     }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
-                    const attributeInfo =
-                        this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo && text != attributeInfo.translation) {
-                        const oldValue = attributeInfo.translation;
-                        this.dependencies.domObserver.applyCustomMutation({
-                            apply: () => (attributeInfo.translation = text),
-                            revert: () => (attributeInfo.translation = oldValue),
-                        });
+                    const oldTranslation =
+                        attribute === "textContent" ? el.textContent : el.getAttribute(attribute);
+                    if (
+                        this.dependencies.translation.hasTranslatedAttribute(el, attribute) &&
+                        text != oldTranslation
+                    ) {
                         el.dataset.oeTranslationState = "translated";
                         if (attribute === "textContent" || attribute === "value") {
                             this.dependencies.valueHistory.setValue(el, text);
