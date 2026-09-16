@@ -163,7 +163,7 @@ class ProjectTask(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
-       domain="[('project_ids', '=', project_id)]")
+       ui_domain="[('project_ids', '=', project_id)]")
     tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([
@@ -226,7 +226,7 @@ class ProjectTask(models.Model):
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=10, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
-        ui_domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        ui_domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Contact Number", readonly=False, store=True, copy=False

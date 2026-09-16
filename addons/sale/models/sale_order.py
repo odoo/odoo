@@ -270,7 +270,7 @@ class SaleOrder(models.Model):
         precompute=True,
         check_company=True,  # Unrequired company
         tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ui_domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If you change the pricelist, the prices of all order lines will be updated"
         " accordingly.",
     )
@@ -316,7 +316,7 @@ class SaleOrder(models.Model):
         check_company=True,  # Unrequired company
         tracking=True,
         index=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ui_domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
     incoterm = fields.Many2one(
         comodel_name="account.incoterms",
