@@ -45,6 +45,7 @@ patch(BuilderUrlPicker.prototype, {
 
     onSelect(value) {
         this.commit(value);
+        wUtils.setRecentlyUsedUrl(value);
         // Forces the input to update its value even if the value of the
         // element in the DOM has not changed.
         this.state.value = null;
