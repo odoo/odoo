@@ -352,10 +352,13 @@
                         t-att-colspan="column.colspan"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
-                        <t t-foreach="column.fields" t-as="fieldInfo" t-key="fieldInfo.id">
-                            <t t-set="subIsInvisible" t-value="!this.isColumnGroupFieldVisible(column, fieldInfo, record)"/>
-                            <div t-if="!subIsInvisible" class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record)" t-att-data-field-name="fieldInfo.name">
-                                <t t-if="this.canUseFormatter(fieldInfo, record)" t-out="this.getFormattedValue(fieldInfo, record)"/>
+                        <t t-set="visibleFields" t-value="this.getVisibleColumnGroupFields(column, record)"/>
+                        <t t-foreach="visibleFields" t-as="fieldInfo" t-key="fieldInfo.id">
+                            <div class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record, visibleFields.length > 1)" t-att-data-field-name="fieldInfo.name">
+                                <t t-if="this.canUseFormatter(fieldInfo, record)">
+                                    <t t-set="value" t-value="this.getFormattedValue(fieldInfo, record)"/>
+                                    <t t-out="value === '' ? '\u00a0' : value"/>
+                                </t>
                                 <Field t-else=""
                                     name="fieldInfo.name"
                                     record="record"
