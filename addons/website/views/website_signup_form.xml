@@ -1,0 +1,37 @@
+<odoo>
+
+    <!-- Editable area in which fields can be added to the signup form from the
+         website editor. Being an `oe_structure`, its content is saved in a view
+         of its own (see `ir.ui.view.save_oe_structure`). -->
+    <template id="signup_extra_fields" name="Sign Up Extra Fields">
+        <!-- `s_website_form` + `data-vcss` apply the form builder styles to the
+             fields added in the area. It holds no `form` element, so neither
+             the form interaction (`form.js`) nor the form options apply to it:
+             the signup form keeps being submitted by the browser itself. -->
+        <div id="oe_structure_signup_fields"
+             class="oe_structure oe_empty s_website_form s_website_form_rows row s_col_no_bgcolor o_mark_required"
+             data-vcss="001"
+             data-mark="*"
+             data-editor-message="Add fields to the sign up form"/>
+    </template>
+
+    <!-- The area is only inserted in the standard signup form, which is left
+         untouched: the modules inheriting `auth_signup.signup` or
+         `auth_signup.fields` (e.g. `auth_password_policy_signup`) keep working. -->
+    <template id="website_signup_extra_fields" inherit_id="auth_signup.signup" name="Sign up: extra fields">
+        <xpath expr="//form[hasclass('oe_signup_form')]" position="attributes">
+            <!-- The extra fields are written on the partner created by the
+                 signup: `data-model_name` tells the form editor which fields
+                 can be added, `enctype` lets a file field be posted. -->
+            <attribute name="data-model_name">res.partner</attribute>
+            <attribute name="enctype">multipart/form-data</attribute>
+            <!-- The reCAPTCHA of the signup form is not the one of the form
+                 snippets (see the `website.signup_form` interaction). -->
+            <attribute name="class" add="s_website_form_no_recaptcha" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-call='auth_signup.fields']" position="after">
+            <t t-call="website.signup_extra_fields"/>
+        </xpath>
+    </template>
+
+</odoo>

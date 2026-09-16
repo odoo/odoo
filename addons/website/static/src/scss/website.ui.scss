@@ -90,6 +90,12 @@ body {
     position: relative;
     margin: 50px auto;
 }
+// The standard signup fields are not form builder fields: they get the mark of
+// the fields added from the website editor (see `SignupFormMarks`).
+.oe_signup_form .mb-3:has(input[required]) > label.form-label::after {
+    content: var(--signup-form-mark, none);
+    color: var(--signup-form-mark-color, inherit);
+}
 
 // POPOVER NAVIGATION
 .tour .popover-navigation {
