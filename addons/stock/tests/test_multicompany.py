@@ -874,3 +874,15 @@ class TestMultiCompany(TransactionCase):
 
         out_to_a.button_validate()
         self.assertEqual(in_from_other.state, 'assigned')
+
+    def test_multi_company_partner_locations(self):
+        # Make sure the partner of the warehouse is different than the company's
+        new_address = self.env['res.partner'].create({'name': 'Warehouse A - New'})
+        self.warehouse_a.partner_id = new_address
+
+        self.assertEqual(new_address.with_company(self.company_a).property_stock_supplier, self.company_a.internal_transit_location_id)
+        self.assertEqual(new_address.with_company(self.company_a).property_stock_customer, self.company_a.internal_transit_location_id)
+
+        new_company = self.env['res.company'].create({'name': 'Company Z'})
+        self.assertEqual(new_address.with_company(new_company).property_stock_customer, self.interco_location)
+        self.assertEqual(new_address.with_company(new_company).property_stock_supplier, self.interco_location)
