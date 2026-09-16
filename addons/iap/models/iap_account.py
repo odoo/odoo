@@ -99,6 +99,11 @@ class IapAccount(models.Model):
             accounts_information = iap_tools.iap_jsonrpc(url=url, params=params)
         except AccessError as e:
             _logger.warning("Fetch of the IAP accounts information has failed: %s", str(e))
+            self.env.user._bus_send("simple_notification", {
+                'type': 'danger',
+                'message': _("The IAP server is unreachable and the information may not be up to date. Please try again later."),
+                'sticky': True,
+            })
             return
 
         for token, information in accounts_information.items():
