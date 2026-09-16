@@ -57,13 +57,28 @@ class HrExpenseSheet(models.Model):
 
         # Get the keys used to fetch the corresponding sale order lines, and the number of times they are used
         # We need the occurrences count to filter out the sale order lines so that we keep exactly one per expense
-        expense_keys_counter = Counter(expensed_amls.mapped(lambda aml: (
-            aml.expense_id.sale_order_id.id,
-            aml.product_id.id,
-            aml.quantity,
-            aml.currency_id.round(aml._sale_get_invoice_price(aml_to_so_map[aml.id])),
-            aml.name,
-        )))
+        expense_keys_counter = Counter()
+        for aml in expensed_amls:
+            order = aml_to_so_map[aml.id]
+            if aml.product_id.expense_policy == 'cost':
+                price_unit = aml.expense_id.currency_id._convert(
+                    aml.expense_id.untaxed_amount_currency,
+                    order.currency_id,
+                    order.company_id,
+                    order.date_order or fields.Date.context_today(aml),
+                )
+                product_uom_qty = 1.0
+            else:
+                price_unit = aml._sale_get_invoice_price(order)
+                product_uom_qty = aml.quantity
+
+            expense_keys_counter.update([(
+                aml.expense_id.sale_order_id.id,
+                aml.product_id.id,
+                product_uom_qty,
+                order.currency_id.round(price_unit),
+                aml.name,
+            )])
         expensed_amls_keys_and_count = tuple(
             (key_id, key_count, *key) for key_id, (key, key_count) in enumerate(expense_keys_counter.items())
         )
