@@ -3,7 +3,7 @@
 import logging
 import random
 from collections import defaultdict
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urlsplit
 
 from psycopg2 import sql
 
@@ -170,6 +170,11 @@ class ProductTemplate(models.Model):
         inverse_name="product_tmpl_id",
         copy=True,
     )
+    video_url = fields.Char(
+        string="Video URL",
+        help="URL of a video showcasing the product, displayed instead of the main image on the"
+        " eCommerce product page.",
+    )
 
     compare_list_price = fields.Monetary(
         string="Compare to Price",
@@ -311,6 +316,19 @@ class ProductTemplate(models.Model):
             template.variants_default_code = RARE_DELIMITER.join(
                 template.product_variant_ids.filtered("default_code").mapped("default_code")
             )
+
+    # === CONSTRAINT METHODS ===#
+
+    @api.constrains("video_url")
+    def _check_valid_video_url(self):
+        for template in self:
+            if template.video_url and not urlsplit(template.video_url).netloc:
+                raise ValidationError(
+                    template.env._(
+                        "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
+                        template.name,
+                    )
+                )
 
     # === CRUD METHODS ===#
 
@@ -473,17 +491,18 @@ class ProductTemplate(models.Model):
         for template in self:
             if template.product_template_image_ids:
                 first_product_image = template.product_template_image_ids.sorted("sequence")[0]
-                if first_product_image.video_url:
-                    raise ValidationError(
-                        template.env._("You can't use a video as the template's main image.")
-                    )
-                if template.image_1920.content == first_product_image.image_1920.content:
+                if (
+                    template.video_url == first_product_image.video_url
+                    and template.image_1920.content == first_product_image.image_1920.content
+                ):
                     continue
-                template.with_context(
-                    from_extra_image=True
-                ).image_1920 = first_product_image.image_1920
+                template.with_context(from_extra_image=True).write({
+                    "image_1920": first_product_image.image_1920,
+                    "video_url": first_product_image.video_url,
+                })
             else:
                 template.image_1920 = False
+                template.video_url = False
 
     def _update_suggested_products(self):
         """Update the current product templates' optional, accessory, and alternative products.

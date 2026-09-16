@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urlsplit
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
@@ -28,6 +28,13 @@ class ProductProduct(models.Model):
         compute="_compute_variant_image_ids",
         store=True,
     )
+
+    # Storage for a video explicitly set on this variant's own main image slot (e.g. via the
+    # website builder while that variant is selected). Kept separate from `image_variant_1920`
+    # so that the video's own poster frame (stored in `image_variant_1920` alongside it) is never
+    # mistaken for a variant-specific photo that should hide the video.
+    video_variant_url = fields.Char(string="Variant Video URL")
+    video_url = fields.Char(compute="_compute_video_url", inverse="_inverse_video_url")
 
     website_url = fields.Char(
         string="Website URL",
@@ -66,6 +73,53 @@ class ProductProduct(models.Model):
                 query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
                 url = url._replace(query=urlencode(query_params))
             product.website_url = url.geturl()
+
+    @api.depends("video_variant_url", "image_variant_1920", "product_tmpl_id.video_url")
+    def _compute_video_url(self):
+        for product in self:
+            product.video_url = product._get_own_video_url(product.image_variant_1920)
+
+    def _get_own_video_url(self, has_own_image):
+        """Return the video (own or inherited from the template) this variant should show,
+        given whether it has its own image (`has_own_image`).
+
+        Factored out of `_compute_video_url` so callers that already know, cheaply, whether
+        this variant has its own image (e.g. because they already loaded a smaller size of it
+        for another purpose) can reuse that instead of triggering `image_variant_1920`
+        specifically just for this check.
+        """
+        self.ensure_one()
+        return self.video_variant_url or (not has_own_image and self.product_tmpl_id.video_url)
+
+    def _inverse_video_url(self):
+        for product in self:
+            if product.video_url:
+                # Always attach a newly set video to this specific variant: its own poster
+                # frame may also land in `image_variant_1920` (see `_compute_video_url`), and
+                # that must never end up hiding the video that poster belongs to.
+                product.video_variant_url = product.video_url
+            elif product.video_variant_url:
+                # This variant had its own video: only clear that one.
+                product.video_variant_url = False
+            elif len(product.product_tmpl_id.product_variant_ids) <= 1:
+                # This variant was only showing the template's fallback video (it never had an
+                # override of its own), and it is the template's only variant: clear that, since
+                # there is no other video left to fall back on.
+                product.product_tmpl_id.video_url = False
+            # Otherwise, this variant was only showing the template's fallback video, but other
+            # variants of the same template may still rely on it: leave it untouched, as clearing
+            # it here would silently remove the showcase video from every sibling variant too.
+
+    @api.constrains("video_variant_url")
+    def _check_valid_video_variant_url(self):
+        for product in self:
+            if product.video_variant_url and not urlsplit(product.video_variant_url).netloc:
+                raise ValidationError(
+                    product.env._(
+                        "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
+                        product.display_name,
+                    )
+                )
 
     # === CRUD METHODS === #
 
@@ -319,17 +373,21 @@ class ProductProduct(models.Model):
         for product in self:
             if product.variant_image_ids:
                 first_product_image = product.variant_image_ids.sorted("sequence")[0]
-                if first_product_image.video_url:
-                    raise ValidationError(
-                        product.env._("You can't use a video as the product's main image.")
-                    )
-                if product.image_variant_1920.content == first_product_image.image_1920.content:
+                if (
+                    product.video_variant_url == first_product_image.video_url
+                    and product.image_variant_1920.content == first_product_image.image_1920.content
+                ):
                     continue
-                product.with_context(
-                    from_extra_image=True
-                ).image_variant_1920 = first_product_image.image_1920
+                # Written directly to the "_variant" storage fields (not the computed
+                # "image_1920"/"video_url") so this never cascades into clearing the
+                # template's own video (see "_inverse_video_url").
+                product.with_context(from_extra_image=True).write({
+                    "image_variant_1920": first_product_image.image_1920,
+                    "video_variant_url": first_product_image.video_url,
+                })
             else:
                 product.image_variant_1920 = False
+                product.video_variant_url = False
 
     def _is_in_wishlist(self):
         if not self:
