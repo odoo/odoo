@@ -211,13 +211,14 @@ export class ImageHoverPlugin extends Plugin {
         };
     }
     canHaveHoverEffect(imgEl, dataset) {
-        return (
-            imgEl.tagName === "IMG" &&
-            !dataset.isCorsProtected &&
-            !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
-            !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
-            !!dataset.isImageSupportedForShapes
-        );
+        if (imgEl.tagName === "IMG") {
+            return (
+                !dataset.isCorsProtected &&
+                !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
+                !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
+                !!dataset.isImageSupportedForShapes
+            );
+        }
     }
 }
 export class SetHoverEffectAction extends BuilderAction {
