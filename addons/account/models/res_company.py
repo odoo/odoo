@@ -1121,7 +1121,7 @@ class ResCompany(models.Model):
             "context": context,
         }
 
-    def _get_default_opening_move_values(self):
+    def _prepare_default_opening_move_values(self):
         self.check_singleton()
         default_journal = self.env["account.journal"].search(
             domain=[
@@ -1338,7 +1338,7 @@ class ResCompany(models.Model):
         if opening_move:
             conversion_date = opening_move.date
         else:
-            move_values.update(self._get_default_opening_move_values())
+            move_values.update(self._prepare_default_opening_move_values())
             conversion_date = move_values["date"]
 
         company_currency = self.currency_id
