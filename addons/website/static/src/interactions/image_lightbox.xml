@@ -19,6 +19,10 @@
                         <span class="carousel-control-prev-icon" aria-hidden="true"/>
                         <span class="visually-hidden">Previous slide</span>
                     </button>
+                    <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" data-bs-slide="next" t-attf-aria-controls="#{this.id}_inner" aria-label="Next slide" title="Next slide">
+                        <span class="carousel-control-next-icon" aria-hidden="true"/>
+                        <span class="visually-hidden">Next slide</span>
+                    </button>
                     <div class="carousel-indicators s_image_gallery_indicators_bars" role="tablist">
                         <t t-foreach="this.images" t-as="image" t-key="image_index">
                             <button type="button"
@@ -34,10 +38,6 @@
                             </button>
                     </t>
                     </div>
-                    <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" data-bs-slide="next" t-attf-aria-controls="#{this.id}_inner" aria-label="Next slide" title="Next slide">
-                        <span class="carousel-control-next-icon" aria-hidden="true"/>
-                        <span class="visually-hidden">Next slide</span>
-                    </button>
                 </div>
             </t>
             <div class="carousel-inner" t-attf-id="#{this.id}_inner" t-att-aria-live="this.ride === 'false' ? 'polite' : 'off'">

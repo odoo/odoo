@@ -115,7 +115,7 @@
         <!-- Avatar -->
         <div t-if="blog_post.author_avatar and opt_posts_loop_show_author"
                 t-field="blog_post.author_avatar"
-                t-options='{"widget": "image", "alt": "", "class": "o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
+                t-options='{"widget": "image", "alt-field": "author_name", "class": "o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
                 t-attf-class="flex-shrink-0 o_not_editable #{_avatar_classes}"/>
         <div t-attf-class="small lh-sm #{_extra_classes}">
             <!-- Author -->
