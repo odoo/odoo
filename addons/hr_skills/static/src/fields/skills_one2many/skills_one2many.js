@@ -16,9 +16,10 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         this.actionService = useService("action");
 
         onWillStart(async () => {
-            const res = await this.orm.searchCount('hr.skill.type', []);
+            [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids", "company_id"]);
+            const companyId = this.user.company_id ? this.user.company_id[0] : false;
+            const res = await this.orm.searchCount('hr.skill.type', ['|', ['company_id', '=', false], ['company_id', '=', companyId]]);
             this.anySkills = res > 0;
-            [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids"]);
             this.IsHrUser = await user.hasGroup("hr.group_hr_user");
             this.userSubordinates = (await this.orm.searchRead(
                 "hr.employee",
