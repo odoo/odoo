@@ -36,6 +36,17 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_item_description_name')
 
+    def test_ubl_line_without_product_name(self):
+        """ Test that an invoice line with an empty name correctly generates an error instead of a traceback. """
+        invoice = self._create_invoice_one_line(product_id=False)
+        invoice.invoice_line_ids.name = ""
+        invoice.action_post()
+        _xml_content, errors = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)
+        self.assertTrue(
+            any("Line 1: Item name is missing" in str(err) for err in errors),
+            f"Expected constraint error for missing item name was not found. Actual errors: {errors}"
+        )
+
     def test_invoice_buyer_reference_uses_partner_ref(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=100.0, taxes_id=tax_21)
