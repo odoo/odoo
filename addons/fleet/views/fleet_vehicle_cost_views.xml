@@ -31,7 +31,7 @@
                                        'list_view_ref': 'fleet.fleet_vehicle_service_types_view_tree',
                                        'form_view_ref': 'fleet.fleet_service_type_view_form_shared'
                                    }"/>
-                            <field name="insurer_id" widget="many2one_avatar_user"/>
+                            <field name="insurer_id" widget="many2one_avatar"/>
                             <field name="service_ids" widget="many2many_tags" domain="[('category', '=', 'service')]"
                                    context="{
                                        'default_category': 'service',
