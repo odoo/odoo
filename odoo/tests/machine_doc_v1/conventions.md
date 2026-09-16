@@ -121,6 +121,10 @@ classes individually silently stops covering new ones.
 - `warmup`/`assertQueryCount`: the warm-up run executes the whole test body
   once with `self.warm = False`; assertions must be conditional on nothing —
   the framework skips the count checks itself.
+- `assertQueriesConstant(run, small, large)`: `run(n)` at both sizes, each in
+  a savepoint after `invalidate_all`, one warm-up run first; equal counts or
+  the assertion fails. It pins the shape (no N+1) where `assertQueryCount`
+  pins the number.
 - Retry mode (`ODOO_TEST_FAILURE_RETRIES`) treats **any ERROR-level log**
   during a soft run as failure (`lower_logging`), not just assertions.
 - `benchmark.compute_stats`: mean/median/percentiles are outlier-trimmed
