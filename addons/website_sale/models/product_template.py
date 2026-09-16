@@ -1422,7 +1422,12 @@ class ProductTemplate(models.Model):
         If the template has no images, the template itself is returned.
         """
         self.ensure_one()
-        return self.product_template_image_ids.sorted("sequence") or self
+        return (
+            self.product_template_image_ids.sorted("sequence").filtered(
+                lambda image: not image.has_attribute_value
+            )
+            or self
+        )
 
     def _get_shop_images(self):
         """Return the primary and secondary images to display on the shop page.
