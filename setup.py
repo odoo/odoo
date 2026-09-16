@@ -64,7 +64,6 @@ setup(
         'werkzeug',
         'xlrd',
         'xlsxwriter',
-        'xlwt',
         'zeep',
     ],
     python_requires='>=' + ".".join(map(str, MIN_PY_VERSION)),

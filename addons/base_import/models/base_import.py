@@ -406,9 +406,6 @@ class Base_ImportImport(models.TransientModel):
                     return handler(options)
             except ImportError as exc:
                 requires = exc.name_from or exc.name
-                if file_extension == 'xlsx':
-                    # if xlrd 2.x then xlrd.xlsx is not available
-                    requires = 'openpyxl or xlrd >= 1.0.0 < 2.0'
             except (ImportValidationError, ValueError):
                 raise
             except Exception as exc:  # noqa: BLE001
