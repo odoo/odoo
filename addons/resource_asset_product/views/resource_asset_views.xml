@@ -9,6 +9,21 @@
             <field name="kind_id" position="before">
                 <field name="product_id" />
             </field>
+            <page name="meters" position="after">
+                <page name="ledger" string="Ledger">
+                    <field name="log_ids">
+                        <list>
+                            <field name="date" />
+                            <field name="log_type" />
+                            <field name="product_id" />
+                            <field name="vendor_id" optional="hide" />
+                            <field name="state" widget="badge" />
+                            <field name="amount" sum="Total" />
+                            <field name="currency_id" column_invisible="True" />
+                        </list>
+                    </field>
+                </page>
+            </page>
         </field>
     </record>
 

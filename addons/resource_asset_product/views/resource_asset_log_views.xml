@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_log_view_list" model="ir.ui.view">
+        <field name="name">resource.asset.log.list</field>
+        <field name="model">resource.asset.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date" />
+                <field name="asset_id" />
+                <field name="log_type" />
+                <field name="product_id" optional="show" />
+                <field name="product_category_id" optional="hide" />
+                <field name="vendor_id" optional="hide" />
+                <field name="inv_ref" optional="hide" />
+                <field name="state" widget="badge" />
+                <field name="amount" sum="Total" />
+                <field name="currency_id" column_invisible="True" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="resource_asset_log_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.log.form</field>
+        <field name="model">resource.asset.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group name="entry">
+                            <field name="asset_id" />
+                            <field name="date" />
+                            <field name="log_type" />
+                            <field name="state" />
+                        </group>
+                        <group name="cost">
+                            <field name="product_id" />
+                            <field name="product_category_id" readonly="1" />
+                            <field name="vendor_id" />
+                            <field name="inv_ref" />
+                            <field name="amount" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="source" readonly="1" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <separator string="Notes" />
+                    <field name="notes" nolabel="1" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_asset_log_view_search" model="ir.ui.view">
+        <field name="name">resource.asset.log.search</field>
+        <field name="model">resource.asset.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="asset_id" />
+                <field name="product_id" />
+                <field name="vendor_id" />
+                <field name="inv_ref" />
+                <filter
+                    name="open"
+                    string="Open"
+                    domain="[('state', 'in', ['new', 'running'])]" />
+                <filter
+                    name="closed"
+                    string="Closed"
+                    domain="[('state', 'in', ['done', 'cancelled'])]" />
+                <separator />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <filter
+                    name="group_asset"
+                    string="Asset"
+                    context="{'group_by': 'asset_id'}" />
+                <filter
+                    name="group_type"
+                    string="Type"
+                    context="{'group_by': 'log_type'}" />
+                <filter
+                    name="group_state"
+                    string="State"
+                    context="{'group_by': 'state'}" />
+                <filter
+                    name="group_date"
+                    string="Date"
+                    context="{'group_by': 'date'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_resource_asset_log" model="ir.actions.act_window">
+        <field name="name">Ledger</field>
+        <field name="res_model">resource.asset.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="resource_asset_log_view_search" />
+    </record>
+
+    <menuitem
+        id="menu_asset_ledger"
+        parent="resource_asset.menu_asset_root"
+        action="action_resource_asset_log"
+        sequence="4" />
+
+</odoo>

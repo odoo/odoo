@@ -14,6 +14,7 @@
         "security/resource_asset_product_security.xml",
         "views/product_template_views.xml",
         "views/resource_asset_views.xml",
+        "views/resource_asset_log_views.xml",
     ],
     "auto_install": True,
 }
