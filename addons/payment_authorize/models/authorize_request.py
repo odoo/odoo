@@ -8,8 +8,12 @@ from uuid import uuid4
 
 import requests
 
+from odoo.exceptions import ValidationError
+from odoo.tools import LazyTranslate
+
 from odoo.addons.payment import utils as payment_utils
 
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
@@ -272,8 +276,13 @@ class AuthorizeAPI:
         :param str transaction_id: transaction id
         :return: a dict containing the transaction details
         :rtype: dict
+        :raise ValidationError: If the request fails due to a network error.
         """
-        return self._make_request('getTransactionDetailsRequest', {'transId': transaction_id})
+        try:
+            return self._make_request('getTransactionDetailsRequest', {'transId': transaction_id})
+        except requests.exceptions.RequestException as error:
+            _logger.warning("Could not retrieve the transaction details: %s", error)
+            raise ValidationError(_lt("Authorize.Net: Could not retrieve the transaction details.")) from error
 
     def capture(self, transaction_id, amount):
         """Capture a previously authorized payment for the given amount.
