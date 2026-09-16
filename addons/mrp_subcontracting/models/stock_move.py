@@ -224,6 +224,12 @@ class StockMove(models.Model):
                 and self.location_dest_id.id == subcontracting_location.id
         )
 
+    def _search_picking_for_assignation(self):
+        res = super()._search_picking_for_assignation()
+        if self.location_dest_id.is_subcontract():
+            return res.filtered(lambda p: self.partner_id == p.partner_id)
+        return res
+
     def _can_create_lot(self):
         return super()._can_create_lot() or self.env.context.get('force_lot_m2o')
 
