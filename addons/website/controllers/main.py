@@ -566,6 +566,11 @@ class Website(Home):
         image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
         return self._get_theme_static_preview_image_url(theme_name, image_name)
 
+    def _is_configurator_preview_image_url(self, image_url):
+        if not image_url:
+            return False
+        return image_url.startswith(API_WEBSITE_IMAGES_URL) or bool(re.match(r'^/[^/]+/static/', image_url))
+
     def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
         """Replace preview image URLs with industry-specific images.
 
@@ -578,12 +583,7 @@ class Website(Home):
         shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
         for image_name, shape_path in shape_urls:
             mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
-            if not mapped_image_url:
-                continue
-            if (
-                not mapped_image_url.startswith(API_WEBSITE_IMAGES_URL)
-                and not re.match(r'^/[^/]+/static/', mapped_image_url)
-            ):
+            if not self._is_configurator_preview_image_url(mapped_image_url):
                 continue
             shape_src = f'/html_editor/image_shape/{image_name}/{shape_path}'
             shape_file_path, _, shape_query = shape_path.partition('?')
@@ -621,7 +621,7 @@ class Website(Home):
         def replace_keyed_image(match):
             el = match.group(0)
             image_url = self._get_configurator_industry_image_url(images_map, match.group(1))
-            if not image_url:
+            if not self._is_configurator_preview_image_url(image_url):
                 return el
             el = re.sub(r'src="[^"]*"', lambda _m: f'src="{image_url}"', el)
             return re.sub(r'url\((["\']?)[^)]*?\1\)', lambda m: f'url({m.group(1)}{image_url}{m.group(1)})', el)
@@ -635,7 +635,9 @@ class Website(Home):
                 images_map,
                 image_url.replace('/web/image/', '', 1),
             )
-            return mapped_image_url or image_url
+            if not self._is_configurator_preview_image_url(mapped_image_url):
+                return image_url
+            return mapped_image_url
 
         final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
         return final_html
