@@ -1404,7 +1404,7 @@ class StockMove(models.Model):
                 self.product_uom_id,
                 round=False,
             )
-        return quantity
+        return self.product_uom_id.round(quantity)
 
     def _recompute_state(self):
         if self.env.context.get("preserve_state"):

@@ -1070,3 +1070,101 @@ class TestGatherPathsAgree(TestStockCommon):
             "search against search and proved nothing",
         )
         self.assertGreaterEqual(combinations, 144)
+
+
+@tagged("post_install", "-at_install")
+class TestANoOpWriteOfQuantityMovesNoStock(TransactionCase):
+    """`stock.move.quantity` is stored at 'Product Unit' precision and derived
+    from move lines that are not. `_inverse_quantity` subtracts the second from
+    the first, so the storage rounding used to read as a deliberate increase."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.unit = cls.env.ref("uom.product_uom_unit")
+        # one unit is 0.125 of this, exactly representable in binary, so the
+        # gap to the stored value is exactly half an ulp -- the one case
+        # HALF-UP rounding sends away from zero
+        cls.eighth = cls.env["uom.uom"].create(
+            {
+                "name": "Eighth of a unit",
+                "relative_factor": 8,
+                "relative_uom_id": cls.unit.id,
+            }
+        )
+        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
+        cls.product = cls.env["product.product"].create(
+            {"name": "Rounded move", "is_storable": True, "uom_id": cls.unit.id}
+        )
+        cls.env["stock.quant"]._update_available_quantity(
+            cls.product, cls.warehouse.lot_stock_id, 1000
+        )
+
+    def _move_of_one_unit_measured_in_eighths(self):
+        move = self.env["stock.move"].create(
+            {
+                "product_id": self.product.id,
+                "product_uom_id": self.eighth.id,
+                "product_uom_qty": 1,
+                "picking_type_id": self.warehouse.out_type_id.id,
+                "location_id": self.warehouse.lot_stock_id.id,
+                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
+            }
+        )
+        move._action_confirm()
+        move.move_line_ids.unlink()
+        self.env["stock.move.line"].create(
+            {
+                "move_id": move.id,
+                "product_id": self.product.id,
+                "product_uom_id": self.unit.id,
+                "quantity": 1.0,
+                "location_id": self.warehouse.lot_stock_id.id,
+                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
+            }
+        )
+        self.env.flush_all()
+        move.invalidate_recordset(["quantity"])
+        return move
+
+    def test_the_fixture_still_sits_on_the_rounding_boundary(self):
+        """Without this the test below passes for the wrong reason: a fixture
+        whose sum happens to be exact would compare equal either way."""
+        move = self._move_of_one_unit_measured_in_eighths()
+        unrounded = sum(
+            line.product_uom_id._compute_quantity(
+                line.quantity, move.product_uom_id, round=False
+            )
+            for line in move.move_line_ids
+        )
+        self.assertEqual(unrounded, 0.125)
+        self.assertEqual(move.quantity, 0.13)
+        self.assertEqual(
+            move.product_uom_id.compare(move.quantity - unrounded, 0),
+            1,
+            "the unrounded gap must still round away from zero, or the "
+            "regression below is no longer being exercised",
+        )
+
+    def test_writing_the_displayed_quantity_back_changes_nothing(self):
+        move = self._move_of_one_unit_measured_in_eighths()
+        before = [(line.id, line.quantity) for line in move.move_line_ids]
+
+        move.quantity = move.quantity
+        self.env.flush_all()
+        move.invalidate_recordset()
+
+        self.assertEqual(
+            [(line.id, line.quantity) for line in move.move_line_ids],
+            before,
+            "a no-op write of quantity must not move stock",
+        )
+
+    def test_a_real_increase_still_reaches_the_move_lines(self):
+        """The rounding must not be bought by making the inverse inert."""
+        move = self._move_of_one_unit_measured_in_eighths()
+        move.quantity = 1.0
+        self.env.flush_all()
+        move.invalidate_recordset()
+        self.assertEqual(move.quantity, 1.0)
+        self.assertAlmostEqual(move._get_move_line_quantity(), 1.0, places=2)
