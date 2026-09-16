@@ -88,7 +88,7 @@
                             <list name="order_line_list" string="Order lines" editable="bottom">
                                 <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
-                                <field name="product_id" widget="account_product_field" readonly="parent.is_refund"/>
+                                <field name="product_id" widget="pos_product_many2one" readonly="parent.is_refund"/>
                                 <field name="is_edited" readonly="1" />
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
@@ -105,6 +105,7 @@
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="refunded_qty" optional="hide" />
+                                <field name="custom_attribute_value_ids" optional="hide" readonly="1" widget="many2many_tags"/>
                             </list>
                             <form string="Order lines">
                                 <group col="4">
