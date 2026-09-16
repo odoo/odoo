@@ -484,7 +484,8 @@ class Task(models.Model):
             for project_follower in project_followers:
                 project_subtypes = project_follower.subtype_ids
                 task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
-                partner_ids.remove(project_follower.partner_id.id)
+                if project_follower.partner_id.id in partner_ids:
+                    partner_ids.remove(project_follower.partner_id.id)
                 super().message_subscribe(project_follower.partner_id.ids, task_subtypes)
         return super().message_subscribe(partner_ids, subtype_ids)
 
