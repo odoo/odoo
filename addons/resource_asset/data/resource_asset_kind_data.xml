@@ -62,6 +62,15 @@
             eval="[Command.set([ref('identifier_type_imei')])]" />
     </record>
 
+    <record id="kind_furniture" model="resource.asset.kind">
+        <field name="name">Furniture</field>
+        <field name="code">furniture</field>
+        <field name="sequence">10</field>
+        <field
+            name="identifier_type_ids"
+            eval="[Command.set([ref('identifier_type_inventory')])]" />
+    </record>
+
     <record id="kind_telecom" model="resource.asset.kind">
         <field name="name">Telecom Equipment</field>
         <field name="code">telecom</field>

@@ -91,6 +91,17 @@ class TestResourceAsset(TransactionCase):
             self.Asset.search([("missing_identifier_type_ids", "in", self.vin.ids)]),
         )
 
+    def test_furniture_wants_the_company_s_inventory_tag(self):
+        desk = self.Asset.create(
+            {
+                "name": "Reception desk",
+                "kind_id": self.env.ref("resource_asset.kind_furniture").id,
+            }
+        )
+        inventory = self.env.ref("resource_asset.identifier_type_inventory")
+        self.assertEqual(desk.missing_identifier_type_ids, inventory)
+        self.assertEqual(inventory.unique_scope, "company")
+
     def test_telecom_equipment_wants_a_serial_and_an_imei(self):
         radio = self.Asset.create(
             {
