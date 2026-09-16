@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.47
+:Version: 6.48
 :Date: 2026-09-15
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -8092,6 +8092,31 @@ field's type; renaming a model or field; any non-trivial data transformation.
 **Not required**: adding an optional field; installing a new module; view-only
 changes; adding or removing a Many2many relation.
 
+12.4 What a migration cannot reach
+----------------------------------
+
+**No migration phase runs late enough to see rows a model discovers from the
+registry.** In ``odoo/modules/loading.py``, ``run_end_migrations()`` is called
+before ``register_model_hooks()``, and a post-migration runs earlier still, while
+the modules that declare what is being discovered are not yet loaded. A migration
+written to fix up such rows therefore matches nothing, writes nothing and raises
+nothing — it reports success having done its work against an empty set. [review]
+
+This is §2.4.14's failure one level up: a binding no import graph reaches, and a
+migration no registry reaches, both report success having done their work against an
+empty set. Neither has a gate; both are caught by asking what the thing matched.
+
+Do it in the hook that produces the rows instead: ``_register_hook`` runs on every
+registry load, after every module is in, and is the only place that sees the whole
+declaration. A row it creates is a fact about the code, so it is derived rather than
+migrated, and a value carried over from a legacy parameter is carried there too.
+
+Corollary, for a hook that queries its own model: guard it with
+``table_exists(self.env.cr, self._table)``. The hook runs on every load, including
+the load of a database whose module predates the table, and the upgrade that would
+create the table has not run yet — without the guard that database cannot boot at
+all, not even to be upgraded.
+
 ----
 
 Appendix A — Fork field renames
@@ -8448,6 +8473,11 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.48
+     - 2026-09-15
+     - §12.4: no migration phase runs late enough to see rows a ``_register_hook``
+       discovers from the registry, so such a migration reports success against an
+       empty set; a hook querying its own model guards with ``table_exists``.
    * - 6.47
      - 2026-09-15
      - §2.4 head: thirty of its thirty-one gate markers name a tool deleted with
