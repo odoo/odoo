@@ -358,6 +358,10 @@ const processMessage = (data) => {
 };
 
 self.addEventListener("fetch", (event) => {
+    if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") {
+        event.respondWith(processFetchRequest(new Request(event.request.url)));
+        return;
+    }
     event.respondWith(processFetchRequest(event.request));
 });
 
