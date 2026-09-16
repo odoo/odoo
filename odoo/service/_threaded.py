@@ -126,6 +126,7 @@ class ThreadedServer(CommonServer):
         self.httpd: ThreadedHTTPServer | None = None
         self.limits_reached_threads: set[threading.Thread] = set()
         self._overrun_start_times: dict[threading.Thread, float] = {}
+        self._cancelled_overruns: dict[threading.Thread, float] = {}
         self.limit_reached_time: float | None = None
         self._stop_after_init = False
         self._listener_threads: list[threading.Thread] = []
@@ -189,28 +190,62 @@ class ThreadedServer(CommonServer):
             if budget <= 0 or elapsed <= budget:
                 continue
             doing = _describe_thread_work(thread)
+            if self._cancelled_overruns.get(thread) != start_time:
+                # First verdict on this unit of work: cancel what it is
+                # running in PostgreSQL and give it one monitor pass to
+                # return.  Most overruns are one query, and the client gets
+                # an error instead of the whole server reloading under
+                # everyone.
+                self._cancelled_overruns[thread] = start_time
+                cancelled = self._cancel_thread_queries(thread)
+                self.logger.warning(
+                    "Thread %s real time limit (%.1f/%ds) reached%s; cancelled "
+                    "%d running quer%s, reloading if it does not return",
+                    thread,
+                    elapsed,
+                    budget,
+                    f" while {doing}" if doing else "",
+                    cancelled,
+                    "y" if cancelled == 1 else "ies",
+                )
+                _debug.logic(
+                    "server.thread_over_limit",
+                    thread=thread.name,
+                    type=thread_type,
+                    elapsed_s=elapsed,
+                    limit_s=budget,
+                    doing=doing,
+                    cancelled=cancelled,
+                )
+                continue
+            if thread in self.limits_reached_threads:
+                continue
             self.logger.warning(
-                "Thread %s real time limit (%.1f/%ds) reached%s.",
+                "Thread %s is still on the same work %.1fs after its queries were "
+                "cancelled%s; reloading",
                 thread,
                 elapsed,
-                budget,
-                f" while {doing}" if doing else "",
+                f" ({doing})" if doing else "",
             )
             _debug.logic(
-                "server.thread_over_limit",
+                "server.thread_stuck_after_cancel",
                 thread=thread.name,
                 type=thread_type,
                 elapsed_s=elapsed,
-                limit_s=budget,
-                doing=doing,
             )
             self.limits_reached_threads.add(thread)
             self._overrun_start_times[thread] = start_time
-        # An observed overrun requests process recycling, even if that cron/job
-        # finishes before the monitor's next pass. Only thread exit clears it --
-        # or, for a pooled HTTP thread, the end of the request that overran.
+        # The verdict stands for the unit of work it was given on: the end of
+        # that request, sweep or job clears it, as does the thread's exit.
+        for thread in list(self._cancelled_overruns):
+            if not thread.is_alive() or self._overrun_work_finished(
+                thread, self._cancelled_overruns[thread]
+            ):
+                del self._cancelled_overruns[thread]
         for thread in list(self.limits_reached_threads):
-            if not thread.is_alive() or self._overrun_request_finished(thread):
+            if not thread.is_alive() or self._overrun_work_finished(
+                thread, self._overrun_start_times.get(thread)
+            ):
                 self.limits_reached_threads.remove(thread)
                 self._overrun_start_times.pop(thread, None)
                 _debug.lifecycle(
@@ -240,12 +275,21 @@ class ThreadedServer(CommonServer):
         else:
             self.limit_reached_time = None
 
-    def _overrun_request_finished(self, thread: threading.Thread) -> bool:
-        if getattr(thread, "type", None) not in ("http", "http_idle"):
-            return False
-        return getattr(thread, "start_time", None) != self._overrun_start_times.get(
-            thread
-        )
+    @staticmethod
+    def _overrun_work_finished(thread: threading.Thread, started: float | None) -> bool:
+        return getattr(thread, "start_time", None) != started
+
+    def _cancel_thread_queries(self, thread: threading.Thread) -> int:
+        try:
+            return db.cancel_queries_of(thread.name)
+        except Exception as exc:
+            self.logger.warning(
+                "Could not cancel the queries of %s", thread.name, exc_info=True
+            )
+            _debug.logic(
+                "server.cancel_failed", thread=thread.name, error=type(exc).__name__
+            )
+            return 0
 
     def run_cron_thread(self, number: int) -> None:
         from odoo.addons.base.models.ir_cron import IrCron

@@ -1344,12 +1344,14 @@ class TestPreforkWorkerKill:
 @pytest.fixture
 def tserver(srv):
     s = threaded_server()
-    s.limits_reached_threads = set()
-    s._overrun_start_times = {}
-    s.limit_reached_time = None
-    s.logger = MagicMock()
     s._process_handle = MagicMock()
     return s
+
+
+@pytest.fixture
+def no_db_cancel():
+    with patch("odoo.service._threaded.db.cancel_queries_of", return_value=1) as c:
+        yield c
 
 
 class TestThreadedServerProcessLimit:
@@ -1397,18 +1399,63 @@ class TestThreadedServerProcessLimit:
         assert tserver.limit_reached_time is None
         assert not tserver.limits_reached_threads
 
-    def test_thread_real_time_exceeded_adds_thread(self, tserver):
+    def test_thread_real_time_exceeded_cancels_then_adds_thread(
+        self, tserver, no_db_cancel
+    ):
+        """The first verdict cancels the thread's queries; only a thread still
+        on the same work at the next pass asks for the reload."""
         mock_thread = MagicMock()
         mock_thread.daemon = False
         mock_thread.type = "http"
+        mock_thread.name = "odoo.service.http.request.1"
         mock_thread.start_time = time.monotonic() - 9999
         mock_thread.is_alive.return_value = True
 
         with self._env(config_override={"limit_time_real": 60}, threads=[mock_thread]):
             tserver.check_limits()
+            no_db_cancel.assert_called_once_with("odoo.service.http.request.1")
+            assert mock_thread not in tserver.limits_reached_threads
+            assert tserver.limit_reached_time is None
+            tserver.check_limits()
+        assert no_db_cancel.call_count == 1
+        assert mock_thread in tserver.limits_reached_threads
+        assert tserver.limit_reached_time is not None
+
+    def test_a_cancelled_thread_that_moves_on_is_not_reloaded_for(
+        self, tserver, no_db_cancel
+    ):
+        mock_thread = MagicMock()
+        mock_thread.type = "cron"
+        mock_thread.name = "odoo.service.cron.cron0"
+        mock_thread.start_time = time.monotonic() - 9999
+        mock_thread.is_alive.return_value = True
+        cfg = {"limit_time_real": 3600, "limit_time_real_cron": 60}
+        with self._env(config_override=cfg, threads=[mock_thread]):
+            tserver.check_limits()
+            mock_thread.start_time = time.monotonic()  # the next sweep
+            tserver.check_limits()
+        assert mock_thread not in tserver.limits_reached_threads
+        assert not tserver._cancelled_overruns
+        assert no_db_cancel.call_count == 1
+
+    def test_a_failed_cancel_still_reloads_on_the_next_pass(self, tserver):
+        mock_thread = MagicMock()
+        mock_thread.type = "http"
+        mock_thread.name = "odoo.service.http.request.2"
+        mock_thread.start_time = time.monotonic() - 9999
+        mock_thread.is_alive.return_value = True
+        with (
+            self._env(config_override={"limit_time_real": 60}, threads=[mock_thread]),
+            patch(
+                "odoo.service._threaded.db.cancel_queries_of",
+                side_effect=RuntimeError("pool gone"),
+            ),
+        ):
+            tserver.check_limits()
+            tserver.check_limits()
         assert mock_thread in tserver.limits_reached_threads
 
-    def test_cron_thread_uses_cron_time_limit(self, tserver):
+    def test_cron_thread_uses_cron_time_limit(self, tserver, no_db_cancel):
         mock_thread = MagicMock()
         mock_thread.daemon = False
         mock_thread.type = "cron"
@@ -1419,6 +1466,7 @@ class TestThreadedServerProcessLimit:
             config_override={"limit_time_real": 3600, "limit_time_real_cron": 60},
             threads=[mock_thread],
         ):
+            tserver.check_limits()
             tserver.check_limits()
         assert mock_thread in tserver.limits_reached_threads
 
@@ -1449,7 +1497,7 @@ class TestThreadedServerProcessLimit:
             tserver.check_limits()
         assert dead not in tserver.limits_reached_threads
 
-    def test_limit_reached_time_set_and_cleared(self, tserver):
+    def test_limit_reached_time_set_and_cleared(self, tserver, no_db_cancel):
         mock_thread = MagicMock()
         mock_thread.daemon = False
         mock_thread.type = "http"
@@ -1457,6 +1505,7 @@ class TestThreadedServerProcessLimit:
         mock_thread.is_alive.return_value = True
 
         with self._env(config_override={"limit_time_real": 60}, threads=[mock_thread]):
+            tserver.check_limits()
             tserver.check_limits()
         assert tserver.limit_reached_time is not None
 
