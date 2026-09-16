@@ -108,7 +108,7 @@ class TestNextAfter:
 
 def _walk_occurrences_after(start, after, interval, unit, tz, count):
     local = start.replace(tzinfo=UTC).astimezone(tz)
-    found = []
+    found: list[datetime] = []
     k = 0
     while len(found) < count:
         candidate = (local + get_timedelta(interval, unit) * k).astimezone(UTC)
