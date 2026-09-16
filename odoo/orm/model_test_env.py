@@ -5,7 +5,7 @@ from collections.abc import Iterable, Mapping
 from contextlib import contextmanager, suppress
 from datetime import UTC, datetime
 from functools import partial
-from typing import TYPE_CHECKING, Any, NoReturn, Self, cast
+from typing import TYPE_CHECKING, Any, Self, cast
 
 from odoo.db import BaseCursor, FunctionStatus
 from odoo.libs.collections import Collector
@@ -256,11 +256,11 @@ class InMemoryCursor(BaseCursor):
         return self._closed
 
     @property
-    def connection(self) -> NoReturn:
-        raise NotImplementedError(
-            "InMemoryCursor has no PostgreSQL connection; use a DB-backed "
-            "TransactionCase for code that reaches through cr.connection."
-        )
+    def connection(self) -> None:
+        # the DB-API name for a cursor's connection: there is none, and psycopg
+        # quotes a literal without one (SQL.inlined); a caller wanting the
+        # connection's members fails on None, which is as loud as it was
+        return self._cnx
 
     @property
     def rowcount(self) -> int:
