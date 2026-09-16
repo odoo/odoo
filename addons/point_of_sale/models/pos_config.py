@@ -139,6 +139,7 @@ class PosConfig(models.Model):
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session", search='_search_current_session')
     current_session_state = fields.Char(compute='_compute_current_session')
     current_cash_register_balance = fields.Float(compute='_compute_current_cash_register_balance', string="Cash Register")
+    write_date = fields.Datetime(compute='_compute_write_date', store=True, readonly=True)
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
@@ -563,11 +564,18 @@ class PosConfig(models.Model):
     def _compute_current_cash_register_balance(self):
         for pos_config in self:
             cash_method = pos_config.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
-            if cash_method:
-                balance = cash_method.journal_id.current_statement_balance
-                pos_config.current_cash_register_balance = balance
-            else:
-                pos_config.current_cash_register_balance = 0
+            balance = cash_method.journal_id.current_statement_balance if cash_method else 0
+            pos_config.current_cash_register_balance = balance
+
+    @api.depends('payment_method_ids.account_bank_statement_id.balance_end')
+    def _compute_write_date(self):
+        now = self.env.cr.now()
+        self.fetch(['write_date'])
+        for pos_config in self:
+            if not pos_config.id:
+                pos_config.write_date = pos_config._origin.write_date
+                continue
+            pos_config.write_date = now
 
     @api.depends('session_ids')
     def _compute_current_session_user(self):
