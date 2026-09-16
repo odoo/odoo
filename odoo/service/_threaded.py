@@ -417,16 +417,24 @@ class ThreadedServer(CommonServer):
         if self._listener_stop_pipe is not None:
             with contextlib.suppress(OSError):
                 os.write(self._listener_stop_pipe[1], b".")
-        deadline = max(deadline, time.monotonic() + LISTENER_JOIN_TIMEOUT_S)
-        busy = [t.name for t in self._listener_threads if t.is_alive()]
-        if busy and deadline - time.monotonic() > LISTENER_JOIN_TIMEOUT_S:
+        floor = time.monotonic() + LISTENER_JOIN_TIMEOUT_S
+        deadline = max(deadline, floor)
+        # A thread the limit monitor already flagged over its budget is what
+        # this reload is leaving behind; it gets the floor, not the bound.
+        waited = [
+            t
+            for t in self._listener_threads
+            if t.is_alive() and t not in self.limits_reached_threads
+        ]
+        if waited and deadline - time.monotonic() > LISTENER_JOIN_TIMEOUT_S:
             self.logger.info(
                 "Waiting up to %.0fs for %d listener thread(s) to finish their job",
                 deadline - time.monotonic(),
-                len(busy),
+                len(waited),
             )
         for thread in self._listener_threads:
-            thread.join(max(deadline - time.monotonic(), 0))
+            until = deadline if thread in waited else floor
+            thread.join(max(until - time.monotonic(), 0))
         alive = [t.name for t in self._listener_threads if t.is_alive()]
         if alive:
             self.logger.warning(

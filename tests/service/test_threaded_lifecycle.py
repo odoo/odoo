@@ -258,6 +258,27 @@ class TestGracefulStop:
         assert "still mid-job at shutdown" in said
         assert "ODOO_GRACEFUL_STOP_TIMEOUT" in said
 
+    def test_a_listener_thread_over_its_limit_gets_the_floor_not_the_bound(
+        self, stopped, monkeypatch
+    ):
+        monkeypatch.setenv("ODOO_GRACEFUL_STOP_TIMEOUT", "5")
+        released = threading.Event()
+        thread = threading.Thread(target=lambda: released.wait(10), daemon=True)
+        thread.start()
+        t0 = time.monotonic()
+        server, _, _, _ = stopped(
+            _listener_threads=[thread], limits_reached_threads={thread}
+        )
+        elapsed = time.monotonic() - t0
+        released.set()
+        assert _threaded.LISTENER_JOIN_TIMEOUT_S <= elapsed < 3
+        server.logger.info.assert_any_call(
+            "Initiating shutdown"
+        )  # no "Waiting up to" line for a thread the reload is leaving behind
+        assert not any(
+            "Waiting up to" in str(c) for c in server.logger.info.call_args_list
+        )
+
     def test_a_listener_thread_that_finishes_its_job_in_time_is_joined(
         self, stopped, monkeypatch
     ):
