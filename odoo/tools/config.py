@@ -1164,7 +1164,8 @@ class configmanager:
             help="specify the minimum number of physical connections kept warm "
             "per-database (0 = open lazily on demand). Raise it on single-database "
             "OLTP deployments to remove first-request cold-start latency; keep 0 on "
-            "multi-tenant hosts to avoid holding min_size connections per database",
+            "multi-tenant hosts: the db_maxconn ceiling never trims a pool below "
+            "it, so databases x db_minconn above db_maxconn holds that many",
         )
         group.add_option(
             "--db-template",
