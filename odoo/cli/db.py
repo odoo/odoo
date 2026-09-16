@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 import tempfile
 import textwrap
@@ -13,9 +12,8 @@ from typing import NoReturn
 
 import requests
 
-from ..db import SYSTEM_DBS, db_connect
+from ..db import SYSTEM_DBS
 from ..libs.debug_log import DebugLog
-from ..modules.neutralize import neutralize_database
 from ..service.db import (
     check_db_name,
     drop_database,
@@ -30,9 +28,9 @@ from ..service.db import (
 from ..tools import config
 from . import Command
 from .command import check_db_not_maintenance
+from .neutralize import neutralize_database_or_exit
 from .server import report_configuration
 
-_logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 eprint = partial(print, file=sys.stderr, flush=True)
@@ -515,19 +513,8 @@ class Db(Command):
             rename_database(args.source, args.target)
         _debug.lifecycle("cli.db.renamed", source=args.source, target=args.target)
         if args.neutralize:
-            try:
-                with db_connect(args.target).cursor() as cr:
-                    with _debug.perf("cli.db.neutralize", cr=cr, db=args.target):
-                        neutralize_database(cr)
-                _debug.lifecycle("cli.db.neutralized", db=args.target)
-            except Exception:
-                _debug.logic("cli.db.neutralize_failed", db=args.target)
-                _logger.critical(
-                    "An error occurred during the neutralization. THE "
-                    "DATABASE IS NOT NEUTRALIZED!",
-                    exc_info=True,
-                )
-                sys.exit(1)
+            neutralize_database_or_exit(args.target)
+            _debug.lifecycle("cli.db.neutralized", db=args.target)
 
     def drop(self, args: argparse.Namespace) -> None:
         check_db_not_maintenance(args.database)
