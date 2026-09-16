@@ -1,7 +1,6 @@
 import logging
-from collections.abc import Callable
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, NoReturn, Self
+from typing import TYPE_CHECKING, Any, Self
 from urllib.parse import quote as url_quote
 
 import werkzeug.datastructures
@@ -69,7 +68,7 @@ class HTTPRequest(_HTTPRequestProxied):
             key: value
             for key, value in self.__environ.items()
             if (
-                not key.startswith(("werkzeug.", "wsgi.", "socket"))
+                not key.startswith(("werkzeug.", "wsgi.", "socket", "odoo.socket"))
                 or key in ["wsgi.url_scheme", "werkzeug.proxy_fix.orig"]
             )
         }
@@ -467,30 +466,10 @@ class Response(Proxy):
         super().__init__(response)
 
 
-if not hasattr(werkzeug.exceptions, "_odoo_original_get_response"):
-    werkzeug.exceptions._odoo_original_get_response = HTTPException.get_response
-if not hasattr(werkzeug.exceptions, "_odoo_original_abort"):
-    werkzeug.exceptions._odoo_original_abort = werkzeug.exceptions.abort
-
-_original_abort: Callable[..., NoReturn] = werkzeug.exceptions._odoo_original_abort
-
-
-def get_response(
-    self: HTTPException, environ: dict[str, Any] | None = None, scope: Any = None
+def prepare_exception_response(
+    exc: HTTPException, environ: dict[str, Any] | None = None
 ) -> Response:
-    if self.response is None and self.code is None:
-        _debug.logic("http.exception.statusless_to_500", error=type(self).__name__)
-        self = werkzeug.exceptions.InternalServerError(self.description)
-    return Response(
-        werkzeug.exceptions._odoo_original_get_response(self, environ, scope)
-    )
-
-
-def abort(status: int | Response, *args: Any, **kwargs: Any) -> NoReturn:
-    target: Any = status._wrapped__ if isinstance(status, Response) else status
-    _debug.logic("http.abort", status=getattr(target, "status_code", target))
-    _original_abort(target, *args, **kwargs)
-
-
-HTTPException.get_response = get_response
-werkzeug.exceptions.abort = abort
+    if exc.response is None and exc.code is None:
+        _debug.logic("http.exception.statusless_to_500", error=type(exc).__name__)
+        exc = werkzeug.exceptions.InternalServerError(exc.description)
+    return Response(exc.get_response(environ))

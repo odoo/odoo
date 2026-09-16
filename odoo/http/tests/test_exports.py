@@ -29,15 +29,15 @@ def test_every_public_name_is_declared_in_all():
     )
 
 
-def test_abort_reaches_the_patched_werkzeug_abort():
+def test_abort_hands_werkzeug_the_wrapped_response():
     import werkzeug.exceptions
 
-    from odoo.http import wrappers
+    import odoo.http
 
-    assert werkzeug.exceptions.abort is wrappers.abort
+    assert werkzeug.exceptions.abort.__module__ == "werkzeug.exceptions"
     with pytest.raises(werkzeug.exceptions.HTTPException) as caught:
         odoo.http.abort(odoo.http.Response("x", status=204))
     assert caught.value.response is not None
     assert not isinstance(caught.value.response, odoo.http.Response), (
-        "the patched abort unwraps the proxy before handing werkzeug the response"
+        "abort unwraps the proxy before handing werkzeug the response"
     )

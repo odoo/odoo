@@ -58,11 +58,19 @@ class ParameterError(BadRequest):
     __module__ = "odoo.http"
 
 
+def is_http_answer(exc: BaseException) -> bool:
+    return (
+        isinstance(exc, HTTPException)
+        and exc.code is not None
+        and exc.code < HTTPStatus.INTERNAL_SERVER_ERROR
+    )
+
+
 def abort(status: int | Response, *args: Any, **kwargs: Any) -> NoReturn:
-    # Resolved per call: `wrappers` installs the Odoo `abort` on werkzeug after
-    # this module is imported, so a name bound here at import time would be
-    # werkzeug's original for the life of the process.
-    werkzeug.exceptions.abort(status, *args, **kwargs)
+    # A package Response is a proxy; werkzeug gets the response it wraps.
+    target: Any = getattr(status, "_wrapped__", status)
+    _debug.logic("http.abort", status=getattr(target, "status_code", target))
+    werkzeug.exceptions.abort(target, *args, **kwargs)
     raise AssertionError("werkzeug.exceptions.abort returned")
 
 
@@ -105,5 +113,6 @@ __all__ = (
     "UnsupportedMediaType",
     "abort",
     "get_error_response",
+    "is_http_answer",
     "set_error_response",
 )

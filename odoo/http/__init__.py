@@ -43,6 +43,7 @@ from .exceptions import (
     UnprocessableEntity,
     UnsupportedMediaType,
     abort,
+    is_http_answer,
 )
 
 from ._params import ParamSpec, coerce_params, get_param_specs
@@ -100,6 +101,7 @@ from .wrappers import (
     prepare_content_disposition_header,
     Response,
     Headers,
+    prepare_exception_response,
     prepare_no_content_response,
     ResponseCacheControl,
     ResponseStream,
@@ -198,10 +200,12 @@ __all__ = [
     "get_session_max_inactivity",
     "invalidate_db_catalog_cache",
     "is_cors_preflight",
+    "is_http_answer",
     "is_select_db_path",
     "iter_map_routes",
     "prepare_content_disposition_header",
     "prepare_default_session",
+    "prepare_exception_response",
     "prepare_no_content_response",
     "prepare_openapi_document",
     "prepare_openapi_from_map",

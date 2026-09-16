@@ -28,10 +28,15 @@ from ._retry import RequestRetryParticipant, rewind_uploaded_files
 from .constants import NOT_FOUND_NODB, NOT_FOUND_NODB_TEXT, STATIC_CACHE
 from .core import borrow_request
 from .dispatcher import _dispatchers, get_dispatcher_for_unmatched_route
-from .exceptions import RegistryError, get_error_response, set_error_response
+from .exceptions import (
+    RegistryError,
+    get_error_response,
+    is_http_answer,
+    set_error_response,
+)
 from .settings import current as current_settings
 from .stream import Stream
-from .wrappers import Response
+from .wrappers import Response, prepare_exception_response
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -74,7 +79,7 @@ class _RequestServeMixin(RequestState):
                 f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
                 "Please verify the Content-Type request header and try again."
             )
-            res = UnsupportedMediaType(e).get_response()
+            res = prepare_exception_response(UnsupportedMediaType(e))
             res.headers["Accept"] = ", ".join(dispatcher_cls.mimetypes)
             raise UnsupportedMediaType(response=res)
         self.dispatcher = dispatcher_cls(self)
@@ -115,7 +120,7 @@ class _RequestServeMixin(RequestState):
             explicit_response=exc.response is not None,
         )
         if exc.response is not None:
-            response = exc.get_response()
+            response = prepare_exception_response(exc)
         else:
             _logger.error(
                 "Aborted with a status-less HTTPException while serving %s",
@@ -129,7 +134,7 @@ class _RequestServeMixin(RequestState):
     def _prepare_dispatcher_error_response(self, exc: HTTPException) -> Response:
         handled = self.dispatcher.prepare_error_response(exc)
         if isinstance(handled, HTTPException):
-            return handled.get_response()
+            return prepare_exception_response(handled)
         return handled
 
     def _serve_nodb(self) -> Response:
@@ -446,6 +451,7 @@ class _RequestServeMixin(RequestState):
         if (
             "werkzeug" in current_settings().dev_mode
             and not self.dispatcher.serializes_errors_in_dev_mode
+            and not is_http_answer(exc)
         ):
             _debug.logic(
                 "http.serve.error_left_to_debugger",

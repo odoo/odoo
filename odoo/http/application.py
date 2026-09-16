@@ -37,6 +37,7 @@ from .exceptions import (
     RegistryError,
     SessionExpiredException,
     get_error_response,
+    is_http_answer,
     set_error_response,
 )
 from .geoip import geoip2, maxminddb
@@ -44,7 +45,12 @@ from .request_class import Request
 from .routing import _generate_routing_rules, prepare_routing_map
 from .session import Session
 from .settings import current as current_settings
-from .wrappers import HTTPRequest, Response, prepare_no_content_response
+from .wrappers import (
+    HTTPRequest,
+    Response,
+    prepare_exception_response,
+    prepare_no_content_response,
+)
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -67,8 +73,8 @@ def _prepare_proxy_fix(hops: int) -> ProxyFix_:
 debugger_attached = False
 
 
-def _is_debugger_handover_required(request: Request | None) -> bool:
-    if not debugger_attached:
+def _is_debugger_handover_required(request: Request | None, exc: BaseException) -> bool:
+    if not debugger_attached or is_http_answer(exc):
         return False
     if request is None:
         return True
@@ -380,7 +386,9 @@ class Application:
             return response
         try:
             if isinstance(response, HTTPException):
-                response = response.get_response(request.httprequest.environ)
+                response = prepare_exception_response(
+                    response, request.httprequest.environ
+                )
             if request._post_init_done:
                 request.dispatcher.post_dispatch(response)
             else:
@@ -475,7 +483,7 @@ class Application:
                     error=type(exc).__name__,
                     status=getattr(exc, "code", None),
                 )
-                if _is_debugger_handover_required(request):
+                if _is_debugger_handover_required(request, exc):
                     _debug.logic(
                         "http.request.debugger_handover", error=type(exc).__name__
                     )

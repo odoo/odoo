@@ -8,22 +8,6 @@ _CORE = pathlib.Path(__file__).resolve().parents[3] / "odoo"
 
 
 KNOWN_PATCHES: dict[tuple[str, str], str] = {
-    ("http/wrappers.py", "HTTPException.get_response"): (
-        "Makes werkzeug's HTTPException render through Odoo's Response. Tightly "
-        "bound to the wrappers module it lives in; moving it to "
-        "_monkeypatches/werkzeug.py would split one behaviour across two files."
-    ),
-    ("http/wrappers.py", "werkzeug.exceptions.abort"): (
-        "Same behaviour, same argument: abort() must raise the patched HTTPException."
-    ),
-    ("http/wrappers.py", "werkzeug.exceptions._odoo_original_get_response"): (
-        "Not a patch but the re-entrancy guard for one: stashes the original "
-        "under an `if not hasattr(...)` so a reimport does not capture the "
-        "already-patched function. Moves with the two patches above."
-    ),
-    ("http/wrappers.py", "werkzeug.exceptions._odoo_original_abort"): (
-        "The same guard for abort()."
-    ),
     ("tests/common.py", "freezegun.freeze_time"): (
         "Replaces freezegun's decorator so @freeze_time also patches Odoo's own "
         "clock sources. Lives beside the replacement class it installs; a "
@@ -175,7 +159,7 @@ assert safe_eval.safe_eval(
         self.assertFalse(_is_test_suite(parts_framework))
 
     def test_scan_is_not_vacuous(self):
-        self.assertGreaterEqual(len(find_patches()), 5)
+        self.assertGreaterEqual(len(find_patches()), 4)
 
     def test_nested_module_level_blocks_are_walked(self):
         tree = ast.parse(
