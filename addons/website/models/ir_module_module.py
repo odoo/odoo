@@ -40,6 +40,7 @@ class IrModuleModule(models.Model):
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')
 
+    @api.depends_context('website_id', 'host_id')
     def _compute_is_installed_on_current_website(self):
         """
             Compute for every theme in ``self`` if the current website is using it or not.
@@ -48,8 +49,11 @@ class IrModuleModule(models.Model):
             the current website as having multiple different themes installed at the same time,
             which would be confusing for the user.
         """
+        # fallback to the host_id, this field is read from the themes kanban,
+        # i.e. over a backend route for which `_match` dropped `website_id`.
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         for module in self:
-            module.is_installed_on_current_website = module == self.env.website.theme_id
+            module.is_installed_on_current_website = module == website.theme_id
 
     def _button_immediate_function(self, func):
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
@@ -416,7 +420,9 @@ class IrModuleModule(models.Model):
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
-        self._theme_remove(self.env.website)
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website.ensure_one()
+        self._theme_remove(website)
 
     def button_refresh_theme(self):
         """
@@ -425,7 +431,9 @@ class IrModuleModule(models.Model):
             To refresh it, we only need to upgrade the modules.
             Indeed the (re)loading of the theme will be done automatically on ``write``.
         """
-        self.env.website.theme_id._theme_upgrade_upstream()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website.ensure_one()
+        website.theme_id._theme_upgrade_upstream()
 
     @api.model
     def update_list(self):
