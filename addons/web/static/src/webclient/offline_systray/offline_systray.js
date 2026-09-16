@@ -110,9 +110,9 @@ class OfflineSystray extends Component {
             if (this.uiService.isSmall) {
                 return "";
             }
-            return "text-bg-secondary";
+            return "text-bg-300";
         }
-        return "text-bg-secondary";
+        return "text-bg-300";
     }
 
     get labelIcon() {

@@ -5,7 +5,7 @@
         <div class="">
             <div class="col-auto my-1" t-foreach="this.recordOnboardingSteps" t-as="step" t-key="step.id">
                 <i class="oi oi-filled me-2 fs-5" t-att-class="{
-                    'text-secondary': step.state == 'not_done',
+                    'text-300': step.state == 'not_done',
                     'text-success': step.state != 'not_done',
                 }" t-attf-data-icon="{{ step.state == 'not_done' ? 'circle' : 'check_circle' }}"/>
                 <a href="#"
