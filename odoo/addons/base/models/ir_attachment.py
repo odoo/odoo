@@ -693,7 +693,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _get_full_path(self, path: str) -> str:
-        path = self._sanitize_store_key(path)
+        path = self._normalize_store_key(path)
         filestore = _get_filestore_root(self._get_filestore())
         full = os.path.realpath(Path(filestore, path))
         if full != filestore and not full.startswith(filestore + os.sep):
@@ -1031,12 +1031,12 @@ class IrAttachment(models.Model):
             return self._is_same_stream_as_file(fa, size, path_b)
 
     @api.model
-    def _sanitize_store_key(self, key: str) -> str:
+    def _normalize_store_key(self, key: str) -> str:
         return re.sub(r"[.:]", "", key).strip("/\\")
 
     @api.model
     def _is_canonical_store_key(self, fname: str) -> bool:
-        return bool(fname) and self._sanitize_store_key(fname) == fname
+        return bool(fname) and self._normalize_store_key(fname) == fname
 
     def _update_content(self, asbytes: Callable[[Any], bytes]) -> None:
         self._check_serving_attachments()
@@ -1989,7 +1989,7 @@ class IrAttachment(models.Model):
         checklist_dir = self._get_filestore_dir("checklist")
         by_shard_dir: dict[Path, list[Path]] = defaultdict(list)
         for fname in fnames:
-            full_path = checklist_dir / self._sanitize_store_key(fname)
+            full_path = checklist_dir / self._normalize_store_key(fname)
             by_shard_dir[full_path.parent].append(full_path)
         _debug.lifecycle("marked_for_gc", count=len(fnames), shards=len(by_shard_dir))
         for shard_dir, paths in by_shard_dir.items():

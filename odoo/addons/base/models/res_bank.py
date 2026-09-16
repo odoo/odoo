@@ -72,7 +72,7 @@ class ResBank(models.Model):
             return domain
         return super()._search_display_name(operator, value)
 
-    def _sanitize_vals(self, vals: ValuesType) -> ValuesType:
+    def _normalize_vals(self, vals: ValuesType) -> ValuesType:
         if bic := vals.get("bic"):
             vals["bic"] = bic.upper()
         return vals
@@ -80,11 +80,11 @@ class ResBank(models.Model):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         _debug.lifecycle("bank_create", count=len(vals_list))
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+        return super().create([self._normalize_vals(vals) for vals in vals_list])
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("bank_write", count=len(self), fields=list(vals))
-        return super().write(self._sanitize_vals(vals))
+        return super().write(self._normalize_vals(vals))
 
     @api.onchange("country")
     def _onchange_country(self) -> None:
@@ -318,7 +318,7 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.color = 10 if bank.allow_out_payment else 1
 
-    def _sanitize_vals(self, vals: ValuesType) -> ValuesType:
+    def _normalize_vals(self, vals: ValuesType) -> ValuesType:
         if "acc_number" not in vals and "sanitized_acc_number" in vals:
             _debug.logic("acc_number_taken_from_sanitized")
             vals["acc_number"] = vals.pop("sanitized_acc_number")
@@ -333,11 +333,11 @@ class ResPartnerBank(models.Model):
             count=len(vals_list),
             partners=sorted({vals.get("partner_id") or 0 for vals in vals_list}),
         )
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+        return super().create([self._normalize_vals(vals) for vals in vals_list])
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("bank_account_write", count=len(self), fields=list(vals))
-        return super().write(self._sanitize_vals(vals))
+        return super().write(self._normalize_vals(vals))
 
     def action_archive_bank(self) -> dict[str, str]:
         self.check_singleton()

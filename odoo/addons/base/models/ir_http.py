@@ -280,7 +280,7 @@ class IrHttp(models.AbstractModel):
             raise AccessDenied from exc
 
     @classmethod
-    def _sanitize_cookies(cls, cookies: Any) -> None:
+    def _update_cookies(cls, cookies: Any) -> None:
         pass
 
     @classmethod

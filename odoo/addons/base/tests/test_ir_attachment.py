@@ -700,7 +700,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 f"{path!r} escaped the filestore as {resolved}",
             )
 
-        self.patch(IrAttachment, "_sanitize_store_key", lambda self, path: path)
+        self.patch(IrAttachment, "_normalize_store_key", lambda self, path: path)
         with self.assertRaises(ValueError):
             self.Attachment._get_full_path("../../etc/passwd")
         with self.assertRaises(ValueError):
@@ -3472,7 +3472,7 @@ class TestGcChecklistAddressing(TransactionCaseWithUserDemo):
         stray.write_bytes(b"")
         self.addCleanup(stray.unlink, True)
         self.assertNotEqual(
-            self.Attachment._sanitize_store_key(str(stray.relative_to(self.checklist))),
+            self.Attachment._normalize_store_key(str(stray.relative_to(self.checklist))),
             str(stray.relative_to(self.checklist)),
             "this test needs a name the sanitizer rewrites",
         )

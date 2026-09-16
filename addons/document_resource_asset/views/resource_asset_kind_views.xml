@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_kind_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.kind.form.documents</field>
+        <field name="model">resource.asset.kind</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_kind_view_form" />
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group string="Documents">
+                    <field name="document_setting_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                            <field name="centralize" />
+                            <field name="folder_id" />
+                            <field name="tag_ids" widget="many2many_tags" />
+                        </list>
+                    </field>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+</odoo>

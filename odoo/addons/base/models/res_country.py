@@ -255,7 +255,7 @@ class ResCountryGroup(models.Model):
         "The country group code must be unique!",
     )
 
-    def _sanitize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
+    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
         if code := vals.get("code"):
             vals["code"] = code.upper()
         return vals
@@ -265,11 +265,11 @@ class ResCountryGroup(models.Model):
         _debug.lifecycle(
             "country_group_create", codes=[vals.get("code") for vals in vals_list]
         )
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+        return super().create([self._normalize_vals(vals) for vals in vals_list])
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("country_group_write", count=len(self), fields=list(vals))
-        return super().write(self._sanitize_vals(vals))
+        return super().write(self._normalize_vals(vals))
 
 
 class ResCountryState(models.Model):

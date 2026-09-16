@@ -427,7 +427,7 @@ class TestResCurrency(TransactionCase):
         self.assertAlmostEqual(other.rate, 2 / 10)
         self.assertIn(f"{2 / 10:.6f}", other.rate_string)
 
-    def test_sanitize_vals_does_not_mutate_caller_dict(self):
+    def test_normalize_vals_does_not_mutate_caller_dict(self):
         currency = self.env["res.currency"].create({"name": "SAN", "symbol": "S"})
         create_vals = {
             "name": "2020-01-01",

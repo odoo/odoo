@@ -40,7 +40,7 @@ class TestCompany(TransactionCase):
         company.write({"code": "   "})
         self.assertFalse(company.code)
 
-    def test_sanitize_vals_does_not_mutate_caller_dict(self):
+    def test_normalize_vals_does_not_mutate_caller_dict(self):
         create_vals = {"name": "Audit Caller", "code": "  ac "}
         create_vals_copy = dict(create_vals)
         company = self.env["res.company"].create(create_vals)

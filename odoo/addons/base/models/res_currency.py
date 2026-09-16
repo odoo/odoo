@@ -616,7 +616,7 @@ class ResCurrencyRate(models.Model):
         "The currency rate must be strictly positive.",
     )
 
-    def _sanitize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
+    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
         drop = set()
         if "inverse_company_rate" in vals and (
             "company_rate" in vals or "rate" in vals
@@ -633,7 +633,7 @@ class ResCurrencyRate(models.Model):
         self.env["res.currency"].invalidate_model(
             ["rate", "inverse_rate", "rate_string"]
         )
-        res = super().write(self._sanitize_vals(vals))
+        res = super().write(self._normalize_vals(vals))
         _debug.lifecycle("rate_write", count=len(self), fields=list(vals))
         return res
 
@@ -642,7 +642,7 @@ class ResCurrencyRate(models.Model):
         self.env["res.currency"].invalidate_model(
             ["rate", "inverse_rate", "rate_string"]
         )
-        records = super().create([self._sanitize_vals(vals) for vals in vals_list])
+        records = super().create([self._normalize_vals(vals) for vals in vals_list])
         _debug.lifecycle("rate_create", count=len(records))
         return records
 

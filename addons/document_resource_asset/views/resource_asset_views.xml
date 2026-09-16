@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.form.documents</field>
+        <field name="model">resource.asset</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    icon="fa-file-text-o"
+                    invisible="not document_centralized"
+                    class="oe_stat_button">
+                    <field name="count_document" string="Documents" widget="statinfo" />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

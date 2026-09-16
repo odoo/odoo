@@ -301,7 +301,7 @@ class ResCompany(models.Model):
     def _default_currency_id(self) -> models.Model:
         return self.env.user.company_id.currency_id
 
-    def _sanitize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
+    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
         if "code" not in vals:
             return vals
         code = (vals["code"] or "").strip().upper()
@@ -310,7 +310,7 @@ class ResCompany(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        vals_list = [self._sanitize_vals(vals) for vals in vals_list]
+        vals_list = [self._normalize_vals(vals) for vals in vals_list]
 
         no_partner_vals_list = [
             vals
@@ -395,7 +395,7 @@ class ResCompany(models.Model):
         return companies
 
     def write(self, vals: dict[str, Any]) -> bool:
-        vals = self._sanitize_vals(vals)
+        vals = self._normalize_vals(vals)
         if "parent_id" in vals and any(
             c.parent_id.id != vals["parent_id"] for c in self
         ):

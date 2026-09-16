@@ -58,7 +58,7 @@ class PhoneNumber(models.Model):
     )
 
     @api.model
-    def _sanitize_number(self, number: str, country=None) -> str:
+    def _normalize_number(self, number: str, country=None) -> str:
         number = PHONE_NOISE_PATTERN.sub("", number or "")
         if number.startswith("00"):
             _debug.logic("sanitize_prefix_rewritten", country=bool(country))
@@ -72,7 +72,7 @@ class PhoneNumber(models.Model):
     def _compute_sanitized(self) -> None:
         _debug.perf.count("sanitized_computed", phones=len(self))
         for phone in self:
-            phone.sanitized = self._sanitize_number(
+            phone.sanitized = self._normalize_number(
                 phone.number, phone._get_phone_country()
             )
 
@@ -86,7 +86,7 @@ class PhoneNumber(models.Model):
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         wanted = [
-            self._sanitize_number(vals.get("number"), self._get_country_from_vals(vals))
+            self._normalize_number(vals.get("number"), self._get_country_from_vals(vals))
             for vals in vals_list
         ]
         existing = {

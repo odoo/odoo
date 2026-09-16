@@ -1646,7 +1646,7 @@ the `phone` and `mobile` columns on partners, users and companies.
 `_rec_name` is `number`; `_rec_names_search` also covers `sanitized` and `label`.
 **Key Fields:** `number`, `sanitized` (computed), `type`, `country_id`,
 `primary`, `label`, `partner_ids`
-**Key Methods:** `_sanitize_number(number, country)`, `_get_phone_country()`
+**Key Methods:** `_normalize_number(number, country)`, `_get_phone_country()`
 
 ### models/report_paperformat.py
 
