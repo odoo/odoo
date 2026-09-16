@@ -234,16 +234,14 @@ patch(ProductScreen.prototype, {
             { textAnswer: {}, userData }
         );
     },
-    onMouseDown(event, product) {
-        if (product.event_id) {
-            return;
+    onPointerDown(event, product) {
+        if (!product.event_id) {
+            return super.onPointerDown(event, product);
         }
-        return super.onMouseDown(event, product);
-    },
-    onTouchStart(product) {
-        if (product.event_id) {
-            return;
+        if (event.pointerType === "mouse") {
+            this.longPressHandlers.onMouseDown(event, product);
+        } else {
+            this.longPressHandlers.onTouchStart(product);
         }
-        return super.onTouchStart(product);
     },
 });
