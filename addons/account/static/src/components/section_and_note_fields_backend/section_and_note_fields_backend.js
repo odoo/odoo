@@ -89,8 +89,14 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         super.setup();
         this.productAndDescriptionColumn = "product_and_description";
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
-        // invisible fields to force copy when duplicating a section
-        this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
+        // invisible/readonly fields to force copy when duplicating a section
+        this.copyFields = [
+            "display_type",
+            "collapse_composition",
+            "collapse_prices",
+            "product_id",
+            "product_template_id",
+        ];
         onPatched(() => {
             this.focusToName(this.editedRecord());
         });
