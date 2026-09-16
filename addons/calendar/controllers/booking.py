@@ -308,7 +308,7 @@ class AppointmentController(http.Controller):
             ),
         }
 
-    def _get_slots_values(
+    def _prepare_slots_values(
         self,
         appointment_type,
         selected_filter_record,
@@ -370,7 +370,7 @@ class AppointmentController(http.Controller):
         filter_prefix = (
             "user" if appointment_type.schedule_based_on == "users" else "resource"
         )
-        slots_values = self._get_slots_values(
+        slots_values = self._prepare_slots_values(
             appointment_type,
             selected_filter_record=page_values[f"{filter_prefix}_selected"],
             default_filter_record=page_values[f"{filter_prefix}_default"],
