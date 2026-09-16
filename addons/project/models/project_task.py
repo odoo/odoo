@@ -1979,10 +1979,7 @@ class ProjectTask(models.Model):
             for vals in vals_list
         ]
 
-        active_users = self.env["res.users"]
         has_default_users = "user_ids" in default
-        if not has_default_users:
-            active_users = self.user_ids.filtered("active")
         milestone_mapping = self.env.context.get("milestone_mapping", {})
         for task, vals in zip(self, vals_list, strict=True):
             if not default.get("step_id"):
@@ -2037,9 +2034,7 @@ class ProjectTask(models.Model):
                     Command.create(child_id.copy_data(child_default)[0])
                     for child_id in child_ids.filtered(lambda c: c.active)
                 ]
-            if not has_default_users and vals.get("user_ids"):
-                task_active_users = task.user_ids & active_users
-                vals["user_ids"] = [Command.set(task_active_users.ids)]
+            task._copy_data_assignment(vals, default, has_default_users)
             if self.env.context.get("copy_from_template") and not self.env.context.get(
                 "copy_from_project_template"
             ):
@@ -2276,9 +2271,7 @@ class ProjectTask(models.Model):
             if "company_id" in fields and "default_project_id" not in self.env.context:
                 vals["company_id"] = project.sudo().company_id.id
         elif "default_user_ids" not in self.env.context and "user_ids" in fields:
-            user_ids = vals.get("user_ids", [])
-            user_ids.append(Command.link(self.env.user.id))
-            vals["user_ids"] = user_ids
+            vals.update(self._prepare_assignment_vals(self.env.user))
             dbg.logic.debug(
                 "project.task.default_get: private task, assigning current user %s",
                 self.env.user.id,
@@ -2665,16 +2658,15 @@ class ProjectTask(models.Model):
         )
         self._write_apply_step_change(vals, additional_vals, now)
 
+        assigns = not self._get_fields_assignment().isdisjoint(vals)
         task_ids_without_user_set = set()
-        if "user_ids" in vals and "date_assign" not in vals:
+        if assigns and "date_assign" not in vals:
             task_ids_without_user_set = {task.id for task in self if not task.user_ids}
 
         recurrence_scope = self._write_capture_recurrence_scope(vals)
         self._write_sync_recurrence(vals)
 
-        old_user_ids = (
-            {t: t.user_ids for t in self.sudo()} if "user_ids" in vals else {}
-        )
+        old_user_ids = {t: t.user_ids for t in self.sudo()} if assigns else {}
 
         self._write_clear_triage(vals)
         partner_ids, project_link_per_task_id = self._write_prepare_transfer_notice(
@@ -2720,7 +2712,7 @@ class ProjectTask(models.Model):
 
         self._write_propagate_recurrence(recurrence_scope, vals)
 
-        self._write_apply_assignment(vals, now, task_ids_without_user_set)
+        self._write_apply_assignment(vals, now, task_ids_without_user_set, assigns)
         self._write_send_step_rating(vals)
         self._write_apply_state(vals, now, state_changed)
 
@@ -2752,17 +2744,17 @@ class ProjectTask(models.Model):
     ) -> None:
         project_id = vals.get("project_id") or default_project_id
 
-        if vals.get("user_ids"):
-            user_ids = self._fields["user_ids"].convert_to_cache(
-                vals["user_ids"], self.env["project.task"]
-            )
-            if user_ids:
-                additional_vals["date_assign"] = fields.Datetime.now()
-            if user_ids and not (vals.get("parent_id") or project_id):
-                if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
-                    additional_vals["user_ids"] = [
-                        Command.set(list(user_ids) + [self.env.user.id])
-                    ]
+        assignees = self._get_assigned_users(vals)
+        if assignees:
+            additional_vals["date_assign"] = fields.Datetime.now()
+            # A task with no project is private to its assignees, so a creator who
+            # is not one of them could not read back what they just created.
+            if not (vals.get("parent_id") or project_id) and self.env.user not in (
+                assignees | self.env["res.users"].browse(SUPERUSER_ID)
+            ):
+                additional_vals.update(
+                    self._prepare_assignment_vals(assignees | self.env.user)
+                )
         if default_triage and "triage_id" not in vals:
             additional_vals["triage_id"] = default_triage[0]
         if not vals.get("name") and vals.get("display_name"):
@@ -3071,10 +3063,54 @@ class ProjectTask(models.Model):
                         project_link_per_task_id[task.id] = project_link
         return partner_ids, project_link_per_task_id
 
+    def _copy_data_assignment(self, vals, default, has_default_users) -> None:
+        """Who the copy is for.
+
+        A caller naming `user_ids` names the assignees outright, so the fields a
+        layer composes it from are dropped rather than left to contradict it.
+        Otherwise the copy carries this task's assignees, minus whoever can no
+        longer work on it -- an archived assignee used to disappear only because
+        reading the composed fields hid them, which is a read's business, not a
+        copy's.
+        """
+        self.check_singleton()
+        composed = self._get_fields_assignment() - {"user_ids"}
+        if has_default_users:
+            for fname in composed:
+                vals.pop(fname, None)
+            return
+        for fname in self._get_fields_assignment():
+            if fname in default or not vals.get(fname):
+                continue
+            vals[fname] = [Command.set(self._filter_active_assignees(self[fname]).ids)]
+
+    @api.model
+    def _prepare_assignment_vals(self, users) -> dict[str, Any]:
+        """The vals that assign `users`, through the fields this layer carries
+        assignment on: writing `user_ids` is not enough where it is composed."""
+        return {"user_ids": [Command.set(users.ids)]}
+
+    def _filter_active_assignees(self, assignees):
+        return assignees.filtered("active")
+
+    def _get_fields_assignment(self) -> set[str]:
+        """The fields a write changes the assignees through.
+
+        `user_ids` is the assignment everything downstream reads, but it is not
+        always what a write carries: project_hr composes it from employees and from
+        users without one, and a layer that does that must name its own fields here
+        or every hook keyed on an assignment change stops firing.
+        """
+        return {"user_ids"}
+
     def _write_apply_assignment(
-        self, vals: dict[str, Any], now: Any, task_ids_without_user_set: set[int]
+        self,
+        vals: dict[str, Any],
+        now: Any,
+        task_ids_without_user_set: set[int],
+        assigns: bool = False,
     ) -> None:
-        if "user_ids" in vals:
+        if assigns:
             self._create_missing_triages()
             self._remove_orphan_triages()
             tasks = self.sudo()
@@ -3595,17 +3631,27 @@ class ProjectTask(models.Model):
                     mail_auto_delete=True,
                 )
 
+    def _get_assigned_users(self, values: dict[str, Any]):
+        """The users an assignment reaches, whatever field carried it.
+
+        A layer that composes `user_ids` from fields of its own answers for the
+        users behind them: values are read before the write, so the composed field
+        cannot be read back from the record yet.
+        """
+        if "user_ids" not in values:
+            return self.env["res.users"]
+        return self.env["res.users"].browse(
+            self._fields["user_ids"].convert_to_cache(
+                values.get("user_ids", []),
+                self.env["project.task"],
+                validate=False,
+            )
+        )
+
     def _message_auto_subscribe_followers(
         self, updated_values: dict[str, Any], default_subtype_ids: list[int]
     ) -> list:
-        if "user_ids" not in updated_values:
-            return []
-        value = self._fields["user_ids"].convert_to_cache(
-            updated_values.get("user_ids", []),
-            self.env["project.task"],
-            validate=False,
-        )
-        users = self.env["res.users"].browse(value)
+        users = self._get_assigned_users(updated_values)
         return [
             (user.partner_id.id, default_subtype_ids, False)
             for user in users.exists()

@@ -19,6 +19,7 @@ class ProjectTask(models.Model):
         string="Assignees",
         default=lambda self: self._default_employee_ids(),
         falsy_value_label=_lt("👤 Unassigned"),
+        context={"active_test": False},
         tracking=True,
     )
 
@@ -28,6 +29,8 @@ class ProjectTask(models.Model):
         column1="task_id",
         column2="user_id",
         string="Assignees without Employee",
+        context={"active_test": False},
+        tracking=True,
     )
     user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -41,6 +44,37 @@ class ProjectTask(models.Model):
         readonly=True,
         tracking=False,
     )
+
+    def _get_fields_assignment(self) -> set[str]:
+        return super()._get_fields_assignment() | {"employee_ids", "direct_user_ids"}
+
+    def _filter_active_assignees(self, assignees):
+        assignees = super()._filter_active_assignees(assignees)
+        if assignees._name != "hr.employee":
+            return assignees
+        return assignees.filtered(
+            lambda employee: not employee.user_id or employee.user_id.active
+        )
+
+    @api.model
+    def _prepare_assignment_vals(self, users):
+        return self._assignee_commands_for_users(users, self.env.company)
+
+    def _get_assigned_users(self, values):
+        users = super()._get_assigned_users(values)
+        for fname, comodel in (
+            ("employee_ids", "hr.employee"),
+            ("direct_user_ids", "res.users"),
+        ):
+            if fname not in values:
+                continue
+            records = self.env[comodel].browse(
+                self._fields[fname].convert_to_cache(
+                    values[fname], self.env["project.task"], validate=False
+                )
+            )
+            users |= records if comodel == "res.users" else records.exists().user_id
+        return users
 
     @api.model
     def _default_employee_ids(self):
