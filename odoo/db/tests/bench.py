@@ -1,6 +1,6 @@
 """Re-derive the figures odoo/db/README.md cites.
 
-    p314o19m/bin/python -m odoo.db.tests.bench -c p314o19m.conf -d <db>
+    PYTHONPATH=odoo p314o19m/bin/python -m odoo.db.tests.bench -c p314o19m.conf -d <db>
 
 Every number the README states next to a decision came from one of these
 measurements; run this before believing them and after touching the path they

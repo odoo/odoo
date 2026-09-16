@@ -313,10 +313,11 @@ class _BulkAccessMixin:
                     # limit; decided per row here, so the rows are walked once.
                     while i < n and len(placeholders) < page_size:
                         row = argslist[i]
+                        width = len(row) if isinstance(row, (list, tuple)) else 1
+                        if len(params) + width > _MAX_BIND_PARAMS and params:
+                            clamped += 1  # debuglog
+                            break
                         if isinstance(row, (list, tuple)):
-                            if len(params) + len(row) > _MAX_BIND_PARAMS and params:
-                                clamped += 1  # debuglog
-                                break
                             if template:
                                 placeholders.append(template)
                             elif (ph := ph_by_len.get(len(row))) is not None:

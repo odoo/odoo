@@ -258,6 +258,18 @@ class TestExecuteValuesReachesTheSeamThroughItsEntryPoints(unittest.TestCase):
             "the widest row and applied to every page",
         )
 
+    def test_scalar_rows_are_clamped_by_the_same_ceiling(self):
+        cursor = _FakeCursorForExecuteValues()
+        sent: list[int] = []
+        cursor.execute = lambda q, params=None, log_exceptions=True: sent.append(  # type: ignore[method-assign]
+            len(params)
+        )
+        cursor.execute_values(  # type: ignore[misc]
+            "INSERT INTO t VALUES %s", list(range(70000)), page_size=100000
+        )
+        self.assertEqual((sum(sent), len(sent)), (70000, 2))
+        self.assertLessEqual(max(sent), _MAX_BIND_PARAMS)
+
     def test_mixed_widths_pack_by_what_each_row_actually_binds(self):
         cursor = _FakeCursorForExecuteValues()
         sent: list[int] = []

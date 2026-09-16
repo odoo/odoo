@@ -723,9 +723,10 @@ one exception, and the scanner has a control showing it tells the two apart.
 - **`execute_values` never asks the server for more than 65 535 bind parameters.**
   The extended protocol counts them in a uint16, and PostgreSQL refuses the
   statement outright (`number of parameters must be between 0 and 65535`) —
-  measured on the raw cursor with one column and 65 536 rows. A `page_size`
-  whose page would exceed that for the widest row is clamped to
-  `65535 // width` and the rest of the batches follow; the caller's page size
+  measured on the raw cursor with one column and 65 536 rows. A page closes
+  when the next row — a tuple's width, or one parameter for a scalar row —
+  would push it past the ceiling, decided per row so the rows are walked
+  once and mixed widths pack by what each row binds; the caller's page size
   is a hint about round trips, not a contract about statements.
 - **A savepoint is never opened inside a pipeline**: a savepoint exists to make
   the next failure recoverable, and in pipeline mode it cannot. PostgreSQL
@@ -1035,7 +1036,7 @@ rerun them — is gone. `odoo/db/tests/bench.py` re-derives the ones that
 matter, on this machine, against a database with `base` installed:
 
 ```bash
-p314o19m/bin/python -m odoo.db.tests.bench -c p314o19m.conf -d <db>
+PYTHONPATH=odoo p314o19m/bin/python -m odoo.db.tests.bench -c p314o19m.conf -d <db>
 ```
 
 Wire-stubbed rows (`execute()`, `fetchone()`, `classify_statement`) measure
