@@ -38,7 +38,7 @@
             <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning impossible_combination_alert mt-3">
                 <span>This option or combination of options is not available</span>
             </div>
-            <t t-if="this.props.available_uoms" t-call="sale.uom_selector"/>
+            <t t-if="this.props.available_uoms?.length > 1" t-call="sale.uom_selector"/>
         </td>
         <t t-if="!this.props.optional">
             <td
