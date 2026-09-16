@@ -133,18 +133,27 @@ class Meeting(models.Model):
                 "previous event, and cannot be moved to or after the day of the following event."
             ))
 
+    @api.model
+    def _get_timeslot_key(self, start, stop, allday):
+        if allday:
+            start = datetime.combine(fields.Date.to_date(start), datetime.min.time())
+            stop = datetime.combine(fields.Date.to_date(stop), datetime.min.time())
+        return (start, stop)
+
+    def _timeslot_key(self, allday):
+        """
+        Return the (start, stop) key identifying the event's timeslot, so events
+        can be matched/indexed by timeslot.
+        """
+        self.ensure_one()
+        return self._get_timeslot_key(*self._range(), allday)
+
     def _is_matching_timeslot(self, start, stop, allday):
         """
         Check if an event matches with the provided timeslot
         """
         self.ensure_one()
-
-        event_start, event_stop = self._range()
-        if allday:
-            event_start = datetime(event_start.year, event_start.month, event_start.day, 0, 0)
-            event_stop = datetime(event_stop.year, event_stop.month, event_stop.day, 0, 0)
-
-        return (event_start, event_stop) == (start, stop)
+        return self._timeslot_key(allday) == self._get_timeslot_key(start, stop, allday)
 
     def _forbid_recurrence_update(self):
         """
