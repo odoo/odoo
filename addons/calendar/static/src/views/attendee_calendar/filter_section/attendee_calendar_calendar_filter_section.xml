@@ -20,5 +20,20 @@
         <xpath expr="//div[hasclass('o_calendar_filter_items_checkall')]" position="attributes">
             <attribute name="class" remove="o-checkbox form-check" add="mt-2" separator=" "/>
         </xpath>
+        <!-- "My Activities" filter -->
+        <xpath expr="//AutoComplete" position="before">
+            <div t-if="this.showActivityFilter" class="o-checkbox form-check position-relative w-100">
+                <input
+                    id="show_activities_checkbox"
+                    type="checkbox"
+                    class="form-check-input"
+                    t-att-checked="this.state.activityFilterChecked"
+                    t-on-change="this.onToggleActivityFilter"
+                />
+                <span class="d-block text-truncate w-100 cursor-pointer"
+                    t-on-click.prevent.stop="this.onToggleActivityFilter"
+                    t-out="this.activityFilterName"/>
+            </div>
+        </xpath>
     </t>
 </templates>
