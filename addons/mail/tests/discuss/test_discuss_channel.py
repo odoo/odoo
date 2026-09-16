@@ -932,9 +932,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(private_group.avatar_128.content, expected_group)
         # meeting: day of month of the creation date
         self.assertEqual(meeting.avatar_128.content, self._expected_default_avatar(str(meeting.create_date.day), str(meeting.id)))
-        # chat with a photo-less correspondent: first and last name initials, seeded by partner
-        self.assertEqual(chat_initials.avatar_128.content, self._expected_default_avatar("JD", str(photoless_partner.id)))
-        # chat with a correspondent that has a real photo: defer to the partner avatar
+        # chat: always defer to the correspondent's avatar
+        self.assertFalse(chat_initials.avatar_128)
+        self.assertEqual(chat_initials.avatar_cache_key, "no-avatar")
         self.assertFalse(chat_photo.avatar_128)
         self.assertEqual(chat_photo.avatar_cache_key, "no-avatar")
 
