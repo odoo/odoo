@@ -21562,6 +21562,34 @@ test(`column tag: stacks multiple fields in a single cell`, async () => {
     ).toHaveCount(2, { message: "Both sub-fields appear in the second cell" });
 });
 
+test(`column tag: empty value in a stacked cell`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="date"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // only the first record has a date
+    const dates = queryAll(`tbody .o_column_group_field[data-field-name='date']`);
+    expect(dates).toHaveLength(4);
+    expect(dates[0]).toHaveText("Jan 25, 2017");
+    expect(dates[1]).toHaveText("\u00a0", {
+        raw: true,
+        message: "an empty stacked value is rendered as a non-breaking space",
+    });
+    expect(queryRect(dates[1]).height).toBe(queryRect(dates[0]).height, {
+        message: "an empty stacked value is as tall as a filled one, keeping stacks aligned",
+    });
+});
+
 test(`column tag: uses string attribute as header label`, async () => {
     await mountView({
         resModel: "foo",
@@ -22014,8 +22042,12 @@ test(`column tag: required styling is applied to the required sub-field`, async 
     const groupFields = queryAll(`.o_selected_row td[name='foo'] .o_column_group_field`);
     expect(groupFields[0]).toHaveClass("o_required_modifier");
     expect(groupFields[1]).not.toHaveClass("o_required_modifier");
-    expect(groupFields[0]).toHaveStyle({ "border-bottom-width": "1px" });
-    expect(groupFields[1]).toHaveStyle({ "border-bottom-width": "0px" });
+    expect(groupFields[0]).toHaveStyle({ "border-bottom-width": "0px" });
+    expect(`.o_selected_row td[name='foo']`).toHaveStyle({ "border-bottom-width": "0px" });
+    // the cell stacks several fields, so the underline is carried by the input
+    expect(`.o_selected_row .o_field_widget[name='foo'] .o_input`).toHaveStyle({
+        "border-bottom-width": "1px",
+    });
 });
 
 test.tags("desktop");
@@ -22042,7 +22074,7 @@ test(`column tag: invalid styling is applied to the invalid sub-field`, async ()
     expect(groupFields[0]).toHaveClass("o_invalid_cell");
     expect(groupFields[1]).not.toHaveClass("o_invalid_cell");
     expect(`.o_selected_row td.o_invalid_cell`).toHaveCount(0, {
-        message: "the cell itself is never marked, only its sub-fields",
+        message: "a cell stacking several fields is not marked, only its sub-fields",
     });
 
     await contains(`.o_selected_row [name='foo'] input`).edit("abc");
@@ -22073,8 +22105,39 @@ test(`column tag: readonly styling is applied to the readonly sub-field`, async 
     expect(groupFields[1]).not.toHaveClass("o_readonly_modifier");
     expect(groupFields[1]).not.toHaveClass("text-muted");
     expect(`.o_selected_row td.o_readonly_modifier`).toHaveCount(0, {
-        message: "the cell itself is never marked, only its sub-fields",
+        message: "a cell stacking several fields is not marked, only its sub-fields",
     });
+});
+
+test.tags("desktop");
+test(`column tag: a lone visible field is styled on the cell only`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="date"/>
+                <column>
+                    <field name="int_field" readonly="1" decoration-danger="1"/>
+                    <field name="foo" invisible="1"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`.o_data_row:eq(1) td[name='int_field']`).toHaveClass("text-danger");
+    expect(`.o_data_row:eq(1) .o_column_group_field`).not.toHaveClass("text-danger");
+
+    await contains(`.o_data_row:eq(0) td[name='date']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='int_field']`).toHaveClass([
+        "o_readonly_modifier",
+        "text-muted",
+    ]);
+    expect(`.o_selected_row td[name='int_field']`).not.toHaveClass("o_stacked_fields");
+    expect(`.o_selected_row .o_column_group_field`).toHaveCount(1);
+    expect(`.o_selected_row .o_column_group_field`).not.toHaveClass("o_readonly_modifier");
+    expect(`.o_selected_row .o_column_group_field`).not.toHaveClass("text-muted");
 });
 
 test.tags("desktop");
@@ -22105,6 +22168,36 @@ test(`column tag: Tab navigation skips a column group only if all its fields are
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_selected_row td[name='date'] [name='int_field'] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`column tag: Tab navigation skips a lone readonly many2one of a column group`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo"/>
+                <column>
+                    <field name="m2o" readonly="1"/>
+                    <field name="bar" invisible="1"/>
+                </column>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='foo']`).click();
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
+
+    // the readonly many2one renders a tabable link
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_selected_row [name='int_field'] input`).toBeFocused();
+
+    await press("shift+Tab");
+    await animationFrame();
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
 });
 
 test.tags("desktop");
