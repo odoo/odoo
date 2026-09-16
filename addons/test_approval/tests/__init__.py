@@ -18,3 +18,4 @@ from . import (
     test_subject_integrity,
 )
 from . import test_gate
+from . import test_gate_batch

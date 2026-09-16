@@ -2,6 +2,7 @@ from odoo import fields, models
 from odoo.exceptions import UserError
 
 from . import approval_trace as trace
+from .approval_utils import ApprovalStepUnstaffed
 
 OPERATION_CONTEXT_KEY = "approval_gate_operation"
 
@@ -27,22 +28,104 @@ class MixinApprovalGate(models.AbstractModel):
         asking = need_approval.with_context(**{OPERATION_CONTEXT_KEY: operation})
         if len(self) == 1:
             return asking.action_create_approval_request()
-        for record in asking:
-            record.action_create_approval_request()
+        asked, blocked = asking._ask_approval_each()
         return self._get_approval_asked_notification(
-            operation, ready, need_approval, result
+            operation, ready, asked, result, blocked
         )
 
-    def _get_approval_asked_notification(self, operation, ready, need_approval, result):
+    def _ask_approval_each(self):
+        """Raise one request per record, and keep the batch when a company staffs none.
+
+        A batch is one transaction, so a refusal here rolls back every record that
+        already ran -- including the ones that needed no approval at all and were
+        done before the first request was raised. A document's own refusal earns
+        that: something about that document is wrong, and the person asked for it by
+        acting on it. A step whose approvers all work in another company does not.
+        That configuration is nobody-in-this-batch's doing and nobody in it can fix
+        it, so the record is reported and the rest stand.
+
+        Returns the records whose request was raised, and a list of
+        ``(record, error)`` for the ones it could not be raised for.
+        """
+        # Flush before the first savepoint. A savepoint flushes on entry, and that
+        # flush checks each record's constraints in the environment that produced
+        # them, so a later iteration is otherwise handed a failure belonging to work
+        # done before this loop began.
+        self.env.flush_all()
+        asked = self.browse()
+        blocked = []
+        for record in self:
+            try:
+                with self.env.cr.savepoint():
+                    record.action_create_approval_request()
+            except ApprovalStepUnstaffed as error:
+                trace.MIXIN.event(
+                    "approval_not_asked_unstaffed",
+                    record=record,
+                    step=error.step.id if error.step else None,
+                    company=error.company.id if error.company else None,
+                )
+                blocked.append((record, error))
+            else:
+                asked |= record
+        return asked, blocked
+
+    def _get_approval_asked_headline(self, ready, need_approval, blocked=()):
+        """The first line of the batch's notification, in this document's words.
+
+        A model that says it in its own vocabulary overrides this rather than
+        `_get_approval_asked_notification`, so the lines naming what could not be
+        asked at all are still appended after it -- and a reason added later
+        appears without that model having to know about it.
+        """
+        if blocked:
+            return self.env._(
+                "%(sent)s sent for approval; %(ran)s went through; "
+                "%(blocked)s could not be sent.",
+                sent=len(need_approval),
+                ran=len(ready),
+                blocked=len(blocked),
+            )
+        return self.env._(
+            "%(sent)s sent for approval; %(ran)s went through.",
+            sent=len(need_approval),
+            ran=len(ready),
+        )
+
+    def _get_approval_unstaffed_note(self, error):
+        """One line for a record nobody could be asked for, naming what to configure."""
+        self.check_singleton()
+        step = error.step
+        company = error.company
+        if not step or not company:
+            return self.env._(
+                "%(name)s could not be sent for approval: no approver is configured.",
+                name=self.display_name,
+            )
+        return self.env._(
+            "%(name)s could not be sent for approval: nobody in %(company)s can "
+            "approve step %(step)s.",
+            name=self.display_name,
+            company=company.display_name,
+            step=step.name,
+        )
+
+    def _get_approval_asked_notification(
+        self, operation, ready, need_approval, result, blocked=()
+    ):
         params = {
             "type": "warning",
             "title": self.env._("Approval Required"),
-            "message": self.env._(
-                "%(sent)s sent for approval; %(ran)s went through.",
-                sent=len(need_approval),
-                ran=len(ready),
+            "message": "\n".join(
+                [
+                    self._get_approval_asked_headline(ready, need_approval, blocked),
+                    *(
+                        record._get_approval_unstaffed_note(error)
+                        for record, error in blocked
+                    ),
+                ]
             ),
-            "sticky": False,
+            "sticky": bool(blocked),
         }
         if isinstance(result, dict):
             params["next"] = result
