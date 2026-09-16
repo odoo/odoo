@@ -829,7 +829,6 @@ class Website(Home):
     @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
     def website_configurator_preview(
         self,
-        preview_url,
         theme_name=None,
         industry_id=-1,
         color1='',
@@ -840,6 +839,9 @@ class Website(Home):
         is_dark='0',
         **kwargs,
     ):
+        if not theme_name or not re.fullmatch(r'[a-z0-9_]+', theme_name):
+            raise NotFound()
+        preview_url = request.env['website']._get_configurator_theme_preview_url(theme_name)
         if not preview_url:
             raise NotFound()
 
