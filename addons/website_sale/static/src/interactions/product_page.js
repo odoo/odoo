@@ -437,6 +437,9 @@ export class ProductPage extends Interaction {
      */
     _updateMinimumQuantity(parent, combination) {
         const addQtyInput = parent.querySelector('input[name="add_qty"]');
+        if (!addQtyInput) {
+            return;
+        }
         const minimumQty = combination.minimum_qty || 1;
         addQtyInput.dataset.min = minimumQty;
         if (addQtyInput.value < minimumQty) {
