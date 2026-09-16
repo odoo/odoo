@@ -577,9 +577,9 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         }])
 
         invoice_analysis_action = self.env.ref('account.action_account_invoice_report_all')
-        profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl')
-        aged_receivable_action = self.env.ref('account_reports.action_account_report_ar')
-        aged_payable_action = self.env.ref('account_reports.action_account_report_ap')
+        profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl', raise_if_not_found=False)
+        aged_receivable_action = self.env.ref('account_reports.action_account_report_ar', raise_if_not_found=False)
+        aged_payable_action = self.env.ref('account_reports.action_account_report_ap', raise_if_not_found=False)
         cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
         kpis = self.env['account.journal'].get_account_dashboard_kpis()
@@ -589,7 +589,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'name': 'Invoices',
             'value': '$\xa075.00',
         }, {
-            'action_id': profit_and_loss_action.id,
+            'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
             'id': 'expenses',
             'name': 'Expenses',
             'value': '$\xa0750.00',
@@ -599,12 +599,12 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'name': 'Cash',
             'value': '$\xa010,000.00',
         }, {
-            'action_id': aged_receivable_action.id,
+            'action_id': aged_receivable_action.id if aged_receivable_action else False,
             'id': 'receivable',
             'name': 'Receivable',
             'value': '$\xa075.00',
         }, {
-            'action_id': aged_payable_action.id,
+            'action_id': aged_payable_action.id if aged_payable_action else False,
             'id': 'payable',
             'name': 'Payable',
             'value': '$\xa0750.00',
