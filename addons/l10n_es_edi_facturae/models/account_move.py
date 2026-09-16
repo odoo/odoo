@@ -974,7 +974,7 @@ class AccountMove(models.Model):
         party = tree.xpath("//SellerParty") if is_bill else tree.xpath("//BuyerParty")
         if party:
             partner_vals = self._import_extract_partner_values(party[0])
-            return self._import_create_or_retrieve_partner(partner_vals)
+            return self._import_get_or_create_partner(partner_vals)
         return None
 
     def _import_extract_partner_values(self, party_node):
@@ -998,7 +998,7 @@ class AccountMove(models.Model):
             "country_code": country_code,
         }
 
-    def _import_create_or_retrieve_partner(self, partner_vals):
+    def _import_get_or_create_partner(self, partner_vals):
         name = partner_vals["name"]
         vat = partner_vals["vat"]
         phone = partner_vals["phone"]

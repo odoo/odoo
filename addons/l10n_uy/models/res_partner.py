@@ -23,12 +23,12 @@ class ResPartner(models.Model):
             for partner in ci_nie_types:
                 if not partner._l10n_uy_ci_nie_is_valid():
                     raise ValidationError(
-                        self._l10n_uy_build_vat_error_message(partner)
+                        self._l10n_uy_get_vat_error_message(partner)
                     )
         return super()._run_check_identification(validation=validation)
 
     @api.model
-    def _l10n_uy_build_vat_error_message(self, partner):
+    def _l10n_uy_get_vat_error_message(self, partner):
         """Similar to _prepare_vat_error_message but using latam doc type name instead of vat_label
         NOTE: maybe can be implemented in master to l10n_latam_base for the use of different doc types"""
         vat_label = _("CI/NIE")

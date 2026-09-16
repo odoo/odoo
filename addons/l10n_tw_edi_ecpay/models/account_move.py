@@ -306,7 +306,7 @@ class AccountMove(models.Model):
     @api.depends("invoice_line_ids.tax_ids")
     def _compute_l10n_tw_edi_invoice_type(self):
         for move in self:
-            tax_type, special_tax_type, _ = move._l10n_tw_edi_determine_tax_types()
+            tax_type, special_tax_type, _ = move._l10n_tw_edi_get_tax_types()
             if tax_type == "3":
                 move.l10n_tw_edi_invoice_type = "07" if not special_tax_type else "08"
             else:
@@ -315,7 +315,7 @@ class AccountMove(models.Model):
     @api.depends("invoice_line_ids.tax_ids")
     def _compute_l10n_tw_edi_is_zero_tax_rate(self):
         for move in self:
-            _, _, is_zero_tax_rate = move._l10n_tw_edi_determine_tax_types()
+            _, _, is_zero_tax_rate = move._l10n_tw_edi_get_tax_types()
             move.l10n_tw_edi_is_zero_tax_rate = (
                 is_zero_tax_rate if move.invoice_line_ids.tax_ids else False
             )
@@ -433,7 +433,7 @@ class AccountMove(models.Model):
             )
         return errors
 
-    def _l10n_tw_edi_determine_tax_types(self):
+    def _l10n_tw_edi_get_tax_types(self):
         """
         Calculate and return the tax type, special tax type and is zero tax rate included based on
         the taxes on invoice lines
@@ -580,7 +580,7 @@ class AccountMove(models.Model):
 
         errors.extend(self._l10n_tw_edi_check_tax_type_on_invoice_lines())
 
-        tax_type, _, is_zero_tax_rate = self._l10n_tw_edi_determine_tax_types()
+        tax_type, _, is_zero_tax_rate = self._l10n_tw_edi_get_tax_types()
 
         if self.l10n_tw_edi_invoice_type == "07" and tax_type not in [
             "1",
@@ -625,7 +625,7 @@ class AccountMove(models.Model):
         sale_amount = 0
         tax_amount = 0
         AccountTax = self.env["account.tax"]
-        tax_type, _, _ = self._l10n_tw_edi_determine_tax_types()
+        tax_type, _, _ = self._l10n_tw_edi_get_tax_types()
         for index, line in enumerate(
             self.invoice_line_ids.filtered(lambda line: line.display_type == "product"),
             start=1,
@@ -795,7 +795,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         self._l10n_tw_edi_check_before_generate_invoice_json()
         tax_type, special_tax_type, is_zero_tax_rate = (
-            self._l10n_tw_edi_determine_tax_types()
+            self._l10n_tw_edi_get_tax_types()
         )
         self.l10n_tw_edi_related_number = base64.urlsafe_b64encode(uuid.uuid4().bytes)[
             :20

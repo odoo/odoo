@@ -27,7 +27,7 @@ class ResPartner(models.Model):
     def _nemhandel_fill_participant_supported_documents(self):
         self.check_singleton()
         edi_identification = f"{self.nemhandel_identifier_type}:{self.nemhandel_identifier_value}".lower()
-        participant_info = self._nemhandel_lookup_participant(edi_identification)
+        participant_info = self._nemhandel_get_participant(edi_identification)
         if not participant_info:
             return
         self.nemhandel_supported_documents = [

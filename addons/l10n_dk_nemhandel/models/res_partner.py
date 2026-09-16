@@ -156,7 +156,7 @@ class ResPartner(models.Model):
         return response.content
 
     @api.model
-    def _nemhandel_lookup_participant(self, edi_identification):
+    def _nemhandel_get_participant(self, edi_identification):
         """NAPTR DNS nemhandel participant lookup through Odoo's Nemhandel proxy"""
         if (edi_mode := self.env.company._get_nemhandel_edi_mode()) == "demo":
             return None
@@ -362,7 +362,7 @@ class ResPartner(models.Model):
             return "not_verified"
 
         edi_identification = f"{self.nemhandel_identifier_type}:{self.nemhandel_identifier_value}".lower()
-        participant_info = self._nemhandel_lookup_participant(edi_identification)
+        participant_info = self._nemhandel_get_participant(edi_identification)
         if participant_info is None:
             return "not_valid"
 

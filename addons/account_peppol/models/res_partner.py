@@ -164,7 +164,7 @@ class ResPartner(models.Model):
         )
 
     @api.model
-    def _peppol_lookup_participant(self, edi_identification):
+    def _peppol_get_participant(self, edi_identification):
         """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
         if (edi_mode := self.env.company._get_peppol_edi_mode()) == "demo":
             return None
@@ -361,7 +361,7 @@ class ResPartner(models.Model):
             return "not_verified"
 
         edi_identification = f"{peppol_eas}:{peppol_endpoint}".lower()
-        participant_info = self._peppol_lookup_participant(edi_identification)
+        participant_info = self._peppol_get_participant(edi_identification)
         if participant_info is None:
             return "not_valid"
         else:

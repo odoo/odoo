@@ -510,7 +510,7 @@ class ResCompany(models.Model):
         external_provider = None
         error_msg = ""
         if (
-            participant_info := self.partner_id._peppol_lookup_participant(
+            participant_info := self.partner_id._peppol_get_participant(
                 edi_identification
             )
         ) is not None and (

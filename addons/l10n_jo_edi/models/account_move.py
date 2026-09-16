@@ -244,7 +244,7 @@ class AccountMove(models.Model):
             return "l10n_jo_edi.report_invoice_document"
         return super()._get_name_invoice_report()
 
-    def _l10n_jo_build_jofotara_headers(self):
+    def _l10n_jo_prepare_jofotara_headers(self):
         self.check_singleton()
         return {
             "Client-Id": self.sudo().company_id.l10n_jo_edi_client_identifier,
@@ -281,7 +281,7 @@ class AccountMove(models.Model):
 
     def _submit_to_jofotara(self):
         self.check_singleton()
-        headers = self._l10n_jo_build_jofotara_headers()
+        headers = self._l10n_jo_prepare_jofotara_headers()
         xml_invoice = self.env["account.edi.xml.ubl_21.jo"]._export_invoice(self)[0]
         params = {"invoice": base64.b64encode(xml_invoice).decode()}
         dict_response = self._send_l10n_jo_edi_request(params, headers)

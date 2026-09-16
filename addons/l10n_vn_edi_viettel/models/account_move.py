@@ -361,7 +361,7 @@ class AccountMove(models.Model):
             # SInvoice will return a NOT_FOUND_DATA error if the status in Odoo matches the one on their side.
             # Because of that we wouldn't be able to differentiate a real issue (invoice on our side not matching theirs)
             # With simply a status already up to date. So we need to check the status first to see if we need to update.
-            invoice_lookup, error_message = invoice._l10n_vn_edi_lookup_invoice()
+            invoice_lookup, error_message = invoice._l10n_vn_edi_get_invoice()
             if error_message:
                 raise UserError(error_message)
 
@@ -542,7 +542,7 @@ class AccountMove(models.Model):
         # If the request was sent but ended up failing, there is still the possibility that the invoice was saved
         # on their system (timeout, for example)
         if self.l10n_vn_edi_invoice_transaction_id:
-            invoice_lookup, error_message = self._l10n_vn_edi_lookup_invoice()
+            invoice_lookup, error_message = self._l10n_vn_edi_get_invoice()
             if "result" in invoice_lookup:
                 invoice_data = invoice_lookup["result"][0]
             # note: We do not catch errors on this endpoint for simplicity, as it should not be required.
@@ -915,7 +915,7 @@ class AccountMove(models.Model):
 
         json_values["taxBreakdowns"] = tax_breakdowns
 
-    def _l10n_vn_edi_lookup_invoice(self):
+    def _l10n_vn_edi_get_invoice(self):
         """Lookup on invoice, returning its current details on SInvoice."""
         self.check_singleton()
         access_token, error = self._l10n_vn_edi_get_access_token()

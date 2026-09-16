@@ -69,7 +69,7 @@ class PosPaymentMethod(models.Model):
             ._send_api_request("POST", "terminal/connection_tokens")
         )
 
-    def _stripe_calculate_amount(self, amount):
+    def _stripe_get_amount(self, amount):
         currency = self.journal_id.currency_id or self.company_id.currency_id
         return round(amount / currency.rounding)
 
@@ -83,7 +83,7 @@ class PosPaymentMethod(models.Model):
 
         params = [
             ("currency", currency.name),
-            ("amount", self._stripe_calculate_amount(amount)),
+            ("amount", self._stripe_get_amount(amount)),
             ("payment_method_types[]", "card_present"),
             ("capture_method", "manual"),
         ]

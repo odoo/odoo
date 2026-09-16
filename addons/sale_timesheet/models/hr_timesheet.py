@@ -142,7 +142,7 @@ class AccountAnalyticLine(models.Model):
         ):
             timesheet.so_line = (
                 timesheet.project_id.allow_billable
-                and timesheet._timesheet_determine_sale_line()
+                and timesheet._timesheet_get_sale_line()
             )
             _debug.logic(
                 "timesheet_so_line", timesheet=timesheet, line=timesheet.so_line
@@ -207,7 +207,7 @@ class AccountAnalyticLine(models.Model):
                 )
         return super()._check_can_write(values)
 
-    def _timesheet_determine_sale_line(self):
+    def _timesheet_get_sale_line(self):
         self.check_singleton()
 
         if not self.task_id:

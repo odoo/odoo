@@ -359,7 +359,7 @@ class AccountMove(models.Model):
     @api.deprecated(
         "Deprecated since 19.0, logic moved to _l10n_tr_nilvera_get_documents"
     )
-    def _l10n_tr_build_document_uuids_list(self, response):
+    def _l10n_tr_get_document_uuids(self, response):
         contents = response.get("Content", [])
         document_uuids = [
             content.get("UUID") for content in contents if content.get("UUID")
