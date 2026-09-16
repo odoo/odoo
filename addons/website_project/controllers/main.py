@@ -19,10 +19,28 @@ class WebsiteForm(form.WebsiteForm):
             # When a task is created from the web editor, if the key 'user_ids' is not present, the user_ids is filled with the odoo bot. We set it to False to ensure it is not.
             values.setdefault('user_ids', False)
 
+            ProjectTask = request.env['project.task'].sudo()
+            partner_fields_values = {
+                fname: values.pop(fname)
+                for fname in ProjectTask._get_partner_related_fields()
+                if values.get(fname)
+            }
+
         res = super().insert_record(request, model, values, custom, meta=meta)
         if model_name != 'project.task':
             return res
-        task = request.env['project.task'].sudo().browse(res)
+        task = ProjectTask.browse(res)
+        if not task.partner_id:
+            task.write(partner_fields_values)
+            partner_fields_values = False
+        elif (
+            partner_fields_values.get('partner_phone') and
+            not request.env.user._is_public() and
+            task.partner_id == request.env.user.partner_id
+        ):
+            task.partner_phone = partner_fields_values.pop('partner_phone')
+        if partner_fields_values:
+            custom += "\n" + "\n".join(["%s : %s" % (fname, value) for fname, value in partner_fields_values.items()])
         custom = custom.replace('email_from', _('Email'))
         custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
         default_field = model.website_form_default_field_id
@@ -52,15 +70,6 @@ class WebsiteForm(form.WebsiteForm):
             data['record']['email_from'] = values['email_from']
             if partner:
                 data['record']['partner_id'] = partner.id
-                custom_fields = ['partner_name', 'partner_company_name']
-                if request.env.user._is_public() or partner != request.env.user.partner_id:
-                    custom_fields.append('partner_phone')
-                custom = [
-                   (field, data['record'].pop(field))
-                   for field in custom_fields
-                   if data['record'].get(field)
-                ]
-                data['custom'] += "\n" + "\n".join(["%s : %s" % c for c in custom])
             else:
                 data['record']['partner_id'] = False
                 data['record']['email_cc'] = values['email_from']
