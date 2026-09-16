@@ -1978,12 +1978,24 @@ export function useActionManager(router = _router) {
     };
 }
 
-export class ActionManagerPlugin extends Plugin {
+export class ActionPlugin extends Plugin {
     setup() {
-        this.manager = useActionManager();
+        const _manager = useActionManager();
+        this.doAction = _manager.doAction.bind(_manager);
+        this.doActionButton = _manager.doActionButton.bind(_manager);
+        this.switchView = _manager.switchView.bind(_manager);
+        this.restore = _manager.restore.bind(_manager);
+        this.loadState = _manager.loadState.bind(_manager);
+        this.loadAction = _manager.loadAction.bind(_manager);
+        Object.defineProperty(this, "currentController", {
+            get: () => _manager.currentController,
+        });
+        Object.defineProperty(this, "currentAction", {
+            get: () => _manager.currentAction,
+        });
     }
 }
-services.add(ActionManagerPlugin);
+services.add(ActionPlugin);
 
 /**
  * -----------------------------------------------------------------------------
@@ -1994,7 +2006,7 @@ services.add(ActionManagerPlugin);
 export const actionService = {
     dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
     start() {
-        return usePlugin(ActionManagerPlugin).manager;
+        return usePlugin(ActionPlugin);
     },
 };
 

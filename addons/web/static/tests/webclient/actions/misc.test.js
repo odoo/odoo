@@ -26,6 +26,7 @@ import { registry } from "@web/core/registry";
 import { router } from "@web/core/browser/router";
 import { listView } from "@web/views/list/list_view";
 import { PivotModel } from "@web/views/pivot/pivot_model";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 import { WebClient } from "@web/webclient/webclient";
 import { redirect } from "@web/core/utils/urls";
 
@@ -226,6 +227,30 @@ test("getCurrentAction", async () => {
         view_mode: "list,form",
         cache: true,
     });
+});
+
+test("usePlugin(ActionPlugin): doAction, doActionButton and switchView work without exposing internals", async () => {
+    await mountWithCleanup(WebClient);
+    const action = getService(ActionPlugin);
+
+    // the plugin must not leak its underlying action manager
+    expect(action.manager).toBe(undefined);
+    expect(action._manager).toBe(undefined);
+
+    await action.doAction(3);
+    expect(`.o_list_view`).toHaveCount(1);
+    expect(action.currentAction.id).toBe(3);
+
+    await action.switchView("form", { resId: 1 });
+    expect(`.o_form_view`).toHaveCount(1);
+
+    await action.doActionButton({
+        type: "action",
+        name: 4,
+        resId: 1,
+        resModel: "partner",
+    });
+    expect(action.currentAction.id).toBe(4);
 });
 
 test("getCurrentAction (virtual controller)", async () => {
