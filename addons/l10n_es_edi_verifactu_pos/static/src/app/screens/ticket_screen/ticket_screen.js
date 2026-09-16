@@ -6,11 +6,17 @@ import { AddVerifactuRefundReasonPopup } from "@l10n_es_edi_verifactu_pos/app/co
 patch(TicketScreen.prototype, {
     async addAdditionalRefundInfo(order, destinationOrder) {
         if (this.pos.company.l10n_es_edi_verifactu_required) {
-            const payload = await makeAwaitable(this.dialog, AddVerifactuRefundReasonPopup, {
-                order: destinationOrder,
-            });
-            if (payload) {
-                destinationOrder.l10n_es_invoice_type = payload.l10n_es_invoice_type;
+            if (!order.isToInvoice()) {
+                // A PoS order that is not explicitly invoiced is a simplified invoice.
+                // Per Spanish regulation, refunds of simplified invoices always use reason R5.
+                destinationOrder.l10n_es_invoice_type = "R5";
+            } else {
+                const payload = await makeAwaitable(this.dialog, AddVerifactuRefundReasonPopup, {
+                    order: destinationOrder,
+                });
+                if (payload) {
+                    destinationOrder.l10n_es_invoice_type = payload.l10n_es_invoice_type;
+                }
             }
         }
         await super.addAdditionalRefundInfo(...arguments);
