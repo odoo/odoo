@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 imStatusDataRegistry.add(
     "hr-holidays",
     {
-        condition: ({ user }) => Boolean(user?.employee_id?.leave_date_to),
+        condition: ({ user }) => Boolean(user?.employee_id?.is_absent),
         icon: "travel",
         iconClass: "",
         title: {

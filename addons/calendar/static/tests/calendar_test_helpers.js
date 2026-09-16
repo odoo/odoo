@@ -2,6 +2,7 @@ import { CalendarEvent } from "./mock_server/mock_models/calendar_event";
 import { CalendarAttendee } from "./mock_server/mock_models/calendar_attendee";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { ResUsers } from "./mock_server/mock_models/res_users";
+import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { CalendarFilters } from "./mock_server/mock_models/calendar_filters";
 
@@ -18,6 +19,7 @@ export const calendarModels = {
     CalendarFilters,
     DiscussChannel,
     ResUsers,
+    ResPartner,
     MailActivity,
 };
 
