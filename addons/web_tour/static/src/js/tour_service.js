@@ -158,7 +158,7 @@ export class TourService {
      */
     async getTour(name, options) {
         let tour = tourRegistry.get(name, null);
-        if (options.mode === "manual" && options.fromDB) {
+        if (options.fromDB) {
             tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
             if (!tour) {
                 throw new Error(`Tour '${name}' is not found in the database.`);
