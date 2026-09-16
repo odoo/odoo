@@ -13,7 +13,13 @@ import {
     getParsedWeight,
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
-import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
+import {
+    BORDER_RADIUS_MULTIPLIERS,
+    isBorderRadiusCustomized,
+    ThemeRoundnessOption,
+    toFixedPixel,
+} from "./theme_roundness_option";
+import { getNumericAndUnit, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -57,8 +63,9 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    SHADOW: 80,
-    ADVANCED: 90,
+    ROUNDNESS: 80,
+    SHADOW: 90,
+    ADVANCED: 100,
 };
 
 const FONT_WEIGHT_OPTIONS = [
@@ -120,6 +127,8 @@ export class ThemeTabPlugin extends Plugin {
             CustomizeWebsiteFontWeightAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
+            CustomizeBorderRadiusVariableAction,
+            ResetBorderRadiusAction,
         },
         theme_options: [
             withSequence(
@@ -176,6 +185,10 @@ export class ThemeTabPlugin extends Plugin {
                         static template = "website.ThemeInputOption";
                     }
                 )
+            ),
+            withSequence(
+                OPTION_POSITIONS.ROUNDNESS,
+                this.getThemeOptionBlock("theme-roundness", _t("Roundness"), ThemeRoundnessOption)
             ),
             withSequence(
                 OPTION_POSITIONS.SHADOW,
@@ -431,6 +444,52 @@ export class ConfigureApiKeyAction extends BuilderAction {
     async apply() {
         const apiKey = await this.services.google_maps.getGMapsAPIKey(false);
         this.dependencies.googleMapsOption.configureGMapsAPI(apiKey);
+    }
+}
+
+export class CustomizeBorderRadiusVariableAction extends BuilderAction {
+    static id = "customizeBorderRadiusVariable";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    getValue() {
+        const currentValue =
+            this.dependencies.customizeWebsite.getWebsiteVariableValue("border-radius");
+        return currentValue;
+    }
+    apply({ value: rawRadiusInput }) {
+        const style = getHtmlStyle(this.document);
+        const [baseRadius, unit] = getNumericAndUnit(rawRadiusInput) || [0, "px"];
+        const scaledVariables = {};
+
+        for (const [varName, multiplier] of Object.entries(BORDER_RADIUS_MULTIPLIERS)) {
+            if (isBorderRadiusCustomized(varName, this.document)) {
+                continue;
+            }
+            const computedValue = toFixedPixel(baseRadius * multiplier, style);
+            scaledVariables[varName] = `${computedValue}${unit}`;
+        }
+
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables(scaledVariables);
+    }
+}
+
+export class ResetBorderRadiusAction extends CustomizeWebsiteVariableAction {
+    static id = "resetBorderRadius";
+    static dependencies = ["customizeWebsite"];
+    apply({ params: { mainParam: variable } }) {
+        const style = getHtmlStyle(this.document);
+        const baseRadius =
+            this.dependencies.customizeWebsite.getWebsiteVariableValue("border-radius");
+        const [baseRadiusVal, unit] = getNumericAndUnit(baseRadius) || [0, "px"];
+
+        const multiplier = BORDER_RADIUS_MULTIPLIERS[variable];
+        const normalizedVariableVal = toFixedPixel(baseRadiusVal * multiplier, style);
+        const normalizedVariable = `${normalizedVariableVal}${unit}`;
+
+        return super.apply({ params: { mainParam: variable }, value: normalizedVariable });
     }
 }
 

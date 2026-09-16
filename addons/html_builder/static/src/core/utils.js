@@ -754,6 +754,7 @@ export function useClickableBuilderComponent(props) {
 
     async function callApply(applySpecs, isPreviewing) {
         await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await env.inputContext?.clean(isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
@@ -998,6 +999,8 @@ export function useInputBuilderComponent(
      */
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
+        // ...
+        await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         for (const applySpec of applySpecs) {
             proms.push(
                 applySpec.action.apply({
