@@ -336,7 +336,7 @@ class SaleOrder(models.Model):
                 # supported way to ask the question.
                 invoice_type, refund_type = line._get_invoice_move_types()
                 qty_invoiced = sum(
-                    inv_line.product_uom_id._compute_quantity(
+                    inv_line.product_uom_id._get_quantity_in_unit(
                         inv_line.quantity, line.product_uom_id
                     )
                     * (1 if inv_line.move_id.move_type == invoice_type else -1)

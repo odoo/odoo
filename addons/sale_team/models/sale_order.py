@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
-            default_team_id = order._default_team_id()
+            default_team_id = order._get_default_sale_team_id()
             user_id = order.user_id.id
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
             "team_defaults_resolved", orders=len(self), keys=len(cached_teams)
         )
 
-    def _default_team_id(self):
+    def _get_default_sale_team_id(self):
         return self.env.context.get("default_team_id", False) or self.team_id.id
 
     def _prepare_invoice_vals(self):

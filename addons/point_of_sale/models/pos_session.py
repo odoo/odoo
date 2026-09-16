@@ -1804,7 +1804,7 @@ class PosSession(models.Model):
                     )
                 exp_key = product_accounts["expense"]
                 stock_key = product_accounts["stock_valuation"]
-                signed_product_qty = move.product_uom_id._compute_quantity(
+                signed_product_qty = move.product_uom_id._get_quantity_in_unit(
                     move.quantity, move.product_id.uom_id, round=False
                 )
                 is_in = move._is_in()

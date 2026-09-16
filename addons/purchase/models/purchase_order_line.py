@@ -581,7 +581,7 @@ class PurchaseOrderLine(models.Model):
         seller=None,
     ):
         values = self.env.context.get("procurement_values", {})
-        uom_po_qty = product_uom_id._compute_quantity(
+        uom_po_qty = product_uom_id._get_quantity_in_unit(
             product_qty,
             product_id.uom_id,
             rounding_method="HALF-UP",
@@ -605,7 +605,7 @@ class PurchaseOrderLine(models.Model):
             and (seller.product_uom_id or seller.product_tmpl_id.uom_id)
             != product_uom_id
         ):
-            uom_po_qty = product_id.uom_id._compute_quantity(
+            uom_po_qty = product_id.uom_id._get_quantity_in_unit(
                 uom_po_qty,
                 seller.product_uom_id,
                 rounding_method="HALF-UP",

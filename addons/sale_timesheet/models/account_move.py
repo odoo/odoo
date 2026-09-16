@@ -50,7 +50,7 @@ class AccountMove(models.Model):
             {timesheet_invoice.id: amount for timesheet_invoice, amount in group_data}
         )
         for invoice in self:
-            total_time = invoice.company_id.project_time_mode_id._compute_quantity(
+            total_time = invoice.company_id.project_time_mode_id._get_quantity_in_unit(
                 timesheet_unit_amount_dict[invoice.id],
                 invoice.timesheet_encode_uom_id,
                 rounding_method="HALF-UP",

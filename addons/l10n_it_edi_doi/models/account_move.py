@@ -138,7 +138,7 @@ class AccountMove(models.Model):
                         if order.l10n_it_edi_doi_id == declaration:
                             linked_orders |= order
                         qty_invoiced = (
-                            invoice_line.product_uom_id._compute_quantity(
+                            invoice_line.product_uom_id._get_quantity_in_unit(
                                 invoice_line.quantity, sale_line.product_uom_id
                             )
                             * -move.direction_sign

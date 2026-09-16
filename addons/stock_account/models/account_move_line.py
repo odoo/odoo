@@ -75,7 +75,7 @@ class AccountMoveLine(models.Model):
             price_unit = (
                 self.product_id._run_fifo(cogs_qty) / cogs_qty if cogs_qty else 0
             )
-        line_quantity_uom = self.product_uom_id._compute_quantity(
+        line_quantity_uom = self.product_uom_id._get_quantity_in_unit(
             self.quantity, self.product_id.uom_id
         )
         return abs(
@@ -87,7 +87,7 @@ class AccountMoveLine(models.Model):
 
     def _get_cogs_qty(self):
         self.check_singleton()
-        return self.product_uom_id._compute_quantity(
+        return self.product_uom_id._get_quantity_in_unit(
             self.quantity, self.product_id.uom_id
         ) * (-1 if self.move_id.move_type == "out_refund" else 1)
 

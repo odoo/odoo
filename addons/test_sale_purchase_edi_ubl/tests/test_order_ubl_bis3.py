@@ -321,7 +321,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         for line in po_line_vals:
             line_product = self.env["product.product"].browse(line["product_id"])
             product_uom_id = self.env["uom.uom"].browse(line["product_uom_id"])
-            line["price_unit"] = line_product.uom_id._compute_price(
+            line["price_unit"] = line_product.uom_id._get_price_in_unit(
                 line_product.list_price, product_uom_id
             )
 

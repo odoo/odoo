@@ -65,11 +65,13 @@ class SaleOrder(models.Model):
             {order.id: unit_amount for order, unit_amount in group_data}
         )
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(
-                timesheet_unit_amount_dict[sale_order.id],
-                sale_order.timesheet_encode_uom_id,
-                rounding_method="HALF-UP",
-                raise_if_failure=False,
+            total_time = (
+                sale_order.company_id.project_time_mode_id._get_quantity_in_unit(
+                    timesheet_unit_amount_dict[sale_order.id],
+                    sale_order.timesheet_encode_uom_id,
+                    rounding_method="HALF-UP",
+                    raise_if_failure=False,
+                )
             )
             sale_order.timesheet_total_duration = round(total_time)
 

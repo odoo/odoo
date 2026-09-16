@@ -21,7 +21,7 @@ class ResPartner(models.Model):
         help="Number of days since this partner's last order.",
     )
 
-    def _compute_order_count(self, order_model, count_field, group, domain=None):
+    def _update_order_count(self, order_model, count_field, group, domain=None):
         self[count_field] = 0
         if not self.env.user.has_group(group):
             _debug.logic("order_count_skipped", field=count_field, reason="no_group")

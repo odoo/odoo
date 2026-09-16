@@ -529,7 +529,7 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
         balance = defaultdict(float)
         for move in moves:
-            quantity = move.product_uom_id._compute_quantity(
+            quantity = move.product_uom_id._get_quantity_in_unit(
                 move.quantity if move.state == "done" else move.product_uom_qty,
                 self.product_uom_id,
                 rounding_method="HALF-UP",

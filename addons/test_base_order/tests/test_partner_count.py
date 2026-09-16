@@ -69,7 +69,7 @@ class TestPartnerOrderCount(TransactionCase):
         cancelled = self._make_orders(self.child, 2)
         cancelled.state = "cancel"
 
-        self.child._compute_order_count(
+        self.child._update_order_count(
             "base.order.test",
             "base_order_test_count",
             "base.group_user",

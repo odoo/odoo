@@ -29,10 +29,10 @@ class SaleOrder(models.Model):
 
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(product)
 
-            product_qty_in_cart = product_uom_id._compute_quantity(
+            product_qty_in_cart = product_uom_id._get_quantity_in_unit(
                 product_qty_in_cart, uom
             )
-            available_qty = product_uom_id._compute_quantity(
+            available_qty = product_uom_id._get_quantity_in_unit(
                 available_qty, uom, round=False
             )
             available_qty = float_round(
@@ -96,7 +96,7 @@ class SaleOrder(models.Model):
         order_lines = self._get_common_product_lines(product_id)
         return sum(
             order_lines.mapped(
-                lambda sol: sol.product_uom_id._compute_quantity(
+                lambda sol: sol.product_uom_id._get_quantity_in_unit(
                     sol.product_uom_qty,
                     sol.product_id.uom_id,
                 )

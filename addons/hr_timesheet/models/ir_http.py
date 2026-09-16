@@ -16,7 +16,7 @@ class IrHttp(models.AbstractModel):
                 result["user_companies"]["allowed_companies"][company.id].update(
                     {
                         "timesheet_uom_id": company.timesheet_encode_uom_id.id,
-                        "timesheet_uom_factor": company.project_time_mode_id._compute_quantity(
+                        "timesheet_uom_factor": company.project_time_mode_id._get_quantity_in_unit(
                             1.0,
                             company.timesheet_encode_uom_id,
                             round=False,

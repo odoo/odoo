@@ -655,7 +655,7 @@ class StockMove(models.Model):
                 else move.product_uom_qty
             )
             factor = (
-                move.product_uom_id._compute_quantity(quantity, bom.product_uom_id)
+                move.product_uom_id._get_quantity_in_unit(quantity, bom.product_uom_id)
                 / bom.product_qty
             )
             _dummy, lines = bom.sudo()._explode(
@@ -895,7 +895,7 @@ class StockMove(models.Model):
 
         def get_qty(move):
             if move.picked:
-                return move.product_uom_id._compute_quantity(
+                return move.product_uom_id._get_quantity_in_unit(
                     move.quantity, move.product_id.uom_id, rounding_method="HALF-UP"
                 )
             else:
@@ -911,7 +911,7 @@ class StockMove(models.Model):
             )
             if bom_line_moves:
                 uom_qty_per_kit = bom_line_data["qty"] / (bom_line_data["original_qty"])
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(
+                qty_per_kit = bom_line.product_uom_id._get_quantity_in_unit(
                     uom_qty_per_kit / kit_bom.product_qty,
                     bom_line.product_id.uom_id,
                     round=False,

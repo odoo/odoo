@@ -295,7 +295,7 @@ class StockPackageContent(models.Model):
         )
         for picking, result_package, product, product_uom_id, quantity in res_groups:
             package_weights[(picking.id, result_package.id)] += (
-                product_uom_id._compute_quantity(quantity, product.uom_id)
+                product_uom_id._get_quantity_in_unit(quantity, product.uom_id)
                 * product.weight
             )
 

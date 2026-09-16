@@ -14,7 +14,9 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to ensure that AsiaPay requirements for references are satisfied.
 
         AsiaPay requirements for references are as follows:
@@ -31,7 +33,7 @@ class PaymentTransaction(models.Model):
         :rtype: str
         """
         if provider_code != "asiapay":
-            return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
+            return super()._get_unique_reference(provider_code, prefix=prefix, **kwargs)
 
         if not prefix:
             # If no prefix is provided, it could mean that a module has passed a kwarg intended for
@@ -43,7 +45,7 @@ class PaymentTransaction(models.Model):
         prefix = payment_utils.singularize_reference_prefix(
             prefix=prefix, max_length=35
         )
-        return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
+        return super()._get_unique_reference(provider_code, prefix=prefix, **kwargs)
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return AsiaPay-specific rendering values.

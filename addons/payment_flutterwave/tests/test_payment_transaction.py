@@ -15,7 +15,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
     )  # Freeze time for consistent singularization behavior.
     def test_reference_is_singularized(self):
         """Test that transaction references are unique at the provider level."""
-        reference = self.env["payment.transaction"]._compute_reference(
+        reference = self.env["payment.transaction"]._get_unique_reference(
             self.flutterwave.code
         )
         self.assertEqual(reference, "tx-20111102120021")

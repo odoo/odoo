@@ -405,7 +405,7 @@ class PaymentPortal(portal.CustomerPortal):
 
             payment_method_id = token_sudo.payment_method_id.id
 
-        reference = request.env["payment.transaction"]._compute_reference(
+        reference = request.env["payment.transaction"]._get_unique_reference(
             provider_sudo.code,
             prefix=reference_prefix,
             **(custom_create_values or {}),

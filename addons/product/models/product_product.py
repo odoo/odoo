@@ -1049,7 +1049,7 @@ class ProductProduct(models.Model):
                 if quantity_uom_seller and uom_id and uom_id != seller.product_uom_id:
                     if not uom_id._has_common_reference(seller.product_uom_id):
                         continue
-                    quantity_uom_seller = uom_id._compute_quantity(
+                    quantity_uom_seller = uom_id._get_quantity_in_unit(
                         quantity_uom_seller,
                         seller.product_uom_id,
                     )

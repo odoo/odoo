@@ -20,7 +20,7 @@ class ResPartner(models.Model):
     sale_warn_msg = fields.Text(string="Message for Sales Order")
 
     def _compute_sale_order_count(self):
-        self._compute_order_count(
+        self._update_order_count(
             "sale.order",
             "sale_order_count",
             "sale.group_sale_salesman",

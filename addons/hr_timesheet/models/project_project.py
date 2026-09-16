@@ -297,7 +297,7 @@ class ProjectProject(models.Model):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id
         return round(
-            uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2
+            uom_from._get_quantity_in_unit(time, uom_to, raise_if_failure=False), 2
         )
 
     def action_project_timesheets(self):

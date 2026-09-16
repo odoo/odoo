@@ -116,7 +116,7 @@ class AccountMove(models.Model):
                 price_unit = line.with_context(anglo_saxon_price_ctx)._get_cogs_value()
                 amount_currency = (
                     sign
-                    * line.product_uom_id._compute_quantity(
+                    * line.product_uom_id._get_quantity_in_unit(
                         line.quantity, line.product_id.uom_id
                     )
                     * price_unit

@@ -252,7 +252,7 @@ class StockMoveLineQuant(models.Model):
                 if product_uom.is_zero(quantity):
                     break
             else:
-                candidate.quantity -= candidate.product_id.uom_id._compute_quantity(
+                candidate.quantity -= candidate.product_id.uom_id._get_quantity_in_unit(
                     quantity, candidate.product_uom_id, rounding_method="HALF-UP"
                 )
                 break

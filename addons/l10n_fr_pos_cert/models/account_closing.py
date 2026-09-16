@@ -119,7 +119,7 @@ class AccountSaleClosing(models.Model):
         self.env.cr.execute(query, params)
         return self.env.cr.dictfetchall()[0]
 
-    def _compute_amounts(self, frequency, company):
+    def _prepare_closing_vals(self, frequency, company):
         """
         Method used to compute all the business data of the new object.
         It will search for previous closings of the same frequency to infer the move from which
@@ -237,7 +237,7 @@ class AccountSaleClosing(models.Model):
         account_closings = self.env["account.sale.closing"]
         for company in res_company.filtered(lambda c: c._is_accounting_unalterable()):
             new_sequence_number = company.l10n_fr_closing_sequence_id.next_by_id()
-            values = self._compute_amounts(frequency, company)
+            values = self._prepare_closing_vals(frequency, company)
             values["frequency"] = frequency
             values["company_id"] = company.id
             values["sequence_number"] = new_sequence_number

@@ -428,7 +428,7 @@ class StockMove(models.Model):
                 for move in self
                 if move.product_uom_qty
                 and move.product_uom_id != move.product_id.uom_id
-                and not move.product_uom_id._compute_quantity(
+                and not move.product_uom_id._get_quantity_in_unit(
                     move.product_uom_qty,
                     move.product_id.uom_id,
                     rounding_method="HALF-UP",

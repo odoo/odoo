@@ -22,11 +22,11 @@ class MixinProductPrice(models.AbstractModel):
 
     def _convert_price_to_uom(self, price, uom):
         self._check_price_uom(uom)
-        return self.uom_id._compute_price(price, uom)
+        return self.uom_id._get_price_in_unit(price, uom)
 
     def _convert_price_from_uom(self, price, uom):
         self._check_price_uom(uom)
-        return uom._compute_price(price, self.uom_id)
+        return uom._get_price_in_unit(price, self.uom_id)
 
     @api.onchange("standard_price")
     def _onchange_standard_price(self):
@@ -35,7 +35,7 @@ class MixinProductPrice(models.AbstractModel):
                 self.env._("The cost of a product can't be negative.")
             )
 
-    def _compute_price(
+    def _get_prices(
         self, price_type, uom=None, currency=None, company=None, date=False
     ):
         company = company or self.env.company

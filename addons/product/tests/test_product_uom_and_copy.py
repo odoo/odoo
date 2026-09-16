@@ -163,9 +163,7 @@ class TestPriceUomConversion(TransactionCase):
         in_dozen = self.variant.with_context(uom=self.uom_dozen.id).lst_price
         self.assertEqual(
             in_dozen,
-            self.variant._compute_price("list_price", uom=self.uom_dozen)[
-                self.variant.id
-            ],
+            self.variant._get_prices("list_price", uom=self.uom_dozen)[self.variant.id],
         )
         self.assertEqual(in_dozen, 1320.0)
 
@@ -242,7 +240,7 @@ class TestPriceUomConversion(TransactionCase):
         )
         self.assertEqual(seller.price_discounted, 10.0)
         self.assertEqual(
-            self.uom_unit._compute_price(
+            self.uom_unit._get_price_in_unit(
                 seller.price_discounted, seller.product_uom_id
             ),
             120.0,

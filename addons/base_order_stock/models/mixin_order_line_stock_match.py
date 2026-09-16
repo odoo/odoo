@@ -119,7 +119,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
     def _compute_product_uom_qty(self):
         for line in self:
             if line.product_id:
-                line.product_uom_qty = line.line_uom_id._compute_quantity(
+                line.product_uom_qty = line.line_uom_id._get_quantity_in_unit(
                     line.line_qty, line.product_uom_id
                 )
             else:
@@ -129,7 +129,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
     def _inverse_product_uom_qty(self):
         for line in self:
             if line.product_id:
-                qty = line.product_uom_id._compute_quantity(
+                qty = line.product_uom_id._get_quantity_in_unit(
                     line.product_uom_qty, line.line_uom_id
                 )
             else:
@@ -173,7 +173,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         _debug.logic("move_rank_for_line", line=order_line.id, move=move.id)
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         residual = order_line.qty_to_transfer
-        move_qty = move.product_uom_id._compute_quantity(
+        move_qty = move.product_uom_id._get_quantity_in_unit(
             move.quantity if move.state == "done" else move.product_uom_qty,
             order_line.product_uom_id,
             rounding_method="HALF-UP",
@@ -218,7 +218,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         )
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         residual = order_line.qty_to_transfer
-        move_qty = move.product_uom_id._compute_quantity(
+        move_qty = move.product_uom_id._get_quantity_in_unit(
             move.quantity if move.state == "done" else move.product_uom_qty,
             order_line.product_uom_id,
             rounding_method="HALF-UP",
@@ -235,7 +235,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
             return move.browse()
 
         if move.state in SPLITTABLE_STATES:
-            residual_ref = order_line.product_uom_id._compute_quantity(
+            residual_ref = order_line.product_uom_id._get_quantity_in_unit(
                 residual, move.product_id.uom_id, rounding_method="HALF-UP"
             )
             split_vals = move._split(move.product_qty - residual_ref)

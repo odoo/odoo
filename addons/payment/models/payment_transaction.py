@@ -267,7 +267,7 @@ class PaymentTransaction(models.Model):
             vals_list, providers, partners, strict=True
         ):
             if not values.get("reference"):
-                values["reference"] = self._compute_reference(
+                values["reference"] = self._get_unique_reference(
                     provider.code, references_in_use=references_in_use, **values
                 )
             references_in_use.add(values["reference"])
@@ -486,7 +486,7 @@ class PaymentTransaction(models.Model):
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
     @api.model
-    def _compute_reference(
+    def _get_unique_reference(
         self,
         provider_code,
         prefix=None,
@@ -890,7 +890,7 @@ class PaymentTransaction(models.Model):
             {
                 "provider_id": self.provider_id.id,
                 "payment_method_id": self.payment_method_id.id,
-                "reference": self._compute_reference(
+                "reference": self._get_unique_reference(
                     self.provider_code, prefix=reference_prefix
                 ),
                 "amount": amount,

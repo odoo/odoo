@@ -380,7 +380,7 @@ class AccountMove(models.Model):
                     Command.update(
                         po_line.id,
                         {
-                            "quantity": inv_line.product_uom_id._compute_quantity(
+                            "quantity": inv_line.product_uom_id._get_quantity_in_unit(
                                 inv_line.quantity, po_line.product_uom_id
                             ),
                             "tax_ids": inv_line.tax_ids,

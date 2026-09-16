@@ -313,7 +313,7 @@ class StockMoveMerge(models.Model):
         new_move_vals = self.copy_data(defaults)
 
         new_product_qty = self.product_uom_id.round(
-            self.product_id.uom_id._compute_quantity(
+            self.product_id.uom_id._get_quantity_in_unit(
                 max(0, self.product_qty - qty),
                 self.product_uom_id,
                 round=False,
@@ -355,13 +355,13 @@ class StockMoveMerge(models.Model):
         self.check_singleton()
         product_uom = self.product_id.uom_id
         uom_quantity = product_uom.round(
-            product_uom._compute_quantity(
+            product_uom._get_quantity_in_unit(
                 quantity,
                 to_uom,
                 rounding_method="HALF-UP",
             ),
         )
-        back_to_product_uom = to_uom._compute_quantity(
+        back_to_product_uom = to_uom._get_quantity_in_unit(
             uom_quantity,
             product_uom,
             rounding_method="HALF-UP",
@@ -372,7 +372,7 @@ class StockMoveMerge(models.Model):
 
     def _product_uom_qty_to_move_uom_qty(self, product_uom_qty):
         self.check_singleton()
-        return self.product_id.uom_id._compute_quantity(
+        return self.product_id.uom_id._get_quantity_in_unit(
             product_uom_qty,
             self.product_uom_id,
             round=False,

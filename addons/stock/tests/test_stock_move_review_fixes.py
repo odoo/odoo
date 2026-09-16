@@ -713,7 +713,7 @@ class TestStockMoveLotInvariants(TestStockCommon):
         move.invalidate_recordset()
         lines = move.move_line_ids
         summed = sum(
-            ml.product_uom_id._compute_quantity(
+            ml.product_uom_id._get_quantity_in_unit(
                 ml.quantity,
                 move.product_uom_id,
                 round=False,

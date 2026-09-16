@@ -234,7 +234,7 @@ class TestSellerPriceUomConversion(ProductCommon):
 
     def test_compute_price_is_strict_by_default(self):
         with self.assertRaises(UserError):
-            self.uom_kgm._compute_price(100.0, self.uom_unit)
+            self.uom_kgm._get_price_in_unit(100.0, self.uom_unit)
 
     def test_compute_price_wrappers_degrade(self):
         self.assertEqual(

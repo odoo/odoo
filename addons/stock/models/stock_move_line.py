@@ -602,13 +602,13 @@ class StockMoveLine(models.Model):
                 record.move_id._get_visible_quantity() if record.move_id else 0.0
             )
 
-            move_demand = record.move_id.product_uom_id._compute_quantity(
+            move_demand = record.move_id.product_uom_id._get_quantity_in_unit(
                 record.move_id.product_uom_qty, sml_uom, rounding_method="HALF-UP"
             )
-            move_quantity = record.move_id.product_uom_id._compute_quantity(
+            move_quantity = record.move_id.product_uom_id._get_quantity_in_unit(
                 move_visible_quantity, sml_uom, rounding_method="HALF-UP"
             )
-            quant_qty = product_uom._compute_quantity(
+            quant_qty = product_uom._get_quantity_in_unit(
                 record.quant_id.available_quantity, sml_uom, rounding_method="HALF-UP"
             )
 
@@ -1010,7 +1010,7 @@ class StockMoveLine(models.Model):
 
     def _get_new_quantity_product_uom(self, vals, updates):
         self.check_singleton()
-        return updates.get("product_uom_id", self.product_uom_id)._compute_quantity(
+        return updates.get("product_uom_id", self.product_uom_id)._get_quantity_in_unit(
             vals.get("quantity", self.quantity),
             self.product_id.uom_id,
             rounding_method="HALF-UP",

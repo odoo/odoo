@@ -91,7 +91,7 @@ class MixinOrderLineStock(models.AbstractModel):
 
     def _get_moves_qty_sum(self, moves):
         return sum(
-            move.product_uom_id._compute_quantity(
+            move.product_uom_id._get_quantity_in_unit(
                 move.quantity if move.state == "done" else move.product_uom_qty,
                 self.product_uom_id,
                 rounding_method="HALF-UP",

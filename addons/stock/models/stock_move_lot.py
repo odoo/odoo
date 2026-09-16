@@ -72,7 +72,7 @@ class StockMoveLot(models.Model):
 
         base_location = self.picking_id.location_id or self.location_id
         quant_domain = self._get_domain_extra_lot_quant(extra_lot_names)
-        minimal_quantity = product.uom_id._compute_quantity(1, self.product_uom_id)
+        minimal_quantity = product.uom_id._get_quantity_in_unit(1, self.product_uom_id)
         if self._is_reservation_bypass_required():
             nb_of_exceed = max(len(extra_lot_names) - nb_of_assignable_sml, 0)
             if nb_of_exceed > 0:
@@ -97,7 +97,7 @@ class StockMoveLot(models.Model):
         assignable_quantity = 0
         nb_of_assignable_sml = 0
         for sml in self.move_line_ids:
-            sml_quantity = sml.product_uom_id._compute_quantity(
+            sml_quantity = sml.product_uom_id._get_quantity_in_unit(
                 sml.quantity,
                 self.product_uom_id,
             )
@@ -177,7 +177,7 @@ class StockMoveLot(models.Model):
         available_quantity_by_lot_name = defaultdict(float)
         for lot, total_quantity, reserved_quantity in quant_by_lot:
             available_quantity_by_lot_name[lot.name] += (
-                self.product_id.uom_id._compute_quantity(
+                self.product_id.uom_id._get_quantity_in_unit(
                     total_quantity - reserved_quantity,
                     self.product_uom_id,
                 )
@@ -386,7 +386,7 @@ class StockMoveLot(models.Model):
         locations = loc_dest._get_putaway_strategy_batch(
             product,
             [
-                line_uom._compute_quantity(
+                line_uom._get_quantity_in_unit(
                     lot["quantity"], product.uom_id, rounding_method="HALF-UP"
                 )
                 for lot in lots
@@ -528,7 +528,7 @@ class StockMoveLot(models.Model):
         commands = []
         lot_id_by_name = {lot.name: lot.id for lot in self.lot_ids}
         available_move_line_ids = []
-        free_uom_qty = self.product_uom_id._compute_quantity(
+        free_uom_qty = self.product_uom_id._get_quantity_in_unit(
             max(self.quantity, self.product_uom_qty),
             product.uom_id,
         )
@@ -542,7 +542,7 @@ class StockMoveLot(models.Model):
             elif lot_name in lot_id_by_name:
                 lot_id = lot_id_by_name[lot_name]
                 assigned_lot_ids.add(lot_id)
-                free_uom_qty -= ml.product_uom_id._compute_quantity(
+                free_uom_qty -= ml.product_uom_id._get_quantity_in_unit(
                     ml.quantity,
                     product.uom_id,
                 )
@@ -720,7 +720,7 @@ class StockMoveLot(models.Model):
             commands = [Command.update(move_line.id, new_vals)]
             available_move_lines -= move_line
             extra_uom_qty -= (
-                uom._compute_quantity(new_vals["quantity"], product.uom_id) - 1
+                uom._get_quantity_in_unit(new_vals["quantity"], product.uom_id) - 1
             )
         else:
             quantity_to_reserve = 1.0
@@ -782,12 +782,12 @@ class StockMoveLot(models.Model):
         for move_line in available_move_lines:
             if product.uom_id.compare(extra_uom_qty, 0.0) <= 0:
                 break
-            ml_quantity = move_line.product_uom_id._compute_quantity(
+            ml_quantity = move_line.product_uom_id._get_quantity_in_unit(
                 move_line.quantity,
                 product.uom_id,
             )
             quantity_to_reserve = min(ml_quantity, extra_uom_qty)
-            new_ml_quantity = product.uom_id._compute_quantity(
+            new_ml_quantity = product.uom_id._get_quantity_in_unit(
                 quantity_to_reserve,
                 move_line.product_uom_id,
             )

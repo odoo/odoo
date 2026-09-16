@@ -72,10 +72,10 @@ class StockMoveLineReport(models.Model):
                 aggregated_properties["line_key"],
                 aggregated_properties["product_uom_id"],
             )
-            quantity = move_line.product_uom_id._compute_quantity(
+            quantity = move_line.product_uom_id._get_quantity_in_unit(
                 move_line.quantity, uom
             )
-            packaging_quantity = uom._compute_quantity(
+            packaging_quantity = uom._get_quantity_in_unit(
                 quantity, move_line.move_id.packaging_uom_id
             )
             undelivered_key.setdefault(move_line.move_id, line_key)
@@ -133,7 +133,7 @@ class StockMoveLineReport(models.Model):
                 backorder_lines.move_id.mapped("product_uom_qty")
             )
             undelivered -= sum(
-                line.product_uom_id._compute_quantity(line.quantity, uom)
+                line.product_uom_id._get_quantity_in_unit(line.quantity, uom)
                 for line in move.move_line_ids
             )
             if uom.is_zero(undelivered):
@@ -142,7 +142,7 @@ class StockMoveLineReport(models.Model):
                 "[move:%s] undelivered %s added to ordered qty", move.id, undelivered
             )
             entry["qty_ordered"] += undelivered
-            entry["packaging_qty_ordered"] += uom._compute_quantity(
+            entry["packaging_qty_ordered"] += uom._get_quantity_in_unit(
                 undelivered, move.packaging_uom_id
             )
 

@@ -313,7 +313,7 @@ class UomUom(models.Model):
                     f"{uom.name}\t--{factor or '0'} {uom.relative_uom_id.name}--"
                 )
 
-    def _compute_quantity(
+    def _get_quantity_in_unit(
         self,
         qty: float,
         to_unit: Self,
@@ -395,7 +395,9 @@ class UomUom(models.Model):
     def _get_quantity_lenient(self, qty: float, to_unit: Self, **kwargs) -> float:
         """Shared body of the degrade wrappers; call those, not this."""
         kwargs.pop("raise_if_failure", None)
-        return self._compute_quantity(qty, to_unit, raise_if_failure=False, **kwargs)
+        return self._get_quantity_in_unit(
+            qty, to_unit, raise_if_failure=False, **kwargs
+        )
 
     def _get_quantity_report(self, qty: float, to_unit: Self, **kwargs) -> float:
         """Convert for a display/report value; degrades on incompatible units."""
@@ -419,7 +421,9 @@ class UomUom(models.Model):
         """
         if self.env.context.get("uom_reconcile_strict"):
             kwargs.pop("raise_if_failure", None)
-            return self._compute_quantity(qty, to_unit, raise_if_failure=True, **kwargs)
+            return self._get_quantity_in_unit(
+                qty, to_unit, raise_if_failure=True, **kwargs
+            )
         return self._get_quantity_lenient(qty, to_unit, **kwargs)
 
     def _conversion_rounding(self, to_unit: Self) -> float:
@@ -440,9 +444,11 @@ class UomUom(models.Model):
     ) -> float:
         """Convert for a value stored or consumed as the authoritative quantity."""
         if not self or not qty or not to_unit or self == to_unit:
-            return self._compute_quantity(qty, to_unit, rounding_method=rounding_method)
+            return self._get_quantity_in_unit(
+                qty, to_unit, rounding_method=rounding_method
+            )
         self.check_singleton()
-        amount = self._compute_quantity(qty, to_unit, round=False)
+        amount = self._get_quantity_in_unit(qty, to_unit, round=False)
         return float_round(
             amount,
             precision_rounding=self._conversion_rounding(to_unit),
@@ -498,7 +504,7 @@ class UomUom(models.Model):
             return product_qty
         # One package expressed in `uom`, unrounded: rounding it first would
         # distort the multiples (e.g. a Unit is 1/12 Dozen, not 0.08).
-        packaging_qty = self._compute_quantity(1, uom, round=False)
+        packaging_qty = self._get_quantity_in_unit(1, uom, round=False)
         # We do not use the modulo operator to check if qty is a multiple of q. Indeed the quantity
         # per package might be a float, leading to incorrect results. For example:
         # 8 % 1.6 = 1.5999999999999996
@@ -519,7 +525,7 @@ class UomUom(models.Model):
             )
         return product_qty
 
-    def _compute_price(
+    def _get_price_in_unit(
         self, price: float, to_unit: Self, raise_if_failure: bool = True
     ) -> float:
         """Convert a price per unit of `self` into a price per unit of `to_unit`.
@@ -579,7 +585,7 @@ class UomUom(models.Model):
     def _get_price_lenient(self, price: float, to_unit: Self, **kwargs) -> float:
         """Shared body of the degrade wrappers; call those, not this."""
         kwargs.pop("raise_if_failure", None)
-        return self._compute_price(price, to_unit, raise_if_failure=False, **kwargs)
+        return self._get_price_in_unit(price, to_unit, raise_if_failure=False, **kwargs)
 
     def _get_price_report(self, price: float, to_unit: Self, **kwargs) -> float:
         """Convert a price for a display/report value; degrades on incompatible units."""

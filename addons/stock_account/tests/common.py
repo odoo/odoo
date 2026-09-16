@@ -162,7 +162,7 @@ class TestStockValuationCommon(BaseCommon):
         product_qty = quantity
         if kwargs.get("uom_id"):
             uom = self.env["uom.uom"].browse(kwargs.get("uom_id"))
-            product_qty = uom._compute_quantity(quantity, product.uom_id)
+            product_qty = uom._get_quantity_in_unit(quantity, product.uom_id)
         move_vals = {
             "product_id": product.id,
             "location_id": kwargs.get("location_id", self.supplier_location.id),

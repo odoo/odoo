@@ -837,7 +837,7 @@ class MrpWorkcenter(models.Model):
                 "workcenter_capacity", workcenter=self.id, by="matched", rank=rank
             )
             return (
-                capacity.product_uom_id._compute_quantity(capacity.capacity, unit),
+                capacity.product_uom_id._get_quantity_in_unit(capacity.capacity, unit),
                 capacity.time_start,
                 capacity.time_stop,
             )

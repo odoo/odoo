@@ -13,7 +13,7 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(self, provider_code, prefix=None, separator="-", **kwargs):
         """Override of `payment` to ensure that Paymob references are unique.
 
         :param str provider_code: The code of the provider handling the transaction.
@@ -36,7 +36,7 @@ class PaymentTransaction(models.Model):
                 prefix=prefix, separator=separator
             )
 
-        return super()._compute_reference(
+        return super()._get_unique_reference(
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 

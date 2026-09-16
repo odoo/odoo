@@ -107,7 +107,7 @@ class StockPickingPackage(models.Model):
                 ["quantity:sum"],
             )
             for picking, product, product_uom_id, quantity in res_groups:
-                totals[picking.id] += product_uom_id._compute_quantity(
+                totals[picking.id] += product_uom_id._get_quantity_in_unit(
                     quantity, product.uom_id
                 ) * getattr(product, product_attr)
         for picking in self - saved:
@@ -117,7 +117,7 @@ class StockPickingPackage(models.Model):
             ):
                 quantity_by_group[line.product_id, line.product_uom_id] += line.quantity
             for (product, product_uom_id), quantity in quantity_by_group.items():
-                totals[picking.id] += product_uom_id._compute_quantity(
+                totals[picking.id] += product_uom_id._get_quantity_in_unit(
                     quantity, product.uom_id
                 ) * getattr(product, product_attr)
         return totals

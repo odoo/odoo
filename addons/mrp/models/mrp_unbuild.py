@@ -410,11 +410,11 @@ class MrpUnbuild(models.Model):
     def _get_unbuild_factor(self):
         self.check_singleton()
         if self.mo_id:
-            return self.product_qty / self.mo_id.product_uom_id._compute_quantity(
+            return self.product_qty / self.mo_id.product_uom_id._get_quantity_in_unit(
                 self.mo_id.qty_produced, self.product_uom_id
             )
         return (
-            self.product_uom_id._compute_quantity(
+            self.product_uom_id._get_quantity_in_unit(
                 self.product_qty, self.bom_id.product_uom_id
             )
             / self.bom_id.product_qty
@@ -536,7 +536,7 @@ class MrpUnbuild(models.Model):
         available_qty = self.env["stock.quant"]._get_available_quantity(
             self.product_id, self.location_id, self.lot_id, strict=True
         )
-        unbuild_qty = self.product_uom_id._compute_quantity(
+        unbuild_qty = self.product_uom_id._get_quantity_in_unit(
             self.product_qty, self.product_id.uom_id
         )
         _debug.logic(

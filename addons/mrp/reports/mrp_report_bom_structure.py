@@ -601,7 +601,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     ):
         company = parent_bom.company_id or self.env.company
         price = (
-            bom_line.product_id.uom_id._compute_price(
+            bom_line.product_id.uom_id._get_price_in_unit(
                 bom_line.product_id.with_company(company).standard_price,
                 bom_line.product_uom_id,
             )

@@ -460,7 +460,7 @@ class TestProduct(AccountTestInvoicingCommon):
             {"name": "ZZ Uom Other", "uom_id": unit.id}
         )
         line = self._post_invoice_for(product, dozen).invoice_line_ids
-        before = line.product_uom_id._compute_quantity(
+        before = line.product_uom_id._get_quantity_in_unit(
             line.quantity, line.product_id.uom_id
         )
         with self.assertRaises(
@@ -472,7 +472,7 @@ class TestProduct(AccountTestInvoicingCommon):
             self.env.flush_all()
         self.assertEqual(
             before,
-            line.product_uom_id._compute_quantity(
+            line.product_uom_id._get_quantity_in_unit(
                 line.quantity, line.product_id.uom_id
             ),
             "a posted quantity must keep the meaning it was posted with",

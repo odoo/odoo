@@ -898,7 +898,7 @@ class SaleOrderLine(models.Model):
         return {line.id: line._get_partner_display() for line in self}
 
     def compute_uom_qty(self, new_qty, stock_move, rounding=True):
-        return self.product_uom_id._compute_quantity(
+        return self.product_uom_id._get_quantity_in_unit(
             new_qty,
             stock_move.product_uom_id,
             rounding,
@@ -1417,7 +1417,7 @@ class SaleOrderLine(models.Model):
                     invoice_line.move_id.state != "cancel"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
-                    invoice_qty = invoice_line.product_uom_id._compute_quantity(
+                    invoice_qty = invoice_line.product_uom_id._get_quantity_in_unit(
                         invoice_line.quantity, line.product_uom_id, round=False
                     )
                     if invoice_line.move_id.move_type == "out_invoice":

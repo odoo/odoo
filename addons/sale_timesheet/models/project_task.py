@@ -75,7 +75,7 @@ class ProjectTask(models.Model):
                 delta -= timesheet.unit_amount
             if delta:
                 mapped_remaining_hours[timesheet.task_id._origin.id] += (
-                    timesheet.product_uom_id._compute_quantity(
+                    timesheet.product_uom_id._get_quantity_in_unit(
                         delta, uom_hour, raise_if_failure=False
                     )
                 )

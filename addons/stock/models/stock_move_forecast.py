@@ -48,7 +48,7 @@ class StockMoveForecast(models.Model):
         outgoing_unreserved_moves_per_warehouse = defaultdict(set)
         for move in product_moves:
             if move.state == "assigned":
-                move.forecast_availability = move.product_uom_id._compute_quantity(
+                move.forecast_availability = move.product_uom_id._get_quantity_in_unit(
                     move.quantity,
                     move.product_id.uom_id,
                     rounding_method="HALF-UP",

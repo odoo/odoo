@@ -76,7 +76,7 @@ class StockRule(models.Model):
                 procurement.product_id
             )
             if bom_kit:
-                order_qty = procurement.product_uom_id._compute_quantity(
+                order_qty = procurement.product_uom_id._get_quantity_in_unit(
                     procurement.product_qty, bom_kit.product_uom_id, round=False
                 )
                 qty_to_produce = order_qty / bom_kit.product_qty
@@ -170,7 +170,7 @@ class StockRule(models.Model):
                     ].append(procurement)
             else:
                 procurement_product_uom_qty = (
-                    procurement.product_uom_id._compute_quantity(
+                    procurement.product_uom_id._get_quantity_in_unit(
                         procurement.product_qty, procurement.product_id.uom_id
                     )
                 )
@@ -179,7 +179,7 @@ class StockRule(models.Model):
                 ).create(
                     {
                         "mo_id": mo.id,
-                        "product_qty": mo.product_id.uom_id._compute_quantity(
+                        "product_qty": mo.product_id.uom_id._get_quantity_in_unit(
                             (mo.product_uom_qty + procurement_product_uom_qty),
                             mo.product_uom_id,
                         ),
@@ -232,11 +232,11 @@ class StockRule(models.Model):
         worse than refusing it.
         """
         uom = bom.product_uom_id
-        quantity = procurement.product_uom_id._compute_quantity(
+        quantity = procurement.product_uom_id._get_quantity_in_unit(
             procurement.product_qty, uom, round=False
         )
         if not is_batch_size:
-            yield procurement.product_uom_id._compute_quantity(
+            yield procurement.product_uom_id._get_quantity_in_unit(
                 procurement.product_qty, uom
             )
             return
@@ -290,9 +290,9 @@ class StockRule(models.Model):
         for _batch in range(batches):
             # `uom.round` is the 'Product Unit' decimal precision rounded
             # HALF-UP; sizing a record wants the unit's own `rounding`, rounded
-            # UP, which is what `_compute_quantity` does and what the caller
+            # UP, which is what `_get_quantity_in_unit` does and what the caller
             # this replaced did.
-            yield uom._compute_quantity(batch_size, uom)
+            yield uom._get_quantity_in_unit(batch_size, uom)
 
     def _prepare_stock_move_vals(self, procurement):
         res = super()._prepare_stock_move_vals(procurement)
@@ -392,7 +392,7 @@ class StockRule(models.Model):
             "never_product_template_attribute_value_ids": values.get(
                 "never_product_template_attribute_value_ids"
             ),
-            "product_qty": product_uom_id._compute_quantity(
+            "product_qty": product_uom_id._get_quantity_in_unit(
                 procurement.product_qty, bom.product_uom_id
             )
             if bom

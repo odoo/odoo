@@ -216,7 +216,7 @@ class DeliveryCarrier(models.Model):
                 and line.product_id.type == "consu"
             )
         ):
-            unit_quantity = line.product_uom_id._compute_quantity(
+            unit_quantity = line.product_uom_id._get_quantity_in_unit(
                 line.product_uom_qty, line.product_id.uom_id
             )
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
@@ -244,7 +244,7 @@ class DeliveryCarrier(models.Model):
         )
         for product, lines in groupby(product_lines, lambda x: x.product_id):
             unit_quantity = sum(
-                line.product_uom_id._compute_quantity(line.quantity, product.uom_id)
+                line.product_uom_id._get_quantity_in_unit(line.quantity, product.uom_id)
                 for line in lines
             )
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))

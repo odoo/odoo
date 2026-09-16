@@ -327,7 +327,7 @@ class PurchaseRequisitionLine(models.Model):
                     )
                 ):
                     if po_line.product_uom_id != line.product_uom_id:
-                        total += po_line.product_uom_id._compute_quantity(
+                        total += po_line.product_uom_id._get_quantity_in_unit(
                             po_line.product_qty, line.product_uom_id
                         )
                     else:

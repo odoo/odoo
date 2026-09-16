@@ -164,7 +164,7 @@ class SaleOrderLine(models.Model):
                 item["qty_to_invoice"] = self._convert_qty(
                     sale_line, item["qty_to_invoice"], "s2p"
                 )
-                item["price_unit"] = sale_line_uom._compute_price(
+                item["price_unit"] = sale_line_uom._get_price_in_unit(
                     item["price_unit"], product_uom_id
                 )
                 results.append(item)
@@ -193,9 +193,9 @@ class SaleOrderLine(models.Model):
         product_uom_id = sale_line.product_id.uom_id
         sale_line_uom = sale_line.product_uom_id
         if direction == "s2p":
-            return sale_line_uom._compute_quantity(qty, product_uom_id, False)
+            return sale_line_uom._get_quantity_in_unit(qty, product_uom_id, False)
         if direction == "p2s":
-            return product_uom_id._compute_quantity(qty, sale_line_uom, False)
+            return product_uom_id._get_quantity_in_unit(qty, sale_line_uom, False)
         raise ValueError(f"Unknown conversion direction: {direction!r}")
 
     def unlink(self):

@@ -227,7 +227,7 @@ class TestStockMoveAudit20260831(TransactionCase):
             uom_ids=[Command.set((units | dozens).ids)],
         )
         self.assertNotEqual(
-            units._compute_quantity(7, dozens),
+            units._get_quantity_in_unit(7, dozens),
             units._get_quantity_stored(7, dozens),
             "sanity: this configuration is one where the two conversions differ",
         )

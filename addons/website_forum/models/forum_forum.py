@@ -448,7 +448,7 @@ class ForumForum(models.Model):
             forum.count_posts_waiting_validation = counts.get((forum.id, "pending"), 0)
             forum.count_flagged_posts = counts.get((forum.id, "flagged"), 0)
 
-    def _compute_website_url(self):
+    def _get_forum_url(self):
         if not self.id:
             return False
         return f"/forum/{self.env['ir.http']._slug(self)}"
@@ -516,10 +516,10 @@ class ForumForum(models.Model):
 
     def go_to_website(self):
         self.check_singleton()
-        website_url = self._compute_website_url()
+        website_url = self._get_forum_url()
         if not website_url:
             return False
-        return self.env["website"].get_client_action(self._compute_website_url())
+        return self.env["website"].get_client_action(self._get_forum_url())
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -555,5 +555,5 @@ class ForumForum(models.Model):
             fetch_fields, mapping, icon, limit
         )
         for forum, data in zip(self, results_data, strict=True):
-            data["website_url"] = forum._compute_website_url()
+            data["website_url"] = forum._get_forum_url()
         return results_data

@@ -745,7 +745,7 @@ class ProductPricelistItem(models.Model):
             return convert(self.fixed_price)
 
         if base_price is None:
-            base_price = self._compute_base_price(
+            base_price = self._get_base_price(
                 product, quantity, uom, date, currency, **kwargs
             )
 
@@ -768,7 +768,7 @@ class ProductPricelistItem(models.Model):
 
         return base_price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
+    def _get_base_price(self, product, quantity, uom, date, currency, **kwargs):
         currency.check_singleton()
 
         rule_base = self.base or "list_price"
@@ -784,7 +784,7 @@ class ProductPricelistItem(models.Model):
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
-            price = product._compute_price(rule_base, uom=uom, date=date)[product.id]
+            price = product._get_prices(rule_base, uom=uom, date=date)[product.id]
         else:
             if rule_base != "list_price":
                 raise ValidationError(
@@ -796,7 +796,7 @@ class ProductPricelistItem(models.Model):
                     ),
                 )
             src_currency = product.currency_id
-            price = product._compute_price(rule_base, uom=uom, date=date)[product.id]
+            price = product._get_prices(rule_base, uom=uom, date=date)[product.id]
 
         if src_currency != currency:
             price = src_currency._convert(
@@ -822,6 +822,6 @@ class ProductPricelistItem(models.Model):
             else:
                 break
 
-        return pricelist_item._compute_base_price(
+        return pricelist_item._get_base_price(
             product, quantity, uom, date, currency, **kwargs
         )

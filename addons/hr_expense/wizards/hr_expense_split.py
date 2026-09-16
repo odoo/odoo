@@ -119,7 +119,7 @@ class HrExpenseSplit(models.TransientModel):
                 != 0
             )
             if split.product_has_cost:
-                split.total_amount_currency = split.product_id._compute_price(
+                split.total_amount_currency = split.product_id._get_prices(
                     "standard_price", currency=split.currency_id
                 )[split.product_id.id]
 

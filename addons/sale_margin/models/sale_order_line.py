@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
                 continue
             line = line.with_company(line.company_id)
 
-            product_cost = line.product_id.uom_id._compute_price(
+            product_cost = line.product_id.uom_id._get_price_in_unit(
                 line.product_id.standard_price,
                 line.product_uom_id,
             )

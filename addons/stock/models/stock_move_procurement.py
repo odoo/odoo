@@ -196,7 +196,7 @@ class StockMoveProcurement(models.Model):
                 0,
             )
             quantity = max(move.product_qty - qty_free, 0)
-            product_uom_qty = move.product_id.uom_id._compute_quantity(
+            product_uom_qty = move.product_id.uom_id._get_quantity_in_unit(
                 quantity,
                 move.product_uom_id,
                 rounding_method="HALF-UP",

@@ -123,7 +123,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
         invoice_type, refund_type = self._get_invoice_move_types()
         for line in self:
             for inv_line in line._get_open_invoice_lines():
-                qty = inv_line.product_uom_id._compute_quantity(
+                qty = inv_line.product_uom_id._get_quantity_in_unit(
                     inv_line.quantity,
                     line.product_uom_id,
                 )

@@ -17,7 +17,7 @@ class ResPartner(models.Model):
     )
 
     def _compute_base_order_test_count(self):
-        self._compute_order_count(
+        self._update_order_count(
             "base.order.test",
             "base_order_test_count",
             "base.group_user",

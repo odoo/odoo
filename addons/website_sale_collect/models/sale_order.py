@@ -123,7 +123,7 @@ class SaleOrder(models.Model):
             for ol in ols:
                 free_qty_in_uom = max(
                     int(
-                        product.uom_id._compute_quantity(
+                        product.uom_id._get_quantity_in_unit(
                             qty_free, ol.product_uom_id, rounding_method="DOWN"
                         )
                     ),
@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
                         available_qty=free_qty_in_uom,
                         line_qty=int(line_qty_in_uom),
                     )
-                qty_free -= ol.product_uom_id._compute_quantity(
+                qty_free -= ol.product_uom_id._get_quantity_in_unit(
                     line_qty_in_uom, product.uom_id
                 )
         return insufficient_stock_data

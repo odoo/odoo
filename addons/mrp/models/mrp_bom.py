@@ -866,13 +866,13 @@ class MrpBom(models.Model):
 
     def _get_kit_component_qty(self, product):
         self.check_singleton()
-        kit_qty = self.product_uom_id._compute_quantity(
+        kit_qty = self.product_uom_id._get_quantity_in_unit(
             self.product_qty, product.uom_id, round=False
         )
         _dummy, exploded_lines = self._explode(product, 1)
         component_qty = defaultdict(float)
         for line, line_data in exploded_lines:
-            component_qty[line.product_id] += line.product_uom_id._compute_quantity(
+            component_qty[line.product_id] += line.product_uom_id._get_quantity_in_unit(
                 line_data["qty"], line.product_id.uom_id, round=False
             )
         return component_qty, kit_qty
@@ -1125,7 +1125,7 @@ class MrpBom(models.Model):
                 self.env["stock.rule"].search(domain, limit=1).route_id.id
             )
         orderpoint.bom_id = self
-        bom_qty = self.product_uom_id._compute_quantity(
+        bom_qty = self.product_uom_id._get_quantity_in_unit(
             self.product_qty, orderpoint.product_id.uom_id
         )
         orderpoint.qty_to_order = max(orderpoint.qty_to_order, bom_qty)

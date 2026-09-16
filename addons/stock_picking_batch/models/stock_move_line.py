@@ -91,7 +91,7 @@ class StockMoveLine(models.Model):
                 picking_to_wave_vals["move_ids"].append(Command.link(move.id))
             else:
                 quantity = sum(
-                    line.product_uom_id._compute_quantity(
+                    line.product_uom_id._get_quantity_in_unit(
                         line.quantity, move.product_id.uom_id, rounding_method="HALF-UP"
                     )
                     for line in move_lines

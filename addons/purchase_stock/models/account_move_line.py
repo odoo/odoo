@@ -10,7 +10,7 @@ class AccountMoveLine(models.Model):
     def _get_price_unit_val_dif_and_relevant_qty(self):
         _debug.logic("price_difference_inputs", lines=self)
         self.check_singleton()
-        valuation_price_unit = self.product_id.uom_id._compute_price(
+        valuation_price_unit = self.product_id.uom_id._get_price_in_unit(
             self.product_id.standard_price,
             self.product_uom_id,
         )

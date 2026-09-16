@@ -88,7 +88,7 @@ class StockMoveLine(models.Model):
             sale_line_id = move_line.move_id.sale_line_id
             if sale_line_id and sale_line_id.product_id == move_line.product_id:
                 base_line = sale_line_id._prepare_base_line_for_taxes_computation()
-                qty = move_line.product_uom_id._compute_quantity(
+                qty = move_line.product_uom_id._get_quantity_in_unit(
                     move_line.quantity, sale_line_id.product_uom_id
                 )
                 base_line.update({"quantity": qty})
@@ -101,7 +101,7 @@ class StockMoveLine(models.Model):
                 )
             else:
                 unit_price = move_line.product_id.list_price
-                qty = move_line.product_uom_id._compute_quantity(
+                qty = move_line.product_uom_id._get_quantity_in_unit(
                     move_line.quantity, move_line.product_id.uom_id
                 )
                 move_line.sale_price = unit_price * qty

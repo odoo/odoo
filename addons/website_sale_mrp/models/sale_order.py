@@ -36,7 +36,7 @@ class SaleOrder(models.Model):
                     ).mapped("product_uom_qty")
                 )
                 uom_qty_per_kit = bom_line_data["qty"] / bom_line_data["original_qty"]
-                qty_per_kit[component] += bom_line.product_uom_id._compute_quantity(
+                qty_per_kit[component] += bom_line.product_uom_id._get_quantity_in_unit(
                     uom_qty_per_kit / kit_bom.product_qty, component.uom_id, round=False
                 )
 

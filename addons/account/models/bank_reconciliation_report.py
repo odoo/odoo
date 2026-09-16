@@ -473,7 +473,9 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             else:
                 # If there is no last statement, the last statement section must be empty and the other must have all
                 # transaction
-                return self._compute_result([], current_groupby, prepare_result_dict)
+                return self._get_grouped_result(
+                    [], current_groupby, prepare_result_dict
+                )
         else:
             last_statement_id_condition = SQL("st_line.statement_id IS NULL")
 
@@ -544,7 +546,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             rows=len(query_res_lines),
         )
 
-        return self._compute_result(
+        return self._get_grouped_result(
             query_res_lines, current_groupby, prepare_result_dict
         )
 
@@ -713,11 +715,13 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             rows=len(query_res_lines),
         )
 
-        return self._compute_result(
+        return self._get_grouped_result(
             query_res_lines, current_groupby, prepare_result_dict
         )
 
-    def _compute_result(self, query_res_lines, current_groupby, prepare_result_dict):
+    def _get_grouped_result(
+        self, query_res_lines, current_groupby, prepare_result_dict
+    ):
         if not current_groupby:
             return prepare_result_dict(query_res_lines)
         else:

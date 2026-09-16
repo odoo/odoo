@@ -134,8 +134,10 @@ class SaleOrderLine(models.Model):
                     purchase_line=last_purchase_line,
                     remaining=remaining,
                 )
-                last_purchase_line.product_qty = line.product_uom_id._compute_quantity(
-                    remaining, last_purchase_line.product_uom_id
+                last_purchase_line.product_qty = (
+                    line.product_uom_id._get_quantity_in_unit(
+                        remaining, last_purchase_line.product_uom_id
+                    )
                 )
             else:
                 _debug.lifecycle(
@@ -164,7 +166,7 @@ class SaleOrderLine(models.Model):
     def _purchase_service_get_ordered_qty(self, purchase_lines):
         self.check_singleton()
         return sum(
-            purchase_line.product_uom_id._compute_quantity(
+            purchase_line.product_uom_id._get_quantity_in_unit(
                 purchase_line.product_qty, self.product_uom_id
             )
             for purchase_line in purchase_lines
@@ -211,7 +213,7 @@ class SaleOrderLine(models.Model):
                 partner=purchase_order.partner_id, warning=False
             )
         purchase_uom = supplierinfo.product_uom_id or self.product_id.uom_id
-        purchase_qty = self.product_uom_id._compute_quantity(
+        purchase_qty = self.product_uom_id._get_quantity_in_unit(
             quantity or self.product_qty, purchase_uom
         )
         purchase_line_vals = self.env[

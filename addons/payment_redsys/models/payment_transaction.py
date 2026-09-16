@@ -24,7 +24,9 @@ class PaymentTransaction(models.Model):
             tx.provider_reference = tx.reference
         return transactions
 
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to ensure that Redsys' requirements for references are satisfied.
 
         Redsys' requirements for transaction are as follows:
@@ -38,7 +40,7 @@ class PaymentTransaction(models.Model):
         :rtype: str
         """
         if provider_code != "redsys":
-            return super()._compute_reference(
+            return super()._get_unique_reference(
                 provider_code, prefix=prefix, separator=separator, **kwargs
             )
 
@@ -46,7 +48,7 @@ class PaymentTransaction(models.Model):
         # This leaves just enough room for the separator and the suffix in case of collisions.
         prefix = str(int(fields.Datetime.now().timestamp()))[-10:]
 
-        return super()._compute_reference(
+        return super()._get_unique_reference(
             provider_code, prefix=prefix, separator="S", **kwargs
         )
 

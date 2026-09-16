@@ -1019,7 +1019,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.product_id.uom_id != production.product_uom_id:
                 production.product_uom_qty = (
-                    production.product_uom_id._compute_quantity(
+                    production.product_uom_id._get_quantity_in_unit(
                         production.product_qty, production.product_id.uom_id
                     )
                 )
@@ -1190,7 +1190,7 @@ class MrpProduction(models.Model):
                 and production.product_qty > 0
             ):
                 workorders_values = []
-                product_qty = production.product_uom_id._compute_quantity(
+                product_qty = production.product_uom_id._get_quantity_in_unit(
                     production.product_qty, production.bom_id.product_uom_id
                 )
                 exploded_boms, _dummy = production.bom_id._explode(
@@ -2242,7 +2242,7 @@ class MrpProduction(models.Model):
                 move.bom_line_id or move.byproduct_id
             ).product_uom_id or move.product_uom_id
             qty = move.quantity or move.product_uom_qty
-            qty = move.product_uom_id._compute_quantity(qty * ratio, target_uom)
+            qty = move.product_uom_id._get_quantity_in_unit(qty * ratio, target_uom)
             return (target_uom, qty)
 
         bom_lines_values = []
@@ -2362,7 +2362,7 @@ class MrpProduction(models.Model):
                     production.never_product_template_attribute_value_ids,
                 ):
                     continue
-                product_uom_factor = production.product_uom_id._compute_quantity(
+                product_uom_factor = production.product_uom_id._get_quantity_in_unit(
                     production.product_qty, production.bom_id.product_uom_id
                 )
                 qty = byproduct.product_qty * (
@@ -2423,7 +2423,7 @@ class MrpProduction(models.Model):
             if not production.bom_id:
                 continue
             factor = (
-                production.product_uom_id._compute_quantity(
+                production.product_uom_id._get_quantity_in_unit(
                     production.product_qty,
                     production.bom_id.product_uom_id,
                     round=False,
@@ -2503,17 +2503,17 @@ class MrpProduction(models.Model):
 
     def _update_moves_from_qty_producing(self, pick_manual_consumption_moves=True):
         if self.product_id.tracking == "serial":
-            qty_producing_uom = self.product_uom_id._compute_quantity(
+            qty_producing_uom = self.product_uom_id._get_quantity_in_unit(
                 self.qty_producing, self.product_id.uom_id, rounding_method="HALF-UP"
             )
-            qty_production_uom = self.product_uom_id._compute_quantity(
+            qty_production_uom = self.product_uom_id._get_quantity_in_unit(
                 self.product_qty, self.product_id.uom_id, rounding_method="HALF-UP"
             )
             if qty_producing_uom != qty_production_uom and not (
                 qty_producing_uom == 0
                 and self._origin.qty_producing != self.qty_producing
             ):
-                self.qty_producing = self.product_id.uom_id._compute_quantity(
+                self.qty_producing = self.product_id.uom_id._get_quantity_in_unit(
                     len(self.lot_producing_ids),
                     self.product_uom_id,
                     rounding_method="HALF-UP",
@@ -2536,7 +2536,7 @@ class MrpProduction(models.Model):
                 qty_waiting = 0
                 for move_orig in move.move_orig_ids:
                     if move_orig.state not in ("draft", "done", "cancel"):
-                        qty_waiting += move_orig.product_uom_id._compute_quantity(
+                        qty_waiting += move_orig.product_uom_id._get_quantity_in_unit(
                             move_orig.quantity, move.product_uom_id
                         )
                 if not move.product_uom_id.is_zero(qty_waiting):
@@ -2801,7 +2801,7 @@ class MrpProduction(models.Model):
             ):
                 production_vals.update(
                     {
-                        "product_qty": production.product_uom_id._compute_quantity(
+                        "product_qty": production.product_uom_id._get_quantity_in_unit(
                             production.product_qty, production.product_id.uom_id
                         ),
                         "product_uom_id": production.product_id.uom_id,
@@ -2814,7 +2814,7 @@ class MrpProduction(models.Model):
                 ):
                     move_finish.write(
                         {
-                            "product_uom_qty": move_finish.product_uom_id._compute_quantity(
+                            "product_uom_qty": move_finish.product_uom_id._get_quantity_in_unit(
                                 move_finish.product_uom_qty,
                                 move_finish.product_id.uom_id,
                             ),
@@ -3033,7 +3033,7 @@ class MrpProduction(models.Model):
                     move_values["product_id"]
                 )
                 move_uom = self.env["uom.uom"].browse(move_values["product_uom_id"])
-                move_product_qty = move_uom._compute_quantity(
+                move_product_qty = move_uom._get_quantity_in_unit(
                     move_values["product_uom_qty"], move_product.uom_id
                 )
                 expected_qty_by_product[move_product] += (
@@ -3042,7 +3042,7 @@ class MrpProduction(models.Model):
 
             done_qty_by_product = defaultdict(float)
             for move in order.move_raw_ids:
-                quantity = move.product_uom_id._compute_quantity(
+                quantity = move.product_uom_id._get_quantity_in_unit(
                     move._get_picked_quantity(), move.product_id.uom_id
                 )
                 if (
@@ -3559,7 +3559,7 @@ class MrpProduction(models.Model):
         ml_by_move = []
         if not initial_move.picked:
             for move_line in initial_move.move_line_ids:
-                available_qty = move_line.product_uom_id._compute_quantity(
+                available_qty = move_line.product_uom_id._get_quantity_in_unit(
                     move_line.quantity, product_uom_id, rounding_method="HALF-UP"
                 )
                 if product_uom_id.compare(available_qty, 0) <= 0:
@@ -3575,7 +3575,7 @@ class MrpProduction(models.Model):
 
         for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
             taken_qty = min(quantity, move_qty_to_reserve)
-            taken_qty_uom = product_uom_id._compute_quantity(
+            taken_qty_uom = product_uom_id._get_quantity_in_unit(
                 taken_qty, move_line.product_uom_id, rounding_method="HALF-UP"
             )
             if move_line.product_uom_id.is_zero(taken_qty_uom):
@@ -3591,7 +3591,7 @@ class MrpProduction(models.Model):
         for quantity, move_line, ml_vals in ml_by_move:
             while product_uom_id.compare(quantity, 0) > 0 and move:
                 taken_qty = min(move_qty_to_reserve, quantity)
-                taken_qty_uom = product_uom_id._compute_quantity(
+                taken_qty_uom = product_uom_id._get_quantity_in_unit(
                     taken_qty, move_line.product_uom_id, rounding_method="HALF-UP"
                 )
                 if move == initial_move:
@@ -4374,7 +4374,7 @@ class MrpProduction(models.Model):
             if not bom_line:
                 moves_to_unlink |= move_raw
                 continue
-            move_raw_qty = move_raw.product_uom_id._compute_quantity(
+            move_raw_qty = move_raw.product_uom_id._get_quantity_in_unit(
                 move_raw.product_uom_qty * ratio, bom_line.product_uom_id
             )
             if (
@@ -4426,7 +4426,7 @@ class MrpProduction(models.Model):
             if not bom_byproduct:
                 moves_to_unlink |= move_byproduct
                 continue
-            move_byproduct_qty = move_byproduct.product_uom_id._compute_quantity(
+            move_byproduct_qty = move_byproduct.product_uom_id._get_quantity_in_unit(
                 move_byproduct.product_uom_qty * ratio, bom_byproduct.product_uom_id
             )
             if (
@@ -4461,7 +4461,9 @@ class MrpProduction(models.Model):
     def _get_ratio_between_mo_and_bom_quantities(self, bom):
         self.check_singleton()
         bom_product_uom = (bom.product_id or bom.product_tmpl_id).uom_id
-        bom_qty = bom.product_uom_id._compute_quantity(bom.product_qty, bom_product_uom)
+        bom_qty = bom.product_uom_id._get_quantity_in_unit(
+            bom.product_qty, bom_product_uom
+        )
         return bom_qty / self.product_uom_qty
 
     def _check_sn_uniqueness(self):

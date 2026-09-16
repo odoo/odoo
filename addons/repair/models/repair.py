@@ -940,7 +940,7 @@ class RepairOrder(models.Model):
             )
             .mapped("quantity")
         )
-        repair_qty = self.product_uom_id._compute_quantity(
+        repair_qty = self.product_uom_id._get_quantity_in_unit(
             self.product_qty, self.product_id.uom_id
         )
         for available_qty in [available_qty_owner, available_qty_noown]:

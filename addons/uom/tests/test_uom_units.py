@@ -14,31 +14,31 @@ class TestPowerAndFuelEfficiency(UomCommon):
 
     def test_one_mpg_is_the_metric_ratio_not_its_reciprocal(self):
         self.assertAlmostEqual(
-            self.mpg._compute_quantity(1.0, self.kmpl, round=False),
+            self.mpg._get_quantity_in_unit(1.0, self.kmpl, round=False),
             1.609344 / 3.785411784,
             places=9,
         )
 
     def test_one_km_per_liter_in_mpg(self):
         self.assertAlmostEqual(
-            self.kmpl._compute_quantity(1.0, self.mpg, round=False),
+            self.kmpl._get_quantity_in_unit(1.0, self.mpg, round=False),
             3.785411784 / 1.609344,
             places=9,
         )
 
     def test_one_horsepower_in_kilowatts(self):
         self.assertAlmostEqual(
-            self.hp._compute_quantity(1.0, self.kw, round=False),
+            self.hp._get_quantity_in_unit(1.0, self.kw, round=False),
             0.74569987158227,
             places=9,
         )
 
     def test_the_power_units_are_decimal_multiples_of_the_watt(self):
         self.assertAlmostEqual(
-            self.kw._compute_quantity(1.0, self.watt, round=False), 1000.0
+            self.kw._get_quantity_in_unit(1.0, self.watt, round=False), 1000.0
         )
         self.assertAlmostEqual(
-            self.mw._compute_quantity(1.0, self.watt, round=False), 1000000.0
+            self.mw._get_quantity_in_unit(1.0, self.watt, round=False), 1000000.0
         )
 
     def test_the_power_units_use_si_symbols(self):

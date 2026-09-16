@@ -15,7 +15,7 @@ class StockMove(models.Model):
         ):
             value -= (
                 self.production_id.extra_cost
-                * self.product_uom_id._compute_quantity(
+                * self.product_uom_id._get_quantity_in_unit(
                     self.quantity, self.product_id.uom_id
                 )
             )

@@ -643,7 +643,7 @@ class TestPosOrderAudit(CommonPosTest):
         line.product_id.with_company(order.company_id).standard_price = 7
         line.product_id.with_company(other_company).standard_price = 17
 
-        line.sudo().with_company(other_company)._compute_total_cost(
+        line.sudo().with_company(other_company)._update_total_cost(
             self.env["stock.move"]
         )
 
@@ -667,7 +667,7 @@ class TestPosOrderAudit(CommonPosTest):
         original.product_id = self.test_product_order
         original.qty = 2
         original.product_id.standard_price = 10
-        original._compute_total_cost(self.env["stock.move"])
+        original._update_total_cost(self.env["stock.move"])
         self.assertEqual(original.total_cost, 40)
         # Legacy lines can carry a total without a recorded source unit cost.
         original.price_cost = 0
@@ -696,7 +696,7 @@ class TestPosOrderAudit(CommonPosTest):
             }
         )
 
-        line._compute_total_cost(move)
+        line._update_total_cost(move)
 
         self.assertEqual(line.total_cost, -20)
         self.assertEqual(line.price_cost, 10)
@@ -1039,7 +1039,7 @@ class TestPosOrderAudit(CommonPosTest):
         original_line = self._create_line(original)
         original_line.product_id = self.test_product_order
         original_line.product_id.standard_price = 10
-        original_line._compute_total_cost(self.env["stock.move"])
+        original_line._update_total_cost(self.env["stock.move"])
         self.assertEqual(original_line.total_cost, 20)
         self.assertEqual(original_line.price_cost, 10)
         rate.rate = 4
@@ -1069,7 +1069,7 @@ class TestPosOrderAudit(CommonPosTest):
             }
         )
 
-        line._compute_total_cost(move)
+        line._update_total_cost(move)
 
         self.assertEqual(line.price_cost, 10)
         self.assertEqual(line.total_cost, -30)

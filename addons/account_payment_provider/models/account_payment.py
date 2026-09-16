@@ -303,7 +303,7 @@ class AccountPayment(models.Model):
         return {
             "provider_id": self.payment_token_id.provider_id.id,
             "payment_method_id": self.payment_token_id.payment_method_id.id,
-            "reference": self.env["payment.transaction"]._compute_reference(
+            "reference": self.env["payment.transaction"]._get_unique_reference(
                 self.payment_token_id.provider_id.code, prefix=self.memo
             ),
             "amount": self.amount,

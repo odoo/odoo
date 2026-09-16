@@ -57,7 +57,7 @@ class MrpProduction(models.Model):
                 )
             for product_id, lines in line_by_product.items():
                 qty = sum(
-                    line.product_uom_id._compute_quantity(
+                    line.product_uom_id._get_quantity_in_unit(
                         line.quantity, product_id.uom_id
                     )
                     for line in lines
@@ -188,7 +188,7 @@ class MrpProduction(models.Model):
                     for origin in raw.move_orig_ids
                     if origin.state != "cancel"
                 )
-                covered[raw.id] = raw.product_id.uom_id._compute_quantity(
+                covered[raw.id] = raw.product_id.uom_id._get_quantity_in_unit(
                     supplied,
                     raw.product_uom_id,
                     rounding_method="HALF-UP",

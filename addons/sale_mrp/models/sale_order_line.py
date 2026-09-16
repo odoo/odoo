@@ -187,11 +187,11 @@ class SaleOrderLine(models.Model):
         bom_line = stock_move.bom_line_id
         if not bom_line:
             return super().compute_uom_qty(new_qty, stock_move, rounding)
-        kit_qty = self.product_uom_id._compute_quantity(
+        kit_qty = self.product_uom_id._get_quantity_in_unit(
             new_qty, bom_line.bom_id.product_uom_id, rounding
         )
         component_qty = kit_qty * bom_line.product_qty / bom_line.bom_id.product_qty
-        return bom_line.product_uom_id._compute_quantity(
+        return bom_line.product_uom_id._get_quantity_in_unit(
             component_qty, stock_move.product_uom_id, rounding
         )
 
@@ -249,11 +249,11 @@ class SaleOrderLine(models.Model):
                 if previous_product_qty
                 else self.product_qty
             )
-            order_qty = self.product_uom_id._compute_quantity(
+            order_qty = self.product_uom_id._get_quantity_in_unit(
                 order_qty, bom.product_uom_id
             )
             qty = moves._get_kit_quantity(self.product_id, order_qty, bom, filters)
-            return bom.product_uom_id._compute_quantity(qty, self.product_uom_id)
+            return bom.product_uom_id._get_quantity_in_unit(qty, self.product_uom_id)
         elif bom and previous_product_qty:
             return previous_product_qty.get(self.id)
         return super()._get_procurement_qty(previous_product_qty=previous_product_qty)

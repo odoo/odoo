@@ -47,7 +47,7 @@ class StockMove(models.Model):
     def _get_quantity_from_bill(self, aml, quantity):
         self.check_singleton()
         if self.bom_line_id.bom_id.type == "phantom":
-            return aml.product_uom_id._compute_quantity(
+            return aml.product_uom_id._get_quantity_in_unit(
                 quantity, self.product_id.uom_id
             )
         return super()._get_quantity_from_bill(aml, quantity)

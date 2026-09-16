@@ -214,7 +214,7 @@ class LoyaltyRule(models.Model):
         self.check_singleton()
         return self.env["product.product"].search(self._get_domain_valid_product())
 
-    def _compute_amount(self, currency_to):
+    def _get_minimum_amount(self, currency_to):
         self.check_singleton()
         return self.currency_id._convert(
             self.minimum_amount,

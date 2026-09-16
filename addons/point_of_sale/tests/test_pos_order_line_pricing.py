@@ -113,7 +113,7 @@ class TestPosOrderLinePricing(TestPoSCommon):
         order = self._new_order(is_refund=True)
         line = self._add_line(order, qty=-2)
         line._onchange_amount_line_all()
-        line._compute_total_cost(None)
+        line._update_total_cost(None)
         order.invalidate_recordset()
         line.invalidate_recordset()
 

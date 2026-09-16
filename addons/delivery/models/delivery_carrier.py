@@ -502,7 +502,7 @@ class DeliveryCarrier(models.Model):
         if self.delivery_type == "fixed":
             return float(price)
         fixed_margin_in_sale_currency = (
-            self._compute_currency_id(order, self.fixed_margin, "company_to_pricelist")
+            self._get_converted_price(order, self.fixed_margin, "company_to_pricelist")
             if order
             else self.fixed_margin
         )
@@ -557,7 +557,7 @@ class DeliveryCarrier(models.Model):
                 res["success"]
                 and self.free_over
                 and self.delivery_type != "base_on_rule"
-                and self._compute_currency_id(
+                and self._get_converted_price(
                     order, amount_without_delivery, "pricelist_to_company"
                 )
                 >= self.amount
@@ -706,7 +706,7 @@ class DeliveryCarrier(models.Model):
                 "warning_message": False,
             }
 
-        price_unit = self._compute_currency_id(
+        price_unit = self._get_converted_price(
             order, price_unit, "company_to_pricelist"
         )
 
@@ -729,7 +729,7 @@ class DeliveryCarrier(models.Model):
             return pricelist_currency, company_currency
         return None
 
-    def _compute_currency_id(self, order, price, conversion):
+    def _get_converted_price(self, order, price, conversion):
         from_currency, to_currency = self._get_conversion_currencies(order, conversion)
         if from_currency.id == to_currency.id:
             return price
@@ -766,7 +766,7 @@ class DeliveryCarrier(models.Model):
             quantity += qty
         total = order._get_amount_total_without_delivery()
 
-        total = self._compute_currency_id(order, total, "pricelist_to_company")
+        total = self._get_converted_price(order, total, "pricelist_to_company")
         # weight is either,
         # 1- weight chosen by user in choose.delivery.carrier wizard passed by context
         # 2- saved weight to use on sale order

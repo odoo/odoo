@@ -63,8 +63,10 @@ class SaleOrderLine(models.Model):
                             f" ({format_duration(line.remaining_hours)} {unit_label})"
                         )
                     elif is_day:
-                        remaining_days = company.project_time_mode_id._compute_quantity(
-                            line.remaining_hours, encoding_uom, round=False
+                        remaining_days = (
+                            company.project_time_mode_id._get_quantity_in_unit(
+                                line.remaining_hours, encoding_uom, round=False
+                            )
                         )
                         remaining_time = f" ({remaining_days:.02f} {unit_label})"
                     name = f"{line.display_name}{remaining_time}"
@@ -89,7 +91,7 @@ class SaleOrderLine(models.Model):
             remaining_hours = None
             if line.remaining_hours_available:
                 qty_left = line.product_qty - line.qty_transferred
-                remaining_hours = line.product_uom_id._compute_quantity(
+                remaining_hours = line.product_uom_id._get_quantity_in_unit(
                     qty_left, uom_hour, round=False
                 )
             line.remaining_hours = remaining_hours
@@ -149,7 +151,7 @@ class SaleOrderLine(models.Model):
             product_uom_id != company_time_uom_id
             and product_uom_id._has_common_reference(company_time_uom_id)
         ):
-            allocated_hours = product_uom_id._compute_quantity(
+            allocated_hours = product_uom_id._get_quantity_in_unit(
                 self.product_qty, company_time_uom_id, rounding_method="HALF-UP"
             )
         else:

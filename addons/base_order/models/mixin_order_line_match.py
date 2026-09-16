@@ -121,7 +121,7 @@ class MixinOrderLineMatch(models.AbstractModel):
     def _compute_product_uom_qty(self):
         for line in self:
             if line.product_id:
-                line.product_uom_qty = line.line_uom_id._compute_quantity(
+                line.product_uom_qty = line.line_uom_id._get_quantity_in_unit(
                     line.line_qty, line.product_uom_id
                 )
             else:

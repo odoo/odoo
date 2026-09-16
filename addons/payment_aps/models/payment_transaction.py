@@ -14,7 +14,9 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to ensure that APS' requirements for references are satisfied.
 
         APS' requirements for transaction are as follows:
@@ -32,7 +34,7 @@ class PaymentTransaction(models.Model):
         if provider_code == "aps":
             prefix = payment_utils.singularize_reference_prefix()
 
-        return super()._compute_reference(
+        return super()._get_unique_reference(
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 

@@ -183,7 +183,7 @@ class TestReportPoSOrder(TestPoSCommon):
         )
         order = self._create_report_order((2, -1), date_order="2026-01-15 12:00:00")
         order.lines.product_id.standard_price = 20
-        order.lines._compute_total_cost(self.env["stock.move"])
+        order.lines._update_total_cost(self.env["stock.move"])
         self.assertEqual(order.currency_id, self.other_currency)
         self.assertAlmostEqual(order.currency_rate, 0.5)
 

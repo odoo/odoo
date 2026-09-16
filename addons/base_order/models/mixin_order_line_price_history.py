@@ -425,7 +425,7 @@ class MixinOrderLinePriceHistoryLine(models.AbstractModel):
     def _prepare_price_update_vals(self) -> dict:
         target = self.wizard_id.line_id
         return {
-            "price_unit": self.line_id.product_uom_id._compute_price(
+            "price_unit": self.line_id.product_uom_id._get_price_in_unit(
                 self.price_unit, target.product_uom_id
             ),
             "discount": self.discount,

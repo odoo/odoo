@@ -78,7 +78,7 @@ class EventEvent(models.Model):
     def _selection_installed_langs(self):
         return self.env["res.lang"].get_installed()
 
-    def _default_question_ids(self):
+    def _get_default_question_ids(self):
         return self.env["event.type"]._default_question_ids()
 
     name = fields.Char(
@@ -418,7 +418,7 @@ class EventEvent(models.Model):
                 )
 
             if not event.event_type_id and not questions_tokeep_ids:
-                event.question_ids = self._default_question_ids()
+                event.question_ids = self._get_default_question_ids()
                 continue
 
             if questions_tokeep_ids:

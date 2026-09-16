@@ -1335,7 +1335,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             corr_bom_line = bom_kit_uom_1.bom_line_ids.filtered(
                 lambda b, move=move: b.product_id.id == move.product_id.id
             )
-            computed_qty = move.product_uom_id._compute_quantity(
+            computed_qty = move.product_uom_id._get_quantity_in_unit(
                 move.product_qty, corr_bom_line.product_uom_id
             )
             self.assertEqual(

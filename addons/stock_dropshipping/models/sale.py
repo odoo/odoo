@@ -65,7 +65,7 @@ class SaleOrderLine(models.Model):
         ):
             qty = 0.0
             for po_line in purchase_lines_sudo.filtered(lambda r: r.state != "cancel"):
-                qty += po_line.product_uom_id._compute_quantity(
+                qty += po_line.product_uom_id._get_quantity_in_unit(
                     po_line.product_qty, self.product_uom_id, rounding_method="HALF-UP"
                 )
             return qty

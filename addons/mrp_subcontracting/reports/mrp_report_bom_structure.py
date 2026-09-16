@@ -156,7 +156,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     params={"subcontractor_ids": bom.subcontractor_ids},
                 )
             if supplier:
-                qty_supplier_uom = product.uom_id._compute_quantity(
+                qty_supplier_uom = product.uom_id._get_quantity_in_unit(
                     quantity, supplier.product_uom_id
                 )
                 return {
@@ -203,10 +203,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 if not product_info[product.id]["consumptions"].get(stock_loc, False):
                     product_info[product.id]["consumptions"][stock_loc] = 0
                 quantities_info["free_to_manufacture_qty"] = (
-                    product.uom_id._compute_quantity(subloc_product.qty_free, bom_uom)
+                    product.uom_id._get_quantity_in_unit(
+                        subloc_product.qty_free, bom_uom
+                    )
                 )
                 quantities_info["qty_free"] = quantities_info["free_to_manufacture_qty"]
-                quantities_info["on_hand_qty"] = product.uom_id._compute_quantity(
+                quantities_info["on_hand_qty"] = product.uom_id._get_quantity_in_unit(
                     subloc_product.qty_available, bom_uom
                 )
                 quantities_info["stock_loc"] = stock_loc

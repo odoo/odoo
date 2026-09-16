@@ -892,7 +892,7 @@ class StockMove(models.Model):
 
         if self.state != "done":
             if self.picked:
-                unit_amount = self.product_uom_id._compute_quantity(
+                unit_amount = self.product_uom_id._get_quantity_in_unit(
                     self.quantity, self.product_id.uom_id
                 )
                 amount = unit_amount * self.product_id.standard_price

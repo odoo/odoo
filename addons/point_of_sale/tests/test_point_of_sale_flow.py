@@ -2463,7 +2463,7 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         order_line = order.lines[0]
         self.env.invalidate_all()
-        order_line.with_user(user).with_company(branch)._compute_total_cost(None)
+        order_line.with_user(user).with_company(branch)._update_total_cost(None)
 
     def test_delete_res_partner_linked_to_pos_order(self):
         partner = self.env["res.partner"].create(

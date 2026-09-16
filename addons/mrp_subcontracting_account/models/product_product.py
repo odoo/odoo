@@ -19,5 +19,7 @@ class ProductProduct(models.Model):
                     (bom.company_id or self.env.company),
                     fields.Date.today(),
                 )
-                price += seller.product_uom_id._compute_price(seller_price, self.uom_id)
+                price += seller.product_uom_id._get_price_in_unit(
+                    seller_price, self.uom_id
+                )
         return price

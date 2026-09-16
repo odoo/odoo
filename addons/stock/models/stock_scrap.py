@@ -394,7 +394,7 @@ class StockScrap(models.Model):
             owner_id=self.owner_id.id,
             strict=True,
         ).product_id.qty_available
-        scrap_qty = self.product_uom_id._compute_quantity(
+        scrap_qty = self.product_uom_id._get_quantity_in_unit(
             self.scrap_qty, self.product_id.uom_id
         )
         dbg.logic.debug(
@@ -420,7 +420,7 @@ class StockScrap(models.Model):
                     "default_product_id": self.product_id.id,
                     "default_location_id": self.location_id.id,
                     "default_scrap_id": self.id,
-                    "default_quantity": self.product_uom_id._compute_quantity(
+                    "default_quantity": self.product_uom_id._get_quantity_in_unit(
                         self.scrap_qty, self.product_id.uom_id
                     ),
                     "default_product_uom_name": self.product_id.uom_name,

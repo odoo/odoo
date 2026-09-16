@@ -557,7 +557,7 @@ class ProductProductQuantity(models.Model):
                 (moves_out_res_past, past_out),
             ):
                 for product, uom, quantity in groups:
-                    target[product.id] += uom._compute_quantity(
+                    target[product.id] += uom._get_quantity_in_unit(
                         quantity,
                         product.uom_id,
                     )

@@ -504,7 +504,7 @@ class StockRule(models.Model):
         line,
     ):
         partner = values["supplier"].partner_id
-        procurement_uom_po_qty = product_uom_id._compute_quantity(
+        procurement_uom_po_qty = product_uom_id._get_quantity_in_unit(
             product_qty,
             line.product_uom_id,
             rounding_method="HALF-UP",
@@ -530,7 +530,7 @@ class StockRule(models.Model):
             and seller.product_uom_id != line.product_uom_id
             and not values.get("force_uom")
         ):
-            res["product_qty"] = line.product_uom_id._compute_quantity(
+            res["product_qty"] = line.product_uom_id._get_quantity_in_unit(
                 res["product_qty"],
                 seller.product_uom_id,
                 rounding_method="HALF-UP",

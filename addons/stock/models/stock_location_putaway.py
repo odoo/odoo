@@ -252,7 +252,7 @@ class StockLocationPutaway(models.Model):
         for location_dest, quantity_list, uom_ids in move_line_data:
             uoms = self.env["uom.uom"].browse(uom_ids)
             current_qty = sum(
-                uom._compute_quantity(float(qty), product.uom_id)
+                uom._get_quantity_in_unit(float(qty), product.uom_id)
                 for qty, uom in zip(quantity_list, uoms, strict=True)
             )
             qty_by_location[location_dest.id] += current_qty

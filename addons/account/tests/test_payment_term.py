@@ -271,7 +271,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
 
     def test_payment_term_compute_method_with_cash_discount(self):
         self.pay_term_a.early_pay_discount_computation = "included"
-        computed_term_a = self.pay_term_a._compute_terms(
+        computed_term_a = self.pay_term_a._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -310,7 +310,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         )
         self.assertEqual(rate, 0.5)
         self.pay_term_a.early_pay_discount_computation = "included"
-        computed_term_a = self.pay_term_a._compute_terms(
+        computed_term_a = self.pay_term_a._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=foreign_currency,
             company=self.env.company,
@@ -345,7 +345,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         )
 
     def test_payment_term_compute_method_without_cash_discount(self):
-        computed_term_b = self.pay_term_b._compute_terms(
+        computed_term_b = self.pay_term_b._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -389,7 +389,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         )
         self.assertEqual(rate, 0.5)
         self.pay_term_a.early_pay_discount_computation = "included"
-        computed_term_b = self.pay_term_b._compute_terms(
+        computed_term_b = self.pay_term_b._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=foreign_currency,
             company=self.env.company,
@@ -436,7 +436,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
 
     def test_payment_term_compute_method_early_excluded(self):
         self.pay_term_a.early_pay_discount_computation = "excluded"
-        computed_term_a = self.pay_term_a._compute_terms(
+        computed_term_a = self.pay_term_a._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -498,7 +498,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             }
         )
 
-        computed_term = pay_term._compute_terms(
+        computed_term = pay_term._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.other_currency,
             company=self.env.company,
@@ -542,7 +542,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             }
         )
 
-        computed_term = pay_term._compute_terms(
+        computed_term = pay_term._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -590,7 +590,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             }
         )
 
-        computed_term = pay_term._compute_terms(
+        computed_term = pay_term._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -639,7 +639,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             }
         )
 
-        computed_term = pay_term._compute_terms(
+        computed_term = pay_term._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,
@@ -695,7 +695,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             }
         )
 
-        computed_term = pay_term._compute_terms(
+        computed_term = pay_term._get_terms(
             date_ref=fields.Date.from_string("2016-01-01"),
             currency=self.env.company.currency_id,
             company=self.env.company,

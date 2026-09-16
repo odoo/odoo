@@ -1005,14 +1005,14 @@ class PosOrder(models.Model):
                 )
                 lines -= storable_fifo_avco_lines
             stock_moves = order.picking_ids.move_ids
-            lines._compute_total_cost(stock_moves)
+            lines._update_total_cost(stock_moves)
 
     def _update_total_cost_at_session_closing(self, stock_moves):
         for order in self:
             storable_fifo_avco_lines = order.lines.filtered(
                 lambda l: l._is_product_storable_fifo_avco()
             )
-            storable_fifo_avco_lines._compute_total_cost(stock_moves)
+            storable_fifo_avco_lines._update_total_cost(stock_moves)
 
     @api.depends("lines.margin", "is_total_cost_computed")
     def _compute_margins(self):

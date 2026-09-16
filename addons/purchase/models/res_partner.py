@@ -53,7 +53,7 @@ class ResPartner(models.Model):
             partner.user_purchase_id = partner.parent_id.user_purchase_id
 
     def _compute_purchase_order_count(self):
-        self._compute_order_count(
+        self._update_order_count(
             "purchase.order",
             "purchase_order_count",
             "purchase.group_purchase_user",

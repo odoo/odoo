@@ -160,7 +160,7 @@ class ReportStockReport_Reception(models.AbstractModel):
 
                 qty_to_reserve = out.product_qty
                 if "done" not in doc_states and out.state == "partially_available":
-                    qty_to_reserve -= out.product_uom_id._compute_quantity(
+                    qty_to_reserve -= out.product_uom_id._get_quantity_in_unit(
                         out.quantity, product_uom_id
                     )
 
@@ -234,7 +234,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 )
 
     def _get_move_quantity(self, move):
-        return move.product_qty or move.product_uom_id._compute_quantity(
+        return move.product_qty or move.product_uom_id._get_quantity_in_unit(
             move.quantity, move.product_id.uom_id, rounding_method="HALF-UP"
         )
 
@@ -373,7 +373,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         uom = out.product_id.uom_id
         if (
             uom.compare(
-                out.product_uom_id._compute_quantity(out.quantity, uom), qty_to_link
+                out.product_uom_id._get_quantity_in_unit(out.quantity, uom), qty_to_link
             )
             <= 0
         ):
@@ -390,12 +390,12 @@ class ReportStockReport_Reception(models.AbstractModel):
             if assigned_amount + move_line_id.quantity_product_uom > qty_to_link:
                 new_move_line = move_line_id.copy({"quantity": 0})
                 new_move_line.quantity = move_line_id.quantity
-                move_line_id.quantity = uom._compute_quantity(
+                move_line_id.quantity = uom._get_quantity_in_unit(
                     qty_to_link - assigned_amount,
                     out.product_uom_id,
                     rounding_method="HALF-UP",
                 )
-                new_move_line.quantity -= uom._compute_quantity(
+                new_move_line.quantity -= uom._get_quantity_in_unit(
                     move_line_id.quantity_product_uom,
                     out.product_uom_id,
                     rounding_method="HALF-UP",
@@ -504,7 +504,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 new_out.write({"state": "confirmed"})
                 out.move_line_ids.move_id = new_out
                 (out | new_out)._compute_quantity()
-                new_out_qty_ref = new_out.product_uom_id._compute_quantity(
+                new_out_qty_ref = new_out.product_uom_id._get_quantity_in_unit(
                     new_out.quantity, new_out.product_id.uom_id
                 )
                 if (
@@ -527,7 +527,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                         ):
                             new_move_line = move_line_id.copy({"quantity": 0})
                             new_move_line.quantity = (
-                                out.product_id.uom_id._compute_quantity(
+                                out.product_id.uom_id._get_quantity_in_unit(
                                     move_line_id.quantity_product_uom
                                     - reserved_amount_to_remain,
                                     move_line_id.product_uom_id,

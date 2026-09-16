@@ -6,7 +6,7 @@ class StockMove(models.Model):
 
     def _l10n_in_get_product_price_unit(self):
         self.check_singleton()
-        return self.product_id.uom_id._compute_price(
+        return self.product_id.uom_id._get_price_in_unit(
             self.product_id.with_company(self.company_id).standard_price,
             self.product_uom_id,
         )

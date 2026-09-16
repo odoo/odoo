@@ -552,7 +552,7 @@ class PosOrderLine(models.Model):
         return moves._get_price_unit()
 
     @dbg.timed
-    def _compute_total_cost(self, stock_moves):
+    def _update_total_cost(self, stock_moves):
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             line = line.with_company(line.company_id)
             product = line.product_id

@@ -110,7 +110,7 @@ class AccountMove(models.Model):
 
             product = sml.product_id
             product_uom_id = product.uom_id
-            quantity = sml.product_uom_id._compute_quantity(
+            quantity = sml.product_uom_id._get_quantity_in_unit(
                 sml.quantity, product_uom_id
             )
 

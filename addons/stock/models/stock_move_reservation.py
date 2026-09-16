@@ -265,7 +265,7 @@ class StockMoveReservation(models.Model):
                 ),
             )
             if to_update:
-                to_update[0].quantity += self.product_id.uom_id._compute_quantity(
+                to_update[0].quantity += self.product_id.uom_id._get_quantity_in_unit(
                     missing_reserved_quantity,
                     self.product_uom_id,
                     rounding_method="HALF-UP",
@@ -560,7 +560,7 @@ class StockMoveReservation(models.Model):
                 env["res.partner"].browse(vals.get("owner_id") or ()),
             )
             line_uom = env["uom.uom"].browse(vals["product_uom_id"])
-            pending[key] += line_uom._compute_quantity(
+            pending[key] += line_uom._get_quantity_in_unit(
                 vals.get("quantity", 0.0), product_uom, rounding_method="HALF-UP"
             )
         return pending
@@ -623,7 +623,7 @@ class StockMoveReservation(models.Model):
         self.check_singleton()
         res = []
         consumed_quant = set()
-        total_qty = self.product_uom_id._compute_quantity(
+        total_qty = self.product_uom_id._get_quantity_in_unit(
             qty,
             self.product_id.uom_id,
             round=False,
@@ -645,7 +645,7 @@ class StockMoveReservation(models.Model):
             return qty
         ml_qty = ml.quantity
         if ml.product_uom_id != self.product_id.uom_id:
-            ml_qty = ml.product_uom_id._compute_quantity(
+            ml_qty = ml.product_uom_id._get_quantity_in_unit(
                 ml_qty,
                 self.product_id.uom_id,
                 round=False,
@@ -658,7 +658,7 @@ class StockMoveReservation(models.Model):
         if ml.product_id.uom_id.compare(ml_qty, qty) > 0:
             line_qty = qty
             if ml.product_uom_id != self.product_id.uom_id:
-                line_qty = ml.product_id.uom_id._compute_quantity(
+                line_qty = ml.product_id.uom_id._get_quantity_in_unit(
                     qty,
                     ml.product_uom_id,
                     round=False,
@@ -708,7 +708,7 @@ class StockMoveReservation(models.Model):
         qty -= avail_qty
         line_qty = avail_qty + ml_qty
         if ml.product_uom_id != self.product_id.uom_id:
-            line_qty = ml.product_id.uom_id._compute_quantity(
+            line_qty = ml.product_id.uom_id._get_quantity_in_unit(
                 line_qty,
                 ml.product_uom_id,
                 round=False,

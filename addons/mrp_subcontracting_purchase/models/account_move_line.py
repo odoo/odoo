@@ -25,7 +25,7 @@ class AccountMoveLine(models.Model):
                 round=False,
             )
             qty = sum(
-                mo.product_uom_id._compute_quantity(
+                mo.product_uom_id._get_quantity_in_unit(
                     mo.qty_producing, self.product_uom_id
                 )
                 for mo in subcontract_production

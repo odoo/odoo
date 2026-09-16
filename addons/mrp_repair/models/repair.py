@@ -44,7 +44,7 @@ class RepairOrder(models.Model):
                 _debug.logic("repair_explode_skipped", move=op.id, reason="no_kit_bom")
                 continue
             factor = (
-                op.product_uom_id._compute_quantity(
+                op.product_uom_id._get_quantity_in_unit(
                     op.product_uom_qty, bom.product_uom_id
                 )
                 / bom.product_qty

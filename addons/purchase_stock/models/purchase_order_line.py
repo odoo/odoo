@@ -330,7 +330,7 @@ class PurchaseOrderLine(models.Model):
         return incoming_moves, outgoing_moves
 
     def _get_stock_move_dests_initial_demand(self, move_dests):
-        return self.product_id.uom_id._compute_quantity(
+        return self.product_id.uom_id._get_quantity_in_unit(
             sum(
                 move_dests.filtered(
                     lambda m: (
@@ -429,7 +429,7 @@ class PurchaseOrderLine(models.Model):
         supplier = values.get("supplier")
 
         if not values.get("force_uom") and supplier.product_uom_id != product_uom_id:
-            product_qty = product_uom_id._compute_quantity(
+            product_qty = product_uom_id._get_quantity_in_unit(
                 product_qty,
                 supplier.product_uom_id,
             )

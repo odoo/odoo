@@ -24,28 +24,26 @@ class TestSharedPricing(ProductVariantsCommon):
         for price_type, expected in (("list_price", 100.0), ("standard_price", 40.0)):
             with self.subTest(price_type=price_type):
                 self.assertEqual(
-                    self.template._compute_price(price_type)[self.template.id],
+                    self.template._get_prices(price_type)[self.template.id],
                     expected,
                 )
                 self.assertEqual(
-                    self.variant._compute_price(price_type)[self.variant.id],
+                    self.variant._get_prices(price_type)[self.variant.id],
                     expected,
                 )
 
     def test_both_models_convert_the_unit_the_same_way(self):
         self.assertEqual(
-            self.template._compute_price("list_price", uom=self.uom_dozen)[
+            self.template._get_prices("list_price", uom=self.uom_dozen)[
                 self.template.id
             ],
-            self.variant._compute_price("list_price", uom=self.uom_dozen)[
-                self.variant.id
-            ],
+            self.variant._get_prices("list_price", uom=self.uom_dozen)[self.variant.id],
         )
 
     def test_both_models_refuse_an_incompatible_unit(self):
         for record in (self.template, self.variant):
             with self.subTest(model=record._name), self.assertRaises(UserError):
-                record._compute_price("list_price", uom=self.uom_kgm)
+                record._get_prices("list_price", uom=self.uom_kgm)
 
     def test_the_template_still_falls_back_to_its_first_variant_cost(self):
         multi = self.product_template_sofa
@@ -53,9 +51,9 @@ class TestSharedPricing(ProductVariantsCommon):
         multi.product_variant_ids.standard_price = 0.0
         multi.product_variant_ids[0].standard_price = 33.0
 
-        self.assertEqual(multi._compute_price("standard_price")[multi.id], 33.0)
+        self.assertEqual(multi._get_prices("standard_price")[multi.id], 33.0)
         second = multi.product_variant_ids[1]
-        self.assertEqual(second._compute_price("standard_price")[second.id], 0.0)
+        self.assertEqual(second._get_prices("standard_price")[second.id], 0.0)
 
     def test_the_hooks_are_what_a_subclass_overrides(self):
         mixin = self.env["mixin.product.price"]

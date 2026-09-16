@@ -82,7 +82,7 @@ class AccountMove(models.Model):
                 )
                 total_invs = [
                     (
-                        i.product_uom_id._compute_quantity(
+                        i.product_uom_id._get_quantity_in_unit(
                             i.quantity, i.product_id.uom_id
                         ),
                         i,

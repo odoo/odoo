@@ -587,10 +587,10 @@ class StockQuantReservation(models.Model):
         precision_digits = self.env["decimal.precision"].get_precision("Product Unit")
 
         if not strict and uom_id and product_id.uom_id != uom_id:
-            quantity_move_uom = product_id.uom_id._compute_quantity(
+            quantity_move_uom = product_id.uom_id._get_quantity_in_unit(
                 quantity, uom_id, rounding_method="DOWN"
             )
-            quantity = uom_id._compute_quantity(
+            quantity = uom_id._get_quantity_in_unit(
                 quantity_move_uom, product_id.uom_id, rounding_method="HALF-UP"
             )
 

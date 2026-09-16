@@ -15,7 +15,9 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to ensure that Worldline requirement for references is satisfied.
 
         Worldline requires for references to be at most 30 characters long.
@@ -26,7 +28,7 @@ class PaymentTransaction(models.Model):
         :return: The unique reference for the transaction.
         :rtype: str
         """
-        reference = super()._compute_reference(
+        reference = super()._get_unique_reference(
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
         if provider_code != "worldline":
@@ -38,7 +40,7 @@ class PaymentTransaction(models.Model):
             return reference
 
         prefix = payment_utils.singularize_reference_prefix(prefix="WL")
-        return super()._compute_reference(
+        return super()._get_unique_reference(
             provider_code, prefix=prefix, separator=separator, **kwargs
         )
 

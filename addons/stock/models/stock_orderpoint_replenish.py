@@ -364,7 +364,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
         if replenishment_multiple and self.product_id.uom_id._has_common_reference(
             replenishment_multiple
         ):
-            qty_to_order = self.product_id.uom_id._compute_quantity(
+            qty_to_order = self.product_id.uom_id._get_quantity_in_unit(
                 qty_to_order,
                 replenishment_multiple,
             )
@@ -373,7 +373,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
                 precision_digits=0,
                 rounding_method="UP",
             )
-            qty_to_order = replenishment_multiple._compute_quantity(
+            qty_to_order = replenishment_multiple._get_quantity_in_unit(
                 qty_to_order,
                 self.product_id.uom_id,
             )

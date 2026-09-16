@@ -122,7 +122,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             _debug.logic("mo_overview_drift", missing=len(missing_components))
             for line in missing_components:
                 line_cost = (
-                    line.product_id.uom_id._compute_price(
+                    line.product_id.uom_id._get_price_in_unit(
                         line.product_id.standard_price, line.product_uom_id
                     )
                     * line.product_qty
@@ -407,7 +407,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_unit_cost(self, move):
         if not move:
             return 0.0
-        return move.product_id.uom_id._compute_price(
+        return move.product_id.uom_id._get_price_in_unit(
             move.product_id.standard_price, move.product_uom_id
         )
 

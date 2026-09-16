@@ -105,14 +105,14 @@ class ProductProduct(models.Model):
                     line.child_bom_id, boms_to_recompute=boms_to_recompute
                 )
                 total += (
-                    line.product_id.uom_id._compute_price(
+                    line.product_id.uom_id._get_price_in_unit(
                         child_total, line.product_uom_id
                     )
                     * line.product_qty
                 )
             else:
                 total += (
-                    line.product_id.uom_id._compute_price(
+                    line.product_id.uom_id._get_price_in_unit(
                         line.product_id.standard_price, line.product_uom_id
                     )
                     * line.product_qty
@@ -123,7 +123,7 @@ class ProductProduct(models.Model):
             )
             product_uom_qty = 0
             for line in byproduct_lines:
-                product_uom_qty += line.product_uom_id._compute_quantity(
+                product_uom_qty += line.product_uom_id._get_quantity_in_unit(
                     line.product_qty, self.uom_id, round=False
                 )
             byproduct_cost_share = sum(byproduct_lines.mapped("cost_share"))
@@ -151,7 +151,7 @@ class ProductProduct(models.Model):
                 total=total,
                 byproduct_share=byproduct_cost_share,
             )
-            return bom.product_uom_id._compute_price(
+            return bom.product_uom_id._get_price_in_unit(
                 total / bom.product_qty, self.uom_id
             )
         return 0.0

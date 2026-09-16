@@ -8991,11 +8991,11 @@ class TestStockMove(TestStockCommon):
         for line in lines:
             self.assertAlmostEqual(
                 line.quantity_product_uom,
-                gram_uom._compute_quantity(line.quantity, oz_uom, round=False),
+                gram_uom._get_quantity_in_unit(line.quantity, oz_uom, round=False),
             )
         self.assertAlmostEqual(
             sum(lines.mapped("quantity_product_uom")),
-            gram_uom._compute_quantity(150.0, oz_uom, round=False),
+            gram_uom._get_quantity_in_unit(150.0, oz_uom, round=False),
         )
 
     def test_in_sub_precision_quantity_is_not_dropped(self):

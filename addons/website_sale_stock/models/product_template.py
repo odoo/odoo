@@ -67,7 +67,7 @@ class ProductTemplate(models.Model):
         )
         if product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
-            computed_qty = product_sudo.uom_id._compute_quantity(
+            computed_qty = product_sudo.uom_id._get_quantity_in_unit(
                 website._get_product_available_qty(product_sudo),
                 to_unit=uom,
                 round=False,
@@ -87,7 +87,7 @@ class ProductTemplate(models.Model):
             )
             cart_quantity = 0.0
             if not product_sudo.allow_out_of_stock_order:
-                cart_quantity = product_sudo.uom_id._compute_quantity(
+                cart_quantity = product_sudo.uom_id._get_quantity_in_unit(
                     request.cart._get_cart_qty(product_sudo.id),
                     to_unit=uom,
                 )
@@ -129,7 +129,7 @@ class ProductTemplate(models.Model):
             )
             if max_quantity is not None:
                 if uom:
-                    max_quantity = product_or_template.uom_id._compute_quantity(
+                    max_quantity = product_or_template.uom_id._get_quantity_in_unit(
                         max_quantity, to_unit=uom
                     )
                 data["qty_free"] = max_quantity

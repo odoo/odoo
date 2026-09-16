@@ -240,7 +240,7 @@ class StockPicking(models.Model):
         if self.carrier_id.free_over and self.sale_id:
             amount_without_delivery = self.sale_id._get_amount_total_without_delivery()
             if (
-                self.carrier_id._compute_currency_id(
+                self.carrier_id._get_converted_price(
                     self.sale_id, amount_without_delivery, "pricelist_to_company"
                 )
                 >= self.carrier_id.amount

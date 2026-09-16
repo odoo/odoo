@@ -367,7 +367,7 @@ class MrpBomLine(models.Model):
                     self.product_id.display_name,
                 )
             )
-        return self.product_uom_id._compute_quantity(
+        return self.product_uom_id._get_quantity_in_unit(
             line_quantity / bom.product_qty, bom.product_uom_id, round=False
         )
 

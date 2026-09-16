@@ -896,7 +896,7 @@ class StockMove(models.Model):
         sum_qty = defaultdict(float)
         for move, product_uom_id, qty_sum in data:
             uom = move.product_uom_id
-            sum_qty[move.id] += product_uom_id._compute_quantity(
+            sum_qty[move.id] += product_uom_id._get_quantity_in_unit(
                 qty_sum,
                 uom,
                 round=False,
@@ -920,7 +920,7 @@ class StockMove(models.Model):
             if not packaging_uom:
                 move.quantity_packaging_uom = 0.0
             elif move.product_uom_id._has_common_reference(packaging_uom):
-                move.quantity_packaging_uom = move.product_uom_id._compute_quantity(
+                move.quantity_packaging_uom = move.product_uom_id._get_quantity_in_unit(
                     move.product_uom_qty,
                     packaging_uom,
                 )
@@ -1016,7 +1016,7 @@ class StockMove(models.Model):
                     break
                 qty_ml_dec = min(
                     ml.quantity,
-                    move.product_uom_id._compute_quantity(
+                    move.product_uom_id._get_quantity_in_unit(
                         quantity,
                         ml.product_uom_id,
                         round=False,
@@ -1031,7 +1031,7 @@ class StockMove(models.Model):
                     mls_to_unlink.add(ml.id)
                 else:
                     ml.quantity -= qty_ml_dec
-                quantity -= ml.product_uom_id._compute_quantity(
+                quantity -= ml.product_uom_id._get_quantity_in_unit(
                     qty_ml_dec,
                     move.product_uom_id,
                     round=False,
@@ -1286,7 +1286,7 @@ class StockMove(models.Model):
             for ml in self.move_line_ids:
                 if not ml.picked:
                     continue
-                picked_qty += ml.product_uom_id._compute_quantity(
+                picked_qty += ml.product_uom_id._get_quantity_in_unit(
                     ml.quantity,
                     self.product_uom_id,
                     round=False,
@@ -1399,7 +1399,7 @@ class StockMove(models.Model):
         self.check_singleton()
         quantity = 0
         for move_line in self.move_line_ids:
-            quantity += move_line.product_uom_id._compute_quantity(
+            quantity += move_line.product_uom_id._get_quantity_in_unit(
                 move_line.quantity,
                 self.product_uom_id,
                 round=False,

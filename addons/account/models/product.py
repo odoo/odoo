@@ -322,7 +322,7 @@ class ProductProduct(models.Model):
         if product_taxes:
             product_taxes = product_taxes._filter_taxes_by_company(company)
         if product_uom_id and self.uom_id != product_uom_id:
-            product_price_unit = self.uom_id._compute_price(
+            product_price_unit = self.uom_id._get_price_in_unit(
                 product_price_unit, product_uom_id
             )
 

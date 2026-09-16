@@ -11,7 +11,7 @@ class TestPaymentTransaction(APSCommon):
     def test_reference_contains_only_valid_characters(self):
         """Test that transaction references are made of only alphanumerics and/or '-' and '_'."""
         for prefix in (None, "", "S0001", "INV/20222/001", "dummy ref"):
-            reference = self.env["payment.transaction"]._compute_reference(
+            reference = self.env["payment.transaction"]._get_unique_reference(
                 "aps", prefix=prefix
             )
             self.assertRegex(reference, r"^[\w-]+$")

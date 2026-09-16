@@ -123,7 +123,7 @@ class AccountAnalyticLine(models.Model):
         if not unit:
             unit = self.product_id.uom_id
 
-        amount_unit = self.product_id._compute_price("standard_price", uom=unit)[
+        amount_unit = self.product_id._get_prices("standard_price", uom=unit)[
             self.product_id.id
         ]
         amount = amount_unit * self.unit_amount or 0.0

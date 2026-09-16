@@ -30,7 +30,7 @@ class ProductProduct(models.Model):
 
     @api.onchange("service_policy")
     def _onchange_service_policy(self):
-        self._inverse_service_policy()
+        self._update_service_policy_fields()
         vals = self.product_tmpl_id._get_onchange_service_policy_updates(
             self.service_tracking,
             self.service_policy,

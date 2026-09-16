@@ -658,7 +658,7 @@ class ProductTemplate(models.Model):
         if self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_show_uom_price"
         ):
-            price_per_product_uom = uom._compute_price(
+            price_per_product_uom = uom._get_price_in_unit(
                 price=combination_info["price"], to_unit=self.uom_id
             )
             combination_info.update(

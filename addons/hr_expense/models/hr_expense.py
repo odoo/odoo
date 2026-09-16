@@ -746,7 +746,7 @@ class HrExpense(models.Model):
 
             product_id = expense.product_id
             if expense._is_product_price_computation_required():
-                expense.price_unit = product_id._compute_price(
+                expense.price_unit = product_id._get_prices(
                     "standard_price",
                     uom=expense.product_uom_id,
                     company=expense.company_id,

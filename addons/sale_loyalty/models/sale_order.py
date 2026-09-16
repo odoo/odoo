@@ -1367,7 +1367,7 @@ class SaleOrder(models.Model):
                 if rule.mode == "with_code" and rule not in self.code_enabled_rule_ids:
                     continue
                 code_matched = True
-                rule_amount = rule._compute_amount(self.currency_id)
+                rule_amount = rule._get_minimum_amount(self.currency_id)
                 untaxed_amount = sum(lines_per_rule[rule].mapped("price_subtotal"))
                 tax_amount = sum(lines_per_rule[rule].mapped("price_tax"))
                 if rule_amount > (

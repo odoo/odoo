@@ -171,7 +171,7 @@ class ResPartner(models.Model):
         ]
 
     def _compute_pos_order_count(self):
-        self._compute_order_count(
+        self._update_order_count(
             "pos.order", "pos_order_count", "point_of_sale.group_pos_user"
         )
 

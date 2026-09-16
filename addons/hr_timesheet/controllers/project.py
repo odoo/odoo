@@ -28,7 +28,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         session_info["user_companies"]["allowed_companies"][company.id].update(
             timesheet_uom_id=timesheet_encode_uom.id,
-            timesheet_uom_factor=project_time_mode_uom._compute_quantity(
+            timesheet_uom_factor=project_time_mode_uom._get_quantity_in_unit(
                 1.0,
                 timesheet_encode_uom,
                 round=False,

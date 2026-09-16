@@ -159,7 +159,7 @@ class MixinOrderLineAmount(models.AbstractModel):
                 and line.product_id.uom_id != line.product_uom_id
                 and line.product_uom_id._has_common_reference(line.product_id.uom_id)
             ):
-                line.product_uom_qty = line.product_uom_id._compute_quantity(
+                line.product_uom_qty = line.product_uom_id._get_quantity_in_unit(
                     line.product_qty,
                     line.product_id.uom_id,
                 )
@@ -190,7 +190,7 @@ class MixinOrderLineAmount(models.AbstractModel):
             )["total_void"]
             price_unit /= qty
         if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit = self.product_uom_id._compute_price(
+            price_unit = self.product_uom_id._get_price_in_unit(
                 price_unit, self.product_id.uom_id
             )
         return price_unit

@@ -75,7 +75,7 @@ class ResPartner(models.Model):
         )
         for move in moves:
             lines_quantity[move.sale_line_id.id] += (
-                move.product_uom_id._compute_quantity(
+                move.product_uom_id._get_quantity_in_unit(
                     move.quantity,
                     move.product_id.uom_id,
                     rounding_method="HALF-UP",

@@ -1998,7 +1998,7 @@ class AccountMove(models.Model):
 
     @_debug.perf.timed
     def _update_needed_terms_from_payment_term(self, invoice, sign):
-        invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
+        invoice_payment_terms = invoice.invoice_payment_term_id._get_terms(
             date_ref=invoice.invoice_date
             or invoice.date
             or fields.Date.context_today(invoice),

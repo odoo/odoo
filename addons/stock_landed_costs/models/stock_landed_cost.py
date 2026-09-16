@@ -199,7 +199,7 @@ class StockLandedCost(models.Model):
                 or not move.quantity
             ):
                 continue
-            qty = move.product_uom_id._compute_quantity(
+            qty = move.product_uom_id._get_quantity_in_unit(
                 move.quantity, move.product_id.uom_id
             )
 

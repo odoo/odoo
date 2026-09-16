@@ -655,7 +655,7 @@ class PurchaseOrder(models.Model):
                     continue
                 price = line.price_unit
                 if tmpl.uom_id != line.product_uom_id:
-                    price = line.product_uom_id._compute_price(price, tmpl.uom_id)
+                    price = line.product_uom_id._get_price_in_unit(price, tmpl.uom_id)
                 supplierinfo = order._prepare_supplierinfo(
                     partner,
                     line,

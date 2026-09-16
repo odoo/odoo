@@ -135,7 +135,7 @@ class TestPosRobustness(CommonPosTest):
                 "refunded_orderline_id": zero_line.id,
             }
         )
-        refund_line._compute_total_cost(self.env["stock.move"])
+        refund_line._update_total_cost(self.env["stock.move"])
         self.assertTrue(refund_line.is_total_cost_computed)
 
     def test_printed_order_refuses_a_new_payment(self):

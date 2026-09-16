@@ -180,8 +180,8 @@ class SaleOrder(models.Model):
                     or order.partner_id.parent_id.user_id.id
                 )
 
-    def _default_team_id(self):
-        return super()._default_team_id() or self.website_id.salesteam_id.id
+    def _get_default_sale_team_id(self):
+        return super()._get_default_sale_team_id() or self.website_id.salesteam_id.id
 
     @api.model_create_multi
     def create(self, vals_list):

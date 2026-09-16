@@ -228,7 +228,7 @@ class AccountPaymentTerm(models.Model):
                 )
                 continue
 
-            terms = record._compute_terms(
+            terms = record._get_terms(
                 date_ref=date_ref,
                 currency=currency,
                 company=record.company_id or self.env.company,
@@ -342,7 +342,7 @@ class AccountPaymentTerm(models.Model):
         )
 
     @_debug.perf.timed
-    def _compute_terms(
+    def _get_terms(
         self,
         *,
         date_ref,
@@ -422,7 +422,7 @@ class AccountPaymentTerm(models.Model):
 
         if _debug.logic.enabled:
             _debug.logic(
-                "_compute_terms",
+                "_get_terms",
                 term=self,
                 ref=date_ref,
                 total=total_amount_currency,

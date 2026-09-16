@@ -53,7 +53,7 @@ class PosOrder(models.Model):
             price_unit = super()._get_pos_anglo_saxon_price_unit(
                 comp[0].product_id, comp[1]["qty"]
             )
-            price_unit = comp[0].product_id.uom_id._compute_price(
+            price_unit = comp[0].product_id.uom_id._get_price_in_unit(
                 price_unit, comp[0].product_uom_id
             )
             qty_per_kit = comp[1]["qty"] / bom.product_qty / (quantity or 1)

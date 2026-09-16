@@ -120,7 +120,7 @@ class StockMove(models.Model):
 
     def _get_quantity_from_bill(self, aml, quantity):
         self.check_singleton()
-        return aml.product_uom_id._compute_quantity(
+        return aml.product_uom_id._get_quantity_in_unit(
             aml.quantity, self.product_id.uom_id
         )
 

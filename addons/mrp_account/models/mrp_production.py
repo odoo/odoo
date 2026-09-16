@@ -78,7 +78,9 @@ class MrpProduction(models.Model):
             return True
 
         quantity = sum(
-            move.product_uom_id._compute_quantity(move.quantity, move.product_id.uom_id)
+            move.product_uom_id._get_quantity_in_unit(
+                move.quantity, move.product_id.uom_id
+            )
             for move in finished_move
         )
         total_cost = (
@@ -104,8 +106,11 @@ class MrpProduction(models.Model):
         for byproduct in priced_byproducts:
             value = currency.round(total_cost * byproduct.cost_share / 100)
             shared_value -= value
-            byproduct.price_unit = value / byproduct.product_uom_id._compute_quantity(
-                byproduct.quantity, byproduct.product_id.uom_id
+            byproduct.price_unit = (
+                value
+                / byproduct.product_uom_id._get_quantity_in_unit(
+                    byproduct.quantity, byproduct.product_id.uom_id
+                )
             )
 
         if self.product_id.cost_method not in ("fifo", "average"):
