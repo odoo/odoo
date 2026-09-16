@@ -472,9 +472,9 @@ export class MailMessage extends models.ServerModel {
             ]);
         }
         if (is_notification === true) {
-            domain.push(["message_type", "=", "notification"]);
+            domain.push(["message_type", "in", ["notification", "tracking"]]);
         } else if (is_notification === false) {
-            domain.push(["message_type", "!=", "notification"]);
+            domain.push(["message_type", "not in", ["notification", "tracking"]]);
         }
         if (search_term) {
             domain = new Domain(domain || []);
@@ -483,7 +483,7 @@ export class MailMessage extends models.ServerModel {
             const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
             const authorIds = this.env["res.partner"].search([["name", "ilike", search_term]]);
             const guestIds = this.env["mail.guest"].search([["name", "ilike", search_term]]);
-            let message_domain = Domain.or([
+            const message_domain = Domain.or([
                 [["body", "ilike", search_term]],
                 [["attachment_ids", "in", irAttachmentIds]],
                 [["author_id", "in", authorIds]],
@@ -491,16 +491,6 @@ export class MailMessage extends models.ServerModel {
                 [["subject", "ilike", search_term]],
                 [["subtype_ids", "in", subtypeIds]],
             ]);
-            if (thread && is_notification !== false) {
-                const messageIds = this.search([
-                    ["res_id", "=", parseInt(thread[0].id)],
-                    ["model", "=", thread._name],
-                ]);
-                message_domain = Domain.or([
-                    message_domain,
-                    new Domain([["id", "in", messageIds]]),
-                ]);
-            }
             domain = Domain.and([domain, message_domain]).toList();
         }
         if (search_term || is_notification !== undefined) {
@@ -531,43 +521,6 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
-    }
-
-    _get_tracking_values_domain(search_term) {
-        let numeric_term = false;
-        const epsilon = 1e-9;
-        numeric_term = parseFloat(search_term);
-        const field_names = [
-            "old_value_char",
-            "new_value_char",
-            "old_value_text",
-            "new_value_text",
-            "old_value_datetime",
-            "new_value_datetime",
-        ];
-        let domain = Domain.or(
-            field_names.map((field_name) => new Domain([[field_name, "ilike", search_term]]))
-        );
-        if (numeric_term) {
-            const float_domain = Domain.or(
-                ["old_value_float", "new_value_float"].map(
-                    (fieldName) =>
-                        new Domain([
-                            [fieldName, ">=", numeric_term - epsilon],
-                            [fieldName, "<=", numeric_term + epsilon],
-                        ])
-                )
-            );
-            domain = Domain.or([domain, float_domain]);
-        }
-        if (Number.isInteger(numeric_term)) {
-            domain = Domain.or([
-                domain,
-                new Domain([["old_value_integer", "=", numeric_term]]),
-                new Domain([["new_value_integer", "=", numeric_term]]),
-            ]);
-        }
-        return domain;
     }
 
     /**
