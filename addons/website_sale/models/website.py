@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 CART_SESSION_CACHE_KEY = "sale_order_id"
+COUNTRY_SESSION_CACHE_KEY = "website_sale_current_country"
 FISCAL_POSITION_SESSION_CACHE_KEY = "fiscal_position_id"
 PRICELIST_SESSION_CACHE_KEY = "website_sale_current_pl"
 PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
@@ -838,6 +839,37 @@ class Website(models.Model):
         request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fpos_sudo.id
 
         return fpos_sudo
+
+    def _get_and_cache_current_country(self):
+        """Retrieve and cache the current visitor's country for the session.
+
+        The country is resolved from the cart's shipping address, then from the logged-in
+        user's own partner, then from geolocation, in that order.
+
+        Note: self.ensure_one()
+
+        :return: The determined country, which could be empty, as a sudoed record.
+        :rtype: res.country
+        """
+        self.ensure_one()
+
+        ResCountrySudo = self.env["res.country"].sudo()
+
+        if COUNTRY_SESSION_CACHE_KEY in request.session:
+            country_sudo = ResCountrySudo.browse(request.session[COUNTRY_SESSION_CACHE_KEY])
+            if country_sudo.exists():
+                return country_sudo
+
+        country_sudo = request.cart.partner_shipping_id.country_id
+        if not country_sudo and not self.env.user._is_public():
+            country_sudo = self.env.user.partner_id.country_id
+        if not country_sudo and (geoip_country_code := self._get_geoip_country_code()):
+            country_sudo = ResCountrySudo.search([("code", "=", geoip_country_code)], limit=1)
+
+        if not request.session.is_new or request.session.is_dirty:
+            request.session[COUNTRY_SESSION_CACHE_KEY] = country_sudo.id
+
+        return country_sudo
 
     def _get_and_cache_current_cart(self):
         """Retrieve and cache the current cart for the session.
