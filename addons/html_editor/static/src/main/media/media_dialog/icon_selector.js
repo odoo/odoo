@@ -9,7 +9,7 @@ import { SearchMedia } from "./search_media";
  * @param {string} [needle] search term; every icon is returned when empty
  * @returns {Promise<Array.<{id: string, name: string, dataIcon: string, hasFilledVersion: boolean, source: string}>>}
  */
-async function searchIcons(needle = "") {
+export async function searchIcons(needle = "") {
     // The full list only changes with the icon font, so it is served from the
     // cache until the assets version changes. Searches always hit the server.
     const settings = needle ? {} : { cache: { type: "disk" } };
