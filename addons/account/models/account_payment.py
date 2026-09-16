@@ -464,6 +464,7 @@ class AccountPayment(models.Model):
 
     @api.depends('reconciled_invoice_ids.payment_state', 'reconciled_bill_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
+        paid_payments_to_recompute = self.env['account.payment']
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
@@ -483,6 +484,8 @@ class AccountPayment(models.Model):
                 and (all_invoices_paid or all_bills_paid)
             ):
                 payment.state = 'reconciled'
+                paid_payments_to_recompute |= payment
+        self.env.add_to_compute(self._fields['is_matched'], paid_payments_to_recompute)
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):
