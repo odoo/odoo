@@ -3,6 +3,7 @@
 import logging
 
 from odoo import api, models
+from odoo.tools import partition
 
 _logger = logging.getLogger(__name__)
 
@@ -13,8 +14,7 @@ class IrHttp(models.AbstractModel):
     @api.model
     def _get_translations_for_webclient(self, modules, lang):
         all_imported_modules = self.env['ir.module.module']._get_imported_module_names()
-        non_imported_modules = [m for m in modules if m not in all_imported_modules]
-        imported_modules = [m for m in modules if m in all_imported_modules]
+        imported_modules, non_imported_modules = partition(lambda m: m in all_imported_modules, modules)
 
         translations_per_module, lang_params = super()._get_translations_for_webclient(non_imported_modules, lang)
         for module in imported_modules:
