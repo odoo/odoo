@@ -414,3 +414,45 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[2], {})
         self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[3], {**expected_amounts, out_refund[0].id: 2500.0, out_refund[1].id: 1000.0})
         self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[3], {**expected_amounts, in_refund[0].id: 2500.0, in_refund[1].id: 1000.0})
+
+    def test_remove_outstanding_partial_keeps_other_matches(self):
+        """ Removing one entry from the payments widget must only undo the reconciliation between the invoice
+        and that entry, not the other matches of the invoice.
+        """
+        invoice = self.init_invoice('out_invoice', amounts=[1000.0], post=True)
+        refund = self.init_invoice('out_refund', amounts=[300.0], post=True)
+        invoice.js_assign_outstanding_line(refund.line_ids.filtered(lambda l: l.account_type == 'asset_receivable').id)
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({'amount': 700.0})._create_payments()
+
+        receivable_line = invoice.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        partials = receivable_line.matched_credit_ids
+        refund_partial = partials.filtered(lambda p: p.credit_move_id.move_id == refund)
+        payment_partial = partials.filtered(lambda p: p.credit_move_id.move_id == payment.move_id)
+        self.assertTrue(refund_partial and payment_partial)
+
+        invoice.js_remove_outstanding_partial(refund_partial.id)
+        self.assertFalse(refund_partial.exists())
+        self.assertTrue(payment_partial.exists())
+        invoice.js_remove_outstanding_partial(payment_partial.id)
+        self.assertFalse(payment_partial.exists())
+
+    def test_remove_outstanding_partial_reverse_cancel(self):
+        """ Removing a reversal created with 'cancel' from the payments widget must undo the reconciliation
+        on every account, not only on the receivable one.
+        """
+        self.company_data['default_account_revenue'].reconcile = True
+        invoice = self.init_invoice('out_invoice', amounts=[1000.0], post=True)
+        move_reversal = self.env['account.move.reversal'].create({
+            'move_ids': invoice.ids,
+            'journal_id': invoice.journal_id.id,
+        })
+        move_reversal.modify_moves()
+        receivable_line = invoice.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        partials = invoice.line_ids.matched_debit_ids + invoice.line_ids.matched_credit_ids
+        self.assertGreater(len(partials), 1)
+
+        invoice.js_remove_outstanding_partial(partials.filtered(lambda p: p.debit_move_id == receivable_line).id)
+        self.assertFalse(partials.exists())
