@@ -13,6 +13,7 @@ declare module "services" {
     import { resultSetCacheInvalidatorService } from "@web/core/network/result_set_cache_invalidator_service";
     import { slowRpcService } from "@web/core/network/slow_rpc_service";
     import { sortableService } from "@web/core/utils/dnd/sortable_service";
+    import { templateCompileCacheService } from "@web/core/template_compile_cache";
     import { titleService } from "@web/core/browser/title_service";
     import { treeProcessorService } from "@web/core/tree/tree_processor_service";
     import { webVitalsService } from "@web/core/network/web_vitals/web_vitals_service";
@@ -103,6 +104,7 @@ declare module "services" {
         shareTarget: typeof shareTargetService;
         slow_rpc: typeof slowRpcService;
         sortable: typeof sortableService;
+        template_compile_cache: typeof templateCompileCacheService;
         title: typeof titleService;
         tooltip: typeof tooltipService;
         tree_processor: typeof treeProcessorService;
