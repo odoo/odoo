@@ -1,5 +1,5 @@
 import { useState } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart } from "@odoo/owl";
+import { Component, EventBus } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -122,10 +122,6 @@ export class PresetInfoPopup extends Component {
             isSubmitting: false,
         });
         this.addressRecord = this.makeAddressRecord();
-
-        onWillStart(async () => {
-            await this.selfOrder.syncPresetSlotAvaibility(this.preset);
-        });
     }
 
     async setInformations() {
