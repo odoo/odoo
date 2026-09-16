@@ -730,7 +730,9 @@ class _InMemoryReadGroup:
                 if value is not None and rank is not None:
                     value = rank(value)
                 if isinstance(value, list):
-                    self._unsupported("ordering by an array aggregate")
+                    # PostgreSQL compares arrays element by element, a shorter
+                    # prefix first and a NULL element after every value
+                    value = tuple((item is None, item) for item in value)
                 return (value is None if null_is_true else value is not None, value)
 
             rows.sort(key=key, reverse=desc)

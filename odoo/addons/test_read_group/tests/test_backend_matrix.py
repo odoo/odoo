@@ -1,5 +1,6 @@
 import datetime
 import itertools
+import random
 
 from odoo import fields, models
 from odoo.orm.model_test_env import ModelRegistry, model_test_env
@@ -429,3 +430,206 @@ class TestReadGroupBackendMatrix(TransactionCase):
         self.assertEqual(
             observed["all"], [(9.0 / 0.9 + 5.0 / 1.25 + 2.5 / 1.25 + 3.0,)]
         )
+
+
+@tagged("post_install", "-at_install")
+class TestReadGroupBackendWalk(TestReadGroupBackendMatrix):
+    """The four scripts above are hand-written; this one is drawn. Random rows,
+    then random `_read_group` calls over the groupbys, aggregates, orders,
+    domains, havings, limits and offsets both tiers claim to answer, compared
+    row for row. An emulation shortcut nobody wrote a case for fails here."""
+
+    SCALAR_GROUPBYS = ([], ["key"], ["key", "partner_id"], ["partner_id"], ["value"])
+    SCALAR_AGGREGATES = (
+        ["__count"],
+        ["value:sum"],
+        ["value:sum", "value:max", "value:min"],
+        ["numeric_value:avg"],
+        ["value:count"],
+        ["value:count_distinct"],
+        ["key:array_agg"],
+        ["value:sum", "__count"],
+    )
+    SCALAR_DOMAINS = (
+        [],
+        [("value", ">", 0)],
+        [("key", "in", [1, 2])],
+        [("partner_id", "!=", False)],
+        [("numeric_value", "<", 0.5)],
+    )
+    TEMPORAL_GROUPBYS = (
+        ["date:month"],
+        ["date:year"],
+        ["date:quarter"],
+        ["date:week"],
+        ["datetime:day"],
+        ["datetime:hour"],
+        ["datetime:month", "value"],
+        ["date:month", "datetime:day"],
+    )
+    TEMPORAL_AGGREGATES = (["value:sum"], ["__count"], ["value:sum", "value:max"])
+    TEMPORAL_DOMAINS = (
+        [],
+        [("date", ">=", "2026-02-01")],
+        [("datetime", "<", "2026-01-16 00:00:00")],
+        [("value", ">", 2)],
+    )
+
+    def _draw_plan(self, rng, calls, groupbys, aggregates, domains, having_terms):
+        plan = []
+        for _ in range(calls):
+            groupby = rng.choice(groupbys)
+            aggs = rng.choice(aggregates)
+            order = None
+            if rng.random() < 0.5 and (groupby or aggs):
+                term = rng.choice([*groupby, *aggs])
+                order = ", ".join(
+                    [
+                        f"{term}{rng.choice(['', ' desc'])}",
+                        *(g for g in groupby if g != term),
+                    ]
+                )
+            having = None
+            for term, operators, values in having_terms:
+                if term in aggs and rng.random() < 0.3:
+                    having = [(term, rng.choice(operators), rng.choice(values))]
+                    break
+            limit = rng.choice([None, None, 2, 3])
+            offset = rng.choice([0, 0, 1]) if limit else 0
+            plan.append(
+                (rng.choice(domains), groupby, aggs, order, having, limit, offset)
+            )
+        return plan
+
+    @staticmethod
+    def _observe(Model, plan):
+        return {
+            f"{index}: {domain} {groupby} {aggs} {order} {having} {limit} {offset}": (
+                _rows(
+                    Model,
+                    domain,
+                    groupby,
+                    aggs,
+                    order=order,
+                    having=having,
+                    limit=limit,
+                    offset=offset,
+                )
+            )
+            for index, (
+                domain,
+                groupby,
+                aggs,
+                order,
+                having,
+                limit,
+                offset,
+            ) in enumerate(plan)
+        }
+
+    HAVING = (
+        ("__count", (">=", ">"), (1, 2, 3)),
+        ("value:sum", ("<", ">"), (-3, 0, 6)),
+    )
+
+    def _scalar_script(self, seed):
+        rng = random.Random(seed)
+        rows = [
+            {
+                "key": rng.choice([0, 1, 2, 3]),
+                "value": rng.randint(-5, 9),
+                "numeric_value": round(rng.random(), 2),
+                "partner": rng.choice([None, "zulu", "alpha", "alpha"]),
+            }
+            for _ in range(rng.randint(3, 14))
+        ]
+        plan = self._draw_plan(
+            rng,
+            25,
+            self.SCALAR_GROUPBYS,
+            self.SCALAR_AGGREGATES,
+            self.SCALAR_DOMAINS,
+            self.HAVING,
+        )
+
+        def script(env):
+            partners = {
+                name: env["res.partner"].create({"name": name})
+                for name in ("zulu", "alpha")
+            }
+            Model = env["test_read_group.aggregate"]
+            Model.create(
+                [
+                    {
+                        "key": row["key"],
+                        "value": row["value"],
+                        "numeric_value": row["numeric_value"],
+                        "partner_id": (
+                            partners[row["partner"]].id if row["partner"] else False
+                        ),
+                    }
+                    for row in rows
+                ]
+            )
+            return self._observe(Model, plan)
+
+        return script
+
+    def _temporal_script(self, seed):
+        rng = random.Random(seed)
+        rows = [
+            {
+                "date": rng.choice(
+                    [
+                        False,
+                        "2025-11-30",
+                        "2026-01-15",
+                        "2026-02-01",
+                        "2026-02-28",
+                        "2026-07-04",
+                    ]
+                ),
+                "datetime": rng.choice(
+                    [
+                        False,
+                        "2026-01-15 23:30:00",
+                        "2026-01-16 03:00:00",
+                        "2026-02-01 12:00:00",
+                        "2026-02-01 12:45:00",
+                    ]
+                ),
+                "value": rng.randint(-2, 9),
+            }
+            for _ in range(rng.randint(3, 12))
+        ]
+        plan = self._draw_plan(
+            rng,
+            20,
+            self.TEMPORAL_GROUPBYS,
+            self.TEMPORAL_AGGREGATES,
+            self.TEMPORAL_DOMAINS,
+            self.HAVING,
+        )
+
+        def script(env):
+            Model = env["test_read_group.fill_temporal"]
+            Model.create(rows)
+            return self._observe(Model, plan)
+
+        return script
+
+    def _diff_seeds(self, classes, draw):
+        # every seed starts from the rows the in-memory tier starts from: none
+        for seed in range(12):
+            with self.subTest(seed=seed), self.env.cr.savepoint() as savepoint:
+                try:
+                    self._diff(classes, draw(seed), msg=f"seed {seed}")
+                finally:
+                    self.env.invalidate_all()
+                    savepoint.rollback()
+
+    def test_drawn_scalar_read_groups_agree(self):
+        self._diff_seeds((Test_Read_GroupAggregate, _StubPartner), self._scalar_script)
+
+    def test_drawn_temporal_read_groups_agree(self):
+        self._diff_seeds((Test_Read_GroupFill_Temporal,), self._temporal_script)

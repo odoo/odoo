@@ -1,7 +1,5 @@
 from datetime import date
 
-import pytest
-
 from odoo import fields, models
 from odoo.orm.model_test_env import model_test_env
 
@@ -89,10 +87,16 @@ def test_groups_by_text_and_month_and_pages_the_groups():
         ]
 
 
-def test_the_unsupported_shapes_say_so():
+def test_an_order_by_an_array_aggregate_compares_arrays_as_postgresql_does():
+    # element by element, a shorter prefix first; pinned against PostgreSQL by
+    # test_read_group's TestReadGroupBackendWalk
     with model_test_env(Team, Score) as env:
         _seed(env)
-        with pytest.raises(NotImplementedError, match="array aggregate"):
-            env["rg.score"]._read_group(
-                [], ["kind"], ["points:array_agg"], order="points:array_agg"
-            )
+        rows = env["rg.score"]._read_group(
+            [], ["kind"], ["points:array_agg"], order="points:array_agg"
+        )
+        assert rows == [(False, [1]), ("x", [3, 7]), ("y", [5])]
+        rows = env["rg.score"]._read_group(
+            [], ["kind"], ["points:array_agg"], order="points:array_agg desc"
+        )
+        assert rows == [("y", [5]), ("x", [3, 7]), (False, [1])]

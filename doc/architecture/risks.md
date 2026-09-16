@@ -95,6 +95,23 @@ browser half.
 server under the ones already there — is the only lever; DB-free gates cannot
 reach this class of defect by construction.
 
+*Differential coverage, re-read 2026-09-16.* Where the same claim is asserted
+on both backends, a divergence of the emulation fails somewhere: the x2many
+scope invariant runs the same random walk in memory
+(`orm/tests/test_x2many_scope_invariant_dbfree.py`) and on PostgreSQL
+(`base/tests/test_x2many_cache_scope.py::TestX2manyScopeInvariant`); row
+operations (`has_cycle`, the skip-locked increment, the restrict guard) and
+grouping sets are pinned on both, and `_InMemoryReadGroup` — 520 lines of
+grouping, granularity and aggregate emulation — is drawn against PostgreSQL by
+`test_read_group/tests/test_backend_matrix.py::TestReadGroupBackendWalk`:
+random rows, then random `_read_group` calls (groupbys, granularities,
+aggregates, orders, havings, limits, offsets) run through both tiers and
+compared row for row, twelve seeds each for scalars and for temporal
+granularities. Its first run found the array-aggregate order the inventory
+had marked unsupported and nothing else. What it does not draw: many2many and
+property groupbys, `sum_currency`, and the `read_grouping_sets` shapes, which
+keep their hand-written cases.
+
 ## R4 — Headless test runs skip the tours they select
 
 **What.** Every `HttpCase` — a tour, and any test that drives a browser or an
