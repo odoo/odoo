@@ -886,7 +886,7 @@ class AccountPaymentRegister(models.TransientModel):
     @_debug.perf.timed
     def _get_total_amounts_to_pay(self, batch_results):
         self.check_singleton()
-        next_payment_date = self._get_next_payment_date_in_context()
+        next_payment_date = self._extract_next_payment_date_from_context()
         amount_per_line_common = []
         amount_per_line_by_default = []
         amount_per_line_full_amount = []
@@ -1158,7 +1158,7 @@ class AccountPaymentRegister(models.TransientModel):
                     wizard.installments_switch_amount = total_amount_values[
                         "full_amount"
                     ]
-                    next_payment_date = self._get_next_payment_date_in_context()
+                    next_payment_date = self._extract_next_payment_date_from_context()
                     html_lines += [
                         _(
                             "Total for the installments before %(date)s.",
@@ -1867,7 +1867,7 @@ class AccountPaymentRegister(models.TransientModel):
         wizard._reconcile_payments(to_process, edit_mode=edit_mode)
         return payments.sudo(flag=False)
 
-    def _get_next_payment_date_in_context(self):
+    def _extract_next_payment_date_from_context(self):
         if active_domain := self.env.context.get("active_domain"):
             for domain_elem in active_domain:
                 if (
