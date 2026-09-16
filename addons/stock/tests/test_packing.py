@@ -1298,12 +1298,7 @@ class TestPacking(TestPackingCommon):
         picking.move_line_ids.quantity = 0.3
         picking.move_ids.picked = True
         picking.action_put_in_pack()
-
-        ml = picking.move_line_ids.copy()
-        ml.write({
-            'quantity': 0.1,
-            'result_package_id': False,
-        })
+        # action_put_in_pack() creates a move line for the remaining demand
         picking.action_put_in_pack()
 
         quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location.id)])
