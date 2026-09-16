@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.SaleDetailsReport" t-inherit="point_of_sale.SaleDetailsReport" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
+            <t t-if="employee_name">
+                <div class="pos-receipt-title" style="text-align: center;">
+                    <strong>Employee: <t t-esc="employee_name" /></strong>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
