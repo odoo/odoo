@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime, timedelta
 
-from odoo.tools import consteq, get_lang
+from odoo.tools import consteq, email_normalize, get_lang
 from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg
@@ -31,6 +31,13 @@ class MailGuest(models.Model):
     access_token = fields.Char(string="Access Token", default=lambda self: str(uuid.uuid4()), groups='base.group_system', required=True, readonly=True, copy=False)
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     email = fields.Char()
+    email_normalized = fields.Char(
+        string="Normalized Email",
+        compute="_compute_email_normalized",
+        compute_sudo=True,
+        store=True,
+        help="This field is used to search on email address as the email field can contain more than strictly an email address.",
+    )
     lang = fields.Selection(string="Language", selection=_lang_get)
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
@@ -57,6 +64,11 @@ class MailGuest(models.Model):
                 if guest.im_status == "offline"
                 else None
             )
+
+    @api.depends("email")
+    def _compute_email_normalized(self):
+        for guest in self:
+            guest.email_normalized = email_normalize(guest.email, strict=False)
 
     @api.depends("name")
     @api.depends_context("display_email", "formatted_display_name")
