@@ -52,7 +52,7 @@ class StockMoveLine(models.Model):
     result_package_id = fields.Many2one(
         'stock.package', 'Destination Package',
         ondelete='restrict', required=False, check_company=True,
-        domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
+        domain="['|', '|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), ('id', '=', quant_package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
         help="If set, the operations are packed into this package")
     result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')
     package_history_id = fields.Many2one('stock.package.history', string="Package History", index='btree_not_null')
@@ -93,9 +93,15 @@ class StockMoveLine(models.Model):
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+    quant_package_id = fields.Many2one('stock.package', compute='_compute_quant_package_id')  # Dummy field for the detailed operation view
 
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
+
+    @api.depends('quant_id')
+    def _compute_quant_package_id(self):
+        for record in self:
+            record.quant_package_id = record.quant_id.package_id if record.quant_id else False
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
