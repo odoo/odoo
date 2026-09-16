@@ -294,7 +294,7 @@ class AccountChartTemplate(models.AbstractModel):
             branch=bool(company.parent_id),
         )
 
-        data = self._get_chart_template_data(template_code)
+        data = self._prepare_chart_template_data(template_code)
         template_data = data.pop("template_data")
         if company.parent_id:
             data = {
@@ -1329,7 +1329,7 @@ class AccountChartTemplate(models.AbstractModel):
             "property_stock_journal": "product.category",
         }
 
-    def _get_chart_template_model_data(self, template_code, model):
+    def _prepare_chart_template_model_data(self, template_code, model):
         data = defaultdict(dict)
         for code in [None] + self._get_parent_template(template_code):
             for func in self._template_register[code].get(model, []):
@@ -1341,7 +1341,7 @@ class AccountChartTemplate(models.AbstractModel):
         return dict(data)
 
     @_debug.perf.timed
-    def _get_chart_template_data(self, template_code):
+    def _prepare_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data["res.company"]
         translatable_model_fields = self._get_fields_translatable_template_model()
@@ -1778,7 +1778,7 @@ class AccountChartTemplate(models.AbstractModel):
             company.account_sale_tax_id + company.account_purchase_tax_id
         )
         chart_template_code = self._guess_chart_template(country=country)
-        chart_template_data = self._get_chart_template_data(chart_template_code)
+        chart_template_data = self._prepare_chart_template_data(chart_template_code)
         tax_group_data = chart_template_data["account.tax.group"]
         tax_data = chart_template_data["account.tax"]
         _debug.pipeline(
@@ -2267,7 +2267,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "account.chart.template"
             ].with_context(ignore_missing_tags=True).with_company(
                 company
-            ).sudo()._get_chart_template_data(company.chart_template)
+            ).sudo()._prepare_chart_template_data(company.chart_template)
             if _debug.pipeline.enabled:
                 _debug.pipeline(
                     "template_translations_collecting",

@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_account_reconcile_res_company(self, chart_template):
         company = self.env.company
-        data = self._get_chart_template_data(chart_template)
+        data = self._prepare_chart_template_data(chart_template)
         company_data = data["res.company"].get(company.id, {})
 
         required_data = {
@@ -31,8 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @_debug.perf.timed
-    def _get_chart_template_data(self, chart_template):
-        data = super()._get_chart_template_data(chart_template)
+    def _prepare_chart_template_data(self, chart_template):
+        data = super()._prepare_chart_template_data(chart_template)
 
         for company_data in data["res.company"].values():
             company_data["deferred_expense_journal_id"] = company_data.get(
