@@ -28,15 +28,11 @@
         </field>
     </record>
 
-    <record id="action_pos_bill" model="ir.actions.act_window">
+    <record id="action_pos_bill_server" model="ir.actions.server">
         <field name="name">Coins/Bills</field>
-        <field name="res_model">pos.bill</field>
-        <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add coins and bills
-            </p>
-        </field>
+        <field name="model_id" ref="point_of_sale.model_pos_bill"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_pos_bill()</field>
     </record>
 
     <menuitem
@@ -44,6 +40,6 @@
         name="Coins/Bills"
         parent="menu_point_config_product"
         sequence="4"
-        action="action_pos_bill"
+        action="action_pos_bill_server"
         groups="group_pos_manager"/>
 </odoo>
