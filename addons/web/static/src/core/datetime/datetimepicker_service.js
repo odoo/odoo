@@ -83,6 +83,9 @@ export const datetimePickerService = {
                  * value has changed, and set other internal variables accordingly.
                  */
                 const apply = async () => {
+                    if (applyDisabled) {
+                        return;
+                    }
                     const valueCopy = deepCopy(pickerProps.value);
                     if (areDatesEqual(lastInitialProps.value, valueCopy)) {
                         return;
@@ -449,6 +452,8 @@ export const datetimePickerService = {
 
                 /** Decides whether the popover 'onClose' callback can be called */
                 let allowOnClose = true;
+                /** Decides whether a pending value can still be applied */
+                let applyDisabled = false;
                 /** @type {boolean[]} */
                 let inputsChanged = [];
                 /** @type {Partial<DateTimePickerProps>} */
@@ -462,6 +467,38 @@ export const datetimePickerService = {
                     state: pickerProps,
                     open: openPicker,
                     computeBasePickerProps,
+                    /**
+                     * Applies the value currently held by the inputs and the picker, if
+                     * it differs from the last applied one. Used when the owner needs
+                     * that value committed right away, typically because the record is
+                     * about to be saved and would otherwise be saved with the previous
+                     * value.
+                     *
+                     * Only an open popover can hold a value that has not been applied yet:
+                     * a change to an input already commits on its own through
+                     * 'onInputChange'. When the popover is closed there is thus nothing
+                     * pending, and re-reading the inputs would needlessly round-trip the
+                     * value through its text representation, which can alter it (e.g. a
+                     * datetime whose input hides its time part) and wrongly mark an
+                     * untouched record as dirty.
+                     */
+                    commitValue() {
+                        if (!popover.isOpen) {
+                            return;
+                        }
+                        updateValueFromInputs();
+                        return apply();
+                    },
+                    /**
+                     * Prevents any pending value from being applied. Used when the owner
+                     * component is going away: 'onApply' would then run on a component
+                     * about to be destroyed. This covers every path reaching 'apply',
+                     * not only the popover being closed: removing a modified input from
+                     * the DOM also makes the browser fire a "change" event on it.
+                     */
+                    disableApply() {
+                        applyDisabled = true;
+                    },
                     focusIfNeeded() {
                         if (popover.isOpen && shouldFocus) {
                             focusActiveInput();
