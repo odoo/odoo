@@ -27,7 +27,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, index='btree_not_null', readonly=False,
-        domain=lambda self: str(self._domain_sale_line_id())
+        ui_domain=lambda self: str(self._domain_sale_line_id())
     )
     sale_order_id = fields.Many2one(related="project_id.sale_order_id", export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id', export_string_translation=False)

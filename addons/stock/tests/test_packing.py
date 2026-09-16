@@ -2260,7 +2260,7 @@ class TestPackagePropagation(TestPackingCommon):
         package = delivery.move_line_ids[0].with_context(delivery.action_detailed_operations()['context']).action_put_in_pack()
         self.assertFalse(package.location_id, 'location_id should not be set')
         domain = expr_eval(
-            self.env['stock.move.line']._fields['result_package_id'].domain
+            self.env['stock.move.line']._fields['result_package_id'].ui_domain
             .replace('location_dest_id)', f'{delivery.move_line_ids.location_dest_id.id})')
             .replace('package_id)', f'{delivery.move_line_ids.package_id.id})'),
         )

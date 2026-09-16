@@ -25,7 +25,7 @@ class PaymentProvider(models.Model):
         " of the Paymob account.",
         comodel_name="res.country",
         inverse="_inverse_paymob_account_country_id",
-        domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
+        ui_domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
         required_if_provider="paymob",
         copy=False,
     )
