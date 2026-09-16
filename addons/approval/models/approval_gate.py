@@ -40,8 +40,8 @@ class ApprovalGate(models.Model):
     )
     model_id = fields.Many2one(
         comodel_name="ir.model",
-        compute="_compute_model_id",
         string="Model Record",
+        compute="_compute_model_id",
     )
     enforced = fields.Boolean(
         help="While off, a call that reaches this operation by a path the gate "
