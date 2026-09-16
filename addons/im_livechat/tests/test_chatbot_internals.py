@@ -349,7 +349,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "discuss.channel": [
                             {
-                                "avatar_cache_key": discuss_channel.avatar_cache_key,
                                 "id": discuss_channel.id,
                                 "name": "OdooBot Ernest Employee",
                             },
