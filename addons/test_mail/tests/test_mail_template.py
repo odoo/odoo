@@ -423,7 +423,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         # `res_partner_phone_number_rel` read where a stored Char cost none.
         # Chased to that query in a debug_sql trace rather than assumed --
         # it appears exactly once per pass.
-        with self.with_user(self.user_employee.login), self.assertQueryCount(22):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(21):
             mail_id = self.test_template_wreports.with_env(self.env).send_mail(
                 self.test_record.id
             )
@@ -454,7 +454,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         # setup queries and the baseline carried none.
         # 149 -> 150 for the same one query as test_template_send_email_wreport
         # above: the tracked `phone_ids` relation read. Same delta, same cause.
-        with self.with_user(self.user_employee.login), self.assertQueryCount(52):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(51):
             template = self.test_template_wreports.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 

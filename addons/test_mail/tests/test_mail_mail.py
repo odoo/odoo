@@ -2985,22 +2985,28 @@ class TestFailureTypeCoherence(MailCommon):
         return codes
 
     def test_every_model_carrying_a_failure_uses_the_shared_selection(self):
+        # a module such as sms extends the selection with selection_add; the
+        # shared vocabulary must survive inside it, whole and unrenamed
         shared = dict(DELIVERY_FAILURE_TYPES)
         outgoing = dict(OUTGOING_FAILURE_TYPES)
-        self.assertEqual(
-            dict(self.env["mail.notification"]._fields["failure_type"].selection),
-            shared,
+        self.assertLessEqual(
+            shared.items(),
+            dict(
+                self.env["mail.notification"]._fields["failure_type"].selection
+            ).items(),
             "mail.notification tracks a delivery it did not perform",
         )
-        self.assertEqual(
-            dict(self.env["mail.mail"]._fields["failure_type"].selection),
-            outgoing,
+        self.assertLessEqual(
+            outgoing.items(),
+            dict(self.env["mail.mail"]._fields["failure_type"].selection).items(),
             "mail.mail performs the send, so it never records a bounce",
         )
         if "mailing.trace" in self.env:
-            self.assertEqual(
-                dict(self.env["mailing.trace"]._fields["failure_type"].selection),
-                shared,
+            self.assertLessEqual(
+                shared.items(),
+                dict(
+                    self.env["mailing.trace"]._fields["failure_type"].selection
+                ).items(),
             )
         self.assertLess(
             set(outgoing),
