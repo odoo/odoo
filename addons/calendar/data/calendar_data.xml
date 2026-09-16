@@ -45,6 +45,13 @@
             <field name="alarm_type">email</field>
             <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
         </record>
+        <record id="alarm_mail_1_day" model="calendar.alarm">
+            <field name="name">Email - 1 day</field>
+            <field name="duration" eval="1" />
+            <field name="interval">days</field>
+            <field name="alarm_type">email</field>
+            <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
+        </record>
 
         <record id="default_privacy" model="ir.config_parameter">
             <field name="key">calendar.default_privacy</field>
