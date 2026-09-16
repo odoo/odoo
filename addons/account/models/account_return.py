@@ -1579,7 +1579,7 @@ class AccountReturn(models.Model):
         if wizard and "qr_code" in wizard:
             ctx.update(
                 {
-                    "qr_data": wizard._get_b64_qr_data(),
+                    "qr_data": wizard._prepare_b64_qr_data(),
                     "communication": wizard.communication,
                 }
             )

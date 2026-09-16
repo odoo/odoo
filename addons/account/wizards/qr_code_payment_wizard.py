@@ -42,7 +42,7 @@ class QRCodePaymentWizard(models.TransientModel):
             _debug.logic("qr_code_built", records=wizard, generated=bool(qr_html))
             wizard.qr_code = qr_html
 
-    def _get_b64_qr_data(self):
+    def _prepare_b64_qr_data(self):
         self.check_singleton()
         b64_qr = False
         if self.qr_code:
