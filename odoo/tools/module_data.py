@@ -139,6 +139,17 @@ def retire_empty_module(cr: _SqlCursor, module: str) -> None:
         )
     )
     retired = cr.rowcount > 0
+    # Also for a row already uninstalled: the module is gone from disk, and a
+    # leftover auto_install makes the loader mark it `to install` the day its
+    # dependencies happen to be installed, which ends the upgrade in an
+    # inconsistent state naming a module nobody can supply.
+    cr.execute(
+        SQL(
+            "UPDATE ir_module_module SET auto_install = FALSE "
+            "WHERE name = %s AND auto_install",
+            module,
+        )
+    )
     cr.execute(
         SQL(
             "DELETE FROM ir_module_module_dependency "

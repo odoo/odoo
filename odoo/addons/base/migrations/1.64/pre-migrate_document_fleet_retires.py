@@ -11,7 +11,13 @@ def migrate(cr, version):
         return
     cr.execute("SELECT state FROM ir_module_module WHERE name = %s", [MODULE])
     row = cr.fetchone()
-    if not row or row[0] == "uninstalled":
+    if not row:
+        return
+    if row[0] == "uninstalled":
+        # It shipped no records here, but the row still carries auto_install and
+        # the module is gone from disk: retire it so the loader cannot pick it
+        # up once fleet and document are both installed.
+        retire_empty_module(cr, MODULE)
         return
     cr.execute(
         """
