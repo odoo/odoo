@@ -3438,3 +3438,47 @@ class TestPointOfSaleFlow(CommonPosTest):
             {'amount': -4},
             {'amount': 10},
         ])
+
+    def test_refund_of_a_global_discount(self):
+        """ The global discount line pins in 'extra_tax_data' base and tax amounts that cannot be
+        recomputed from its price. The UI does not refund that line, it applies the discount again
+        on the refund order, where the refunded lines are negative and the discount is therefore
+        positive. Those pinned amounts have to be booked as they are on both orders, otherwise an
+        order and its refund do not cancel each other in the closing entry of the session.
+        """
+        AccountTax = self.env['account.tax']
+        company = self.env.company
+        product = self.twenty_dollars_with_10_incl.product_variant_id
+
+        def discount_line(quantity):
+            """ The values the UI stores for a 25% global discount on 'quantity' x that product. """
+            base_lines = [AccountTax._prepare_base_line_for_taxes_computation(
+                None, product_id=product, tax_ids=product.taxes_id, price_unit=product.lst_price,
+                quantity=quantity, currency_id=company.currency_id, rate=1.0,
+            )]
+            AccountTax._add_tax_details_in_base_lines(base_lines, company)
+            AccountTax._round_base_lines_tax_details(base_lines, company)
+            line = AccountTax._prepare_global_discount_lines(base_lines, company, 'percent', 25.0)[0]
+            return {
+                'product_id': product.id,
+                'qty': line['quantity'],
+                'price_unit': company.currency_id.round(line['price_unit']),
+                'extra_tax_data': AccountTax._export_base_line_extra_tax_data(line),
+            }
+
+        self.pos_config_usd.open_ui()
+        for quantity in (1, -1):
+            self.create_backend_pos_order({
+                'order_data': {'is_refund': quantity < 0},
+                'line_data': [{'product_id': product.id, 'qty': quantity}, discount_line(quantity)],
+                'payment_data': [{'payment_method_id': self.cash_payment_method.id}],
+            })
+
+        session = self.pos_config_usd.current_session_id
+        session.post_closing_cash_details(sum(session.order_ids.payment_ids.mapped('amount')))
+        session.close_session_from_ui()
+        tax_lines = session.move_id.line_ids.filtered(lambda line: line.display_type == 'tax')
+        self.assertAlmostEqual(
+            sum(tax_lines.mapped('balance')), 0.0,
+            msg="The taxes of an order and of its refund should cancel each other.",
+        )
