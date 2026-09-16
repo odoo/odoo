@@ -195,7 +195,7 @@ class Dispatcher(ABC):
         self.request._save_session()
         self.request._session_response = response
         self.request._update_response_from_future(response)
-        root.update_security_headers(response)
+        root.update_standard_headers(response)
         _debug.pipeline(
             "http.dispatch.post",
             dispatcher=self.routing_type,

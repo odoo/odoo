@@ -303,6 +303,29 @@ def test_a_route_statement_budget_is_set_on_the_request_transaction(harness):
     )
 
 
+def test_every_response_carries_a_request_id_and_a_well_formed_one_is_kept(harness):
+    minted = harness.serve(environ("/probe/public"))
+    assert minted.status_code == 200
+    rid = minted.header("X-Request-Id")
+    assert rid and len(rid) >= 12
+
+    kept = harness.serve(
+        environ("/probe/public", headers={"X-Request-Id": "trace-42.abc:def"})
+    )
+    assert kept.header("X-Request-Id") == "trace-42.abc:def"
+
+    replaced = harness.serve(
+        environ("/probe/public", headers={"X-Request-Id": "bad id\nwith junk"})
+    )
+    assert replaced.header("X-Request-Id") not in (None, "bad id\nwith junk")
+
+    error = harness.serve(environ("/probe/boom"))
+    assert error.status_code == 500 and error.header("X-Request-Id")
+    harness.served_dbs = []
+    nodb = harness.serve(environ("/probe/nodb"))
+    assert nodb.header("X-Request-Id")
+
+
 def test_a_rejected_method_never_reaches_the_router(harness):
     served = harness.serve(environ("/probe/public", "TRACE"))
     assert served.status_code == 405

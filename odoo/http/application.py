@@ -245,10 +245,12 @@ class Application:
     def geoip_country_db(self):
         return self._open_geoip_reader("country", current_settings().geoip_country_db)
 
-    def update_security_headers(self, response: WerkzeugResponse | Response) -> None:
+    def update_standard_headers(self, response: WerkzeugResponse | Response) -> None:
         headers = response.headers
         if "X-Content-Type-Options" not in headers:
             headers["X-Content-Type-Options"] = "nosniff"
+        if request and "X-Request-Id" not in headers:
+            headers["X-Request-Id"] = request.id
 
         if "Content-Security-Policy" in headers:
             return
@@ -265,7 +267,7 @@ class Application:
         current_thread.query_time = 0
         current_thread.perf_t0 = real_time()
         current_thread.cursor_mode = None
-        for attr in ("dbname", "uid", "url"):
+        for attr in ("dbname", "uid", "url", "request_id"):
             if hasattr(current_thread, attr):
                 delattr(current_thread, attr)
         current_thread.rpc_model_method = ""
@@ -336,7 +338,7 @@ class Application:
         _debug.logic("http.static.method_rejected", method=method, allow=allow)
         if method == "OPTIONS":
             response = prepare_no_content_response(headers=[("Allow", allow)])
-            self.update_security_headers(response)
+            self.update_standard_headers(response)
             return response
         raise MethodNotAllowed(valid_methods=allow.split(", "))
 
@@ -411,7 +413,7 @@ class Application:
             if request._post_init_done:
                 request.dispatcher.post_dispatch(response)
             else:
-                self.update_security_headers(response)
+                self.update_standard_headers(response)
             set_error_response(exc, response)
             _debug.pipeline(
                 "http.error_response.finalized",
@@ -444,6 +446,7 @@ class Application:
                 _request_stack.push(request)
                 pushed = True
                 current_worker_thread().url = httprequest.url
+                current_worker_thread().request_id = request.id
 
                 if httprequest.method in REJECTED_HTTP_METHODS:
                     _debug.logic(
@@ -460,6 +463,7 @@ class Application:
                 request._post_init()
                 _debug.pipeline(
                     "http.request.begin",
+                    request_id=request.id,
                     method=httprequest.method,
                     path=httprequest.path,
                     db=request.db,

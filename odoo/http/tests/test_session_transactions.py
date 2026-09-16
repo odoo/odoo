@@ -194,7 +194,7 @@ def transaction_request(store):
     req: Any = Request(
         HTTPRequest(EnvironBuilder().get_environ()),
         SimpleNamespace(
-            session_store=store, update_security_headers=lambda response: None
+            session_store=store, update_standard_headers=lambda response: None
         ),
     )
     req.session = store.get(session.sid)

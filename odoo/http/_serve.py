@@ -102,7 +102,7 @@ class _RequestServeMixin(RequestState):
                     max_age=0 if debug else STATIC_CACHE,
                     content_security_policy=None,
                 )
-                root.update_security_headers(res)
+                root.update_standard_headers(res)
                 span.set(size=stream.size, status=res.status_code, debug_assets=debug)
                 return res
             except OSError:

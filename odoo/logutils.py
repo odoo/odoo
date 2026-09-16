@@ -292,6 +292,7 @@ class LogRecord(logging.LogRecord):
         self.dbname = getattr(worker, "dbname", "?")
         uid = getattr(worker, "uid", None)
         self.uid = uid if uid is not None else "-"
+        self.request_id = getattr(worker, "request_id", "-")
 
 
 class _ShowWarning(Protocol):
@@ -375,7 +376,7 @@ def _apply_log_config_file() -> dict | None:
 
 
 def _install_log_handler() -> None:
-    format = "%(asctime)s %(pid)s %(levelname)s uid:%(uid)s %(dbname)s %(name)s: %(message)s %(perf_info)s"
+    format = "%(asctime)s %(pid)s %(levelname)s uid:%(uid)s %(dbname)s rid:%(request_id)s %(name)s: %(message)s %(perf_info)s"
     handler: logging.Handler = logging.StreamHandler()
 
     if tools.config["syslog"]:

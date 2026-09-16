@@ -34,6 +34,7 @@ class _FakeRequest:
         self.httprequest = httprequest
         self.app = app
         self.db = db
+        self.id = "fake-request-id"
         self.dispatcher = mock.Mock()
         self.dispatcher.serializes_errors_in_dev_mode = False
         self.dispatcher.prepare_error_response.side_effect = lambda exc: exc

@@ -1,6 +1,8 @@
 import contextlib
 import functools
 import logging
+import re
+import secrets
 from collections.abc import Callable
 from typing import Any
 
@@ -29,6 +31,16 @@ from .wrappers import HTTPRequest, Response
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
+_REQUEST_ID_RE = re.compile(r"[A-Za-z0-9._:-]{1,200}")
+
+
+def _get_request_id(httprequest: Any) -> str:
+    headers = getattr(httprequest, "headers", None)
+    offered = headers.get("X-Request-Id") if headers is not None else None
+    if offered and _REQUEST_ID_RE.fullmatch(offered):
+        return offered
+    return secrets.token_urlsafe(9)
+
 
 class Request(
     _RequestServeMixin,
@@ -40,6 +52,7 @@ class Request(
         self.app = app
 
         self.httprequest: HTTPRequest = httprequest
+        self.id: str = _get_request_id(httprequest)
         self.future_response: FutureResponse = FutureResponse()
         self.dispatcher = _dispatchers["http"](self)
         self._params: dict[str, Any] = {}

@@ -61,7 +61,9 @@ The `Request._serve_*` methods are defined on `_RequestServeMixin` in
 
 **`Application.__call__`** — WSGI entry point. Sanitizes the request, wraps it in
 a werkzeug request and itself in an Odoo HTTP request, exposes it at
-`http.request`, then forwards to `_serve_static`, `_serve_nodb` or `_serve_db`
+`http.request`, gives it an id (`request.id`: a well-formed `X-Request-Id` the
+client sent, else a fresh token) that every log line of the request carries as
+`rid:` and every response echoes as `X-Request-Id`, then forwards to `_serve_static`, `_serve_nodb` or `_serve_db`
 depending on the request path and the presence of a database. Also responsible
 for logging any error and encapsulating it in an HTTP error response.
 
