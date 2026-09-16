@@ -18,6 +18,11 @@ _debug = DebugLog(__name__)
 
 class MailFollowers(models.Model):
     _inherit = "mail.followers"
+    _search_visibility_fields = (
+        "res_model",
+        "res_id",
+        "partner_id",
+    )
 
     _SEARCH_ACCESS_CHUNK_MIN = 30
     _SEARCH_ACCESS_CHUNK_MAX = 8192

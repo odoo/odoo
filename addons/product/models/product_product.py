@@ -24,6 +24,7 @@ class ProductProduct(models.Model):
         "mixin.product.price",
     ]
     _order = "default_code, name, id"
+    _search_visibility_fields = ()
     _check_company_domain = models.check_company_domain_parent_of
 
     product_tmpl_id = fields.Many2one(

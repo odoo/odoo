@@ -18,6 +18,7 @@ class ResGroups(models.Model):
     _rec_name = "full_name"
     _allow_sudo_commands = False
     _order = "privilege_id, sequence, name, id"
+    _search_visibility_fields = ()
 
     name = fields.Char(
         translate=True,

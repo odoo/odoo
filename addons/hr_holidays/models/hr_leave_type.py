@@ -20,6 +20,7 @@ class HrLeaveType(models.Model):
     _name = "hr.leave.type"
     _description = "Time Off Type"
     _order = "sequence"
+    _search_visibility_fields = ()
 
     @api.model
     def _model_sorting_key(self, leave_type):

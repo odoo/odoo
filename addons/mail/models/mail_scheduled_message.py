@@ -33,6 +33,10 @@ _debug = DebugLog(__name__)
 class MailScheduledMessage(models.Model):
     _name = "mail.scheduled.message"
     _description = "Scheduled Message"
+    _search_visibility_fields = (
+        "model",
+        "res_id",
+    )
 
     _mail_partner_fields = ()
 

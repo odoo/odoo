@@ -107,6 +107,11 @@ class CalendarEvent(models.Model):
     _name = "calendar.event"
     _description = "Calendar Event"
     _order = "start desc"
+    _search_visibility_fields = (
+        "privacy",
+        "user_id",
+        "partner_ids",
+    )
     _inherit = [
         "mixin.mail.thread",
         "mixin.recurrence.occurrence",

@@ -422,6 +422,7 @@ class AccountReport(models.AbstractModel):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+    _search_visibility_fields = ()
 
     @api.model
     @_debug.perf.timed

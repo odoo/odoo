@@ -104,6 +104,7 @@ class AccountTax(models.Model):
     _check_company_auto = True
     _rec_names_search = ["name", "description", "invoice_label"]
     _check_company_domain = models.check_companies_domain_parent_of
+    _search_visibility_fields = ()
 
     name = fields.Char(
         string="Tax Name",

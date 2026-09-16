@@ -24,6 +24,7 @@ class AccountCodeMapping(models.Model):
     _description = "Mapping of account codes per company"
     _auto = False
     _table_query = "0"
+    _search_visibility_fields = ()
 
     account_id = fields.Many2one(
         comodel_name="account.account",

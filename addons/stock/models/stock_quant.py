@@ -38,6 +38,7 @@ class StockQuant(models.Model):
     _description = "Quants"
     _rec_name = "product_id"
     _rec_names_search = ["location_id", "lot_id", "package_id", "owner_id"]
+    _search_visibility_fields = ()
 
     location_id = fields.Many2one(
         comodel_name="stock.location",

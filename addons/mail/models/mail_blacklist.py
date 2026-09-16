@@ -15,6 +15,7 @@ class MailBlacklist(models.Model):
     _inherit = ["mixin.mail.thread"]
     _description = "Mail Blacklist"
     _rec_name = "email"
+    _search_visibility_fields = ()
 
     email = fields.Char(
         string="Email Address",

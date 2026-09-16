@@ -4,6 +4,7 @@ from odoo.fields import Domain
 
 class MailTemplate(models.Model):
     _inherit = "mail.template"
+    _search_visibility_fields = ()
 
     @api.model
     def _search(self, domain, *args, **kwargs):
