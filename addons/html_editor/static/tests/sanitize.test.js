@@ -53,6 +53,24 @@ test("sanitize plugin should handle aria-label attribute with data-oe-aria-label
     });
 });
 
+test("sanitize plugin should preserve name attribute on form inputs inside .s_website_form", async () => {
+    const { editor } = await setupEditor("");
+    expect(
+        editor.shared.sanitize.sanitize(
+            `<section class="s_website_form"><form><input class="s_website_form_input" name="name"/></form></section>`
+        )
+    ).toBe(
+        `<section class="s_website_form"><form><input class="s_website_form_input" name="name"></form></section>`
+    );
+});
+
+test("sanitize plugin should strip name attribute on form inputs outside .s_website_form", async () => {
+    const { editor } = await setupEditor("");
+    expect(
+        editor.shared.sanitize.sanitize(`<form><input name="name"/></form>`)
+    ).toBe(`<form><input></form>`);
+});
+
 test("fixInvalidHTML should close self-closing elements", () => {
     expect(fixInvalidHTML(markup`<t/>`).toString()).toBe("<t></t>");
     expect(fixInvalidHTML(markup`<t class="test"/>`).toString()).toBe('<t class="test"></t>');
