@@ -413,7 +413,7 @@ class StockPackage(models.Model):
 
     def _check_move_lines_map_quant(self, move_lines):
         """ This method checks that all product (quants) of self (package) are well present in the `move_line_ids`. """
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
 
         def _keys_groupby(record):
             return record.product_id, record.lot_id

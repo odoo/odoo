@@ -84,7 +84,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
                     if base_line['product_id'] == refund_base_line['product_id']
                     and float_compare(base_line['price_unit'], refund_base_line['price_unit'], precision_digits=DecimalPrecision.precision_get('Product Price')) == 0
                     and float_compare(base_line['discount'], refund_base_line['discount'], precision_digits=DecimalPrecision.precision_get('Discount')) == 0
-                    and float_compare(base_line['quantity'], abs(refund_base_line['quantity']), precision_digits=DecimalPrecision.precision_get('Product Unit of Measure')) >= 0
+                    and float_compare(base_line['quantity'], abs(refund_base_line['quantity']), precision_digits=DecimalPrecision.precision_get('Product Unit')) >= 0
                 ]
 
                 if matching_edi_ids:
