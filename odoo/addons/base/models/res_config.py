@@ -218,8 +218,8 @@ class ResConfigSettings(models.TransientModel):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 modules += IrModule._get(name[7:])
             elif hasattr(field, 'config_parameter') and field.config_parameter:
-                if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
-                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
+                if field.type not in ('boolean', 'integer', 'float', 'char', 'text', 'selection', 'many2one', 'datetime'):
+                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'text', 'selection', 'many2one' or 'datetime'" % field)
                 configs.append((name, field.config_parameter))
             else:
                 others.append(name)
@@ -264,7 +264,7 @@ class ResConfigSettings(models.TransientModel):
         for name, icp in classified['config']:
             field = self._fields[name]
             match field.type:
-                case 'char' | 'datetime' | 'selection':
+                case 'char' | 'text' | 'datetime' | 'selection':
                     value = IrConfigParameter.get_str(icp, field.default(self) if field.default else False)
                 case 'integer':
                     value = IrConfigParameter.get_int(icp, field.default(self) if field.default else 0)
@@ -326,7 +326,7 @@ class ResConfigSettings(models.TransientModel):
             value = self[name]
 
             match field.type:
-                case 'char' | 'datetime' | 'selection':
+                case 'char' | 'text' | 'datetime' | 'selection':
                     # logically set the config as undefined when the value is False
                     # storing developer keys as ir.config_parameter may lead to nasty
                     # bugs when users leave spaces around them
