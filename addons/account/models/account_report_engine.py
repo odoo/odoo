@@ -2442,6 +2442,19 @@ class AccountReportCustomHandler(models.AbstractModel):
         Should only be used when necessary, _dynamic_lines_generator is preferred.
         """
 
+    def _get_line_columns(self, report, options, data):
+        line_columns = []
+        for column in options["columns"]:
+            col_value = data[column["column_group_key"]].get(column["expression_label"])
+            line_columns.append(
+                report._prepare_column_dict(
+                    col_value=col_value or "",
+                    col_data=column,
+                    options=options,
+                )
+            )
+        return line_columns
+
     def _get_zip_export(
         self, file_name: str, files: Collection[tuple[str, str | bytes]]
     ) -> dict:

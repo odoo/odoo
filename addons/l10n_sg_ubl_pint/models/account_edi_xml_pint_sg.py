@@ -78,7 +78,7 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
         # see https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_bis_identifiers
         document_node["cbc:ProfileID"] = {"_text": "urn:peppol:bis:billing"}
-        document_node["cbc:UUID"] = {"_text": invoice._l10n_sg_get_uuid()}
+        document_node["cbc:UUID"] = {"_text": invoice._get_database_scoped_uuid()}
 
         if invoice.currency_id != invoice.company_id.currency_id:
             amounts_in_accounting_currency = (

@@ -266,6 +266,33 @@ class DeliveryCarrier(models.Model):
 
         return commodities
 
+    def _prepare_commodity_values_from_move_lines(self, move_lines):
+        commodities = []
+
+        product_lines = move_lines.filtered(
+            lambda line: line.product_id.type in ["product", "consu"]
+        )
+        for product, lines in groupby(product_lines, lambda x: x.product_id):
+            unit_quantity = sum(
+                line.product_uom_id._get_quantity_in_unit(line.quantity, product.uom_id)
+                for line in lines
+            )
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = lines[
+                0
+            ].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            unit_price = sum(line.sale_price for line in lines) / rounded_qty
+            commodities.append(
+                {
+                    "product_id": product,
+                    "qty": rounded_qty,
+                    "monetary_value": unit_price,
+                    "country_of_origin": country_of_origin,
+                }
+            )
+
+        return commodities
+
     def _product_price_to_company_currency(self, quantity, product, company):
         return company.currency_id._convert(
             quantity * product.standard_price,

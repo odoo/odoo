@@ -2,6 +2,7 @@ import ast
 import logging
 import re
 import sys
+import uuid
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager, nullcontext
 from datetime import date, timedelta
@@ -8120,3 +8121,8 @@ class AccountMove(models.Model):
         if not stem:
             return []
         return [{"label": label(), "template": f"/account/static/xls/{stem}.xlsx"}]
+
+    def _get_database_scoped_uuid(self):
+        self.check_singleton()
+        dbuuid = self.env["ir.config_parameter"].sudo().get_param("database.uuid")
+        return str(uuid.uuid5(namespace=uuid.UUID(dbuuid), name=str(self.id)))
