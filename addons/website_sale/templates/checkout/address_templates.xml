@@ -70,9 +70,12 @@
             </div>
             <!-- === Delivery estimated date === -->
             <div class="o_delivery_date_col order-1 order-md-0 order-lg-1 order-xl-0">
-                <t t-if="dm.enable_delivery_estimate">
+                <t t-if="dm.enable_delivery_estimate != 'none'">
                     <t t-set="tooltip_title" t-value="'Estimated Delivery'"/>
-                    <t t-set="available_delivery_days" t-value="dm._get_estimate_delivery_days()"/>
+                    <t
+                        t-set="available_delivery_days"
+                        t-value="dm._get_estimate_delivery_days(order)"
+                    />
                     <div
                         class="o_wsale_delivery_date_badge input-group"
                         t-if="len(available_delivery_days) == 1"
@@ -95,7 +98,7 @@
                     <div
                         t-if="len(available_delivery_days) > 1"
                         class="o_website_sale_delivery_date_picker input-group o_daterange_picker"
-                        t-att-data-delivery-available-days="json.dumps(dm._get_estimate_delivery_days())"
+                        t-att-data-delivery-available-days="json.dumps(available_delivery_days)"
                     >
                         <input
                             t-attf-id="o_estimated_delivery_date_{{dm.id}}"
