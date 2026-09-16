@@ -5,6 +5,7 @@ from dateutil import relativedelta
 
 from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
+from odoo.tools import float_compare
 
 
 class StockPicking(models.Model):
@@ -67,6 +68,35 @@ class StockPicking(models.Model):
                 user_id=purchase_order.user_id.id,
             )
         return super()._log_less_quantities_than_expected(moves)
+
+    def _check_backorder(self):
+        backorder_pickings = super()._check_backorder()
+        prec = self.env["decimal.precision"].precision_get("Product Unit")
+        for picking in self:
+            if picking.picking_type_id.create_backorder != 'ask':
+                continue
+            if any(
+                    not line.move_ids and line.product_id.type == 'consu' and
+                    float_compare(line.product_uom_qty, line.qty_received, precision_digits=prec) < 0
+                    for line in picking.purchase_id.order_line
+                    if line.state != 'cancel'
+            ):
+                backorder_pickings |= picking
+        return backorder_pickings
+
+    def _get_moves_to_backorder(self):
+        backorder_moves = super()._get_moves_to_backorder()
+        for picking in self:
+            unfulfilled_purchase_order_lines = picking.purchase_id.order_line.filtered(lambda line: not line.move_ids and line.product_id.type == 'consu')
+            backorder_moves |= self.env['stock.move'].create([{
+                'product_id': order_line.product_id.id,
+                'product_uom_qty': order_line.product_uom_qty - order_line.qty_received,
+                'purchase_line_id': order_line.id,
+                'location_id': picking.location_id.id,
+                'location_dest_id': picking.location_dest_id.id,
+                'company_id': picking.company_id.id,
+            } for order_line in unfulfilled_purchase_order_lines])
+        return backorder_moves
 
 
 class StockWarehouse(models.Model):
