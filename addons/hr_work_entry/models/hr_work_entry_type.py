@@ -44,7 +44,7 @@ class HrWorkEntryType(models.Model):
         string="Rate",
         default=1.0,
         tracking=True,
-        help="If you want the hours to be paid double, the rate should be set to 200%.")
+        help="The percentage of wages paid. For standard paid leave set to 100%, for unpaid leave to 0%, or for double-pay to 200%.")
     description = fields.Text(translate=True, tracking=True)
     resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'work_entry_type_id', readonly=True, copy=False)
     resource_calendar_selectable = fields.Boolean(string="Selectable in Working Schedule", compute='_compute_resource_calendar_selectable', store=True, readonly=False, tracking=True)
