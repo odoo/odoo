@@ -1092,7 +1092,7 @@ class AccountJournal(models.Model):
             }
         )
 
-    def _assign_outsanding_account_to_payment_method_lines(self, payment_type, payment_method_codes=None, chart_template=None):
+    def _assign_outstanding_account_to_payment_method_lines(self, payment_type, payment_method_codes=None, chart_template=None):
         """ Link bank journal payment method lines to their corresponding outstanding account for the specified chart template.
 
         :param payment_type: Payment direction, either ``'inbound'`` or ``'outbound'``.
