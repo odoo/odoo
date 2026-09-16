@@ -460,17 +460,17 @@
                     <group name="partner_details">
                         <field name="partner_id"
                                widget="res_partner_many2one"
-                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_identifier': True}"
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
                               options="{'no_quick_create': True}"
-                              context="{'default_type': 'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
+                              context="{'default_type': 'invoice', 'show_address': False, 'show_identifier': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                         <field name="partner_shipping_id"
                               groups="account.group_delivery_invoice_address"
                               options="{'no_quick_create': True}"
-                              context="{'default_type': 'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
+                              context="{'default_type': 'delivery', 'show_address': False, 'show_identifier': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                     </group>
                     <group name="order_details">
