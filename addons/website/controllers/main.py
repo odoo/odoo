@@ -57,6 +57,13 @@ MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+CONFIGURATOR_PREVIEW_CSP = (
+    "default-src 'none';"
+    f" img-src 'self' data: {API_WEBSITE_IMAGES_URL};"
+    " style-src 'unsafe-inline';"
+    " font-src 'self' data: https://fonts.gstatic.com;"
+    " frame-ancestors 'self'"
+)
 CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
     f'website.{image_name}': f'website.{fallback_image_name}'
     for image_name, fallback_image_name in [
@@ -887,7 +894,10 @@ class Website(Home):
             preview_overrides,
         )
 
-        return request.make_response(final_html, [('Content-Type', 'text/html; charset=utf-8')])
+        return request.make_response(final_html, [
+            ('Content-Type', 'text/html; charset=utf-8'),
+            ('Content-Security-Policy', CONFIGURATOR_PREVIEW_CSP),
+        ])
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
