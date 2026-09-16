@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="discuss_public_channel_template_portal" name="Discuss Public Template portal">
+        <t t-call="portal.frontend_layout" no_footer="true" no_livechat="true" pageName.f="o_portal_discuss">
+            <iframe t-att-src="embed_url" title="Conversations"
+                class="o_portal_discuss_iframe w-100 border-0"
+                allow="camera; microphone; display-capture; autoplay; fullscreen"
+                allowfullscreen="allowfullscreen"/>
+        </t>
+    </template>
+</odoo>
