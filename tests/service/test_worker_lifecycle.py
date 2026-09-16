@@ -434,7 +434,9 @@ class TestTheWorkerCancelsItsOwnOverrun:
         with patch("odoo.db.cancel_queries_of", return_value=2) as cancel:
             assert worker._supervise_work_thread(thread) is False
         cancel.assert_called_once_with(thread.name)
-        assert len(pings) == 3, "the grace keeps the master's watchdog fed"
+        assert len(pings) == 4, (
+            "the cancel and then the grace feed the master's watchdog"
+        )
         assert worker.alive
         message, budget, elapsed, count, plural = worker.logger.warning.call_args.args
         assert "cancelled %d running quer%s" in message
@@ -448,7 +450,7 @@ class TestTheWorkerCancelsItsOwnOverrun:
         with patch("odoo.db.cancel_queries_of", return_value=0):
             assert worker._supervise_work_thread(thread) is True
         assert not worker.alive
-        multi.ping_pipe.assert_not_called()
+        multi.ping_pipe.assert_called_once()
 
     def test_work_within_budget_is_left_alone(self, multi):
         worker = self._worker(multi, budget=60)

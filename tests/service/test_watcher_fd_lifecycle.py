@@ -27,6 +27,8 @@ def _inotify_fds():
 def _make_watcher(tmp_path, monkeypatch):
     root = tmp_path / "addons"
     (root / "mod" / "static").mkdir(parents=True)
+    # Only a subtree that holds Python is armed; the root and `mod` make two.
+    (root / "mod" / "__init__.py").write_text("")
     monkeypatch.setattr(
         _watcher.FSWatcherBase, "get_watch_paths", staticmethod(lambda: [str(root)])
     )

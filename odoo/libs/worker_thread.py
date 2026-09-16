@@ -24,6 +24,7 @@ class WorkerThread(Protocol):
     perf_t0: float
     cursor_mode: str | None
     rpc_model_method: str
+    request_line: str
 
     type: str
 

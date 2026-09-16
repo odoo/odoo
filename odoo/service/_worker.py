@@ -156,8 +156,14 @@ class Worker:
             f"CPU time limit ({current().limit_time_cpu}s) exceeded"
         )
 
+    @property
+    def selector(self) -> selectors.BaseSelector:
+        if self._selector is None:
+            raise RuntimeError(f"{type(self).__name__} polls before start()")
+        return self._selector
+
     def sleep(self) -> None:
-        ready = self._selector.select(timeout=self.multi.beat)
+        ready = self.selector.select(timeout=self.multi.beat)
         self._listener_ready = any(key.fd != self.wakeup_pipe[0] for key, _ in ready)
         empty_pipe(self.wakeup_pipe[0])
 
@@ -336,6 +342,9 @@ class Worker:
                 cancelled_for = started
                 grace_until = now + self._CANCEL_GRACE_S
                 self._cancel_work_thread_queries(work, now - started, budget)
+                # The master's clock has run since the work began; feed it
+                # now, not a poll later.
+                self.multi.ping_pipe(self.watchdog_pipe)
             elif cancelled_for == started:
                 if now >= grace_until:
                     self.alive = False
@@ -485,7 +494,7 @@ class WorkerHTTP(Worker):
         exclusive = False
         if self.multi.socket is not None:
             self.identity = self._get_identity(self.multi.socket)
-            exclusive = watch_accept(self._selector, self.multi.socket)
+            exclusive = watch_accept(self.selector, self.multi.socket)
         _debug.lifecycle(
             "worker.http.serving",
             pid=self.pid,

@@ -187,7 +187,7 @@ class ReconnectBackoff:
         self,
         what: str,
         exc: BaseException,
-        sleep: typing.Callable[[float], None] | None = None,
+        sleep: typing.Callable[[float], object] | None = None,
     ) -> None:
         self.attempts += 1
         delay = backoff.get_bound(self.attempts, base=BACKOFF_BASE_S, cap=self._ceiling)
@@ -267,7 +267,7 @@ class CronListener:
     def reconnect_after_failure(
         self,
         what: str,
-        sleep: typing.Callable[[float], None] | None = None,
+        sleep: typing.Callable[[float], object] | None = None,
     ) -> bool:
         self.close()
         try:
