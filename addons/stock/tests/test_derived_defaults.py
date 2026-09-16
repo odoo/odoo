@@ -3,15 +3,27 @@ from odoo.tests import tagged
 
 from odoo.addons.stock.tests.common import TestStockCommon
 
-# A stored computed field whose recompute legitimately disagrees with storage,
-# with the reason it does. `test_no_stored_derivation_disagrees_with_its_own_
-# compute` reads this, so a new exception is argued for here or not at all.
-DELIBERATE_RECOMPUTE_DRIFT = {
-    # the drift IS the feature: `is_outdated` and the inventory conflict wizard
-    # detect a count taken against an on-hand that has since moved by comparing
-    # `inventory_quantity - inventory_diff_quantity` with `quantity`. Adding
-    # `quantity` to this field's depends would make every conflict invisible.
-    ("stock.quant", "inventory_diff_quantity"),
+# Stored computed fields whose recompute disagrees with storage, each with the
+# reason it is allowed to. `test_no_stored_derivation_disagrees_with_its_own_
+# compute` reads this, so a new entry is argued for here or not at all -- and
+# the two below are NOT the same kind of thing.
+RECOMPUTE_DRIFT_ALLOWED = {
+    # BY DESIGN. The drift IS the feature: `is_outdated` and the inventory
+    # conflict wizard detect a count taken against an on-hand that has since
+    # moved, by comparing `inventory_quantity - inventory_diff_quantity` with
+    # `quantity`. Adding `quantity` to this field's depends would make every
+    # conflict invisible.
+    ("stock.quant", "inventory_diff_quantity"): "conflict detection depends on it",
+    # KNOWN HAZARD, not a feature and not yet decided. The compute is
+    # `self.inventory_quantity_set = True` with no condition, so it is a
+    # mark-on-write hook wearing a compute's clothes: any recompute sets it on
+    # every quant, including those `action_clear_inventory_quantity` has just
+    # cleared. Measured: a never-counted quant of 100 flips to set=True and
+    # `is_outdated` True, which routes `action_apply_inventory` to the conflict
+    # wizard for every quant in the database. `inventory_diff_quantity` does
+    # NOT follow in the same pass -- measured 0.0, so no stock moves -- which
+    # is the only reason this is an annoyance rather than a data defect.
+    ("stock.quant", "inventory_quantity_set"): "unconditional compute, upstream shape",
 }
 
 
@@ -305,6 +317,53 @@ class TestDerivedDefaults(TestStockCommon):
 
     # -- the general guard --------------------------------------------------
 
+    def _build_sweep_fixture(self):
+        """Rows for the models the sweep would otherwise not reach.
+
+        Measured before this existed: on a fresh install `stock.picking`,
+        `stock.move`, `stock.move.line` and `stock.quant` hold **no rows**, so
+        33 of the 44 stored computes in the sweep's models were examined over
+        an empty recordset and the test passed by having nothing to look at.
+        """
+        product = self.env["product.product"].create(
+            {"name": "Sweep tracked", "is_storable": True, "tracking": "lot"}
+        )
+        plain = self.env["product.product"].create(
+            {"name": "Sweep plain", "is_storable": True}
+        )
+        lot = self.LotObj.create({"name": "SWEEP-LOT", "product_id": product.id})
+        self.StockQuantObj._update_available_quantity(
+            product, self.stock_location, 12, lot_id=lot
+        )
+        self.StockQuantObj._update_available_quantity(plain, self.stock_location, 7)
+        outgoing = self.PickingObj.create(
+            {
+                "picking_type_id": self.picking_type_out.id,
+                "move_ids": [
+                    (0, 0, {"product_id": product.id, "product_uom_qty": 3}),
+                    (0, 0, {"product_id": plain.id, "product_uom_qty": 2}),
+                ],
+            }
+        )
+        outgoing.action_confirm()
+        outgoing.action_assign()
+        incoming = self.PickingObj.create(
+            {
+                "picking_type_id": self.picking_type_in.id,
+                "move_ids": [(0, 0, {"product_id": plain.id, "product_uom_qty": 5})],
+            }
+        )
+        incoming.action_confirm()
+        self.env["stock.scrap"].create(
+            {
+                "product_id": plain.id,
+                "product_uom_id": plain.uom_id.id,
+                "scrap_qty": 1,
+                "picking_id": incoming.id,
+            }
+        )
+        self.env.flush_all()
+
     def test_no_stored_derivation_disagrees_with_its_own_compute(self):
         """The guard that would have caught the picking-type clobber.
 
@@ -312,25 +371,32 @@ class TestDerivedDefaults(TestStockCommon):
         different value is a clobber waiting for its trigger: the value is
         right today only because nothing has recomputed it yet.
         """
+        self._build_sweep_fixture()
         drifted = []
+        coverage = []
+        checks = 0
         for model_name in (
             "stock.picking.type",
             "stock.picking",
             "stock.move",
             "stock.move.line",
             "stock.quant",
+            "stock.scrap",
             "stock.warehouse",
             "stock.location",
         ):
             model = self.env[model_name]
             records = model.with_context(active_test=False).search([])
-            if not records:
-                continue
+            swept = 0
             for field in model._fields.values():
                 if not (field.compute and field.store) or field.related:
                     continue
-                if (model_name, field.name) in DELIBERATE_RECOMPUTE_DRIFT:
+                if (model_name, field.name) in RECOMPUTE_DRIFT_ALLOWED:
                     continue
+                swept += 1
+                if not records:
+                    continue
+                checks += len(records)
                 before = {record.id: record[field.name] for record in records}
                 try:
                     self._force_recompute(records, field.name)
@@ -347,7 +413,20 @@ class TestDerivedDefaults(TestStockCommon):
                             f"{before[record.id]!r} -> {record[field.name]!r}"
                         )
                         break
+            coverage.append(f"{model_name}={len(records)}rows*{swept}fields")
+            self.assertTrue(
+                records,
+                f"{model_name} has no rows, so its {swept} stored computes are "
+                "examined over nothing -- the fixture must reach every model "
+                "this sweep claims to cover",
+            )
         self.assertEqual(drifted, [], "stored values a recompute would overwrite")
+        # A sweep that stops finding rows stops being a check and says so only
+        # by passing faster. Before `_build_sweep_fixture` existed this read
+        # 108 comparisons over 2 of the 8 models; it now reads 270 over all 8.
+        # The floor sits between the two so a collapse back to incidental
+        # install data fails rather than passes.
+        self.assertGreater(checks, 200, f"sweep coverage collapsed: {coverage}")
 
 
 @tagged("post_install", "-at_install")
