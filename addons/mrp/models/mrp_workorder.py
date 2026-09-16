@@ -195,12 +195,16 @@ class MrpWorkorder(models.Model):
         store=True,
         copy=False,
         readonly=False,
+        help="Time logged against this work order, in minutes. A timer that is"
+        " still running counts for nothing until it is stopped, so this is a"
+        " function of the timer lines alone and does not move with the clock.",
     )
     duration_live = fields.Float(
         string="Live Duration",
         compute="_compute_duration_live",
-        help="Real duration including the time accrued so far on a running "
-        "timer. Technical: read by the timer widget.",
+        help="Real duration plus the time accrued so far on a running timer."
+        " Equal to Real Duration whenever no timer is running. Technical: read"
+        " by the timer widget.",
     )
     duration_unit = fields.Float(
         string="Duration Per Unit",
@@ -678,7 +682,7 @@ class MrpWorkorder(models.Model):
     )
     def _compute_durations(self):
         for order in self:
-            order.duration = order.get_duration()
+            order.duration = order._get_duration()
             order.duration_unit = (
                 round(order.duration / order.qty_produced, 2)
                 if order.qty_produced
@@ -699,8 +703,9 @@ class MrpWorkorder(models.Model):
 
     @api.depends("time_ids.date_start", "time_ids.date_end", "duration")
     def _compute_duration_live(self):
+        now = fields.Datetime.now()
         for workorder in self:
-            workorder.duration_live = workorder.get_duration()
+            workorder.duration_live = workorder._get_duration(until=now)
 
     def _inverse_duration(self):
 
@@ -710,7 +715,7 @@ class MrpWorkorder(models.Model):
             return minutes * 60 + seconds
 
         for order in self:
-            old_order_duration = order.get_duration()
+            old_order_duration = order._get_duration()
             new_order_duration = order.duration
             if new_order_duration == old_order_duration:
                 continue
@@ -1547,6 +1552,11 @@ class MrpWorkorder(models.Model):
             self.qty_producing = quantity
 
     def _get_duration_of_intervals(self, intervals):
+        """Measure `(date_start, date_end, timer)` triples, overlaps counted once.
+
+        A timer may span several intervals; that is not a problem, because what
+        the split is for is telling employee time from blocking time.
+        """
         if not intervals:
             return 0.0
         spans = [
@@ -1557,18 +1567,35 @@ class MrpWorkorder(models.Model):
             self.env["mrp.workcenter.productivity.loss"]._get_durations_batch(spans)
         )
 
-    def get_duration(self):
+    def _get_duration(self, until=None):
+        """Measure the timer lines against the work center's working calendar.
+
+        `until` closes off a timer that is still running. With no bound a
+        running timer contributes nothing, which is what the stored `duration`
+        wants: a value that is a function of the timer rows and of nothing
+        else. `duration_live` passes the wall clock -- the same clock
+        `button_start` stamped `date_start` with. Never the cursor's clock:
+        `cr.now()` is PostgreSQL's `now()`, the transaction's start, so a timer
+        opened a second into the transaction spans backwards and `Intervals`
+        drops it.
+        """
         self.check_singleton()
-        now = self.env.cr.now()
         loss_type_times = defaultdict(lambda: self.env["mrp.workcenter.productivity"])
         for time in self.time_ids:
             loss_type_times[time.loss_id.loss_type] |= time
         duration = 0
         for times in loss_type_times.values():
             duration += self._get_duration_of_intervals(
-                [(t.date_start or now, t.date_end or now, t) for t in times]
+                [
+                    (time.date_start, time.date_end or until, time)
+                    for time in times
+                    if time.date_start and (time.date_end or until)
+                ]
             )
         return duration
+
+    def get_duration(self):
+        return self._get_duration(until=fields.Datetime.now())
 
     def action_mark_as_done(self):
         for wo in self:

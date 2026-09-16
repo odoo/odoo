@@ -1,7 +1,9 @@
 import re
 from datetime import datetime, timedelta
 
-from odoo import Command
+from freezegun import freeze_time
+
+from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import Form, tagged
@@ -968,15 +970,23 @@ class TestMrpAuditFixes(TestMrpCommon):
                 "workorder_id": workorder.id,
                 "workcenter_id": self.workcenter_1.id,
                 "loss_id": loss.id,
-                "date_start": self.env.cr.now() - timedelta(minutes=30),
+                "date_start": fields.Datetime.now() - timedelta(minutes=30),
             }
         )
         self.env.flush_all()
         workorder.invalidate_recordset()
 
         self.assertAlmostEqual(workorder.duration_live, 30.0, delta=1.0)
-        self.assertAlmostEqual(workorder.duration_live, workorder.get_duration())
+        self.assertAlmostEqual(
+            workorder.duration_live, workorder.get_duration(), delta=1.0
+        )
         self.assertEqual(workorder.time_ids.duration, 0.0)
+        self.assertEqual(
+            workorder.duration,
+            0.0,
+            "a timer that is still running counts for nothing in the stored "
+            "duration, which is what makes it a function of the timer rows",
+        )
 
     def test_live_duration_matches_the_stored_one_when_nothing_runs(self):
         production = self.generate_mo()[0]
@@ -1005,6 +1015,94 @@ class TestMrpAuditFixes(TestMrpCommon):
 
         self.assertAlmostEqual(workorder.duration, 12.0, delta=0.1)
         self.assertAlmostEqual(workorder.duration_live, workorder.duration)
+
+    def test_a_timer_that_starts_after_the_transaction_did_still_accrues(self):
+        """The bound on a running timer must be the clock that stamped its start.
+
+        It was `cr.now()`, PostgreSQL's transaction timestamp, so a timer whose
+        `date_start` fell after the transaction began spanned backwards and
+        `Intervals` dropped it -- a work order started five seconds into its own
+        transaction reported a live duration of exactly zero. Freezing the
+        wall clock ahead of the transaction reproduces that ordering exactly,
+        without depending on how long this test's transaction has been open.
+        """
+        with freeze_time("2099-03-01 10:00:00"):
+            workorder = self._audit_workorder_with_timer(
+                "Ahead of the cursor", started_minutes_ago=60
+            )
+            self.assertGreater(
+                workorder.time_ids.date_start,
+                self.env.cr.now(),
+                "the timer must open after the transaction did for this to bite",
+            )
+            self.assertEqual(workorder.duration_live, 60.0)
+
+    def test_a_frozen_clock_freezes_the_live_duration(self):
+        """A live duration read twice under a frozen clock reads the same twice.
+
+        It did not: the running timer was bounded by `cr.now()`, which is
+        PostgreSQL's clock and which `freeze_time` cannot reach. Under a freeze
+        that put `date_start` in 2020, the unfrozen bound made the interval
+        years wide -- the same defect that made a real 5-second-old transaction
+        report zero, seen from the other side.
+        """
+        with freeze_time("2020-05-04 10:00:00"):
+            workorder = self._audit_workorder_with_timer(
+                "Frozen", started_minutes_ago=45
+            )
+            self.assertEqual(workorder.time_ids.date_start, datetime(2020, 5, 4, 9, 15))
+            self.assertEqual(workorder.duration_live, 45.0)
+            self.assertEqual(workorder.duration_live, workorder.get_duration())
+            self.assertEqual(workorder.duration, 0.0)
+
+    def test_the_stored_duration_agrees_with_the_sum_of_its_timer_rows(self):
+        """One figure, two routes: the ORM field and the SQL the reports run.
+
+        `mrp_account_enterprise` reads `SUM(mrp_workcenter_productivity.duration)`
+        and `mrp_workorder_hr_account` reads `SUM(mrp_workorder.duration)`. They
+        are the same quantity and disagreed by the live accrual of every running
+        timer.
+        """
+        workorder = self._audit_workorder_with_timer(
+            "Two numbers", started_minutes_ago=30
+        )
+        self.env.cr.execute(
+            "SELECT COALESCE(SUM(duration), 0) FROM mrp_workcenter_productivity"
+            " WHERE workorder_id = %s",
+            (workorder.id,),
+        )
+        [[summed_rows]] = self.env.cr.fetchall()
+        self.env.cr.execute(
+            "SELECT duration FROM mrp_workorder WHERE id = %s", (workorder.id,)
+        )
+        [[stored]] = self.env.cr.fetchall()
+        self.assertEqual(stored, summed_rows)
+        self.assertAlmostEqual(workorder.duration_live, 30.0, delta=1.0)
+
+    def _audit_workorder_with_timer(self, name, started_minutes_ago):
+        production = self.generate_mo()[0]
+        workorder = self.env["mrp.workorder"].create(
+            {
+                "name": name,
+                "production_id": production.id,
+                "workcenter_id": self.workcenter_1.id,
+            }
+        )
+        loss = self.env["mrp.workcenter.productivity.loss"].search(
+            [("loss_type", "=", "productive")], limit=1
+        )
+        self.env["mrp.workcenter.productivity"].create(
+            {
+                "workorder_id": workorder.id,
+                "workcenter_id": self.workcenter_1.id,
+                "loss_id": loss.id,
+                "date_start": fields.Datetime.now()
+                - timedelta(minutes=started_minutes_ago),
+            }
+        )
+        self.env.flush_all()
+        workorder.invalidate_recordset()
+        return workorder
 
     def test_live_duration_is_computed_for_the_whole_list_at_once(self):
         production = self.generate_mo()[0]
