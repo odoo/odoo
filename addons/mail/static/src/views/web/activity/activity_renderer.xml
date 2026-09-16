@@ -79,7 +79,7 @@
     <t t-set="activityGroup" t-value="this.props.groupedActivities[resId] and this.props.groupedActivities[resId][type.id] or {count: 0, ids: [], state: false}"/>
     <t t-set="isCellHidden" t-value="!this.activeFilter.resIds.has(resId) and this.activeFilter.activityTypeId === type.id"/>
     <td t-if="activityGroup.state and !isCellHidden"
-        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} bg-gradient-lg {{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
+        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} bg-gradient {{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
         t-att-class="{
             'bg-danger-light text-danger': activityGroup.state == 'overdue',
             'bg-warning-light text-warning': activityGroup.state == 'today',

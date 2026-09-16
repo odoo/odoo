@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityCell">
-        <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="this.onClick">
+        <div class="h-100 cursor-pointer p-1 p-xl-2 d-flex flex-column justify-content-between" t-on-click="this.onClick">
             <div class="d-flex position-relative" t-ref="this.contentRef">
                 <div class="text-truncate w-100 fs-6 fw-bold" t-out="this.displayedSummaries"/>
             </div>
