@@ -370,9 +370,9 @@ class ProductProduct(models.Model):
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id], strict=True)
 
     def _get_remaining_moves(self):
-        moves_qty_by_product = {}
+        """ Remaining quantity by incoming move, for the products in `self`. """
+        qty_by_move = defaultdict(float)
         for product in self:
-            qty_by_move = defaultdict(float)
             lots = [None]
             if product.lot_valuated:
                 lots = product.stock_quant_ids.filtered(
@@ -385,10 +385,7 @@ class ProductProduct(models.Model):
                 qty_by_move[moves[0]] += remaining_qty
                 for move in moves[1:]:
                     qty_by_move[move] += move._get_valued_qty(lot)
-            if not qty_by_move:
-                continue
-            moves_qty_by_product[product] = qty_by_move
-        return moves_qty_by_product
+        return qty_by_move
 
     def _run_standard_batch(self, at_date=None, lot=None):
         std_price_by_product_id = {product.id: product.standard_price for product in self}
