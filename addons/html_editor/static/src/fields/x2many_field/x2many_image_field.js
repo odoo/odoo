@@ -35,6 +35,8 @@ export class X2ManyImageField extends ImageField {
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
+            resModel: this.props.record.model.config.resModel,
+            resId: this.props.record.model.config.resId,
         };
     }
     async onImageSave(attachments) {
