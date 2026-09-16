@@ -161,8 +161,8 @@
                                     <field name="product_variant_count"/> Variants
                                 </strong>
                             </div>
-                            <div class="d-flex align-items-start gap-2">
-                                <div class="d-flex flex-column">
+                            <div class="d-flex align-items-start gap-2 mb-1">
+                                <div class="d-flex flex-column flex-shrink-0">
                                     <strong invisible="not context.get('show_lst_price', True)">
                                         <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </strong>
@@ -170,7 +170,7 @@
                                         <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                     </strong>
                                 </div>
-                                <span t-if="record.default_code.value" class="text-muted">
+                                <span t-if="record.default_code.value" class="text-muted text-break min-w-0">
                                     <field name="default_code"/>
                                 </span>
                             </div>
