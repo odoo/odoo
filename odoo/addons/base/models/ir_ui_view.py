@@ -1129,6 +1129,17 @@ actual arch.
     # ------------------------------------------------------
 
     @api.model
+    def _raise_error(self, error):
+        kind, value = error
+        if kind == 'missing_template':
+            raise MissingError(self.env._("Template not found: '%s'", value))
+        if kind == 'missing_external':
+            raise MissingError(self.env._("External ID can not be loaded: %s", value))
+        if kind == 'syntax':
+            raise SyntaxError(value)
+        raise AssertionError(f'Unknown template error kind: {kind}')
+
+    @api.model
     def _get_cached_template_prefetched_keys(self):
         return ['id', 'key', 'active', 'type']
 
@@ -1166,13 +1177,13 @@ actual arch.
                 view = info['view']
                 error = info['error']
             else:
-                error = SyntaxError('Error compiling template')
+                error = ('syntax', 'Error compiling template')
         info = {
             f: view[f] if view else None
             for f in self._get_cached_template_prefetched_keys()
         }
         if not view and not error:
-            error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
+            error = ('missing_template', id_or_xmlid)
         info['error'] = error
         return info
 
@@ -1180,7 +1191,7 @@ actual arch.
     def _get_template_view(self, id_or_xmlid: int | str, raise_if_not_found=True) -> models.BaseModel:
         info = self._get_cached_template_info(id_or_xmlid)
         if info['error'] and raise_if_not_found:
-            raise info['error']
+            self._raise_error(info['error'])
         return self.env['ir.ui.view'].browse(info['id'])
 
     @api.model
