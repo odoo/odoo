@@ -166,6 +166,11 @@ export const mailPopoutService = {
                 const hooks = popout.hooks;
                 hooks?.beforePopout?.();
                 externalWindow = window.open("about:blank", "_blank", "popup=yes");
+                if (!externalWindow) {
+                    // The browser can refuse to open the popup (e.g. popup blocker).
+                    hooks?.afterPopoutClosed?.();
+                    return null;
+                }
                 window.addEventListener("beforeunload", () => {
                     if (externalWindow && !externalWindow.closed) {
                         externalWindow.close();
