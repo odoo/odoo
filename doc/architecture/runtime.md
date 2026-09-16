@@ -269,6 +269,37 @@ short-circuit when nothing is pending or dirty.
 The loop still issues *reads*: prefetch `SELECT`s land where the field is first
 touched ([`qualities.md`](qualities.md#scenario-1--write-throughput)).
 
+**When the cache reaches the database, and when it must not.** The states a
+stored value passes through are *cached* (the slot holds it), *dirty* (a
+`write`/`create` set it and `Field.mark_dirty` listed the record in the unit of
+work; the row does not hold it yet), *pending* (`PENDING` in the slot: a stored
+compute owes it) and *absent* (nothing cached; the next read fetches). What
+moves a value between them:
+
+| Event | Flushes | Then |
+|---|---|---|
+| `env.flush_all()`, `flush_model()`, `flush_recordset()` | everything, the model's fields, the records' fields | recompute pending stored computes to a fixpoint, `UPDATE`/`INSERT` the dirty ones through the backend |
+| `env.execute_query(sql)` — every `_search`, `read_group`, fetch and port statement | exactly the fields the statement reads (`SQL.to_flush`), across a table-inheritance tree | so a read never sees a column older than its own cache |
+| `invalidate_model()` / `invalidate_recordset()` with `flush=True` (the default) | the fields being dropped | then drops them; with `flush=False` it refuses a field that is dirty (`_check_no_pending_write`) rather than lose the write |
+| `unlink()` | everything | before the `DELETE`, so no dirty write targets a gone row |
+| a parent-store write | the parent field | before the path recomputation reads it |
+| `cr.flush()` at a savepoint or commit boundary | everything, then the precommit hooks, interleaved to a fixpoint | |
+| `cr.execute(...)` — raw SQL | **nothing** | flush by hand first (`coding_guidelines.rst` §6.5) |
+
+Two rules follow, and every cache-maintenance path in `fields/` obeys them:
+
+1. **No fetch inside a write.** Between a write's first cache mutation and its
+   `modified()`, nothing may read a value that is not cached: the miss would
+   flush the half-written transaction and run computes on partial values. This
+   is why `Many2one._update_inverses` sorts an appended one2many in memory and
+   caches it unsorted when the keys are not there, why a stored many2many write
+   does the same, and why another scope's slot is *evicted* (its next read
+   fetches, later) rather than refreshed.
+2. **A cache write is a claim about the row after the flush.** A slot holds
+   what the database will read back — for an x2many, what the scope's search
+   returns (the invariant above); for a column, the converted value. A path
+   that cannot make that claim leaves the slot absent instead.
+
 **A new record's cache mirrors what it was given, and nothing more.** `new()`
 (`models/mixins/env.py::_update_cache`) caches every value, then tells each
 relational value's inverse fields about the record — a new line given a new
