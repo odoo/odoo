@@ -133,7 +133,9 @@ def _get_jinja_env() -> Environment:
             "odoo-bin scaffold needs Jinja2, which is not installed.\n"
             "    pip install Jinja2      (or: pip install 'odoo[scaffold]')"
         )
-    env = jinja2.Environment()  # noqa: S701  see comment above
+    # autoescape stays off: the templates render Python, XML and CSV source
+    # for a module skeleton, never HTML served to a browser.
+    env = jinja2.Environment()  # noqa: S701
     env.filters["snake"] = _str_to_snake_case
     env.filters["pascal"] = _str_to_pascal_case
     _debug.lifecycle("cli.scaffold.jinja_env_built", filters=2)

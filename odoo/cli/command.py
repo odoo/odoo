@@ -356,19 +356,22 @@ def load_addons_commands(command: str | None = None) -> None:
                 continue
             fq_name = f"odoo.cli.{found_command}"
             if fq_name in mapping:
+                # addons_path order is priority, as for modules: the first
+                # path that defines the command keeps it.
                 _debug.logic(
                     "cli.commands.addon_shadowed",
                     command=found_command,
-                    winner=str(fullpath),
-                    loser=str(mapping[fq_name]),
+                    winner=str(mapping[fq_name]),
+                    loser=str(fullpath),
                 )
                 _logger.warning(
                     "Addon CLI command %r is defined in multiple addons: "
-                    "%s shadows %s (iteration order is not guaranteed)",
+                    "%s shadows %s (addons_path order)",
                     found_command,
-                    fullpath,
                     mapping[fq_name],
+                    fullpath,
                 )
+                continue
             mapping[fq_name] = fullpath
     _debug.pipeline(
         "cli.commands.addons_discovered",
