@@ -1319,6 +1319,127 @@ class TestProcurement(TestMrpCommon):
             self.assertEqual(len(mo), i, "One mo per picking")
             self.assertEqual(delta_hours(mo[i - 1].date_end - mo[i - 1].date_start), 15)
 
+    def _run_batched_manufacture(self, product, quantity, uom):
+        rule = self.warehouse_1.manufacture_pull_id
+        self.env["stock.rule"]._run_manufacture(
+            [
+                (
+                    self.env["stock.rule"].Procurement(
+                        product,
+                        quantity,
+                        uom,
+                        self.warehouse_1.lot_stock_id,
+                        "Batch probe",
+                        "Batch probe",
+                        self.warehouse_1.company_id,
+                        {
+                            "warehouse_id": self.warehouse_1,
+                            "date_planned": fields.Datetime.now(),
+                            "date_deadline": fields.Datetime.now(),
+                            "company_id": self.warehouse_1.company_id,
+                        },
+                    ),
+                    rule,
+                )
+            ]
+        )
+        return self.env["mrp.production"].search([("product_id", "=", product.id)])
+
+    def test_a_batch_size_is_honoured_in_the_unit_it_is_written_in(self):
+        """`batch_size` belongs to the BoM, so the split must be done in its unit.
+
+        Counting the demand down in the *procurement's* unit means converting
+        the batch into that unit first, and the conversion rounds: a 0.4 kg
+        batch procured in tonnes is rounded to the tonne's own precision of
+        0.01 t, so a 25 kg batch becomes a 30 kg one: the orders come out a
+        fifth larger than the BoM asked for, there are 34 of them instead of
+        40, and they add up to 1020 kg against a demand of 1000.
+        """
+        kg = self.env.ref("uom.product_uom_kgm")
+        ton = self.env.ref("uom.product_uom_ton")
+        product = self.env["product.product"].create(
+            {"name": "Bulk", "is_storable": True, "uom_id": kg.id}
+        )
+        component = self.env["product.product"].create(
+            {"name": "Bulk component", "is_storable": True, "uom_id": kg.id}
+        )
+        self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_uom_id": kg.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "enable_batch_size": True,
+                "batch_size": 25.0,
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 1})
+                ],
+            }
+        )
+        orders = self._run_batched_manufacture(product, 1.0, ton)
+        self.assertEqual(orders.product_uom_id, kg)
+        self.assertEqual(
+            orders.mapped("product_qty"),
+            [25.0] * 40,
+            "1 t split into 25 kg batches is forty orders of 25 kg",
+        )
+        self.assertEqual(sum(orders.mapped("product_qty")), 1000.0)
+
+    def test_a_batch_size_too_small_for_the_demand_is_refused_not_obeyed(self):
+        """A thousand-order answer is worse than saying the configuration is wrong.
+
+        `mrp.production.split` already refuses beyond MAX_SPLITS with a message
+        naming the count; the procurement rule looped without a bound, and with
+        a batch that rounds to zero in the procurement's unit it never
+        terminated at all.
+        """
+        product = self.env["product.product"].create(
+            {"name": "Tiny batch", "is_storable": True}
+        )
+        component = self.env["product.product"].create(
+            {"name": "Tiny batch component", "is_storable": True}
+        )
+        self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "enable_batch_size": True,
+                "batch_size": 1.0,
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 1})
+                ],
+            }
+        )
+        with self.assertRaisesRegex(UserError, "more than the 1000 allowed"):
+            self._run_batched_manufacture(product, 1001.0, self.uom_unit)
+        self.assertFalse(
+            self.env["mrp.production"].search([("product_id", "=", product.id)]),
+            "a refused procurement must leave no orders behind",
+        )
+
+    def test_a_batch_exactly_dividing_the_demand_makes_no_extra_order(self):
+        product = self.env["product.product"].create(
+            {"name": "Exact batch", "is_storable": True}
+        )
+        component = self.env["product.product"].create(
+            {"name": "Exact batch component", "is_storable": True}
+        )
+        self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": product.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "enable_batch_size": True,
+                "batch_size": 50.0,
+                "bom_line_ids": [
+                    Command.create({"product_id": component.id, "product_qty": 1})
+                ],
+            }
+        )
+        orders = self._run_batched_manufacture(product, 150.0, self.uom_unit)
+        self.assertEqual(orders.mapped("product_qty"), [50.0, 50.0, 50.0])
+
     def test_mo_split_with_batch_size_mto(self):
         self.route_mto.write({"active": True})
         self.product_4.route_ids = [

@@ -21,6 +21,8 @@ class StockRule(models.Model):
         ondelete={"manufacture": "cascade"},
     )
 
+    MAX_MANUFACTURE_BATCHES = 1000
+
     def _get_action_messages(self):
         message_dict = super()._get_action_messages()
         source, destination, direct_destination, operation = self._get_message_labels()
@@ -156,30 +158,16 @@ class StockRule(models.Model):
                         else "no demand unsatisfied",
                     )
                     continue
-                procurement_qty = procurement.product_qty
-                batch_size = (
-                    bom.product_uom_id._compute_quantity(
-                        bom.batch_size, procurement.product_uom_id
-                    )
-                    if is_batch_size
-                    else procurement_qty
-                )
                 vals = rule._prepare_mo_vals(procurement, bom)
-                while procurement.product_uom_id.compare(procurement_qty, 0) > 0:
+                for batch_qty in rule._get_manufacture_batches(
+                    procurement, bom, is_batch_size
+                ):
                     new_productions_values_by_company[procurement.company_id.id][
                         "values"
-                    ].append(
-                        {
-                            **vals,
-                            "product_qty": procurement.product_uom_id._compute_quantity(
-                                batch_size, bom.product_uom_id
-                            ),
-                        }
-                    )
+                    ].append({**vals, "product_qty": batch_qty})
                     new_productions_values_by_company[procurement.company_id.id][
                         "procurements"
                     ].append(procurement)
-                    procurement_qty -= batch_size
             else:
                 procurement_product_uom_qty = (
                     procurement.product_uom_id._compute_quantity(
@@ -222,13 +210,83 @@ class StockRule(models.Model):
                 .create(productions_vals_list)
             )
             _debug.lifecycle("productions_created", productions=productions)
-            for mo in productions:
-                if self._is_mo_auto_confirm_required(mo):
-                    mo.action_confirm()
+            productions.filtered(self._is_mo_auto_confirm_required).action_confirm()
             productions._post_run_manufacture(
                 new_productions_values_by_company[company_id]["procurements"]
             )
         return True
+
+    def _get_manufacture_batches(self, procurement, bom, is_batch_size):
+        """Yield the quantity of each manufacturing order a procurement becomes.
+
+        Every figure is in the BoM's unit, because that is the unit
+        `batch_size` is written in. Converting the batch into the procurement's
+        unit first and counting down there rounds the batch to the procurement
+        unit's precision: a 0.4 kg batch procured in tonnes becomes 0.01 t,
+        which is 10 kg, so the orders come out twenty-five times the size the
+        BoM asked for and the count explodes to match.
+
+        The count is capped the way `mrp.production.split` caps its own, and
+        for the same reason: a batch size small against the demand is a
+        configuration mistake, and answering it with thousands of orders is
+        worse than refusing it.
+        """
+        uom = bom.product_uom_id
+        quantity = procurement.product_uom_id._compute_quantity(
+            procurement.product_qty, uom, round=False
+        )
+        if not is_batch_size:
+            yield uom.round(quantity)
+            return
+        batch_size = bom.batch_size
+        if uom.compare(batch_size, 0) <= 0:
+            _debug.logic(
+                "manufacture_refused",
+                reason="batch_size_not_positive",
+                bom=bom.id,
+                batch_size=batch_size,
+            )
+            raise UserError(
+                self.env._(
+                    "The batch size of %(bom)s must be positive to manufacture"
+                    " %(product)s.",
+                    bom=bom.display_name,
+                    product=procurement.product_id.display_name,
+                )
+            )
+        whole, remainder = divmod(quantity, batch_size)
+        batches = max(int(whole) + (0 if uom.is_zero(remainder) else 1), 1)
+        if batches > self.MAX_MANUFACTURE_BATCHES:
+            _debug.logic(
+                "manufacture_refused",
+                reason="too_many_batches",
+                bom=bom.id,
+                batches=batches,
+                maximum=self.MAX_MANUFACTURE_BATCHES,
+            )
+            raise UserError(
+                self.env._(
+                    "Manufacturing %(quantity)s %(unit)s of %(product)s in"
+                    " batches of %(size)s would take %(count)s manufacturing"
+                    " orders, more than the %(maximum)s allowed. Use a larger"
+                    " batch size.",
+                    quantity=quantity,
+                    unit=uom.display_name,
+                    product=procurement.product_id.display_name,
+                    size=batch_size,
+                    count=batches,
+                    maximum=self.MAX_MANUFACTURE_BATCHES,
+                )
+            )
+        _debug.logic(
+            "manufacture_batched",
+            bom=bom.id,
+            quantity=quantity,
+            batch_size=batch_size,
+            batches=batches,
+        )
+        for _batch in range(batches):
+            yield uom.round(batch_size)
 
     def _prepare_stock_move_vals(self, procurement):
         res = super()._prepare_stock_move_vals(procurement)
