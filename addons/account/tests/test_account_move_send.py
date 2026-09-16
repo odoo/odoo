@@ -6,7 +6,7 @@ from datetime import date
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import users, warmup, tagged
@@ -14,7 +14,7 @@ from odoo.tools import formataddr, mute_logger
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
+class TestAccountComposerPerformance(AccountTestInvoicingHttpCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -125,7 +125,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
     @classmethod
     def default_env_context(cls):
         # OVERRIDE
-        return {}
+        return {'force_report_rendering': True}
 
     def setUp(self):
         super().setUp()
@@ -215,6 +215,53 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         # invoice update
         for test_move in test_moves:
             self.assertTrue(test_move.is_move_sent)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_move_composer_splitting(self):
+        """Test with multi mode and a PDF that is longer than one page."""
+        # remove the layout_document_title from the invoice document template
+        self.env['ir.ui.view'].sudo().create({
+            'active': True,
+            "arch": """
+                <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+                    <t t-set='layout_document_title'/>
+                </xpath>
+                """,
+            "inherit_id": self.env.ref("account.report_invoice_document").id,
+            "name": "report_invoice_document.remove_layout_title",
+            "type": "qweb",
+        })
+
+        # make the wordy move
+        test_moves = self.test_account_moves.with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
+
+        wordy_move = test_moves[-1].copy({
+            "line_ids": [
+                Command.create({
+                    'name': 'Line1',
+                    'price_unit': 100.0
+                }),
+            ] + [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "fill"
+                }) for i in range(15)
+            ]
+        })
+        wordy_move.action_post()
+        test_moves = test_moves[-1] + wordy_move
+
+        for test_move in test_moves:
+            self.assertFalse(test_move.is_move_sent)
+
+        # will raise exception if the title is not handled correctly
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.env['account.move.send']._generate_and_send_invoices(
+                test_moves,
+                sending_methods={'email'},
+                mail_template=move_template,
+            )
 
     @users('user_account')
     @warmup
@@ -540,7 +587,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         self.assertIn('1,000', context.get('subtitles')[1])
 
 
-class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
+class TestAccountMoveSendCommon(AccountTestInvoicingHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -583,6 +630,10 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'invoice_sending_method': 'email',
             'email': "turlututu@tsointsoin",
         })
+
+    @classmethod
+    def default_env_context(cls):
+        return super().default_env_context() | {'force_report_rendering': True}
 
     def test_invoice_single(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
