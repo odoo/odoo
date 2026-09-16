@@ -1313,7 +1313,7 @@ class AccountEdiUBL(models.AbstractModel):
         suffix = '_currency' if in_foreign_currency else ''
         tax_details = base_line['tax_details']
 
-        gross_total_excluded = currency.round(tax_details[f'raw_gross_total_excluded{suffix}'])
+        gross_total_excluded = tax_details[f'gross_total_excluded{suffix}']
         for allowance_charge_node in line_node['cac:AllowanceCharge']:
             sign = 1 if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true' else -1
             gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
