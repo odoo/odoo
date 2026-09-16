@@ -5329,29 +5329,6 @@ class ProjectTask(models.Model):
         return self.allocated_hours or self.planned_hours
 
     @api.model
-    def _compute_schedule(self, user, calendar, date_start, date_end, company=None):
-        if user:
-            employees_work_days_data, _dummy = user.sudo()._get_valid_work_intervals(
-                date_start, date_end
-            )
-            schedule = employees_work_days_data.get(user.id) or Intervals([])
-            _dummy, validity_intervals = (
-                self._scheduling_get_resource_calendars_validity(
-                    date_start,
-                    date_end,
-                    resource=user._get_project_task_resource(),
-                    company=company,
-                )
-            )
-            for start, stop, _dummy in validity_intervals["invalid"]:
-                schedule |= calendar._work_intervals_batch(start, stop)[False]
-
-            return validity_intervals["invalid"], schedule
-        else:
-            return Intervals([]), calendar._work_intervals_batch(date_start, date_end)[
-                False
-            ]
-
     @dbg.timed
     def _get_last_predecessor_date_end_per_task(self):
         query = """
