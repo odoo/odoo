@@ -51,7 +51,7 @@
                         </group>
                     </group>
                     <separator string="Notes" />
-                    <field name="notes" nolabel="1" />
+                    <field name="notes" />
                 </sheet>
             </form>
         </field>
@@ -106,11 +106,5 @@
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="resource_asset_log_view_search" />
     </record>
-
-    <menuitem
-        id="menu_asset_ledger"
-        parent="resource_asset.menu_asset_root"
-        action="action_resource_asset_log"
-        sequence="4" />
 
 </odoo>
