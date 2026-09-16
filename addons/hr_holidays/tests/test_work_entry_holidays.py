@@ -495,12 +495,8 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': datetime(2026, 6, 7),
             'request_date_to': datetime(2026, 6, 7),
-
-        })
-
-        working_leave.write({
             'request_hour_from': 11,
-            'request_hour_to': 17
+            'request_hour_to': 17,
         })
 
         self.assertEqual(working_leave.request_hour_from, 11)
