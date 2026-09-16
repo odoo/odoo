@@ -6,11 +6,11 @@
                 <t t-foreach="this.state.entries" t-as="entry" t-key="entry_index">
                     <div class="o_attendance_entry_card d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2"
                          t-attf-class="bg-color-{{entry.color + 1}}-light">
-                        <div class="d-flex flex-row align-items-baseline gap-1">
+                        <div class="d-flex flex-row align-items-baseline row-gap-1 column-gap-2">
                             <span class="o_attendance_entry_duration">
                                 <t t-out="this.formatDuration({ hours: entry.worked_hours })"/>
                             </span>
-                            <span class="o_attendance_entry_name ms-1"><t t-out="entry.name"/></span>
+                            <span class="o_attendance_entry_name"><t t-out="entry.name"/></span>
                         </div>
                     </div>
                 </t>
