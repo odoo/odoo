@@ -4,10 +4,20 @@
 from datetime import timedelta
 
 from odoo import models, fields, api, _
+from odoo.fields import Domain
 
 
 class WebsiteSnippetFilter(models.Model):
     _inherit = 'website.snippet.filter'
+
+    def _prepare_values(self, limit=None, search_domain=None, search_info=None, main_object=None, **options):
+        search_domain = search_domain or Domain.TRUE
+        search_info = search_info or {}
+
+        if ids_by_category := search_info.pop('eventByTagIds', False):
+            search_domain &= Domain.AND([Domain("tag_ids", "in", ids) for category_id, ids in ids_by_category.items()])
+
+        return super()._prepare_values(limit=limit, search_domain=search_domain, search_info=search_info, main_object=main_object, **options)
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)

@@ -169,6 +169,18 @@ export class DropZonePlugin extends Plugin {
         if (hasForm && !selectorExcludeAncestor.includes("form")) {
             selectorExcludeAncestor.push("form");
         }
+
+        // Prevent dropping qweb directives into html fields
+        if (
+            selectElements(snippetEl, "*").some((el) =>
+                el
+                    .getAttributeNames()
+                    .some((attr) => attr.startsWith("t-") || attr.startsWith("data-oe-editable-"))
+            )
+        ) {
+            selectorExcludeAncestor.push("[data-oe-type=html]");
+        }
+
         if (selectorExcludeAncestor.length) {
             const excludeAncestor = selectorExcludeAncestor.join(",");
             selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));

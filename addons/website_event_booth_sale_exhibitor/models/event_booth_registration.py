@@ -11,7 +11,7 @@ class EventBoothRegistration(models.Model):
     sponsor_email = fields.Char(string='Sponsor Email')
     sponsor_phone = fields.Char(string='Sponsor Phone')
     sponsor_subtitle = fields.Char(string='Sponsor Slogan')
-    sponsor_website_description = fields.Html(string='Sponsor Description', sanitize_overridable=True,)
+    sponsor_website_description = fields.Qweb(string='Sponsor Description', sanitize_overridable=True,)
     sponsor_image_512 = fields.Image(string='Sponsor Logo')
 
     def _get_fields_for_booth_confirmation(self):

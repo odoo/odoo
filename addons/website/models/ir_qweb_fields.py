@@ -40,3 +40,21 @@ class IrQwebFieldHtml(models.AbstractModel):
             res = Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
 
         return res
+
+
+class IrQwebFieldQwebContent(models.AbstractModel):
+    _inherit = 'ir.qweb.field.qweb_content'
+
+    @api.model
+    def render_values(self, options):
+        values = super().render_values(options)
+        record = options.get('record')
+        if record and 'website_id' in record._fields:
+            website = record.website_id or self.env.website
+            values |= dict(
+                website=website,
+                is_view_active=website.is_view_active,
+            )
+        return values
+
+# TODO: also do the form stuff for qweb content?

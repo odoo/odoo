@@ -26,13 +26,13 @@
                 <BuilderSelectItem classAction="''">Inverted colors</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-	    <BuilderRow id="this.speed_opt" label.translate="Slider Speed" t-if="numberOfRecords > 1">
-	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false"/>
+	    <BuilderRow id="this.speed_opt" label.translate="Slider Speed" t-if="limit > 1">
+            <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false"/>
 	    </BuilderRow>
-        <BuilderRow id="this.scroll_opt" label.translate="Scrolling Mode" t-if="numberOfRecords > 1">
-            <BuilderButtonGroup preview="false">
-                <BuilderButton classAction="''">All</BuilderButton>
-                <BuilderButton classAction="'o_carousel_multi_items'">Single</BuilderButton>
+        <BuilderRow id="this.scroll_opt" label.translate="Scrolling Mode" t-if="limit > 1">
+            <BuilderButtonGroup preview="false" action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'scroll_mode' }">
+                <BuilderButton classAction="''" actionValue="'multi'">All</BuilderButton>
+                <BuilderButton classAction="'o_carousel_multi_items'" actionValue="'single'">Single</BuilderButton>
             </BuilderButtonGroup>
         </BuilderRow>
     </BuilderRow>
