@@ -2233,6 +2233,8 @@ class TestWorkerCpuLimitHandoff:
         joined = []
 
         class _T:
+            name = "workthread"
+
             def start(self):
                 pass
 
@@ -2243,7 +2245,7 @@ class TestWorkerCpuLimitHandoff:
                 order.append(("join", timeout))
 
             def is_alive(self):
-                return False
+                return not joined
 
         with (
             patch.object(srv.Worker, "start", lambda self: None),

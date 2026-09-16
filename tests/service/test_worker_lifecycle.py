@@ -5,6 +5,8 @@ import resource
 import select
 import selectors
 import socket
+import threading
+import time
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -397,3 +399,101 @@ class TestTheListeningSocketIsWatchedExclusively:
         finally:
             selector.close()
             sock.close()
+
+
+class TestTheWorkerCancelsItsOwnOverrun:
+    """The main thread only waited on the work thread; now it is the budget
+    monitor the master used to be, with SIGKILL as the fallback."""
+
+    def _worker(self, multi, budget):
+        worker = build_worker(_worker.WorkerHTTP, multi, pid=4242)
+        worker.watchdog_timeout = budget
+        multi.beat = 0.05
+        return worker
+
+    def _thread(self, alive_for):
+        thread = MagicMock()
+        thread.name = "Worker WorkerHTTP (4242) workthread"
+        thread.start_time = None
+        polls = {"n": 0}
+
+        def is_alive():
+            polls["n"] += 1
+            return polls["n"] <= alive_for
+
+        thread.is_alive.side_effect = is_alive
+        thread.join.side_effect = lambda timeout=None: None
+        return thread
+
+    def test_work_over_budget_is_cancelled_once_and_the_watchdog_fed(self, multi):
+        worker = self._worker(multi, budget=2)
+        thread = self._thread(alive_for=4)
+        thread.start_time = time.monotonic() - 10
+        pings = []
+        multi.ping_pipe.side_effect = pings.append
+        with patch("odoo.db.cancel_queries_of", return_value=2) as cancel:
+            assert worker._supervise_work_thread(thread) is False
+        cancel.assert_called_once_with(thread.name)
+        assert len(pings) == 3, "the grace keeps the master's watchdog fed"
+        assert worker.alive
+        message, budget, elapsed, count, plural = worker.logger.warning.call_args.args
+        assert "cancelled %d running quer%s" in message
+        assert (budget, count, plural) == (2, 2, "ies") and elapsed > 9
+
+    def test_work_still_stuck_after_the_grace_ends_the_worker(self, multi):
+        worker = self._worker(multi, budget=2)
+        worker._CANCEL_GRACE_S = 0.0
+        thread = self._thread(alive_for=10)
+        thread.start_time = time.monotonic() - 10
+        with patch("odoo.db.cancel_queries_of", return_value=0):
+            assert worker._supervise_work_thread(thread) is True
+        assert not worker.alive
+        multi.ping_pipe.assert_not_called()
+
+    def test_work_within_budget_is_left_alone(self, multi):
+        worker = self._worker(multi, budget=60)
+        thread = self._thread(alive_for=3)
+        thread.start_time = time.monotonic() - 1
+        with patch("odoo.db.cancel_queries_of") as cancel:
+            worker._supervise_work_thread(thread)
+        cancel.assert_not_called()
+        multi.ping_pipe.assert_not_called()
+
+    def test_no_budget_means_no_monitor(self, multi):
+        worker = self._worker(multi, budget=None)
+        thread = self._thread(alive_for=2)
+        thread.start_time = time.monotonic() - 10_000
+        with patch("odoo.db.cancel_queries_of") as cancel:
+            worker._supervise_work_thread(thread)
+        cancel.assert_not_called()
+
+    def test_a_new_unit_of_work_gets_its_own_verdict(self, multi):
+        worker = self._worker(multi, budget=2)
+        thread = self._thread(alive_for=3)
+        first = time.monotonic() - 10
+        starts = iter([first, first, None])
+        type(thread).start_time = property(lambda self: next(starts, None))
+        with patch("odoo.db.cancel_queries_of", return_value=1) as cancel:
+            worker._supervise_work_thread(thread)
+        assert cancel.call_count == 1
+
+    def test_the_work_loop_stamps_start_time_around_each_unit(self, multi, monkeypatch):
+        monkeypatch.setattr(
+            threading.current_thread(), "start_time", None, raising=False
+        )
+        worker = build_worker(_worker.WorkerHTTP, multi, pid=4242)
+        seen = []
+
+        def work():
+            seen.append(threading.current_thread().start_time is not None)
+            worker.alive = False
+
+        worker.check_limits = MagicMock()
+        worker.sleep = MagicMock()
+        worker.process_work = work
+        worker._runloop_exc = None
+        with patch.object(_worker.signal, "pthread_sigmask"):
+            worker._run_work_loop()
+        assert worker._runloop_exc is None, worker._runloop_exc
+        assert seen == [True]
+        assert threading.current_thread().start_time is None

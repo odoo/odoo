@@ -31,6 +31,7 @@ except ImportError:
 
 from odoo.db import PoolError
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.worker_thread import as_worker_thread, current_worker_thread
 from odoo.modules.registry import Registry
 
 from ._cron import (
@@ -81,6 +82,11 @@ def watch_accept(selector: selectors.BaseSelector, sock: socket.socket) -> bool:
 
 class Worker:
     _CPU_LIMIT_JOIN_GRACE_S = 1.0
+
+    _CANCEL_GRACE_S = 5.0
+    """How long the main thread keeps the master's watchdog fed after it has
+    cancelled the work thread's queries, so the cancel gets to land before
+    the master's SIGKILL does."""
 
     _listener_ready = True
     """Whether the last `sleep()` was woken by a watched fd other than its own
@@ -258,14 +264,22 @@ class Worker:
         )
         t.start()
         try:
-            t.join()
+            stuck = self._supervise_work_thread(t)
             if self._runloop_exc is not None:
                 raise SystemExit(1)
-            self.logger.info(
-                "Exiting cleanly. request_count: %s, registry count: %s.",
-                self.request_count,
-                len(Registry.registries),
-            )
+            if stuck:
+                self.logger.warning(
+                    "Work did not return %.0fs after its queries were cancelled; "
+                    "recycling worker. request_count: %s",
+                    self._CANCEL_GRACE_S,
+                    self.request_count,
+                )
+            else:
+                self.logger.info(
+                    "Exiting cleanly. request_count: %s, registry count: %s.",
+                    self.request_count,
+                    len(Registry.registries),
+                )
         except CpuTimeLimitExceeded:
             # The kernel keeps sending SIGXCPU once a second while the process
             # stays over the soft limit; the first one is the verdict, and a
@@ -300,6 +314,62 @@ class Worker:
             )
             self.stop()
 
+    def _supervise_work_thread(self, work: threading.Thread) -> bool:
+        # The main thread has nothing to do but wait, so it is the worker's
+        # own budget monitor: a unit of work over `watchdog_timeout` has its
+        # queries cancelled here, from inside the process, and the master's
+        # watchdog is fed through the grace so the cancel gets to land.
+        # Work still stuck after the grace -- a stall in Python, not in a
+        # query -- ends the worker itself, a clean exit the master replaces
+        # at once instead of a SIGKILL a full timeout later.
+        worker = as_worker_thread(work)
+        cancelled_for: float | None = None
+        grace_until = 0.0
+        while work.is_alive():
+            work.join(timeout=min(self.multi.beat, 1.0))
+            budget = self.watchdog_timeout
+            started = getattr(worker, "start_time", None)
+            if not budget or not started:
+                continue
+            now = time.monotonic()
+            if cancelled_for != started and now - started > budget:
+                cancelled_for = started
+                grace_until = now + self._CANCEL_GRACE_S
+                self._cancel_work_thread_queries(work, now - started, budget)
+            elif cancelled_for == started:
+                if now >= grace_until:
+                    self.alive = False
+                    return True
+                self.multi.ping_pipe(self.watchdog_pipe)
+        return False
+
+    def _cancel_work_thread_queries(
+        self, work: threading.Thread, elapsed: float, budget: float
+    ) -> None:
+        from odoo import db
+
+        try:
+            cancelled = db.cancel_queries_of(work.name)
+        except Exception as exc:
+            _debug.logic("worker.cancel_failed", pid=self.pid, error=type(exc).__name__)
+            cancelled = 0
+        self.logger.warning(
+            "Work over its %ss budget (%.1fs): cancelled %d running quer%s; the "
+            "master kills this worker if it does not return",
+            budget,
+            elapsed,
+            cancelled,
+            "y" if cancelled == 1 else "ies",
+        )
+        _debug.logic(
+            "worker.over_limit",
+            kind=self.__class__.__name__,
+            pid=self.pid,
+            elapsed_s=elapsed,
+            limit_s=budget,
+            cancelled=cancelled,
+        )
+
     def _run_work_loop(self) -> None:
         try:
             signal.pthread_sigmask(
@@ -316,13 +386,18 @@ class Worker:
             # during listener reconnect or main-thread setup cannot prove it.
             os.write(self.watchdog_pipe[1], b"R")
             _debug.lifecycle("worker.ready", kind=self.__class__.__name__, pid=self.pid)
+            worker = current_worker_thread()
             while self.alive:
                 self.check_limits()
                 self.multi.ping_pipe(self.watchdog_pipe)
                 self.sleep()
                 if not self.alive:
                     break
-                self.process_work()
+                worker.start_time = time.monotonic()
+                try:
+                    self.process_work()
+                finally:
+                    worker.start_time = None
         except BaseException as exc:
             self.logger.exception("Exception occurred, exiting...")
             _debug.logic(
