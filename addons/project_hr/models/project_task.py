@@ -39,23 +39,11 @@ class ProjectTask(models.Model):
         column2="user_id",
         string="Assignees (Users)",
         compute="_compute_user_ids",
-        inverse="_inverse_user_ids",
         default=None,
         store=True,
-        readonly=False,
+        readonly=True,
         tracking=False,
     )
-
-    def _inverse_user_ids(self):
-        """Assigning users assigns their employees, and the rest directly.
-
-        The field is composed, not stored by hand, but it is still the name every
-        caller and every view assigns through, so it answers to a write rather than
-        refusing one: a readonly composed field makes `user_ids` unassignable from
-        a form and from `Form()`, which is what the readonly spelling did.
-        """
-        for task in self:
-            task.update(task._prepare_assignment_vals(task.user_ids))
 
     def _get_fields_assignment(self) -> set[str]:
         return super()._get_fields_assignment() | {"employee_ids", "direct_user_ids"}
