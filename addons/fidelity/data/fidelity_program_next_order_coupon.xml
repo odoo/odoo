@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="next_order_discount_when_50" model="fidelity.program">
+        <field name="name">Buy for 50 and get 5% on next order</field>
+        <field name="type">next_order_promotion</field>
+        <field name="trigger">manual</field>
+        <field name="point_unit">Credit(s)</field>
+    </record>
+
+    <record id="next_order_discount_when_50_rule" model="fidelity.rule">
+        <field name="minimum_qty">3</field>
+        <field name="minimum_amount">50</field>
+        <field name="reward_point_mode">order</field>
+        <field name="reward_point_amount">1</field>
+        <field name="program_id" ref="fidelity.next_order_discount_when_50"/>
+    </record>
+
+    <record id="next_order_discount_when_50_reward" model="fidelity.reward">
+        <field name="type">discount</field>
+        <field name="discount_amount">5</field>
+        <field name="discount_amount_type">percent</field>
+        <field name="discount_amount_applicability">order</field>
+        <field name="required_points">1</field>
+        <field name="program_id" ref="fidelity.next_order_discount_when_50"/>
+    </record>
+
+    <!-- Grant some transactions to the fidelity card example -->
+    <record id="next_order_discount_when_50_balance_example_1" model="fidelity.balance">
+        <field name="card_id" ref="fidelity.fidelity_card_example_1"/>
+        <field name="program_id" ref="fidelity.next_order_discount_when_50"/>
+    </record>
+
+    <record id="next_order_discount_when_50_transaction_1" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity.next_order_discount_when_50_balance_example_1"/>
+        <field name="program_id" ref="fidelity.next_order_discount_when_50"/>
+        <field name="issued">1</field>
+        <field name="rule_id" ref="fidelity.next_order_discount_when_50_rule"/>
+        <field name="state">done</field>
+    </record>
+
+    <record id="next_order_discount_when_50_transaction_1" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity.next_order_discount_when_50_balance_example_1"/>
+        <field name="program_id" ref="fidelity.next_order_discount_when_50"/>
+        <field name="issued">1</field>
+        <field name="rule_id" ref="fidelity.next_order_discount_when_50_rule"/>
+        <field name="state">done</field>
+    </record>
+</odoo>

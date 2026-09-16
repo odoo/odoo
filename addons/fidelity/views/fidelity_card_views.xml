@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_card_view_form" model="ir.ui.view">
+        <field name="name">fidelity.card.view.form</field>
+        <field name="model">fidelity.card</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="partner_image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="code" class="oe_edit_only"/>
+                        <h1><field name="code" readonly="1" /></h1>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="nb_programs" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="balances" string="Balances">
+                            <field name="balance_ids" create="0" edit="0" delete="0">
+                                <list string="Balances">
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fidelity_card_view_list" model="ir.ui.view">
+        <field name="name">fidelity.card.view.list</field>
+        <field name="model">fidelity.card</field>
+        <field name="arch" type="xml">
+            <list string="Cards" edit="false" delete="false">
+                <field name="code" readonly="1"/>
+                <field name="partner_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fidelity_card_action" model="ir.actions.act_window">
+        <field name="name">Cards</field>
+        <field name="res_model">fidelity.card</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <h1>No Cards Found.</h1>
+            <p>There haven't been any cards generated yet.</p>
+        </field>
+    </record>
+</odoo>
