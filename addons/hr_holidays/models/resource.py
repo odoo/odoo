@@ -183,6 +183,7 @@ class ResourceCalendar(models.Model):
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
+<<<<<<< faccb11c3ebaa25706ff087a7b033e4eb6ac2893
 
 
 class ResourceResource(models.Model):
@@ -224,3 +225,16 @@ class ResourceResource(models.Model):
                 resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
         else:
             super()._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
+||||||| 4cadc97d771824843449550b31250220b856218d
+=======
+
+    def _get_flexible_leaves_date(self, res_leaves, resource, tz):
+        super()._get_flexible_leaves_date(res_leaves, resource, tz)
+        return [
+            (tz.localize(datetime.combine(i[0].date(), time.min)).astimezone(pytz.utc),
+             tz.localize(datetime.combine(i[1].date(), time.max)).astimezone(pytz.utc))
+            if not i[2].holiday_id.request_unit_half and not i[2].holiday_id.request_unit_hours
+            else (i[0], i[1])
+            for i in res_leaves
+        ]
+>>>>>>> 7a036ef80d66c46c84671e50f506cd5cdcb79133
