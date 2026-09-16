@@ -538,7 +538,7 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+            if not move_line.location_id.is_valued_internal and move_line.location_dest_id.is_valued_internal:
                 res.add(move_line.id)
         return self.env['stock.move.line'].browse(res)
 
@@ -560,7 +560,7 @@ class StockMove(models.Model):
         :returns: a subset of `self` containing the outgoing records
         :rtype: recordset
         """
-        res = self.env['stock.move.line']
+        res = OrderedSet()
         for move_line in self.move_line_ids:
             if lot and move_line.lot_id != lot:
                 continue
@@ -568,9 +568,9 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
-                res |= move_line
-        return res
+            if move_line.location_id.is_valued_internal and not move_line.location_dest_id.is_valued_internal:
+                res.add(move_line.id)
+        return self.env['stock.move.line'].browse(res)
 
     def _is_out(self):
         """Check if the move should be considered as leaving the company so that the cost method

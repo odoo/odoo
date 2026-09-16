@@ -428,7 +428,8 @@ class ProductProduct(models.Model):
 
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
         oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
+        manual_value_products = self.env['product.product'].concat(*last_manual_value_by_product.keys())
+        if oldest_manual_value and manual_value_products == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
         product_ids_by_manual_value_date = defaultdict(list)
@@ -436,12 +437,30 @@ class ProductProduct(models.Model):
             for manual_value in last_manual_value_by_product.values():
                 product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
 
+        manual_value_quantity_by_product = defaultdict(float)
+        if manual_value_products and not lot:
+            domain_quant_loc, domain_move_in_loc, domain_move_out_loc = manual_value_products._get_domain_locations()
+            domain_quant = Domain('product_id', 'in', manual_value_products.ids) & Domain(domain_quant_loc)
+            domain_move = Domain('state', '=', 'done') & Domain.OR([('product_id', 'in', products), ('date', '>', date)] for date, products in product_ids_by_manual_value_date.items())
+            if 'owners' in self.env.context:
+                owners = self.env.context['owners'] or [False]
+                domain_quant &= Domain('owner_id', 'in', owners)
+                domain_move &= Domain('move_line_ids.owner_id', 'in', owners)
+            domain_move_in_done = domain_move_in_loc + domain_move
+            domain_move_out_done = domain_move_out_loc + domain_move
+            for product, quantity in self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum']):
+                manual_value_quantity_by_product[product.id] = quantity
+            for product, uom, quantity in self.env['stock.move']._read_group(domain_move_in_done, ['product_id', 'product_uom'], ['quantity:sum']):
+                manual_value_quantity_by_product[product.id] -= uom._compute_quantity(quantity, product.uom_id)
+            for product, uom, quantity in self.env['stock.move']._read_group(domain_move_out_done, ['product_id', 'product_uom'], ['quantity:sum']):
+                manual_value_quantity_by_product[product.id] += uom._compute_quantity(quantity, product.uom_id)
+
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+                quantity = manual_value_quantity_by_product[product.id]
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -456,9 +475,9 @@ class ProductProduct(models.Model):
             order='product_id, date, id'
         )
 
-        # PERF avoid memoryerror
-        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
+        move_fields = ['date', 'state', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id', 'restrict_partner_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
+        location_fields = ['usage', 'company_id', 'is_valued_internal']
 
         product, valuation_from_date = False, False
         batch_size = 50000
@@ -483,12 +502,14 @@ class ProductProduct(models.Model):
             moves_batch = self.env['stock.move'].browse(moves_batch)
             moves_batch.fetch(move_fields)
             moves_batch.move_line_ids.fetch(move_line_fields)
+            (moves_batch.move_line_ids.location_id + moves_batch.move_line_ids.location_dest_id).fetch(location_fields)
             for move in moves_batch:
+                valued_qty = move._get_valued_qty()
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / valued_qty if valued_qty else 0)
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.is_in:
-                    in_qty = move._get_valued_qty()
+                    in_qty = valued_qty
                     in_value = move.value
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
@@ -505,7 +526,7 @@ class ProductProduct(models.Model):
                         average_cost = in_value / in_qty if in_qty else average_cost
                         value = average_cost * quantity
                 if move.is_out:
-                    out_qty = move._get_valued_qty()
+                    out_qty = valued_qty
                     out_value = out_qty * average_cost
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
