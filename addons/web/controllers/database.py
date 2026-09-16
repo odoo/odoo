@@ -143,7 +143,7 @@ class Database(http.Controller):
         d["pattern"] = DBNAME_PATTERN
         try:
             with dbg.timer(None, "[dbmanager] list databases + incompatible"):
-                d["databases"] = http.get_dbs_served()
+                d["databases"] = request.app.get_dbs_served()
                 d["incompatible_databases"] = odoo.service.db.list_db_incompatible(
                     d["databases"]
                 )
@@ -321,7 +321,7 @@ class Database(http.Controller):
                 f"Invalid backup format {backup_format!r}; expected {expected}"
             )
         odoo.service.db.check_super(master_pwd)
-        if name not in http.get_dbs_served():
+        if name not in request.app.get_dbs_served():
             dbg.logic.debug("[db:%s] backup: not served", name)
             raise ValueError(f"Database {name!r} is not known")
         ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
@@ -432,6 +432,6 @@ class Database(http.Controller):
 
     @http.route("/web/database/list", type="jsonrpc", auth="none")
     def list(self) -> list[str]:
-        dbs = http.get_dbs_served()
+        dbs = request.app.get_dbs_served()
         dbg.lifecycle.debug("[dbmanager] list: %s -> %d", dbg.req(), len(dbs))
         return dbs

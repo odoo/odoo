@@ -70,14 +70,14 @@ class TestHttpRegistry(BaseCase):
             odoo.http.constants.SELECT_DB_PATHS | {"/test_http/ensure_db"},
         )
 
-        cls._db_list = cls.startClassPatcher(patch("odoo.http.get_dbs_served"))
+        cls._db_list = cls.startClassPatcher(patch("odoo.http.Application.get_dbs_served"))
         cls._db_list.return_value = ["postgres", get_db_name()]
 
         def fake_db_filter(dbs, host=None):
             return [db for db in dbs if db in cls._db_list()]
 
         cls.startClassPatcher(
-            patch("odoo.http.filter_dbs_served", side_effect=fake_db_filter)
+            patch("odoo.http.Application.filter_dbs_served", side_effect=fake_db_filter)
         )
 
     def setUp(self):

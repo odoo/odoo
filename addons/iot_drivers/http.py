@@ -37,7 +37,7 @@ class JsonRPCDispatcherPatch(JsonRPCDispatcher):
 if not IS_TEST:
     # Test IoT system is expected to handle Odoo database unlike "real" IoT systems.
 
-    def get_dbs_served(force=False, host=None):
+    def get_dbs_served(self, host=None):
         return []
 
-    odoo.http.get_dbs_served = get_dbs_served
+    odoo.http.Application.get_dbs_served = get_dbs_served

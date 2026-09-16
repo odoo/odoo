@@ -322,12 +322,13 @@ class Harness:
         with (
             mock.patch("odoo.http._serve.Registry", lambda db: self.registry),
             mock.patch("odoo.api.Environment", FakeEnv),
-            mock.patch(
-                "odoo.http.get_dbs_served", lambda *a, **k: list(self.served_dbs)
+            mock.patch.object(
+                self.app, "get_dbs_served", lambda host: list(self.served_dbs)
             ),
-            mock.patch(
-                "odoo.http.filter_dbs_served",
-                lambda dbs, host=None: [d for d in dbs if d in self.served_dbs],
+            mock.patch.object(
+                self.app,
+                "filter_dbs_served",
+                lambda dbs, host: [d for d in dbs if d in self.served_dbs],
             ),
             mock.patch.object(self.app, "get_static_file_path", return_value=None),
         ):

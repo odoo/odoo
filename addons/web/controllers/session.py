@@ -43,7 +43,7 @@ class Session(http.Controller):
             login,
             bool(password),
         )
-        if not http.filter_dbs_served([db]):
+        if not request.app.filter_dbs_served([db]):
             dbg.logic.debug("[session] authenticate: db %s not served", db)
             msg = "Database not found."  # pylint: disable=missing-gettext
             raise AccessError(msg)

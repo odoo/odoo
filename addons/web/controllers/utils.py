@@ -87,7 +87,7 @@ def select_db(redirect: str = "/web/database/selector", db: str | None = None) -
     if db is None:
         db = (raw_db := request.params.get("db")) and raw_db.strip()
 
-    if db and db not in http.filter_dbs_served([db]):
+    if db and db not in request.app.filter_dbs_served([db]):
         dbg.logic.debug("[select_db] %r not served, dropped", db)
         db = None
 
@@ -103,12 +103,16 @@ def select_db(redirect: str = "/web/database/selector", db: str | None = None) -
         )
         abort(request.redirect(urlunsplit(url_redirect), 302))
 
-    if not db and request.session.db and http.filter_dbs_served([request.session.db]):
+    if (
+        not db
+        and request.session.db
+        and request.app.filter_dbs_served([request.session.db])
+    ):
         db = request.session.db
         dbg.logic.debug("[select_db] from session: %r", db)
 
     if not db:
-        all_dbs = http.get_dbs_served(force=True)
+        all_dbs = request.app.get_dbs_served()
         dbg.logic.debug("[select_db] no db yet, %d served (forced scan)", len(all_dbs))
         if len(all_dbs) == 1:
             db = all_dbs[0]

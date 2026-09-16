@@ -46,8 +46,8 @@ class TestHttpBase(HttpCaseWithUserDemo):
 
     def nodb_url_open(self, url, *args, allow_redirects=False, **kwargs):
         with (
-            patch("odoo.http.get_dbs_served", return_value=[]),
-            patch("odoo.http.filter_dbs_served", return_value=[]),
+            patch("odoo.http.Application.get_dbs_served", return_value=[]),
+            patch("odoo.http.Application.filter_dbs_served", return_value=[]),
         ):
             odoo.http.invalidate_db_catalog_cache()
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
@@ -56,9 +56,9 @@ class TestHttpBase(HttpCaseWithUserDemo):
         dblist = dblist or self.dbs_served
         assert len(dblist) >= 2, "There should be at least 2 databases"
         with (
-            patch("odoo.http.get_dbs_served", return_value=list(dblist)),
+            patch("odoo.http.Application.get_dbs_served", return_value=list(dblist)),
             patch(
-                "odoo.http.filter_dbs_served",
+                "odoo.http.Application.filter_dbs_served",
                 side_effect=lambda dbs, host=None: [db for db in dbs if db in dblist],
             ),
             patch("odoo.http.request_class.Registry") as Registry,

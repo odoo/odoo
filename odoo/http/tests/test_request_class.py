@@ -1,4 +1,3 @@
-import pathlib
 import types
 import typing
 from typing import Any
@@ -62,26 +61,58 @@ def test_db_list_degrades_on_any_psycopg_error(fresh_monodb_cache):
         assert _dbfilter.get_dbs_served(force=True, host="h") == []
 
 
-def test_resolution_goes_through_the_public_db_list():
-    import odoo.http._session_lifecycle as rc
+class _App:
+    def __init__(self, served):
+        self.served = list(served)
+        self.asked = []
 
-    source = pathlib.Path(rc.__file__).read_text(encoding="utf-8")
-    assert "http.get_dbs_served(force=True, host=host)" in source
-    assert "\n    get_dbs_served,\n" not in source, (
-        "_session_lifecycle must not bind get_dbs_served at import time, or patching "
-        "odoo.http.get_dbs_served stops reaching the mono-db resolution path"
+    def get_dbs_served(self, host):
+        self.asked.append(("list", host))
+        return list(self.served)
+
+    def filter_dbs_served(self, dbs, host):
+        self.asked.append(("filter", tuple(dbs), host))
+        return [db for db in dbs if db in self.served]
+
+
+def _selecting_request(app, *, cookie_db=None, header_db=None):
+    headers = {"X-Odoo-Database": header_db} if header_db else {}
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None,
+        session_id=None,
+        environ={"HTTP_HOST": "h.example"},
+        headers=headers,
+        accept_languages=types.SimpleNamespace(best=None),
     )
-
-
-def test_resolution_goes_through_the_public_db_filter():
-    import odoo.http._session_lifecycle as rc
-
-    source = pathlib.Path(rc.__file__).read_text(encoding="utf-8")
-    assert "http.filter_dbs_served(" in source
-    assert "\n    filter_dbs_served,\n" not in source, (
-        "_session_lifecycle must not bind filter_dbs_served at import time, or patching "
-        "odoo.http.filter_dbs_served stops reaching the resolution path"
+    request = Request(httprequest, app=app)
+    session: Any = types.SimpleNamespace(
+        db=cookie_db, uid=None, is_new=True, should_rotate=False, can_save=True
     )
+    session.mark_clean = lambda: None
+    session.logout = lambda keep_db=False: setattr(session, "db", None)
+    return request, session
+
+
+def test_the_single_served_database_is_resolved_through_the_application():
+    app = _App(["only"])
+    request, session = _selecting_request(app)
+    assert request._select_dbname(session) == "only"
+    assert app.asked == [("list", "h.example")]
+
+
+def test_the_session_database_is_filtered_through_the_application():
+    app = _App(["kept"])
+    request, session = _selecting_request(app, cookie_db="kept")
+    assert request._select_dbname(session) == "kept"
+    assert app.asked == [("filter", ("kept",), "h.example")]
+
+
+def test_a_header_database_is_filtered_through_the_application():
+    app = _App(["named"])
+    request, session = _selecting_request(app, header_db="named")
+    assert request._select_dbname(session) == "named"
+    assert app.asked == [("filter", ("named",), "h.example")]
+    assert session.can_save is False
 
 
 def test_http_adds_no_second_cache_over_the_catalogue(fresh_monodb_cache):

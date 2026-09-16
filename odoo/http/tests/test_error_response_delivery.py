@@ -57,8 +57,7 @@ def _serve(app, environ):
         captured["headers"] = {k.lower(): v for k, v in headers}
 
     with (
-        mock.patch("odoo.http._dbfilter.get_dbs_served", return_value=[]),
-        mock.patch("odoo.http.get_dbs_served", return_value=[]),
+        mock.patch.object(app, "get_dbs_served", lambda host: []),
     ):
         body = b"".join(app(environ, start_response))
     return captured["status"], captured["headers"], body

@@ -110,7 +110,7 @@ class OAuthController(http.Controller):
         # make sure request.session.db and state['d'] are the same,
         # update the session and retry the request otherwise
         dbname = state["d"]
-        if not http.filter_dbs_served([dbname]):
+        if not request.app.filter_dbs_served([dbname]):
             return BadRequest()
         select_db(db=dbname)
 
@@ -179,7 +179,7 @@ class OAuthController(http.Controller):
             dbname = request.db
         if not dbname:
             raise BadRequest
-        if not http.filter_dbs_served([dbname]):
+        if not request.app.filter_dbs_served([dbname]):
             raise BadRequest
 
         registry = Registry(dbname)

@@ -214,7 +214,7 @@ class Home(http.Controller):
             k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS
         }
         try:
-            values["databases"] = http.get_dbs_served()
+            values["databases"] = request.app.get_dbs_served()
         except AccessDenied:
             dbg.logic.debug("[login] db list denied (list_db off)")
             values["databases"] = None

@@ -24,6 +24,7 @@ from odoo.modules import module as module_manager
 from odoo.tools import file_path
 from odoo.tools.misc import real_time
 
+from ._dbfilter import filter_dbs_served, get_dbs_served
 from ._protocols import get_ir_http
 from ._session_store import FilesystemSessionStore, prepare_session_dir
 from .constants import (
@@ -127,6 +128,12 @@ class Application:
             "http.application.initialized",
             server_wide_modules=len(current_settings().server_wide_modules),
         )
+
+    def get_dbs_served(self, host: str | None = None) -> list[str]:
+        return get_dbs_served(force=True, host=host)
+
+    def filter_dbs_served(self, dbs: list[str], host: str | None = None) -> list[str]:
+        return filter_dbs_served(dbs, host=host)
 
     def get_static_path(self, module_name: str) -> str | None:
         manifest = module_manager.Manifest.for_addon(module_name, display_warning=False)

@@ -108,13 +108,13 @@ class _RequestSessionMixin(RequestState):
         return session
 
     def _select_dbname(self, session: Session) -> str | None:
-        from odoo import http
+        root = self.app
 
         dbname = None
         source = "none"  # debuglog
         host = self.httprequest.environ.get("HTTP_HOST", "")
         header_dbname = self.httprequest.headers.get("X-Odoo-Database")
-        if session.db and http.filter_dbs_served([session.db], host=host):
+        if session.db and root.filter_dbs_served([session.db], host):
             dbname = session.db
             source = "session"  # debuglog
             if header_dbname and header_dbname != dbname:
@@ -131,7 +131,7 @@ class _RequestSessionMixin(RequestState):
                 raise werkzeug.exceptions.Forbidden(e)
         elif header_dbname:
             session.can_save = False
-            header_served = http.filter_dbs_served([header_dbname], host=host)
+            header_served = root.filter_dbs_served([header_dbname], host)
             _debug.logic(
                 "http.session.header_db",
                 header_db=header_dbname,
@@ -141,7 +141,7 @@ class _RequestSessionMixin(RequestState):
                 dbname = header_dbname
                 source = "header"  # debuglog
         else:
-            all_dbs = http.get_dbs_served(force=True, host=host)
+            all_dbs = root.get_dbs_served(host)
             if len(all_dbs) == 1:
                 dbname = all_dbs[0]
                 source = "single"  # debuglog
