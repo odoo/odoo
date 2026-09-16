@@ -883,10 +883,6 @@ test("solid tab color navigation using keys", async () => {
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
     await press("Tab");
-    expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
-    await press("Tab");
-    expect('.o_font_color_selector button:contains("Gradient")').toBeFocused();
-    await press("Tab");
     expect(".o_font_color_selector button[data-icon='delete'].oi-filled").toBeFocused();
     await press("Tab");
     expect('.o_font_color_selector button[data-color="o-color-1"]').toBeFocused();
@@ -913,13 +909,12 @@ test("custom tab color navigation using keys", async () => {
     await animationFrame();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
-    await press("Tab");
+    await press("ArrowRight");
     expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
     await press("Enter");
     await animationFrame();
     expect(".btn:contains('Custom')").toHaveClass("active");
-    await press("Tab");
-    await press("Tab");
+    await press("Tab"); // Delete button
     await press("Tab");
     expect(`.o_font_color_selector button[data-color="#FF0000"]`).toBeFocused();
     await press("ArrowDown");
@@ -941,16 +936,15 @@ describe("keyboard navigation", () => {
         await expandToolbar();
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
-        await press("Tab");
+        await press("ArrowRight");
         expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
         await press("Enter");
         await animationFrame();
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true }); // Native browser eyedropper
+        await press("Tab", { shiftKey: true }); // Hex input
+        await press("Tab", { shiftKey: true }); // Opacity
+        await press("Tab", { shiftKey: true }); // Hue
+        await press("Tab", { shiftKey: true }); // Saturation & brightness box
         expect(".o_font_color_selector .o_picker_pointer").toBeFocused();
         const hexInputEl = await getIframeInput(
             ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
@@ -980,15 +974,14 @@ describe("keyboard navigation", () => {
         await expandToolbar();
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
-        await press("Tab");
+        await press("ArrowRight");
         expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
         await press("Enter");
         await animationFrame();
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true }); // Native browser eyedropper
+        await press("Tab", { shiftKey: true }); // Hex input
+        await press("Tab", { shiftKey: true }); // Opacity
+        await press("Tab", { shiftKey: true }); // Hue
         expect(".o_font_color_selector .o_slider_pointer").toBeFocused();
         const hexInputEl = await getIframeInput(
             ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
@@ -1033,14 +1026,13 @@ describe("keyboard navigation", () => {
         await expandToolbar();
         await click(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
-        await press("Tab");
+        await press("ArrowRight");
         expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
         await press("Enter");
         await animationFrame();
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
-        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true }); // Native browser eyedropper
+        await press("Tab", { shiftKey: true }); // Hex input
+        await press("Tab", { shiftKey: true }); // Opacity
         expect(".o_font_color_selector .o_opacity_pointer").toBeFocused();
         const hexInputEl = await getIframeInput(
             ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
@@ -1368,10 +1360,6 @@ describe("color preview", () => {
         await animationFrame();
         expect("i[data-icon='A']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
         await click(".o-select-color-foreground");
-        await animationFrame();
-        await press("Tab"); // Tab to Custom
-        await animationFrame();
-        await press("Tab"); // Tab to Gradient
         await animationFrame();
         await press("Tab"); // Tab to Trash
         await animationFrame();
