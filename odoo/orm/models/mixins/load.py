@@ -45,8 +45,11 @@ class LoadMixin(_ModelStubs):
                     break
 
                 o2m_field = model_fields.get(field_name)
-                if o2m_field is not None and o2m_field.is_one2many:
-                    comodel = o2m_field.comodel_name
+                if (
+                    o2m_field is not None
+                    and o2m_field.is_one2many
+                    and (comodel := o2m_field.comodel_name)
+                ):
                     creatable_models.add(comodel)
                     model_fields = self.env[comodel]._fields
         _debug.logic(

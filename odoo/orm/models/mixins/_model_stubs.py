@@ -116,6 +116,12 @@ class _ModelStubs:
         def invalidate_model(
             self, fnames: typing.Any = None, flush: bool = True
         ) -> None: ...
+        def _invalidate_cache(
+            self,
+            fnames: Collection[str] | None = None,
+            ids: typing.Sequence[IdType] | None = None,
+            flush: bool = True,
+        ) -> None: ...
         def update_field_translations(self, fname: str, translations: dict) -> bool: ...
 
         def _read_format(

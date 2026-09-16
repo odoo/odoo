@@ -27,6 +27,7 @@ from ._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from ..._typing import BaseModel
     from ...fields.base import Field
+    from ...fields.relational._base import _RelationalMulti
 
 _debug = DebugLog(__name__)
 
@@ -596,13 +597,13 @@ class CreateMixin(_ModelStubs):
         common_set_vals = _BAD_NAMES_LOG
 
         env = self.env
-        _stored_x2m_fields = []
+        _stored_x2m_fields: list[_RelationalMulti] = []
         _stored_scalar_caches = []
         for field in self._fields.values():
             if not field.store:
                 continue
             if field.is_x2many:
-                _stored_x2m_fields.append(field)
+                _stored_x2m_fields.append(typing.cast("_RelationalMulti", field))
             else:
                 default = PENDING if field.is_stored_computed else None
                 _stored_scalar_caches.append(
