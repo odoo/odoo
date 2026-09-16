@@ -831,7 +831,9 @@ export class SeoChecks extends Component {
         const uniqueRecords = new Set();
 
         // Select all relevant <img> elements in the editable page.
-        const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const imgEls = [
+            ...this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img"),
+        ];
 
         imgEls.forEach((el) => {
             // Find the closest ancestor element containing Odoo metadata.
@@ -862,7 +864,23 @@ export class SeoChecks extends Component {
 
         const results = await rpc("/website/get_alt_images", { models });
 
-        return JSON.parse(results);
+        // The RPC reads the saved arch: overlay the live DOM values so that
+        // unsaved changes (e.g. pending builder edits) show up in the dialog.
+        // The same image can appear several times on the page: the n-th
+        // record with a given src is the n-th live <img> with that src.
+        const srcCounts = {};
+        for (const img of results) {
+            img.srcIndex = srcCounts[img.src] || 0;
+            srcCounts[img.src] = img.srcIndex + 1;
+            const sameSrcEls = imgEls.filter((el) => el.getAttribute("src") === img.src);
+            const liveImgEl = sameSrcEls[img.srcIndex];
+            if (liveImgEl) {
+                img.alt = (liveImgEl.getAttribute("alt") || "").trim();
+                img.decorative = liveImgEl.getAttribute("role") === "presentation";
+            }
+        }
+
+        return results;
     }
 
     async getBrokenLinks() {
@@ -968,6 +986,13 @@ export class SeoChecks extends Component {
     }
 }
 
+export const optimizeSEODialogProps = {
+    close: t.function(),
+    // Opened from the builder: skip the reload on save to keep unsaved edits.
+    reloadOnSave: t.boolean().optional(),
+    applyImageAlts: t.function().optional(),
+};
+
 export class OptimizeSEODialog extends Component {
     static template = "website.OptimizeSEODialog";
     static components = {
@@ -978,9 +1003,7 @@ export class OptimizeSEODialog extends Component {
         SeoChecks,
         BrokenLink,
     };
-    props = useProps({
-        close: t.function(),
-    });
+    props = useProps(optimizeSEODialogProps);
 
     setup() {
         this.website = useService("website");
@@ -1195,14 +1218,23 @@ export class OptimizeSEODialog extends Component {
                 );
             }
         } else if (seoContext.updatedAlts?.length) {
-            rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
-                })
-            );
+            if (this.props.applyImageAlts) {
+                this.props.applyImageAlts(seoContext.updatedAlts);
+            } else {
+                rpcCalls.push(
+                    rpc("/website/update_alt_images", {
+                        imgs: seoContext.updatedAlts,
+                    })
+                );
+            }
         }
 
         await Promise.all(rpcCalls);
+
+        if (this.props.reloadOnSave === false) {
+            // Reloading here would discard unsaved builder edits.
+            return;
+        }
 
         this.website.goToWebsite({
             path: this.url.replace(
