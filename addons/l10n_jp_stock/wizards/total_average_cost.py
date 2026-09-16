@@ -53,6 +53,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         unchanged_count = sum(
             1 for result in evaluation.values() if result['evaluated'] and not result['updated']
         )
+        excluded_count = sum(1 for result in evaluation.values() if result['excluded_reason'])
         if updated_count and unchanged_count:
             message = self.env._(
                 'Updated the standard price of %(updated)s products; %(unchanged)s already '
@@ -75,6 +76,12 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'or the result is not positive.',
             )
             notification_type = 'warning'
+        if excluded_count:
+            # a price that never moved looks like a price the period did not change
+            message += ' ' + self.env._(
+                'The evaluation left %(count)s products out; preview it to see why.',
+                count=excluded_count,
+            )
         params = {
             'message': message,
             'sticky': False,
@@ -115,6 +122,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'current_cost': result['current_cost'],
                 'evaluated_cost': result['evaluated_cost'],
                 'pulled_in': result['pulled_in'],
+                'excluded_reason': result['excluded_reason'],
             })
             for product, result in evaluation.items()
         ]
@@ -132,9 +140,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
 
         Returns what the period makes of every product it covers, by product: the
         cost it starts from, the cost it is evaluated at, whether the period had
-        anything to evaluate it on, whether that moved the price, and whether the
-        product was pulled in rather than picked. A caller after the figures alone
-        reads them off that instead of off the products.
+        anything to evaluate it on, whether that moved the price, whether the
+        product was pulled in rather than picked, and why it was left out of the
+        evaluation, if it was. A caller after the figures alone reads them off
+        that instead of off the products.
         """
         self.ensure_one()
         if self.date_from > self.date_to:
@@ -160,6 +169,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'evaluated': False,
                 'updated': False,
                 'pulled_in': product in pulled_in,
+                'excluded_reason': False,
             }
             for product in products
         }
@@ -175,7 +185,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             lambda m: m.location_id.usage == 'production' and m.location_dest_id.usage == 'internal',
         ).grouped('product_id')
         # a manufactured good is valued off its components, so each level is corrected first
-        for batch in self._get_evaluation_batches(products, moves):
+        batches, excluded = self._get_evaluation_batches(products, moves, pulled_in)
+        for product, reason in excluded.items():
+            evaluation[product]['excluded_reason'] = reason
+        for batch in batches:
             production_values = self._get_production_move_values(moves.browse([
                 move.id for product in batch for move in production_moves.get(product, ())
             ]))
@@ -369,15 +382,21 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
         )
 
-    def _get_evaluation_batches(self, products, moves):
+    def _get_evaluation_batches(self, products, moves, pulled_in):
         """
-        Return the products to evaluate, grouped in the order their costs depend on each other.
+        Return the batches to evaluate in order, and why each left-out product was.
+
+        The batches come in the order their costs depend on each other, and what is
+        left out is returned by product with the reason to show the user, rather
+        than raised: it has to reach the preview, where the run is looked over.
 
         Without `mrp` nothing is made out of anything, so a single batch holds them
-        all; `l10n_jp_mrp` splits the manufactured goods from the components they
-        consumed, which have to be evaluated and corrected first.
+        all and nothing is left out; `l10n_jp_mrp` splits the manufactured goods
+        from the components they consumed, which have to be evaluated and corrected
+        first, and leaves out what it cannot order. ``pulled_in`` says which
+        products the user did not pick, which is what makes that leniency theirs.
         """
-        return [products]
+        return [products], {}
 
     def _get_production_move_values(self, moves):
         """
@@ -447,10 +466,15 @@ class L10nJpTotalAverageCostLine(models.TransientModel):
     evaluated_cost = fields.Monetary(
         string='Evaluated Cost',
         help="The cost the period comes to, which is the current one again when the period "
-             "holds nothing to evaluate the product on.",
+             "holds nothing to evaluate the product on, or when the product is left out.",
     )
     pulled_in = fields.Boolean(
         string='Pulled In',
         help="The evaluation added this product because the cost of a selected one is read "
              "off it; it was not selected itself, and its own cost changes too.",
+    )
+    excluded_reason = fields.Char(
+        string='Left Out',
+        help="Why the evaluation cannot cost this product. Nothing is written for it, "
+             "selected or not, and the cost it holds is the one it keeps.",
     )
