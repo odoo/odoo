@@ -1278,7 +1278,7 @@ class BaseCase(TestCase):
     @classmethod
     def _registry_test_mode_patches(cls, *, cr: Cursor, registry: Registry):
 
-        def _patched_cursor(readonly: bool = False):
+        def _patched_cursor(readonly: bool = False, *, pin_key: object = None):
             return TestCursor(
                 cr,
                 cast("Any", _registry_test_lock),
