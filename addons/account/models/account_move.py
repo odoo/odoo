@@ -7426,7 +7426,7 @@ class AccountMove(models.Model):
         term_lines = self.line_ids.filtered(lambda l: l.display_type == "payment_term")
         return term_lines._prepare_installments_data()
 
-    def _get_early_payment_discount_installment_values(self, epd_installment):
+    def _prepare_early_payment_discount_installment_values(self, epd_installment):
         discount_date = epd_installment[
             "line"
         ].discount_date or fields.Date.context_today(self)
@@ -7453,7 +7453,7 @@ class AccountMove(models.Model):
         }
 
     @_debug.perf.timed
-    def _get_next_installment_values(self, installments):
+    def _prepare_next_installment_values(self, installments):
         not_reconciled = [x for x in installments if not x["reconciled"]]
         overdue = [x for x in not_reconciled if x["type"] == "overdue"]
         epd_installment = next(
@@ -7503,7 +7503,7 @@ class AccountMove(models.Model):
                 "next_amount_to_pay": self.amount_residual,
                 "next_payment_reference": self.name,
                 "next_due_date": epd_installment["date_maturity"],
-                "additional_info": self._get_early_payment_discount_installment_values(
+                "additional_info": self._prepare_early_payment_discount_installment_values(
                     epd_installment
                 ),
             }
@@ -7517,7 +7517,7 @@ class AccountMove(models.Model):
         }
 
     @_debug.perf.timed
-    def _get_invoice_next_payment_values(self, custom_amount=None):
+    def _prepare_invoice_next_payment_values(self, custom_amount=None):
         self.check_singleton()
         term_lines = self.line_ids.filtered(
             lambda line: line.display_type == "payment_term"
@@ -7527,7 +7527,7 @@ class AccountMove(models.Model):
             return {}
         installments = term_lines._prepare_installments_data()
         not_reconciled_installments = [x for x in installments if not x["reconciled"]]
-        next_values = self._get_next_installment_values(installments)
+        next_values = self._prepare_next_installment_values(installments)
 
         if custom_amount is not None:
             is_custom_amount_same_as_next_amount = self.currency_id.is_zero(
@@ -7570,7 +7570,7 @@ class AccountMove(models.Model):
         return {
             "invoice": self,
             "currency": self.currency_id,
-            **self._get_invoice_next_payment_values(custom_amount=custom_amount),
+            **self._prepare_invoice_next_payment_values(custom_amount=custom_amount),
         }
 
     def _get_accounting_date(self, invoice_date, has_tax, lock_dates=None):

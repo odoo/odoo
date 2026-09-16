@@ -225,7 +225,7 @@ class PaymentTransaction(models.Model):
         for invoice in self.invoice_ids:
             if invoice.state != "posted":
                 continue
-            next_payment_values = invoice._get_invoice_next_payment_values()
+            next_payment_values = invoice._prepare_invoice_next_payment_values()
             if (
                 next_payment_values["installment_state"] != "epd"
                 or self.amount != next_payment_values["amount_due"]

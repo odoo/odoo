@@ -173,7 +173,7 @@ class AccountMove(models.Model):
         return action
 
     def _prepare_payment_link_vals(self):
-        next_payment_values = self._get_invoice_next_payment_values()
+        next_payment_values = self._prepare_invoice_next_payment_values()
         amount_max = next_payment_values.get("amount_due")
         additional_info = {}
         open_installments = []

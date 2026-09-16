@@ -157,7 +157,7 @@ class TestMarinAccountMoveSequenceGap(AccountTestInvoicingCommon):
     def test_next_installment_values_are_keyed(self):
         move = self._invoice()
         move.action_post()
-        values = move._get_next_installment_values(
+        values = move._prepare_next_installment_values(
             move.line_ids.filtered(
                 lambda line: line.display_type == "payment_term"
             )._prepare_installments_data()
@@ -177,7 +177,7 @@ class TestMarinAccountMoveSequenceGap(AccountTestInvoicingCommon):
     def test_invoice_next_payment_values_still_exposes_its_contract(self):
         move = self._invoice()
         move.action_post()
-        values = move._get_invoice_next_payment_values()
+        values = move._prepare_invoice_next_payment_values()
         for key in (
             "payment_state",
             "installment_state",
