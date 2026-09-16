@@ -1569,7 +1569,7 @@ class AppointmentType(models.Model):
         return False
 
     @api.model
-    def _get_clean_appointment_context(self):
+    def _prepare_clean_appointment_context(self):
         whitelist_default_fields = [
             f"default_{field}"
             for field in self._get_calendar_view_appointment_type_default_context_fields_whitelist()

@@ -50,7 +50,7 @@ class AppointmentCalendarView(http.Controller):
             request.update_context(**context)
         AppointmentType = request.env["appointment.type"]
         appointment_type = AppointmentType.with_context(
-            AppointmentType._get_clean_appointment_context()
+            AppointmentType._prepare_clean_appointment_context()
         ).create(
             {
                 "name": _("%(name)s - My availabilities", name=request.env.user.name),
@@ -189,7 +189,7 @@ class AppointmentCalendarView(http.Controller):
         if not appointment_type:
             appt_type_vals = cls._prepare_appointment_type_anytime_values(user)
             appointment_type = AppointmentType.with_context(
-                AppointmentType._get_clean_appointment_context()
+                AppointmentType._prepare_clean_appointment_context()
             ).create(appt_type_vals)
         return cls._get_staff_user_appointment_invite_info(appointment_type)
 
@@ -238,7 +238,7 @@ class AppointmentCalendarView(http.Controller):
                 request.env["appointment.invite"]
                 .sudo()
                 .with_context(
-                    request.env["appointment.type"]._get_clean_appointment_context()
+                    request.env["appointment.type"]._prepare_clean_appointment_context()
                 )
                 .create(invitation_values)
             )
