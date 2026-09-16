@@ -175,11 +175,9 @@ export class PaymentPineLabs extends PaymentInterface {
             return false;
         }
 
-        const orderId = order?.pos_reference?.replace(" ", "").replaceAll("-", "").toUpperCase();
-        const referencePrefix = this.pos.config.name.replace(/\s/g, "").slice(0, 4);
+        const referenceId = `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${paymentLine.amount}`;
         paymentLine.update({
-            payment_ref_no:
-                referencePrefix + "/" + orderId + "/" + crypto.randomUUID().replaceAll("-", ""),
+            payment_ref_no: referenceId,
         });
 
         // Assume that the Pine Labs terminal payment method is configured with INR (Indian Rupees) as the currency_id in the POS config.
