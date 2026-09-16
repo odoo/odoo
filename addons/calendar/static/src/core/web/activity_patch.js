@@ -1,4 +1,5 @@
 import { Activity } from "@mail/core/web/activity";
+import { browser } from "@web/core/browser/browser";
 import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
@@ -37,6 +38,16 @@ patch(Activity.prototype, {
                   _t("%s others", this.meeting.partner_ids.length - 2),
               ])
             : this.attendeeNames;
+    },
+    async onClickJoinMeeting() {
+        const meeting = this.meeting;
+        const channelId = meeting.videocall_channel_id?.id;
+        const channel = channelId && (await this.store["discuss.channel"].getOrFetch(channelId));
+        if (!channel?.self_member_id) {
+            browser.open(meeting.videocall_location);
+            return;
+        }
+        channel.thread.open({ focus: true });
     },
     onClickReschedule() {
         this.activity().rescheduleMeeting();

@@ -12,7 +12,7 @@ class MailActivitySchedule(models.TransientModel):
     _inherit = 'mail.activity.schedule'
 
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
-    employee_id = fields.Many2one('hr.employee', compute='_compute_employee_id', readonly=False, store=False)
+    employee_id = fields.Many2one('hr.employee', compute='_compute_employee_id', readonly=False)
     employee_id_domain = fields.Char(compute='_compute_employee_id_domain', export_string_translation=False)
     plan_department_filterable = fields.Boolean(compute='_compute_plan_department_filterable')
 
@@ -63,24 +63,22 @@ class MailActivitySchedule(models.TransientModel):
             if scheduler.employee_id or scheduler.res_model_selection != 'hr.employee':
                 continue
             domain = literal_eval(scheduler.employee_id_domain)
-            scheduler.employee_id = self.env.context.get('default_employee_id') or scheduler.env['hr.employee'].search(
-                domain, limit=1,
+            scheduler.employee_id = self.env.context.get('default_employee_id') or self._get_log_default_record(
+                'hr.employee', domain,
             )
 
-    @api.depends_context('log_contact_id')
+    @api.depends_context('log_contact_id', 'log_channel_partner_ids')
     def _compute_employee_id_domain(self):
         if not self.env.user.has_group('hr.group_hr_user'):
             # keep an always-empty domain: the user has no access to employees
             self.employee_id_domain = Domain.FALSE
             return
-        if contact_id := self.env.context.get('log_contact_id'):
-            contact = self.env['res.partner'].browse(contact_id)
-            domain = [
-                ('id', 'in', contact.employee_ids.ids),
-                ('company_id', 'in', self.env.companies.ids),
-            ]
-        else:
-            domain = []
+        if not self._is_logging_call():
+            self.employee_id_domain = []
+            return
+        domain = [('company_id', 'in', self.env.companies.ids)]
+        if contact := self._get_log_filter_contact():
+            domain.append(('id', 'in', contact.employee_ids.ids))
         self.employee_id_domain = domain
 
     def _get_partner_from_target(self):
