@@ -52,11 +52,16 @@ def _fake_pool_factory(*_a, **_k):
     return _FakePool()
 
 
+def _record(calls: list, args: tuple, answer: bool = True) -> bool:
+    calls.append(args)
+    return answer
+
+
 class TestReachabilityProof(unittest.TestCase):
     def _pool_with_probe_counter(self, **kw):
         pool = ConnectionPool(maxconn=2, **kw)
-        calls = []
-        pool._probe.probe_connectable = lambda *a, **k: calls.append(a)  # type: ignore[method-assign]
+        calls: list[tuple] = []
+        pool._probe.probe_connectable = lambda *a, **k: _record(calls, a)  # type: ignore[method-assign]
         return pool, calls
 
     def test_first_cold_start_probes(self):
@@ -259,7 +264,7 @@ if __name__ == "__main__":
 class TestFailFast(unittest.TestCase):
     def _pool(self, connected):
         pool = ConnectionPool(maxconn=2)
-        pool._probe.probe_connectable = lambda *a, **k: connected  # type: ignore[method-assign]
+        pool._probe.probe_connectable = lambda *a, **k: connected  # type: ignore[method-assign, return-value]
         return pool
 
     def test_a_transient_probe_failure_ends_a_fail_fast_borrow_at_once(self):
@@ -347,8 +352,8 @@ class TestFailFastOnASurvivingPool(unittest.TestCase):
 
     def test_without_fail_fast_a_surviving_pool_is_never_probed(self):
         pool = ConnectionPool(maxconn=2)
-        calls = []
-        pool._probe.probe_connectable = lambda *a, **k: calls.append(a) or False  # type: ignore[method-assign]
+        calls: list[tuple] = []
+        pool._probe.probe_connectable = lambda *a, **k: _record(calls, a, False)  # type: ignore[method-assign]
         key = _get_dsn_key({"dbname": "d"})
         fake = _FakePool(size=2, available=0)
         pool._pools[key] = fake

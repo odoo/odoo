@@ -1,4 +1,5 @@
 import re
+import typing
 import unittest
 from collections import deque
 from types import SimpleNamespace
@@ -6,7 +7,8 @@ from typing import Any
 
 import psycopg
 
-from odoo.db import schema
+from odoo.db import BaseCursor, schema
+from odoo.db.savepoint import Savepoint
 from odoo.libs.sql import SQL
 
 
@@ -22,15 +24,20 @@ class _Savepoint:
         return False
 
 
-class _RecordingCursor:
-    def __init__(self, rows: list[list[tuple[Any, ...]]] | None = None):
+class _RecordingCursor(BaseCursor):
+    def __init__(self, rows: list[list[Any]] | None = None):
+        super().__init__()
         self.statements: list[tuple[str, tuple[Any, ...]]] = []
-        self.rows: deque[list[tuple[Any, ...]]] = deque(rows or [])
-        self._current: list[tuple[Any, ...]] = []
-        self.rowcount = 0
+        self.rows: deque[list[Any]] = deque(rows or [])
+        self._current: list[Any] = []
+        self._rowcount = 0
         self.raise_on: dict[int, Exception] = {}
 
-    def execute(self, query, params=None, log_exceptions=True):
+    @property
+    def rowcount(self) -> int:
+        return self._rowcount
+
+    def execute(self, query, params=None, log_exceptions=True, prepare=None):
         if isinstance(query, SQL):
             code, params = query.code, query.params
         else:
@@ -40,7 +47,7 @@ class _RecordingCursor:
         if n in self.raise_on:
             raise self.raise_on[n]
         self._current = self.rows.popleft() if self.rows else []
-        self.rowcount = len(self._current)
+        self._rowcount = len(self._current)
 
     def fetchone(self):
         return self._current[0] if self._current else None
@@ -48,11 +55,14 @@ class _RecordingCursor:
     def fetchall(self):
         return list(self._current)
 
+    def dictfetchone(self):
+        return dict(self._current[0]) if self._current else None
+
     def dictfetchall(self):
         return [dict(row) for row in self._current]
 
-    def savepoint(self, flush=True):
-        return _Savepoint()
+    def savepoint(self, flush: bool = True) -> Savepoint:
+        return typing.cast("Savepoint", _Savepoint())
 
     @property
     def codes(self) -> list[str]:

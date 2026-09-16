@@ -525,13 +525,27 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     # flush opens such a block), the transaction has state only the caller
     # can rebuild, and the loss propagates as it did.
     def _replace_lost_connection(self, exc: Exception) -> bool:
-        if (
-            self._transaction_touched
-            or self._savepoint_depth
-            or self._pipeline is not None
-            or not isinstance(exc, psycopg.OperationalError)
+        refused = (
+            "touched"
+            if self._transaction_touched
+            else "savepoint"
+            if self._savepoint_depth
+            else "pipeline"
+            if self._pipeline is not None
+            else "not_a_loss"
+            if not isinstance(exc, psycopg.OperationalError)
             or not (self._cnx.closed or not has_reached_server(exc))
-        ):
+            else None
+        )
+        if refused is not None:
+            if _debug.logic.enabled and refused != "not_a_loss":
+                _debug.logic(
+                    "cursor.replay_refused",
+                    db=self.dbname,
+                    reason=refused,
+                    error=type(exc).__name__,
+                    sqlstate=getattr(exc, "sqlstate", None),
+                )
             return False
         pool = self.__pool
         old, old_obj = self._cnx, self._obj
@@ -589,7 +603,9 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
     def _has_written(self) -> bool:
         self.execute("SELECT txid_current_if_assigned() IS NOT NULL")
         row = self.fetchone()
-        return bool(row and row[0])
+        written = bool(row and row[0])
+        _debug.logic("cursor.commit_write_asked", db=self.dbname, written=written)
+        return written
 
     def cancel(self) -> None:
         _debug.lifecycle("cursor.cancel", db=self.dbname, backend_pid=self._backend_pid)

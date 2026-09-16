@@ -828,11 +828,17 @@ class ConnectionPool:
     def cancel_queries_of(self, thread_name: str) -> int:
         cancelled = 0
         for conn in self._checkouts.get_connections_of(thread_name):
+            pid = getattr(getattr(conn, "info", None), "backend_pid", None)  # debuglog
             try:
                 conn.cancel_safe(timeout=self._CANCEL_TIMEOUT)
             except Exception as exc:
-                _debug.logic("pool.cancel_failed", error=type(exc).__name__)
+                _debug.logic(
+                    "pool.cancel_failed", backend_pid=pid, error=type(exc).__name__
+                )
                 continue
+            _debug.lifecycle(
+                "pool.query_cancelled", backend_pid=pid, thread=thread_name
+            )
             cancelled += 1
         _debug.lifecycle("pool.queries_cancelled", thread=thread_name, count=cancelled)
         return cancelled

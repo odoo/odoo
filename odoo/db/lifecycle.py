@@ -81,8 +81,17 @@ def _mark_idle(conn: psycopg.Connection) -> None:
 # per cursor cycle when re-issued unconditionally, the comparison 50 ns.
 def _set_transaction_flags(conn: psycopg.Connection, readonly: bool) -> None:
     if conn.isolation_level is not _ISOLATION_LEVEL:
+        _debug.logic(
+            "connection.flag_set",
+            flag="isolation_level",
+            was=conn.isolation_level,
+            readonly=readonly,
+        )
         conn.isolation_level = _ISOLATION_LEVEL
     if conn.read_only is not readonly:
+        _debug.logic(
+            "connection.flag_set", flag="read_only", was=conn.read_only, now=readonly
+        )
         conn.read_only = readonly
 
 
@@ -117,7 +126,16 @@ def _run_session_reset(conn: psycopg.Connection, sql: str) -> None:
 # toggle it wraps around execute(): 8 us against 12.7. A terminated backend
 # answers FATAL_ERROR once and raises OperationalError after.
 def _probe_liveness(conn: psycopg.Connection) -> None:
-    _run_simple_query(conn, b"", ExecStatus.EMPTY_QUERY)
+    try:
+        _run_simple_query(conn, b"", ExecStatus.EMPTY_QUERY)
+    except Exception as exc:
+        # psycopg_pool discards the connection and says nothing at our level.
+        _debug.lifecycle(
+            "connection.liveness_failed",
+            backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
+            error=type(exc).__name__,
+        )
+        raise
 
 
 def _reset_connection(

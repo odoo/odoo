@@ -1,7 +1,9 @@
 import logging
 import subprocess
 import threading
+import typing
 import unittest
+from typing import Any
 
 from odoo.db import metrics
 from odoo.db.cursor import BaseCursor
@@ -609,7 +611,11 @@ class TestConnectionRecord(unittest.TestCase):
     def test_dsn_strips_the_password_and_expands_a_uri(self):
         from odoo.db.cursor import Connection
 
-        conn = Connection(self._Pool(), "dbz", {"dsn": "postgresql://u:s3cret@h/dbz"})
+        conn = Connection(
+            typing.cast("Any", self._Pool()),
+            "dbz",
+            {"dsn": "postgresql://u:s3cret@h/dbz"},
+        )
         self.assertEqual(conn.dbname, "dbz")
         self.assertEqual(conn.dsn, {"user": "u", "host": "h", "dbname": "dbz"})
 
@@ -619,7 +625,7 @@ class TestConnectionRecord(unittest.TestCase):
 
         pool = self._Pool()
         info = {"dbname": "x", "host": "h", "password": "hunter2"}
-        conn = Connection(pool, "x", info)
+        conn = Connection(typing.cast("Any", pool), "x", info)
         for _ in range(2):
             with self.assertRaisesRegex(RuntimeError, "stop before"):
                 conn.cursor()

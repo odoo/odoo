@@ -37,6 +37,10 @@ class _Conn:
         return cr
 
 
+def _as_conn(conn: _Conn | None) -> typing.Any:
+    return conn
+
+
 class _Cursor:
     def __init__(self, conn):
         self.conn = conn
@@ -69,7 +73,7 @@ def _router(*, replica_fails=False, with_replica=True, lag=0.0, max_lag=0.0):
 class TestTheReplicaBorrowNeverWaitsOutTheBudget(unittest.TestCase):
     def test_the_replica_is_asked_with_a_short_deadline_and_fail_fast(self):
         primary, replica = _Conn("primary"), _Conn("replica")
-        router = ReplicaRouter(primary, replica)
+        router = ReplicaRouter(_as_conn(primary), _as_conn(replica))
         _cr, mode = router.cursor(readonly=True)
         self.assertEqual(mode, "ro")
         self.assertEqual(
@@ -84,7 +88,7 @@ class TestTheReplicaBorrowNeverWaitsOutTheBudget(unittest.TestCase):
 
     def test_the_primary_keeps_the_full_budget(self):
         primary, replica = _Conn("primary"), _Conn("replica")
-        router = ReplicaRouter(primary, replica)
+        router = ReplicaRouter(_as_conn(primary), _as_conn(replica))
         router.cursor(readonly=False)
         self.assertEqual(primary.borrow_options, {})
 
@@ -316,15 +320,22 @@ class TestWritePins(unittest.TestCase):
 class TestReadYourWrites(unittest.TestCase):
     def _router(self, window=2.0):
         primary, replica = _Conn("primary"), _Conn("replica")
-        return ReplicaRouter(primary, replica, write_pin=window), primary, replica
+        return (
+            ReplicaRouter(_as_conn(primary), _as_conn(replica), write_pin=window),
+            primary,
+            replica,
+        )
 
     def test_a_rw_cursor_with_a_key_pins_it_when_the_transaction_wrote(self):
         router, _primary, replica = self._router()
-        cr, mode = router.cursor(readonly=False, pin_key="sid")
+        cursor, mode = router.cursor(readonly=False, pin_key="sid")
+        cr = typing.cast("_Cursor", cursor)
         self.assertEqual(mode, "rw")
-        self.assertIsNotNone(cr.write_observer, "the cursor asks at commit")
+        observer = cr.write_observer
+        self.assertIsNotNone(observer, "the cursor asks at commit")
+        assert observer is not None
         self.assertFalse(router.pins.is_pinned("sid"), "nothing written yet")
-        cr.write_observer()
+        observer()
         self.assertTrue(router.pins.is_pinned("sid"))
         _cr, mode = router.cursor(readonly=True, pin_key="sid")
         self.assertEqual(
@@ -336,16 +347,16 @@ class TestReadYourWrites(unittest.TestCase):
 
     def test_no_key_means_no_observer_and_no_pin(self):
         router, _primary, _replica = self._router()
-        cr, _mode = router.cursor(readonly=False)
+        cr = typing.cast("_Cursor", router.cursor(readonly=False)[0])
         self.assertIsNone(cr.write_observer)
 
     def test_a_zero_window_registers_no_observer(self):
         router, _primary, _replica = self._router(window=0.0)
-        cr, _mode = router.cursor(readonly=False, pin_key="sid")
+        cr = typing.cast("_Cursor", router.cursor(readonly=False, pin_key="sid")[0])
         self.assertIsNone(cr.write_observer, "no pin window, no round trip at commit")
 
     def test_without_a_replica_the_key_is_irrelevant(self):
-        router = ReplicaRouter(_Conn("primary"), None, write_pin=2.0)
-        cr, mode = router.cursor(readonly=False, pin_key="sid")
+        router = ReplicaRouter(_as_conn(_Conn("primary")), None, write_pin=2.0)
+        cursor, mode = router.cursor(readonly=False, pin_key="sid")
         self.assertEqual(mode, "rw")
-        self.assertIsNone(cr.write_observer)
+        self.assertIsNone(typing.cast("_Cursor", cursor).write_observer)

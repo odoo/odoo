@@ -53,5 +53,5 @@ class TestExistenceAdmitsEveryTableKind(unittest.TestCase):
                 return []
 
         cr = _Cursor()
-        get_tables_existing(cr, ["t"])
+        get_tables_existing(cr, ["t"])  # type: ignore[arg-type]
         self.assertEqual(cr.params, (["t"], list(_EXISTING_RELKINDS)))

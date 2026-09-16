@@ -140,7 +140,10 @@ class ReplicaRouter:
         cr = self._resolve_replica_cursor(self.readonly)
         if cr is not None:
             _debug.logic(
-                "replica.route", db=getattr(self.primary, "dbname", None), mode="ro"
+                "replica.route",
+                db=getattr(self.primary, "dbname", None),
+                mode="ro",
+                pin_key=pin_key is not None,
             )
             return cr, "ro"
         _debug.logic(

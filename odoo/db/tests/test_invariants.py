@@ -39,6 +39,7 @@ class _FakeConn:
         self.read_only = None
         self.reset_sql: list = []
         self.pgconn = _FakePgconn(self)
+        self.rollback: typing.Any = mock.Mock()
 
     def close(self):
         self.closed = True
@@ -772,9 +773,9 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
             def cursor(self):
                 return self.obj
 
-        class _PoolThatFailsLate(self._FakePool):
+        class _PoolThatFailsLate(TestCursorConstructionNeverLeaksAPermit._FakePool):
             @property
-            def readonly(self):
+            def readonly(self):  # type: ignore[override]  # the failure injection point
                 raise RuntimeError("setup failed after a statement")
 
         conn = _AbortedAfterAStatement()
@@ -804,10 +805,8 @@ class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
 
 
 class TestADroppedCursorAlwaysGivesItsConnectionBack(unittest.TestCase):
-    _FakePool = TestCursorConstructionNeverLeaksAPermit._FakePool
-
     def _dropped(self, conn):
-        fake_pool = self._FakePool(conn)
+        fake_pool = TestCursorConstructionNeverLeaksAPermit._FakePool(conn)
         cr = cursor.Cursor(
             typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
         )
@@ -837,7 +836,7 @@ class TestADroppedCursorAlwaysGivesItsConnectionBack(unittest.TestCase):
 
     def test_a_closed_cursor_is_left_alone(self):
         conn = _FakeConn()
-        fake_pool = self._FakePool(conn)
+        fake_pool = TestCursorConstructionNeverLeaksAPermit._FakePool(conn)
         cr = cursor.Cursor(
             typing.cast("pool.ConnectionPool", fake_pool), "db", {"dbname": "db"}
         )
