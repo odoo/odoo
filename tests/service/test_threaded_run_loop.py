@@ -1,5 +1,6 @@
 import contextlib
 import socket
+import threading
 import time
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
@@ -8,7 +9,7 @@ import psycopg
 import pytest
 
 from odoo.db import PoolError
-from odoo.service import _cron, _threaded
+from odoo.service import _cron, _limits, _threaded
 from odoo.service import settings as server_settings
 
 from .conftest import threaded_server
@@ -381,11 +382,13 @@ class TestHasOtherHttpRequests:
 
 class TestAnOverLimitThreadIsNamedByItsWork:
     def _thread(self, kind, **attrs):
-        t = MagicMock()
-        t.type = kind
+        # A real thread's attribute surface: an unset attribute is absent,
+        # not a truthy mock, and the object is hashable for the ledgers.
+        thread = threading.Thread(name=f"fake.{kind}")
+        thread.type = kind
         for name, value in attrs.items():
-            setattr(t, name, value)
-        return t
+            setattr(thread, name, value)
+        return thread
 
     def test_an_http_thread_by_its_url_and_rpc_target(self):
         t = self._thread(
@@ -393,27 +396,36 @@ class TestAnOverLimitThreadIsNamedByItsWork:
             url="http://h/web/dataset/call_kw",
             rpc_model_method="res.partner.read",
         )
-        assert _threaded._describe_thread_work(t) == (
+        assert _limits.describe_thread_work(t) == (
             "serving http://h/web/dataset/call_kw (res.partner.read)"
+        )
+
+    def test_the_request_id_rides_along_for_the_join(self):
+        t = self._thread("http", url="http://h/web/login", request_id="req-42")
+        assert _limits.describe_thread_work(t) == (
+            "serving http://h/web/login, request req-42"
         )
 
     def test_an_http_thread_before_the_http_layer_stamped_it(self):
         t = self._thread("http", url="", rpc_model_method="")
-        assert _threaded._describe_thread_work(t) == ""
+        assert _limits.describe_thread_work(t) == ""
 
     def test_a_cron_thread_by_the_database_it_sweeps(self):
-        assert _threaded._describe_thread_work(self._thread("cron", dbname="prod")) == (
+        assert _limits.describe_thread_work(self._thread("cron", dbname="prod")) == (
             "sweeping prod"
         )
-        assert _threaded._describe_thread_work(self._thread("job", dbname=None)) == ""
+        assert _limits.describe_thread_work(self._thread("job", dbname=None)) == ""
 
     def test_the_warning_carries_it(self, server, caplog):
         import logging
         import time
 
-        thread = self._thread("cron", dbname="prod")
-        thread.start_time = time.monotonic() - 500
-        thread.is_alive.return_value = True
+        thread = self._thread(
+            "cron",
+            dbname="prod",
+            start_time=time.monotonic() - 500,
+            is_alive=lambda: True,
+        )
         server.logger = logging.getLogger("odoo.service.server.test")
         with (
             server_settings.override(limit_time_real=120, limit_time_real_cron=60),

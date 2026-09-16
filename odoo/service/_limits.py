@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import threading
 from typing import Any
 
 from odoo.libs.debug_log import DebugLog
@@ -83,11 +84,32 @@ def empty_pipe(fd: int) -> None:
         pass
 
 
+def describe_thread_work(thread: threading.Thread) -> str:
+    # What the operator will want beside the thread name or pid: the request
+    # it is serving (the http layer stamps `url` and `request_id`, the RPC
+    # dispatcher `rpc_model_method`) or the database a cron/job pass is
+    # sweeping.  The limit verdicts are logged from a monitor thread, so the
+    # request id has to travel in the message to join the request's lines.
+    kind = getattr(thread, "type", None)
+    if kind == "http":
+        url = getattr(thread, "url", "")
+        if not url:
+            return ""
+        method = getattr(thread, "rpc_model_method", "")
+        text = f"serving {url} ({method})" if method else f"serving {url}"
+        if request_id := getattr(thread, "request_id", ""):
+            text += f", request {request_id}"
+        return text
+    db_name = getattr(thread, "dbname", None)
+    return f"sweeping {db_name}" if db_name else ""
+
+
 __all__ = (
     "BACKOFF_BASE_S",
     "BACKOFF_CEILING_S",
     "GRACEFUL_STOP_TIMEOUT_S",
     "INHERIT_FROM_CRON",
+    "describe_thread_work",
     "empty_pipe",
     "get_cron_real_time_budget",
     "get_graceful_stop_timeout",

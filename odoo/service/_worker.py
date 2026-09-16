@@ -44,7 +44,7 @@ from ._cron import (
     drain_swept_database,
 )
 from ._env import get_env_int
-from ._limits import empty_pipe, get_memory_over_soft_limit
+from ._limits import describe_thread_work, empty_pipe, get_memory_over_soft_limit
 from ._transport import (
     Outcome,
     ServerIdentity,
@@ -274,10 +274,12 @@ class Worker:
             if self._runloop_exc is not None:
                 raise SystemExit(1)
             if stuck:
+                doing = describe_thread_work(t)
                 self.logger.warning(
-                    "Work did not return %.0fs after its queries were cancelled; "
+                    "Work did not return %.0fs after its queries were cancelled%s; "
                     "recycling worker. request_count: %s",
                     self._CANCEL_GRACE_S,
+                    f" ({doing})" if doing else "",
                     self.request_count,
                 )
             else:
@@ -362,11 +364,13 @@ class Worker:
         except Exception as exc:
             _debug.logic("worker.cancel_failed", pid=self.pid, error=type(exc).__name__)
             cancelled = 0
+        doing = describe_thread_work(work)
         self.logger.warning(
-            "Work over its %ss budget (%.1fs): cancelled %d running quer%s; the "
-            "master kills this worker if it does not return",
+            "Work over its %ss budget (%.1fs)%s: cancelled %d running quer%s; "
+            "recycling this worker if it does not return",
             budget,
             elapsed,
+            f" while {doing}" if doing else "",
             cancelled,
             "y" if cancelled == 1 else "ies",
         )
@@ -376,6 +380,7 @@ class Worker:
             pid=self.pid,
             elapsed_s=elapsed,
             limit_s=budget,
+            doing=doing,
             cancelled=cancelled,
         )
 

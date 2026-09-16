@@ -438,7 +438,9 @@ class TestTheWorkerCancelsItsOwnOverrun:
             "the cancel and then the grace feed the master's watchdog"
         )
         assert worker.alive
-        message, budget, elapsed, count, plural = worker.logger.warning.call_args.args
+        message, budget, elapsed, _doing, count, plural = (
+            worker.logger.warning.call_args.args
+        )
         assert "cancelled %d running quer%s" in message
         assert (budget, count, plural) == (2, 2, "ies") and elapsed > 9
 
