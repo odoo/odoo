@@ -48,10 +48,13 @@ function updateCartNavBar(data) {
 function updateCartSummary(data) {
     if (data['website_sale.shorter_cart_summary']) {
         const shorterCartSummaryEl = document.querySelector('.o_wsale_shorter_cart_summary');
-        const newShorterCartSummaryEl = createElementWithContent(
+        const newShorterCartSummaryWrapperEl = createElementWithContent(
             'div', data['website_sale.shorter_cart_summary'],
         );
-        shorterCartSummaryEl.replaceWith(...newShorterCartSummaryEl.childNodes);
+        const newShorterCartSummaryEl = newShorterCartSummaryWrapperEl.querySelector('.o_wsale_shorter_cart_summary');
+        // Update the existing cart summary
+        shorterCartSummaryEl.className = newShorterCartSummaryEl.className;
+        shorterCartSummaryEl.replaceChildren(...newShorterCartSummaryEl.childNodes);
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(
