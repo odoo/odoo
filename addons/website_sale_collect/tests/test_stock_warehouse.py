@@ -14,7 +14,7 @@ class TestStockWarehouse(ClickAndCollectCommon):
                 {"partner_latitude": 1.0, "partner_longitude": 1.0}
             ),
         ):
-            self.warehouse._prepare_pickup_location_data()
+            self.warehouse._update_missing_coordinates()
         latitude = self.warehouse.partner_id.partner_latitude
         longitude = self.warehouse.partner_id.partner_longitude
         self.assertEqual((latitude, longitude), (1.0, 1.0))
@@ -26,7 +26,7 @@ class TestStockWarehouse(ClickAndCollectCommon):
                 {"partner_latitude": 0.0, "partner_longitude": 0.0}
             ),
         ):
-            self.warehouse._prepare_pickup_location_data()
+            self.warehouse._update_missing_coordinates()
         latitude = self.warehouse.partner_id.partner_latitude
         longitude = self.warehouse.partner_id.partner_longitude
         self.assertEqual((latitude, longitude), (1000.0, 1000.0))
@@ -44,5 +44,5 @@ class TestStockWarehouse(ClickAndCollectCommon):
             with patch(
                 "odoo.addons.geocoding.models.res_partner.ResPartner.geo_localize"
             ) as geo_localize_mock:
-                self.warehouse._prepare_pickup_location_data()
+                self.warehouse._update_missing_coordinates()
                 self.assertFalse(geo_localize_mock.called)

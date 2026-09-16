@@ -19,8 +19,8 @@ class StockPicking(models.Model):
             return subcontract_move.sale_line_id.order_id.warehouse_id
         return super()._get_warehouse(subcontract_move)
 
-    def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
-        res = super()._prepare_subcontract_mo_vals(subcontract_move, bom)
+    def _prepare_subcontract_mo_vals(self, subcontract_move, bom, references):
+        res = super()._prepare_subcontract_mo_vals(subcontract_move, bom, references)
         if not res.get("picking_type_id") and (
             subcontract_move.location_dest_id.usage == "customer"
             or subcontract_move.location_dest_id.is_subcontract()

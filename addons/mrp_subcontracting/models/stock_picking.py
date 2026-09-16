@@ -135,21 +135,23 @@ class StockPicking(models.Model):
             or subcontract_move.move_dest_ids.picking_type_id.warehouse_id
         )
 
-    def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
+    def _get_or_create_subcontract_references(self, subcontract_move):
         subcontract_move.check_singleton()
-        if not self.reference_ids:
-            references = (
-                self.env["stock.reference"]
-                .sudo()
-                .create(
-                    {
-                        "name": self.name,
-                        "move_ids": [Command.link(subcontract_move.id)],
-                    }
-                )
+        if self.reference_ids:
+            return self.reference_ids
+        return (
+            self.env["stock.reference"]
+            .sudo()
+            .create(
+                {
+                    "name": self.name,
+                    "move_ids": [Command.link(subcontract_move.id)],
+                }
             )
-        else:
-            references = self.reference_ids
+        )
+
+    def _prepare_subcontract_mo_vals(self, subcontract_move, bom, references):
+        subcontract_move.check_singleton()
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
         subcontracting_location = (
@@ -209,7 +211,8 @@ class StockPicking(models.Model):
             if move.product_uom_id.compare(quantity, 0) <= 0:
                 continue
 
-            mo_subcontract = self._prepare_subcontract_mo_vals(move, bom)
+            references = self._get_or_create_subcontract_references(move)
+            mo_subcontract = self._prepare_subcontract_mo_vals(move, bom, references)
             group_by_company[move.company_id.id][0].append(mo_subcontract)
             group_by_company[move.company_id.id][1].append(move)
 

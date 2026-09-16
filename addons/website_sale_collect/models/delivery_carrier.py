@@ -99,6 +99,7 @@ class DeliveryCarrier(models.Model):
 
         pickup_locations = []
         order_sudo = request.cart
+        self.warehouse_ids._update_missing_coordinates()
         for wh in self.warehouse_ids:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:

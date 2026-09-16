@@ -98,9 +98,9 @@ class SaleOrder(models.Model):
                 and dm.id != self.carrier_id.id
                 and len(dm.warehouse_ids) == 1
             ):
-                pickup_location_data = dm.warehouse_ids[
-                    0
-                ]._prepare_pickup_location_data()
+                warehouse = dm.warehouse_ids[0]
+                warehouse._update_missing_coordinates()
+                pickup_location_data = warehouse._prepare_pickup_location_data()
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {
                         "pickup_location_data": pickup_location_data,

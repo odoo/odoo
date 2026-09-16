@@ -794,13 +794,12 @@ class AccountMove(models.Model):
                 "lines": lines,
             }
 
-        def prepare_ksef_bill_vals(data):
+        def get_or_create_vendor(data):
             nip = data["vendor_nip"]
             vat = f"PL{nip}"
-            partner_vat_domain_vals = (nip, vat)
             partner = self.env["res.partner"].search(
                 [
-                    ("vat", "in", partner_vat_domain_vals),
+                    ("vat", "in", (nip, vat)),
                     *self.env["res.partner"]._check_company_domain(self.env.company),
                     "|",
                     ("country_id.code", "=", data["vendor_country"]),
@@ -808,17 +807,17 @@ class AccountMove(models.Model):
                 ],
                 limit=1,
             )
-            if not partner:
-                partner = self.env["res.partner"].create(
-                    {
-                        "name": data["vendor_name"],
-                        "vat": vat,
-                        "country_id": self.env["res.country"]
-                        .search([("code", "=", data["vendor_country"])])
-                        .id,
-                    },
-                )
+            return partner or self.env["res.partner"].create(
+                {
+                    "name": data["vendor_name"],
+                    "vat": vat,
+                    "country_id": self.env["res.country"]
+                    .search([("code", "=", data["vendor_country"])])
+                    .id,
+                },
+            )
 
+        def get_active_currency(data):
             currency = (
                 self.env["res.currency"]
                 .with_context(active_test=False)
@@ -836,7 +835,9 @@ class AccountMove(models.Model):
                 )
             if not currency.active:
                 currency.sudo().active = True
+            return currency
 
+        def prepare_ksef_bill_vals(data, partner, currency):
             fiscal_position = self.env["account.fiscal.position"]._get_fiscal_position(
                 partner
             )
@@ -877,7 +878,10 @@ class AccountMove(models.Model):
 
             return move_vals
 
-        return prepare_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
+        data = parse_fa3_bill_xml(xml_content)
+        partner = get_or_create_vendor(data)
+        currency = get_active_currency(data)
+        return prepare_ksef_bill_vals(data, partner, currency)
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):

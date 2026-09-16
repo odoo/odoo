@@ -17,9 +17,9 @@ class WebsiteSaleCollect(WebsiteSale):
             ):
                 selected_location_data = order_sudo.pickup_location_data
             elif single_location:
-                selected_location_data = in_store_dm_sudo.warehouse_ids[
-                    0
-                ]._prepare_pickup_location_data()
+                warehouse = in_store_dm_sudo.warehouse_ids[0]
+                warehouse._update_missing_coordinates()
+                selected_location_data = warehouse._prepare_pickup_location_data()
             res.update(
                 {
                     "selected_location_data": selected_location_data,
