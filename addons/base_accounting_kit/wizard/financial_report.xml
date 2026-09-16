@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--    Financial report common form view    -->
+        <record id="financial_report_wiz_modified" model="ir.ui.view">
+            <field name="name">financial.report.extended.wiz</field>
+            <field name="model">financial.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group string="Dates">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="target_move" widget="radio"/>
+                            <field name="view_format" widget="radio" invisible="1"/>
+                            <field name="enable_filter" invisible="1"/>
+                            <field name="debit_credit"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Print" name="view_report_pdf" type="object"
+                                class="btn-primary"/>
+                        <button string="Discard" class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!--    Action for profit and loss    -->
+        <record id="action_profit_and_loss_report" model="ir.actions.act_window">
+            <field name="name">Profit and Loss</field>
+            <field name="res_model">financial.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="financial_report_wiz_modified"/>
+            <field name="target">new</field>
+            <field name="context"
+                   eval="{'default_account_report_id':ref('base_accounting_kit.account_financial_report_profitandloss0')}"/>
+        </record>
+
+        <!--    Action for balance sheet    -->
+        <record id="action_balance_sheet_report" model="ir.actions.act_window">
+            <field name="name">Balance Sheet</field>
+            <field name="res_model">financial.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="financial_report_wiz_modified"/>
+            <field name="target">new</field>
+            <field name="context"
+                   eval="{'default_account_report_id':ref('base_accounting_kit.account_financial_report_balancesheet0')}"/>
+        </record>
+
+         <menuitem id="account_financial_reports_profit_loss" sequence="1"
+                  name="Profit and Loss" parent="base_accounting_kit.account_reports_generic_statements"
+                  action="action_profit_and_loss_report"/>
+
+        <menuitem id="_account_financial_reports_balance_sheet" sequence="2"
+                  name="Balance Sheet" parent="base_accounting_kit.account_reports_generic_statements"
+                  action="action_balance_sheet_report"/>
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<odoo>
+    <record model="ir.ui.view" id="view_commission_mixin_agent_only">
+        <field name="model">commission.mixin</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="commission_free" invisible="1" />
+                <field
+                    name="agent_ids"
+                    attrs="{'readonly': [('commission_free', '=', True)]}"
+                />
+                <footer class="oe_edit_only">
+                    <button string="Save" special="save" class="oe_highlight" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

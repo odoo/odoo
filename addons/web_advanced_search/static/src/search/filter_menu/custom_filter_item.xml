@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017-2018 Jairo Llopis <jairo.llopis@tecnativa.com>
+    Copyright 2022 Camptocamp SA (https://www.camptocamp.com).
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<templates>
+    <t t-inherit="web.CustomFilterItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//select[@t-elif]" position="after">
+            <t
+                t-elif="['many2one', 'many2many', 'one2many'].includes(fieldType) and ['=', '!='].includes(selectedOperator.symbol)"
+            >
+                <RecordPicker
+                    model="fields[condition.field].relation"
+                    string="fields[condition.field].string"
+                    context="fields[condition.field].context"
+                    t-on-change="(ev) => this.onRelationalChanged(condition,ev)"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

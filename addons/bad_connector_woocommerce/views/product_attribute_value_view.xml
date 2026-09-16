@@ -1,0 +1,127 @@
+<odoo>
+    <data>
+        <!-- Form view for product.attribute.value -->
+        <record id="view_product_attribute_woo_value_form" model="ir.ui.view">
+            <field name="name">product.attribute.woo.commerce.value.form</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="attribute_id" />
+                                <field name="sequence" />
+                                <field name="display_type" />
+                            </group>
+                            <group>
+                                <field name="html_color" />
+                                <field name="color" />
+                                <field name="is_used_on_products" />
+                                <field name="is_custom" />
+                            </group>
+                            <notebook>
+                                <page
+                                    string="General Information"
+                                    name="general_information"
+                                >
+                                    <field name="pav_attribute_line_ids" />
+                                    <group string="Internal Notes">
+                                        <field
+                                            colspan="2"
+                                            name="description"
+                                            nolabel="1"
+                                            placeholder="This note is only for internal purposes."
+                                        />
+                                    </group>
+                                </page>
+                                <page
+                                    string="WooCommerce Connector"
+                                    name="woo_connector"
+                                    attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                                    groups="connector.group_connector_manager"
+                                >
+                                    <field name="woo_bind_ids" nolabel="1" readonly="1">
+                                        <tree
+                                            string="WooCommerce Product Attribute Value"
+                                            delete="false"
+                                            edit="false"
+                                            create="false"
+                                        >
+                                            <field
+                                                name="backend_id"
+                                                widget="selection"
+                                            />
+                                            <field name="external_id" />
+                                        </tree>
+                                        <form
+                                            string="WooCommerce Product Attribute Value"
+                                            delete="false"
+                                            edit="false"
+                                            create="false"
+                                        >
+                                            <group>
+                                                <group>
+                                                    <field
+                                                        name="backend_id"
+                                                        widget="selection"
+                                                    />
+                                                    <field name="external_id" />
+                                                    <field name="woo_data" />
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Added Tree view for Product Attribute value -->
+        <record id="view_product_attribute_woo_value_tree" model="ir.ui.view">
+            <field name="name">product.attribute.woo.value.tree</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <!-- Added Search view for Product Attribute value-->
+        <record id="product_attribute_woo_value_view_search" model="ir.ui.view">
+            <field name="name">product.attribute.woo.value.search</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <search string="Attribute Values">
+                    <group expand="1" string="Group By">
+                        <filter
+                            string="Attribute"
+                            name="group_by_attribute"
+                            context="{'group_by': 'attribute_id'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Action to open the form view -->
+        <record
+            id="action_product_attribute_woo_value_form"
+            model="ir.actions.act_window"
+        >
+            <field name="name">Attribute Value</field>
+            <field name="res_model">product.attribute.value</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_attribute_woo_value_tree" />
+            <field name="target">current</field>
+        </record>
+        <!-- Menuitem for Product Attribute Value at sale level -->
+        <menuitem
+            id="menu_product_attribute_woo_value_form"
+            action="action_product_attribute_woo_value_form"
+            parent="sale.prod_config_main"
+            sequence="10"
+        />
+    </data>
+</odoo>

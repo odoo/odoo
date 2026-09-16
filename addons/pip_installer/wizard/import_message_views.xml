@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--View for wizard after executed the commands-->
+    <record id="import_message_view_form" model="ir.ui.view">
+        <field name="name">import.message.view.form</field>
+        <field name="model">import.message</field>
+        <field name="arch" type="xml">
+            <form string="Message">
+                <sheet>
+                    <field name="message"/>
+                </sheet>
+                <footer>
+                    <button string="OK" class="btn-danger"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    to showing the amount in words in invoice report-->
+    <template id="invoice_report_view_amount_in_words"
+              inherit_id="account.report_invoice_document">
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <div style="font-size:15px; padding15px;border:1px solid black;">
+                <span>
+                    <strong>Amount in Words (Total) :</strong>
+                </span>
+                <span t-field="o.number_to_words"/>
+            </div>
+        </xpath>
+    </template>
+    <!--to shows the amount in words on purchase report-->
+    <template id="purchase_report_view_amount_in_words"
+              inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@class='row justify-content-end']" position="after">
+            <div style="font-size:15px; padding-top:15px; padding-bottom:15px;">
+                <span>
+                    <strong>Amount in Words (Total) :</strong>
+                </span>
+                <span t-field="o.number_to_words"/>
+            </div>
+        </xpath>
+    </template>
+    <!--to shows the amount in words to the sales report-->
+    <template id="sale_report_view_amount_in_words"
+              inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@class='clearfix']" position="after">
+            <div style="font-size:15px; padding-top:15px; padding-bottom:15px;">
+                <span>
+                    <strong>Amount in Words (Total) :</strong>
+                </span>
+                <span t-field="doc.number_to_words"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

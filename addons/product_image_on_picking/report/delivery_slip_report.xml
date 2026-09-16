@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id = "stock_report_delivery" inherit_id = "stock.report_delivery_document">
+		<xpath expr="//table[1]/thead/tr[1]/th[1]" position="after">   
+			<th>Image</th>
+		</xpath>
+		<xpath expr="//table[1]/tbody/tr[1]/td[1]" position="after">
+		<td> 
+			<img t-if="move.image_128" t-att-src="image_data_uri(move.image_128)" style="width: 70%"/>
+		</td>
+		</xpath>
+
+		<xpath expr="//table[2]/thead/tr[1]/th[1]" position="after">   
+			<th>Image</th>
+		</xpath>
+
+		<xpath expr="//table[1]/thead/tr[1]/th[1]" position="before">   
+			<th>Sr. No</th>
+		</xpath>
+		<xpath expr="//table[1]/tbody/tr[1]/td[1]" position="before">
+		<td style ="text-align:center;"> 
+			<span t-field="move.sr_number"/>		
+		</td>
+		</xpath>
+
+		<xpath expr="//table[2]/thead/tr[1]/th[1]" position="before">   
+			<th>Sr. No</th>
+		</xpath>
+
+	</template>
+
+	<template id = "stock_report_inherit" inherit_id = "stock.report_picking">
+		<xpath expr="//table[1]/thead/tr[1]/th[1]" position="after">   
+			<th>Image</th>
+		</xpath>
+		<xpath expr="//table[1]/tbody/t/tr[1]/td[1]" position="after"> 
+			<td><img t-if="ml.product_id.image_128" 
+				t-att-src="image_data_uri(ml.product_id.image_128)" style="width: 70%"/></td>
+		</xpath>
+
+		<xpath expr="//table[1]/thead/tr[1]/th[1]" position="before">   
+			<th>Sr. No</th>
+		</xpath>
+		<xpath expr="//table[1]/tbody/t/tr[1]/td[1]" position="before"> 
+			<t>
+            <td style ="text-align:center;">
+                <span t-field="ml.move_id.sr_number"/>
+	        </td>
+        	</t>
+		</xpath>
+	</template>
+
+	<template id = "stock_moveline_report_delivery" inherit_id = "stock.stock_report_delivery_has_serial_move_line">
+		<xpath expr="//td[1]" position="after">
+        <t>
+            <td>						
+            	<img t-if="move_line.move_id.image_128" 
+            		t-att-src="image_data_uri(move_line.move_id.image_128)" style="width: 70%"/>
+			</td>
+        </t>
+		</xpath>
+		<xpath expr="//td[1]" position="before">
+        <t>
+            <td>						
+                <span t-field="move_line.move_id.sr_number"/>
+			</td>
+        </t>
+		</xpath>
+		
+	</template>
+
+	<template id = "stock_aggregated_moveline_report_delivery" inherit_id = "stock.stock_report_delivery_aggregated_move_lines">
+		<xpath expr="//tr/td[1]" position="after">
+            <td>						
+            	<img t-if="aggregated_lines[line]['product']['image_1920']" 
+            		t-att-src="image_data_uri(aggregated_lines[line]['product']['image_1920'])" style="width: 70%"/>
+			</td>
+		</xpath>
+		<xpath expr="//tr/td[1]" position="before">
+			<t>
+            <td style ="text-align:center;">
+				<span t-esc="aggregated_lines[line]['sr_number']"/>
+			</td>
+			</t>
+		</xpath>
+	</template>
+</odoo>

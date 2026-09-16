@@ -1,0 +1,255 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_payment_change
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-05-22 12:10+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: pos_payment_change
+#. odoo-python
+#: code:addons/pos_payment_change/models/pos_order.py:0
+#, python-format
+msgid " (Refund Order: %(refund_order)s ; Resale Order: %(resale_order)s)"
+msgstr ""
+" (Ordine rimborsato: %(refund_order)s ; Ordine rivenduto: %(resale_order)s)"
+
+#. module: pos_payment_change
+#: model_terms:ir.ui.view,arch_db:pos_payment_change.view_pos_config_form
+msgid "<span class=\"o_form_label\">Payment Change Policy</span>"
+msgstr "<span class=\"o_form_label\">Politica modifica pagamento</span>"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__amount
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__amount
+msgid "Amount"
+msgstr "Valore"
+
+#. module: pos_payment_change
+#: model_terms:ir.ui.view,arch_db:pos_payment_change.view_pos_payment_change_wizard_form
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: pos_payment_change
+#: model:ir.actions.act_window,name:pos_payment_change.action_pos_payment_change_wizard
+#: model_terms:ir.ui.view,arch_db:pos_payment_change.view_pos_order_form
+#: model_terms:ir.ui.view,arch_db:pos_payment_change.view_pos_payment_change_wizard_form
+msgid "Change Payments"
+msgstr "Modifica pagamenti"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__company_currency_id
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__company_currency_id
+msgid "Company Currency"
+msgstr "Valuta azienda"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__create_uid
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__create_date
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__create_date
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: pos_payment_change
+#. odoo-python
+#: code:addons/pos_payment_change/wizards/pos_payment_change_wizard.py:0
+#, python-format
+msgid ""
+"Differences between the two values for the POS Order '%(name)s':\n"
+"\n"
+" * Total of all the new payments %(total)s;\n"
+" * Total of the POS Order %(amount_total)s;\n"
+"\n"
+"Please change the payments."
+msgstr ""
+"Differenze tra i due valori per l'ordine POS '%(name)s':\n"
+"\n"
+" * Totale di tutti i nuovi pagamenti %(total)s;\n"
+" * Totale dell'ordine POS %(amount_total)s;\n"
+"\n"
+"Si prega di modificare i pagamenti."
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__display_name
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__display_name
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__id
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__id
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard____last_update
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line____last_update
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__write_uid
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__write_date
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__write_date
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__new_line_ids
+msgid "New Payment Lines"
+msgstr "Righe nuovo pagamento"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__old_line_ids
+msgid "Old Payment Lines"
+msgstr "Righe vecchio pagamento"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__order_id
+msgid "Order"
+msgstr "Ordine"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_config__payment_change_policy
+msgid "Payment Change Policy"
+msgstr "Politica modifica pagamento"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,help:pos_payment_change.field_pos_config__payment_change_policy
+msgid ""
+"Payment Change Policy when users want to change the payment lines of a given "
+"PoS Order.\n"
+"* 'Refund and Resale': Odoo will refund the current Pos Order to cancel it, "
+"and create a new PoS Order with the correct payment lines.\n"
+"* 'Update Payments': Odoo will change payment lines.\n"
+"\n"
+"Note : In some countries the 'Update Payments' Option is not allowed by law, "
+"because orders history shouldn't not be altered."
+msgstr ""
+"Politica modifica del pagamento quando gli utenti vogliono modificare le "
+"righe del pagamento.\n"
+"* 'Rimborsa e rivendi': Odoo rimborserà l'ordine PoS attuale per annullarlo "
+"e creerà un nuovo ordine PoS con le righe di pagamento corrette.\n"
+"* 'Aggiorna pagamenti': Odoo modificherà le righe pagamento.\n"
+"\n"
+"Nota : in alcune nazioni l'opzione 'Aggiorna pagamenti' non è consentita "
+"dalla legge perché lo storico degli ordini non deve essere modificato."
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__new_payment_method_id
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__old_payment_method_id
+msgid "Payment Method"
+msgstr "Metodo di pagamento"
+
+#. module: pos_payment_change
+#: model:ir.model,name:pos_payment_change.model_pos_payment_change_wizard
+msgid "PoS Payment Change Wizard"
+msgstr "Procedura guidata modifica pagamento PoS"
+
+#. module: pos_payment_change
+#: model:ir.model,name:pos_payment_change.model_pos_payment_change_wizard_new_line
+msgid "PoS Payment Change Wizard New Line"
+msgstr "Nuova riga procedura guidata modifica pagamento PoS"
+
+#. module: pos_payment_change
+#: model:ir.model,name:pos_payment_change.model_pos_payment_change_wizard_old_line
+msgid "PoS Payment Change Wizard Old Line"
+msgstr "Vecchia riga procedura guidata modifica pagamento PoS"
+
+#. module: pos_payment_change
+#: model:ir.model,name:pos_payment_change.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurazione punto vendita"
+
+#. module: pos_payment_change
+#: model:ir.model,name:pos_payment_change.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Ordini punto vendita"
+
+#. module: pos_payment_change
+#: model:ir.model.fields.selection,name:pos_payment_change.selection__pos_config__payment_change_policy__refund
+msgid "Refund and Resale"
+msgstr "Rimborsa e rivendi"
+
+#. module: pos_payment_change
+#. odoo-python
+#: code:addons/pos_payment_change/models/pos_order.py:0
+#, python-format
+msgid ""
+"The payments of the Order %(order)s (Ref: %(ref)s have been changed by "
+"%(user_name)s on %(today)s"
+msgstr ""
+"Il pagamento dell'ordine %(order)s (Rif: %(ref)s è stato modificato da "
+"%(user_name)s il %(today)s"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard__amount_total
+#: model_terms:ir.ui.view,arch_db:pos_payment_change.view_pos_payment_change_wizard_form
+msgid "Total"
+msgstr "Totale"
+
+#. module: pos_payment_change
+#. odoo-python
+#: code:addons/pos_payment_change/models/pos_config.py:0
+#, python-format
+msgid ""
+"Unable to use the 'Update Payments' options for companies that have "
+"unalterable accounting."
+msgstr ""
+"Impossibile utilizzare l'opzione 'Aggiorna pagamenti' per le nazioni che "
+"hanno la contabilità inalterabile."
+
+#. module: pos_payment_change
+#: model:ir.model.fields.selection,name:pos_payment_change.selection__pos_config__payment_change_policy__update
+msgid "Update Payments"
+msgstr "Aggiorna pagamenti"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,help:pos_payment_change.field_pos_payment_change_wizard_new_line__company_currency_id
+#: model:ir.model.fields,help:pos_payment_change.field_pos_payment_change_wizard_old_line__company_currency_id
+msgid "Utility field to express amount currency"
+msgstr "Campo utilità per esprimere la valuta del valore"
+
+#. module: pos_payment_change
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_new_line__wizard_id
+#: model:ir.model.fields,field_description:pos_payment_change.field_pos_payment_change_wizard_old_line__wizard_id
+msgid "Wizard"
+msgstr "Procedura guidata"
+
+#. module: pos_payment_change
+#. odoo-python
+#: code:addons/pos_payment_change/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can not change payments of the POS '%(name)s' because the associated "
+"session '%(session)s' has been closed!"
+msgstr ""
+"Non si possono modificare i pagamenti del POS '%(name)s' perché la sessione "
+"associata '%(session)s' è stata chiusa!"

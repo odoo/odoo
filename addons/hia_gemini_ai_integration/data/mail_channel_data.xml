@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="mail.channel" id="channel_gemini">
+            <field name="name">Gemini</field>
+            <field name="description">Gemini-Discuss Integration</field>
+            <field name="image_128" type="base64" file="hia_gemini_ai_integration/static/description/assets/utility/gemini.png"/>
+        </record>
+
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="hia_gemini_ai_integration.channel_gemini"/>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="body">
+                <![CDATA[
+                    <p>Welcome to the #Gemini channel.</p>
+                    <p>Ask your questions to Gemini</b>.</p>
+                ]]>
+            </field>
+        </record>
+
+        <record model="mail.channel.member" id="channel_member_gemini_channel_for_admin">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="hia_gemini_ai_integration.channel_gemini"/>
+            <field name="fetched_message_id" ref="hia_gemini_ai_integration.module_install_notification"/>
+            <field name="seen_message_id" ref="hia_gemini_ai_integration.module_install_notification"/>
+        </record>
+
+        <record model="mail.channel" id="hia_gemini_ai_integration.channel_gemini">
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>

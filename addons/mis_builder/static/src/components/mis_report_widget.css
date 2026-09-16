@@ -1,0 +1,67 @@
+.o_web_client .mis_builder_amount {
+    text-align: right;
+}
+
+.o_web_client .mis_builder_collabel {
+    text-align: center;
+}
+
+.o_web_client .mis_builder_rowlabel {
+    text-align: left;
+}
+
+.o_web_client .mis_builder a {
+    /* we don't want the link color, to respect user styles */
+    color: inherit;
+}
+
+.o_web_client .mis_builder a:hover {
+    /* underline links on hover to give a visual cue */
+    text-decoration: underline;
+}
+
+.oe_mis_builder_content {
+}
+
+/* style for the control panel (search box and buttons) */
+
+.oe_mis_builder_cp {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20px;
+}
+
+.oe_mis_builder_cp_left {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.oe_mis_builder_cp_right {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    max-width: 1280px;
+}
+
+.oe_mis_builder_cp_right_top {
+    display: flex;
+    flex-direction: row;
+}
+
+.oe_mis_builder_cp_right_bottom {
+    display: flex;
+    flex-direction: row;
+}
+
+.oe_mis_builder_filter_buttons {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.oe_mis_builder_action_buttons {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+}

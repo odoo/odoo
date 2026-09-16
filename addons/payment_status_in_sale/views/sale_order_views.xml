@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited sale order form view. -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sales.order.view.form.inherit.payment.status.in
+            .sale
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_status" invisible="1"/>
+                <field name="invoice_state" invisible="1"/>
+                <field name="payment_details" widget="payment"
+                       style="width: 60%"/>
+                <field name="amount_due"/>
+            </xpath>
+            <xpath expr="//sheet//div[hasclass('oe_button_box')]"
+                   position="after">
+                <widget name="web_ribbon" title="Not Paid"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('payment_status', '!=', 'Not Paid')]}"/>
+                <widget name="web_ribbon" title="Paid"
+                        bg_color="bg-success"
+                        attrs="{'invisible': [('payment_status', '!=', 'Paid')]}"/>
+                <widget name="web_ribbon" title="Partially Paid"
+                        bg_color="bg-warning"
+                        attrs="{'invisible': [('payment_status', '!=', 'Partially Paid')]}"/>
+                <widget name="web_ribbon" title="In Payment"
+                        bg_color="bg-info"
+                        attrs="{'invisible': [('payment_status', '!=', 'In Payment')]}"/>
+                <widget name="web_ribbon" title="Reversed"
+                        bg_color="bg-success"
+                        attrs="{'invisible': [('payment_status', '!=', 'Reversed')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']"
+                   position="after">
+                <button name="action_register_payment"
+                        string="Register Payment" class="btn-primary"
+                        type="object"
+                        attrs="{'invisible': ['|', '|', ('state', '!=', 'sale'),
+                         ('invoice_state', '!=', 'posted'),
+                         ('payment_status', 'not in', ('Not Paid', 'Partially Paid'))]}"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inherited sale order tree view. -->
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.view.tree.inherit.payment.status.in
+            .sale
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inherited sale order quotation tree view. -->
+    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+        <field name="name">sale.order.view.tree.inherit.payment.status
+            .in.sale
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id"
+               ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

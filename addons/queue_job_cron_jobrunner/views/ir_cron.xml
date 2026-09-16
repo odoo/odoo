@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2022 Camptocamp SA (https://www.camptocamp.com).
+    @author Iván Todorovich <ivan.todorovich@camptocamp.com>
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <record id="ir_cron_view_form" model="ir.ui.view">
+        <field name="model">ir.cron</field>
+        <field name="inherit_id" ref="base.ir_cron_view_form" />
+        <field name="arch" type="xml">
+            <field name="doall" position="after">
+                <field
+                    name="queue_job_runner"
+                    attrs="{'invisible': [('model_name', '!=', 'queue.job')]}"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>

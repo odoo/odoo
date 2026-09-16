@@ -1,0 +1,23 @@
+.oe_cp_refresher {
+    margin: auto 0 auto 0;
+    user-select: none;
+}
+
+.o_content {
+    &__refresh {
+        animation: web_refresh 0.6s ease;
+    }
+}
+
+@keyframes web_refresh {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10px);
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}

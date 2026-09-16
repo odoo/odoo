@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017-2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="mis_budget_by_account_item_search_view">
+        <field name="name">
+            mis.budget.by.account.item.search (in mis_builder_budget)
+        </field>
+        <field name="model">mis.budget.by.account.item</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="account_id" />
+                <field name="date_from" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="mis_budget_by_account_item_tree_view">
+        <field name="name">
+            mis.budget.by.account.item.tree (in mis_builder_budget)
+        </field>
+        <field name="model">mis.budget.by.account.item</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="budget_id" invisible="1" />
+                <field name="budget_date_from" invisible="1" />
+                <field name="budget_date_to" invisible="1" />
+                <field name="name" />
+                <field name="account_id" />
+                <field
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
+                    optional="show"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field name="date_range_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="debit" />
+                <field name="credit" />
+                <field name="balance" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="mis_budget_by_account_item_act_window">
+        <field name="name">MIS Budget Items (by accounts)</field>
+        <field name="res_model">mis.budget.by.account.item</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('budget_id', '=', active_id)]</field>
+        <field name="context">{'default_budget_id': active_id}</field>
+    </record>
+</odoo>

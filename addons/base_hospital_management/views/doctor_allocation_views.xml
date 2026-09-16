@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Doctor allocation form view-->
+    <record id="doctor_allocation_view_form" model="ir.ui.view">
+        <field name="name">doctor.allocation.view.form</field>
+        <field name="model">doctor.allocation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_allocation"
+                            string="Confirm"
+                            class="oe_highlight"
+                            states="draft"
+                            type="object"
+                            groups="base_hospital_management.base_hospital_management_group_manager,
+                            base_hospital_management.base_hospital_management_group_doctor"
+                    />
+                    <button name="action_cancel_allocation" string="Cancel"
+                            states="draft"
+                            type="object"
+                            groups="base_hospital_management.base_hospital_management_group_manager,
+                            base_hospital_management.base_hospital_management_group_doctor"
+                    />
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_patient_booking"
+                                states="confirm"
+                                class="oe_stat_button" icon="fa-archive"
+                                type="object">
+                            <field name="patient_count" string="Booking"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group attrs="{'readonly': [('state', '!=', 'draft')]}">
+                        <group>
+                            <field name="doctor_id"  options="{'no_create': True, 'no_edit': True}"
+                                   attrs="{'readonly': [('is_doctor', '=', True)]}"/>
+                            <field name="patient_type"/>
+                            <field name="department_id"/>
+                            <field name="date"/>
+                            <field name="is_doctor" invisible="1"/>
+                            <field name="patient_count" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="work_from"
+                                   widget="float_time"/>
+                            <field name="work_to" widget="float_time"/>
+                            <field name="time_avg"
+                                   string="Time/ Patient"
+                                   widget="float_time"/>
+                            <field name="patient_limit"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Doctor allocation tree view-->
+    <record id="doctor_allocation_view_tree" model="ir.ui.view">
+        <field name="name">doctor.allocation.view.tree</field>
+        <field name="model">doctor.allocation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Action of Doctor Allocation menu-->
+    <record id="doctor_allocation_action" model="ir.actions.act_window">
+        <field name="name">Schedule Doctor's Allocation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">doctor.allocation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Allocation For Doctor
+            </p>
+            <p>
+                You can create Doctor's allocation here.
+            </p>
+        </field>
+    </record>
+    <menuitem id="doctor_allocation_menu" name="Allocation"
+              parent="appointment_menu_doctor"
+              action="doctor_allocation_action" sequence="5"/>
+</odoo>

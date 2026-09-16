@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Inherited form view of res config settings of sales inorder to add new
+        fields for sale due date reminder-->
+    <record id="res_config_settings_sale_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.invoice.due.date.reminder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='invoicing_setting_container']"
+                   position="after">
+                <h2>Order Due Reminder</h2>
+                <div class="row mt16 o_settings_container"
+                     name="sale_order_due_reminder_container">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="order_due_reminder">
+                        <div class="o_setting_left_pane">
+                            <field name="reminder_sales"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="reminder_sales"/>
+                            <div class="text-muted">
+                                Enable this to get reminder of due in Sale
+                                Order.
+                            </div>
+                            <div class="row mt16"
+                                 attrs="{'invisible': [('reminder_sales', '=', False)]}">
+                                <label for="set_date_sales"
+                                       class="col-lg-4 o_light_label"/>
+                                <field name="set_date_sales"
+                                       class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+<!--    Inherited form view of res config settings of invoice, inorder to add
+        new fields for invoice due date reminder-->
+    <record id="res_config_settings_account_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.invoice.due.date.reminder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="after">
+                <h2>Invoice Due Reminder</h2>
+                <div class="row mt16 o_settings_container"
+                     name="invoice_due_reminder_container">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="invoice_due_reminder">
+                        <div class="o_setting_left_pane">
+                            <field name="reminder_invoicing"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="reminder_invoicing"/>
+                            <div class="text-muted">
+                                Enable this to get reminder of due in Sale
+                                Order.
+                            </div>
+                            <div class="row mt16"
+                                 attrs="{'invisible': [('reminder_invoicing', '=', False)]}">
+                                <label for="set_date_invoicing"
+                                       class="col-lg-4 o_light_label"/>
+                                <field name="set_date_invoicing"
+                                       class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Doctor specialization tree view-->
+    <record id="doctor_specialization_view_tree" model="ir.ui.view">
+        <field name="name">doctor.specialization.view.tree</field>
+        <field name="model">doctor.specialization</field>
+        <field name="arch" type="xml">
+            <tree create="1" editable="bottom">
+                <field name="specialization"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Specialization action-->
+    <record id="doctor_specialization_action" model='ir.actions.act_window'>
+        <field name="name">Specialization</field>
+        <field name="res_model">doctor.specialization</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <!--    Specialization menu-->
+    <menuitem id="doctor_specialization_menu" name="Specialization"
+              sequence="10"
+              parent="hospital_menu_configuration"
+              action="doctor_specialization_action"/>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="app_view_model_data_list" model="ir.ui.view">
+        <field name="name">app.ir.model.data.tree</field>
+        <field name="model">ir.model.data</field>
+        <field name="inherit_id" ref="base.view_model_data_list"/>
+        <field name="arch" type="xml">
+            <field name="res_id" position="after">
+                <field name="noupdate"/>
+            </field>
+        </field>
+    </record>
+    <record id="app_view_model_data_search" model="ir.ui.view">
+        <field name="name">app.ir.model.data.search</field>
+        <field name="model">ir.model.data</field>
+        <field name="inherit_id" ref="base.view_model_data_search"/>
+        <field name="arch" type="xml">
+            <filter name="updatable" position="after">
+                <filter string="No Updatable" name="noupdatable" domain="[('noupdate', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

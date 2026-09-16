@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright 2019 GRAP - Quentin DUPONT
+Copyright 2020 Tecnativa - Alexandre Díaz
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<template>
+    <t t-name="web_widget_numeric_step" owl="1">
+        <div class="d-flex widget_numeric_step">
+            <div class="input-group-prepend widget_numeric_step_btn">
+                <button
+                    class="fa fa-minus btn btn-default btn_numeric_step"
+                    aria-label="Minus"
+                    tabindex="-1"
+                    title="Minus"
+                    type="button"
+                    data-mode="minus"
+                    t-att-disabled="props.readonly"
+                    t-on-click="_onStepClick"
+                />
+            </div>
+            <input
+                t-att-id="props.id"
+                t-ref="numpadDecimal"
+                t-att-placeholder="props.placeholder"
+                t-att-type="props.inputType"
+                class="o_input input_numeric_step"
+                inputmode="decimal"
+                t-att-step="props.step"
+                t-on-keydown="_onKeyDown"
+                t-on-wheel="_onWheel"
+            />
+            <div class="input-group-append widget_numeric_step_btn">
+                <button
+                    class="fa fa-plus btn btn-default btn_numeric_step"
+                    aria-label="Plus"
+                    tabindex="-1"
+                    title="Plus"
+                    type="button"
+                    data-mode="plus"
+                    t-att-disabled="props.readonly"
+                    t-on-click="_onStepClick"
+                />
+            </div>
+        </div>
+    </t>
+</template>

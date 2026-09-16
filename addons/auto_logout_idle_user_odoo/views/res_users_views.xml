@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="Big5" ?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.auto.logout.idle.user.odoo</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='messaging']" position="after">
+                <group>
+                    <group string="IDLE TIMER">
+                        <field name="enable_idle" />
+                        <field name="idle_time" widget="float_time"  attrs="{'invisible': [('enable_idle', '=', False)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

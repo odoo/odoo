@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_button_onhand_qty_inherit" model="ir.ui.view">
+            <field name="name">view.onhand.qty.button.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_update_quantity_on_hand']" position="replace">
+                    <button string="Update Quantity" type="object" groups="bi_update_qty_disable.group_onhand_qty_user"
+                            name="action_update_quantity_on_hand" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_template_form_view_print_label_inherit" model="ir.ui.view">
+            <field name="name">product.template.print.label.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_label_layout']" position="replace">
+                    <button string="Print Labels" type="object" name="action_open_label_layout"
+                            groups="bi_update_qty_disable.group_onhand_qty_user"
+                            attrs="{'invisible': [('detailed_type', '==', 'service')]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_product_form_button_onhand_qty_inherit" model="ir.ui.view">
+            <field name="name">product.product.onhand.qty.button.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_update_quantity_on_hand']" position="replace">
+                    <button string="Update Quantity" type="object" groups="bi_update_qty_disable.group_onhand_qty_user"
+                            name="action_update_quantity_on_hand" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_template_tree_view_print_label_inherit" model="ir.ui.view">
+            <field name="name">product.template.tree.print.label.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_label_layout']" position="replace">
+                    <button string="Print Labels" type="object" name="action_open_label_layout"
+                            groups="bi_update_qty_disable.group_onhand_qty_user"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_product_tree_view_print_label_inherit" model="ir.ui.view">
+            <field name="name">product.product.tree.print.label.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_label_layout']" position="replace">
+                    <button string="Print Labels" type="object" name="action_open_label_layout"
+                            groups="bi_update_qty_disable.group_onhand_qty_user"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

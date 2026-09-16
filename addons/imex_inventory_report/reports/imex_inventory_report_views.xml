@@ -1,0 +1,172 @@
+<odoo>
+    <record id="view_imex_inventory_report_search" model="ir.ui.view">
+        <field name="name">imex.inventory.report.search</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <search string="Imex Inventory Report Search">
+                <field name="product_id" string="Product"/>
+                <field name="product_category" string="Category"/>
+                <field name="location" string="Location"/>
+                <separator/>
+                <filter name="balance" string="In stock" domain="[('balance','!=',0)]"/>
+                <filter name="not_balance" string="Out of stock" domain="[('balance','=',0)]"/>
+                <separator/>
+                <filter name="imex" string="Imex Qty" domain="['|',('product_in','!=',0),('product_out','!=',0)]"/>
+                <filter name="not_imex" string="Not Imex Qty" domain="[('product_in','=',0),('product_out','=',0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Category" name="product_category" domain="[]" context="{'group_by': 'product_category'}"/>
+                    <filter string="Location" name="location" domain="[]" context="{'group_by': 'location'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_imex_inventory_report_tree" model="ir.ui.view">
+        <field name="name">imex.inventory.report.tree</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <tree create="false" string="Imex Inventory Report">
+                <field name="product_id" string="Product"/>
+                <field name="product_uom" string="UoM" optional="show"/>
+                <field name="product_category" string="Category" optional="show"/>
+                <field name="location" string="Location" optional="show"/>
+                <field name="initial" string="Initial" optional="show"/>
+                <field name="initial_amount" string="Initial Amount" optional="show"/>
+                <field name="product_in" string="Total Qty In" optional="show"/>
+                <field name="product_in_amount" string="Total Amount In" optional="show"/>
+                <field name="product_out" string="Total Qty Out" optional="show"/>
+                <field name="product_out_amount" string="Total Amount Out" optional="show"/>
+                <field name="balance" string="Balance" optional="show"/>
+                <field name="amount" string="Amount" optional="show"/>
+                <button name="report_details" type="object" class="fa fa-search"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_imex_inventory_report_tree_view" model="ir.actions.act_window">
+        <field name="name">Imex Inventory Report</field>
+        <field name="res_model">imex.inventory.report</field>
+        <field name="search_view_id" ref="view_imex_inventory_report_search" />
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_imex_inventory_report_pdf" model="ir.actions.report">
+        <field name="name">Print imex inventory report</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">imex_inventory_report.imex_inventory_report_pdf</field>
+        <field name="report_file">imex_inventory_report.imex_inventory_report_pdf</field>
+        <field name="print_report_name">'Imex Inventory Report'</field>
+        <field name="binding_model_id" ref="model_imex_inventory_report"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="imex_inventory_report_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="o_inventory_reports_page">
+                    <table class="data_table table-bordered" style="width: 100%; font-size: 10px" name="report_table">
+                        <tr class="text-center">
+                            <th t-att-rowspan="2">
+                                <span>Product Code</span>
+                            </th>
+                            <th t-att-rowspan="2">
+                                <span>Product Name</span>
+                            </th>
+                            <th t-att-rowspan="2">
+                                <span>UoM</span>
+                            </th>
+                            <th t-att-rowspan="2">
+                                <span>Category</span>
+                            </th>
+                            <th t-att-rowspan="2">
+                                <span>Location</span>
+                            </th>
+                            <th t-att-colspan="2" class="text-center">
+                                <span>Initial</span>
+                            </th>
+                            <th t-att-colspan="2" class="text-center">
+                                <span>Total In</span>
+                            </th>
+                            <th t-att-colspan="2" class="text-center">
+                                <span>Total Out</span>
+                            </th>
+                            <th t-att-colspan="2" class="text-center">
+                                <span>Balance</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">
+                                <span>Qty</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Amount</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Qty</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Amount</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Qty</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Amount</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Qty</span>
+                            </th>
+                            <th class="text-center">
+                                <span>Amount</span>
+                            </th>
+                        </tr>
+                        <t t-foreach="docs" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-out="line.product_id.default_code"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.product_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.product_uom.name"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.product_category.complete_name"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.location.complete_name"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.initial)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.initial_amount)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.product_in)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.product_in_amount)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.product_out)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.product_out_amount)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.balance)"/>
+                                </td>
+                                <td style="text-align: right">
+                                    <t t-out="'{0:,.2f}'.format(line.amount)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

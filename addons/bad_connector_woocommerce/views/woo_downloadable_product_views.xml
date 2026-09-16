@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Woocommerce Downloadable Product form view-->
+    <record id="view_woo_downloadable_product_form" model="ir.ui.view">
+        <field name="name">woo.downloadable.product.form</field>
+        <field name="model">woo.downloadable.product</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Downloadable Product">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="external_id" />
+                            <field name="name" />
+                            <field name="url" />
+                            <field name="woo_product_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Woocommerce Downloadable Product tree view -->
+    <record id="view_woo_downloadable_product_tree" model="ir.ui.view">
+        <field name="name">woo.downloadable.product.tree</field>
+        <field name="model">woo.downloadable.product</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="url" />
+            </tree>
+        </field>
+    </record>
+    <!-- Action for the Woocommerce Downloadable Product menu item -->
+    <record id="action_woo_downloadable_product" model="ir.actions.act_window">
+        <field name="name">WooCommerce Downloadable Product</field>
+        <field name="res_model">woo.downloadable.product</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_woo_downloadable_product_tree" />
+    </record>
+</odoo>

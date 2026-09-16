@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <!--
+     XML configuration for adding ECommerce Address settings to the
+     Odoo res.config.settings view form.This XML defines the layout and fields
+     for the ECommerce Address settings section in the res.config.settings view
+     form. It includes fields for both billing and shipping addresses.
+     -->
+        <field name="name">
+            res.config.settings.view.form.inherit.website_sale_address_management
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="website_info_settings" position="after">
+                <h2>ECommerce Address</h2>
+                <div class="row mt16 o_settings_container"
+                     id="website_shop_address">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <h4 class="address_head">Billing Address</h4>
+                        <div class="o_setting_right_pane">
+                            <label for="is_billing_phone" string="Phone"/>
+                            <field name="is_billing_phone"
+                                   widget="boolean_toggle"/>
+                            <label for="is_billing_phone_is_required"
+                                   string="required"/>
+                            <field name="is_billing_phone_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_billing_street"
+                                   string="Street"/>
+                            <field name="is_billing_street"
+                                   widget="boolean_toggle"/>
+                            <label for="is_billing_street_is_required"
+                                   string="required"/>
+                            <field name="is_billing_street_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_billing_street2"
+                                   string="Street2"/>
+                            <field name="is_billing_street2"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_billing_city" string="City"/>
+                            <field name="is_billing_city"
+                                   widget="boolean_toggle"/>
+                            <label for="is_billing_city_is_required"
+                                   string="required"/>
+                            <field name="is_billing_city_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="billing_country_id"
+                                   string="Default Country"/>
+                            <field name="billing_country_id"
+                              options="{'create_edit': false}"/>
+
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_billing_zip_code"
+                                   string="ZIP Code"/>
+                            <field name="is_billing_zip_code"
+                                   widget="boolean_toggle"/>
+                            <label for="is_billing_zip_code_is_required"
+                                   string="required"/>
+                            <field name="is_billing_zip_code_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <h4 class="address_head">Shipping Address</h4>
+                        <div class="o_setting_right_pane">
+                            <label for="is_shipping_phone"
+                                   string="Phone"/>
+                            <field name="is_shipping_phone"
+                                   widget="boolean_toggle"/>
+                            <label for="is_shipping_phone_is_required"
+                                   string="required"/>
+                            <field name="is_shipping_phone_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_shipping_street"
+                                   string="Street"/>
+                            <field name="is_shipping_street"
+                                   widget="boolean_toggle"/>
+                            <label for="is_shipping_street_is_required"
+                                   string="required"/>
+                            <field name="is_shipping_street_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_shipping_street2"
+                                   string="Street2"/>
+                            <field name="is_shipping_street2"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_shipping_city" string="City"/>
+                            <field name="is_shipping_city"
+                                   widget="boolean_toggle"/>
+                            <label for="is_shipping_city_is_required"
+                                   string="required"/>
+                            <field name="is_shipping_city_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="shipping_country_id"
+                                   string="Default Country"/>
+                            <field name="shipping_country_id"
+                                   widget="selection"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_shipping_zip_code"
+                                   string="ZIP Code"/>
+                            <field name="is_shipping_zip_code"
+                                   widget="boolean_toggle"/>
+                            <label for="is_shipping_zip_code_is_required"
+                                   string="required"/>
+                            <field name="is_shipping_zip_code_is_required"
+                                   widget="boolean_toggle"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

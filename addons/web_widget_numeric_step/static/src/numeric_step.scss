@@ -1,0 +1,22 @@
+// Copyright 2023 Moduon Team S.L.
+// License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
+
+.widget_numeric_step {
+    // Hide the buttons until the user hovers if possible
+    @media (hover: hover) {
+        .btn_numeric_step {
+            visibility: hidden;
+        }
+    }
+    &:hover .btn_numeric_step {
+        visibility: visible;
+    }
+}
+
+.o_numeric_step_cell {
+    // Default for old browsers
+    min-width: 15 * $btn-padding-x;
+    // Value hardcoded in `FIXED_FIELD_COLUMN_WIDTHS.float` + width of 2
+    // FontAwesome icons + 2 buttons * 2 horizontal paddings
+    min-width: calc(92px + 2ex + 4 * #{$btn-padding-x});
+}

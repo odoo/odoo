@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    form view for the Session Dashboard in the Open Academy module.-->
+    <record id="board_session_form" model="ir.ui.view">
+        <field name="name">session.dashboard.view.form</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Session Dashboard">
+                <board style="2-1">
+                    <column>
+                        <action
+                                string="Attendees by course"
+                                name="%(action_openacademy_session_view_graph)d"
+                                height="150"
+                                width="510"/>
+                        <action
+                                string="Sessions"
+                                name="%(action_openacademy_session_view_calendar)d"/>
+                    </column>
+                    <column>
+                        <action
+                                string="Courses"
+                                name="%(action_openacademy_course_list)d"/>
+                    </column>
+                </board>
+            </form>
+        </field>
+    </record>
+
+    <!--    Defines an action that opens a dashboard view for sessions in a specific model.-->
+    <record id="open_board_session" model="ir.actions.act_window">
+        <field name="name">Session Dashboard</field>
+        <field name="res_model">board.board</field>
+        <field name="view_mode">form</field>
+        <field name="usage">menu</field>
+        <field name="view_id" ref="board_session_form"/>
+    </record>
+
+    <!--    Defines a menu item that adds an entry for a session dashboard in a specific parent menu.-->
+    <menuitem
+            id="board_session_menu"
+            name="Session Dashboard" parent="base.menu_reporting_dashboard"
+            action="open_board_session"
+            sequence="1"
+    />
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2021 ITerra - Sergey Shebanin
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.NavBar.SectionsMenu" t-inherit-mode="extension" owl="1">
+        <xpath
+            expr="//t[@t-foreach='sections']//t[@t-set='hotkey']"
+            position="attributes"
+        >
+            <attribute
+                name="t-value"
+                t-translation="off"
+            >'shift+' + ((section_index + 1) % 10).toString()</attribute>
+        </xpath>
+        <xpath
+            expr="//t[@t-if='currentAppSectionsExtra.length']//t[@t-set='hotkey']"
+            position="attributes"
+        >
+            <attribute
+                name="t-value"
+                t-translation="off"
+            >'shift+' + (sectionsVisibleCount + 1 % 10).toString()</attribute>
+        </xpath>
+    </t>
+</templates>

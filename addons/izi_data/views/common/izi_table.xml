@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree view for the menuitem -->
+        <record id="izi_table_tree" model="ir.ui.view">
+            <field name="name">izi.table.tree</field>
+            <field name="model">izi.table</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="source_id"/>
+                    <field name="stored_option"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for the menuitem -->
+        <record id="izi_table_form" model="ir.ui.view">
+            <field name="name">izi.table.form</field>
+            <field name="model">izi.table</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Run Manually" class="oe_highlight"
+                            name="method_direct_trigger" type="object"
+                            attrs="{'invisible': [('is_stored', '=', False), ('is_direct', '=', False)]}" />
+                        <button string="Upload Data" class="" name="get_data_from_source" type="object"
+                            attrs="{'invisible': [('is_direct', '=', False)]}" />
+                        <button string="Get Fields" class="oe_highlight" name="get_table_fields"
+                            type="object"
+                            attrs="{'invisible': ['|', ('is_stored', '=', True), ('is_direct', '=', True)]}" />
+                        <button string="Sample Data" name="get_table_datas" type="object"
+                            context="{'test_query': True}" invisible="1" />
+                        <button string="Create Mart Table" class=""
+                            confirm="You will create a mart table from this query. Are you sure?"
+                            name="create_mart_table_from_query" type="object"
+                            attrs="{'invisible': ['|', ('is_stored', '=', True), ('is_direct', '=', True)]}" />
+                        <button string="Create Mart Table" class="" 
+                            confirm="You will create a mart table from this script. Are you sure?"
+                            name="create_mart_table_from_dataframe" type="object" 
+                            attrs="{'invisible': [('is_direct', '=', False)]}" />
+                        <button
+                            confirm="You are about to update the schema of the mart table. If any fields change, the table will be rebuilt and the stored data will be deleted. Are you sure?"
+                            string="Update Schema" name="update_schema_store_table" type="object"
+                            attrs="{'invisible': ['|', ('is_stored', '=', False), ('is_direct', '=', True)]}" />
+                        <button invisible="1"
+                            confirm="You will run python code, this may take some time. Are you sure?"
+                            string="Run Python Code" name="run_python_code" type="object" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="source_id" attrs="{'readonly': [('id', '!=', False)]}" force_save="1"/>
+                                <field name="user_defined" readonly="1" invisible="1"/>
+                                <field name="stored_option" attrs="{'invisible': [('model_id', '!=', False)]}"/>
+                                <field name="is_query" invisible="1"/>
+                                <field name="is_stored" invisible="1"/>
+                                <field name="is_direct" invisible="1"/>
+                                <field name="model_id" invisible="1"/>
+                            </group>
+                            <group
+                                attrs="{'invisible': ['|', ('is_stored', '=', False), ('is_direct', '=', True)]}">
+                                <field name="cron_id" />
+                                <field name="table_name" invisible="1" />
+                                <field name="store_table_name" readonly="1"
+                                    attrs="{'invisible': ['|', ('is_stored', '=', False), ('user_defined', '=', False)]}" />
+                            </group>
+                        </group>
+                        <group
+                            attrs="{'invisible': ['|', ('is_stored', '=', False), ('is_direct', '=', True)]}">
+                            <group>
+                                <field name="store_interval" />
+                                <field name="store_interval_custom_type"
+                                    attrs="{'invisible': [('store_interval', '!=', 'custom')]}" />
+                                <field name="store_start_datetime"
+                                    attrs="{'invisible': ['|', ('store_interval', '!=', 'custom'), ('store_interval_custom_type', '!=', 'datetime_range')]}" />
+                                <field name="store_end_datetime"
+                                    attrs="{'invisible': ['|', ('store_interval', '!=', 'custom'), ('store_interval_custom_type', '!=', 'datetime_range')]}" />
+                                <label for="store_unit_of_time_value" string="Unit of Time"
+                                    attrs="{'invisible': ['|', ('store_interval', '!=', 'custom'), ('store_interval_custom_type', '!=', 'unit_of_time')]}" />
+                                <div
+                                    attrs="{'invisible': ['|', ('store_interval', '!=', 'custom'), ('store_interval_custom_type', '!=', 'unit_of_time')]}">
+                                    <field name="store_unit_of_time_value" class="oe_inline" />
+                                    <field name="store_unit_of_time" class="oe_inline" />
+                                </div>
+                            </group>
+                            <group>
+                                <field name="start_datetime" />
+                                <field name="end_datetime" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Query" attrs="{'invisible': ['|', ('is_stored', '=', True), '|', ('is_direct', '=', True), ('table_name', '!=', False)]}">
+                                <field name="db_query" widget="ace" options="{'mode':'python'}"/>
+                            </page>
+                            <page string="Fields">
+                                <field name="field_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"
+                                            attrs="{'readonly': [('parent.is_stored', '=', False)]}" />
+                                        <field name="field_name"
+                                            attrs="{'readonly': [('parent.is_stored', '=', False)]}" />
+                                        <field name="field_type_origin_selection"
+                                            attrs="{'required': [('parent.is_stored', '=', True)], 'column_invisible': [('parent.is_stored', '=', False)]}" />
+                                        <field name="field_type" force_save="1" readonly="1" />
+                                        <field name="description" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Python Code"
+                                attrs="{'invisible': [('is_stored', '=', False), ('is_direct', '=', False)]}">
+                                <field name="main_code" widget="ace" options="{'mode':'python'}" />
+                            </page>
+                            <page string="Python Functions" invisible="1">
+                                <field name="python_code_ids">
+                                    <tree>
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name" />
+                                        <field name="type_code" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Instructional Prompt" invisible="0">
+                                <field name="ai_prompt"/>
+                            </page>
+                            <page string="Attachments" invisible="1">
+                                <field name="attachment_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" />
+                                        <field name="datas" filename="name" string="CSV File" />
+                                        <field name="table_date" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Analysis" invisible="1">
+                                <field name="analysis_ids" readonly="1">
+                                    <tree>
+                                        <field name="name" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="izi_data.izi_table_python_code_form" model="ir.ui.view">
+            <field name="name">izi.table.python.code.form</field>
+            <field name="model">izi.table.python.code</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="sequence" />
+                                <field name="type_code" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Python Code">
+                                <field name="python_code" widget="ace" options="{'mode':'python'}" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_izi_table_filter" model="ir.ui.view">
+            <field name="name">izi.table.filter</field>
+            <field name="model">izi.table</field>
+            <field name="priority" eval="15" />
+            <field name="arch" type="xml">
+                <search string="Search Tables">
+                    <field name="name"/>
+                    <filter string="User Defined" domain="[('model_id', '=', False)]" name="filter_user_defined"/>
+                    <filter string="Odoo Model" domain="[('model_id', '!=', False)]" name="filter_model"/>
+                    <filter string="Table View" domain="[('model_id', '=', False), ('is_query', '=', False), ('is_stored', '=', False)]" name="filter_table_view"/>
+                    <filter string="Direct Query" domain="[('model_id', '=', False), ('is_query', '=', True), ('is_stored', '=', False)]" name="filter_query"/>
+                    <filter string="Mart Table" domain="[('model_id', '=', False), ('is_query', '=', False), ('is_stored', '=', True)]" name="filter_table"/>
+               </search>
+            </field>
+        </record>
+    </data>
+</odoo>

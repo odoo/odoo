@@ -1,0 +1,177 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/settings/tax/woocommerce_currency
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": "woocommerce_currency",
+                "label": "Currency",
+                "description": "This controls what currency prices are listed at in the catalog and which currency gateways will take payments in.",
+                "type": "select",
+                "default": "USD",
+                "options": {
+                    "AED": "United Arab Emirates dirham (&#x62f;.&#x625;)",
+                    "AFN": "Afghan afghani (&#x60b;)",
+                    "ALL": "Albanian lek (L)"
+                },
+                "tip": "This controls what currency prices are listed at in the catalog and which currency gateways will take payments in.",
+                "value": "USD",
+                "group_id": "general",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/general/woocommerce_currency"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/general"
+                        }
+                    ]
+                }
+            }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/settings/tax/woocommerce_weight_unit
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": "woocommerce_weight_unit",
+                "label": "Weight unit",
+                "description": "This controls what unit you will define weights in.",
+                "type": "select",
+                "default": "kg",
+                "options": {
+                    "kg": "kg",
+                    "g": "g",
+                    "lbs": "lbs",
+                    "oz": "oz"
+                },
+                "tip": "This controls what unit you will define weights in.",
+                "value": "kg",
+                "group_id": "products",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/products/woocommerce_weight_unit"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/products"
+                        }
+                    ]
+                }
+            }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/settings/tax/woocommerce_dimension_unit
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": "woocommerce_dimension_unit",
+                "label": "Dimensions unit",
+                "description": "This controls what unit you will define lengths in.",
+                "type": "select",
+                "default": "cm",
+                "options": {
+                    "m": "m",
+                    "cm": "cm",
+                    "mm": "mm",
+                    "in": "in",
+                    "yd": "yd"
+                },
+                "tip": "This controls what unit you will define lengths in.",
+                "value": "cm",
+                "group_id": "products",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/products/woocommerce_dimension_unit"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/settings/products"
+                        }
+                    ]
+                }
+            }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+
+
