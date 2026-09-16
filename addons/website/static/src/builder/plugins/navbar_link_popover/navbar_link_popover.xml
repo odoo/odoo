@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.navbarLinkPopover" t-inherit="html_editor.linkPopover">
-        <xpath expr="//div[@data-prevent-closing-overlay]" position="attributes">
+        <xpath expr="//t[@t-set-slot='content']" position="attributes">
             <attribute name="style"/>
         </xpath>
         <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
