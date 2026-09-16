@@ -1023,49 +1023,6 @@ font[class*='bg-'] {
     @extend %o-we-background-layer-parent;
 }
 
-// Probably outdated
-// Disable fixed height
-@include media-breakpoint-down(md) {
-    section,
-    .parallax,
-    .row,
-    .hr,
-    .blockquote {
-        height: auto !important;
-    }
-}
-
-// Probably outdated
-// Table
-.table_desc {
-    margin: 0 0 20px 0;
-    width: 100%;
-    word-break: break-all;
-    border: 1px solid #dddddd;
-}
-.table_heading {
-    background-color: #f5f5f5;
-    border: 1px solid #dddddd;
-    color: #666666;
-    @include font-size(14px);
-    padding: 4px;
-}
-table.table_desc tr td {
-    text-align: left;
-    padding: 5px;
-    @include font-size(13px);
-    &:first-child {
-        width: 25%;
-        font-weight: bold;
-        border-bottom: 1px solid #c9c9c9;
-        border-right: 1px solid #c9c9c9;
-        border-left: none;
-    }
-    &:last-child {
-        border-bottom: 1px solid #c9c9c9;
-    }
-}
-
 // Jumbotron
 .jumbotron {
     border-radius: 0;
