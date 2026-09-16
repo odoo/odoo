@@ -28,6 +28,8 @@ export class FontSizeSelector extends Component {
         title: t.or([t.string(), t.function()]),
         getSelection: t.function(),
         isDisabled: t.boolean(),
+        isSelectionInEditable: t.function(),
+        focusEditable: t.function(),
     });
     static components = { Dropdown, DropdownItem, IframeInput };
 
@@ -35,7 +37,13 @@ export class FontSizeSelector extends Component {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
         this.fontSizeSelector = useRef("fontSizeSelector");
-        this.dropdown = useDropdownState();
+        this.dropdown = useDropdownState({
+            onClose: () => {
+                if (!this.props.isSelectionInEditable()) {
+                    this.props.focusEditable();
+                }
+            },
+        });
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useChildRef();
