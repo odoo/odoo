@@ -7,7 +7,7 @@ from odoo.addons.website_sale.controllers.delivery import Delivery
 
 class InStoreDelivery(Delivery):
 
-    @route()
+    @route(type='jsonrpc')
     def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):
         """ Override of `website_sale` to set the pickup in store delivery method on the order in
         order to retrieve pickup locations when called from the product page. If there is no order
