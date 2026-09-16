@@ -1363,6 +1363,8 @@ class TestOrmTransient_Model(models.TransientModel):
 class TestOrmAttachment(models.Model):
     _name = "test_orm.attachment"
     _description = "Attachment"
+    # the override below exists to be patched by a test; it narrows nothing
+    _search_visibility_fields = ()
 
     res_model = fields.Char(required=True)
     res_id = fields.Integer(required=True)

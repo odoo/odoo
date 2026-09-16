@@ -2,6 +2,7 @@ import random
 
 from odoo.exceptions import AccessError
 from odoo.fields import Command
+from odoo.orm._recordset import is_search_overridden
 from odoo.orm.domain import Domain
 from odoo.orm.fields.relational._base import PENDING_SCOPE_KEY
 from odoo.tests import TransactionCase, new_test_user, tagged
@@ -296,3 +297,15 @@ class TestSearchVisibilityFields(TransactionCase):
                     [],
                     f"{name}._search_visibility_fields names fields it lacks",
                 )
+
+    def test_every_search_override_declares_its_visibility_fields(self):
+        # None is the conservative reading -- every write refetches -- and a
+        # choice nobody made; an override says what its search reads, or ()
+        undeclared = sorted(
+            name
+            for name, cls in self.env.registry.items()
+            if is_search_overridden(cls) and cls._search_visibility_fields is None
+        )
+        self.assertEqual(
+            undeclared, [], "_search overrides without _search_visibility_fields"
+        )
