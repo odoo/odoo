@@ -1,11 +1,9 @@
-import { usePlugin } from '@odoo/owl';
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
 import { session } from '@web/session';
 import { ReCaptcha } from '@google_recaptcha/js/recaptcha';
 import { isVisible } from "@html_editor/utils/dom_info";
-import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class Subscribe extends Interaction {
     static selector = '.js_subscribe';
@@ -14,7 +12,6 @@ export class Subscribe extends Interaction {
     };
 
     setup() {
-        this.bootstrap = usePlugin(BootstrapInstance);
         this._recaptcha = new ReCaptcha();
         this.notification = this.services['notification'];
         if (session.turnstile_site_key) {
@@ -124,28 +121,21 @@ export class Subscribe extends Interaction {
             });
             return;
         }
-        const result = await this.waitFor(rpc('/website_mass_mailing/subscribe', {
+        const { status, content } = await this.waitFor(rpc('/website_mass_mailing/subscribe', {
             'list_id': this._getListId(),
             'value': input?.value ?? false,
             'subscription_type': inputName,
             ...(tokenObj.token ? { recaptcha_token_response: tokenObj.token } : {}),
             turnstile_captcha: this.el.parentElement.querySelector('input[name="turnstile_captcha"]')?.value,
         }));
-        const toastType = result.toast_type;
-        if (toastType === 'success') {
+        if (status === "success") {
             this._updateSubscribeControlsStatus(true);
-            const modalEl = this.el.closest('.o_newsletter_modal');
-            if (modalEl) {
-                this.addListener(modalEl, 'hidden.bs.modal', () => {
-                    this.bootstrap.disposeBootstrapInstance(window.Modal.getInstance(modalEl));
-                }, { once: true });
-                this.bootstrap.getOrCreateInstance(window.Modal, modalEl).hide();
-            }
+        } else {
+            this.notification.add(content, {
+                type: "danger",
+                sticky: true,
+            });
         }
-        this.notification.add(result.toast_content, {
-            type: toastType,
-            sticky: true,
-        });
     }
 }
 
