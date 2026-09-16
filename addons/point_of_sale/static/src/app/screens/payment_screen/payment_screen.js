@@ -213,6 +213,9 @@ export class PaymentScreen extends Component {
             this.selectedPaymentLine.setAmount(amount);
         }
     }
+    disableInvoiceBtn() {
+        return Boolean(this.currentOrder?.refunded_order_id?.isToInvoice());
+    }
     async toggleIsToInvoice() {
         if (!this.pos.config.canInvoice) {
             this.notification.add(
