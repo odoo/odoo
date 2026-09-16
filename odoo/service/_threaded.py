@@ -126,6 +126,18 @@ class ThreadedServer(CommonServer):
             "overruns_cancelled": self._overruns_cancelled,
         }
 
+    def describe_capacity(self) -> str:
+        settings = self.settings
+        http = (
+            f"HTTP {self.interface}:{self.port} ({self.httpd.max_http_threads} threads)"
+            if self.httpd is not None
+            else "no HTTP"
+        )
+        return (
+            f"{http}, {settings.max_cron_threads} cron thread(s), "
+            f"{settings.job_workers} job thread(s)"
+        )
+
     def signal_handler(self, sig: int, frame: Any) -> None:
         if sig in [signal.SIGINT, signal.SIGTERM]:
             self.quit_signals_received += 1
@@ -675,6 +687,7 @@ class ThreadedServer(CommonServer):
 
             self.spawn_cron_threads()
             self.spawn_job_threads()
+            self.log_ready()
             notify_ready()
             watchdog = Watchdog()
 
@@ -777,6 +790,10 @@ class WebsocketServer(CommonServer):
 
     def get_memory_soft_limit(self) -> int:
         return self.settings.limit_memory_soft_gevent or self.settings.limit_memory_soft
+
+    def describe_capacity(self) -> str:
+        threads = self.httpd.max_http_threads if self.httpd is not None else 0
+        return f"websocket {self.interface}:{self.port} ({threads} threads)"
 
     def get_metrics(self) -> dict[str, Any]:
         # The same pool as the threaded server, on the websocket port: an

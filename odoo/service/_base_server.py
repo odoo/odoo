@@ -121,6 +121,32 @@ class CommonServer:
     def get_memory_soft_limit(self) -> int:
         return self.settings.limit_memory_soft
 
+    def describe_capacity(self) -> str:
+        raise NotImplementedError
+
+    def log_ready(self) -> None:
+        # One line an operator can read the deployment's shape from, where
+        # the bind, thread-budget and worker lines each told a part of it.
+        settings = self.settings
+        budgets = ", ".join(
+            f"{label} {int(settings.get_real_time_budget(kind))}s"
+            for label, kind in (
+                ("limit_time_real", "http"),
+                ("cron", "cron"),
+                ("job", "job"),
+            )
+        )
+        self.logger.info(
+            "Ready: %s, pid %s; %s; %s; limit_memory_soft %d MiB; db_maxconn %s",
+            self.flavor,
+            self.pid,
+            self.describe_capacity(),
+            budgets,
+            self.get_memory_soft_limit() // (1024 * 1024),
+            settings.db_maxconn,
+        )
+        _debug.lifecycle("server.ready", flavor=self.flavor, pid=self.pid)
+
     @classmethod
     def register_on_stop_hook(cls, func: Callable) -> None:
         register_on_stop_hook(func)

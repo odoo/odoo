@@ -5,6 +5,7 @@ import pytest
 import odoo
 import odoo.tools
 from odoo.service import _factory, _process_state
+from odoo.service import settings as server_settings
 from odoo.service.settings import ServerSettings, installed
 
 
@@ -240,3 +241,65 @@ class TestShutdownAndPhoenix:
     def test_a_failing_preload_code_survives(self, start):
         rc, _, _, _, _ = start(run_returns=3)
         assert rc == 3
+
+
+class TestTheReadyLineNamesTheDeploymentShape:
+    def _said(self, server):
+        server.log_ready()
+        call = server.logger.info.call_args
+        return call.args[0] % call.args[1:]
+
+    def test_threaded(self):
+        from .conftest import threaded_server
+
+        with server_settings.override(
+            workers=0,
+            http_interface="127.0.0.1",
+            http_port=8069,
+            max_cron_threads=2,
+            job_workers=1,
+            limit_time_real=120,
+            limit_time_real_cron=300,
+            limit_memory_soft=1024 * 1024 * 1024,
+            db_maxconn=32,
+        ):
+            server = threaded_server(httpd=MagicMock(max_http_threads=14))
+            said = self._said(server)
+        assert said == (
+            "Ready: threaded, pid %d; HTTP 127.0.0.1:8069 (14 threads), 2 cron "
+            "thread(s), 1 job thread(s); limit_time_real 120s, cron 300s, job 300s; "
+            "limit_memory_soft 1024 MiB; db_maxconn 32" % server.pid
+        )
+
+    def test_prefork(self):
+        from .conftest import prefork_server
+
+        with server_settings.override(
+            workers=4,
+            http_interface="127.0.0.1",
+            http_port=8069,
+            gevent_port=8072,
+            max_cron_threads=2,
+            job_workers=0,
+            limit_request=1000,
+            limit_time_cpu=60,
+            limit_time_real=120,
+            limit_memory_soft=2048 * 1024 * 1024,
+            db_maxconn=64,
+        ):
+            server = prefork_server(population=4)
+            said = self._said(server)
+        assert said == (
+            "Ready: prefork, pid %d; HTTP 127.0.0.1:8069 (4 workers), websocket "
+            "127.0.0.1:8072, 2 cron worker(s), 0 job worker(s); limit_request 1000, "
+            "limit_time_cpu 60s; limit_time_real 120s, cron 120s, job 120s; "
+            "limit_memory_soft 2048 MiB; db_maxconn 64" % server.pid
+        )
+
+    def test_no_http_says_so(self):
+        from .conftest import prefork_server
+
+        with server_settings.override(http_enable=False, workers=2):
+            server = prefork_server()
+            said = self._said(server)
+        assert "no HTTP" in said and "websocket" not in said

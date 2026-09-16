@@ -806,6 +806,21 @@ class PreforkServer(CommonServer):
         )
         return sock
 
+    def describe_capacity(self) -> str:
+        settings = self.settings
+        if not settings.http_enable:
+            http = "no HTTP"
+        else:
+            http = (
+                f"HTTP {self.interface}:{self.port} ({self.population} workers), "
+                f"websocket {self.interface}:{settings.gevent_port}"
+            )
+        return (
+            f"{http}, {settings.max_cron_threads} cron worker(s), "
+            f"{settings.job_workers} job worker(s); limit_request {self.limit_request}, "
+            f"limit_time_cpu {settings.limit_time_cpu}s"
+        )
+
     @property
     def shutdown_requested(self) -> bool:
         return any(sig in (signal.SIGINT, signal.SIGTERM) for sig in self.queue)
@@ -1002,6 +1017,7 @@ class PreforkServer(CommonServer):
         # Only the process systemd started talks to it: a replacement
         # generation reports through its supervisor's promotion instead.
         speaks = not self.handoff.is_supervised
+        self.log_ready()
         if speaks:
             notify_ready()
         watchdog = Watchdog() if speaks else None
