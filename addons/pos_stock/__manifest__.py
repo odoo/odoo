@@ -14,6 +14,7 @@
         'views/pos_session_view.xml',
         'views/res_config_settings_views.xml',
         'views/stock_reference_views.xml',
+        'views/stock_warehouse_views.xml',
         'receipt/pos_order_receipt.xml',
         'security/ir.access.csv',
     ],
