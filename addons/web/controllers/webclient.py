@@ -11,7 +11,6 @@ from odoo.modules import Manifest
 from odoo.tools import translate
 from odoo.tools.misc import file_path
 
-
 from .utils import _local_web_translations
 
 _logger = logging.getLogger(__name__)
@@ -88,6 +87,14 @@ class WebClient(http.Controller):
         return request.make_json_response(body, [
             ('Cache-Control', f'public, max-age={STATIC_CACHE_LONG}'),
         ])
+
+    @http.route('/website/translations', type='http', auth='public', readonly=True, sitemap=False)
+    def get_website_translations(self, hash=None, lang=None, mods=None):
+        IrHttp = request.env['ir.http'].sudo()
+        modules = IrHttp._get_translation_frontend_modules_name()
+        if mods:
+            modules += mods.split(',')
+        return self.translations(hash, mods=','.join(modules), lang=lang)
 
     @http.route('/web/webclient/version_info', type='jsonrpc', auth="none")
     def version_info(self):
