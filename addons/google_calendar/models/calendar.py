@@ -56,10 +56,12 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
-        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+        events = super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+        events._check_alarm_ids_sync_limit()
+        return events
 
     @api.model
     def _check_values_to_sync(self, values):
@@ -96,7 +98,18 @@ class Meeting(models.Model):
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
+        if 'alarm_ids' in values:
+            self._check_alarm_ids_sync_limit()
         return res
+
+    def _check_alarm_ids_sync_limit(self):
+        """ Google Calendar only accepts up to 5 reminders per event.
+        Log a message on every record in self that exceeds this limit.
+        """
+        records_over_limit = self.filtered(lambda record: len(record.alarm_ids) > 5)
+        if records_over_limit:
+            body = _("This event has more than 5 reminders, only the first 5 will be synced to Google Calendar.")
+            records_over_limit._message_log_batch(bodies={record.id: body for record in records_over_limit})
 
     def _check_modify_event_permission(self, values):
         """ Check if event modification attempt by attendee is valid to avoid duplicate events creation. """
@@ -309,10 +322,11 @@ class Meeting(models.Model):
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
             start['dateTime'] = pytz.utc.localize(self.start).isoformat()
             end['dateTime'] = pytz.utc.localize(self.stop).isoformat()
+        # The Google Calendar API only accepts up to 5 reminders per event.
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
-        } for alarm in self.alarm_ids]
+        } for alarm in self.alarm_ids[:5]]
 
         attendees = self.attendee_ids
         attendee_values = [{
