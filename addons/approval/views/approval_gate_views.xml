@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_approval_gate_list" model="ir.ui.view">
+        <field name="name">approval.gate.list</field>
+        <field name="model">approval.gate</field>
+        <field name="arch" type="xml">
+            <list string="Code Gates" editable="bottom" create="false" delete="false">
+                <field name="model_name" readonly="1" />
+                <field name="operation" readonly="1" />
+                <field name="observation_count" string="Seen" readonly="1" />
+                <field name="would_block_count" readonly="1" />
+                <field name="enforced" widget="boolean_toggle" />
+                <button
+                    name="action_view_observations"
+                    type="object"
+                    string="Watched Calls"
+                    icon="fa-search" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_approval_gate_search" model="ir.ui.view">
+        <field name="name">approval.gate.search</field>
+        <field name="model">approval.gate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="model_name" />
+                <field name="operation" />
+                <filter
+                    name="enforced"
+                    string="Enforcing"
+                    domain="[('enforced', '=', True)]" />
+                <filter
+                    name="watching"
+                    string="Only Watching"
+                    domain="[('enforced', '=', False)]" />
+                <group>
+                    <filter
+                        name="groupby_model"
+                        string="Model"
+                        context="{'group_by': 'model_name'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_approval_gate" model="ir.actions.act_window">
+        <field name="name">Code Gates</field>
+        <field name="res_model">approval.gate</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No model gates an operation in its own code</p>
+            <p>
+                These rows are not created by hand. A model declares which of its
+                methods are terminal transitions, and the registry keeps one row per
+                declaration; the only thing left to decide is whether each one is
+                enforcing yet.
+            </p>
+            <p>
+                While a gate is only watching, a call that reaches its operation by a
+                path the gate does not own is recorded and let through. Read Would Be
+                Refused first: it is exactly what enforcing would start refusing, and
+                it is counted per operation so a cheap gate need not wait for an
+                expensive one.
+            </p>
+        </field>
+    </record>
+
+</odoo>

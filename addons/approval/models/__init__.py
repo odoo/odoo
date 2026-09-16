@@ -23,6 +23,7 @@ from . import (
     approval_request_prediction,
     approval_request_routing,
     approval_decision_log,  # isort: skip -- extends approval.request
+    approval_gate,
     approval_observation,
     approval_rule,
     approval_trace,

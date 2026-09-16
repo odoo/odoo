@@ -954,8 +954,8 @@ switched on, so the table has its own screen: *Settings > Technical > Approvals
 > Watched Calls* (`action_approval_observation`), which opens filtered to
 `would_block` and grouped by model and operation. Those rows are what
 enforcement would begin refusing. Rows with no `binding_id` come from a code
-gate, whose switch is the `approval.gate_enforced` system parameter rather than
-a binding's mode; the search view separates the two.
+gate and are switched on through `approval.gate` rather than a binding's mode;
+the search view separates the two.
 
 ### Fields
 
@@ -969,6 +969,54 @@ a binding's mode; the search view separates the two.
 | `elevation` | Selection(none/superuser/self_elevated) | Yes | **Yes** | index |
 | `would_block` | Boolean | Yes | No | whether Block would have refused this call — the number that sizes switching a binding on |
 | `date` | Datetime | Yes | No | default=now, index |
+
+---
+
+## approval.gate
+
+| Key | Value |
+|-----|-------|
+| Model | `approval.gate` |
+| File | `models/approval_gate.py` |
+| Type | Model |
+| Order | `model_name, operation` |
+
+One row per terminal transition a model gates in its own code -- the configured
+twin of `approval.binding`. A binding exists because a person decided to gate a
+method; a gate exists because a model declares `_approval_operations`, so
+**nobody creates these**. `_register_hook` calls `_sync_declared_gates`, which
+walks the registry, adds a row for each declared operation and deletes any row
+whose operation the model no longer declares. A new adopter therefore appears
+the next time the registry is built, without a data file.
+
+The only field a person may write is `enforced`, and that is the point: the row
+is a place to put the decision the counts beside it inform. Enforcement is **per
+operation**, so a gate whose watched calls cost nothing can be switched on while
+an expensive one keeps watching. `mixin.approval.gate._is_approval_gate_enforced`
+asks `_is_enforced`, which reads an `ormcache`d set cleared on every write here.
+
+Supersedes `approval.gate_enforced`, the single system parameter 19.0.2.9.0
+shipped with. `_adopt_legacy_enforcement` carries a `1` there onto every row and
+deletes the parameter, so a database that was enforcing keeps enforcing. It runs
+from the sync rather than from a migration because **no migration phase runs late
+enough**: the gates cannot be discovered until every adopter is in the registry,
+which is `_register_hook`, and end migrations run before that.
+
+A document holds **one** `approval_request_id` at a time, so a model may declare
+several gated operations but cannot have two of them waiting at once.
+
+### Fields
+
+| Field | Type | Stored | Required | Key Attributes |
+|-------|------|--------|----------|----------------|
+| `model_name` | Char | Yes | **Yes** | index, readonly. The gated model |
+| `operation` | Char | Yes | **Yes** | index, readonly. The method the model declares as terminal |
+| `model_id` | Many2one(`ir.model`) | No | No | compute, for display |
+| `enforced` | Boolean | Yes | No | the one writable field: whether this operation refuses a bypassing caller yet |
+| `observation_count` | Integer | No | No | compute: every watched call on this operation |
+| `would_block_count` | Integer | No | No | compute: those enforcement would refuse -- the cost of switching it on |
+
+Constraint: UNIQUE `(model_name, operation)`.
 
 ---
 

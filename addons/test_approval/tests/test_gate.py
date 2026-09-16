@@ -29,6 +29,14 @@ class TestApprovalGate(ApprovalCommon):
     def _approve(self, document):
         document.approval_request_id.with_user(self.approver_1).action_approve()
 
+    def _enforce(self, operation):
+        gate = self.env["approval.gate"].search(
+            [("model_name", "=", "approval.test.gated"), ("operation", "=", operation)]
+        )
+        self.assertEqual(len(gate), 1, "the registry declares this gate")
+        gate.enforced = True
+        return gate
+
     def test_the_operation_asks_instead_of_running(self):
         document = self._document()
         document.action_ship()
@@ -104,7 +112,7 @@ class TestApprovalGate(ApprovalCommon):
         )
 
     def test_another_path_is_refused_once_the_gate_is_enforced(self):
-        self.env["ir.config_parameter"].sudo().set_param("approval.gate_enforced", "1")
+        self._enforce("action_ship")
         document = self._document()
         document.action_ship()
         with self.assertRaises(UserError):
@@ -112,7 +120,78 @@ class TestApprovalGate(ApprovalCommon):
         self.assertEqual(document.ship_count, 0)
 
     def test_the_gate_admits_what_it_let_through(self):
-        self.env["ir.config_parameter"].sudo().set_param("approval.gate_enforced", "1")
+        self._enforce("action_ship")
         document = self._document(test_category_id=False)
         document.action_ship()
         self.assertEqual(document.ship_count, 1)
+
+    def test_the_registry_declares_a_row_for_every_gated_operation(self):
+        gates = self.env["approval.gate"].search(
+            [("model_name", "=", "approval.test.gated")]
+        )
+        self.assertEqual(
+            set(gates.mapped("operation")),
+            {"action_ship", "action_bill"},
+            "both declared operations have a row, and nobody created them",
+        )
+        self.assertFalse(
+            gates.filtered("enforced"),
+            "a gate starts out watching, so shipping the code changes nothing",
+        )
+
+    def test_enforcing_one_operation_leaves_the_other_watching(self):
+        self._enforce("action_ship")
+        document = self._document()
+
+        self.assertTrue(document._is_approval_gate_enforced("action_ship"))
+        self.assertFalse(
+            document._is_approval_gate_enforced("action_bill"),
+            "a gate is switched on per operation, so a cheap one need not wait "
+            "for an expensive one",
+        )
+
+        document.action_ship()
+        with self.assertRaises(UserError):
+            document.action_ship_from_elsewhere()
+
+    def test_the_counts_beside_a_gate_are_its_own_observations(self):
+        document = self._document()
+        document.action_ship()
+        document.action_ship_from_elsewhere()
+
+        ship = self.env["approval.gate"].search(
+            [
+                ("model_name", "=", "approval.test.gated"),
+                ("operation", "=", "action_ship"),
+            ]
+        )
+        bill = self.env["approval.gate"].search(
+            [
+                ("model_name", "=", "approval.test.gated"),
+                ("operation", "=", "action_bill"),
+            ]
+        )
+        self.assertEqual(ship.would_block_count, 1)
+        self.assertEqual(
+            bill.would_block_count,
+            0,
+            "a gate counts what reached its own operation, not its neighbour's",
+        )
+
+    def test_a_database_that_was_enforcing_globally_keeps_enforcing(self):
+        parameters = self.env["ir.config_parameter"].sudo()
+        parameters.set_param("approval.gate_enforced", "1")
+
+        self.env["approval.gate"]._adopt_legacy_enforcement()
+
+        gates = self.env["approval.gate"].search(
+            [("model_name", "=", "approval.test.gated")]
+        )
+        self.assertTrue(
+            all(gates.mapped("enforced")),
+            "the single switch meant every gate, so every gate keeps it",
+        )
+        self.assertFalse(
+            parameters.search([("key", "=", "approval.gate_enforced")]),
+            "and the superseded parameter is gone, so it cannot disagree later",
+        )

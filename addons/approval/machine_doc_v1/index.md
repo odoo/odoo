@@ -14,7 +14,7 @@ dashboards.
 | Key | Value |
 |-----|-------|
 | Technical name | `approval` |
-| Version | 19.0.2.9.0 (matches `__manifest__.py`) |
+| Version | 19.0.2.10.0 (matches `__manifest__.py`) |
 | Category | Human Resources/Approvals |
 | Dependencies | `mail`, and nothing else. `approval_automation` (which needs `automation`) and `approval_analytics` (which needs `mixin_report_sql`) were split out at 19.0.2.0.0 so that adopting `mixin.approval` costs one manifest row rather than nineteen prerequisites; both auto-install |
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
@@ -57,6 +57,7 @@ dashboards.
 | `mixin_approval_domain.py` | `mixin.approval.domain` (Abstract) | Base of `approval.rule` and `approval.binding`: parses a subject domain and walks every dotted path in it against the registry at save time, because a condition that never matches reads as "approval was not required" |
 | `approval_category_step.py` | `approval.category.step`, `approval.category.step.member` | Steps: a category that needs several pools, each with its own quorum, declares them. A pool is its members (each with an optional end date, so a delegation is a membership that expires) together with a group. Every request routes by the steps that apply to it |
 | `approval_binding.py` | `approval.binding` | Gates a model's method on an approval by wrapping it at registry load: Observe, Block or Request, with a `sudo_policy` that tells the real superuser apart from an ordinary user elevated by `sudo()` |
+| `approval_gate.py` | `approval.gate` | One row per terminal transition a model gates in its own code, discovered from the registry at `_register_hook` rather than created: the place to record, per operation, whether the gate has stopped watching and started refusing |
 | `approval_observation.py` | `approval.observation` | Append-only record of each gated call with the caller's elevation and whether Block would have refused it — how a binding is sized before it is switched on |
 | `approval_binding_client.py` | extends `approval.binding` | What the approval button asks: `get_button_approvals`, `check_button_approval`, `action_decide_approval`, `action_withdraw_decision`, and the gated-model set `get_views` reads |
 | `approval_binding_editor.py` | extends `approval.binding` | What Studio's editor asks: `create_step_for_button` (binds the button on its first step), `action_open_button_steps` (a kanban of the button's steps first) |
@@ -230,7 +231,7 @@ approval/
 |   +-- approval_request_report.xml   # QWeb PDF report action
 +-- migrations/                       # 29 script directories (1.0.1 .. 2.9)
 +-- tests/                            # 44 test modules + common.py
-+-- views/                            # 9 XML view files
++-- views/                            # 10 XML view files
 +-- data/                             # 6 XML data files
 +-- security/                         # Groups, rules, ACL
 +-- static/                           # JS, SCSS, images
@@ -246,7 +247,7 @@ approval/
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 19 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 20 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
 | Abstract models | 9 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.gate, mixin.approval.lifecycle, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |

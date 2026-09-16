@@ -1,10 +1,9 @@
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from . import approval_trace as trace
 
 OPERATION_CONTEXT_KEY = "approval_gate_operation"
-ENFORCE_PARAM = "approval.gate_enforced"
 
 
 class MixinApprovalGate(models.AbstractModel):
@@ -194,11 +193,8 @@ class MixinApprovalGate(models.AbstractModel):
             )
         )
 
-    @api.model
     def _is_approval_gate_enforced(self, operation):
-        return (
-            self.env["ir.config_parameter"].sudo().get_param(ENFORCE_PARAM, "") == "1"
-        )
+        return self.env["approval.gate"]._is_enforced(self, operation)
 
     def _is_operation_run_on_approval(self, operation):
         self.check_singleton()
