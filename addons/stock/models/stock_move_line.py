@@ -1519,9 +1519,15 @@ class StockMoveLine(models.Model):
                 else:
                     domains.append(Domain('state', '=', 'draft'))
                 if picking_type.batch_group_by_partner:
-                    domains.append(Domain('picking_ids.partner_id', 'in', lines.move_id.partner_id.ids))
+                    partner_domain = Domain('picking_ids.partner_id', 'in', lines.move_id.partner_id.ids)
+                    if any(not line.move_id.partner_id for line in lines):
+                        partner_domain |= Domain('picking_ids.partner_id', '=', False)
+                    domains.append(partner_domain)
                 if picking_type.batch_group_by_destination:
-                    domains.append(Domain('picking_ids.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids))
+                    country_domain = Domain('picking_ids.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids)
+                    if any(not line.move_id.partner_id.country_id for line in lines):
+                        country_domain |= Domain('picking_ids.partner_id.country_id', '=', False)
+                    domains.append(country_domain)
                 if picking_type.batch_group_by_src_loc:
                     domains.append(Domain('picking_ids.location_id', 'in', lines.location_id.ids))
                 if picking_type.batch_group_by_dest_loc:
