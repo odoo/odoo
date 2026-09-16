@@ -222,3 +222,16 @@ def test_a_mode_the_router_recorded_is_kept_for_the_access_log():
     assert current_worker_thread().cursor_mode == "ro->rw", (
         "a request pinned to the primary must not read as a plain rw route"
     )
+
+
+@pytest.mark.parametrize("stamped", ["ro", "ro->rw"])
+def test_a_write_route_reads_rw_whatever_the_speculative_acquisition_stamped(stamped):
+    this, env = _make(readonly_route=False, replica=True)
+    current_worker_thread().cursor_mode = stamped
+    served = _run(this, env, lambda func, env, participant=None: func())
+
+    assert served == "served"
+    assert current_worker_thread().cursor_mode == "rw", (
+        "the registry stamps the read-only probe before the route's mode is "
+        "known; a write route must not log as a replica read"
+    )

@@ -391,6 +391,43 @@ class TestReadYourWrites(unittest.TestCase):
         _cr, mode = router.cursor(readonly=True, pin_key="someone_else")
         self.assertEqual(mode, "ro", "another session still reads from the replica")
 
+    def test_a_pinned_session_refreshes_its_pin_when_the_reused_cursor_writes(self):
+        router, _primary, replica = self._router()
+        clock = [0.0]
+        router.pins = replica_module.WritePins(2.0, clock=lambda: clock[0])
+        router.pins.pin("sid")
+        clock[0] = 1.5
+        cursor, mode = router.cursor(readonly=True, pin_key="sid")
+        cr = typing.cast("_Cursor", cursor)
+        self.assertEqual(mode, "ro->rw")
+        observer = cr.write_observer
+        self.assertIsNotNone(
+            observer,
+            "the primary cursor handed to a pinned session asks at commit too; "
+            "http reuses it for the write route",
+        )
+        assert observer is not None
+        observer()
+        clock[0] = 3.0
+        _cr, mode = router.cursor(readonly=True, pin_key="sid")
+        self.assertEqual(mode, "ro->rw", "the write moved the deadline forward")
+        self.assertEqual(replica.attempts, 0)
+
+    def test_a_demoted_read_only_request_that_writes_pins_too(self):
+        primary = _Conn("primary")
+        replica = _Conn("replica", fails=True)
+        router = ReplicaRouter(_as_conn(primary), _as_conn(replica), write_pin=2.0)
+        cursor, mode = router.cursor(readonly=True, pin_key="sid")
+        self.assertEqual(mode, "ro->rw")
+        self.assertFalse(router.breaker.closed)
+        observer = typing.cast("_Cursor", cursor).write_observer
+        self.assertIsNotNone(
+            observer, "the breaker-open fallback is a primary cursor like any other"
+        )
+        assert observer is not None
+        observer()
+        self.assertTrue(router.pins.is_pinned("sid"))
+
     def test_no_key_means_no_observer_and_no_pin(self):
         router, _primary, _replica = self._router()
         cr = typing.cast("_Cursor", router.cursor(readonly=False)[0])

@@ -879,8 +879,11 @@ one exception, and the scanner has a control showing it tells the two apart.
   seconds.** A replica that has not applied a client's own commit would show
   that client its write as missing. `ReplicaRouter.cursor(pin_key=…)` routes
   a read-only request for a pinned key to the primary (`ro->rw`,
-  `reason=pinned`), and a read-write cursor opened with a key registers
-  `Cursor.on_commit_if_written` — at commit, one
+  `reason=pinned`), and every primary cursor handed out with a key — the
+  read-write route, the pinned read, and the breaker-open or lagging
+  fallback — registers `Cursor.on_commit_if_written` (`_primary_cursor`), so
+  a session that writes through a reused cursor refreshes its pin — at
+  commit, one
   `SELECT txid_current_if_assigned() IS NOT NULL` (an xid is assigned on the
   first write and never otherwise) says whether the transaction wrote, so a
   request that only read pins nothing and keeps the replica. The round trip

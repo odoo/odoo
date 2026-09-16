@@ -145,10 +145,7 @@ class ReplicaRouter:
         if self.readonly is None:
             return self.primary.cursor(), "rw"
         if not readonly:
-            primary = self.primary.cursor()
-            if pin_key is not None and self.pins.window:
-                primary.on_commit_if_written(lambda: self.pins.pin(pin_key))
-            return primary, "rw"
+            return self._primary_cursor(pin_key), "rw"
         if pin_key is not None and self.pins.is_pinned(pin_key):
             _debug.logic(
                 "replica.route",
@@ -156,7 +153,7 @@ class ReplicaRouter:
                 mode="ro->rw",
                 reason="pinned",
             )
-            return self.primary.cursor(), "ro->rw"
+            return self._primary_cursor(pin_key), "ro->rw"
         cr = self._resolve_replica_cursor(self.readonly)
         if cr is not None:
             _debug.logic(
@@ -173,7 +170,17 @@ class ReplicaRouter:
             breaker_closed=self.breaker.closed,
             lagging=not self.lag.is_replica_usable(),
         )
-        return self.primary.cursor(), "ro->rw"
+        return self._primary_cursor(pin_key), "ro->rw"
+
+    # Every primary cursor handed out with a key can pin, whatever branch
+    # chose the primary: http acquires read-only first and reuses the cursor
+    # when the route writes, so a pinned or demoted request that writes must
+    # refresh the pin or its next read lands on the replica unpinned.
+    def _primary_cursor(self, pin_key: typing.Hashable | None) -> BaseCursor:
+        primary = self.primary.cursor()
+        if pin_key is not None and self.pins.window:
+            primary.on_commit_if_written(lambda: self.pins.pin(pin_key))
+        return primary
 
     def _resolve_replica_cursor(self, replica: Connection) -> BaseCursor | None:
         sample_due = self.lag.is_sample_due()

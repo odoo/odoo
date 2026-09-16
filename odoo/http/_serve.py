@@ -411,9 +411,12 @@ class _RequestServeMixin(RequestState):
                 promoted = True
             else:
                 thread = current_worker_thread()
-                # The router records "ro->rw" when it pinned a read-only
-                # request to the primary; that reading outranks ours.
-                if getattr(thread, "cursor_mode", None) is None:
+                # The registry stamps the speculative read-only acquisition
+                # ("ro", or "ro->rw" when the session is pinned). Only a
+                # readonly route whose cursor came back on the primary keeps
+                # that reading; a write route ran read/write whatever the
+                # router chose first.
+                if not readonly or getattr(thread, "cursor_mode", None) is None:
                     thread.cursor_mode = "rw"
 
             env = self._require_env()
