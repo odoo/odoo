@@ -1123,7 +1123,7 @@ class BaseModel(metaclass=MetaModel):
                 for record, xid in self.env[model].browse(ids).__ensure_xml_id():
                     for i, j in xidmap.pop((record._name, record.id)):
                         lines[i][j] = xid
-            assert not xidmap, "failed to export xids for %s" % ', '.join('{}:{}' % it for it in xidmap.items())
+            assert not xidmap, "failed to export xids for %s" % ', '.join('%s:%s' % it for it in xidmap.items())
 
         return lines
 
