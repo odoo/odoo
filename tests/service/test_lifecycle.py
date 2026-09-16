@@ -1,4 +1,5 @@
 import errno
+import logging
 import os
 import signal
 import threading
@@ -588,3 +589,75 @@ class TestSigHupSentinel:
                 f"__all__ and has no consumer outside this suite"
             )
         assert set(server.__all__) <= set(vars(server))
+
+
+class TestTheOpenFileBudgetIsEnsuredAtBoot:
+    """`db_maxconn` × the HTTP slots × the idle-connection budget can exceed
+    the default 1024 descriptors; the process finds out on accept()."""
+
+    def test_the_threaded_demand_counts_every_descriptor_holder(self):
+        from odoo.service import lifecycle
+
+        with (
+            server_settings.override(
+                workers=0, db_maxconn=64, max_cron_threads=2, job_workers=1
+            ),
+            patch.dict(
+                os.environ,
+                {
+                    "ODOO_MAX_HTTP_THREADS": "30",
+                    "ODOO_HTTP_MAX_IDLE_CONNECTIONS": "500",
+                },
+            ),
+        ):
+            demand = lifecycle._get_descriptor_budget_demand()
+        assert demand == 64 + 30 + 500 + 3 + lifecycle.DESCRIPTOR_HEADROOM
+
+    def test_the_prefork_demand_is_the_largest_child(self):
+        from odoo.service import lifecycle
+
+        with (
+            server_settings.override(workers=4, db_maxconn=64, db_maxconn_gevent=8),
+            patch.dict(
+                os.environ,
+                {
+                    "ODOO_MAX_HTTP_THREADS": "30",
+                    "ODOO_HTTP_MAX_IDLE_CONNECTIONS": "500",
+                },
+            ),
+        ):
+            demand = lifecycle._get_descriptor_budget_demand()
+        assert demand == max(64 + 1, 8 + 30 + 500) + lifecycle.DESCRIPTOR_HEADROOM
+
+    def _run(self, soft, hard, demand, caplog):
+        import resource
+
+        from odoo.service import lifecycle
+
+        calls = []
+        with (
+            patch.object(
+                lifecycle, "_get_descriptor_budget_demand", return_value=demand
+            ),
+            patch.object(resource, "getrlimit", return_value=(soft, hard)),
+            patch.object(resource, "setrlimit", side_effect=lambda *a: calls.append(a)),
+            caplog.at_level(logging.INFO, logger="odoo.service.server"),
+        ):
+            lifecycle._ensure_descriptor_budget()
+        return calls, [r.getMessage() for r in caplog.records]
+
+    def test_enough_soft_limit_touches_nothing(self, caplog):
+        calls, said = self._run(4096, 4096, 800, caplog)
+        assert calls == [] and said == []
+
+    def test_a_low_soft_limit_is_raised_to_the_hard_one(self, caplog):
+        import resource
+
+        calls, said = self._run(1024, 524288, 4000, caplog)
+        assert calls == [(resource.RLIMIT_NOFILE, (524288, 524288))]
+        assert any("raised from 1024 to 524288" in m for m in said)
+
+    def test_a_hard_limit_below_the_demand_is_named_with_the_remedy(self, caplog):
+        calls, said = self._run(1024, 1024, 4000, caplog)
+        assert calls == []
+        assert any("LimitNOFILE" in m and "4000" in m for m in said)

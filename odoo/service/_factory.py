@@ -17,6 +17,7 @@ from ._watcher import (
     watchdog,
 )
 from .lifecycle import (
+    _ensure_descriptor_budget,
     _limit_malloc_arenas,
     _reexec_server,
     _warn_on_connection_budget,
@@ -165,6 +166,7 @@ def _run_configured_server(
     set_server(server)
 
     _warn_on_connection_budget()
+    _ensure_descriptor_budget()
 
     watcher = _start_watcher(settings, server)
 

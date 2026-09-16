@@ -419,6 +419,74 @@ def _warn_on_connection_budget() -> None:
     )
 
 
+DESCRIPTOR_HEADROOM = 128
+"""Descriptors a process needs beside the ones the budget counts: log files,
+pipes, the listening and wake sockets, the inotify instance, the terminal."""
+
+
+def _get_descriptor_budget_demand() -> int:
+    # The largest single process this configuration runs.  Threaded: every
+    # HTTP slot and every parked idle connection is a socket, each cron and
+    # job thread holds a listener session, and the pool holds db_maxconn.
+    # Prefork: a worker holds db_maxconn and one client; the evented child
+    # is the threaded shape on its own port.  Workers inherit the limit, so
+    # the per-process maximum is what has to fit.
+    from ._transport import TransportLimits
+    from .httpd import compute_http_thread_limit
+
+    settings = current()
+    threads, _ = compute_http_thread_limit(settings)
+    http = threads + TransportLimits.from_environment().max_idle_connections
+    listeners = settings.max_cron_threads + settings.job_workers
+    if settings.workers:
+        worker = settings.db_maxconn + 1
+        evented = (settings.db_maxconn_gevent or settings.db_maxconn) + http
+        return max(worker, evented) + DESCRIPTOR_HEADROOM
+    return settings.db_maxconn + http + listeners + DESCRIPTOR_HEADROOM
+
+
+def _ensure_descriptor_budget() -> None:
+    if not IS_POSIX:
+        return
+    import resource
+
+    demand = _get_descriptor_budget_demand()
+    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    _debug.logic("service.descriptor_budget", demand=demand, soft=soft, hard=hard)
+    if soft == resource.RLIM_INFINITY or soft >= demand:
+        return
+    if hard == resource.RLIM_INFINITY or hard >= demand:
+        # The hard limit is the operator's ceiling; the soft one is ours to
+        # spend, as nginx and PostgreSQL raise theirs.
+        try:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+        except ValueError, OSError:
+            _logger.warning(
+                "Could not raise the open-file limit from %d to %d", soft, hard
+            )
+            _debug.logic("service.descriptor_budget_raise_failed", soft=soft, hard=hard)
+            return
+        _logger.info(
+            "Open-file limit raised from %d to %d: this configuration may hold "
+            "%d descriptors at once",
+            soft,
+            hard,
+            demand,
+        )
+        _debug.lifecycle("service.descriptor_budget_raised", soft=soft, hard=hard)
+        return
+    _debug.logic("service.descriptor_budget_exceeded", demand=demand, hard=hard)
+    _logger.warning(
+        "Open-file limit is %d but this configuration may hold %d descriptors at "
+        "once (db_maxconn, the HTTP thread and idle-connection budgets, the "
+        "listener sessions). Under load this surfaces as 'Too many open files' "
+        "on accept(). Raise LimitNOFILE= on the unit (or ulimit -n), or lower "
+        "db_maxconn / ODOO_HTTP_MAX_IDLE_CONNECTIONS.",
+        hard,
+        demand,
+    )
+
+
 __all__ = (
     "load_server_wide_modules",
     "preload_registries",
