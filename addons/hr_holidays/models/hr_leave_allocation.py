@@ -98,12 +98,12 @@ class HrLeaveAllocation(models.Model):
     date_to = fields.Date('End Date', copy=False, tracking=True)
     work_entry_type_id = fields.Many2one(
         "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
-        domain=_domain_work_entry_type_id)
+        ui_domain=_domain_work_entry_type_id)
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
-        index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
+        index=True, ondelete="restrict", required=True, tracking=True, ui_domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')

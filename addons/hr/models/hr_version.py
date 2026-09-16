@@ -188,7 +188,7 @@ class HrVersion(models.Model):
 
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
-        help='Person responsible for validating the employee\'s contracts.', domain=lambda self: self._get_hr_responsible_domain(),
+        help='Person responsible for validating the employee\'s contracts.', ui_domain=lambda self: self._get_hr_responsible_domain(),
         default=lambda self: self.env.user, required=True, groups="hr.group_hr_user")
 
     _check_contract_start_date_defined = models.Constraint(

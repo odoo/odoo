@@ -629,7 +629,7 @@ class IrActionsServer(models.Model):
     show_code_history = fields.Boolean(compute='_compute_show_code_history')
     # Multi
     parent_id = fields.Many2one('ir.actions.server', string='Parent Action', index=True, ondelete='cascade')
-    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain=lambda self: str(self._get_children_domain()),
+    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, ui_domain=lambda self: str(self._get_children_domain()),
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(

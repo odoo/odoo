@@ -28,7 +28,7 @@ class AccountMove(models.Model):
         copy=False,
         tracking=True,
         check_company=True,
-        domain="[('usage', '=', l10n_vn_symbol_usage)]",
+        ui_domain="[('usage', '=', l10n_vn_symbol_usage)]",
     )
     l10n_vn_template_code = fields.Char(
         related='l10n_vn_symbol_id.invoice_template_code',

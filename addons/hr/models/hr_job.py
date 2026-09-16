@@ -31,7 +31,7 @@ class HrJob(models.Model):
     recruiter_id = fields.Many2one(
         'hr.employee',
         "Recruiter",
-        domain=_recruiter_domain,
+        ui_domain=_recruiter_domain,
         check_company=True,
         default=lambda self: self.env.user.employee_id,
         tracking=True,

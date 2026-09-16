@@ -37,7 +37,7 @@ class QuotationDocument(models.Model):
         relation="header_footer_quotation_template_rel",
         groups="sales_team.group_sale_salesman",
         check_company=True,
-        ui_domain="[('template_type', '=', 'quotation')]",
+        domain=[('template_type', '=', 'quotation')],
     )
     form_field_ids = fields.Many2many(
         string="Form Fields Included",

@@ -7,7 +7,7 @@ from odoo.tools import format_amount, frozendict
 from odoo.tools.misc import split_every
 from odoo.tools.constants import IN_MAX
 
-ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
+ACCOUNT_DOMAIN = [('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card', 'off_balance'))]
 
 
 class ProductCategory(models.Model):

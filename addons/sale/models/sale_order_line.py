@@ -115,7 +115,7 @@ class SaleOrderLine(models.Model):
         # without modifying the related product_id when updated.
         # magic way to make sure the domain integrates the check_company _domain_product_id logics
         # despite not being a check_company=True field
-        domain=lambda self: self._fields["product_id"]._description_domain(self.env),
+        ui_domain=lambda self: self._fields["product_id"]._description_domain(self.env),
     )
 
     product_template_attribute_value_ids = fields.Many2many(
@@ -208,7 +208,7 @@ class SaleOrderLine(models.Model):
         precompute=True,
         context={"active_test": False, "hide_original_tax_ids": True},
         check_company=True,
-        domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
+        ui_domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
     )
     document_tax_mode = fields.Selection(related="order_id.document_tax_mode")
 

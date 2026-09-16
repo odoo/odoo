@@ -109,7 +109,7 @@ class AccountMoveLine(models.Model):
         index=False,  # covered by _account_id_date_idx
         bypass_search_access=True,
         ondelete="restrict",
-        ui_domain="[('account_type', '!=', 'off_balance')]",
+        domain=[('account_type', '!=', 'off_balance')],
         check_company=True,
         tracking=True,
     )

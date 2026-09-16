@@ -42,7 +42,7 @@ class ProductFeed(models.Model):
         store=True,
         readonly=False,
         required=True,
-        domain="[('id', 'in', website_lang_ids)]",
+        ui_domain="[('id', 'in', website_lang_ids)]",
     )
     website_lang_ids = fields.Many2many(related="website_id.language_ids")
     product_category_ids = fields.Many2many("product.public.category", string="Categories")

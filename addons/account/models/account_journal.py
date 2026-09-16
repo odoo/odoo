@@ -114,7 +114,7 @@ class AccountJournal(models.Model):
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict', index='btree_not_null',
         string='Default Account',
-        domain=_get_default_account_domain)
+        ui_domain=_get_default_account_domain)
     default_account_active = fields.Boolean(related='default_account_id.active', string="Default Account Active")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True, index='btree_not_null',
