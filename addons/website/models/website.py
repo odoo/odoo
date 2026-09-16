@@ -542,6 +542,7 @@ class Website(models.CachedModel):
         # For text content generation
         return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, **kwargs)
 
+    @api.private
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus', 'shop_btn_href': '#'}
 
@@ -696,11 +697,13 @@ class Website(models.CachedModel):
         if not self.env.user.has_group('website.group_website_designer'):
             raise AccessError(_("You don't have the necessary access rights to use the website configurator."))
 
+    @api.private
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
             m.sequence = module_data[m.url]['sequence']
 
+    @api.private
     def configurator_get_footer_links(self):
         return [
             {'text': _("Privacy Policy"), 'href': '/privacy'},
@@ -1228,6 +1231,7 @@ class Website(models.CachedModel):
     # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
     # additional setup steps on the generated website. This acts as an entry point for modules to
     # customize the website.
+    @api.private
     def configurator_addons_apply(self, industry_name=None, **kwargs):
         pass
 
