@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from ast import literal_eval
+
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
@@ -7,6 +9,11 @@ from odoo.exceptions import UserError
 
 @tagged('post_install', '-at_install')
 class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
+
+    def _get_selectable_accrual_accounts(self, wizard):
+        domain_str = wizard._fields['account_id'].domain
+        domain = literal_eval(domain_str.replace('account_types', str(wizard.account_types)))
+        return self.env['account.account'].search(domain)
 
     @classmethod
     def setUpClass(cls):
@@ -308,6 +315,95 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         wizard_form.date = False
         with self.assertRaises(AssertionError):
             wizard_form.save()
+
+    def test_accrued_account_types_bill_to_receive(self):
+        """ When all lines are received but not (fully) invoiced, only the
+        liability account type should be proposed (bill to receive). """
+        self.purchase_order.order_line.qty_received = 5
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': self.purchase_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'liability_current'})
+
+        # open the wizard from the po lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order.line',
+            'active_ids': self.purchase_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'liability_current'})
+
+    def test_accrued_account_types_prepaid_expense(self):
+        """ When all lines are invoiced ahead of receipt, only the asset
+        account type should be proposed (prepaid expense). """
+        self.purchase_order.order_line.qty_received = 10
+        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move.invoice_date = '2020-01-01'
+        move.action_post()
+        self.purchase_order.order_line.qty_received = 0
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': self.purchase_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current'})
+
+        # open the wizard from the po lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order.line',
+            'active_ids': self.purchase_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current'})
+
+    def test_accrued_account_types_mixed_lines(self):
+        """ When having mixed lines, both account types should be proposed. """
+        purchase_order_line_a, purchase_order_line_b = self.purchase_order.order_line
+        self.purchase_order.order_line.qty_received = 10
+        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move.invoice_date = '2020-01-01'
+        move.action_post()
+
+        # bill to receive
+        purchase_order_line_a.qty_received = 15
+        # prepaid expense
+        purchase_order_line_b.qty_received = 5
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': self.purchase_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+        # open the wizard from the po lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order.line',
+            'active_ids': self.purchase_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+    def test_accrued_account_types_default_no_movement(self):
+        """ When nothing has been received nor invoiced yet, both account
+        types should be proposed by default. """
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': self.purchase_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+        # open the wizard from the po lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order.line',
+            'active_ids': self.purchase_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
 
     def test_accrued_order_wizard_zero_total(self):
         """
