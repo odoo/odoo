@@ -1148,8 +1148,24 @@ campaign ends; the recipe, the cost figures and the first findings are in
   `fail_fast`, a fail-fast borrow ends on a transient probe answer and
   re-probes a surviving unproven empty pool, `get_tables_existing`'s relkinds
   derive from `TableKind`, and the two layer contracts (`imports-only-libs`,
-  `resilience-below-connectivity`) are scanned with a control each. Each was
-  verified to fail when its invariant is violated.
+  `resilience-below-connectivity`) are scanned with a control each. Added
+  2026-09-16: the statement budget is armed before the first statement and
+  not when set, survives commit and rollback on the same cursor, does not
+  spend the replay window and is re-armed on the replacement, is re-armed
+  after a savepoint rollback that reverted it and kept across one that did
+  not, is lifted at once when armed or set in a touched transaction and
+  silently otherwise (`test_invariants`, plus the `TestCursor` boundary in
+  `base/tests/test_db_cursor.py`); a cancel walk skips a connection rehomed
+  to another thread (`test_pool`); scalar rows count against the bind
+  ceiling (`test_bulk`); `replica.pinned` never carries the key, a router
+  with a replica reports under its database and leaves the table when
+  collected, and the router's lag ceiling and pin window follow the settings
+  slot unless given (`test_replica`); the backend ceiling trims the least
+  recently borrowed pool first and FIFO within it, counts checked-out
+  connections without trimming them and never goes below `min_size`
+  (`test_reaper`), with the four psycopg_pool attributes it reads pinned
+  against the installed release in `tests/contract/test_psycopg_pool_internals.py`.
+  Each was verified to fail when its invariant is violated.
   Add the check here when you add an invariant above. One class per invariant:
   a behavioural check against a fake and the structural one (`co_names`, AST)
   sit together, with the AST helpers in `tests/_source.py`; `test_source_pins.py`
