@@ -3,39 +3,43 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
-    status,
-    useEffect,
-    proxy,
-    signal,
-    useScope,
     providePlugins,
+    signal,
+    t,
+    useProps,
+    useScope,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { TemplatePreviewField } from "../../fields/template_preview_field/template_preview_field";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { closestScrollableY } from "@web/core/utils/scrolling";
-import { StyleSheetPlugin } from "../../views/mailing_template_kanban_view/stylesheets_plugin";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { TemplatePreviewField } from "../../fields/template_preview_field/template_preview_field";
 import { getStyleSheets } from "../../utils/iframe_assets";
+import { StyleSheetPlugin } from "../../views/mailing_template_kanban_view/stylesheets_plugin";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
-    static props = {
-        config: { type: Object },
-        themesPromise: Promise,
-        // Reactive wrapper for templateThemes promise: { promise }
-        templateThemes: Object,
-        iframeRef: { type: Function },
-    };
     static components = {
         TemplatePreviewField,
     };
 
+    props = useProps({
+        config: t.object(),
+        iframeRef: t.signal(),
+        /** @type {import("@odoo/owl").AsyncComputed<Record<string, any>[]>} */
+        templates: t.function(),
+    });
+
     themeSelectorWrapperRef = signal.ref();
 
+    get commonThemes() {
+        return this.themeService.getCommonThemes();
+    }
+
+    get simpleThemes() {
+        return this.themeService.getSimpleThemes();
+    }
+
     setup() {
-        this.orm = useService("orm");
-        this.action = useService("action");
         this.themeService = useService("mass_mailing.themes");
         const scope = useScope();
         providePlugins([StyleSheetPlugin], {
@@ -48,37 +52,11 @@ export class ThemeSelector extends Component {
                 ),
             ],
         });
-        this.config = this.props.config;
-        this.commonThemes = this.themeService.getCommonThemes();
-        this.simpleThemes = this.themeService.getSimpleThemes();
-        this.state = proxy({
-            loading: false,
-            templates: [],
-            showBanner: !this.props.config.isTemplate,
-        });
-        onWillStart(async () => {
-            const { themesPromise, templateThemes } = this.props;
-            const [templates] = await Promise.all([templateThemes.promise, themesPromise]);
-            Object.assign(this.state, { templates });
-        });
-        let templateThemesPromise = this.props.templateThemes.promise;
-        const keepLastTemplateThemes = new KeepLast();
-        useEffect(async () => {
-            if (status(this) === "destroyed") {
-                return;
-            }
-            if (templateThemesPromise !== this.props.templateThemes.promise) {
-                templateThemesPromise = this.props.templateThemes.promise;
-                this.state.loading = true;
-                const templates = await keepLastTemplateThemes.add(templateThemesPromise);
-                Object.assign(this.state, { templates });
-                this.state.loading = false;
-            }
-        });
+
+        onWillStart(() => this.themeService.load());
+        onWillStart(() => this.props.templates.currentPromise());
+
         this.throttledResize = useThrottleForAnimation(() => {
-            if (status(this) === "destroyed") {
-                return;
-            }
             const iframe = this.props.iframeRef();
             iframe.style.width = "";
             const height = Math.trunc(
@@ -114,14 +92,14 @@ export class ThemeSelector extends Component {
     }
 
     onSelectTemplate(html) {
-        if (this.state.loading) {
+        if (this.props.templates.loading()) {
             return;
         }
         this.props.config.setThemeHTML(html);
     }
 
     onSelectTheme(themeOptions) {
-        if (this.state.loading) {
+        if (this.props.templates.loading()) {
             return;
         }
         this.props.config.setThemeHTML(themeOptions.html);

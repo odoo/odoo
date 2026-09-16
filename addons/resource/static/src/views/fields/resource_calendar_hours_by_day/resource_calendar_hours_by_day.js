@@ -1,6 +1,6 @@
+import { Component, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export const WEEKDAY_LABELS = [
@@ -24,7 +24,8 @@ export function formatHoursLabel(hours) {
 
 export class CalendarHoursByDay extends Component {
     static template = "resource.CalendarHoursByDay";
-    static props = standardFieldProps;
+
+    props = useProps(standardFieldProps);
 
     get isVariable() {
         return this.props.record.data.calendar_type === "variable";

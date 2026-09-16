@@ -1,6 +1,6 @@
-import { beforeEach, expect, test, waitFor } from "@odoo/hoot";
-import { Component, onMounted, xml } from "@odoo/owl";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { beforeEach, expect, test, waitFor } from "@odoo/hoot";
+import { Component, onMounted, t, useProps, xml } from "@odoo/owl";
 import {
     defineActions,
     defineModels,
@@ -18,7 +18,11 @@ class TestClientAction extends Component {
         <div class="test_client_action">
             ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>`;
-    static props = ["*"];
+
+    props = useProps({
+        action: t.object(),
+    });
+
     setup() {
         onMounted(() => this.env.config.setDisplayName(`Client action ${this.props.action.id}`));
     }
@@ -72,8 +76,8 @@ test("test display_notification client action with newlines", async () => {
         params: {
             notification: {
                 message: "Item 1%(NOTIF_NEWLINE)sItem 2",
-                button: { name:"View", action: {} },
-                type: "success"
+                button: { name: "View", action: {} },
+                type: "success",
             },
         },
     });

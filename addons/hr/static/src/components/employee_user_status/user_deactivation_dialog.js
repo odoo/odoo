@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 /**
@@ -8,10 +8,11 @@ import { Dialog } from "@web/core/dialog/dialog";
 export class UserDeactivationDialog extends Component {
     static template = "hr.UserDeactivationDialog";
     static components = { Dialog };
-    static props = {
-        close: Function,
-        canEndCollaboration: Boolean,
-    };
+
+    props = useProps({
+        close: t.function(),
+        canEndCollaboration: t.boolean(),
+    });
 
     onDeactivate() {
         this.props.close("deactivate");
