@@ -86,13 +86,6 @@ class PdpResponseWizard(models.TransientModel):
         help="The payment's currency.",
     )
 
-    # TODO: remove in master
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        self.env['res.config.settings']._pdp_ensure_selection_value('pdp.response.wizard', 'status', 'completed')
-        self.env['res.config.settings']._pdp_ensure_selection_value('pdp.response.wizard', 'reason_code', 'JUSTIF_ABS')
-        return super().fields_get(allfields, attributes)
-
     @api.depends('move_ids')
     def _compute_move_count(self):
         for wizard in self:
