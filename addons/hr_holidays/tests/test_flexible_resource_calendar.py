@@ -148,3 +148,52 @@ class TestFlexibleResourceCalendar(TransactionCase):
             (2025, 32): 40.0,
         }, "week 31 (27/07 -> 02/08): 2 days off 31 & 01 (-16 hours), half day on 28 and 30 (-8 hours), 5 hours off on day 29 / hours = 40-(16+8+5) = 11 hours, no timeoff on week 32")
         self.assertTrue(self.fully_flex_resource.id not in hours_per_week)
+
+    def test_flexible_resource_work_intervals_with_public_holiday(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Hourly Time Off',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+
+        leave = self.env['hr.leave'].with_context(
+            mail_create_nolog=True,
+            mail_notrack=True,
+        ).create({
+            'name': 'Test Hourly Time Off',
+            'holiday_status_id': leave_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2025, 7, 27),
+            'request_date_to': date(2025, 8, 30),
+            'request_hour_from': 0.0,
+            'request_hour_to': 24.0,
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': leave.name,
+            'resource_id': self.flex_resource.id,
+            'calendar_id': self.calendar_40h_flex.id,
+            'date_from': datetime(2025, 8, 13, 0),
+            'date_to': datetime(2025, 8, 15, 0),
+            'holiday_id': leave.id,
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test Public Holiday',
+            'calendar_id': self.calendar_40h_flex.id,
+            'date_from': datetime(2025, 8, 14, 0),
+            'date_to': datetime(2025, 8, 15, 0),
+        })
+
+        start_dt = datetime(2025, 8, 13).astimezone(UTC)
+        end_dt = datetime(2025, 8, 16).astimezone(UTC)
+
+        # Overlapping employee leave and public holiday raise an Expected singleton without the fix.
+        work_intervals, _, _ = (
+            self.flex_resource._get_flexible_resource_valid_work_intervals(
+                start_dt,
+                end_dt,
+            )
+        )
+
+        self.assertTrue(work_intervals[self.flex_resource.id])
