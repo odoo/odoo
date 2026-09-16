@@ -1,6 +1,9 @@
 from unittest.mock import patch
 
+from lxml import etree
+
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import file_path
 
 from odoo.addons.fleet import hooks
 
@@ -41,6 +44,15 @@ class TestBrandAdoption(TransactionCase):
         self.assertEqual(self._adopt(declared), 1)
         self.assertFalse(
             self.env.ref("fleet.brand_twin_two_probe", raise_if_not_found=False)
+        )
+
+    def test_the_catalog_is_seed_data(self):
+        root = etree.parse(file_path(hooks._BRAND_DATA)).getroot()
+        self.assertEqual(
+            root.get("noupdate"),
+            "1",
+            "an upgrade must not write the shipped logo and name back over the "
+            "ones a database keeps for a brand it already had",
         )
 
     def test_every_shipped_brand_declares_a_name(self):
