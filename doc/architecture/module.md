@@ -275,28 +275,29 @@ The raw objects stay private to `Transaction` (`_cache_store`,
 
 Module-level imports only; `if TYPE_CHECKING:` bodies and function-local
 imports are outside every rule (a deferred import is the sanctioned way to
-break a cycle). All eighteen hold as of 2026-09-11.
+break a cycle). Fifteen are tests in `tests/framework/test_layer_contracts.py`
+(Tier 2), which fail on the offending line; the rest are held as the table says.
 
 | Contract | Rule | Enforced by |
 |----------|------|-------------|
-| `libs-is-dependency-free` | `odoo/libs/**` must not import `odoo.*` (except `odoo.libs`) | review |
-| `db-is-orm-agnostic` | `odoo/db/**` must not import `odoo.orm/models/fields/api` | review |
-| `db-imports-only-libs` | `odoo/db/**` imports `odoo.libs`, `odoo.exceptions`, `odoo.release` and the standard library, nothing else — not `odoo.tools`, whose option dict reaches the pool as the typed `PoolSettings` snapshot `odoo.tools.config` builds and hands in | review |
-| `tools-does-not-reach-the-orm-runtime` | `odoo/tools/**` must not import `odoo.orm.runtime` (Layers 0–1 stay allowed) | review |
-| `tools-stays-below-the-serving-tier` | `odoo/tools/**` must not import `odoo.http` **at module scope**; an import inside a function is the sanctioned form (`assets/esm_bridges.py`, `cache_version.py`, `urls.py` each take `request` that way), because the contract bounds what the layer costs to *load*, not what it may use | review |
-| `orm-helpers-and-registration-stay-below-runtime` | `orm/helpers.py` & `orm/registration.py` must not import `orm/runtime` | review |
-| `orm-components-are-pure-python` | `odoo/orm/components/**` must not import `odoo.*` (except `odoo.libs`) | review |
-| `orm-layer0-is-foundational` | Layer-0 (`primitives`, `parsing`, `validation`, `constants`, `_typing`, `_protocols`) imports no higher ORM layer | review |
-| `orm-layer1-below-models-and-runtime` | `orm/fields` & `orm/domain` must not import `orm/models`, `orm/runtime` or `odoo.db`; `fields/_field_ddl.py` → `odoo.db.schema` is the one exception, the only Layer-1 file that issues DDL | review |
-| `orm-models-below-runtime` | `orm/models` (Layer 2) must not import `orm/runtime` (Layer 3) | review |
-| `orm-seams-stay-below-models-and-runtime` | `orm/_recordset` & `orm/decorators` must not import `orm/models` or `orm/runtime` | review |
+| `libs-is-dependency-free` | `odoo/libs/**` must not import `odoo.*` (except `odoo.libs`) | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `db-is-orm-agnostic` | `odoo/db/**` must not import `odoo.orm/models/fields/api` | `tests/framework/test_layer_contracts.py` (Tier 2) (as `db-imports-only-libs`) |
+| `db-imports-only-libs` | `odoo/db/**` imports `odoo.libs`, `odoo.exceptions`, `odoo.release` and the standard library, nothing else — not `odoo.tools`, whose option dict reaches the pool as the typed `PoolSettings` snapshot `odoo.tools.config` builds and hands in | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `tools-does-not-reach-the-orm-runtime` | `odoo/tools/**` must not import `odoo.orm.runtime` (Layers 0–1 stay allowed) | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `tools-stays-below-the-serving-tier` | `odoo/tools/**` must not import `odoo.http` **at module scope**; an import inside a function is the sanctioned form (`assets/esm_bridges.py`, `cache_version.py`, `urls.py` each take `request` that way), because the contract bounds what the layer costs to *load*, not what it may use | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-helpers-and-registration-stay-below-runtime` | `orm/helpers.py` & `orm/registration.py` must not import `orm/runtime` | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-components-are-pure-python` | `odoo/orm/components/**` must not import `odoo.*` (except `odoo.libs`) | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-layer0-is-foundational` | Layer-0 (`primitives`, `parsing`, `validation`, `constants`, `_typing`, `_protocols`) imports no higher ORM layer | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-layer1-below-models-and-runtime` | `orm/fields` & `orm/domain` must not import `orm/models`, `orm/runtime` or `odoo.db`; `fields/_field_ddl.py` → `odoo.db.schema` is the one exception, the only Layer-1 file that issues DDL | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-models-below-runtime` | `orm/models` (Layer 2) must not import `orm/runtime` (Layer 3) | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `orm-seams-stay-below-models-and-runtime` | `orm/_recordset` & `orm/decorators` must not import `orm/models` or `orm/runtime` | `tests/framework/test_layer_contracts.py` (Tier 2) |
 | `facade-boundary` | addon code (`odoo/addons/**` **and** the repo-root `addons/**`) must not import `odoo.orm.*` (use `odoo.api`/`odoo.fields`/`odoo.models`), nor a private module of `odoo.service` or `odoo.http` (`odoo.http._params`, `odoo.service._limits` — use what the package exports) | `test_lint` `orm-import` (`E8508`) for the `odoo.orm.*` half; review for the private-module half |
-| `core-does-not-depend-on-addons` | core packages must not import `odoo.addons.<module>` (bare `odoo.addons` for `__path__` discovery is fine — `tools/assets/esbuild.py` does) | review; 4 tolerated edges, below |
+| `core-does-not-depend-on-addons` | core packages must not import `odoo.addons.<module>` (bare `odoo.addons` for `__path__` discovery is fine — `tools/assets/esbuild.py` does) | `tests/framework/test_layer_contracts.py` (Tier 2) |
 | `db-resilience-below-connectivity` | `db/` `[resilience]` (lag, budget, leaks, reaper, probe, metrics, stats) must not import `[connectivity]` (pool, cursor, ddl, schema, savepoint, schema_cache, bulk, lifecycle, endpoints, replica) | `odoo/db/tests/test_source_pins.py::TestThePackageImportsOnlyWhatItMayDependOn` (Tier 2) |
 | `http-features-below-serving` | `http/` `[features]` (openapi, `_params`, geoip) and `[foundation]` (constants, exceptions, `_protocols`, settings) must not import `[serving]` | `odoo/http/tests/test_layer_contract.py` (Tier 2), module-scope imports outside `TYPE_CHECKING` |
-| `orm-below-the-serving-tier` | `odoo/orm/**` must not import `odoo.service`, `odoo.http` or `odoo.cli` — the serving tier runs on the ORM, never the reverse | review |
-| `transaction-primitive-is-transport-agnostic` | `odoo/service/transaction.py` must not import `odoo.http` — the transport injects a `RetryParticipant` instead, the shape by which `db/` receives its flushing savepoint | review |
-| `root-modules-are-foundational` | `odoo/exceptions.py` & `odoo/release.py` must not import `odoo.*` except `odoo.libs`. **Not** `logutils.py`, which imports `db`/`tools` and is a consumer of the stack | review |
+| `orm-below-the-serving-tier` | `odoo/orm/**` must not import `odoo.service`, `odoo.http` or `odoo.cli` — the serving tier runs on the ORM, never the reverse | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `transaction-primitive-is-transport-agnostic` | `odoo/service/transaction.py` must not import `odoo.http` — the transport injects a `RetryParticipant` instead, the shape by which `db/` receives its flushing savepoint | `tests/framework/test_layer_contracts.py` (Tier 2) |
+| `root-modules-are-foundational` | `odoo/exceptions.py` & `odoo/release.py` must not import `odoo.*` except `odoo.libs`. **Not** `logutils.py`, which imports `db`/`tools` and is a consumer of the stack | `tests/framework/test_layer_contracts.py` (Tier 2) |
 
 Three scope rules the table does not show:
 
@@ -308,10 +309,11 @@ Three scope rules the table does not show:
 
 `core-does-not-depend-on-addons` is the mirror of `facade-boundary`: that one
 stops addons reaching into ORM internals, this one stops the framework depending
-on its own consumer. It tolerates **4 edges**, all `odoo.service` →
-`odoo.addons.base.models.ir_cron` / `…ir_job`: `_threaded.py` lines 169 and
-179, `_worker.py` lines 319 and 433. Reasoning in **Known boundary exceptions**
-in [`gates.md`](gates.md).
+on its own consumer. It holds at zero module-scope edges: the four
+`odoo.service` → `odoo.addons.base.models.ir_cron` / `…ir_job` reaches it once
+tolerated are function-local imports now (`_threaded.py`, `_worker.py`), the
+sanctioned form. Reasoning in **Known boundary exceptions** in
+[`gates.md`](gates.md).
 
 ## Coupling the import graph cannot see
 
@@ -438,11 +440,13 @@ and of the locale goes through the six port objects named under **Seams**; the
 `fields/properties.py`, the import converter in `mixins/load.py`,
 `res.currency.rate` in `read_group/sql.py`, the in-memory reflection's two in
 `model_test_env.py`) and are frozen by
-`odoo/orm/tests/test_architecture_pins.py`, which also freezes the seven
+`odoo/orm/tests/test_architecture_pins.py`, which also freezes the five
 statements the models, fields and domain layers still execute themselves (DDL
-and schema in `mixins/schema.py` and `fields/_field_ddl.py`, read_group's
-grouping sets and its empty-having probe). Both maps may shrink and must not
-grow; a regression names the file and where the site belongs.
+and schema in `mixins/schema.py` and `fields/_field_ddl.py`). Both maps may
+shrink and must not grow; a regression names the file and where the site
+belongs. `doc/architecture/factcheck.sh` derives both counts, the dispatch
+inventory and the mixin composition from the pins and the classes and fails
+when a page stops citing them.
 
 ### Direction rules are blind to cycles
 
@@ -525,7 +529,7 @@ and the transient vacuum's backlog probe moved onto the port and
 | Measure | Value | What it counts |
 |---|---:|---|
 | declared capabilities | 0 | a backend answers every question of the protocol itself; a site that branched on what the backend could do was a site the backend now owns |
-| dispatch sites | 29 across 20 files, 7 in Layer 1 | every `env.backend.<method>(` in the models, fields and domain |
+| dispatch sites | 30 across 20 files, 8 in Layer 1 | every `env.backend.<method>(` in the models, fields and domain |
 | protocol methods without a caller | 0 | every `StorageBackend` method is dispatched from the ORM or from a base model spelling `env.backend.` |
 
 What used to branch now calls the port: a many2many read is `read_m2m_groups`

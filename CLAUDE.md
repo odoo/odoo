@@ -182,7 +182,7 @@ Gates that read the *installed registry* rather than the tree cannot be graded a
 
 ### Other gates
 
-The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree: `tooling/` was removed on 2026-09-11.
+`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.githooks/pre-push` runs it on each pushed commit once `git config core.hooksPath .githooks` is set for the checkout; `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree: `tooling/` was removed on 2026-09-11.
 
 ### Changing the guidelines
 

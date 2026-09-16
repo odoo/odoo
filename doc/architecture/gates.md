@@ -5,12 +5,26 @@
 > operator's manual for the machinery that keeps them true.
 
 What is enforced is the standard tools on their pinned versions, the pytest
-tiers, `test_lint`, and the DB-backed suites. Every one runs by hand; there is
-no CI. The dependency rules in [`module.md`](module.md#dependency-rules) are
-held by review, except the ORM half of the façade boundary, which `test_lint`
-holds.
+tiers, `test_lint`, and the DB-backed suites. The database-free gates run as
+one command, `./gates.sh`, from the repo root; the `.githooks/pre-push` hook
+runs it on every commit about to leave the checkout (enable once per checkout
+with `git config core.hooksPath .githooks`), and `.github/workflows/gates.yml`
+is the same command on a runner. Fifteen of the dependency rules in
+[`module.md`](module.md#dependency-rules) are Tier-2 tests
+(`tests/framework/test_layer_contracts.py`); the ORM half of the façade
+boundary is `test_lint`'s; the rest are held by review.
 
 ## Running the checks
+
+```bash
+./gates.sh                                     # everything below the line, one exit code
+./gates.sh --fast                              # lint and the two tiers only
+./gates.sh --ref <rev>                         # the same, on a worktree of <rev>
+./gates.sh --rust --js                         # add the cargo and JS toolchains
+```
+
+`gates.sh` sequences the commands a developer types; it defines no gate of its
+own, so there is nothing to reconcile with this page:
 
 ```bash
 ruff check odoo/ --no-cache                    # core package, hard zero
@@ -29,6 +43,10 @@ python odoo-bin -d <db> -i test_lint --test-enable --stop-after-init
 resolves `lxml`, `psycopg`, `dateutil` to `Any`), never in the shared venv,
 over `odoo.orm`, `odoo.db`, `odoo.libs`, `odoo.http`, `odoo.service`,
 `odoo.modules`, and separately `odoo.tools`, `odoo.cli`, `odoo.tests`.
+`gates.sh` keeps that bare environment under `~/.cache/odoo-gates/`.
+`doc/architecture/factcheck.sh` derives the figures these pages state (mixin
+composition, base-model reaches, executed statements, dispatch sites) from the
+classes and the pin tests, and fails when a page stops citing one.
 
 **`test_lint`** (`odoo/addons/test_lint/tests/`) holds the rules no general
 linter knows — SQL-injection shapes, gettext discipline, N+1 query shapes,
@@ -90,7 +108,7 @@ method has a caller and every capability flag a consumer; the in-memory backend
 implements the whole protocol. `test_backend_dispatch_surface.py`: the inventory
 of `env.backend` dispatch sites, its header count, and which of them the
 in-memory backend answers differently. `test_architecture_pins.py`: the eight
-`env["<base model>"]` sites outside the six port files and the seven
+`env["<base model>"]` sites outside the six port files and the five
 statements the models, fields and domain layers execute themselves, as frozen
 maps that may shrink and must not grow. None of them is a re-homed gate tree;
 each is a test of one claim this document makes.

@@ -1,0 +1,42 @@
+# One lane: ./gates.sh, the same command a developer runs. The nineteen
+# workflows 532091ea4018 removed each restated a gate and needed tooling to
+# reconcile them with the pages; this one restates nothing.
+name: gates
+
+on:
+  push:
+    branches: ["19.0-marin"]
+  pull_request:
+    branches: ["19.0-marin"]
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            requirements-test.txt
+            requirements-dev.txt
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install the venv
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install -q -r requirements-test.txt -r requirements-dev.txt
+          echo "VIRTUAL_ENV=$RUNNER_TEMP/venv" >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+
+      # CI=true makes a missing odoo_rust an ImportError (odoo/init.py), as intended
+      - name: Build odoo_rust
+        working-directory: crates/odoo_rust
+        run: maturin develop --release
+
+      - name: gates.sh
+        run: ./gates.sh
