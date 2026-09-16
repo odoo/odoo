@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.51
+:Version: 6.52
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -1610,13 +1610,25 @@ Section  Population                                                  Count
      - writes to records; an ``inverse=`` target is ``_inverse_<field>``
    * - Addition
      - ``_add_*``
-     - ``_append_``
-     - ``_insert_`` / ``_push_`` are reserved, not abolished
+     - ``_append_`` ``_fill_`` (of a caller's container)
+     - adds entries to a container — records' x2many, or a dict or list **the caller
+       passes in** and reads back; ``_insert_`` / ``_push_`` are reserved, not abolished
    * - Removal
      - ``_remove_*``
      - ``_delete_`` ``_purge_``
      - ``unlink`` stays reserved for the ORM operation; so do ``_drop_`` /
        ``_discard_``
+
+**An accumulator is Addition, not Payload and not Mutation** ``[review]``. A body that
+writes into a dict or list its caller hands it, and returns nothing, fits neither of
+the rows it resembles: ``_prepare_`` *returns* the payload, and ``_update_`` writes
+*records*. The shape is common where one report or document is assembled in passes —
+``account_saft``'s ``_saft_fill_report_*`` family filling one ``values`` dict, one
+section at a time — and it was spelled ``_fill_`` because no row claimed it. It is
+``_add_``: the method adds its section to a container the caller owns and will read
+back. **The discriminator is who holds the container**; a body that builds a dict and
+returns it is still ``_prepare_``, and one that writes onto records is still
+``_update_``.
 
 **Reserved, not abolished** ``[review]``. Each is a term of art from a layer
 below the ORM; collapsing it destroys information. Use them **only** with these
@@ -8585,6 +8597,11 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.52
+     - 2026-09-16
+     - §2.4.3: an accumulator — a body writing into a container its caller passes in
+       and returning nothing — is the Addition row's ``_add_``; ``_fill_`` of a
+       caller's container is abolished.
    * - 6.51
      - 2026-09-16
      - §2.4.18: the ingestion cycle gains an Acquire row before Identify —
