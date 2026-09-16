@@ -70,7 +70,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     get quantityStr() {
         let unitPart = "";
         let decimalPart = "";
-        const unit = this.product_id.uom_id;
+        const unit = this.product_id?.uom_id;
         const decimalPoint = l10n.decimalPoint;
 
         const ProductUnit = this.models["decimal.precision"].find(
@@ -400,14 +400,14 @@ export class PosOrderline extends PosOrderlineAccounting {
         return this.quantityStr;
     }
     getUnit() {
-        return this.product_id.uom_id;
+        return this.product_id?.uom_id;
     }
     // return the product of this orderline
     getProduct() {
         return this.product_id;
     }
     getFullProductName() {
-        return this.full_product_name || this.product_id.display_name;
+        return this.full_product_name || this.product_id?.display_name;
     }
     get orderDisplayProductName() {
         return {
