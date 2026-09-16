@@ -196,7 +196,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         return response["result"]
 
-    def _get_iap_params(self, company, proxy_type, private_key_sudo):
+    def _prepare_iap_params(self, company, proxy_type, private_key_sudo):
         edi_identification = self._get_proxy_identification(company, proxy_type)
 
         return {
@@ -236,7 +236,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 server_url = self._get_server_url(proxy_type, edi_mode)
                 response = self._prepare_request(
                     f"{server_url}/iap/account_edi/2/create_user",
-                    params=self._get_iap_params(company, proxy_type, private_key_sudo),
+                    params=self._prepare_iap_params(company, proxy_type, private_key_sudo),
                 )
             except AccountEdiProxyError as e:
                 raise UserError(e.message) from e
