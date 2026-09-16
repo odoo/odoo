@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval, datetime
 
 
@@ -26,6 +29,14 @@ class IrFilters(models.Model):
                                      "for this model.")
     active = fields.Boolean(default=True)
 
+    def _sanitize_shared_context(self):
+        for shared_filter in self.filtered(lambda f: not f.user_id):
+            context = ast.literal_eval(shared_filter.context)
+            cleaned = clean_context(context)
+            defaults = context.keys() - cleaned.keys()
+            if defaults:
+                shared_filter.context = repr(cleaned)
+
     @api.model
     def _list_all_models(self):
         lang = self.env.lang or 'en_US'
@@ -35,9 +46,17 @@ class IrFilters(models.Model):
         )
         return self._cr.fetchall()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        filters = super().create(vals_list)
+        filters._sanitize_shared_context()
+        return filters
+
     def write(self, vals):
         new_filter = super().write(vals)
         self.check_access_rule('write')
+        if 'context' in vals or 'user_id' in vals:
+            self._sanitize_shared_context()
         return new_filter
 
     def copy(self, default=None):

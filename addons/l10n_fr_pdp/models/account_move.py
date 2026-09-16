@@ -16,6 +16,7 @@ from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
 G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
+VALID_PDP_TAX_RATES = {0, 0.9, 1.05, 1.75, 2.1, 5.5, 7, 8.5, 9.2, 9.6, 10, 13, 19.6, 20, 20.6}
 PDP_TRACKED_FIELDS = {
     'l10n_fr_pdp_last_flow_id',
     'l10n_fr_pdp_status',
@@ -560,15 +561,25 @@ class AccountMove(models.Model):
     def _get_l10n_fr_pdp_errors(self, lazy=False):
         """Return the list of validation errors for this move in the context of PDP reporting."""
         self.ensure_one()
-        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type == 'payment':  # all the checks concerns transactions properties
+        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type != 'transaction':
             return []
 
         def check():
+            if not self.company_id.partner_id._l10n_fr_pdp_get_siren():
+                yield _("The company SIREN is missing or invalid.")
+
             if transaction_type == 'b2bi':
                 try:
                     self.commercial_partner_id.check_vat()
                 except ValidationError:
                     yield _("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
+                # G2.19 limits Flow 10 VAT identifiers to 18 characters.
+                for partner in (self.company_id.partner_id, self.commercial_partner_id):
+                    if len(partner.vat or '') > 18:
+                        yield _(
+                            "VAT number for %s must not exceed 18 characters.",
+                            partner.display_name,
+                        )
 
             for move in (self + self._l10n_fr_pdp_get_referenced_documents()):
                 if not move or move.move_type == 'entry':
@@ -576,15 +587,41 @@ class AccountMove(models.Model):
                 ref_move = _(" in referenced move %s", move.name) if move != self else ""
                 if not move.name or not G1_05_RE.match(move.name):
                     yield _("Move name is not valid%s.", ref_move)
+                for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
+                    is_valid_oss_rate = (
+                        tax._l10n_fr_pdp_is_oss()
+                        and tax.amount_type == 'percent'
+                        and 0 <= tax.amount <= 100
+                    )
+                    if tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate:
+                        yield _(
+                            "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
+                            tax=tax.display_name,
+                            ref_move=ref_move,
+                        )
                 if transaction_type == 'b2bi':
+                    partner_country_code = drom_com_territories.map_country_code_for_ppf(
+                        move.commercial_partner_id.country_id.code
+                    )
+                    if not partner_country_code or len(partner_country_code) != 2 or not partner_country_code.isalpha():
+                        yield _("Partner country code must contain two letters%s.", ref_move)
+
                     if not move.partner_shipping_id.street:
                         yield _("Missing address street (line 1)%s.", ref_move)
                     if not move.partner_shipping_id.city:
                         yield _("Missing address city%s.", ref_move)
                     if not move.partner_shipping_id.zip:
                         yield _("Missing address zip code%s.", ref_move)
+                    elif len(move.partner_shipping_id.zip) > 10:
+                        yield _("Address zip code must not exceed 10 characters%s.", ref_move)
                     if not move.partner_shipping_id.country_id:
                         yield _("Missing address country%s.", ref_move)
+                    else:
+                        country_code = drom_com_territories.map_country_code_for_ppf(
+                            move.partner_shipping_id.country_id.code
+                        )
+                        if not country_code or len(country_code) != 2 or not country_code.isalpha():
+                            yield _("Address country code must contain two letters%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
         if lazy:
@@ -644,7 +681,12 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         for move in self:
-            if move.l10n_fr_pdp_sent_in_flow_ids and move.state == 'posted':
+            # Keep the sent moves of a rejected flow so it can be corrected and resent.
+            if (
+                move.l10n_fr_pdp_sent_in_flow_ids
+                and move.state == 'posted'
+                and move.l10n_fr_pdp_last_flow_id.state != 'error'
+            ):
                 # When a flow is sent it compares the moves it sends vs the moves of the previous
                 # flow to avoid sending the data twice if it's strictly the same.
                 # Setting "l10n_fr_pdp_sent_in_flow_ids" to None will ensure the move is not already
