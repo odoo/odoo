@@ -575,7 +575,7 @@ class TestHrAuditRound3(TestHrCommon):
                 "calendar_id": calendar.id,
                 "date_from": datetime(2026, 3, 4, 0, 0),
                 "date_to": datetime(2026, 3, 4, 23, 59),
-                "time_type": "other",
+                "time_type_id": self.env.ref("resource.time_type_work").id,
             }
         )
 

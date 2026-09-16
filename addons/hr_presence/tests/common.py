@@ -103,7 +103,6 @@ class HrPresenceCase(TransactionCase):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": f"leave for {employee.name}",
-                "time_type": "leave",
                 "requires_allocation": False,
                 "company_id": employee.company_id.id,
             }

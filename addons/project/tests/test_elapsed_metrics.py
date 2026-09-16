@@ -62,7 +62,7 @@ class TestElapsedBatching(TestProjectCommon):
 
         leave_domain = [
             ("company_id", "in", project.company_id.ids),
-            ("time_type", "=", "leave"),
+            ("time_type_id.is_work", "=", False),
         ]
         for label, start, stop, field in (
             ("queue", create_date, assign, "queue_time_hours"),

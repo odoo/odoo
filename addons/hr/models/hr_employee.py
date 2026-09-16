@@ -3084,7 +3084,7 @@ class HrEmployee(models.Model):
                 tz=tz,
                 resources=resource,
                 compute_leaves=True,
-                domain=[*company_domain, ("time_type", "=", "leave")],
+                domain=[*company_domain, ("time_type_id.is_work", "=", False)],
             )[resource.id]
 
         return self._fold_version_windows(

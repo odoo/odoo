@@ -35,7 +35,7 @@ class HrLeave(models.Model):
                 leave.employee_id.company_id.leave_timesheet_task_id,
             )
 
-            if not project or not task or leave.holiday_status_id.time_type == "other":
+            if not project or not task or leave.holiday_status_id.time_type_id.is_work:
                 _debug.logic(
                     "leave_timesheets_skipped",
                     reason="no_internal_project"

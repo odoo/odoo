@@ -44,7 +44,6 @@ class TestPartner(TransactionCase):
             {
                 "requires_allocation": False,
                 "name": "Legal Leaves",
-                "time_type": "leave",
                 "responsible_ids": cls.users.ids,
             }
         )

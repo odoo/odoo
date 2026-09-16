@@ -71,7 +71,6 @@ class TestContractCalendars(TestHrCommon):
                     "date_to": end,
                     "resource_id": resource.id if resource else None,
                     "calendar_id": self.employee.resource_calendar_id.id,
-                    "time_type": "leave",
                 }
             )
 
@@ -143,13 +142,21 @@ class TestContractCalendars(TestHrCommon):
             )
 
     def test_employee_resource_contract_without_and_with_date_from(self):
+        # The form collects a local day, not an instant: the exception's hours are
+        # read in its own zone, so the field that carries a zone is not the one a
+        # person types into.
         leave_form = Form(self.env["resource.schedule.exception"])
-        leave_form.date_from = False
+        leave_form.local_date_from = False
 
         leave_form.resource_id = self.employee.resource_id
         self.assertFalse(leave_form.calendar_id)
 
-        leave_form.date_from = Datetime.to_datetime("2018-01-01 07:00:00")
+        leave_form.local_date_from = Date.to_date("2018-01-01")
+        # Asserted on the saved record: the local day reaches `date_from` through an
+        # inverse, which runs at save, so the contract covering the day is not known
+        # while the form is still open. The form must therefore not offer the field
+        # -- it would save the calendar it could not yet resolve.
+        leave = leave_form.save()
         self.assertEqual(
-            leave_form.calendar_id, self.employee.version_id.resource_calendar_id
+            leave.calendar_id, self.employee.version_id.resource_calendar_id
         )

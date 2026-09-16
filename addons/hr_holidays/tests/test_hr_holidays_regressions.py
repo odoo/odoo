@@ -1102,7 +1102,6 @@ class TestPresenceFollowsTheLeave(TestHrHolidaysCommon):
         cls.leave_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Presence Leaves",
-                "time_type": "leave",
                 "requires_allocation": False,
                 "leave_validation_type": "hr",
                 "company_id": cls.company.id,
@@ -2047,7 +2046,6 @@ class TestLeaveResourceCalendar(TestHrHolidaysCommon):
             {
                 "name": "Calendar probe",
                 "requires_allocation": False,
-                "time_type": "leave",
             }
         )
 

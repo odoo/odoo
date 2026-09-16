@@ -230,7 +230,7 @@ class HrVersion(models.Model):
                 min(end_dt, leave.date_to.replace(tzinfo=UTC).astimezone(tz)),
                 leave,
             )
-            target = leave_intervals if leave.time_type == "leave" else work_intervals
+            target = work_intervals if leave.time_type_id.is_work else leave_intervals
             target += self._get_valid_leave_intervals(attendances, interval)
         return (
             Intervals(leave_intervals, keep_distinct=True),

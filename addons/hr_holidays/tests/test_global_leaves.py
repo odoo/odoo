@@ -402,7 +402,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Paid Time Off",
-                "time_type": "leave",
                 "requires_allocation": False,
             }
         )
@@ -432,7 +431,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Paid Time Off",
-                "time_type": "leave",
                 "requires_allocation": False,
             }
         )
@@ -543,7 +541,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Sick Time Off",
-                "time_type": "leave",
                 "requires_allocation": False,
                 "leave_validation_type": "both",
             }
@@ -649,7 +646,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Paid Time Off",
-                "time_type": "leave",
                 "requires_allocation": "yes",
             }
         )

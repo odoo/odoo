@@ -29,7 +29,6 @@ class TestLeaveBeatsWorkLocation(TransactionCase):
             {
                 "name": "Unpaid",
                 "requires_allocation": False,
-                "time_type": "leave",
                 "request_unit": "day",
             }
         )

@@ -599,7 +599,7 @@ class HrLeaveAllocation(models.Model):
             end_dt,
             calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
             domain=[
-                ("time_type", "=", "leave"),
+                ("time_type_id.is_work", "=", False),
                 ("eligible_for_accrual_rate", "=", eligible_for_accrual_rate),
             ],
         )[self.employee_id.id]["hours"]

@@ -165,11 +165,18 @@ class HrLeaveType(models.Model):
         search="_search_has_valid_allocation",
         help="This indicates if it is still possible to use this type of leave",
     )
-    time_type = fields.Selection(
-        selection=[("other", "Worked Time"), ("leave", "Absence")],
+    time_type_is_work = fields.Boolean(
+        related="time_type_id.is_work",
+        string="Counts as Working Time",
+        help="Read by the form: a view expression cannot walk to the kind's own field.",
+    )
+    time_type_id = fields.Many2one(
+        comodel_name="resource.time.type",
         string="Kind of Time Off",
-        default="leave",
-        help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.",
+        default=lambda self: self.env["resource.time.type"]._get_leave_type(),
+        required=True,
+        ondelete="restrict",
+        help="What time off of this type counts as in the working schedule. An absence is subtracted from working time; a kind that counts as working time (a training, say) is not, and an accrual plan's rate reads the same distinction.",
     )
     request_unit = fields.Selection(
         selection=[("day", "Day"), ("half_day", "Half-Day"), ("hour", "Hours")],
@@ -283,7 +290,7 @@ class HrLeaveType(models.Model):
     @api.constrains("allow_request_on_top")
     def _check_allow_request_on_top(self):
         for leave in self:
-            if leave.time_type == "leave" and leave.allow_request_on_top:
+            if not leave.time_type_id.is_work and leave.allow_request_on_top:
                 raise ValidationError(
                     self.env._(
                         "You cannot allow requests on top of leaves of type 'Absence'."
@@ -293,7 +300,7 @@ class HrLeaveType(models.Model):
     @api.constrains("eligible_for_accrual_rate")
     def _check_eligible_for_accrual_rate(self):
         for leave in self:
-            if leave.time_type == "other" and not leave.eligible_for_accrual_rate:
+            if leave.time_type_id.is_work and not leave.eligible_for_accrual_rate:
                 raise ValidationError(
                     self.env._(
                         "leaves of type 'Worked Time' should be always eligible for accrual rate."
@@ -595,10 +602,10 @@ class HrLeaveType(models.Model):
             record.display_name = name
         return None
 
-    @api.depends("time_type")
+    @api.depends("time_type_id.is_work")
     def _compute_eligible_for_accrual_rate(self):
         for leave_type in self:
-            leave_type.eligible_for_accrual_rate = leave_type.time_type != "leave"
+            leave_type.eligible_for_accrual_rate = leave_type.time_type_id.is_work
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):

@@ -346,7 +346,7 @@ class HrEmployee(models.Model):
         "leave_ids.state",
         "leave_ids.date_from",
         "leave_ids.date_to",
-        "leave_ids.holiday_status_id.time_type",
+        "leave_ids.holiday_status_id.time_type_id.is_work",
     )
     def _compute_leave_status(self):
         holidays = (
@@ -357,7 +357,7 @@ class HrEmployee(models.Model):
                     ("employee_id", "in", self.ids),
                     ("date_from", "<=", fields.Datetime.now()),
                     ("date_to", ">=", fields.Datetime.now()),
-                    ("holiday_status_id.time_type", "=", "leave"),
+                    ("holiday_status_id.time_type_id.is_work", "=", False),
                     ("state", "=", "validate"),
                 ]
             )

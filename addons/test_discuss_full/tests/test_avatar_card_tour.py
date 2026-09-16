@@ -83,7 +83,6 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 {
                     "name": "Time Off multi company",
                     "company_id": cls.company_2.id,
-                    "time_type": "leave",
                     "requires_allocation": False,
                 }
             )

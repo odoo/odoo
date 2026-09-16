@@ -22,7 +22,6 @@ class TestHrDepartureWizardFlow(TestHrHolidaysCommon):
         cls.leave_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Paid Time Off",
-                "time_type": "leave",
                 "requires_allocation": False,
             }
         )

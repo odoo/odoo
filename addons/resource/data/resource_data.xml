@@ -2,6 +2,17 @@
 <odoo>
 
     <data noupdate="1">
+        <record id="time_type_work" model="resource.time.type">
+            <field name="name">Worked Time</field>
+            <field name="code">work</field>
+            <field name="sequence">10</field>
+            <field name="is_work" eval="True" />
+        </record>
+        <record id="time_type_leave" model="resource.time.type">
+            <field name="name">Time Off</field>
+            <field name="code">leave</field>
+            <field name="sequence">20</field>
+        </record>
         <record id="resource_calendar_std" model="resource.calendar">
             <field name="name">Standard 40 hours/week</field>
             <field name="company_id" ref="base.main_company" />

@@ -83,7 +83,8 @@
                                 name="request_unit"
                                 widget="radio"
                                 options="{'horizontal': True}" />
-                            <field name="time_type" string="Count as" required="1" />
+                            <field name="time_type_id" string="Count as" required="1" />
+                            <field name="time_type_is_work" invisible="1" />
                             <field
                                 name="responsible_ids"
                                 placeholder="Nobody to notify"
@@ -151,7 +152,7 @@
                                         class="me-4" />
                                     <label
                                         for="allow_request_on_top"
-                                        invisible="time_type == 'leave'"
+                                        invisible="not time_type_is_work"
                                         class="me-4" />
                                 </div>
                                 <div class="d-flex flex-column gap-1">
@@ -167,11 +168,11 @@
                                     <field
                                         name="eligible_for_accrual_rate"
                                         nolabel="1"
-                                        readonly="time_type != 'leave'" />
+                                        readonly="time_type_is_work" />
                                     <field
                                         name="allow_request_on_top"
                                         nolabel="1"
-                                        invisible="time_type == 'leave'" />
+                                        invisible="not time_type_is_work" />
                                 </div>
                             </div>
                         </group>

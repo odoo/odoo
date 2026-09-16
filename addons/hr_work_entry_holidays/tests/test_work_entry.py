@@ -45,7 +45,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         cls.leave_remote_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Legal Leaves",
-                "time_type": "other",
+                "time_type_id": cls.env.ref("resource.time_type_work").id,
                 "requires_allocation": False,
                 "allow_request_on_top": True,
                 "work_entry_type_id": cls.work_entry_type_remote.id,
@@ -55,7 +55,6 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         cls.half_day_leave_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Half-Day Leaves",
-                "time_type": "leave",
                 "request_unit": "half_day",
                 "work_entry_type_id": cls.work_entry_type_leave.id,
                 "requires_allocation": False,
@@ -65,7 +64,6 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         cls.hours_leave_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Hours Leaves",
-                "time_type": "leave",
                 "request_unit": "hour",
                 "work_entry_type_id": cls.work_entry_type_leave.id,
                 "requires_allocation": False,

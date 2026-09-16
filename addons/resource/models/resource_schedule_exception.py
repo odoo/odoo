@@ -18,6 +18,10 @@ def _hour_of(dt: datetime) -> float:
     return dt.hour + dt.minute / 60 + dt.second / 3600
 
 
+def _to_local(dt: datetime | None, tz) -> datetime | None:
+    return dt and dt.replace(tzinfo=UTC).astimezone(tz)
+
+
 def _to_utc(day: date, hour: float, tz) -> datetime:
     local = datetime.combine(day, time.min).replace(tzinfo=tz) + relativedelta(
         seconds=round(hour * 3600)
@@ -58,10 +62,13 @@ class ResourceScheduleException(models.Model):
         check_company=True,
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource",
     )
-    time_type = fields.Selection(
-        selection=[("leave", "Time Off"), ("other", "Other")],
-        default="leave",
-        help="Whether this should be computed as a time off or as work time (eg: formation)",
+    time_type_id = fields.Many2one(
+        comodel_name="resource.time.type",
+        string="Kind of Time",
+        default=lambda self: self.env["resource.time.type"]._get_leave_type(),
+        required=True,
+        ondelete="restrict",
+        help="What this exception takes out of the schedule. An absence is subtracted from working time; a kind that counts as working time (a training, say) carves out the period without shortening the day.",
     )
     date_from = fields.Datetime(
         string="Start Date",
@@ -165,9 +172,7 @@ class ResourceScheduleException(models.Model):
                 leave.date_to and leave.date_to > leave.date_from
             ):
                 continue
-            local_date_from = leave.date_from.replace(tzinfo=UTC).astimezone(
-                timezone(leave.tz or "UTC")
-            )
+            local_date_from = _to_local(leave.date_from, timezone(leave.tz or "UTC"))
             local_date_to = local_date_from + relativedelta(
                 hour=23, minute=59, second=59
             )
@@ -177,8 +182,8 @@ class ResourceScheduleException(models.Model):
     def _compute_local_dates(self):
         for leave in self:
             tz = timezone(leave.tz or "UTC")
-            start = leave.date_from and leave.date_from.replace(tzinfo=UTC).astimezone(tz)
-            stop = leave.date_to and leave.date_to.replace(tzinfo=UTC).astimezone(tz)
+            start = _to_local(leave.date_from, tz)
+            stop = _to_local(leave.date_to, tz)
             leave.local_date_from = start and start.date()
             leave.local_hour_from = start and _hour_of(start)
             leave.local_date_to = stop and stop.date()
@@ -227,7 +232,7 @@ class ResourceScheduleException(models.Model):
             "name": self.name,
             "date_from": self.date_from,
             "date_to": self.date_to,
-            "time_type": self.time_type,
+            "time_type_id": self.time_type_id.id,
         }
 
     @api.model
@@ -262,7 +267,7 @@ class ResourceScheduleException(models.Model):
                 "company_id",
                 "date_from",
                 "date_to",
-                "time_type",
+                "time_type_id",
             }
         )
 
@@ -274,7 +279,7 @@ class ResourceScheduleException(models.Model):
                 "company_id": exception.company_id.id,
                 "date_from": exception.date_from,
                 "date_to": exception.date_to,
-                "time_type": exception.time_type,
+                "time_type_id": exception.time_type_id.id,
             }
             for exception in self
         ]

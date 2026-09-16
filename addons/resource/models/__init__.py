@@ -2,6 +2,7 @@ from . import mixin_resource_ledger
 from . import res_company
 from . import res_partner
 from . import res_users
+from . import resource_time_type
 from . import resource_calendar
 from . import resource_calendar_attendance
 from . import resource_schedule_exception

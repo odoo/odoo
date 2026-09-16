@@ -1486,7 +1486,7 @@ class ProjectTask(models.Model):
                 continue
             leave_domain = [
                 ("company_id", "in", list(company_ids)),
-                ("time_type", "=", "leave"),
+                ("time_type_id.is_work", "=", False),
             ]
             bounds = [
                 value

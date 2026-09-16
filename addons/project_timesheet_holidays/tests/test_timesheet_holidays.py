@@ -61,7 +61,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
                 {
                     "name": "Time Off Type (worked time)",
                     "requires_allocation": False,
-                    "time_type": "other",
+                    "time_type_id": self.env.ref("resource.time_type_work").id,
                 }
             )
         )
@@ -384,7 +384,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         leave_type = self.env["hr.leave.type"].create(
             {
                 "name": "Legal Leaves",
-                "time_type": "leave",
                 "requires_allocation": False,
             }
         )

@@ -724,14 +724,16 @@ class ResourceCalendar(models.Model):
         dt1 = datetime.combine(last_day, time.max).replace(tzinfo=tz)
         return dt0, dt1
 
-    @staticmethod
-    def _with_default_leave_type(domain: list | None) -> list:
-        leave_only = Domain("time_type", "=", "leave")
+    def _with_default_leave_type(self, domain: list | None) -> list:
+        # The kernel's one question of a kind of time: does it come out of the
+        # working schedule. A caller naming the kind itself is left alone.
+        leave_only = Domain("time_type_id.is_work", "=", False)
         if domain is None:
             return list(leave_only)
         given = Domain(domain)
         if any(
-            condition.field_expr == "time_type" for condition in given.iter_conditions()
+            condition.field_expr.startswith("time_type_id")
+            for condition in given.iter_conditions()
         ):
             return list(given)
         return list(given & leave_only)

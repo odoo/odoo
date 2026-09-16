@@ -16,7 +16,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         cls.leave_type = cls.env["hr.leave.type"].create(
             {
                 "name": "Paid Time Off",
-                "time_type": "leave",
                 "requires_allocation": True,
                 "allocation_validation_type": "hr",
             }

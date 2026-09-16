@@ -63,7 +63,12 @@
                     <group>
                         <group name="leave_details">
                             <field name="name" string="Reason" />
-                            <field name="calendar_id" />
+                            <!-- A resource's exception takes its calendar from the
+                                 schedule covering the day, which is known only once the
+                                 local day has become an instant, at save. Left editable,
+                                 the form would send the value it computed from a
+                                 date_from the inverse had not written yet. -->
+                            <field name="calendar_id" readonly="resource_id" />
                             <field
                                 name="company_id"
                                 options="{'no_create': True}"

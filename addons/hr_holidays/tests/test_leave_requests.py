@@ -1326,7 +1326,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                                 "2019-12-26 23:59:59"
                             ),
                             "resource_id": False,
-                            "time_type": "leave",
                         },
                     )
                 ],
@@ -2152,7 +2151,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     "name": "Winter Holidays",
                     "date_from": "2019-12-25 00:00:00",
                     "date_to": "2019-12-26 23:59:59",
-                    "time_type": "leave",
                 },
             )
         ]
@@ -2192,7 +2190,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     "name": "Autumn Holidays",
                     "date_from": "2021-11-16 00:00:00",
                     "date_to": "2021-11-16 23:59:59",
-                    "time_type": "leave",
                 },
             )
         ]
@@ -3050,7 +3047,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     "name": "Autumn Holidays",
                     "date_from": "2021-11-16 00:00:00",
                     "date_to": "2021-11-16 23:59:59",
-                    "time_type": "leave",
                 }
             )
         ]

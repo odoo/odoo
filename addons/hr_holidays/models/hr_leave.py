@@ -791,7 +791,7 @@ Versions:
             else:
                 work_data_employees[key] += leave.employee_id
         domain = [
-            ("time_type", "=", "leave"),
+            ("time_type_id.is_work", "=", False),
             ("company_id", "in", self.env.companies.ids),
             "|",
             ("holiday_id", "=", False),
@@ -1467,7 +1467,7 @@ Versions:
             "date_to": self.date_to,
             "resource_id": self.employee_id.resource_id.id,
             "calendar_id": self.resource_calendar_id.id,
-            "time_type": self.holiday_status_id.time_type,
+            "time_type_id": self.holiday_status_id.time_type_id.id,
             "eligible_for_accrual_rate": self.holiday_status_id.eligible_for_accrual_rate,
         }
 

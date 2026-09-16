@@ -851,7 +851,7 @@ class MrpWorkorder(models.Model):
             self.duration_expected / 60.0,
             date_start or self.date_start,
             compute_leaves=True,
-            domain=[("time_type", "in", ["leave", "other"])],
+            domain=[("time_type_id", "!=", False)],
         )
 
     @api.onchange("date_end")
@@ -874,7 +874,7 @@ class MrpWorkorder(models.Model):
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
             date_start or self.date_start,
             date_end or self.date_end,
-            domain=[("time_type", "in", ["leave", "other"])],
+            domain=[("time_type_id", "!=", False)],
         )
         return interval["hours"] * 60
 

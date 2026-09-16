@@ -1,6 +1,6 @@
 {
     "name": "Time Off",
-    "version": "1.11",
+    "version": "1.12",
     "category": "Human Resources/Time Off",
     "sequence": 85,
     "summary": "Allocate time off and follow leave requests",

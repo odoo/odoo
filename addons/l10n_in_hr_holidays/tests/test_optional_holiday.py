@@ -16,7 +16,6 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
             {
                 "name": "Indian Leave Type",
                 "requires_allocation": False,
-                "time_type": "leave",
                 "request_unit": "hour",
                 "l10n_in_is_limited_to_optional_days": True,
             }
