@@ -86,7 +86,8 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         self._assemble(self.product, subassembly, component_qty=1)
         return subassembly, component
 
-    def test_byproduct_recycled_into_its_own_component_refused(self):
+    def _recycle_a_byproduct_into_its_component(self):
+        """Craft the product out of an ingot, and melt the casting it gives off back into that ingot."""
         ingot = self.env['product.product'].create({
             'name': 'JP Ingot', 'categ_id': self.category.id, 'is_storable': True, 'standard_price': 100,
         })
@@ -113,8 +114,62 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
             })
             mo.action_confirm()
             self._finish_mo(mo)
+        return ingot, casting
+
+    def test_byproduct_recycled_into_its_own_component_refused(self):
+        self._recycle_a_byproduct_into_its_component()
         with self.assertRaises(UserError):
             self._run_category_wizard()
+
+    def test_a_looping_product_only_pulled_in_is_left_out_not_refused(self):
+        ingot, casting = self._recycle_a_byproduct_into_its_component()
+        # the loop is reached through the craft, so the run names nobody it holds
+        action = self._run_wizard(product_ids=[self.product.id], include_components=True)
+        self.assertEqual(action['params']['type'], 'warning')
+        self.assertAlmostEqual(ingot.standard_price, 100, places=2)
+        self.assertAlmostEqual(casting.standard_price, 0, places=2)
+
+    def test_a_product_made_out_of_a_pulled_in_loop_is_left_out_too(self):
+        self._recycle_a_byproduct_into_its_component()
+        self._run_wizard(product_ids=[self.product.id], include_components=True)
+        # the craft was selected, but valuing it off an ingot the run could not correct is
+        # the stale figure the pull-in exists to stop: 100 * 0.8, off a component still at 100
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
+
+    def test_preview_says_why_each_product_was_left_out(self):
+        ingot, casting = self._recycle_a_byproduct_into_its_component()
+        wizard = self._create_wizard(product_ids=[self.product.id], include_components=True)
+        wizard.action_preview_total_average_cost()
+        lines = wizard.evaluation_line_ids.grouped('product_id')
+        self.assertEqual(set(lines), {self.product, ingot, casting})
+        # the two that close the loop are named by the chain they close
+        for looping in (ingot, casting):
+            self.assertIn(ingot.display_name, lines[looping].excluded_reason)
+            self.assertIn(casting.display_name, lines[looping].excluded_reason)
+        # the craft only knows the component below it, which is what it would be costed off
+        self.assertIn(ingot.display_name, lines[self.product].excluded_reason)
+        self.assertNotIn(casting.display_name, lines[self.product].excluded_reason)
+        # a product the user picked and the run drops is the surprise, so the row must say so
+        self.assertFalse(lines[self.product].pulled_in)
+        self.assertAlmostEqual(lines[self.product].current_cost, 100, places=2)
+        self.assertAlmostEqual(lines[self.product].evaluated_cost, 100, places=2)
+
+    def test_a_selected_looping_product_is_still_refused(self):
+        ingot, _casting = self._recycle_a_byproduct_into_its_component()
+        # naming a product asks for that product, so a loop it sits on is an error
+        with self.assertRaises(UserError):
+            self._run_wizard(product_ids=[self.product.id, ingot.id], include_components=True)
+
+    def test_a_run_without_a_loop_leaves_nothing_out(self):
+        subassembly, component = self._build_two_level_tree()
+        self._run_wizard(product_ids=[self.product.id], include_components=True)
+        self.assertAlmostEqual(component.standard_price, 10 * 25 / 10, places=2)
+        self.assertAlmostEqual(subassembly.standard_price, 2 * 25, places=2)
+        self.assertAlmostEqual(self.product.standard_price, 2 * 25, places=2)
+        wizard = self._create_wizard(product_ids=[self.product.id], include_components=True)
+        wizard.action_preview_total_average_cost()
+        self.assertEqual(len(wizard.evaluation_line_ids), 3)
+        self.assertFalse(any(wizard.evaluation_line_ids.mapped('excluded_reason')))
 
     def test_manufacturing_output_real_mo(self):
         mo, _byproduct = self._create_mo()
