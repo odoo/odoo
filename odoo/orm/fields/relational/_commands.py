@@ -75,7 +75,9 @@ class CommandDelta:
                     ids = command[2]
                     if ids.__class__ is int:
                         ids = (ids,)
-                    delta._replace(tuple(normalize(id_) for id_ in ids))
+                    # an RPC payload can carry false/null where the ids go;
+                    # clear, like the empty list, instead of a raw TypeError
+                    delta._replace(tuple(normalize(id_) for id_ in ids or ()))
         return delta
 
     def _link(self, id_: IdType) -> None:
