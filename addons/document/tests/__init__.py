@@ -6,6 +6,7 @@ from . import test_document_attachment_link
 from . import test_document_audit_round3_wizards
 from . import test_document_chatter
 from . import test_document_common
+from . import test_document_dangling_link
 from . import test_document_document
 from . import test_document_document_folder
 from . import test_document_download

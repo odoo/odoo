@@ -1000,16 +1000,14 @@ class DocumentsDocument(models.Model):
                 record.res_model,
                 record.res_id,
             ):
+                res_model, res_id = record._owning_record_link()
                 attachment.with_context(no_document=True).write(
-                    {
-                        "res_model": record.res_model or "document.document",
-                        "res_id": record.res_id if record.res_model else record.id,
-                    }
+                    {"res_model": res_model, "res_id": res_id}
                 )
 
-            related_record = record.res_model and self.env[record.res_model].browse(
-                record.res_id
-            )
+            related_record = record.res_model in self.env and self.env[
+                record.res_model
+            ].browse(record.res_id)
             if (
                 not hasattr(related_record, "message_main_attachment_id")
                 or related_record.message_main_attachment_id != record.attachment_id
@@ -1047,19 +1045,29 @@ class DocumentsDocument(models.Model):
     ) -> None:
         res_model = vals.get("res_model", record.res_model)
         res_id = vals.get("res_id", record.res_id)
-        if res_model and not self.env[res_model].browse(res_id).exists():
-            _debug.logic("res_record_cleared", res_model=res_model)
+        if res_model and (
+            res_model not in self.env or not self.env[res_model].browse(res_id).exists()
+        ):
+            # A model the registry no longer has is the strongest form of "the
+            # linked record is gone", which is what this branch is already for.
+            # It used to index `self.env[res_model]` first and raise KeyError.
+            _debug.logic(
+                "res_record_cleared",
+                res_model=res_model,
+                reason="model" if res_model not in self.env else "record",
+            )
             record.res_model = False
             record.res_id = False
 
+        owning_model, owning_id = record._owning_record_link()
         record.attachment_id = (
             self.env["ir.attachment"]
             .with_context(no_document=True)
             .create(
                 {
                     "name": vals.get("name", record.name),
-                    "res_model": record.res_model or "document.document",
-                    "res_id": record.res_id if record.res_model else record.id,
+                    "res_model": owning_model,
+                    "res_id": owning_id,
                 }
             )
             .id
@@ -1691,6 +1699,30 @@ class DocumentsDocument(models.Model):
                 else False
             )
             (record | record.shortcut_ids).file_extension = file_extension
+
+    def _owning_record_link(self) -> tuple:
+        """Where this document's file belongs: the linked record, or itself.
+
+        `res_model` can name a model the registry no longer has -- the module
+        that owned it was uninstalled and the string stayed behind on the row.
+        That is a dangling link, not an error, and `_compute_res_name` and
+        `_inverse_res_record` already read it that way. Two write paths did not,
+        and they are the ones that hurt: `_write_attach_empty_document` indexed
+        `self.env[res_model]` unguarded and raised a bare `KeyError: '<model>'`
+        -- reaching the client as a 500 when someone fulfilled an upload request
+        against a record whose module had since been uninstalled -- and
+        `_write_version_existing` stamped the dead name onto a freshly created
+        attachment, which `ir.attachment` then refuses to read at all, because it
+        denies access to anything it cannot access-check.
+
+        The expression this replaces was written out at three call sites, one of
+        them in the controller, which is why the guard was missing from two of
+        them.
+        """
+        self.check_singleton()
+        if self.res_model and self.res_model in self.env:
+            return self.res_model, self.res_id
+        return "document.document", self.id
 
     def _inverse_res_record(self) -> None:
         attachments_by_target = defaultdict(lambda: self.env["ir.attachment"])

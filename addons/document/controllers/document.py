@@ -1116,13 +1116,9 @@ class ShareRoute(http.Controller):
             attachment_sudo = AttachmentSudo._create_from_request_file(
                 files[0], mimetype="TRUST" if is_internal_user else "GUESS"
             )
+            res_model, res_id = document_sudo._owning_record_link()
             attachment_sudo.with_context(no_document=True).write(
-                {
-                    "res_model": document_sudo.res_model or "document.document",
-                    "res_id": document_sudo.res_id
-                    if document_sudo.res_model
-                    else document_sudo.id,
-                }
+                {"res_model": res_model, "res_id": res_id}
             )
             values = {"attachment_id": attachment_sudo.id}
             if not document_sudo.attachment_id:
