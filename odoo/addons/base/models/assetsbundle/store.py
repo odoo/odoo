@@ -28,8 +28,8 @@ class AssetAttachmentStore:
 
     _ATTACHMENT_MIMETYPES = MappingProxyType(
         {
-            "js": "application/javascript",
-            "min.js": "application/javascript",
+            "js": "text/javascript",
+            "min.js": "text/javascript",
             "js.map": "application/json",
             "css": "text/css",
             "min.css": "text/css",

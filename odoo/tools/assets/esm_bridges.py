@@ -8,6 +8,7 @@ from urllib.parse import quote
 
 from odoo import modules
 from odoo.api import SUPERUSER_ID, Environment
+from odoo.fields import Domain
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.hashing import cache_hash
@@ -107,10 +108,8 @@ class BridgeShimManager:
             content_by_url[url] = content
         Attachment = self.env["ir.attachment"].sudo()
         existing = Attachment.search_fetch(
-            [
-                ("url", "in", list(content_by_url)),
-                ("public", "=", True),
-            ],
+            Attachment._get_domain_generated_assets()
+            & Domain("url", "in", list(content_by_url)),
             ["url", "write_date"],
         )
         existing_urls = set(existing.mapped("url"))
@@ -123,16 +122,12 @@ class BridgeShimManager:
         )
         self._update_reused_shim_dates(existing)
         to_create = [
-            {
-                "name": url.rsplit("/", 1)[-1],
-                "mimetype": "text/javascript",
-                "res_model": "ir.ui.view",
-                "res_id": False,
-                "type": "binary",
-                "public": True,
-                "raw": content.encode("utf-8"),
-                "url": url,
-            }
+            Attachment._prepare_generated_asset_vals(
+                name=url.rsplit("/", 1)[-1],
+                mimetype="text/javascript",
+                raw=content.encode("utf-8"),
+                url=url,
+            )
             for url, content in content_by_url.items()
             if url not in existing_urls
         ]

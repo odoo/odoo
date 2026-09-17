@@ -132,6 +132,10 @@ class TestSaveAttachmentGuard(TransactionCase):
         self.assertEqual(
             bundle.save_attachment("js.map", "{}").mimetype, "application/json"
         )
+        # the same mimetype the ESM route and the bridge shims serve
+        self.assertEqual(
+            bundle.save_attachment("min.js", "x").mimetype, "text/javascript"
+        )
 
     def test_xml_extensions_rejected(self):
         bundle = AssetsBundle("test_assetsbundle.extguard3", [], env=self.env)
