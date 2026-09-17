@@ -247,6 +247,68 @@ class TestTranslateSpecs(unittest.TestCase):
         self.assertEqual(canon(view_ir.to_arch(applied.root)), canon(xml_result))
 
 
+class TestEveryShapeBothWays(unittest.TestCase):
+    """Every position over every content shape on a target with text, a tail
+    and siblings: what the patches yield is what the XML combine yields, or
+    the spec is one the ids leave to the XML way -- never a third thing."""
+
+    BASE = (
+        "<form>"
+        '<group name="g">before<field name="a">Old <i>text</i> tail</field>mid'
+        '<field name="b"/>after</group>'
+        "</form>"
+    )
+    CONTENTS = {
+        "element": "<b>New</b>",
+        "text": "Just text",
+        "mixed": "lead <b>New</b> trail",
+        "two": "<b>One</b><u>Two</u>",
+        "dollar_whole": "<b>$0</b>",
+        "dollar_text": "see $0 here",
+        "empty": "",
+    }
+    POSITIONS = ("before", "after", "inside", "replace", "replace_inner")
+
+    def test_every_position_over_every_content(self):
+        for position in self.POSITIONS:
+            for shape, content in self.CONTENTS.items():
+                mode = ' mode="inner"' if position == "replace_inner" else ""
+                pos = "replace" if position == "replace_inner" else position
+                spec_xml = (
+                    f'<xpath expr="//field[@name=\'a\']" position="{pos}"{mode}>'
+                    f"{content}</xpath>"
+                )
+                with self.subTest(position=position, content=shape):
+                    xml_result, _translated, applied, fallbacks = both_ways(
+                        self.BASE, spec_xml
+                    )
+                    self.assertEqual(
+                        canon(view_ir.to_arch(applied.root)),
+                        canon(xml_result),
+                        f"{position}/{shape}: fallbacks={len(fallbacks)}",
+                    )
+
+    def test_attributes_and_remove_match_too(self):
+        attributes = (
+            '<xpath expr="//field[@name=\'a\']" position="attributes">'
+            '<attribute name="string">S</attribute>'
+            '<attribute name="invisible" add="x" separator="or"/>'
+            '<attribute name="name"/></xpath>'
+        )
+        for spec_xml in (
+            attributes,
+            '<xpath expr="//field[@name=\'a\']" position="replace"/>',
+            '<xpath expr="//field[@name=\'b\']" position="replace"/>',
+        ):
+            with self.subTest(spec=spec_xml):
+                xml_result, _translated, applied, _fallbacks = both_ways(
+                    self.BASE, spec_xml
+                )
+                self.assertEqual(
+                    canon(view_ir.to_arch(applied.root)), canon(xml_result)
+                )
+
+
 class TestTranslateCorpus(unittest.TestCase):
     """Every inherited view the checkout ships, applied to its primary both
     ways — the XML combine and the translated patches — yields the same arch."""
