@@ -2,7 +2,7 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { defineWebsiteModels, saveWebsiteBuilder, setupWebsiteBuilder } from "../website_helpers";
 import { Builder } from "@html_builder/builder";
 import { useService } from "@web/core/utils/hooks";
 
@@ -105,8 +105,7 @@ describe("save breadcrumb visibility", () => {
             return true;
         });
         await contains(".o-overlay-container [data-action-value='overTheContent']").click();
-        await contains(".o-snippets-top-actions button:contains(Save)").click();
-        expect(".o-website-builder_sidebar").not.toHaveClass("o_builder_sidebar_open");
+        await saveWebsiteBuilder();
         expect.verifySteps(["save breadcrumbs visibility"]);
     });
 
