@@ -12,3 +12,16 @@
         }
     }
 }
+
+.o-mail-DiscussAvatar .o-mail-ImStatus.o-imStatus-bot {
+    padding-top: map-get($spacers, 1) / 2;
+}
+
+.o-mail-DiscussAvatar-imStatusMask.o-imStatus-bot {
+    baseline-shift: -.125rem;
+}
+
+// `data-icon` is renamed in the mask, so icons.scss can't select the font.
+.o-mail-DiscussAvatar-imStatusMask[data-mask-icon^="oi_"] {
+    --icon-font-family: #{$oi-font-family};
+}

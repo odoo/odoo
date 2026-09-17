@@ -6,7 +6,33 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
+/** @typedef {import("registries").ImStatusData} ImStatusData */
+
 export const imStatusDataRegistry = registry.category("mail.im_status_data");
+
+/**
+ * @param {Object} param0
+ * @param {import("models").ChannelMember} [param0.member]
+ * @param {import("models").MailGuest|import("models").ResPartner} param0.persona
+ * @param {import("models").ResUsers} [param0.user]
+ * @returns {ImStatusData}
+ */
+export function getImStatusData({ member, persona, user }) {
+    const data = imStatusDataRegistry.getAll().find((r) => r.condition({ member, persona, user }));
+    return /** @type {ImStatusData} */ (
+        Object.fromEntries(
+            ["icon", "iconClass", "title"].map((key) => {
+                const value = data[key];
+                return [
+                    key,
+                    typeof value === "string" || value instanceof String
+                        ? value
+                        : value[persona.imStatusUI] ?? value.default,
+                ];
+            })
+        )
+    );
+}
 
 imStatusDataRegistry.add(
     "mail",
@@ -42,7 +68,7 @@ imStatusDataRegistry.add(
     {
         condition: ({ persona }) => persona?.isBot,
         icon: "favorite",
-        iconClass: "oi-filled o-pt-0_5",
+        iconClass: "oi-filled o-imStatus-bot",
         title: _t("User is a bot"),
     },
     { sequence: 90 }
@@ -93,29 +119,23 @@ export class ImStatus extends Component {
     }
 
     get activeImStatusData() {
-        return imStatusDataRegistry
-            .getAll()
-            .find((r) =>
-                r.condition({ member: this.member(), persona: this.persona, user: this.user })
-            );
+        return getImStatusData({
+            member: this.member(),
+            persona: this.persona,
+            user: this.user,
+        });
     }
 
     get icon() {
-        const data = this.activeImStatusData;
-        return data.icon[this.persona.imStatusUI] || data.icon.default || data.icon;
+        return this.activeImStatusData.icon;
     }
 
     get iconClass() {
-        const data = this.activeImStatusData;
-        return data.iconClass[this.persona.imStatusUI] || data.iconClass.default || data.iconClass;
+        return this.activeImStatusData.iconClass;
     }
 
     get title() {
-        const { title } = this.activeImStatusData;
-        if (typeof title === "string" || title instanceof String) {
-            return title;
-        }
-        return title[this.persona.imStatusUI] || title.default;
+        return this.activeImStatusData.title;
     }
 
     get colorClass() {
