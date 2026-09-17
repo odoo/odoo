@@ -24,7 +24,7 @@ export class CalendarEvent extends models.Model {
     partner_ids = fields.Many2many({ string: "Attendees", relation: "res.partner" });
     resource_ids = fields.Many2many({
         string: "Resources",
-        relation: "appointment.resource",
+        relation: "resource.resource",
     });
     appointment_status = fields.Selection({
         selection: [
@@ -127,8 +127,8 @@ export class AppointmentType extends models.Model {
     ];
 }
 
-class AppointmentResource extends models.Model {
-    _name = "appointment.resource";
+class ResourceResource extends models.Model {
+    _name = "resource.resource";
 }
 
 export class AppointmentSlot extends models.Model {
@@ -226,7 +226,7 @@ export function defineAppointmentModels() {
     defineAppointmentMockServer();
     return defineModels({
         ...mailModels,
-        AppointmentResource,
+        ResourceResource,
         AppointmentSlot,
         AppointmentType,
         CalendarEvent,
