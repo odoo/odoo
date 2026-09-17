@@ -4,6 +4,13 @@
         border: 0;
         border-radius: 0;
         box-shadow: $modal-content-box-shadow-sm-up;
+
+        .container, .container-fluid, .o_container_small {
+            // Force padding when dropped inside another container (eg. inside a
+            // blog post page)
+            padding-right: $grid-gutter-width * .5;
+            padding-left: $grid-gutter-width * .5;
+        }
     }
 
     // Close icon
