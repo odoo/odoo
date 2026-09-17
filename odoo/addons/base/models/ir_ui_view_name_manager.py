@@ -190,6 +190,8 @@ class NameManager:
                 raise view._prepare_view_error(message)
 
     def _check_required_actions(self, view: Any) -> None:
+        # resolve every reference first, then one existence query for all
+        resolved: dict[str, tuple[int, etree._Element]] = {}
         for name, node in self.required_actions.items():
             try:
                 action_id = int(name)
@@ -223,8 +225,17 @@ class NameManager:
                         xmlid_model=model,
                     )
                     raise view._prepare_view_error(msg, node) from None
-            action = view.env["ir.actions.actions"].browse(action_id).exists()
-            if not action:
+            resolved[name] = (action_id, node)
+        if not resolved:
+            return
+        existing = set(
+            view.env["ir.actions.actions"]
+            .browse(list({action_id for action_id, _node in resolved.values()}))
+            .exists()
+            .ids
+        )
+        for name, (action_id, node) in resolved.items():
+            if action_id not in existing:
                 msg = _(
                     "Action %(action_reference)s (id: %(action_id)s) does not exist for button of type action.",
                     action_reference=name,
@@ -261,16 +272,13 @@ class NameManager:
                     use=self._describe_use(use),
                 )
                 raise view._prepare_view_error(msg, node)
-            info = self.available_fields.get(name, {}).get("info")
-
-            if info is None:
-                if name in ["false", "true"]:
-                    _debug.logic("used_field.js_literal", view=view.id, name=name)
-                    _logger.warning(
-                        "Using Javascript syntax 'true, 'false' in expressions is deprecated, found %s",
-                        name,
-                    )
-                    continue
+            # a used name the view has no field for is _check_group_consistency's
+            if name in ("false", "true") and name not in self.available_fields:
+                _debug.logic("used_field.js_literal", view=view.id, name=name)
+                _logger.warning(
+                    "Using Javascript syntax 'true, 'false' in expressions is deprecated, found %s",
+                    name,
+                )
 
     def _check_group_consistency(self, view: Any) -> None:
         for name, (

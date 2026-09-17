@@ -304,7 +304,7 @@ class TestViewInheritance(ViewCase):
 
     def test_get_combined_arch_query_count(self):
         self.env.invalidate_all()
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             self.view_ids["A"].get_combined_arch()
 
     def test_view_validate_button_action_query_count(self):
@@ -313,7 +313,7 @@ class TestViewInheritance(ViewCase):
         )
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(9):
             base_view = self.assertValid("""
                 <form string="View">
                     <header>
@@ -327,7 +327,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 2)
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(4):
             self.assertValid(
                 """
                 <field name="name" position="replace"/>
@@ -354,7 +354,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss)
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.assertValid(
                 """
                 <field name="name" position="replace">
