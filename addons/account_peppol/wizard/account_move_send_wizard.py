@@ -14,6 +14,8 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
+        if self.move_id.peppol_is_sent:
+            return self.env._(" (Previously sent)")
         peppol_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
         if peppol_partner.peppol_verification_state == 'not_valid':
             return self.env._(' (Customer not on Peppol)')
