@@ -943,6 +943,9 @@ class Post(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
+        self.ensure_one()
+        if not self.can_comment:
+            raise AccessError(_('%d karma required to comment.', self.karma_comment))
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -956,9 +959,6 @@ class Post(models.Model):
                 partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 
-            self.ensure_one()
-            if not self.can_comment:
-                raise AccessError(_('%d karma required to comment.', self.karma_comment))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
