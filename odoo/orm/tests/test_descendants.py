@@ -102,3 +102,34 @@ def test_child_of_without_a_parent_field_names_what_is_missing():
         tree = _tree(env)
         leaf.node_id = tree["child"]
         assert env["d.leaf"].search([("node_id", "child_of", tree["root"].id)]) == leaf
+
+
+class Rank(models.Model):
+    _name = "d.rank"
+    _module = "odoo.addons.test_descendants_harness"
+    _description = "Descendants node with an integer same-column"
+
+    name = fields.Char()
+    rank = fields.Integer()
+    parent_id = fields.Many2one("d.rank")
+
+
+def test_same_columns_tells_a_stored_zero_apart_from_null():
+    # COALESCE(col::text, '') on the SQL side: NULL is '', 0 is '0' -- a
+    # zero-ranked child of a rank-less root is NOT in the closure
+    with model_test_env(Rank) as env:
+        Ranks = env["d.rank"]
+        root = Ranks.create({"name": "root"})  # rank is NULL
+        zero = Ranks.create({"name": "zero", "rank": 0, "parent_id": root.id})
+        null = Ranks.create({"name": "null", "parent_id": root.id})
+        env.flush_all()
+        query = env.backend.descendants(
+            Ranks,
+            "parent_id",
+            [root.id],
+            domain=Domain.TRUE,
+            step_domain=Domain.TRUE,
+            same_columns=("rank",),
+        )
+        assert set(query.get_result_ids()) == {root.id, null.id}
+        assert zero.id not in set(query.get_result_ids())

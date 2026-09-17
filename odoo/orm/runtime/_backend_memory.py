@@ -1246,16 +1246,30 @@ class InMemoryBackend:
                     domain & step_domain & Domain(parent_field, "in", frontier)
                 ).get_result_ids()
             )
-            parent_values = {
-                parent.id: tuple(parent[column] or "" for column in same_columns)
-                for parent in parents
-            }
+
+            def same_key(record):
+                # COALESCE(col::text, '') on the SQL side: only NULL collapses
+                # to '', a stored 0 or false compares as its text -- which
+                # takes the stored cell, since the cache reads NULL as the
+                # type's falsy value
+                row = self.storage.get_row(model._table, record.id) or {}
+                key = []
+                for column in same_columns:
+                    value = row.get(column)
+                    if value is None:
+                        key.append("")
+                    elif value is True or value is False:
+                        key.append("true" if value else "false")
+                    else:
+                        key.append(str(value))
+                return tuple(key)
+
+            parent_values = {parent.id: same_key(parent) for parent in parents}
             frontier = [
                 typing.cast("int", child.id)
                 for child in children
                 if child.id not in found
-                and tuple(child[column] or "" for column in same_columns)
-                == parent_values[child[parent_field].id]
+                and same_key(child) == parent_values[child[parent_field].id]
             ]
             found.update(frontier)
         return self.as_query(model.browse(list(found)), ordered=False)
