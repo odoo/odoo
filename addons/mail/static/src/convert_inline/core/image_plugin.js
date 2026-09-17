@@ -15,6 +15,9 @@ export class ImagePlugin extends Plugin {
      * rendered dimensions.
      * Background images do not influence their content dimensions so they don't
      * have to be waited for.
+     * TODO EGGMAIL: load background images as well and enforce a background color
+     * according to the vibe of the image, to ensure contrast for mail clients
+     * that don't support them
      */
     loadImages(root) {
         const promises = [];

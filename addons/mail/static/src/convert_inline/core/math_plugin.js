@@ -1,11 +1,17 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 
+// TODO EGGMAIL: evaluate pertinence of pixel tolerance
+const EPSILON = 0.05;
+const MAX_SCALE = 4;
+
 export class MathPlugin extends Plugin {
     static id = "math";
     static shared = [
         "areRectEqual",
+        "closestValue",
         "computeRect",
+        "computeWithEpsilon",
         "pixelTolerance",
         "isNegativeZero",
         "isPositiveZero",
@@ -19,14 +25,31 @@ export class MathPlugin extends Plugin {
         "siblingSpacing",
         "containerPadding",
         "ratioPercentage",
+        "formatValue",
     ];
 
+    setup() {
+        this.epsilon = EPSILON;
+        this.useForcedEpsilon = false;
+    }
+
+    computeWithEpsilon(callback, epsilon = EPSILON) {
+        this.epsilon = epsilon;
+        this.useForcedEpsilon = true;
+        callback();
+        this.epsilon = EPSILON;
+        this.useForcedEpsilon = false;
+    }
+
     pixelTolerance() {
-        // TODO EGGMAIL: evaluate if 0.25 - 1 is a reasonable range for tolerance
-        return Math.min(
-            1,
-            Math.max(0.25, 1 / this.config.referenceDocument.defaultView.devicePixelRatio)
-        );
+        if (this.useForcedEpsilon) {
+            return this.epsilon;
+        }
+        const dpr = this.config.referenceDocument.defaultView.devicePixelRatio;
+        if (!Number.isFinite(dpr) || dpr <= 0) {
+            return this.epsilon;
+        }
+        return this.epsilon * Math.min(MAX_SCALE, Math.max(1, dpr));
     }
 
     areRectEqual(rect1, rect2) {
@@ -151,7 +174,7 @@ export class MathPlugin extends Plugin {
         value,
         { inputUnit = 1, outputUnit = 100, precision = 2, percentageLeft } = {}
     ) {
-        const truncatedValue = this.formatPercentage(value, {
+        const truncatedValue = this.formatValue(value, {
             inputUnit,
             outputUnit,
             precision,
@@ -162,7 +185,7 @@ export class MathPlugin extends Plugin {
         return truncatedValue;
     }
 
-    formatPercentage(value, { inputUnit = 1, outputUnit = 100, precision = 2 } = {}) {
+    formatValue(value, { inputUnit = 1, outputUnit = 100, precision = 2 } = {}) {
         const precisionFactor = 10 ** precision;
         return Math.trunc(((value * outputUnit) / inputUnit) * precisionFactor) / precisionFactor;
     }
@@ -172,7 +195,7 @@ export class MathPlugin extends Plugin {
         let dist, key;
         for (const testKey of collection) {
             const testDist = Math.abs(value - Number(testKey));
-            if (!dist || dist > testDist) {
+            if (dist === undefined || dist > testDist) {
                 dist = testDist;
                 key = testKey;
             }

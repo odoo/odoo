@@ -4,7 +4,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { useEmailHtmlConverter, useSavePendingImage } from "@mail/convert_inline/hooks";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
@@ -20,7 +20,6 @@ import {
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -55,10 +54,12 @@ export class MassMailingHtmlField extends HtmlField {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
-            services: this.env.services,
+        });
+        this._savePendingImages = useSavePendingImage({
+            getLastChangeId: () => this.lastChangeId,
+            setLastChangeId: (id) => (this.lastChangeId = id),
         });
         this.themeService = useService("mass_mailing.themes");
-        this.ui = useService("ui");
         Object.assign(this.state, {
             showThemeSelector: this.props.record.isNew,
             activeTheme: undefined,
@@ -245,7 +246,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -272,10 +273,11 @@ export class MassMailingHtmlField extends HtmlField {
             record: this.props.record,
             mobileBreakpoint: "md",
             onEditorReady: () => this.commitChanges(),
+            measureReference: this.converter.measureReference,
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -287,13 +289,14 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
+            measureReference: this.converter.measureReference,
             Plugins: [
                 ...MAIN_EDITOR_PLUGINS,
                 ...DYNAMIC_FIELD_PLUGINS,
                 ...registry.category("mail-core-plugins").getAll(),
             ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
-                .concat(registry.category("basic-editor-plugins").getAll()),
+                .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
     }
 
@@ -374,7 +377,7 @@ export class MassMailingHtmlField extends HtmlField {
         if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
             this.activeElement = undefined;
             this.onBlur();
-        } else if (this.iframeWrapperRef().contains(ev.target)) {
+        } else if (this.iframeWrapperRef()?.contains(ev.target)) {
             this.activeElement = this.iframeWrapperRef();
         }
     }
@@ -402,13 +405,11 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     /**
-     * Ensure that every SVG and WEBP images are converted to PNG, and create
-     * an attachment for every b64 encoded image, to ensure every image src
-     * is not a data url.
+     * @see useSavePendingImage
      * @override
      */
-    savePendingImages(content) {
-        return this.editor.shared["imageEmailFormat"].sanitizeImages(content);
+    async savePendingImages(content) {
+        await this._savePendingImages({ content, editor: this.editor });
     }
 
     /**
@@ -464,9 +465,10 @@ export class MassMailingHtmlField extends HtmlField {
         const valueFragment = parseHTML(document, value);
         let inlineValue;
         try {
-            inlineValue = await this.converter.convertToEmailHtml(valueFragment, {
+            const template = await this.converter.convertToEmailHtml(valueFragment, {
                 debug: this.env.debug,
             });
+            inlineValue = template ? template.innerHTML : null;
         } catch (error) {
             if (status(this) !== "destroyed") {
                 throw error;
@@ -486,23 +488,6 @@ export class MassMailingHtmlField extends HtmlField {
             () => {}
         );
         record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
-    }
-
-    /**
-     * TODO EGGMAIL: remove in dev branch
-     * @deprecated
-     */
-    preprocessFilterDomains(htmlEl) {
-        htmlEl.querySelectorAll("[data-filter-domain]").forEach((el) => {
-            let domain;
-            try {
-                domain = new Domain(JSON.parse(el.dataset.filterDomain));
-            } catch {
-                el.setAttribute("t-if", "false");
-                return;
-            }
-            el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
-        });
     }
 }
 
