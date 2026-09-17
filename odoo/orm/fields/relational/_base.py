@@ -1084,6 +1084,11 @@ class _RelationalMulti(_Relational):
     def _check_sudo_commands(self, comodel: BaseModel) -> BaseModel:
         if comodel._allow_sudo_commands:
             return comodel
+        if not comodel.env.su:
+            # a real user's commands already run as that user; demoting to
+            # the transaction's default environment would switch the acting
+            # user (and misattribute create_uid/write_uid)
+            return comodel
         default_env = comodel.env.transaction.default_env
         _debug.logic(
             "field.x2many.commands_demoted",
