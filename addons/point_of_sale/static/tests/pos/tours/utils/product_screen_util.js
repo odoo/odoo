@@ -96,7 +96,7 @@ export function checkFloatingOrderCount(expectedCount) {
         },
         {
             isActive: ["mobile"],
-            trigger: ".modal-header [data-icon='west']",
+            trigger: ".modal-header [data-icon='arrow_back']",
             run: "click",
         },
     ];

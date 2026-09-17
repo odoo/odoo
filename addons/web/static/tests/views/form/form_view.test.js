@@ -8663,7 +8663,7 @@ test(`support anchor tags with action type`, async () => {
         type: "form",
         arch: `
             <form>
-                <a type="action" name="42" class="btn-primary"><i class="oi" data-icon="east"/> Click me !</a>
+                <a type="action" name="42" class="btn-primary"><i class="oi" data-icon="arrow_forward"/> Click me !</a>
             </form>
         `,
         resId: 1,
@@ -11811,7 +11811,7 @@ test(`setting : boolean field`, async () => {
             <form>
                 <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
                     <field name="bar"/>
-                    <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
+                    <button name="buttonName" icon="arrow_forward" type="action" string="Manage Users" class="btn-link"/>
                 </setting>
             </form>
         `,
@@ -13250,7 +13250,7 @@ test(`preserve current scroll position on form view while closing dialog`, async
     });
 
     // click on back button
-    await contains(".modal .modal-header [data-icon='west']").click();
+    await contains(".modal .modal-header [data-icon='arrow_back']").click();
 
     expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
     expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });

@@ -1041,7 +1041,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
         "foo partner 13",
         "foo partner 14",
     ]);
-    await contains(`[data-icon='west']`).click();
+    await contains(`[data-icon='arrow_back']`).click();
     expect(`.modal`).toHaveCount(0);
     expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([

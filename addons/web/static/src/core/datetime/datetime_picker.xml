@@ -60,7 +60,7 @@
                     showSeconds="this.props.rounding === 0"
                     inputCssClass="'o_input'"
                 />
-                <i t-if="this.state.timeValues[0] and this.state.timeValues[1]" class="oi" data-icon="east"/>
+                <i t-if="this.state.timeValues[0] and this.state.timeValues[1]" class="oi" data-icon="arrow_forward"/>
                 <TimePicker
                     t-if="this.state.timeValues[1]"
                     value="this.state.timeValues[1]"

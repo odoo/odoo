@@ -32,6 +32,6 @@ test("KioskBarcodeScanner can be opened and closed", async () => {
     });
     await contains("button.o_mobile_barcode").click();
     await waitFor(".modal-body video");
-    await contains(`[data-icon='west']`).click();
+    await contains(`[data-icon='arrow_back']`).click();
     expect(await isBarcodeScannerOpened.promise).toBe(true);
 });
