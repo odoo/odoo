@@ -837,7 +837,7 @@ class AccountJournal(models.Model):
         # Create the bank_account_id if necessary
         if 'bank_account_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
-                journal.set_bank_account(vals.get('bank_account_number'), vals.get('bank_bic'))
+                journal.set_bank_account(vals.get('bank_account_number'), vals.get('bank_bic'), vals.get('bank_name'))
         if 'bank_account_number' in vals or 'bank_account_id' in vals:
             for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
                 if bank._user_can_trust():
@@ -1079,7 +1079,7 @@ class AccountJournal(models.Model):
 
         return journals
 
-    def set_bank_account(self, account_number, bank_bic=None):
+    def set_bank_account(self, account_number, bank_bic=None, bank_name=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
         self.bank_account_id = self.env['res.partner.bank']._find_or_create_bank_account(
@@ -1088,6 +1088,7 @@ class AccountJournal(models.Model):
             company=self.company_id,
             extra_create_vals={
                 'bank_bic': bank_bic,
+                'bank_name': bank_name,
                 'journal_id': self,
             }
         )
