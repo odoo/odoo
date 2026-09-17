@@ -9,11 +9,23 @@ from odoo.http import SessionExpiredException
 from odoo.http.core import _request_stack
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.base.models.ir_http import IrHttp as BaseIrHttp
+
+
+class _FakeSession(dict):
+    uid = None
+
 
 class TestIrHttpAuth(TransactionCase):
     @contextmanager
     def _fake_request(self, env, path="/"):
-        fake = SimpleNamespace(env=env, httprequest=SimpleNamespace(path=path))
+        # what every consumer of a request may read: an addon's ir.http
+        # (website) asks the session and the host for the current website
+        fake = SimpleNamespace(
+            env=env,
+            session=_FakeSession(),
+            httprequest=SimpleNamespace(path=path, host="localhost"),
+        )
         _request_stack.push(fake)
         try:
             yield fake
@@ -43,9 +55,12 @@ class TestIrHttpAuth(TransactionCase):
                 "public": False,
             }
         )
+        # base's own fallback: an addon's override (website) runs the whole
+        # frontend dispatch on top of it, which this fake request cannot carry
+        serve_fallback = BaseIrHttp.__dict__["_serve_fallback"].__func__
         with self._fake_request(self.env, path=path):
             self.assertIsNone(
-                self.registry["ir.http"]._serve_fallback(),
+                serve_fallback(self.registry["ir.http"]),
                 "non-public binary attachment must not be served by the fallback",
             )
 

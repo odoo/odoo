@@ -17,6 +17,7 @@ class MixinWebsiteSeoMetadata(models.AbstractModel):
         string="SEO optimized",
         compute="_compute_is_seo_optimized",
         store=True,
+        precompute=True,
     )
     website_meta_title = fields.Char(
         string="Website meta title",

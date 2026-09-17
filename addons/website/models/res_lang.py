@@ -1,4 +1,4 @@
-from odoo import _, models, tools
+from odoo import SUPERUSER_ID, _, models, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
@@ -12,7 +12,7 @@ class ResLang(models.Model):
     _inherit = "res.lang"
 
     def write(self, vals):
-        if "active" in vals and not vals["active"]:
+        if "active" in vals and not vals["active"] and self.env.uid != SUPERUSER_ID:
             if self.env["website"].search_count(
                 [("language_ids", "in", self._ids)], limit=1
             ):

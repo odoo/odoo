@@ -601,6 +601,44 @@ class TestViewSaving(TestViewSavingCommon):
         View.browse(company_id).save(value=node)
         self.assertEqual(company.name, "Acme Corporation")
 
+    def test_cow_of_a_parentless_primary_given_a_parent_is_an_extension(self):
+        View = self.env["ir.ui.view"]
+        website = self.env.ref("website.default_website")
+        base = View.create(
+            {
+                "name": "cow mode base",
+                "type": "qweb",
+                "key": "website.cow_mode_base",
+                "arch": "<t t-name='website.cow_mode_base'><div/></t>",
+            }
+        )
+        fresh = View.create(
+            {
+                "name": "cow mode fresh",
+                "type": "qweb",
+                "key": "website.cow_mode_fresh",
+                "arch": "<data/>",
+            }
+        )
+        child = View.create(
+            {
+                "name": "cow mode child",
+                "type": "qweb",
+                "key": "website.cow_mode_child",
+                "mode": "primary",
+                "inherit_id": fresh.id,
+                "arch": "<data/>",
+            }
+        )
+        (fresh + child).with_context(website_id=website.id).write(
+            {"inherit_id": base.id}
+        )
+        specific = View.search([("website_id", "=", website.id)])
+        by_key = {view.key: view for view in specific}
+        self.assertEqual(by_key["website.cow_mode_fresh"].mode, "extension")
+        self.assertEqual(by_key["website.cow_mode_child"].mode, "primary")
+        self.assertEqual(fresh.mode, "primary", "the generic is untouched")
+
     def test_field_tail(self):
         replacement = ET.tostring(
             h.LI(

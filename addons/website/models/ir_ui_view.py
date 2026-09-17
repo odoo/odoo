@@ -180,6 +180,11 @@ class IrUiView(models.Model):
             copy_vals = {"website_id": current_website_id, "key": view.key}
             if vals.get("inherit_id"):
                 copy_vals["inherit_id"] = vals["inherit_id"]
+                if "mode" in vals:
+                    copy_vals["mode"] = vals["mode"]
+                # the copy carries the generic's mode; the change implies
+                # the same default it would on the generic itself
+                copy_vals = view._default_mode(copy_vals)
             website_specific_view = view.copy(copy_vals)
 
             website = view.env["website"].browse(current_website_id)
