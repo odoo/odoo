@@ -42,6 +42,12 @@ class EventBooth(models.Model):
         action['res_id'] = self.sale_order_id.id
         return action
 
+    def _action_cancel(self):
+        self.is_paid = False
+        # Need to clear sale_order_line_id and event user might not have access to write on sale.order.line.
+        self.sudo().sale_order_line_id = False
+        super()._action_cancel()
+
     def _get_booth_multiline_description(self):
         return '%s : \n%s' % (
             self.event_id.display_name,

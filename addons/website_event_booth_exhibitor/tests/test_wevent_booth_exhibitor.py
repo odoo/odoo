@@ -3,6 +3,8 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tests import tagged
 
@@ -50,3 +52,34 @@ class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPorta
             })]
         })
         self.start_tour('/event', 'webooth_exhibitor_register', login='admin')
+
+    def test_sponsor_archived_with_its_last_booth(self):
+        """ Test a sponsor only exhibits through its booths. It is archived if
+        its last booth is cancelled, and unarchived if a booth is booked again. """
+        now = datetime.now()
+        booth_category_id = self.env.ref('event_booth.event_booth_category_premium').id
+        event = self.env['event.event'].create({
+            'name': 'Test Sponsored Booth',
+            'date_begin': now + relativedelta(days=1),
+            'date_end': now + relativedelta(days=2),
+            'event_booth_ids': [
+                Command.create({'name': 'Test Booth 1', 'booth_category_id': booth_category_id}),
+                Command.create({'name': 'Test Booth 2', 'booth_category_id': booth_category_id}),
+            ],
+        })
+        booth_1, booth_2 = event.event_booth_ids
+
+        event.event_booth_ids.action_confirm({'partner_id': self.partner_demo.id})
+        sponsor = booth_1.sponsor_id
+        self.assertEqual(booth_2.sponsor_id, sponsor, "Booths of a same customer should share its sponsor.")
+        self.assertTrue(sponsor.active)
+
+        booth_1.write({'state': 'available'})
+        self.assertTrue(sponsor.active, "Sponsor should stay active as long as it exhibits in a booth.")
+
+        booth_2.write({'state': 'available'})
+        self.assertFalse(sponsor.active, "Sponsor should be archived along with its last booth.")
+
+        booth_1.action_confirm({'partner_id': self.partner_demo.id})
+        self.assertEqual(sponsor, booth_1.sponsor_id, "Booking a booth again should unarchive its sponsor.")
+        self.assertTrue(sponsor.active)

@@ -25,7 +25,7 @@ class EventBooth(models.Model):
 
     def _get_or_create_sponsor(self, vals):
         self.ensure_one()
-        sponsor_id = self.env['event.sponsor'].sudo().search([
+        sponsor_id = self.env['event.sponsor'].sudo().with_context(active_test=False).search([
             ('partner_id', '=', self.partner_id.id),
             ('sponsor_type_id', '=', self.sponsor_type_id.id),
             ('exhibitor_type', '=', self.booth_category_id.exhibitor_type),
@@ -43,10 +43,19 @@ class EventBooth(models.Model):
             if not values.get('name'):
                 values['name'] = self.partner_id.name
             sponsor_id = self.env['event.sponsor'].sudo().create(values)
+        elif not sponsor_id.active:
+            sponsor_id.action_unarchive()
         return sponsor_id.id
 
-    def _action_post_confirm(self, write_vals):
+    def _action_confirm(self, write_vals):
         for booth in self:
             if booth.use_sponsor and booth.partner_id:
                 booth.sponsor_id = booth._get_or_create_sponsor(write_vals)
-        super(EventBooth, self)._action_post_confirm(write_vals)
+        super()._action_confirm(write_vals)
+
+    def _action_cancel(self):
+        # Booths can be released by the event user, and they don't have access to sponsors.
+        sponsors = self.sudo().sponsor_id
+        self.sponsor_id = False
+        super()._action_cancel()
+        sponsors.filtered(lambda sponsor: not sponsor.booth_ids).action_archive()
