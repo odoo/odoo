@@ -1367,10 +1367,11 @@ class Website(models.Model):
         # We will now try to find a website matching the request host/domain (if
         # there is one on request) or return a random one.
 
-        # The format of `httprequest.host` is `domain:port`
+        # The format of `httprequest.host` is `domain:port`, while the url set
+        # on the thread is a full url: only keep its `domain:port` part.
         domain_name = (
             request and request.httprequest.host
-            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or hasattr(threading.current_thread(), 'url') and get_base_domain(threading.current_thread().url)
             or '')
         website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
