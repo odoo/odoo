@@ -1,18 +1,19 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
-import { DIMENSIONS } from "../hooks";
 import { CellLayout, EmptyCellLayout, TableRowLayout } from "./table_models";
-import { EmailNode } from "../core/render_models";
+import { Analysis, ElementLayout, EmailNode } from "../core/render_models";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
+import { DIMENSIONS } from "../core/utils";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
+// align-items|self -> verticalAlign map
 const VERTICAL_ALIGN = {
     start: "top",
     end: "bottom",
@@ -21,49 +22,65 @@ const VERTICAL_ALIGN = {
     "flex-end": "bottom",
 };
 
+// TODO EGGMAIL: should it be completed?
+const ILLEGAL_TABLE_STRATEGY_NODES = new Set(["TABLE", "TBODY", "TR", "THEAD", "TFOOT"]);
+
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = [
+        "border",
         "contextStyle",
         "math",
         "measurementSnapshot",
+        "render",
         "responsiveBlock",
         "referenceNode",
         "rules",
         "spacing",
+        "style",
     ];
     static shared = [
         "addTableOuterSpacingFacts",
         "applyCellNewWidth",
         "applyDescendantBackground",
         "applyDescendantBorder",
+        "attemptCellMerge",
         "buildCell",
         "buildCellWithOffset",
         "buildEmptyCell",
         "buildRow",
         "extractRowsFromBands",
         "fillTableContainer",
+        "getCellBackgroundStyleInfo",
         "getCellMarginStyleInfo",
         "getClusterEmailNodes",
+        "getVerticalAlign",
     ];
     resources = {
         element_layout_analysis_processors: [
             this.analyzeElementLayout.bind(this),
             this.addBottomUpConstraintsForTables.bind(this),
+            this.addAlignSelfConstraint.bind(this),
+            this.addCenterHRConstraint.bind(this),
         ],
+        merge_layout_overrides: [this.mergeCellDescendant.bind(this)],
+        should_discard_reference_node_predicates: this.isUnsupportedTableElement.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {
                 return emailNode;
             }
-            const rowMeasures = this.extractRowsFromBands(emailNode);
+            const rowMeasures = this.extractRowsFromBands(emailNode.lastReferenceNode);
             return this.fillTableContainer(emailNode, rowMeasures);
         },
         refine_layout_processors: [
             withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
             this.applyDescendantBackground.bind(this),
             this.applyDescendantBorder.bind(this),
+            this.forceVerticalAlign.bind(this),
+            this.forceTextAlign.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
+        merge_fact_overrides: this.mergeTableStrategyReport.bind(this),
     };
 
     setup() {
@@ -81,30 +98,59 @@ export class TableStrategyPlugin extends Plugin {
             emptyCell: this.buildEmptyCell.bind(this, buildContext),
             cellWithOffset: this.buildCellWithOffset.bind(this, buildContext),
         });
-        this.borderStyleRules = new Rules();
         this.backgroundStyleRules = new Rules();
         this.cellMarginStyleRules = new Rules();
         this.provideStyleRules();
     }
 
+    getVerticalAlign(align) {
+        return VERTICAL_ALIGN[align];
+    }
+
+    mergeTableStrategyReport({ fact, isConstraint }) {
+        if (isConstraint) {
+            return;
+        }
+        if (fact === "tableStrategyReport" || fact === "cellMargin") {
+            // never overwrite tableStrategyReport or cellMargin unless it is a
+            // constraint
+            return true;
+        }
+    }
+
+    isUnsupportedTableElement(referenceNode) {
+        if (!referenceNode) {
+            return;
+        }
+        if (referenceNode.nodeName === "COLGROUP") {
+            return true;
+        }
+    }
+
     provideStyleRules() {
-        const borderRules = this.borderStyleRules.forPlugin(TableStrategyPlugin.id);
         const backgroundRules = this.backgroundStyleRules.forPlugin(TableStrategyPlugin.id);
         const cellMarginRules = this.cellMarginStyleRules.forPlugin(TableStrategyPlugin.id);
-        borderRules.allow(/^border.*/);
         backgroundRules.allow(/^background.*/);
         cellMarginRules.allow(/^margin-(top|bottom)$/);
     }
 
-    getCellMarginStyleInfo(styleInfo, emailNode) {
+    getCellBackgroundStyleInfo(styleInfo, referenceNode) {
         if (!styleInfo) {
             return styleInfo;
         }
-        return this.filterStyleInfo(
-            styleInfo,
-            emailNode.layout.ancestorTag,
-            this.cellMarginStyleRules
-        );
+        return this.filterStyleInfo(styleInfo, referenceNode, this.backgroundStyleRules);
+    }
+
+    /**
+     * Remove horizontal margin (for the child of a cell), as
+     * it won't render properly with box-sizing: content-box (cells have a
+     * dimension)
+     */
+    getCellMarginStyleInfo(styleInfo, referenceNode) {
+        if (!styleInfo) {
+            return styleInfo;
+        }
+        return this.filterStyleInfo(styleInfo, referenceNode, this.cellMarginStyleRules);
     }
 
     /**
@@ -169,6 +215,8 @@ export class TableStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.acceptCellNewWidth) {
             this.applyCellNewWidth(layout, { emailNode });
         }
+        // TODO EGGMAIL: identify why we don't need to handle
+        // cellMobileMarginBottom/Top in this case
         return layout;
     }
 
@@ -193,6 +241,76 @@ export class TableStrategyPlugin extends Plugin {
             }),
             emailNode.layout.ancestorTag
         );
+    }
+
+    addCenterHRConstraint(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        if (!referenceNode.matches?.(":scope:has(> .s_hr:only-child)")) {
+            return defaultEmailNodeArguments;
+        }
+        const { analysis } = defaultEmailNodeArguments;
+        analysis.bottomUpConstraints.push((emailNode) => {
+            if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
+                return;
+            }
+            return {
+                facts: { forceTextAlign: "center" },
+                topDownConstraints: [
+                    () => ({
+                        shouldPropagate: true,
+                        facts: {
+                            spacingContextStyleInfo: StyleInfo.from({ "text-align": "center" }),
+                        },
+                    }),
+                ],
+            };
+        });
+        return defaultEmailNodeArguments;
+    }
+
+    addAlignSelfConstraint(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return defaultEmailNodeArguments;
+        }
+        const rawStyle = this.getRawStyleInfo(referenceNode);
+        const alignSelf = rawStyle.getPropertyValue("align-self");
+        if (!(alignSelf in VERTICAL_ALIGN)) {
+            return defaultEmailNodeArguments;
+        }
+        const verticalAlign = this.getVerticalAlign(alignSelf);
+        const { analysis } = defaultEmailNodeArguments;
+        analysis.bottomUpConstraints.push((emailNode) => {
+            if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
+                return;
+            }
+            return { facts: { forceVerticalAlign: verticalAlign } };
+        });
+        return defaultEmailNodeArguments;
+    }
+
+    forceTextAlign(layout, { emailNode }) {
+        const textAlign = emailNode.analysis.facts.forceTextAlign;
+        if (!textAlign || !emailNode.analysis.facts.isCell) {
+            return layout;
+        }
+        const ref = layout.getRef();
+        ref.styleInfo.setProperty("text-align", textAlign);
+        if (ref.attributes.align) {
+            ref.attributes.align = textAlign;
+        }
+        return layout;
+    }
+
+    forceVerticalAlign(layout, { emailNode }) {
+        const verticalAlign = emailNode.analysis.facts.forceVerticalAlign;
+        if (!verticalAlign || !emailNode.analysis.facts.isCell) {
+            return layout;
+        }
+        const rootRef = layout.getRef();
+        rootRef.styleInfo.setProperty("vertical-align", verticalAlign);
+        if (rootRef.attributes.valign) {
+            rootRef.attributes.valign = verticalAlign;
+        }
+        return layout;
     }
 
     applyCellNewWidth(layout, { emailNode }) {
@@ -252,7 +370,7 @@ export class TableStrategyPlugin extends Plugin {
      *   for every reference element, during the first render tree phase,
      *   identify if there is a border/background on every element.
      * - if there is, create a tableStrategyReport that is propagated towards
-     *   ancestors as a constraintsForAncestors
+     *   ancestors as a bottomUpConstraints
      *   this report should include cleanup functions that will be called when
      *   the report is accepted AND is stopped from propagating
      * - stop propagation if
@@ -266,17 +384,13 @@ export class TableStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         }
         const styleInfo = layout.getRef().styleInfo;
-        const borderStyleInfo = this.filterStyleInfo(
-            styleInfo,
-            referenceNode,
-            this.borderStyleRules
-        );
-        const backgroundStyleInfo = this.filterStyleInfo(
-            styleInfo,
-            referenceNode,
-            this.backgroundStyleRules
-        );
-        if (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) {
+        const borderStyleInfo = this.getBorderStyleInfo(styleInfo, referenceNode);
+        const backgroundStyleInfo = this.getCellBackgroundStyleInfo(styleInfo, referenceNode);
+        if (
+            (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) ||
+            // HR should not generate a table strategy report (they should keep their border)
+            referenceNode.nodeName === "HR"
+        ) {
             return defaultEmailNodeArguments;
         }
         const cleanupStyleInfo = (sourceStyleInfo, referenceNode, emailNode) => {
@@ -309,7 +423,6 @@ export class TableStrategyPlugin extends Plugin {
         // i.e. we find the emailNode which has referenceNode in its referenceNodes,
         // then we remove all propertyInfo by key /!\ in case of merge, we may not
         // remove all that is necessary but oh well for now.
-        const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
         const referenceRect = this.getBoundingClientRect(referenceNode);
         const spacingCleanup = [];
         let marginRect = { ...referenceRect };
@@ -317,7 +430,7 @@ export class TableStrategyPlugin extends Plugin {
         // marginRect, as the one just below the row element is already taken into
         // account by the table computation
         let storedMarginRect = { ...marginRect };
-        if (marginStyleInfo.size > 0) {
+        if (this.hasMarginSpacing(analysis)) {
             // TODO EGGMAIL: cleanup this code, as it will probably be reused
             // we probably need to check that the margin is really in px in
             // the style
@@ -340,6 +453,7 @@ export class TableStrategyPlugin extends Plugin {
             });
         }
         const tableStrategyReport = {
+            originNode: referenceNode,
             descendantBackground: {
                 styleInfo: backgroundStyleInfo,
                 cleanup: [cleanupBackground],
@@ -370,7 +484,7 @@ export class TableStrategyPlugin extends Plugin {
          *   nullify all sources (border, bacgkround, margin, padding) of the report (towards descendants)
          *
          */
-        analysis.constraintsForAncestors.push((emailNode) => {
+        analysis.bottomUpConstraints.push((emailNode) => {
             const analysis = emailNode.analysis;
             const referenceNode = emailNode.lastReferenceNode;
             const acceptTableStrategyReport = this.delegateTo(
@@ -381,19 +495,20 @@ export class TableStrategyPlugin extends Plugin {
                 const report = { ...tableStrategyReport };
                 const facts = { tableStrategyReport: report };
                 report.spacing = { ...report.spacing, marginRect: storedMarginRect };
-                const constraintsForDescendants = [];
+                const topDownConstraints = [];
                 let shouldPropagate = true;
+                if (analysis.facts.stopTableStrategyReportPropagation) {
+                    shouldPropagate = false;
+                }
                 if (analysis.facts.acceptTableOuterSpacing) {
                     shouldPropagate = false;
-                    constraintsForDescendants.push(...tableStrategyReport.spacing.cleanup);
+                    topDownConstraints.push(...tableStrategyReport.spacing.cleanup);
                 }
                 if (analysis.facts.acceptDescendantBorder) {
-                    constraintsForDescendants.push(...tableStrategyReport.descendantBorder.cleanup);
+                    topDownConstraints.push(...tableStrategyReport.descendantBorder.cleanup);
                 }
                 if (analysis.facts.acceptDescendantBackground) {
-                    constraintsForDescendants.push(
-                        ...tableStrategyReport.descendantBackground.cleanup
-                    );
+                    topDownConstraints.push(...tableStrategyReport.descendantBackground.cleanup);
                 }
                 if (analysis.facts.acceptCellNewWidth) {
                     facts.cellMargin = this.containerPadding(
@@ -404,14 +519,13 @@ export class TableStrategyPlugin extends Plugin {
                 return {
                     facts,
                     shouldPropagate,
-                    constraintsForDescendants,
+                    topDownConstraints,
                 };
             } else if (!referenceNode || analysis.facts.tableStrategyReport) {
                 return { shouldPropagate: false };
             }
-            const paddingStyleInfo = analysis.facts.desktopPaddingStyleInfo;
             const referenceRect = this.getBoundingClientRect(referenceNode);
-            if (paddingStyleInfo.size > 0) {
+            if (this.hasPaddingSpacing(analysis)) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("padding-top"));
                 const right = parseCssValue(computedStyle.getPropertyValue("padding-right"));
@@ -432,8 +546,7 @@ export class TableStrategyPlugin extends Plugin {
             marginRect = referenceRect;
             storedMarginRect = { ...marginRect };
             tableStrategyReport.spacing.cleanup.push(cleanupSpacing.bind(undefined, referenceNode));
-            const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
-            if (marginStyleInfo.size > 0) {
+            if (this.hasMarginSpacing(analysis)) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
                 const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
@@ -502,7 +615,7 @@ export class TableStrategyPlugin extends Plugin {
         const { layout, analysis } = defaultEmailNodeArguments;
         const div = this.config.referenceDocument.createElement("DIV");
         if (
-            referenceNode.nodeName === "TR" ||
+            ILLEGAL_TABLE_STRATEGY_NODES.has(referenceNode.nodeName) ||
             analysis.facts.isMainTable ||
             !isAllowedContent(referenceNode, [div]) ||
             !this.detectTableLayout(referenceNode)
@@ -516,6 +629,34 @@ export class TableStrategyPlugin extends Plugin {
         analysis.facts.isTableContainer = true;
         layout.pluginIds.add(TableStrategyPlugin.id);
         return defaultEmailNodeArguments;
+    }
+
+    mergeCellDescendant(parentEmailNode, { layout, analysis }) {
+        if (!parentEmailNode.analysis.parsingFacts.attemptCellMerge) {
+            return;
+        }
+        if (
+            layout instanceof ElementLayout &&
+            layout.tag === "DIV" &&
+            !this.hasMarginSpacing(analysis) &&
+            !this.hasPaddingSpacing(analysis)
+        ) {
+            // need to know which ref has to receive the "DIV" info
+            const refName = this.processThrough(
+                "cell_ref_name_processors",
+                "root",
+                parentEmailNode
+            );
+            const ref = layout.getRef();
+            const styleInfo = ref.style;
+            // TODO EGGMAIL: handle the following properly with rules, evaluate
+            // what other properties should be removed
+            // Only the resulting layout (from parentEmailNode) can determine
+            // the display mode.
+            styleInfo.removeProperty("display");
+            parentEmailNode.layout.setAttributes(ref, refName);
+            return true;
+        }
     }
 
     // TODO EGGMAIL: evaluate how float: left/right behave, will it match
@@ -555,7 +696,7 @@ export class TableStrategyPlugin extends Plugin {
         return isTableCandidate;
     }
 
-    fillTableContainer(emailNode, rowMeasures, { builders = this.builders } = {}) {
+    fillTableContainer(containerEmailNode, rowMeasures, { builders = this.builders } = {}) {
         const rows = [];
         for (const rowMeasure of rowMeasures) {
             const width = rowMeasure.width;
@@ -565,7 +706,7 @@ export class TableStrategyPlugin extends Plugin {
                 });
             };
             let ratio = 100;
-            const rowEmailNode = builders["row"](rowMeasure);
+            const rowEmailNode = builders["row"](rowMeasure, containerEmailNode);
             rows.push(rowEmailNode);
             for (const cellMeasure of rowMeasure.children) {
                 const widthRatio = this.ratioPercentage(cellMeasure.width, {
@@ -580,27 +721,32 @@ export class TableStrategyPlugin extends Plugin {
                         percentageLeft: ratio,
                     });
                     ratio -= cellMeasure.offsetWidthRatio;
-                    for (const cell of builders["cellWithOffset"](cellMeasure)) {
+                    for (const cell of builders["cellWithOffset"](
+                        cellMeasure,
+                        containerEmailNode
+                    )) {
                         assignRowInfo(cell);
                         rowEmailNode.appendChild(cell);
                     }
                 } else if (cellMeasure.type === "emptyCell") {
-                    const cell = builders["emptyCell"](cellMeasure);
+                    const cell = builders["emptyCell"](cellMeasure, containerEmailNode);
                     assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 } else if (cellMeasure.type === "cell") {
-                    const cell = builders["cell"](cellMeasure);
+                    const cell = builders["cell"](cellMeasure, containerEmailNode);
                     assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 }
             }
         }
-        emailNode.spliceChildren(0, emailNode.children.length, ...rows);
-        return emailNode;
+        // TODO EGGMAIL: do we need to keep the emailNode if it's a div?
+        // At least when it is neutral and has no margin/padding we could
+        // replace it by the rows directly
+        containerEmailNode.spliceChildren(0, containerEmailNode.children.length, ...rows);
+        return containerEmailNode;
     }
 
-    extractRowsFromBands(emailNode) {
-        const referenceNode = emailNode.lastReferenceNode;
+    extractRowsFromBands(referenceNode) {
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
         // TODO EGGMAIL: export this computation somewhere, it is used multiple times
         const computedStyle = this.getComputedStyle(desktopBlock.element);
@@ -621,8 +767,9 @@ export class TableStrategyPlugin extends Plugin {
         const contextStyleInfo = this.getTableContextStyleInfo(referenceNode);
         // TODO EGGMAIL: approximate vertical alignment support:
         // start/center/end/stretch -> default stretch
-        const verticalAlign =
-            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
+        const verticalAlign = this.getVerticalAlign(
+            this.getStylePropertyValue(referenceNode, "align-items")
+        );
         // STEP 1: construct measure bundles
         const rowMeasures = [];
         for (const band of desktopBlock.bands) {
@@ -646,9 +793,9 @@ export class TableStrategyPlugin extends Plugin {
                 const measures = {
                     contextStyleInfo,
                     needsZoomCorrection,
+                    isFirst: true,
                     isLast,
                     cluster: prevCluster,
-                    emailNode,
                     width: prevCluster.rect.width,
                     verticalAlign,
                 };
@@ -671,7 +818,6 @@ export class TableStrategyPlugin extends Plugin {
                     needsZoomCorrection,
                     isLast,
                     cluster,
-                    emailNode,
                     width: cluster.rect.width,
                     verticalAlign,
                 };
@@ -733,9 +879,10 @@ export class TableStrategyPlugin extends Plugin {
 
     buildCell(
         { cell, strategy },
-        { contextStyleInfo, cluster, emailNode, widthRatio, verticalAlign, isLast }
+        { contextStyleInfo, cluster, widthRatio, verticalAlign, isLast, isFirst },
+        containerEmailNode
     ) {
-        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const clusterEmailNodes = this.getClusterEmailNodes(containerEmailNode, cluster);
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%` };
@@ -748,24 +895,46 @@ export class TableStrategyPlugin extends Plugin {
             attributes,
         });
         const layout = new cell.Layout({ refs });
-        const cellEmailNode = new EmailNode({ layout });
+        const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
+        analysis.facts.isCell = true;
+        const cellEmailNode = new EmailNode({ layout, analysis });
+        if (!verticalAlign) {
+            Object.assign(cellEmailNode.analysis.facts, {
+                acceptCellMobileMargin: {
+                    top: !isFirst,
+                    right: true,
+                    bottom: !isLast,
+                    left: true,
+                },
+                acceptCellNewWidth: true,
+                acceptDescendantBackground: true,
+                acceptDescendantBorder: true,
+            });
+        }
+        cellEmailNode.analysis.facts[strategy] = true;
+        cellEmailNode.analysis.facts.cluster = cluster;
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
-                child
+                child.layout.ancestorTag
             );
             cellEmailNode.appendChild(child);
         }
-        if (!verticalAlign) {
-            if (!isLast) {
-                cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
-            }
-            cellEmailNode.analysis.facts.acceptCellNewWidth = true;
-            cellEmailNode.analysis.facts.acceptDescendantBackground = true;
-            cellEmailNode.analysis.facts.acceptDescendantBorder = true;
+        if (clusterEmailNodes.length === 1) {
+            this.attemptCellMerge(cellEmailNode, clusterEmailNodes.at(0));
         }
-        cellEmailNode.analysis.facts[strategy] = true;
         return cellEmailNode;
+    }
+
+    attemptCellMerge(cellEmailNode, emailNode) {
+        if (this.attemptMerge(cellEmailNode, emailNode)) {
+            for (const child of cellEmailNode.children) {
+                child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
+                    child.analysis.facts.desktopMarginStyleInfo,
+                    child.layout.ancestorTag
+                );
+            }
+        }
     }
 
     buildEmptyCell({ emptyCell, strategy }, { widthRatio }) {
@@ -783,22 +952,28 @@ export class TableStrategyPlugin extends Plugin {
         return emailNode;
     }
 
-    buildCellWithOffset(context, cellMeasure) {
+    buildCellWithOffset(context, cellMeasure, containerEmailNode) {
         const cells = [];
-        const offsetEmailNode = context.builders["emptyCell"]({
-            ...cellMeasure,
-            width: cellMeasure.offsetWidth,
-            widthRatio: cellMeasure.offsetWidthRatio,
-            isLast: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
-        const cellEmailNode = context.builders["cell"]({
-            ...cellMeasure,
-            needsZoomCorrection: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
+        const offsetEmailNode = context.builders["emptyCell"](
+            {
+                ...cellMeasure,
+                width: cellMeasure.offsetWidth,
+                widthRatio: cellMeasure.offsetWidthRatio,
+                isLast: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
+        const cellEmailNode = context.builders["cell"](
+            {
+                ...cellMeasure,
+                needsZoomCorrection: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
         cells.push(offsetEmailNode, cellEmailNode);
         return cells;
     }

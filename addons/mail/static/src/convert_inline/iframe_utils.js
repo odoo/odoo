@@ -47,8 +47,8 @@ export function loadIframe(iframe, callback = () => {}) {
  * @returns {Promise<T>} Forever pending if the iframe is disconnected
  */
 export function loadIframeBundles(iframe, bundles, options) {
-    const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
     return loadIframe(iframe, async () => {
+        const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
         const result = [];
         for (const bundle of bundles) {
             result.push(await loadBundle(bundle, bundleOptions));
