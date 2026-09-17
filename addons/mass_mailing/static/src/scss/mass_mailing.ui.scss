@@ -304,6 +304,11 @@ body.editor_enable.o_basic_theme.o_in_iframe {
     }
 }
 
+.note-editable:has(.o_basic_theme),
+.o_readonly #iframe_target:has(.o_basic_theme) {
+    padding: 24px 16px 10px;
+}
+
 .note-editable .o_layout {
     overflow: initial;
 }
