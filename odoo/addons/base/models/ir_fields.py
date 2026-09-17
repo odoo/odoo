@@ -1082,7 +1082,14 @@ class IrFieldsConverter(models.AbstractModel):
         name_create_enabled_fields = (
             self.env.context.get("name_create_enabled_fields") or {}
         )
-        if name_create_enabled_fields.get(self._get_field_path(field)):
+        if RelatedModel._name_create_on_import or name_create_enabled_fields.get(
+            self._get_field_path(field)
+        ):
+            _debug.logic(
+                "ref_name_create_allowed",
+                model=RelatedModel._name,
+                by_model=RelatedModel._name_create_on_import,
+            )
             try:
                 with self.env.cr.savepoint():
                     id, _name = RelatedModel.name_create(name=value)

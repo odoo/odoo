@@ -24,6 +24,7 @@ class PhoneNumber(models.Model):
     _order = "primary desc, sequence, id"
     _rec_name = "number"
     _rec_names_search = ["number", "sanitized", "label"]
+    _name_create_on_import = True
 
     number = fields.Char(required=True)
     sanitized = fields.Char(

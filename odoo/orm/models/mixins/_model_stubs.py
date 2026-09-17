@@ -59,6 +59,7 @@ class _ModelStubs:
         _order: str
         _rec_name: str | None
         _rec_names_search: list[str] | None
+        _name_create_on_import: bool
         _display_name_column: str | tuple[str, ...] | None
         _display_name_column_guard: str | None
         _display_name_context_keys: tuple[str, ...]

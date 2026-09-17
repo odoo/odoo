@@ -52,31 +52,20 @@ class _ModelMetadataMixin(_ModelStubs):
 
     _rec_name: str | None = None
     _rec_names_search: list[str] | None = None
+    _name_create_on_import: bool = False
     _order: str = "id"
     _parent_name: str = "parent_id"
     _parent_store: bool = False
     _active_name: str | None = None
-    # a stored column that IS display_name whenever the context carries none
-    # of the keys, so a read engine can serve it without the compute; the
-    # guard names a field whose empty rows render a translated placeholder
-    # instead, which the stored column carries in English only
     _display_name_column: str | tuple[str, ...] | None = None
     _display_name_column_guard: str | None = None
     _display_name_context_keys: tuple[str, ...] = ()
-    # the model's _search_display_name is the default composition whenever the
-    # context carries none of the keys above
     _display_name_search_default: bool = False
-    # stored fields whose exact match takes precedence in _search_display_name:
-    # for "in" / "ilike" with a value, rows matching one of them exactly are the
-    # whole answer when any exist, the default composition answers otherwise
     _display_name_search_exact: tuple[str, ...] = ()
     _fold_name: str = "fold"
 
     _translate: bool = True
     _check_company_auto: bool = False
-    # the fields a _search override reads to decide what a user sees, beyond
-    # the record rules: a write to one of them evicts the x2many slots users
-    # hold on this model's records. None on an override means every field
     _search_visibility_fields: tuple[str, ...] | None = None
 
     _allow_sudo_commands: bool = True
