@@ -493,12 +493,21 @@ class AccountMove(models.Model):
         'commercial_partner_id',
         'l10n_fr_pdp_flow_10_operation_type',
         'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.pdp_is_sent',
         'line_ids.matched_debit_ids.debit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.pdp_is_sent',
         'move_type',
+        'pdp_is_sent',
         'state',
     )
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
         for move in self:
+            if move.pdp_is_sent:
+                if move.l10n_fr_pdp_sent_in_flow_ids:
+                    # The previous e-report must be rectified before clearing its scope.
+                    self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                move.l10n_fr_pdp_flow_10_report_type = None
+                continue
             if (
                 move.state == 'draft'
                 or not move.company_id.l10n_fr_f10_enable_reporting
@@ -543,7 +552,7 @@ class AccountMove(models.Model):
             return
 
         return self._get_reconciled_amls().move_id.filtered(
-            lambda move: move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
+            lambda move: not move.pdp_is_sent and move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
                 move._is_downpayment()
                 or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
             )
