@@ -1,6 +1,13 @@
-import { expect, test } from "@odoo/hoot";
-import { click, press, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    expect,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -488,7 +495,7 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
             ["martine", "Martine"],
         ],
     });
-    Partner._records[0].selection = null;
+    delete Partner._records[0].selection;
 
     await mountView({
         type: "form",
