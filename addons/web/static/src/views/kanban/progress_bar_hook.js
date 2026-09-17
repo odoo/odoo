@@ -394,7 +394,7 @@ class ProgressBarState {
 
     /** @param {(group: Group, activeBar: Object) => boolean} shouldDeselect */
     _deselectActiveBars(shouldDeselect) {
-        for (const group of this.model.root.groups) {
+        for (const group of this.model.root.groups || []) {
             const key = groupKey(group.serverValue);
             const activeBar = this.activeBars[key];
             if (
@@ -636,7 +636,7 @@ class ProgressBarState {
         if (this._pbCounts === null) {
             return;
         }
-        for (const group of this.model.root.groups) {
+        for (const group of this.model.root.groups || []) {
             if (group.isFolded) {
                 continue;
             }
@@ -681,6 +681,10 @@ class ProgressBarState {
                 return;
             }
             this._pbCounts = res;
+        } else {
+            // The root is about to become ungrouped: it will have no `groups` at
+            // all, so counts harvested for the previous group-by must not survive.
+            this._pbCounts = null;
         }
     }
 

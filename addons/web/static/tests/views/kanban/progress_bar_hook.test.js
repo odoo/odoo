@@ -472,3 +472,44 @@ describe("optimistic accounting for a record move", () => {
         expect(model.calls.length).toBe(callsBefore + 1);
     });
 });
+
+describe("dropping the group-by", () => {
+    test("counts from the grouped load do not survive into an ungrouped root", async () => {
+        const model = makeModel();
+        const { state } = await mountProgressBar({ model });
+        await load(model);
+        expect(state._pbCounts).not.toBe(null);
+
+        // The user removes the group-by: the root becomes a record list, which
+        // has no `groups` at all.
+        delete model.root.groups;
+        model.root.groupBy = [];
+        const callsBefore = model.calls.length;
+        await model.fire("onWillLoadRoot", {
+            context: {},
+            domain: [],
+            groupBy: [],
+            resModel: "task",
+        });
+        await model.fire("onRootLoaded");
+
+        expect(state._pbCounts).toBe(null, {
+            message: "the stale grouped counts were dropped",
+        });
+        expect(model.calls.length).toBe(callsBefore, {
+            message: "no counts are fetched without a group-by",
+        });
+    });
+
+    test("refreshing the bars on an ungrouped root is a no-op", async () => {
+        const model = makeModel();
+        const { state } = await mountProgressBar({ model });
+        await load(model);
+
+        delete model.root.groups;
+        model.root.groupBy = [];
+
+        expect(() => state._refreshBars()).not.toThrow();
+        expect(() => state._deselectActiveBars(() => true)).not.toThrow();
+    });
+});
