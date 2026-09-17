@@ -75,7 +75,7 @@ export class NotificationItem extends Component {
             "o-interest": this.props.muted === 0,
             "opacity-50": this.props.muted === 2,
             "px-1 py-2 gap-1 o-small": this.ui.isSmall,
-            "o-p-1_5 gap-2": !this.ui.isSmall,
+            "o-px-1_5 py-2 gap-2": !this.ui.isSmall,
             "o-active": this.props.isActive,
             [this.props.className]: this.props.className,
         };
