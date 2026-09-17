@@ -8,8 +8,8 @@ from odoo.libs.debug_log import DebugLog
 from ._protocols import RequestState
 from .constants import (
     CORS_DEFAULT_ALLOWED_HEADERS,
-    CORS_DEFAULT_ALLOWED_METHODS,
     CORS_MAX_AGE,
+    DEFAULT_ALLOWED_METHODS,
     WILDCARD_CORS_CREDENTIALS_WARNING,
 )
 
@@ -60,12 +60,16 @@ def _get_cors_methods(
     dispatcher_methods: Collection[str] | None,
     routing: Mapping[str, Any],
 ) -> Collection[str]:
-    if dispatcher_methods is not None:
-        return dispatcher_methods
-    routed = routing.get("methods")
-    if routed is not None:
-        return routed
-    return CORS_DEFAULT_ALLOWED_METHODS
+    methods = dispatcher_methods
+    if methods is None:
+        methods = routing.get("methods")
+    if methods is None:
+        # A route with no methods= accepts every verb at runtime; advertise
+        # the same unrestricted set the Allow header uses, not a guess.
+        return DEFAULT_ALLOWED_METHODS
+    # An explicitly empty list means OPTIONS-only at runtime; an empty
+    # Allow-Methods header would be malformed per the Fetch spec.
+    return methods or ("OPTIONS",)
 
 
 def stage_cors_headers(

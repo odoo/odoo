@@ -188,14 +188,18 @@ def test_the_abstract_dispatcher_still_declares_no_expose_headers():
 
 def test_cors_methods_resolves_each_step_with_is_none():
     from odoo.http._cors import _get_cors_methods
-    from odoo.http.constants import CORS_DEFAULT_ALLOWED_METHODS
+    from odoo.http.constants import DEFAULT_ALLOWED_METHODS
 
-    assert tuple(_get_cors_methods(None, {})) == tuple(CORS_DEFAULT_ALLOWED_METHODS)
+    # A route with no methods= is unrestricted at runtime: the preflight
+    # advertises the full default set, not a GET/POST guess.
+    assert tuple(_get_cors_methods(None, {})) == tuple(DEFAULT_ALLOWED_METHODS)
     assert tuple(_get_cors_methods(None, {"methods": None})) == tuple(
-        CORS_DEFAULT_ALLOWED_METHODS
+        DEFAULT_ALLOWED_METHODS
     )
-    assert tuple(_get_cors_methods((), {"methods": ("PUT",)})) == ()
-    assert tuple(_get_cors_methods(None, {"methods": ()})) == ()
+    # An explicitly empty declaration accepts only OPTIONS at runtime; an
+    # empty Allow-Methods header would be malformed, so OPTIONS is advertised.
+    assert tuple(_get_cors_methods((), {"methods": ("PUT",)})) == ("OPTIONS",)
+    assert tuple(_get_cors_methods(None, {"methods": ()})) == ("OPTIONS",)
     assert tuple(_get_cors_methods(("POST",), {"methods": ("PUT",)})) == ("POST",)
     assert tuple(_get_cors_methods(None, {"methods": ("PUT",)})) == ("PUT",)
 

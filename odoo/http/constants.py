@@ -30,8 +30,6 @@ def prepare_allow_header(methods: Iterable[str] | None = None) -> str:
     return ", ".join(normalized)
 
 
-CORS_DEFAULT_ALLOWED_METHODS = ("GET", "POST")
-
 CORS_DEFAULT_ALLOWED_HEADERS = (
     "Origin, X-Requested-With, Content-Type, Accept, Authorization, Range"
 )
