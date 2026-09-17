@@ -113,10 +113,12 @@ class AccountMove(models.Model):
     def _l10n_ph_qrph_update_payment_status(self):
         """ Register a payment on the invoices of self whose QRPH code Maya reports as paid. """
         paid_invoices = self.env['account.move']
+        settled_transactions = self.env['l10n_ph.qrph.transaction']
         bodies = {}
         for invoice in self:
             if transaction := invoice.l10n_ph_qrph_transaction_ids._get_paid_transaction():
                 paid_invoices |= invoice
+                settled_transactions |= transaction
                 bodies[invoice.id] = self.env._(
                     "Paid with QRPH, Maya payment %(payment)s.",
                     payment=transaction.maya_payment_id,
@@ -126,7 +128,11 @@ class AccountMove(models.Model):
             return None
 
         paid_invoices._message_log_batch(bodies=bodies)
-        return self.env['account.payment.register'].with_context(
+        payments = self.env['account.payment.register'].with_context(
             active_model='account.move',
             active_ids=paid_invoices.ids,
         ).create({'group_payment': False}).action_create_payments()
+        # A code pays an invoice once. Maya repeating its notification, or the invoice going back
+        # to unpaid because its payment was undone, must not have the same code pay a second time.
+        settled_transactions.settled_date = fields.Datetime.now()
+        return payments

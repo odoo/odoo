@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
 
 # Maya statuses meaning the money reached the merchant. They are reversible by a refund or a void,
 # which is a decision taken in Odoo afterwards and not something the QRPH code can still change.
@@ -57,6 +61,14 @@ class L10n_PhQrphTransaction(models.Model):
         string="Status",
         default='pending',
         required=True,
+    )
+    # Whether Maya has the money and whether Odoo recorded it are two different questions: a code
+    # can sit paid for a while before anything settles it, and a settled one must never settle again.
+    settled_date = fields.Datetime(
+        string="Settled on",
+        readonly=True,
+        copy=False,
+        help="When the payment of this code was recorded in Odoo.",
     )
 
     @api.constrains('model')
@@ -118,16 +130,43 @@ class L10n_PhQrphTransaction(models.Model):
         """ Record the payment of what this code was minted for.
 
         Maya repeats a notification it was given no answer to, and the record may also be settled
-        by the cron or by someone asking for it, so paying twice has to amount to paying once.
+        by the cron or by someone asking for it, so paying twice has to amount to paying once: a
+        code that already paid for something is done, whatever becomes of what it paid for.
         """
         self.ensure_one()
+        if self.settled_date:
+            return
         if self.model == 'account.move' and (invoice := self._get_record()):
             invoice._l10n_ph_qrph_update_payment_status()
 
-    def _get_paid_transaction(self):
-        """ Return the code of self that Maya reports as paid, after refreshing the pending ones. """
+    def _get_paid_transaction(self, amount=None):
+        """ Return the code of self that Maya reports as paid and that is still to be recorded.
+
+        :param float amount: what the caller is about to settle with the code, when it knows it.
+            A code minted for less than that does not settle it: an order that grew after its code
+            was handed out would otherwise be paid in full by the cheaper code it started as, as
+            Maya has no way of taking a code back once it is out.
+        :rtype: l10n_ph.qrph.transaction
+        """
         self._update_state_from_maya()
-        return self.filtered(lambda transaction: transaction.state == 'paid')[:1]
+        paid = self.filtered(
+            lambda transaction: transaction.state == 'paid' and not transaction.settled_date
+        )
+        if amount is None:
+            return paid[:1]
+
+        covering = paid.filtered(
+            lambda transaction: transaction.currency_id.compare_amounts(transaction.amount, amount) >= 0
+        )
+        if paid and not covering:
+            # Real money reached Maya, only not enough of it to pay what it is being handed for.
+            # Nobody but the merchant can settle that with the customer, so do not let it be silent.
+            short = paid[:1]
+            _logger.warning(
+                "QRPH: Maya payment %s was paid %s, short of the %s owed on %s %s. Left unsettled.",
+                short.maya_payment_id, short.amount, amount, short.model, short.model_id,
+            )
+        return covering[:1]
 
     @api.autovacuum
     def _gc_unpaid_transactions(self):

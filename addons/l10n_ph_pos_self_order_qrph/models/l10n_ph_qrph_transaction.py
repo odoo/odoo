@@ -14,6 +14,8 @@ class L10n_PhQrphTransaction(models.Model):
             # An order taken at the counter is paid by the cashier confirming the code was scanned,
             # and is only stored once that happened: there is nothing for Maya to settle there.
             if order and order.config_id.self_ordering_mode == 'kiosk':
-                order._l10n_ph_qrph_settle_kiosk_payment()
+                # Maya notifies about a code, not about an order: what the code was minted for is
+                # only known here, and the order has grown since if the customer went back to it.
+                order._l10n_ph_qrph_settle_kiosk_payment(self)
             return
         return super()._l10n_ph_qrph_settle()

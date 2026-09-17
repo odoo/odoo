@@ -100,8 +100,11 @@ class PosPaymentMethod(models.Model):
 
         Every code handed out for the order is looked at, not only the one on screen: Maya has no
         way of taking a code back, so an earlier one the kiosk gave up on can still be what paid.
+        One minted before the customer went back and added to their order no longer buys it,
+        though, so what settles is a code covering what the order costs now.
 
         :param order: the <pos.order> being collected
+        :return: whether the order came out of this paid
         :rtype: bool
         """
         self.ensure_one()
@@ -110,10 +113,12 @@ class PosPaymentMethod(models.Model):
             ('model', '=', 'pos.order'),
             ('model_id', '=', order.uuid),
         ])
-        if transaction := transactions._get_paid_transaction():
+        if transaction := transactions._get_paid_transaction(order.amount_total):
             transaction._l10n_ph_qrph_settle()
-            return True
-        return False
+        # Maya's own notification may have settled the order while the customer was still looking
+        # at the code: what they are asking is whether they are paid, not whose message got here
+        # first, so answer on the order rather than on what this call happened to settle.
+        return order.state in ('paid', 'done', 'invoiced')
 
     def _l10n_ph_kiosk_qrph_get_order(self, order_uuid):
         """ Return the open kiosk order a QRPH code is being minted or checked for.

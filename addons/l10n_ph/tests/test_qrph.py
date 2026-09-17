@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -7,16 +9,19 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.l10n_ph.models.l10n_ph_qrph_transaction import QRPH_REUSE_SECONDS
 from odoo.addons.l10n_ph.tests.common import TestPhCommon
 
 MAYA_REQUEST = 'odoo.addons.l10n_ph.models.res_bank.ResPartnerBank._l10n_ph_qrph_make_request'
+# Reaching Maya about a code that is already settled means the guard against paying twice is gone.
+MAYA_SETTLED = "Maya was asked about a code that is already settled"
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nPhQrph(TestPhCommon):
+class TestL10nPhQrph(TestPhCommon, HttpCase):
     """ QRPH codes are minted by Maya, so the point is to call them as rarely as the payment allows. """
 
     @classmethod
@@ -160,3 +165,73 @@ class TestL10nPhQrph(TestPhCommon):
             self.bank_qrph.build_qr_code_value(
                 0, 'a reference', '', self.env.ref('base.PHP'), self.partner_a, 'ph_qrph', silent_errors=False,
             )
+
+    def test_webhook_settles_once_and_the_repeat_changes_nothing(self):
+        """ Maya repeats a notification it was given no answer to, which must not pay twice. """
+        with patch(MAYA_REQUEST, return_value=self.maya_code):
+            self.invoice.with_context(is_online_qr=True)._generate_qr_code()
+
+        with patch(MAYA_REQUEST, return_value={'status': 'PAYMENT_SUCCESS'}):
+            self._notify_webhook(self.maya_code['paymentId'])
+        payments = self.invoice.matched_payment_ids
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(self.invoice.amount_residual, 0)
+
+        # The repeat must not even reach Maya: the code is spent, whatever Maya still says about it.
+        with patch(MAYA_REQUEST, side_effect=AssertionError(MAYA_SETTLED)):
+            response = self._notify_webhook(self.maya_code['paymentId'])
+        self.assertEqual(response.status_code, 200, "Maya keeps retrying a notification it gets no 200 for")
+        self.assertEqual(self.invoice.matched_payment_ids, payments)
+
+    def test_webhook_ignores_a_code_it_knows_nothing_about(self):
+        """ The route is public, so a made-up notification must come to nothing. """
+        with patch(MAYA_REQUEST, side_effect=AssertionError("Maya was asked about a code we never minted")):
+            response = self._notify_webhook('never minted by us')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(self.invoice.matched_payment_ids)
+
+    def test_undone_payment_is_not_paid_again_by_the_same_code(self):
+        """ A code pays an invoice once: undoing that payment must not have the cron redo it. """
+        with patch(MAYA_REQUEST, return_value=self.maya_code):
+            self.invoice.with_context(is_online_qr=True)._generate_qr_code()
+        with patch(MAYA_REQUEST, return_value={'status': 'PAYMENT_SUCCESS'}):
+            self.invoice.action_l10n_ph_qrph_update_payment_status()
+        self.assertEqual(self.invoice.amount_residual, 0)
+
+        # An accountant who unreconciles the payment puts the invoice back in the cron's way.
+        self.invoice.line_ids.remove_move_reconcile()
+        self.assertEqual(self.invoice.payment_state, 'not_paid')
+
+        payments_before = self.env['account.payment'].search([])
+        with patch(MAYA_REQUEST, side_effect=AssertionError(MAYA_SETTLED)):
+            self.env['account.move']._l10n_ph_qrph_cron_update_payment_status()
+        self.assertEqual(self.env['account.payment'].search([]), payments_before)
+
+    @mute_logger('odoo.addons.l10n_ph.models.l10n_ph_qrph_transaction')
+    def test_code_settles_only_what_it_covers(self):
+        """ Maya cannot take a code back, so one minted for less must not buy what costs more.
+
+        This is what a self-order kiosk leans on: a customer who is handed a code, goes back to
+        their order and adds to it can otherwise pay the order they ended up with at the price of
+        the one they started from.
+        """
+        with patch(MAYA_REQUEST, return_value=self.maya_code):
+            self.invoice.with_context(is_online_qr=True)._generate_qr_code()
+        transaction = self.invoice.l10n_ph_qrph_transaction_ids
+        self.assertEqual(transaction.amount, 100)
+
+        with patch(MAYA_REQUEST, return_value={'status': 'PAYMENT_SUCCESS'}):
+            self.assertFalse(transaction._get_paid_transaction(140), "a code minted for 100 does not settle 140")
+        self.assertEqual(transaction.state, 'paid', "the money did reach Maya, and the merchant has to see it")
+        self.assertFalse(transaction.settled_date)
+
+        self.assertEqual(transaction._get_paid_transaction(100), transaction, "it does settle what it was minted for")
+        self.assertEqual(transaction._get_paid_transaction(60), transaction, "and anything it covers")
+
+    def _notify_webhook(self, maya_payment_id=None, body=None):
+        """ Post to the public webhook the way Maya does, and return the response. """
+        if body is None:
+            body = json.dumps({'id': maya_payment_id})
+        response = self.url_open('/l10n_ph/qrph/webhook', data=body, headers={'Content-Type': 'application/json'})
+        self.env.invalidate_all()  # the request ran in its own environment
+        return response

@@ -32,7 +32,7 @@ patch(QRPopup.prototype, {
             const paid = await this.orm.call(
                 "pos.payment.method",
                 "l10n_ph_qrph_verify_payment_status",
-                [[this.props.paymentMethod.id], this.props.order.uuid]
+                [[this.props.paymentMethod.id], this.props.order.uuid, this.props.order.amount]
             );
             if (!paid) {
                 this.dialog.add(AlertDialog, {

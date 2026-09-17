@@ -9,7 +9,9 @@ patch(PosPayment.prototype, {
         return {
             ...base,
             paymentMethod: { ...(base.paymentMethod || {}), id: this.payment_method_id.id },
-            order: { ...(base.order || {}), uuid: this.pos_order_id.uuid },
+            // The amount travels along because it is what the code was minted for: the server
+            // checks Maya against it rather than against whatever the order has grown into.
+            order: { ...(base.order || {}), uuid: this.pos_order_id.uuid, amount: this.amount },
         };
     },
 });
