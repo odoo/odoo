@@ -1160,6 +1160,9 @@ patch(PosOrder.prototype, {
             return _t("Unknown discount type");
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
+        // Other discounts may already cover part of the discountable lines
+        const totalFactor =
+            discountable > 0 ? Math.min(1, this.get_total_with_tax() / discountable) : 1;
         discountable = Math.min(this.get_total_with_tax(), discountable);
         if (floatIsZero(discountable)) {
             return [];
@@ -1227,10 +1230,7 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
-                price_unit: -roundDecimals(
-                    Math.min(this.get_total_with_tax(), entry[1]) * discountFactor,
-                    priceDigits
-                ),
+                price_unit: -roundDecimals(entry[1] * totalFactor * discountFactor, priceDigits),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,
