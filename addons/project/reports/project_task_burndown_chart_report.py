@@ -13,6 +13,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
     _description = "Burndown Chart"
     _auto = False
     _order = "date"
+    _search_visibility_fields = ()
 
     planned_hours = fields.Float(readonly=True)
     date = fields.Datetime(readonly=True)

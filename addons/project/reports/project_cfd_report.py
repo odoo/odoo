@@ -13,6 +13,7 @@ class ProjectCFDReport(models.AbstractModel):
     _description = "Cumulative Flow Diagram"
     _auto = False
     _order = "date"
+    _search_visibility_fields = ()
 
     date = fields.Datetime(readonly=True)
     date_assign = fields.Datetime(
