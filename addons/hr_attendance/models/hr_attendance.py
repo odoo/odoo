@@ -685,18 +685,19 @@ class HrAttendance(models.Model):
                 ))
 
     def _get_localized_times(self):
-        """Return ``check_in`` and ``check_out`` in the timezone of the employee's version.
+        """
+        Return ``check_in`` and ``check_out`` in the timezone of the employee's version.
 
-        The attendance must be closed.
-
-        :return: ``(check_in, check_out)``, naive local datetimes
-        :rtype: tuple
+        :return: ``(check_in, check_out)``, naive local datetimes (``check_out`` may be False)
         """
         self.ensure_one()
-        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
-        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        return localized_start, localized_end
+        version = self.employee_id.sudo()._get_version(self.check_in.date()) if self.employee_id else None
+        tz = ZoneInfo(version.tz) if version and version.tz else self.env.tz
+
+        def to_local(dt):
+            return dt and dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+
+        return to_local(self.check_in), to_local(self.check_out)
 
     def _get_break_duration_within_period(self, start, stop):
         """Return the part of the break durations of ``self`` falling within a period.
