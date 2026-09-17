@@ -1734,24 +1734,10 @@ class PosOrder(models.Model):
         )._generate_pos_order_invoice()
         session = self.session_id
         move = session._create_partial_reversal_move_from_session_closing(self)
-        sign = -1 if self.is_refund_or_negative() else 1
-        move.line_ids = [
-            Command.create({
-                'name': _("Reversal for %s", self.name),
-                'account_id': global_move.line_ids[0].account_id.id,
-                'partner_id': global_move.partner_id.id,
-                'balance': invoice.amount_total * sign,
-            }),
-            Command.create({
-                'name': _("Counterpart for invoice payment %s", invoice.name),
-                'account_id': invoice.partner_id.property_account_receivable_id.id,
-                'partner_id': invoice.partner_id.id,
-                'balance': -invoice.amount_total * sign,
-            }),
-        ]
-
         move._post()
-        counter_part = move.line_ids[-1]
+
+        partner_receivable = invoice.partner_id.property_account_receivable_id.id
+        counter_part = move.line_ids.filtered(lambda line: line.account_id.id == partner_receivable)
         to_reconcile = invoice.line_ids.filtered_domain([
             ('account_id', '=', counter_part.account_id.id),
             ('reconciled', '=', False),

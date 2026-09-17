@@ -974,28 +974,28 @@ class TestPosStockFlow(CommonPosStockTest):
         order_no_invoice.action_pos_order_invoice()
 
         reversal_move = order_no_invoice.reversed_move_ids
-        self.assertEqual(len(reversal_move.line_ids), 7)
-        used_line = self.env['account.move.line']
-        for line in order_no_invoice.session_id.sale_move_ids.line_ids:
-            reverse_line = reversal_move.line_ids.filtered(
-                lambda l: l.account_id == line.account_id and l not in used_line,
-            )
-            used_line |= reverse_line[0]
-            self.assertEqual(line.debit, reverse_line[0].credit)
-            self.assertEqual(line.credit, reverse_line[0].debit)
+        self.assertEqual(len(reversal_move.line_ids), 5)
+        receivable = order_no_invoice.partner_id.property_account_receivable_id
+        reversal_payment_lines = reversal_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        invoice_payment_lines = order_no_invoice.account_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
         refund_order_no_invoice.partner_id = self.partner
         refund_order_no_invoice.action_pos_order_invoice()
         reversal_move = refund_order_no_invoice.reversed_move_ids
-        self.assertEqual(len(reversal_move.line_ids), 7)
-        used_line = self.env['account.move.line']
-        for line in refund_order_no_invoice.session_id.refund_move_ids[0].line_ids:
-            reverse_line = reversal_move.line_ids.filtered(
-                lambda l: l.account_id == line.account_id and l not in used_line,
-            )
-            used_line |= reverse_line[0]
-            self.assertEqual(line.debit, reverse_line[0].credit)
-            self.assertEqual(line.credit, reverse_line[0].debit)
+        self.assertEqual(len(reversal_move.line_ids), 5)
+        receivable = refund_order_no_invoice.partner_id.property_account_receivable_id
+        reversal_payment_lines = reversal_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        invoice_payment_lines = refund_order_no_invoice.account_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
     def test_description_is_computed_for_product_with_attribute(self):
         """

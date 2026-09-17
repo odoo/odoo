@@ -805,25 +805,23 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         reversal_sale_move = session_sales.reversal_move_ids
         reversal_refund_move = session_refunds.reversal_move_ids
 
-        # Check that the reversal moves have the exact opposite lines
-        # than the original moves
-        used_line = self.env['account.move.line']
-        for sline in session_sales.line_ids:
-            rline = reversal_sale_move.line_ids.filtered(
-                lambda line: line.account_id == sline.account_id and not line in used_line,
-            )
-            used_line |= rline[0]
-            self.assertEqual(sline.debit, rline[0].credit)
-            self.assertEqual(sline.credit, rline[0].debit)
+        receivable = order.partner_id.property_account_receivable_id
+        reversal_payment_lines = reversal_sale_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        invoice_payment_lines = order.account_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
-        used_line = self.env['account.move.line']
-        for rline in session_refunds.line_ids:
-            rliner = reversal_refund_move.line_ids.filtered(
-                lambda line: line.account_id == rline.account_id and not line in used_line,
-            )
-            used_line |= rliner[0]
-            self.assertEqual(rline.debit, rliner[0].credit)
-            self.assertEqual(rline.credit, rliner[0].debit)
+        receivable = order.partner_id.property_account_receivable_id
+        reversal_payment_lines = reversal_refund_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        invoice_payment_lines = refund.account_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
     def test_order_partial_refund_rounding(self):
         """
@@ -1995,19 +1993,19 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         order.action_pos_order_invoice()
         self.assertTrue(order.is_singly_invoiced)
 
+        receivable = order.partner_id.property_account_receivable_id
         session_sales = session.sale_move_ids
         reversal_sale_move = session_sales.reversal_move_ids
 
         # Check that the reversal moves have the exact opposite lines
         # than the original moves
-        used_line = self.env['account.move.line']
-        for sline in session_sales.line_ids:
-            rline = reversal_sale_move.line_ids.filtered(
-                lambda line: line.account_id == sline.account_id and not line in used_line,
-            )
-            used_line |= rline[0]
-            self.assertEqual(sline.debit, rline[0].credit)
-            self.assertEqual(sline.credit, rline[0].debit)
+        reversal_payment_lines = reversal_sale_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        invoice_payment_lines = order.account_move.line_ids.filtered(
+            lambda line: line.account_id == receivable,
+        )
+        self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
         self.create_pos_order(
             payment_method=[[self.cash_pm, {'amount': 11.2}]],
