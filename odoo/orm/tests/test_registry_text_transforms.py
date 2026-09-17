@@ -160,3 +160,13 @@ def test_concurrent_cold_callers_build_the_tables_once():
     assert len(results) == 8
     assert all(result is results[0] for result in results)
     assert cursor.execute.call_count == 2
+
+
+def test_model_registry_folds_with_an_injected_table():
+    from odoo.orm.model_test_env import ModelRegistry
+
+    registry = ModelRegistry([])
+    assert registry.get_ilike_normalizer(None)("ΟΣ") == "οσ"
+    registry.ilike_table = {ord("A"): "a"}
+    normalize = registry.get_ilike_normalizer(None)
+    assert normalize("ΟΣ A") == "ΟΣ a"

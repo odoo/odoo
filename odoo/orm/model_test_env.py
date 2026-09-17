@@ -357,6 +357,9 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     file_store = FILE_STORE
     settings = SYSTEM_SETTINGS
     locale = LOCALE
+    # A database's own character case table (Registry._get_text_transforms().ilike),
+    # when a differential wants this registry to fold exactly as that database does.
+    ilike_table: dict[int, str] | None = None
 
     def __init__(
         self,
@@ -468,8 +471,12 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         return text
 
     def get_ilike_normalizer(self, env):
+        table = self.ilike_table
+
         def normalize(value):
             text = self.unaccent_python(value)
+            if table is not None:
+                return text.translate(table)
             if text.isascii():
                 return text.lower()
             return "".join(char.lower()[0] for char in text)

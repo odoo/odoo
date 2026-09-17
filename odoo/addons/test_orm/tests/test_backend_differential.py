@@ -127,6 +127,9 @@ class TestBackendDifferential(TransactionCase):
 
     def _diff(self, classes, script, msg=""):
         registry = _isolated_registry(*classes)
+        # fold case the way this database does, not the way Python does:
+        # a C-locale cluster lowers ASCII only, and the tiers must agree on that
+        registry.ilike_table = self.env.registry._get_text_transforms(self.env.cr).ilike
         with model_test_env(registry=registry) as env_a:
             obs_a = script(env_a)
         obs_b = script(self.env)
