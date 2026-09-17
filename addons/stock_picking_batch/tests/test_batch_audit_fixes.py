@@ -113,6 +113,39 @@ class TestBatchAuditFixes(TransactionCase):
         )
         self.assertIn(self.picking_type.sequence_code, name)
 
+    def test_an_operation_type_numbers_its_batches_on_its_own_sequence(self):
+        shared = self.env.ref("stock.seq_picking_batch")
+        type_code = self.picking_type.sequence_code
+        self.env["ir.sequence"].create(
+            {
+                "name": f"Batch Transfer {type_code}",
+                "code": f"picking.batch.{type_code.lower()}",
+                "prefix": "BATCH/",
+                "padding": 4,
+                "company_id": False,
+            }
+        )
+        shared_before = shared.number_next_actual
+        name = self.env["stock.picking.batch"]._prepare_name(
+            self.picking_type, "picking.batch", self.env.company.id
+        )
+        self.assertEqual(name, f"BATCH/{type_code}/0001")
+        self.assertEqual(
+            shared.number_next_actual,
+            shared_before,
+            "a type with its own counter must not consume the shared one",
+        )
+
+    def test_a_type_without_its_own_sequence_draws_from_the_shared_counter(self):
+        shared = self.env.ref("stock.seq_picking_batch")
+        picking_type = self.picking_type.copy({"sequence_code": "NOSEQ"})
+        shared_before = shared.number_next_actual
+        name = self.env["stock.picking.batch"]._prepare_name(
+            picking_type, "picking.batch", self.env.company.id
+        )
+        self.assertIn("/NOSEQ/", name)
+        self.assertEqual(shared.number_next_actual, shared_before + 1)
+
     def test_negative_batch_limits_are_refused(self):
         picking_type = self.picking_type.copy({"sequence_code": "AUDIT"})
         with self.assertRaises(ValidationError):

@@ -616,10 +616,18 @@ class StockPickingBatch(models.Model):
 
     @api.model
     def _prepare_name(self, picking_type, sequence_code, company_id):
-        sequence = (
-            self.env["ir.sequence"].with_company(company_id).next_by_code(sequence_code)
-            or "/"
-        )
+        ir_sequence = self.env["ir.sequence"].with_company(company_id)
+        # An operation type numbers its batches on its own counter as soon as a
+        # sequence is configured for it (picking.batch.in, picking.batch.out).
+        # Without one they all draw from the single picking.batch counter and
+        # their numbers interleave: a delivery batch taking 0001 leaves 0002 to
+        # the next receipt batch. A missing code costs one cheap lookup and
+        # consumes nothing, so the shared counter stays the default.
+        type_code = (picking_type.sequence_code or "").strip().lower()
+        sequence = False
+        if type_code:
+            sequence = ir_sequence.next_by_code(f"{sequence_code}.{type_code}")
+        sequence = sequence or ir_sequence.next_by_code(sequence_code) or "/"
         # The operation type code goes right after the sequence root, never
         # right before the number: a dated prefix such as BATCH/26/09/ must
         # stay glued to its counter (BATCH/OUT/26/09/0001), not be split by
