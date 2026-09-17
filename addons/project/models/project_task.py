@@ -2171,6 +2171,45 @@ class ProjectTask(models.Model):
                 order = re.sub(r'\bpersonal_stage_type_id\b', 'personal_stage_type_ids', order)
         return super()._read_grouping_sets(domain, grouping_sets, aggregates, order)
 
+    @api.model
+    def _access_domain(self, operation):
+        domain = super()._access_domain(operation)
+        if operation != 'read' or self.env.su or self.env.user._is_internal():
+            return domain
+        return domain.map_conditions(self._inline_access_condition)
+
+    def _inline_access_condition(self, condition):
+        """`project_task_rule_portal` OR's two sub-queries, which makes postgresql
+        seq-scan project_task instead of using its indexes. Materialize the ids of
+        each branch when there are few enough, so that it can BitmapOr them.
+        """
+        limit = self.env.cr.IN_MAX
+        if condition.field_expr == 'message_partner_ids':
+            ids = tuple(self.sudo()._search(
+                condition,
+                limit=limit,
+                active_test=False,
+                bypass_access=True,
+                order=self._order,
+            ))
+            if len(ids) < limit:
+                return Domain('id', 'in', ids)
+        elif (
+            condition.field_expr == 'project_id'
+            and isinstance(condition.value, Domain)
+            and condition.operator == 'any'  # required? can it be 'not any'?
+            and any(c.field_expr == 'collaborator_ids' for c in condition.value.iter_conditions())
+        ):
+            ids = tuple(self.env['project.project'].sudo()._search(
+                condition.value,
+                limit=limit,
+                active_test=False,
+                bypass_access=True
+            ))
+            if len(ids) < limit:
+                return Domain('project_id', 'in', ids)
+        return condition
+
     # ---------------------------------------------------
     # Project Sharing
     # ---------------------------------------------------
