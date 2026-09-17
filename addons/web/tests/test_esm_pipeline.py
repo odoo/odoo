@@ -3749,6 +3749,33 @@ class TestPageBundleExportSurface(TransactionCase):
             "reading static imports as loader reads",
         )
 
+    def test_a_source_is_scanned_for_literals_once_per_descriptor(self):
+        from types import SimpleNamespace
+
+        from odoo.addons.base.models import ir_qweb_assets_esbuild as esbuild_module
+
+        IrQweb = self.env["ir.qweb"]
+        source = SimpleNamespace(
+            raw_content='import { a } from "@web/x"; odoo.loader.modules.get("@web/y");'
+        )
+        descriptor = f"/probe/{self.id()},1.0"
+        esbuild_module._SPECIFIER_LITERALS_CACHE.pop(descriptor, None)
+        first = IrQweb._get_specifier_literals(descriptor, source)
+        self.assertEqual(
+            first, frozenset({"@web/y"}), "an import target is not a literal"
+        )
+        source.raw_content = 'odoo.loader.modules.get("@web/z");'
+        self.assertEqual(
+            IrQweb._get_specifier_literals(descriptor, source),
+            first,
+            "the same url and mtime is served from the memo",
+        )
+        self.assertEqual(
+            IrQweb._get_specifier_literals(f"/probe/{self.id()},2.0", source),
+            frozenset({"@web/z"}),
+            "a new mtime is a new scan",
+        )
+
     def test_what_a_child_imports_and_what_a_literal_names_stay_registered(self):
         bundle, exported = self._exported()
         self.assertIn("@web/core/templates", exported)

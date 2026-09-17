@@ -5,6 +5,7 @@ from typing import Any
 from odoo import models
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.lru import LRU
 from odoo.tools.assets import esm_index
 from odoo.tools.assets.esbuild import (
     EsbuildCompiler,
@@ -24,6 +25,11 @@ from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 _fallback_log = get_asset_logger("fallback")
 _debug = DebugLog(__name__)
+
+# specifier literals per source, keyed by the asset's unique descriptor (url
+# and mtime): the page bundles of one process share most of their sources,
+# and one bundle's consumers re-list many of its own
+_SPECIFIER_LITERALS_CACHE: LRU = LRU(16384)
 
 
 class EsbuildBundleError(RuntimeError):
@@ -459,16 +465,15 @@ class IrQweb(models.AbstractModel):
                 set(), set(external_libs()), modules=child.native_modules
             )
             exported.update(bridged.keys() & members)
-        for source in (
-            *asset_bundle.native_modules,
-            *(a for c in consumers for a in c.native_modules),
-        ):
-            body = _TRANSITIVE_IMPORT_RE.sub("", source.raw_content)
-            exported.update(
-                literal
-                for literal in self._SPECIFIER_LITERAL_RE.findall(body)
-                if literal in members
+        sources = {
+            source.unique_descriptor: source
+            for source in (
+                *asset_bundle.native_modules,
+                *(a for c in consumers for a in c.native_modules),
             )
+        }
+        for descriptor, source in sources.items():
+            exported.update(self._get_specifier_literals(descriptor, source) & members)
         log_event(
             _fallback_log,
             logging.DEBUG,
@@ -479,6 +484,15 @@ class IrQweb(models.AbstractModel):
             consumers=len(consumers),
         )
         return frozenset(exported)
+
+    @classmethod
+    def _get_specifier_literals(cls, descriptor: str, source: Any) -> frozenset[str]:
+        literals = _SPECIFIER_LITERALS_CACHE.get(descriptor)
+        if literals is None:
+            body = _TRANSITIVE_IMPORT_RE.sub("", source.raw_content)
+            literals = frozenset(cls._SPECIFIER_LITERAL_RE.findall(body))
+            _SPECIFIER_LITERALS_CACHE[descriptor] = literals
+        return literals
 
     def _get_runtime_parent_specs(
         self,
