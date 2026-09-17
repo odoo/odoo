@@ -67,6 +67,7 @@ used nowhere** — all browser interaction goes through `start_tour`.
 | `test_redirect.py` | TransactionCase / HttpCase | `website.rewrite` / 301–308 redirects + serving |
 | `test_res_users.py` | TransactionCase | res.users website-specific behaviour |
 | `test_sitemap.py` | TransactionCase / HttpCase | sitemap.xml generation + host handling |
+| `test_res_lang.py` | TransactionCase | Language deactivation guard: refused for a user, open to the superuser |
 | `test_skip_website_configurator.py` | HttpCase (TestConfiguratorCommon) | Skip configurator → automatic editor (tour) |
 | `test_snippet_filter.py` | TransactionCase | Dynamic-snippet filter **security** (ACL) |
 | `test_snippets.py` | HttpCase | Snippet drag/drop + editing (tag `website_snippets`, many tours) |
