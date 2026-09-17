@@ -263,6 +263,24 @@ class WebsitePageProperties(models.TransientModel):
         if not moved:
             return write_result
 
+        # One search and one create for the whole batch. Both used to run per
+        # record inside the loop, so renaming N pages cost N searches plus N
+        # inserts -- and `website.rewrite` is exactly the table a bulk rename
+        # touches most.
+        #
+        # `dfd50c87d614` fixed the search half of this independently and landed
+        # in the same branch; this batches the archives and the creates as
+        # well. Only the search half is gated: `_checker_batch._QUERY_METHODS`
+        # is search, search_count, search_fetch, search_read, name_search and
+        # _read_group, so a `create()` per record inside a loop is invisible to
+        # `lint_n_plus_one_query` and stays invisible however many rows it
+        # writes.
+        #
+        # The search carries both clauses. An earlier version of this dropped
+        # the `website_id` one and filtered on the key afterwards, to avoid
+        # putting a `False` into an `in` list; `dfd50c87d614` shipped exactly
+        # that and it resolves to IS NULL as it should, so the reason for the
+        # wider fetch was never a real one.
         Rewrite = self.env["website.rewrite"]
         website_by_record = {
             record: (vals.get("website_id") or record.website_id.id or False)
@@ -270,7 +288,10 @@ class WebsitePageProperties(models.TransientModel):
         }
         obsolete_by_key = defaultdict(Rewrite.browse)
         for rewrite in Rewrite.search(
-            [("url_from", "in", [record.url for record in moved])]
+            [
+                ("url_from", "in", list({record.url for record in moved})),
+                ("website_id", "in", list(set(website_by_record.values()))),
+            ]
         ):
             obsolete_by_key[(rewrite.url_from, rewrite.website_id.id or False)] |= (
                 rewrite
