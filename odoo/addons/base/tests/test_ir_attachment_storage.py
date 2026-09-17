@@ -394,15 +394,23 @@ class TestMemoryStorageCRUD(TransactionCase):
             copy.invalidate_recordset()
             self.assertEqual(copy.raw, payload)
 
+            shared_key = copy.store_fname
             att.write({"raw": b"mem-rewritten"})
+            self.env.cr.postcommit.run()
+            self.assertIn(
+                shared_key,
+                MemoryStorage.blobs,
+                "the rewrite must not delete the key the copy still holds",
+            )
             att.invalidate_recordset()
             self.assertEqual(att.raw, b"mem-rewritten")
             copy.invalidate_recordset()
             self.assertEqual(copy.raw, payload)
 
-            old_key = copy.store_fname
             copy.unlink()
-            self.assertNotIn(old_key, MemoryStorage.blobs)
+            self.assertIn(shared_key, MemoryStorage.blobs, "not before the commit")
+            self.env.cr.postcommit.run()
+            self.assertNotIn(shared_key, MemoryStorage.blobs)
 
     def test_streamed_upload_lifecycle(self):
         payload = b"streamed-into-a-custom-backend-" * 40
