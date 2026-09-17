@@ -5,12 +5,15 @@
         <field name="model">calendar.calendar</field>
         <field name="arch" type="xml">
             <form>
-                <group>
-                    <field name="name" placeholder="Calendar name"/>
-                    <field name="calendar_default_privacy" readonly="user_access_role not in ['owner', 'writer']" string="Default visibility"/>
-                    <field name="color" widget="color_picker"/>
-                    <field name="share_user_ids" widget="many2many_avatar_user" invisible="user_access_role != 'owner'"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Calendar name"/>
+                        <field name="calendar_default_privacy" readonly="user_access_role not in ['owner', 'writer']" string="Default visibility"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="owner_id" invisible="not owner_id" widget="many2one_avatar"/>
+                        <field name="share_user_ids" widget="many2many_avatar_user" invisible="user_access_role != 'owner'"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -19,11 +22,11 @@
         <field name="name">calendar.calendar.view.list</field>
         <field name="model">calendar.calendar</field>
         <field name="arch" type="xml">
-            <list string="Calendars" editable="bottom" delete="0">
+            <list string="Calendars" delete="0">
                 <field name="name"/>
                 <field name="owner_id" widget="many2one_avatar"/>
                 <field name="share_user_ids" widget="many2many_avatar_user"/>
-                <field name="calendar_default_privacy" string="Default Privacy" widget="selection" readonly="1"/>
+                <field name="calendar_default_privacy" string="Visibility" widget="selection" readonly="1"/>
             </list>
         </field>
     </record>
