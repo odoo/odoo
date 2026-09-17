@@ -2259,6 +2259,30 @@ class TestPartnerAddressCompany(TransactionCase):
         ):
             test_partner_company.write({"company_id": company_2.id})
 
+    def test_a_many2one_in_the_format_prints_its_name(self):
+        country = self.env["res.country"].create(
+            {
+                "name": "Formatland",
+                "code": "FL",
+                "address_format": "%(street)s, %(state_id)s, %(country_id)s",
+            }
+        )
+        state = self.env["res.country.state"].create(
+            {"name": "North", "code": "NO", "country_id": country.id}
+        )
+        partner = self.env["res.partner"].create(
+            {
+                "name": "Formatted",
+                "street": "1 Main",
+                "state_id": state.id,
+                "country_id": country.id,
+            }
+        )
+        self.assertEqual(
+            partner._display_address(without_company=True),
+            "1 Main, North (FL), Formatland",
+        )
+
     def test_display_address_missing_key(self):
         country = self.env["res.country"].create(
             {
@@ -2384,6 +2408,20 @@ class TestPartnerAddressCompany(TransactionCase):
             self.env["res.partner"].with_user(user).search([("id", "=", partner.id)])
         )
         self.assertEqual(record.id, partner.id)
+
+    def test_archived_descendants_follow_the_commercial_and_address_sync(self):
+        Partner = self.env["res.partner"]
+        company = Partner.create({"name": "Archive Co", "is_company": True})
+        active = Partner.create({"name": "Kept", "parent_id": company.id})
+        archived = Partner.create({"name": "Gone", "parent_id": company.id})
+        grandchild = Partner.create({"name": "Gone Jr", "parent_id": archived.id})
+        (archived | grandchild).action_archive()
+
+        company.write({"vat": "BEARCHIVE", "street": "Sync Street"})
+
+        for partner in (active, archived, grandchild):
+            self.assertEqual(partner.vat, "BEARCHIVE", partner.name)
+        self.assertEqual(archived.street, "Sync Street")
 
     def test_children_sync_skips_walk_without_commercial_fields(self):
         company = self.env["res.partner"].create(

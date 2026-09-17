@@ -27,6 +27,7 @@ class MixinAvatar(models.AbstractModel):
     _inherit = ["mixin.image"]
     _description = "Avatar Mixin"
     _avatar_name_field = "name"
+    _avatar_extra_depends: tuple[str, ...] = ()
 
     avatar_1920 = fields.Image(
         string="Avatar",
@@ -37,23 +38,41 @@ class MixinAvatar(models.AbstractModel):
     avatar_256 = fields.Image(compute="_compute_avatar_256")
     avatar_128 = fields.Image(compute="_compute_avatar_128")
 
-    @api.depends(lambda self: [self._avatar_name_field, "image_1920"])
+    @api.depends(
+        lambda self: [
+            self._avatar_name_field,
+            "image_1920",
+            *self._avatar_extra_depends,
+        ]
+    )
     def _compute_avatar_1920(self) -> None:
         self._update_avatar("avatar_1920", "image_1920")
 
-    @api.depends(lambda self: [self._avatar_name_field, "image_1024"])
+    @api.depends(
+        lambda self: [
+            self._avatar_name_field,
+            "image_1024",
+            *self._avatar_extra_depends,
+        ]
+    )
     def _compute_avatar_1024(self) -> None:
         self._update_avatar("avatar_1024", "image_1024")
 
-    @api.depends(lambda self: [self._avatar_name_field, "image_512"])
+    @api.depends(
+        lambda self: [self._avatar_name_field, "image_512", *self._avatar_extra_depends]
+    )
     def _compute_avatar_512(self) -> None:
         self._update_avatar("avatar_512", "image_512")
 
-    @api.depends(lambda self: [self._avatar_name_field, "image_256"])
+    @api.depends(
+        lambda self: [self._avatar_name_field, "image_256", *self._avatar_extra_depends]
+    )
     def _compute_avatar_256(self) -> None:
         self._update_avatar("avatar_256", "image_256")
 
-    @api.depends(lambda self: [self._avatar_name_field, "image_128"])
+    @api.depends(
+        lambda self: [self._avatar_name_field, "image_128", *self._avatar_extra_depends]
+    )
     def _compute_avatar_128(self) -> None:
         self._update_avatar("avatar_128", "image_128")
 

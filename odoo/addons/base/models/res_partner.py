@@ -40,7 +40,7 @@ EU_EXTRA_VAT_CODES = {
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
-_FAILED_ADDRESS_FORMATS: set[tuple[str, str]] = set()
+_FAILED_ADDRESS_FORMATS: set[tuple[str, int, str]] = set()
 
 
 def _is_distinct_partner(
@@ -142,6 +142,7 @@ class ResPartner(models.Model):
 
     _complete_name_displayed_types = ("invoice", "delivery", "other", "private")
     _display_name_column = "complete_name"
+    _avatar_extra_depends = ("user_ids.share", "is_company", "type")
     _display_name_column_guard = "name"
     _display_name_context_keys = (
         "formatted_display_name",
@@ -475,26 +476,6 @@ class ResPartner(models.Model):
         self.check_singleton()
         return tools.street_split(self.street or "")
 
-    @api.depends("name", "user_ids.share", "image_1920", "is_company", "type")
-    def _compute_avatar_1920(self) -> None:
-        super()._compute_avatar_1920()
-
-    @api.depends("name", "user_ids.share", "image_1024", "is_company", "type")
-    def _compute_avatar_1024(self) -> None:
-        super()._compute_avatar_1024()
-
-    @api.depends("name", "user_ids.share", "image_512", "is_company", "type")
-    def _compute_avatar_512(self) -> None:
-        super()._compute_avatar_512()
-
-    @api.depends("name", "user_ids.share", "image_256", "is_company", "type")
-    def _compute_avatar_256(self) -> None:
-        super()._compute_avatar_256()
-
-    @api.depends("name", "user_ids.share", "image_128", "is_company", "type")
-    def _compute_avatar_128(self) -> None:
-        super()._compute_avatar_128()
-
     @api.model
     def default_get(self, fields: list[str]) -> dict[str, Any]:
         values = super().default_get(fields)
@@ -787,8 +768,6 @@ class ResPartner(models.Model):
         "country_id.code",
     )
     def _compute_same_identifier_partners(self) -> None:
-        Partner = self.with_context(active_test=False).sudo()
-
         all_vats = set()
         all_registries = set()
         vat_variants: dict[int, list[str]] = {}
@@ -810,23 +789,10 @@ class ResPartner(models.Model):
             if partner.company_registry and not partner.parent_id:
                 all_registries.add(partner.company_registry)
 
-        vat_by_value: dict[str, list] = defaultdict(list)
-        if all_vats:
-            candidates = Partner.search_fetch(
-                [("vat", "in", list(all_vats))],
-                ["vat", "parent_id", "company_id", "country_id"],
-            )
-            for c in candidates.with_env(self.env)._filtered_access("read"):
-                vat_by_value[c.vat].append(c)
-
-        reg_by_value: dict[str, list] = defaultdict(list)
-        if all_registries:
-            candidates = Partner.search_fetch(
-                [("company_registry", "in", list(all_registries))],
-                ["company_registry", "parent_id", "company_id", "country_id"],
-            )
-            for c in candidates.with_env(self.env)._filtered_access("read"):
-                reg_by_value[c.company_registry].append(c)
+        vat_by_value = self._search_identifier_candidates("vat", all_vats)
+        reg_by_value = self._search_identifier_candidates(
+            "company_registry", all_registries
+        )
         _debug.perf.count(
             "same_identifier_candidates",
             partners=len(self),
@@ -873,6 +839,24 @@ class ResPartner(models.Model):
                 )
             else:
                 partner.same_company_registry_partner_id = False
+
+    def _search_identifier_candidates(
+        self, fname: str, values: set[str]
+    ) -> dict[str, list[ResPartner]]:
+        by_value: dict[str, list[ResPartner]] = defaultdict(list)
+        if not values:
+            return by_value
+        candidates = (
+            self.with_context(active_test=False)
+            .sudo()
+            .search_fetch(
+                [(fname, "in", list(values))],
+                [fname, "parent_id", "company_id", "country_id"],
+            )
+        )
+        for candidate in candidates.with_env(self.env)._filtered_access("read"):
+            by_value[candidate[fname]].append(candidate)
+        return by_value
 
     def _get_duplicate_scope(self) -> tuple[int | None, int | None]:
         return self.country_id.id or None, self.company_id.id or None
@@ -1282,39 +1266,26 @@ class ResPartner(models.Model):
     def _check_barcode_unicity(self) -> None:
         self.flush_model(["barcode"])
         cid = str(self.env.company.id)
+        # one pass: a batch member against every other row, itself excluded,
+        # through the gin index on the jsonb column
         self.env.cr.execute(
             tools.SQL(
-                "SELECT id, barcode ->> %(cid)s FROM res_partner"
-                " WHERE id = ANY(%(ids)s) AND barcode ->> %(cid)s IS NOT NULL",
+                """
+                SELECT 1
+                  FROM res_partner AS mine
+                  JOIN res_partner AS other
+                    ON other.barcode @> jsonb_build_object(%(cid)s::text, mine.barcode ->> %(cid)s)
+                   AND other.id != mine.id
+                 WHERE mine.id = ANY(%(ids)s)
+                   AND mine.barcode ->> %(cid)s IS NOT NULL
+                 LIMIT 1
+                """,
                 cid=cid,
-                ids=list(self.ids),
-            )
-        )
-        ids_by_value: dict[str, list[int]] = defaultdict(list)
-        for partner_id, value in self.env.cr.fetchall():
-            ids_by_value[value].append(partner_id)
-        if any(len(ids) > 1 for ids in ids_by_value.values()):
-            _debug.logic("barcode_duplicate", company=cid, scope="batch")
-            raise ValidationError(_("Another partner already has this barcode"))
-        if not ids_by_value:
-            return
-        probes = tools.SQL(" OR ").join(
-            tools.SQL(
-                "barcode @> jsonb_build_object(%(cid)s::text, %(value)s::text)",
-                cid=cid,
-                value=value,
-            )
-            for value in ids_by_value
-        )
-        self.env.cr.execute(
-            tools.SQL(
-                "SELECT 1 FROM res_partner WHERE (%(probes)s) AND id != ALL(%(ids)s) LIMIT 1",
-                probes=probes,
                 ids=list(self.ids),
             )
         )
         if self.env.cr.fetchone():
-            _debug.logic("barcode_duplicate", company=cid, scope="others")
+            _debug.logic("barcode_duplicate", company=cid, partners=self.ids)
             raise ValidationError(_("Another partner already has this barcode"))
 
     def _convert_fields_to_values(self, field_names: list[str]) -> dict[str, Any]:
@@ -1471,19 +1442,17 @@ class ResPartner(models.Model):
                 )
 
     def _sync_commercial_fields_to_descendants(
-        self, fields_to_sync: list[str] | None = None
+        self, fields_to_sync: list[str] | None = None, *, new: bool = False
     ) -> None:
         self.check_singleton()
         commercial_partner = self.commercial_partner_id
         if fields_to_sync is None:
             fields_to_sync = self._commercial_fields()
         descendants = self.browse()
-        frontier = self.child_ids.filtered(lambda c: not c.is_company)
+        frontier = self._get_contact_children(self, new=new)
         while frontier:
             descendants |= frontier
-            frontier = (frontier.child_ids - self - descendants).filtered(
-                lambda c: not c.is_company
-            )
+            frontier = self._get_contact_children(frontier) - self - descendants
         if descendants:
             sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
             descendants_to_sync = descendants.filtered(
@@ -1502,7 +1471,19 @@ class ResPartner(models.Model):
             if descendants_to_sync:
                 descendants_to_sync.write(sync_vals)
 
-    def _fields_sync(self, values: dict[str, Any]) -> None:
+    @api.model
+    def _get_contact_children(
+        self, parents: ResPartner, *, new: bool = False
+    ) -> ResPartner:
+        # a record just created holds its children in cache, all active; an
+        # existing one may have archived children the child_ids domain hides
+        if new:
+            return parents.child_ids.filtered(lambda c: not c.is_company)
+        return self.with_context(active_test=False).search(
+            [("parent_id", "in", parents.ids), ("is_company", "=", False)]
+        )
+
+    def _fields_sync(self, values: dict[str, Any], *, new: bool = False) -> None:
         _debug.logic(
             "fields_sync",
             partner=self.id,
@@ -1512,7 +1493,7 @@ class ResPartner(models.Model):
         )
         self._sync_from_parent(values)
         self._sync_to_parent(values)
-        self._sync_children(values)
+        self._sync_children(values, new=new)
 
     def _sync_from_parent(self, values: dict[str, Any]) -> None:
         if not (values.get("parent_id") or values.get("type") == "contact"):
@@ -1559,14 +1540,18 @@ class ResPartner(models.Model):
             )
             self.parent_id.write(synced_vals)
 
-    def _sync_children(self, values: dict[str, Any]) -> None:
+    def _sync_children(self, values: dict[str, Any], *, new: bool = False) -> None:
         if self.commercial_partner_id == self:
             fields_to_sync = values.keys() & self._commercial_fields()
             if fields_to_sync:
-                self.sudo()._sync_commercial_fields_to_descendants(fields_to_sync)
+                self.sudo()._sync_commercial_fields_to_descendants(
+                    fields_to_sync, new=new
+                )
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
-            contacts = self.child_ids.filtered(lambda c: c.type == "contact")
+            contacts = self._get_contact_children(self, new=new).filtered(
+                lambda c: c.type == "contact"
+            )
             _debug.logic(
                 "address_synced_to_children", partner=self.id, contacts=len(contacts)
             )
@@ -1801,7 +1786,7 @@ class ResPartner(models.Model):
             vals = self.env["res.partner"]._add_missing_default_values(
                 vals, _missing_defaults_cache=missing_defaults_cache
             )
-            partner._fields_sync(vals)
+            partner._fields_sync(vals, new=True)
         return partners
 
     @api.ondelete(at_uninstall=False)
@@ -1851,7 +1836,7 @@ class ResPartner(models.Model):
             "load_records_create", partners=len(partners), groups=len(groups)
         )
         for partner, vals in zip(partners, vals_list, strict=True):
-            partner._sync_children(vals)
+            partner._sync_children(vals, new=True)
             partner._update_parent_address()
         return partners
 
@@ -1981,11 +1966,17 @@ class ResPartner(models.Model):
             _debug.logic("name_create_refused", reason="no_email")
             raise ValidationError(_("Couldn't create contact without email address!"))
 
-        create_values = {self._rec_name: name or email_normalized}
-        if email_normalized:
-            create_values["email"] = email_normalized
-        partner = self.create(create_values)
+        partner = self.create(self._prepare_vals_from_email(name, email_normalized))
         return partner.id, partner.display_name
+
+    @api.model
+    def _prepare_vals_from_email(
+        self, name: str, email_normalized: str | Literal[False]
+    ) -> ValuesType:
+        values: ValuesType = {"name": name or email_normalized}
+        if email_normalized:
+            values["email"] = email_normalized
+        return values
 
     @api.model
     def get_or_create(self, email: str, assert_valid_email: bool = False) -> Self:
@@ -2010,10 +2001,9 @@ class ResPartner(models.Model):
         _debug.logic(
             "get_or_create", found=None, valid_email=bool(parsed_email_normalized)
         )
-        create_values = {self._rec_name: parsed_name or parsed_email_normalized}
-        if parsed_email_normalized:
-            create_values["email"] = parsed_email_normalized
-        return self.create(create_values)
+        return self.create(
+            self._prepare_vals_from_email(parsed_name, parsed_email_normalized)
+        )
 
     def _address_get_chains(self) -> list[list[Self]]:
         chains = []
@@ -2090,13 +2080,19 @@ class ResPartner(models.Model):
                 if len(result) == len(adr_pref):
                     return result
 
-        default = result.get("contact", self[:1].id or False)
         _debug.logic(
             "address_get_defaulted",
             partners=len(self),
             found=sorted(result),
             missing=sorted(adr_pref - result.keys()),
         )
+        return self._address_get_fill_defaults(result, adr_pref, self[:1].id or False)
+
+    @staticmethod
+    def _address_get_fill_defaults(
+        result: dict[str, int | bool], adr_pref: set[str], fallback: int | bool
+    ) -> dict[str, int | bool]:
+        default = result.get("contact", fallback)
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default
         return result
@@ -2114,10 +2110,9 @@ class ResPartner(models.Model):
         for partner, chain in zip(self, chains, strict=True):
             result: dict[str, int | bool] = {}
             self._address_get_walk(chain, children_map, adr_pref, result, set())
-            default = result.get("contact", partner.id or False)
-            for adr_type in adr_pref:
-                result[adr_type] = result.get(adr_type) or default
-            results[partner.id] = result
+            results[partner.id] = self._address_get_fill_defaults(
+                result, adr_pref, partner.id or False
+            )
         return results
 
     def _get_address_format(self) -> str:
@@ -2138,7 +2133,10 @@ class ResPartner(models.Model):
             },
         )
         for field in self._formatting_address_fields():
-            args[field] = self[field] or ""
+            value = self[field]
+            args[field] = (
+                value.display_name if isinstance(value, models.BaseModel) else value
+            ) or ""
         if without_company:
             args["company_name"] = ""
         elif self.commercial_company_name:
@@ -2155,7 +2153,7 @@ class ResPartner(models.Model):
                 partner=self.id,
                 country=self.country_id.id,
             )
-            memo_key = (self.env.cr.dbname, address_format)
+            memo_key = (self.env.cr.dbname, self.country_id.id, address_format)
             if memo_key not in _FAILED_ADDRESS_FORMATS:
                 _FAILED_ADDRESS_FORMATS.add(memo_key)
                 _logger.warning(
