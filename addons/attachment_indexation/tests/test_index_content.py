@@ -2,12 +2,10 @@
 
 import io
 import zipfile
+from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.attachment_indexation.models.ir_attachment import (
-    index_content_cache,
-)
 from odoo.addons.attachment_indexation.tools.readers import csv_escape
 
 DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -66,20 +64,22 @@ class TestIndexContent(TransactionCase):
         """Plain text defers to the base bounded prefix (not None)."""
         self.assertIsNotNone(self.Attachment._get_index_read_size("text/plain"))
 
-    def test_copy_cache_retains_every_checksum_in_batch(self):
-        """copy()'s pre-warm must not evict all but the last checksum from a
-        multi-record batch (LRU(1) self-defeat)."""
+    def test_copying_an_inline_document_reuses_its_index(self):
         self.env["ir.config_parameter"].sudo().set_param("ir_attachment.location", "db")
         attachments = self.Attachment.create(
-            [{"name": f"f{i}.txt", "raw": f"content {i}".encode()} for i in range(5)]
+            [
+                {"name": f"f{i}.docx", "raw": _make_docx([f"paragraph {i}"])}
+                for i in range(5)
+            ]
         )
-        self.assertFalse(
-            attachments[0].store_fname, "must be db_datas-backed for this test"
-        )
-        attachments.copy()
-        for attachment in attachments:
-            self.assertIn(
-                attachment.checksum,
-                index_content_cache,
-                "every checksum in the batch must survive the pre-warm",
-            )
+        self.assertFalse(attachments[0].store_fname, "must be db_datas-backed")
+        self.assertIn("paragraph 3", attachments[3].index_content)
+        with patch.object(
+            self.registry["ir.attachment"],
+            "_get_index_content",
+            side_effect=AssertionError("a copy must not parse the document again"),
+        ):
+            copies = attachments.copy()
+        for origin, copied in zip(attachments, copies, strict=True):
+            self.assertEqual(copied.index_content, origin.index_content)
+            self.assertEqual(copied.raw, origin.raw)

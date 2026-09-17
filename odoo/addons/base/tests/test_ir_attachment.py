@@ -280,6 +280,50 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertEqual(copied.index_content, attachment.index_content)
         self.assertEqual(copied.raw, self.blob1)
 
+    def test_copying_an_inline_row_keeps_its_index_without_extracting(self):
+        self.env["ir.config_parameter"].set_param("ir_attachment.location", "db")
+        rows = self.Attachment.create(
+            [
+                {"name": f"n{i}.txt", "raw": f"alpha bravo {i}".encode()}
+                for i in range(3)
+            ]
+        )
+        self.assertFalse(rows[0].store_fname)
+        self.assertIn("bravo", rows[1].index_content)
+        with patch.object(
+            self.registry["ir.attachment"],
+            "_extract_index_content",
+            side_effect=AssertionError("a copy must not extract again"),
+        ):
+            copies = rows.copy()
+        for origin, copied in zip(rows, copies, strict=True):
+            self.assertEqual(copied.index_content, origin.index_content)
+            self.assertEqual(copied.checksum, origin.checksum)
+            self.assertEqual(copied.raw, origin.raw)
+        self.assertNotIn("attachment_index_from_origin", copies.env.context)
+
+    def test_streamed_create_honours_the_index_hook(self):
+        vals = self.Attachment._prepare_generated_asset_vals(
+            name="web.assets_web.min.js",
+            mimetype="text/javascript",
+            raw=b"",
+            url="/web/assets/abc123/web.assets_web.min.js",
+        )
+        vals.pop("raw")
+        with patch.object(
+            self.registry["ir.attachment"],
+            "_extract_index_content",
+            side_effect=AssertionError("a compiled bundle must not be indexed"),
+        ):
+            streamed = self.Attachment.sudo()._create_from_stream(
+                io.BytesIO(b"function f(){return 1}" * 100), **vals
+            )
+        self.addCleanup(
+            Path(self.filestore, streamed.store_fname).unlink, missing_ok=True
+        )
+        self.assertFalse(streamed.index_content)
+        self.assertTrue(streamed.file_size)
+
     def test_copying_a_legacy_dual_row_writes_no_new_content(self):
         attachment = self.Attachment.create({"name": "dual.bin", "raw": self.blob1})
         attachment.flush_recordset()

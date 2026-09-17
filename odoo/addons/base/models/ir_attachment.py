@@ -420,32 +420,34 @@ class IrAttachment(models.Model):
         return vals_list
 
     def copy(self, default: ValuesType | None = None) -> Self:
-        new_attachments = super().copy(default)
-        if not (default or {}).keys() & {"datas", "db_datas", "raw"}:
-            by_content: dict[tuple, list[int]] = defaultdict(list)
-            for origin, copied in zip(self, new_attachments, strict=True):
-                if origin.store_fname:
-                    by_content[
-                        origin.store_fname,
-                        origin.checksum,
-                        origin.file_size,
-                        origin.index_content,
-                    ].append(copied.id)
-            for (fname, checksum, size, index), ids in by_content.items():
-                super(IrAttachment, self.browse(ids).sudo()).write(
-                    {
-                        "store_fname": fname,
-                        "checksum": checksum,
-                        "file_size": size,
-                        "index_content": index,
-                    }
+        if (default or {}).keys() & {"datas", "db_datas", "raw"}:
+            return super().copy(default)
+        new_attachments = super(
+            IrAttachment, self.with_context(attachment_index_from_origin=True)
+        ).copy(default)
+        by_content: dict[tuple, list[int]] = defaultdict(list)
+        for origin, copied in zip(self, new_attachments, strict=True):
+            if origin.store_fname:
+                key = (
+                    origin.store_fname,
+                    origin.checksum,
+                    origin.file_size,
+                    origin.index_content,
                 )
-            _debug.lifecycle(
-                "copy_shared_content",
-                copied=len(new_attachments),
-                shared=len(by_content),
-            )
-        return new_attachments
+            else:
+                key = (None, None, None, origin.index_content)
+            by_content[key].append(copied.id)
+        for (fname, checksum, size, index), ids in by_content.items():
+            values = {"index_content": index}
+            if fname:
+                values.update(store_fname=fname, checksum=checksum, file_size=size)
+            super(IrAttachment, self.browse(ids).sudo()).write(values)
+        _debug.lifecycle(
+            "copy_shared_content",
+            copied=len(new_attachments),
+            shared=len(by_content),
+        )
+        return new_attachments.with_env(self.env)
 
     def unlink(self) -> bool:
         to_delete = OrderedSet(
@@ -771,7 +773,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _should_index_content(self, values: dict[str, Any]) -> bool:
-        return True
+        return not self.env.context.get("attachment_index_from_origin")
 
     def _get_content_vals_memoized(
         self,
@@ -814,11 +816,7 @@ class IrAttachment(models.Model):
             checksum_given=checksum is not None,
         )
         index_vals = (
-            {
-                "index_content": self._extract_index_content(
-                    data, mimetype, checksum=checksum
-                )
-            }
+            {"index_content": self._extract_index_content(data, mimetype)}
             if index
             else {}
         )
@@ -1164,9 +1162,7 @@ class IrAttachment(models.Model):
         )
 
     @api.model
-    def _get_index_content(
-        self, bin_data: bytes, file_type: str, checksum: str | None = None
-    ) -> str | None:
+    def _get_index_content(self, bin_data: bytes, file_type: str) -> str | None:
         if not (file_type and file_type.startswith("text/")):
             return None
         text = bin_data[: self._INDEX_MAX_BYTES].decode("utf-8", errors="ignore")
@@ -1187,10 +1183,8 @@ class IrAttachment(models.Model):
         return "\n".join(words)
 
     @api.model
-    def _extract_index_content(
-        self, bin_data: bytes, mimetype: str, checksum: str | None = None
-    ) -> str | None:
-        index_content = self._get_index_content(bin_data, mimetype, checksum=checksum)
+    def _extract_index_content(self, bin_data: bytes, mimetype: str) -> str | None:
+        index_content = self._get_index_content(bin_data, mimetype)
         if not index_content:
             return index_content
         limit = self._get_index_max_chars()
@@ -1601,6 +1595,10 @@ class IrAttachment(models.Model):
         with _debug.perf("stream_store", attachment=record.id, mimetype=mimetype):
             store_values = self._get_storage_backend().write_stream(fileobj)
         read_size = self._get_index_read_size(record.mimetype)
+        if not self._should_index_content(
+            {"name": name, "type": "binary", "mimetype": mimetype, **vals}
+        ):
+            read_size = 0
         index_content = None
         if read_size != 0:
             content = b""
@@ -1621,9 +1619,7 @@ class IrAttachment(models.Model):
                 db_datas = store_values["db_datas"] or b""
                 content = db_datas if read_size is None else db_datas[:read_size]
             if readable:
-                index_content = self._extract_index_content(
-                    content, record.mimetype, checksum=store_values.get("checksum")
-                )
+                index_content = self._extract_index_content(content, record.mimetype)
         store_values["index_content"] = index_content
         _debug.lifecycle(
             "stream_stored",

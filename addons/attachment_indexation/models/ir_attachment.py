@@ -4,7 +4,6 @@ import logging
 
 from odoo import api, models
 from odoo.libs.documents import Document, canonical_mimetypes
-from odoo.libs.lru import LRU
 
 from ..tools.readers import (
     clean_text_content,
@@ -24,8 +23,6 @@ if not (
         "Attachment indexation of PDF documents is unavailable because the 'pdfminer.six' Python library cannot be found on the system. "
         "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)"
     )
-
-index_content_cache = LRU(1)
 
 
 class IrAttachment(models.Model):
@@ -93,18 +90,14 @@ class IrAttachment(models.Model):
             return ""
 
     @api.model
-    def _get_index_content(self, bin_data, mimetype, checksum=None):
-        if checksum:
-            cached_content = index_content_cache.get(checksum)
-            if cached_content:
-                return cached_content
+    def _get_index_content(self, bin_data, mimetype):
         if not bin_data or (mimetype or "").startswith("text/"):
             # An attachment may legally have no content, and `Document` refuses
             # empty bytes rather than pretending to hold a document. Every
             # `_index_*` used to answer "" here, so this branch is what the walk
             # did rather than a new tolerance. Plain text is base's: its word
             # scan is bounded and needs no reader.
-            return super()._get_index_content(bin_data, mimetype, checksum=checksum)
+            return super()._get_index_content(bin_data, mimetype)
 
         document = Document(
             bin_data,
@@ -136,10 +129,7 @@ class IrAttachment(models.Model):
             res = document.text
         res = res.replace("\x00", "") if res else False
 
-        res = res or super()._get_index_content(bin_data, mimetype, checksum=checksum)
-        if checksum:
-            index_content_cache[checksum] = res
-        return res
+        return res or super()._get_index_content(bin_data, mimetype)
 
     # Mimetypes whose readers parse the WHOLE file: zip-based office containers
     # and PDF. The streaming create path must read these back
@@ -170,14 +160,3 @@ class IrAttachment(models.Model):
         ):
             return None
         return super()._get_index_read_size(mimetype)
-
-    def copy(self, default=None):
-        # LRU(1) can only ever retain the last entry written to it: pre-warming
-        # it one checksum at a time for a multi-record `self` evicts every
-        # entry but the last before super().copy() ever reads it back. Grow
-        # the cache to fit this batch (never shrink it back down) so every
-        # checksum survives until it's consumed.
-        index_content_cache.count = max(index_content_cache.count, len(self))
-        for attachment in self:
-            index_content_cache[attachment.checksum] = attachment.index_content
-        return super().copy(default=default)
