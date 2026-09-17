@@ -21,6 +21,13 @@ _RX_ACTION_PATH = re.compile(r"[a-z][a-z0-9_-]*")
 
 _BINDING_ACCESS_MODEL = "__opens_model"
 
+WINDOW_TARGETS = [
+    ("current", "Current Window"),
+    ("new", "New Window"),
+    ("fullscreen", "Full Screen"),
+    ("main", "Main action of Current Window"),
+]
+
 
 def _eval_with_missing_names_false(expr: str, eval_ctx: dict[str, Any]) -> Any:
     eval_ctx = dict(eval_ctx)
@@ -549,8 +556,7 @@ class IrActionsActions(models.Model):
             return {}
         root = self.env.registry["ir.actions.actions"]
         by_table = self._get_model_names_by_table()
-        for model_name in self._get_model_names_in_tree():
-            self.env[model_name].flush_model()
+        self.env[root._name].flush_model()
         self.env.cr.execute(
             SQL(
                 "SELECT a.id, c.relname, a.type FROM %s a"

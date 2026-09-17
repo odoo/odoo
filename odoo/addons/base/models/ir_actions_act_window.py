@@ -6,6 +6,8 @@ from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import _
 
+from .ir_actions_actions import WINDOW_TARGETS
+
 _debug = DebugLog(__name__)
 
 
@@ -43,12 +45,7 @@ class IrActionsAct_Window(models.Model):
         help="Model name of the object to open in the view window",
     )
     target = fields.Selection(
-        selection=[
-            ("current", "Current Window"),
-            ("new", "New Window"),
-            ("fullscreen", "Full Screen"),
-            ("main", "Main action of Current Window"),
-        ],
+        selection=WINDOW_TARGETS,
         string="Target Window",
         default="current",
     )
@@ -68,7 +65,7 @@ class IrActionsAct_Window(models.Model):
     view_ids = fields.One2many(
         comodel_name="ir.actions.act_window.view",
         inverse_name="act_window_id",
-        string="No of Views",
+        string="Views",
     )
     views = fields.Binary(
         compute="_compute_views",

@@ -1010,7 +1010,7 @@ class IrActionsServer(models.Model):
             )  # noqa: E8507  loop variable is the model -- a different table each time
         _debug.perf.count("webhook_samples", actions=len(webhooks), models=len(samples))
         for model_name, actions in webhooks.grouped("model_name").items():
-            sample = samples.get(model_name, self.env["ir.model"].browse())
+            sample = samples.get(model_name)
             if sample:
                 sample.read(
                     list(set(actions.webhook_field_ids.mapped("name"))), load=None

@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.safe_eval import safe_eval
 
+from .ir_actions_actions import WINDOW_TARGETS
+
 _debug = DebugLog(__name__)
 
 
@@ -25,12 +27,7 @@ class IrActionsClient(models.Model):
         "is no central tag repository across clients.",
     )
     target = fields.Selection(
-        selection=[
-            ("current", "Current Window"),
-            ("new", "New Window"),
-            ("fullscreen", "Full Screen"),
-            ("main", "Main action of Current Window"),
-        ],
+        selection=WINDOW_TARGETS,
         string="Target Window",
         default="current",
     )
