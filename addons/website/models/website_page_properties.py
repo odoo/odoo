@@ -256,40 +256,64 @@ class WebsitePageProperties(models.TransientModel):
         write_result = super().write(vals)
 
         if "url" in vals:
-            for record in self:
+            moved = [record for record in self if record.old_url != record.url]
+            # the rewrites the new urls made obsolete, looked up once and
+            # indexed by (url, website) rather than searched per record
+            obsolete_by_target = {}
+            if moved:
+                Rewrite = self.env["website.rewrite"]
+                for rewrite in Rewrite.search(
+                    [
+                        ("url_from", "in", list({record.url for record in moved})),
+                        (
+                            "website_id",
+                            "in",
+                            list(
+                                {
+                                    vals.get("website_id")
+                                    or record.website_id.id
+                                    or False
+                                    for record in moved
+                                }
+                            ),
+                        ),
+                    ]
+                ):
+                    key = (rewrite.url_from, rewrite.website_id.id or False)
+                    obsolete_by_target[key] = (
+                        obsolete_by_target.get(key, Rewrite) | rewrite
+                    )
+            for record in moved:
                 old_url = record.old_url
                 new_url = record.url
-                if old_url != new_url:
-                    website_id = vals.get("website_id") or record.website_id.id or False
+                website_id = vals.get("website_id") or record.website_id.id or False
+                _debug.lifecycle(
+                    "page_properties_url_changed",
+                    page=record.target_model_id.id,
+                    old=old_url,
+                    new=new_url,
+                    redirect=bool(vals.get("redirect_old_url")),
+                )
+                obsolete = obsolete_by_target.get((new_url, website_id))
+                if obsolete:
                     _debug.lifecycle(
-                        "page_properties_url_changed",
+                        "obsolete_rewrites_archived",
                         page=record.target_model_id.id,
-                        old=old_url,
-                        new=new_url,
-                        redirect=bool(vals.get("redirect_old_url")),
+                        url=new_url,
+                        rewrites=obsolete.ids,
                     )
-                    obsolete = self.env["website.rewrite"].search(
-                        [("url_from", "=", new_url), ("website_id", "=", website_id)]
+                    obsolete.active = False
+                if vals.get("redirect_old_url"):
+                    self.env["website.rewrite"].create(
+                        {
+                            "name": vals.get("name") or record.name,
+                            "redirect_type": vals.get("redirect_type")
+                            or record.redirect_type,
+                            "url_from": old_url,
+                            "url_to": new_url,
+                            "website_id": website_id,
+                        }
                     )
-                    if obsolete:
-                        _debug.lifecycle(
-                            "obsolete_rewrites_archived",
-                            page=record.target_model_id.id,
-                            url=new_url,
-                            rewrites=obsolete.ids,
-                        )
-                        obsolete.active = False
-                    if vals.get("redirect_old_url"):
-                        self.env["website.rewrite"].create(
-                            {
-                                "name": vals.get("name") or record.name,
-                                "redirect_type": vals.get("redirect_type")
-                                or record.redirect_type,
-                                "url_from": old_url,
-                                "url_to": new_url,
-                                "website_id": website_id,
-                            }
-                        )
-                    record.old_url = new_url
+                record.old_url = new_url
 
         return write_result
