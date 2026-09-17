@@ -53,6 +53,17 @@ class StockPicking(models.Model):
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
 
+    def action_view_purchase_order(self):
+        self.ensure_one()
+        if self.purchase_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'purchase.order',
+                'res_id': self.purchase_id.id,
+                'view_mode': 'form',
+            }
+        return False
+
     def _log_less_quantities_than_expected(self, moves):
         moves_information = [(k, v) for k, v in moves.items()]
         purchase_order = self.move_ids.purchase_line_id.order_id
