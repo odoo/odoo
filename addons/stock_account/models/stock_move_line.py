@@ -50,9 +50,11 @@ class StockMoveLine(models.Model):
 
     def unlink(self):
         _debug.lifecycle("valued_line_unlink", lines=self)
-        analytic_move_to_recompute = self.move_id
+        analytic_move_to_recompute = self.move_id.ids
         res = super().unlink()
-        analytic_move_to_recompute.sudo()._create_analytic_move()
+        self.env["stock.move"].browse(
+            analytic_move_to_recompute
+        ).sudo()._create_analytic_move()
         return res
 
     def _is_excluded_from_valuation(self):
