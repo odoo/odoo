@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="col-6" role="menuitem" name="kanban_job_more_options">
                                     <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="open">Configuration</a>
-                                    <a class="dropdown-item" t-if="record.active.raw_value" type="archive" >Archive</a>
+                                    <a class="dropdown-item" t-if="record.active.raw_value" name="action_archive" type="object">Archive</a>
                                     <a class="dropdown-item" t-if="!record.active.raw_value" name="action_unarchive" type="object">Unarchive</a>
                                 </div>
                             </div>
