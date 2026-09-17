@@ -156,6 +156,8 @@ class StockPicking(models.Model):
         help='Batch associated to this transfer',
         check_company=True, index=True, copy=False)
     batch_sequence = fields.Integer(string='Sequence')
+    recall_product_names = fields.Char(string='Recalled Product Names')
+    recall_lot_names = fields.Char(string='Recalled Lots')
 
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
