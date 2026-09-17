@@ -231,7 +231,8 @@ class Manifest(Mapping[str, typing.Any]):
     )
 
     def __init__(self, *, path: str, manifest_content: dict):
-        assert Path(path).is_absolute(), "path of module must be absolute"
+        if not Path(path).is_absolute():
+            raise ValueError("path of module must be absolute")
         self.path = path
         self.name = Path(path).name
         if not MODULE_NAME_RE.match(self.name):
@@ -245,7 +246,10 @@ class Manifest(Mapping[str, typing.Any]):
     @property
     def addons_path(self) -> str:
         p = Path(self.path)
-        assert p.name == self.name
+        if p.name != self.name:
+            raise RuntimeError(
+                f"module path {self.path!r} does not end in {self.name!r}"
+            )
         return str(p.parent)
 
     @functools.cached_property
@@ -451,7 +455,10 @@ class Manifest(Mapping[str, typing.Any]):
                         )
                         continue
                     if mod := Manifest._from_path(str(entry)):
-                        assert entry.name == mod.name
+                        if entry.name != mod.name:
+                            raise RuntimeError(
+                                f"manifest at {entry} resolved to module {mod.name!r}"
+                            )
                         modules[entry.name] = mod
             span.set(entries=entries, modules=len(modules), shadowed=shadowed)
         return sorted(modules.values(), key=lambda m: m.name)
@@ -543,10 +550,11 @@ def _normalize_auto_install(module: str, manifest: dict, depends: Collection) ->
     if isinstance(auto_install, (list, tuple, set, frozenset)):
         manifest["auto_install"] = auto_install_set = set(auto_install)
         non_dependencies = auto_install_set.difference(depends)
-        assert not non_dependencies, (
-            f"module {module}: auto_install triggers must be dependencies,"
-            f" found non-dependencies [{', '.join(non_dependencies)}]"
-        )
+        if non_dependencies:
+            raise ValueError(
+                f"module {module}: auto_install triggers must be dependencies,"
+                f" found non-dependencies [{', '.join(non_dependencies)}]"
+            )
     elif auto_install is True:
         manifest["auto_install"] = set(depends)
     elif auto_install is not False:
@@ -637,7 +645,11 @@ def _normalize_manifest(module: str, manifest_content: dict) -> dict:
             f" string {depends!r} (did you forget the brackets, e.g."
             f" ['{depends}']?)"
         )
-    assert isinstance(depends, Collection)
+    if not isinstance(depends, Collection):
+        raise TypeError(
+            f"module {module}: 'depends' must be a collection of module names;"
+            f" got {type(depends).__name__}: {depends!r}"
+        )
 
     _normalize_auto_install(module, manifest, depends)
     _normalize_version(module, manifest)
@@ -819,7 +831,8 @@ def check_python_external_dependency(pydep: str) -> None:
 def load_script(path: str, module_name: str) -> types.ModuleType:
     full_path = tools.file_path(path) if not Path(path).is_absolute() else path
     spec = importlib.util.spec_from_file_location(module_name, full_path)
-    assert spec and spec.loader, f"spec not found for {module_name}"
+    if not (spec and spec.loader):
+        raise ImportError(f"spec not found for {module_name}")
     module = importlib.util.module_from_spec(spec)
     with _debug.perf("module.load_script", name=module_name, path=full_path):
         spec.loader.exec_module(module)

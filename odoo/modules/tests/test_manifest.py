@@ -167,7 +167,7 @@ class TestManifestAutoInstall(BaseCase):
             )
 
     def test_auto_install_trigger_must_be_a_dependency(self):
-        with self.assertRaisesRegex(AssertionError, "must be dependencies"):
+        with self.assertRaisesRegex(ValueError, "must be dependencies"):
             _normalize_manifest(
                 "m", {**self.BASE, "auto_install": ["sale"], "depends": ["base"]}
             )

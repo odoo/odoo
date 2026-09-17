@@ -205,7 +205,8 @@ class MigrationManager:
         pkg: module_graph.ModuleNode,
         stage: typing.Literal["pre", "post", "end"],
     ) -> None:
-        assert stage in MIGRATION_STAGES
+        if stage not in MIGRATION_STAGES:
+            raise ValueError(f"invalid migration stage {stage!r}")
         stageformat = {
             "pre": "[>%s]",
             "post": "[%s>]",

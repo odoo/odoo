@@ -257,7 +257,8 @@ def get_or_create_category_id(
                 (Json({"en_US": cat_name}), p_id),
             )
             row = cr.fetchone()
-            assert row is not None
+            if row is None:
+                raise RuntimeError(f"INSERT of category {cat_name!r} returned no id")
             p_id = row[0]
             cr.execute(
                 """
@@ -274,7 +275,11 @@ def get_or_create_category_id(
             )
         else:
             p_id = row[0]
-        assert isinstance(p_id, int)
+        if not isinstance(p_id, int):
+            raise RuntimeError(
+                f"category {xml_id!r} resolved to non-integer id {p_id!r}"
+                " (NULL res_id in ir_model_data?)"
+            )
         if category_cache is not None:
             category_cache[xml_id] = p_id
     return p_id

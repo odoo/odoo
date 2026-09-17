@@ -815,7 +815,8 @@ class _PackageLoader:
             tests=suite.countTestCases(),
         )
         self.test_results = loader.run_suite(suite, global_report=self.report)
-        assert self.report is not None, "Missing report during tests"
+        if self.report is None:
+            raise RuntimeError("Missing report during tests")
         self.report.update(self.test_results)
         self.test_time = time.time() - tests_t0
         self.test_queries = odoo.db.sql_counter - tests_q0
@@ -958,7 +959,8 @@ def load_module_graph(
 
     registry = env.registry
     cr = env.cr
-    assert isinstance(cr, odoo.db.Cursor), "Need for a real Cursor to load modules"
+    if not isinstance(cr, odoo.db.Cursor):
+        raise TypeError("Need for a real Cursor to load modules")
     if migrations is None:
         migrations = MigrationManager(cr, graph)
     module_count = len(graph)
@@ -1035,7 +1037,8 @@ def _warn_invalid_module_names(cr: BaseCursor, module_names: Iterable[str]) -> N
             (list(mod_names),),
         )
         row = cr.fetchone()
-        assert row is not None
+        if row is None:
+            raise RuntimeError("count(id) over ir_module_module returned no row")
         if row[0] != len(mod_names):
             cr.execute("SELECT name FROM ir_module_module")
             incorrect_names = mod_names.difference(name for [name] in cr.fetchall())
@@ -1078,7 +1081,8 @@ def _run_deferred_at_install_tests(
         )
         tests_t0, tests_q0 = time.time(), odoo.db.sql_counter
         results = loader.run_suite(suite, global_report=report)
-        assert report is not None, "Missing report during tests"
+        if report is None:
+            raise RuntimeError("Missing report during tests")
         report.update(results)
         _logger.info(
             "Module %s: %d deferred at_install test(s) in %.2fs, %s queries",
@@ -1797,7 +1801,8 @@ def load_modules(
             run_tests=run_tests,
         ) as span,
     ):
-        assert isinstance(cr, odoo.db.Cursor), "Need a real Cursor to load modules"
+        if not isinstance(cr, odoo.db.Cursor):
+            raise TypeError("Need a real Cursor to load modules")
         cr.execute("SET idle_session_timeout = 0")
         loader = _ModuleLoader(
             registry,
