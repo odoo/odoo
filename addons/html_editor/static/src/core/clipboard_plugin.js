@@ -285,12 +285,9 @@ export class ClipboardPlugin extends Plugin {
         }
         const fragment = parseHTML(this.document, clipboardHtml);
         this.dependencies.sanitize.sanitize(fragment);
-        if (this.delegateTo("paste_odoo_editor_html_overrides", selection, fragment)) {
-            return true;
-        }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
-            if (this.delegateTo("paste_html_overrides", selection, clipboardElem)) {
+            if (this.delegateTo("paste_html_overrides", selection, clipboardElem, fragment)) {
                 return true;
             }
             // @phoenix @todo: should it be handled in table plugin?
