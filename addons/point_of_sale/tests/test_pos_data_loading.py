@@ -128,7 +128,7 @@ class TestPosDataLoading(CommonPosTest):
     # -------------------------------------------------------------------------
 
     def test_load_data_incremental_skips_up_to_date_records(self):
-        """Records whose local timestamp is in the future should not be returned."""
+        """Records whose local timestamp is in the future should not be returned except PosConfig."""
         session = self._get_session()
         full_data = session.load_data({'only_records': True})
         config_records = full_data['pos.config']
@@ -142,7 +142,23 @@ class TestPosDataLoading(CommonPosTest):
             'records': {'pos.config': {str(config_id): config_ts}},
             'only_records': True,
         })
-        self.assertEqual(result.get('pos.config', []), [],
+        self.assertTrue(result.get('pos.config'),
+            "pos.config should always be reloaded, even if the local copy is up to date")
+
+        product_records = full_data['product.product']
+        self.assertTrue(product_records)
+
+        product_timestamps = {
+            str(record['id']): fields.Datetime.from_string(record['write_date']).timestamp()
+            for record in product_records
+        }
+
+        result = session.load_data({
+            'models': ['product.product'],
+            'records': {'product.product': product_timestamps},
+            'only_records': True,
+        })
+        self.assertEqual(result.get('product.product', []), [],
             "Up-to-date record should be skipped in incremental load")
 
     def test_load_data_incremental_returns_outdated_records(self):
