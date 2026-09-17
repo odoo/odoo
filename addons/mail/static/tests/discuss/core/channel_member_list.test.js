@@ -217,7 +217,7 @@ test("Channel member count update after user joined", async () => {
     await contains(".o-discuss-ChannelMemberList h6:text('Online - 1')");
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
-    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
+    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-discuss-ChannelMemberList h6:text('Online - 2')");
 });
