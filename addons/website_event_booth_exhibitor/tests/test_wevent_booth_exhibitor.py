@@ -3,6 +3,8 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tests import tagged
 
@@ -50,3 +52,29 @@ class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPorta
             })]
         })
         self.start_tour('/event', 'webooth_exhibitor_register', login='admin')
+
+    def test_sponsor_archived_with_its_last_booth(self):
+        """ Test a sponsor only exhibits through its booths. It is archived if
+        booth is cancelled, and unarchived if the booth is booked again. """
+        now = datetime.now()
+        event = self.env['event.event'].create({
+            'name': 'Test Sponsored Booth',
+            'date_begin': now + relativedelta(days=1),
+            'date_end': now + relativedelta(days=2),
+            'event_booth_ids': [Command.create({
+                'name': 'Test Booth',
+                'booth_category_id': self.env.ref('event_booth.event_booth_category_premium').id,
+            })],
+        })
+        booth = event.event_booth_ids
+
+        booth.action_confirm({'partner_id': self.partner_demo.id})
+        sponsor = booth.sponsor_id
+        self.assertTrue(sponsor.active)
+
+        booth.write({'state': 'available'})
+        self.assertFalse(sponsor.active, "Sponsor should be archived.")
+
+        booth.action_confirm({'partner_id': self.partner_demo.id})
+        self.assertEqual(sponsor, booth.sponsor_id, "Booking the booth again should revive its sponsor.")
+        self.assertTrue(sponsor.active)
