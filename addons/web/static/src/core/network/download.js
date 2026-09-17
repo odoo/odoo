@@ -316,21 +316,17 @@ function _download(data, filename, mimetype) {
 
     if (url && url.length < 2048) {
         // if no filename and no mime, assume a url was passed as the only argument
-        fileName = url.split("/").pop().split("?")[0];
         anchor.href = url; // assign href prop to temp anchor
-        if (anchor.href.indexOf(url) !== -1) {
-            // if the browser determines that it's a potentially valid url path:
-            return new Promise((resolve, reject) => {
-                let xhr = new browser.XMLHttpRequest();
-                xhr.open("GET", url, true);
-                configureBlobDownloadXHR(xhr, {
-                    onSuccess: resolve,
-                    onFailure: reject,
-                    url
-                });
-                xhr.send();
+        return new Promise((resolve, reject) => {
+            let xhr = new browser.XMLHttpRequest();
+            xhr.open("GET", url, true);
+            configureBlobDownloadXHR(xhr, {
+                onSuccess: resolve,
+                onFailure: reject,
+                url
             });
-        }
+            xhr.send();
+        });
     }
 
     //go ahead and download dataURLs right away
