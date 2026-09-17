@@ -219,6 +219,9 @@ class RecomputeMixin(_ModelStubs):
                 continue
 
             model = self.env[field.model_name]
+            if self._invalidates_from_cache(field, subtree):
+                yield from self._modified_cache_only(field, subtree)
+                continue
             for invf in model.pool.field_inverses[field]:
                 if not (invf.is_x2many and invf.domain):
                     if invf.is_many2one_reference:
@@ -279,6 +282,37 @@ class RecomputeMixin(_ModelStubs):
                     )
 
             yield from records._modified_triggers(subtree)
+
+    def _invalidates_from_cache(self, field: Field, subtree: TriggerTree) -> bool:
+        if len(subtree) or field.is_many2one_reference:
+            return False
+        if any(f.is_stored_computed or f.recursive for f in subtree.root):
+            return False
+        inverses = self.env[field.model_name].pool.field_inverses[field]
+        return any(invf.is_x2many and not invf.domain for invf in inverses)
+
+    def _modified_cache_only(
+        self, field: Field, subtree: TriggerTree
+    ) -> Iterable[tuple[Field, Self, bool]]:
+        env = self.env
+        model = env[field.model_name]
+        self_ids = set(self._ids)
+        back = field._get_cache(env)
+        for dependent in subtree.root:
+            ids = [
+                id_
+                for id_ in dependent._get_all_cache_ids(env)
+                if id_ not in back or back[id_] in self_ids
+            ]
+            _debug.logic(
+                "recompute.invalidated_from_cache",
+                model=self._name,
+                via=f"{field.model_name}.{field.name}",
+                field=dependent.name,
+                records=len(ids),
+            )
+            if ids:
+                yield dependent, model.browse(ids), False
 
     @classmethod
     def _get_stored_computed_fields(cls) -> tuple[Field, ...]:
