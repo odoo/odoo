@@ -54,6 +54,9 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
 
         amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
         self.assertRecordValues(amls, [
+            # _should_create_account_move
+            {'debit': 143.0, 'credit': 0.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 0.0, 'credit': 143.0, 'account_id': self.account_stock_variation.id},
             {'debit': 0.0, 'credit': 66.0, 'account_id': self.account_income.id},
             {'debit': 0.0, 'credit': 42.0, 'account_id': self.account_stock_valuation.id},
             {'debit': 42.0, 'credit': 0.0, 'account_id': self.account_expense.id},
@@ -76,6 +79,9 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
 
         amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
         self.assertRecordValues(amls, [
+            # _should_create_account_move
+            {'debit': 143.0, 'credit': 0.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 0.0, 'credit': 143.0, 'account_id': self.account_stock_variation.id},
             {'debit': 0.0, 'credit': 66.0, 'account_id': self.account_income.id},
             {'debit': 0.0, 'credit': 13.0, 'account_id': self.account_stock_valuation.id},
             {'debit': 13.0, 'credit': 0.0, 'account_id': self.account_expense.id},
@@ -113,6 +119,9 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         # Final check, everything should be reconciled
         amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
         self.assertRecordValues(amls, [
+            # _should_create_account_move
+            {'debit': 143.0, 'credit': 0.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 0.0, 'credit': 143.0, 'account_id': self.account_stock_variation.id},
             {'debit': 0.0, 'credit': 132.0, 'account_id': self.account_income.id},
             {'debit': 0.0, 'credit': 84.0, 'account_id': self.account_stock_valuation.id},
             {'debit': 84.0, 'credit': 0.0, 'account_id': self.account_expense.id},

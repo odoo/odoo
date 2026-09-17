@@ -35,14 +35,14 @@
         <field name="arch" type="xml">
             <list default_order="date desc" create="0" editable="top">
                 <field name="company_id" readonly="1" force_save="1" optional="hide"/>
-                <field name="date" readonly="1"/>
+                <field name="date"/>
                 <field name="description" width="350"/>
                 <field name="product_id" readonly="id"/>
                 <field name="lot_id" readonly="id" required="product_tracking in ('serial', 'lot')" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" optional="hide" groups="stock.group_production_lot" />
                 <field name="move_id" readonly="1" optional="hide" context="{'for_product_value':True}"/>
                 <field name="quantity" readonly="1"/>
                 <field name="old_cost" readonly="1"/>
-                <field name="new_cost" readonly="1"/>
+                <field name="new_cost"/>
                 <field name="old_value" readonly="1"/>
                 <field name="new_value" readonly="1"/>
                 <field name="adjustment" readonly="1"/>
