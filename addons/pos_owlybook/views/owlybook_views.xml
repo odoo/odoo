@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="owlybook_open" model="ir.actions.act_url">
+            <field name="name">Owlybook</field>
+            <field name="url">pos_owlybook</field>
+            <field name="target">self</field>
+        </record>
+
+        <template id="owlybook" name="Owlybook">&lt;!DOCTYPE html&gt;
+<html style="height: 100%;">
+    <head>
+        <title>Owlybook</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script type="text/javascript">
+            var odoo = <t t-out="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                '__session_info__': session_info,
+                'debug': debug,
+            })"/>;
+            odoo.loadMenusPromise = Promise.resolve();
+        </script>
+        <t t-call-assets="pos_owlybook.assets_owlybook"/>
+    </head>
+    <body style="height: 100%; margin: 0;"/>
+</html>
+        </template>
+    </data>
+</odoo>
