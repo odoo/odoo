@@ -3,27 +3,6 @@ import { models } from "@web/../tests/web_test_helpers";
 export class ProductProduct extends models.ServerModel {
     _name = "product.product";
 
-    // NOTE - We don't take into account _eval_taxes_computation_prepare_product_fields
-    _load_pos_data_fields() {
-        return [
-            "id",
-            "lst_price",
-            "display_name",
-            "product_tmpl_id",
-            "product_template_variant_value_ids",
-            "product_template_attribute_value_ids",
-            "barcode",
-            "product_tag_ids",
-            "default_code",
-            "standard_price",
-            "pos_categ_ids",
-        ];
-    }
-
-    has_access(operation) {
-        return true;
-    }
-
     _records = [
         {
             id: 1,
@@ -338,4 +317,25 @@ export class ProductProduct extends models.ServerModel {
             product_template_variant_value_ids: [],
         },
     ];
+
+    // NOTE - We don't take into account _eval_taxes_computation_prepare_product_fields
+    _load_pos_data_fields() {
+        return [
+            "id",
+            "lst_price",
+            "display_name",
+            "product_tmpl_id",
+            "product_template_variant_value_ids",
+            "product_template_attribute_value_ids",
+            "barcode",
+            "product_tag_ids",
+            "default_code",
+            "standard_price",
+            "pos_categ_ids",
+        ];
+    }
+
+    has_access(operation) {
+        return true;
+    }
 }

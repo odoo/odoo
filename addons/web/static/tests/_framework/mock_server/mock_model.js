@@ -250,6 +250,18 @@ function formatFieldValue(fieldType, groupByField, val) {
 }
 
 /**
+ * @param {"or" | "and"} type
+ * @param {Iterable<string>} values
+ */
+function formatList(type, values) {
+    const formatter = new Intl.ListFormat("en", {
+        style: "long",
+        type: type === "and" ? "conjunction" : "disjunction",
+    });
+    return formatter.format(values);
+}
+
+/**
  * @param {unknown} value
  */
 function isEmptyValue(value) {
@@ -528,75 +540,102 @@ function isValidCommand(command) {
  * @param {ModelRecord} record
  * @param {FieldDefinition} fieldDef
  * @param {unknown} value
+ * @returns {null | string} null = valid - string = description of expected value
  */
 function isValidFieldValue(record, fieldDef) {
     const value = record[fieldDef.name];
     if (value === false) {
         // False is the accepted default for all field types
-        return true;
+        return null;
     }
+    let isValid = true;
     switch (fieldDef.type) {
         case "binary":
         case "char":
         case "html":
         case "text": {
-            return typeof value === "string";
+            isValid = typeof value === "string";
+            break;
         }
         case "boolean": {
-            return typeof value === "boolean";
+            isValid = typeof value === "boolean";
+            break;
         }
         case "date": {
-            return R_DATE.test(value);
+            isValid = R_DATE.test(String(value));
+            break;
         }
         case "datetime": {
-            return R_DATE_TIME.test(value);
+            isValid = R_DATE_TIME.test(String(value));
+            break;
         }
         case "float":
         case "monetary": {
-            return typeof value === "number";
+            isValid = typeof value === "number";
+            break;
         }
         case "integer": {
-            return Number.isInteger(value);
+            isValid = Number.isInteger(value);
+            break;
         }
         case "many2many":
         case "one2many": {
-            return (
-                Array.isArray(value) &&
-                value.every((id) => {
+            if (!Array.isArray(value)) {
+                isValid = false;
+            } else if (
+                !value.every((id) => {
                     if (Array.isArray(id)) {
                         return isValidCommand(id);
                     } else {
                         return isValidId(id, fieldDef, record);
                     }
                 })
-            );
+            ) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
         }
         case "many2one":
         case "many2one_reference": {
-            return isValidId(value, fieldDef, record);
+            if (!isValidId(value, fieldDef, record)) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
         }
         case "properties": {
-            return isObject(value);
+            isValid = isObject(value);
+            break;
         }
         case "properties_definition": {
-            return value.every(
+            isValid = value.every(
                 (def) => typeof def.name === "string" && typeof def.type === "string"
             );
+            break;
         }
         case "reference": {
             const [modelName, id] = getReferenceValue(value);
-            return (
-                fieldDef.selection.some(([value]) => value === modelName) &&
-                isValidId(id, { ...fieldDef, relation: modelName }, record)
-            );
+            if (!fieldDef.selection.some(([selValue]) => selValue === modelName)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            if (!isValidId(id, { ...fieldDef, relation: modelName }, record)) {
+                return `an id referencing a "${modelName}" record`;
+            }
+            break;
         }
         case "selection": {
-            return fieldDef.selection.some(([value]) => value === value);
-        }
-        default: {
-            return true;
+            if (!fieldDef.selection.some(([selValue]) => selValue === value)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            break;
         }
     }
+    return isValid ? null : `"${fieldDef.type}" value`;
 }
 
 /**
@@ -955,6 +994,17 @@ function parseView(model, params) {
 }
 
 /**
+ * @param {any} value
+ */
+function safeStringify(value) {
+    try {
+        return JSON.stringify(value);
+    } catch {
+        return value;
+    }
+}
+
+/**
  * Equivalent to the server '_search_panel_domain_image' method.
  *
  * @param {Model} model
@@ -1015,7 +1065,7 @@ function searchPanelFieldImage(model, fieldName, kwargs) {
     const onlyCounters = kwargs.only_counters;
     const extraDomain = kwargs.extra_domain || [];
     const normalizedExtra = new Domain(extraDomain).toList();
-    const noExtra = JSON.stringify(normalizedExtra) === "[]";
+    const noExtra = safeStringify(normalizedExtra) === "[]";
     const modelDomain = kwargs.model_domain || [];
     const countDomain = new Domain([...modelDomain, ...extraDomain]).toList();
 
@@ -1257,7 +1307,7 @@ function validateFieldDefinition(fieldName, fieldDef) {
  * @param {number | false} viewId
  */
 function viewNotFoundError(modelName, viewType, viewId, consequence) {
-    let message = `Cannot find an arch for view "${viewType}" with ID ${JSON.stringify(
+    let message = `Cannot find an arch for view "${viewType}" with ID ${safeStringify(
         viewId
     )} in model "${modelName}"`;
     if (consequence) {
@@ -1894,7 +1944,7 @@ export class Model extends Array {
                 }
             }
             for (const group of recordGroupsValues) {
-                const valueKey = JSON.stringify(group);
+                const valueKey = safeStringify(group);
                 groups[valueKey] = groups[valueKey] || [];
                 groups[valueKey].push(record);
             }
@@ -2220,9 +2270,6 @@ export class Model extends Array {
     }
 
     /**
-     * @param {KwArgs<{ domain: DomainListRepr, group_by: string, progress_bar: any }>} [kwargs={}]
-     */
-    /**
      * @param {DomainListRepr} domain
      * @param {string} groupBy
      * @param {any} progressBar
@@ -2318,7 +2365,7 @@ export class Model extends Array {
         const supportedTypes = ["many2one", "selection"];
         if (!supportedTypes.includes(field.type)) {
             throw new MockServerError(
-                `Only category types ${supportedTypes.join(" and ")} are supported, got "${
+                `Only category types ${formatList("and", supportedTypes)} are supported, got "${
                     field.type
                 }"`
             );
@@ -2527,7 +2574,7 @@ export class Model extends Array {
                     if (groupBy && groupDomain) {
                         localExtraDomain = new Domain([
                             ...localExtraDomain,
-                            ...(groupDomain[JSON.stringify(groupId)] || []),
+                            ...(groupDomain[safeStringify(groupId)] || []),
                         ]).toList();
                     }
                     const searchCountDomain = new Domain([
@@ -2538,7 +2585,7 @@ export class Model extends Array {
                         count = this.search_count(searchCountDomain);
                     }
                     if (!expand) {
-                        if (enableCounters && JSON.stringify(localExtraDomain) === "[]") {
+                        if (enableCounters && safeStringify(localExtraDomain) === "[]") {
                             inImage = count;
                         } else {
                             inImage = this.search(searchDomain, [], 1).length;
@@ -3075,13 +3122,14 @@ export class Model extends Array {
         for (const record of this) {
             for (const fieldName of Object.keys(record)) {
                 const fieldDef = this._fields[fieldName];
-                if (!isValidFieldValue(record, fieldDef)) {
+                const expected = isValidFieldValue(record, fieldDef);
+                if (expected) {
                     throw new MockServerError(
                         `Invalid value for field "${fieldName}" on ${getRecordQualifier(
                             record
-                        )} in model "${this._name}": expected "${fieldDef.type}" and got: ${
+                        )} in model "${this._name}": expected ${expected} and got: ${safeStringify(
                             record[fieldName]
-                        }`
+                        )}`
                     );
                 }
             }
@@ -3605,7 +3653,7 @@ export class Model extends Array {
                         ids = [...command[2]];
                     } else {
                         throw new MockServerError(
-                            `Command "${JSON.stringify(
+                            `Command "${safeStringify(
                                 value
                             )}" is not supported by the MockServer on field "${fieldName}" in model "${
                                 this._name
@@ -3623,7 +3671,7 @@ export class Model extends Array {
                             continue;
                         }
                         throw new MockServerError(
-                            `Invalid ID "${JSON.stringify(
+                            `Invalid ID "${safeStringify(
                                 value
                             )}" for a many2one on field "${fieldName}" in model "${this._name}"`
                         );
