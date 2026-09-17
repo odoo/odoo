@@ -221,7 +221,7 @@ class TestCleanAttachmentsIdentityFilter(TransactionCase):
                 "url": real.url,
             }
         )
-        store._clean_attachments("min.css", keep_url="/web/assets/nomatch/x.min.css")
+        store._clean_attachments("min.css", keep_id=0)
         self.assertFalse(real.exists(), "the real outdated artifact is GC'd")
         self.assertTrue(rogue.exists(), "the rogue non-ir.ui.view row is left alone")
 
@@ -254,6 +254,40 @@ class TestUnlinkAttachmentsReturning(TransactionCase):
             self.env["ir.attachment"].search(
                 [("url", "like", "/web/assets/hardeningtest/%")]
             )
+        )
+
+
+class TestSaveKeepsOneRowPerUrl(TransactionCase):
+    FILES = [asset_file("/test_assetsbundle/static/src/js/audit_one.js", PLAIN_JS)]
+
+    def test_a_second_save_of_the_same_version_replaces_the_first(self):
+        bundle = AssetsBundle("test.audit_one", self.FILES, env=self.env, css=False)
+        first = bundle.save_attachment("min.js", "/* first */")
+        first_url = first.url
+        second = bundle.save_attachment("min.js", "/* second */")
+
+        self.assertEqual(first_url, second.url)
+        self.assertFalse(first.exists(), "a same-url twin is superseded, not kept")
+        self.assertEqual(
+            bundle.get_attachments("min.js", ignore_version=True).ids, [second.id]
+        )
+
+    def test_a_debug_build_writes_its_map_once_with_content(self):
+        bundle = AssetsBundle(
+            "test.audit_map", self.FILES, env=self.env, css=False, debug_assets=True
+        )
+        with patch.object(
+            IrAttachment, "write", autospec=True, side_effect=IrAttachment.write
+        ) as write:
+            js = bundle.js()
+        maps = bundle.get_attachments("js.map", ignore_version=True)
+
+        self.assertEqual(len(maps), 1)
+        self.assertEqual(js.url + ".map", maps.url)
+        self.assertIn(b'"version"', maps.raw)
+        self.assertFalse(
+            [c for c in write.call_args_list if "raw" in c.args[1]],
+            "the map is created with its content, never written after the fact",
         )
 
 

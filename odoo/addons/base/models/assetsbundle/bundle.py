@@ -455,10 +455,12 @@ class AssetsBundle:
     def _bridges(self) -> BridgeShimManager:
         return BridgeShimManager(self.env, self.name, self.native_modules)
 
+    def _extension(self, asset_type: str) -> str:
+        return asset_type if self.is_debug_assets else f"min.{asset_type}"
+
     def get_link(self, asset_type: str) -> str:
         unique = self.get_version(asset_type) if not self.is_debug_assets else "debug"
-        extension = asset_type if self.is_debug_assets else f"min.{asset_type}"
-        return self.get_asset_url(unique=unique, extension=extension)
+        return self.get_asset_url(unique=unique, extension=self._extension(asset_type))
 
     def get_version(self, asset_type: str) -> str:
         return self.get_checksum(asset_type)[0:7]
@@ -525,63 +527,65 @@ class AssetsBundle:
     def _xml(self) -> XmlTemplatePipeline:
         return XmlTemplatePipeline(self)
 
+    def _stored_or_built(
+        self, asset_type: str, build: Callable[[str], IrAttachment]
+    ) -> IrAttachment:
+        extension = self._extension(asset_type)
+        stored = self.get_attachments(extension)
+        _debug.logic(
+            f"{asset_type}_attachment",
+            bundle=self.name,
+            minified=not self.is_debug_assets,
+            hit=bool(stored),
+        )
+        return stored[0] if stored else build(extension)
+
     def js(self) -> IrAttachment:
         if not self.has_js_content:
             _debug.logic("js_attachment", bundle=self.name, reason="no_content")
             return self._no_attachment()
-        is_minified = not self.is_debug_assets
-        extension = "min.js" if is_minified else "js"
-        js_attachment = self.get_attachments(extension)
-        _debug.logic(
-            "js_attachment",
+        return self._stored_or_built("js", self._build_js)
+
+    def _build_js(self, extension: str) -> IrAttachment:
+        with _debug.perf(
+            "js_build",
+            cr=self.env.cr,
             bundle=self.name,
-            minified=is_minified,
-            hit=bool(js_attachment),
-        )
-
-        if not js_attachment:
-            with _debug.perf(
-                "js_build",
-                cr=self.env.cr,
-                bundle=self.name,
-                minified=is_minified,
-                assets=len(self.javascripts),
-            ):
-                template_bundle = (
-                    self._xml.legacy_template_iife()
-                    if self._has_legacy_templates
-                    else ""
-                )
-                if is_minified:
-                    content_bundle = self._js.minified_bundle(template_bundle)
-                    js_attachment = self.save_attachment(extension, content_bundle)
-                else:
-                    js_attachment = self.js_with_sourcemap(
-                        template_bundle=template_bundle
-                    )
-
-        return js_attachment[0]
+            minified=not self.is_debug_assets,
+            assets=len(self.javascripts),
+        ):
+            template_bundle = (
+                self._xml.legacy_template_iife() if self._has_legacy_templates else ""
+            )
+            if self.is_debug_assets:
+                return self.js_with_sourcemap(template_bundle=template_bundle)
+            return self.save_attachment(
+                extension, self._js.minified_bundle(template_bundle)
+            )
 
     def _save_with_sourcemap(
         self,
         extension: str,
         body_builder: Callable[[SourceMapGenerator, str], str],
     ) -> IrAttachment:
-        map_attachment = self.get_attachments(
-            f"{extension}.map"
-        ) or self.save_attachment(f"{extension}.map", "")
+        map_extension = f"{extension}.map"
+        # the map's url is a function of the version, so it is known before
+        # the map exists and no placeholder row has to be written to learn it
+        map_url = self._store.get_versioned_url(map_extension)
         generator = SourceMapGenerator(
             source_root=_sourcemap_source_root(self.get_asset_url("debug", extension)),
         )
         with _debug.perf(
             "sourcemap_build", cr=self.env.cr, bundle=self.name, extension=extension
         ) as span:
-            content_bundle = body_builder(generator, map_attachment.url)
+            content_bundle = body_builder(generator, map_url)
             span.set(bytes=len(content_bundle))
         attachment = self.save_attachment(extension, content_bundle)
 
         generator.file = attachment.url
-        map_attachment.write({"raw": generator.get_content()})
+        map_attachment = self.save_attachment(
+            map_extension, generator.get_content().decode()
+        )
         _debug.lifecycle(
             "sourcemap_saved",
             bundle=self.name,
@@ -610,23 +614,14 @@ class AssetsBundle:
         if not self.has_css_content:
             _debug.logic("css_attachment", bundle=self.name, reason="no_content")
             return self._no_attachment()
-        is_minified = not self.is_debug_assets
-        extension = "min.css" if is_minified else "css"
-        attachments = self.get_attachments(extension)
-        _debug.logic(
-            "css_attachment",
-            bundle=self.name,
-            minified=is_minified,
-            hit=bool(attachments),
-        )
-        if attachments:
-            return attachments[0]
+        return self._stored_or_built("css", self._build_css)
 
+    def _build_css(self, extension: str) -> IrAttachment:
         with _debug.perf(
             "css_build",
             cr=self.env.cr,
             bundle=self.name,
-            minified=is_minified,
+            minified=not self.is_debug_assets,
             stylesheets=len(self.stylesheets),
             rtl=self.rtl,
         ) as span:
@@ -654,9 +649,9 @@ class AssetsBundle:
             bytes=len(css),
         )
 
-        if is_minified:
-            return self.save_attachment(extension, "\n".join(import_rules + [css]))
-        return self.css_with_sourcemap("\n".join(import_rules))
+        if self.is_debug_assets:
+            return self.css_with_sourcemap("\n".join(import_rules))
+        return self.save_attachment(extension, "\n".join(import_rules + [css]))
 
     def css_with_sourcemap(self, content_import_rules: str) -> IrAttachment:
         return self._save_with_sourcemap(

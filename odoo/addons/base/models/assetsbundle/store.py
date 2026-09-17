@@ -66,6 +66,9 @@ class AssetAttachmentStore:
     def _unique_for(self, extension: str) -> str:
         return self._version("css" if self.is_css(extension) else "js")
 
+    def get_versioned_url(self, extension: str) -> str:
+        return self.get_asset_url(self._unique_for(extension), extension)
+
     def _asset_url(self, unique: str, extension: str, pattern: bool = False) -> str:
         direction = ".rtl" if self.is_css(extension) and self.rtl else ""
         autoprefixed = (
@@ -127,12 +130,12 @@ class AssetAttachmentStore:
         if to_delete:
             attachments._remove_stored_file_multi(to_delete)
 
-    def _clean_attachments(self, extension: str, keep_url: str) -> None:
+    def _clean_attachments(self, extension: str, keep_id: int) -> None:
         ira = self.env["ir.attachment"].sudo()
         to_clean_pattern = self.get_asset_url_pattern(extension)
         domain = ira._get_domain_generated_assets(
             url_pattern=to_clean_pattern
-        ) & Domain("url", "!=", keep_url)
+        ) & Domain("id", "!=", keep_id)
 
         attachments = ira.search(domain)
         _debug.logic(
@@ -146,7 +149,7 @@ class AssetAttachmentStore:
                 "Deleting attachments %s (matching %s) because it was replaced with %s",
                 attachments.ids,
                 to_clean_pattern,
-                keep_url,
+                keep_id,
             )
             self._unlink_attachments(attachments)
 
@@ -191,8 +194,7 @@ class AssetAttachmentStore:
         ira = self.env["ir.attachment"]
 
         fname = f"{self.name}.{extension}"
-        unique = self._unique_for(extension)
-        url = self.get_asset_url(unique=unique, extension=extension)
+        url = self.get_versioned_url(extension)
         values = self._attachment_values(
             name=fname, mimetype=mimetype, raw=content.encode("utf-8"), url=url
         )
@@ -214,11 +216,11 @@ class AssetAttachmentStore:
             bytes=len(content),
         )
 
-        self._clean_attachments(extension, url)
+        self._clean_attachments(extension, attachment.id)
 
         broadcast = "bus.bus" in self.env and self.name in self.TRACKED_BUNDLES
         if broadcast:
-            self._broadcast_bundle_changed(unique)
+            self._broadcast_bundle_changed(self._unique_for(extension))
         if _debug.logic.enabled and not broadcast:
             _debug.logic(
                 "bundle_changed_not_broadcast",
