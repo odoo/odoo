@@ -163,6 +163,29 @@ class TestPatchAlgebra(unittest.TestCase):
         self.assertEqual(applied.managed[("field:date", "string")], "a")
         self.assertEqual(applied.conflicts, [])
 
+    def test_an_add_over_another_origin_composes_and_is_no_conflict(self):
+        applied = apply(
+            base(),
+            [
+                Patch(
+                    "attributes",
+                    "field:date",
+                    attributes=(AttrChange("invisible", add="a", separator="or"),),
+                    origin="a",
+                ),
+                Patch(
+                    "attributes",
+                    "field:date",
+                    attributes=(AttrChange("invisible", add="b", separator="and"),),
+                    origin="b",
+                ),
+            ],
+        )
+        date = view_ir.identify(applied.root)["field:date"]
+        self.assertEqual(date.attrs["invisible"], "((state == 'done') or (a)) and (b)")
+        self.assertEqual(applied.conflicts, [])
+        self.assertEqual(applied.managed[("field:date", "invisible")], "b")
+
     def test_a_refused_attribute_change_leaves_the_node_as_it_was(self):
         root = base()
         before = dict(view_ir.identify(root)["field:date"].attrs)

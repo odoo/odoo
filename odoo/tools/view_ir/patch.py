@@ -95,8 +95,8 @@ def apply(root: Node, patches: Iterable[Patch]) -> Applied:
 
     Provenance: a node the patches insert carries the patch's ``origin``; the
     last origin to set each attribute is kept in ``managed``, and an attribute
-    set by two different origins is a :class:`Conflict` — reported, not
-    refused, so the caller decides.
+    one origin sets over another's value is a :class:`Conflict` — reported,
+    not refused, so the caller decides; an add/remove composes and is none.
     """
     result = Applied(root=root)
     for patch in patches:
@@ -240,7 +240,13 @@ def _apply_attributes(result: Applied, target: Node, patch: Patch) -> None:
     for change in patch.attributes:
         key = (target.id or "", change.name)
         previous = result.managed.get(key, target.origin)
-        if key in result.managed and previous != patch.origin:
+        # an add/remove composes with what is there; only a value set over
+        # another origin's value is a conflict
+        if (
+            key in result.managed
+            and previous != patch.origin
+            and not (change.add or change.remove)
+        ):
             result.conflicts.append(
                 Conflict(target.id or "", change.name, (previous, patch.origin))
             )
