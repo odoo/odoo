@@ -70,7 +70,7 @@
             </div>
             <!-- === Delivery estimated date === -->
             <div class="o_delivery_date_col order-1 order-md-0 order-lg-1 order-xl-0">
-                <t t-if="dm.enable_delivery_estimate != 'none'">
+                <t t-if="dm.delivery_estimate_mode != 'none'">
                     <t t-set="tooltip_title" t-value="'Estimated Delivery'"/>
                     <t
                         t-set="available_delivery_days"

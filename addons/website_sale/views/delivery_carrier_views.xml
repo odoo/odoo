@@ -15,53 +15,56 @@
                             groups="website.group_multi_website"
                             options="{'no_open': True, 'no_create_edit': True}"
                         />
-                        <field
-                            name="enable_delivery_estimate"
-                            invisible="delivery_type not in ['fixed', 'base_on_rule']"
-                            widget="radio" options="{'horizontal': True}"
-                        />
-                        <!-- Empty label to place the rows in the fields column of the group -->
                         <label
-                            string=""
-                            for="delivery_estimate_lead_days"
-                            invisible="enable_delivery_estimate == 'none'"
+                            for="delivery_estimate_mode"
+                            invisible="delivery_type not in ['fixed', 'base_on_rule']"
                         />
                         <div
-                            name="estimated_delivery_fields"
-                            invisible="enable_delivery_estimate == 'none'"
+                            name="estimated_delivery"
+                            invisible="delivery_type not in ['fixed', 'base_on_rule']"
                         >
-                            <div name="estimated_delivery_days_row">
-                                <label
-                                    string="From"
-                                    for="delivery_estimate_lead_days"
-                                    invisible="enable_delivery_estimate != 'user_choice'"
-                                    class="me-2"
-                                />
-                                <field
-                                    name="delivery_estimate_lead_days"
-                                    class="oe_inline o_input_4ch text-center"
-                                />
-                                <label
-                                    string="to"
-                                    for="delivery_estimate_end_days"
-                                    invisible="enable_delivery_estimate != 'user_choice'"
-                                    class="mx-2"
-                                />
-                                <field
-                                    name="delivery_estimate_end_days"
-                                    invisible="enable_delivery_estimate != 'user_choice'"
-                                    class="oe_inline o_input_4ch text-center"
-                                />
-                                working days
-                            </div>
-                            <div name="delivery_calendar_row">
-                                <label string="Based on" for="delivery_calendar_id" class="me-2"/>
-                                <field
-                                    string="Based on"
-                                    name="delivery_calendar_id"
-                                    required="enable_delivery_estimate != 'none'"
-                                    class="oe_inline"
-                                />
+                            <field
+                                name="delivery_estimate_mode"
+                                widget="radio"
+                                options="{'horizontal': True}"
+                            />
+                            <div
+                                name="estimated_delivery_fields"
+                                invisible="delivery_estimate_mode == 'none'"
+                            >
+                                <div name="estimated_delivery_days_row">
+                                    <label
+                                        string="From"
+                                        for="delivery_estimate_min_days"
+                                        invisible="delivery_estimate_mode != 'user_choice'"
+                                        class="me-2"
+                                    />
+                                    <field
+                                        name="delivery_estimate_min_days"
+                                        class="oe_inline o_input_4ch text-center"
+                                    />
+                                    <label
+                                        string="to"
+                                        for="delivery_estimate_max_days"
+                                        invisible="delivery_estimate_mode != 'user_choice'"
+                                        class="mx-2"
+                                    />
+                                    <field
+                                        name="delivery_estimate_max_days"
+                                        invisible="delivery_estimate_mode != 'user_choice'"
+                                        class="oe_inline o_input_4ch text-center"
+                                    />
+                                    working days
+                                </div>
+                                <div name="delivery_calendar_row">
+                                    <label string="Based on" for="delivery_calendar_id" class="me-2"/>
+                                    <field
+                                        string="Based on"
+                                        name="delivery_calendar_id"
+                                        required="delivery_estimate_mode != 'none'"
+                                        class="oe_inline"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </group>
