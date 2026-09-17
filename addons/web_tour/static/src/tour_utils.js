@@ -81,9 +81,7 @@ export const stepUtils = {
                     const buttonOutSideDropdownMenu = queryFirst(
                         `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`
                     );
-                    const node = queryFirst(
-                        ".o_statusbar_buttons button:has([data-icon='more_vert'])"
-                    );
+                    const node = queryFirst(".o_statusbar_buttons button.dropdown-toggle-split");
                     if (!buttonOutSideDropdownMenu && node) {
                         await click(node);
                     }

@@ -45,7 +45,7 @@ patch(PurchaseAdditionalTourSteps.prototype, {
             trigger: ".o_statusbar_buttons",
             async run({ queryFirst, click }) {
                 const buttonOutsideDropdownMenu = queryFirst("button:enabled:contains('Upload Bill')");
-                const node = queryFirst(".o_statusbar_buttons button:has([data-icon='more_vert'])");
+                const node = queryFirst(".o_statusbar_buttons button.dropdown-toggle-split");
                 if (!buttonOutsideDropdownMenu && node) {
                     await click(node);
                 }
