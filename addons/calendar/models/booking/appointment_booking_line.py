@@ -9,8 +9,9 @@ class AppointmentBookingLine(models.Model):
     _order = "event_start desc, id desc"
 
     active = fields.Boolean(related="calendar_event_id.active")
-    appointment_resource_id = fields.Many2one(
-        comodel_name="appointment.resource",
+    resource_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Resource",
         ondelete="cascade",
     )
     appointment_user_id = fields.Many2one(
@@ -66,7 +67,7 @@ class AppointmentBookingLine(models.Model):
     )
 
     @api.constrains(
-        "appointment_resource_id", "appointment_type_id", "appointment_user_id"
+        "resource_id", "appointment_type_id", "appointment_user_id"
     )
     def _check_user_or_resource_set(self):
         for line in self:
@@ -75,14 +76,14 @@ class AppointmentBookingLine(models.Model):
                 and not line.appointment_user_id
             ) or (
                 line.appointment_type_id.schedule_based_on == "resources"
-                and not line.appointment_resource_id
+                and not line.resource_id
             ):
                 raise ValidationError(
                     _("Booking line must have a user or resource set.")
                 )
 
     @api.constrains(
-        "appointment_resource_id", "appointment_type_id", "appointment_user_id"
+        "resource_id", "appointment_type_id", "appointment_user_id"
     )
     def _check_user_or_resource_match_appointment_type(self):
         """Check appointment user/resource linked to the lines is indeed usable through the appointment type."""
@@ -94,7 +95,7 @@ class AppointmentBookingLine(models.Model):
                         non_compatible_users_and_resource += user
             else:
                 non_compatible_users_and_resource = (
-                    lines.appointment_resource_id - appointment_type.resource_ids
+                    lines.resource_id - appointment_type.resource_ids
                 )
 
             if non_compatible_users_and_resource:
@@ -109,8 +110,8 @@ class AppointmentBookingLine(models.Model):
                 )
 
     @api.depends(
-        "appointment_resource_id.capacity",
-        "appointment_resource_id.shareable",
+        "resource_id.capacity",
+        "resource_id.booking_exclusive",
         "appointment_type_id.manage_capacity",
         "capacity_reserved",
         "calendar_event_id.show_as",
@@ -140,9 +141,9 @@ class AppointmentBookingLine(models.Model):
                 line.capacity_used = 1
             elif (
                 line.appointment_type_id.schedule_based_on == "resources"
-                and not line.appointment_resource_id.shareable
+                and line.resource_id.booking_exclusive
             ):
-                line.capacity_used = line.appointment_resource_id.capacity
+                line.capacity_used = line.resource_id.capacity
             else:
                 line.capacity_used = line.capacity_reserved
 

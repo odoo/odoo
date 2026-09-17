@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_resource_view_form_booking" model="ir.ui.view">
+        <field name="name">resource.resource.form.booking</field>
+        <field name="model">resource.resource</field>
+        <field name="inherit_id" ref="resource.resource_resource_form" />
+        <field name="arch" type="xml">
+            <field name="capacity" position="after">
+                <field name="booking_limit_percentage" />
+                <field name="enforce_booking_limit" />
+                <field name="booking_exclusive" invisible="capacity &lt;= 1" />
+                <field name="booking_sequence" />
+                <field
+                    name="combinable_resource_ids"
+                    placeholder="Does not combine"
+                    widget="many2many_tags"
+                    domain="[('id', '!=', id)]"
+                    options="{'no_create': True}" />
+                <field
+                    name="appointment_type_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}" />
+                <field name="is_bookable" invisible="1" />
+            </field>
+            <sheet position="inside">
+                <notebook>
+                    <page name="description" string="Description">
+                        <field name="description" />
+                    </page>
+                </notebook>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="resource_resource_view_list_booking" model="ir.ui.view">
+        <field name="name">resource.resource.list.booking</field>
+        <field name="model">resource.resource</field>
+        <field name="inherit_id" ref="resource.resource_resource_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="booking_sequence" widget="handle" />
+            </field>
+            <field name="name" position="after">
+                <field
+                    name="appointment_type_ids"
+                    widget="many2many_tags"
+                    optional="hide" />
+                <field
+                    name="combinable_resource_ids"
+                    widget="many2many_tags"
+                    optional="hide" />
+                <field name="booking_exclusive" optional="hide" />
+                <field name="capacity" optional="show" sum="Total Capacity" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_resource_view_search_booking" model="ir.ui.view">
+        <field name="name">resource.resource.search.booking</field>
+        <field name="model">resource.resource</field>
+        <field name="inherit_id" ref="resource.view_resource_resource_search" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="appointment_type_ids" />
+                <field name="capacity" />
+            </field>
+            <group position="before">
+                <separator />
+                <filter
+                    name="filter_bookable"
+                    string="Bookable"
+                    domain="[('is_bookable', '=', True)]" />
+            </group>
+            <group position="inside">
+                <filter
+                    name="group_by_appointment_type"
+                    string="Available In"
+                    context="{'group_by': 'appointment_type_ids'}" />
+            </group>
+        </field>
+    </record>
+
+    <record id="appointment_resource_action" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="resource.view_resource_resource_search" />
+        <field name="domain">[('resource_type', '=', 'material')]</field>
+        <field name="context">{'default_resource_type': 'material'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a bookable resource
+            </p>
+            <p>
+                A resource is what people book: a table, a tennis court, a meeting room.
+                Give it an appointment type and it is offered; give it papers, maintenance
+                or custody by making it an asset.
+            </p>
+        </field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+
+    <record id="appointment_resource_action_stat" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('appointment_type_ids', 'in', active_ids)]</field>
+        <field
+            name="context">{'default_appointment_type_ids': active_ids, 'default_resource_type': 'material'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a bookable resource
+            </p>
+            <p>
+                A resource is what people book: a table, a tennis court, a meeting room.
+            </p>
+        </field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+
+</odoo>

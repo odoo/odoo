@@ -478,8 +478,9 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         )
 
         user = self.staff_user_bxls
-        resource = self.env["appointment.resource"].create(
+        resource = self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "appointment_type_ids": [(4, apt_resource.id)],
                 "capacity": 2,
                 "name": "Resource 1",
@@ -526,7 +527,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                                 0,
                                 {
                                     "capacity_reserved": 1,
-                                    "appointment_resource_id": resource.id,
+                                    "resource_id": resource.id,
                                 },
                             )
                         ],
@@ -2177,7 +2178,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
             | slot_2.restrict_to_user_ids
             | slot_3.restrict_to_user_ids
         )
-        resource_1, resource_2, resource_3 = self.env["appointment.resource"].create(
+        resource_1, resource_2, resource_3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment_type.ids,
@@ -2349,7 +2350,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         """
         start = datetime(2022, 2, 14, 15, 0, 0)
         end = start + timedelta(hours=1)
-        court1, court2, court3 = self.env["appointment.resource"].create(
+        court1, court2, court3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
@@ -2362,7 +2363,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "name": "Court 3",
-                    "shareable": True,
+                    "booking_exclusive": False,
                     "capacity": 3,
                 },
             ]
@@ -2370,7 +2371,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         booking_1 = self.env["calendar.event"].create(
             {
                 "appointment_type_id": self.apt_type_resource.id,
-                "booking_line_ids": [(0, 0, {"appointment_resource_id": court1.id})],
+                "booking_line_ids": [(0, 0, {"resource_id": court1.id})],
                 "name": "Booking 1",
                 "start": start,
                 "stop": end,
@@ -2381,8 +2382,8 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
             {
                 "appointment_type_id": self.apt_type_resource.id,
                 "booking_line_ids": [
-                    (0, 0, {"appointment_resource_id": court1.id}),
-                    (0, 0, {"appointment_resource_id": court2.id}),
+                    (0, 0, {"resource_id": court1.id}),
+                    (0, 0, {"resource_id": court2.id}),
                 ],
                 "name": "Booking 1",
                 "start": start,
@@ -2401,7 +2402,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                     (
                         0,
                         0,
-                        {"appointment_resource_id": court3.id, "capacity_reserved": 1},
+                        {"resource_id": court3.id, "capacity_reserved": 1},
                     )
                 ],
                 "name": "Booking 3",
@@ -2416,7 +2417,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                     (
                         0,
                         0,
-                        {"appointment_resource_id": court3.id, "capacity_reserved": 1},
+                        {"resource_id": court3.id, "capacity_reserved": 1},
                     )
                 ],
                 "name": "Booking 4",
@@ -2430,7 +2431,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
 
         # add full capacity
         booking_4.booking_line_ids = [
-            (0, 0, {"appointment_resource_id": court3.id, "capacity_reserved": 3})
+            (0, 0, {"resource_id": court3.id, "capacity_reserved": 3})
         ]
         (booking_3 + booking_4)._compute_unavailable_resource_ids()
         self.assertEqual(booking_3.unavailable_resource_ids, court3)
@@ -2447,7 +2448,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
         - bookings in appointments with all manage capacity False.
         - bookings in appointments with manage capacity and unshareable resource type.
         """
-        court1, court2, court3 = self.env["appointment.resource"].create(
+        court1, court2, court3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_resource_multiple_bookings.ids,
@@ -2458,7 +2459,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Court 2",
-                    "shareable": True,
+                    "booking_exclusive": False,
                 },
                 {
                     "appointment_type_ids": (
@@ -2482,7 +2483,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                             0,
                             0,
                             {
-                                "appointment_resource_id": court1.id,
+                                "resource_id": court1.id,
                                 "capacity_reserved": 1,
                             },
                         )
@@ -2498,7 +2499,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                             0,
                             0,
                             {
-                                "appointment_resource_id": court2.id,
+                                "resource_id": court2.id,
                                 "capacity_reserved": 2,
                             },
                         )
@@ -2514,7 +2515,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                             0,
                             0,
                             {
-                                "appointment_resource_id": court3.id,
+                                "resource_id": court3.id,
                                 "capacity_reserved": 2,
                             },
                         )
@@ -2576,7 +2577,7 @@ class AppointmentTest(AppointmentCommon, HttpCaseWithUserDemo):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource.id,
+                                    "resource_id": resource.id,
                                     "capacity_reserved": capacity_reserved,
                                 },
                             )

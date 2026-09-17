@@ -92,7 +92,7 @@ def _free_kiosk_code(env, field, value, keep):
     if not value:
         return
     holder = (
-        env["appointment.resource"]
+        env["resource.resource"]
         .with_context(active_test=False)
         .search([(field, "=", value), ("id", "!=", keep.id)])
     )
@@ -212,10 +212,10 @@ def _convert_rooms(cr, env, partners, renames):
                 room_id,
             )
         )
-        profile = asset.appointment_resource_id
-        _free_kiosk_code(env, "short_code", short_code, profile)
-        _free_kiosk_code(env, "access_token", access_token, profile)
-        profile.write(
+        resource = asset.resource_id
+        _free_kiosk_code(env, "short_code", short_code, resource)
+        _free_kiosk_code(env, "access_token", access_token, resource)
+        resource.write(
             {
                 "short_code": short_code,
                 "access_token": access_token,
@@ -225,7 +225,7 @@ def _convert_rooms(cr, env, partners, renames):
         )
         if not active:
             asset.active = False
-        rooms[room_id] = (asset, profile)
+        rooms[room_id] = (asset, resource)
     env.invalidate_all()
     return rooms
 
@@ -247,7 +247,7 @@ def _convert_bookings(cr, env, rooms):
     booking_ids = []
     bookings = {}
     for booking_id, name, room_id, start, stop, organizer_id, partner_id in rows:
-        _asset, profile = rooms[room_id]
+        _asset, resource = rooms[room_id]
         adopted = _adopt_or_create(env, parked.get(booking_id), "calendar.event", None)
         if adopted is not None:
             bookings[booking_id] = adopted
@@ -262,7 +262,7 @@ def _convert_bookings(cr, env, rooms):
                 "appointment_type_id": room_type.id,
                 "booking_line_ids": [
                     Command.create(
-                        {"appointment_resource_id": profile.id, "capacity_reserved": 1}
+                        {"resource_id": resource.id, "capacity_reserved": 1}
                     )
                 ],
             }
@@ -346,13 +346,13 @@ def _move_background_images(cr, rooms):
     if not rooms:
         return
     mapping = json.dumps(
-        {str(room_id): profile.id for room_id, (_asset, profile) in rooms.items()}
+        {str(room_id): resource.id for room_id, (_asset, resource) in rooms.items()}
     )
     cr.execute(
         SQL(
             """
             UPDATE ir_attachment
-               SET res_model = 'appointment.resource',
+               SET res_model = 'resource.resource',
                    res_id = (%(mapping)s::jsonb ->> res_id::text)::int
              WHERE res_model = 'room.room'
                AND res_field = 'room_background_image'

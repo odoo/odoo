@@ -2,6 +2,7 @@ from datetime import datetime
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import users
 
@@ -43,12 +44,12 @@ class AppointmentManageLeaveTest(AppointmentCommon):
         )
         # Set user to be the same date so HR override on resource leaves doesn't modify dates
         self.env.user.sudo().tz = "UTC"
-        resources = self.env["appointment.resource"].create(
+        resources = self.env["resource.resource"].create(
             [
                 {
                     "capacity": 1,
                     "name": f"Test Resource {res_id}",
-                    "resource_calendar_id": calendar.id,
+                    "calendar_id": calendar.id,
                 }
                 for res_id in range(1, 4)
             ]
@@ -115,7 +116,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
 
         self.env["appointment.manage.leaves"].create(
             {
-                "appointment_resource_ids": resources[0],
+                "resource_ids": resources[0],
                 "leave_start_dt": start_leave,
                 "leave_end_dt": stop_leave,
             }
@@ -228,7 +229,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": resource.id,
+                                "resource_id": resource.id,
                                 "capacity_reserved": 1,
                                 "capacity_used": 1,
                             },
@@ -242,7 +243,7 @@ class AppointmentManageLeaveTest(AppointmentCommon):
         )
         self.env["appointment.manage.leaves"].sudo().create(
             {
-                "appointment_resource_ids": resources.ids,
+                "resource_ids": resources.ids,
                 "leave_start_dt": datetime(2022, 2, 14, 5, 0, 0),
                 "leave_end_dt": datetime(2022, 2, 14, 6, 0, 0),
             }
@@ -260,21 +261,28 @@ class AppointmentManageLeaveTest(AppointmentCommon):
     @users("apt_manager")
     def test_manage_leaves_is_scoped_to_appointment_resources(self):
         self.assertFalse(self.env.user.has_group("base.group_erp_manager"))
-        appointment_resource = self.env["appointment.resource"].create(
-            {"name": "Court", "capacity": 1}
+        appointment_resource = self.env["resource.resource"].create(
+            {
+                "resource_type": "material",
+                "name": "Court",
+                "capacity": 1,
+                "appointment_type_ids": [Command.link(self.apt_type_resource.id)],
+            }
         )
         machine = (
             self.env["resource.resource"]
             .sudo()
             .create({"name": "Lathe", "resource_type": "material"})
         )
+        self.assertTrue(appointment_resource.is_bookable)
+        self.assertFalse(machine.is_bookable)
         leave_vals = {
             "date_from": datetime(2022, 2, 14, 14, 0, 0),
             "date_to": datetime(2022, 2, 14, 15, 0, 0),
         }
         Leaves = self.env["resource.schedule.exception"]
         leave = Leaves.create(
-            {**leave_vals, "resource_id": appointment_resource.resource_id.id}
+            {**leave_vals, "resource_id": appointment_resource.id}
         )
         leave.name = "Resurfacing"
         leave.unlink()

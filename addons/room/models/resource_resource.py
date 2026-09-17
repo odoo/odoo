@@ -9,8 +9,8 @@ BOOKABLE_BACKGROUND_COLOR = "#83c5be"
 BOOKED_BACKGROUND_COLOR = "#dd2d4a"
 
 
-class AppointmentResource(models.Model):
-    _inherit = "appointment.resource"
+class ResourceResource(models.Model):
+    _inherit = "resource.resource"
 
     short_code = fields.Char(copy=False)
     access_token = fields.Char(
@@ -41,17 +41,17 @@ class AppointmentResource(models.Model):
 
     @api.depends("short_code")
     def _compute_room_booking_url(self):
-        for profile in self:
-            profile.room_booking_url = (
-                profile.short_code
-                and f"{profile.get_base_url()}/room/{profile.short_code}/book"
+        for room in self:
+            room.room_booking_url = (
+                room.short_code
+                and f"{room.get_base_url()}/room/{room.short_code}/book"
             )
 
     @api.depends(
-        "resource_id.reservation_ids.date_start",
-        "resource_id.reservation_ids.date_end",
-        "resource_id.reservation_ids.allocated_percentage",
-        "resource_id.reservation_ids.active",
+        "reservation_ids.date_start",
+        "reservation_ids.date_end",
+        "reservation_ids.allocated_percentage",
+        "reservation_ids.active",
     )
     def _compute_booking_status(self):
         now = fields.Datetime.now()
@@ -60,7 +60,7 @@ class AppointmentResource(models.Model):
             .sudo()
             .search_fetch(
                 [
-                    ("resource_id", "in", self.resource_id.ids),
+                    ("resource_id", "in", self.ids),
                     ("active", "=", True),
                     ("allocated_percentage", ">", 0),
                     ("date_end", ">", now),
@@ -77,20 +77,12 @@ class AppointmentResource(models.Model):
                 busy.add(resource_id)
             else:
                 next_start.setdefault(resource_id, reservation.date_start)
-        for profile in self:
-            profile.is_available = profile.resource_id.id not in busy
-            profile.next_booking_start = next_start.get(profile.resource_id.id)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        profiles = super().create(vals_list)
-        profiles._setup_room_kiosk()
-        return profiles
+        for room in self:
+            room.is_available = room.id not in busy
+            room.next_booking_start = next_start.get(room.id)
 
     def write(self, vals):
         res = super().write(vals)
-        if "asset_id" in vals:
-            self._setup_room_kiosk()
         kiosk_fields = {
             "short_code",
             "bookable_background_color",
@@ -101,31 +93,31 @@ class AppointmentResource(models.Model):
             "active",
         }
         if kiosk_fields & vals.keys():
-            for profile in self.filtered("access_token"):
-                profile._notify_booking_view("reload")
+            for room in self.filtered("access_token"):
+                room._notify_booking_view("reload")
         return res
 
     def _setup_room_kiosk(self):
         rooms = self.filtered(
-            lambda profile: profile.sudo().asset_id.kind_id.code == ROOM_KIND
+            lambda resource: resource.sudo().asset_id.kind_id.code == ROOM_KIND
         )
         room_type = self.env.ref("room.appointment_type_room", raise_if_not_found=False)
-        for profile in rooms.sudo():
+        for room in rooms.sudo():
             vals = {}
-            if not profile.short_code:
+            if not room.short_code:
                 vals["short_code"] = str(uuid4())[:8]
-            if not profile.access_token:
+            if not room.access_token:
                 vals["access_token"] = str(uuid4())
-            if not profile.bookable_background_color:
+            if not room.bookable_background_color:
                 vals["bookable_background_color"] = BOOKABLE_BACKGROUND_COLOR
-            if not profile.enforce_booking_limit:
+            if not room.enforce_booking_limit:
                 vals["enforce_booking_limit"] = True
-            if not profile.booked_background_color:
+            if not room.booked_background_color:
                 vals["booked_background_color"] = BOOKED_BACKGROUND_COLOR
-            if room_type and room_type not in profile.appointment_type_ids:
+            if room_type and room_type not in room.appointment_type_ids:
                 vals["appointment_type_ids"] = [fields.Command.link(room_type.id)]
             if vals:
-                super(AppointmentResource, profile).write(vals)
+                super(ResourceResource, room).write(vals)
 
     def _get_room_bookings(self, domain=None):
         self.check_singleton()
@@ -133,7 +125,7 @@ class AppointmentResource(models.Model):
             self.env["calendar.event"]
             .sudo()
             .search(
-                Domain("booking_line_ids.appointment_resource_id", "=", self.id)
+                Domain("booking_line_ids.resource_id", "=", self.id)
                 & Domain(domain or []),
                 order="start asc",
             )
@@ -146,7 +138,7 @@ class AppointmentResource(models.Model):
             .sudo()
             .search(
                 [
-                    ("resource_id", "=", self.resource_id.id),
+                    ("resource_id", "=", self.id),
                     ("active", "=", True),
                     ("allocated_percentage", ">", 0),
                     ("date_end", ">", since),

@@ -1,7 +1,6 @@
 from . import appointment_booking_line
 from . import appointment_invite
 from . import survey_question
-from . import appointment_resource
 from . import appointment_slot
 from . import appointment_type
 from . import calendar_alarm

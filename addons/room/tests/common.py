@@ -28,18 +28,18 @@ class RoomCommon(TransactionCase):
                 },
             ]
         )
-        cls.profiles = cls.rooms.appointment_resource_id
-        cls.profiles[0].short_code = "room_1"
+        cls.resources = cls.rooms.resource_id
+        cls.resources[0].short_code = "room_1"
         cls.room_type = cls.env.ref("room.appointment_type_room")
         cls.bookings = cls.env["calendar.event"].create(
             [
-                cls._booking_vals("Booking 1", cls.profiles[0], 10, 11),
-                cls._booking_vals("Booking 2", cls.profiles[0], 11, 12),
+                cls._booking_vals("Booking 1", cls.resources[0], 10, 11),
+                cls._booking_vals("Booking 2", cls.resources[0], 11, 12),
             ]
         )
 
     @classmethod
-    def _booking_vals(cls, name, profile, start_hour, stop_hour, day=15):
+    def _booking_vals(cls, name, resource, start_hour, stop_hour, day=15):
         return {
             "name": name,
             "start": datetime(2023, 5, day, start_hour, 0),
@@ -47,7 +47,7 @@ class RoomCommon(TransactionCase):
             "appointment_type_id": cls.room_type.id,
             "booking_line_ids": [
                 Command.create(
-                    {"appointment_resource_id": profile.id, "capacity_reserved": 1}
+                    {"resource_id": resource.id, "capacity_reserved": 1}
                 )
             ],
         }

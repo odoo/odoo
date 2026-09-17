@@ -16,7 +16,7 @@ class CalendarEvent(models.Model):
         }
 
     def _get_kiosk_rooms(self):
-        return self.sudo().booking_line_ids.appointment_resource_id.filtered(
+        return self.sudo().booking_line_ids.resource_id.filtered(
             "access_token"
         )
 
@@ -24,7 +24,7 @@ class CalendarEvent(models.Model):
         for room in self._get_kiosk_rooms():
             events = self.filtered(
                 lambda event, room=room: (
-                    room in event.sudo().booking_line_ids.appointment_resource_id
+                    room in event.sudo().booking_line_ids.resource_id
                 )
             )
             room._notify_booking_view(method, events)
@@ -65,7 +65,7 @@ class CalendarEvent(models.Model):
                     ).id,
                     "booking_line_ids": [
                         fields.Command.create(
-                            {"appointment_resource_id": room.id, "capacity_reserved": 1}
+                            {"resource_id": room.id, "capacity_reserved": 1}
                         )
                     ],
                 }

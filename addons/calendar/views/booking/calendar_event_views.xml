@@ -128,7 +128,7 @@
                             </control>
                             <field name="appointment_type_id" column_invisible="True" />
                             <field
-                                name="appointment_resource_id"
+                                name="resource_id"
                                 domain="[('appointment_type_ids', 'in', appointment_type_id)]"
                                 options="{'no_create': True}"
                                 column_invisible="parent.appointment_type_schedule_based_on != 'resources'" />
@@ -160,7 +160,7 @@
             <xpath expr="//field[@name='duration']" position="after">
                 <field name="appointment_type_id" groups="base.group_no_one" />
                 <field
-                    name="appointment_resource_ids"
+                    name="resource_ids"
                     widget="many2many_tags"
                     groups="base.group_no_one" />
             </xpath>
@@ -250,7 +250,7 @@
                 <field name="name" string="Subject" />
                 <field name="appointment_type_id" />
                 <field name="attendee_ids" string="Booked by" widget="many2many_tags" />
-                <field name="appointment_resource_ids" widget="many2many_tags" />
+                <field name="resource_ids" widget="many2many_tags" />
                 <field name="start" />
                 <field name="stop" />
                 <field name="total_capacity_reserved" sum="Total Capacity Reserved" />
@@ -355,7 +355,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field
-                    name="appointment_resource_ids"
+                    name="resource_ids"
                     widget="many2many_tags"
                     options="{'icon': 'fa-solid fa-cubes'}"
                     invisible="appointment_type_schedule_based_on != 'resources'" />
@@ -385,7 +385,7 @@
                 <attribute name="avatar_field" />
             </xpath>
             <xpath expr="//field[@name='partner_ids']" position="after">
-                <field name="appointment_resource_ids" invisible="1" filters="1" />
+                <field name="resource_ids" invisible="1" filters="1" />
             </xpath>
         </field>
     </record>
@@ -400,7 +400,7 @@
             name="search_view_id"
             ref="calendar.calendar_event_view_search_booking" />
         <field
-            name="domain">['|', ('appointment_resource_ids.company_id', '=', False), ('appointment_resource_ids.company_id', 'in', allowed_company_ids)]</field>
+            name="domain">['|', ('resource_ids.company_id', '=', False), ('resource_ids.company_id', 'in', allowed_company_ids)]</field>
         <field
             name="context">{'appointment_default_assign_user_attendees': False,
                                'default_partner_ids': []}</field>

@@ -1,28 +1,26 @@
-from odoo import fields, models
-from odoo.fields import Domain
+from odoo import api, fields, models
 
 
 class ResourceResource(models.Model):
     _inherit = "resource.resource"
 
+    asset_ids = fields.One2many(
+        comodel_name="resource.asset",
+        inverse_name="resource_id",
+        string="Assets",
+    )
     asset_id = fields.Many2one(
         comodel_name="resource.asset",
         compute="_compute_asset_id",
-        search="_search_asset_id",
+        store=True,
+        index="btree_not_null",
     )
 
-    def _search_asset_id(self, operator, value):
-        if operator not in ("in", "any"):
-            return NotImplemented
-        assets = (
-            self.env["resource.asset"]
-            .with_context(active_test=False)
-            ._search(Domain("id", operator, value))
-        )
-        return Domain("id", "in", assets.subselect("resource_id"))
-
+    @api.depends("asset_ids")
     def _compute_asset_id(self):
-        assets = self.env["resource.asset"].search([("resource_id", "in", self.ids)])
-        by_resource = {asset.resource_id.id: asset for asset in assets}
-        for resource in self:
-            resource.asset_id = by_resource.get(resource.id)
+        """Stored, because everything asks a resource what it is: the slot
+        engine, the room kiosk and the record rules of both. Derived from the
+        other table on read, it costs one query per record, and the engine reads
+        it one record at a time."""
+        for resource in self.with_context(active_test=False):
+            resource.asset_id = resource.asset_ids[:1]

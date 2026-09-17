@@ -8,7 +8,7 @@
         <t t-call="portal.portal_layout">
             <t t-set="appointment_type" t-value="event.appointment_type_id" />
             <t t-set="staff_user" t-value="event.user_id" />
-            <t t-set="resources" t-value="event.appointment_resource_ids" />
+            <t t-set="resources" t-value="event.resource_ids" />
             <t
                 t-set="based_on_users"
                 t-value="appointment_type.schedule_based_on == 'users'" />
@@ -121,7 +121,7 @@
                                 </div>
                                 <div class="col-9 col-lg-6">
                                     <div
-                                        t-foreach="event.appointment_resource_ids"
+                                        t-foreach="event.resource_ids"
                                         t-as="resource"
                                         class="d-flex flex-nowrap gap-2 align-items-center mb-1">
                                         <div

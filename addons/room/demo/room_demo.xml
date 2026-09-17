@@ -15,8 +15,9 @@
         <field name="company_id" ref="base.main_company" />
     </record>
 
-    <record id="room_room_main_office_room_1_profile" model="appointment.resource">
+    <record id="room_room_main_office_room_1_resource" model="resource.resource">
         <field name="name">Big Meeting Room</field>
+        <field name="resource_type">material</field>
         <field name="short_code">room1</field>
     </record>
 
@@ -26,13 +27,12 @@
         <field name="state">in_service</field>
         <field name="address_id" ref="room_office_main_office" />
         <field name="description">Projector, whiteboard</field>
-        <field
-            name="appointment_resource_id"
-            ref="room_room_main_office_room_1_profile" />
+        <field name="resource_id" ref="room_room_main_office_room_1_resource" />
     </record>
 
-    <record id="room_room_main_office_room_2_profile" model="appointment.resource">
+    <record id="room_room_main_office_room_2_resource" model="resource.resource">
         <field name="name">Medium Meeting Room</field>
+        <field name="resource_type">material</field>
         <field name="short_code">room2</field>
     </record>
 
@@ -42,13 +42,12 @@
         <field name="state">in_service</field>
         <field name="address_id" ref="room_office_main_office" />
         <field name="description">Projector</field>
-        <field
-            name="appointment_resource_id"
-            ref="room_room_main_office_room_2_profile" />
+        <field name="resource_id" ref="room_room_main_office_room_2_resource" />
     </record>
 
-    <record id="room_room_main_office_room_3_profile" model="appointment.resource">
+    <record id="room_room_main_office_room_3_resource" model="resource.resource">
         <field name="name">Small Meeting Room</field>
+        <field name="resource_type">material</field>
         <field name="short_code">room3</field>
     </record>
 
@@ -58,13 +57,12 @@
         <field name="state">in_service</field>
         <field name="address_id" ref="room_office_main_office" />
         <field name="description">Capacity: 6 people</field>
-        <field
-            name="appointment_resource_id"
-            ref="room_room_main_office_room_3_profile" />
+        <field name="resource_id" ref="room_room_main_office_room_3_resource" />
     </record>
 
-    <record id="room_room_head_office_room_1_profile" model="appointment.resource">
+    <record id="room_room_head_office_room_1_resource" model="resource.resource">
         <field name="name">First Floor's Room</field>
+        <field name="resource_type">material</field>
         <field name="short_code">floor1</field>
     </record>
 
@@ -73,13 +71,12 @@
         <field name="kind_id" ref="kind_room" />
         <field name="state">in_service</field>
         <field name="address_id" ref="room_office_head_office" />
-        <field
-            name="appointment_resource_id"
-            ref="room_room_head_office_room_1_profile" />
+        <field name="resource_id" ref="room_room_head_office_room_1_resource" />
     </record>
 
-    <record id="room_room_head_office_room_2_profile" model="appointment.resource">
+    <record id="room_room_head_office_room_2_resource" model="resource.resource">
         <field name="name">Second Floor's Room</field>
+        <field name="resource_type">material</field>
         <field name="short_code">floor2</field>
     </record>
 
@@ -88,9 +85,7 @@
         <field name="kind_id" ref="kind_room" />
         <field name="state">in_service</field>
         <field name="address_id" ref="room_office_head_office" />
-        <field
-            name="appointment_resource_id"
-            ref="room_room_head_office_room_2_profile" />
+        <field name="resource_id" ref="room_room_head_office_room_2_resource" />
     </record>
 
     <record id="room_booking_room_1_booking_1" model="calendar.event">
@@ -101,7 +96,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_1_booking_2" model="calendar.event">
@@ -112,7 +107,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_1_booking_3" model="calendar.event">
@@ -123,7 +118,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_1_booking_4" model="calendar.event">
@@ -134,7 +129,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_1_booking_5" model="calendar.event">
@@ -149,7 +144,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_2_booking_1" model="calendar.event">
@@ -160,7 +155,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_2_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_2_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_3_booking_1" model="calendar.event">
@@ -171,7 +166,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_3_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_3_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_room_3_booking_2" model="calendar.event">
@@ -182,7 +177,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_main_office_room_3_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_main_office_room_3_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_floor_1_booking_1" model="calendar.event">
@@ -193,7 +188,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_head_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_head_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
     <record id="room_booking_floor_1_booking_2" model="calendar.event">
@@ -204,7 +199,7 @@
         <field name="appointment_type_id" ref="appointment_type_room" />
         <field
             name="booking_line_ids"
-            eval="[Command.create({'appointment_resource_id': ref('room_room_head_office_room_1_profile'), 'capacity_reserved': 1})]" />
+            eval="[Command.create({'resource_id': ref('room_room_head_office_room_1_resource'), 'capacity_reserved': 1})]" />
     </record>
 
 </odoo>

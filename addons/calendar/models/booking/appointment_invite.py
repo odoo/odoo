@@ -135,7 +135,7 @@ class AppointmentInvite(models.Model):
     )
     schedule_based_on = fields.Char(compute="_compute_schedule_based_on")
     suggested_resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+        comodel_name="resource.resource",
         related="appointment_type_ids.resource_ids",
         string="Possible resources",
     )
@@ -173,7 +173,7 @@ class AppointmentInvite(models.Model):
         inverse="_inverse_resources_resource_choice",
     )
     resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+        comodel_name="resource.resource",
         string="Resources",
         compute="_compute_resource_ids",
         store=True,

@@ -18,11 +18,12 @@ class TestUnifiedCalendarOccupancy(TransactionCase):
         booker = new_test_user(self.env, "equipment_booker", groups="base.group_user")
         staff = self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "name": "Equipment booker staff resource",
                 "user_id": booker.id,
             }
         )
-        profiles = self.env["appointment.resource"].create(
+        profiles = self.env["resource.resource"].create(
             [
                 {"name": "Equipment A"},
                 {"name": "Equipment B"},
@@ -51,7 +52,7 @@ class TestUnifiedCalendarOccupancy(TransactionCase):
                         "booking_line_ids": [
                             Command.create(
                                 {
-                                    "appointment_resource_id": profile.id,
+                                    "resource_id": profile.id,
                                     "capacity_reserved": 1,
                                 }
                             )
@@ -61,7 +62,7 @@ class TestUnifiedCalendarOccupancy(TransactionCase):
                 ]
             )
         )
-        self.assertEqual(events.reservation_ids.resource_id, profiles.resource_id)
+        self.assertEqual(events.reservation_ids.resource_id, profiles)
         self.assertNotIn(staff, events.reservation_ids.resource_id)
         self.assertTrue(
             booker.partner_id._is_calendar_available(self.start, events[0].stop, offer)
@@ -88,7 +89,7 @@ class TestUnifiedCalendarOccupancy(TransactionCase):
                     "booking_line_ids": [
                         Command.create(
                             {
-                                "appointment_resource_id": profiles[0].id,
+                                "resource_id": profiles[0].id,
                                 "capacity_reserved": 1,
                             }
                         )
@@ -112,7 +113,7 @@ class TestUnifiedCalendarOccupancy(TransactionCase):
         migrate(self.cr, "19.0.2.0")
         migrate(self.cr, "19.0.2.0")
         self.assertFalse(stale.exists())
-        self.assertEqual(events.reservation_ids.resource_id, profiles.resource_id)
+        self.assertEqual(events.reservation_ids.resource_id, profiles)
         self.assertEqual(events.attendee_ids.partner_id, booker.partner_id)
 
     def setUp(self):

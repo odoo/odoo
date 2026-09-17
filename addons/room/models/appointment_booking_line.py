@@ -11,7 +11,7 @@ class AppointmentBookingLine(models.Model):
         return lines
 
     def write(self, vals):
-        if "appointment_resource_id" not in vals:
+        if "resource_id" not in vals:
             return super().write(vals)
         self._notify_room_kiosks("delete")
         res = super().write(vals)
@@ -23,7 +23,5 @@ class AppointmentBookingLine(models.Model):
         return super().unlink()
 
     def _notify_room_kiosks(self, method):
-        for line in self.sudo().filtered("appointment_resource_id.access_token"):
-            line.appointment_resource_id._notify_booking_view(
-                method, line.calendar_event_id
-            )
+        for line in self.sudo().filtered("resource_id.access_token"):
+            line.resource_id._notify_booking_view(method, line.calendar_event_id)

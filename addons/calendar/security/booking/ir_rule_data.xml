@@ -318,10 +318,9 @@
 
     <record id="resource_schedule_exception_rule_appointment_manager" model="ir.rule">
         <field
-            name="name">resource.schedule.exception: apt administrator modifies appointment resource leaves</field>
+            name="name">resource.schedule.exception: apt administrator modifies bookable resource leaves</field>
         <field name="model_id" ref="resource.model_resource_schedule_exception" />
-        <field
-            name="domain_force">[('resource_id.appointment_resource_ids', '!=', False)]</field>
+        <field name="domain_force">[('resource_id.is_bookable', '=', True)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('calendar.group_appointment_manager'))]" />

@@ -1,6 +1,6 @@
 {
     "name": "Calendar",
-    "version": "2.3",
+    "version": "2.4",
     "category": "Productivity/Calendar",
     "sequence": 165,
     "summary": "Meetings, resource bookings and public appointment scheduling",
@@ -45,7 +45,7 @@
         "views/booking/appointment_answer_views.xml",
         "views/booking/appointment_invite_views.xml",
         "views/booking/appointment_question_views.xml",
-        "views/booking/appointment_resource_views.xml",
+        "views/booking/resource_resource_views.xml",
         "views/booking/appointment_type_views.xml",
         "views/booking/appointment_slot_views.xml",
         "views/booking/resource_schedule_exception_views.xml",
@@ -61,7 +61,7 @@
         "demo/calendar_demo.xml",
         "demo/booking/res_partner_demo.xml",
         "demo/booking/appointment_type_demo.xml",
-        "demo/booking/appointment_resource_demo.xml",
+        "demo/booking/resource_resource_demo.xml",
     ],
     "assets": {
         "web.assets_backend": [

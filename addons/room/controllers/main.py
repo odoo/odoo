@@ -93,7 +93,7 @@ class RoomController(http.Controller):
         return self._get_room_sudo([("access_token", "=", access_token)])
 
     def _get_room_sudo(self, domain):
-        room_sudo = request.env["appointment.resource"].sudo().search(domain, limit=1)
+        room_sudo = request.env["resource.resource"].sudo().search(domain, limit=1)
         if not room_sudo:
             raise exceptions.NotFound
         return room_sudo

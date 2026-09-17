@@ -16,9 +16,7 @@ class AppointmentSlot(models.Model):
         index=True,
         ondelete="cascade",
     )
-    schedule_based_on = fields.Selection(
-        related="appointment_type_id.schedule_based_on"
-    )
+    schedule_based_on = fields.Selection(related="appointment_type_id.schedule_based_on")
     slot_type = fields.Selection(
         selection=[("recurring", "Regular"), ("unique", "One Shot")],
         string="Slot type",
@@ -45,7 +43,7 @@ class AppointmentSlot(models.Model):
         "If set, only the selected users will be taken into account for this slot.",
     )
     restrict_to_resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+        comodel_name="resource.resource",
         string="Restrict to Resources",
         compute="_compute_restrict_to_resource_ids",
         store=True,

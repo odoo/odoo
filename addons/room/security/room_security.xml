@@ -44,25 +44,13 @@
 
     <record id="resource_resource_rule_room_manager_write" model="ir.rule">
         <field
-            name="name">resource.resource: room managers write the resources of rooms only</field>
+            name="name">resource.resource: room managers write and unlink the resources of rooms only</field>
         <field name="model_id" ref="resource.model_resource_resource" />
         <field name="domain_force">[('asset_id.kind_id.code', '=', 'room')]</field>
         <field name="groups" eval="[Command.link(ref('group_room_manager'))]" />
         <field name="perm_read" eval="False" />
         <field name="perm_write" eval="True" />
         <field name="perm_create" eval="False" />
-        <field name="perm_unlink" eval="False" />
-    </record>
-
-    <record id="appointment_resource_rule_room_manager" model="ir.rule">
-        <field
-            name="name">appointment.resource: room managers manage the booking profiles of rooms</field>
-        <field name="model_id" ref="calendar.model_appointment_resource" />
-        <field name="domain_force">[('asset_id.kind_id.code', '=', 'room')]</field>
-        <field name="groups" eval="[Command.link(ref('group_room_manager'))]" />
-        <field name="perm_read" eval="False" />
-        <field name="perm_write" eval="True" />
-        <field name="perm_create" eval="True" />
         <field name="perm_unlink" eval="True" />
     </record>
 
@@ -71,7 +59,7 @@
             name="name">appointment.booking.line: employees book rooms for their own meetings</field>
         <field name="model_id" ref="calendar.model_appointment_booking_line" />
         <field
-            name="domain_force">[('appointment_resource_id.asset_id.kind_id.code', '=', 'room'), ('calendar_event_id.user_id', 'in', [user.id, False])]</field>
+            name="domain_force">[('resource_id.asset_id.kind_id.code', '=', 'room'), ('calendar_event_id.user_id', 'in', [user.id, False])]</field>
         <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
         <field name="perm_read" eval="False" />
         <field name="perm_write" eval="True" />
@@ -84,7 +72,7 @@
             name="name">appointment.booking.line: room managers manage every room booking</field>
         <field name="model_id" ref="calendar.model_appointment_booking_line" />
         <field
-            name="domain_force">[('appointment_resource_id.asset_id.kind_id.code', '=', 'room')]</field>
+            name="domain_force">[('resource_id.asset_id.kind_id.code', '=', 'room')]</field>
         <field name="groups" eval="[Command.link(ref('group_room_manager'))]" />
         <field name="perm_read" eval="False" />
         <field name="perm_write" eval="True" />

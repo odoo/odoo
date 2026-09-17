@@ -7,6 +7,7 @@ from pathlib import Path
 from odoo import Command
 from odoo.db.schema import column_exists, create_column
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import SQL
 
 
 @tagged("post_install", "-at_install")
@@ -197,8 +198,12 @@ class TestBookingMenuMigration(TransactionCase):
 @tagged("post_install", "-at_install")
 class TestBookingRelationOwnership(TransactionCase):
     def test_stale_relation_metadata_cleanup_preserves_booking_payload(self):
-        resource = self.env["appointment.resource"].create(
-            {"name": "Upgrade payload resource", "capacity": 4}
+        resource = self.env["resource.resource"].create(
+            {
+                "resource_type": "material",
+                "name": "Upgrade payload resource",
+                "capacity": 4,
+            }
         )
         offer = self.env["appointment.type"].create(
             {
@@ -216,7 +221,7 @@ class TestBookingRelationOwnership(TransactionCase):
                 "booking_line_ids": [
                     Command.create(
                         {
-                            "appointment_resource_id": resource.id,
+                            "resource_id": resource.id,
                             "capacity_reserved": 2,
                         }
                     )
@@ -236,7 +241,7 @@ class TestBookingRelationOwnership(TransactionCase):
         self.assertFalse(legacy.exists())
         line.invalidate_recordset()
         self.assertEqual(line.capacity_reserved, 2)
-        self.assertEqual(line.appointment_resource_id, resource)
+        self.assertEqual(line.resource_id, resource)
         self.assertEqual(line.calendar_event_id, event)
 
 
@@ -250,20 +255,48 @@ class TestBookingCapacityMigration(TransactionCase):
         if not module:
             module = self.env["ir.module.module"].create({"name": "appointment"})
         module.write({"db_version": "19.0.1.3", "state": "installed"})
-        profile = self.env["appointment.resource"].create(
-            {"name": "Historical capacity", "capacity": 3}
+        resource = self.env["resource.resource"].create(
+            {"resource_type": "material", "name": "Historical capacity", "capacity": 3}
         )
         self.env.flush_all()
+        # The retired table outlives the merge on an upgraded database, so build
+        # it only where this is a fresh one.
+        self.cr.execute("""
+            CREATE TABLE IF NOT EXISTS appointment_resource (
+                id serial PRIMARY KEY,
+                resource_id integer,
+                capacity integer
+            )
+        """)
         if not column_exists(self.cr, "appointment_resource", "capacity"):
             create_column(self.cr, "appointment_resource", "capacity", "integer")
+        # An upgraded database keeps the legacy table with its own NOT NULL
+        # columns; fill whichever of them are still there.
+        legacy = {"resource_id": resource.id, "capacity": 7}
+        legacy.update(
+            (column, value)
+            for column, value in (("name", "Historical capacity"), ("sequence", 1))
+            if column_exists(self.cr, "appointment_resource", column)
+        )
         self.cr.execute(
-            "UPDATE appointment_resource SET capacity = 7 WHERE id = %s", [profile.id]
+            SQL(
+                "INSERT INTO appointment_resource (%s) VALUES (%s)",
+                SQL(", ").join(SQL.identifier(column) for column in legacy),
+                SQL(", ").join(SQL("%s", value) for value in legacy.values()),
+            )
+        )
+        self.addCleanup(
+            self.cr.execute,
+            SQL(
+                "DELETE FROM appointment_resource WHERE resource_id = %s",
+                resource.id,
+            ),
         )
         for installed, expected in (("19.0.1.3", 7), ("19.0.1.4", 3), ("19.0.1.6", 3)):
             with self.subTest(installed=installed):
                 module.db_version = installed
-                profile.resource_id.capacity = 3
+                resource.capacity = 3
                 self.env.flush_all()
                 migrate(self.cr, "19.0.1.1")
-                profile.resource_id.invalidate_recordset(["capacity"])
-                self.assertEqual(profile.resource_id.capacity, expected)
+                resource.invalidate_recordset(["capacity"])
+                self.assertEqual(resource.capacity, expected)

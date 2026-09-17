@@ -61,7 +61,7 @@ class AppointmentResource(AppointmentCommon):
         )
 
         cls.resource_1, cls.resource_2, cls.resource_3 = cls.env[
-            "appointment.resource"
+            "resource.resource"
         ].create(
             [
                 {
@@ -73,7 +73,7 @@ class AppointmentResource(AppointmentCommon):
                     "appointment_type_ids": cls.appointment_manage_capacity.ids,
                     "capacity": 2,
                     "name": "Resource 2",
-                    "shareable": True,
+                    "booking_exclusive": False,
                 },
                 {
                     "appointment_type_ids": (
@@ -109,7 +109,7 @@ class AppointmentResource(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resource_link(self):
         """Test link between resources when they are combinable."""
-        resource_1, resource_2 = self.env["appointment.resource"].create(
+        resource_1, resource_2 = self.env["resource.resource"].create(
             [
                 {
                     "capacity": 4,
@@ -121,14 +121,14 @@ class AppointmentResource(AppointmentCommon):
                 },
             ]
         )
-        self.assertFalse(resource_1.linked_resource_ids)
-        self.assertFalse(resource_2.linked_resource_ids)
+        self.assertFalse(resource_1.combinable_resource_ids)
+        self.assertFalse(resource_2.combinable_resource_ids)
 
         # Test: link resource 2 to resource 1, and add a new resource as an
         # embedded 2many creation
         resource_1.write(
             {
-                "linked_resource_ids": [
+                "combinable_resource_ids": [
                     (4, resource_2.id),  # new link
                     (
                         0,
@@ -141,12 +141,12 @@ class AppointmentResource(AppointmentCommon):
                 ],
             }
         )
-        new_resource_1 = self.env["appointment.resource"].search(
+        new_resource_1 = self.env["resource.resource"].search(
             [("name", "=", "OnTheFly Table of 1")]
         )
         self.assertEqual(len(new_resource_1), 1, "Should have created a new resource")
         self.assertEqual(
-            new_resource_1.linked_resource_ids, resource_1, "Link works both ways"
+            new_resource_1.combinable_resource_ids, resource_1, "Link works both ways"
         )
         self.assertFalse(new_resource_1.source_resource_ids)
         self.assertEqual(
@@ -155,14 +155,14 @@ class AppointmentResource(AppointmentCommon):
             "Resource 2 is destination of link between 1 and 2",
         )
         self.assertEqual(
-            resource_1.linked_resource_ids,
+            resource_1.combinable_resource_ids,
             resource_2 + new_resource_1,
             "Resource 1 should be linked to linked resource 2 and newly created new",
         )
         self.assertEqual(resource_1.source_resource_ids, resource_2 + new_resource_1)
         self.assertFalse(resource_1.destination_resource_ids)
         self.assertEqual(
-            resource_2.linked_resource_ids, resource_1, "Link works both ways"
+            resource_2.combinable_resource_ids, resource_1, "Link works both ways"
         )
         self.assertFalse(resource_2.source_resource_ids)
         self.assertEqual(
@@ -175,29 +175,29 @@ class AppointmentResource(AppointmentCommon):
         # and create yet another one
         resource_1.write(
             {
-                "linked_resource_ids": [
+                "combinable_resource_ids": [
                     (3, resource_2.id),  # break link
                     (4, new_resource_1.id),  # already existing
                     (0, 0, {"capacity": 1, "name": "OnTheFly Table of 1 (bis)"}),
                 ],
             }
         )
-        new_resource_2 = self.env["appointment.resource"].search(
+        new_resource_2 = self.env["resource.resource"].search(
             [("name", "=", "OnTheFly Table of 1 (bis)")]
         )
         self.assertEqual(len(new_resource_2), 1, "Should have created a new resource")
         self.assertEqual(
-            new_resource_1.linked_resource_ids, resource_1, "Link works both ways"
+            new_resource_1.combinable_resource_ids, resource_1, "Link works both ways"
         )
         self.assertFalse(new_resource_1.source_resource_ids)
         self.assertEqual(new_resource_1.destination_resource_ids, resource_1)
         self.assertEqual(
-            new_resource_2.linked_resource_ids, resource_1, "Link works both ways"
+            new_resource_2.combinable_resource_ids, resource_1, "Link works both ways"
         )
         self.assertFalse(new_resource_2.source_resource_ids)
         self.assertEqual(new_resource_2.destination_resource_ids, resource_1)
         self.assertEqual(
-            resource_1.linked_resource_ids,
+            resource_1.combinable_resource_ids,
             new_resource_1 + new_resource_2,
             "Resource 1 should be linked to linked resource 2 and newly created new",
         )
@@ -205,21 +205,21 @@ class AppointmentResource(AppointmentCommon):
             resource_1.source_resource_ids, new_resource_1 + new_resource_2
         )
         self.assertFalse(resource_1.destination_resource_ids)
-        self.assertFalse(resource_2.linked_resource_ids)
+        self.assertFalse(resource_2.combinable_resource_ids)
         self.assertFalse(resource_2.source_resource_ids)
         self.assertFalse(resource_2.destination_resource_ids)
 
         # Test: update link based on destination, not source as previous tests
         resource_2.write(
             {
-                "linked_resource_ids": [
+                "combinable_resource_ids": [
                     (4, new_resource_1.id),  # add a new entry in destination
                 ]
             }
         )
         new_resource_2.write(
             {
-                "linked_resource_ids": [
+                "combinable_resource_ids": [
                     (3, resource_1.id),  # break link
                     (4, resource_2.id),  # new link, will have both sources and dest
                     (4, new_resource_1.id),  # new link
@@ -228,7 +228,8 @@ class AppointmentResource(AppointmentCommon):
         )
         self.assertEqual(len(new_resource_2), 1, "Should have created a new resource")
         self.assertEqual(
-            new_resource_1.linked_resource_ids, resource_1 + resource_2 + new_resource_2
+            new_resource_1.combinable_resource_ids,
+            resource_1 + resource_2 + new_resource_2,
         )
         self.assertFalse(new_resource_1.source_resource_ids)
         self.assertEqual(
@@ -236,17 +237,17 @@ class AppointmentResource(AppointmentCommon):
             resource_1 + resource_2 + new_resource_2,
         )
         self.assertEqual(
-            new_resource_2.linked_resource_ids, resource_2 + new_resource_1
+            new_resource_2.combinable_resource_ids, resource_2 + new_resource_1
         )
         self.assertEqual(
             new_resource_2.source_resource_ids, resource_2 + new_resource_1
         )
         self.assertFalse(new_resource_2.destination_resource_ids)
-        self.assertEqual(resource_1.linked_resource_ids, new_resource_1)
+        self.assertEqual(resource_1.combinable_resource_ids, new_resource_1)
         self.assertEqual(resource_1.source_resource_ids, new_resource_1)
         self.assertFalse(resource_1.destination_resource_ids)
         self.assertEqual(
-            resource_2.linked_resource_ids, new_resource_1 + new_resource_2
+            resource_2.combinable_resource_ids, new_resource_1 + new_resource_2
         )
         self.assertEqual(resource_2.source_resource_ids, new_resource_1)
         self.assertEqual(resource_2.destination_resource_ids, new_resource_2)
@@ -325,7 +326,7 @@ class AppointmentResource(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": self.resource_1.id,
+                                "resource_id": self.resource_1.id,
                                 "capacity_reserved": 1,
                                 "capacity_used": self.resource_1.capacity,
                             },
@@ -388,7 +389,7 @@ class AppointmentResource(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_1.id,
+                                    "resource_id": resource_1.id,
                                     "capacity_reserved": 1,
                                     "capacity_used": resource_1.capacity,
                                 },
@@ -405,7 +406,7 @@ class AppointmentResource(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_2.id,
+                                    "resource_id": resource_2.id,
                                     "capacity_reserved": 1,
                                 },
                             )
@@ -435,7 +436,7 @@ class AppointmentResource(AppointmentCommon):
         )
 
         bookings.unlink()
-        resource_1.linked_resource_ids = resource_2
+        resource_1.combinable_resource_ids = resource_2
         self.assertTrue(
             appointment._get_resources_remaining_capacity(resource_1, start, end)[
                 "total_remaining_capacity"
@@ -474,7 +475,7 @@ class AppointmentResource(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_1.id,
+                                    "resource_id": resource_1.id,
                                     "capacity_reserved": 3,
                                     "capacity_used": 3,
                                 },
@@ -483,7 +484,7 @@ class AppointmentResource(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_2.id,
+                                    "resource_id": resource_2.id,
                                     "capacity_reserved": 1,
                                 },
                             ),
@@ -496,7 +497,7 @@ class AppointmentResource(AppointmentCommon):
             )
         )
 
-        self.assertTrue(len(booking.appointment_resource_ids) == 2)
+        self.assertTrue(len(booking.resource_ids) == 2)
         self.assertTrue(
             appointment._get_resources_remaining_capacity(resource_1, start, end)[
                 "total_remaining_capacity"
@@ -521,7 +522,7 @@ class AppointmentResource(AppointmentCommon):
 
         self.assertDictEqual(
             appointment._get_resources_remaining_capacity(
-                self.env["appointment.resource"], start, end
+                self.env["resource.resource"], start, end
             ),
             {"total_remaining_capacity": 0},
             "No result should give dict with correct accumulated values.",
@@ -544,7 +545,7 @@ class AppointmentResource(AppointmentCommon):
         self.assertEqual(booking.name, "Gommage")
         self.assertEqual(booking.appointment_type_id, self.appointment_manage_capacity)
         self.assertEqual(len(booking.resource_ids), 1)
-        self.assertEqual(booking.appointment_resource_ids, self.resource_1)
+        self.assertEqual(booking.resource_ids, self.resource_1)
 
 
 @tagged("appointment_resources", "post_install", "-at_install")
@@ -576,7 +577,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        self.env["appointment.resource"].create(
+        self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment.ids,
@@ -625,21 +626,21 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_combinable(self):
         """Check that combinable resources are correctly process."""
-        table_c2, table_c4, table_c6 = self.env["appointment.resource"].create(
+        table_c2, table_c4, table_c6 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": i,
                     "name": "Table for %s" % i,
-                    "sequence": i,
+                    "booking_sequence": i,
                 }
                 for i in range(2, 7, 2)
             ]
         )
 
-        table_c2.linked_resource_ids = table_c4 + table_c6
-        table_c4.linked_resource_ids = table_c2 + table_c6
-        table_c6.linked_resource_ids = table_c2 + table_c4
+        table_c2.combinable_resource_ids = table_c4 + table_c6
+        table_c4.combinable_resource_ids = table_c2 + table_c6
+        table_c6.combinable_resource_ids = table_c2 + table_c4
 
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots("UTC")
@@ -685,7 +686,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertListEqual(available_resources_c6, table_c6.ids)
         self.assertListEqual(available_resources_c9, (table_c4 + table_c6).ids)
 
-        table_c4.sequence = 1
+        table_c4.booking_sequence = 1
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots("UTC")
             resource_slots_c1 = self._filter_appointment_slots(slots)
@@ -733,30 +734,30 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         we should check if the linked resources of the one selected are not a better fit to avoid losing capacity.
         """
 
-        nordic, scandinavian, snow = self.env["appointment.resource"].create(
+        nordic, scandinavian, snow = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Nordic",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 8,
                     "name": "Scandinavian",
-                    "sequence": 3,
+                    "booking_sequence": 3,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Snow",
-                    "sequence": 4,
+                    "booking_sequence": 4,
                 },
             ]
         )
 
-        nordic.linked_resource_ids = scandinavian
+        nordic.combinable_resource_ids = scandinavian
 
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots(
@@ -768,7 +769,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         ]
         self.assertListEqual(available_resources_c5, scandinavian.ids)
 
-        snow.sequence = 1
+        snow.booking_sequence = 1
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots(
                 "UTC", asked_capacity=5
@@ -779,11 +780,11 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         ]
         self.assertListEqual(available_resources_c5, snow.ids)
 
-        snow.sequence = 4
+        snow.booking_sequence = 4
         scandinavian.write(
             {
-                "linked_resource_ids": [(4, nordic.id)],
-                "sequence": 1,
+                "combinable_resource_ids": [(4, nordic.id)],
+                "booking_sequence": 1,
             }
         )
 
@@ -809,85 +810,86 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     def test_appointment_resources_combinable_complex(self):
         """Check resources assignation when the linked resources are not mirrored for all resources"""
 
-        table1_c2, table2_c2, table3_c2 = self.env["appointment.resource"].create(
+        table1_c2, table2_c2, table3_c2 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 2,
                     "name": "Table 2A",
-                    "sequence": 1,
+                    "booking_sequence": 1,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 2,
                     "name": "Table 2B",
-                    "sequence": 3,
+                    "booking_sequence": 3,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 2,
                     "name": "Table 2C",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
             ]
         )
-        table1_c2.linked_resource_ids = table2_c2 + table3_c2
-        table2_c2.linked_resource_ids = table1_c2 + table3_c2
-        table3_c2.linked_resource_ids = table1_c2 + table2_c2
+        table1_c2.combinable_resource_ids = table2_c2 + table3_c2
+        table2_c2.combinable_resource_ids = table1_c2 + table3_c2
+        table3_c2.combinable_resource_ids = table1_c2 + table2_c2
 
-        table_c3 = self.env["appointment.resource"].create(
+        table_c3 = self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "appointment_type_ids": self.apt_type_resource.ids,
                 "capacity": 3,
                 "name": "Table 3A",
-                "sequence": 4,
+                "booking_sequence": 4,
             }
         )
 
-        table1_c6, table2_c6 = self.env["appointment.resource"].create(
+        table1_c6, table2_c6 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Table 6A",
-                    "sequence": 5,
+                    "booking_sequence": 5,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Table 6B",
-                    "sequence": 6,
+                    "booking_sequence": 6,
                 },
             ]
         )
 
-        table1_c6.linked_resource_ids = table_c3
-        table2_c6.linked_resource_ids = table1_c2 + table2_c2 + table3_c2
+        table1_c6.combinable_resource_ids = table_c3
+        table2_c6.combinable_resource_ids = table1_c2 + table2_c2 + table3_c2
 
-        table1_c8, table2_c8, bar = self.env["appointment.resource"].create(
+        table1_c8, table2_c8, bar = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 8,
                     "name": "Table 8A",
-                    "sequence": 8,
+                    "booking_sequence": 8,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 8,
                     "name": "Table 8B",
-                    "sequence": 9,
+                    "booking_sequence": 9,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 10,
                     "name": "Bar",
-                    "sequence": 15,
-                    "shareable": True,
+                    "booking_sequence": 15,
+                    "booking_exclusive": False,
                 },
             ]
         )
-        table1_c8.sequence = 10
+        table1_c8.booking_sequence = 10
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots(
                 "UTC", asked_capacity=4
@@ -922,29 +924,29 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertListEqual(available_resources_c10, bar.ids)
         self.assertListEqual(
             available_resources_c12,
-            (table2_c6 + table2_c6.linked_resource_ids).sorted("sequence").ids,
+            (table2_c6 + table2_c6.combinable_resource_ids).sorted("booking_sequence").ids,
         )
 
     @users("apt_manager")
     def test_appointment_resources_combinable_last_availability(self):
         """Check that the last resource available is correctly computed with linked resources"""
-        table_c2, table_c3 = self.env["appointment.resource"].create(
+        table_c2, table_c3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 2,
                     "name": "Table for 2",
-                    "sequence": 1,
+                    "booking_sequence": 1,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 3,
                     "name": "Table for 3",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
             ]
         )
-        table_c2.linked_resource_ids = table_c3
+        table_c2.combinable_resource_ids = table_c3
 
         # Create a booking for the first resource for all its capacity
         start = datetime(2022, 2, 14, 15, 0, 0)
@@ -957,7 +959,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                         0,
                         0,
                         {
-                            "appointment_resource_id": table_c2.id,
+                            "resource_id": table_c2.id,
                             "capacity_reserved": 2,
                             "capacity_used": 2,
                         },
@@ -1019,7 +1021,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        table1_c2, table2_c2, table3_c2 = self.env["appointment.resource"].create(
+        table1_c2, table2_c2, table3_c2 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment.ids,
@@ -1030,7 +1032,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             ]
         )
 
-        table1_c4, table2_c4, table3_c4 = self.env["appointment.resource"].create(
+        table1_c4, table2_c4, table3_c4 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment.ids,
@@ -1041,21 +1043,22 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             ]
         )
 
-        table1_c6 = self.env["appointment.resource"].create(
+        table1_c6 = self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "appointment_type_ids": appointment.ids,
                 "capacity": 6,
                 "name": "Table - 6",
             }
         )
 
-        (table1_c4 + table2_c4 + table3_c4).linked_resource_ids = (
+        (table1_c4 + table2_c4 + table3_c4).combinable_resource_ids = (
             table1_c2 + table2_c2 + table3_c2 + table1_c6
         )
-        (table1_c2 + table2_c2 + table3_c2).linked_resource_ids = (
+        (table1_c2 + table2_c2 + table3_c2).combinable_resource_ids = (
             table1_c4 + table2_c4 + table3_c4
         )
-        table1_c6.linked_resource_ids = table1_c4 + table2_c4 + table3_c4
+        table1_c6.combinable_resource_ids = table1_c4 + table2_c4 + table3_c4
 
         # Flush everything, notably tracking values, as it may impact performances
         self.flush_tracking()
@@ -1098,23 +1101,23 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_combinable_with_manual_date_first(self):
         """Check available linked resources with 'manual' assignment and 'date' selected first"""
-        table_c2, table_c3 = self.env["appointment.resource"].create(
+        table_c2, table_c3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 2,
                     "name": "Table for 2",
-                    "sequence": 1,
+                    "booking_sequence": 1,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 3,
                     "name": "Table for 3",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
             ]
         )
-        table_c2.linked_resource_ids = table_c3
+        table_c2.combinable_resource_ids = table_c3
         self.apt_type_resource.write(
             {
                 "is_auto_assign": False,
@@ -1180,7 +1183,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                         0,
                         0,
                         {
-                            "appointment_resource_id": table_c2.id,
+                            "resource_id": table_c2.id,
                             "capacity_reserved": 1,
                             "capacity_used": 1,
                         },
@@ -1229,19 +1232,19 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     def test_appointment_resources_sequence(self):
         """Check that the sequence is correctly taken into account when selecting resources for slots"""
 
-        resource_1, resource_2 = self.env["appointment.resource"].create(
+        resource_1, resource_2 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Resource 1",
-                    "sequence": 5,
+                    "booking_sequence": 5,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 10,
                     "name": "Resource 2",
-                    "sequence": 10,
+                    "booking_sequence": 10,
                 },
             ]
         )
@@ -1273,7 +1276,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertTrue(len(resource_slots_c6) > 0)
         self.assertListEqual(available_resources_c6, resource_2.ids)
 
-        resource_2.sequence = 1
+        resource_2.booking_sequence = 1
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots("UTC")
             resource_slots_c1 = self._filter_appointment_slots(slots)
@@ -1302,23 +1305,23 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertListEqual(available_resources_c6, resource_2.ids)
 
     @users("apt_manager")
-    def test_appointment_resources_shareable(self):
+    def test_bookable_resources_shared(self):
         """Check shareable resources are correctly used"""
 
-        resource, resource_shareable = self.env["appointment.resource"].create(
+        resource, resource_shared = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 5,
                     "name": "Resource",
-                    "sequence": 5,
+                    "booking_sequence": 5,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 10,
                     "name": "Resource Shareable",
-                    "sequence": 10,
-                    "shareable": True,
+                    "booking_sequence": 10,
+                    "booking_exclusive": False,
                 },
             ]
         )
@@ -1339,7 +1342,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             resource["id"] for resource in resource_slots_c6[0]["available_resources"]
         ]
         self.assertListEqual(available_resources_c4, resource.ids)
-        self.assertListEqual(available_resources_c6, resource_shareable.ids)
+        self.assertListEqual(available_resources_c6, resource_shared.ids)
 
         start = datetime(2022, 2, 14, 15, 0, 0)
         end = start + timedelta(hours=1)
@@ -1352,7 +1355,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": resource_shareable.id,
+                                "resource_id": resource_shared.id,
                                 "capacity_reserved": 4,
                                 "capacity_used": 4,
                             },
@@ -1369,7 +1372,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": resource_shareable.id,
+                                "resource_id": resource_shared.id,
                                 "capacity_reserved": 2,
                                 "capacity_used": 2,
                             },
@@ -1408,7 +1411,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         self.assertListEqual(available_resources_c5, resource.ids)
         self.assertListEqual(available_resources_c6, [])
 
-        resource_shareable.sequence = 1
+        resource_shared.booking_sequence = 1
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots(
                 "UTC", asked_capacity=4
@@ -1424,34 +1427,34 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         available_resources_c5 = [
             resource["id"] for resource in resource_slots_c5[0]["available_resources"]
         ]
-        self.assertListEqual(available_resources_c4, resource_shareable.ids)
+        self.assertListEqual(available_resources_c4, resource_shared.ids)
         self.assertListEqual(available_resources_c5, resource.ids)
 
     @users("apt_manager")
-    def test_appointment_resources_shareable_linked_with_capacity(self):
+    def test_bookable_resources_shared_combined_with_capacity(self):
         """Check that resources shareable linked together with the capacity management
         correctly compute the remaining capacity"""
 
-        resource_1, resource_2 = self.env["appointment.resource"].create(
+        resource_1, resource_2 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 5,
                     "name": "Resource 1",
-                    "sequence": 5,
-                    "shareable": True,
+                    "booking_sequence": 5,
+                    "booking_exclusive": False,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Resource 2",
-                    "sequence": 10,
-                    "shareable": True,
+                    "booking_sequence": 10,
+                    "booking_exclusive": False,
                 },
             ]
         )
 
-        resource_1.linked_resource_ids = resource_2
+        resource_1.combinable_resource_ids = resource_2
 
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots(
@@ -1490,7 +1493,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                         0,
                         0,
                         {
-                            "appointment_resource_id": resource_1.id,
+                            "resource_id": resource_1.id,
                             "capacity_reserved": 5,
                             "capacity_used": 5,
                         },
@@ -1526,7 +1529,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
         )
 
     @users("apt_manager")
-    def test_appointment_resources_shareable_performance(self):
+    def test_bookable_resources_shared_performance(self):
         """Simple use case with shareable resources"""
         appointment = self.env["appointment.type"].create(
             {
@@ -1551,13 +1554,13 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        self.env["appointment.resource"].create(
+        self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment.ids,
                     "capacity": 5,
                     "name": "Resource %s" % i,
-                    "shareable": True,
+                    "booking_exclusive": False,
                 }
                 for i in range(20)
             ]
@@ -1617,7 +1620,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        resource1, resource2, resource3 = self.env["appointment.resource"].create(
+        resource1, resource2, resource3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": appointment.ids,
@@ -1713,25 +1716,25 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        nordic, scandinavian, snow = self.env["appointment.resource"].create(
+        nordic, scandinavian, snow = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Nordic",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 8,
                     "name": "Scandinavian",
-                    "sequence": 3,
+                    "booking_sequence": 3,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Snow",
-                    "sequence": 4,
+                    "booking_sequence": 4,
                 },
             ]
         )
@@ -1774,7 +1777,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_booked_for_all_appointments(self):
         """Check that a resource can only be booked once, even if shared among appointment_types"""
-        paddle_court = self.env["appointment.resource"].create(
+        paddle_court = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
@@ -1800,7 +1803,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                         0,
                         0,
                         {
-                            "appointment_resource_id": paddle_court.id,
+                            "resource_id": paddle_court.id,
                             "capacity_reserved": 1,
                             "capacity_used": paddle_court.capacity,
                         },
@@ -1843,7 +1846,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_multi_edit_capacity(self):
         """Check that the capacity reserved is correctly updated in multi-edit"""
-        resource_1, resource_2 = self.env["appointment.resource"].create(
+        resource_1, resource_2 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
@@ -1857,7 +1860,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                 },
             ]
         )
-        resource_1.linked_resource_ids = resource_2
+        resource_1.combinable_resource_ids = resource_2
         start = datetime(2022, 2, 14, 15, 0, 0)
         end = start + timedelta(hours=1)
         apt_1, apt_2 = (
@@ -1872,7 +1875,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_1.id,
+                                    "resource_id": resource_1.id,
                                     "capacity_reserved": 4,
                                     "capacity_used": 4,
                                 },
@@ -1881,7 +1884,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_2.id,
+                                    "resource_id": resource_2.id,
                                     "capacity_reserved": 1,
                                     "capacity_used": 3,
                                 },
@@ -1898,7 +1901,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_1.id,
+                                    "resource_id": resource_1.id,
                                     "capacity_reserved": 4,
                                     "capacity_used": 2,
                                 },
@@ -1907,7 +1910,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                                 0,
                                 0,
                                 {
-                                    "appointment_resource_id": resource_2.id,
+                                    "resource_id": resource_2.id,
                                     "capacity_reserved": 2,
                                     "capacity_used": 3,
                                 },
@@ -1931,11 +1934,12 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_with_resource_calendar(self):
         """Check that the slots correctly take into account the default resource calendar"""
-        self.env["appointment.resource"].create(
+        self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "appointment_type_ids": self.apt_type_resource.ids,
                 "name": "Resource",
-                "resource_calendar_id": self.env.ref(
+                "calendar_id": self.env.ref(
                     "calendar.appointment_default_resource_calendar"
                 ).id,
             }
@@ -1965,19 +1969,19 @@ class AppointmentResourceBookingTest(AppointmentCommon):
     @users("apt_manager")
     def test_appointment_resources_duplicate(self):
         """Check that we can correctly duplicate resource bookings"""
-        table, other_table = self.env["appointment.resource"].create(
+        table, other_table = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 3,
                     "name": "Table for 3",
-                    "sequence": 1,
+                    "booking_sequence": 1,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Table for 4",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
             ]
         )
@@ -1995,7 +1999,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": table.id,
+                                "resource_id": table.id,
                                 "capacity_reserved": 2,
                                 "capacity_used": 3,
                             },
@@ -2004,7 +2008,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": other_table.id,
+                                "resource_id": other_table.id,
                                 "capacity_reserved": 3,
                                 "capacity_used": 4,
                             },
@@ -2050,31 +2054,31 @@ class AppointmentResourceBookingTest(AppointmentCommon):
 
         self.apt_type_resource.manage_capacity = False
 
-        resource_1, resource_2, resource_3 = self.env["appointment.resource"].create(
+        resource_1, resource_2, resource_3 = self.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 6,
                     "name": "Resource 1",
-                    "sequence": 1,
-                    "shareable": True,
+                    "booking_sequence": 1,
+                    "booking_exclusive": False,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 4,
                     "name": "Resource 2",
-                    "sequence": 2,
+                    "booking_sequence": 2,
                 },
                 {
                     "appointment_type_ids": self.apt_type_resource.ids,
                     "capacity": 1,
                     "name": "Resource 3",
-                    "sequence": 3,
+                    "booking_sequence": 3,
                 },
             ]
         )
 
-        resource_2.linked_resource_ids = resource_3
+        resource_2.combinable_resource_ids = resource_3
 
         with freeze_time(self.reference_now):
             slots = self.apt_type_resource._get_appointment_slots("UTC")
@@ -2097,7 +2101,7 @@ class AppointmentResourceBookingTest(AppointmentCommon):
                             0,
                             0,
                             {
-                                "appointment_resource_id": resource_1.id,
+                                "resource_id": resource_1.id,
                                 "capacity_reserved": 1,
                                 "capacity_used": resource_1.capacity,
                             },
@@ -2148,11 +2152,12 @@ class AppointmentResourceBookingTest(AppointmentCommon):
             }
         )
 
-        self.env["appointment.resource"].create(
+        self.env["resource.resource"].create(
             {
+                "resource_type": "material",
                 "appointment_type_ids": self.apt_type_resource.ids,
                 "name": "Resource",
-                "resource_calendar_id": self.env.ref(
+                "calendar_id": self.env.ref(
                     "calendar.appointment_default_resource_calendar"
                 ).id,
             }
@@ -2202,18 +2207,20 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
                 },
             ]
         )
-        cls.table, cls.counter = cls.env["appointment.resource"].create(
+        cls.table, cls.counter = cls.env["resource.resource"].create(
             [
                 {
                     "appointment_type_ids": (cls.managed | cls.unmanaged).ids,
                     "capacity": 4,
                     "name": "Table of four",
+                    "resource_type": "material",
                 },
                 {
                     "appointment_type_ids": cls.managed.ids,
                     "capacity": 10,
                     "name": "Bar counter",
-                    "shareable": True,
+                    "booking_exclusive": False,
+                    "resource_type": "material",
                 },
             ]
         )
@@ -2222,7 +2229,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
 
     def _reservations(self, resource):
         return self.env["resource.reservation"].search(
-            [("resource_id", "=", resource.resource_id.id)]
+            [("resource_id", "=", resource.id)]
         )
 
     def _book(self, appointment_type, resource, capacity_reserved=1):
@@ -2232,7 +2239,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
                 "booking_line_ids": [
                     Command.create(
                         {
-                            "appointment_resource_id": resource.id,
+                            "resource_id": resource.id,
                             "capacity_reserved": capacity_reserved,
                         }
                     )
@@ -2244,14 +2251,14 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
         )
 
     def test_capacity_lives_on_the_resource(self):
-        self.assertEqual(self.table.resource_id.capacity, 4)
-        self.assertEqual(self.table.resource_id.resource_type, "material")
+        self.assertEqual(self.table.capacity, 4)
+        self.assertEqual(self.table.resource_type, "material")
         self.table.capacity = 6
-        self.assertEqual(self.table.resource_id.capacity, 6)
-        self.table.resource_id.capacity = 2
+        self.assertEqual(self.table.capacity, 6)
+        self.table.capacity = 2
         self.assertEqual(self.table.capacity, 2)
 
-    def test_unshareable_booking_takes_the_whole_resource(self):
+    def test_an_exclusive_booking_takes_the_whole_resource(self):
         event = self._book(self.managed, self.table, capacity_reserved=2)
         reservation = self._reservations(self.table)
         self.assertEqual(len(reservation), 1)
@@ -2269,7 +2276,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
             ],
         )
 
-    def test_shareable_booking_takes_its_share(self):
+    def test_a_shared_booking_takes_its_share(self):
         self._book(self.managed, self.counter, capacity_reserved=3)
         self.assertEqual(self._reservations(self.counter).allocated_percentage, 30.0)
 
@@ -2277,14 +2284,14 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
         self._book(self.unmanaged, self.table, capacity_reserved=1)
         self.assertEqual(self._reservations(self.table).allocated_percentage, 100.0)
 
-    def test_two_shareable_bookings_over_capacity_conflict(self):
+    def test_two_shared_bookings_over_capacity_conflict(self):
         first = self._book(self.managed, self.counter, capacity_reserved=6)
         second = self._book(self.managed, self.counter, capacity_reserved=6)
         (first | second).invalidate_recordset(["schedule_overlap_count"])
         self.assertEqual(first.schedule_overlap_count, 1)
         self.assertEqual(second.schedule_overlap_count, 1)
 
-    def test_two_shareable_bookings_within_capacity_do_not_conflict(self):
+    def test_two_shared_bookings_within_capacity_do_not_conflict(self):
         first = self._book(self.managed, self.counter, capacity_reserved=4)
         second = self._book(self.managed, self.counter, capacity_reserved=4)
         (first | second).invalidate_recordset(["schedule_overlap_count"])
@@ -2302,7 +2309,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
         self.assertEqual(
             self._reservations(self.table).date_start, self.start + timedelta(days=1)
         )
-        event.booking_line_ids.write({"appointment_resource_id": self.counter.id})
+        event.booking_line_ids.write({"resource_id": self.counter.id})
         self.assertFalse(self._reservations(self.table))
         self.assertEqual(len(self._reservations(self.counter)), 1)
         event.booking_line_ids.unlink()
@@ -2319,7 +2326,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
         self.env["resource.reservation"].create(
             {
                 "name": "Other application",
-                "resource_id": self.counter.resource_id.id,
+                "resource_id": self.counter.id,
                 "date_start": self.start,
                 "date_end": self.stop,
             }
@@ -2328,7 +2335,7 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
             self.counter, self.start, self.stop
         )
         self.assertEqual(remaining[self.counter], 0)
-        self.counter.resource_id.booking_limit_percentage = 120
+        self.counter.booking_limit_percentage = 120
         remaining = self.managed._get_resources_remaining_capacity(
             self.counter, self.start, self.stop
         )
@@ -2353,24 +2360,8 @@ class AppointmentResourceLedgerTest(AppointmentCommon):
         )
         self.assertEqual(remaining[self.counter], 10)
 
-    def test_alias_profile_cannot_offer_the_same_capacity_again(self):
-        alias = self.env["appointment.resource"].create(
-            {
-                "name": self.counter.name,
-                "resource_id": self.counter.resource_id.id,
-                "appointment_type_ids": self.managed.ids,
-                "shareable": True,
-            }
-        )
-        self.assertEqual(alias.capacity, 10)
-        self._book(self.managed, self.counter, capacity_reserved=10)
-        remaining = self.managed._get_resources_remaining_capacity(
-            alias, self.start, self.stop
-        )
-        self.assertEqual(remaining[alias], 0)
-
     def test_enforced_overbooking_survives_later_edits(self):
-        self.counter.resource_id.booking_limit_percentage = 120
+        self.counter.booking_limit_percentage = 120
         first = self._book(self.managed, self.counter, capacity_reserved=10)
         first.booking_capacity_enforced = True
         second = self._book(self.managed, self.counter, capacity_reserved=2)

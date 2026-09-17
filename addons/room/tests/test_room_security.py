@@ -55,7 +55,7 @@ class TestRoomSecurity(RoomCommon, MailCase):
         own.write(
             {
                 "name": "rescheduled",
-                "resource_ids": self.profiles[1].ids,
+                "resource_ids": self.resources[1].ids,
                 "start": datetime(2023, 5, 15, 7, 0),
                 "stop": datetime(2023, 5, 15, 8, 0),
             }
@@ -66,17 +66,17 @@ class TestRoomSecurity(RoomCommon, MailCase):
             .with_env(self.env)
             .create(
                 {
-                    **self._booking_vals("morning meeting", self.profiles[0], 13, 14),
+                    **self._booking_vals("morning meeting", self.resources[0], 13, 14),
                     "user_id": self.env.user.id,
                 }
             )
         )
-        self.assertEqual(new.resource_ids, self.profiles[0])
+        self.assertEqual(new.resource_ids, self.resources[0])
         new.unlink()
 
         with self.assertRaises(exceptions.AccessError):
             self.bookings[1].with_env(self.env).write(
-                {"resource_ids": self.profiles[1].ids}
+                {"resource_ids": self.resources[1].ids}
             )
 
     @users("room_manager")
@@ -94,7 +94,7 @@ class TestRoomSecurity(RoomCommon, MailCase):
                 }
             )
         )
-        self.assertTrue(new_room.appointment_resource_id)
+        self.assertTrue(new_room.resource_id.access_token)
         new_room.room_short_code = "new_room"
 
         with self.assertRaises(exceptions.AccessError):

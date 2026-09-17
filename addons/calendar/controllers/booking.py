@@ -442,7 +442,7 @@ class AppointmentController(http.Controller):
             appointment_type, filter_resource_ids
         )
         user_default = user_selected = request.env["res.users"]
-        resource_default = resource_selected = request.env["appointment.resource"]
+        resource_default = resource_selected = request.env["resource.resource"]
         staff_user_id = int(staff_user_id) if staff_user_id else False
         resource_selected_id = (
             int(resource_selected_id) if resource_selected_id else False
@@ -471,7 +471,7 @@ class AppointmentController(http.Controller):
                 )
             ):
                 resource_selected = (
-                    request.env["appointment.resource"]
+                    request.env["resource.resource"]
                     .sudo()
                     .browse(resource_selected_id)
                 )
@@ -568,7 +568,7 @@ class AppointmentController(http.Controller):
 
         :param appointment_type: the appointment type that we want to access
         :param filter_resource_ids: list of resource ids used to filter the ones of the appointment_types.
-        :return: an appointment.resource recordset containing all possible resources to choose from.
+        :return: a resource.resource recordset containing all possible resources to choose from.
         """
         if not filter_resource_ids:
             return appointment_type.resource_ids
@@ -613,24 +613,24 @@ class AppointmentController(http.Controller):
         self, appointment_type_id, resource_id=False, avatar_size=512
     ):
         """
-        Route used to bypass access rights on the appointment resource for public user.
-        Equivalent of ``appointment_staff_user_avatar()`` for appointment resource.
+        Route used to bypass access rights on the booked resource for public user.
+        Equivalent of ``appointment_staff_user_avatar()`` for a resource.
         """
-        resource = request.env["appointment.resource"].sudo().browse(int(resource_id))
+        resource = request.env["resource.resource"].sudo().browse(int(resource_id))
         appointment_type = (
             request.env["appointment.type"].sudo().browse(appointment_type_id)
         )
 
-        resource = (
-            resource
+        pictured = (
+            resource._get_booking_picture()
             if appointment_type.show_avatars
             and resource in appointment_type.resource_ids
-            else request.env["appointment.resource"]
+            else request.env["resource.resource"]
         )
         return (
             request.env["ir.binary"]
             ._get_stream_image_from_record(
-                resource,
+                pictured,
                 field_name=self._get_avatar_field_name(avatar_size),
             )
             .prepare_response()
@@ -678,7 +678,7 @@ class AppointmentController(http.Controller):
             )
         )
         resources = (
-            request.env["appointment.resource"]
+            request.env["resource.resource"]
             .sudo()
             .browse(
                 AppointmentController._parse_json_param(
@@ -801,9 +801,9 @@ class AppointmentController(http.Controller):
             date_time_object.time(), locale=get_lang(request.env).code, format="short"
         )
         resource = (
-            request.env["appointment.resource"].sudo().browse(int(resource_selected_id))
+            request.env["resource.resource"].sudo().browse(int(resource_selected_id))
             if resource_selected_id
-            else request.env["appointment.resource"]
+            else request.env["resource.resource"]
         )
         # Staff presentation is authorized through the published offer whose
         # slot was validated above, not through the visitor's contact ACLs.
@@ -941,13 +941,13 @@ class AppointmentController(http.Controller):
             )
         else:
             resources = (
-                request.env["appointment.resource"]
+                request.env["resource.resource"]
                 .sudo()
                 .search([("id", "in", available_resource_ids)])
             )
             if resource_selected_id:
                 resource = (
-                    request.env["appointment.resource"]
+                    request.env["resource.resource"]
                     .sudo()
                     .search([("id", "=", resource_selected_id)])
                 )
@@ -1049,7 +1049,7 @@ class AppointmentController(http.Controller):
         invite_token = kwargs.get("invite_token")
 
         staff_user = request.env["res.users"]
-        resources = request.env["appointment.resource"]
+        resources = request.env["resource.resource"]
         resource_ids = None
         asked_capacity = int(asked_capacity)
         resources_remaining_capacity = None
@@ -1060,16 +1060,16 @@ class AppointmentController(http.Controller):
             )
             # Check if there is still enough capacity (in case someone else booked with a resource in the meantime)
             resources = (
-                request.env["appointment.resource"].sudo().browse(resource_ids).exists()
+                request.env["resource.resource"].sudo().browse(resource_ids).exists()
             )
             if any(
                 resource not in appointment_type.resource_ids for resource in resources
             ):
                 raise NotFound
-            resources.resource_id._lock_for_scheduling()
+            resources._lock_for_scheduling()
             resources_remaining_capacity = (
                 appointment_type._get_resources_remaining_capacity(
-                    resources, date_start, date_end, with_linked_resources=False
+                    resources, date_start, date_end, with_combinable_resources=False
                 )
             )
             if (
@@ -1221,10 +1221,11 @@ class AppointmentController(http.Controller):
                 capacity_to_assign -= new_capacity_reserved
                 booking_line_values.append(
                     {
-                        "appointment_resource_id": resource.id,
+                        "resource_id": resource.id,
                         "capacity_reserved": new_capacity_reserved,
                         "capacity_used": new_capacity_reserved
-                        if resource.shareable and appointment_type.manage_capacity
+                        if not resource.booking_exclusive
+                        and appointment_type.manage_capacity
                         else resource.capacity
                         if appointment_type.manage_capacity
                         else 1,
@@ -1449,7 +1450,7 @@ class AppointmentController(http.Controller):
         Returns the maximum capacity possible considering the resources given.
         We consider all the combinations of linked resources and their capacities.
 
-        :param resources: an appointment.resource recordset
+        :param resources: a resource.resource recordset
         :param resource_selected_id: id of the selected resource
         :return: int, the maximum capacity possible with the resources given
         """
@@ -1602,7 +1603,7 @@ class AppointmentController(http.Controller):
             filter_users = request.env["res.users"].sudo().browse(int(staff_user_id))
         elif resource_selected_id:
             filter_resources = (
-                request.env["appointment.resource"]
+                request.env["resource.resource"]
                 .sudo()
                 .browse(int(resource_selected_id))
             )

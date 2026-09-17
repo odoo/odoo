@@ -54,19 +54,17 @@ class CalendarEvent(models.Model):
                 (res["stop"] - datetime.min) / timedelta(minutes=1)  # noqa: DTZ901  same
             ) * timedelta(minutes=1)
         user_id = res.get("user_id")
-        appointment_resource_ids = (
+        resource_ids = (
             self.env["calendar.event"]
             ._fields["resource_ids"]
             .convert_to_cache(res.get("resource_ids", []), self.env["calendar.event"])
         )
-        appointment_resources = self.env["appointment.resource"].browse(
-            appointment_resource_ids
-        )
+        resources = self.env["resource.resource"].browse(resource_ids)
         # get a relevant appointment type for ease of use when coming from a view that groups by resource
         if not res.get("appointment_type_id") and "appointment_type_id" in fields:
             appointment_types = False
-            if appointment_resources:
-                appointment_types = appointment_resources.appointment_type_ids
+            if resources:
+                appointment_types = resources.appointment_type_ids
             elif user_id:
                 appointment_types = self.env["appointment.type"].search(
                     [("staff_user_ids", "in", user_id)]
@@ -82,13 +80,13 @@ class CalendarEvent(models.Model):
             if "total_capacity_reserved" in fields:
                 if (
                     appointment_type.schedule_based_on == "resources"
-                    and appointment_resources
+                    and resources
                 ):
                     res.setdefault(
                         "total_capacity_reserved",
-                        sum(resource.capacity for resource in appointment_resources)
+                        sum(resource.capacity for resource in resources)
                         if appointment_type.manage_capacity
-                        else len(appointment_resources),
+                        else len(resources),
                     )
                 elif appointment_type.schedule_based_on == "users":
                     res.setdefault(
@@ -172,12 +170,8 @@ class CalendarEvent(models.Model):
         index="btree_not_null",
         tracking=True,
     )
-    appointment_type_schedule_based_on = fields.Selection(
-        related="appointment_type_id.schedule_based_on"
-    )
-    appointment_type_manage_capacity = fields.Boolean(
-        related="appointment_type_id.manage_capacity"
-    )
+    appointment_type_schedule_based_on = fields.Selection(related="appointment_type_id.schedule_based_on")
+    appointment_type_manage_capacity = fields.Boolean(related="appointment_type_id.manage_capacity")
     appointment_invite_id = fields.Many2one(
         comodel_name="appointment.invite",
         string="Appointment Invitation",
@@ -185,28 +179,28 @@ class CalendarEvent(models.Model):
         readonly=True,
         ondelete="set null",
     )
-    appointment_resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+    # The booking-line table is the truth, and `booked_resource_ids` reads it so a
+    # search or a group-by can reach it. `resource_ids` is what a writer uses: writing
+    # the relation table directly would insert a line with no capacity_reserved.
+    booked_resource_ids = fields.Many2many(
+        comodel_name="resource.resource",
         relation="appointment_booking_line",
         column1="calendar_event_id",
-        column2="appointment_resource_id",
-        string="Appointment Resources",
+        column2="resource_id",
+        string="Booked Resources",
         depends=["booking_line_ids"],
         copy=False,
         readonly=True,
-        group_expand="_read_group_appointment_resource_ids",
+        group_expand="_read_group_resource_ids",
     )
-    # This field is used in the form view to create/manage the booking lines based on the total_capacity_reserved
-    # selected. This allows to have the appointment_resource_ids field linked to the appointment_booking_line model and
-    # thus avoid the duplication of information.
     resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+        comodel_name="resource.resource",
         string="Resources",
         compute="_compute_resource_ids",
         inverse="_inverse_resource_ids_or_capacity",
         search="_search_resource_ids",
         copy=False,
-        group_expand="_read_group_appointment_resource_ids",
+        group_expand="_read_group_resource_ids",
     )
     booking_line_ids = fields.One2many(
         comodel_name="appointment.booking.line",
@@ -237,15 +231,15 @@ class CalendarEvent(models.Model):
         index="btree_not_null",
     )
     unavailable_resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+        comodel_name="resource.resource",
         string="Resources intersecting with leave time",
         compute="_compute_unavailable_resource_ids",
     )
 
-    @api.constrains("appointment_resource_ids", "appointment_type_id")
+    @api.constrains("booked_resource_ids", "appointment_type_id")
     def _check_resource_and_appointment_type(self):
         for event in self:
-            if event.appointment_resource_ids and not event.appointment_type_id:
+            if event.booked_resource_ids and not event.appointment_type_id:
                 raise ValidationError(
                     _(
                         "The event %s cannot book resources without an appointment type.",
@@ -324,10 +318,10 @@ class CalendarEvent(models.Model):
                     non_staff_attendees.name + " - " + event.appointment_type_id.name
                 )
 
-    @api.depends("booking_line_ids", "booking_line_ids.appointment_resource_id")
+    @api.depends("booking_line_ids", "booking_line_ids.resource_id")
     def _compute_resource_ids(self):
         for event in self:
-            event.resource_ids = event.booking_line_ids.appointment_resource_id
+            event.resource_ids = event.booking_line_ids.resource_id
 
     @api.depends("start", "stop", "resource_ids")
     def _compute_unavailable_resource_ids(self):
@@ -356,7 +350,7 @@ class CalendarEvent(models.Model):
                 isAllCapacityFalse = not any(events_manage_capacity)
                 # Add events of the bookings to check if:
                 # - There are event appointments with manage capacity True and False
-                # - Manage capacity is all True and resource is not shareable or capacity used >= resource capacity
+                # - Manage capacity is all True and the resource is exclusive or capacity used >= resource capacity
                 # - Manage capacity is all False and more than one appointment type or number of bookings > max_bookings
                 if (
                     (not isAllCapacityTrue and not isAllCapacityFalse)
@@ -364,7 +358,7 @@ class CalendarEvent(models.Model):
                         isAllCapacityTrue
                         and (
                             sum(bookings.mapped("capacity_used")) >= resource.capacity
-                            or not resource.shareable
+                            or resource.booking_exclusive
                         )
                     )
                     or (
@@ -522,7 +516,7 @@ class CalendarEvent(models.Model):
                 )
         shares = {}
         for line in self.booking_line_ids:
-            resource = line.appointment_resource_id.resource_id
+            resource = line.resource_id
             if not resource or line.capacity_used <= 0:
                 continue
             capacity = (
@@ -647,7 +641,7 @@ class CalendarEvent(models.Model):
                 else:
                     capacity_to_reserve = len(event.resource_ids)
                 booking_lines_to_delete |= event.booking_line_ids
-                for resource in resources.sorted("shareable"):
+                for resource in resources.sorted("booking_exclusive", reverse=True):
                     if (
                         event.appointment_type_manage_capacity
                         and capacity_to_reserve <= 0
@@ -660,7 +654,7 @@ class CalendarEvent(models.Model):
                     )
                     booking_lines.append(
                         {
-                            "appointment_resource_id": resource.id,
+                            "resource_id": resource.id,
                             "calendar_event_id": event.id,
                             "capacity_reserved": resource_capacity_used,
                         }
@@ -714,20 +708,20 @@ class CalendarEvent(models.Model):
         self.env["appointment.booking.line"].sudo().create(booking_lines)
 
     def _search_resource_ids(self, operator, value):
-        return [("appointment_resource_ids", operator, value)]
+        return [("booked_resource_ids", operator, value)]
 
     def _read_group_groupby(self, alias, groupby_spec, query):
-        """Simulate group_by on resource_ids by using appointment_resource_ids."""
-        # appointment_resource_ids is only used to store the data through the appointment_booking_line
+        """Simulate group_by on resource_ids by using booked_resource_ids."""
+        # booked_resource_ids is only used to store the data through the appointment_booking_line
         # table; all computation on the resources and the capacity reserved is done with
-        # capacity_reserved. Simulating the group_by also avoids overriding appointment_resource_ids
+        # capacity_reserved. Simulating the group_by also avoids overriding booked_resource_ids
         # in JS: writing on the field directly tries to create the corresponding booking line, whose
         # required capacity_reserved is missing, raising a ValidationError.
         if groupby_spec == "resource_ids":
-            return super()._read_group_groupby(alias, "appointment_resource_ids", query)
+            return super()._read_group_groupby(alias, "booked_resource_ids", query)
         return super()._read_group_groupby(alias, groupby_spec, query)
 
-    def _read_group_appointment_resource_ids(self, resources, domain):
+    def _read_group_resource_ids(self, resources, domain):
         if not self.env.context.get("appointment_booking_gantt_show_all_resources"):
             return resources
         resources_domain = [
@@ -744,7 +738,7 @@ class CalendarEvent(models.Model):
                 .browse(default_appointment_type)
                 .resource_ids.filtered_domain(resources_domain)
             )
-        return self.env["appointment.resource"].search(resources_domain)
+        return self.env["resource.resource"].search(resources_domain)
 
     def _read_group_partner_ids(self, partners, domain):
         """Show the partners associated with relevant staff users in appointment gantt context."""
@@ -870,8 +864,8 @@ class CalendarEvent(models.Model):
 
     def _get_fields_public(self):
         return super()._get_fields_public() | {
-            "appointment_resource_ids",
             "appointment_type_id",
+            "booked_resource_ids",
             "resource_ids",
             "total_capacity_reserved",
             "total_capacity_used",

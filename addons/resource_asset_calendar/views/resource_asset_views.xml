@@ -6,17 +6,14 @@
         <field name="model">resource.asset</field>
         <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
         <field name="arch" type="xml">
-            <group name="where" position="inside">
-                <field
-                    name="appointment_resource_id"
-                    invisible="not appointment_resource_id" />
-                <button
-                    name="action_make_bookable"
-                    type="object"
-                    string="Make Bookable"
-                    groups="calendar.group_appointment_manager"
-                    invisible="not id or appointment_resource_id or state in ('draft', 'out_of_service', 'disposed')"
-                    class="btn-link ps-0" />
+            <group name="where" position="after">
+                <group name="booking" string="Booking">
+                    <field
+                        name="appointment_type_ids"
+                        widget="many2many_tags"
+                        groups="calendar.group_appointment_manager"
+                        readonly="state in ('draft', 'out_of_service', 'disposed')" />
+                </group>
             </group>
         </field>
     </record>

@@ -484,7 +484,7 @@ class AppointmentUITest(AppointmentUICommon):
         self.assertFalse(self.apt_type_resource.meeting_ids)  # Assert initial data
         self.authenticate(self.env.user.login, self.env.user.login)
         resource = (
-            self.env["appointment.resource"]
+            self.env["resource.resource"]
             .sudo()
             .create(
                 [
@@ -628,7 +628,7 @@ class AppointmentUITest(AppointmentUICommon):
         phone_question = self.apt_resource_multiple_bookings._get_main_phone_question()
         self.assertTrue(phone_question)
         resource = (
-            self.env["appointment.resource"]
+            self.env["resource.resource"]
             .sudo()
             .create(
                 [

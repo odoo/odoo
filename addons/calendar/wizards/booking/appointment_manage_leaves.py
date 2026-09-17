@@ -19,8 +19,8 @@ class AppointmentManageLeaves(models.TransientModel):
         )
         return user_time.astimezone(UTC).replace(tzinfo=None)
 
-    appointment_resource_ids = fields.Many2many(
-        comodel_name="appointment.resource",
+    resource_ids = fields.Many2many(
+        comodel_name="resource.resource",
         string="Resources",
         required=True,
     )
@@ -40,14 +40,14 @@ class AppointmentManageLeaves(models.TransientModel):
         self.env["resource.schedule.exception"].create(
             [
                 {
-                    "calendar_id": resource.resource_calendar_id.id,
+                    "calendar_id": resource.calendar_id.id,
                     "date_from": wizard.leave_start_dt,
                     "date_to": wizard.leave_end_dt,
                     "name": wizard.reason,
-                    "resource_id": resource.resource_id.id,
+                    "resource_id": resource.id,
                 }
                 for wizard in self
-                for resource in wizard.appointment_resource_ids
+                for resource in wizard.resource_ids
             ]
         )
         return {"type": "ir.actions.act_window_close"}

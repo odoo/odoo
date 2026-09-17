@@ -17,15 +17,18 @@ class TestResourceAssetCalendar(TransactionCase):
         )
         cls.start = datetime(2026, 10, 5, 9, 0)
 
-    def _book(self, profile, start=None, hours=1):
-        start = start or self.start
-        offer = self.env["appointment.type"].create(
+    def _offer(self, asset):
+        return self.env["appointment.type"].create(
             {
                 "name": "Equipment booking",
                 "schedule_based_on": "resources",
-                "resource_ids": [Command.set(profile.ids)],
+                "resource_ids": [Command.set(asset.resource_id.ids)],
             }
         )
+
+    def _book(self, asset, start=None, hours=1):
+        start = start or self.start
+        offer = self._offer(asset)
         return self.env["calendar.event"].create(
             {
                 "name": "Presentation",
@@ -34,111 +37,70 @@ class TestResourceAssetCalendar(TransactionCase):
                 "appointment_type_id": offer.id,
                 "booking_line_ids": [
                     Command.create(
-                        {"appointment_resource_id": profile.id, "capacity_reserved": 1}
+                        {
+                            "resource_id": asset.resource_id.id,
+                            "capacity_reserved": 1,
+                        }
                     )
                 ],
             }
         )
 
-    def test_a_profile_created_on_an_asset_shares_its_resource_and_name(self):
-        profile = self.env["appointment.resource"].create(
-            {"asset_id": self.projector.id, "name": "Something else"}
+    def test_an_offer_made_on_the_asset_reaches_its_resource(self):
+        offer = self._offer(self.projector)
+        self.assertEqual(self.projector.appointment_type_ids, offer)
+        self.assertTrue(self.projector.is_bookable)
+        self.assertTrue(self.projector.resource_id.is_bookable)
+
+    def test_the_asset_offers_itself(self):
+        offer = self.env["appointment.type"].create(
+            {"name": "Equipment booking", "schedule_based_on": "resources"}
         )
-        self.assertEqual(profile.resource_id, self.projector.resource_id)
-        self.assertEqual(self.projector.appointment_resource_id, profile)
-        self.assertEqual(profile.name, "Projector")
-        self.assertEqual(self.projector.name, "Projector")
+        self.projector.appointment_type_ids = offer
+        self.assertEqual(offer.resource_ids, self.projector.resource_id)
 
-    def test_attaching_later_swaps_the_resource_and_detaching_gives_one_back(self):
-        profile = self.env["appointment.resource"].create({"name": "Loose projector"})
-        own = profile.resource_id
-        profile.asset_id = self.projector
-        self.assertEqual(profile.resource_id, self.projector.resource_id)
-        self.assertFalse(own.active)
-        profile.asset_id = False
-        self.assertNotEqual(profile.resource_id, self.projector.resource_id)
-        self.assertTrue(profile.resource_id.active)
-        self.assertTrue(self.projector.resource_id.active)
-
-    def test_one_profile_per_asset_even_within_one_create(self):
-        with self.assertRaises(ValidationError):
-            self.env["appointment.resource"].create(
-                [{"asset_id": self.projector.id}, {"asset_id": self.projector.id}]
-            )
-        self.env["appointment.resource"].create({"asset_id": self.projector.id})
-        with self.assertRaises(ValidationError):
-            self.env["appointment.resource"].create({"asset_id": self.projector.id})
-
-    def test_an_existing_profile_is_attached_from_the_asset(self):
-        profile = self.env["appointment.resource"].create({"name": "Loose projector"})
-        own = profile.resource_id
-        self.projector.appointment_resource_id = profile
-        self.assertEqual(profile.asset_id, self.projector)
-        self.assertEqual(profile.resource_id, self.projector.resource_id)
-        self.assertFalse(own.active)
-
-    def test_assets_are_found_by_their_booking_profile(self):
-        profile = self.projector._create_appointment_resources()
+    def test_assets_are_found_by_what_offers_them(self):
+        offer = self._offer(self.projector)
         Asset = self.env["resource.asset"]
         self.assertEqual(
-            Asset.search([("appointment_resource_id", "in", profile.ids)]),
-            self.projector,
+            Asset.search([("appointment_type_ids", "in", offer.ids)]), self.projector
         )
-        self.assertIn(
-            self.projector,
-            Asset.search([("appointment_resource_id", "!=", False)]),
-        )
-        self.assertNotIn(
-            self.projector,
-            Asset.search([("appointment_resource_id", "=", False)]),
-        )
-
-    def test_make_bookable_creates_the_profile_once(self):
-        first = self.projector._create_appointment_resources()
-        second = self.projector._create_appointment_resources()
-        self.assertEqual(self.projector.appointment_resource_id, first)
-        self.assertFalse(second)
+        self.assertIn(self.projector, Asset.search([("is_bookable", "=", True)]))
 
     def test_an_asset_out_of_service_refuses_a_booking(self):
-        profile = self.projector._create_appointment_resources()
-        self.assertTrue(self._book(profile).reservation_ids)
+        self.assertTrue(self._book(self.projector).reservation_ids)
         for state in ("draft", "out_of_service"):
             self.projector.state = state
             with self.assertRaises(ValidationError):
-                self._book(profile, start=self.start + timedelta(days=1))
+                self._book(self.projector, start=self.start + timedelta(days=1))
         self.projector.action_dispose()
         with self.assertRaises(ValidationError):
-            self._book(profile, start=self.start + timedelta(days=2))
+            self._book(self.projector, start=self.start + timedelta(days=2))
 
     def test_an_asset_under_maintenance_is_still_offered(self):
-        profile = self.projector._create_appointment_resources()
         self.projector.state = "maintenance"
-        self.assertTrue(self._book(profile).reservation_ids)
+        self.assertTrue(self._book(self.projector).reservation_ids)
 
     def test_slot_search_skips_an_asset_that_is_not_bookable(self):
-        profile = self.projector._create_appointment_resources()
-        offer = self.env["appointment.type"].create(
-            {
-                "name": "Equipment booking",
-                "schedule_based_on": "resources",
-                "resource_ids": [Command.set(profile.ids)],
-            }
-        )
+        offer = self._offer(self.projector)
         slot = {
             "slot": self.env["appointment.slot"],
             "UTC": (self.start, self.start + timedelta(hours=1)),
         }
         values = {"resource_to_bookings": {}}
         self.assertTrue(
-            offer._slot_availability_is_resource_available(slot, profile, values)
+            offer._slot_availability_is_resource_available(
+                slot, self.projector.resource_id, values
+            )
         )
         self.projector.state = "out_of_service"
         self.assertFalse(
-            offer._slot_availability_is_resource_available(slot, profile, values)
+            offer._slot_availability_is_resource_available(
+                slot, self.projector.resource_id, values
+            )
         )
 
     def test_a_hard_reservation_on_the_asset_refuses_an_overlapping_booking(self):
-        profile = self.projector._create_appointment_resources()
         self.projector.resource_id.enforce_booking_limit = True
         self.env["resource.reservation"].create(
             {
@@ -150,7 +112,9 @@ class TestResourceAssetCalendar(TransactionCase):
             }
         )
         self.assertTrue(
-            self._book(profile, start=self.start + timedelta(hours=2)).reservation_ids
+            self._book(
+                self.projector, start=self.start + timedelta(hours=2)
+            ).reservation_ids
         )
         with self.assertRaises(ValidationError):
-            self._book(profile, start=self.start + timedelta(minutes=30))
+            self._book(self.projector, start=self.start + timedelta(minutes=30))
