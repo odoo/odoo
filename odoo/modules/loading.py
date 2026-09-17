@@ -1590,12 +1590,11 @@ class _ModuleLoader:
                 checked_models.append(model)
             else:
                 unloadable += 1  # debuglog
-                if _logger.isEnabledFor(logging.INFO):
-                    _logger.log(
-                        RUNBOT,
-                        "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)",
-                        model,
-                    )
+                _logger.log(
+                    RUNBOT,
+                    "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)",
+                    model,
+                )
         _debug.pipeline(
             "modules.post_update_checks",
             updated_modules=len(self.registry.updated_modules),
