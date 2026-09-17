@@ -586,19 +586,6 @@ class IrUiView(models.Model):
 
     @api.depends("arch", "inherit_id")
     def _compute_invalid_locators(self) -> None:
-        def assess_locator(source: _Element, spec: _Element) -> dict[str, Any] | None:
-            node = None
-            with suppress(ValidationError):
-                node = self.locate_node(source, spec)
-
-            if node is None:
-                return {
-                    "tag": spec.tag,
-                    "attrib": dict(spec.attrib),
-                    "sourceline": spec.sourceline,
-                }
-            return None
-
         self.invalid_locators = False
         for view in self:
             if not view.inherit_id or not view.arch:
@@ -607,47 +594,64 @@ class IrUiView(models.Model):
                 source = view.with_context(
                     ir_ui_view_tree_cut_off_view=view
                 )._get_combined_arch()
-                specs = collections.deque([etree.fromstring(view.arch)])
+                specs_tree = etree.fromstring(view.arch)
             except ValidationError, ValueError, etree.ParseError:
                 _debug.logic("invalid_locators.broken_hierarchy", view=view.id)
                 view.invalid_locators = [{"broken_hierarchy": True}]
                 continue
-
-            invalid_locators = []
-            while specs:
-                spec = specs.popleft()
-                if isinstance(spec, etree._Comment):
-                    continue
-                if spec.tag == "data":
-                    specs.extend(spec)
-                    continue
-
-                if invalid_locator := assess_locator(source, spec):
-                    invalid_locators.append(invalid_locator)
-                else:
-                    position, mode = spec.get("position"), spec.get("mode")
-                    for sub_spec in spec:
-                        sub_position = sub_spec.get("position")
-                        if sub_position == "move" and (
-                            position != "replace" or mode != "inner"
-                        ):
-                            if invalid_move := assess_locator(source, sub_spec):
-                                invalid_locators.append(invalid_move)
-                        elif sub_position:
-                            invalid_locators.append(
-                                {
-                                    "tag": sub_spec.tag,
-                                    "attrib": dict(sub_spec.attrib),
-                                    "sourceline": sub_spec.sourceline,
-                                }
-                            )
-
-                    with suppress(ValueError, ValidationError):
-                        source = apply_inheritance_specs(source, spec)
+            invalid_locators = list(view._iter_invalid_locators(source, specs_tree))
             _debug.logic(
                 "invalid_locators", view=view.id, invalid=len(invalid_locators)
             )
             view.invalid_locators = invalid_locators or False
+
+    def _iter_invalid_locators(
+        self, source: _Element, specs_tree: _Element
+    ) -> typing.Iterator[dict[str, Any]]:
+        """Each spec of this overlay that names no node of ``source``, the
+        specs applying as the walk goes so a later one sees what an earlier
+        one inserted. A move inside a spec is a locator too; any other
+        position on a spec's child is misplaced and reported as is."""
+
+        def unlocated(spec: _Element) -> dict[str, Any] | None:
+            node = None
+            with suppress(ValidationError):
+                node = self.locate_node(source, spec)
+            if node is not None:
+                return None
+            return {
+                "tag": spec.tag,
+                "attrib": dict(spec.attrib),
+                "sourceline": spec.sourceline,
+            }
+
+        specs = collections.deque([specs_tree])
+        while specs:
+            spec = specs.popleft()
+            if isinstance(spec, etree._Comment):
+                continue
+            if spec.tag == "data":
+                specs.extend(spec)
+                continue
+            if invalid := unlocated(spec):
+                yield invalid
+                continue
+            inner_replace = spec.get("position") == "replace" and (
+                spec.get("mode") == "inner"
+            )
+            for sub_spec in spec:
+                sub_position = sub_spec.get("position")
+                if sub_position == "move" and not inner_replace:
+                    if invalid := unlocated(sub_spec):
+                        yield invalid
+                elif sub_position:
+                    yield {
+                        "tag": sub_spec.tag,
+                        "attrib": dict(sub_spec.attrib),
+                        "sourceline": sub_spec.sourceline,
+                    }
+            with suppress(ValueError, ValidationError):
+                source = apply_inheritance_specs(source, spec)
 
     def _check_inheritance(self, arch: _Element) -> None:
         for node in _xpath_position(arch):
@@ -1913,7 +1917,7 @@ class IrUiView(models.Model):
             if key and key not in view_by_ref:
                 view_by_ref[key] = view
 
-        missing_xmlid_views = [
+        missing_xmlids = [
             xmlid for xmlid in xmlids if "." in xmlid and xmlid not in view_by_ref
         ]
         _debug.perf.count(
@@ -1921,34 +1925,10 @@ class IrUiView(models.Model):
             ids=len(ids),
             xmlids=len(xmlids),
             found=len(views),
-            missing_xmlids=len(missing_xmlid_views),
+            missing_xmlids=len(missing_xmlids),
         )
-        if missing_xmlid_views:
-            domain = Domain.OR(
-                Domain("model", "=", "ir.ui.view")
-                & Domain("module", "=", res[0])
-                & Domain("name", "=", res[1])
-                for xmlid in missing_xmlid_views
-                if (res := xmlid.split(".", 1))
-            )
-
-            model_data_records = self.env["ir.model.data"].sudo().search(domain)
-            all_views = views_sudo.browse(model_data_records.mapped("res_id")).exists()
-            _debug.logic(
-                "views_by_ref.xmlid_fallback",
-                xmlids=len(missing_xmlid_views),
-                model_data=len(model_data_records),
-                views=len(all_views),
-            )
-            view_by_id = {view.id: view for view in all_views}
-            for model_data in model_data_records:
-                view = view_by_id.get(model_data.res_id)
-                if view is None:
-                    continue
-                view_by_ref[view.id] = view
-                view_by_ref[f"{model_data.module}.{model_data.name}"] = view
-                if view.key and view.key not in view_by_ref:
-                    view_by_ref[view.key] = view
+        if missing_xmlids:
+            view_by_ref.update(views_sudo._get_views_by_xmlid(missing_xmlids))
 
         for key, view in view_by_ref.items():
             self._get_cached_template_info(key, _view=view)
@@ -1970,6 +1950,35 @@ class IrUiView(models.Model):
                 error = MissingError(self.env._("Template not found: '%s'", xmlid))
                 self._get_cached_template_info(xmlid, _error=error)
                 view_by_ref[xmlid] = error
+        return view_by_ref
+
+    def _get_views_by_xmlid(self, xmlids: list[str]) -> dict[int | str, Self]:
+        """The views the xmlids name through ir.model.data, each under its
+        id, its xmlid and, first come, its key."""
+        domain = Domain.OR(
+            Domain("model", "=", "ir.ui.view")
+            & Domain("module", "=", module)
+            & Domain("name", "=", name)
+            for module, name in (xmlid.split(".", 1) for xmlid in xmlids)
+        )
+        model_data_records = self.env["ir.model.data"].sudo().search(domain)
+        views = self.browse(model_data_records.mapped("res_id")).exists()
+        _debug.logic(
+            "views_by_ref.xmlid_fallback",
+            xmlids=len(xmlids),
+            model_data=len(model_data_records),
+            views=len(views),
+        )
+        view_by_id = {view.id: view for view in views}
+        view_by_ref: dict[int | str, Self] = {}
+        for model_data in model_data_records:
+            view = view_by_id.get(model_data.res_id)
+            if view is None:
+                continue
+            view_by_ref[view.id] = view
+            view_by_ref[f"{model_data.module}.{model_data.name}"] = view
+            if view.key and view.key not in view_by_ref:
+                view_by_ref[view.key] = view
         return view_by_ref
 
     @tools.ormcache(cache="templates")
@@ -2065,74 +2074,8 @@ class IrUiView(models.Model):
                 elem.tail = elem.tail.replace("\t", "")
 
     def _postprocess_access_rights(self, tree: _Element) -> _Element:
-        group_definitions = self.env["res.groups"]._get_group_definitions()
-
-        user_group_ids = self.env.user._get_group_ids()
-
-        @functools.cache
-        def has_access(groups_key: str) -> bool:
-            groups = group_definitions.from_key(groups_key)
-            return groups.matches(user_group_ids)
-
-        removed = unwrapped = 0  # debuglog
-        for node in _xpath_groups_key(tree):
-            parent = node.getparent()
-            if not has_access(node.attrib.pop("__groups_key__")):
-                if parent is None:
-                    _debug.logic(
-                        "access_rights.root_refused", view=self.id, uid=self.env.uid
-                    )
-                    raise AccessError(
-                        _(
-                            "View '%(name)s' is restricted to groups the user does not belong to.",
-                            name=self._view_display_name() if self else tree.tag,
-                        )
-                    )
-                tail = node.tail
-                previous = node.getprevious()
-                parent.remove(node)
-                removed += 1  # debuglog
-                if tail:
-                    if previous is not None:
-                        previous.tail = (previous.tail or "") + tail
-                    else:
-                        parent.text = (parent.text or "") + tail
-            elif node.tag == "t" and not node.attrib and parent is not None:
-                self._unwrap_node(node, parent)
-                unwrapped += 1  # debuglog
-
-        model_access = 0  # debuglog
-        for node in _xpath_model_access(tree):
-            model_access += 1  # debuglog
-            model = self.env[node.attrib.pop("model_access_rights")]
-            if node.tag == "field":
-                can_create = model.has_access("create")
-                can_write = model.has_access("write")
-                node.set("can_create", str(bool(can_create)))
-                node.set("can_write", str(bool(can_write)))
-            else:
-                for action, operation in (
-                    ("create", "create"),
-                    ("delete", "unlink"),
-                    ("edit", "write"),
-                ):
-                    if not node.get(action) and not model.has_access(operation):
-                        node.set(action, "False")
-                if node.tag == "kanban":
-                    group_by_name = node.get("default_group_by")
-                    group_by_field = model._fields.get(group_by_name)
-                    if group_by_field and group_by_field.type == "many2one":
-                        group_by_model = model.env[group_by_field.comodel_name]
-                        for action, operation in (
-                            ("group_create", "create"),
-                            ("group_delete", "unlink"),
-                            ("group_edit", "write"),
-                        ):
-                            if not node.get(action) and not group_by_model.has_access(
-                                operation
-                            ):
-                                node.set(action, "False")
-
+        removed, unwrapped = self._drop_inaccessible_nodes(tree)
+        model_access = self._apply_model_access(tree)
         _debug.pipeline(
             "access_rights_applied",
             view=self.id,
@@ -2142,6 +2085,86 @@ class IrUiView(models.Model):
             model_access=model_access,
         )
         return tree
+
+    def _drop_inaccessible_nodes(self, tree: _Element) -> tuple[int, int]:
+        """Remove every node whose groups the user is not in, keeping its
+        tail; unwrap a bare <t> the user may see. Returns (removed,
+        unwrapped)."""
+        group_definitions = self.env["res.groups"]._get_group_definitions()
+        user_group_ids = self.env.user._get_group_ids()
+
+        @functools.cache
+        def has_access(groups_key: str) -> bool:
+            return group_definitions.from_key(groups_key).matches(user_group_ids)
+
+        removed = unwrapped = 0
+        for node in _xpath_groups_key(tree):
+            parent = node.getparent()
+            if has_access(node.attrib.pop("__groups_key__")):
+                if node.tag == "t" and not node.attrib and parent is not None:
+                    self._unwrap_node(node, parent)
+                    unwrapped += 1
+                continue
+            if parent is None:
+                _debug.logic(
+                    "access_rights.root_refused", view=self.id, uid=self.env.uid
+                )
+                raise AccessError(
+                    _(
+                        "View '%(name)s' is restricted to groups the user does not belong to.",
+                        name=self._view_display_name() if self else tree.tag,
+                    )
+                )
+            tail = node.tail
+            previous = node.getprevious()
+            parent.remove(node)
+            removed += 1
+            if tail:
+                if previous is not None:
+                    previous.tail = (previous.tail or "") + tail
+                else:
+                    parent.text = (parent.text or "") + tail
+        return removed, unwrapped
+
+    def _apply_model_access(self, tree: _Element) -> int:
+        """Stamp each node carrying model_access_rights with what the user
+        may do on that model: can_create/can_write on a field, the
+        create/delete/edit flags the view left unset on a root, and the
+        group flags of a kanban grouped on a many2one. Returns the count."""
+        count = 0
+        for node in _xpath_model_access(tree):
+            count += 1
+            model = self.env[node.attrib.pop("model_access_rights")]
+            if node.tag == "field":
+                node.set("can_create", str(model.has_access("create")))
+                node.set("can_write", str(model.has_access("write")))
+                continue
+            self._deny_missing_actions(
+                node,
+                model,
+                (("create", "create"), ("delete", "unlink"), ("edit", "write")),
+            )
+            if node.tag == "kanban":
+                group_by_field = model._fields.get(node.get("default_group_by"))
+                if group_by_field and group_by_field.type == "many2one":
+                    self._deny_missing_actions(
+                        node,
+                        model.env[group_by_field.comodel_name],
+                        (
+                            ("group_create", "create"),
+                            ("group_delete", "unlink"),
+                            ("group_edit", "write"),
+                        ),
+                    )
+        return count
+
+    @staticmethod
+    def _deny_missing_actions(
+        node: _Element, model: models.BaseModel, actions: tuple[tuple[str, str], ...]
+    ) -> None:
+        for action, operation in actions:
+            if not node.get(action) and not model.has_access(operation):
+                node.set(action, "False")
 
     @staticmethod
     def _unwrap_node(node: _Element, parent: _Element) -> None:
