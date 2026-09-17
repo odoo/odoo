@@ -1913,10 +1913,8 @@ class IrUiView(models.Model):
     def _get_views_by_ref(
         self, ids_or_xmlids: Sequence[int | str]
     ) -> dict[int | str, Self | Exception]:
-        views_sudo = (
-            self.env["ir.ui.view"]
-            .sudo()
-            .with_context(load_all_views=True, raise_if_not_found=True)
+        views_sudo = self.sudo().with_context(
+            load_all_views=True, raise_if_not_found=True
         )
 
         ids, xmlids = partition(lambda v: isinstance(v, int), ids_or_xmlids)
@@ -1959,24 +1957,20 @@ class IrUiView(models.Model):
         for key, view in view_by_ref.items():
             self._get_cached_template_info(key, _view=view)
 
-        for view_id in ids:
-            if view_id not in view_by_ref:
-                _debug.logic("views_by_ref.missing", ref=view_id)
-                error = MissingError(
-                    self.env._(
-                        "Template does not exist or has been deleted: %s",
-                        view_id,
-                    )
-                )
-                self._get_cached_template_info(view_id, _error=error)
-                view_by_ref[view_id] = error
-        for xmlid in xmlids:
-            if xmlid not in view_by_ref:
-                _debug.logic("views_by_ref.missing", ref=xmlid)
-                error = MissingError(self.env._("Template not found: '%s'", xmlid))
-                self._get_cached_template_info(xmlid, _error=error)
-                view_by_ref[xmlid] = error
+        for ref in (*ids, *xmlids):
+            if ref not in view_by_ref:
+                _debug.logic("views_by_ref.missing", ref=ref)
+                error = self._missing_template_error(ref)
+                self._get_cached_template_info(ref, _error=error)
+                view_by_ref[ref] = error
         return view_by_ref
+
+    def _missing_template_error(self, ref: int | str) -> MissingError:
+        if isinstance(ref, int):
+            return MissingError(
+                self.env._("Template does not exist or has been deleted: %s", ref)
+            )
+        return MissingError(self.env._("Template not found: '%s'", ref))
 
     def _get_views_by_xmlid(self, xmlids: list[str]) -> dict[int | str, Self]:
         """The views the xmlids name through ir.model.data, each under its
