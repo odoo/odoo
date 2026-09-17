@@ -4,7 +4,7 @@
   read better than a loop.
 - Recordsets/collections are booleans: write `if records:` / `if some_list:`,
   not `if len(...)`.
-- Don't read a non-relational field on a multi-record set (it raises) — iterate
+- Don't read a non-relational field on a multi-record set (it raises); iterate
   or `mapped`. Conversely, guard single-record assumptions with `ensure_one()`.
 - Combine domains with `odoo.fields.Domain`: the `&`, `|`, `~` operators for
   domains written inline, `Domain.AND`/`Domain.OR` for a list of domains you
@@ -21,7 +21,7 @@
   `create` per record in a loop (see [Batch ORM calls](performance.md#batch-orm-calls)).
 - `@api.depends` must list **every** field the compute reads; stored computes
   need correct dependencies and no side effects.
-- `@api.onchange` is UI-only — never rely on it for data integrity; enforce
+- `@api.onchange` is UI-only: never rely on it for data integrity; enforce
   invariants with `@api.constrains` or SQL constraints declared as model
   attributes (`_x_check = models.Constraint("CHECK (...)", "msg")`; the
   attribute name must start with `_`). Indexes are declared the same way
@@ -48,4 +48,4 @@
 - Catch **specific** exceptions over the smallest possible block; let unexpected
   ones propagate to the framework. To recover from framework exceptions, wrap the
   work in `with self.env.cr.savepoint():` (note: >64 savepoints per transaction
-  degrades PostgreSQL — bound batch sizes).
+  degrades PostgreSQL, so bound batch sizes).
