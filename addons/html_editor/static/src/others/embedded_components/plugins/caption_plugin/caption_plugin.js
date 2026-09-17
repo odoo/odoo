@@ -16,6 +16,11 @@ import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 
 const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
+const captionSpanPredicates = (expectsToBeInside) => (selection) => {
+    if (closestElement(selection.focusNode, CAPTION_SPAN_SELECTOR)) {
+        return expectsToBeInside;
+    }
+};
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
@@ -89,13 +94,8 @@ export class CaptionPlugin extends Plugin {
             }
         }),
         html_drop_overrides: this.onDrop.bind(this),
-        should_process_text_for_insertion_predicates: ([focusNode]) => {
-            if (closestElement(focusNode, CAPTION_SPAN_SELECTOR)) {
-                return false;
-            }
-        },
-        paste_html_overrides: this.onPaste.bind(this),
-        paste_odoo_editor_html_overrides: this.onPaste.bind(this),
+        should_process_text_for_insertion_predicates: captionSpanPredicates(false),
+        should_paste_as_text_predicates: captionSpanPredicates(true),
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
@@ -160,14 +160,6 @@ export class CaptionPlugin extends Plugin {
     onDrop(selection, text) {
         if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
             this.dependencies.dom.insert(text.replace(/\r?\n|\r/g, ""));
-            return true;
-        }
-    }
-
-    onPaste(selection, clipboardRoot) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            const pastedTextContent = clipboardRoot.textContent;
-            this.dependencies.dom.insert(pastedTextContent.replace(/\r?\n|\r/g, ""));
             return true;
         }
     }

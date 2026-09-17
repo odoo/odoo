@@ -53,8 +53,8 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        should_process_text_for_insertion_predicates: ([focusNode]) => {
-            if (isInPre(focusNode)) {
+        should_process_text_for_insertion_predicates: (selection) => {
+            if (isInPre(selection.focusNode)) {
                 return false;
             }
         },
