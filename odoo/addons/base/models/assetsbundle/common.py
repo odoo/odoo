@@ -21,12 +21,18 @@ _debug = DebugLog(__name__)
 _bundle_log = get_asset_logger("bundle")
 
 
-def _pipeline_sources() -> tuple[Path, ...]:
+def _tools_dir() -> Path | None:
     tools_file = getattr(odoo.tools, "__file__", None)
-    if not tools_file or not __file__:
+    if not tools_file:
+        return None
+    return Path(tools_file).resolve().parent
+
+
+def _pipeline_sources() -> tuple[Path, ...]:
+    tools_dir = _tools_dir()
+    if tools_dir is None or not __file__:
         _debug.logic("pipeline_sources_unknown", reason="no_file")
         return ()
-    tools_dir = Path(tools_file).resolve().parent
     package_dir = Path(__file__).resolve().parent
     return (
         package_dir,
@@ -72,10 +78,8 @@ def _toolchain_versions() -> str:
 
 
 def _repo_root() -> Path | None:
-    tools_file = getattr(odoo.tools, "__file__", None)
-    if not tools_file:
-        return None
-    return Path(tools_file).resolve().parent.parent.parent
+    tools_dir = _tools_dir()
+    return None if tools_dir is None else tools_dir.parent.parent
 
 
 @functools.cache

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 from odoo import release
 from odoo.api import SUPERUSER_ID, Environment
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.assets.constants import ANY_UNIQUE
@@ -59,10 +60,11 @@ class AssetAttachmentStore:
     def get_asset_url(self, unique: str, extension: str) -> str:
         return self._asset_url(unique, extension)
 
-    def get_asset_url_pattern(
-        self, unique: str = ANY_UNIQUE, extension: str = "%"
-    ) -> str:
+    def get_asset_url_pattern(self, extension: str, unique: str = ANY_UNIQUE) -> str:
         return self._asset_url(unique, extension, pattern=True)
+
+    def _unique_for(self, extension: str) -> str:
+        return self._version("css" if self.is_css(extension) else "js")
 
     def _asset_url(self, unique: str, extension: str, pattern: bool = False) -> str:
         direction = ".rtl" if self.is_css(extension) and self.rtl else ""
@@ -103,6 +105,7 @@ class AssetAttachmentStore:
             )
         )
         deleted_ids = {row[0] for row in self.env.cr.fetchall()}
+        attachments.browse(deleted_ids).invalidate_recordset()
         if _debug.logic.enabled and len(deleted_ids) < len(attachments):
             _debug.logic(
                 "attachments_skipped_locked",
@@ -125,18 +128,13 @@ class AssetAttachmentStore:
             attachments._remove_stored_file_multi(to_delete)
 
     def _clean_attachments(self, extension: str, keep_url: str) -> None:
-        ira = self.env["ir.attachment"]
-        to_clean_pattern = self.get_asset_url_pattern(extension=extension)
-        domain = [
-            ("url", "=like", to_clean_pattern),
-            ("url", "!=", keep_url),
-            ("public", "=", True),
-            ("res_model", "=", "ir.ui.view"),
-            ("res_id", "=", 0),
-            ("create_uid", "=", SUPERUSER_ID),
-        ]
+        ira = self.env["ir.attachment"].sudo()
+        to_clean_pattern = self.get_asset_url_pattern(extension)
+        domain = ira._get_domain_generated_assets(
+            url_pattern=to_clean_pattern
+        ) & Domain("url", "!=", keep_url)
 
-        attachments = ira.sudo().search(domain)
+        attachments = ira.search(domain)
         _debug.logic(
             "stale_attachments",
             bundle=self.name,
@@ -155,32 +153,25 @@ class AssetAttachmentStore:
     def get_attachments(
         self, extension: str, ignore_version: bool = False
     ) -> IrAttachment:
-        unique = (
-            ANY_UNIQUE
-            if ignore_version
-            else self._version("css" if self.is_css(extension) else "js")
-        )
-        url_pattern = self.get_asset_url_pattern(unique=unique, extension=extension)
+        unique = ANY_UNIQUE if ignore_version else self._unique_for(extension)
+        url_pattern = self.get_asset_url_pattern(extension, unique)
         _debug.logic(
             "attachment_lookup",
             bundle=self.name,
             extension=extension,
             versioned=not ignore_version,
         )
-        query = """
-             SELECT max(id)
-               FROM ir_attachment
-              WHERE create_uid = %s
-                AND url like %s
-                AND res_model = 'ir.ui.view'
-                AND res_id = 0
-                AND public = true
-           GROUP BY name
-           ORDER BY name
-        """
-        self.env.cr.execute(SQL(query, SUPERUSER_ID, url_pattern))
-
-        attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+        ira = self.env["ir.attachment"].sudo()
+        # parallel transactions can each store the same version; one row per name
+        attachment_ids = [
+            max_id
+            for _name, max_id in ira._read_group(
+                ira._get_domain_generated_assets(url_pattern=url_pattern),
+                groupby=["name"],
+                aggregates=["id:max"],
+                order="name",
+            )
+        ]
         _debug.logic(
             "attachments_looked_up",
             bundle=self.name,
@@ -188,7 +179,7 @@ class AssetAttachmentStore:
             ignore_version=ignore_version,
             found=len(attachment_ids),
         )
-        return self.env["ir.attachment"].sudo().browse(attachment_ids)
+        return ira.browse(attachment_ids)
 
     def save_attachment(self, extension: str, content: str) -> IrAttachment:
         mimetype = self._ATTACHMENT_MIMETYPES.get(extension)
@@ -200,11 +191,8 @@ class AssetAttachmentStore:
         ira = self.env["ir.attachment"]
 
         fname = f"{self.name}.{extension}"
-        unique = self._version("css" if self.is_css(extension) else "js")
-        url = self.get_asset_url(
-            unique=unique,
-            extension=extension,
-        )
+        unique = self._unique_for(extension)
+        url = self.get_asset_url(unique=unique, extension=extension)
         values = self._attachment_values(
             name=fname, mimetype=mimetype, raw=content.encode("utf-8"), url=url
         )

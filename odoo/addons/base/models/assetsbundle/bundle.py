@@ -157,7 +157,11 @@ class AssetsBundle:
             if css and (stylesheet_type := self._STYLESHEET_TYPES.get(extension)):
                 self.stylesheets.append(
                     stylesheet_type(
-                        self, **params, rtl=self.rtl, autoprefix=self.autoprefix
+                        self,
+                        **params,
+                        rtl=self.rtl,
+                        autoprefix=self.autoprefix,
+                        split_id=f"{len(self.stylesheets):04x}",
                     )
                 )
             if js and (script_type := self._SCRIPT_TYPES.get(extension)):
@@ -203,11 +207,11 @@ class AssetsBundle:
         assets_params: dict[str, Any] | None = None,
         autoprefix: bool = False,
     ) -> None:
+        _check_external_libs_once()
         self.name = name
         self.env = env
         self.javascripts = []
         self.native_modules = []
-        _check_external_libs_once()
         self._is_esm_bundle = name in esm_registry().bundles
         self.templates = []
         self.stylesheets = []
@@ -216,8 +220,6 @@ class AssetsBundle:
         self.rtl = rtl
         self.assets_params = assets_params or {}
         self.autoprefix = autoprefix
-        self.has_css = css
-        self.has_js = js
         self._checksum_cache = {}
         self._native_module_data_cache: dict[bool, NativeModuleData] = {}
         self.is_debug_assets = debug_assets
@@ -225,9 +227,6 @@ class AssetsBundle:
             external_assets, css, js
         )
         self._collect_files(files, css, js)
-
-        for index, stylesheet in enumerate(self.stylesheets):
-            stylesheet.id = f"{index:04x}"
 
         self._version_assets = {
             "css": tuple(self.stylesheets),
@@ -277,10 +276,10 @@ class AssetsBundle:
     def get_links(self) -> list[str]:
         response = []
 
-        if self.has_css and self.stylesheets:
+        if self.has_css_content:
             response.append(self.get_link("css"))
 
-        if self.has_js and self.has_js_content:
+        if self.has_js_content:
             response.append(self.get_link("js"))
 
         _debug.pipeline(
@@ -607,12 +606,6 @@ class AssetsBundle:
     def generate_esm_template_bundle(self, use_import=True) -> str:
         return self._xml.generate_esm_template_bundle(use_import)
 
-    @classmethod
-    def _render_css_error_banner(
-        cls, css_errors: Sequence[str], previous_css: str
-    ) -> str:
-        return CssPipeline._render_css_error_banner(css_errors, previous_css)
-
     def css(self) -> IrAttachment:
         if not self.has_css_content:
             _debug.logic("css_attachment", bundle=self.name, reason="no_content")
@@ -650,7 +643,7 @@ class AssetsBundle:
                 errors=len(self.css_errors),
                 previous=bool(previous_attachment),
             )
-            banner = self._render_css_error_banner(self.css_errors, previous_css)
+            banner = self._css._render_css_error_banner(self.css_errors, previous_css)
             return self.save_attachment(extension, banner)
 
         import_rules, css = self._css.hoist_import_rules(css)

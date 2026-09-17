@@ -215,9 +215,54 @@ class TestPreprocessCssAtRulesIdempotent(BaseCase):
         self.assertEqual(out3.count("@charset"), 1)
 
 
+class TestRtlAfterCompileFailure(BaseCase):
+    def _pipeline(self, compile_ok):
+        scss = Mock(spec=ScssStylesheetAsset)
+        scss.id = "abc123"
+        scss.get_source.return_value = "/*! odoo-split:abc123 */\n.a{color:$x}"
+        scss.minify.return_value = ".a{color:red}"
+        scss.errors = []
+        plain = Mock(spec=StylesheetAsset)
+        plain.id = "def456"
+        plain.get_source.return_value = "/*! odoo-split:def456 */\n.b{margin-left:1px}"
+        plain.minify.return_value = ".b{margin-left:1px}"
+        plain.errors = []
+        bundle = _fake_bundle(stylesheets=[scss, plain], rtl=True)
+        pipeline = CssPipeline(bundle)
+
+        def compile_css(compiler, source):
+            if compile_ok:
+                return "/*! odoo-split:abc123 */\n.a{color:red}"
+            bundle.css_errors.append("Sass: broke")
+            return ""
+
+        pipeline.compile_css = compile_css
+        pipeline.convert_css_to_rtl = Mock(side_effect=lambda source: source)
+        return pipeline, bundle
+
+    def test_a_failed_compile_never_reaches_rtlcss(self):
+        pipeline, bundle = self._pipeline(compile_ok=False)
+
+        self.assertEqual(pipeline.preprocess(), "")
+
+        pipeline.convert_css_to_rtl.assert_not_called()
+        self.assertEqual(bundle.css_errors, ["Sass: broke"])
+
+    def test_a_clean_compile_still_converts(self):
+        pipeline, bundle = self._pipeline(compile_ok=True)
+
+        out = pipeline.preprocess()
+
+        pipeline.convert_css_to_rtl.assert_called_once()
+        self.assertIn(".a{color:red}", out)
+        self.assertIn(".b{margin-left:1px}", out)
+        self.assertEqual(bundle.css_errors, [])
+
+
 class TestStylesheetErrorInversion(BaseCase):
     class _StubBundle(AssetsBundle):
         def __init__(self):
+            self.name = "test.stub"
             self.stylesheets = []
             self.css_errors = []
             self.rtl = False
@@ -696,7 +741,7 @@ class TestAutoprefixImportStringBoundary(BaseCase):
         self.assertEqual(out, '.x{content:"@import url(evil);"}')
 
     def test_hoist_import_rules_extracts_only_real_rules(self):
-        pipeline = CssPipeline.__new__(CssPipeline)
+        pipeline = CssPipeline(_fake_bundle(name="b"))
         rules, remainder = pipeline.hoist_import_rules(
             '@import "a.css";\n.x{content:"@import url(evil);"}\nbody{}'
         )
@@ -1188,38 +1233,38 @@ class TestCssErrorBanner(BaseCase):
     H = CssPipeline._CSS_ERROR_HEADER
 
     def test_message_is_escaped_for_a_css_string_literal(self):
-        out = AssetsBundle._render_css_error_banner(['boom "x" *\n y'], "")
+        out = CssPipeline._render_css_error_banner(['boom "x" *\n y'], "")
         self.assertIn(r"\"x\"", out)
         self.assertIn(r"\A", out)
         self.assertIn(r"\*", out)
         self.assertIn("A css error occurred", out)
 
     def test_previous_good_css_is_carried_over(self):
-        out = AssetsBundle._render_css_error_banner(["e"], ".keep{color:red}")
+        out = CssPipeline._render_css_error_banner(["e"], ".keep{color:red}")
         self.assertTrue(out.startswith(".keep{color:red}"))
         self.assertIn(self.H, out)
 
     def test_banner_does_not_stack_across_repeated_errors(self):
-        first = AssetsBundle._render_css_error_banner(["err_one"], ".keep{}")
-        second = AssetsBundle._render_css_error_banner(["err_two"], first)
+        first = CssPipeline._render_css_error_banner(["err_one"], ".keep{}")
+        second = CssPipeline._render_css_error_banner(["err_two"], first)
         self.assertEqual(second.count(self.H), 1, "exactly one banner survives")
         self.assertIn(".keep{}", second)
         self.assertIn("err_two", second)
         self.assertNotIn("err_one", second)
 
     def test_multiple_errors_are_joined_into_one_message(self):
-        out = AssetsBundle._render_css_error_banner(["a", "b"], "")
+        out = CssPipeline._render_css_error_banner(["a", "b"], "")
         self.assertIn(r"a\Ab", out)
 
 
 class TestCssErrorBannerBackslashEscape(BaseCase):
     def test_backslash_is_escaped_not_interpreted(self):
-        banner = AssetsBundle._render_css_error_banner([r"C:\foo broke"], "")
+        banner = CssPipeline._render_css_error_banner([r"C:\foo broke"], "")
         content_line = next(ln for ln in banner.splitlines() if "C:" in ln)
         self.assertIn(r"C:\\foo", content_line)
 
     def test_quote_escape_stays_single_backslash(self):
-        banner = AssetsBundle._render_css_error_banner(['say "hi"'], "")
+        banner = CssPipeline._render_css_error_banner(['say "hi"'], "")
         content_line = next(ln for ln in banner.splitlines() if "say" in ln)
         self.assertIn(r"say \"hi\"", content_line)
         self.assertNotIn(r"\\\"", content_line)

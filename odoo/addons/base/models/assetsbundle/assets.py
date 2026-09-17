@@ -1,7 +1,6 @@
 import functools
 import posixpath
 import re
-import uuid
 from contextlib import suppress
 from datetime import UTC
 from pathlib import Path
@@ -69,10 +68,6 @@ class WebAsset:
         msg = f"{msg!r} in file {self.url!r}"
         _logger.error(msg)
         return msg
-
-    @functools.cached_property
-    def id(self) -> str:
-        return str(uuid.uuid4())
 
     @functools.cached_property
     def unique_descriptor(self) -> str:
@@ -175,7 +170,9 @@ class JavascriptAsset(WebAsset):
 
     @property
     def raw_content(self) -> str:
-        return super().content
+        # the name tools/assets' NativeModuleLike protocol reads; a script's
+        # content is never rewritten, so it is the content itself
+        return self.content
 
     def minify(self) -> str:
         content = self.content
@@ -270,12 +267,19 @@ class StylesheetAsset(WebAsset):
     _CSS_TOKEN_RE = _CSS_STRING_OR_COMMENT
     _SOURCE_TOKEN_RE = _CSS_STRING_OR_COMMENT
     _IDENT_CHAR = re.compile(r"[\w-]")
+    id = "0"
 
     def __init__(
-        self, *args: Any, rtl: bool = False, autoprefix: bool = False, **kw: Any
+        self,
+        *args: Any,
+        rtl: bool = False,
+        autoprefix: bool = False,
+        split_id: str = "0",
+        **kw: Any,
     ) -> None:
         self.rtl = rtl
         self.autoprefix = autoprefix
+        self.id = split_id
         self.errors: list[str] = []
         super().__init__(*args, **kw)
 

@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo import api
 from odoo.api import SUPERUSER_ID
 from odoo.db import db_connect
+from odoo.exceptions import MissingError
 from odoo.modules.registry import Registry
 from odoo.tests.common import BaseCase, TransactionCase, get_db_name, tagged
 from odoo.tools.assets.constants import like_escape
@@ -254,6 +255,31 @@ class TestUnlinkAttachmentsReturning(TransactionCase):
                 [("url", "like", "/web/assets/hardeningtest/%")]
             )
         )
+
+
+class TestUnlinkAttachmentsLeavesNoCache(TransactionCase):
+    def test_a_deleted_row_stops_answering_from_the_cache(self):
+        env = self.env
+        attachment = env["ir.attachment"].create(
+            {
+                "name": "cachetest.js",
+                "type": "binary",
+                "raw": b"// cache " + b"x" * 200,
+                "res_model": "ir.ui.view",
+                "res_id": 0,
+                "public": True,
+                "url": "/web/assets/cachetest/cachetest.js",
+            }
+        )
+        self.assertEqual(attachment.name, "cachetest.js")
+        store = AssetsBundle("test_assetsbundle.cachetest", [], env=env)._store
+
+        with patch.object(IrAttachment, "_mark_for_gc_multi"):
+            store._unlink_attachments(attachment)
+
+        self.assertFalse(attachment.exists())
+        with self.assertRaises(MissingError):
+            attachment.name
 
 
 class TestUnlinkAttachmentsSkipLockedPartial(BaseCase):

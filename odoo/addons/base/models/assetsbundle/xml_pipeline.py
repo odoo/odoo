@@ -155,6 +155,12 @@ class XmlTemplatePipeline:
 
         return "\n".join(content)
 
+    def _registrar_binding(self, indent: str = "") -> str:
+        return (
+            f"{indent}const {{ {self._TEMPLATE_REGISTRARS} }} = "
+            f'odoo.loader.modules.get("{self._TEMPLATE_MODULE}");\n'
+        )
+
     def generate_esm_template_bundle(self, use_import=True) -> str:
         bundle = self._bundle
         if not bundle.templates:
@@ -176,10 +182,7 @@ class XmlTemplatePipeline:
                 f'from "{self._TEMPLATE_MODULE}";\n'
             )
         else:
-            header = (
-                f"const {{ {self._TEMPLATE_REGISTRARS} }} = "
-                f'odoo.loader.modules.get("{self._TEMPLATE_MODULE}");\n'
-            )
+            header = self._registrar_binding()
         return f"{header}/* {bundle.name} */\n{templates}\n"
 
     def legacy_template_iife(self) -> str:
@@ -194,8 +197,7 @@ class XmlTemplatePipeline:
             "*******************************************/\n\n"
             "(function() {\n"
             '    "use strict";\n'
-            f"    const {{ {self._TEMPLATE_REGISTRARS} }} = "
-            f'odoo.loader.modules.get("{self._TEMPLATE_MODULE}");\n'
+            f"{self._registrar_binding(indent='    ')}"
             f"    /* {self._bundle.name} */\n"
             f"{templates}\n"
             "})();\n"
