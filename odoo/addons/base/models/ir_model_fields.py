@@ -905,7 +905,10 @@ class IrModelFields(models.Model):
 
     def _prepare_update(self, setup_models: bool = True) -> Self:
         uninstalling = self.env.context.get(MODULE_UNINSTALL_FLAG)
-        if not uninstalling and any(record.state != "manual" for record in self):
+        requested = {(record.model, record.name) for record in self}
+        if not uninstalling and any(
+            self._is_module_data(record, requested) for record in self
+        ):
             _debug.logic("prepare_update.rejected", reason="base_field")
             raise UserError(
                 _("This column contains module data and cannot be removed!")
@@ -959,6 +962,7 @@ class IrModelFields(models.Model):
             pop_field(self.env.registry[record.model], record.name)
             for record in records
         ]
+        self.pool.discard_fields([field for field in fields_ if field is not None])
         views = self._get_views_mentioning(records.mapped("name"))
         _debug.logic("views_mentioning_fields", fields=len(records), views=len(views))
         try:
@@ -1031,20 +1035,33 @@ class IrModelFields(models.Model):
         if attachments:
             attachments.write({"res_field": self.name})
 
+    def _is_module_data(self, record: Self, requested: set[tuple[str, str]]) -> bool:
+        # an inherited copy of a manual field goes with its base field, never alone
+        if record.state == "manual":
+            return False
+        model = self.env.get(record.model)
+        field = model._fields.get(record.name) if model is not None else None
+        if field is None or not field.inherited:
+            return True
+        base = field.base_field
+        return not (base.manual and (base.model_name, base.name) in requested)
+
     def _get_dependent_fields_and_failures(self) -> tuple[Self, list[tuple]]:
         records = self
         fields_ = OrderedSet()
         failed_dependencies = []
 
+        requested = OrderedSet()
         for record in self:
             model = self.env.get(record.model)
-            if model is None:
-                continue
-            field = model._fields.get(record.name)
-            if field is None:
-                continue
+            if model is not None and (field := model._fields.get(record.name)):
+                requested.add(field)
+
+        for field in list(requested):
             fields_.add(field)
             for dep in self.pool.get_dependent_fields(field):
+                if dep in requested:
+                    continue
                 if dep.manual:
                     failed_dependencies.append((field, dep))
                 elif dep.inherited:

@@ -458,6 +458,55 @@ class TestIrModelEdition(TransactionCase):
         self.assertTrue(setup.call_args_list)
         self.assertEqual(setup.call_args_list[-1].args[1], [])
 
+    def test_model_deletion_survives_a_manual_many2one_on_a_delegating_parent(self):
+        IrModel = self.env["ir.model"]
+        model = IrModel.create({"name": "Target", "model": "x_target"})
+        self.env["ir.model.fields"].create(
+            {
+                "model_id": IrModel._get("res.partner").id,
+                "name": "x_target_id",
+                "ttype": "many2one",
+                "relation": "x_target",
+            }
+        )
+        self.assertIn("x_target_id", self.env.registry["res.users"]._fields)
+        model.unlink()
+        self.assertNotIn("x_target", self.env.registry)
+        self.assertNotIn("x_target_id", self.env.registry["res.partner"]._fields)
+        self.assertNotIn("x_target_id", self.env.registry["res.users"]._fields)
+        self.assertFalse(
+            self.env["ir.model.fields"].search([("name", "=", "x_target_id")])
+        )
+
+    def test_model_deletion_survives_a_computed_field_depending_on_a_sibling(self):
+        model = self.env["ir.model"].create(
+            {
+                "name": "Computed",
+                "model": "x_computed",
+                "field_id": [Command.create({"name": "x_name", "ttype": "char"})],
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "model_id": model.id,
+                "name": "x_upper",
+                "ttype": "char",
+                "depends": "x_name",
+                "compute": "for r in self: r['x_upper'] = (r.x_name or '').upper()",
+                "store": True,
+            }
+        )
+        record = self.env["x_computed"].create({"x_name": "abc"})
+        self.assertEqual(record.x_upper, "ABC")
+        model.unlink()
+        self.assertNotIn("x_computed", self.env.registry)
+        graph_fields = {
+            f"{f.model_name}.{f.name}"
+            for f in self.env.registry.field_depends_context
+            if f.model_name == "x_computed"
+        }
+        self.assertEqual(graph_fields, set())
+
     def test_manual_model_data_is_the_class_source(self):
         self.env["ir.model"].create({"name": "Rows", "model": "x_rows"})
         self.env.flush_all()
