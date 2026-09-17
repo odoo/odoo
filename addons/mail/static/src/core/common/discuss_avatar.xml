@@ -4,12 +4,27 @@
         <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="o-mail-DiscussAvatar overflow-visible" t-attf-class="{{ this.props.className }}" t-att-class="{ 'o-isBrowserSafari': this.isBrowserSafari() }">
             <mask t-att-id="this.uniqueId" width="1000" height="1000">
                 <rect x="0" y="0" height="100%" width="100%" fill="white"/>
-                <rect t-if="this.showIconMask" color="black" x="0" y="0" t-att-width="this.isTypingUi ? 24 : 16" t-att-height="this.isTypingUi ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (this.isTypingUi ? 14 : 19) + ', 19) ' + (this.props.iconExtraTransform ?? '')"/>
+                <t t-if="this.showIconMask">
+                    <t t-set="imStatusData" t-value="this.imStatusData"/>
+                    <t t-set="safariNonBreakingSpace" t-value="this.isBrowserSafari() ? '\u00a0' : ''"/> <!-- hack for making mask work in Safari -->
+                    <t t-if="imStatusData">
+                        <!-- glyph is a ligature, i.e. text: keep it out of the text content of the avatar -->
+                        <Portal target="'body'">
+                            <svg width="0" height="0" class="position-absolute" aria-hidden="true">
+                                <defs>
+                                    <text t-att-id="this.uniqueId + '.imStatus'" class="oi oi-filled o-mail-DiscussAvatar-imStatusMask" t-att-class="imStatusData.iconClass" t-att-data-mask-icon="imStatusData.icon" y=".45rem" dominant-baseline="central" fill="black" stroke="black" stroke-width="3" stroke-linejoin="round" aria-hidden="true" t-out="imStatusData.icon + safariNonBreakingSpace"/>
+                                </defs>
+                            </svg>
+                        </Portal>
+                        <use t-att-href="'#' + this.uniqueId + '.imStatus'" t-att-transform="'translate(21, 20) ' + (this.props.iconExtraTransform ?? '')"/>
+                    </t>
+                    <rect t-else="" fill="black" x="0" y="0" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (this.isTyping ? 14 : 19) + ', 19) ' + (this.props.iconExtraTransform ?? '')"/>
+                </t>
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + this.uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTypingUi ? 16 : 21) + ', 20) ' + (this.props.iconExtraTransform ?? '')">
+            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTyping ? 16 : 21) + ', 20) ' + (this.props.iconExtraTransform ?? '')">
                 <svg width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
                         <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
