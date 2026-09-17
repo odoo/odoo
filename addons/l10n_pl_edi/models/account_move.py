@@ -255,15 +255,14 @@ class AccountMove(models.Model):
         correction_info = {}
         if 'KOR' in ksef_type:
             origin = self.reversed_entry_id
-            origin_ksef_id = origin.l10n_pl_edi_ref if origin else False
+            origin_ksef_id = origin.l10n_pl_edi_number if origin else False
 
             correction_info = {
                 'PrzyczynaKorekty': self.ref or 'Korekta',
                 'TypKorekty': '1',
                 'NrFaKorygowanej': origin.name if origin else 'BRAK',
                 'DataWystFaKorygowanej': origin.invoice_date if origin else self.invoice_date,
-                'NrKSeF': origin_ksef_id,
-                'NrKSeFN': '1' if not origin_ksef_id else False,
+                'NrKSeFFaKorygowanej': origin_ksef_id,
             }
 
         return {
