@@ -127,6 +127,18 @@ export class ChatWindow extends Component {
         };
     }
 
+    /** Whether an extra line is shown below the display name in the header. */
+    get hasNameSubline() {
+        return false;
+    }
+
+    get displayNameFontSizeClass() {
+        if (this.hasNameSubline) {
+            return this.ui.isSmall ? "fs-5" : "fs-6";
+        }
+        return this.ui.isSmall ? "fs-4" : "fs-5";
+    }
+
     get style() {
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
