@@ -63,10 +63,14 @@ class EventBooth(models.Model):
         return res
 
     def write(self, vals):
-        to_confirm = self.filtered(lambda booth: booth.state == 'available')
+        to_confirm, to_release = self.partitioned(lambda booth: booth.state == 'available')
+        if vals.get('state') == 'available':
+            vals.update(self._get_release_values())
         res = super(EventBooth, self).write(vals)
         if vals.get('state') == 'unavailable':
             to_confirm._action_post_confirm(vals)
+        elif vals.get('state') == 'available':
+            to_release._post_release_message()
         return res
 
     def _post_confirmation_message(self):
@@ -79,9 +83,27 @@ class EventBooth(models.Model):
                 subtype_xmlid='event_booth.mt_event_booth_booked',
             )
 
+    def _post_release_message(self):
+        for booth in self:
+            booth.event_id.message_post_with_source(
+                'event_booth.event_booth_unbooked_template',
+                render_values={
+                    'booth': booth,
+                },
+                subtype_xmlid='event_booth.mt_event_booth_unbooked',
+            )
+
     def action_confirm(self, additional_values=None):
         write_vals = dict({'state': 'unavailable'}, **additional_values or {})
         self.write(write_vals)
 
     def _action_post_confirm(self, write_vals):
         self._post_confirmation_message()
+
+    def _get_release_values(self):
+        return {
+            'partner_id': False,
+            'contact_name': False,
+            'contact_email': False,
+            'contact_phone': False,
+        }
