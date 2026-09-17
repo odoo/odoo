@@ -260,6 +260,7 @@ class WebsitePageProperties(models.TransientModel):
                 old_url = record.old_url
                 new_url = record.url
                 if old_url != new_url:
+                    website_id = vals.get("website_id") or record.website_id.id or False
                     _debug.lifecycle(
                         "page_properties_url_changed",
                         page=record.target_model_id.id,
@@ -267,10 +268,18 @@ class WebsitePageProperties(models.TransientModel):
                         new=new_url,
                         redirect=bool(vals.get("redirect_old_url")),
                     )
-                    if vals.get("redirect_old_url"):
-                        website_id = (
-                            vals.get("website_id") or record.website_id.id or False
+                    obsolete = self.env["website.rewrite"].search(
+                        [("url_from", "=", new_url), ("website_id", "=", website_id)]
+                    )
+                    if obsolete:
+                        _debug.lifecycle(
+                            "obsolete_rewrites_archived",
+                            page=record.target_model_id.id,
+                            url=new_url,
+                            rewrites=obsolete.ids,
                         )
+                        obsolete.active = False
+                    if vals.get("redirect_old_url"):
                         self.env["website.rewrite"].create(
                             {
                                 "name": vals.get("name") or record.name,

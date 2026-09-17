@@ -1376,3 +1376,111 @@ class TestSearchFetchScalesWithMatches(common.TransactionCase):
         _results, count, sizes = self._candidates_handed_to_the_dedup("zqabsentterm")
         self.assertEqual(count, 0)
         self.assertEqual(max(sizes, default=0), 0)
+
+
+@tagged("-at_install", "post_install")
+class TestPageRenameRedirects(common.TransactionCase):
+    """A page that moves leaves a redirect behind. Moving it back left that
+    redirect active, pointing away from where the page now lives -- which made
+    the reverse redirect a cycle and the rename impossible to undo."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref("website.default_website")
+        cls.page = cls.env["website.page"].create(
+            {
+                "name": "rename probe",
+                "url": "/rename-probe-a",
+                "website_id": cls.website.id,
+                "view_id": cls.env["ir.ui.view"]
+                .create(
+                    {
+                        "name": "rename probe view",
+                        "type": "qweb",
+                        "key": "website.rename_probe_view",
+                        "arch": '<t t-name="website.rename_probe_view"><div>x</div></t>',
+                    }
+                )
+                .id,
+            }
+        )
+
+    def _props(self):
+        return self.env["website.page.properties"].create(
+            {"target_model_id": self.page.id, "website_id": self.website.id}
+        )
+
+    def _rewrites(self, url_from):
+        return (
+            self.env["website.rewrite"]
+            .with_context(active_test=False)
+            .search([("url_from", "=", url_from)])
+        )
+
+    def _move(self, props, url):
+        props.write(
+            {
+                "url": url,
+                "redirect_old_url": True,
+                "name": "probe redirect",
+                "redirect_type": "301",
+            }
+        )
+
+    def test_a_page_can_be_renamed_back_to_its_previous_url(self):
+        props = self._props()
+        self._move(props, "/rename-probe-b")
+        self._move(props, "/rename-probe-a")
+        self.assertEqual(props.url, "/rename-probe-a")
+
+    def test_the_redirect_off_the_new_url_is_archived_not_deleted(self):
+        props = self._props()
+        self._move(props, "/rename-probe-b")
+        stale = self._rewrites("/rename-probe-a")
+        self.assertTrue(stale.filtered("active"), "the A -> B redirect starts active")
+        self._move(props, "/rename-probe-a")
+        self.assertTrue(stale, "the row is kept as history")
+        self.assertFalse(
+            stale.filtered("active"),
+            "a redirect away from where the page now lives must not stay active",
+        )
+
+    def test_the_reverse_redirect_is_created(self):
+        props = self._props()
+        self._move(props, "/rename-probe-b")
+        self._move(props, "/rename-probe-a")
+        reverse = self._rewrites("/rename-probe-b").filtered("active")
+        self.assertEqual(reverse.url_to, "/rename-probe-a")
+
+    def test_an_unrelated_redirect_is_left_alone(self):
+        other = self.env["website.rewrite"].create(
+            {
+                "name": "unrelated",
+                "redirect_type": "301",
+                "url_from": "/somewhere-else",
+                "url_to": "/rename-probe-b",
+                "website_id": self.website.id,
+            }
+        )
+        props = self._props()
+        self._move(props, "/rename-probe-b")
+        self.assertTrue(other.active, "only redirects off the new url are retired")
+
+    def test_a_generic_redirect_is_not_retired_by_one_website(self):
+        """Deliberately scoped: a generic rewrite serves every website."""
+        generic = self.env["website.rewrite"].create(
+            {
+                "name": "generic",
+                "redirect_type": "301",
+                "url_from": "/rename-probe-b",
+                "url_to": "/elsewhere",
+                "website_id": False,
+            }
+        )
+        props = self._props()
+        self._move(props, "/rename-probe-b")
+        self.assertTrue(
+            generic.active,
+            "one website's page moving must not retire another website's redirect",
+        )
