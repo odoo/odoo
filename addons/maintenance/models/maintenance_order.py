@@ -4,6 +4,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 ORDER_ACTIVITY_TYPE = "maintenance.mail_act_maintenance_order"
 OPEN_STATES = ("draft", "confirmed", "in_progress")
@@ -57,20 +60,6 @@ class MaintenanceOrder(models.Model):
         check_company=True,
         tracking=True,
     )
-    name = fields.Char(
-        string="Subjects",
-        required=True,
-    )
-    color = fields.Integer(string="Color Index")
-    priority = fields.Selection(
-        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
-    )
-    description = fields.Html()
-    locked = fields.Boolean(tracking=True)
-    block_resource = fields.Boolean(
-        default=True,
-        help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
-    )
     resource_ids = fields.Many2many(
         comodel_name="resource.resource",
         relation="maintenance_order_resource_rel",
@@ -86,6 +75,14 @@ class MaintenanceOrder(models.Model):
         string="Assets",
         compute="_compute_asset_ids",
         search="_search_asset_ids",
+    )
+
+    vendor_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+        check_company=True,
+        tracking=True,
+        help="Supplier performing the maintenance, when it is done outside.",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -106,6 +103,20 @@ class MaintenanceOrder(models.Model):
         required=True,
         domain=[("use_maintenance", "=", True)],
         check_company=True,
+    )
+    name = fields.Char(
+        string="Subjects",
+        required=True,
+    )
+    color = fields.Integer(string="Color Index")
+    priority = fields.Selection(
+        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
+    )
+    description = fields.Html()
+    locked = fields.Boolean(tracking=True)
+    block_resource = fields.Boolean(
+        default=True,
+        help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
     )
     maintenance_type = fields.Selection(
         selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
@@ -179,6 +190,16 @@ class MaintenanceOrder(models.Model):
         default=1.0,
         help="Duration in hours.",
     )
+    part_ids = fields.One2many(
+        comodel_name="resource.asset.part",
+        inverse_name="maintenance_order_id",
+        string="Parts",
+        copy=False,
+    )
+    part_flagged_count = fields.Integer(
+        string="Flagged Parts",
+        compute="_compute_part_flagged_count",
+    )
 
     instruction_type = fields.Selection(
         selection=[("pdf", "PDF"), ("google_slide", "Google Slide"), ("text", "Text")],
@@ -233,6 +254,8 @@ class MaintenanceOrder(models.Model):
         if vals.get("state") == "cancel":
             self.sudo().reservation_ids.unlink()
         res = super().write(vals)
+        if "state" in vals:
+            self._sync_parts_to_state(vals["state"])
         if not self.env.context.get("skip_maintenance_reservations"):
             if vals.keys() & RESERVATION_FIELDS:
                 self._recreate_reservations()
@@ -284,6 +307,13 @@ class MaintenanceOrder(models.Model):
                 lambda asset, resources=order.resource_ids._origin: (
                     asset.resource_id in resources
                 )
+            )
+
+    @api.depends("part_ids.review_state")
+    def _compute_part_flagged_count(self):
+        for order in self:
+            order.part_flagged_count = len(
+                order.part_ids.filtered(lambda part: part.review_state == "flagged")
             )
 
     @api.depends("state")
@@ -392,6 +422,52 @@ class MaintenanceOrder(models.Model):
     def action_done(self):
         self.write({"state": "done"})
         return True
+
+    def action_view_flagged_parts(self):
+        self.check_singleton()
+        action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
+            "resource_asset_product.action_resource_asset_part"
+        )
+        action["domain"] = [("maintenance_order_id", "=", self.id)]
+        action["context"] = {"create": False, "search_default_flagged": 1}
+        return action
+
+    def _sync_parts_to_state(self, state):
+        parts = self.part_ids
+        _debug.lifecycle(
+            "order_parts_follow_state", orders=self, state=state, parts=parts
+        )
+        if state == "done":
+            planned = parts.filtered(lambda part: part.state == "draft")
+            for order in self:
+                order._prepare_parts_for_installation(
+                    planned.filtered(
+                        lambda part, o=order: part.maintenance_order_id == o
+                    )
+                )
+            planned._action_install()
+            planned._flag_not_returned()
+        elif state == "cancel":
+            parts.filtered(lambda part: part.state == "draft").action_cancel()
+        elif state == "draft":
+            parts.filtered(lambda part: part.state == "cancelled").action_draft()
+
+    def _prepare_parts_for_installation(self, parts):
+        self.check_singleton()
+        _debug.logic(
+            "order_parts_installer",
+            order=self,
+            parts=parts,
+            vendor=self.vendor_id,
+            technician=self.user_id,
+        )
+        if self.vendor_id:
+            parts.filtered(lambda part: not part.vendor_id).vendor_id = self.vendor_id
+        elif self.user_id:
+            parts.filtered(
+                lambda part: not part.vendor_id and not part.user_id
+            ).user_id = self.user_id
+        parts.filtered(lambda part: part.source == "manual").source = "maintenance"
 
     def _prepare_confirmation_values(self):
         return {"state": "confirmed"}

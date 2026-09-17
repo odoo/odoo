@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_order_view_form_stock" model="ir.ui.view">
+        <field name="name">maintenance.order.form.stock</field>
+        <field name="model">maintenance.order</field>
+        <field name="inherit_id" ref="maintenance.maintenance_order_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='part_ids']/list/field[@name='serial']"
+                position="after">
+                <field
+                    name="stock_location_id"
+                    optional="show"
+                    options="{'no_create': True}"
+                    readonly="state != 'draft'" />
+            </xpath>
+            <xpath
+                expr="//field[@name='part_ids']/list/field[@name='removed_returned']"
+                position="after">
+                <field
+                    name="removed_location_id"
+                    optional="show"
+                    options="{'no_create': True}"
+                    readonly="removed_move_id" />
+                <field name="removed_move_id" column_invisible="True" />
+                <button
+                    name="action_receive_removed_part"
+                    type="object"
+                    title="Receive Removed Part"
+                    icon="fa-download"
+                    invisible="state not in ('installed', 'removed') or removed_move_id or not removed_location_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

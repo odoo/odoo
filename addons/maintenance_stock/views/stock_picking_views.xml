@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_maintenance" model="ir.ui.view">
+        <field name="name">stock.picking.form.maintenance</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_maintenance_order"
+                    type="object"
+                    icon="fa-wrench"
+                    invisible="not maintenance_order_id"
+                    class="oe_stat_button">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Maintenance</span>
+                    </div>
+                </button>
+            </div>
+            <field name="origin" position="after">
+                <field
+                    name="maintenance_order_id"
+                    invisible="not maintenance_order_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_picking_form_maintenance_show_return" model="ir.ui.view">
+        <field name="name">stock.picking.form.maintenance.show.return</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_form" />
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//button[@name='%(stock.act_stock_return_picking)d']"
+                position="attributes">
+                <attribute name="invisible">(picking_type_code == 'internal' and not maintenance_order_id) or state != 'done' or return_id</attribute>
+                <attribute name="groups">stock.group_stock_user</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_search_maintenance" model="ir.ui.view">
+        <field name="name">stock.picking.search.maintenance</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_search_internal" />
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator />
+                <filter
+                    name="maintenance_orders"
+                    string="Maintenance Transfers"
+                    domain="[('maintenance_order_id', '!=', False)]" />
+            </search>
+        </field>
+    </record>
+
+</odoo>

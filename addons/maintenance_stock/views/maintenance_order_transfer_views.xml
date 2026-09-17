@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_order_view_form_transfer" model="ir.ui.view">
+        <field name="name">maintenance.order.form.transfer</field>
+        <field name="model">maintenance.order</field>
+        <field name="inherit_id" ref="maintenance.maintenance_order_view_form" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="is_sent" invisible="1" />
+                <button
+                    name="action_send_to_maintenance"
+                    type="object"
+                    string="Send to Maintenance"
+                    groups="stock.group_stock_user"
+                    invisible="not lot_ids or state not in ('confirmed', 'in_progress') or is_sent"
+                    class="btn-primary" />
+            </header>
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_transfers"
+                    type="object"
+                    icon="fa-truck"
+                    invisible="not picking_count"
+                    class="oe_stat_button">
+                    <field name="picking_count" string="Transfers" widget="statinfo" />
+                </button>
+            </div>
+            <field name="resource_ids" position="after">
+                <field name="lot_ids" widget="many2many_tags" invisible="not lot_ids" />
+            </field>
+            <field name="date_done" position="after">
+                <field name="date_returned" invisible="not date_returned" />
+                <field name="return_delay_days" invisible="not date_returned" />
+                <field name="is_returned_on_time" invisible="not date_returned" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

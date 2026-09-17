@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.7",
+    "version": "1.8",
     "category": "Supply Chain/Maintenance",
     "summary": "Maintain assets and resources with orders and plans",
     "description": """
@@ -12,6 +12,7 @@ Maintenance orders and plans on assets and resources""",
         "approval",
         "mail",
         "resource_asset",
+        "resource_asset_product",
         "team",
     ],
     "data": [

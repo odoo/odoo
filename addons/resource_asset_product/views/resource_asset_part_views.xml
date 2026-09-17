@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_part_view_list" model="ir.ui.view">
+        <field name="name">resource.asset.part.list</field>
+        <field name="model">resource.asset.part</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="review_state == 'flagged'"
+                decoration-muted="state in ('removed', 'cancelled')">
+                <field name="date_installed" />
+                <field name="asset_id" />
+                <field name="position_id" />
+                <field name="product_id" />
+                <field name="serial" optional="show" />
+                <field name="vendor_id" optional="show" />
+                <field name="user_id" optional="hide" />
+                <field name="meter_installed" optional="hide" />
+                <field name="date_removed" optional="hide" />
+                <field name="removed_serial" optional="hide" />
+                <field name="removed_returned" optional="hide" />
+                <field name="amount" optional="show" sum="Total" />
+                <field name="currency_id" column_invisible="True" />
+                <field name="state" widget="badge" />
+                <field
+                    name="review_state"
+                    widget="badge"
+                    decoration-danger="review_state == 'flagged'"
+                    decoration-success="review_state == 'cleared'" />
+            </list>
+        </field>
+    </record>
+
+    <record id="resource_asset_part_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.part.form</field>
+        <field name="model">resource.asset.part</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_install"
+                        type="object"
+                        string="Install"
+                        invisible="state != 'draft'"
+                        class="btn-primary" />
+                    <button
+                        name="action_open_clear_wizard"
+                        type="object"
+                        string="Clear Flags"
+                        groups="resource_asset.group_asset_manager"
+                        invisible="review_state != 'flagged'" />
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        invisible="state != 'draft'" />
+                    <button
+                        name="action_draft"
+                        type="object"
+                        string="Reset to Planned"
+                        invisible="state != 'cancelled'" />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,installed,removed" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_position_history"
+                            type="object"
+                            string="Position History"
+                            icon="fa-history"
+                            invisible="state == 'draft'"
+                            class="oe_stat_button" />
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Flagged"
+                        invisible="review_state != 'flagged'"
+                        bg_color="text-bg-danger" />
+                    <group>
+                        <group name="installation">
+                            <field name="asset_id" readonly="state != 'draft'" />
+                            <field name="kind_id" invisible="1" />
+                            <field name="position_id" readonly="state != 'draft'" />
+                            <field name="product_id" readonly="state != 'draft'" />
+                            <field name="serial" readonly="state != 'draft'" />
+                            <field name="date_installed" readonly="state != 'draft'" />
+                            <field name="vendor_id" readonly="state != 'draft'" />
+                            <field name="user_id" readonly="state != 'draft'" />
+                            <field name="source" />
+                        </group>
+                        <group name="removal">
+                            <field
+                                name="previous_part_id"
+                                invisible="not previous_part_id" />
+                            <field name="removed_serial" />
+                            <field name="removed_returned" />
+                            <field name="meter_installed" invisible="not meter_id" />
+                            <field name="meter_id" invisible="1" />
+                            <field name="date_removed" invisible="not date_removed" />
+                            <field name="meter_removed" invisible="not date_removed" />
+                        </group>
+                        <group name="warranty">
+                            <field name="warranty_date" readonly="state != 'draft'" />
+                            <field name="warranty_meter" readonly="state != 'draft'" />
+                            <field name="amount" readonly="state != 'draft'" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="review_state" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="flags" string="Flags" invisible="not flag_ids">
+                            <field name="flag_ids">
+                                <list>
+                                    <field name="create_date" string="Raised On" />
+                                    <field name="reason" />
+                                    <field name="note" />
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-danger="state == 'open'"
+                                        decoration-success="state != 'open'" />
+                                    <field name="cleared_user_id" optional="show" />
+                                    <field name="clear_note" optional="show" />
+                                    <field name="date_closed" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="notes" string="Notes">
+                            <field name="notes" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_asset_part_view_search" model="ir.ui.view">
+        <field name="name">resource.asset.part.search</field>
+        <field name="model">resource.asset.part</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="asset_id" />
+                <field name="position_id" />
+                <field name="product_id" />
+                <field name="serial" />
+                <field name="vendor_id" />
+                <filter
+                    name="flagged"
+                    string="Flagged"
+                    domain="[('review_state', '=', 'flagged')]" />
+                <filter
+                    name="current"
+                    string="Installed Now"
+                    domain="[('state', '=', 'installed')]" />
+                <filter
+                    name="history"
+                    string="History"
+                    domain="[('state', 'in', ['installed', 'removed'])]" />
+                <separator />
+                <filter
+                    name="not_returned"
+                    string="Removed Part Not Returned"
+                    domain="[('vendor_id', '!=', False), ('removed_returned', '=', False), ('state', 'in', ['installed', 'removed'])]" />
+                <filter
+                    name="group_asset"
+                    string="Asset"
+                    context="{'group_by': 'asset_id'}" />
+                <filter
+                    name="group_position"
+                    string="Position"
+                    context="{'group_by': 'position_id'}" />
+                <filter
+                    name="group_vendor"
+                    string="Vendor"
+                    context="{'group_by': 'vendor_id'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_resource_asset_part" model="ir.actions.act_window">
+        <field name="name">Parts</field>
+        <field name="res_model">resource.asset.part</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_history': 1}</field>
+    </record>
+
+    <record id="resource_asset_part_clear_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.part.clear.form</field>
+        <field name="model">resource.asset.part.clear</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="part_ids" widget="many2many_tags" readonly="1" />
+                    <field name="note" placeholder="Why these flags are accepted" />
+                </group>
+                <footer>
+                    <button
+                        name="action_clear"
+                        type="object"
+                        string="Clear Flags"
+                        class="btn-primary" />
+                    <button special="cancel" string="Discard" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_asset_kind_view_form_positions" model="ir.ui.view">
+        <field name="name">resource.asset.kind.form.positions</field>
+        <field name="model">resource.asset.kind</field>
+        <field name="inherit_id" ref="resource_asset.resource_asset_kind_view_form" />
+        <field name="arch" type="xml">
+            <field name="asset_properties_definition" position="after">
+                <separator string="Part Positions" />
+                <field name="position_ids">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle" />
+                        <field name="name" />
+                        <field name="code" />
+                        <field name="product_category_id" />
+                        <field name="expected_life_days" />
+                        <field name="meter_kind" />
+                        <field name="expected_life_meter" invisible="not meter_kind" />
+                    </list>
+                </field>
+            </field>
+        </field>
+    </record>
+
+</odoo>

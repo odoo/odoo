@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_repair_order_form_asset" model="ir.ui.view">
+        <field name="name">repair.order.form.asset</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form" />
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="asset_id" invisible="not asset_id" />
+                <field name="asset_kind_id" invisible="1" />
+            </field>
+            <xpath
+                expr="//field[@name='move_ids']/list/field[@name='repair_line_type']"
+                position="after">
+                <field
+                    name="asset_position_id"
+                    domain="[('kind_id', '=', parent.asset_kind_id)]"
+                    options="{'no_create': True}"
+                    column_invisible="not parent.asset_id" />
+            </xpath>
+            <page name="parts" position="after">
+                <page name="asset_parts" string="Asset Parts" invisible="not part_ids">
+                    <field name="part_ids" readonly="1">
+                        <list decoration-danger="review_state == 'flagged'">
+                            <field name="position_id" />
+                            <field name="product_id" />
+                            <field name="serial" />
+                            <field name="removed_serial" />
+                            <field name="state" widget="badge" />
+                            <field name="review_state" widget="badge" />
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

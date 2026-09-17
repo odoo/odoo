@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_asset_part_view_form_stock" model="ir.ui.view">
+        <field name="name">resource.asset.part.form.stock</field>
+        <field name="model">resource.asset.part</field>
+        <field
+            name="inherit_id"
+            ref="resource_asset_product.resource_asset_part_view_form" />
+        <field name="arch" type="xml">
+            <button name="action_install" position="after">
+                <button
+                    name="action_receive_removed_part"
+                    type="object"
+                    string="Receive Removed Part"
+                    invisible="state not in ('installed', 'removed') or removed_move_id" />
+            </button>
+            <field name="source" position="after">
+                <field name="stock_location_id" readonly="state != 'draft'" />
+                <field name="move_id" invisible="not move_id" />
+            </field>
+            <field name="removed_returned" position="after">
+                <field name="removed_location_id" readonly="removed_move_id" />
+                <field name="removed_move_id" invisible="not removed_move_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

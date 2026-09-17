@@ -1,6 +1,6 @@
 {
     "name": "Assets - Product",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden",
     "summary": "A product whose units are assets: the kind on the template, the asset on the unit",
     "author": "AgroMarin",
@@ -15,6 +15,7 @@
         "views/product_template_views.xml",
         "views/resource_asset_views.xml",
         "views/resource_asset_log_views.xml",
+        "views/resource_asset_part_views.xml",
         "views/resource_asset_product_menus.xml",
     ],
     "auto_install": True,

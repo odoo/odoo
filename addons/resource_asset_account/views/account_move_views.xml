@@ -6,6 +6,27 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_flagged_asset_parts"
+                    type="object"
+                    icon="fa-flag"
+                    invisible="not asset_part_flagged_count"
+                    class="oe_stat_button text-danger">
+                    <field
+                        name="asset_part_flagged_count"
+                        string="Flagged Parts"
+                        widget="statinfo" />
+                </button>
+            </div>
+            <div name="button_box" position="after">
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    invisible="not asset_part_flagged_count">
+                    This bill charges parts flagged as a repeated or unreturned replacement. It cannot be posted or paid until an asset manager clears them.
+                </div>
+            </div>
             <xpath
                 expr="//field[@name='line_ids']//field[@name='account_id']"
                 position="after">

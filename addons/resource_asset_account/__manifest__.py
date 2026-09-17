@@ -1,6 +1,6 @@
 {
     "name": "Assets - Accounting",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "summary": "Book journal items and analytic lines against an asset, and log the cost on it",
     "author": "AgroMarin",

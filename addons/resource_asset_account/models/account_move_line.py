@@ -1,6 +1,10 @@
+import math
 from typing import Any
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
@@ -21,6 +25,14 @@ class AccountMoveLine(models.Model):
         help="Service log entries automatically created from this accounting line",
     )
 
+    asset_part_ids = fields.One2many(
+        comodel_name="resource.asset.part",
+        inverse_name="account_move_line_id",
+        string="Asset Parts",
+        help="The installed parts this bill line charges.",
+    )
+
+    @api.depends("account_id", "move_id.move_type")
     def _compute_need_asset(self) -> None:
         self.need_asset = False
 
@@ -90,3 +102,36 @@ class AccountMoveLine(models.Model):
         return (
             self.product_id.categ_id.log_type or self.account_id.sudo().asset_log_type
         )
+
+    def _bind_asset_parts(self, parts) -> None:
+        for line in self.filtered(
+            lambda line: (
+                line.asset_id
+                and line.product_id
+                and line.display_type == "product"
+                and line.move_id.move_type == "in_invoice"
+            )
+        ):
+            vendor = line.move_id.commercial_partner_id
+            free = max(math.ceil(line.quantity), 1) - len(line.asset_part_ids)
+            if free <= 0:
+                continue
+            candidates = parts.filtered(
+                lambda part, line=line, vendor=vendor: (
+                    part.asset_id == line.asset_id
+                    and part.product_id == line.product_id
+                    and part.vendor_id.commercial_partner_id == vendor
+                    and not part.account_move_line_id
+                )
+            )[:free]
+            _debug.logic(
+                "bill_line_parts_bound",
+                line=line,
+                vendor=vendor,
+                free=free,
+                parts=candidates,
+            )
+            if candidates:
+                candidates.with_context(asset_part_ledger_write=True).write(
+                    {"account_move_line_id": line.id}
+                )
