@@ -96,22 +96,27 @@ export class Animation extends Interaction {
         this.waitForTimeout(() => {
             this.isAnimating = true;
             this.playState = "running";
+            const removeListeners = [];
+            const onAnimationEnd = (ev) => {
+                const duration = parseFloat(getComputedStyle(this.el).animationDuration);
+                if (ev.target !== this.el || (duration > 0 && ev.elapsedTime === 0)) {
+                    return;
+                }
+                for (const removeListener of removeListeners) {
+                    removeListener();
+                }
+                this.isAnimating = false;
+                this.isAnimated = true;
+                window.dispatchEvent(new Event("resize"));
+            };
             for (const eventName of [
                 "webkitAnimationEnd",
                 "oanimationend",
                 "msAnimationEnd",
                 "animationend",
             ]) {
-                this.addListener(
-                    this.el,
-                    eventName,
-                    () => {
-                        this.isAnimating = false;
-                        this.isAnimated = true;
-                        window.dispatchEvent(new Event("resize"));
-                    },
-                    { once: true }
-                );
+                const removeListener = this.addListener(this.el, eventName, onAnimationEnd);
+                removeListeners.push(removeListener);
             }
         });
     }
