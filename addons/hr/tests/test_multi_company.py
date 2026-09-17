@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import Command
 from odoo.addons.hr.tests.common import TestHrCommon
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -129,3 +129,22 @@ class TestMultiCompany(TestHrCommon):
             AccessError, msg="A manager cannot access their subordinates if they are not in a selected company",
         ):
             employee_other_company.with_user(manager_user).check_access('read')
+
+    def test_user_can_access_own_employee_from_inactive_company(self):
+        """
+        A user must be able to read their own employee record even if it belongs
+        to a company that is not currently active in their session (e.g., for avatars).
+        """
+        self.user_a.write({'group_ids': [Command.link(self.env.ref('hr.group_hr_user').id)]})
+        emp_a_comp_b = self.employee_a.with_user(self.user_a).with_context(allowed_company_ids=[self.company_b.id])
+        emp_other_comp_b = self.employee_other_a.with_user(self.user_a).with_context(allowed_company_ids=[self.company_b.id])
+
+        try:
+            emp_a_comp_b.check_access('read')
+        except AccessError:
+            self.fail("User should be able to read their own employee record across companies.")
+
+        with self.assertRaises(
+                AccessError, msg="A user cannot access other employees if they are not in a selected company"
+        ):
+            emp_other_comp_b.check_access('read')
