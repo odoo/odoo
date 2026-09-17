@@ -6,7 +6,7 @@ from unittest.mock import patch
 import psycopg
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.libs.lru import LRU
 from odoo.tests import TransactionCase, can_import, loaded_demo_data, tagged
 from odoo.tools.misc import file_open
@@ -312,7 +312,7 @@ class TestFieldConverters(TransactionCase):
     def test_m2m_blank_comma_segments_dropped(self):
         tag = self.env["res.partner.tag"].create({"name": "IFLD17 Tag"})
         converter = self.converter._resolve_converter_field(
-            self.env["res.partner"]._fields["tag_ids"], str
+            self.env["res.partner"]._fields["tag_ids"]
         )
         for raw in ("IFLD17 Tag,", ",IFLD17 Tag", "IFLD17 Tag, ", "IFLD17 Tag,,"):
             commands, warnings = converter([{None: raw}])
@@ -1052,9 +1052,9 @@ class TestFieldConverters(TransactionCase):
         converter_type = type(self.converter)
         original = converter_type._get_converter_record
 
-        def spy(this, model, fromtype=str):
+        def spy(this, model):
             calls.append(model._name)
-            return original(this, model, fromtype)
+            return original(this, model)
 
         rows = [[f"IFLD49 P{i}", f"IFLD49 C{i}"] for i in range(25)]
         with patch.object(converter_type, "_get_converter_record", spy):
@@ -1074,6 +1074,145 @@ class TestFieldConverters(TransactionCase):
                 self.env["res.partner"]._fields["child_ids"], ["notadict"]
             )
         self.assertNotIn("has no attribute", str(cm.exception.args[0]))
+
+    def test_unsupported_field_type_empty_cell_is_not_written(self):
+        Definition = self.env["properties.base.definition"]
+        field = Definition._fields["properties_definition"]
+        self.assertIsNone(self.converter._resolve_converter_field(field))
+        convert = self.converter._get_converter_record(Definition)
+        logged = []
+        result = convert({"properties_definition": ""}, lambda f, exc: logged.append(f))
+        self.assertEqual(
+            result, {}, "an empty cell of an unsupported column must not write False"
+        )
+        self.assertEqual(logged, ["properties_definition"])
+
+    def test_property_datetime_and_date_go_through_the_column_converters(self):
+        self._define_partner_properties(
+            [
+                {"name": "pdt", "type": "datetime", "string": "PDT"},
+                {"name": "pd", "type": "date", "string": "PD"},
+            ]
+        )
+        model = self.env["res.partner"].with_context(
+            import_file=True, tz="America/Mexico_City"
+        )
+        result = model.load(
+            ["name", "properties.pdt"], [["IFLD95 dt", "2026-01-15 10:00:00"]]
+        )
+        self.assertFalse(result["messages"])
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT properties FROM res_partner WHERE id = %s", [result["ids"][0]]
+        )
+        self.assertEqual(
+            self.env.cr.fetchone()[0]["pdt"],
+            "2026-01-15 16:00:00",
+            "a naive datetime property is localized like a datetime column",
+        )
+        result = model.load(["name", "properties.pd"], [["IFLD95 bad", "2026-13-45"]])
+        self.assertFalse(result["ids"])
+        [message] = result["messages"]
+        self.assertIn("valid date", message["message"])
+        self.assertIn("PD", message["message"])
+
+    def test_a_datetime_property_round_trips_through_export_and_import(self):
+        self._define_partner_properties(
+            [{"name": "pdt", "type": "datetime", "string": "PDT"}]
+        )
+        Partner = self.env["res.partner"].with_context(tz="America/Mexico_City")
+        source = Partner.create(
+            {"name": "IFLD95 rt", "properties": {"pdt": "2026-01-15 16:00:00"}}
+        )
+        [row] = source.export_data(["name", "properties.pdt"])["datas"]
+        self.assertEqual(
+            str(row[1]),
+            "2026-01-15 10:00:00",
+            "a datetime property exports in the user's timezone like a column",
+        )
+        result = Partner.with_context(import_file=True).load(
+            ["name", "properties.pdt"], [["IFLD95 rt copy", str(row[1])]]
+        )
+        self.assertFalse(result["messages"])
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT properties FROM res_partner WHERE id = %s", [result["ids"][0]]
+        )
+        self.assertEqual(self.env.cr.fetchone()[0]["pdt"], "2026-01-15 16:00:00")
+
+    def test_property_tags_are_split_like_a_many2many_column(self):
+        self._define_partner_properties(
+            [
+                {
+                    "name": "pt",
+                    "type": "tags",
+                    "string": "PT",
+                    "tags": [["a", "Alpha", 1], ["b", "Beta", 2]],
+                }
+            ]
+        )
+        model = self.env["res.partner"].with_context(import_file=True)
+        result = model.load(
+            ["name", "properties.pt"], [["IFLD95 tags", "Alpha, beta,"]]
+        )
+        self.assertFalse(result["messages"])
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT properties FROM res_partner WHERE id = %s", [result["ids"][0]]
+        )
+        self.assertEqual(self.env.cr.fetchone()[0]["pt"], ["a", "b"])
+
+    def test_property_selection_matches_labels_case_insensitively(self):
+        payload = [
+            {
+                "name": "sel",
+                "type": "selection",
+                "string": "Sel",
+                "selection": [["a", "Alpha"]],
+                "value": "ALPHA ",
+            }
+        ]
+        converted, _w = self.converter._str_to_properties(self.flds["bool"], payload)
+        self.assertEqual(converted[0]["value"], "a")
+
+    def test_a_property_error_names_the_property(self):
+        payload = [{"name": "n", "type": "integer", "string": "Count", "value": "x"}]
+        with self.assertRaises(ValueError) as cm:
+            self.converter._str_to_properties(self.flds["bool"], payload)
+        self.assertIn("%(field)s/Count", cm.exception.args[0])
+
+    def test_a_user_error_in_a_lookup_is_reported_not_hidden(self):
+        PartnerClass = type(self.env["res.partner"])
+        with patch.object(
+            PartnerClass,
+            "name_search",
+            side_effect=AccessError("IFLD95 no read on partners"),
+        ):
+            result = (
+                self.env["res.partner"]
+                .with_context(import_file=True)
+                .load(["name", "parent_id"], [["IFLD95 child", "Some Parent"]])
+            )
+        self.assertFalse(result["ids"])
+        [message] = result["messages"]
+        self.assertIn("IFLD95 no read on partners", message["message"])
+        self.assertNotIn("server logs", message["message"])
+
+    def test_o2m_child_with_a_blank_database_id_creates_nothing(self):
+        commands, warnings = self.converter._str_to_one2many(
+            self.env["res.partner"]._fields["child_ids"], [{".id": "0"}]
+        )
+        self.assertEqual(commands, [])
+        self.assertFalse(warnings)
+
+    def test_non_text_numbers_are_a_clean_error(self):
+        partner_fields = self.env["res.partner"]._fields
+        with self.assertRaises(ValueError) as cm:
+            self.converter._str_to_integer(partner_fields["color"], [1, 2])
+        self.assertIn("integer", cm.exception.args[0])
+        with self.assertRaises(ValueError) as cm:
+            self.converter._str_to_float(partner_fields["partner_latitude"], {"a": 1})
+        self.assertIn("number", cm.exception.args[0])
 
 
 @tagged("post_install", "-at_install")
@@ -1144,9 +1283,13 @@ class TestSelectionIndexPrecedence(TransactionCase):
         field = self.env["res.partner"]._fields["type"]
         cache = self.converter._get_transaction_cache()
         lang = self.converter.env.lang
-        cache[("selection", field.model_name, field.name, lang)] = (selection, {})
         cache.pop(("selection_index", field.model_name, field.name, lang), None)
-        return self.converter._get_selection_index(field)
+        with patch.object(
+            type(self.converter),
+            "_get_selection_and_labels",
+            lambda _self, _field: (selection, {}),
+        ):
+            return self.converter._get_selection_index(field)
 
     def test_a_value_is_never_shadowed_by_another_items_label(self):
         index = self._index_for([("pending", "Sent"), ("sent", "Delivered")])

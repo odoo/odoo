@@ -10,6 +10,7 @@ from odoo.tools import groupby, unique
 from odoo.tools.translate import _
 
 from ..._recordset import is_recordset
+from ...fields.temporal import Datetime
 from ...parsing import fix_import_export_id_paths
 from ._model_stubs import _ModelStubs
 
@@ -65,6 +66,16 @@ class ExportMixin(_ModelStubs):
             field_type = field.type
             value = record[name]
         return field, field_type, value
+
+    @staticmethod
+    def _export_convert_cell(field, field_type, value, record):
+        if field.is_properties and field_type == "datetime" and value:
+            # a property is stored as the client stores it, in UTC; export it
+            # in the user's timezone exactly like a datetime column, so the
+            # sheet reads the same and re-imports through the same converter
+            localized = Datetime.context_timestamp(record, Datetime.to_datetime(value))
+            return Datetime.to_datetime(Datetime.to_string(localized))
+        return field.convert_to_export(value, record)
 
     def _export_get_many2many_cell(self, value, fields2, index_fallback):
         index = None
@@ -127,7 +138,9 @@ class ExportMixin(_ModelStubs):
                     )
 
                     if not is_recordset(value):
-                        current[i] = field.convert_to_export(value, record)
+                        current[i] = self._export_convert_cell(
+                            field, field_type, value, record
+                        )
 
                     elif import_compatible and field_type == "reference":
                         current[i] = f"{value._name},{value.id}"
