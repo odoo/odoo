@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3915 methods, 800 classes, 138 files)
+# All base tests (3919 methods, 801 classes, 138 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 468 classes)
+### Tagged Files (78 files, 469 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -126,10 +126,10 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_id_sequence_names.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_import_files.py` | `post_install`, `-at_install` | 4 | 109 | TransactionCase |
 | `test_ir_actions.py` | `post_install`, `-at_install` | 7 | 104 | TestServerActionsBase, TransactionCase, TestCommonCustomFields |
-| `test_ir_actions_audit.py` | `post_install`, `-at_install` | 51 | 155 | TransactionCase |
+| `test_ir_actions_audit.py` | `post_install`, `-at_install` | 51 | 156 | TransactionCase |
 | `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 6 | 15 | TransactionCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
-| `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 20 | 55 | ServerActionCase |
+| `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 21 | 56 | ServerActionCase |
 | `test_ir_actions_webhook.py` | `post_install`, `-at_install` | 4 | 20 | WebhookCase, TransactionCase |
 | `test_ir_asset.py` | `-at_install`, `post_install` | 1 | 1 | TransactionCase |
 | `test_ir_asset_audit.py` | `post_install`, `-at_install` | 20 | 68 | TransactionCase |
@@ -143,7 +143,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_filters.py` | `post_install`, `-at_install`, `migration` | 8 | 32 | FiltersCase, TransactionCase |
 | `test_ir_job.py` | `post_install`, `-at_install` | 8 | 114 | TransactionCase, BaseCase |
 | `test_ir_logging.py` | `post_install`, `-at_install` | 3 | 7 | TransactionCase |
-| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 138 | TransactionCase, HttpCase |
+| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 140 | TransactionCase, HttpCase |
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_mixin_merge.py` | `post_install`, `-at_install` | 2 | 7 | TransactionCase |
 | `test_module_data_remove_xmlid_records.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
@@ -255,11 +255,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 138 |
-| Total test classes | 800 |
-| Total test methods | 3915 |
+| Total test classes | 801 |
+| Total test methods | 3919 |
 | Files with @tagged | 78 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 263 |
+| Classes using post_install | 264 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 
