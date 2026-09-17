@@ -425,9 +425,11 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             {
                 'name': 'server action',
                 'input_activity_phone': '+1 202 555 0183',
+                'expected_activity_phone': '+1 202-555-0183',
             }, {
                 'name': 'wizard override',
                 'input_activity_phone': '+1 202 555 0184',
+                'expected_activity_phone': '+1 202-555-0184',
             },
         ]
         for case in cases:
@@ -464,5 +466,5 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                         wizard.phone = case['input_activity_phone']
                         wizard.action_schedule_activities()
 
-                    self.assertEqual(lead.activity_ids.phone, case['input_activity_phone'])
-                    self.assertEqual(partner.phone, partner_phone or case['input_activity_phone'])
+                    self.assertEqual(lead.activity_ids.phone, case['expected_activity_phone'])
+                    self.assertEqual(partner.phone, partner_phone or case['expected_activity_phone'])

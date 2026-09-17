@@ -51,7 +51,7 @@ afterEach(() => {
 
 test("callPhoneNumber reports that it opened the native phone link", () => {
     patchWithCleanup(user, { isSystem: false });
-    const callMade = callPhoneNumber({ services: {} }, { phoneNumber: "+12 345 67 89" });
+    const callMade = callPhoneNumber({ services: {} }, { phoneNumber: "+12 (345) 67-89" });
 
     expect(callMade).toBe(true);
     expect.verifySteps(["tel:+123456789"]);
