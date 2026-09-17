@@ -164,3 +164,27 @@ class TestUnlinkRestrictInMemory:
             b.flush_recordset()
             (a + b).unlink()
             assert not env["r.boss"].search([])
+
+
+class Note(models.Model):
+    _name = "r.note"
+    _module = "odoo.addons.test_backend_row_operations_harness"
+    _description = "a node with a company-dependent note"
+    _log_access = False
+
+    note = fields.Char(company_dependent=True)
+
+
+class TestCompanyDependentUpdate:
+    def test_an_update_strips_entries_equal_to_the_fallback(self):
+        # the SQL update drops merged entries equal to the field's fallback
+        # (jsonb_object_agg join in the PostgreSQL twin), and the in-memory
+        # insert already does: the in-memory update must agree with both
+        with model_test_env(Note) as env:
+            rec = env["r.note"].create({"note": "custom"})
+            env.flush_all()
+            table = env["r.note"]._table
+            assert env.cr.storage.get_row(table, rec.id)["note"]
+            rec.note = False  # back to the fallback
+            env.flush_all()
+            assert env.cr.storage.get_row(table, rec.id).get("note") is None

@@ -981,6 +981,20 @@ class InMemoryBackend:
         )
         return new_ids
 
+    @staticmethod
+    def _strip_company_fallbacks(model: BaseModel, field: Field, merged: dict) -> dict:
+        kept = {}
+        for key, item in merged.items():
+            rec = model.with_company(int(key))
+            fallback = field._to_json_value(
+                field.convert_to_column(
+                    field._get_company_dependent_fallback_raw(rec), rec
+                )
+            )
+            if item != fallback:
+                kept[key] = item
+        return kept
+
     def update_rows(
         self, model: BaseModel, fnames: tuple[str, ...], rows: list[tuple]
     ) -> None:
@@ -1004,6 +1018,14 @@ class InMemoryBackend:
                         old = {"en_US": next(iter(value.values()))}
                     if isinstance(old, dict):
                         value = {**old, **value}
+                    if field.company_dependent and isinstance(value, dict):
+                        # the SQL update stores only entries that differ from
+                        # the field's fallback for their company (the
+                        # jsonb_object_agg join in the PostgreSQL twin); the
+                        # insert path already strips them
+                        value = (
+                            self._strip_company_fallbacks(model, field, value) or None
+                        )
                 values[fname] = value
             updates.append((id_, values))
         _check_table_constraints(
