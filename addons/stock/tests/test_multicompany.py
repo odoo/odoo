@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command
+from json import loads
 
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form, TransactionCase
 
@@ -792,6 +792,7 @@ class TestMultiCompany(TransactionCase):
         })
         self.warehouse_a.resupply_wh_ids = [Command.link(self.warehouse_b.id)]
         self.env['stock.quant']._update_available_quantity(product, self.stock_location_b, 10)
+        resupply_route = self.warehouse_a.resupply_route_ids
 
         orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_a).create({
             'location_id': self.stock_location_a.id,
@@ -799,7 +800,7 @@ class TestMultiCompany(TransactionCase):
             'product_id': product.id,
             'product_min_qty': 10,
             'product_max_qty': 10,
-            'route_id': self.warehouse_a.resupply_route_ids.id,
+            'route_id': resupply_route.id,
         })
         op_name = orderpoint.name
         orderpoint.action_replenish()
@@ -825,6 +826,17 @@ class TestMultiCompany(TransactionCase):
 
         out_to_a.button_validate()
         self.assertEqual(in_from_b.state, 'assigned')
+
+        # Check that the route delay is correctly computed despite the multi-company
+        resupply_route.rule_ids.delay = 5
+        orderpoint.invalidate_recordset()
+        self.assertEqual(orderpoint.lead_days, 10)  # 5 days WHA -> Interco + 5 days Interco -> WHB
+        info = self.env['stock.replenishment.info'].with_company(self.company_a).create({'orderpoint_id': orderpoint.id})
+        self.assertEqual(info.wh_replenishment_option_ids.lead_time, "10.0 days")
+        info_lead_days = loads(info.json_lead_days)
+        self.assertEqual(len(info_lead_days['lead_days_description']), 3)
+        self.assertRegex(info_lead_days['lead_days_description'][1][0], f".*{self.warehouse_b.code}.*{self.stock_location_b.name}.*{self.interco_location.name}")
+        self.assertRegex(info_lead_days['lead_days_description'][2][0], f".*{self.warehouse_a.code}.*{self.interco_location.name}.*{self.stock_location_a.name}")
 
     def test_resupply_inter_warehouse(self):
         """ Ensure that when resupplying from another warehouse, the partner are correctly set on each side.
