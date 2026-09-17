@@ -771,21 +771,12 @@ class ResPartner(models.Model):
         all_registries = set()
         vat_variants: dict[int, list[str]] = {}
         for partner in self:
-            if partner.vat and partner.vat != "/" and not partner.parent_id:
-                vats = [partner.vat]
-                if (
-                    partner.country_id
-                    and "EU_PREFIX" in partner.country_id.country_group_codes
-                ):
-                    if partner.vat[:2].isalpha():
-                        vats.append(partner.vat[2:])
-                    else:
-                        vats.append(partner.country_id.code + partner.vat)
-                        if new_code := EU_EXTRA_VAT_CODES.get(partner.country_id.code):
-                            vats.append(new_code + partner.vat)
+            if partner.parent_id:
+                continue
+            if vats := partner._get_vat_lookup_variants():
                 vat_variants[partner.id] = vats
                 all_vats.update(vats)
-            if partner.company_registry and not partner.parent_id:
+            if partner.company_registry:
                 all_registries.add(partner.company_registry)
 
         vat_by_value = self._search_identifier_candidates("vat", all_vats)
@@ -838,6 +829,22 @@ class ResPartner(models.Model):
                 )
             else:
                 partner.same_company_registry_partner_id = False
+
+    def _get_vat_lookup_variants(self) -> list[str]:
+        self.check_singleton()
+        vat = self.vat
+        if not vat or vat == "/":
+            return []
+        variants = [vat]
+        country = self.country_id
+        if country and "EU_PREFIX" in country.country_group_codes:
+            if vat[:2].isalpha():
+                variants.append(vat[2:])
+            else:
+                variants.append(country.code + vat)
+                if extra_code := EU_EXTRA_VAT_CODES.get(country.code):
+                    variants.append(extra_code + vat)
+        return variants
 
     def _search_identifier_candidates(
         self, fname: str, values: set[str]

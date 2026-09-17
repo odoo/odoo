@@ -2895,3 +2895,143 @@ class TestPartnerImportBatch(TransactionCase):
             f"an import of 40 children of 40 parents cost {large} queries against "
             f"{small} for 10: the parents must be fetched once, not once per row",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestPartnerSmallContracts(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Partner = cls.env["res.partner"]
+        cls.be = cls.env.ref("base.be")
+        cls.gr = cls.env.ref("base.gr")
+        cls.us = cls.env.ref("base.us")
+
+    def test_vat_lookup_variants_follow_the_eu_prefix_rule(self):
+        cases = [
+            (
+                {"vat": "BE0477472701", "country_id": self.be.id},
+                ["BE0477472701", "0477472701"],
+            ),
+            (
+                {"vat": "0477472701", "country_id": self.be.id},
+                ["0477472701", "BE0477472701"],
+            ),
+            (
+                {"vat": "123456", "country_id": self.gr.id},
+                ["123456", "GR123456", "EL123456"],
+            ),
+            ({"vat": "12-3456789", "country_id": self.us.id}, ["12-3456789"]),
+            ({"vat": "/", "country_id": self.be.id}, []),
+            ({"vat": False, "country_id": self.be.id}, []),
+        ]
+        for values, expected in cases:
+            with self.subTest(values=values):
+                partner = self.Partner.new({"name": "Vat", **values})
+                self.assertEqual(partner._get_vat_lookup_variants(), expected)
+
+    def test_a_website_without_a_scheme_gets_http(self):
+        partner = self.Partner.create({"name": "Web", "website": "example.com/shop"})
+        self.assertEqual(partner.website, "http://example.com/shop")
+        partner.write({"website": "https://secure.example.com"})
+        self.assertEqual(partner.website, "https://secure.example.com")
+
+    def test_a_copy_is_named_as_a_copy_unless_told_otherwise(self):
+        partner = self.Partner.create({"name": "Original"})
+        self.assertEqual(partner.copy().name, "Original (copy)")
+        self.assertEqual(partner.copy({"name": "Renamed"}).name, "Renamed")
+
+    def test_an_import_realigns_a_state_to_the_row_country(self):
+        State = self.env["res.country.state"]
+        be_state = State.create(
+            {"name": "Namur", "code": "ZZ9", "country_id": self.be.id}
+        )
+        gr_state = State.create(
+            {"name": "Namur GR", "code": "ZZ9", "country_id": self.gr.id}
+        )
+        lonely = State.create(
+            {"name": "Nowhere", "code": "NWH", "country_id": self.be.id}
+        )
+        realigned, dropped = self.Partner.with_context(import_file=True).create(
+            [
+                {
+                    "name": "Realigned",
+                    "state_id": be_state.id,
+                    "country_id": self.gr.id,
+                },
+                {"name": "Dropped", "state_id": lonely.id, "country_id": self.gr.id},
+            ]
+        )
+        self.assertEqual(realigned.state_id, gr_state)
+        self.assertFalse(dropped.state_id)
+
+    def test_address_get_multi_answers_like_address_get_per_partner(self):
+        company = self.Partner.create({"name": "Multi Co", "is_company": True})
+        delivery = self.Partner.create(
+            {"name": "Dock", "parent_id": company.id, "type": "delivery"}
+        )
+        contact = self.Partner.create({"name": "Person", "parent_id": company.id})
+        loner = self.Partner.create({"name": "Loner"})
+        batch = company | contact | loner
+        multi = batch._address_get_multi(["delivery", "invoice"])
+        for partner in batch:
+            self.assertEqual(
+                multi[partner.id], partner.address_get(["delivery", "invoice"])
+            )
+        self.assertEqual(multi[contact.id]["delivery"], delivery.id)
+        self.assertEqual(multi[loner.id]["delivery"], loner.id)
+
+    def test_email_formatted_quotes_and_joins(self):
+        cases = [
+            ("John Doe", "j@example.com", '"John Doe" <j@example.com>'),
+            ("Doe, John", "j@example.com", '"Doe, John" <j@example.com>'),
+            (
+                "Two",
+                "a@example.com, b@example.com",
+                '"Two" <a@example.com,b@example.com>',
+            ),
+            ("Broken", "not-an-email", False),
+            ("Raw", "raw@localhost", '"Raw" <raw@localhost>'),
+        ]
+        for name, email, expected in cases:
+            with self.subTest(name=name):
+                partner = self.Partner.create({"name": name, "email": email})
+                self.assertEqual(partner.email_formatted, expected)
+
+    def test_tz_offset_reads_the_zone(self):
+        utc = self.Partner.create({"name": "UTC", "tz": "UTC"})
+        self.assertEqual(utc.tz_offset, "+0000")
+        unset = self.Partner.create({"name": "No zone", "tz": False})
+        self.assertEqual(unset.tz_offset, "+0000")
+
+    def test_primary_industry_returns_to_the_first_when_dropped(self):
+        Industry = self.env["res.partner.industry"]
+        farming, packing = Industry.create([{"name": "Farming"}, {"name": "Packing"}])
+        partner = self.Partner.create(
+            {"name": "Grower", "industry_ids": [Command.set([farming.id, packing.id])]}
+        )
+        self.assertEqual(partner.primary_industry_id, farming)
+        partner.primary_industry_id = packing
+        partner.industry_ids = [Command.unlink(packing.id)]
+        self.assertEqual(partner.primary_industry_id, farming)
+        partner.industry_ids = [Command.clear()]
+        self.assertFalse(partner.primary_industry_id)
+
+    def test_a_parent_created_from_a_name_takes_the_contact_address_and_vat(self):
+        contact = self.Partner.create(
+            {
+                "name": "Ann",
+                "vat": "BE0477472701",
+                "street": "Rue 1",
+                "country_id": self.be.id,
+            }
+        )
+        child = self.Partner.create({"name": "Ann Jr", "parent_id": contact.id})
+        parent = contact._create_parent_from_name("Ann Co", {"website": "ann.example"})
+        self.assertTrue(parent.is_company)
+        self.assertEqual(parent.vat, "BE0477472701")
+        self.assertEqual(parent.street, "Rue 1")
+        self.assertEqual(parent.website, "http://ann.example")
+        self.assertEqual(contact.parent_id, parent)
+        self.assertEqual(child.parent_id, parent)
+        self.assertFalse(contact._create_parent_from_name(""))
