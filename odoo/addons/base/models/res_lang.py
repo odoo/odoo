@@ -135,7 +135,7 @@ class ResLang(models.CachedModel):
                 lang.flag_image_url = f"/base/static/img/country_flags/{lang.code.lower().rsplit('_')[-1]}.png"
 
     flag_image = fields.Image("Image")
-    flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
+    flag_image_url = fields.Char(compute='_compute_field_flag_image_url')
 
     _name_uniq = models.Constraint(
         'unique(name)',
