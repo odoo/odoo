@@ -63,6 +63,7 @@ if TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+type ContentMemo = dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]]
 SECURITY_FIELDS = ("res_model", "res_id", "create_uid", "public", "res_field")
 
 _INDEX_WORD_RE = re.compile(r"[^\x00-\x1f\x7f-\x9f]{4,}")
@@ -328,7 +329,7 @@ class IrAttachment(models.Model):
 
         backend = self._get_storage_backend()
         verify_collision = self._is_content_collision_check_enabled()
-        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]] = {}
+        memo: ContentMemo = {}
         for index, values in enumerate(vals_list):
             values, has_content = self._normalize_content_vals(values)
 
@@ -409,9 +410,10 @@ class IrAttachment(models.Model):
             for attachment, vals in zip(
                 self._with_bin_size_disabled(), vals_list, strict=True
             ):
-                if attachment.store_fname:
-                    vals.pop("db_datas", None)
-                elif attachment.checksum or attachment.db_datas:
+                vals.pop("db_datas", None)
+                if not attachment.store_fname and (
+                    attachment.checksum or attachment.db_datas
+                ):
                     vals["raw"] = attachment.raw
                     inlined += 1
             _debug.logic("copy_data", count=len(vals_list), inlined_raw=inlined)
@@ -421,6 +423,7 @@ class IrAttachment(models.Model):
         new_attachments = super().copy(default)
         if not (default or {}).keys() & {"datas", "db_datas", "raw"}:
             by_content: dict[tuple, list[int]] = defaultdict(list)
+            self.fetch(["store_fname", "checksum", "file_size", "index_content"])
             for origin, copied in zip(self, new_attachments, strict=True):
                 if origin.store_fname:
                     by_content[
@@ -436,7 +439,6 @@ class IrAttachment(models.Model):
                         "checksum": checksum,
                         "file_size": size,
                         "index_content": index,
-                        "db_datas": False,
                     }
                 )
             _debug.lifecycle(
@@ -509,7 +511,7 @@ class IrAttachment(models.Model):
         bypass_access: bool = False,
     ) -> Query:
         assert not self._active_name, "active name not supported on ir.attachment"
-        disable_binary_fields_attachments = False
+        hide_field_rows = False
         domain = Domain(domain)
         if (
             not self.env.context.get("skip_res_field_check")
@@ -518,7 +520,7 @@ class IrAttachment(models.Model):
             )
             and not bypass_access
         ):
-            disable_binary_fields_attachments = True
+            hide_field_rows = True
             domain &= Domain("res_field", "=", False)
 
         domain = domain.optimize(self)
@@ -528,7 +530,7 @@ class IrAttachment(models.Model):
                 su=self.env.su,
                 bypass_access=bypass_access,
                 empty=domain.is_false(),
-                res_field_hidden=disable_binary_fields_attachments,
+                res_field_hidden=hide_field_rows,
             )
             return super()._search(
                 domain,
@@ -557,7 +559,7 @@ class IrAttachment(models.Model):
                 res_ids=len(res_ids or ()),
             )
             sec_domain |= self._get_domain_security_by_model(
-                domain, res_model_names, disable_binary_fields_attachments
+                domain, res_model_names, hide_field_rows
             )
             return super()._search(
                 domain & sec_domain,
@@ -774,7 +776,7 @@ class IrAttachment(models.Model):
 
     def _get_content_vals_memoized(
         self,
-        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]],
+        memo: ContentMemo,
         data: bytes,
         mimetype: str,
         backend: AttachmentStorage,
@@ -857,49 +859,6 @@ class IrAttachment(models.Model):
     def get_groups_allowed_to_serve(self) -> list[str]:
         return ["base.group_system"]
 
-    def _get_content_for_rewrite(self, attach: Self, operation: str) -> bytes | None:
-        raw = attach._with_bin_size_disabled().raw
-        if self._is_content_unreadable(
-            raw,
-            attach.file_size,
-            att_id=attach.id,
-            key=attach.store_fname,
-            action=f"skipping {operation}",
-        ):
-            _debug.logic(
-                "rewrite_skipped",
-                attachment=attach.id,
-                operation=operation,
-                reason="unreadable",
-            )
-            return None
-        return raw
-
-    def _rewrite_stored_content(
-        self, attach: Self, values: dict[str, Any], old_fname: str | None
-    ) -> None:
-        super(IrAttachment, attach.sudo()).write(values)
-        attach.flush_recordset(
-            ["store_fname", "db_datas", "checksum", "file_size", "index_content"]
-        )
-        _debug.lifecycle(
-            "stored_content_rewritten",
-            attachment=attach.id,
-            old_key_removed=bool(old_fname),
-        )
-        if old_fname:
-            attach._remove_stored_file(old_fname)
-
-    def _get_rows_rewritable(
-        self, rows: Self, operation: str
-    ) -> Generator[tuple[int, Self, bytes]]:
-        for index, attach in enumerate(rows, 1):
-            raw = self._get_content_for_rewrite(attach, operation)
-            if raw is None:
-                continue
-            yield index, attach, raw
-            attach.invalidate_recordset()
-
     def _get_mimetype_from_values(self, values: dict[str, Any]) -> str:
         mimetype = None
         if values.get("mimetype"):
@@ -960,7 +919,7 @@ class IrAttachment(models.Model):
                 span.set(bytes=len(data) if data else 0)
             self._is_content_unreadable(
                 data,
-                self.file_size,
+                self.file_size if size is None else min(self.file_size, size),
                 att_id=self.id,
                 key=self.store_fname,
                 action="serving empty bytes",
@@ -1047,7 +1006,7 @@ class IrAttachment(models.Model):
         wrote_content = False
         backend = self._get_storage_backend()
         verify_collision = self._is_content_collision_check_enabled()
-        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]] = {}
+        memo: ContentMemo = {}
         _debug.pipeline(
             "update_content_begin",
             count=len(self),
@@ -1079,8 +1038,6 @@ class IrAttachment(models.Model):
             replaced=len(old_fnames),
             wrote_content=wrote_content,
         )
-        if old_fnames or wrote_content:
-            self.flush_recordset(["checksum", "store_fname"])
         self._remove_stored_file_multi(OrderedSet(old_fnames))
 
     @api.model
@@ -1328,7 +1285,7 @@ class IrAttachment(models.Model):
         self,
         domain: Domain,
         res_model_names: Collection[Any],
-        disable_binary_fields_attachments: bool,
+        hide_field_rows: bool,
     ) -> Domain:
         env = self.with_context(active_test=False).env
         models_domain = Domain.FALSE
@@ -1366,7 +1323,7 @@ class IrAttachment(models.Model):
                 if query.where_clause
                 else Domain("res_id", "!=", False)
             )
-            if not disable_binary_fields_attachments and not self.env.is_system():
+            if not hide_field_rows and not self.env.is_system():
                 accessible_fields = [
                     field.name
                     for field in comodel._fields.values()
@@ -1450,9 +1407,9 @@ class IrAttachment(models.Model):
             token = self._prepare_access_token()
             new_tokens[attachment.id] = token
             tokens.append(token)
-        for attachment in self.browse(new_tokens):
-            super(IrAttachment, attachment).write(
-                {"access_token": new_tokens[attachment.id]}
+        for attachment_id, token in new_tokens.items():
+            super(IrAttachment, self.browse(attachment_id)).write(
+                {"access_token": token}
             )
         _debug.lifecycle(
             "access_tokens_generated", count=len(self), created=len(new_tokens)
@@ -1664,7 +1621,6 @@ class IrAttachment(models.Model):
             indexed=bool(index_content),
         )
         super(IrAttachment, record.sudo()).write(store_values)
-        record._check_serving_attachments()
         return record
 
     def _to_http_stream(self) -> Stream:
@@ -1825,12 +1781,25 @@ class IrAttachment(models.Model):
         legacy = model.search(domain, order="id", limit=limit)
         rekeyed = 0
         backend = self._get_storage_backend()
-        for _index, attach, raw in self._get_rows_rewritable(legacy, "rehash"):
+        for attach in legacy:
+            raw = attach._with_bin_size_disabled().raw
+            if self._is_content_unreadable(
+                raw,
+                attach.file_size,
+                att_id=attach.id,
+                key=attach.store_fname,
+                action="skipping rehash",
+            ):
+                continue
+            old_fname = attach.store_fname
             checksum = self._get_content_checksum(raw)
-            self._rewrite_stored_content(
-                attach,
-                {**backend.write(raw, checksum), "checksum": checksum},
-                attach.store_fname,
+            super(IrAttachment, attach.sudo()).write(
+                {**backend.write(raw, checksum), "checksum": checksum}
+            )
+            attach._remove_stored_file(old_fname)
+            attach.invalidate_recordset()
+            _debug.lifecycle(
+                "legacy_key_rehashed", attachment=attach.id, old_key=old_fname
             )
             rekeyed += 1
         _debug.lifecycle(
@@ -1922,6 +1891,7 @@ class IrAttachment(models.Model):
 
         removed = 0
         dropped = 0
+        self.flush_model(["store_fname"])
         for names in batched(checklist, self.env.cr.BATCH_SIZE, strict=False):
             self.env.cr.execute(
                 "SELECT store_fname FROM ir_attachment WHERE store_fname = ANY(%s)",
@@ -2175,9 +2145,7 @@ class IrAttachment(models.Model):
         if mimetype.startswith("application/vnd.openxmlformats"):
             return False
         subtype = mimetype.partition("/")[2]
-        return (
-            "html" in subtype or subtype in {"hta", "xml"} or subtype.endswith("+xml")
-        )
+        return "html" in subtype or "xml" in subtype or subtype == "hta"
 
     def _is_remote_source(self) -> bool:
         self.check_singleton()
