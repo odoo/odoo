@@ -27,7 +27,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { before_insert_within_pre_processors } from "@html_editor/main/code_block_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
-    import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
+    import { feff_providers, FeffShared, is_feff_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers, before_color_element_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
     import { font_type_items } from "@html_editor/main/font/font_type_plugin";
@@ -231,7 +231,7 @@ declare module "plugins" {
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
         should_show_power_buttons_predicates: should_show_power_buttons_predicates;
-        would_feff_be_legit_predicates: would_feff_be_legit_predicates;
+        is_feff_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
 
         // Processors

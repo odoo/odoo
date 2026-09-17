@@ -130,14 +130,6 @@ export class IconPlugin extends Plugin {
                 icon: "image",
             },
         ],
-        would_feff_be_legit_predicates: (node) => {
-            if (
-                (node.previousSibling && isIconElement(closestElement(node.previousSibling))) ||
-                (node.nextSibling && isIconElement(closestElement(node.nextSibling)))
-            ) {
-                return true;
-            }
-        },
         /** Providers */
         selected_background_color_providers: withSequence(
             5,
