@@ -15,7 +15,7 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { browser } from "@web/core/browser/browser";
-import { TABLE_WRAPPER_SELECTOR, wrapTableInScrollContainer } from "@html_editor/utils/table";
+import { wrapTables } from "@html_editor/utils/table";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -138,21 +138,8 @@ export class HtmlViewer extends Component {
     processReadonlyContent(container) {
         this.retargetLinks(container);
         this.applyAccessibilityAttributes(container);
-        this.wrapTables(container);
+        wrapTables(container);
         this.addDomListener(container, "copy", this.onCopy);
-    }
-
-    /**
-     * The wrapper is not saved, so the viewer adds it like the editor does.
-     *
-     * @param {HTMLElement} container
-     */
-    wrapTables(container) {
-        for (const table of container.querySelectorAll(".o_table")) {
-            if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
-                wrapTableInScrollContainer(table);
-            }
-        }
     }
 
     /**

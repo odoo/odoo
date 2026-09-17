@@ -143,18 +143,37 @@ export function getTableWrapper(node) {
 }
 
 /**
- * Put the given table in a scroll container, so that it scrolls on its own
- * instead of making its container overflow.
+ * Put the tables of `root` in scroll containers, so that a table wider than the
+ * space available to it scrolls on its own instead of making its container
+ * overflow. Every table gets one, whether it overflows or not, so that they all
+ * share the same structure. A nested table is skipped, it cannot scroll beyond
+ * its cell anyway, and so is an already wrapped one.
  *
- * @param {HTMLTableElement} table
- * @returns {HTMLDivElement}
+ * @param {HTMLElement} root
+ * @param {(table: HTMLTableElement) => boolean} [filter] Further restricts the
+ *     tables to wrap.
+ * @returns {HTMLDivElement[]} The added containers.
  */
-export function wrapTableInScrollContainer(table) {
-    const wrapper = table.ownerDocument.createElement("div");
-    wrapper.className = TABLE_WRAPPER_CLASS;
-    table.before(wrapper);
-    wrapper.append(table);
-    return wrapper;
+export function wrapTables(root, filter = () => true) {
+    const wrappers = [];
+    for (const table of root.querySelectorAll("table")) {
+        // Not `closestElement`, which only works inside an editable, the same
+        // rule applies to readonly content. The search stops at the editable or
+        // readonly root, a cell beyond it does not belong to a parent table.
+        const cellOrRoot = table.parentElement.closest(
+            "td, th, .odoo-editor-editable, .o_readonly"
+        );
+        const isNested = cellOrRoot && isTableCell(cellOrRoot);
+        if (isNested || isTableWrapper(table.parentElement) || !filter(table)) {
+            continue;
+        }
+        const wrapper = table.ownerDocument.createElement("div");
+        wrapper.className = TABLE_WRAPPER_CLASS;
+        table.before(wrapper);
+        wrapper.append(table);
+        wrappers.push(wrapper);
+    }
+    return wrappers;
 }
 
 /**

@@ -30,9 +30,8 @@ import {
     getRowIndex,
     getTableCells,
     getTableRoot,
-    getTableWrapper,
     isTableWrapper,
-    wrapTableInScrollContainer,
+    wrapTables,
 } from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -248,33 +247,6 @@ export class TablePlugin extends Plugin {
         this.normalizeTableStructure(this.editable);
     }
 
-    /**
-     * Wraps the given table in a scroll container, so that a table wider than
-     * the space available to it scrolls on its own instead of making the whole
-     * editable overflow. Every table gets one, whether it overflows or not, so
-     * that they all share the same structure. A nested table is skipped, it
-     * cannot scroll beyond its cell anyway, and so are the tables the editor
-     * has no business touching: the ones that are not editable and the
-     * protected ones.
-     *
-     * @param {HTMLTableElement} table
-     */
-    wrapTable(table) {
-        if (
-            !this.config.allowScrollableTables ||
-            getTableWrapper(table) ||
-            closestElement(table, isTableCell) ||
-            !isContentEditable(table) ||
-            isProtected(table) ||
-            isProtecting(table)
-        ) {
-            return;
-        }
-        const cursors = this.dependencies.selection.preserveSelection();
-        wrapTableInScrollContainer(table);
-        cursors.restore();
-    }
-
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
         // Clipboard must contain exactly one table.
         const sourceTable = clipboardRoot.firstChild;
@@ -403,15 +375,24 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Inherits table-level colors to all child tds to make it
-     * easier to add/remove style on tables.
+     * Puts the tables in scroll containers, and inherits table-level colors to
+     * all child tds to make it easier to add/remove style on tables.
      *
      * @param {Element} root
      */
     normalizeTable(root) {
+        if (this.config.allowScrollableTables) {
+            const cursors = this.dependencies.selection.preserveSelection();
+            const wrappers = wrapTables(
+                root,
+                (table) => isContentEditable(table) && !isProtected(table) && !isProtecting(table)
+            );
+            if (wrappers.length) {
+                cursors.restore();
+            }
+        }
         const tables = root.querySelectorAll("table");
         for (const table of tables) {
-            this.wrapTable(table);
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
