@@ -64,3 +64,87 @@ class TestResourceAssetLog(TransactionCase):
             ),
         ):
             self.Log.create({"asset_id": asset.id, "company_id": self.company_b.id})
+
+
+@tagged("post_install", "-at_install")
+class TestResourceAssetLogOdometer(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Log = cls.env["resource.asset.log"]
+        cls.km = cls.env.ref("uom.product_uom_km")
+        cls.mile = cls.env.ref("uom.product_uom_mile")
+        cls.asset = cls.env["resource.asset"].create(
+            {
+                "name": "Loader",
+                "kind_id": cls.env.ref("resource_asset.kind_machinery").id,
+                "odometer_uom_id": cls.km.id,
+            }
+        )
+
+    def _reading(self, odometer, date):
+        return self.Log.create(
+            {"asset_id": self.asset.id, "odometer": odometer, "date": date}
+        )
+
+    def test_a_ledger_reading_reaches_the_meter(self):
+        self._reading(1200, "2026-01-01")
+
+        self.assertEqual(self.asset.odometer_meter_id.kind, "odometer")
+        self.assertEqual(self.asset.odometer, 1200)
+        self.assertEqual(self.asset.odometer_meter_id.uom_id, self.km)
+
+    def test_the_newest_reading_is_the_one_the_meter_carries(self):
+        self._reading(1200, "2026-01-01")
+        self._reading(1800, "2026-02-01")
+
+        self.assertEqual(self.asset.odometer, 1800)
+
+    def test_a_reading_below_an_earlier_one_is_refused(self):
+        self._reading(1200, "2026-01-01")
+
+        with self.assertRaises(ValidationError):
+            self._reading(900, "2026-02-01")
+
+    def test_a_reading_above_a_later_one_is_refused(self):
+        self._reading(1800, "2026-02-01")
+
+        with self.assertRaises(ValidationError):
+            self._reading(2500, "2026-01-01")
+
+    def test_a_negative_reading_is_refused(self):
+        with self.assertRaises(ValidationError):
+            self._reading(-1, "2026-01-01")
+
+    def test_deleting_the_newest_reading_walks_the_meter_back(self):
+        self._reading(1200, "2026-01-01")
+        newest = self._reading(1800, "2026-02-01")
+
+        newest.unlink()
+
+        self.assertEqual(self.asset.odometer, 1200)
+
+    def test_writing_the_odometer_records_a_reading(self):
+        self.asset.odometer = 500
+
+        self.assertEqual(self.asset.odometer_meter_id.value, 500)
+        with self.assertRaises(ValidationError):
+            self.asset.odometer = 400
+
+    def test_the_unit_may_still_be_set_before_any_reading(self):
+        self.asset.odometer_uom_id = self.mile
+
+        self.assertEqual(self.asset.odometer_uom_id, self.mile)
+
+    def test_switching_the_unit_would_restate_history_and_is_refused(self):
+        self._reading(1200, "2026-01-01")
+
+        with self.assertRaises(ValidationError):
+            self.asset.odometer_uom_id = self.mile
+
+    def test_rewriting_the_same_unit_is_not_a_change(self):
+        self._reading(1200, "2026-01-01")
+
+        self.asset.odometer_uom_id = self.km
+
+        self.assertEqual(self.asset.odometer_uom_id, self.km)

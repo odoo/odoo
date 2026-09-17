@@ -1,6 +1,6 @@
 {
     "name": "Assets - Product",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Hidden",
     "summary": "A product whose units are assets: the kind on the template, the asset on the unit",
     "author": "AgroMarin",

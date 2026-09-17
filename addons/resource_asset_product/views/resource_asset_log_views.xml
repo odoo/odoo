@@ -9,6 +9,7 @@
                 <field name="date" />
                 <field name="asset_id" />
                 <field name="log_type" />
+                <field name="odometer" optional="hide" />
                 <field name="product_id" optional="show" />
                 <field name="product_category_id" optional="hide" />
                 <field name="vendor_id" optional="hide" />
@@ -35,6 +36,11 @@
                             <field name="asset_id" />
                             <field name="date" />
                             <field name="log_type" />
+                            <label for="odometer" />
+                            <div class="o_row">
+                                <field name="odometer" class="w-25" />
+                                <field name="odometer_uom_name" />
+                            </div>
                             <field name="state" />
                         </group>
                         <group name="cost">

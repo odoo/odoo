@@ -1,6 +1,6 @@
 {
     "name": "Assets",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Hidden",
     "summary": "A physical thing as a resource: identity, lifecycle, meters, custody",
     "author": "AgroMarin",

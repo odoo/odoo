@@ -167,12 +167,18 @@ class ResourceAsset(models.Model):
     )
     odometer = fields.Float(
         compute="_compute_odometer",
+        inverse="_inverse_odometer",
         store=True,
+        readonly=False,
     )
     odometer_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         tracking=True,
         help="Unit of measurement for the odometer readings",
+    )
+    odometer_uom_name = fields.Char(
+        related="odometer_uom_id.display_name",
+        string="Odometer Unit",
     )
     address_id = fields.Many2one(
         comodel_name="res.partner",
@@ -255,6 +261,55 @@ class ResourceAsset(models.Model):
     def _compute_odometer(self):
         for asset in self:
             asset.odometer = asset.odometer_meter_id.value
+
+    def _inverse_odometer(self):
+        for asset in self:
+            meter = asset.odometer_meter_id
+            if not asset.odometer and not meter:
+                continue
+            if not meter:
+                meter = asset._create_odometer_meter()
+            if meter.value > asset.odometer:
+                raise ValidationError(
+                    self.env._(
+                        "%(asset)s: the odometer cannot go below its last reading of %(value)s.",
+                        asset=asset.display_name,
+                        value=meter.value,
+                    )
+                )
+            if meter.value != asset.odometer:
+                meter.record(asset.odometer)
+
+    def _create_odometer_meter(self):
+        self.check_singleton()
+        meter = self.env["resource.asset.meter"].create(
+            {
+                "asset_id": self.id,
+                "name": self.env._("Odometer"),
+                "kind": "odometer",
+                "uom_id": self.odometer_uom_id.id,
+            }
+        )
+        self.invalidate_recordset(["odometer_meter_id"])
+        return meter
+
+    def _check_odometer_uom_is_not_reinterpreted(self, new_uom_id):
+        """Every reading the meter holds is a number in the asset's unit, and
+        nothing stores which unit it was taken in. Changing the unit therefore
+        restates the whole history rather than converting it."""
+        changing = self.filtered(lambda asset: asset.odometer_uom_id.id != new_uom_id)
+        with_readings = changing.sudo().filtered(
+            lambda asset: asset.odometer_meter_id.reading_ids
+        )
+        if with_readings:
+            raise ValidationError(
+                self.env._(
+                    "%(assets)s already carry odometer readings in their current "
+                    "unit. Changing it now would restate every one of them; "
+                    "convert the readings deliberately instead.",
+                    assets=", ".join(with_readings.mapped("display_name")),
+                )
+            )
 
     @api.depends("identifier_ids.value", "identifier_ids.type_id")
     def _compute_identifier_columns(self):
@@ -404,6 +459,8 @@ class ResourceAsset(models.Model):
         return resource_vals
 
     def write(self, vals):
+        if "odometer_uom_id" in vals:
+            self._check_odometer_uom_is_not_reinterpreted(vals["odometer_uom_id"])
         if "active" in vals and not vals["active"]:
             now = fields.Datetime.now()
             self._end_custody(

@@ -1,4 +1,5 @@
 import logging
+from bisect import bisect_left, bisect_right
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -91,6 +92,14 @@ class ResourceAssetLog(models.Model):
     )
     inv_ref = fields.Char(string="Vendor Reference")
     notes = fields.Text()
+    odometer = fields.Float(
+        string="Odometer Value",
+        help="Odometer measure of the asset at the moment of this log",
+    )
+    odometer_uom_name = fields.Char(
+        related="asset_id.odometer_uom_name",
+        string="Odometer Unit",
+    )
 
     def _selection_log_type(self):
         category_field = self.env["product.category"]._fields["log_type"]
@@ -307,7 +316,9 @@ class ResourceAssetLog(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_entry_state(vals_list)
-        return super().create(vals_list)
+        logs = super().create(vals_list)
+        logs.asset_id._sync_odometer_meter()
+        return logs
 
     @api.model
     def _check_entry_state(self, vals_list):
@@ -329,7 +340,22 @@ class ResourceAssetLog(models.Model):
     def write(self, vals):
         if "state" in vals:
             self._check_state_transition(vals["state"])
-        return super().write(vals)
+        assets_before = self.asset_id
+        res = super().write(vals)
+        if vals.keys() & {"odometer", "date", "asset_id", "active", "state"}:
+            (assets_before | self.asset_id)._sync_odometer_meter()
+        return res
+
+    def unlink(self):
+        """A deleted reading rolls the ledger's newest reading back, so the
+        meter has to follow it down. `create` and `write` already re-sync;
+        without this the two odometers disagree forever and every consumer of
+        the meter -- a maintenance plan's distance trigger, telemetry -- keeps
+        the reading of a log that no longer exists."""
+        assets_before = self.asset_id
+        res = super().unlink()
+        assets_before._sync_odometer_meter()
+        return res
 
     def _check_state_transition(self, new_state):
         for log in self:
@@ -345,6 +371,75 @@ class ResourceAssetLog(models.Model):
                         target=new_state,
                     )
                 )
+
+    @api.constrains("odometer")
+    def _check_odometer_non_negative(self):
+        for log in self:
+            if log.odometer < 0:
+                raise ValidationError(
+                    self.env._(
+                        "Odometer reading cannot be negative (got %(value)s).",
+                        value=log.odometer,
+                    )
+                )
+
+    @api.constrains("odometer", "asset_id", "date")
+    def _check_odometer_sequence(self):
+        dirty = self.filtered("odometer")
+        if not dirty:
+            return
+
+        by_asset = dirty._get_odometer_timeline()
+        for log in dirty:
+            previous, next_entry = log._find_odometer_neighbours(by_asset, log.id)
+            if previous and log.odometer < previous.odometer:
+                raise ValidationError(
+                    self.env._(
+                        "Odometer (%(current)s) cannot be less than previous reading (%(previous)s) on %(date)s.",
+                        current=log.odometer,
+                        previous=previous.odometer,
+                        date=previous.date,
+                    )
+                )
+            if next_entry and log.odometer > next_entry.odometer:
+                raise ValidationError(
+                    self.env._(
+                        "Odometer (%(current)s) cannot be greater than next reading (%(next)s) on %(date)s.",
+                        current=log.odometer,
+                        next=next_entry.odometer,
+                        date=next_entry.date,
+                    )
+                )
+
+    def _get_odometer_timeline(self):
+        timeline = self.sudo().search_fetch(
+            [("asset_id", "in", self.asset_id.ids), ("odometer", ">", 0)],
+            ["asset_id", "date", "odometer"],
+            order="asset_id, date, id",
+        )
+        by_asset = {}
+        for entry in timeline:
+            if entry.date:
+                by_asset.setdefault(entry.asset_id.id, []).append(entry)
+        return by_asset
+
+    def _find_odometer_neighbours(self, by_asset, skip_id):
+        self.check_singleton()
+        if not self.date:
+            return None, None
+        entries = by_asset.get(self.asset_id.id, [])
+        dates = [entry.date for entry in entries]
+        left = bisect_left(dates, self.date)
+        right = bisect_right(dates, self.date)
+        previous = next(
+            (entry for entry in reversed(entries[:left]) if entry.id != skip_id),
+            None,
+        )
+        next_entry = next(
+            (entry for entry in entries[right:] if entry.id != skip_id),
+            None,
+        )
+        return previous, next_entry
 
     def action_set_done(self):
         self.write({"state": "done"})

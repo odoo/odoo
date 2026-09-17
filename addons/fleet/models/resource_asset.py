@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 
@@ -43,10 +42,6 @@ class ResourceAsset(models.Model):
     co2_emission_unit = fields.Selection(related="product_id.co2_emission_unit")
     vehicle_range = fields.Integer(related="product_id.vehicle_range")
     range_unit = fields.Selection(related="product_id.range_unit")
-    odometer = fields.Float(
-        inverse="_inverse_odometer",
-        readonly=False,
-    )
     service_count = fields.Integer(compute="_compute_service_count")
 
     @api.depends("kind_id")
@@ -78,31 +73,6 @@ class ResourceAsset(models.Model):
             parts.append(vehicle.license_plate or self.env._("No Plate"))
             vehicle.display_name = " / ".join(parts)
         super(ResourceAsset, self - vehicles)._compute_display_name()
-
-    def _inverse_odometer(self):
-        for asset in self:
-            meter = asset.odometer_meter_id
-            if not asset.odometer and not meter:
-                continue
-            if not meter:
-                meter = self.env["resource.asset.meter"].create(
-                    {
-                        "asset_id": asset.id,
-                        "name": self.env._("Odometer"),
-                        "kind": "odometer",
-                        "uom_id": asset.odometer_uom_id.id,
-                    }
-                )
-            if meter.value > asset.odometer:
-                raise ValidationError(
-                    self.env._(
-                        "%(vehicle)s: the odometer cannot go below its last reading of %(value)s.",
-                        vehicle=asset.display_name,
-                        value=meter.value,
-                    )
-                )
-            if meter.value != asset.odometer:
-                meter.record(asset.odometer)
 
     def _get_service_domain(self):
         return Domain("asset_id", "in", self.ids) & Domain("log_type", "=", "service")
