@@ -128,6 +128,16 @@ class DiscussChannelWebclientController(WebclientController):
             )
             messages.set_message_done()
 
+    @store_handler("/discuss/channel/pinned_messages", audience="everyone")
+    def store_get_discuss_channel_pinned_messages(self, store: Store, channel_id, request_list):
+        if channel := request.env["discuss.channel"].search_fetch([("id", "=", channel_id)]):
+            store.add(
+                channel,
+                "_store_pinned_messages_fields",
+                fields_params={"request_list": request_list},
+                as_thread=True,
+            )
+
     @store_handler("/discuss/channel/pin", audience="everyone", readonly=False)
     def store_set_discuss_channel_pin(self, store: Store, channel_id, pinned):
         if member := request.env["discuss.channel.member"].search_fetch(
