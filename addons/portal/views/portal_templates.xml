@@ -80,9 +80,12 @@
     <!-- Added by another template so that it can be disabled if needed -->
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
         <t id="language_selector_hook" position="replace">
-            <t id="language_selector_call"
+            <t
+                id="language_selector_call"
                 t-call="portal.language_selector"
-                _div_classes="(_div_classes or '') + ' dropup'"/>
+                _div_classes="(_div_classes or '') + ' dropup'"
+                _btn_class.f="btn btn-sm btn-light"
+            />
         </t>
     </template>
 
