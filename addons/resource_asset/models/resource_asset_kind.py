@@ -18,6 +18,11 @@ class ResourceAssetKind(models.Model):
         column1="kind_id",
         column2="type_id",
         string="Required Identifiers",
+        help="What an asset of this kind is expected to carry. A gap is reported on the asset; it refuses the asset only where the kind enforces it.",
+    )
+    enforce_identifiers = fields.Boolean(
+        string="Refuse Incomplete Assets",
+        help="Refuse an asset of this kind that is missing a required identifier, instead of only reporting the gap. Off by default: a unit usually arrives before its paperwork, and a fleet that is already incomplete would become unwritable.",
     )
     asset_properties_definition = fields.PropertiesDefinition(string="Asset Properties")
     asset_ids = fields.One2many(

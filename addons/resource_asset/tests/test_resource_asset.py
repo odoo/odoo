@@ -102,6 +102,58 @@ class TestResourceAsset(TransactionCase):
         self.assertEqual(desk.missing_identifier_type_ids, inventory)
         self.assertEqual(inventory.unique_scope, "company")
 
+    def test_a_kind_that_does_not_enforce_takes_an_incomplete_asset(self):
+        """The default everywhere. A unit arrives before its paperwork, and a
+        fleet that is already incomplete must stay writable."""
+        truck = self._truck()
+
+        self.assertFalse(self.vehicle.enforce_identifiers)
+        self.assertEqual(truck.missing_identifier_type_ids, self.plate | self.vin)
+        truck.name = "Still editable"
+
+    def test_an_enforcing_kind_refuses_an_asset_missing_an_identifier(self):
+        self.vehicle.enforce_identifiers = True
+
+        with self.assertRaises(ValidationError):
+            self._truck("Bare truck")
+
+    def test_an_enforcing_kind_takes_an_asset_that_carries_everything(self):
+        self.vehicle.enforce_identifiers = True
+
+        truck = self._truck("Complete truck", license_plate="ENF-1", vin_sn="ENFVIN1")
+
+        self.assertFalse(truck.missing_identifier_type_ids)
+
+    def test_clearing_an_identifier_an_enforcing_kind_needs_is_refused(self):
+        truck = self._truck("Losing its vin", license_plate="ENF-2", vin_sn="ENFVIN2")
+        self.vehicle.enforce_identifiers = True
+
+        with self.assertRaises(ValidationError):
+            truck.vin_sn = False
+
+    def test_enforcement_reaches_an_asset_that_changes_kind(self):
+        tool = self.Asset.create(
+            {
+                "name": "Reclassified",
+                "kind_id": self.env.ref("resource_asset.kind_tool").id,
+            }
+        )
+        self.vehicle.enforce_identifiers = True
+
+        with self.assertRaises(ValidationError):
+            tool.kind_id = self.vehicle
+
+    def test_an_enforcing_kind_is_still_refused_nothing_when_asked_to_skip(self):
+        """The seam a receipt uses: the serial is created before the paperwork
+        arrives, and `resource_asset_stock` opens it on that one path."""
+        self.vehicle.enforce_identifiers = True
+
+        truck = self.Asset.with_context(skip_asset_identity_check=True).create(
+            {"name": "Just received", "kind_id": self.vehicle.id}
+        )
+
+        self.assertEqual(truck.missing_identifier_type_ids, self.plate | self.vin)
+
     def test_telecom_equipment_wants_a_serial_and_an_imei(self):
         radio = self.Asset.create(
             {

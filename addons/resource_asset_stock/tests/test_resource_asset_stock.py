@@ -185,3 +185,68 @@ class TestResourceAssetStock(TransactionCase):
         self.assertEqual(drill.location_id, shelf)
         drill.name = "Hammer drill"
         self.assertEqual(drill.location_id, shelf)
+
+
+@tagged("post_install", "-at_install")
+class TestReceivingAnEnforcedAsset(TransactionCase):
+    """A goods receipt must not be blocked by paperwork that arrives later.
+    `_create_production_lots` builds a bare lot from name, product and company;
+    enforcing the kind's identifiers there would make receiving a vehicle
+    impossible until its registration came through."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.vehicle = cls.env.ref("resource_asset.kind_vehicle")
+        cls.vehicle.enforce_identifiers = True
+        cls.template = cls.env["product.template"].create(
+            {
+                "name": "Enforced pickup",
+                "is_storable": True,
+                "tracking": "serial",
+                "asset_kind_id": cls.vehicle.id,
+            }
+        )
+        cls.product = cls.template.product_variant_id
+
+    def _receive(self, serial):
+        warehouse = self.env["stock.warehouse"].search([], limit=1)
+        picking_type = warehouse.in_type_id
+        picking_type.use_create_lots = True
+        supplier = self.env.ref("stock.stock_location_suppliers")
+        picking = self.env["stock.picking"].create(
+            {
+                "picking_type_id": picking_type.id,
+                "location_id": supplier.id,
+                "location_dest_id": warehouse.lot_stock_id.id,
+                "move_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product.id,
+                            "product_uom_qty": 1,
+                            "location_id": supplier.id,
+                            "location_dest_id": warehouse.lot_stock_id.id,
+                        },
+                    )
+                ],
+            }
+        )
+        picking.action_confirm()
+        picking.move_ids.move_line_ids.write({"lot_name": serial, "quantity": 1})
+        picking.button_validate()
+        return picking.move_ids.move_line_ids.lot_id
+
+    def test_a_receipt_creates_the_serial_before_the_plate_exists(self):
+        lot = self._receive("RECEIPT-SN-1")
+
+        self.assertEqual(lot.name, "RECEIPT-SN-1")
+        self.assertTrue(lot.asset_id)
+        self.assertTrue(lot.asset_id.missing_identifier_type_ids)
+
+    def test_the_receipt_exemption_does_not_leak_to_a_direct_create(self):
+        with self.assertRaises(ValidationError):
+            self.env["resource.asset"].create(
+                {"name": "Direct", "kind_id": self.vehicle.id}
+            )

@@ -13,6 +13,8 @@ MANAGER_ROLE = "manager"
 CUSTODY_ROLE_BY_FIELD = {"operator_id": OPERATOR_ROLE, "manager_id": MANAGER_ROLE}
 DEFAULT_HANDOVER_DELAY = timedelta(days=7)
 
+SKIP_IDENTITY_CHECK = "skip_asset_identity_check"
+
 IDENTIFIER_CODE_BY_FIELD = {
     "license_plate": "plate",
     "vin_sn": "vin",
@@ -347,6 +349,27 @@ class ResourceAsset(models.Model):
                 elif not value and current:
                     current.unlink()
 
+    def _check_required_identifiers(self):
+        if self.env.context.get(SKIP_IDENTITY_CHECK):
+            return
+        enforced = self.filtered(lambda asset: asset.kind_id.enforce_identifiers)
+        if not enforced:
+            return
+        enforced.invalidate_recordset(
+            ["identifier_ids", "missing_identifier_type_ids", *IDENTIFIER_CODE_BY_FIELD]
+        )
+        for asset in enforced:
+            missing = asset.missing_identifier_type_ids
+            if missing:
+                raise ValidationError(
+                    self.env._(
+                        "%(asset)s is a %(kind)s, which requires %(types)s.",
+                        asset=asset.name or self.env._("This asset"),
+                        kind=asset.kind_id.display_name,
+                        types=", ".join(missing.mapped("name")),
+                    )
+                )
+
     @api.depends("identifier_ids.type_id", "kind_id.identifier_type_ids")
     def _compute_missing_identifier_type_ids(self):
         for asset in self:
@@ -447,6 +470,7 @@ class ResourceAsset(models.Model):
         for asset, resource_vals in zip(assets, resource_vals_list, strict=True):
             if resource_vals:
                 asset.resource_id.sudo().write(resource_vals)
+        assets._check_required_identifiers()
         return assets
 
     def _pop_resource_vals(self, vals):
@@ -475,8 +499,16 @@ class ResourceAsset(models.Model):
                 disposed._write_through_resource(
                     {**vals, "state": "out_of_service", "date_disposal": False}
                 )
-                return (self - disposed)._write_through_resource(vals)
-        return self._write_through_resource(vals)
+                (self - disposed)._write_through_resource(vals)
+                self._check_identity_after(vals)
+                return True
+        res = self._write_through_resource(vals)
+        self._check_identity_after(vals)
+        return res
+
+    def _check_identity_after(self, vals):
+        if vals.keys() & {"kind_id", "identifier_ids", *IDENTIFIER_CODE_BY_FIELD}:
+            self._check_required_identifiers()
 
     def _write_through_resource(self, vals):
         vals = dict(vals)
