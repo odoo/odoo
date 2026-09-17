@@ -24,7 +24,7 @@ class CalendarUser(models.Model):
     # Access roles matching those of Google Calendar
     access_role = fields.Selection([
         ('owner', 'Owner'),
-        ('writer', 'Write'),
+        ('writer', 'Writer'),
     ], required=True, readonly=True)
 
     # Filter values

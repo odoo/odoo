@@ -5,7 +5,7 @@ import { Domain } from "@web/core/domain";
 
 patch(AttendeeCalendarCalendarFilterSection.prototype, {
     getDeleteCalendarDialogProps(filter) {
-        if (this.props.model.syncStatus?.['google_calendar'] === "sync_stopped") {
+        if (this.props.model.syncStatus?.['google_calendar'] === "sync_stopped" || filter.accessRole !== 'owner') {
             return super.getDeleteCalendarDialogProps(filter);
         }
         return {

@@ -196,7 +196,7 @@ class CalendarEvent(models.Model):
         [('public', 'Public'),
          ('private', 'Private'),
          ('confidential', 'Only internal users'),
-         ('members_only', 'Shared Calendar Members Only')], 'Privacy',
+         ('members_only', 'Calendar Members Only')], 'Privacy',
         help="People to whom this event will be visible.")
     privacy_placeholder = fields.Char(compute='_compute_privacy_placeholder')
     effective_privacy = fields.Selection(
