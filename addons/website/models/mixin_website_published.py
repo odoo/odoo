@@ -79,14 +79,9 @@ class MixinWebsitePublished(models.AbstractModel):
 
     @api.depends_context("uid")
     def _compute_can_publish(self):
+        modifiable = self.env["website"].get_current_website()._filter_modifiable(self)
         for record in self:
-            try:
-                self.env["website"].get_current_website()._check_access_to_modify(
-                    record
-                )
-                record.can_publish = True
-            except AccessError:
-                record.can_publish = False
+            record.can_publish = record in modifiable
 
     @api.model
     def _get_can_publish_error_message(self):

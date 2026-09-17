@@ -179,7 +179,7 @@ URL-less overrides inherit their pattern from the superclass and declare 0.
 | Asset bundle (website_id context) | `WebsiteWebClient` (webclient.py) | 1 / 0 (inherited) |
 | Logout (public auth) | `WebsiteSession` (main.py) | 1 / 0 (inherited) |
 | Back-compat image routes | `WebsiteBinary` (main.py) | 1 / 7 |
-| **Total** | **8 controller classes across 6 files** | **57 handlers / 70 URL variants** |
+| **Total** | **8 controller classes across 8 files** | **57 handlers / 70 URL variants** |
 
 Of the 57 handlers, **3 are URL-less overrides** (`WebsiteWebClient.bundle`,
 `Website.web_login`, `WebsiteSession.logout`) inheriting their URL from the

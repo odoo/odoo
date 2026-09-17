@@ -79,9 +79,9 @@ assert_grep "builder-iframe bundle present" 'website.assets_inside_builder_ifram
 
 # ------- Python surface -------
 assert_eq "Controller files (incl __init__)" \
-    "$(ls "$WEB"/controllers/*.py | wc -l)" "7"
+    "$(ls "$WEB"/controllers/*.py | wc -l)" "9"
 assert_eq "Controller files (excl __init__)" \
-    "$(ls "$WEB"/controllers/*.py | grep -vc __init__)" "6"
+    "$(ls "$WEB"/controllers/*.py | grep -vc __init__)" "8"
 assert_eq "Model files" \
     "$(ls "$WEB"/models/*.py | wc -l)" "45"
 assert_eq "Wizard py files (excl __init__)" \

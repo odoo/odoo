@@ -1596,6 +1596,15 @@ class Website(models.Model):
     def _check_access_to_modify(self, record):
         record.check_access("write")
 
+    def _filter_modifiable(self, records):
+        modifiable = records._filtered_access("write")
+        _debug.logic(
+            "website_modifiable_filtered",
+            records=records,
+            modifiable=len(modifiable),
+        )
+        return modifiable
+
     def _disable_unused_snippets_assets(self):
         _debug.pipeline("disable_unused_snippets", website=self.id)
         snippet_assets = (

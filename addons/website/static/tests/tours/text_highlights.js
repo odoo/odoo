@@ -21,10 +21,18 @@ function applyHighlight(target, targetName, highlight) {
 }
 
 function countLines(el) {
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const rects = range.getClientRects();
-    const lines = new Set([...rects].map((r) => Math.round(r.top)));
+    const lines = new Set();
+    const walker = el.ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const range = el.ownerDocument.createRange();
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.textContent.trim() || node.parentElement.closest("svg")) {
+            continue;
+        }
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) {
+            lines.add(Math.round(rect.top));
+        }
+    }
     return lines.size;
 }
 
@@ -53,7 +61,7 @@ registerWebsitePreviewTour(
         ...applyHighlight(".s_title h2", "page title", "underline"),
         {
             content: "Check that the highlights was correctly applied",
-            trigger: ":iframe .s_title .o_text_highlight",
+            trigger: ":iframe .s_title .o_text_highlight:has(svg.o_text_highlight_svg)",
             run() {
                 if (
                     this.anchor.querySelectorAll("svg").length !==

@@ -201,6 +201,10 @@ registerWebsitePreviewTour(
         {
             trigger: "body:not(:has(.modal))",
         },
+        {
+            content: "Wait for the reloaded page to carry the new menu entry",
+            trigger: ":iframe .top_menu:has(.nav-item a:contains('Random!'))",
+        },
         clickOnExtraMenuItem({}, true),
         ...openLinkPopup(
             ":iframe .top_menu .nav-item a:contains('Random!')",
