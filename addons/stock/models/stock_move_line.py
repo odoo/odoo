@@ -690,9 +690,18 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
+
+        # The loop below gathers in strict mode, matching the lot, package and
+        # owner of each move line exactly: only those quants can ever be read
+        # from the cache, so restrict it to them.
+        packages = mls_todo.package_id | mls_todo.result_package_id
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
-            extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
+            extra_domain=[
+                '|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False),
+                '|', ('package_id', 'in', packages.ids), ('package_id', '=', False),
+                '|', ('owner_id', 'in', mls_todo.owner_id.ids), ('owner_id', '=', False),
+            ])
 
         # Prepare package history records before any actual move
         if not self.env.context.get('ignore_dest_packages'):
