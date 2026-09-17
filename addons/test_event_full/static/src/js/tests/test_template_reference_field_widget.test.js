@@ -1,8 +1,15 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, select } from "@odoo/hoot-dom";
+import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    editSelectMenu,
+    fields,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class EventMail extends models.Model {
     _name = "event.mail";
@@ -81,8 +88,7 @@ test("Reference field displays right icons", async () => {
 
     await click(".o_field_cell:eq(0)");
     await animationFrame();
-    await click(".o_field_cell:eq(0) select.o_input");
-    await select("sms.template");
+    await editSelectMenu(".o_field_cell:eq(0) .o_select_menu input", { value: "SMS Template" });
     await animationFrame();
     await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
@@ -98,8 +104,7 @@ test("Reference field displays right icons", async () => {
 
     await click(".o_field_cell:eq(0)");
     await animationFrame();
-    await click(".o_field_cell:eq(0) select.o_input");
-    await select("some.template");
+    await editSelectMenu(".o_field_cell:eq(0) .o_select_menu input", { value: "Some Template" });
     await animationFrame();
     await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
@@ -114,8 +119,7 @@ test("Reference field displays right icons", async () => {
 
     await click(".o_field_cell:eq(1)");
     await animationFrame();
-    await click(".o_field_cell:eq(1) select.o_input");
-    await select("mail.template");
+    await editSelectMenu(".o_field_cell:eq(1) .o_select_menu input", { value: "Mail Template" });
     await click(".o_list_renderer");
     await animationFrame();
 
