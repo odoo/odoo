@@ -38,6 +38,21 @@
                                 <field name="co2_emission_unit" class="oe_inline" />
                             </div>
                         </group>
+                        <group name="vehicle_fuel" string="Fuel">
+                            <field name="fuel_tank_capacity" />
+                            <label for="fuel_efficiency_theoretical" />
+                            <div class="o_row">
+                                <field
+                                    name="fuel_efficiency_theoretical"
+                                    class="oe_inline" />
+                                <field
+                                    name="fuel_efficiency_uom_name"
+                                    readonly="1"
+                                    class="oe_inline" />
+                            </div>
+                            <field name="fuel_efficiency_min" />
+                            <field name="fuel_efficiency_max" />
+                        </group>
                     </group>
                 </page>
             </page>

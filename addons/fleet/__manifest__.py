@@ -1,6 +1,6 @@
 {
     "name": "Fleet",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Human Resources/Fleet",
     "sequence": 185,
     "summary": "Manage your company's vehicles, drivers, services and costs",

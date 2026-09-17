@@ -142,6 +142,24 @@ class TestFleetVehicle(TransactionCase):
                 }
             )
 
+    def test_a_vehicle_waiting_for_its_plate_is_named_by_what_identifies_it(self):
+        awaiting = self._vehicle(plate=False, vin_sn="VIN-4242")
+
+        self.assertEqual(awaiting.display_name, "Probe Motors / Probe One / VIN-4242")
+
+    def test_a_model_carries_its_fuel_specifications(self):
+        self.model.product_tmpl_id.write(
+            {
+                "fuel_tank_capacity": 47,
+                "fuel_efficiency_theoretical": 17.5,
+                "fuel_efficiency_min": 14.2,
+                "fuel_efficiency_max": 20.8,
+            }
+        )
+
+        self.assertEqual(self._vehicle(plate="PRB-FUEL").fuel_tank_capacity, 47)
+        self.assertTrue(self.model.product_tmpl_id.fuel_efficiency_uom_name)
+
     def test_writing_the_odometer_records_a_reading(self):
         vehicle = self._vehicle()
         vehicle.odometer = 1200

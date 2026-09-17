@@ -67,6 +67,32 @@ class ProductTemplate(models.Model):
         selection=[("km", "km"), ("mi", "mi")],
         default="km",
     )
+    fuel_tank_capacity = fields.Float(
+        digits=(10, 2),
+        aggregator="avg",
+        help="Total fuel tank capacity in liters",
+    )
+    fuel_efficiency_theoretical = fields.Float(
+        aggregator="avg",
+        help="Manufacturer-rated fuel efficiency. Unit (km/L or MPG) is configurable in system settings.",
+    )
+    fuel_efficiency_min = fields.Float(
+        aggregator="avg",
+        help="Worst-case fuel efficiency (e.g., city driving). Unit (km/L or MPG) is configurable in system settings.",
+    )
+    fuel_efficiency_max = fields.Float(
+        aggregator="avg",
+        help="Best-case fuel efficiency (e.g., highway driving). Unit (km/L or MPG) is configurable in system settings.",
+    )
+    fuel_efficiency_uom_name = fields.Char(
+        string="Fuel Efficiency Unit",
+        compute="_compute_fuel_efficiency_uom_name",
+    )
+
+    def _compute_fuel_efficiency_uom_name(self):
+        self.fuel_efficiency_uom_name = (
+            self._get_fuel_efficiency_uom_name_from_ir_config_parameter()
+        )
 
     def _selection_vehicle_model_years(self):
         return [(str(year), str(year)) for year in range(1970, datetime.now().year + 2)]

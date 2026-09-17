@@ -41,6 +41,10 @@ class ResourceAsset(models.Model):
     co2 = fields.Float(related="product_id.co2")
     co2_emission_unit = fields.Selection(related="product_id.co2_emission_unit")
     vehicle_range = fields.Integer(related="product_id.vehicle_range")
+    fuel_tank_capacity = fields.Float(
+        related="product_id.fuel_tank_capacity",
+        digits=(10, 2),
+    )
     range_unit = fields.Selection(related="product_id.range_unit")
     service_count = fields.Integer(compute="_compute_service_count")
 
@@ -58,7 +62,7 @@ class ResourceAsset(models.Model):
             if not asset.model_year and asset.product_id.vehicle_model_year:
                 asset.model_year = asset.product_id.vehicle_model_year
 
-    @api.depends("product_id", "license_plate", "name", "is_vehicle")
+    @api.depends("product_id", "license_plate", "vin_sn", "name", "is_vehicle")
     def _compute_display_name(self):
         vehicles = self.filtered("is_vehicle")
         for vehicle in vehicles:
@@ -69,10 +73,18 @@ class ResourceAsset(models.Model):
                     vehicle.product_id.name,
                 )
                 if part
-            ] or [vehicle.name or ""]
-            parts.append(vehicle.license_plate or self.env._("No Plate"))
+            ]
+            parts.append(vehicle._get_display_identity())
             vehicle.display_name = " / ".join(parts)
         super(ResourceAsset, self - vehicles)._compute_display_name()
+
+    def _get_display_identity(self):
+        """What names this unit among others of its model. A plate is how a
+        vehicle is spoken about, but one waiting for its paperwork has none --
+        and a serial says more about which vehicle this is than "No Plate"
+        does."""
+        self.check_singleton()
+        return self.license_plate or self.vin_sn or self.name or self.env._("No Plate")
 
     def _get_service_domain(self):
         return Domain("asset_id", "in", self.ids) & Domain("log_type", "=", "service")
