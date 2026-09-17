@@ -142,6 +142,14 @@ class TestModuleManifest(_ManifestCase):
         self.assertIn("Missing `author` key", capture.output[0])
         self.assertIn("Missing `license` key", capture.output[1])
 
+    def test_missing_name_defaults_to_technical_name(self):
+        with self.assertLogs("odoo.modules.module", "WARNING") as capture:
+            manifest = _normalize_manifest(
+                "m", {"author": "x", "license": "MIT", "version": "1.0"}
+            )
+        self.assertEqual(manifest["name"], "m")
+        self.assertIn("Missing `name` key", capture.output[0])
+
 
 class TestManifestAutoInstall(BaseCase):
     BASE = {"author": "x", "license": "MIT"}

@@ -621,6 +621,13 @@ def _normalize_manifest(module: str, manifest_content: dict) -> dict:
             module,
         )
 
+    if not manifest.get("name"):
+        manifest["name"] = module
+        _logger.warning(
+            "Missing `name` key in manifest for %r, defaulting to the technical name",
+            module,
+        )
+
     if module == "base":
         manifest["depends"] = []
     elif not manifest["depends"]:
