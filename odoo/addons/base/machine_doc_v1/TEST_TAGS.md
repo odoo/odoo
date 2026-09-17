@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3862 methods, 788 classes, 138 files)
+# All base tests (3865 methods, 790 classes, 138 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 456 classes)
+### Tagged Files (78 files, 458 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -179,11 +179,11 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_table_object_conversion.py` | `post_install`, `-at_install` | 2 | 8 | TransactionCase |
 | `test_test_retry.py` | `test_retry`, `test_retry_success`, `-standard`, `test_retry_failures`, `test_retry_disable` | 12 | 19 | TestRetryCommon, TransactionCase |
 | `test_tests_tags.py` | `nodatabase` | 4 | 14 | TransactionCase, BaseCase |
-| `test_translate.py` | `post_install`, `-at_install` | 12 | 89 | BaseCase, TransactionCase |
+| `test_translate.py` | `post_install`, `-at_install` | 13 | 90 | BaseCase, TransactionCase |
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 56 | 302 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
-| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 3 | 11 | TransactionCase |
+| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 4 | 13 | TransactionCase |
 
 ### Untagged Files (60 files)
 
@@ -255,11 +255,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 138 |
-| Total test classes | 788 |
-| Total test methods | 3862 |
+| Total test classes | 790 |
+| Total test methods | 3865 |
 | Files with @tagged | 78 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 252 |
+| Classes using post_install | 254 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 

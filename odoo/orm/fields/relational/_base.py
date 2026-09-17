@@ -534,6 +534,16 @@ class _RelationalMulti(_Relational):
         except NotImplementedError:
             # an environment without an access policy declares no rule
             return False
+        except AccessError:
+            # the scope names a company its user no longer holds: its rules can
+            # no longer be read, and forgetting what it held is always safe
+            _debug.logic(
+                "field.x2many.scope_unreadable_evicted",
+                model=self.model_name,
+                field=self.name,
+                uid=key[env._field_depends_context[self].index("access")][0],
+            )
+            return True
         return any(
             condition.field_expr.split(".", 1)[0] in fnames
             for condition in domain.iter_conditions()

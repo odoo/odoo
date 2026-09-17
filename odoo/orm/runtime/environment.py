@@ -396,7 +396,12 @@ class Environment(Mapping[str, "BaseModel"]):
     def _access_scope(self) -> typing.Any:
         if self.su:
             return True
-        if company_ids := self._get_allowed_company_ids():
+        if company_ids := self.context.get("allowed_company_ids"):
+            _debug.logic(
+                "environment.access_scope.from_context",
+                uid=self.uid,
+                companies=len(company_ids),
+            )
             return (self.uid, tuple(sorted(company_ids)))
         try:
             scope = (self.uid, tuple(sorted(self.user._get_company_ids())))

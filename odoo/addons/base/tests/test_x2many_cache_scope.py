@@ -101,6 +101,64 @@ class TestX2manyCacheScope(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
+class TestX2manyScopeKey(TransactionCase):
+    def test_the_scope_keys_a_context_naming_a_company_the_user_just_lost(self):
+        company_a = self.env.company
+        company_b = self.env["res.company"].create({"name": "scope key B"})
+        user = new_test_user(
+            self.env,
+            login="scope_key",
+            groups="base.group_user",
+            company_ids=[Command.set((company_a | company_b).ids)],
+        )
+        allowed = [company_a.id, company_b.id]
+        env = self.env(user=user, context={"allowed_company_ids": allowed})
+
+        user.sudo().company_ids = [Command.set(company_a.ids)]
+
+        self.assertEqual(env._access_scope(), (user.id, tuple(sorted(allowed))))
+        with self.assertRaises(AccessError):
+            env.companies
+
+    def test_a_write_evicts_a_scope_whose_user_lost_a_company(self):
+        company_a = self.env.company
+        company_b = self.env["res.company"].create(
+            {"name": "scope evict B", "parent_id": company_a.id}
+        )
+        user = new_test_user(
+            self.env,
+            login="scope_evict",
+            groups="base.group_user",
+            company_ids=[Command.set((company_a | company_b).ids)],
+        )
+        self.env["ir.rule"].create(
+            {
+                "name": "scope evict: companies by name",
+                "model_id": self.env["ir.model"]._get_id("res.company"),
+                "domain_force": "[('name', '!=', False)]",
+                "groups": [Command.link(self.env.ref("base.group_user").id)],
+            }
+        )
+        allowed = [company_a.id, company_b.id]
+        env = self.env(user=user, context={"allowed_company_ids": allowed})
+        self.assertIn(company_b, company_a.with_env(env).child_ids)
+
+        field = self.env["res.company"]._fields["child_ids"]
+        (user_key,) = [
+            key
+            for key, slot in self.env.core.iter_context_caches(field)
+            if slot
+            and key != PENDING_SCOPE_KEY
+            and not field._is_superuser_scope(self.env, key)
+        ]
+
+        user.sudo().company_ids = [Command.set(company_a.ids)]
+        self.env.registry.clear_cache()
+
+        self.assertTrue(field._scope_reads_through(self.env, user_key, {"name"}))
+
+
+@tagged("post_install", "-at_install")
 class TestX2manyScopeInvariant(TransactionCase):
     """The DB-free walk of odoo/orm/tests/test_x2many_scope_invariant_dbfree.py
     against PostgreSQL: after every step of a random sequence of reads and
