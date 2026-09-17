@@ -815,6 +815,32 @@ class AccountPayment(models.Model):
             payment.duplicate_payment_ids = payment_to_duplicate_move.get(payment._origin.id, self.env['account.payment'])
 
     def _search_reconciled_invoice_ids(self, operator, value):
+        if (operator, value) == ('=', False):
+            return [
+                '|',
+                ('move_id', '=', False),
+                '&',
+                ('move_id.line_ids', 'any', [
+                    ('matched_debit_ids','=', False),
+                    ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+                ]), ('move_id.line_ids', 'any', [
+                    ('matched_credit_ids','=', False),
+                    ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+                ]),
+            ]
+        if (operator, value) == ('!=', False):
+            return [
+                '&',
+                ('move_id', '!=', False),
+                '|',
+                ('move_id.line_ids', 'not any', [
+                    ('matched_debit_ids','=', False),
+                    ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+                ]), ('move_id.line_ids', 'not any', [
+                    ('matched_credit_ids','=', False),
+                    ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+                ]),
+            ]
         if operator not in ('in', '='):
             return NotImplemented
         move_ids = self.env['account.move'].browse(value).reconciled_payment_ids.ids
