@@ -188,3 +188,40 @@ class TestCompanyDependentUpdate:
             rec.note = False  # back to the fallback
             env.flush_all()
             assert env.cr.storage.get_row(table, rec.id).get("note") is None
+
+
+class Doc(models.Model):
+    _name = "r.doc"
+    _module = "odoo.addons.test_backend_row_operations_harness"
+    _description = "a doc with an html body"
+    _log_access = False
+
+    body = fields.Html()
+
+
+class TestHtmlInsert:
+    def test_an_insert_does_not_revalidate_html_like_postgresql(self):
+        # _prepare_insert_rows passes validate=not field.is_html on the SQL
+        # side: the cache value was sanitized on its way in, and the insert
+        # must not sanitize it again (a validate=False cache entry, as the
+        # x2many command path plants, would otherwise store an altered value)
+        from unittest import mock
+
+        from odoo.orm.fields.textual import Html
+
+        with model_test_env(Doc, check_cache=False) as env:
+            seen = []
+            original = Html.convert_to_column_insert
+
+            def spy(self, value, record, values=None, validate=True):
+                if self.name == "body":
+                    seen.append(validate)
+                return original(self, value, record, values, validate)
+
+            with mock.patch.object(Html, "convert_to_column_insert", spy):
+                rec = env["r.doc"].create({"body": "<p>t</p>"})
+                env.flush_all()
+            assert rec.body
+            assert seen and all(validate is False for validate in seen), (
+                f"the insert conversion re-validated the html cache value: {seen}"
+            )

@@ -967,7 +967,11 @@ class InMemoryBackend:
             for fname, field in zip(columns, col_fields, strict=True):
                 if fname in stored:
                     row_dict[fname] = _unwrap_json(
-                        field.convert_to_column_insert(stored[fname], model, stored)
+                        # same flag as the PostgreSQL _prepare_insert_rows:
+                        # an Html column is stored as handed in, not sanitized
+                        field.convert_to_column_insert(
+                            stored[fname], model, stored, validate=not field.is_html
+                        )
                     )
             row_dicts.append(row_dict)
             new_ids.append(new_id)
