@@ -159,9 +159,14 @@ class PdpFlow(models.Model):
         but it DOES NOT verify if move is eligible for flow 10
         """
         report_type = move.l10n_fr_pdp_flow_10_report_type
-        transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
-        operation_type = 'purchase' if transaction._l10n_fr_pdp_is_purchase() else 'sale'
+        if report_type == 'transaction':
+            operation_type = 'purchase' if move._l10n_fr_pdp_is_purchase() else 'sale'
+        elif matched_transactions := move._l10n_fr_pdp_get_matched_transactions():
+            operation_type = 'purchase' if matched_transactions[0]._l10n_fr_pdp_is_purchase() else 'sale'
+        else:
+            # The related transaction can already be out of scope when a sent payment needs an RE.
+            operation_type = move.l10n_fr_pdp_sent_in_flow_ids.sorted('id')[-1].operation_type
         return {
             'company_id': move.company_id.id,
             'period_start': period_data['period_start'],
