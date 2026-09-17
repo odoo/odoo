@@ -256,6 +256,9 @@ test("show looking for help duration in the sidebar", async () => {
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer[data-tooltip='Looking for help for: < 1m']"
+    );
     await advanceTime(60_000);
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(1m)"
