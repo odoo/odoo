@@ -219,6 +219,14 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             meta = event.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
 
+    def test_website_event_submenu(self):
+        website = self.env['website'].get_current_website()
+        self.env['event.event'].create({
+            'name': 'Some event',
+            'website_id': website.id,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/event'), 'website_event_submenus', login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
