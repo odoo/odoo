@@ -136,3 +136,35 @@ test("a PDF the route refuses is marked failed, not retried forever", async () =
     expect.verifySteps(["update_thumbnail"]);
     expect(stored).toBe(false, { message: "stored as a definitive failure" });
 });
+
+test("building an image thumbnail reads the content inline, not as a download", async () => {
+    // The fetch used to carry no `download` parameter, so it took the download
+    // branch of `/documents/content`: every image on screen wrote a
+    // "Downloaded" row into that document's access log -- the log whose whole
+    // point is telling an owner who took a copy -- and a document with
+    // `is_download_blocked` answered 403, so it never got a thumbnail at all.
+    const serverData = getDocumentsTestServerModelsData([
+        makeDocumentRecordData(3, "Blocked Image", {
+            thumbnail_status: "client_generated",
+            attachment_id: 2,
+            folder_id: 1,
+            mimetype: "image/webp",
+            access_token: "accessTokenImage",
+        }),
+    ]);
+    serverData["ir.attachment"] = [{ id: 2, name: "binary" }];
+    onRpc("/documents/content/accessTokenImage", (request) => {
+        expect.step(new URL(request.url).searchParams.get("download"));
+        return new Response(
+            Uint8Array.from(atob(mimetypeExamplesBase64.WEBP), (c) => c.charCodeAt(0)),
+            { headers: { "Content-Type": "image/webp" } },
+        );
+    });
+    onRpc("/documents/document/3/update_thumbnail", () => true);
+
+    await makeDocumentsMockEnv({ serverData });
+    await mountDocumentsKanbanView();
+    await drainThumbnailQueue();
+
+    expect.verifySteps(["0"]);
+});

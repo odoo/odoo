@@ -92,6 +92,41 @@ class DocumentsAccess(models.Model):
         (expired - visited).unlink()
         return len(expired), len(expired) == limit
 
+    @api.model
+    def _recent_retention_days(self) -> int:
+        return int(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("document.recent_retention_days", 365)
+        )
+
+    @api.autovacuum
+    def _gc_recent(self) -> tuple[int, bool]:
+        retention_days = self._recent_retention_days()
+        if retention_days <= 0:
+            return 0, False
+        limit = 10000
+        stale = self.search(
+            [
+                ("role", "=", False),
+                ("expiration_date", "=", False),
+                (
+                    "last_access_date",
+                    "<",
+                    fields.Datetime.subtract(
+                        fields.Datetime.now(), days=retention_days
+                    ),
+                ),
+            ],
+            limit=limit,
+        )
+        removed = len(stale)
+        _debug.lifecycle(
+            "access_recent_gc", removed=removed, retention_days=retention_days
+        )
+        stale.unlink()
+        return removed, removed == limit
+
     def _is_signup_available(self) -> bool:
         return (
             self.env["res.users"].sudo()._get_signup_invitation_scope() == "b2c"

@@ -196,9 +196,58 @@
         <field name="perm_read" eval="False" />
     </record>
 
+    <!--
+        Every wizard below is a TransientModel whose ACL grants read+write to
+        base.group_user as a whole, so without an owner rule one user's live
+        wizard is another user's record. Measured: a colleague could read
+        document.sharing.invite_partner_ids (who you are about to share with)
+        and write invite_role, turning a pending "Viewer" invitation into
+        "Editor" before its owner pressed the button. document.operation
+        carried this rule from the start; its four siblings did not.
+    -->
     <record id="document_operation_rwu" model="ir.rule">
         <field name="name">Documents Operation Rule</field>
         <field name="model_id" ref="model_document_operation" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="document_sharing_rw" model="ir.rule">
+        <field name="name">Documents Sharing Rule</field>
+        <field name="model_id" ref="model_document_sharing" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="document_sharing_access_rw" model="ir.rule">
+        <field name="name">Documents Sharing Access Rule</field>
+        <field name="model_id" ref="model_document_sharing_access" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="document_request_wizard_rw" model="ir.rule">
+        <field name="name">Documents Request Wizard Rule</field>
+        <field name="model_id" ref="model_document_request_wizard" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="document_link_to_record_wizard_rw" model="ir.rule">
+        <field name="name">Documents Link to Record Wizard Rule</field>
+        <field name="model_id" ref="model_document_link_to_record_wizard" />
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_write" eval="True" />

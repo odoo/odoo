@@ -326,6 +326,13 @@ class DocumentsDocument(models.Model):
         compute="_compute_deletion_delay",
         help="Delay after permanent deletion of the document in the trash (days)",
     )
+    deletion_date = fields.Date(
+        string="Deletion Date",
+        index="btree_not_null",
+        copy=False,
+        help="When this document, sitting in the trash, is deleted forever. "
+        "Set when it is sent to the trash and cleared when it is restored.",
+    )
 
     create_activity_option = fields.Boolean(
         string="Create a new activity",
@@ -631,6 +638,19 @@ class DocumentsDocument(models.Model):
                         "res_id": document.id,
                     }
                 )
+        # A document can be BORN in the trash -- `message_new` creates every
+        # mail-gateway document with `active=False`, and `document_sign` does
+        # the same for its signed copies. `_write_check_active_after` never
+        # runs for those, so without this they would carry no deletion date and
+        # `_gc_clear_bin`, which purges on that date, would leave them in the
+        # trash for good. The invariant is "not active implies a deletion
+        # date", and it is owned by the two places `active` can take that
+        # value: here and on the write transition.
+        if born_archived := documents.filtered(
+            lambda document: not document.active and not document.deletion_date
+        ):
+            born_archived.sudo().deletion_date = self._next_deletion_date()
+
         self._mark_url_preview_pending(documents)
         if _debug.lifecycle.enabled:
             _debug.lifecycle(
@@ -1045,11 +1065,27 @@ class DocumentsDocument(models.Model):
             .id
         )
 
+    @api.model
+    def _next_deletion_date(self):
+        return fields.Date.today() + relativedelta(days=self.get_deletion_delay())
+
     def _write_check_active_after(
         self, vals: dict, documents_per_initial_active: dict
     ) -> None:
         if (new_active := vals.get("active")) is None:
             return
+        # Stamp on the TRANSITION, not in `action_archive`. `write` reroutes a
+        # bare `active=False` to `action_archive` only when the caller is not
+        # superuser, so `doc.sudo().write({"active": False})` -- which several
+        # bridges do -- reached the trash with no deletion date, and a purge
+        # that reads that date would have left those documents in the trash for
+        # good. Here every path that flips `active` is covered, including the
+        # one `action_archive` itself takes.
+        if not new_active:
+            if newly_archived := documents_per_initial_active.get(True):
+                newly_archived.sudo().deletion_date = self._next_deletion_date()
+        elif restored := documents_per_initial_active.get(False):
+            restored.sudo().deletion_date = False
         if not new_active:
             if self.sudo().search(
                 [("id", "child_of", self.ids), ("active", "=", True)]
@@ -1753,7 +1789,7 @@ class DocumentsDocument(models.Model):
         if not self.ids:
             return self.browse()
 
-        if len(self.folder_id.ids) > 1 and location_user_folder_id is None:
+        if location_user_folder_id is None and len({d.folder_id.id for d in self}) > 1:
             _debug.logic("shortcut_refused", reason="ambiguous_destination")
             raise UserError(
                 _("A destination is required when creating multiple shortcuts at once.")
@@ -1907,12 +1943,10 @@ class DocumentsDocument(models.Model):
 
         active_documents._raise_if_unauthorized_archive()
         active_documents._raise_if_used_folder()
-        deletion_date = fields.Date.to_string(
-            fields.Date.today() + relativedelta(days=self.get_deletion_delay())
-        )
+        deletion_date = self._next_deletion_date()
         log_message = _(
             "This file has been sent to the trash and will be deleted forever on the %s",
-            deletion_date,
+            fields.Date.to_string(deletion_date),
         )
         active_documents._message_log_batch(
             bodies={doc.id: log_message for doc in active_documents}
@@ -1923,6 +1957,11 @@ class DocumentsDocument(models.Model):
             requested=len(self),
             deletion_date=deletion_date,
         )
+        # The stamp itself happens in `_write_check_active_after`, on the
+        # active transition the `super()` call below performs, so that a path
+        # which never comes through here is covered too. Both read
+        # `_next_deletion_date`, so the promise above and the date the purge
+        # reads cannot drift.
         return super(
             DocumentsDocument,
             active_documents.with_context(documents_archiving=True),
@@ -2083,10 +2122,6 @@ class DocumentsDocument(models.Model):
             return False
 
     @api.model
-    def get_previewable_file_extensions(self) -> set:
-        return {"bmp", "mp3", "png", "jpg", "jpeg", "pdf", "gif", "txt", "wav"}
-
-    @api.model
     def _get_fields_shortcuts_copy(self) -> set:
         return {
             "company_id",
@@ -2174,14 +2209,30 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _get_domain_gc_clear_bin(self) -> list:
-        deletion_delay = self.get_deletion_delay()
+        """Purge what the trash SAID it would purge, on the day it said.
+
+        This used to re-derive the date as `write_date <= now - delay`, which
+        is a different quantity from the one `action_archive` writes into the
+        chatter ("will be deleted forever on ..."):
+
+        - any later write to a trashed document -- a rename, a stored
+          recompute, a bridge detaching `res_model` -- restarted the countdown
+          silently, with no new message and nothing in the UI saying so;
+        - changing `document.deletion_delay` retroactively moved the date of
+          every document already in the trash, in both directions; lowering it
+          could purge, on the next cron run, documents whose own message
+          promised them weeks more.
+
+        `deletion_date` is stamped once, when the document is archived, so the
+        promise and the mechanism are the same value. `_gc_clear_bin` still
+        skips rows with no date -- a document archived by a bare
+        `write({"active": False})` under `documents_archiving`, or by an older
+        version before the migration -- rather than inventing one for them.
+        """
         return [
             ("active", "=", False),
-            (
-                "write_date",
-                "<=",
-                fields.Datetime.now() - relativedelta(days=deletion_delay),
-            ),
+            ("deletion_date", "!=", False),
+            ("deletion_date", "<=", fields.Date.today()),
         ]
 
     def _get_access_action(

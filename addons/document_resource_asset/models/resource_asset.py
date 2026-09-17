@@ -58,8 +58,7 @@ class ResourceAsset(models.Model):
             "access_via_link": "none",
         }
 
-    def _prepare_document_vals(self, name, **extra):
-        """Vals for a document filed against this asset, routed by its kind."""
+    def _prepare_asset_document_vals(self, name, **extra):
         self.check_singleton()
         return {
             "name": name,
@@ -78,7 +77,7 @@ class ResourceAsset(models.Model):
         return (
             self.env["document.document"]
             .sudo()
-            .create(self._prepare_document_vals(name, **extra))
+            .create(self._prepare_asset_document_vals(name, **extra))
             .with_env(self.env)
         )
 

@@ -7,7 +7,7 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from odoo.addons.document.tools import UserFolder
+from odoo.addons.document.tools import UserFolder, is_mimetype_inline_rendered
 
 _debug = DebugLog(__name__)
 
@@ -341,9 +341,40 @@ class DocumentsDocument(models.Model):
     def _is_download_allowed(self) -> bool:
         self.check_singleton()
         target = self.shortcut_document_id or self
-        if not target.is_download_blocked:
+        allowed = not target.is_download_blocked or (
+            target.user_permission == "edit" or target.access_via_link == "edit"
+        )
+        # Log the INPUTS, not only the refusal. Both of these gates used to be
+        # visible in a log only through the caller's `content_refused` event,
+        # so an allowed request said nothing -- and "was this blocked document
+        # served because the block is off, because the caller is an editor, or
+        # because the link is an edit link?" was unanswerable from any log,
+        # which is exactly the question a download-block complaint asks.
+        _debug.logic(
+            "download_gate",
+            document=self,
+            target=target,
+            allowed=allowed,
+            blocked=target.is_download_blocked,
+            permission=target.user_permission,
+            via_link=target.access_via_link,
+        )
+        return allowed
+
+    def _is_inline_content_allowed(self) -> bool:
+        self.check_singleton()
+        if self._is_download_allowed():
             return True
-        return target.user_permission == "edit" or target.access_via_link == "edit"
+        target = self.shortcut_document_id or self
+        renderable = is_mimetype_inline_rendered(target.mimetype)
+        _debug.logic(
+            "inline_gate",
+            document=self,
+            target=target,
+            allowed=renderable,
+            mimetype=target.mimetype or "",
+        )
+        return renderable
 
     def action_update_access_rights(
         self,

@@ -64,6 +64,47 @@ class UserFolder:
         return hash((self.kind, self.folder_id))
 
 
+INLINE_RENDERED_MIMETYPES = frozenset(
+    {
+        "application/javascript",
+        "application/json",
+        "text/css",
+        "text/html",
+        "text/plain",
+        "image/bmp",
+        "image/gif",
+        "image/jpeg",
+        "image/png",
+        "image/svg+xml",
+        "image/tiff",
+        "image/webp",
+        "image/x-icon",
+        "audio/aac",
+        "audio/flac",
+        "audio/mp4",
+        "audio/mpeg",
+        "audio/ogg",
+        "audio/opus",
+        "audio/wav",
+        "audio/webm",
+        "audio/x-m4a",
+        "audio/x-wav",
+        "video/mp4",
+        "video/ogg",
+        "video/quicktime",
+        "video/webm",
+        "video/x-matroska",
+    }
+)
+
+
+def is_mimetype_inline_rendered(mimetype: str) -> bool:
+    mimetype = (mimetype or "").split(";")[0].strip().lower()
+    return mimetype.startswith("application/pdf") or (
+        mimetype in INLINE_RENDERED_MIMETYPES
+    )
+
+
 def is_mimetype_textual(mimetype: str) -> bool:
     maintype, _, subtype = (mimetype or "").partition("/")
     return maintype == "text" or (

@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from PIL import Image
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import tagged, users
 
 from .test_document_common import GIF, TEXT, TransactionCaseDocuments
@@ -260,3 +260,104 @@ class TestDocumentsShortcutAsParent(TransactionCaseDocuments):
             target,
             "both spellings of the same move must land in the same folder",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsShortcutDestinationAmbiguity(TransactionCaseDocuments):
+    """A shortcut with no destination may only inherit ONE unambiguous one.
+
+    `action_create_shortcut` refuses a destination-less call when the selection
+    spans several folders, and it decided that by counting `self.folder_id.ids`
+    -- the id list of a recordset, which cannot hold the root's absent folder.
+    So a selection of one root document and one document inside a folder read
+    as "one folder", the refusal never fired, and `location` became that one
+    folder: the root document's shortcut was filed somewhere nobody named.
+    """
+
+    @users("documents@example.com")
+    def test_a_selection_spanning_root_and_a_folder_is_ambiguous(self):
+        in_folder = self.env["document.document"].create(
+            {
+                "name": "inside.txt",
+                "type": "binary",
+                "folder_id": self.folder_a.id,
+                "raw": b"inside",
+            }
+        )
+        at_root = self.env["document.document"].create(
+            {
+                "name": "at-root.txt",
+                "type": "binary",
+                "user_folder_id": "MY",
+                "raw": b"root",
+            }
+        )
+
+        with self.assertRaises(UserError):
+            (in_folder | at_root).action_create_shortcut()
+
+    @users("documents@example.com")
+    def test_the_same_selection_is_accepted_with_an_explicit_destination(self):
+        """Naming a destination is what the refusal asks for, so it must work."""
+        in_folder = self.env["document.document"].create(
+            {
+                "name": "inside2.txt",
+                "type": "binary",
+                "folder_id": self.folder_a.id,
+                "raw": b"inside",
+            }
+        )
+        at_root = self.env["document.document"].create(
+            {
+                "name": "at-root2.txt",
+                "type": "binary",
+                "user_folder_id": "MY",
+                "raw": b"root",
+            }
+        )
+
+        shortcuts = (in_folder | at_root).action_create_shortcut(
+            location_user_folder_id=str(self.folder_a.id)
+        )
+
+        self.assertEqual(len(shortcuts), 2)
+        self.assertEqual(shortcuts.folder_id, self.folder_a)
+
+    @users("documents@example.com")
+    def test_one_shared_folder_still_needs_no_destination(self):
+        """Negative control: the check must not start refusing the plain case."""
+        documents = self.env["document.document"].create(
+            [
+                {
+                    "name": f"sibling{index}.txt",
+                    "type": "binary",
+                    "folder_id": self.folder_a.id,
+                    "raw": b"x",
+                }
+                for index in range(2)
+            ]
+        )
+
+        shortcuts = documents.action_create_shortcut()
+
+        self.assertEqual(shortcuts.folder_id, self.folder_a)
+
+    @users("documents@example.com")
+    def test_a_selection_entirely_at_the_root_still_needs_no_destination(self):
+        """The other negative control: one destination, and it is the root."""
+        documents = self.env["document.document"].create(
+            [
+                {
+                    "name": f"root{index}.txt",
+                    "type": "binary",
+                    "user_folder_id": "MY",
+                    "raw": b"x",
+                }
+                for index in range(2)
+            ]
+        )
+
+        shortcuts = documents.action_create_shortcut()
+
+        self.assertEqual(len(shortcuts), 2)
+        self.assertFalse(shortcuts.folder_id)

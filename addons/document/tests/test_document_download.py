@@ -291,7 +291,7 @@ class TestDocumentsAccessLog(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestDocumentsAccessLogRoutes(HttpCase):
-    def test_download_is_recorded_and_preview_is_not(self):
+    def test_a_preview_and_a_download_are_recorded_as_different_actions(self):
         self.env["ir.config_parameter"].sudo().set_param(
             "document.access_log_window", "0"
         )
@@ -309,22 +309,19 @@ class TestDocumentsAccessLogRoutes(HttpCase):
             f"/documents/content/{document.access_token}?download=false"
         )
         preview.raise_for_status()
-        self.assertFalse(
-            Log.search([("document_id", "=", document.id)]),
-            "an inline preview must not be recorded as a download",
-        )
+        entries = Log.search([("document_id", "=", document.id)])
+        self.assertEqual(entries.mapped("action"), ["view"])
 
         download = self.url_open(f"/documents/content/{document.access_token}")
         download.raise_for_status()
         self.assertEqual(download.content, b"secret")
 
         entries = Log.search([("document_id", "=", document.id)])
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries.action, "download")
+        self.assertEqual(sorted(entries.mapped("action")), ["download", "view"])
         self.assertEqual(
             entries.partner_id,
             self.env.ref("base.public_user").partner_id,
-            "an anonymous download is still attributable to the link",
+            "an anonymous retrieval is still attributable to the link",
         )
 
 
@@ -738,3 +735,133 @@ class TestDocumentsLinkEditPermissionInvariant(TransactionCase):
             "the same sweep over a link-VIEW document must find viewers, or it "
             "is not capable of detecting the thing the other test asserts",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestDocumentsDownloadBlockedInlineBypass(HttpCase):
+    """`is_download_blocked` must not key on a parameter the caller chooses.
+
+    The gate used to sit inside `if download:`, and `download` is a query
+    parameter. `GET /documents/content/<token>?download=0` answered 200 with the
+    whole file, its real `Content-Type: application/zip` and
+    `Content-Disposition: inline; filename=payroll.zip` -- a download with one
+    header changed -- and, because `_log_download` sits in the same skipped
+    branch, `document.access.log` held no row for it either. The block neither
+    blocked nor recorded that it had not.
+
+    Serving inline differs from handing over only for content the browser
+    renders in place; that is the line these tests pin.
+    """
+
+    def _blocked(self, name, raw, mimetype):
+        document = self.env["document.document"].create(
+            {
+                "name": name,
+                "type": "binary",
+                "raw": raw,
+                "access_via_link": "view",
+                "is_download_blocked": True,
+            }
+        )
+        document.attachment_id.sudo().mimetype = mimetype
+        return document
+
+    def _log_rows(self, document):
+        return (
+            self.env["document.access.log"]
+            .sudo()
+            .search_count([("document_id", "=", document.id)])
+        )
+
+    def test_a_blocked_archive_is_not_handed_over_inline(self):
+        document = self._blocked("payroll.zip", b"PK\x03\x04secret", "application/zip")
+
+        inline = self.url_open(f"/documents/content/{document.access_token}?download=0")
+
+        self.assertEqual(
+            inline.status_code,
+            403,
+            "a zip is not rendered in place, so serving it inline is the "
+            "download the block exists to refuse",
+        )
+        self.assertNotIn(b"secret", inline.content)
+
+    def test_a_blocked_document_the_browser_renders_is_still_previewable(self):
+        """The control: the block is a viewing restriction, not a reading one."""
+        document = self._blocked("watch.txt", b"secret", "text/plain")
+
+        inline = self.url_open(f"/documents/content/{document.access_token}?download=0")
+
+        self.assertEqual(inline.status_code, 200)
+        self.assertEqual(inline.content, b"secret")
+
+    def test_the_inline_path_is_recorded_in_the_access_log(self):
+        """A retrieval that leaves no trace is worse than one that is refused."""
+        document = self._blocked("watch2.txt", b"secret", "text/plain")
+        self.assertEqual(self._log_rows(document), 0)
+
+        self.url_open(
+            f"/documents/content/{document.access_token}?download=0"
+        ).raise_for_status()
+
+        self.assertEqual(
+            self._log_rows(document),
+            1,
+            "reading a document's bytes must appear in its access log whether "
+            "the caller asked for an attachment or not",
+        )
+
+    def test_the_textual_thumbnail_route_takes_the_same_gate(self):
+        """Two of its branches stream the WHOLE file, not a 4 KB head.
+
+        The route's normal answer is the first 4 KB re-wrapped in HTML, which is
+        looking rather than taking and stays ungated. Its `text/html` branch and
+        its empty-prefix branch instead hand back `stream.prepare_response`, the
+        same bytes `/documents/content` serves, so they answer the same question
+        and now take the same gate.
+
+        `is_mimetype_textual` and the inline-rendered set are not the same list
+        -- `application/xml` and `application/documents-email` are textual and
+        are not rendered in place -- so this is the seam that reopens if either
+        list moves.
+        """
+        rendered = self._blocked("page.html", b"<b>secret</b>", "text/html")
+        self.assertEqual(
+            self.url_open(
+                f"/documents/thumbnail_textual/{rendered.access_token}"
+            ).status_code,
+            200,
+            "text/html IS rendered in place, so the whole-file branch is the "
+            "preview and stays reachable",
+        )
+
+        opaque = self._blocked("empty.xml", b"", "application/xml")
+        self.assertEqual(
+            self.url_open(
+                f"/documents/thumbnail_textual/{opaque.access_token}"
+            ).status_code,
+            403,
+            "with no prefix to render, the route falls through to serving the "
+            "file itself, which for a type the browser will not render is the "
+            "download the block refuses",
+        )
+
+    def test_an_unblocked_document_is_unaffected_on_every_path(self):
+        """Negative control: the gate must bite only where the block is set."""
+        document = self.env["document.document"].create(
+            {
+                "name": "open.zip",
+                "type": "binary",
+                "raw": b"PK\x03\x04open",
+                "access_via_link": "view",
+            }
+        )
+        document.attachment_id.sudo().mimetype = "application/zip"
+
+        for suffix in ("", "?download=0"):
+            with self.subTest(suffix=suffix):
+                response = self.url_open(
+                    f"/documents/content/{document.access_token}{suffix}"
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.content, b"PK\x03\x04open")

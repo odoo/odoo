@@ -151,7 +151,14 @@ class TestDocumentsThumbnailRoutes(HttpCase, TransactionCaseDocuments):
         ).json()
 
     def test_s3_thumbnail_rejects_non_image(self):
-        self.authenticate("audit_view", "audit_view")
+        """Payload validation, driven by a principal allowed to store one.
+
+        This used to authenticate as the VIEWER, which passed only because the
+        route checked read access before a `sudo()` write. Storing a thumbnail
+        is a write on the document, so the audience is an editor; what a viewer
+        gets is pinned by the test below.
+        """
+        self.authenticate("audit_mgr", "audit_mgr")
         garbage = base64.b64encode(b"<svg onload=alert(1)>NOTIMAGE").decode()
         body = self._post_thumbnail(garbage)
         self.assertIn("error", body)
@@ -162,6 +169,32 @@ class TestDocumentsThumbnailRoutes(HttpCase, TransactionCaseDocuments):
         self.assertNotIn("error", body)
         self.assertTrue(self.webp.thumbnail)
         self.assertTrue(base64.b64decode(self.webp.thumbnail).startswith(b"\x89PNG"))
+
+    def test_a_viewer_cannot_store_a_thumbnail(self):
+        """A read check guarding a `sudo()` write let any reader set it.
+
+        The thumbnail is stored on the document and shown to everyone, and the
+        write flips `thumbnail_status` away from "client_generated" -- so the
+        first reader to post one decided what every other user saw, and nobody
+        could correct it afterwards.
+        """
+        self.authenticate("audit_view", "audit_view")
+        buffer = io.BytesIO()
+        Image.new("RGB", (48, 48)).save(buffer, format="PNG")
+
+        body = self._post_thumbnail(base64.b64encode(buffer.getvalue()).decode())
+
+        self.assertEqual(
+            body.get("error", {}).get("data", {}).get("name"),
+            "odoo.exceptions.AccessError",
+        )
+        self.webp.invalidate_recordset()
+        self.assertFalse(self.webp.thumbnail)
+        self.assertEqual(
+            self.webp.thumbnail_status,
+            "client_generated",
+            "and the document stays open for someone who may store one",
+        )
 
 
 def _oversized_png(side):

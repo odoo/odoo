@@ -202,7 +202,12 @@ class AccountMove(models.Model):
             if file_data_group:
                 invoice._extend_with_attachments(file_data_group, new=True)
 
+        invoices._message_post_from_alias_done()
+
         return res
+
+    def _message_post_from_alias_done(self):
+        return
 
     @_debug.perf.timed
     def _message_post_after_hook(self, new_message, message_values):

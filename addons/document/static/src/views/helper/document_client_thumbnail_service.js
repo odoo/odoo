@@ -17,6 +17,13 @@ export const documentsClientThumbnailService = {
         const mutex = new Mutex();
         const queued = new Set();
 
+        // Storing the thumbnail is a write on the document, and the route
+        // enforces that. A viewer that tried anyway would fail silently and
+        // retry on every page load forever, because the status only leaves
+        // "client_generated" once the write lands -- so the client does not
+        // attempt what the server will refuse.
+        const canStore = (record) => record.data.user_permission === "edit";
+
         const makeThumbnail = async (record) => {
             if (record.data.thumbnail_status !== "client_generated") {
                 return;
@@ -66,6 +73,7 @@ export const documentsClientThumbnailService = {
                 for (const record of records) {
                     if (
                         record.data.thumbnail_status === "client_generated" &&
+                        canStore(record) &&
                         !queued.has(record.resId)
                     ) {
                         queued.add(record.resId);
@@ -92,8 +100,17 @@ export const documentsClientThumbnailService = {
         return getPdfThumbnail(record, width, height);
     },
     async _getLoadedImage(record) {
+        // `?download=0`: this reads the image in order to RENDER it, which is
+        // what the parameter means. Without it the fetch took the download
+        // branch, so building a kanban thumbnail wrote a "Downloaded" row into
+        // the document's access log for every image on screen -- the log whose
+        // whole purpose is telling an owner who took a copy -- and a
+        // download-blocked image answered 403 and silently never got a
+        // thumbnail at all.
         const response = await fetch(
-            `/documents/content/${encodeURIComponent(record.data.access_token)}`,
+            `/documents/content/${encodeURIComponent(
+                record.data.access_token,
+            )}?download=0`,
         );
         if (!response.ok) {
             const error = new Error(`Thumbnail fetch failed (${response.status})`);

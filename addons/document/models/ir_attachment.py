@@ -100,13 +100,10 @@ class IrAttachment(models.Model):
             _debug.logic("auto_document_skipped", reason="no_folder", record=record)
             return False
         candidates = self.filtered(lambda attachment: not attachment.res_field)
-        # `write` reaches here whenever res_model/res_id move, and an attachment
-        # that already carries a document must not get a second one: the
-        # `_attachment_unique` constraint would raise. Merging two products is
-        # the path that does it.
         already_documented = set(
             self.env["document.document"]
             .sudo()
+            .with_context(active_test=False)
             .search_fetch([("attachment_id", "in", candidates.ids)], ["attachment_id"])
             .mapped("attachment_id")
             .ids
@@ -118,14 +115,32 @@ class IrAttachment(models.Model):
             and (document_vals := record._prepare_document_vals(attachment))
         ]
         if not vals_list:
+            trashed = (
+                self.env["document.document"]
+                .sudo()
+                .with_context(active_test=False)
+                .search_count(
+                    [
+                        ("attachment_id", "in", list(already_documented)),
+                        ("active", "=", False),
+                    ]
+                )
+                if already_documented
+                else 0
+            )
             _debug.logic(
                 "auto_document_skipped",
                 reason="already_documented",
                 candidates=len(candidates),
+                documented=len(already_documented),
+                trashed=trashed,
             )
             return False
         _debug.pipeline(
-            "auto_document_created", res_model=res_model, count=len(vals_list)
+            "auto_document_created",
+            res_model=res_model,
+            count=len(vals_list),
+            with_attachment=sum(1 for vals in vals_list if vals.get("attachment_id")),
         )
         self.env["document.document"].create(vals_list)
         return True

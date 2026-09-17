@@ -42,6 +42,8 @@ class MixinDocuments(models.AbstractModel):
                 model=self._name,
                 folder=folder,
                 owner=owner,
+                attachment=attachment,
+                carries_attachment=bool(document_vals.get("attachment_id")),
             )
         return document_vals
 

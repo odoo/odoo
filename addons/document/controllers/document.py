@@ -759,6 +759,11 @@ class ShareRoute(http.Controller):
                     _debug.logic("content_refused", reason="download_denied")
                     raise Forbidden("downloading this document is not allowed")
                 self._log_download(document_sudo)
+            elif not document_sudo._is_inline_content_allowed():
+                _debug.logic("content_refused", reason="inline_download_denied")
+                raise Forbidden("downloading this document is not allowed")
+            else:
+                self._log_view(document_sudo)
             _debug.pipeline(
                 "content_served",
                 by="binary",
@@ -780,6 +785,12 @@ class ShareRoute(http.Controller):
         _debug.lifecycle("download_logged", documents=document_sudo)
         request.env["document.access.log"].sudo()._log(
             document_sudo, request.env.user.partner_id, "download"
+        )
+
+    def _log_view(self, document_sudo: Any) -> None:
+        _debug.lifecycle("view_logged", documents=document_sudo)
+        request.env["document.access.log"].sudo()._log(
+            document_sudo, request.env.user.partner_id, "view"
         )
 
     @http.route(
@@ -859,6 +870,16 @@ class ShareRoute(http.Controller):
         if document_sudo.mimetype == "text/html" or not (
             head := attachment_sudo._get_content_prefix(self.TEXTUAL_THUMBNAIL_SIZE)
         ):
+            # These two branches serve the WHOLE file, not a 4 KB head, so they
+            # answer the same question `/documents/content` does and take the
+            # same gate rather than a different one.
+            if not document_sudo._is_inline_content_allowed():
+                _debug.logic(
+                    "thumbnail_textual_refused",
+                    reason="inline_download_denied",
+                    document=document_sudo,
+                )
+                raise Forbidden("downloading this document is not allowed")
             with replace_exceptions(
                 ValueError, MissingError, by=request.prepare_not_found_error()
             ):
@@ -878,7 +899,14 @@ class ShareRoute(http.Controller):
     )
     def documents_update_thumbnail(self, document_id: int, thumbnail: Any) -> None:
         document = request.env["document.document"].browse(document_id)
-        document.check_access("read")
+        # A read check guarding a `sudo().write`: any reader could set the
+        # stored thumbnail that every other user then sees, and because the
+        # write flips `thumbnail_status` away from "client_generated" nobody
+        # could correct it afterwards. The thumbnail is a property of the
+        # document, so writing it takes write access like every other one; the
+        # client only reaches this route for documents it can already edit, and
+        # a viewer simply leaves the thumbnail to somebody who can.
+        document.check_access("write")
         if document.thumbnail_status != "client_generated":
             return
         validated = False

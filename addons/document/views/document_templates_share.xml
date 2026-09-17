@@ -409,12 +409,13 @@
                 </div>
                 <div class="mt16 mb8 d-flex flex-column gap-2">
                     <a
+                        t-if="document._is_download_allowed()"
                         t-att-href="document_content_url"
                         title="Download file"
                         class="btn btn-primary rounded-pill">
                         <i class="fa-solid fa-download" /> Download file </a>
                     <a
-                        t-if="document.file_extension in document.get_previewable_file_extensions()"
+                        t-if="document._is_inline_content_allowed()"
                         t-att-href="document_content_url + '?download=0'"
                         target="new"
                         title="Preview files"
