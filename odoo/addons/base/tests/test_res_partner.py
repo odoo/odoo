@@ -608,6 +608,29 @@ class TestPartnerStoredNameLanguage(TransactionCase):
 
 @tagged("res_partner")
 class TestPartnerWriteContract(TransactionCase):
+    def test_create_computes_the_language_before_the_insert(self):
+        Partner = self.env["res.partner"]
+        parent = Partner.create({"name": "Lang Source", "is_company": True})
+        writes = []
+        original = type(Partner).write
+
+        def recording_write(records, vals):
+            writes.append(dict(vals))
+            return original(records, vals)
+
+        self.patch(type(Partner), "write", recording_write)
+        children = Partner.create(
+            [
+                {"name": f"Lang Child {index}", "parent_id": parent.id}
+                for index in range(5)
+            ]
+        )
+        self.assertEqual(set(children.mapped("lang")), {parent.lang})
+        self.assertFalse(
+            [vals for vals in writes if "lang" in vals],
+            "a created partner takes its language in the create, not by a write",
+        )
+
     def test_write_does_not_mutate_the_values_it_is_given(self):
         Partner = self.env["res.partner"]
         manager = new_test_user(
@@ -1154,6 +1177,21 @@ class TestPartnerSimilarNameDuplicates(TransactionCase):
 
         self.assertIn(twin, offered)
         self.assertNotIn(hidden, offered)
+
+    def test_the_recall_leaves_the_trigram_threshold_as_it_found_it(self):
+        setting = "SELECT current_setting('pg_trgm.similarity_threshold', true)"
+        self.cr.execute(setting)
+        before = self.cr.fetchone()[0] or "0.3"
+        partner = self.Partner.create({"name": "Threshold Bakeries Limited"})
+        partner.invalidate_recordset(["duplicate_ids"])
+        partner.mapped("duplicate_ids")
+        self.cr.execute(setting)
+        self.assertEqual(
+            self.cr.fetchone()[0],
+            before,
+            "the recall bar is transaction-scoped and must not leak to the next"
+            " `%` query of the same transaction",
+        )
 
     def test_the_recall_does_not_grow_with_the_batch(self):
         def queries_for(size):

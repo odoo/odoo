@@ -18,12 +18,14 @@ from odoo.libs.text import name_length_band, similarity_ratio
 from odoo.tools import SQL
 
 if typing.TYPE_CHECKING:
-    from .res_partner_tag import ResPartnerTag
     from .res_users import ResUsers
 
 from .mixin_format_address import ADDRESS_FIELDS
 
 POSITION_FIELDS = ("partner_latitude", "partner_longitude")
+DEFAULT_ADDRESS_FORMAT = (
+    "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+)
 
 SIMILAR_NAME_THRESHOLD_PARAM = "base.partner_name_similarity_threshold"
 DEFAULT_SIMILAR_NAME_THRESHOLD = 0.75
@@ -213,7 +215,6 @@ class ResPartner(models.Model):
         column1="partner_id",
         column2="tag_id",
         string="Tags",
-        default=lambda self: self._default_tag_ids(),
     )
     barcode = fields.Char(
         copy=False,
@@ -494,9 +495,6 @@ class ResPartner(models.Model):
     def _compute_avatar_128(self) -> None:
         super()._compute_avatar_128()
 
-    def _default_tag_ids(self) -> ResPartnerTag:
-        return self.env["res.partner.tag"].browse(self.env.context.get("tag_id"))
-
     @api.model
     def default_get(self, fields: list[str]) -> dict[str, Any]:
         values = super().default_get(fields)
@@ -593,7 +591,7 @@ class ResPartner(models.Model):
     def _update_lang_from_parent(self) -> None:
         if not self:
             return
-        default_lang = self.default_get(["lang"]).get("lang")
+        default_lang = self._get_default_lang()
         _debug.logic(
             "lang_from_parent",
             partners=len(self),
@@ -602,9 +600,35 @@ class ResPartner(models.Model):
         )
         for partner in self:
             if partner.parent_id:
-                partner.lang = partner.parent_id.lang or default_lang or self.env.lang
+                partner.lang = partner.parent_id.lang or default_lang
             elif not partner.lang:
-                partner.lang = default_lang or self.env.lang
+                partner.lang = default_lang
+
+    @api.model
+    def _get_default_lang(self) -> str | None:
+        return self.default_get(["lang"]).get("lang") or self.env.lang
+
+    @api.model
+    def _add_lang_to_vals(self, vals_list: list[ValuesType]) -> None:
+        # the ORM's defaults would fill `lang` before any compute could, so
+        # the parent's language goes into the values, not into a later write
+        missing = [vals for vals in vals_list if "lang" not in vals]
+        if not missing:
+            return
+        default_lang = self._get_default_lang()
+        parents = self.browse(
+            {vals["parent_id"] for vals in missing if vals.get("parent_id")}
+        )
+        parents.fetch(["lang"])
+        lang_by_parent = {parent.id: parent.lang for parent in parents}
+        _debug.logic(
+            "lang_from_parent",
+            partners=len(missing),
+            with_parent=len(lang_by_parent),
+            default_lang=default_lang,
+        )
+        for vals in missing:
+            vals["lang"] = lang_by_parent.get(vals.get("parent_id")) or default_lang
 
     def _compute_active_lang_count(self) -> None:
         lang_count = len(self.env["res.lang"].get_installed())
@@ -716,8 +740,7 @@ class ResPartner(models.Model):
     def _compute_main_bank_id(self) -> None:
         sources = self.with_context(active_test=False)
         for partner, source in zip(self, sources, strict=True):
-            accounts = source.bank_ids.filtered("active")
-            partner.main_bank_id = accounts.sorted("sequence")[:1]
+            partner.main_bank_id = source.bank_ids.filtered("active")[:1]
 
     @api.depends("industry_ids")
     def _compute_primary_industry_id(self) -> None:
@@ -816,10 +839,9 @@ class ResPartner(models.Model):
         for partner in self:
             partner_id = partner._origin.id
             vats = vat_variants.get(partner.id)
+            country_id, company_id = partner._get_duplicate_scope()
 
             if vats and any(vat in vat_by_value for vat in vats):
-                country_id = partner.country_id.id if partner.country_id else None
-                company_id = partner.company_id.id if partner.company_id else None
                 partner.same_vat_partner_id = _get_duplicate(
                     partner_id,
                     vats,
@@ -841,8 +863,6 @@ class ResPartner(models.Model):
                 and not partner.parent_id
                 and partner.company_registry in reg_by_value
             ):
-                country_id = partner.country_id.id if partner.country_id else None
-                company_id = partner.company_id.id if partner.company_id else None
                 partner.same_company_registry_partner_id = _get_duplicate(
                     partner_id,
                     [partner.company_registry],
@@ -853,6 +873,9 @@ class ResPartner(models.Model):
                 )
             else:
                 partner.same_company_registry_partner_id = False
+
+    def _get_duplicate_scope(self) -> tuple[int | None, int | None]:
+        return self.country_id.id or None, self.company_id.id or None
 
     @api.depends("complete_name", "country_id", "company_id", "parent_id")
     def _compute_possible_duplicates(self) -> None:
@@ -901,8 +924,7 @@ class ResPartner(models.Model):
             partner_id = partner._origin.id
             lowered = partner.complete_name.lower()
             shortest, longest = name_length_band(len(lowered), threshold)
-            country_id = partner.country_id.id if partner.country_id else None
-            company_id = partner.company_id.id if partner.company_id else None
+            country_id, company_id = partner._get_duplicate_scope()
             kept = self.browse()
             for other in candidates:
                 name = (other.complete_name or "").lower()
@@ -926,6 +948,13 @@ class ResPartner(models.Model):
 
     def _get_similar_name_recall(self, named: ResPartner) -> dict[int, list[int]]:
         self.flush_model(["active", "complete_name"])
+        # the GUC is transaction-scoped and unknown to a backend until the
+        # extension's library loads: read it missing-ok, put it back after,
+        # so a later `%` query in the transaction keeps its own bar
+        self.env.cr.execute(
+            "SELECT current_setting('pg_trgm.similarity_threshold', true)"
+        )
+        previous_threshold = self.env.cr.fetchone()[0]
         self.env.cr.execute(
             SQL(
                 "SELECT set_config('pg_trgm.similarity_threshold', %s, true)",
@@ -933,11 +962,9 @@ class ResPartner(models.Model):
             )
         )
         stored = SQL('candidate."complete_name"')
-        if self.env.registry.has_unaccent == FunctionStatus.INDEXABLE:
-            stored = self.env.registry.unaccent(stored)
-
         searched = SQL("source.name")
         if self.env.registry.has_unaccent == FunctionStatus.INDEXABLE:
+            stored = self.env.registry.unaccent(stored)
             searched = self.env.registry.unaccent(searched)
         sources = SQL(", ").join(
             SQL("(%s::integer, %s::integer, %s::varchar)", index, id_ or 0, name)
@@ -970,6 +997,15 @@ class ResPartner(models.Model):
         recalled_by_index: dict[int, list[int]] = defaultdict(list)
         for index, candidate_id in self.env.cr.fetchall():
             recalled_by_index[index].append(candidate_id)
+        if previous_threshold is None:
+            self.env.cr.execute("SET LOCAL pg_trgm.similarity_threshold TO DEFAULT")
+        else:
+            self.env.cr.execute(
+                SQL(
+                    "SELECT set_config('pg_trgm.similarity_threshold', %s, true)",
+                    previous_threshold,
+                )
+            )
         return recalled_by_index
 
     @api.model
@@ -1163,6 +1199,8 @@ class ResPartner(models.Model):
     @api.constrains("company_id")
     def _check_partner_company(self) -> None:
         partners = self.filtered(lambda p: p.is_company and p.company_id)
+        if not partners:
+            return
         companies = self.env["res.company"].search_fetch(
             [("partner_id", "in", partners.ids)], ["partner_id"]
         )
@@ -1564,7 +1602,6 @@ class ResPartner(models.Model):
         public_partner_ids = {
             partner.id
             for (partner,) in self.env["res.users"]
-            .sudo()
             .with_context(active_test=False)
             ._read_group(
                 [
@@ -1609,72 +1646,53 @@ class ResPartner(models.Model):
             )
         )
 
-    def write(self, vals: dict[str, Any]) -> bool:
-        vals = dict(vals)
-        if self._is_geolocation_stale(vals):
-            vals["partner_latitude"] = False
-            vals["partner_longitude"] = False
-        if "active" in vals and not vals["active"]:
-            self.invalidate_recordset(["user_ids"])
-            users = (
-                self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
-            )
-            if users:
-                _debug.logic("archive_refused", partners=self.ids, users=len(users))
-                raise self._prepare_linked_user_error(users, "archive")
-        if vals.get("website"):
-            vals["website"] = self._clean_website(vals["website"])
-        if vals.get("name"):
-            banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
-                lambda bank: bank.acc_holder_name == bank.partner_id.name
-            )
-            _debug.logic(
-                "bank_holders_renamed", partners=self.ids, banks=len(banks_to_sync)
-            )
-            if banks_to_sync:
-                banks_to_sync.acc_holder_name = vals["name"]
+    def _check_archive_allowed(self) -> None:
+        users = self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
+        if users:
+            _debug.logic("archive_refused", partners=self.ids, users=len(users))
+            raise self._prepare_linked_user_error(users, "archive")
 
-        sync_fields = (
-            {"parent_id", "type"}
-            | set(self._address_fields())
-            | set(self._commercial_fields())
+    def _rename_bank_holders(self, name: str) -> None:
+        banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
+            lambda bank: bank.acc_holder_name == bank.partner_id.name
         )
-        tracked_fields = [fname for fname in vals if fname in sync_fields]
-        pre_values_list = [
-            {fname: partner[fname] for fname in tracked_fields} for partner in self
-        ]
+        _debug.logic(
+            "bank_holders_renamed", partners=self.ids, banks=len(banks_to_sync)
+        )
+        if banks_to_sync:
+            banks_to_sync.acc_holder_name = name
 
-        if "company_id" in vals:
-            company_id = vals["company_id"]
-            if company_id:
-                company = self.env["res.company"].browse(company_id)
-                for partner in self:
-                    if partner.user_ids:
-                        companies = {user.company_id for user in partner.user_ids}
-                        if len(companies) > 1 or company not in companies:
-                            _debug.logic(
-                                "company_change_refused",
-                                partner=partner.id,
-                                company=company.id,
-                                user_companies=len(companies),
-                            )
-                            raise UserError(
-                                self.env._(
-                                    "The selected company is not compatible with the companies of the related user(s)"
-                                )
-                            )
-            children = self.with_context(active_test=False).search(
-                [("parent_id", "in", self.ids)]
-            )
-            _debug.pipeline(
-                "company_propagated_to_children",
-                partners=self.ids,
-                company=company_id,
-                children=len(children),
-            )
-            if children:
-                children.write({"company_id": company_id})
+    def _check_company_compatible_with_users(self, company_id: int) -> None:
+        company = self.env["res.company"].browse(company_id)
+        for partner in self.filtered("user_ids"):
+            companies = {user.company_id for user in partner.user_ids}
+            if len(companies) > 1 or company not in companies:
+                _debug.logic(
+                    "company_change_refused",
+                    partner=partner.id,
+                    company=company.id,
+                    user_companies=len(companies),
+                )
+                raise UserError(
+                    self.env._(
+                        "The selected company is not compatible with the companies of the related user(s)"
+                    )
+                )
 
+    def _propagate_company_to_children(self, company_id: int | Literal[False]) -> None:
+        children = self.with_context(active_test=False).search(
+            [("parent_id", "in", self.ids)]
+        )
+        _debug.pipeline(
+            "company_propagated_to_children",
+            partners=self.ids,
+            company=company_id,
+            children=len(children),
+        )
+        if children:
+            children.write({"company_id": company_id})
+
+    def _check_backing_users_writable(self) -> None:
         backing_ids = (
             self.sudo()
             .user_ids.filtered(lambda u: u._is_internal() and u.id != self.env.uid)
@@ -1682,24 +1700,21 @@ class ResPartner(models.Model):
         )
         if backing_ids:
             self.env["res.users"].browse(backing_ids).check_access("write")
-        result = True
-        if (
-            "is_company" in vals
-            and not self.env.su
-            and self.env.user.has_group("base.group_partner_manager")
-        ):
-            _debug.logic("is_company_written_elevated", partners=self.ids)
-            result = super(ResPartner, self.sudo()).write(
-                {"is_company": vals.get("is_company")}
-            )
-            del vals["is_company"]
-        _debug.lifecycle("write", count=len(self), fields=list(vals))
-        result = result and super().write(vals)
-        if {"lang", "tz"} & vals.keys() and self.sudo().with_context(
-            active_test=False
-        ).user_ids:
-            _debug.lifecycle("write_cache_cleared", reason="user_lang_or_tz")
-            self.env.registry.clear_cache()
+
+    @api.model
+    def _synced_field_names(self) -> set[str]:
+        return (
+            {"parent_id", "type"}
+            | set(self._address_fields())
+            | set(self._commercial_fields())
+        )
+
+    def _sync_written_fields(
+        self,
+        vals: dict[str, Any],
+        tracked_fields: set[str],
+        pre_values_list: list[dict[str, Any]],
+    ) -> None:
         synced = 0
         for partner, pre_values in zip(self, pre_values_list, strict=True):
             updated = {
@@ -1713,9 +1728,51 @@ class ResPartner(models.Model):
         _debug.pipeline(
             "write_fields_synced",
             partners=len(self),
-            tracked=tracked_fields,
+            tracked=sorted(tracked_fields),
             synced=synced,
         )
+
+    def write(self, vals: dict[str, Any]) -> bool:
+        vals = dict(vals)
+        if self._is_geolocation_stale(vals):
+            vals["partner_latitude"] = False
+            vals["partner_longitude"] = False
+        if "active" in vals and not vals["active"]:
+            self._check_archive_allowed()
+        if vals.get("website"):
+            vals["website"] = self._clean_website(vals["website"])
+        if vals.get("name"):
+            self._rename_bank_holders(vals["name"])
+
+        tracked_fields = vals.keys() & self._synced_field_names()
+        pre_values_list = [
+            {fname: partner[fname] for fname in tracked_fields} for partner in self
+        ]
+
+        if "company_id" in vals:
+            if vals["company_id"]:
+                self._check_company_compatible_with_users(vals["company_id"])
+            self._propagate_company_to_children(vals["company_id"])
+
+        self._check_backing_users_writable()
+        result = True
+        if (
+            "is_company" in vals
+            and not self.env.su
+            and self.env.user.has_group("base.group_partner_manager")
+        ):
+            _debug.logic("is_company_written_elevated", partners=self.ids)
+            result = super(ResPartner, self.sudo()).write(
+                {"is_company": vals.pop("is_company")}
+            )
+        _debug.lifecycle("write", count=len(self), fields=list(vals))
+        result = result and super().write(vals)
+        if {"lang", "tz"} & vals.keys() and self.sudo().with_context(
+            active_test=False
+        ).user_ids:
+            _debug.lifecycle("write_cache_cleared", reason="user_lang_or_tz")
+            self.env.registry.clear_cache()
+        self._sync_written_fields(vals, tracked_fields, pre_values_list)
         return result
 
     @api.model_create_multi
@@ -1727,23 +1784,15 @@ class ResPartner(models.Model):
         for vals in vals_list:
             if vals.get("website"):
                 vals["website"] = self._clean_website(vals["website"])
+        self._add_lang_to_vals(vals_list)
         partners = super().create(vals_list)
-        partners_without_lang = partners.browse(
-            partner.id
-            for partner, values in zip(partners, vals_list, strict=True)
-            if "lang" not in values
-        )
         _debug.lifecycle(
             "create",
             count=len(partners),
             companies=sum(1 for vals in vals_list if vals.get("is_company")),
             with_parent=sum(1 for vals in vals_list if vals.get("parent_id")),
-            without_lang=len(partners_without_lang),
             skip_sync=bool(self.env.context.get("_partners_skip_fields_sync")),
         )
-        if partners_without_lang:
-            partners_without_lang._update_lang_from_parent()
-
         if self.env.context.get("_partners_skip_fields_sync"):
             return partners
 
@@ -1790,11 +1839,11 @@ class ResPartner(models.Model):
             if cp_id:
                 to_write = commercial.browse(cp_id)._prepare_commercial_vals()
             if add_id:
-                parent = address_parents.browse(add_id)
-                for f in self._address_fields():
-                    v = parent[f]
-                    if v:
-                        to_write[f] = v.id if isinstance(v, models.BaseModel) else v
+                to_write.update(
+                    address_parents.browse(add_id)._prepare_vals_only_when_set(
+                        self._address_fields()
+                    )
+                )
             if to_write:
                 self.sudo().browse(children).write(to_write)
 
@@ -2071,24 +2120,8 @@ class ResPartner(models.Model):
             results[partner.id] = result
         return results
 
-    @api.model
-    def view_header_get(self, view_id: int | None, view_type: str) -> str | bool:
-        if self.env.context.get("tag_id"):
-            return _(
-                "Partners: %(tag)s",
-                tag=self.env["res.partner.tag"].browse(self.env.context["tag_id"]).name,
-            )
-        return super().view_header_get(view_id, view_type)
-
-    @api.model
-    def _get_default_address_format(self) -> str:
-        return (
-            "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
-        )
-
-    @api.model
     def _get_address_format(self) -> str:
-        return self.country_id.address_format or self._get_default_address_format()
+        return self.country_id.address_format or DEFAULT_ADDRESS_FORMAT
 
     def _prepare_display_address(
         self, without_company: bool = False
