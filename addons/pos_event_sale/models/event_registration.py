@@ -7,6 +7,10 @@ class EventRegistration(models.Model):
     _inherit = ['event.registration']
     _name = 'event.registration'
 
+    @api.model
+    def _load_pos_data_fields(self, config):
+        return super()._load_pos_data_fields(config) + ['sale_order_line_id']
+
     @api.depends('pos_order_id.state')
     def _compute_registration_status(self):
         super()._compute_registration_status()
