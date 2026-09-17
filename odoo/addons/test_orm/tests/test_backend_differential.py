@@ -781,7 +781,17 @@ class TestBackendDifferential(TransactionCase):
         def script(env):
             described = {}
             for model_name in ("test_orm.foo", "test_orm.bar", "test_orm.category"):
-                for name, description in env[model_name].fields_get().items():
+                model = env[model_name]
+                attributes = sorted(
+                    {
+                        attr
+                        for field in model._fields.values()
+                        for attr, _prop in field.description_attrs
+                    }
+                )
+                for name, description in model.fields_get(
+                    attributes=attributes
+                ).items():
                     described[f"{model_name}.{name}"] = description
             return described
 
