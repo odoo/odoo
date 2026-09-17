@@ -63,6 +63,30 @@ describe("Popup options: empty page before edit", () => {
             "background-color": "rgb(255, 0, 0)",
         });
     });
+
+    test("selecting a theme backdrop color keeps the backdrop enabled", async () => {
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await contains(":iframe .s_popup .modal").click();
+        await contains("[data-label=Backdrop] button.o_we_color_preview").click();
+        await contains(".o-overlay-item [data-color='o-color-1']").click();
+
+        expect(":iframe .s_popup .modal").toHaveClass("bg-o-color-1");
+        expect("[data-action-id='setBackdrop'] .o-checkbox .form-check-input:checked").toHaveCount(
+            1
+        );
+    });
+
+    test("clearing the backdrop color keeps the backdrop enabled", async () => {
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await contains(":iframe .s_popup .modal").click();
+        await contains("[data-label=Backdrop] button.o_we_color_preview").click();
+        await contains("button[title='Reset']").click();
+
+        expect(queryOne(":iframe .s_popup .modal").style.backgroundColor).toBe("");
+        expect("[data-action-id='setBackdrop'] .o-checkbox .form-check-input:checked").toHaveCount(
+            1
+        );
+    });
 });
 describe("Popup options: popup in page before edit", () => {
     let builder;
