@@ -762,6 +762,13 @@ class IrActionsActions(models.Model):
         _debug.lifecycle("bindings_created", model=self._name, actions=self.ids)
         IrModel = self.env["ir.model"]
         for model_name, actions in self.grouped(target_field).items():
+            if not model_name:
+                raise UserError(
+                    _(
+                        "Choose the model to bind %s to.",
+                        ", ".join(actions.mapped("name")),
+                    )
+                )
             actions.write(
                 {
                     "binding_model_id": IrModel._get(model_name).id,

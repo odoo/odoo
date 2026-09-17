@@ -2452,3 +2452,12 @@ class TestIrActionsBindingIsOneMethod(TransactionCase):
         close = self.env["ir.actions.act_window_close"].create({"name": "bind-close"})
         with self.assertRaises(UserError):
             close.create_action()
+
+    def test_an_action_without_a_target_model_value_refuses(self):
+        client = self.env["ir.actions.client"].create(
+            {"name": "bind-client", "tag": "x"}
+        )
+        self.assertFalse(client.res_model)
+        with self.assertRaises(UserError):
+            client.create_action()
+        self.assertFalse(client.binding_model_id)

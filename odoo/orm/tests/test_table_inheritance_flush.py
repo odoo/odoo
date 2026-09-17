@@ -117,3 +117,13 @@ def test_a_fetch_on_a_leaf_writes_the_root_rows_first():
         assert env.cr.storage.get_row("tree_root", root.id)["kind"] == "old"
         leaf.fetch(["kind"])
         assert env.cr.storage.get_row("tree_root", root.id)["kind"] == "new"
+
+
+def test_flushing_a_leaf_model_writes_the_root_rows_too():
+    # a raw query on the leaf table, preceded by the leaf's own flush_model
+    # as raw callers do, must not read a row the root still holds dirty
+    with model_test_env(Root, Leaf, Apart) as env:
+        root, _leaf = _root_and_leaf(env)
+        root.kind = "new"
+        env["tree.leaf"].flush_model(["kind"])
+        assert env.cr.storage.get_row("tree_root", root.id)["kind"] == "new"
