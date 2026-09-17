@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
             payload = {
                 "payment_source": {
                     "card": {
-                        "verification_method": "SCA_WHEN_REQUIRED",
+                        "verification_method": self._get_paypal_3ds_policy(),
                         "experience_context": experience_context,
                     }
                 }
@@ -146,6 +146,12 @@ class PaymentTransaction(models.Model):
                 self, scope="setup_token_request"
             ),
         )
+
+    def _get_paypal_3ds_policy(self):
+        is_3ds_required = (
+            self.env["ir.config_parameter"].sudo().get_bool("payment_paypal.is_3ds_required")
+        )
+        return "SCA_ALWAYS" if is_3ds_required else "SCA_WHEN_REQUIRED"
 
     def _send_payment_request(self):
         """Override of `payment` to charge a saved PayPal wallet or card by token."""
@@ -282,6 +288,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         card_data = {"experience_context": {"return_url": return_url, "cancel_url": cancel_url}}
+        verification_method = {"verification": {"method": self._get_paypal_3ds_policy()}}
 
         if self.token_id:
             card_data["vault_id"] = self.token_id.provider_ref
@@ -292,7 +299,7 @@ class PaymentTransaction(models.Model):
                     "payment_type": "UNSCHEDULED",
                 })
             else:
-                card_data["attributes"] = {"verification": {"method": "SCA_WHEN_REQUIRED"}}
+                card_data["attributes"] = verification_method
                 card_data["stored_credential"].update({
                     "payment_initiator": "CUSTOMER",
                     "payment_type": "ONE_TIME",
@@ -301,7 +308,7 @@ class PaymentTransaction(models.Model):
 
         card_data["name"] = self.partner_name
         card_data["billing_address"] = invoice_address_vals.get("address", {})
-        card_data["attributes"] = {"verification": {"method": "SCA_WHEN_REQUIRED"}}
+        card_data["attributes"] = verification_method
 
         if self.tokenize:
             card_data["stored_credential"] = {

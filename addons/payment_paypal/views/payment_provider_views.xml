@@ -69,35 +69,17 @@
                 </div>
             </notebook>
             <group name="provider_credentials" position="inside">
-                <div
-                    invisible="not paypal_client_id or not paypal_client_secret"
-                    groups="base.group_system"
-                    colspan="2"
-                    class="text-muted mb-2"
-                >
-                    This provider is linked with your PayPal account.
-                </div>
-                <div
-                    invisible="paypal_client_id and paypal_client_secret"
-                    groups="base.group_system"
-                    colspan="2"
-                    class="text-muted mb-2"
-                >
-                    Click "Connect" to link your PayPal account to your database.
-                </div>
                 <field
                     string="Email"
                     name="paypal_email_account"
                     invisible="code != 'paypal'"
                     readonly="paypal_is_oauth_onboarded"
-                    groups="base.group_no_one"
                 />
                 <field
                     string="Account ID"
                     name="paypal_account_id"
                     invisible="code != 'paypal'"
                     readonly="paypal_is_oauth_onboarded"
-                    groups="base.group_no_one"
                 />
                 <field
                     string="Client ID"
