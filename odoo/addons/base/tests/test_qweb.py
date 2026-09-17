@@ -4606,6 +4606,30 @@ class TestQWebDirectiveEdgeCases(TransactionCase):
             'xmlns:xlink="http://www.w3.org/1999/xlink"><g></g></svg>',
         )
 
+    def test_a_widget_gets_no_value_like_a_field_does(self):
+        for widget in ("integer", "float", "time", "duration", "relative", "image_url"):
+            for value in (None, False):
+                arch = f"<t><span t-out='v' t-options-widget=\"'{widget}'\">none</span></t>"
+                self.assertEqual(
+                    self._render(arch, {"v": value}),
+                    "<span>none</span>",
+                    f"{widget} with {value!r} must show the default body",
+                )
+        self.assertEqual(
+            self._render(
+                "<t><span t-out='v' t-options-widget=\"'integer'\"/></t>", {"v": 0}
+            ),
+            "<span>0</span>",
+        )
+        self.assertEqual(
+            self._render(
+                "<t>[<span t-out='v' t-options-widget=\"'many2one'\"/>]</t>",
+                {"v": self.env["res.partner"]},
+            ),
+            "[]",
+            "an empty widget value renders no tag, like a plain t-out",
+        )
+
     def test_t_options_shapes_merge_into_one_dict(self):
         arch = "<t><span t-out='v' t-options=\"{'widget': 'float'}\" t-options-precision='1'/></t>"
         self.assertEqual(self._render(arch, {"v": 1.25}), "<span>1.3</span>")

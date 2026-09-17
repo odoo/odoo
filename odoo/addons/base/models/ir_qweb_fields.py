@@ -265,9 +265,9 @@ class IrQwebFieldDatetime(models.AbstractModel):
         elif dateless:
             value = datetime.combine(value, time.min)
 
-        record = self
+        tz_source = self
         if options.get("tz_name"):
-            record = self.with_context(tz=options["tz_name"])
+            tz_source = self.with_context(tz=options["tz_name"])
             tzinfo = babel.dates.get_timezone(options["tz_name"])
         else:
             tzinfo = None
@@ -275,7 +275,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
         if dateless:
             tzinfo = None
         else:
-            value = fields.Datetime.context_timestamp(record, value)
+            value = fields.Datetime.context_timestamp(tz_source, value)
 
         if "format" in options:
             pattern = options["format"]
@@ -419,11 +419,11 @@ class IrQwebFieldHtml(models.AbstractModel):
     def value_to_html(self, value: Any, options: dict[str, Any]) -> Markup:
         if not value:
             return Markup("")
-        irQweb = self.env["ir.qweb"]
+        qweb = self.env["ir.qweb"]
         body = etree.fromstring(
             f"<body>{value}</body>", etree.HTMLParser(encoding="utf-8")
         )[0]
-        att_names = irQweb._get_post_processing_att_names()
+        att_names = qweb._get_post_processing_att_names()
         rewritten = 0  # debuglog
         for element in body.iter():
             attrib = element.attrib
@@ -431,7 +431,7 @@ class IrQwebFieldHtml(models.AbstractModel):
                 continue
             if att_names is not None and att_names.isdisjoint(attrib):
                 continue
-            processed = irQweb._post_processing_att(element.tag, dict(attrib))
+            processed = qweb._post_processing_att(element.tag, dict(attrib))
             if len(processed) != len(attrib) or any(
                 attrib.get(name) != value for name, value in processed.items()
             ):
@@ -502,7 +502,7 @@ class IrQwebFieldImage(models.AbstractModel):
         return Markup('<img src="%s">') % self._get_src_data_b64(value, options)
 
 
-class IrQwebFieldImage_Url(models.AbstractModel):
+class IrQwebFieldImageUrl(models.AbstractModel):
     _name = "ir.qweb.field.image_url"
     _description = "Qweb Field Image"
     _inherit = ["ir.qweb.field.image"]
@@ -533,14 +533,14 @@ class IrQwebFieldMonetary(models.AbstractModel):
             raise TypeError(msg)
 
         if options.get("from_currency"):
-            date = options.get("date") or fields.Date.today()
+            conversion_date = options.get("date") or fields.Date.today()
             company_id = options.get("company_id")
             if company_id:
                 company = self.env["res.company"].browse(company_id)
             else:
                 company = self.env.company
             value = options["from_currency"]._convert(
-                value, display_currency, company, date
+                value, display_currency, company, conversion_date
             )
             _debug.logic(
                 "monetary_converted",
@@ -624,7 +624,7 @@ class IrQwebFieldMonetary(models.AbstractModel):
         return options
 
 
-class IrQwebFieldFloat_Time(models.AbstractModel):
+class IrQwebFieldFloatTime(models.AbstractModel):
     _name = "ir.qweb.field.float_time"
     _description = "Qweb Field Float Time"
     _inherit = ["ir.qweb.field"]
@@ -843,14 +843,13 @@ class IrQwebFieldContact(models.AbstractModel):
                 )
             return ""
 
-        opf = options.get("fields") or CONTACT_DEFAULT_FIELDS
-        sep = options.get("separator")
-        if sep:
-            opsep = escape(sep)
+        field_names = options.get("fields") or CONTACT_DEFAULT_FIELDS
+        if options.get("separator"):
+            separator = escape(options["separator"])
         elif options.get("no_tag_br"):
-            opsep = escape(", ")
+            separator = escape(", ")
         else:
-            opsep = Markup("<br/>")
+            separator = Markup("<br/>")
 
         value = value.sudo().with_context(show_address=True)
         # a record delegating to a partner (a user) renders that partner's
@@ -866,23 +865,25 @@ class IrQwebFieldContact(models.AbstractModel):
                     break
         phone = (
             contact._phone_get_number().number
-            if "phone" in opf and contact._name == "res.partner"
+            if "phone" in field_names and contact._name == "res.partner"
             else ""
         )
         display_name = value.display_name or ""
         name_line, *address_lines = display_name.split("\n")
         if any(elem.strip() for elem in address_lines):
-            address = opsep.join(address_lines).strip()
+            address = separator.join(address_lines).strip()
         else:
             address = ""
         _debug.logic(
             "contact_rendered",
             partner=value.id,
-            fields=list(opf),
+            fields=list(field_names),
             address_lines=len(address_lines),
-            separator="br" if not sep and not options.get("no_tag_br") else "text",
+            separator="text"
+            if options.get("separator") or options.get("no_tag_br")
+            else "br",
         )
-        val = {
+        values = {
             "name": name_line,
             "address": address,
             "phone": phone,
@@ -892,12 +893,12 @@ class IrQwebFieldContact(models.AbstractModel):
             "email": value.email,
             "vat": value.vat,
             "vat_label": value.country_id.vat_label or _("VAT"),
-            "fields": opf,
+            "fields": field_names,
             "object": value,
             "options": options,
         }
         return self.env["ir.qweb"]._render(
-            "base.contact", val, minimal_qcontext=True, **template_options
+            "base.contact", values, minimal_qcontext=True, **template_options
         )
 
 

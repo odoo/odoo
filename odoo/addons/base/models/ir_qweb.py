@@ -2715,7 +2715,8 @@ class IrQweb(models.AbstractModel):
                 indent_code(
                     f"""
                 content, force_display = self._get_widget(content, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)
-                content = self._compile_to_str(content)
+                if content is not None and content is not False:
+                    content = self._compile_to_str(content)
                 """,
                     level,
                 )
@@ -3183,8 +3184,14 @@ class IrQweb(models.AbstractModel):
         inherit_branding = self.env.context.get("inherit_branding")
         field_options["inherit_branding"] = inherit_branding
 
-        converter = self._get_field_converter(field_options["type"])
-        content = converter.value_to_html(value, field_options)
+        # No value is no content, as record_to_html already answers for
+        # t-field: the converters format numbers, dates and images, and
+        # None or False through them is a TypeError or "<img src='None'>".
+        if value is None or value is False:
+            content = None
+        else:
+            converter = self._get_field_converter(field_options["type"])
+            content = converter.value_to_html(value, field_options)
         if inherit_branding:
             self._merge_node_attributes(
                 values,

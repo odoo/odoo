@@ -116,7 +116,7 @@ class IrQwebFieldImage(models.AbstractModel):
         return Markup("".join(img))
 
 
-class IrQwebFieldImage_Url(models.AbstractModel):
+class IrQwebFieldImageUrl(models.AbstractModel):
     _inherit = "ir.qweb.field.image_url"
 
     def _get_src_urls(
