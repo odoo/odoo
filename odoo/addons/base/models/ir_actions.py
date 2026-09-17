@@ -620,6 +620,33 @@ class IrActionsServer(models.Model):
         })
         return eval_context
 
+    def _get_run_context(self, records):
+        """Return a runner context constrained to ``records``."""
+        self.ensure_one()
+        run_context = dict(self._context)
+
+        onchange_self = run_context.get('onchange_self')
+        if onchange_self:
+            active_ids = records.ids
+        else:
+            active_id = run_context.get('active_id')
+            requested_ids = run_context.get('active_ids', [active_id] if active_id else [])
+            record_ids = set(records.ids)
+            active_ids = [record_id for record_id in requested_ids if record_id in record_ids]
+
+        run_context.pop('active_model', None)
+        run_context.pop('active_id', None)
+        run_context.pop('active_ids', None)
+
+        if onchange_self or active_ids:
+            run_context['active_model'] = records._name
+        if active_ids:
+            run_context.update(
+                active_id=active_ids[0],
+                active_ids=active_ids,
+            )
+        return run_context
+
     def run(self):
         """ Runs the server action. For each server action, the
         :samp:`_run_action_{TYPE}[_multi]` method is called. This allows easy
@@ -668,21 +695,24 @@ class IrActionsServer(models.Model):
                     )
                     raise
 
+            run_context = action._get_run_context(records)
+            eval_context['env'] = eval_context['env'](context=run_context)
+
             runner, multi = action._get_runner()
             if runner and multi:
                 # call the multi method
-                run_self = action.with_context(eval_context['env'].context)
+                run_self = action.with_context(run_context)
                 res = runner(run_self, eval_context=eval_context)
             elif runner:
-                active_id = self._context.get('active_id')
-                if not active_id and self._context.get('onchange_self'):
-                    active_id = self._context['onchange_self']._origin.id
+                active_id = run_context.get('active_id')
+                if not active_id and run_context.get('onchange_self'):
+                    active_id = run_context['onchange_self']._origin.id
                     if not active_id:  # onchange on new record
                         res = runner(action, eval_context=eval_context)
-                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                active_ids = run_context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
-                    run_self = action.with_context(active_ids=[active_id], active_id=active_id)
+                    run_self = action.with_context(dict(run_context, active_ids=[active_id], active_id=active_id))
                     eval_context["env"].context = run_self._context
                     eval_context['records'] = eval_context['record'] = records.browse(active_id)
                     res = runner(run_self, eval_context=eval_context)
