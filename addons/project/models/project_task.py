@@ -2277,6 +2277,26 @@ class ProjectTask(models.Model):
                 self.env.user.id,
             )
 
+        composed_fields = (self._get_fields_assignment() - {"user_ids"}) & set(fields)
+        if composed_fields and "default_user_ids" in self.env.context:
+            users = self.env["res.users"].browse(
+                self._fields["user_ids"].convert_to_cache(
+                    self.env.context["default_user_ids"], self, validate=False
+                )
+            )
+            dbg.logic.debug(
+                "project.task.default_get: default_user_ids %s through composed fields %s",
+                users.ids,
+                sorted(composed_fields),
+            )
+            vals.update(
+                {
+                    fname: value
+                    for fname, value in self._prepare_assignment_vals(users).items()
+                    if fname in composed_fields
+                }
+            )
+
         parent_id = vals.get("parent_id", self.env.context.get("default_parent_id"))
         if parent_id:
             parent = self.env["project.task"].browse(parent_id)

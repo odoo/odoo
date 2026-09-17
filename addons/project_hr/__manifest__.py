@@ -1,6 +1,6 @@
 {
     "name": "Project HR",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Services/Project",
     "summary": "Replace user assignees in project with HR employees",
     "description": """
@@ -25,5 +25,10 @@
         "views/project_task_views.xml",
         "views/project_project_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "project_hr/static/src/js/tours/project.js",
+        ],
+    },
     "post_init_hook": "post_init_hook",
 }

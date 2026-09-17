@@ -127,13 +127,13 @@ class TestTaskPlanningFlow(TransactionCase):
                         {
                             "default_date_start": datum["dates"][0],
                             "default_date_end": datum["dates"][1],
+                            "default_user_ids": self.project_user.ids,
                             "scale": scale,
                         }
                     ),
                     form_view,
                 ) as task:
                     task.name = "Test"
-                    task.user_ids = self.project_user
                     task.project_id = self.project_test
                     self.assertEqual(
                         task.scheduled_hours,
