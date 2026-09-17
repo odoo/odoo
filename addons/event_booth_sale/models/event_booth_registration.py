@@ -61,14 +61,16 @@ class EventBoothRegistration(models.Model):
             'message': _('Your order has been cancelled because the following booths have been reserved'),
             'booth_names': Markup().join(Markup('<li>%s</li>') % booth.display_name for booth in self.event_booth_id)
         }
-        other_registrations = self.search([
+        # Registrations of cancelled orders are kept: those orders released their booths and may be confirmed again.
+        to_cancel = self.search([
             ('event_booth_id', 'in', self.event_booth_id.ids),
-            ('id', 'not in', self.ids)
+            ('id', 'not in', self.ids),
+            ('sale_order_line_id.order_id.state', '!=', 'cancel'),
         ])
-        for order in other_registrations.sale_order_line_id.order_id:
+        for order in to_cancel.sale_order_line_id.order_id:
             order.sudo().message_post(
                 body=body,
                 partner_ids=order.user_id.partner_id.ids,
             )
             order.sudo()._action_cancel()
-        other_registrations.unlink()
+        to_cancel.unlink()
