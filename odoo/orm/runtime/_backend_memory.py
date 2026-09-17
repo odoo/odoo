@@ -1414,12 +1414,20 @@ class InMemoryBackend:
         allow_referencing: bool = False,
         limit: int | None = None,
     ) -> BaseModel:
+        # the PostgreSQL twin's selection rule: saturating new ids win the
+        # whole limit; otherwise the limit buys real rows only, and every
+        # new id rides along, all in the recordset's order
         new_ids, real = partition(lambda i: isinstance(i, NewId), model._ids)
-        lockable = self.storage.get_existing_ids(model._table, real) | set(new_ids)
-        locked = [i for i in model._ids if i in lockable]
+        if limit is not None and len(new_ids) >= limit:
+            return model.browse(new_ids[:limit])
+        existing = self.storage.get_existing_ids(model._table, real)
+        lockable_real = [
+            i for i in model._ids if not isinstance(i, NewId) and i in existing
+        ]
         if limit is not None:
-            locked = locked[:limit]
-        return model.browse(locked)
+            lockable_real = lockable_real[: limit - len(new_ids)]
+        valid = set(lockable_real) | set(new_ids)
+        return model.browse(i for i in model._ids if i in valid)
 
     def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
         env = model.env

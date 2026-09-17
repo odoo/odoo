@@ -41,5 +41,19 @@ def test_try_lock_for_update_returns_lockable_rows_in_order():
         assert recs.try_lock_for_update(limit=1)._ids == (a.id,)
 
 
+def test_try_lock_with_new_ids_and_limit_follows_the_sql_rule():
+    # the SQL twin: saturating new ids take the whole limit; otherwise the
+    # limit buys real rows only and every new id rides along, in order
+    with model_test_env(LockThing) as env:
+        a = env["lock.thing"].create({"name": "a"})
+        b = env["lock.thing"].create({"name": "b"})
+        draft = env["lock.thing"].new({"name": "draft"})
+        env.flush_all()
+        mixed = a + b + draft
+        assert mixed.try_lock_for_update(limit=2)._ids == (a.id, draft.id)
+        assert mixed.try_lock_for_update(limit=1)._ids == (draft.id,)
+        assert mixed.try_lock_for_update()._ids == mixed._ids
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-v"]))
