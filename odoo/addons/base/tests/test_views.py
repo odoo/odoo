@@ -7869,6 +7869,19 @@ class TestViewWriteContract(ViewCase):
             view.write({"arch": '<form><field name="email"/></form>'})
             self.assertFalse(custom.exists())
 
+    def test_an_overlay_replacing_the_root_with_text_is_refused(self):
+        # the XML combine used to hand back None here, a crash for every
+        # reader of the result; a replace of the root needs one element
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="rt p", model="res.partner"
+        )
+        self.assertInvalid(
+            '<xpath expr="/form" position="replace">just text</xpath>',
+            "needs an element",
+            inherit_id=primary.id,
+            model="res.partner",
+        )
+
     def test_two_overlays_setting_one_attribute_report_a_conflict(self):
         primary = self.assertValid(
             '<form><field name="name"/></form>', name="cf p", model="res.partner"
