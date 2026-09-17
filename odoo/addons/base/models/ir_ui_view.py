@@ -9,6 +9,7 @@ import typing
 import uuid
 from collections.abc import Callable, Collection
 from contextlib import suppress
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Self
 
 from lxml import etree
@@ -149,7 +150,20 @@ _IR_UI_VIEW_XMLID_SUFFIX = "_ir_ui_view"
 
 
 def get_view_arch_from_file(filepath: str, xmlid: str) -> str | None:
-    return _extract_view_arch(etree.parse(filepath), xmlid, filepath)
+    return _extract_view_arch(_parse_view_file(filepath), xmlid, filepath)
+
+
+@functools.lru_cache(maxsize=256)
+def _parse_cached(filepath: str, _mtime_ns: int, _size: int) -> etree._ElementTree:
+    return etree.parse(filepath)
+
+
+def _parse_view_file(filepath: str) -> etree._ElementTree:
+    # dev-xml mode reads a view's file on every arch read, and a file holds
+    # many views: parse it once per version. The tree is shared, so what is
+    # read out of it is copied before it is edited.
+    stat = Path(filepath).stat()
+    return _parse_cached(filepath, stat.st_mtime_ns, stat.st_size)
 
 
 def _iter_declarations(
@@ -185,6 +199,7 @@ def _extract_view_arch(
         candidate_ids += [xmlid[:end], view_id[:end]]
 
     for node in _iter_declarations(document, candidate_ids):
+        node = copy.deepcopy(node)
         if node.tag == "record":
             field_arch = node.find('field[@name="arch"]')
             if field_arch is not None:
@@ -446,6 +461,10 @@ class IrUiView(models.Model):
     def _translate_arch_from_file(self, arch: str) -> str:
         lang = self.env.lang or "en_US"
         field_arch_db = self._fields["arch_db"]
+        if lang == "en_US":
+            # the file is the source language: the dictionary would map every
+            # term to itself, and the walk is what normalises the arch
+            return field_arch_db.translate(lambda term: term, arch)
         translations = field_arch_db.get_translation_dictionary(
             self.with_context(
                 edit_translations=None, lang="en_US", check_translations=True

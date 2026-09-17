@@ -1,5 +1,6 @@
 import logging
 import os
+import pathlib
 import re
 import tempfile
 import time
@@ -8213,6 +8214,32 @@ class TestViewArchFileResolution(common.TransactionCase):
 
         self.assertIn("QUALIFIED", ir_ui_view.get_view_arch_from_file(path, "base.dup"))
         self.assertIn("SHORT", ir_ui_view.get_view_arch_from_file(path, "other.dup"))
+
+    def test_a_rewritten_file_is_read_again_and_the_tree_is_not_edited(self):
+        def record(text):
+            return (
+                '<odoo><record id="v" model="ir.ui.view">'
+                f'<field name="arch" type="xml"><form>{text}</form></field>'
+                "</record></odoo>"
+            )
+
+        with tempfile.NamedTemporaryFile(
+            "w", encoding="utf-8", suffix=".xml", delete=False
+        ) as handle:
+            handle.write(record("FIRST"))
+            path = handle.name
+        self.addCleanup(os.unlink, path)
+        self.assertIn("FIRST", ir_ui_view.get_view_arch_from_file(path, "base.v"))
+        # the same parse serves the second read
+        with patch.object(
+            ir_ui_view.etree, "parse", wraps=ir_ui_view.etree.parse
+        ) as parse:
+            self.assertIn("FIRST", ir_ui_view.get_view_arch_from_file(path, "base.v"))
+        parse.assert_not_called()
+        # a new version of the file is parsed again
+        time.sleep(0.01)
+        pathlib.Path(path).write_text(record("SECOND"), encoding="utf-8")
+        self.assertIn("SECOND", ir_ui_view.get_view_arch_from_file(path, "base.v"))
 
 
 class TestGroupbyPostprocessTermination(ViewCase):
