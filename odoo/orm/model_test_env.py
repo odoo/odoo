@@ -213,7 +213,7 @@ class InMemoryCursor(BaseCursor):
     def __init__(
         self,
         registry: Registry,
-        fixtures: dict[str, list[tuple]] | None = None,
+        fixtures: dict[str | tuple[str, tuple], list[tuple]] | None = None,
     ) -> None:
         super().__init__()
         self.dbname = registry.db_name
@@ -223,7 +223,7 @@ class InMemoryCursor(BaseCursor):
         # in-memory backend never runs can carry
         self._cnx = None
         self.transaction = Transaction(registry, storage=self.storage)
-        self._fixtures: dict[str, list[tuple]] = fixtures or {}
+        self._fixtures: dict[str | tuple[str, tuple], list[tuple]] = fixtures or {}
         self._last_result: list[tuple] = []
 
     def execute(
@@ -234,8 +234,22 @@ class InMemoryCursor(BaseCursor):
         prepare: bool | None = None,
     ) -> None:
         key = str(query)
-        if key in self._fixtures:
-            self._last_result = self._fixtures[key]
+        # a fixture registered as (query, params) answers only that exact
+        # execution; a str-only fixture answers the text whatever the params,
+        # as before, but says so when params were dropped on the floor
+        rows = None
+        if params is not None:
+            rows = self._fixtures.get((key, tuple(params)))
+        if rows is None:
+            rows = self._fixtures.get(key)
+            if rows is not None and params is not None:
+                _debug.logic(
+                    "test_env.sql_fixture_params_ignored",
+                    query=key[:120],
+                    params=len(params),
+                )
+        if rows is not None:
+            self._last_result = rows
             _debug.logic(
                 "test_env.sql_fixture_hit",
                 rows=len(self._last_result) if self._last_result else 0,
@@ -637,7 +651,7 @@ def model_test_env(
     *model_classes: type[BaseModel],
     registry: ModelRegistry | None = None,
     db_name: str = ":memory:",
-    fixtures: dict[str, list[tuple]] | None = None,
+    fixtures: dict[str | tuple[str, tuple], list[tuple]] | None = None,
     langs: Iterable[str] = (),
     check_cache: bool = True,
 ):

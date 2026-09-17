@@ -518,3 +518,17 @@ def test_fetchmany_defaults_to_one_row_like_psycopg():
         env.cr.execute("SELECT 1")
         assert env.cr.fetchmany() == [(1,)]
         assert env.cr.fetchmany(2) == [(1,), (2,)]
+
+
+def test_a_fixture_keyed_by_params_answers_that_execution_only():
+    fixtures = {
+        ("SELECT %s", (1,)): [(10,)],
+        "SELECT %s": [(99,)],
+    }
+    with model_test_env(HWidget, fixtures=fixtures) as env:
+        env.cr.execute("SELECT %s", (1,))
+        assert env.cr.fetchall() == [(10,)]
+        env.cr.execute("SELECT %s", (2,))  # falls back to the str-only fixture
+        assert env.cr.fetchall() == [(99,)]
+        env.cr.execute("SELECT %s")
+        assert env.cr.fetchall() == [(99,)]
