@@ -430,7 +430,8 @@ def _check_constraints(name: str, value: Any, constraints: Constraints) -> None:
 def _coerce_constrained_scalar(name: str, value: Any, spec: ParamSpec) -> Any:
     target = spec.target
     if _is_enum(target):
-        assert spec.constraints is not None and spec.constraints.choices
+        if spec.constraints is None or not spec.constraints.choices:
+            raise RuntimeError("enum coercion needs the spec's declared choices")
         raw = _coerce_scalar(name, value, type(spec.constraints.choices[0]))
         _check_constraints(name, raw, spec.constraints)
         return target(raw)

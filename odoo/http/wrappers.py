@@ -252,7 +252,8 @@ class _Response(werkzeug.wrappers.Response):
                 "is_qweb() or set one before rendering."
             )
         env = request.env
-        assert env is not None, "rendering a QWeb response needs a bound environment"
+        if env is None:
+            raise RuntimeError("rendering a QWeb response needs a bound environment")
         self.qcontext["request"] = request
         with _debug.perf(
             "http.response.render", cr=env.cr, template=self.template

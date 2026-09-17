@@ -120,9 +120,11 @@ class Request(
         anonymous: bool = False,
     ) -> None:
         env = self.env
-        assert env is not None, "update_env() needs a database-bound request"
+        if env is None:
+            raise RuntimeError("update_env() needs a database-bound request")
         if anonymous:
-            assert user is None, "anonymous=True and user= are exclusive"
+            if user is not None:
+                raise RuntimeError("anonymous=True and user= are exclusive")
             env = odoo.api.Environment(
                 env.cr, None, env.context if context is None else context
             )
@@ -135,7 +137,8 @@ class Request(
 
     def update_context(self, **overrides: Any) -> None:
         env = self.env
-        assert env is not None, "update_context() needs a database-bound request"
+        if env is None:
+            raise RuntimeError("update_context() needs a database-bound request")
         context = env.context | overrides
         if context == env.context and env.transaction.default_env is env:
             _debug.lifecycle("http.request.context_unchanged", keys=len(overrides))

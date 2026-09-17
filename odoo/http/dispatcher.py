@@ -217,7 +217,8 @@ class Dispatcher(ABC):
             self.request.params = coerce_params(self.request.params, specs)
         if self.request.db:
             registry = self.request.registry
-            assert registry is not None, "a database-bound request has a registry"
+            if registry is None:
+                raise RuntimeError("a database-bound request has a registry")
             with _debug.perf(
                 "http.dispatch.endpoint",
                 cr=getattr(getattr(self.request, "env", None), "cr", None),
