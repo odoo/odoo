@@ -1470,6 +1470,18 @@ class TestPurchase(AccountTestInvoicingCommon):
             "May 1-12 entry that matches the wrong UTC date.",
         )
 
+    def test_import_keeps_imported_price_unit(self):
+        self.product_a.seller_ids = [Command.create({'partner_id': self.partner_a.id, 'price': 50.0})]
+        order = self.env['purchase.order'].create({'partner_id': self.partner_a.id})
+
+        self.env['purchase.order'].with_context(import_file=True).load(
+            ['.id', 'partner_id/.id', 'order_line/product_id/.id',
+             'order_line/product_qty', 'order_line/price_unit'],
+            [[str(order.id), str(self.partner_a.id), str(self.product_a.id), '1', '10.0']],
+        )
+
+        self.assertEqual(order.order_line.price_unit, 10.0)
+
 
 @tagged('at_install', '-post_install')
 class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
