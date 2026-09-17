@@ -483,13 +483,16 @@ class IrFieldsConverter(models.AbstractModel):
 
     @staticmethod
     def _match_choice(value: Any, choices: Sequence[Sequence]) -> Any:
-        for choice_value, choice_label, *_rest in choices:
-            if value in (choice_value, choice_label):
-                return choice_value
+        # a value outranks every label, exactly as the column index orders
+        # its tokens, so an item's label can never shadow another item's value
         token = str(value).strip().lower()
-        for choice_value, choice_label, *_rest in choices:
-            if token in (str(choice_value).lower(), str(choice_label).lower()):
-                return choice_value
+        for position in (0, 1):
+            for choice in choices:
+                if value == choice[position]:
+                    return choice[0]
+            for choice in choices:
+                if str(choice[position]).lower() == token:
+                    return choice[0]
         return None
 
     @api.model
@@ -923,9 +926,17 @@ class IrFieldsConverter(models.AbstractModel):
         cache, cache_key = self._get_cache_and_key(field, subfield, value)
         if cache is not None:
             if (cached := cache.get(cache_key)) is not None:
-                cached_id, cached_warnings = cached
-                _debug.perf.count("ref_cache_hit", field=field.name, subfield=subfield)
-                return cached_id, list(cached_warnings)
+                if subfield is None and self._flush_import(
+                    model=field.comodel_name, name=value
+                ):
+                    _debug.logic("ref_cache_stale", field=field.name, reason="pending")
+                    del cache[cache_key]
+                else:
+                    cached_id, cached_warnings = cached
+                    _debug.perf.count(
+                        "ref_cache_hit", field=field.name, subfield=subfield
+                    )
+                    return cached_id, list(cached_warnings)
 
         if subfield == ".id":
             lookup = self._get_ref_from_dbid(field, value)
@@ -964,10 +975,9 @@ class IrFieldsConverter(models.AbstractModel):
         return lookup.id, lookup.warnings
 
     @api.model
-    def _flush_import(self, **selector: Any) -> None:
+    def _flush_import(self, **selector: Any) -> bool:
         flush = self.env.context.get("import_flush")
-        if flush is not None:
-            flush(**selector)
+        return flush is not None and bool(flush(**selector))
 
     @api.model
     def _get_ref_from_dbid(self, field: ConvertibleField, value: str) -> RefLookup:
@@ -1023,10 +1033,15 @@ class IrFieldsConverter(models.AbstractModel):
         ids = RelatedModel.name_search(name=value, operator="=")
         flushed = False
         if not ids:
-            # only a miss can be a record an earlier row of this import is
-            # still holding; flushing before every search split a 3000-row
-            # import into 3000 single-row creates
+            # a miss may be a record an earlier row of this import is still
+            # holding; flushing before every search split a 3000-row import
+            # into 3000 single-row creates
             self._flush_import(model=field.comodel_name)
+            flushed = True
+            ids = RelatedModel.name_search(name=value, operator="=")
+        elif self._flush_import(model=field.comodel_name, name=value):
+            # a hit with a namesake pending in the batch: the pending one is
+            # a match too, and the caller must see both
             flushed = True
             ids = RelatedModel.name_search(name=value, operator="=")
         _debug.perf.count(
@@ -1091,8 +1106,10 @@ class IrFieldsConverter(models.AbstractModel):
     def _is_name_prefetchable(self, comodel: models.BaseModel) -> bool:
         # the batch below re-derives what name_search(name, operator="=")
         # matches, which is only the default _search_display_name's contract
+        cls = type(comodel)
         return (
-            type(comodel)._search_display_name is models.BaseModel._search_display_name
+            cls.name_search is models.BaseModel.name_search
+            and cls._search_display_name is models.BaseModel._search_display_name
         )
 
     @api.model

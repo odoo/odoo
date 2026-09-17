@@ -206,9 +206,11 @@ class LoadMixin(_ModelStubs):
 
         creatable_models = self._load_creatable_models(field_paths)
 
-        def flush(*, xml_id=None, model=None):
+        batch_tokens: dict[str, set] = defaultdict(set)
+
+        def flush(*, xml_id=None, model=None, name=None) -> bool:
             if not batch:
-                return
+                return False
 
             if xml_id and model:
                 raise ValueError(
@@ -216,9 +218,15 @@ class LoadMixin(_ModelStubs):
                 )
 
             if xml_id and xml_id not in batch_xml_ids:
-                return
+                return False
             if model and model not in creatable_models:
-                return
+                return False
+            if name is not None and name not in batch_tokens.get(model, ()):
+                # the batch holds no record this name could resolve to, so
+                # the reference is settled by storage alone and the batch
+                # stays whole; flushing here split an import into one create
+                # per distinct name
+                return False
 
             data_list = [
                 {"xml_id": xid, "values": vals, "info": info, "noupdate": noupdate}
@@ -226,7 +234,9 @@ class LoadMixin(_ModelStubs):
             ]
             batch.clear()
             batch_xml_ids.clear()
+            batch_tokens.clear()
             self._load_data_list(data_list, mode == "update", messages, ids)
+            return True
 
         flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(65536))
 
@@ -241,7 +251,7 @@ class LoadMixin(_ModelStubs):
             )
             converted = flush_recordset._convert_records(extracted, log=messages.append)
             info = self._collect_load_batch(
-                converted, current_module, batch, batch_xml_ids
+                converted, current_module, batch, batch_xml_ids, batch_tokens
             )
             flush()
             if any(message["type"] == "error" for message in messages):
@@ -307,9 +317,13 @@ class LoadMixin(_ModelStubs):
                 model = self.env[field.comodel_name]
         return messages
 
-    @staticmethod
     def _collect_load_batch(
-        converted, current_module: str, batch: list, batch_xml_ids: set
+        self,
+        converted,
+        current_module: str,
+        batch: list,
+        batch_xml_ids: set,
+        batch_tokens: dict[str, set],
     ) -> dict:
         info = {"rows": {"to": -1}}
         for dbid, xid, record, info in converted:
@@ -321,7 +335,32 @@ class LoadMixin(_ModelStubs):
             elif dbid:
                 record["id"] = dbid
             batch.append((xid, record, info))
+            self._collect_pending_tokens(record, batch_tokens)
         return info
+
+    def _collect_pending_tokens(self, vals: dict, tokens: dict[str, set]) -> None:
+        # every text a name reference could resolve to once this batch is
+        # created. A rec-name field is often computed (res.partner searches
+        # complete_name, which is not in vals), so every string value of the
+        # pending record counts, not only the searchable fields; a reference
+        # equal to a value that only exists after compute is the one shape
+        # this cannot see, and it costs a lost "multiple matches" warning,
+        # never a wrong link
+        for fname, value in vals.items():
+            field = self._fields.get(fname)
+            if field is None:
+                continue
+            if isinstance(value, str):
+                tokens[self._name].add(value)
+            elif field.is_x2many and isinstance(value, list):
+                comodel = self.env[field.comodel_name]
+                for command in value:
+                    if (
+                        isinstance(command, (list, tuple))
+                        and len(command) == 3
+                        and isinstance(command[2], dict)
+                    ):
+                        comodel._collect_pending_tokens(command[2], tokens)
 
     def _get_o2m_only_row_predicate(
         self, field_paths: FieldPaths

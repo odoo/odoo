@@ -607,16 +607,16 @@ class TestFieldConverters(TransactionCase):
         Partner = self.env["res.partner"]
         Partner.create([{"name": f"IFLD97 parent {i}"} for i in range(30)])
         self.env.flush_all()
-        PartnerClass = type(Partner)
+        converter_type = type(self.env["ir.fields.converter"])
         searches = []
-        original = PartnerClass.name_search
+        original = converter_type._get_ref_from_name
 
-        def spy(this, *args, **kwargs):
-            searches.append(kwargs.get("name"))
-            return original(this, *args, **kwargs)
+        def spy(this, field, value):
+            searches.append(value)
+            return original(this, field, value)
 
         rows = [[f"IFLD97 child {i}", f"IFLD97 parent {i}"] for i in range(30)]
-        with patch.object(PartnerClass, "name_search", spy):
+        with patch.object(converter_type, "_get_ref_from_name", spy):
             result = Partner.load(["name", "parent_id"], rows)
         self.assertFalse(result["messages"])
         self.assertEqual(
@@ -730,6 +730,20 @@ class TestFieldConverters(TransactionCase):
         )
         self.assertFalse(result["ids"])
         self.assertIn("res.lang", result["messages"][0]["message"])
+
+    def test_a_pending_namesake_still_yields_the_multiple_matches_warning(self):
+        Partner = self.env["res.partner"]
+        Partner.create({"name": "IFLD100 Twin"})
+        self.env.flush_all()
+        self.env.invalidate_all()
+        result = Partner.load(
+            ["name", "parent_id"],
+            [["IFLD100 Twin", ""], ["IFLD100 child", "IFLD100 Twin"]],
+        )
+        warnings = [m for m in result["messages"] if m["type"] == "warning"]
+        self.assertEqual(len(warnings), 1, "the row this import creates is a match too")
+        self.assertIn("2 matches", warnings[0]["message"])
+        self.assertEqual(len(result["ids"]), 2)
 
     def test_reference_miss_is_not_cached(self):
         converter = self.converter.with_context(
@@ -1335,6 +1349,32 @@ class TestFieldConverters(TransactionCase):
         ]
         converted, _w = self.converter._str_to_properties(self.flds["bool"], payload)
         self.assertEqual(converted[0]["value"], "a")
+
+    def test_property_choice_value_outranks_another_items_label(self):
+        payload = [
+            {
+                "name": "sel",
+                "type": "selection",
+                "string": "Sel",
+                "selection": [["pending", "Sent"], ["sent", "Delivered"]],
+                "value": "SENT",
+            }
+        ]
+        converted, _w = self.converter._str_to_properties(self.flds["bool"], payload)
+        self.assertEqual(converted[0]["value"], "sent")
+
+    def test_a_model_overriding_name_search_is_not_batched(self):
+        Country = self.env["res.country"]
+        self.assertFalse(self.converter._is_name_prefetchable(Country))
+        self.assertTrue(self.converter._is_name_prefetchable(self.env["res.partner"]))
+        mx = Country.search([("code", "=", "MX")], limit=1)
+        result = self.env["res.partner"].load(
+            ["name", "country_id"], [["IFLD99 a", "MX"], ["IFLD99 b", "MX"]]
+        )
+        self.assertFalse(result["messages"])
+        self.assertEqual(
+            self.env["res.partner"].browse(result["ids"]).mapped("country_id"), mx
+        )
 
     def test_a_property_error_names_the_property(self):
         payload = [{"name": "n", "type": "integer", "string": "Count", "value": "x"}]
