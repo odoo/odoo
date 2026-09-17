@@ -1836,10 +1836,18 @@ $-product-radius-map: (
         font-size: $font-size-sm;
     }
 
-    .o_wsale_address_fill {
-        .col-form-label:not(.label-optional)::after {
-            content: " *";
-            font-weight: normal;
+    #o_wsale_address_form {
+        &:is(.o_mark_none, .o_mark_optional) .col-form-label:not(.label-optional)::after {
+            content: none;
+        }
+
+        &:not(:is(.o_mark_none, .o_mark_optional)) .col-form-label:not(.label-optional),
+        &.o_mark_optional .col-form-label.label-optional {
+            &::after {
+                content: " " var(--form-mark);
+                color: var(--form-mark-color);
+                font-weight: normal;
+            }
         }
     }
 
