@@ -32,4 +32,15 @@
         </ul>
     </template>
 
+    <template id="event_booth_unbooked_template" technical_usage="mail_post_source">
+        <p>
+            Booth
+            <a href="#" t-att-data-oe-model="booth._name" t-att-data-oe-id="booth.id" t-out="booth.name"/>
+            has been unbooked by
+            <a href="#" t-att-data-oe-model="booth.env.user.partner_id._name"
+               t-att-data-oe-id="booth.env.user.partner_id.id"
+               t-out="booth.env.user.partner_id.name"/>
+        </p>
+    </template>
+
 </data></odoo>
