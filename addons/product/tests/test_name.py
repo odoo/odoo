@@ -81,3 +81,20 @@ class TestName(TransactionCase):
             ('display_name', '=', 'HOHO'),
         ])
         self.assertEqual(variant1, product_search)
+
+    def test_product_product_name_search_favorite_first(self):
+        # `is_favorite` was removed from product.product's `_order` for name_search
+        # performance reasons; name_search must still surface favorites first when
+        # called without a search term (e.g. opening a many2one dropdown).
+        Product = self.env['product.product']
+        favorite = Product.create({'name': 'ZZZFavTest Favorite'})
+        non_favorite = Product.create({'name': 'AAAFavTest NonFavorite'})
+        favorite.product_tmpl_id.is_favorite = True
+
+        domain = [('id', 'in', (favorite + non_favorite).ids)]
+        res = Product.name_search(name='', domain=domain, limit=1)
+        self.assertEqual(
+            [r[0] for r in res], [favorite.id],
+            "The favorite product should be suggested first even though it sorts "
+            "after the non-favorite one alphabetically.",
+        )
