@@ -234,6 +234,12 @@ class NameManager:
             .exists()
             .ids
         )
+        _debug.perf.count(
+            "actions_checked",
+            view=view.id,
+            actions=len(resolved),
+            existing=len(existing),
+        )
         for name, (action_id, node) in resolved.items():
             if action_id not in existing:
                 msg = _(

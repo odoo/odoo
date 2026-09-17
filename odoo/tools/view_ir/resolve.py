@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 from lxml import etree
 
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.xml import SKIPPED_ELEMENT_TYPES, apply_inheritance_specs, locate_node
 
 from .arch import from_arch, to_arch
@@ -19,6 +20,8 @@ POSITIONS: dict[str, Op] = {
     "attributes": "attributes",
 }
 REPLACE_MODES: dict[str, Op] = {"outer": "replace", "inner": "replace_inner"}
+
+_debug = DebugLog(__name__)
 
 ApplyXml = Callable[[etree._Element, etree._Element], etree._Element]
 
@@ -48,19 +51,34 @@ def apply_specs(
     out: list[Patch | etree._Element] = []
     for spec in _flatten(specs_tree):
         patch = _translate(work, spec, origin)
+        reason = "unnamed"  # debuglog
         if patch is not None:
             try:
                 apply_one(state, patch, work.ids())
-            except ValueError:
+            except ValueError as e:
                 # a change the merge refuses (a bad separator, say): the XML
                 # path applies the same spec and reports it in its own words
                 patch = None
+                reason = f"refused:{type(e).__name__}"  # debuglog
             else:
                 out.append(patch)
                 work.invalidate()
         if patch is None:
+            _debug.logic(
+                "apply_specs.xml_way",
+                origin=origin,
+                spec=spec.tag,
+                position=spec.get("position", "inside"),
+                reason=reason,
+            )
             work.apply_xml(spec, apply_xml, origin)
             out.append(spec)
+    _debug.pipeline(
+        "apply_specs",
+        origin=origin,
+        specs=len(out),
+        patches=sum(isinstance(item, Patch) for item in out),
+    )
     return out
 
 

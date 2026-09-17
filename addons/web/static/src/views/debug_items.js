@@ -50,6 +50,81 @@ export function getView({ component, env }) {
 
 debugRegistry.category("view").add("getView", /** @type {any} */ (getView));
 
+class ViewProvenanceDialog extends Component {
+    static template = "web.DebugMenu.ViewProvenanceDialog";
+    static components = { Dialog };
+    static props = {
+        viewId: { type: Number },
+        close: { type: Function },
+    };
+
+    setup() {
+        this.orm = useService("orm");
+        this.state = useState({ views: [] });
+        onWillStart(async () => {
+            const provenance = await this.orm.call("ir.ui.view", "get_provenance", [
+                [this.props.viewId],
+            ]);
+            this.state.views = this.groupByView(provenance);
+        });
+    }
+
+    /**
+     * The nodes each view put in the combined arch, the primary first.
+     * @param {Record<string, { view_id: number, xml_id: string | null, kind: string }>} provenance
+     */
+    groupByView(provenance) {
+        const byView = new Map();
+        for (const [nodeId, node] of Object.entries(provenance)) {
+            if (!byView.has(node.view_id)) {
+                byView.set(node.view_id, {
+                    viewId: node.view_id,
+                    xmlId: node.xml_id,
+                    nodes: [],
+                });
+            }
+            byView.get(node.view_id).nodes.push({ id: nodeId, kind: node.kind });
+        }
+        const views = [...byView.values()];
+        views.sort((a, b) =>
+            a.viewId === this.props.viewId
+                ? -1
+                : b.viewId === this.props.viewId
+                  ? 1
+                  : a.viewId - b.viewId,
+        );
+        for (const view of views) {
+            view.nodes.sort((a, b) => a.id.localeCompare(b.id));
+        }
+        return views;
+    }
+}
+
+/**
+ * Which view put each node of the combined arch where it is.
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object | null}
+ */
+export function viewProvenance({ component, env }) {
+    const { viewId } = component.env.config;
+    if (!viewId) {
+        return null;
+    }
+    return {
+        type: "item",
+        description: _t("View Provenance"),
+        callback: () => {
+            env.services.dialog.add(ViewProvenanceDialog, { viewId });
+        },
+        sequence: 275,
+        section: "ui",
+    };
+}
+
+debugRegistry
+    .category("view")
+    .add("viewProvenance", /** @type {any} */ (viewProvenance));
+
 /**
  * @param {{ accessRights: Object, component: Object, env: Object }} params
  * @returns {Object | null}

@@ -293,6 +293,58 @@ describe("DebugMenu", () => {
         expect(".modal-body").toHaveText(`<list><field name="name"/></list>`);
     });
 
+    test("view provenance: nodes grouped by the view that put them there", async () => {
+        serverState.debug = "1";
+
+        webModels.ResPartner._views["list,7"] = `<list><field name="name"/></list>`;
+        onRpc("ir.ui.view", "get_provenance", ({ args }) => {
+            expect.step("get_provenance");
+            expect(args[0]).toEqual([7]);
+            return {
+                list: {
+                    view_id: args[0][0],
+                    xml_id: "base.view_partner_list",
+                    kind: "list",
+                },
+                "field:name": {
+                    view_id: args[0][0],
+                    xml_id: "base.view_partner_list",
+                    kind: "field",
+                },
+                "field:email": {
+                    view_id: 999,
+                    xml_id: "mail.partner_list",
+                    kind: "field",
+                },
+            };
+        });
+
+        defineWebModels();
+
+        await mountWebClient();
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "res.partner",
+            type: "ir.actions.act_window",
+            views: [[7, "list"]],
+        });
+
+        await contains(".o_debug_manager button").click();
+        await contains(
+            ".dropdown-menu .dropdown-item:contains('View Provenance')",
+        ).click();
+        expect(".modal").toHaveCount(1);
+        expect(".o_debug_view_provenance tbody tr").toHaveCount(3);
+        expect(".o_debug_view_provenance tbody tr:first td:first").toHaveText(
+            "base.view_partner_list",
+        );
+        expect(".o_debug_view_provenance tbody tr:last td:first").toHaveText(
+            "mail.partner_list",
+        );
+        expect(".o_debug_view_provenance tbody tr:last code").toHaveText("field:email");
+        expect.verifySteps(["get_provenance"]);
+    });
+
     test("can edit a pivot view", async () => {
         serverState.debug = "1";
 

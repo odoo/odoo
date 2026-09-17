@@ -121,4 +121,29 @@
             </t>
         </Dialog>
     </t>
+
+    <t t-name="web.DebugMenu.ViewProvenanceDialog">
+        <Dialog title.translate="View Provenance">
+            <p t-if="!state.views.length">This view is combined the XML way and carries no provenance.</p>
+            <table t-else="" class="table table-sm o_debug_view_provenance">
+                <thead>
+                    <tr><th>View</th><th>Node</th><th>Kind</th></tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="state.views" t-as="view" t-key="view.viewId">
+                        <tr t-foreach="view.nodes" t-as="node" t-key="node.id">
+                            <td t-if="node_index === 0" t-att-rowspan="view.nodes.length">
+                                <t t-esc="view.xmlId or view.viewId"/>
+                            </td>
+                            <td><code t-esc="node.id"/></td>
+                            <td t-esc="node.kind"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>
+            </t>
+        </Dialog>
+    </t>
 </templates>

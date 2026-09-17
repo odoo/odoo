@@ -155,6 +155,7 @@ def get_view_arch_from_file(filepath: str, xmlid: str) -> str | None:
 
 @functools.lru_cache(maxsize=256)
 def _parse_cached(filepath: str, _mtime_ns: int, _size: int) -> etree._ElementTree:
+    _debug.perf.count("view_file_parsed", path=filepath, size=_size)
     return etree.parse(filepath)
 
 
@@ -1102,7 +1103,9 @@ class IrUiView(models.Model):
 
         if revalidate:
             res = super().write(vals)
-            if not self.env.context.get("ir_ui_view_validate_later"):
+            if self.env.context.get("ir_ui_view_validate_later"):
+                _debug.logic("write.validation_deferred", views=self.ids)
+            else:
                 self._check_xml()
             return res
         if not recombines:
