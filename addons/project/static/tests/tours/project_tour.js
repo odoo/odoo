@@ -31,17 +31,17 @@ registry.category("web_tour.tours").add("project_test_tour", {
             run: "click .modal:visible .btn.btn-primary",
         },
         {
+            // a new project is born with a "New" step, so the board already has
+            // a column and the column quick create starts folded
+            trigger: ".o_kanban_project_tasks .o_column_quick_create",
+        },
+        {
+            isActive: [
+                ".o_kanban_project_tasks .o_column_quick_create.o_quick_create_folded",
+            ],
             trigger:
-                ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-            run: "edit New",
-        },
-        {
-            isActive: ["auto"],
-            trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+                ".o_kanban_project_tasks .o_column_quick_create .o_quick_create_button",
             run: "click",
-        },
-        {
-            trigger: ".o_kanban_group",
         },
         {
             trigger:
