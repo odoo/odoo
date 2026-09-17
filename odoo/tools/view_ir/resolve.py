@@ -10,7 +10,7 @@ from odoo.libs.xml import SKIPPED_ELEMENT_TYPES, apply_inheritance_specs, locate
 
 from .arch import from_arch, to_arch
 from .identity import identify
-from .node import Node
+from .node import COMMENT, Node
 from .patch import Applied, AttrChange, Move, Op, Patch, apply_one
 
 POSITIONS: dict[str, Op] = {
@@ -255,21 +255,25 @@ def _translate(
                 )
             )
         return Patch(op, target_id, attributes=tuple(changes), origin=origin)
-    text = spec.text if spec.text and spec.text.strip() else None
-    # an outer replace puts its content in the target's place and carries no
-    # text there; an inner one puts the text in the emptied node
-    if text and op == "replace":
-        return None
+    text = None if op == "replace" else spec.text
     content: list[Node | Move] = []
     for child in spec:
         if not isinstance(child.tag, str):
+            if isinstance(child, etree._Comment):
+                if op == "replace" and not content:
+                    return None
+                content.append(
+                    Node(
+                        COMMENT, text=child.text, tail=child.tail, line=child.sourceline
+                    )
+                )
             continue
         if child.get("position") == "move":
             moved = work.locate(child)
             if moved is None or len(child):
                 return None
             assert moved.id is not None
-            content.append(Move(moved.id))
+            content.append(Move(moved.id, tail=child.tail))
             continue
         node = _content_node(child, op)
         if node is None:

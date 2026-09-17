@@ -25,9 +25,8 @@ class PatchError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class Move:
-    """A node of the base, addressed by id, placed where this item sits."""
-
     target: str
+    tail: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,11 +138,15 @@ def apply_one(result: Applied, patch: Patch, ids: dict[str, Node]) -> None:
         _insert(target, 0, content, patch.text)
     elif target is result.root:
         result.root = content[0]
+        # the XML combine carries the template name over
+        if "t-name" in target.attrs and "t-name" not in result.root.attrs:
+            result.root.attrs["t-name"] = target.attrs["t-name"]
     else:
         parent, index = _parent_of(result.root, target)
         if patch.op == "replace":
-            del parent.children[index]
-            _insert(parent, index, content, None)
+            # as the XML combine: the content takes the node's place, its
+            # tail goes with it, the text before is left alone
+            parent.children[index : index + 1] = content
         elif patch.op == "before":
             _insert(parent, index, content, patch.text)
         else:
@@ -171,15 +174,17 @@ def _insert(parent: Node, index: int, content: list[Node], text: str | None) -> 
     stripped = before.rstrip()
     indentation = _INDENTATION.search(before)
     trailing = indentation.group(0) if indentation else ""
-    joined = (stripped + (text or "")) if (text or trailing) else before
+    joined = (stripped + (text or "")) if (text is not None or trailing) else before
     if index:
         parent.children[index - 1].tail = joined or None
     else:
         parent.text = joined or None
     parent.children[index:index] = content
-    if content and trailing:
+    if content:
+        # the last node's own trailing whitespace goes, the indentation the
+        # insertion point had takes its place -- even when there was none
         last = content[-1]
-        last.tail = (last.tail or "").rstrip() + trailing
+        last.tail = ((last.tail or "").rstrip() + trailing) or None
 
 
 def _materialise(
@@ -195,7 +200,12 @@ def _materialise(
                     f"nothing to move at {item.target!r}"
                 )
             parent, index = _parent_of(root, moved)
+            # as the XML combine's remove_element: what followed the node
+            # stays where it was, the node carries the placeholder's tail
+            _leave_tail(parent, index)
             del parent.children[index]
+            # an outer replace's extract hands the node over bare
+            moved.tail = None if patch.op == "replace" else item.tail
             content.append(moved)
         else:
             # the patch's own nodes carry its origin; a moved node keeps its
@@ -203,6 +213,17 @@ def _materialise(
             _stamp((item,), patch.origin)
             content.append(item)
     return [_place_target(node, patch, target) for node in content]
+
+
+def _leave_tail(parent: Node, index: int) -> None:
+    tail = parent.children[index].tail
+    if not tail:
+        return
+    if index:
+        previous = parent.children[index - 1]
+        previous.tail = (previous.tail or "") + tail
+    else:
+        parent.text = (parent.text or "") + tail
 
 
 def _place_target(node: Node, patch: Patch, target: Node) -> Node:

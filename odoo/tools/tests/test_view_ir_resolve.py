@@ -5,7 +5,7 @@ from lxml import etree
 
 from odoo.libs.xml import apply_inheritance_specs
 from odoo.tools import view_ir
-from odoo.tools.view_ir.patch import Applied, AttrChange, Move, Patch
+from odoo.tools.view_ir.patch import Applied, AttrChange, Patch
 from odoo.tools.view_ir.resolve import apply_specs
 
 from .test_view_ir_corpus import iter_view_records
@@ -112,7 +112,7 @@ class TestTranslateSpecs(unittest.TestCase):
                 AttrChange("string", value="Date"),
             ),
         )
-        self.assertEqual(translated[5].content, (Move("field:ref"),))
+        self.assertEqual([item.target for item in translated[5].content], ["field:ref"])
         self.assertTrue(all(p.origin == "mod" for p in translated))
         self.assertEqual(canon(view_ir.to_arch(applied.root)), canon(xml_result))
         ids = view_ir.identify(applied.root)
@@ -248,14 +248,17 @@ class TestTranslateSpecs(unittest.TestCase):
 
 
 class TestEveryShapeBothWays(unittest.TestCase):
-    """Every position over every content shape on a target with text, a tail
-    and siblings: what the patches yield is what the XML combine yields, or
-    the spec is one the ids leave to the XML way -- never a third thing."""
+    """Every position over every content shape on an indented target with
+    text, a tail and siblings: what the patches yield is, byte for byte,
+    what the XML combine yields -- whitespace is content in a template -- or
+    the spec is one the ids leave to the XML way; never a third thing."""
 
     BASE = (
-        "<form>"
-        '<group name="g">before<field name="a">Old <i>text</i> tail</field>mid'
-        '<field name="b"/>after</group>'
+        "<form>\n"
+        '  <group name="g">before\n'
+        '    <field name="a">Old <i>text</i> tail</field>mid\n'
+        '    <field name="b"/>after\n'
+        "  </group>\n"
         "</form>"
     )
     CONTENTS = {
@@ -263,8 +266,12 @@ class TestEveryShapeBothWays(unittest.TestCase):
         "text": "Just text",
         "mixed": "lead <b>New</b> trail",
         "two": "<b>One</b><u>Two</u>",
+        "pretty": "\n      <b>New</b>\n      Custo\n    ",
+        "whitespace_only": "\n    ",
         "dollar_whole": "<b>$0</b>",
         "dollar_text": "see $0 here",
+        "comment": "<!-- why --><b>New</b>\n      ",
+        "move": '<b>New</b><field name="b" position="move"/>\n    ',
         "empty": "",
     }
     POSITIONS = ("before", "after", "inside", "replace", "replace_inner")
@@ -283,8 +290,8 @@ class TestEveryShapeBothWays(unittest.TestCase):
                         self.BASE, spec_xml
                     )
                     self.assertEqual(
-                        canon(view_ir.to_arch(applied.root)),
-                        canon(xml_result),
+                        view_ir.to_string(applied.root),
+                        etree.tostring(xml_result, encoding="unicode"),
                         f"{position}/{shape}: fallbacks={len(fallbacks)}",
                     )
 
@@ -342,7 +349,9 @@ class TestTranslateCorpus(unittest.TestCase):
                 fallback += 1
                 continue
             translated += 1
-            if canon(view_ir.to_arch(applied.root)) == canon(xml_result):
+            if view_ir.to_string(applied.root) == etree.tostring(
+                xml_result, encoding="unicode"
+            ):
                 matched += 1
             else:
                 mismatched += 1
