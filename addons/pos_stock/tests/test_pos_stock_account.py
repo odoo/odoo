@@ -1,14 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 import odoo
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
-class TestPoSStock(TestPoSCommon):
+class TestPoSStock(TestPosStockCommon):
     """ Tests for anglo saxon accounting scenario.
     """
     _test_user_groups = None  # FIXME list needed groups
@@ -38,9 +35,10 @@ class TestPoSStock(TestPoSCommon):
         self.product2.write({'standard_price': 13.0})
         self.adjust_inventory([self.product1, self.product2, self.product3], [25, 25, 25])
 
-        self.output_account = self.categ_anglo.property_stock_account_output_categ_id
         self.expense_account = self.categ_anglo.property_account_expense_categ_id
         self.valuation_account = self.categ_anglo.property_stock_valuation_account_id
+        # the session closing entry is booked on the config's default partner
+        self.closing_partner = self.config.default_partner_id
 
     def test_01_orders_no_invoiced(self):
         """
@@ -69,7 +67,7 @@ class TestPoSStock(TestPoSCommon):
         | account             | balance |
         +---------------------+---------+
         | sale_account        | -1070.0 |
-        | pos_receivable-cash |  1070.0 |
+        | pos_receivable      |  1070.0 |
         | expense_account     |   327.0 |
         | output_account      |  -327.0 |
         +---------------------+---------+
@@ -107,17 +105,26 @@ class TestPoSStock(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 1070.0, 'reconciled': False},
-                        {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 327, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 1070.0, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 327, 'reconciled': True},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': self.closing_partner.id, 'debit': 1070.0, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.sales_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 1070.0, 'reconciled': False},
+                        # one expense/valuation pair per delivered move: 50 + 100 + 56 + 43 + 78 = 327
+                        {'account_id': self.expense_account.id, 'partner_id': self.closing_partner.id, 'debit': 50.0, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.valuation_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 50.0, 'reconciled': False},
+                        {'account_id': self.expense_account.id, 'partner_id': self.closing_partner.id, 'debit': 100.0, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.valuation_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 100.0, 'reconciled': False},
+                        {'account_id': self.expense_account.id, 'partner_id': self.closing_partner.id, 'debit': 56.0, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.valuation_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 56.0, 'reconciled': False},
+                        {'account_id': self.expense_account.id, 'partner_id': self.closing_partner.id, 'debit': 43.0, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.valuation_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 43.0, 'reconciled': False},
+                        {'account_id': self.expense_account.id, 'partner_id': self.closing_partner.id, 'debit': 78.0, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.valuation_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 78.0, 'reconciled': False},
                     ],
                 },
                 'cash_statement': [
                     ((1070.0, ), {
                         'line_ids': [
-                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 1070.0, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 1070.0, 'reconciled': True},
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.closing_partner.id, 'debit': 1070.0, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.pos_receivable_account.id, 'partner_id': self.closing_partner.id, 'debit': 0, 'credit': 1070.0, 'reconciled': True},
                         ]
                     }),
                 ],
@@ -191,7 +198,7 @@ class TestPoSStock(TestPoSCommon):
                         {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 206, 'credit': 0, 'reconciled': False},
                         {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 1010.0, 'credit': 0, 'reconciled': True},
                         {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 360, 'reconciled': True},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 206, 'reconciled': True},
+                        {'account_id': self.valuation_account.id, 'partner_id': False, 'debit': 0, 'credit': 206, 'reconciled': False},
                     ],
                 },
                 'cash_statement': [
