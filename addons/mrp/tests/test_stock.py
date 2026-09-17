@@ -284,11 +284,16 @@ class TestWarehouseMrp(common.TestMrpCommon):
         change_qty.change_prod_qty()
         self.assertEqual(len(mo_laptop.move_finished_ids.move_line_ids), 2)
         mo_laptop.action_generate_serial()
+        self.env['change.production.qty'].create({
+            'mo_id': mo_laptop.id,
+            'product_qty': 4,
+        }).change_prod_qty()
+        self.assertEqual(len(mo_laptop.move_finished_ids.move_line_ids), 3)
         mo_laptop.button_mark_done()
         self.assertEqual(mo_laptop.state, 'done')
         move_lines = mo_laptop.move_finished_ids.move_line_ids
         self.assertTrue(all(ml.lot_id == mo_laptop.lot_producing_ids for ml in move_lines))
-        self.assertEqual(sum(move_lines.mapped('quantity')), 3)
+        self.assertEqual(sum(move_lines.mapped('quantity')), 4)
 
     def test_backorder_unpacking(self):
         """ Test that movement of pack in backorder is correctly handled. """
