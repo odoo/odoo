@@ -54,7 +54,6 @@ class Resolution:
     )
     bundle_assets: dict[str, list] = field(default_factory=dict)
     loaded_bundles: set[str] = field(default_factory=set)
-    symlink_memo: dict[tuple[str, str], bool] = field(default_factory=dict)
     resolved_paths: dict[str, tuple[ResolvedPath, ...]] = field(default_factory=dict)
     _manifests: dict[str, Manifest | None] = field(default_factory=dict)
     _addon_roots: dict[str, tuple[str, str]] = field(default_factory=dict)
@@ -290,6 +289,19 @@ class IrAsset(models.Model):
                 self._prepare_bundle_directives, resolution=resolution
             ),
         )
+
+    # One glob per pattern per process: the bundles of one page resolve the
+    # same 500-odd patterns (`web/static/src/**/*` for each of them), and the
+    # mtimes this returns are already frozen by the cache on _get_asset_paths.
+    @api.model
+    @tools.conditional(
+        _CACHE_ASSET_LOOKUPS,
+        tools.ormcache("full_path", "static_dir", cache="assets"),
+    )
+    def _get_static_files_cached(
+        self, full_path: str, static_dir: str
+    ) -> tuple[tuple[str, float], ...]:
+        return tuple(_get_static_files(full_path, static_dir))
 
     @api.model
     @tools.conditional(_CACHE_ASSET_LOOKUPS, tools.ormcache("addons"))
@@ -532,8 +544,8 @@ class IrAsset(models.Model):
             addon_root, static_dir = resolution.get_addon_roots(addon, addon_manifest)
             full_path = os.path.normpath("/".join([addon_root, *path_parts[1:]]))
             if full_path == static_dir or full_path.startswith(static_dir + os.sep):
-                paths_with_timestamps = _get_static_files(
-                    full_path, static_dir, resolution.symlink_memo
+                paths_with_timestamps = self._get_static_files_cached(
+                    full_path, static_dir
                 )
                 root_len = len(addon_root) + 1
                 paths = tuple(

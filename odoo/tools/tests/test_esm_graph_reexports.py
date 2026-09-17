@@ -63,3 +63,27 @@ class TestNamedReExportsAreSeen(unittest.TestCase):
             {spec for _path, spec, _resolved in escapes},
             "the escape this check exists to find",
         )
+
+
+class TestTransitiveImportGuard(unittest.TestCase):
+    def _specs(self, source):
+        return {
+            m.group("spec") or m.group("side")
+            for m in _TRANSITIVE_IMPORT_RE.finditer(source)
+        }
+
+    def test_a_keyword_inside_a_longer_name_is_not_a_statement(self):
+        source = (
+            'reimport { a } from "not/a/statement";\n'
+            'obj.import { b } from "not/a/member";\n'
+            '$export { c } from "not/a/dollar";\n'
+            'foo.import "not/a/side";\n'
+            'import { d } from "real";\n'
+            'export * from "real/star";\n'
+            'import "real/side";\n'
+        )
+        self.assertEqual(self._specs(source), {"real", "real/star", "real/side"})
+
+    def test_a_statement_at_the_start_of_the_source_is_seen(self):
+        self.assertEqual(self._specs('import "first";'), {"first"})
+        self.assertEqual(self._specs('export {a} from "first";'), {"first"})

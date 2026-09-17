@@ -145,12 +145,16 @@ _IMPORT_ANY_RE = re.compile(
     r"""|(?<![\w$.])import\s*["'](?P<side>[^"'\n]+)["']"""
 )
 
+# The keyword comes first and the "not part of a longer name" guard follows it
+# as fixed-width lookbehinds: a pattern that opens with a lookbehind cannot use
+# re's literal-prefix skip and is evaluated at every character (2.6x slower on
+# the 21 MB addons corpus, identical matches).
 _TRANSITIVE_IMPORT_RE = re.compile(
-    r"(?<![\w$.])(?:import|export)\s*"
+    r"(?:import|export)(?<![\w$.]import)(?<![\w$.]export)\s*"
     r"[\w$*{},\s]{0,2000}?"
     r"\bfrom\s*"
     r"""["'](?P<spec>[^"'\n]+)["']"""
-    r"""|(?<![\w$.])import\s*["'](?P<side>[^"'\n]+)["']"""
+    r"""|import(?<![\w$.]import)\s*["'](?P<side>[^"'\n]+)["']"""
 )
 
 

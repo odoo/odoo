@@ -130,6 +130,32 @@ class TestResolvedPathsAreShared(TransactionCase):
             )
         )
 
+    def test_a_pattern_is_globbed_once_per_process_across_bundles(self):
+        from odoo.addons.base.models import ir_asset as ir_asset_module
+
+        IrAsset = self.env["ir.asset"]
+        if not ir_asset_module._CACHE_ASSET_LOOKUPS:
+            self.skipTest("dev_mode=xml disables the asset lookup caches")
+        self.registry.clear_cache("assets")
+        calls = []
+        real = ir_asset_module._get_static_files
+
+        def counting(pattern, static_dir, symlink_memo=None):
+            calls.append(pattern)
+            return real(pattern, static_dir, symlink_memo)
+
+        with patch.object(ir_asset_module, "_get_static_files", counting):
+            IrAsset._get_asset_paths.__wrapped__(IrAsset, self.BUNDLE, {})
+            first = len(calls)
+            IrAsset._get_asset_paths.__wrapped__(IrAsset, "web.assets_common", {})
+            IrAsset._get_asset_paths.__wrapped__(IrAsset, self.BUNDLE, {})
+        self.assertTrue(first, "the probe bundle must glob something")
+        self.assertEqual(
+            len(set(calls)),
+            len(calls),
+            "a pattern globbed once must be served from the assets cache after",
+        )
+
     def test_the_two_resolutions_are_still_distinct_objects(self):
         IrAsset = self.env["ir.asset"]
         first = IrAsset._get_asset_paths.__wrapped__(IrAsset, self.BUNDLE, {})
