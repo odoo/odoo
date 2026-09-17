@@ -80,6 +80,21 @@ def test_a_hard_rotation_revokes_the_family_for_every_connection(stores):
     assert not second.get(origin.sid).is_new
 
 
+def test_a_rolled_back_first_transaction_does_not_brick_the_schema(stores):
+    first, _ = stores
+    fresh = _store()
+    with first._cursor() as cr:
+        cr.execute("DROP TABLE IF EXISTS http_session")
+    with pytest.raises(RuntimeError, match="probe"):
+        with fresh._cursor() as cr:
+            cr.execute("SELECT count(*) FROM http_session")
+            raise RuntimeError("probe: force the schema transaction to roll back")
+    assert not fresh._schema_ready, "a rolled-back DDL must not be remembered"
+    with fresh._cursor() as cr:
+        cr.execute("SELECT count(*) FROM http_session")
+        assert cr.fetchone()[0] == 0, "the schema was recreated on retry"
+
+
 def test_vacuum_and_missing_identifiers_over_the_table(stores):
     first, _ = stores
     kept = _saved(first)

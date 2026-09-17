@@ -87,7 +87,7 @@ class SessionStore(ABC):
 
     # -- keys ----------------------------------------------------------------
 
-    def generate_key(self, salt: bytes | None = None) -> str:
+    def generate_key(self) -> str:
         return base64.urlsafe_b64encode(os.urandom(63)).decode("ascii")
 
     def is_valid_key(self, key: str) -> bool:
@@ -659,13 +659,12 @@ class PostgresSessionStore(SessionStore):
         self._local = threading.local()
         self._schema_ready = False
 
-    def _ensure_schema(self, cr: Any) -> None:
+    def _ensure_schema(self, cr: Any) -> bool:
         if self._schema_ready:
-            return
+            return False
         cr.execute(_SESSION_TABLE_DDL)
         cr.execute(_SESSION_INDEX_DDL)
-        self._schema_ready = True
-        _debug.lifecycle("http.session.pg_schema_ready", db=self.dbname)
+        return True
 
     @contextlib.contextmanager
     def _cursor(self) -> Iterator[Any]:
@@ -682,9 +681,15 @@ class PostgresSessionStore(SessionStore):
             # lock is this store's serialization; READ COMMITTED lets the
             # locked section see what the previous holder wrote.
             cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
-            self._ensure_schema(cr)
+            schema_created = self._ensure_schema(cr)
             yield cr
             cr.commit()
+            if schema_created:
+                # Only remember the schema once its DDL is committed: a
+                # rollback of this first transaction undoes CREATE TABLE, and
+                # a flag set before the commit would suppress every retry.
+                self._schema_ready = True
+                _debug.lifecycle("http.session.pg_schema_ready", db=self.dbname)
         except BaseException:
             cr.rollback()
             raise
@@ -763,6 +768,22 @@ class PostgresSessionStore(SessionStore):
         with self._cursor() as cr:
             cr.execute("SELECT sid FROM http_session WHERE family = %s", (identifier,))
             return [row[0] for row in cr.fetchall()]
+
+    def get_missing_session_identifiers(self, identifiers: Iterable[str]) -> set[str]:
+        # One query instead of the base class's transaction per identifier.
+        identifiers = set(identifiers)
+        asked = len(identifiers)  # debuglog
+        if identifiers:
+            with self._cursor() as cr:
+                cr.execute(
+                    "SELECT DISTINCT family FROM http_session WHERE family = ANY(%s)",
+                    (list(identifiers),),
+                )
+                identifiers.difference_update(row[0] for row in cr.fetchall())
+        _debug.pipeline(
+            "http.session.missing_identifiers", asked=asked, missing=len(identifiers)
+        )
+        return identifiers
 
     def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
         threshold = time.time() - max_lifetime
