@@ -26,6 +26,9 @@ from .ir_model_common import (
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
+MANUAL_CLASS_FIELDS = ("name", "order", "info", "abstract", "transient", "fold_name")
+MANUAL_CLASS_MUTABLE_FIELDS = ("name", "order", "info", "fold_name")
+
 
 class Base(models.AbstractModel):
     _name = "base"
@@ -340,7 +343,6 @@ class IrModel(models.Model):
                     model.model,
                 )
 
-    @api.ondelete(at_uninstall=False)
     def _unlink_except_module_data(self) -> None:
         for model in self:
             if model.state != "manual":
@@ -377,14 +379,11 @@ class IrModel(models.Model):
             .with_context(active_test=False)
             .search([("model_id", "in", self.ids)])
         )
-        if crons:
-            crons.unlink()
-
+        crons.unlink()
         model_data = self.env["ir.model.data"].search(
             [("model", "in", self.mapped("model"))]
         )
-        if model_data:
-            model_data.unlink()
+        model_data.unlink()
         _debug.pipeline("unlink_cascade", crons=len(crons), xmlids=len(model_data))
 
         self.field_id._drop_m2m_tables()
@@ -417,26 +416,37 @@ class IrModel(models.Model):
                     )
                 )
         if "field_id" in vals:
-            vals = dict(vals, field_id=[op for op in vals["field_id"] if op[0] != 4])
-            _debug.logic("write.field_links_dropped", commands=len(vals["field_id"]))
+            commands = [op for op in vals["field_id"] if op[0] != 4]
+            if len(commands) != len(vals["field_id"]):
+                _debug.logic(
+                    "write.field_links_dropped",
+                    dropped=len(vals["field_id"]) - len(commands),
+                )
+            vals = dict(vals, field_id=commands)
         if _debug.lifecycle.enabled:
             _debug.lifecycle("write", models=self.mapped("model"), fields=list(vals))
+        before = self._manual_class_source()
         res = super().write(vals)
-        if "order" in vals or "fold_name" in vals:
+        if before != self._manual_class_source():
             self.env.flush_all()
             with _debug.perf("registry_setup_after_write", cr=self.env.cr):
                 self.pool.setup_models(self.env.cr, [])
         return res
 
+    def _manual_class_source(self) -> list[tuple[Any, ...]]:
+        manual = self.filtered(lambda rec: rec.state == "manual")
+        if not manual:
+            return []
+        manual = manual.with_context(lang="en_US")
+        return [
+            tuple(rec[fname] for fname in MANUAL_CLASS_MUTABLE_FIELDS) for rec in manual
+        ]
+
     @api.model_create_multi
     @override
     def create(self, vals_list: list[ValuesType]) -> Self:
         res = super().create(vals_list)
-        manual_models = [
-            vals["model"]
-            for vals in vals_list
-            if vals.get("state", "manual") == "manual"
-        ]
+        manual_models = [rec.model for rec in res if rec.state == "manual"]
         _debug.lifecycle("create", count=len(res), manual=manual_models)
         if manual_models:
             with _debug.perf("reload_schema", cr=self.env.cr, models=manual_models):
@@ -479,12 +489,13 @@ class IrModel(models.Model):
     def _prewarm_ids(self, model_names: list[str]) -> list[int]:
         if not model_names:
             return []
-        add_value = self._get_id.__cache__.add_value
+        cache = self._get_id.__cache__
+        generation = cache.get_cache_generation(self)
         model_ids = []
         for name, id_ in self.env.execute_query(
             SQL("SELECT model, id FROM ir_model WHERE model = ANY(%s)", model_names)
         ):
-            add_value(self, name, cache_value=id_)
+            cache.add_value(self, name, cache_value=id_, generation=generation)
             model_ids.append(id_)
         _debug.perf.count(
             "prewarm_ids", requested=len(model_names), found=len(model_ids)
@@ -505,7 +516,7 @@ class IrModel(models.Model):
         rows = [
             self._prepare_model_vals(self.env[model_name]) for model_name in model_names
         ]
-        cols = list(unique(["model"] + list(rows[0])))
+        cols = list(rows[0])
         expected = [tuple(row[col] for col in cols) for row in rows]
 
         model_ids = {}
@@ -550,7 +561,15 @@ class IrModel(models.Model):
     @api.model
     def _get_manual_model_data(self) -> list[dict[str, Any]]:
         self.env.cr.execute(
-            "SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'",
+            SQL(
+                "SELECT %s FROM ir_model WHERE state = 'manual'",
+                SQL(", ").join(
+                    SQL("name->>'en_US' AS name")
+                    if col == "name"
+                    else SQL.identifier(col)
+                    for col in ("id", "model", *MANUAL_CLASS_FIELDS)
+                ),
+            ),
             prepare=False,
         )
         manual_models = self.env.cr.dictfetchall()

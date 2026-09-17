@@ -395,6 +395,51 @@ class TestIrModelEdition(TransactionCase):
             default_ttype="char",
         ).name_create("field_name")
 
+    def test_create_without_a_model_name_uses_the_default(self):
+        model = self.env["ir.model"].create({"name": "Default name"})
+        self.assertEqual(model.model, "x_")
+        self.assertIn("x_", self.env.registry)
+
+    def test_manual_model_rename_reaches_the_registry(self):
+        model = self.env["ir.model"].create(
+            {"name": "Before", "model": "x_renamed", "info": "old doc"}
+        )
+        self.assertEqual(self.env.registry["x_renamed"]._description, "Before")
+        model.write({"name": "After", "info": "new doc"})
+        self.assertEqual(self.env.registry["x_renamed"]._description, "After")
+        self.assertEqual(
+            self.env["ir.model"]._prepare_model_vals(self.env["x_renamed"])["info"],
+            "new doc",
+        )
+
+    def test_base_model_order_write_skips_registry_setup(self):
+        model = self.env["ir.model"]._get("res.country")
+        with patch.object(type(self.env.registry), "setup_models") as setup:
+            model.write({"order": model.order})
+        setup.assert_not_called()
+
+    def test_manual_model_write_that_changes_nothing_skips_registry_setup(self):
+        self.env["res.lang"]._activate_lang("fr_FR")
+        model = self.env["ir.model"].create({"name": "Same", "model": "x_same"})
+        with patch.object(type(self.env.registry), "setup_models") as setup:
+            model.write({"name": "Same", "order": "id"})
+            model.with_context(lang="fr_FR").write({"name": "Pareil"})
+        setup.assert_not_called()
+        self.assertEqual(self.env.registry["x_same"]._description, "Same")
+
+    def test_manual_model_data_is_the_class_source(self):
+        self.env["ir.model"].create({"name": "Rows", "model": "x_rows"})
+        self.env.flush_all()
+        (row,) = [
+            r
+            for r in self.env["ir.model"]._get_manual_model_data()
+            if r["model"] == "x_rows"
+        ]
+        self.assertEqual(row["name"], "Rows")
+        attrs = self.env["ir.model"]._prepare_class_attrs(row)
+        self.assertEqual(attrs["_description"], "Rows")
+        self.assertEqual(attrs["_order"], "id")
+
     def test_reflect_models_empty_no_raise(self):
         self.assertIsNone(self.env["ir.model"]._reflect_models([]))
 
