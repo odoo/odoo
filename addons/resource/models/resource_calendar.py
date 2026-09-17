@@ -532,8 +532,13 @@ class ResourceCalendar(models.Model):
             leave_date_from = leave.date_from
             leave_date_to = leave.date_to
             for resource in resources_list:
-                if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
+                if leave_resource.id not in [False, resource.id]:
                     continue
+                if not leave_resource and resource:
+                    if resource.calendar_id and leave.calendar_id and resource.calendar_id != leave.calendar_id:
+                        continue
+                    if resource.company_id and leave_company and resource.company_id != leave_company:
+                        continue
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in tz_dates:
                     start = tz_dates[tz, start_dt]
