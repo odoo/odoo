@@ -213,6 +213,12 @@ def new_test_user(env, login="", groups="base.group_user", context=None, **kwarg
             create_values["email"] = f"{login[0]}.{login[0]}@example.com"
     if "company_id" in create_values and "company_ids" not in create_values:
         create_values["company_ids"] = [(4, create_values["company_id"])]
+    # the user reads in the language and dates in the zone of the environment the
+    # test runs in, not in whatever ir.default an installed module gives new partners
+    create_values.setdefault(
+        "lang", context.get("lang") or env.context.get("lang") or "en_US"
+    )
+    create_values.setdefault("tz", context.get("tz") or env.context.get("tz") or False)
 
     with _debug.perf(
         "test.user.create",
