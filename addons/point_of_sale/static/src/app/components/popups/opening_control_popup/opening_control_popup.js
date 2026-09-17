@@ -6,7 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
-import { RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 class CustomDialog extends Dialog {
     onEscape() {}
@@ -37,15 +38,25 @@ export class OpeningControlPopup extends Component {
             .length;
     }
     async confirm() {
+        // queue only when known offline, so the reconnect loop is sure to replay it
+        const queue = this.pos.data.network.offline;
         try {
             await this.pos.data.call(
                 "pos.session",
                 "set_opening_control",
                 [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
                 {},
-                true
+                queue
             );
         } catch (error) {
+            if (error instanceof ConnectionLostError) {
+                this.pos.data.checkConnectivity();
+                this.dialog.add(AlertDialog, {
+                    title: _t("Connection Lost"),
+                    body: _t("The register cannot be opened while offline. Please try again."),
+                });
+                return;
+            }
             if (
                 error instanceof RPCError &&
                 error.data.name === "odoo.exceptions.MissingError" &&
