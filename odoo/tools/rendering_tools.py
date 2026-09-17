@@ -10,6 +10,7 @@ from lxml import etree, html
 from markupsafe import Markup, escape
 
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.text import VOID_ELEMENTS
 from odoo.tools import safe_eval
 
 _debug = DebugLog(__name__)
@@ -124,7 +125,7 @@ class QWebErrorInfo:
         self,
         error: str,
         ref_name: str | int | None,
-        ref: int | None,
+        ref: str | int | None,
         path: str | None,
         element: str | None,
         source: list[tuple[int | str, str, str]],
@@ -169,25 +170,6 @@ class StaticRenderUnsupported(Exception):
     pass
 
 
-VOID_HTML_ELEMENTS = frozenset(
-    {
-        "area",
-        "base",
-        "br",
-        "col",
-        "embed",
-        "hr",
-        "img",
-        "input",
-        "link",
-        "meta",
-        "param",
-        "source",
-        "track",
-        "wbr",
-    }
-)
-
 HOLE_OPEN, HOLE_CLOSE = "\ue000", "\ue001"
 HOLE_RE = re.compile(f"{HOLE_OPEN}(\\d+){HOLE_CLOSE}")
 
@@ -202,7 +184,7 @@ def serialize_static_tree(tree: etree._Element) -> Markup:
             isinstance(element.tag, str)
             and element.text is None
             and len(element) == 0
-            and element.tag.lower() not in VOID_HTML_ELEMENTS
+            and element.tag.lower() not in VOID_ELEMENTS
         ):
             element.text = ""
     body = html.tostring(tree, encoding="unicode", method="xml")
