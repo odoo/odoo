@@ -37,6 +37,18 @@
                                 <field name="company_id" groups="!base.group_multi_company" invisible="1" />
                             </group>
                         </group>
+                        <group>
+                            <group name="geolocation" string="Geolocation">
+                                <field name="latitude" class="oe_inline"/>
+                                <field name="longitude" class="oe_inline"/>
+                                <button
+                                    name="open_location_map"
+                                    type="object"
+                                    class="btn btn-link"
+                                    icon="east"
+                                    string="Choose in maps"/>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
