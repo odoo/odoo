@@ -48,7 +48,7 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
             }
         }
 
-        if (platform && videoId) {
+        if (platform && videoId !== undefined) {
             const platFormClass = PLATFORMS[platform];
             return platFormClass.getEmbedUrl(videoId, params);
         }
