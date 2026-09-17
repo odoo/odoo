@@ -1,4 +1,4 @@
-import { click, describe, expect, queryOne, test } from "@odoo/hoot";
+import { click, describe, expect, queryOne, test, waitFor } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
@@ -186,6 +186,7 @@ test("Should clean shape/hover related data on an incompatible image when saving
     });
     queryOne(":iframe .test-options-target").classList.add("o_dirty");
     await contains(".btn[data-action='save']").click();
+    await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
     expect.verifySteps(["save"]);
 });
 
