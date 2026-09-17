@@ -246,7 +246,11 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_header_share_links_display" t-value="is_view_active('website_blog.opt_blog_post_header_share_links_display')"/>
         <t t-set="opt_blog_post_header_tags_display" t-value="is_view_active('website_blog.opt_blog_post_header_tags_display')"/>
         <t t-set="opt_blog_post_full_width_cover" t-value="is_view_active('website_blog.opt_blog_post_full_width_cover')"/>
+
+        <!-- Content width options -->
         <t t-set="opt_blog_post_large_container" t-value="is_view_active('website_blog.opt_blog_post_large_container')"/>
+        <t t-set="opt_blog_post_full_container" t-value="is_view_active('website_blog.opt_blog_post_full_container')"/>
+        <t t-set="opt_blog_post_small_container" t-value="not opt_blog_post_large_container and not opt_blog_post_full_container"/>
 
         <!-- Content footer options -->
         <t t-set="opt_blog_post_footer_share_links_display" t-value="is_view_active('website_blog.opt_blog_post_footer_share_links_display')"/>
@@ -306,14 +310,14 @@ list of filtered posts (by date or tag).
         <section id="o_wblog_post_main" t-attf-class="py-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
             <!-- Setting the classes depending on the layout -->
             <t t-if="opt_blog_post_split_cover">
-                <t t-set="containerClasses" t-value="'container'"/>
+                <t t-set="containerClasses" t-valuef="#{opt_blog_post_full_container and 'container-fluid' or 'container'}"/>
                 <t t-set="contentColClasses" t-valuef="col-lg-7 #{opt_blog_post_sidebar and 'offset-lg-1' or 'offset-lg-5'}"/>
                 <t t-set="sidebarColClasses" t-value="'col-lg-4 order-lg-first'"/>
             </t>
             <t t-else="">
-                <t t-set="containerClasses" t-value="'o_container_small' if not opt_blog_post_sidebar and not opt_blog_post_large_container else 'container'"/>
-                <t t-set="contentColClasses" t-value="'col-12' if not opt_blog_post_sidebar else ('col-lg-6 offset-lg-1' if not opt_blog_post_large_container else 'col-lg-9')"/>
-                <t t-set="sidebarColClasses" t-valuef="col-lg-3 #{not opt_blog_post_large_container and 'offset-lg-1'}"/>
+                <t t-set="containerClasses" t-value="'o_container_small' if not opt_blog_post_sidebar and opt_blog_post_small_container else ('container-fluid' if opt_blog_post_full_container else 'container')"/>
+                <t t-set="contentColClasses" t-value="'col-12' if not opt_blog_post_sidebar else ('col-lg-6 offset-lg-1' if opt_blog_post_small_container else 'col-lg-9')"/>
+                <t t-set="sidebarColClasses" t-valuef="col-lg-3 #{opt_blog_post_small_container and 'offset-lg-1'}"/>
             </t> 
             <!-- Content -->
             <div t-attf-class="#{containerClasses}">
@@ -413,9 +417,9 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//div[@id='title']" position="replace">
-        <div id="title" t-attf-class="blog_header o_wblog_post_regular_cover_container #{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'container' or 'o_container_small'}">
+        <div id="title" t-attf-class="blog_header o_wblog_post_regular_cover_container #{opt_blog_post_small_container and not opt_blog_post_sidebar and 'o_container_small' or 'container'}">
             <div class="row">
-                <div t-attf-class="col-12 #{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'col-lg-8 offset-lg-2'}">
+                <div t-attf-class="col-12 #{(not opt_blog_post_small_container or opt_blog_post_sidebar) and 'col-lg-8 offset-lg-2'}">
                     <!-- Breadcrumbs -->
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"/>
                     <!-- Title and subtitle -->
@@ -450,7 +454,7 @@ list of filtered posts (by date or tag).
                 </div>
             </div>
         </div>
-        <div t-attf-class="#{opt_blog_post_full_width_cover and 'container-fluid g-0' or 'container'}">
+        <div t-attf-class="#{(opt_blog_post_full_width_cover or opt_blog_post_full_container) and 'container-fluid' or 'container'} #{opt_blog_post_full_width_cover and 'g-0'}">
             <t t-call="website.record_cover"
                 _record="blog_post"
                 display_opt_name.translate="Blog Post Cover"
@@ -477,7 +481,7 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_split_cover" name="Split Cover" inherit_id="website_blog.blog_post_complete" active="False">
     <xpath expr="//div[@id='title']" position="replace">
-        <div id="title" class="blog_header o_wblog_post_split_cover_container container">
+        <div id="title" t-attf-class="blog_header o_wblog_post_split_cover_container #{opt_blog_post_full_container and 'container-fluid' or 'container'}">
             <div class="row mb-0 mb-lg-4">
                 <div class="col-lg-4 d-flex flex-column mb-5 mb-lg-0">
                     <!-- Breadcrumb -->
@@ -558,10 +562,15 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_full_width_cover" name="Full Width Cover" inherit_id="website_blog.blog_post_complete" active="False"/>
 
+<!-- (Option) Post: Large-width container
+    Make the blog post content container large
+-->
+<template id="opt_blog_post_large_container" name="Large Width Container" inherit_id="website_blog.blog_post_complete" active="False"/>
+
 <!-- (Option) Post: Full-width container
     Make the blog post content container full-width
 -->
-<template id="opt_blog_post_large_container" name="Full Width Container" inherit_id="website_blog.blog_post_complete" active="False"/>
+<template id="opt_blog_post_full_container" name="Full Width Container" inherit_id="website_blog.blog_post_complete" active="False"/>
 
 <!-- (Option) Post: Show Footer Share Links
     Display the share links at the end of the post content
