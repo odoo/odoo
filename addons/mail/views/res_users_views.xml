@@ -23,7 +23,9 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//group[@name='other_preferences']" position="inside">
-                        <field name="notification_type" widget="radio" readonly="0" options="{'horizontal': true}"/>
+                        <field name="role" invisible="1" readonly="1"/>
+                        <field name="notification_type" widget="radio" readonly="0" options="{'horizontal': true}"
+                            invisible="role == 'light_user'"/>
                         <field name="outgoing_mail_server_id" invisible="1"/> <!-- Used by the mail_server_configurator_selection widget -->
                         <span class="o_form_label fw-bold" invisible="not has_external_mail_server">Outgoing Mail Server</span>
                         <field name="outgoing_mail_server_type"
