@@ -626,7 +626,7 @@ class ForumPost(models.Model):
         return True
 
     def reopen(self):
-        if any(post.parent_id or post.state != 'close' for post in self):
+        if any(post.parent_id or post.state != 'close' or not post.can_close for post in self):
             return False
 
         reason_offensive = self.env.ref('website_forum.reason_7')
