@@ -51,7 +51,8 @@ def _fake_bundle(**overrides):
 
 def _sanitized(source):
     bundle = _fake_bundle(name="test.spans")
-    out = CssPipeline(bundle).compile_css(lambda src: src, source)
+    identity = SimpleNamespace(compile=lambda src: src, output_style="test")
+    out = CssPipeline(bundle).compile_css(identity, source)
     return out, bundle.css_errors
 
 
@@ -413,8 +414,10 @@ class TestCompileMemoContract(TransactionCase):
             calls.append(source)
             return "compiled{}"
 
+        asset = SimpleNamespace(compile=compiler, output_style="compressed")
+        pipeline = CssPipeline(_fake_bundle())
         for _ in range(3):
-            CssPipeline._compile_memoized(compiler, "a{}")
+            pipeline.compile_css(asset, "a{}")
         self.assertEqual(len(calls), 1)
 
     def test_a_failure_is_not_retained(self):
@@ -708,6 +711,28 @@ class TestImportSanitizerSpans(BaseCase):
         self.assertEqual(out, '@import "foo" screen;')
         out, _ = _sanitized('@import "foo" screen;\n@import "foo" print;')
         self.assertEqual(out, '@import "foo" screen;\n@import "foo" print;')
+
+
+class TestEmptyUrlIsLeftAlone(BaseCase):
+    def test_an_empty_url_is_not_rewritten_to_a_directory(self):
+        asset = StylesheetAsset(
+            _fake_bundle(), url="/mod/static/src/css/a.css", inline="x"
+        )
+        with patch.object(
+            WebAsset, "_get_content", return_value=".a{background:url()}"
+        ):
+            out = asset._get_content()
+        self.assertEqual(out, ".a{background:url()}")
+
+    def test_a_relative_url_still_resolves(self):
+        asset = StylesheetAsset(
+            _fake_bundle(), url="/mod/static/src/css/a.css", inline="x"
+        )
+        with patch.object(
+            WebAsset, "_get_content", return_value=".a{background:url(../img/x.png)}"
+        ):
+            out = asset._get_content()
+        self.assertEqual(out, ".a{background:url(/mod/static/src/img/x.png)}")
 
 
 class TestAutoprefixImportStringBoundary(BaseCase):

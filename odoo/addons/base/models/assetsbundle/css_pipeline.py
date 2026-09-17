@@ -147,7 +147,7 @@ class CssPipeline:
                 assets=len(assets),
                 lines=source.count("\n") + 1,
             ) as span:
-                compiled = self.compile_css(assets[0].compile, source)
+                compiled = self.compile_css(assets[0], source)
                 span.set(compiled=len(compiled))
 
         if bundle.rtl and not bundle.css_errors:
@@ -271,7 +271,7 @@ class CssPipeline:
         )
         return import_rules, remainder
 
-    def compile_css(self, compiler: Callable[[str], str], source: str) -> str:
+    def compile_css(self, asset: PreprocessedCSS, source: str) -> str:
         bundle = self._bundle
         seen_imports: set[str] = set()
 
@@ -309,7 +309,11 @@ class CssPipeline:
             imports=len(seen_imports),
         )
         try:
-            return self._compile_memoized(compiler, source)
+            return self._memoized_transform(
+                ("compile", type(asset).__name__, asset.output_style),
+                source,
+                lambda src: asset.compile(src).strip(),
+            )
         except (CompileError, SassCompileError) as e:
             error = self._format_compiler_error(str(e), source)
             _logger.warning(error)
@@ -352,12 +356,6 @@ class CssPipeline:
             "css_cache_stored", stage=key[0], size=len(cache), evicted=evicted
         )
         return result
-
-    @classmethod
-    def _compile_memoized(cls, compiler: Callable[[str], str], source: str) -> str:
-        asset = getattr(compiler, "__self__", None)
-        key = ("compile", type(asset).__name__, getattr(asset, "output_style", None))
-        return cls._memoized_transform(key, source, lambda src: compiler(src).strip())
 
     _RX_APPEARANCE = re.compile(
         r"(?<=[{;\s])appearance\s*:\s*(?P<value>[\w-]+)(?P<important>\s*!important)?"

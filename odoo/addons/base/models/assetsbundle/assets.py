@@ -272,6 +272,9 @@ class StylesheetAsset(WebAsset):
     _CSS_TOKEN_RE = _CSS_STRING_OR_COMMENT
     _SOURCE_TOKEN_RE = _CSS_STRING_OR_COMMENT
     _IDENT_CHAR = re.compile(r"[\w-]")
+    # plain CSS resolves @import here; a preprocessor resolves it on its own
+    # load paths, so the rewrite would break every library import
+    _REWRITES_IMPORTS = True
     id = "0"
 
     def __init__(
@@ -305,7 +308,7 @@ class StylesheetAsset(WebAsset):
                 q = match.group("q")
                 return f"@import {q}{web_dir}/{match.group('path')}{q}"
 
-            if self.rx_import:
+            if self._REWRITES_IMPORTS:
                 content = _rewrite_css_outside_strings(
                     self.rx_import, _rewrite_import, content, self._SOURCE_TOKEN_RE
                 )
@@ -314,7 +317,7 @@ class StylesheetAsset(WebAsset):
                 q = match.group("q")
                 body = match.group("body")
                 if not body:
-                    return f"url({q}{web_dir}/{q}"
+                    return match.group(0)
                 normalised = posixpath.normpath(f"{web_dir}/{body}")
                 return f"url({q}{normalised}{q}"
 
@@ -361,10 +364,16 @@ class StylesheetAsset(WebAsset):
 
 
 class PreprocessedCSS(StylesheetAsset):
-    rx_import = None
+    _REWRITES_IMPORTS = False
     _SOURCE_TOKEN_RE = _SCSS_STRING_OR_COMMENT
 
     _COMPILE_TIMEOUT_S: int = 180
+
+    @property
+    def output_style(self) -> str:
+        return (
+            "expanded" if self.bundle and self.bundle.is_debug_assets else "compressed"
+        )
 
     def get_command(self) -> list[str]:
         raise NotImplementedError
@@ -401,12 +410,6 @@ class ScssStylesheetAsset(PreprocessedCSS):
     @property
     def bootstrap_path(self) -> str:
         return file_path("web/static/lib/bootstrap/scss")
-
-    @property
-    def output_style(self) -> str:
-        return (
-            "expanded" if self.bundle and self.bundle.is_debug_assets else "compressed"
-        )
 
     _sass_syntax = "scss"
 
