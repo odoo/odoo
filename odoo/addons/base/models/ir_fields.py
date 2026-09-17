@@ -3,6 +3,7 @@ import functools
 import itertools
 import logging
 import math
+from collections import defaultdict
 from collections.abc import Callable, Sequence
 from datetime import datetime
 from enum import StrEnum
@@ -12,6 +13,7 @@ import psycopg
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.libs.datetime import utc
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import loads as json_loads
@@ -1035,15 +1037,7 @@ class IrFieldsConverter(models.AbstractModel):
         )
         if ids:
             if len(ids) > 1:
-                warnings.append(
-                    OdooImportWarning(
-                        self.env._(
-                            'Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)',
-                            value=escape_import_message(str(value)),
-                            match_count=len(ids),
-                        )
-                    )
-                )
+                warnings.append(self._prepare_multiple_matches_warning(value, len(ids)))
             id, _name = ids[0]
             return RefLookup(id, field_type, "", warnings)
 
@@ -1080,6 +1074,115 @@ class IrFieldsConverter(models.AbstractModel):
             name_create_allowed=False,
         )
         return RefLookup(None, field_type, "", warnings)
+
+    @api.model
+    def _prepare_multiple_matches_warning(self, value: Any, count: int) -> Warning:
+        return OdooImportWarning(
+            self.env._(
+                'Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)',
+                value=escape_import_message(str(value)),
+                match_count=count,
+            )
+        )
+
+    NAME_SEARCH_LIMIT = 100
+
+    @api.model
+    def _is_name_prefetchable(self, comodel: models.BaseModel) -> bool:
+        # the batch below re-derives what name_search(name, operator="=")
+        # matches, which is only the default _search_display_name's contract
+        return (
+            type(comodel)._search_display_name is models.BaseModel._search_display_name
+        )
+
+    @api.model
+    def _prefetch_name_references(
+        self, model: models.BaseModel, records: Sequence[dict]
+    ) -> None:
+        cache = self.env.context.get("import_cache")
+        if cache is None:
+            return
+        wanted: dict[str, OrderedSet] = defaultdict(OrderedSet)
+        for record in records:
+            for fname, value in record.items():
+                field = model._fields.get(fname)
+                if field is None or not (field.is_many2one or field.is_many2many):
+                    continue
+                if not isinstance(value, list):
+                    continue
+                for sub in value:
+                    if not (
+                        isinstance(sub, dict)
+                        and list(sub) == [None]
+                        and isinstance(sub[None], str)
+                    ):
+                        continue
+                    if field.is_many2many:
+                        names = self._split_references(sub[None])
+                    else:
+                        names = [sub[None].strip()]
+                    wanted[field.comodel_name].update(
+                        name
+                        for name in names
+                        if name and (field.comodel_name, None, name) not in cache
+                    )
+        for comodel_name, names in wanted.items():
+            if len(names) < 2:
+                continue
+            self._prefetch_names_of(comodel_name, names, cache)
+
+    @api.model
+    def _prefetch_names_of(
+        self, comodel_name: str, names: OrderedSet, cache: Any
+    ) -> None:
+        comodel = self.env[comodel_name]
+        if not self._is_name_prefetchable(comodel):
+            _debug.logic(
+                "ref_name_prefetch_skipped", model=comodel_name, reason="override"
+            )
+            return
+        fnames = [
+            fname
+            for fname in comodel._get_rec_names_search_fields()
+            if not comodel._is_rec_names_search_cyclic(fname)
+        ]
+        if not fnames:
+            return
+        try:
+            found = comodel.search_fetch(
+                Domain("display_name", "in", list(names)), fnames
+            )
+            matches: dict[str, list[int]] = defaultdict(list)
+            for record in found:
+                for fname in fnames:
+                    value = record[fname]
+                    if isinstance(value, models.BaseModel):
+                        tokens = value.mapped("display_name")
+                    else:
+                        tokens = [value, str(value)]
+                    for token in tokens:
+                        if isinstance(token, str) and token in names:
+                            if record.id not in matches[token]:
+                                matches[token].append(record.id)
+                            break
+        except UserError, psycopg.Error:
+            _debug.logic(
+                "ref_name_prefetch_skipped", model=comodel_name, reason="error"
+            )
+            return
+        for name, ids in matches.items():
+            ids = ids[: self.NAME_SEARCH_LIMIT]
+            warnings = []
+            if len(ids) > 1:
+                warnings.append(self._prepare_multiple_matches_warning(name, len(ids)))
+            cache[(comodel_name, None, name)] = (ids[0], warnings)
+        _debug.perf.count(
+            "ref_name_prefetched",
+            model=comodel_name,
+            wanted=len(names),
+            found=len(matches),
+            records=len(found),
+        )
 
     @api.model
     def _prepare_ref_not_found_error(

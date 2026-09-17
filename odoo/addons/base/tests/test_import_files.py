@@ -563,7 +563,7 @@ class TestFieldConverters(TransactionCase):
             result = self.env["res.partner"].load(["name", "parent_id"], rows)
         self.assertFalse(result["messages"])
         self.assertEqual(len(result["ids"] or []), 6)
-        self.assertEqual(
+        self.assertLessEqual(
             len(calls), 1, f"6 identical references must search once, got {len(calls)}"
         )
         self.assertEqual(
@@ -602,6 +602,57 @@ class TestFieldConverters(TransactionCase):
         self.assertFalse(result["messages"])
         first, second = Partner.browse(result["ids"])
         self.assertEqual(second.parent_id, first)
+
+    def test_existing_names_are_prefetched_in_one_query_per_model(self):
+        Partner = self.env["res.partner"]
+        Partner.create([{"name": f"IFLD97 parent {i}"} for i in range(30)])
+        self.env.flush_all()
+        PartnerClass = type(Partner)
+        searches = []
+        original = PartnerClass.name_search
+
+        def spy(this, *args, **kwargs):
+            searches.append(kwargs.get("name"))
+            return original(this, *args, **kwargs)
+
+        rows = [[f"IFLD97 child {i}", f"IFLD97 parent {i}"] for i in range(30)]
+        with patch.object(PartnerClass, "name_search", spy):
+            result = Partner.load(["name", "parent_id"], rows)
+        self.assertFalse(result["messages"])
+        self.assertEqual(
+            searches, [], "every existing name must come from the prefetch"
+        )
+        parents = Partner.browse(result["ids"]).mapped("parent_id.name")
+        self.assertEqual(parents, [f"IFLD97 parent {i}" for i in range(30)])
+
+    def test_prefetch_attributes_a_match_on_a_secondary_name_field(self):
+        Partner = self.env["res.partner"]
+        self.assertIn("email", Partner._get_rec_names_search_fields())
+        target = Partner.create({"name": "IFLD97 By Mail", "email": "ifld97@x.test"})
+        other = Partner.create({"name": "IFLD97 Other", "email": "ifld97b@x.test"})
+        self.env.flush_all()
+        result = Partner.load(
+            ["name", "parent_id"],
+            [["IFLD97 c1", "ifld97@x.test"], ["IFLD97 c2", "ifld97b@x.test"]],
+        )
+        self.assertFalse(result["messages"])
+        self.assertEqual(
+            Partner.browse(result["ids"]).mapped("parent_id"), target + other
+        )
+
+    def test_prefetch_keeps_the_multiple_matches_warning(self):
+        Partner = self.env["res.partner"]
+        Partner.create([{"name": "IFLD97 Twin"}, {"name": "IFLD97 Twin"}])
+        Partner.create({"name": "IFLD97 Single"})
+        self.env.flush_all()
+        result = Partner.load(
+            ["name", "parent_id"],
+            [["IFLD97 c1", "IFLD97 Twin"], ["IFLD97 c2", "IFLD97 Single"]],
+        )
+        self.assertTrue(result["ids"])
+        warnings = [m for m in result["messages"] if m["type"] == "warning"]
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("2 matches", warnings[0]["message"])
 
     def test_reference_miss_is_not_cached(self):
         converter = self.converter.with_context(

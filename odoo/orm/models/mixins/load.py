@@ -228,7 +228,7 @@ class LoadMixin(_ModelStubs):
             batch_xml_ids.clear()
             self._load_data_list(data_list, mode == "update", messages, ids)
 
-        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(1024))
+        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(65536))
 
         limit = self.env.context.get("_import_limit")
         if limit is None:
@@ -498,7 +498,8 @@ class LoadMixin(_ModelStubs):
                 self.env.registry.metaschema.field_strings(self.env, self._name)
             )
 
-        convert = self.env["ir.fields.converter"]._get_converter_record(self)
+        converter = self.env["ir.fields.converter"]
+        convert = converter._get_converter_record(self)
 
         def _log(base, record, field, exception):
             type = "warning" if isinstance(exception, Warning) else "error"
@@ -520,6 +521,9 @@ class LoadMixin(_ModelStubs):
             log(record)
 
         stream = list(records)
+        converter._prefetch_name_references(
+            self, [record for record, _extras in stream]
+        )
         wanted_ids = set()
         for record, _extras in stream:
             if record.get(".id"):
