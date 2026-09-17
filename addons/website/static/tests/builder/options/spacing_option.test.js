@@ -3,6 +3,7 @@ import { edit, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-do
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
+    saveWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
@@ -65,6 +66,6 @@ test("Saving a block with a grid preview should not save the preview", async () 
     await contains("[data-label='Spacing'] input").click();
     await edit(20);
 
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await saveWebsiteBuilder();
     expect(saveResult[0].includes("o_we_grid_preview")).toBe(false);
 });
