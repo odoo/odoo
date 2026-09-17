@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+<<<<<<< 23ba3c83639e2e9012ae4f0d5f5ea6879f670666
 from odoo.fields import Domain
 from odoo.models import TableSQL
 from odoo.tools import SQL
+||||||| 3cb8316c82bba0f9c5c404a38baab69da9603808
+=======
+from odoo.tools import clean_context
+>>>>>>> 1b0631d01c458b54ed154669ae4eeebecaaf6773
 
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
@@ -200,12 +205,15 @@ class SaleReport(models.Model):
     def _case_value_or_one(self, value):
         return SQL("CASE COALESCE(%(value)s, 0) WHEN 0 THEN 1.0 ELSE %(value)s END", value=value)
 
+    def _get_order_reference(self):
+        """Resolve the order from the line id, without reading the view."""
+        self.ensure_one()
+        line = self.env["sale.order.line"].browse(self.id)
+        line.fetch(["order_id"])
+        return line.order_id
+
     @api.readonly
     def action_open_order(self):
-        self.ensure_one()
-        return {
-            "res_model": self.order_reference._name,
-            "type": "ir.actions.act_window",
-            "views": [[False, "form"]],
-            "res_id": self.order_reference.id,
-        }
+
+        order = self._get_order_reference()
+        return order._get_records_action(context=clean_context(self.env.context))
