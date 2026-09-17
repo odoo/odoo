@@ -1132,6 +1132,8 @@ class HrExpense(models.Model):
                 raise UserError(_("You do not have the required permission to submit this expense."))
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
+            if expense.state != 'draft':
+                raise UserError(self.env._("You can not submit an expense that's not in 'draft' state."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
         expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
@@ -1158,6 +1160,8 @@ class HrExpense(models.Model):
     def action_refuse(self):
         """ Refuse an expense with a reason """
         self._check_can_refuse()
+        if any(expense.state not in ['submitted', 'approved'] for expense in self):
+            raise UserError(self.env._("All expenses must be in Submtted or Approved state to perform this action."))
         return self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
 
     def action_post(self):
