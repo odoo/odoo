@@ -1,5 +1,8 @@
+import re
+from xml.dom import minidom
+from xml.etree import ElementTree as ET
+
 from odoo import api, fields, models, Command
-import json
 
 
 class Web_TourTour(models.Model):
@@ -58,17 +61,37 @@ class Web_TourTour(models.Model):
         tour_json["rainbowManMessage"] = self.rainbow_man_message
         return tour_json
 
-    def export_js_file(self):
-        js_content = f"""import {{ registry }} from '@web/core/registry';
+    def export_xml_file(self):
+        tour_xmlid = re.sub(r"\W", "_", self.name)
 
-registry.category("web_tour.tours").add("{self.name}", {{
-    steps: () => {json.dumps(self.step_ids.get_steps_json(), indent=4)}
-}})"""
+        odoo_el = ET.Element("odoo")
+        tour_record = ET.SubElement(odoo_el, "record", {"id": tour_xmlid, "model": "web_tour.tour"})
+        ET.SubElement(tour_record, "field", {"name": "name"}).text = self.name
+        ET.SubElement(tour_record, "field", {"name": "url"}).text = self.url or ""
+        if self.rainbow_man_message:
+            ET.SubElement(tour_record, "field", {"name": "rainbow_man_message"}).text = self.rainbow_man_message
+
+        for index, step in enumerate(self.step_ids, start=1):
+            step_record = ET.SubElement(odoo_el, "record", {
+                "id": f"{tour_xmlid}_step_{index}",
+                "model": "web_tour.tour.step",
+            })
+            ET.SubElement(step_record, "field", {"name": "tour_id", "ref": tour_xmlid})
+            ET.SubElement(step_record, "field", {"name": "sequence"}).text = str(step.sequence or index * 10)
+            ET.SubElement(step_record, "field", {"name": "trigger"}).text = step.trigger
+            if step.run:
+                ET.SubElement(step_record, "field", {"name": "run"}).text = step.run
+            if step.content:
+                ET.SubElement(step_record, "field", {"name": "content"}).text = step.content
+            if step.tooltip_position:
+                ET.SubElement(step_record, "field", {"name": "tooltip_position"}).text = step.tooltip_position
+
+        xml_content = minidom.parseString(ET.tostring(odoo_el)).toprettyxml(indent="    ", encoding="utf-8")
 
         attachment_id = self.env["ir.attachment"].create({
-            "raw": bytes(js_content, 'utf-8'),
-            "name": f"{self.name}.js",
-            "mimetype": "application/javascript",
+            "raw": xml_content,
+            "name": f"{self.name}.xml",
+            "mimetype": "application/xml",
             "res_model": "web_tour.tour",
             "res_id": self.id,
         })

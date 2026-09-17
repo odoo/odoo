@@ -1,3 +1,5 @@
+from xml.etree import ElementTree as ET
+
 from odoo.tests import tagged
 from odoo import Command
 from odoo.addons.base.tests.common import BaseCommon, HttpCase
@@ -77,6 +79,32 @@ class TestTour(BaseCommon):
         self.env.user.tour_enabled = False
         tour = self.env["web_tour.tour"].get_current_tour()
         self.assertEqual(bool(tour), False)
+
+    def test_export_xml_file(self):
+        action = self.tour_2.export_xml_file()
+        self.assertEqual(action["type"], "ir.actions.act_url")
+
+        attachment = self.env["ir.attachment"].search([
+            ("res_model", "=", "web_tour.tour"),
+            ("res_id", "=", self.tour_2.id),
+            ("name", "=", "your_tour.xml"),
+        ])
+        self.assertTrue(attachment)
+        self.assertIn(str(attachment.id), action["url"])
+
+        root = ET.fromstring(attachment.raw)
+        tour_record = root.find("./record[@model='web_tour.tour']")
+        self.assertEqual(tour_record.find("field[@name='name']").text, "your_tour")
+        self.assertEqual(tour_record.find("field[@name='url']").text, "my_url")
+        tour_xmlid = tour_record.get("id")
+
+        step_records = root.findall("./record[@model='web_tour.tour.step']")
+        self.assertEqual(len(step_records), 2)
+        for step_record, step in zip(step_records, self.tour_2.step_ids):
+            self.assertEqual(step_record.find("field[@name='tour_id']").get("ref"), tour_xmlid)
+            self.assertEqual(step_record.find("field[@name='trigger']").text, step.trigger)
+            self.assertEqual(step_record.find("field[@name='run']").text, step.run)
+            self.assertEqual(step_record.find("field[@name='content']").text, step.content)
 
 
 @tagged('post_install', '-at_install')
