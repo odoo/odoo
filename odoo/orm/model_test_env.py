@@ -92,7 +92,8 @@ class _TestResUsers(Model):
     group_xmlids = Char()
 
     def _get_company_ids(self):
-        return (self.company_id | self.company_ids).ids
+        # the protocol and the real res.users answer tuple[int, ...]
+        return (self.company_id | self.company_ids)._ids
 
     def _held_groups(self) -> set[str]:
         self.check_singleton()

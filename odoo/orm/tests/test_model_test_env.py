@@ -489,6 +489,18 @@ def test_write_after_invalidate_with_log_access():
         assert env["res.users"].browse(1).login == "admin"
 
 
+def test_company_ids_are_a_tuple_like_the_protocol():
+    # runs before the custom res.users below replaces the stub in _MOD
+    with model_test_env(HWidget) as env:
+        c1, c2 = env["res.company"].create([{"name": "a"}, {"name": "b"}])
+        user = env["res.users"].create(
+            {"name": "u", "company_id": c1.id, "company_ids": [Command.link(c2.id)]}
+        )
+        ids = user._get_company_ids()
+        assert isinstance(ids, tuple)
+        assert ids == (c1.id, c2.id)
+
+
 def test_user_supplied_res_users_wins_over_stub():
     class MyUsers(models.Model):
         _name = "res.users"
