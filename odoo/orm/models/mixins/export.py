@@ -20,6 +20,7 @@ _debug = DebugLog(__name__)
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
+    from datetime import datetime
 
 
 class ExportMixin(_ModelStubs):
@@ -73,7 +74,8 @@ class ExportMixin(_ModelStubs):
             # a property is stored as the client stores it, in UTC; export it
             # in the user's timezone exactly like a datetime column, so the
             # sheet reads the same and re-imports through the same converter
-            localized = Datetime.context_timestamp(record, Datetime.to_datetime(value))
+            utc = typing.cast("datetime", Datetime.to_datetime(value))
+            localized = Datetime.context_timestamp(record, utc)
             return Datetime.to_datetime(Datetime.to_string(localized))
         return field.convert_to_export(value, record)
 
