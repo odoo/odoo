@@ -18,6 +18,10 @@ class _RegistryLoadingPhaseMixin(_RegistryStubs):
         self._loading = None
 
     @property
+    def is_loading(self) -> bool:
+        return self._loading is not None
+
+    @property
     def loading(self) -> LoadingPhase:
         if self._loading is None:
             raise RuntimeError(

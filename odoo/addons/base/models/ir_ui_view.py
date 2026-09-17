@@ -98,6 +98,8 @@ _REVALIDATE_ON_CHANGE = frozenset({"mode", "model", "priority", "type"})
 
 _COMBINATION_ERRORS = (ValidationError, ValueError, etree.ParseError, TypeError)
 
+_KEYS_WITH_COPIES = "ir.ui.view.keys_with_copies"
+
 _CTE_EXCLUDED_FIELDS = frozenset(
     {
         "arch_prev",
@@ -2964,11 +2966,28 @@ class IrUiView(models.Model):
         views._check_xml()
 
     def _create_all_specific_views(self, processed_modules: list[str]) -> None:
-        pass
+        if self.pool.is_loading:
+            self.pool.loading.state(_KEYS_WITH_COPIES, dict).clear()
+
+    def _get_keys_with_copies(self) -> set[str]:
+        state = self.pool.loading.state(_KEYS_WITH_COPIES, dict)
+        if "keys" not in state:
+            rows = self.env.execute_query(
+                SQL(
+                    "SELECT key FROM ir_ui_view WHERE key IS NOT NULL "
+                    "GROUP BY key HAVING count(*) > 1"
+                )
+            )
+            state["keys"] = {key for (key,) in rows}
+            _debug.perf.count("keys_with_copies_loaded", keys=len(state["keys"]))
+        return state["keys"]
 
     def _get_views_specific(self) -> Self:
         self.check_singleton()
         if self.type != "qweb":
+            return self.env["ir.ui.view"]
+        if self.pool.is_loading and self.key not in self._get_keys_with_copies():
+            _debug.logic("views_specific.none", view=self.id, key=self.key)
             return self.env["ir.ui.view"]
         specific = (
             self.with_context(active_test=False)

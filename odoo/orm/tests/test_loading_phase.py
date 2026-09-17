@@ -30,14 +30,17 @@ def test_state_is_created_once_per_key_and_shared():
 
 def test_loading_is_only_reachable_inside_the_window():
     registry = _Registry()
+    assert not registry.is_loading
     with pytest.raises(RuntimeError, match="only available while load_modules"):
         registry.loading
     with registry.loading_window() as phase:
+        assert registry.is_loading
         assert registry.loading is phase
         phase.state("addon.key", list[int]).append(1)
         assert registry.loading.state("addon.key", list[int]) == [1]
     with pytest.raises(RuntimeError):
         registry.loading
+    assert not registry.is_loading
 
 
 def test_the_window_does_not_nest():
