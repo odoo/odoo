@@ -63,19 +63,12 @@ _SAFE_QWEB_OPCODES = (
         to_opcodes(
             [
                 "MAKE_FUNCTION",
-                "CALL_FUNCTION",
-                "CALL_FUNCTION_KW",
                 "CALL_FUNCTION_EX",
-                "CALL_METHOD",
-                "LOAD_METHOD",
                 "GET_ITER",
                 "FOR_ITER",
                 "YIELD_VALUE",
                 "JUMP_FORWARD",
-                "JUMP_ABSOLUTE",
                 "JUMP_BACKWARD",
-                "JUMP_IF_FALSE_OR_POP",
-                "JUMP_IF_TRUE_OR_POP",
                 "POP_JUMP_IF_FALSE",
                 "POP_JUMP_IF_TRUE",
                 "LOAD_NAME",
@@ -86,23 +79,10 @@ _SAFE_QWEB_OPCODES = (
                 "STORE_SUBSCR",
                 "LOAD_GLOBAL",
                 "EXTENDED_ARG",
-                "RESUME",
                 "CALL",
-                "PRECALL",
                 "PUSH_NULL",
-                "KW_NAMES",
-                "FORMAT_VALUE",
                 "BUILD_STRING",
                 "RETURN_GENERATOR",
-                "SWAP",
-                "POP_JUMP_FORWARD_IF_FALSE",
-                "POP_JUMP_FORWARD_IF_TRUE",
-                "POP_JUMP_BACKWARD_IF_FALSE",
-                "POP_JUMP_BACKWARD_IF_TRUE",
-                "POP_JUMP_FORWARD_IF_NONE",
-                "POP_JUMP_FORWARD_IF_NOT_NONE",
-                "POP_JUMP_BACKWARD_IF_NONE",
-                "POP_JUMP_BACKWARD_IF_NOT_NONE",
                 "END_FOR",
                 "LOAD_FAST_AND_CLEAR",
                 "POP_JUMP_IF_NOT_NONE",
@@ -2087,7 +2067,8 @@ class IrQweb(models.AbstractModel):
             ]
             for key in dropped:
                 del el.attrib[key]
-            _debug.logic("directive_att.skipped", tag=el.tag, dropped=len(dropped))
+            if dropped:
+                _debug.logic("directive_att.dropped", tag=el.tag, attributes=dropped)
             return []
 
         code = [indent_code("attrs = values['__qweb_attrs__'] = {}", level)]
@@ -2101,13 +2082,13 @@ class IrQweb(models.AbstractModel):
                     )
                 )
 
-        if any(not key.startswith("t-") for key in el.attrib):
+        static_keys = [key for key in el.attrib if not key.startswith("t-")]
+        if static_keys:
             nsprefixmap = self._get_ns_prefix_map(el, compile_context)
-            for key in list(el.attrib):
-                if not key.startswith("t-"):
-                    value = el.attrib.pop(key)
-                    name = self._get_qualified_attribute_name(key, nsprefixmap)
-                    code.append(indent_code(f"attrs[{name!r}] = {value!r}", level))
+            for key in static_keys:
+                value = el.attrib.pop(key)
+                name = self._get_qualified_attribute_name(key, nsprefixmap)
+                code.append(indent_code(f"attrs[{name!r}] = {value!r}", level))
 
         for key in list(el.attrib):
             if key.startswith("t-attf-"):
