@@ -144,7 +144,23 @@ class StockWarehouseLocation(models.Model):
                 "stock.location", list(missing.values()), company_id
             )
             locations = self.env["stock.location"].create(list(missing.values()))
-            warehouse.write(dict(zip(missing, locations.ids, strict=True)))
+            # The outer write has not assigned its own picking types yet: the refresh
+            # this nested write triggers must not create a second one for them.
+            pending = [
+                fname
+                for fname in vals
+                if fname in warehouse._fields
+                and warehouse._fields[fname].type == "many2one"
+                and warehouse._fields[fname].comodel_name == "stock.picking.type"
+            ]
+            dbg.logic.debug(
+                "[warehouse:%s] _create_missing_locations: picking types pending in the outer write: %s",
+                warehouse.id,
+                pending,
+            )
+            warehouse.with_context(stock_pending_picking_type_fields=pending).write(
+                dict(zip(missing, locations.ids, strict=True))
+            )
 
     def _update_location_barcodes(self, new_code):
         for warehouse in self:

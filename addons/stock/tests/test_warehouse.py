@@ -2498,3 +2498,33 @@ class TestWarehouse(TestStockCommon):
             rule.name.startswith(stored + ": "),
             "rule %r is prefixed by a code the warehouse does not hold" % rule.name,
         )
+
+    def test_a_write_assigning_a_picking_type_creates_no_second_one(self):
+        warehouse = self.env["stock.warehouse"].create(
+            {"name": "Pending Types", "code": "PTY"}
+        )
+        qc_type = warehouse.qc_type_id
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE stock_warehouse SET wh_qc_stock_loc_id = NULL, qc_type_id = NULL"
+            " WHERE id = %s",
+            [warehouse.id],
+        )
+        self.env.invalidate_all()
+
+        warehouse.write({"qc_type_id": qc_type.id})
+        self.env.flush_all()
+
+        self.assertEqual(warehouse.qc_type_id, qc_type)
+        self.assertTrue(warehouse.wh_qc_stock_loc_id)
+        self.assertEqual(
+            self.env["stock.picking.type"]
+            .with_context(active_test=False)
+            .search_count(
+                [
+                    ("warehouse_id", "=", warehouse.id),
+                    ("sequence_code", "=", qc_type.sequence_code),
+                ]
+            ),
+            1,
+        )

@@ -27,7 +27,16 @@ class StockWarehousePickingType(models.Model):
         self._update_picking_type_barcodes(data, suffixes)
 
         to_update = [field for field in data if self[field]]
-        to_create = [field for field in data if not self[field]]
+        pending = set(self.env.context.get("stock_pending_picking_type_fields", ()))
+        to_create = [
+            field for field in data if not self[field] and field not in pending
+        ]
+        if pending:
+            dbg.logic.debug(
+                "[warehouse:%s] picking types left to the pending outer write: %s",
+                self.id,
+                sorted(pending),
+            )
         dbg.lifecycle.debug(
             "[warehouse:%s] picking types: update %s, create %s",
             self.id,
