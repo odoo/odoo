@@ -101,6 +101,7 @@ class AccountMove(models.Model):
         selection=[('transaction', 'Transaction'), ('payment', 'Payment')],
         compute='_compute_l10n_fr_pdp_flow_10_report_type',
         store=True,
+        recursive=True,
         copy=False,
     )
     l10n_fr_pdp_flow_10_operation_type = fields.Selection(
@@ -493,12 +494,21 @@ class AccountMove(models.Model):
         'commercial_partner_id',
         'l10n_fr_pdp_flow_10_operation_type',
         'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.l10n_fr_pdp_flow_10_report_type',
         'line_ids.matched_debit_ids.debit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.l10n_fr_pdp_flow_10_report_type',
         'move_type',
+        'pdp_is_sent',
         'state',
     )
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
         for move in self:
+            if move.pdp_is_sent:
+                if move.l10n_fr_pdp_sent_in_flow_ids:
+                    # The previous e-report must be rectified before clearing its scope.
+                    self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                move.l10n_fr_pdp_flow_10_report_type = None
+                continue
             if (
                 move.state == 'draft'
                 or not move.company_id.l10n_fr_f10_enable_reporting
