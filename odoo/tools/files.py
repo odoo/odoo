@@ -106,9 +106,25 @@ def _file_path_uncached(
 
     skip_exists_check = not check_exists and (is_abs or len(addons_paths) == 1)
 
+    if is_abs:
+        if not (skip_exists_check or normalized.exists()):
+            _debug.logic("files.not_found", path=file_path, absolute=True)
+            raise FileNotFoundError("File not found: " + file_path)
+        for addons_dir in addons_paths:
+            parent = str(_addons_dir_paths(addons_dir)[1])
+            if normalized_str == parent or normalized_str.startswith(parent + os.sep):
+                _debug.perf.count(
+                    "files.resolved", path=file_path, addons_dir=addons_dir
+                )
+                return normalized_str
+        _debug.logic(
+            "files.escapes_addons_dir", path=file_path, resolved=normalized_str
+        )
+        raise FileNotFoundError("File not found: " + file_path)
+
     for addons_dir in addons_paths:
         parent_path, resolved_parent = _addons_dir_paths(addons_dir)
-        fpath = normalized if is_abs else parent_path / normalized
+        fpath = parent_path / normalized
         if not (skip_exists_check or fpath.exists()):
             continue
         resolved = os.path.realpath(fpath)

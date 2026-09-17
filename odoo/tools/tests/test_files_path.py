@@ -2,6 +2,7 @@ import os
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 from odoo.tools.files import _addons_dir_paths, clear_caches, file_path
@@ -72,6 +73,28 @@ class TestFilePathContainment(unittest.TestCase):
             target = r.addons / "mymod" / "static" / "ok.txt"
             self.assertEqual(
                 Path(file_path(str(target))).read_text(encoding="utf-8"), "ok"
+            )
+
+    def test_an_absolute_symlink_escaping_addons_is_rejected(self):
+        with _AddonsRoot() as r:
+            with self.assertRaises(FileNotFoundError):
+                file_path(str(r.escape / "secret.txt"))
+
+    def test_an_absolute_path_resolves_once_whatever_the_number_of_addons_dirs(self):
+        with _AddonsRoot() as r:
+            odoo.addons.__path__[:] = [
+                str(r.outside),
+                str(r.outside),
+                str(r.addons),
+            ]
+            clear_caches()
+            target = r.addons / "mymod" / "static" / "ok.txt"
+            with unittest.mock.patch("os.path.realpath", wraps=os.path.realpath) as rp:
+                self.assertEqual(file_path(str(target)), str(target))
+            self.assertEqual(
+                sum(1 for c in rp.call_args_list if str(c.args[0]) == str(target)),
+                1,
+                "resolved once (Path.resolve), not once more per addons dir",
             )
 
     def test_missing_file_raises(self):
