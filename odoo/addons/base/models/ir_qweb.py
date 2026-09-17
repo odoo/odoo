@@ -3042,49 +3042,40 @@ class IrQweb(models.AbstractModel):
 
         code.append(
             indent_code(
-                """
-            for index, (tag_name, asset_attrs) in enumerate(t_call_assets_nodes):
-                if index:
-                    yield '\\n        '
-                yield '<'
-                yield tag_name
-
-                # Extract inline text content (import maps, loader shim, bridge
-                # scripts) WITHOUT mutating asset_attrs: these node dicts are
-                # served straight from the ormcache (_get_native_module_nodes_cached),
-                # so a .pop() permanently strips 'text' from the cached copy and
-                # every render after the first emits an empty <script>. Read with
-                # .get and pass a 'text'-free copy to attribute post-processing.
-                text_content = asset_attrs.get("text") if asset_attrs else None
-                # Asset nodes are framework-generated static markup (bundle
-                # URLs, media/defer attributes): post-process them as static
-                # attributes, like the other compile-time static nodes.
-                attrs = self._post_processing_att(
-                    tag_name,
-                    {k: v for k, v in asset_attrs.items() if k != "text"}
-                    if asset_attrs
-                    else {},
-                    is_static=True,
-                )
-                for name, value in attrs.items():
-                    if value or isinstance(value, str):
-                        yield f' {escape(str(name))}="{escape(str(value))}"'
-
-                if tag_name in VOID_ELEMENTS:
-                    yield '/>'
-                else:
-                    yield '>'
-                    if text_content:
-                        yield str(text_content)
-                    yield '</'
-                    yield tag_name
-                    yield '>'
-                """,
-                level,
+                "yield from self._render_asset_nodes(t_call_assets_nodes)", level
             )
         )
 
         return code
+
+    def _render_asset_nodes(
+        self, nodes: Iterable[tuple[str, Mapping[str, Any] | None]]
+    ) -> Iterator[str]:
+        for index, (tag_name, asset_attrs) in enumerate(nodes):
+            if index:
+                yield "\n        "
+            # The node dicts come straight from the ormcache
+            # (_get_native_module_nodes_cached): read 'text' without popping it,
+            # or every render after the first emits an empty <script>.
+            text_content = asset_attrs.get("text") if asset_attrs else None
+            # Framework-generated markup (bundle URLs, media/defer attributes):
+            # post-processed as static attributes, like compile-time static nodes.
+            attrs = self._post_processing_att(
+                tag_name,
+                {k: v for k, v in asset_attrs.items() if k != "text"}
+                if asset_attrs
+                else {},
+                is_static=True,
+            )
+            attributes = "".join(
+                f' {escape(str(name))}="{escape(str(value))}"'
+                for name, value in attrs.items()
+                if value or isinstance(value, str)
+            )
+            if tag_name in VOID_ELEMENTS:
+                yield f"<{tag_name}{attributes}/>"
+            else:
+                yield f"<{tag_name}{attributes}>{text_content or ''}</{tag_name}>"
 
     def _debug_trace(self, debugger: str, values: dict[str, Any]) -> None:
         if debugger:

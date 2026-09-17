@@ -3411,6 +3411,28 @@ class TestQWebHelpers(TransactionCase):
             )
         )
 
+    def test_render_asset_nodes(self):
+        qweb = self.env["ir.qweb"]
+        cached = {"src": "/web/x.js", "type": "module", "text": "import 'a';"}
+        nodes = [
+            ("link", {"rel": "stylesheet", "href": "/web/a.css", "media": None}),
+            ("script", cached),
+            ("script", {"src": "/web/y.js", "async": True, "defer": False}),
+        ]
+        self.assertEqual(
+            "".join(qweb._render_asset_nodes(nodes)),
+            '<link rel="stylesheet" href="/web/a.css"/>\n        '
+            '<script src="/web/x.js" type="module">import \'a\';</script>\n        '
+            '<script src="/web/y.js" async="True"></script>',
+        )
+        self.assertIn("text", cached, "the cached node dict must not be mutated")
+        self.assertEqual(
+            "".join(qweb._render_asset_nodes([("script", {"text": "<&>"})])),
+            "<script><&></script>",
+            "inline text is emitted as is, attributes are escaped",
+        )
+        self.assertEqual("".join(qweb._render_asset_nodes([("meta", None)])), "<meta/>")
+
     def test_namespace_helpers(self):
         qweb = self.env["ir.qweb"]
         el = etree.fromstring('<div xmlns:x="urn:x"/>')
