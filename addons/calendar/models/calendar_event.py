@@ -259,7 +259,7 @@ class CalendarEvent(models.Model):
     should_show_status = fields.Boolean(compute="_compute_should_show_status")
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
-        string='Attendees', default=_default_partners)
+        string='Attendees', default=_default_partners, falsy_value_label="Unassigned")
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
     unavailable_partner_ids = fields.Many2many('res.partner', string="Unavailable Attendees", compute='_compute_unavailable_partner_ids')
     # alarms
