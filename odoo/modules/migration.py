@@ -314,6 +314,11 @@ def run_migration_script(
     p = Path(pyfile)
     if p.suffix.lower() != ".py":
         _debug.logic("migration.script_skipped", module=addon, script=pyfile)
+        _logger.warning(
+            "module %s: migration script %s skipped: not a .py file",
+            addon,
+            pyfile,
+        )
         return
     _debug.pipeline(
         "migration.script",

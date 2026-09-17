@@ -92,6 +92,18 @@ class TestStagesAreDeclaredOnce:
         assert MIGRATION_STAGES == ("pre", "post", "end")
 
 
+class TestNonPythonScriptWarns:
+    def test_a_non_py_script_is_skipped_with_a_warning(self, caplog):
+        with caplog.at_level(logging.WARNING):
+            migration_mod.run_migration_script(
+                typing.cast("Cursor", None), "19.0.1.0", "scripts/fix.sql", "m", "pre"
+            )
+        messages = _warnings(caplog)
+        assert len(messages) == 1, messages
+        assert "fix.sql" in messages[0]
+        assert "not a .py file" in messages[0]
+
+
 class _FakePkg:
     def __init__(self, name, load_state):
         self.name = name
