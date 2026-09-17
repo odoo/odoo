@@ -4,10 +4,21 @@
         <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_recipient_partner" t-value="doc.partner_id"/>
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="doc.company_id.sudo()._l10n_jp_hide_zero_decimals(doc._l10n_jp_printed_unit_prices())"/>
             </xpath>
 
             <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">
                 <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <!-- The column drops its decimals only when every unit price in it is whole.
+                 A negative discount prints a surcharged price, so that is the one that counts. -->
+            <xpath expr="//td[@name='td_product_priceunit']/span[1]" position="attributes">
+                <attribute name="t-options">{'widget': 'float', 'precision': 0} if jp_hide_zero_decimals else {'widget': 'float', 'decimal_precision': 'Product Price'}</attribute>
+            </xpath>
+            <xpath expr="//td[@name='td_product_priceunit']/span[2]" position="attributes">
+                <attribute name="t-options">{'precision': 0} if jp_hide_zero_decimals else {}</attribute>
             </xpath>
 
             <xpath expr="//th[@name='th_priceunit']" position="replace">

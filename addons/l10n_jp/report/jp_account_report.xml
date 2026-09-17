@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <!-- The report goes through this inherit before any other: l10n_din5008
+             rewrites the unit price cell to the monetary widget for every
+             company rather than for its own layout, and a cell has one
+             t-options, so whichever of the two applies last takes it. Going
+             first leaves the cell to them wherever they are installed, instead
+             of install order deciding it and their invoices losing a currency
+             symbol half the time. -->
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document" priority="10">
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="o.company_id.sudo()._l10n_jp_hide_zero_decimals(o._get_move_lines_to_report().mapped('price_unit'))"/>
             </xpath>
 
             <!-- The layout heads the block with the recipient name and its honorific,
@@ -16,6 +25,11 @@
             </xpath>
             <xpath expr="//t[@name='no_shipping']/address" position="attributes">
                 <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <!-- The column drops its decimals only when every unit price in it is whole. -->
+            <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+                <attribute name="t-options">{'precision': 0} if jp_hide_zero_decimals else {}</attribute>
             </xpath>
 
             <xpath expr="//th[@name='th_priceunit']" position="attributes">

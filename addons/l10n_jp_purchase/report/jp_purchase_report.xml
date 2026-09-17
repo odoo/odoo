@@ -5,10 +5,17 @@
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
                 <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="o.company_id.sudo()._l10n_jp_hide_zero_decimals(o.order_line.mapped('price_unit'))"/>
             </xpath>
 
             <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
                 <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+            </xpath>
+
+            <!-- The column drops its decimals only when every unit price in it is whole. -->
+            <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+                <attribute name="t-options">{'precision': 0} if jp_hide_zero_decimals else {}</attribute>
             </xpath>
 
             <xpath expr="//th[@name='th_price_unit']" position="attributes">
