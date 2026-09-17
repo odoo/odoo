@@ -1,4 +1,5 @@
 import logging
+import math
 from collections import defaultdict
 
 from odoo import models
@@ -319,6 +320,35 @@ class StockMoveMerge(models.Model):
                 round=False,
             ),
         )
+        # A split cannot conserve demand when the remainder is not representable
+        # in this move's unit: eight units of a move denominated in dozens is
+        # 0.6667, stored 0.67, which reads back as 8.04. Rounding here is the
+        # only option that keeps the move in the unit the order was placed in,
+        # so the residual is reported rather than removed -- `_split` is the one
+        # place that can still see the quantity going in and the two coming out.
+        split_qty = defaults["product_uom_qty"]
+        if uom_qty is None:
+            split_back = split_qty
+        else:
+            split_back = self.product_uom_id._compute_quantity(
+                split_qty, self.product_id.uom_id, round=False
+            )
+        kept_back = self.product_uom_id._compute_quantity(
+            new_product_qty, self.product_id.uom_id, round=False
+        )
+        if not math.isclose(kept_back + split_back, self.product_qty, rel_tol=1e-12):
+            dbg.logic.debug(
+                "[move:%s] _split(%s): does NOT conserve -- %s in, %s kept + %s "
+                "split = %s, residual %s (remainder not representable in %s)",
+                self.id,
+                qty,
+                self.product_qty,
+                kept_back,
+                split_back,
+                kept_back + split_back,
+                kept_back + split_back - self.product_qty,
+                self.product_uom_id.name,
+            )
         dbg.logic.debug(
             "[move:%s] _split(%s): keeps %s, new move gets %s (faithful uom=%s)",
             self.id,

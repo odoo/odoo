@@ -1223,3 +1223,83 @@ class TestApplyingACountLandsOnIt(TransactionCase):
             "a count that will not land must be reported, and the guard for it "
             "cannot use compare(): the gap is under half an ulp by construction",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestSplittingAMoveCannotAlwaysConserve(TransactionCase):
+    """`_split` keeps the remainder in the move's own unit, so when the
+    remainder is not representable there the split does not conserve demand.
+    Eight units of a move denominated in dozens is 0.6667, stored 0.67, which
+    reads back as 8.04.
+
+    THIS RECORDS AN OPEN DECISION, not a desired outcome. The three quantities
+    involved -- what went in, what is split off, and what remains -- cannot all
+    be exact while the move stays in the unit the order was placed in, and the
+    only fix that conserves changes a move's unit of measure underneath the
+    user. `stock_picking_batch`'s `test_wave_split_move_uom` pins the current
+    behaviour explicitly (0.58 dozen where 7 units remain), so this is a
+    contract to change deliberately or not at all. Until then the residual must
+    not be silent.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.unit = cls.env.ref("uom.product_uom_unit")
+        cls.dozen = cls.env["uom.uom"].create(
+            {
+                "name": "Split dozen",
+                "relative_factor": 12,
+                "relative_uom_id": cls.unit.id,
+            }
+        )
+        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
+        cls.product = cls.env["product.product"].create(
+            {"name": "Split probe", "is_storable": True, "uom_id": cls.unit.id}
+        )
+        cls.env["stock.quant"]._update_available_quantity(
+            cls.product, cls.warehouse.lot_stock_id, 10000
+        )
+
+    def _confirmed_dozen_move(self):
+        move = self.env["stock.move"].create(
+            {
+                "product_id": self.product.id,
+                "product_uom_id": self.dozen.id,
+                "product_uom_qty": 1.0,
+                "picking_type_id": self.warehouse.out_type_id.id,
+                "location_id": self.warehouse.lot_stock_id.id,
+                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
+            }
+        )
+        move._action_confirm()
+        return move
+
+    def test_a_representable_remainder_conserves_exactly(self):
+        """Six units of a dozen is 0.5, which the move's own unit expresses."""
+        move = self._confirmed_dozen_move()
+        before = move.product_qty
+        new = self.env["stock.move"].create(move._split(6.0))
+        self.env.flush_all()
+        move.invalidate_recordset()
+        new.invalidate_recordset()
+        self.assertEqual(move.product_qty + sum(new.mapped("product_qty")), before)
+
+    def test_an_unrepresentable_remainder_is_reported(self):
+        move = self._confirmed_dozen_move()
+        before = move.product_qty
+        with self.assertLogs("odoo.addons.stock.debug.logic", "DEBUG") as captured:
+            new = self.env["stock.move"].create(move._split(4.0))
+            self.env.flush_all()
+        move.invalidate_recordset()
+        new.invalidate_recordset()
+        self.assertNotEqual(
+            move.product_qty + sum(new.mapped("product_qty")),
+            before,
+            "if this conserves, the open decision above has been taken and this "
+            "test should be replaced rather than relaxed",
+        )
+        self.assertTrue(
+            any("does NOT conserve" in line for line in captured.output),
+            "a split that changes the total demanded must say so",
+        )
