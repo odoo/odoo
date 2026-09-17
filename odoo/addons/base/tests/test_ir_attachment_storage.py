@@ -82,6 +82,34 @@ class TestIrAttachmentStorage(TransactionCase):
         self.env.cr.postcommit.run()
         self.assertEqual(removed, ["fake-remote://bucket/key"])
 
+    def test_remote_key_referenced_again_before_the_commit_is_kept(self):
+        removed = []
+
+        class FakeRemoteStorage(AttachmentStorage):
+            location = "fake_remote"
+            key_scheme = "fake-remote"
+
+            def remove(self, key):
+                removed.append(key)
+
+        register_storage(FakeRemoteStorage)
+        self.addCleanup(STORAGE_BACKENDS.pop, "fake_remote", None)
+        key = "fake-remote://bucket/shared"
+        first, second = self.Attachment.create(
+            [{"name": "a", "raw": b"x"}, {"name": "b", "raw": b"y"}]
+        )
+        (first + second).flush_recordset()
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET store_fname = %s WHERE id = %s", [key, first.id]
+        )
+        first.invalidate_recordset()
+        first.unlink()
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET store_fname = %s WHERE id = %s", [key, second.id]
+        )
+        self.env.cr.postcommit.run()
+        self.assertEqual(removed, [], "a key another row took back must survive")
+
     def test_unknown_scheme_warns_once(self):
         dbname = self.env.cr.dbname
         self.addCleanup(

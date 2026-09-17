@@ -1084,9 +1084,19 @@ class IrAttachment(models.Model):
 
     @api.model
     def _remove_remote_files(self, fnames: Collection[str]) -> None:
-        _debug.lifecycle("remote_files_removed", count=len(fnames))
+        self.env.cr.execute(
+            "SELECT store_fname FROM ir_attachment WHERE store_fname = ANY(%s)",
+            [list(fnames)],
+        )
+        referenced = {row[0] for row in self.env.cr.fetchall()}
+        _debug.lifecycle(
+            "remote_files_removed",
+            count=len(fnames) - len(referenced),
+            still_referenced=len(referenced),
+        )
         for fname in fnames:
-            self._get_storage_backend_for_key(fname).remove(fname)
+            if fname not in referenced:
+                self._get_storage_backend_for_key(fname).remove(fname)
 
     @api.model
     def _is_content_collision_check_enabled(self) -> bool:
