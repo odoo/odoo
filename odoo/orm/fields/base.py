@@ -785,6 +785,11 @@ class Field[T](
             record_id = record_ids[0]
             if core.is_protected(self, record_id):
                 self.mark_dirty(records, value)
+                if record_id:
+                    # a recompute writes through here, never through write():
+                    # user scopes whose read rule tests this field must forget
+                    # what they hold, exactly as write() does after mark_dirty
+                    records._evict_x2many_scopes_reading_through((self.name,))
                 return
             if not record_id:
                 self._update_new(records, [record_id], value)
@@ -823,7 +828,11 @@ class Field[T](
     def _update_protected(
         self, records: BaseModel, ids: list[typing.Any], value: typing.Any
     ) -> None:
-        self.mark_dirty(_get_recordset_like(records, ids), value)
+        recs = _get_recordset_like(records, ids)
+        self.mark_dirty(recs, value)
+        if any(ids):
+            # same eviction as write(), which this protected path bypasses
+            recs._evict_x2many_scopes_reading_through((self.name,))
 
     def _update_new(
         self, records: BaseModel, ids: list[typing.Any], value: typing.Any
