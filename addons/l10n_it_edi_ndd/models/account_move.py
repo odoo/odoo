@@ -1,7 +1,8 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.models.account_move import get_text
+from odoo.exceptions import ValidationError
 
 
 class AccountMove(models.Model):
@@ -131,3 +132,27 @@ class AccountMove(models.Model):
             if v.get('level') in ('error', 'warning')
         )
         return errors
+
+    @api.onchange('partner_id', 'invoice_line_ids')
+    def _onchange_partner_or_lines_td07(self):
+        for move in self:
+            if move.l10n_it_document_type and move.l10n_it_document_type.code == 'TD07':
+                errors = move._l10n_it_edi_is_simplified_checks()
+                if errors:
+                    error_messages = [error_data['message'] for error_data in errors.values()]
+                    move.l10n_it_document_type = False
+                    return {
+                        'warning': {
+                            'title': _("Type of document TD07 is not allowed anymore."),
+                            'message': "\n\n".join(error_messages)
+                        }
+                    }
+
+    @api.constrains('l10n_it_document_type')
+    def _check_td07_requirements_on_save(self):
+        for move in self:
+            if move.l10n_it_document_type and move.l10n_it_document_type.code == 'TD07':
+                errors = move._l10n_it_edi_is_simplified_checks()
+                if errors:
+                    error_messages = [error_data['message'] for error_data in errors.values()]
+                    raise ValidationError("\n".join(error_messages))

@@ -1,5 +1,6 @@
 from odoo import Command
 from odoo.tests import tagged
+from odoo.exceptions import ValidationError
 from odoo.addons.l10n_it_edi.tests.test_edi_export import TestItEdiExport
 
 
@@ -7,6 +8,7 @@ from odoo.addons.l10n_it_edi.tests.test_edi_export import TestItEdiExport
 class TestItEdiNddExport(TestItEdiExport):
 
     def _force_simplified(self, partner):
+        partner.street = None
         td07 = self.env['l10n_it.document.type'].search([('code', '=', 'TD07')], limit=1)
         return self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
@@ -32,8 +34,8 @@ class TestItEdiNddExport(TestItEdiExport):
 
     def test_invoice_non_domestic_force_simplified(self):
         """ If the user forces a simplified document type (i.e. TD07) on a non-italian partner, an error is raised """
-        invoice = self._force_simplified(self.american_partner)
-        self.assertEqual(['l10n_it_edi_move_simplified_partner'], self._get_simplified_errors(invoice))
+        with self.assertRaises(ValidationError):
+            self._force_simplified(self.american_partner)
 
     def test_invoice_domestic_force_simplified(self):
         """ If the user forces a simplified document type (i.e. TD07) on an italian partner, it works """
@@ -42,5 +44,5 @@ class TestItEdiNddExport(TestItEdiExport):
 
     def test_invoice_pa_force_simplified(self):
         """ If the user forces a simplified document type (i.e. TD07) on an italian PA partner, errors are raised """
-        invoice = self._force_simplified(self.italian_partner_b)
-        self.assertEqual(['l10n_it_edi_move_simplified_partner'], self._get_simplified_errors(invoice))
+        with self.assertRaises(ValidationError):
+            self._force_simplified(self.italian_partner_b)
