@@ -1778,12 +1778,19 @@ class ResPartner(models.Model):
                 add_id = partner.parent_id.id
             groups[(cp_id, add_id)].append(partner.id)
 
+        # one fetch per field set for every group's source, so a file whose
+        # rows each name a different parent costs two queries, not two per row
+        commercial = self.sudo().browse([cp_id for cp_id, _add_id in groups if cp_id])
+        commercial.fetch(self._commercial_fields())
+        address_parents = self.browse([add_id for _cp_id, add_id in groups if add_id])
+        address_parents.fetch(self._address_fields())
+
         for (cp_id, add_id), children in groups.items():
             to_write = {}
             if cp_id:
-                to_write = self.sudo().browse(cp_id)._prepare_commercial_vals()
+                to_write = commercial.browse(cp_id)._prepare_commercial_vals()
             if add_id:
-                parent = self.browse(add_id)
+                parent = address_parents.browse(add_id)
                 for f in self._address_fields():
                     v = parent[f]
                     if v:

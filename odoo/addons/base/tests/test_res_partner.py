@@ -2756,3 +2756,36 @@ class TestPartnerDisplayNameColumn(TransactionCase):
             Company._search_display_name("ilike", "Co"),
             Company.with_context(other_key=1)._search_display_name("ilike", "Co"),
         )
+
+
+@tagged("res_partner")
+class TestPartnerImportBatch(TransactionCase):
+    def _queries_for_import_of(self, count):
+        Partner = self.env["res.partner"]
+        parents = Partner.create(
+            [{"name": f"IMPB parent {count}-{i}"} for i in range(count)]
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        before = self.cr.sql_statement_count
+        result = Partner.load(
+            ["name", "parent_id"],
+            [
+                [f"IMPB child {count}-{i}", parent.name]
+                for i, parent in enumerate(parents)
+            ],
+        )
+        self.env.flush_all()
+        self.assertFalse(result["messages"])
+        self.assertEqual(len(result["ids"]), count)
+        return self.cr.sql_statement_count - before
+
+    def test_import_query_count_does_not_grow_with_the_number_of_parents(self):
+        small = self._queries_for_import_of(10)
+        large = self._queries_for_import_of(40)
+        self.assertLessEqual(
+            large,
+            small + 10,
+            f"an import of 40 children of 40 parents cost {large} queries against "
+            f"{small} for 10: the parents must be fetched once, not once per row",
+        )
