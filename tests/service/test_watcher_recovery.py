@@ -211,3 +211,52 @@ class TestResyncAfterOverflow:
             "a bundle rebuilt from a file whose change event was dropped is "
             "stale until something else touches it"
         )
+
+
+@requires_inotify
+class TestCreatedDirectoryVanished:
+    def _handle(self, created_dir):
+        obj = object.__new__(_watcher.FSWatcherInotify)
+        obj.watcher = MagicMock()
+        obj.on_file_changed = MagicMock(return_value=None)
+        event = MagicMock()
+        event.name = created_dir.name
+        event.full_path = str(created_dir)
+        return obj, obj._handle_created_directory(event)
+
+    def test_a_directory_gone_before_the_scan_does_not_kill_the_watcher(self, tmp_path):
+        # The race: git checkout/stash, mkdtemp and editors create and remove
+        # directories fast enough that the CREATE event is read after the
+        # rmdir.  The scan must skip it, or the exception propagates through
+        # _run() and the watcher thread dies for the rest of the session.
+        obj, result = self._handle(tmp_path / "vanished")
+        assert result is False
+        obj.on_file_changed.assert_not_called()
+
+    def test_a_subdirectory_gone_mid_scan_does_not_lose_its_siblings(self, tmp_path):
+        created = tmp_path / "mod"
+        (created / "gone").mkdir(parents=True)
+        (created / "kept").mkdir()
+        (created / "kept" / "models.py").write_text("")
+
+        obj = object.__new__(_watcher.FSWatcherInotify)
+        obj.watcher = MagicMock()
+        seen = []
+        obj.on_file_changed = lambda path: seen.append(path) and None
+
+        real_iterdir = Path.iterdir
+
+        def iterdir(self):
+            if self == created / "gone":
+                raise FileNotFoundError(errno.ENOENT, "gone", str(self))
+            return real_iterdir(self)
+
+        event = MagicMock()
+        event.name = created.name
+        event.full_path = str(created)
+        with patch.object(Path, "iterdir", iterdir):
+            assert obj._handle_created_directory(event) is False
+        assert seen == [str(created / "kept" / "models.py")], (
+            "one vanished subdirectory must not stop the scan of the rest of "
+            "the created tree"
+        )
