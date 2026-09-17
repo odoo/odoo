@@ -5053,7 +5053,7 @@ class MrpProduction(models.Model):
     def _track_get_fields(self):
         res = super()._track_get_fields()
         if res:
-            res = OrderedSet(topological_sort(self.fields_get(res, ("depends"))))
+            res = OrderedSet(topological_sort(self.fields_get(res, ("depends",))))
         return res
 
     def _add_reference(self, reference):
