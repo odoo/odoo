@@ -10,7 +10,7 @@
         <div t-if="collapsedBreadcrumbs.length || previousBreadcrumb" class="o_breadcrumb d-flex flex-row flex-md-column min-w-0">
             <t t-if="this.uiService.isSmall">
                 <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected" data-available-offline="">
-                    <i class="oi oi-fw" data-icon="west"/>
+                    <i class="oi oi-fw" data-icon="arrow_back"/>
                 </button>
             </t>
             <t t-else="">

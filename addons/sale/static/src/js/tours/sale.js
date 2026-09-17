@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         ),
         {
             isActive: ["desktop"],
-            trigger: "[data-icon='east']", // Wait for product creation
+            trigger: "[data-icon='arrow_forward']", // Wait for product creation
         },
         {
             isActive: ["desktop"],

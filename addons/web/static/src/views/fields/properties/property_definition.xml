@@ -103,7 +103,7 @@
                             className="'d-inline-block me-2'"
                         />
                         <div t-if="this.state.matchingRecordsCount !== undefined" class="d-inline-block">
-                            <i class="oi" data-icon="east" role="img" title="Domain"/>
+                            <i class="oi" data-icon="arrow_forward" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
                                 t-on-click.stop="this.onButtonDomainClick">
                                 <t t-out="this.state.matchingRecordsCount"/> record(s)
