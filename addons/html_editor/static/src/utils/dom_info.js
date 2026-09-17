@@ -887,11 +887,11 @@ export function hasSameClasses(node, node2) {
 }
 
 export function isTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE;
+    return node?.nodeType === Node.TEXT_NODE;
 }
 
 export function isElement(node) {
-    return node.nodeType === Node.ELEMENT_NODE;
+    return node?.nodeType === Node.ELEMENT_NODE;
 }
 
 export function isContentEditable(node) {
