@@ -1168,3 +1168,58 @@ class TestANoOpWriteOfQuantityMovesNoStock(TransactionCase):
         move.invalidate_recordset()
         self.assertEqual(move.quantity, 1.0)
         self.assertAlmostEqual(move._get_move_line_quantity(), 1.0, places=2)
+
+
+@tagged("post_install", "-at_install")
+class TestApplyingACountLandsOnIt(TransactionCase):
+    """`stock.quant.quantity` is stored at full precision, while
+    `inventory_diff_quantity` and the `stock.move` carrying it are stored at
+    display precision. A quant with more decimals than the display can show
+    therefore cannot be counted onto an exact figure."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
+        cls.unit = cls.env.ref("uom.product_uom_unit")
+
+    def _count_and_apply(self, on_hand, counted, name):
+        product = self.env["product.product"].create(
+            {"name": name, "is_storable": True, "uom_id": self.unit.id}
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            product, self.warehouse.lot_stock_id, on_hand
+        )
+        self.env.flush_all()
+        quant = self.env["stock.quant"].search(
+            [
+                ("product_id", "=", product.id),
+                ("location_id", "=", self.warehouse.lot_stock_id.id),
+            ]
+        )
+        quant.invalidate_recordset()
+        quant.with_context(inventory_mode=True).inventory_quantity = counted
+        self.env.flush_all()
+        quant.with_context(inventory_mode=True)._apply_inventory()
+        self.env.flush_all()
+        quant.invalidate_recordset()
+        return quant
+
+    def test_a_count_lands_exactly_when_the_gap_is_representable(self):
+        quant = self._count_and_apply(10.25, 11.0, "Countable")
+        self.assertEqual(quant.quantity, 11.0)
+
+    def test_a_count_that_cannot_land_says_so_on_the_logic_channel(self):
+        """The first assertion records an OPEN DECISION, not a desired outcome:
+        an ordinary receipt of 1 unit of a product stocked in dozens makes a
+        quant of 0.0833..., and no adjustment can count it onto a round figure
+        while moves carry display precision. Until that is decided, the only
+        defensible position is that the drift must not be silent."""
+        with self.assertLogs("odoo.addons.stock.debug.logic", "DEBUG") as captured:
+            quant = self._count_and_apply(31.0 / 3.0, 11.0, "Uncountable")
+        self.assertNotEqual(quant.quantity, 11.0)
+        self.assertTrue(
+            any("_apply_inventory: counted" in line for line in captured.output),
+            "a count that will not land must be reported, and the guard for it "
+            "cannot use compare(): the gap is under half an ulp by construction",
+        )

@@ -471,6 +471,21 @@ class StockQuantInventory(models.Model):
                         or self.env.company.display_name,
                     )
                 )
+            applied = quant.inventory_diff_quantity
+            intended = quant.inventory_quantity - quant.quantity
+            if not math.isclose(
+                quant.quantity + applied, quant.inventory_quantity, rel_tol=1e-12
+            ):
+                dbg.logic.debug(
+                    "[quant:%s] _apply_inventory: counted %s against %s, moving %s "
+                    "not %s -- will land on %s",
+                    quant.id,
+                    quant.inventory_quantity,
+                    quant.quantity,
+                    applied,
+                    intended,
+                    quant.quantity + applied,
+                )
             if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._prepare_inventory_move_vals(
