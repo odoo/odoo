@@ -35,11 +35,11 @@
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Container Size" t-if="!this.isActiveItem('split_cover_opt')"
-            tooltip.translate="Adapt the size of the blog post content">
+        <BuilderRow label.translate="Container Size" tooltip.translate="Adapt the size of the blog post page">
             <BuilderSelect>
-                <BuilderSelectItem actionParam="{views: []}">Default</BuilderSelectItem>
-                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_large_container']}">Large</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}" t-if="!this.isActiveItem('split_cover_opt')">Small</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_large_container']}">Regular</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_full_container']}">Full</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
 
