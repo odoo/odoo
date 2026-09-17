@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
 import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
 import { EventSlotSelectionPopup } from "../../components/popup/event_slot_selection_popup/event_slot_selection_popup";
+import { createRegistrationAnswer, extractRegistrationData } from "@pos_event/app/utils/event_util";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -154,8 +155,10 @@ patch(ProductScreen.prototype, {
             return;
         }
 
-        const { textAnswer: globalTextAnswer, userData: globalUserData } =
-            this.extractRegistrationData(result.byOrder);
+        const { textAnswer: globalTextAnswer, userData: globalUserData } = extractRegistrationData(
+            this.pos.models,
+            result.byOrder
+        );
 
         for (const [ticketId, data] of Object.entries(result.byRegistration)) {
             const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
@@ -179,9 +182,11 @@ patch(ProductScreen.prototype, {
             });
 
             for (const registration of data) {
-                const { textAnswer, userData } = this.extractRegistrationData(registration, {
-                    ...globalUserData,
-                });
+                const { textAnswer, userData } = extractRegistrationData(
+                    this.pos.models,
+                    registration,
+                    { ...globalUserData }
+                );
 
                 // This will throw an error on creation if not possible (python constraint)
                 this.pos.models["event.registration"].create({
@@ -191,48 +196,13 @@ patch(ProductScreen.prototype, {
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
-                    registration_answer_ids: this.createRegistrationAnswer(
+                    registration_answer_ids: createRegistrationAnswer(
+                        this.pos.models,
                         Object.entries({ ...textAnswer, ...globalTextAnswer })
                     ),
                 });
             }
         }
-    },
-    createRegistrationAnswer(textAnswers) {
-        return textAnswers.map(([questionId, answer]) => {
-            const ansId = this.pos.models["event.question.answer"].get(parseInt(answer));
-            return [
-                "create",
-                {
-                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
-                    ...(ansId ? { value_answer_id: ansId } : { value_text_box: answer }),
-                },
-            ];
-        });
-    },
-    extractRegistrationData(questions, userData = {}) {
-        const IDENTIFICATION_QUESTION_TYPES = new Set(["name", "email", "phone", "company_name"]);
-
-        return Object.entries(questions).reduce(
-            (acc, [qId, answer]) => {
-                if (!answer) {
-                    return acc;
-                }
-
-                const question = this.pos.models["event.question"].get(parseInt(qId));
-                if (!question) {
-                    return acc;
-                }
-
-                acc.textAnswer[qId] = answer;
-                if (IDENTIFICATION_QUESTION_TYPES.has(question.question_type)) {
-                    userData[question.question_type] ??= answer;
-                }
-
-                return acc;
-            },
-            { textAnswer: {}, userData }
-        );
     },
     onMouseDown(event, product) {
         if (product.event_id) {
