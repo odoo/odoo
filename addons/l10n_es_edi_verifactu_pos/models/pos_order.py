@@ -153,6 +153,10 @@ class PosOrder(models.Model):
 
         return errors
 
+    def l10n_es_edi_verifactu_get_invoice_name(self):
+        self.ensure_one()
+        return self.account_move.name if self.account_move else self.name
+
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         self.ensure_one()
 

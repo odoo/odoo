@@ -22,4 +22,18 @@ patch(TicketScreen.prototype, {
         }
         await super.addAdditionalRefundInfo(...arguments);
     },
+    async print(order) {
+        if (
+            this.pos.company.l10n_es_edi_verifactu_required &&
+            typeof order.id === "number" &&
+            !order.invoice_name
+        ) {
+            order.invoice_name = await this.pos.data.call(
+                "pos.order",
+                "l10n_es_edi_verifactu_get_invoice_name",
+                [order.id]
+            );
+        }
+        return super.print(...arguments);
+    },
 });
