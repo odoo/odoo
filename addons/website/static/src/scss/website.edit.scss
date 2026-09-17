@@ -11,6 +11,18 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
     z-index: $o-we-dropzone-z-index + 1;
 }
 
+// Links are disabled in edit mode, so we need to disable the animations that
+// would be blocked by links.
+*:has(> .stretched-link, > .slide-link) {
+    .o_block_hover:hover {
+        transform: none !important;
+
+        &::before {
+            display: none !important;
+        }
+    }
+}
+
 // The first and last dropzones in the “parallax” and “animated cover”
 // snippets are in the same place as the dropzones just before and after
 // them, so we shift them a bit.
