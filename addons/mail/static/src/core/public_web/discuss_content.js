@@ -74,7 +74,7 @@ export class DiscussContent extends Component {
     get showsChatLocalDateTime() {
         return (
             this.thread.channel?.channel_type === "chat" &&
-            this.correspondentLocalDateTimeFormatted()
+            Boolean(this.correspondentLocalDateTimeFormatted())
         );
     }
 
@@ -84,6 +84,19 @@ export class DiscussContent extends Component {
             this.thread.is_editable &&
             ["channel", "group"].includes(this.thread.channel?.channel_type)
         );
+    }
+
+    /** Whether an extra line is shown below the thread name in the header. */
+    get hasHeaderSubline() {
+        return this.showsChatLocalDateTime;
+    }
+
+    get threadNameAttClass() {
+        return {
+            "o-mail-DiscussContent-threadNameBox fw-bold flex-shrink-0 py-0": true,
+            "fs-5": this.hasHeaderSubline,
+            "fs-4": !this.hasHeaderSubline,
+        };
     }
 
     get threadAvatarAttClass() {
