@@ -425,7 +425,7 @@
                 </div>
                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="oi" data-icon="calendar_today" title="Calendar"/>
-                    <field name="calendar_id" nolabel="1" class="w-100" options="{'no_open': True}"/>
+                    <field name="calendar_id" nolabel="1" class="w-100" options="{'no_open': True}" placeholder="No calendar"/>
                 </div>
                 <div class="o_outlined d-flex align-items-start mb-2 gap-2">
                     <i class="oi oi-filled" data-icon="sticky_note_2" title="Notes"/>
@@ -474,7 +474,7 @@
                 <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
                 <field name="calendar_id" filters="1" write_model="calendar.user" write_field="calendar_id"
                        filter_field="is_filter_checked" color="filter_color" options="{'icon': 'calendar_today', 'no_open': True}"
-                       string="My Calendars" invisible="user_id != uid"/>
+                       string="Calendar" invisible="user_id != uid"/>
                 <field name="description" class="text-wrap" invisible="not display_description" options="{'icon': 'sticky_note_2', 'icon_class': 'oi-filled'}"/>
             </calendar>
         </field>
