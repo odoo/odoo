@@ -24,7 +24,7 @@ class TeamTeam(models.Model):
         string="Number of Orders",
         compute="_compute_maintenance_todo_orders",
     )
-    maintenance_todo_order_count_date = fields.Integer(
+    maintenance_todo_order_count_scheduled = fields.Integer(
         string="Number of Orders Scheduled",
         compute="_compute_maintenance_todo_orders",
     )
@@ -62,6 +62,49 @@ class TeamTeam(models.Model):
         string="Maintenance Email Alias",
     )
 
+    @api.depends("alias_ids.usage")
+    def _compute_maintenance_alias_id(self):
+        self._compute_usage_alias_field("maintenance", "maintenance_alias_id")
+
+    @api.depends("maintenance_order_ids.state")
+    def _compute_maintenance_todo_orders(self):
+        Order = self.env["maintenance.order"]
+        data_by_team = defaultdict(list)
+        for team, *row in Order._read_group(
+            [("maintenance_team_id", "in", self.ids), *Order._get_domain_open()],
+            [
+                "maintenance_team_id",
+                "date_scheduled_start:year",
+                "priority",
+                "kanban_state",
+            ],
+            ["__count"],
+        ):
+            data_by_team[team].append(row)
+        for team in self:
+            data = data_by_team[team]
+            team.maintenance_todo_order_count = sum(count for (_, _, _, count) in data)
+            team.maintenance_todo_order_count_scheduled = sum(
+                count
+                for (date_scheduled_start, _, _, count) in data
+                if date_scheduled_start
+            )
+            team.maintenance_todo_order_count_high_priority = sum(
+                count for (_, priority, _, count) in data if priority == "3"
+            )
+            team.maintenance_todo_order_count_block = sum(
+                count
+                for (_, _, kanban_state, count) in data
+                if kanban_state == "blocked"
+            )
+            team.maintenance_todo_order_count_unscheduled = (
+                team.maintenance_todo_order_count
+                - team.maintenance_todo_order_count_scheduled
+            )
+
+    def _search_maintenance_alias_id(self, operator, value):
+        return self._search_usage_alias_field("maintenance", operator, value)
+
     @api.model
     def _get_usages(self):
         return super()._get_usages() | {
@@ -79,39 +122,3 @@ class TeamTeam(models.Model):
         if key == "maintenance":
             defaults["maintenance_team_id"] = defaults.pop("team_id")
         return defaults
-
-    @api.depends("alias_ids.usage")
-    def _compute_maintenance_alias_id(self):
-        self._compute_usage_alias_field("maintenance", "maintenance_alias_id")
-
-    def _search_maintenance_alias_id(self, operator, value):
-        return self._search_usage_alias_field("maintenance", operator, value)
-
-    @api.depends("maintenance_order_ids.state")
-    def _compute_maintenance_todo_orders(self):
-        Order = self.env["maintenance.order"]
-        data_by_team = defaultdict(list)
-        for team, *row in Order._read_group(
-            [("maintenance_team_id", "in", self.ids), *Order._get_domain_open()],
-            ["maintenance_team_id", "schedule_date:year", "priority", "kanban_state"],
-            ["__count"],
-        ):
-            data_by_team[team].append(row)
-        for team in self:
-            data = data_by_team[team]
-            team.maintenance_todo_order_count = sum(count for (_, _, _, count) in data)
-            team.maintenance_todo_order_count_date = sum(
-                count for (schedule_date, _, _, count) in data if schedule_date
-            )
-            team.maintenance_todo_order_count_high_priority = sum(
-                count for (_, priority, _, count) in data if priority == "3"
-            )
-            team.maintenance_todo_order_count_block = sum(
-                count
-                for (_, _, kanban_state, count) in data
-                if kanban_state == "blocked"
-            )
-            team.maintenance_todo_order_count_unscheduled = (
-                team.maintenance_todo_order_count
-                - team.maintenance_todo_order_count_date
-            )

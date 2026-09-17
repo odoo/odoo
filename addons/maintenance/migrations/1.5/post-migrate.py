@@ -1,11 +1,11 @@
 from odoo.db.schema import column_exists, table_exists
 
-RELIABILITY_COLUMNS = (
-    "maintenance_team_id",
-    "technician_user_id",
-    "expected_mtbf",
-    "date_effective",
-)
+RELIABILITY_COLUMNS = {
+    "maintenance_team_id": "maintenance_team_id",
+    "technician_user_id": "technician_user_id",
+    "expected_mtbf": "expected_mtbf",
+    "date_effective": "date_in_service",
+}
 
 
 def migrate(cr, version):
@@ -60,7 +60,8 @@ def _move_reliability(cr, table, resource_column):
     if not columns:
         return
     assignments = ", ".join(
-        f"{c} = COALESCE(source.{c}, resource.{c})" for c in columns
+        f"{RELIABILITY_COLUMNS[c]} = COALESCE(source.{c}, resource.{RELIABILITY_COLUMNS[c]})"
+        for c in columns
     )
     cr.execute(
         f"""

@@ -8,8 +8,8 @@ from .maintenance_order import OPEN_STATES
 class ResourceResource(models.Model):
     _inherit = "resource.resource"
 
-    date_effective = fields.Date(
-        string="Effective Date",
+    date_in_service = fields.Date(
+        string="In Service Since",
         default=fields.Date.context_today,
         help="This date will be used to compute the Mean Time Between Failure.",
     )
@@ -56,12 +56,15 @@ class ResourceResource(models.Model):
         compute="_compute_maintenance_order",
         help="Mean Time To Repair",
     )
-    estimated_next_failure = fields.Date(
-        string="Estimated time before next failure (in days)",
+    date_next_failure = fields.Date(
+        string="Estimated Next Failure",
         compute="_compute_maintenance_order",
-        help="Computed as Latest Failure Date + MTBF",
+        help="Computed as Last Failure + MTBF",
     )
-    latest_failure_date = fields.Date(compute="_compute_maintenance_order")
+    date_last_failure = fields.Date(
+        string="Last Failure",
+        compute="_compute_maintenance_order",
+    )
     maintenance_plan_ids = fields.Many2many(
         comodel_name="maintenance.plan",
         relation="maintenance_plan_resource_rel",
@@ -80,39 +83,43 @@ class ResourceResource(models.Model):
                 record.maintenance_team_id = False
 
     @api.depends(
-        "date_effective",
+        "date_in_service",
         "maintenance_ids.maintenance_type",
         "maintenance_ids.state",
-        "maintenance_ids.close_date",
-        "maintenance_ids.date_order",
+        "maintenance_ids.date_done",
+        "maintenance_ids.date_confirmed",
     )
     def _compute_maintenance_order(self):
         for record in self:
             maintenance_orders = record.maintenance_ids.filtered(
                 lambda mr: mr.maintenance_type == "corrective" and mr.state == "done"
             )
-            repair_days = [
-                (order.close_date - order.date_order).days
+            failure_days = {
+                order: fields.Datetime.context_timestamp(
+                    order, order.date_confirmed
+                ).date()
                 for order in maintenance_orders
-                if order.close_date and order.date_order
+                if order.date_confirmed
+            }
+            repair_days = [
+                (order.date_done - failure_day).days
+                for order, failure_day in failure_days.items()
+                if order.date_done
             ]
             record.mttr = sum(repair_days) / len(repair_days) if repair_days else 0
-            record.latest_failure_date = max(
-                (order.date_order for order in maintenance_orders),
-                default=False,
-            )
-            since = record.date_effective or (
+            record.date_last_failure = max(failure_days.values(), default=False)
+            since = record.date_in_service or (
                 record.create_date and record.create_date.date()
             )
             record.mtbf = (
-                record.latest_failure_date
+                record.date_last_failure
                 and since
-                and max((record.latest_failure_date - since).days, 0)
+                and max((record.date_last_failure - since).days, 0)
                 / len(maintenance_orders)
             ) or 0
-            record.estimated_next_failure = (
+            record.date_next_failure = (
                 record.mtbf
-                and record.latest_failure_date + relativedelta(days=record.mtbf)
+                and record.date_last_failure + relativedelta(days=record.mtbf)
             ) or False
 
     @api.depends("maintenance_ids.state")

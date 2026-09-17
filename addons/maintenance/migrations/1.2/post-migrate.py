@@ -27,7 +27,7 @@ def migrate(cr, version):
                    request.repeat_unit,
                    request.repeat_type,
                    request.repeat_until,
-                   COALESCE(%s, request.schedule_date, request.create_date)
+                   COALESCE(%s, request.date_scheduled_start, request.create_date)
               FROM maintenance_order request
          LEFT JOIN maintenance_stage stage ON stage.id = request.stage_id
              WHERE request.recurring_maintenance
@@ -85,7 +85,7 @@ def migrate(cr, version):
                         else "forever",
                         "repeat_until": until,
                         "repeat_anchor": "fixed",
-                        "date_start": start,
+                        "date_first_occurrence": start,
                         "order_ids": [
                             Command.link(member.id) for member, _start in members
                         ],

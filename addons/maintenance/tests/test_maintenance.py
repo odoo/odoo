@@ -65,7 +65,6 @@ class TestMaintenance(TestMaintenanceCommon):
             {
                 "name": "Resolution is bad",
                 "user_id": self.user.id,
-                "owner_user_id": self.user.id,
                 "resource_ids": monitor.resource_id.ids,
                 "color": 7,
                 "maintenance_team_id": self.ref(
@@ -137,10 +136,10 @@ class TestMaintenancePostInstall(TestMaintenanceCommon):
             form = Form(self.env["resource.asset"].browse(asset.id))
             self.assertEqual(form.name, "Super Equipment")
 
-    def test_done_maintenance_no_close_or_date_order(self):
+    def test_done_maintenance_no_date_done_or_date_confirmed(self):
         """
         Ensure an asset with done maintenance orders that have
-        `close_date` or `date_order` set to False can still be opened.
+        `date_done` or `date_confirmed` set to False can still be opened.
         In theory this should never happen, but we should fail gracefully
         in case these dates are forced set to False.
         """
@@ -154,20 +153,20 @@ class TestMaintenancePostInstall(TestMaintenanceCommon):
         form.resource_ids.add(equipment.resource_id)
         form.maintenance_type = "corrective"
         maintenance = form.save()
-        self.assertTrue(maintenance.date_order)
-        self.assertFalse(maintenance.close_date)
+        self.assertFalse(maintenance.date_confirmed)
+        self.assertFalse(maintenance.date_done)
 
         maintenance.action_confirm()
         maintenance.action_done()
-        self.assertTrue(maintenance.date_order)
-        self.assertTrue(maintenance.close_date)
+        self.assertTrue(maintenance.date_confirmed)
+        self.assertTrue(maintenance.date_done)
         form = Form(equipment)
 
         # this shouldn't happen unless it's forced
-        maintenance.close_date = False
+        maintenance.date_done = False
         form = Form(equipment)
-        maintenance.close_date = fields.Date.today()
-        maintenance.date_order = False
+        maintenance.date_done = fields.Date.today()
+        maintenance.date_confirmed = False
         form = Form(equipment)
-        maintenance.close_date = False
+        maintenance.date_done = False
         form = Form(equipment)

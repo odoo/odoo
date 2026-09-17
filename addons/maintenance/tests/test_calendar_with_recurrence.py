@@ -19,18 +19,18 @@ class TestCalendarWithRecurrence(HttpCase):
             [
                 {
                     "name": "send the mails",
-                    "schedule_date": datetime.now() + relativedelta(weeks=-2),
+                    "date_scheduled_start": datetime.now() + relativedelta(weeks=-2),
                 },
                 {
                     "name": "wash the car",
-                    "schedule_date": datetime.now() + relativedelta(weeks=+3),
+                    "date_scheduled_start": datetime.now() + relativedelta(weeks=+3),
                 },
             ]
         )
         plan = self.env["maintenance.plan"].create(
             {
                 "name": "clean the room",
-                "date_start": datetime.now(),
+                "date_first_occurrence": datetime.now(),
                 "repeat_type": "until",
                 "repeat_until": datetime.now() + relativedelta(days=+8),
                 "repeat_interval": 1,
@@ -66,18 +66,18 @@ class TestCalendarWithRecurrence(HttpCase):
             [
                 {
                     "name": "send the mails",
-                    "schedule_date": datetime.now() + relativedelta(months=-2),
+                    "date_scheduled_start": datetime.now() + relativedelta(months=-2),
                 },
                 {
                     "name": "wash the car",
-                    "schedule_date": datetime.now() + relativedelta(months=+1),
+                    "date_scheduled_start": datetime.now() + relativedelta(months=+1),
                 },
             ]
         )
         plan = self.env["maintenance.plan"].create(
             {
                 "name": "clean the room",
-                "date_start": datetime.combine(
+                "date_first_occurrence": datetime.combine(
                     datetime.now().replace(day=6), time.min.replace(hour=10)
                 ),  # 6th of the month at 10 AM
                 "repeat_interval": 1,
@@ -95,7 +95,7 @@ class TestCalendarWithRecurrence(HttpCase):
             datetime.now().replace(day=15), time.min.replace(hour=10)
         )  # 15h of the month at 10 AM
         self.assertEqual(
-            order.schedule_date,
+            order.date_scheduled_start,
             target_datetime,
             "The event modification should update the order",
         )

@@ -37,8 +37,10 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                     ...this.normalizeRecord({
                         ...rawRecord,
                         display_name: `${rawRecord.display_name} (+${index + 1})`,
-                        schedule_date: occurrence,
-                        schedule_end: serializeDateTime(date.plus({ hours: duration })),
+                        date_scheduled_start: occurrence,
+                        date_scheduled_end: serializeDateTime(
+                            date.plus({ hours: duration }),
+                        ),
                     }),
                     id: recordsCounter,
                     isRecurrent: true,
@@ -69,7 +71,7 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
         ];
     }
     normalizeRecord(rawRecord) {
-        // Override to set end = start + 1h if schedule_end is False.
+        // Override to set end = start + 1h if date_scheduled_end is False.
         const record = super.normalizeRecord(rawRecord);
         const { duration, start, end } = record;
         if (!end.isValid && duration) {

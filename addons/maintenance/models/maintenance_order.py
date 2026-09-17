@@ -13,8 +13,8 @@ RESERVATION_FIELDS = frozenset(
     {
         "resource_ids",
         "block_resource",
-        "schedule_date",
-        "schedule_end",
+        "date_scheduled_start",
+        "date_scheduled_end",
         "duration",
         "maintenance_type",
         "plan_id",
@@ -44,36 +44,33 @@ class MaintenanceOrder(models.Model):
         "cancel": {"draft"},
     }
 
-    def _creation_subtype(self):
-        return self.env.ref("maintenance.mt_order_created")
-
-    def _track_subtype(self, init_values):
-        self.check_singleton()
-        if "state" in init_values:
-            return self.env.ref("maintenance.mt_order_state")
-        return super()._track_subtype(init_values)
-
-    name = fields.Char(
-        string="Subjects",
-        required=True,
-    )
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
         required=True,
     )
-    description = fields.Html()
-    date_order = fields.Date(
-        default=fields.Date.context_today,
+    plan_id = fields.Many2one(
+        comodel_name="maintenance.plan",
+        index="btree_not_null",
+        copy=False,
+        ondelete="set null",
+        check_company=True,
         tracking=True,
-        help="Date requested for the maintenance to happen",
     )
-    owner_user_id = fields.Many2one(
-        comodel_name="res.users",
-        string="Created by User",
-        default=lambda s: s.env.uid,
+    name = fields.Char(
+        string="Subjects",
+        required=True,
     )
+    color = fields.Integer(string="Color Index")
+    priority = fields.Selection(
+        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
+    )
+    description = fields.Html()
     locked = fields.Boolean(tracking=True)
+    block_resource = fields.Boolean(
+        default=True,
+        help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
+    )
     resource_ids = fields.Many2many(
         comodel_name="resource.resource",
         relation="maintenance_order_resource_rel",
@@ -90,10 +87,6 @@ class MaintenanceOrder(models.Model):
         compute="_compute_asset_ids",
         search="_search_asset_ids",
     )
-    block_resource = fields.Boolean(
-        default=True,
-        help="While confirmed or in progress, the scheduled window is unavailable time on every maintained resource, for planning, work orders and every other reader of their calendars.",
-    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Technician",
@@ -101,6 +94,22 @@ class MaintenanceOrder(models.Model):
         store=True,
         readonly=False,
         tracking=True,
+    )
+    maintenance_team_id = fields.Many2one(
+        comodel_name="team.team",
+        string="Team",
+        compute="_compute_maintenance_team_id",
+        precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
+        required=True,
+        domain=[("use_maintenance", "=", True)],
+        check_company=True,
+    )
+    maintenance_type = fields.Selection(
+        selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
+        default="corrective",
     )
     state = fields.Selection(
         selection=[
@@ -118,18 +127,6 @@ class MaintenanceOrder(models.Model):
         group_expand=True,
         tracking=True,
     )
-    priority = fields.Selection(
-        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
-    )
-    color = fields.Integer(string="Color Index")
-    close_date = fields.Date(
-        compute="_compute_close_date",
-        precompute=True,
-        store=True,
-        copy=False,
-        readonly=False,
-        help="Date the maintenance was finished.",
-    )
     kanban_state = fields.Selection(
         selection=[
             ("normal", "On Track"),
@@ -140,40 +137,49 @@ class MaintenanceOrder(models.Model):
         required=True,
         tracking=True,
     )
-    maintenance_type = fields.Selection(
-        selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
-        default="corrective",
+    date_confirmed = fields.Datetime(
+        string="Confirmation Date",
+        compute="_compute_date_confirmed",
+        precompute=True,
+        store=True,
+        copy=False,
+        readonly=False,
+        help="When the order was confirmed, which reliability counts as the failure.",
     )
-    schedule_date = fields.Datetime(
-        string="Scheduled Date",
-        help="Date the maintenance team plans the maintenance.  It should not differ much from the Order Date. ",
+    date_plan_slot = fields.Datetime(
+        string="Plan Slot",
+        copy=False,
+        readonly=True,
+        help="The date of its plan's series this order stands for, however it is rescheduled.",
     )
-    schedule_end = fields.Datetime(
+    date_scheduled_start = fields.Datetime(
+        string="Scheduled Start",
+        help="Date the maintenance team plans the maintenance. It should not differ much from the Confirmation Date.",
+    )
+    date_scheduled_end = fields.Datetime(
         string="Scheduled End",
-        compute="_compute_schedule_end",
-        inverse="_inverse_schedule_end",
+        compute="_compute_date_scheduled_end",
+        inverse="_inverse_date_scheduled_end",
         precompute=True,
         store=True,
         copy=False,
         readonly=False,
         help="Expected completion date and time of the maintenance order.",
     )
-    maintenance_team_id = fields.Many2one(
-        comodel_name="team.team",
-        string="Team",
-        compute="_compute_maintenance_team_id",
+    date_done = fields.Date(
+        string="Done Date",
+        compute="_compute_date_done",
         precompute=True,
         store=True,
-        index=True,
+        copy=False,
         readonly=False,
-        required=True,
-        domain=[("use_maintenance", "=", True)],
-        check_company=True,
+        help="Date the maintenance was finished.",
     )
     duration = fields.Float(
         default=1.0,
         help="Duration in hours.",
     )
+
     instruction_type = fields.Selection(
         selection=[("pdf", "PDF"), ("google_slide", "Google Slide"), ("text", "Text")],
         string="Instruction",
@@ -185,178 +191,28 @@ class MaintenanceOrder(models.Model):
         help="Paste the url of your Google Slide. Make sure the access to the document is public.",
     )
     instruction_text = fields.Html(string="Text")
-    plan_id = fields.Many2one(
-        comodel_name="maintenance.plan",
-        index="btree_not_null",
-        copy=False,
-        ondelete="set null",
-        check_company=True,
-        tracking=True,
-    )
-    date_occurrence = fields.Datetime(
-        string="Planned Occurrence",
-        copy=False,
-        readonly=True,
-        help="The date of its plan's series this order stands for, however it is rescheduled.",
-    )
 
-    def _prepare_confirmation_values(self):
-        return {"state": "confirmed"}
-
-    def action_start(self):
-        self.write({"state": "in_progress"})
-        return True
-
-    def action_done(self):
-        self.write({"state": "done"})
-        return True
-
-    def _get_domain_approval_category(self):
-        self.check_singleton()
-        return [
-            ("active", "=", True),
-            ("approval_type", "=", f"maintenance_{self.maintenance_type}"),
-            ("target_model", "=", False),
-        ]
-
-    def _get_fields_approval_protected(self):
-        return ["resource_ids", "maintenance_type"]
-
-    @api.depends("resource_ids")
-    def _compute_asset_ids(self):
-        assets = self.env["resource.asset"].search(
-            [("resource_id", "in", self.resource_ids._origin.ids)]
-        )
-        for order in self:
-            order.asset_ids = assets.filtered(
-                lambda asset, resources=order.resource_ids._origin: (
-                    asset.resource_id in resources
-                )
-            )
-
-    def _search_asset_ids(self, operator, value):
-        if operator not in ("in", "not in", "any", "not any"):
-            return NotImplemented
-        if operator in ("any", "not any"):
-            assets = self.env["resource.asset"].search(value)
-        else:
-            assets = self.env["resource.asset"].browse(value)
-        domain = Domain("resource_ids", "in", assets.resource_id.ids)
-        return ~domain if operator.startswith("not") else domain
-
-    @api.model
-    def _get_domain_open(self):
-        return [("state", "in", OPEN_STATES)]
-
-    @api.constrains("schedule_date", "schedule_end")
-    def _check_schedule_end_after_start(self):
+    @api.constrains("date_scheduled_start", "date_scheduled_end")
+    def _check_date_scheduled_end_after_start(self):
         for order in self:
             if (
-                order.schedule_date
-                and order.schedule_end
-                and order.schedule_date > order.schedule_end
+                order.date_scheduled_start
+                and order.date_scheduled_end
+                and order.date_scheduled_start > order.date_scheduled_end
             ):
                 raise ValidationError(
                     self.env._("End date cannot be earlier than start date.")
                 )
 
-    @api.depends("state")
-    def _compute_close_date(self):
-        today = fields.Date.context_today(self)
-        for order in self:
-            if order.state != "done":
-                order.close_date = False
-            elif not order.close_date:
-                order.close_date = today
-
-    @api.depends("schedule_date", "duration")
-    def _compute_schedule_end(self):
-        for order in self:
-            order.schedule_end = order.schedule_date and (
-                order.schedule_date + timedelta(hours=order.duration or 1)
-            )
-
-    def _inverse_schedule_end(self):
-        for order in self:
-            if order.schedule_date and order.schedule_end:
-                order.duration = (
-                    order.schedule_end - order.schedule_date
-                ).total_seconds() / 3600
-
-    @api.depends(
-        "company_id",
-        "resource_ids.maintenance_team_id",
-        "asset_ids.kind_id.maintenance_team_id",
-    )
-    def _compute_maintenance_team_id(self):
-        default_teams = {}
-        for order in self:
-            team = (
-                order.resource_ids.maintenance_team_id.filtered(
-                    lambda t, c=order.company_id: not t.company_id or t.company_id == c
-                )[:1]
-                or order.asset_ids.kind_id.maintenance_team_id[:1]
-                or order.maintenance_team_id
-            )
-            if team.company_id and team.company_id != order.company_id:
-                team = team.browse()
-            # The company default is the last resort of this precomputed field, not a field
-            # default: a field default is filled before the compute, so a create never took the
-            # resource's (or an override's) team.
-            if not team:
-                company = order.company_id
-                if company not in default_teams:
-                    default_teams[company] = order._get_default_maintenance_team(
-                        company
-                    )
-                team = default_teams[company]
-            order.maintenance_team_id = team
-
-    @api.model
-    def _get_default_maintenance_team(self, company):
-        return (
-            self.env["team.team"]
-            .with_company(company)
-            .search(
-                [
-                    ("use_maintenance", "=", True),
-                    ("company_id", "in", [company.id, False]),
-                ],
-                order="company_id NULLS LAST, id",
-                limit=1,
-            )
-        )
-
-    @api.depends(
-        "company_id",
-        "resource_ids.technician_user_id",
-        "asset_ids.kind_id.technician_user_id",
-    )
-    def _compute_user_id(self):
-        for order in self:
-            technician = (
-                order.resource_ids.technician_user_id[:1]
-                or order.asset_ids.kind_id.technician_user_id[:1]
-            )
-            if technician:
-                order.user_id = technician
-            if (
-                order.user_id
-                and order.company_id.id not in order.user_id.company_ids.ids
-            ):
-                order.user_id = False
-
     @api.model_create_multi
     def create(self, vals_list):
         orders = super().create(vals_list)
-        orders.filtered(
-            lambda order: order.owner_user_id or order.user_id
-        )._add_followers()
+        orders.filtered("user_id")._add_followers()
         orders.activity_update()
         typed_in = (
             orders.browse()
             if self.ids
-            else orders.filtered(lambda order: not order.date_occurrence)
+            else orders.filtered(lambda order: not order.date_plan_slot)
         )
         typed_in._recreate_reservations()
         (orders - typed_in)._recreate_reservations(refuse_taken_window=False)
@@ -389,7 +245,7 @@ class MaintenanceOrder(models.Model):
                 )._recreate_reservations(refuse_taken_window=False)
         if vals.keys() & {"resource_ids", "state"}:
             (self.asset_ids | assets_before)._sync_state_from_maintenance()
-        if vals.get("owner_user_id") or vals.get("user_id"):
+        if vals.get("user_id"):
             self._add_followers()
         if closing:
             closing.filtered(lambda order: order.state == "done").activity_feedback(
@@ -404,12 +260,171 @@ class MaintenanceOrder(models.Model):
             self.activity_unlink([ORDER_ACTIVITY_TYPE])
         if replace_activity or vals.keys() & {
             "state",
-            "schedule_date",
+            "date_scheduled_start",
             "user_id",
-            "owner_user_id",
         }:
             self.activity_update()
         return res
+
+    def unlink(self):
+        plans = self.filtered(lambda order: order.state in OPEN_STATES).plan_id
+        assets = self.asset_ids
+        res = super().unlink()
+        plans.exists().sudo()._create_missing_open_orders()
+        assets.exists()._sync_state_from_maintenance()
+        return res
+
+    @api.depends("resource_ids")
+    def _compute_asset_ids(self):
+        assets = self.env["resource.asset"].search(
+            [("resource_id", "in", self.resource_ids._origin.ids)]
+        )
+        for order in self:
+            order.asset_ids = assets.filtered(
+                lambda asset, resources=order.resource_ids._origin: (
+                    asset.resource_id in resources
+                )
+            )
+
+    @api.depends("state")
+    def _compute_date_confirmed(self):
+        now = fields.Datetime.now()
+        for order in self:
+            if order.state == "draft":
+                order.date_confirmed = False
+            elif order.state != "cancel" and not order.date_confirmed:
+                order.date_confirmed = now
+
+    @api.depends("state")
+    def _compute_date_done(self):
+        today = fields.Date.context_today(self)
+        for order in self:
+            if order.state != "done":
+                order.date_done = False
+            elif not order.date_done:
+                order.date_done = today
+
+    @api.depends("date_scheduled_start", "duration")
+    def _compute_date_scheduled_end(self):
+        for order in self:
+            order.date_scheduled_end = order.date_scheduled_start and (
+                order.date_scheduled_start + timedelta(hours=order.duration or 1)
+            )
+
+    @api.depends(
+        "company_id",
+        "resource_ids.maintenance_team_id",
+        "asset_ids.kind_id.maintenance_team_id",
+    )
+    def _compute_maintenance_team_id(self):
+        default_teams = {}
+        for order in self:
+            team = (
+                order.resource_ids.maintenance_team_id.filtered(
+                    lambda t, c=order.company_id: not t.company_id or t.company_id == c
+                )[:1]
+                or order.asset_ids.kind_id.maintenance_team_id[:1]
+                or order.maintenance_team_id
+            )
+            if team.company_id and team.company_id != order.company_id:
+                team = team.browse()
+            # The company default is the last resort of this precomputed field, not a field
+            # default: a field default is filled before the compute, so a create never took the
+            # resource's (or an override's) team.
+            if not team:
+                company = order.company_id
+                if company not in default_teams:
+                    default_teams[company] = order._get_default_maintenance_team(
+                        company
+                    )
+                team = default_teams[company]
+            order.maintenance_team_id = team
+
+    @api.depends(
+        "company_id",
+        "resource_ids.technician_user_id",
+        "asset_ids.kind_id.technician_user_id",
+    )
+    def _compute_user_id(self):
+        for order in self:
+            technician = (
+                order.resource_ids.technician_user_id[:1]
+                or order.asset_ids.kind_id.technician_user_id[:1]
+            )
+            if technician:
+                order.user_id = technician
+            if (
+                order.user_id
+                and order.company_id.id not in order.user_id.company_ids.ids
+            ):
+                order.user_id = False
+
+    def _inverse_date_scheduled_end(self):
+        for order in self:
+            if order.date_scheduled_start and order.date_scheduled_end:
+                order.duration = (
+                    order.date_scheduled_end - order.date_scheduled_start
+                ).total_seconds() / 3600
+
+    def _search_asset_ids(self, operator, value):
+        if operator not in ("in", "not in", "any", "not any"):
+            return NotImplemented
+        if operator in ("any", "not any"):
+            assets = self.env["resource.asset"].search(value)
+        else:
+            assets = self.env["resource.asset"].browse(value)
+        domain = Domain("resource_ids", "in", assets.resource_id.ids)
+        return ~domain if operator.startswith("not") else domain
+
+    def _creation_subtype(self):
+        return self.env.ref("maintenance.mt_order_created")
+
+    def _track_subtype(self, init_values):
+        self.check_singleton()
+        if "state" in init_values:
+            return self.env.ref("maintenance.mt_order_state")
+        return super()._track_subtype(init_values)
+
+    def action_start(self):
+        self.write({"state": "in_progress"})
+        return True
+
+    def action_done(self):
+        self.write({"state": "done"})
+        return True
+
+    def _prepare_confirmation_values(self):
+        return {"state": "confirmed"}
+
+    def _get_domain_approval_category(self):
+        self.check_singleton()
+        return [
+            ("active", "=", True),
+            ("approval_type", "=", f"maintenance_{self.maintenance_type}"),
+            ("target_model", "=", False),
+        ]
+
+    def _get_fields_approval_protected(self):
+        return ["resource_ids", "maintenance_type"]
+
+    @api.model
+    def _get_domain_open(self):
+        return [("state", "in", OPEN_STATES)]
+
+    @api.model
+    def _get_default_maintenance_team(self, company):
+        return (
+            self.env["team.team"]
+            .with_company(company)
+            .search(
+                [
+                    ("use_maintenance", "=", True),
+                    ("company_id", "in", [company.id, False]),
+                ],
+                order="company_id NULLS LAST, id",
+                limit=1,
+            )
+        )
 
     def get_plan_occurrences(self, start, stop):
         start, stop = (
@@ -429,17 +444,6 @@ class MaintenanceOrder(models.Model):
             ]
         return occurrences
 
-    def unlink(self):
-        plans = self.filtered(lambda order: order.state in OPEN_STATES).plan_id
-        assets = self.asset_ids
-        res = super().unlink()
-        plans.exists().sudo()._create_missing_open_orders()
-        assets.exists()._sync_state_from_maintenance()
-        return res
-
-    def _is_new_activity_required(self, vals):
-        return vals.get("resource_ids")
-
     def _get_activity_note(self):
         self.check_singleton()
         if self.asset_ids:
@@ -450,7 +454,7 @@ class MaintenanceOrder(models.Model):
         return False
 
     def _get_fields_reservation_date(self):
-        return ("schedule_date", "schedule_end")
+        return ("date_scheduled_start", "date_scheduled_end")
 
     def _get_booked_resources(self):
         self.check_singleton()
@@ -471,7 +475,7 @@ class MaintenanceOrder(models.Model):
 
     def _get_occurrences_to_book(self):
         self.check_singleton()
-        dates = [self.schedule_date]
+        dates = [self.date_scheduled_start]
         plan = self.plan_id
         if (
             plan.active
@@ -480,7 +484,10 @@ class MaintenanceOrder(models.Model):
             and self.maintenance_type == "preventive"
         ):
             dates += plan._get_occurrences_after(
-                max(self.date_occurrence or self.schedule_date, self.schedule_date),
+                max(
+                    self.date_plan_slot or self.date_scheduled_start,
+                    self.date_scheduled_start,
+                ),
                 limit=plan.book_ahead_count,
             )
         return dates
@@ -493,11 +500,11 @@ class MaintenanceOrder(models.Model):
             if (
                 not resources
                 or not order.block_resource
-                or not order.schedule_date
+                or not order.date_scheduled_start
                 or order.state not in BOOKING_STATES
             ):
                 continue
-            desired = order.schedule_date
+            desired = order.date_scheduled_start
             hours = order.duration or 1
             if refuse_taken_window:
                 start, _end = resources._find_free_window(desired, hours)
@@ -535,7 +542,7 @@ class MaintenanceOrder(models.Model):
             order.invalidate_recordset(["reservation_ids", "schedule_overlap_count"])
             if first and first[0] != desired:
                 order.with_context(skip_maintenance_reservations=True).write(
-                    {"schedule_date": first[0], "schedule_end": first[1]}
+                    {"date_scheduled_start": first[0], "date_scheduled_end": first[1]}
                 )
             if missing or (first and first[0] != desired):
                 order._warn_rescheduled(desired, first, missing)
@@ -559,14 +566,14 @@ class MaintenanceOrder(models.Model):
         """Update maintenance activities based on current record set state.
         It reschedule, unlink or create maintenance order activities."""
         planned = self.filtered(
-            lambda order: order.schedule_date and order.state in OPEN_STATES
+            lambda order: order.date_scheduled_start and order.state in OPEN_STATES
         )
         (self - planned).activity_unlink([ORDER_ACTIVITY_TYPE])
         Activity = self.env["mail.activity"]
         for order in planned:
-            assignee = order.user_id or order.owner_user_id or self.env.user
+            assignee = order.user_id or order.create_uid or self.env.user
             deadline = Activity._today_in_tz(
-                assignee.sudo().tz, order.schedule_date.replace(tzinfo=UTC)
+                assignee.sudo().tz, order.date_scheduled_start.replace(tzinfo=UTC)
             )
             if not order.activity_reschedule(
                 [ORDER_ACTIVITY_TYPE],
@@ -582,10 +589,7 @@ class MaintenanceOrder(models.Model):
 
     def _add_followers(self):
         for order in self:
-            partner_ids = (
-                order.owner_user_id.partner_id + order.user_id.partner_id
-            ).ids
-            order.message_subscribe(partner_ids=partner_ids)
+            order.message_subscribe(partner_ids=order.user_id.partner_id.ids)
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
@@ -594,3 +598,6 @@ class MaintenanceOrder(models.Model):
         if team.company_id and "company_id" not in values:
             values["company_id"] = team.company_id.id
         return super().message_new(msg_dict, custom_values=values)
+
+    def _is_new_activity_required(self, vals):
+        return vals.get("resource_ids")

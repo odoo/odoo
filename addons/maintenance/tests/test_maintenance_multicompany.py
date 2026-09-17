@@ -129,7 +129,6 @@ class TestMaintenanceMulticompany(TransactionCase):
                 "name": "Some keys are not working",
                 "company_id": company_b.id,
                 "user_id": user.id,
-                "owner_user_id": user.id,
             }
         )
 
@@ -139,7 +138,6 @@ class TestMaintenanceMulticompany(TransactionCase):
                 "name": "Battery drains fast",
                 "company_id": company_a.id,
                 "user_id": equipment_manager.id,
-                "owner_user_id": equipment_manager.id,
             }
         )
 

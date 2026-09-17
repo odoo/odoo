@@ -1,5 +1,6 @@
 from datetime import date, datetime
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, TransactionCase
 from odoo.tools.safe_eval import safe_eval
@@ -35,7 +36,7 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
         self.assertEqual(order.state, "in_progress")
         order.action_done()
         self.assertEqual(order.state, "done")
-        self.assertTrue(order.close_date)
+        self.assertTrue(order.date_done)
 
     def test_a_state_the_lifecycle_does_not_allow_is_refused(self):
         order = self.Order.create({"name": "Transition probe"})
@@ -65,14 +66,32 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
         order.unlink()
         self.assertFalse(order.exists())
 
+    def test_the_confirmation_date_is_the_day_the_order_left_draft(self):
+        order = self.Order.create({"name": "Confirmation date probe"})
+        self.assertFalse(order.date_confirmed)
+        before = fields.Datetime.now()
+        order.action_confirm()
+        confirmed_at = order.date_confirmed
+        self.assertTrue(before <= confirmed_at <= fields.Datetime.now())
+        order.action_cancel()
+        self.assertEqual(order.date_confirmed, confirmed_at)
+        order.action_draft()
+        self.assertFalse(order.date_confirmed)
+        self.assertFalse(self.Order.create({"name": "Never confirmed"}).date_confirmed)
+        confirmed = self.Order.create(
+            {"name": "Created confirmed", "state": "confirmed"}
+        )
+        self.assertTrue(before <= confirmed.date_confirmed <= fields.Datetime.now())
+        self.assertFalse(confirmed.copy().date_confirmed)
+
     def test_the_close_date_follows_the_state_and_keeps_an_explicit_value(self):
         order = self.Order.create({"name": "Close date probe"})
-        self.assertFalse(order.close_date)
+        self.assertFalse(order.date_done)
         order.action_confirm()
-        order.write({"state": "done", "close_date": date(2025, 5, 5)})
-        self.assertEqual(order.close_date, date(2025, 5, 5))
+        order.write({"state": "done", "date_done": date(2025, 5, 5)})
+        self.assertEqual(order.date_done, date(2025, 5, 5))
         created_done = self.Order.create({"name": "Created done", "state": "done"})
-        self.assertTrue(created_done.close_date)
+        self.assertTrue(created_done.date_done)
 
     def test_a_state_write_leaves_the_caller_vals_alone(self):
         order = self.Order.create({"name": "Vals probe", "kanban_state": "blocked"})
@@ -83,7 +102,10 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
 
     def test_a_finished_or_cancelled_order_has_no_pending_activity(self):
         order = self.Order.create(
-            {"name": "Activity probe", "schedule_date": datetime(2026, 9, 20, 10)}
+            {
+                "name": "Activity probe",
+                "date_scheduled_start": datetime(2026, 9, 20, 10),
+            }
         )
         self.assertEqual(len(self._activities(order)), 1)
         order.action_confirm()
@@ -97,7 +119,10 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
         self.assertFalse(self._activities(order))
         self.assertTrue(order.message_ids.filtered("mail_activity_type_id"))
         other = self.Order.create(
-            {"name": "Cancelled probe", "schedule_date": datetime(2026, 9, 20, 10)}
+            {
+                "name": "Cancelled probe",
+                "date_scheduled_start": datetime(2026, 9, 20, 10),
+            }
         )
         self.assertEqual(len(self._activities(other)), 1)
         other.action_cancel()
@@ -105,17 +130,16 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
 
     def test_clearing_the_schedule_or_the_technician_updates_the_activity(self):
         owner = self.env.ref("base.user_admin")
-        order = self.Order.create(
+        order = self.Order.with_user(owner).create(
             {
                 "name": "Activity probe",
-                "owner_user_id": owner.id,
                 "user_id": self.technician.id,
-                "schedule_date": datetime(2026, 9, 20, 10),
+                "date_scheduled_start": datetime(2026, 9, 20, 10),
             }
         )
         order.user_id = False
         self.assertEqual(self._activities(order).user_id, owner)
-        order.schedule_date = False
+        order.date_scheduled_start = False
         self.assertFalse(self._activities(order))
 
     def test_the_activity_deadline_is_the_assignee_local_day(self):
@@ -123,7 +147,7 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
             {
                 "name": "Timezone probe",
                 "user_id": self.technician.id,
-                "schedule_date": datetime(2026, 9, 21, 2, 0),
+                "date_scheduled_start": datetime(2026, 9, 21, 2, 0),
             }
         )
         self.assertEqual(self._activities(order).date_deadline, date(2026, 9, 20))
@@ -131,7 +155,10 @@ class TestMaintenanceOrderLifecycle(TransactionCase):
     def test_closing_several_orders_at_once_completes_their_activities(self):
         orders = self.Order.create(
             [
-                {"name": f"Batch {index}", "schedule_date": datetime(2026, 9, 20, 10)}
+                {
+                    "name": f"Batch {index}",
+                    "date_scheduled_start": datetime(2026, 9, 20, 10),
+                }
                 for index in range(5)
             ]
         )
@@ -257,8 +284,8 @@ class TestMaintenanceSchedule(TransactionCase):
         return self.env["maintenance.order"].create(
             {
                 "name": "Schedule probe",
-                "schedule_date": datetime(2026, 9, 20, 10),
-                "schedule_end": datetime(2026, 9, 20, 14),
+                "date_scheduled_start": datetime(2026, 9, 20, 10),
+                "date_scheduled_end": datetime(2026, 9, 20, 14),
                 **vals,
             }
         )
@@ -266,51 +293,51 @@ class TestMaintenanceSchedule(TransactionCase):
     def test_moving_the_start_keeps_the_planned_duration(self):
         order = self._order()
         self.assertEqual(order.duration, 4)
-        order.schedule_date = datetime(2026, 9, 21, 10)
-        self.assertEqual(order.schedule_end, datetime(2026, 9, 21, 14))
+        order.date_scheduled_start = datetime(2026, 9, 21, 10)
+        self.assertEqual(order.date_scheduled_end, datetime(2026, 9, 21, 14))
         with Form(order) as form:
-            form.schedule_date = datetime(2026, 9, 22, 8)
-            self.assertEqual(form.schedule_end, datetime(2026, 9, 22, 12))
+            form.date_scheduled_start = datetime(2026, 9, 22, 8)
+            self.assertEqual(form.date_scheduled_end, datetime(2026, 9, 22, 12))
         self.assertEqual(order.duration, 4)
 
     def test_moving_the_end_changes_the_duration(self):
         order = self._order()
-        order.schedule_end = datetime(2026, 9, 20, 11, 30)
+        order.date_scheduled_end = datetime(2026, 9, 20, 11, 30)
         self.assertEqual(order.duration, 1.5)
         order.write(
             {
-                "schedule_date": datetime(2026, 9, 25, 9),
-                "schedule_end": datetime(2026, 9, 25, 17),
+                "date_scheduled_start": datetime(2026, 9, 25, 9),
+                "date_scheduled_end": datetime(2026, 9, 25, 17),
             }
         )
         self.assertEqual(order.duration, 8)
 
     def test_a_start_alone_plans_one_hour(self):
         order = self.env["maintenance.order"].create(
-            {"name": "One hour", "schedule_date": datetime(2026, 9, 20, 10)}
+            {"name": "One hour", "date_scheduled_start": datetime(2026, 9, 20, 10)}
         )
-        self.assertEqual(order.schedule_end, datetime(2026, 9, 20, 11))
+        self.assertEqual(order.date_scheduled_end, datetime(2026, 9, 20, 11))
         self.assertEqual(order.duration, 1)
 
 
 class TestMaintenanceReliabilityFigures(TransactionCase):
-    def _asset_with_failures(self, date_effective, failures):
+    def _asset_with_failures(self, date_in_service, failures):
         asset = self.env["resource.asset"].create(
             {
                 "name": "Reliability probe",
                 "kind_id": self.env.ref("resource_asset.kind_equipment").id,
-                "date_effective": date_effective,
+                "date_in_service": date_in_service,
             }
         )
-        for date_order, close_date in failures:
+        for date_confirmed, date_done in failures:
             self.env["maintenance.order"].create(
                 {
                     "name": "Failure",
                     "resource_ids": asset.resource_id.ids,
                     "maintenance_type": "corrective",
-                    "date_order": date_order,
+                    "date_confirmed": date_confirmed,
                     "state": "done",
-                    "close_date": close_date,
+                    "date_done": date_done,
                 }
             )
         return asset
@@ -320,7 +347,7 @@ class TestMaintenanceReliabilityFigures(TransactionCase):
             date(2026, 9, 10), [(date(2026, 9, 1), date(2026, 9, 3))]
         )
         self.assertEqual(asset.mtbf, 0)
-        self.assertFalse(asset.estimated_next_failure)
+        self.assertFalse(asset.date_next_failure)
 
     def test_mttr_averages_only_the_repairs_with_both_dates(self):
         asset = self._asset_with_failures(

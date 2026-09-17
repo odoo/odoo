@@ -35,11 +35,11 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         },
         {
             content: "Change Scheduled End",
-            trigger: "button#schedule_end_0",
+            trigger: "button#date_scheduled_end_0",
             run: "click",
         },
         {
-            trigger: "input#schedule_end_0",
+            trigger: "input#date_scheduled_end_0",
             async run({ edit, anchor }) {
                 const value = luxon.DateTime.fromFormat(
                     anchor.value,

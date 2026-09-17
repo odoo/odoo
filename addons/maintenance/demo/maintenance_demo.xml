@@ -174,7 +174,6 @@
         <record id="m_order_3" model="maintenance.order">
             <field name="name">Resolution is bad</field>
             <field name="user_id" ref="base.user_demo" />
-            <field name="owner_user_id" ref="base.user_admin" />
             <field
                 name="resource_ids"
                 eval="[Command.link(ref('equipment_monitor6_resource'))]" />
@@ -185,7 +184,6 @@
         <record id="m_order_4" model="maintenance.order">
             <field name="name">Some keys are not working</field>
             <field name="user_id" ref="base.user_admin" />
-            <field name="owner_user_id" ref="base.user_admin" />
             <field
                 name="resource_ids"
                 eval="[Command.link(ref('equipment_computer3_resource'))]" />
@@ -195,7 +193,6 @@
         <record id="m_order_6" model="maintenance.order">
             <field name="name">Motherboard failed</field>
             <field name="user_id" ref="base.user_demo" />
-            <field name="owner_user_id" ref="base.user_admin" />
             <field
                 name="resource_ids"
                 eval="[Command.link(ref('equipment_computer5_resource'))]" />
@@ -205,7 +202,6 @@
         <record id="m_order_7" model="maintenance.order">
             <field name="name">Battery drains fast</field>
             <field name="user_id" ref="base.user_demo" />
-            <field name="owner_user_id" ref="base.user_demo" />
             <field
                 name="resource_ids"
                 eval="[Command.link(ref('equipment_computer9_resource'))]" />
@@ -215,7 +211,6 @@
         <record id="m_order_8" model="maintenance.order">
             <field name="name">Touchpad not working</field>
             <field name="user_id" ref="base.user_demo" />
-            <field name="owner_user_id" ref="base.user_demo" />
             <field
                 name="resource_ids"
                 eval="[Command.link(ref('equipment_computer11_resource'))]" />

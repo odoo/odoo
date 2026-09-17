@@ -11,7 +11,7 @@
                 <field name="user_id" />
                 <field name="resource_ids" />
                 <field name="asset_ids" />
-                <field name="owner_user_id" />
+                <field name="create_uid" string="Requested By" />
                 <field name="state" />
                 <field name="maintenance_team_id" />
                 <filter
@@ -50,11 +50,13 @@
                 <filter
                     name="unscheduled"
                     string="Unscheduled"
-                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('schedule_date', '=', False)]" />
+                    domain="[('state', 'in', ('draft', 'confirmed', 'in_progress')), ('date_scheduled_start', '=', False)]" />
                 <separator />
-                <filter name="filter_date_order" date="date_order" />
-                <filter name="filter_schedule_date" date="schedule_date" />
-                <filter name="filter_close_date" date="close_date" />
+                <filter name="filter_date_confirmed" date="date_confirmed" />
+                <filter
+                    name="filter_date_scheduled_start"
+                    date="date_scheduled_start" />
+                <filter name="filter_date_done" date="date_done" />
                 <separator />
                 <filter
                     name="message_needaction"
@@ -105,7 +107,7 @@
                     <filter
                         name="created_by"
                         string="Created By"
-                        context="{'group_by': 'owner_user_id'}" />
+                        context="{'group_by': 'create_uid'}" />
                 </group>
             </search>
         </field>
@@ -196,10 +198,6 @@
                     <group>
                         <group>
                             <field
-                                name="owner_user_id"
-                                string="Requested By"
-                                invisible="1" />
-                            <field
                                 name="resource_ids"
                                 widget="many2many_tags"
                                 options="{'no_create': True}" />
@@ -207,9 +205,12 @@
                             <field
                                 name="schedule_overlap_count"
                                 invisible="not resource_ids or not schedule_overlap_count" />
-                            <field name="date_order" readonly="True" />
                             <field
-                                name="close_date"
+                                name="date_confirmed"
+                                invisible="not date_confirmed"
+                                readonly="True" />
+                            <field
+                                name="date_done"
                                 invisible="state != 'done'"
                                 readonly="True" />
                             <field name="maintenance_type" widget="radio" />
@@ -219,12 +220,12 @@
                                 name="maintenance_team_id"
                                 options="{'no_create': True, 'no_open': True}" />
                             <field name="user_id" string="Responsible" />
-                            <field name="schedule_date" />
-                            <field name="schedule_end" />
+                            <field name="date_scheduled_start" />
+                            <field name="date_scheduled_end" />
                             <field
                                 name="plan_id"
                                 invisible="maintenance_type == 'corrective'" />
-                            <field name="date_occurrence" invisible="not plan_id" />
+                            <field name="date_plan_slot" invisible="not plan_id" />
                             <field name="priority" widget="priority" />
                             <field
                                 name="email_cc"
@@ -294,9 +295,9 @@
                     </t>
                     <t t-name="card">
                         <field name="name" class="fw-bold fs-5" />
-                        <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id" /></span>
+                        <span name="create_uid" t-if="record.create_uid.raw_value">Requested by: <field name="create_uid" /></span>
                         <field name="resource_ids" widget="many2many_tags" />
-                        <field name="schedule_date" />
+                        <field name="date_scheduled_start" />
                         <footer>
                             <div class="d-flex">
                                 <field name="priority" widget="priority" />
@@ -334,8 +335,8 @@
             <list string="Maintenance Order" multi_edit="1" sample="1">
                 <field name="message_needaction" column_invisible="True" />
                 <field name="name" />
-                <field name="date_order" groups="base.group_no_one" />
-                <field name="owner_user_id" />
+                <field name="date_confirmed" groups="base.group_no_one" />
+                <field name="create_uid" string="Requested By" />
                 <field name="user_id" />
                 <field name="resource_ids" widget="many2many_tags" optional="show" />
                 <field name="state" />
@@ -381,8 +382,8 @@
         <field name="arch" type="xml">
             <calendar
                 color="user_id"
-                date_start="schedule_date"
-                date_stop="schedule_end"
+                date_start="date_scheduled_start"
+                date_stop="date_scheduled_end"
                 event_limit="5"
                 js_class="calendar_with_recurrence">
                 <field name="user_id" filters="1" />
@@ -624,12 +625,13 @@
                             </div>
                             <div class="col-6">
                                 <a
-                                    t-if="record.maintenance_todo_order_count_date.raw_value &gt; 0"
+                                    t-if="record.maintenance_todo_order_count_scheduled.raw_value &gt; 0"
                                     name="%(maintenance_order_action_cal)d"
                                     type="action"
                                     context="{'search_default_todo': 1, 'search_default_maintenance_team_id': id}"
                                     class="d-block">
-                                    <field name="maintenance_todo_order_count_date" />
+                                    <field
+                                        name="maintenance_todo_order_count_scheduled" />
                                     Scheduled
                                 </a>
                                 <a

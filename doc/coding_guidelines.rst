@@ -8531,6 +8531,57 @@ approval request's state:
        and export lines on ``hr.expense``, so none of them silently reads the
        other field.
 
+``maintenance`` puts ``date_`` first on every date it owns and names what each
+one dates. ``maintenance.plan`` is the fork's own, and ``date_order`` was an
+earlier fork name for vanilla ``request_date``; both are listed so the list stays
+one. The 1.7 migration renames the columns and rewrites stored expressions on each
+model.
+
+``date_order`` defaulted to the day the order was created and nothing wrote it again,
+so it only repeated ``create_date`` as a date. ``date_confirmed`` is a datetime
+stamped when the order leaves draft and cleared when it returns there, and
+reliability counts its local day as the failure. The 1.7 migration takes it from
+each order's first tracked state change, or from ``create_date`` when there is
+none, and clears it on drafts.
+
+``maintenance.order.owner_user_id`` is dropped: an order is requested by whoever
+created it, ``create_uid``, as a sale, purchase or invoice is. It differed only
+under ``hr_maintenance``, which filled it from ``employee_id``; that module is
+retired by base 1.78, which drops ``employee_id`` and the implication that made
+every HR officer a maintenance manager. Maintenance 1.7 rewrites stored
+expressions naming ``owner_user_id`` to ``create_uid``.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Model
+     - Previous name
+     - This fork
+   * - ``maintenance.order``
+     - ``date_order`` (vanilla ``request_date``)
+     - ``date_confirmed``
+   * - ``maintenance.order``
+     - ``close_date``
+     - ``date_done``
+   * - ``maintenance.order``
+     - ``schedule_date`` / ``schedule_end``
+     - ``date_scheduled_start`` / ``date_scheduled_end``
+   * - ``maintenance.order``
+     - ``date_occurrence``
+     - ``date_plan_slot``
+   * - ``maintenance.plan``
+     - ``date_start`` / ``date_next``
+     - ``date_first_occurrence`` / ``date_next_scheduled``
+   * - ``resource.resource``, ``resource.asset``, ``mrp.workcenter``
+     - ``date_effective`` (vanilla ``effective_date``)
+     - ``date_in_service``
+   * - ``resource.resource``, ``resource.asset``, ``mrp.workcenter``
+     - ``latest_failure_date`` / ``estimated_next_failure``
+     - ``date_last_failure`` / ``date_next_failure``
+   * - ``team.team``
+     - ``maintenance_todo_order_count_date``
+     - ``maintenance_todo_order_count_scheduled``
+
 Appendix B — References
 ========================
 

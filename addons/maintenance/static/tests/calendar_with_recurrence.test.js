@@ -39,8 +39,8 @@ class MaintenanceOrder extends models.Model {
     _name = "maintenance.order";
 
     name = fields.Char();
-    schedule_date = fields.Datetime();
-    schedule_end = fields.Datetime();
+    date_scheduled_start = fields.Datetime();
+    date_scheduled_end = fields.Datetime();
     duration = fields.Float();
     plan_id = fields.Many2one({ relation: "maintenance.plan" });
     state = fields.Selection({
@@ -62,23 +62,23 @@ class MaintenanceOrder extends models.Model {
         {
             id: 1,
             name: "daily check",
-            schedule_date: "2026-09-14 16:00:00",
-            schedule_end: "2026-09-14 17:00:00",
+            date_scheduled_start: "2026-09-14 16:00:00",
+            date_scheduled_end: "2026-09-14 17:00:00",
             duration: 1,
             plan_id: 1,
         },
         {
             id: 2,
             name: "last year's repair",
-            schedule_date: "2025-09-10 16:00:00",
-            schedule_end: "2025-09-10 17:00:00",
+            date_scheduled_start: "2025-09-10 16:00:00",
+            date_scheduled_end: "2025-09-10 17:00:00",
             duration: 1,
         },
         {
             id: 4,
             name: "closed occurrence of an active plan",
-            schedule_date: "2025-09-12 16:00:00",
-            schedule_end: "2025-09-12 17:00:00",
+            date_scheduled_start: "2025-09-12 16:00:00",
+            date_scheduled_end: "2025-09-12 17:00:00",
             duration: 1,
             plan_id: 1,
             state: "done",
@@ -86,8 +86,8 @@ class MaintenanceOrder extends models.Model {
         {
             id: 3,
             name: "stopped plan",
-            schedule_date: "2025-09-11 16:00:00",
-            schedule_end: "2025-09-11 17:00:00",
+            date_scheduled_start: "2025-09-11 16:00:00",
+            date_scheduled_end: "2025-09-11 17:00:00",
             duration: 1,
             plan_id: 2,
         },
@@ -98,7 +98,7 @@ defineModels([MaintenancePlan, MaintenanceOrder]);
 preloadFullCalendar();
 
 const arch = `
-    <calendar js_class="calendar_with_recurrence" date_start="schedule_date" date_stop="schedule_end" mode="week">
+    <calendar js_class="calendar_with_recurrence" date_start="date_scheduled_start" date_stop="date_scheduled_end" mode="week">
         <field name="plan_id" invisible="1"/>
         <field name="state" invisible="1"/>
         <field name="duration" invisible="1"/>

@@ -11,7 +11,7 @@ from .maintenance_order import OPEN_STATES
 from odoo.addons.base.models.res_partner import _selection_timezones
 
 RESCHEDULING_FIELDS = frozenset(
-    {"date_start", "repeat_anchor", "repeat_interval", "repeat_unit", "tz"}
+    {"date_first_occurrence", "repeat_anchor", "repeat_interval", "repeat_unit", "tz"}
 )
 ORDER_FIELDS = ("resource_ids", "block_resource")
 BOOKING_FIELDS = RESCHEDULING_FIELDS | {
@@ -23,7 +23,7 @@ BOOKING_FIELDS = RESCHEDULING_FIELDS | {
 
 
 def _occurrence_key(order):
-    moment = order.date_occurrence or order.schedule_date
+    moment = order.date_plan_slot or order.date_scheduled_start
     return (not moment, moment or order.id)
 
 
@@ -31,7 +31,7 @@ class MaintenancePlan(models.Model):
     _name = "maintenance.plan"
     _inherit = ["mixin.mail.thread", "mixin.mail.activity", "mixin.recurrence.rule"]
     _description = "Maintenance Plan"
-    _order = "date_next, id"
+    _order = "date_next_scheduled, id"
     _check_company_auto = True
 
     name = fields.Char(
@@ -111,7 +111,7 @@ class MaintenancePlan(models.Model):
         required=True,
         help="The local time the series' dates and days are counted in, whoever closes its orders.",
     )
-    date_start = fields.Datetime(
+    date_first_occurrence = fields.Datetime(
         string="First Occurrence",
         default=fields.Datetime.now,
         required=True,
@@ -122,8 +122,8 @@ class MaintenancePlan(models.Model):
         inverse_name="plan_id",
     )
     order_count = fields.Count(count_of="order_ids")
-    date_next = fields.Datetime(
-        string="Next Occurrence",
+    date_next_scheduled = fields.Datetime(
+        string="Next Scheduled",
         compute="_compute_dates",
         store=True,
     )
@@ -142,30 +142,13 @@ class MaintenancePlan(models.Model):
                 self.env._("A plan repeated until a date needs its end date.")
             )
 
-    @api.depends(
-        "order_ids.schedule_date",
-        "order_ids.date_occurrence",
-        "order_ids.state",
-        "order_ids.close_date",
-    )
-    def _compute_dates(self):
-        for plan in self:
-            orders = plan.order_ids
-            plan.date_next = plan._get_open_order().schedule_date
-            plan.date_last_done = max(
-                orders.filtered(lambda order: order.state == "done").mapped(
-                    "close_date"
-                ),
-                default=False,
-            )
-
     @api.model_create_multi
     def create(self, vals_list):
         plans = super().create(vals_list)
         for plan in plans.filtered(
             lambda plan: plan.active and not plan._get_open_order()
         ):
-            plan._create_order(plan.date_start)
+            plan._create_order(plan.date_first_occurrence)
         return plans
 
     def write(self, vals):
@@ -189,6 +172,23 @@ class MaintenancePlan(models.Model):
         open_orders._recreate_reservations(refuse_taken_window=False)
         return res
 
+    @api.depends(
+        "order_ids.date_scheduled_start",
+        "order_ids.date_plan_slot",
+        "order_ids.state",
+        "order_ids.date_done",
+    )
+    def _compute_dates(self):
+        for plan in self:
+            orders = plan.order_ids
+            plan.date_next_scheduled = plan._get_open_order().date_scheduled_start
+            plan.date_last_done = max(
+                orders.filtered(lambda order: order.state == "done").mapped(
+                    "date_done"
+                ),
+                default=False,
+            )
+
     def _get_open_orders(self):
         self.check_singleton()
         return (
@@ -208,8 +208,8 @@ class MaintenancePlan(models.Model):
             .order_ids.filtered(lambda order: order.state == "done")
             .sorted(
                 key=lambda order: (
-                    bool(order.close_date),
-                    order.close_date or order.id,
+                    bool(order.date_done),
+                    order.date_done or order.id,
                     _occurrence_key(order),
                 )
             )[-1:]
@@ -232,9 +232,8 @@ class MaintenancePlan(models.Model):
                 "plan_id": self.id,
                 "company_id": self.company_id.id,
                 "maintenance_type": "preventive",
-                "schedule_date": occurrence,
-                "date_occurrence": occurrence,
-                "date_order": fields.Date.context_today(self),
+                "date_scheduled_start": occurrence,
+                "date_plan_slot": occurrence,
                 "duration": self.duration,
                 "state": "confirmed",
                 "kanban_state": "normal",
@@ -268,13 +267,13 @@ class MaintenancePlan(models.Model):
         untouched = self._get_open_orders().filtered(
             lambda order: (
                 order.state == "confirmed"
-                and order.date_occurrence
-                and order.schedule_date == order.date_occurrence
+                and order.date_plan_slot
+                and order.date_scheduled_start == order.date_plan_slot
             )
         )[:1]
         if untouched and (occurrence := self._resolve_resumed_occurrence()):
             untouched.write(
-                {"schedule_date": occurrence, "date_occurrence": occurrence}
+                {"date_scheduled_start": occurrence, "date_plan_slot": occurrence}
             )
 
     def _schedule_after(self, order):
@@ -282,12 +281,12 @@ class MaintenancePlan(models.Model):
         if not self.active or self._get_open_order():
             return self.env["maintenance.order"]
         now = fields.Datetime.now()
-        planned = order.date_occurrence or order.schedule_date or now
+        planned = order.date_plan_slot or order.date_scheduled_start or now
         missed = 0
         if self.repeat_anchor == "completion":
             day = (
-                order.close_date
-                if order.state == "done" and order.close_date
+                order.date_done
+                if order.state == "done" and order.date_done
                 else self._get_local_date(now)
             )
             occurrence = self._get_completion_occurrence(day)
@@ -311,16 +310,16 @@ class MaintenancePlan(models.Model):
         now = fields.Datetime.now()
         last = self._get_last_done_order()
         if self.repeat_anchor == "fixed":
-            after = max(now, last.date_occurrence or now)
+            after = max(now, last.date_plan_slot or now)
             occurrence = (
-                self.date_start
-                if self.date_start > after
+                self.date_first_occurrence
+                if self.date_first_occurrence > after
                 else next(self._get_grid_occurrences(after))
             )
-        elif last.close_date:
-            occurrence = max(now, self._get_completion_occurrence(last.close_date))
+        elif last.date_done:
+            occurrence = max(now, self._get_completion_occurrence(last.date_done))
         else:
-            occurrence = max(now, self.date_start)
+            occurrence = max(now, self.date_first_occurrence)
         return occurrence if self._is_within_until(occurrence) else None
 
     def _count_missed_occurrences(self, planned, occurrence):
@@ -333,7 +332,7 @@ class MaintenancePlan(models.Model):
 
     def _get_grid_occurrences(self, after):
         return occurrences_after(
-            self.date_start,
+            self.date_first_occurrence,
             after,
             self.repeat_interval,
             self.repeat_unit,
@@ -342,15 +341,12 @@ class MaintenancePlan(models.Model):
 
     def _get_completion_occurrence(self, day, steps=1):
         tz = self._get_tzinfo()
-        start_time = self.date_start.replace(tzinfo=UTC).astimezone(tz).time()
+        start_time = (
+            self.date_first_occurrence.replace(tzinfo=UTC).astimezone(tz).time()
+        )
         local = datetime.combine(day, start_time).replace(tzinfo=tz)
         delta = get_timedelta(self.repeat_interval, self.repeat_unit) * steps
         return (local + delta).astimezone(UTC).replace(tzinfo=None)
-
-    def _is_within_until(self, occurrence):
-        return self.repeat_type != "until" or bool(
-            self.repeat_until and self._get_local_date(occurrence) <= self.repeat_until
-        )
 
     def _get_occurrences_after(self, after, stop=None, limit=None):
         self.check_singleton()
@@ -372,7 +368,7 @@ class MaintenancePlan(models.Model):
     def _get_projection_base(self):
         self.check_singleton()
         latest = self._get_open_orders()[-1:]
-        occurrence = latest.date_occurrence or latest.schedule_date
+        occurrence = latest.date_plan_slot or latest.date_scheduled_start
         if not occurrence:
             return None
         if self.repeat_anchor == "fixed":
@@ -390,3 +386,8 @@ class MaintenancePlan(models.Model):
             "default_company_id": self.company_id.id,
         }
         return action
+
+    def _is_within_until(self, occurrence):
+        return self.repeat_type != "until" or bool(
+            self.repeat_until and self._get_local_date(occurrence) <= self.repeat_until
+        )

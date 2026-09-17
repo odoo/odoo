@@ -9,12 +9,12 @@ _logger = logging.getLogger(__name__)
 EQUIPMENT_MODELS = ("maintenance.equipment", "maintenance.equipment.category")
 PARKED = "__retired_equipment__"
 RETIRED_SUBTYPES = ("mt_mat_assign", "mt_cat_mat_assign", "mt_cat_order_created")
-RELIABILITY = (
-    "maintenance_team_id",
-    "technician_user_id",
-    "expected_mtbf",
-    "date_effective",
-)
+RELIABILITY = {
+    "maintenance_team_id": "maintenance_team_id",
+    "technician_user_id": "technician_user_id",
+    "expected_mtbf": "expected_mtbf",
+    "date_effective": "date_in_service",
+}
 QUIET = {
     "mail_create_nolog": True,
     "mail_create_nosubscribe": True,
@@ -230,7 +230,8 @@ def _convert_equipment(cr, env, kinds):
     columns = [c for c in RELIABILITY if column_exists(cr, "maintenance_equipment", c)]
     if columns:
         assignments = ", ".join(
-            f"{c} = COALESCE(equipment.{c}, resource.{c})" for c in columns
+            f"{RELIABILITY[c]} = COALESCE(equipment.{c}, resource.{RELIABILITY[c]})"
+            for c in columns
         )
         cr.execute(
             f"""

@@ -34,8 +34,8 @@ class TestMaintenanceResources(TransactionCase):
                 "name": "Oil change",
                 "resource_ids": [(6, 0, self.press.resource_id.ids)],
                 "maintenance_team_id": self.team.id,
-                "schedule_date": self.start,
-                "schedule_end": self.end,
+                "date_scheduled_start": self.start,
+                "date_scheduled_end": self.end,
                 "block_resource": True,
                 "state": "confirmed",
                 **vals,
@@ -110,8 +110,8 @@ class TestMaintenanceResources(TransactionCase):
         order = self._order()
         order.write(
             {
-                "schedule_date": datetime(2026, 3, 3, 8, 0),
-                "schedule_end": datetime(2026, 3, 3, 9, 0),
+                "date_scheduled_start": datetime(2026, 3, 3, 8, 0),
+                "date_scheduled_end": datetime(2026, 3, 3, 9, 0),
             }
         )
         self.assertEqual(self._bookings().date_start, datetime(2026, 3, 3, 8, 0))
@@ -141,8 +141,8 @@ class TestMaintenanceResources(TransactionCase):
         with self.assertRaises(UserError):
             self._order(
                 name="Second",
-                schedule_date=datetime(2026, 3, 2, 10, 0),
-                schedule_end=datetime(2026, 3, 2, 14, 0),
+                date_scheduled_start=datetime(2026, 3, 2, 10, 0),
+                date_scheduled_end=datetime(2026, 3, 2, 14, 0),
             )
 
     def test_the_asset_counts_its_orders_and_lends_its_team(self):
@@ -224,12 +224,12 @@ class TestMaintenanceResources(TransactionCase):
                 "repeat_interval": 1,
                 "repeat_unit": "month",
                 "tz": "UTC",
-                "date_start": datetime(2026, 3, 2, 8, 0),
+                "date_first_occurrence": datetime(2026, 3, 2, 8, 0),
                 "duration": 2,
             }
         )
         order = plan.order_ids
-        self.assertEqual(order.schedule_date, datetime(2026, 3, 2, 10, 0))
+        self.assertEqual(order.date_scheduled_start, datetime(2026, 3, 2, 10, 0))
         self.assertEqual(
             order.reservation_ids.mapped("date_start"), [datetime(2026, 3, 2, 10, 0)]
         )
@@ -264,7 +264,7 @@ class TestMaintenanceResources(TransactionCase):
                 "repeat_interval": 1,
                 "repeat_unit": "week",
                 "tz": "UTC",
-                "date_start": datetime(2026, 3, 2, 8, 0),
+                "date_first_occurrence": datetime(2026, 3, 2, 8, 0),
                 "book_ahead_count": 2,
             }
         )

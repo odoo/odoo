@@ -6,8 +6,12 @@ KIND_DEFAULTS = ("technician_user_id", "maintenance_team_id")
 class ResourceAsset(models.Model):
     _inherit = "resource.asset"
 
-    maintenance_ids = fields.Many2many(related="resource_id.maintenance_ids")
-    maintenance_count = fields.Integer(related="resource_id.maintenance_count")
+    maintenance_ids = fields.Many2many(
+        related="resource_id.maintenance_ids",
+    )
+    maintenance_count = fields.Integer(
+        related="resource_id.maintenance_count",
+    )
     maintenance_open_count = fields.Integer(
         related="resource_id.maintenance_open_count"
     )
@@ -23,8 +27,8 @@ class ResourceAsset(models.Model):
         related="resource_id.technician_user_id",
         readonly=False,
     )
-    date_effective = fields.Date(
-        related="resource_id.date_effective",
+    date_in_service = fields.Date(
+        related="resource_id.date_in_service",
         readonly=False,
     )
     expected_mtbf = fields.Integer(
@@ -33,8 +37,8 @@ class ResourceAsset(models.Model):
     )
     mtbf = fields.Integer(related="resource_id.mtbf")
     mttr = fields.Integer(related="resource_id.mttr")
-    estimated_next_failure = fields.Date(related="resource_id.estimated_next_failure")
-    latest_failure_date = fields.Date(related="resource_id.latest_failure_date")
+    date_next_failure = fields.Date(related="resource_id.date_next_failure")
+    date_last_failure = fields.Date(related="resource_id.date_last_failure")
 
     @api.model_create_multi
     def create(self, vals_list):

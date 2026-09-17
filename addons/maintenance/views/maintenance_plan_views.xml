@@ -43,7 +43,7 @@
                 <field name="repeat_interval" string="Every" />
                 <field name="repeat_unit" nolabel="1" />
                 <field name="repeat_anchor" optional="show" />
-                <field name="date_next" />
+                <field name="date_next_scheduled" />
                 <field name="date_last_done" optional="show" />
                 <field name="maintenance_team_id" optional="hide" />
                 <field name="user_id" widget="many2one_avatar_user" optional="show" />
@@ -109,7 +109,7 @@
                                 groups="base.group_multi_company" />
                         </group>
                         <group name="recurrence">
-                            <field name="date_start" />
+                            <field name="date_first_occurrence" />
                             <label for="repeat_interval" string="Repeat Every" />
                             <div class="d-flex">
                                 <field
@@ -134,7 +134,7 @@
                                     invisible="repeat_type != 'until'"
                                     required="repeat_type == 'until'" />
                             </div>
-                            <field name="date_next" />
+                            <field name="date_next_scheduled" />
                             <field name="date_last_done" />
                         </group>
                     </group>
