@@ -27,6 +27,9 @@ class StockLandedCost(models.Model):
         ProductCategory = self.env['product.category']
         return self.env.company.lc_journal_id or ProductCategory._fields['property_stock_journal'].get_company_dependent_fallback(ProductCategory)
 
+    def _default_target_model(self):
+        return 'picking'
+
     name = fields.Char(
         'Name', default=lambda self: _('New'),
         copy=False, readonly=True, tracking=True)
@@ -35,7 +38,7 @@ class StockLandedCost(models.Model):
         copy=False, required=True, tracking=True)
     target_model = fields.Selection(
         [('picking', 'Transfers')], string="Apply On",
-        required=True, default='picking',
+        required=True, default=lambda self: self._default_target_model(),
         copy=False)
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
@@ -121,7 +124,10 @@ class StockLandedCost(models.Model):
 
         for cost in self:
             cost = cost.with_company(cost.company_id)
-            move = self.env['account.move']
+            # `account.move._post()` has a hard requirement for `group_account_invoice` and will categorically
+            # refuse calls from all other users, making `sudo()` unavoidable for landed cost validation (with
+            # real-time valuation) for stock/MRP/purchase managers.
+            move = self.env['account.move'].sudo()
             move_vals = {
                 'journal_id': cost.account_journal_id.id,
                 'date': cost.date,

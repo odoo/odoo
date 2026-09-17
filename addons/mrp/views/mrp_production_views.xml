@@ -305,19 +305,22 @@
                         <button name="action_view_allocation_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="format_list_bulleted"
                             invisible="not show_allocation"/>
-                        <button class="oe_stat_button" name="action_view_mrp_production_all_childs" type="object" icon="build" invisible="mrp_production_all_child_count == 0">
+                        <button class="oe_stat_button" name="action_view_mrp_production_all_childs" type="object" icon="build"
+                                groups="mrp.group_mrp_user" invisible="mrp_production_all_child_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_all_child_count"/></span>
                                 <span class="o_stat_text">Child MO</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_mrp_production_sources" type="object" icon="build" invisible="mrp_production_source_count == 0">
+                        <button class="oe_stat_button" name="action_view_mrp_production_sources" type="object" icon="build"
+                                groups="mrp.group_mrp_user" invisible="mrp_production_source_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_source_count"/></span>
                                 <span class="o_stat_text">Source MO</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="build" invisible="mrp_production_backorder_count &lt; 2">
+                        <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="build"
+                                groups="mrp.group_mrp_user" invisible="mrp_production_backorder_count &lt; 2">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_backorder_count"/></span>
                                 <span class="o_stat_text">Backorders</span>
@@ -704,7 +707,7 @@
                                         <i class="oi mx-1 mt-1" data-icon="package_2" role="img" title="Components Availability"/>
                                         <field name="components_availability"/>
                                     </div>
-                                    <div t-if="record.mrp_production_all_child_count.raw_value &gt; 0" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis">
+                                    <div t-if="record.mrp_production_all_child_count.raw_value &gt; 0" groups="mrp.group_mrp_user" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis">
                                         <i class="oi mx-1 mt-1" data-icon="build" role="img" title="Child MO's"/>
                                         <a name="action_view_mrp_production_all_childs" type="object" role="button">
                                             <field name="mrp_production_all_child_done_count"/>
@@ -795,7 +798,7 @@
                     <field name="picking_type_id"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
-                    <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]"/>
+                    <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]" groups="mrp.group_mrp_user"/>
                     <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
