@@ -207,7 +207,10 @@ def route(route: str | Iterable[str] | None = None, **routing: Any) -> Callable:
                 "%s defined with invalid routing parameter 'method', assuming 'methods'",
                 fname,
             )
-            routing["methods"] = wrong
+            # Honor the "assuming" promise for the typo's most common shape,
+            # a single method string, instead of raising two lines below
+            # about a parameter the author never wrote.
+            routing["methods"] = (wrong,) if isinstance(wrong, str) else wrong
             _debug.logic("http.route.parameter_typo", endpoint=fname, given="method")
         methods = routing.get("methods")
         if methods is not None:

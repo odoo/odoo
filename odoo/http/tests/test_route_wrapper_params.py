@@ -57,3 +57,13 @@ def test_a_surplus_parameter_is_still_dropped_with_a_warning(ctrl, caplog):
 def test_positional_calls_bypass_the_check(ctrl):
     assert ctrl.positional(1, 2) == (1, 2)
     assert ctrl.positional(1, b=2) == (1, 2)
+
+
+def test_the_method_typo_with_a_single_string_is_repaired_not_raised(caplog):
+    with caplog.at_level(logging.WARNING, logger="odoo.http.routing"):
+
+        @route("/typo", type="http", auth="none", method="POST")
+        def ep(self): ...
+
+    assert ep.original_routing["methods"] == ("POST",)
+    assert any("assuming 'methods'" in r.message for r in caplog.records)
