@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3919 methods, 801 classes, 138 files)
+# All base tests (3964 methods, 804 classes, 138 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 469 classes)
+### Tagged Files (78 files, 472 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -165,7 +165,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_res_config.py` | `post_install`, `-at_install` | 3 | 12 | TransactionCase |
 | `test_res_config_install.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
 | `test_res_country.py` | `-at_install`, `post_install` | 2 | 4 | TransactionCase |
-| `test_res_partner.py` | `res_partner`, `res_partner_address`, `post_install`, `-at_install` | 15 | 90 | TransactionCaseWithUserDemo, TransactionCase |
+| `test_res_partner.py` | `res_partner`, `res_partner_address`, `post_install`, `-at_install` | 16 | 104 | TransactionCaseWithUserDemo, TransactionCase |
 | `test_res_partner_identifier.py` | `post_install`, `-at_install` | 1 | 18 | TransactionCase |
 | `test_res_partner_main_channels.py` | `post_install`, `-at_install` | 1 | 15 | TransactionCase |
 | `test_res_partner_merge.py` | `post_install`, `-at_install`, `res_partner_merge` | 10 | 34 | TransactionCase |
@@ -255,11 +255,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 138 |
-| Total test classes | 801 |
-| Total test methods | 3919 |
+| Total test classes | 804 |
+| Total test methods | 3964 |
 | Files with @tagged | 78 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 264 |
+| Classes using post_install | 267 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 
