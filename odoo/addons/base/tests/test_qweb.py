@@ -19,6 +19,8 @@ from odoo.addons.base.models.ir_qweb import (
     CompileContext,
     QwebCallParameters,
     QwebContent,
+    _StandaloneEnv,
+    _StandaloneQweb,
     format_attributes,
     qweb_json,
     render,
@@ -833,10 +835,9 @@ class TestQWebNS(TransactionCase):
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
-    def test_default_namespace_keeps_the_whitespace_before_a_t_call(self):
-        # Under a default namespace <t> is "{ns}t" to lxml, and every
-        # directive's whitespace rule tests el.tag against "t": the text
-        # before a t-call is kept there and stripped on a plain <t>.
+    def test_default_namespace_t_is_still_the_t_element(self):
+        # Under a default namespace <t> is "{ns}t" to lxml; the whitespace
+        # rules of t-call, t-set and t-foreach see the <t> element all the same.
         self.env["ir.ui.view"].create(
             {
                 "key": "base.ws_callee",
@@ -848,17 +849,37 @@ class TestQWebNS(TransactionCase):
         for arch, expected in (
             (
                 '<Invoice xmlns="urn:d">text\n    <t t-call="base.ws_callee"/>\n</Invoice>',
-                '<Invoice xmlns="urn:d">text\n    <i>c</i>\n</Invoice>',
+                '<Invoice xmlns="urn:d">text<i>c</i>\n</Invoice>',
             ),
             (
                 '<Invoice>text\n    <t t-call="base.ws_callee"/>\n</Invoice>',
                 "<Invoice>text<i>c</i>\n</Invoice>",
+            ),
+            (
+                '<Invoice xmlns="urn:d">text\n    <t t-set="x" t-value="1"/>\n</Invoice>',
+                '<Invoice xmlns="urn:d">text\n</Invoice>',
+            ),
+            (
+                '<Invoice xmlns="urn:d">text\n    <t t-foreach="[1, 2]" t-as="i"><a/></t>\n</Invoice>',
+                '<Invoice xmlns="urn:d">text<a></a><a></a>\n</Invoice>',
             ),
         ):
             view = self.env["ir.ui.view"].create(
                 {"name": "ws_caller", "type": "qweb", "arch": f"<t>{arch}</t>"}
             )
             self.assertEqual(str(self.env["ir.qweb"]._render(view.id)), expected)
+
+    def test_t_field_on_a_default_namespace_t_is_rejected(self):
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "field_ns_t",
+                "type": "qweb",
+                "arch": '<t><root xmlns="urn:d"><t t-field="r.name"/></root></t>',
+            }
+        )
+        with self.assertRaises(QWebError) as cm:
+            self.env["ir.qweb"]._render(view.id, {"r": self.env.user})
+        self.assertIn("t-field can not be used on a t element", str(cm.exception))
 
     def test_attribute_prefix_survives_a_later_default_declaration(self):
         # lxml lists the default namespace after the prefix that shares its
@@ -3661,6 +3682,27 @@ class TestQWebRenderStandalone(TransactionCase):
         out = render("m", {"val": "hi", "flag": True, "n": 5}, self._load(templates))
         self.assertEqual(str(out), '<span>hi</span><b>Y</b><i data-x="5"></i>')
 
+    def test_render_standalone_body_with_only_assignments(self):
+        templates = {
+            "m": '<t><t t-set="s"><t t-set="q" t-value="1"/></t>[<t t-out="s"/>]'
+            '<t t-call="c"><t t-set="v" t-value="7"/></t></t>',
+            "c": '<t t-out="v"/>',
+        }
+        self.assertEqual(str(render("m", {}, self._load(templates))), "[]7")
+
+    def test_render_standalone_t_set_body_renders_inside_a_server_thread(self):
+        # The thread carries the test database's name and the standalone
+        # cursor carries none; a QwebContent must still render here.
+        templates = {"m": '<t><t t-set="s">S</t>[<t t-out="s"/>]</t>'}
+        self.assertTrue(getattr(threading.current_thread(), "dbname", None))
+        self.assertEqual(str(render("m", {}, self._load(templates))), "[S]")
+
+    def test_generated_module_has_no_empty_yield_unless_needed(self):
+        templates = {"m": '<t><t t-set="s"><b>x</b></t><i t-out="s"/></t>'}
+        qweb = _StandaloneQweb(_StandaloneEnv(), (), ())
+        code = qweb._generate_code(etree.fromstring(templates["m"]))[0]
+        self.assertNotIn("yield ''", code)
+
     def test_render_standalone_foreach(self):
         templates = {"m": '<t><span t-foreach="items" t-as="i" t-out="i"/></t>'}
         out = render("m", {"items": [1, 2, 3]}, self._load(templates))
@@ -4757,7 +4799,8 @@ class TestQWebDirectiveEdgeCases(TransactionCase):
         code = qweb._generate_code(
             etree.fromstring('<t><t t-if="x" t-att-a="f()"/></t>')
         )[0]
-        self.assertIn("attrs['a'] = ", code, "a t-att expression is still evaluated")
+        self.assertNotIn("attrs['a']", code, "nothing receives an attribute on <t>")
+        self.assertNotIn("__qweb_attrs__", code)
         self.assertEqual(
             self._render(
                 '<t><t t-if="v" t-out="v" t-options-widget="\'float\'"/></t>',

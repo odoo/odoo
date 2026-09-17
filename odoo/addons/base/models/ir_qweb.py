@@ -163,6 +163,8 @@ ALLOWED_KEYWORD = frozenset(
     ]
     + list(_BUILTINS)
 )
+YIELD_LINE_REGEXP = re.compile(r"^\s*yield\b", re.MULTILINE)
+BODY_INDENT_REGEXP = re.compile(r"^([ \t]+)\S", re.MULTILINE)
 RSTRIP_REGEXP = re.compile(r"\n[ \t]*$")
 LSTRIP_REGEXP = re.compile(r"^[ \t]*\n")
 FIRST_RSTRIP_REGEXP = re.compile(r"^(\n[ \t]*)+(\n[ \t])")
@@ -277,7 +279,8 @@ class QwebContent:
     def qweb(self) -> IrQweb | None:
         qweb = self.__qweb
         thread_dbname = getattr(threading.current_thread(), "dbname", None)
-        if thread_dbname and thread_dbname != qweb.env.cr.dbname:
+        cr_dbname = qweb.env.cr.dbname
+        if thread_dbname and cr_dbname and thread_dbname != cr_dbname:
             return None
         return qweb
 
@@ -1103,7 +1106,6 @@ class IrQweb(models.AbstractModel):
             element.text = FIRST_RSTRIP_REGEXP.sub(r"\2", element.text)
 
         compile_context.text_concat = []
-        self._add_text("", compile_context)
         try:
             compile_context.template_functions[f"{def_name}_content"] = (
                 [f"def {def_name}_content(self, values):"]
@@ -1232,6 +1234,12 @@ class IrQweb(models.AbstractModel):
         ]
         for lines in template_functions.values():
             code_lines.extend(lines)
+            # A body with no output (t-set assignments only) must still be a
+            # generator: the renderer iterates whatever the function returns.
+            body = "\n".join(lines).split("\n", 1)[1]
+            if not YIELD_LINE_REGEXP.search(body):
+                match = BODY_INDENT_REGEXP.search(body)
+                code_lines.append(f"{match[1] if match else '    '}yield ''")
         code_lines.extend(
             f"template_functions[{name!r}] = {name}" for name in template_functions
         )
@@ -1458,6 +1466,8 @@ class IrQweb(models.AbstractModel):
             self._rstrip_text(compile_context)
         text = "".join(text_concat)
         text_concat.clear()
+        if not text:
+            return []
         return [f"{'    ' * level}yield {text!r}"]
 
     def _is_static_node(
@@ -1894,6 +1904,10 @@ class IrQweb(models.AbstractModel):
             )
             el.attrib["t-options"] = el.attrib.pop("t-call-options")
 
+    @classmethod
+    def _is_t_element(cls, el: etree._Element) -> bool:
+        return cls._get_tag_names(el)[0] == "t"
+
     @staticmethod
     def _get_tag_names(el: etree._Element) -> tuple[str, str]:
         if not el.nsmap:
@@ -2063,6 +2077,19 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_att(
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
+        if "t-tag-open" not in el.attrib and not any(
+            name in el.attrib for name in OUTPUT_DIRECTIVES
+        ):
+            dropped = [
+                key
+                for key in el.attrib
+                if not key.startswith("t-") or key.startswith("t-att")
+            ]
+            for key in dropped:
+                del el.attrib[key]
+            _debug.logic("directive_att.skipped", tag=el.tag, dropped=len(dropped))
+            return []
+
         code = [indent_code("attrs = values['__qweb_attrs__'] = {}", level)]
 
         if el.nsmap:
@@ -2104,12 +2131,6 @@ class IrQweb(models.AbstractModel):
                 value = el.attrib.pop(key)
                 code.append(self._compile_dict_merge("attrs", value, level))
 
-        has_consumer = "t-tag-open" in el.attrib or any(
-            name in el.attrib for name in OUTPUT_DIRECTIVES
-        )
-        if len(code) == 1 and not has_consumer:
-            _debug.logic("directive_att.skipped", tag=el.tag)
-            return []
         _debug.pipeline("directive_att.compiled", tag=el.tag, statements=len(code) - 1)
         return code
 
@@ -2161,7 +2182,7 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
 
-        code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == "t")
+        code = self._flush_text(compile_context, level, rstrip=self._is_t_element(el))
 
         varname = el.attrib.pop("t-set")
         self._check_set_varname(varname)
@@ -2381,7 +2402,7 @@ class IrQweb(models.AbstractModel):
             raise ValueError("t-if or t-elif expression should not be empty.")
 
         strip = self._rstrip_text(compile_context)
-        if el.tag.lower() == "t" and el.text and LSTRIP_REGEXP.search(el.text):
+        if self._is_t_element(el) and el.text and LSTRIP_REGEXP.search(el.text):
             strip = ""
         code = self._flush_text(compile_context, level)
 
@@ -2471,7 +2492,7 @@ class IrQweb(models.AbstractModel):
             f"self.env.user.has_groups({groups!r})" for groups in conditions
         )
         code.append(indent_code(f"if {test}:", level))
-        if strip and el.tag.lower() != "t":
+        if strip and not self._is_t_element(el):
             self._add_text(strip, compile_context)
         code.extend(
             [
@@ -2501,7 +2522,7 @@ class IrQweb(models.AbstractModel):
                 f"The varname {expr_as!r} can only contain alphanumeric characters and underscores."
             )
 
-        if el.tag.lower() == "t":
+        if self._is_t_element(el):
             self._rstrip_text(compile_context)
 
         code = self._flush_text(compile_context, level)
@@ -2816,7 +2837,7 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_field(
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
-        tag_name = el.tag
+        tag_name = self._get_tag_names(el)[0]
         if tag_name in FORBIDDEN_FIELD_TAGS:
             raise ValueError(
                 f"QWeb widgets do not work correctly on {tag_name!r} elements"
@@ -2844,7 +2865,7 @@ class IrQweb(models.AbstractModel):
                 f"t-call must be on a <t> element (actually on <{el_tag}>)."
             )
 
-        code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == "t")
+        code = self._flush_text(compile_context, level, rstrip=True)
         path, xml = compile_context.element_path, compile_context.element_xml
 
         el.attrib.pop("t-consumed-options", None)
@@ -2919,7 +2940,6 @@ class IrQweb(models.AbstractModel):
         code_content.extend(
             self._compile_directive(el, compile_context, "inner-content", 1)
         )
-        self._add_text("", compile_context)
         code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context.template_functions[def_name] = code_content
