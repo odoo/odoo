@@ -70,11 +70,13 @@ class TestSaleStockMultiWarehouse(
         so.action_confirm()
 
         self.assertEqual(len(so.picking_ids), 2)
-        self.assertEqual(len(so.picking_ids[0].move_ids), 1)
-        self.assertEqual(len(so.picking_ids[1].move_ids), 1)
-        self.assertEqual(
-            so.picking_ids[0].move_ids[0].location_id.warehouse_id, self.warehouse_A
-        )
-        self.assertEqual(
-            so.picking_ids[1].move_ids[0].location_id.warehouse_id, self.warehouse_B
-        )
+        # selected by warehouse, not by position: `stock.picking._order` ends
+        # `id desc`, and both pickings carry the same date_planned, so indexing
+        # asserts which one the procurement happened to create last
+        by_warehouse = {
+            picking.move_ids.location_id.warehouse_id: picking
+            for picking in so.picking_ids
+        }
+        self.assertEqual(set(by_warehouse), {self.warehouse_A, self.warehouse_B})
+        for warehouse in (self.warehouse_A, self.warehouse_B):
+            self.assertEqual(len(by_warehouse[warehouse].move_ids), 1)
