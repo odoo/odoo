@@ -533,6 +533,12 @@ class ReadMixin(_ModelStubs):
             column_fields=len(column_fields),
             other_fields=len(other_fields),
         )
+        if column_fields and self._table_inheritance_root:
+            # a cache miss here says nothing about the other models of the
+            # tree, whose dirty values land in the rows this SELECT reads
+            self._flush_table_inheritance_siblings(
+                [field.name for field in column_fields]
+            )
         return self.env.backend.fetch(self, query, column_fields, other_fields)
 
     def get_metadata(self) -> list[ValuesType]:

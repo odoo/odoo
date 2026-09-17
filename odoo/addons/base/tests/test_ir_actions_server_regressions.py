@@ -6,7 +6,7 @@ import requests
 from lxml import etree
 from requests.adapters import HTTPAdapter
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.netguard import DestinationRefused
 from odoo.tests.common import TransactionCase, tagged
@@ -290,7 +290,7 @@ class TestObjectWriteCostsNothingPerExtraRecord(ServerActionCase):
             evaluation_type="sequence",
             sequence_id=sequence.id,
         )
-        self.assertFalse(action._is_batch_safe())
+        self.assertFalse(action._resolve_runner()[1])
         records = self._partners(3, "seq")
         action.with_context(**self._ctx(records)).run()
         self.env.flush_all()
@@ -305,7 +305,7 @@ class TestObjectWriteCostsNothingPerExtraRecord(ServerActionCase):
             evaluation_type="equation",
             value="record.name",
         )
-        self.assertFalse(action._is_batch_safe())
+        self.assertFalse(action._resolve_runner()[1])
         records = self._partners(3, "eq")
         action.with_context(**self._ctx(records)).run()
         self.env.flush_all()
@@ -692,3 +692,159 @@ class TestPerRecordLoopRebindsEverything(ServerActionCase):
         action.with_context(**self._ctx(partners)).run()
         for partner in partners:
             self.assertEqual(partner.ref, "/".join([str(partner.id)] * 3))
+
+
+@tagged("post_install", "-at_install")
+class TestAnEmptiedNameReturnsToTheAutomatedOne(ServerActionCase):
+    def test_writing_an_empty_name_yields_the_automated_name(self):
+        action = self._action(state="code", code="pass", name="Mine")
+        self.env.flush_all()
+        self.assertTrue(action.name_is_custom)
+        for blank in (False, ""):
+            with self.subTest(blank=blank):
+                action.write({"name": "Mine"})
+                action.write({"name": blank})
+                self.env.flush_all()
+                self.assertEqual(action.name, "Execute Code")
+                self.assertFalse(action.name_is_custom)
+
+    def test_releasing_the_custom_flag_alone_yields_the_automated_name(self):
+        action = self._action(state="code", code="pass", name="Mine")
+        action.write({"name_is_custom": False})
+        self.env.flush_all()
+        self.assertEqual(action.name, "Execute Code")
+
+
+@tagged("post_install", "-at_install")
+class TestAnX2manyValueIsANumberOrRefused(ServerActionCase):
+    def _tag_action(self, operation, value):
+        return self._action(
+            state="object_write",
+            update_path="tag_ids",
+            evaluation_type="value",
+            update_m2m_operation=operation,
+            value=value,
+        )
+
+    def test_a_value_that_is_not_an_id_is_refused_as_a_number_is(self):
+        partners = self._partners(2)
+        action = self._tag_action("add", "not-an-id")
+        with self.assertRaises(UserError):
+            action.with_context(**self._ctx(partners)).run()
+
+    def test_an_id_links_removes_and_sets(self):
+        tag = self.env["res.partner.tag"].create({"name": "x2m"})
+        partners = self._partners(2)
+        self._tag_action("add", str(tag.id)).with_context(**self._ctx(partners)).run()
+        self.assertEqual(partners.tag_ids, tag)
+        self._tag_action("remove", str(tag.id)).with_context(
+            **self._ctx(partners)
+        ).run()
+        self.assertFalse(partners.tag_ids)
+        self._tag_action("set", str(tag.id)).with_context(**self._ctx(partners)).run()
+        self.assertEqual(partners.tag_ids, tag)
+        self._tag_action("clear", "").with_context(**self._ctx(partners)).run()
+        self.assertFalse(partners.tag_ids)
+
+    def test_an_empty_value_writes_nothing(self):
+        partners = self._partners(1)
+        self._tag_action("add", "").with_context(**self._ctx(partners)).run()
+        self.assertFalse(partners.tag_ids)
+
+
+@tagged("post_install", "-at_install")
+class TestASequenceValueNeedsASequence(ServerActionCase):
+    def test_the_form_warns_and_the_run_refuses(self):
+        action = self._action(
+            state="object_write", update_path="ref", evaluation_type="sequence"
+        )
+        self.assertIn("sequence", (action.warning or "").lower())
+        with self.assertRaises(UserError):
+            action._eval_value()
+        action.sequence_id = self.env["ir.sequence"].create(
+            {"name": "seq", "code": "seq.test", "prefix": "S"}
+        )
+        self.assertFalse(action.warning)
+        partners = self._partners(1)
+        action.with_context(**self._ctx(partners)).run()
+        self.assertTrue(partners.ref.startswith("S"))
+
+
+@tagged("post_install", "-at_install")
+class TestCrudTargetsAreCheckedWithoutGroups(ServerActionCase):
+    """Measured 2026-09-17: with no group on the action, a user who could
+    write the action's model created and copied records of a model they
+    could not create, because only the group-gated branch checked the target.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = cls.env["res.users"].create(
+            {
+                "name": "crud-target",
+                "login": "crud_target",
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [
+                            cls.env.ref("base.group_user").id,
+                            cls.env.ref("base.group_partner_manager").id,
+                        ],
+                    )
+                ],
+            }
+        )
+        Access = cls.env["ir.model.access"].with_user(cls.user)
+        assert Access.check("res.partner", "write", False)
+        assert not Access.check("res.users", "create", False)
+        cls.users_model = cls.env["ir.model"]._get("res.users")
+
+    def test_an_ungated_create_needs_create_access_on_its_target(self):
+        partners = self._partners(1)
+        action = self._action(
+            state="object_create", crud_model_id=self.users_model.id, value="nope"
+        )
+        self.assertFalse(action.group_ids)
+        with self.assertRaises(AccessError):
+            action.with_user(self.user).with_context(**self._ctx(partners)).run()
+
+    def test_an_ungated_copy_needs_create_access_on_the_copied_model(self):
+        partners = self._partners(1)
+        action = self._action(state="object_copy", crud_model_id=self.users_model.id)
+        action.write(
+            {"resource_ref": f"res.users,{self.env.ref('base.user_admin').id}"}
+        )
+        before = self.env["res.users"].sudo().search_count([])
+        with self.assertRaises(AccessError):
+            action.with_user(self.user).with_context(**self._ctx(partners)).run()
+        self.assertEqual(self.env["res.users"].sudo().search_count([]), before)
+
+    def test_a_copy_is_checked_against_the_record_it_copies(self):
+        partners = self._partners(1)
+        action = self._action(state="object_copy", crud_model_id=self.partner_model.id)
+        action.write(
+            {"resource_ref": f"res.users,{self.env.ref('base.user_admin').id}"}
+        )
+        self.assertEqual(action.crud_model_id.model, "res.partner")
+        with self.assertRaises(AccessError):
+            action.with_user(self.user).with_context(**self._ctx(partners)).run()
+
+    def test_a_copy_within_the_user_s_rights_runs(self):
+        partners = self._partners(2)
+        action = self._action(state="object_copy")
+        action.write({"resource_ref": f"res.partner,{partners[1].id}"})
+        before = self.env["res.partner"].search_count([])
+        action.with_user(self.user).with_context(**self._ctx(partners[:1])).run()
+        self.assertEqual(self.env["res.partner"].search_count([]), before + 1)
+
+
+@tagged("post_install", "-at_install")
+class TestHistoryRecordsCodeNotItsAbsence(ServerActionCase):
+    def test_a_create_without_code_writes_no_history(self):
+        History = self.env["ir.actions.server.history"]
+        action = self._action(state="object_write", update_path="name", code=False)
+        self.assertFalse(History.search([("action_id", "=", action.id)]))
+        action.write({"code": "pass", "state": "code"})
+        self.assertEqual(len(History.search([("action_id", "=", action.id)])), 1)

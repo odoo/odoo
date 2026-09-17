@@ -634,9 +634,11 @@ class Environment(Mapping[str, "BaseModel"]):
             self[model_name].flush_model(field_names)
 
     def _table_inheritance_tree(self, model_name: str) -> tuple[str, ...]:
-        model_cls = self.registry[model_name]
-        root = model_cls._table_inheritance_root
-        if not root or root != model_cls._table:
+        # A root UPDATE reaches the rows of every table inheriting from it and
+        # a leaf SELECT reads the rows the root writes, so the tree is the
+        # same set of models seen from any of its members.
+        root = self.registry[model_name]._table_inheritance_root
+        if not root:
             return ()
         return tuple(
             name

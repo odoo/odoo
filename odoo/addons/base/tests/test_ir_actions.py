@@ -941,9 +941,10 @@ ZeroDivisionError: division by zero"""
                 "value": "not-an-int",
             }
         )
-        self.assertEqual(self.action._eval_value()[self.action.id], [])
-        run_res = self.action.with_context(self.context).run()
-        self.assertFalse(run_res)
+        with self.assertRaises(UserError):
+            self.action._eval_value()
+        with self.assertRaises(UserError):
+            self.action.with_context(self.context).run()
 
     def test_97_eval_value_m2m_unknown_operation(self):
         self.action.write(
@@ -1689,9 +1690,7 @@ class TestActionsBindings(common.TransactionCase):
             "binding_icon",
             "domain",
         }
-        invalidating = self.env[
-            "ir.actions.actions"
-        ]._get_fields_invalidating_when_cached()
+        invalidating = self.env["ir.actions.actions"]._get_fields_read_by_bindings()
         missing = binding_inputs - invalidating
         self.assertFalse(
             missing,

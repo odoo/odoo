@@ -6,7 +6,7 @@ from typing import Any, Self
 
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
@@ -105,7 +105,7 @@ class IrActionsActions(models.Model):
     )
     binding_type = fields.Selection(
         selection=[("action", "Action"), ("report", "Report")],
-        default="action",
+        default=lambda self: self._BINDING_TYPE,
         required=True,
     )
     binding_view_types = fields.Char(default="list,form")
@@ -121,8 +121,9 @@ class IrActionsActions(models.Model):
     _RESERVED_PATH_PREFIXES = ("m-", "action-")
     _RESERVED_PATHS = ("new",)
 
-    _BINDING_SQL_SELECTED = ("type", "binding_type")
-    _BINDING_SQL_JOINED = "binding_model_id"
+    _BINDING_TYPE = "action"
+    _BINDING_TYPE_FIELDS = ("type", "binding_type")
+    _BINDING_MODEL_FIELD = "binding_model_id"
     _BINDING_READ_FIELDS = (
         "name",
         "binding_view_types",
@@ -241,6 +242,25 @@ class IrActionsActions(models.Model):
         return res
 
     def write(self, vals: dict[str, Any]) -> bool:
+        if self._name == "ir.actions.actions":
+            _debug.logic("write_dispatched_to_concrete", count=len(self))
+            return self._write_as_concrete_types(vals)
+        return self._write_concrete(vals)
+
+    def _write_as_concrete_types(self, vals: dict[str, Any]) -> bool:
+        by_model = defaultdict(list)
+        for action_id, model_name in self._get_model_names_concrete().items():
+            by_model[model_name].append(action_id)
+        result = True
+        for model_name, ids in by_model.items():
+            records = self.env[model_name].browse(ids)
+            if model_name == self._name:
+                result = records._write_concrete(vals) and result
+            else:
+                result = records.write(vals) and result
+        return result
+
+    def _write_concrete(self, vals: dict[str, Any]) -> bool:
         if "binding_view_types" in vals:
             vals = {
                 **vals,
@@ -267,7 +287,7 @@ class IrActionsActions(models.Model):
         if self._name == "ir.actions.actions":
             _debug.logic("unlink_dispatched_to_concrete", count=len(self))
             return self._unlink_as_concrete_types()
-        groups = self._get_cache_groups_holding() | {"actions"}
+        groups = self.exists()._get_cache_groups_holding() | {"actions"}
         _debug.lifecycle("unlink", model=self._name, count=len(self))
         with self.env.cr.savepoint():
             self._apply_ondelete_unenforced()
@@ -276,7 +296,7 @@ class IrActionsActions(models.Model):
         return res
 
     def _unlink_as_concrete_types(self) -> bool:
-        groups = self._get_cache_groups_holding() | {"actions"}
+        groups = self.exists()._get_cache_groups_holding() | {"actions"}
         by_model = defaultdict(list)
         for action_id, model_name in self._get_model_names_concrete().items():
             by_model[model_name].append(action_id)
@@ -403,26 +423,25 @@ class IrActionsActions(models.Model):
 
     @api.model
     @tools.ormcache(cache="stable")
-    def _get_fields_invalidating_when_cached(self) -> frozenset[str]:
+    def _get_fields_read_by_bindings(self) -> frozenset[str]:
         return frozenset(
             (
-                *self._BINDING_SQL_SELECTED,
-                self._BINDING_SQL_JOINED,
+                *self._BINDING_TYPE_FIELDS,
+                self._BINDING_MODEL_FIELD,
                 *self._BINDING_READ_FIELDS,
                 *self._BINDING_OPTIONAL_FIELDS,
-                "path",
+                *self._get_fields_naming_target_model(),
             )
         )
 
     @api.model
     @tools.ormcache(cache="stable")
-    def _get_fields_invalidating_always(self) -> frozenset[str]:
-        target = self._get_field_target_model()
-        return frozenset(("binding_model_id", "path", *filter(None, [target])))
+    def _get_fields_read_by_menus(self) -> frozenset[str]:
+        return frozenset(("path", *self._get_fields_naming_target_model()))
 
     @api.model
-    def _get_fields_invalidating_menus(self) -> frozenset[str]:
-        return self._get_fields_invalidating_always() - {"binding_model_id"}
+    def _get_fields_naming_target_model(self) -> frozenset[str]:
+        return frozenset(filter(None, [self._get_field_target_model()]))
 
     @api.model
     @tools.ormcache(cache="stable")
@@ -566,21 +585,16 @@ class IrActionsActions(models.Model):
 
     @api.model
     def _eval_action_domain(self, domain: str | None, **names: Any) -> list:
-        eval_context = {
-            **self._prepare_eval_context(self),
-            **self.env.context,
-            **names,
-        }
-        return _eval_list_or_default(domain, eval_context, [])
+        return _eval_list_or_default(domain, self._prepare_expression_names(names), [])
 
     @api.model
     def _eval_action_context(self, context: str | None, **names: Any) -> dict:
-        eval_context = {
-            **self._prepare_eval_context(self),
-            **self.env.context,
-            **names,
-        }
-        return _eval_dict_or_default(context, eval_context, {})
+        return _eval_dict_or_default(context, self._prepare_expression_names(names), {})
+
+    @api.model
+    def _prepare_expression_names(self, names: dict[str, Any]) -> dict[str, Any]:
+        root = self.env["ir.actions.actions"]
+        return {**root._prepare_eval_context(root), **self.env.context, **names}
 
     @api.model
     def _prepare_eval_context(self, action: Any) -> dict[str, Any]:
@@ -646,13 +660,13 @@ class IrActionsActions(models.Model):
             .sudo()
             .with_context(active_test=False)
             .search_fetch(
-                [(f"{self._BINDING_SQL_JOINED}.model", "=", model_name)],
-                list(self._BINDING_SQL_SELECTED),
+                [(f"{self._BINDING_MODEL_FIELD}.model", "=", model_name)],
+                list(self._BINDING_TYPE_FIELDS),
                 order="id",
             )
         )
         rows = [
-            (action.id, *(action[name] for name in self._BINDING_SQL_SELECTED))
+            (action.id, *(action[name] for name in self._BINDING_TYPE_FIELDS))
             for action in bound
         ]
         _debug.perf.count("bindings_computed", model=model_name, rows=len(rows))
@@ -740,6 +754,31 @@ class IrActionsActions(models.Model):
     def _get_keys_client_only(self) -> frozenset[str]:
         return frozenset()
 
+    def create_action(self) -> bool:
+        self.check_access("write")
+        target_field = self._get_field_target_model()
+        if not target_field:
+            raise UserError(_("%s cannot be bound to a model.", self._description))
+        _debug.lifecycle("bindings_created", model=self._name, actions=self.ids)
+        IrModel = self.env["ir.model"]
+        for model_name, actions in self.grouped(target_field).items():
+            actions.write(
+                {
+                    "binding_model_id": IrModel._get(model_name).id,
+                    "binding_type": self._BINDING_TYPE,
+                }
+            )
+        return True
+
+    def unlink_action(self) -> bool:
+        self.check_access("write")
+        bound = self.filtered("binding_model_id")
+        _debug.lifecycle(
+            "bindings_removed", model=self._name, actions=self.ids, bound=len(bound)
+        )
+        bound.write({"binding_model_id": False})
+        return True
+
     def _sync_path_reservations(self) -> None:
         Reservation = self.env["ir.actions.path"].sudo()
         reserved = {
@@ -793,13 +832,9 @@ class IrActionsActions(models.Model):
                     )
                 )
 
-    def _is_cached_registry_wide(self) -> bool:
-        self.check_singleton()
-        return bool(self._get_cache_groups_holding())
-
     def _get_cache_groups_holding(self) -> set[str]:
         groups = set()
-        for action in self.exists():
+        for action in self:
             if action.binding_model_id:
                 groups.add("actions")
             if action.path:
@@ -809,11 +844,11 @@ class IrActionsActions(models.Model):
     def _get_cache_groups_invalidated_by(self, vals: dict[str, Any]) -> set[str]:
         groups = set()
         if "binding_model_id" in vals or (
-            not self._get_fields_invalidating_when_cached().isdisjoint(vals)
+            not self._get_fields_read_by_bindings().isdisjoint(vals)
             and any(action.binding_model_id for action in self)
         ):
             groups.add("actions")
-        if not self._get_fields_invalidating_menus().isdisjoint(vals):
+        if not self._get_fields_read_by_menus().isdisjoint(vals):
             groups.add("default")
         _debug.logic(
             "cache_groups_invalidated",

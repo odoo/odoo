@@ -46,7 +46,6 @@ class IrActionsReport(models.Model):
     _allow_sudo_commands = False
 
     type = fields.Char(default="ir.actions.report")
-    binding_type = fields.Selection(default="report")
     model = fields.Char(
         string="Model Name",
         required=True,
@@ -119,6 +118,8 @@ class IrActionsReport(models.Model):
         help="If set, the action will only appear on records that matches the domain.",
     )
 
+    _BINDING_TYPE = "report"
+
     @api.depends("model")
     def _compute_model_id(self) -> None:
         for action in self:
@@ -190,21 +191,6 @@ class IrActionsReport(models.Model):
             ("type", "=", "qweb"),
         ]
         return action_data
-
-    def create_action(self) -> bool:
-        self.check_access("write")
-        _debug.lifecycle("bindings_created", reports=self.ids)
-        for model, reports in self.grouped("model").items():
-            model_id = self.env["ir.model"]._get(model).id
-            reports.write({"binding_model_id": model_id, "binding_type": "report"})
-        return True
-
-    def unlink_action(self) -> bool:
-        self.check_access("write")
-        bound = self.filtered("binding_model_id")
-        _debug.lifecycle("bindings_removed", reports=self.ids, bound=len(bound))
-        bound.write({"binding_model_id": False})
-        return True
 
     def _get_attachment_filenames(self, records: Any) -> dict[int, Any]:
         self.check_singleton()
@@ -434,7 +420,7 @@ class IrActionsReport(models.Model):
         if values is None:
             values = {}
 
-        user = self.env["res.users"].browse(self.env.uid)
+        user = self.env.user
         view_obj = self.env["ir.ui.view"].with_context(inherit_branding=False)
         values.update(
             time=time,

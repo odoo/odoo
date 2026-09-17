@@ -1,5 +1,4 @@
 import base64
-import contextlib
 import logging
 from collections.abc import Callable
 from functools import partial
@@ -533,10 +532,11 @@ class IrActionsServer(models.Model):
         )
         actions = super().create(vals_list)
 
-        history_vals = []
-        for action, vals in zip(actions, vals_list, strict=True):
-            if "code" in vals:
-                history_vals.append({"action_id": action.id, "code": vals.get("code")})
+        history_vals = [
+            {"action_id": action.id, "code": vals["code"]}
+            for action, vals in zip(actions, vals_list, strict=True)
+            if vals.get("code")
+        ]
         if history_vals:
             self.env["ir.actions.server.history"].create(history_vals)
 
@@ -551,9 +551,13 @@ class IrActionsServer(models.Model):
         return actions
 
     def write(self, vals: dict[str, Any]) -> bool:
+        if "name" in vals and not vals["name"]:
+            _debug.logic("name_emptied", actions=self.ids)
+            vals = {key: value for key, value in vals.items() if key != "name"}
+            vals["name_is_custom"] = False
         name_decides_custom = "name" in vals and "name_is_custom" not in vals
         if name_decides_custom:
-            vals = {**vals, "name_is_custom": bool(vals["name"])}
+            vals = {**vals, "name_is_custom": True}
         if "code" in vals:
             new_code = vals.get("code")
             history_vals = [
@@ -703,6 +707,7 @@ class IrActionsServer(models.Model):
             "update_path",
             "update_field_type",
             "evaluation_type",
+            "sequence_id",
             "webhook_field_ids",
             "usage",
         ]
@@ -785,13 +790,17 @@ class IrActionsServer(models.Model):
                 )
             )
 
-        if (
-            self.state == "object_write"
-            and self.evaluation_type == "sequence"
-            and self.update_field_type
-            and self.update_field_type not in ("char", "text")
-        ):
-            warnings.append(_("A sequence must only be used with character fields."))
+        if self.state == "object_write" and self.evaluation_type == "sequence":
+            if self.update_field_type and self.update_field_type not in (
+                "char",
+                "text",
+            ):
+                warnings.append(
+                    _("A sequence must only be used with character fields.")
+                )
+            if not self.sequence_id:
+                _debug.logic("sequence_missing", action=self.id)
+                warnings.append(_("Choose the sequence the value is drawn from."))
 
         if self.state == "webhook" and self.model_id:
             restricted_fields = []
@@ -849,6 +858,7 @@ class IrActionsServer(models.Model):
             "state",
             "crud_model_id",
             "resource_ref",
+            "name_is_custom",
         ]
 
     def _prefetch_automated_name_sources(self) -> None:
@@ -1023,9 +1033,8 @@ class IrActionsServer(models.Model):
                 )
 
     @api.model
-    @tools.ormcache(cache="stable")
-    def _get_fields_invalidating_always(self) -> frozenset[str]:
-        return super()._get_fields_invalidating_always() | {"model_id"}
+    def _get_fields_naming_target_model(self) -> frozenset[str]:
+        return super()._get_fields_naming_target_model() | {"model_id"}
 
     def _get_field_target_model(self) -> str:
         return "model_name"
@@ -1059,36 +1068,18 @@ class IrActionsServer(models.Model):
         }
 
     def _resolve_runner(self) -> tuple[Callable | None, bool]:
+        self.check_singleton()
         model_class = self.env.registry[self._name]
         fn = getattr(model_class, f"_run_action_{self.state}", None)
         fn_multi = getattr(model_class, f"_run_action_{self.state}_multi", None)
-        if fn_multi is None and self.state in ("multi", "object_write"):
+        batches_itself = self.state in ("multi", "object_write")
+        if fn_multi is None and batches_itself:
             fn_multi = fn
-        if fn_multi and self._is_batch_safe():
+        if fn_multi and (not batches_itself or self._is_batchable()):
             return fn_multi, True
         if _debug.logic.enabled and fn_multi:
             _debug.logic("batch_runner_declined", action=self.id, state=self.state)
         return fn, False
-
-    def _is_batch_safe(self) -> bool:
-        self.check_singleton()
-        if self.state in ("multi", "object_write"):
-            return self._is_batchable()
-        return True
-
-    def create_action(self) -> bool:
-        self.check_access("write")
-        _debug.lifecycle("bindings_created", actions=self.ids)
-        for model_id, actions in self.grouped("model_id").items():
-            actions.write({"binding_model_id": model_id.id, "binding_type": "action"})
-        return True
-
-    def unlink_action(self) -> bool:
-        self.check_access("write")
-        bound = self.filtered("binding_model_id")
-        _debug.lifecycle("bindings_removed", actions=self.ids, bound=len(bound))
-        bound.write({"binding_model_id": False})
-        return True
 
     def action_view_code_history(self) -> dict[str, Any]:
         self.check_singleton()
@@ -1566,9 +1557,12 @@ class IrActionsServer(models.Model):
                 raise AccessError(
                     _("You don't have enough access rights to run this action.")
                 )
-            self._check_access_to_crud_targets(records)
-            return
+        else:
+            self._check_access_to_model_and_records(records)
+        self._check_access_to_crud_targets(records)
 
+    def _check_access_to_model_and_records(self, records: Any) -> None:
+        config = self.sudo()
         model_name = config.model_id.model
         try:
             self.env[model_name].check_access("write")
@@ -1617,7 +1611,12 @@ class IrActionsServer(models.Model):
         if config.state == "object_write":
             records.check_access("write")
             return
-        self.env[config.crud_model_id.model].check_access("create")
+        if config.state == "object_create":
+            self.env[config.crud_model_id.model].check_access("create")
+        elif config.resource_ref:
+            source = self.env[config.resource_ref._name].browse(config.resource_ref.id)
+            source.check_access("read")
+            self.env[source._name].check_access("create")
         if config.link_field_id:
             records.check_access("write")
 
@@ -1717,23 +1716,18 @@ class IrActionsServer(models.Model):
             if action.evaluation_type == "equation":
                 expr = safe_eval(action.value, eval_context)
             elif action.evaluation_type == "sequence":
+                if not action.sequence_id:
+                    _debug.logic("sequence_missing", action=action.id)
+                    raise UserError(
+                        _(
+                            "The 'Update Record' action '%(name)s' draws its value "
+                            "from a sequence, and none is chosen.",
+                            name=action.name,
+                        )
+                    )
                 expr = action.sequence_id.next_by_id()
             elif action.update_field_id.ttype in ("one2many", "many2many"):
-                expr = []
-                match action.update_m2m_operation:
-                    case "add":
-                        with contextlib.suppress(ValueError, TypeError):
-                            expr = [Command.link(int(action.value))]
-                    case "remove":
-                        with contextlib.suppress(ValueError, TypeError):
-                            expr = [Command.unlink(int(action.value))]
-                    case "set":
-                        with contextlib.suppress(ValueError, TypeError):
-                            expr = [Command.set([int(action.value)])]
-                    case "clear":
-                        expr = [Command.clear()]
-                    case _:
-                        pass
+                expr = action._prepare_x2many_commands()
             elif action.update_field_id.ttype == "boolean":
                 expr = action.update_boolean_value == "true"
             elif action.update_field_id.ttype in ("many2one", "integer"):
@@ -1757,6 +1751,23 @@ class IrActionsServer(models.Model):
                 m2m_operation=action.update_m2m_operation,
             )
         return result
+
+    def _prepare_x2many_commands(self) -> list:
+        self.check_singleton()
+        operation = self.update_m2m_operation
+        if operation == "clear":
+            return [Command.clear()]
+        target_id = self._coerce_number(int) if self.value else 0
+        if not target_id:
+            return []
+        match operation:
+            case "add":
+                return [Command.link(target_id)]
+            case "remove":
+                return [Command.unlink(target_id)]
+            case "set":
+                return [Command.set([target_id])]
+        return []
 
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
         default = default or {}
