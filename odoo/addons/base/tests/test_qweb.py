@@ -19,6 +19,8 @@ from odoo.addons.base.models.ir_qweb import (
     CompileContext,
     QwebCallParameters,
     QwebContent,
+    format_attributes,
+    qweb_json,
     render,
 )
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -830,6 +832,53 @@ class TestQWebNS(TransactionCase):
         rendering = self.env["ir.qweb"]._render(view1.id)
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
+
+    def test_xml_prefixed_attributes_keep_their_prefix(self):
+        for arch in (
+            '<div xml:lang="en">x</div>',
+            '<div xml:lang="en" t-att-a="a">x</div>',
+            '<div xmlns:y="urn:y" xml:lang="en" y:k="v" t-att-a="a">x</div>',
+        ):
+            view = self.env["ir.ui.view"].create(
+                {"name": "xml_prefix", "type": "qweb", "arch": f"<t>{arch}</t>"}
+            )
+            rendered = str(self.env["ir.qweb"]._render(view.id, {"a": 1}))
+            self.assertIn(' xml:lang="en"', rendered, arch)
+            self.assertNotIn("{http://www.w3.org/XML/1998/namespace}", rendered)
+            self.assertEqual(etree.fromstring(rendered).text, "x")
+
+    def test_t_call_does_not_redeclare_the_callers_namespace(self):
+        self.env["ir.ui.view"].create(
+            {
+                "key": "base.ns_callee",
+                "name": "ns_callee",
+                "type": "qweb",
+                "arch": """
+                <t t-name="base.ns_callee">
+                    <y:a xmlns:y="urn:y"><x:b xmlns:x="urn:x">v</x:b></y:a>
+                    <y:c xmlns:y="urn:y" t-att-k="1"><x:d xmlns:x="urn:x" t-att-k="2">w</x:d></y:c>
+                </t>
+                """,
+            }
+        )
+        caller = self.env["ir.ui.view"].create(
+            {
+                "name": "ns_caller",
+                "type": "qweb",
+                "arch": """
+                <t t-name="base.ns_caller">
+                    <root xmlns:x="urn:x"><t t-call="base.ns_callee"/></root>
+                </t>
+                """,
+            }
+        )
+        rendered = str(self.env["ir.qweb"]._render(caller.id))
+        self.assertEqual(rendered.count('xmlns:x="urn:x"'), 1)
+        self.assertEqual(rendered.count('xmlns:y="urn:y"'), 2)
+        tree = etree.fromstring(rendered)
+        self.assertEqual(
+            [el.text for el in tree.iter("{urn:x}b", "{urn:x}d")], ["v", "w"]
+        )
 
 
 @tagged("post_install", "-at_install")
@@ -3394,6 +3443,28 @@ class TestQWebHelpers(TransactionCase):
         )
         self.assertIn("view_ref=42", repr(params))
 
+    def test_qweb_json_default(self):
+        class Unserializable:
+            pass
+
+        content = QwebContent(self.env["ir.qweb"], None)
+        content.html = "<b>x</b>"
+        self.assertEqual(qweb_json.dumps({"c": content}), '{"c": "<b>x</b>"}')
+        with self.assertRaisesRegex(TypeError, "Unserializable is not JSON"):
+            qweb_json.dumps({"u": Unserializable()})
+        self.assertEqual(
+            qweb_json.dumps({"u": Unserializable()}, default=lambda o: "D"),
+            '{"u": "D"}',
+        )
+
+    def test_format_attributes(self):
+        self.assertEqual(
+            format_attributes(
+                {"a": 1, "b": "", "c": None, "d": 0, "e": False, 'x"y': "<&>"}
+            ),
+            ' a="1" b="" x&#34;y="&lt;&amp;&gt;"',
+        )
+
     def test_is_static_node(self):
         qweb = self.env["ir.qweb"]
         ctx = self._context(nsmap={})
@@ -3835,6 +3906,20 @@ class TestQWebDirectiveContracts(TransactionCase):
             self.env["ir.qweb"]._render(view.id)
         self.assertIsInstance(cm.exception.__cause__, SyntaxError)
         self.assertIn("t-set cannot share a node", str(cm.exception))
+
+    def test_t_set_body_beside_an_output_directive_is_a_syntax_error(self):
+        view = self._view("set_body_out", "<t><t t-set='a' t-out='v'>body</t></t>")
+        with self.assertRaises(QWebError) as cm:
+            self.env["ir.qweb"]._render(view.id, {"v": "V"})
+        self.assertIsInstance(cm.exception.__cause__, SyntaxError)
+        self.assertIn("t-set cannot share a node", str(cm.exception))
+
+    def test_t_set_slot_from_t_value_is_a_syntax_error(self):
+        view = self._view("set_slot_value", "<t><t t-set='0' t-value='1'/></t>")
+        with self.assertRaises(QWebError) as cm:
+            self.env["ir.qweb"]._render(view.id)
+        self.assertIsInstance(cm.exception.__cause__, SyntaxError)
+        self.assertIn('t-set="0" should not be set from t-value', str(cm.exception))
 
     def test_t_options_does_not_mutate_the_caller_dict(self):
         view = self._view("opt_alias", "<t><span t-out='v' t-options='opts'/></t>")

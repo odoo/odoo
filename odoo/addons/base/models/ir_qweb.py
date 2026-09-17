@@ -179,6 +179,8 @@ QWEB_MAX_RENDER_DEPTH = 50
 
 ETREE_TEMPLATE_REF = count()
 
+XML_NAMESPACE_PREFIXES = frozendict({"http://www.w3.org/XML/1998/namespace": "xml"})
+
 POST_PROCESSING_ATT_NAMES = frozenset(
     ("href", "src", "action", "formaction", "xlink:href", "data")
 )
@@ -191,6 +193,10 @@ URL_IGNORED_CHARS = re.compile(r"[\s\x00-\x1f]+")
 
 def _normalize_url_for_scheme_check(value: object) -> str:
     return URL_IGNORED_CHARS.sub("", urllib.parse.unquote_plus(str(value)))
+
+
+def _xmlns_attribute(prefix: str | None) -> str:
+    return "xmlns" if prefix is None else f"xmlns:{prefix}"
 
 
 def _id_or_xmlid(ref: str | int) -> str | int:
@@ -209,6 +215,14 @@ def to_text(value: Any) -> str:
 
 def indent_code(code: str, level: int) -> str:
     return textwrap.indent(textwrap.dedent(code).strip(), " " * 4 * level)
+
+
+def format_attributes(attrs: Mapping[str, Any]) -> str:
+    return "".join(
+        f' {escape(str(name))}="{escape(str(value))}"'
+        for name, value in attrs.items()
+        if value or isinstance(value, str)
+    )
 
 
 class QwebCallParameters(NamedTuple):
@@ -350,16 +364,18 @@ class RenderScopedList(list):
 
 class QwebJSON(json.JSON):
     def dumps(self, *args: Any, **kwargs: Any) -> str:
-        prev_default = kwargs.pop("default", lambda obj: obj)
-        return super().dumps(
-            *args,
-            **kwargs,
-            default=(
-                lambda obj: prev_default(
-                    str(obj) if isinstance(obj, QwebContent) else obj
-                )
-            ),
-        )
+        prev_default = kwargs.pop("default", None)
+
+        def default(obj: Any) -> Any:
+            if isinstance(obj, QwebContent):
+                return str(obj)
+            if prev_default is not None:
+                return prev_default(obj)
+            raise TypeError(
+                f"Object of type {type(obj).__name__} is not JSON serializable"
+            )
+
+        return super().dumps(*args, **kwargs, default=default)
 
 
 qweb_json = QwebJSON()
@@ -457,11 +473,12 @@ class IrQweb(models.AbstractModel):
             values.pop(0, None)
 
         qweb = self.with_context(**options)._prepare_environment(values)
-        _compiled_cache = qweb.env.context.get("__qweb_compiled_cache")
-        if _compiled_cache is None:
-            _compiled_cache = RenderScopedDict()
+        compiled_cache = qweb.env.context.get("__qweb_compiled_cache")
+        cache_shared = compiled_cache is not None
+        if not cache_shared:
+            compiled_cache = RenderScopedDict()
         qweb = qweb.with_context(
-            __qweb_compiled_cache=_compiled_cache,
+            __qweb_compiled_cache=compiled_cache,
             __qweb_loaded_codes=RenderScopedDict(),
             __qweb_loaded_options=RenderScopedDict(),
             _qweb_error_path_xml=RenderScopedList((None, None, None)),
@@ -470,7 +487,7 @@ class IrQweb(models.AbstractModel):
         safe_eval.check_values(values)
         _debug.pipeline(
             "render.prepared",
-            cache_shared=_compiled_cache is not None,
+            cache_shared=cache_shared,
             values=len(values),
             options=sorted(options),
         )
@@ -1403,6 +1420,7 @@ class IrQweb(models.AbstractModel):
             "Mapping": Mapping,
             "Markup": Markup,
             "escape": escape,
+            "format_attributes": format_attributes,
             "VOID_ELEMENTS": VOID_ELEMENTS,
             "QwebCallParameters": QwebCallParameters,
             "QwebContent": QwebContent,
@@ -1466,21 +1484,25 @@ class IrQweb(models.AbstractModel):
         )
 
     @staticmethod
-    def _get_qualified_attribute_name(
-        key: str, nsprefixmap: dict[str, str | None]
-    ) -> str:
+    def _get_qualified_attribute_name(key: str, nsprefixmap: Mapping[str, str]) -> str:
         name = key.removesuffix(".translate")
+        if name[0] != "{":
+            return name
         qname = etree.QName(name)
-        if qname.namespace:
-            return f"{nsprefixmap[qname.namespace]}:{qname.localname}"
-        return name
+        prefix = nsprefixmap.get(qname.namespace) or XML_NAMESPACE_PREFIXES.get(
+            qname.namespace
+        )
+        if prefix is None:
+            raise KeyError(f"No prefix is declared for the namespace of {name!r}")
+        return f"{prefix}:{qname.localname}"
 
     def _get_ns_prefix_map(
         self, el: etree._Element, compile_context: CompileContext
-    ) -> dict[str, str | None]:
+    ) -> dict[str, str]:
         return {
             uri: prefix
             for prefix, uri in chain(compile_context.nsmap.items(), el.nsmap.items())
+            if prefix is not None
         }
 
     def _get_element_marker(self, path: str | None, xml: str | None) -> str:
@@ -1711,11 +1733,7 @@ class IrQweb(models.AbstractModel):
         if string in argument_names:
             return ARGUMENT_NAME_TEMPLATE % string
 
-        follows_dot = (
-            index > 0
-            and tokens[index - 1]
-            and tokens[index - 1].exact_type == token.DOT
-        )
+        follows_dot = index > 0 and tokens[index - 1].exact_type == token.DOT
         is_keyword_argument = (
             index + 1 < len(tokens) and tokens[index + 1].exact_type == token.EQUAL
         )
@@ -1859,7 +1877,7 @@ class IrQweb(models.AbstractModel):
             if el_tag not in VOID_ELEMENTS:
                 el.set("t-tag-close", el_tag)
 
-        if not ({"t-out", "t-esc", "t-raw", "t-field"} & set(el.attrib)):
+        if not any(name in el.attrib for name in OUTPUT_DIRECTIVES):
             el.set("t-inner-content", "True")
 
         return body + self._compile_directives(el, compile_context, level)
@@ -1889,28 +1907,14 @@ class IrQweb(models.AbstractModel):
         self, el: etree._Element, compile_context: CompileContext, level: int
     ) -> list[str]:
         unqualified_el_tag, el_tag = self._get_tag_names(el)
-        if not el.nsmap:
-            attrib = self._post_processing_att(
-                el.tag,
-                {
-                    key.removesuffix(".translate"): value
-                    for key, value in el.attrib.items()
-                },
-                is_static=True,
-            )
-        else:
-            attrib = {}
+        attrib = {}
+        if el.nsmap:
             for ns_prefix, ns_definition in self._new_namespaces(el, compile_context):
-                if ns_prefix is None:
-                    attrib["xmlns"] = ns_definition
-                else:
-                    attrib[f"xmlns:{ns_prefix}"] = ns_definition
-
-            nsprefixmap = self._get_ns_prefix_map(el, compile_context)
-            for key, value in el.attrib.items():
-                attrib[self._get_qualified_attribute_name(key, nsprefixmap)] = value
-
-            attrib = self._post_processing_att(el.tag, attrib, is_static=True)
+                attrib[_xmlns_attribute(ns_prefix)] = ns_definition
+        nsprefixmap = self._get_ns_prefix_map(el, compile_context)
+        for key, value in el.attrib.items():
+            attrib[self._get_qualified_attribute_name(key, nsprefixmap)] = value
+        attrib = self._post_processing_att(el.tag, attrib, is_static=True)
 
         _debug.pipeline(
             "compile_static_node",
@@ -1920,12 +1924,7 @@ class IrQweb(models.AbstractModel):
             void=el_tag in VOID_ELEMENTS,
         )
         if unqualified_el_tag != "t":
-            attributes = "".join(
-                f' {escape(str(name))}="{escape(str(value))}"'
-                for name, value in attrib.items()
-                if value or isinstance(value, str)
-            )
-            self._add_text(f"<{el_tag}{attributes}", compile_context)
+            self._add_text(f"<{el_tag}{format_attributes(attrib)}", compile_context)
             if el_tag in VOID_ELEMENTS:
                 self._add_text("/>", compile_context)
             else:
@@ -1933,17 +1932,10 @@ class IrQweb(models.AbstractModel):
 
         el.attrib.clear()
 
-        if el.nsmap:
-            original_nsmap = compile_context.nsmap
-            compile_context.nsmap = {**original_nsmap, **el.nsmap}
-            body = self._compile_directive(el, compile_context, "inner-content", level)
-            compile_context.nsmap = original_nsmap
-        else:
-            body = self._compile_directive(el, compile_context, "inner-content", level)
+        body = self._compile_directive(el, compile_context, "inner-content", level)
 
-        if unqualified_el_tag != "t":
-            if el_tag not in VOID_ELEMENTS:
-                self._add_text(f"</{el_tag}>", compile_context)
+        if unqualified_el_tag != "t" and el_tag not in VOID_ELEMENTS:
+            self._add_text(f"</{el_tag}>", compile_context)
 
         return body
 
@@ -2075,10 +2067,12 @@ class IrQweb(models.AbstractModel):
 
         if el.nsmap:
             for ns_prefix, ns_definition in self._new_namespaces(el, compile_context):
-                key = "xmlns"
-                if ns_prefix is not None:
-                    key = f"xmlns:{ns_prefix}"
-                code.append(indent_code(f"attrs[{key!r}] = {ns_definition!r}", level))
+                code.append(
+                    indent_code(
+                        f"attrs[{_xmlns_attribute(ns_prefix)!r}] = {ns_definition!r}",
+                        level,
+                    )
+                )
 
         if any(not key.startswith("t-") for key in el.attrib):
             nsprefixmap = self._get_ns_prefix_map(el, compile_context)
@@ -2137,11 +2131,7 @@ class IrQweb(models.AbstractModel):
                 f"""
             attrs = values.pop('__qweb_attrs__', None)
             if attrs:
-                tag_name = {el.tag!r}
-                attrs = self._post_processing_att(tag_name, attrs)
-                for name, value in attrs.items():
-                    if value or isinstance(value, str):
-                        yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
+                yield format_attributes(self._post_processing_att({el.tag!r}, attrs))
         """,
                 level,
             )
@@ -2175,16 +2165,13 @@ class IrQweb(models.AbstractModel):
 
         varname = el.attrib.pop("t-set")
         self._check_set_varname(varname)
-
-        if (
-            "t-value" in el.attrib
-            or "t-valuef" in el.attrib
-            or "t-valuef.translate" in el.attrib
-            or varname[0] == "{"
-        ):
-            self._check_set_owns_its_node(el, varname)
+        self._check_set_owns_its_node(el, varname)
 
         value_code = self._compile_set_value(el, varname, level)
+        if value_code is not None and varname == T_CALL_SLOT:
+            _debug.logic("directive_set.rejected", reason="slot_from_value")
+            msg = 't-set="0" should not be set from t-value or t-valuef'
+            raise SyntaxError(msg)
         _debug.logic(
             "directive_set.compiled",
             varname=varname if varname[0] != "{" else "{dict}",
@@ -2235,10 +2222,6 @@ class IrQweb(models.AbstractModel):
             _debug.logic(
                 "directive_set.rejected", reason="shares_output_node", varname=varname
             )
-            raise SyntaxError(msg)
-        if varname == T_CALL_SLOT:
-            _debug.logic("directive_set.rejected", reason="slot_from_value")
-            msg = 't-set="0" should not be set from t-value or t-valuef'
             raise SyntaxError(msg)
 
     def _compile_set_value(
@@ -2338,7 +2321,7 @@ class IrQweb(models.AbstractModel):
 
         parent_nsmap = compile_context.nsmap
         if el.nsmap:
-            compile_context.nsmap = el.nsmap
+            compile_context.nsmap = {**parent_nsmap, **el.nsmap}
 
         if el.text is not None:
             self._add_text(el.text, compile_context)
@@ -2785,13 +2768,10 @@ class IrQweb(models.AbstractModel):
         )
         code.extend(tag_close)
 
-        if default_body or compile_context.text_concat:
-            _text_concat = list(compile_context.text_concat)
-            compile_context.text_concat.clear()
+        if default_body:
             code.append(indent_code("else:", level))
             code.extend(tag_open)
             code.extend(default_body)
-            compile_context.text_concat.extend(_text_concat)
             code.extend(tag_close)
         elif force_display_dependent:
             if tag_open + tag_close:
@@ -2864,7 +2844,7 @@ class IrQweb(models.AbstractModel):
                 f"t-call must be on a <t> element (actually on <{el_tag}>)."
             )
 
-        code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == "t")
+        code = self._flush_text(compile_context, level, rstrip=True)
         path, xml = compile_context.element_path, compile_context.element_xml
 
         el.attrib.pop("t-consumed-options", None)
@@ -2913,16 +2893,9 @@ class IrQweb(models.AbstractModel):
         if not compile_context.nsmap:
             return code
 
-        nsmap = []
-        for key, value in compile_context.nsmap.items():
-            if isinstance(key, str):
-                nsmap.append(f"{key!r}:{value!r}")
-            else:
-                nsmap.append(f"None:{value!r}")
         code.append(
             indent_code(
-                f"t_call_options.update(nsmap={{{', '.join(nsmap)}}})",
-                level,
+                f"t_call_options.update(nsmap={compile_context.nsmap!r})", level
             )
         )
         return code
@@ -3090,11 +3063,7 @@ class IrQweb(models.AbstractModel):
                 else {},
                 is_static=True,
             )
-            attributes = "".join(
-                f' {escape(str(name))}="{escape(str(value))}"'
-                for name, value in attrs.items()
-                if value or isinstance(value, str)
-            )
+            attributes = format_attributes(attrs)
             if tag_name in VOID_ELEMENTS:
                 yield f"<{tag_name}{attributes}/>"
             else:
