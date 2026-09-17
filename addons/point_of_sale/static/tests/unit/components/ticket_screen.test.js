@@ -114,3 +114,23 @@ test("scanning a barcode on the ticket screen does not feed the refund quantity"
     expect(comp.getToRefundDetail(line).qty).toBe(0);
     expect(dialogTitles).toEqual([]);
 });
+
+test("searching by customer keeps the orders of a nameless address contact", async () => {
+    const store = await setupPosEnv();
+    const company = store.models["res.partner"].get(3);
+    const address = store.models["res.partner"].create({
+        name: false,
+        parent_name: company.name,
+    });
+    const companyOrder = store.addNewOrder({ partner_id: company });
+    const addressOrder = store.addNewOrder({ partner_id: address });
+    expect(addressOrder.getPartnerName()).toBe(company.name);
+
+    const comp = await mountWithCleanup(TicketScreen, {
+        props: { stateOverride: { search: { fieldName: "PARTNER", searchTerm: company.name } } },
+    });
+    expect(comp.getFilteredOrderList().map((order) => order.id)).toEqual(
+        [companyOrder.id, addressOrder.id],
+        { message: "the address contact is searched by its company name" }
+    );
+});
