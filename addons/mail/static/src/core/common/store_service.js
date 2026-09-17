@@ -287,7 +287,10 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
-                if (isTabFocused && thread?.channel?.isDisplayed) {
+                if (
+                    this.self_user?.im_status === "busy" ||
+                    (isTabFocused && thread?.channel?.isDisplayed)
+                ) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },

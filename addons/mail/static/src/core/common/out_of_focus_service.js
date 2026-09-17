@@ -36,7 +36,21 @@ export class OutOfFocusService {
             return;
         }
         this.contributingMessageLocalIds.add(message.localId);
-        if (await this.hasServiceWorkInstalledAndPushSubscriptionActive()) {
+        // Keep in sync with mail.thread._notify_get_recipients_for_extra_notifications:
+        // automated messages and notifications to their own author are not sent by push.
+        const messageTypesHandledByPush = [
+            "comment",
+            "whatsapp_message",
+            "notification",
+            "user_notification",
+            "email",
+            "tracking",
+        ];
+        if (
+            messageTypesHandledByPush.includes(message.message_type) &&
+            !message.isSelfAuthored &&
+            (await this.hasServiceWorkInstalledAndPushSubscriptionActive())
+        ) {
             return;
         }
         const author = message.author;
