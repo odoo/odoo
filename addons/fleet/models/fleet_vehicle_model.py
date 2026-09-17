@@ -76,6 +76,22 @@ class FleetVehicleModel(models.Model):
             return NotImplemented
         return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
 
+    @api.model
+    def name_create(self, name):
+        if '/' in name:
+            brand_name, model_name = name.split('/', 1)
+            brand = self.env['fleet.vehicle.model.brand'].search([
+                ('name', '=ilike', brand_name.strip())
+            ], limit=1)
+            if not brand:
+                brand = self.env['fleet.vehicle.model.brand'].create({'name': brand_name.strip()})
+            record = self.create({
+                'name': model_name.strip(),
+                'brand_id': brand.id,
+            })
+            return record.id, record.display_name
+        return super().name_create(name)
+
     @api.depends('brand_id')
     def _compute_display_name(self):
         for record in self:
