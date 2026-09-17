@@ -47,7 +47,7 @@ class MicrosoftAuth(http.Controller):
             )
             request.env.user._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
             self._post_microsoft_auth_success_hook()
-            return request.redirect(_build_url_w_params(url_return, {"auth_success": "True"}))
+            return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect(_build_url_w_params(url_return, {"error": kw['error']}))
         else:

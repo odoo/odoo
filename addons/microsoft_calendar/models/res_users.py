@@ -141,8 +141,6 @@ class ResUsers(models.Model):
     def restart_microsoft_synchronization(self):
         self.env.user.microsoft_last_sync_date = datetime.now()
         self.env.user.microsoft_synchronization_stopped = False
-        self.env['calendar.recurrence']._restart_microsoft_sync()
-        self.env['calendar.event']._restart_microsoft_sync()
 
     def unpause_microsoft_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_bool("microsoft_calendar_sync_paused", False)

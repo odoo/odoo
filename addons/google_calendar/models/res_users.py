@@ -254,9 +254,6 @@ class ResUsers(models.Model):
     @api.model
     def restart_google_synchronization(self):
         self.env.user.google_synchronization_stopped = False
-        self.env['calendar.calendar']._restart_google_sync()
-        self.env['calendar.recurrence']._restart_google_sync()
-        self.env['calendar.event']._restart_google_sync()
 
     def unpause_google_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_bool("google_calendar_sync_paused", False)

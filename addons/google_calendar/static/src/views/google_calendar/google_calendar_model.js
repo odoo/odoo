@@ -16,7 +16,7 @@ patch(AttendeeCalendarModel.prototype, {
         });
     },
 
-    /** Override
+    /**
      * This override handles the situation where the sync finishes during the initial view load.
      * The sync process can sometimes take a while, so we launch it in the background without awaiting
      * the result so that we don't block the UI.
@@ -28,9 +28,10 @@ patch(AttendeeCalendarModel.prototype, {
      * be discarded, and the await in model.js `_load` would never resolve - the view would not load.
      *
      * Instead, we postpone the second update call to the end of the load
+     *
+     * @override
      */
     async load() {
-
         this.isLoading = true;
         try {
             await super.load(...arguments);
@@ -67,7 +68,7 @@ patch(AttendeeCalendarModel.prototype, {
             }
             console.error("Could not synchronize Google events now.", error);
             this.state.googlePendingSync = false;
-        })
+        });
         if (this.isAlive()) {
             await super.updateData(...arguments);
             return this.updateCalendarData(data);
@@ -83,14 +84,6 @@ patch(AttendeeCalendarModel.prototype, {
 
     async syncGoogleCalendar(silent = false) {
         this.state.googlePendingSync = true;
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("auth_success")) {
-            await this.orm.call(
-                "res.users",
-                "restart_google_synchronization",
-            );
-        }
-
         const result = await rpc(
             "/google_calendar/sync_data",
             {
