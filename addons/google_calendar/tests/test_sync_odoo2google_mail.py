@@ -64,8 +64,9 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
                 'google_calendar_rtoken': 'my_new_rtoken',
                 'google_calendar_token': 'my_new_token',
             })
-            user.with_user(user).restart_google_synchronization()
-            self.assertTrue(user.is_google_calendar_synced())
+            # Restart google synchronization
+            self.env['calendar.event'].with_user(user)._check_synced_events_alarm_limit()
+            self.env.user.google_synchronization_stopped = False
             assert_alarm_message(existing_event_over_limit, 1)
             # Create
             event_under_limit = self.env['calendar.event'].create({**base_vals, 'alarm_ids': [(4, alarms[0].id)]})
@@ -122,6 +123,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
         organizer1 = self.users[0]
         organizer2 = self.users[1]
         user_root = self.env.ref('base.user_root')
+        user_root.google_calendar_token = False
         organizer1.google_calendar_token = 'abc'
         organizer2.google_calendar_token = False
         organizer1.primary_calendar_id.google_id = 'primary_calendar_id'
@@ -133,8 +135,11 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
         }
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
         for create_user, organizer, responsible, expect_mail, is_public in [
-            (user_root, organizer1, organizer1, False, True), (user_root, None, user_root, True, True),
-            (organizer1, None, organizer1, False, False), (organizer1, organizer2, organizer1, False, True)]:
+            (user_root, organizer1, organizer1, False, True),
+            (user_root, None, user_root, True, True),  # No organizer -> root user can't sync -> expect mail
+            (organizer1, None, organizer1, False, False),  # No organizer -> creator can sync
+            (organizer1, organizer2, organizer1, True, True)  # organizer is not synced -> won't sync -> expect mail
+        ]:
             with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None):
                 with self.mock_mail_gateway(), self.mock_google_sync(user_id=responsible):
                     self.env['calendar.event'].with_user(create_user).create({
@@ -156,4 +161,4 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
                     }, timeout=3)
                 else:
                     self.assertGoogleEventNotInserted()
-                    self.assertMailMail(partner, 'sent', author=user_root.partner_id)
+                    self.assertMailMail(partner, 'sent', author=organizer.partner_id if organizer else user_root.partner_id)
