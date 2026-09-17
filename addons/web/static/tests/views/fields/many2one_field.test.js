@@ -3865,7 +3865,7 @@ test("external_button performs a doAction by default", async () => {
     });
 
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button [data-icon='east']").toHaveCount(1);
+    expect(".o_field_widget .o_external_button [data-icon='arrow_forward']").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
     expect.verifySteps(["get_record_default_action"]);

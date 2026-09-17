@@ -112,7 +112,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
                     <block title="Title of group Bar">
                         <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="arrow_forward" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting>
                             <label string="Big BAZ" for="baz"/>
@@ -292,7 +292,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
                     <block title="Title of group Bar">
                         <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="arrow_forward" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting>
                             <label string="Big BAZ" for="baz"/>
@@ -2412,7 +2412,7 @@ test("settings search is accent-insensitive", async () => {
                     <block title="Title of group Bâr">
                         <setting help="this is bàr" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
-                            <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
+                            <button name="buttonName" icon="arrow_forward" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
                         <setting string="Big BÄZ" help="this is a báz">
                             <field name="baz"/>
