@@ -17,7 +17,7 @@ import { withSequence } from "../utils/resource";
  */
 
 /**
- * @typedef {((node: Node) => boolean | undefined)[]} would_feff_be_legit_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_feff_legit_predicates
  * @typedef {((root: EditorContext["editable"], cursors: Cursors) => Node[])[]} feff_providers
  * @typedef {(() => string)[]} selectors_for_feff_providers
  */
@@ -50,7 +50,27 @@ export class FeffPlugin extends Plugin {
         },
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
+        is_feff_legit_predicates: (node) => {
+            const previousSibling = node.previousSibling;
+            const nextSibling = node.nextSibling;
+            if (this.hasFeff(previousSibling) || this.hasFeff(nextSibling)) {
+                return false;
+            } else {
+                if (
+                    closestElement(previousSibling)?.matches(this.feffProvidersSelector) ||
+                    closestElement(nextSibling)?.matches(this.feffProvidersSelector)
+                ) {
+                    return true;
+                }
+            }
+        },
     };
+
+    setup() {
+        this.feffProvidersSelector = this.getResource("selectors_for_feff_providers")
+            .map((provider) => provider())
+            .join(", ");
+    }
 
     cleanForSave(root, { preserveSelection = false } = {}) {
         if (preserveSelection) {
@@ -72,6 +92,10 @@ export class FeffPlugin extends Plugin {
         this.updateFeffs(root);
     }
 
+    hasFeff(node) {
+        return isTextNode(node) && node.textContent.includes("\ufeff");
+    }
+
     /**
      * @param {Element} root
      * @param {Cursors} [cursors]
@@ -82,13 +106,12 @@ export class FeffPlugin extends Plugin {
             const excludeParam = exclude;
             exclude = (node) =>
                 excludeParam?.(node) ||
-                (this.checkPredicates("would_feff_be_legit_predicates", node) ?? false);
+                (this.checkPredicates("is_feff_legit_predicates", node) ?? false);
         }
-        const hasFeff = (node) => isTextNode(node) && node.textContent.includes("\ufeff");
         const isEditable = (node) => node.parentElement.isContentEditable;
         const isFocusedLink = (node) => closestElement(node, "a.o_link_in_selection");
         const composedFilter = (node) =>
-            hasFeff(node) && isEditable(node) && !exclude(node) && !isFocusedLink(node);
+            this.hasFeff(node) && isEditable(node) && !exclude(node) && !isFocusedLink(node);
 
         for (const node of descendants(root).filter(composedFilter)) {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
@@ -154,13 +177,10 @@ export class FeffPlugin extends Plugin {
      * @returns {Node[]}
      */
     padWithFeffs(root, cursors) {
-        const combinedSelector = this.getResource("selectors_for_feff_providers")
-            .map((provider) => provider())
-            .join(", ");
-        if (!combinedSelector) {
+        if (!this.feffProvidersSelector) {
             return [];
         }
-        const elements = selectElements(root, combinedSelector);
+        const elements = selectElements(root, this.feffProvidersSelector);
         const isEditable = (node) => node.parentElement?.isContentEditable;
         const feffNodes = elements
             .filter(isEditable)
