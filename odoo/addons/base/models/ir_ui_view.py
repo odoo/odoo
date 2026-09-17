@@ -712,6 +712,7 @@ class IrUiView(models.Model):
             combined=len(combined_archs),
         )
 
+        checked_roots: set[int] = set()
         for view in views:
             if partial_validation and not view.arch:
                 _debug.logic("check_xml.skipped", view=view.id, reason="no_arch")
@@ -720,7 +721,10 @@ class IrUiView(models.Model):
                 combined_arch = view._get_combined_arch_checked(combined_archs)
 
                 if view.inherit_id or view.inherit_children_ids:
-                    view._check_sibling_primary_views()
+                    root = view._get_primary_root()
+                    if root.id not in checked_roots:
+                        checked_roots.add(root.id)
+                        root._check_sibling_primary_views()
 
                 if view.type == "qweb":
                     _debug.logic("check_xml.skipped", view=view.id, reason="qweb")
@@ -834,21 +838,24 @@ class IrUiView(models.Model):
             )
         ) from None
 
-    def _check_sibling_primary_views(self) -> None:
-        """The primary views hanging off this view's primary root still
-        combine: they inherit its extensions and one may no longer apply."""
+    def _get_primary_root(self) -> Self:
         self.check_singleton()
         root = self
         while root.inherit_id and root.mode != "primary":
             root = root.inherit_id
+        return root
+
+    def _check_sibling_primary_views(self) -> None:
+        """The primary views hanging off these primary roots still combine:
+        they inherit the roots' extensions and one may no longer apply."""
+        # one read per level, none when the tree is in cache already
         sibling_primary_views = self.env["ir.ui.view"]
-        stack = [root]
-        while stack:
-            for child in stack.pop().inherit_children_ids:
-                if child.mode == "primary":
-                    sibling_primary_views += child
-                else:
-                    stack.append(child)
+        level = self
+        while level:
+            children = level.inherit_children_ids
+            primaries = children.filtered(lambda view: view.mode == "primary")
+            sibling_primary_views |= primaries
+            level = children - primaries
 
         if not self.pool.ready and sibling_primary_views and self.pool.loaded_modules:
             found = len(sibling_primary_views)  # debuglog
@@ -857,15 +864,14 @@ class IrUiView(models.Model):
             )
             _debug.logic(
                 "sibling_primary_views_filtered",
-                view=self.id,
+                roots=self.ids,
                 found=found,
                 loaded=len(sibling_primary_views),
             )
 
         _debug.pipeline(
             "sibling_primary_views_checked",
-            view=self.id,
-            root=root.id,
+            roots=self.ids,
             siblings=len(sibling_primary_views),
         )
         if sibling_primary_views:
@@ -904,7 +910,7 @@ class IrUiView(models.Model):
         that already inherits keeps its mode when the parent changes."""
         if "mode" in values or "inherit_id" not in values:
             return values
-        if values["inherit_id"] and any(view.inherit_id for view in self):
+        if values["inherit_id"] and self and all(view.inherit_id for view in self):
             return values
         mode = "extension" if values["inherit_id"] else "primary"
         _debug.logic(
@@ -1031,7 +1037,7 @@ class IrUiView(models.Model):
                     for fname in ("arch_base", "arch_db", "arch")
                     if fname in values and not _is_arch_absent(values[fname])
                 ),
-                values.get("arch"),
+                None,
             )
             if "arch" in values:
                 values["arch_db"] = values.pop("arch")
@@ -1063,6 +1069,18 @@ class IrUiView(models.Model):
     def write(self, vals: dict[str, Any]) -> bool:
         for fname in ("arch", "arch_base", "arch_db"):
             self._check_xml_encoding(vals.get(fname))
+
+        if "mode" not in vals and vals.get("inherit_id"):
+            inheriting = self.filtered("inherit_id")
+            if inheriting and inheriting != self:
+                _debug.logic(
+                    "write.split_by_mode_default",
+                    inheriting=len(inheriting),
+                    fresh=len(self - inheriting),
+                )
+                inheriting.write(vals)
+                (self - inheriting).write(vals)
+                return True
 
         if (
             "arch_updated" not in vals
@@ -1126,9 +1144,9 @@ class IrUiView(models.Model):
                 error=type(error).__name__,
                 combined_before=combined_before,
             )
-            res = super().write(vals)
             if combined_before:
                 self._refuse_recombination(error)
+            res = super().write(vals)
         return res
 
     def _get_customizations(self) -> Any:
@@ -1678,10 +1696,10 @@ class IrUiView(models.Model):
             in_every_chain = (
                 set.intersection(*map(set, parented)) if parented else set()
             )
-            root_ids = {view.id for view in all_tree_views if not view.inherit_id}
+            tree_root_ids = {view.id for view in all_tree_views if not view.inherit_id}
             admitted = set(
                 all_tree_views._filter_loaded_views(
-                    set(check_view_ids) | in_every_chain | root_ids
+                    set(check_view_ids) | in_every_chain | tree_root_ids
                 ).ids
             )
             _debug.logic(
@@ -1739,8 +1757,9 @@ class IrUiView(models.Model):
             )
             if key in combined:
                 archs.append(copy.deepcopy(combined[key]))
-                continue
-            archs.append(combined.setdefault(key, root._combine(hierarchy)))
+            else:
+                combined[key] = root._combine(hierarchy)
+                archs.append(combined[key])
         _debug.perf.count("combine_batch", requested=len(archs), combined=len(combined))
         return archs
 
@@ -1779,7 +1798,7 @@ class IrUiView(models.Model):
         elif _view is not None:
             view = _view
         elif isinstance(id_or_xmlid, int):
-            view = self.env["ir.ui.view"].sudo().browse(id_or_xmlid)
+            view = self.sudo().browse(id_or_xmlid)
             try:
                 _ = view.key
             except MissingError:
@@ -1826,7 +1845,7 @@ class IrUiView(models.Model):
                 error=type(info["error"]).__name__,
             )
             raise self._prepare_cached_template_error(info["error"])
-        return self.env["ir.ui.view"].browse(info["id"])
+        return self.browse(info["id"])
 
     @api.model
     def _get_domain_template(self, xmlids: list[str]) -> Domain:
@@ -1897,16 +1916,15 @@ class IrUiView(models.Model):
                 model_data=len(model_data_records),
                 views=len(all_views),
             )
-            existing_ids = set(all_views._ids)
-            view_map = {v.id: v for v in all_views}
+            view_by_id = {view.id: view for view in all_views}
             for model_data in model_data_records:
-                if model_data.res_id in existing_ids:
-                    view = view_map[model_data.res_id]
-                    view_by_ref[view.id] = view
-                    xmlid = f"{model_data.module}.{model_data.name}"
-                    view_by_ref[xmlid] = view
-                    if view.key and view.key not in view_by_ref:
-                        view_by_ref[view.key] = view
+                view = view_by_id.get(model_data.res_id)
+                if view is None:
+                    continue
+                view_by_ref[view.id] = view
+                view_by_ref[f"{model_data.module}.{model_data.name}"] = view
+                if view.key and view.key not in view_by_ref:
+                    view_by_ref[view.key] = view
 
         for key, view in view_by_ref.items():
             self._get_cached_template_info(key, _view=view)
@@ -2332,9 +2350,8 @@ class IrUiView(models.Model):
         return name_manager
 
     def _add_missing_fields(
-        self, node: _Element, name_manager: NameManager
+        self, root: _Element, name_manager: NameManager
     ) -> dict[str, Any]:
-        root = node
         missing_fields = name_manager.get_fields_missing()
         for name, (missing_groups, reasons) in missing_fields.items():
             if name not in name_manager.field_info:
@@ -2741,11 +2758,12 @@ class IrUiView(models.Model):
     def _check_field_paths(
         self, node: _Element, field_paths: set[str], model_name: str, use: str
     ) -> None:
+        root_model = self.pool[model_name]
         for field_path in field_paths:
             names = field_path.split(".")
-            Model = self.pool[model_name]
             if names[0] == "parent":
                 continue
+            Model = root_model
             for index, name in enumerate(names):
                 if Model is None:
                     _debug.logic(
@@ -2965,11 +2983,11 @@ class IrUiView(models.Model):
 
         prefix = module + "."
         prefix_len = len(prefix)
-        names = tuple(
+        names = [
             xmlid[prefix_len:]
             for xmlid in self.pool.loaded_xmlids
             if xmlid.startswith(prefix)
-        )
+        ]
         if not names:
             _debug.logic(
                 "module_views_check_skipped", module=module, reason="no_xmlids"
@@ -2983,7 +3001,7 @@ class IrUiView(models.Model):
                 [
                     ("model", "=", "ir.ui.view"),
                     ("module", "=", module),
-                    ("name", "in", list(names)),
+                    ("name", "in", names),
                     ("noupdate", "=", True),
                 ],
                 ["res_id"],

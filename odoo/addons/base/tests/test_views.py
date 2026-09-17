@@ -4957,6 +4957,18 @@ class ViewModeField(ViewCase):
         view.write({"inherit_id": base2.id})
         self.assertEqual(view.mode, "primary")
 
+    def test_mode_defaults_per_view_in_a_mixed_batch(self):
+        base1 = self.View.create({"arch": "<qweb/>"})
+        base2 = self.View.create({"arch": "<qweb/>"})
+        fresh = self.View.create({"arch": "<qweb/>"})
+        inheriting = self.View.create(
+            {"mode": "primary", "inherit_id": base1.id, "arch": "<qweb/>"}
+        )
+        (fresh + inheriting).write({"inherit_id": base2.id})
+        self.assertEqual(fresh.mode, "extension")
+        self.assertEqual(inheriting.mode, "primary")
+        self.assertEqual((fresh + inheriting).inherit_id, base2)
+
 
 class TestDefaultView(ViewCase):
     def test_default_view_base(self):
@@ -7791,6 +7803,22 @@ class TestViewRevalidation(ViewCase):
             second.with_context(ir_ui_view_loading_records=True).write({"priority": 5})
         self.assertTrue(any("unable to combine" in line for line in log_catcher.output))
 
+    def test_a_refused_recombination_writes_nothing(self):
+        _parent, _first, second = self._tree()
+        with mute_logger("odoo.addons.base.models.ir_ui_view"):
+            try:
+                second.write({"priority": 5})
+            except ValidationError:
+                pass
+            else:
+                self.fail("the reordering was not refused")
+        self.assertEqual(second.priority, 20)
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT priority FROM ir_ui_view WHERE id = %s", [second.id]
+        )
+        self.assertEqual(self.env.cr.fetchone()[0], 20)
+
     def test_an_already_broken_tree_stays_writable(self):
         _parent, _first, second = self._tree()
         with mute_logger("odoo.addons.base.models.ir_ui_view"):
@@ -8016,6 +8044,79 @@ class TestCombineBatching(ViewCase):
                 extensions.write(
                     {"arch": '<field name="nope" position="after"><div/></field>'}
                 )
+
+
+@tagged("post_install", "-at_install")
+class TestSiblingPrimaryCheck(ViewCase):
+    """While loading, the check keeps only loaded siblings; these trees
+    carry no xmlid, so they are what the check sees once the registry is
+    ready."""
+
+    def _tree(self, depth, extensions_per_level=1, primaries=2):
+        root = self.assertValid(
+            '<form><field name="name"/><group name="g0"/></form>',
+            name="sp root",
+            model="res.partner",
+        )
+        parent = root
+        extensions = self.View.browse()
+        for level in range(depth):
+            chain = self.assertValid(
+                f'<group name="g{level}" position="inside">'
+                f'<group name="g{level + 1}"/></group>',
+                name=f"sp ext {level}",
+                inherit_id=parent.id,
+                model="res.partner",
+            )
+            extensions += chain
+            for index in range(1, extensions_per_level):
+                extensions += self.assertValid(
+                    f'<group name="g{level}" position="attributes">'
+                    f'<attribute name="col">{index + 1}</attribute></group>',
+                    name=f"sp ext {level}.{index}",
+                    inherit_id=parent.id,
+                    model="res.partner",
+                )
+            parent = chain
+        for index in range(primaries):
+            self.View.create(
+                {
+                    "name": f"sp primary {index}",
+                    "model": "res.partner",
+                    "mode": "primary",
+                    "inherit_id": extensions[index % depth].id,
+                    "arch": '<field name="name" position="attributes">'
+                    '<attribute name="readonly">1</attribute></field>',
+                }
+            )
+        return root, extensions
+
+    def _sibling_checks(self, fn):
+        with self.assertLogs(
+            "odoo.debug.pipeline.base.ir_ui_view", level="DEBUG"
+        ) as log_catcher:
+            fn()
+        return [
+            line
+            for line in log_catcher.output
+            if "event=sibling_primary_views_checked" in line
+        ]
+
+    def test_the_siblings_of_one_root_are_checked_once_per_batch(self):
+        _root, extensions = self._tree(depth=3, extensions_per_level=2)
+        checks = self._sibling_checks(extensions._check_xml)
+        self.assertEqual(len(checks), 1, checks)
+        self.assertIn("siblings=2", checks[0])
+
+    def test_the_check_finds_primaries_hanging_off_deep_extensions(self):
+        _root, extensions = self._tree(depth=3)
+        checks = self._sibling_checks(extensions[-1]._check_xml)
+        self.assertIn("siblings=2", checks[0])
+        # a broken sibling is what the check is for
+        extensions[-1].write({"arch": '<group name="g2" position="replace"/>'})
+        with mute_logger("odoo.addons.base.models.ir_ui_view"):
+            with self.assertRaises(ValidationError):
+                extensions[0].write({"arch": '<field name="name" position="replace"/>'})
 
 
 @tagged("post_install", "-at_install")
