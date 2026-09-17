@@ -1096,45 +1096,15 @@ class IrUiView(models.Model):
     def write(self, vals: dict[str, Any]) -> bool:
         for fname in ("arch", "arch_base", "arch_db"):
             self._check_xml_encoding(vals.get(fname))
-
-        if "mode" not in vals and vals.get("inherit_id"):
-            inheriting = self.filtered("inherit_id")
-            if inheriting and inheriting != self:
-                _debug.logic(
-                    "write.split_by_mode_default",
-                    inheriting=len(inheriting),
-                    fresh=len(self - inheriting),
-                )
-                inheriting.write(vals)
-                (self - inheriting).write(vals)
-                return True
-
-        if (
-            "arch_updated" not in vals
-            and ("arch" in vals or "arch_base" in vals)
-            and "install_filename" not in self.env.context
-        ):
-            vals = {**vals, "arch_updated": True}
+        if self._write_split_by_mode_default(vals):
+            return True
+        vals = self._with_arch_updated(vals)
 
         nested_arch_write = self.env.context.get("ir_ui_view_nested_arch_write")
         if not nested_arch_write and _TEMPLATE_CACHE_FIELDS.intersection(vals):
-            custom_view = self._get_customizations()
-            _debug.lifecycle(
-                "write.template_cache_cleared",
-                views=len(self),
-                custom_views=len(custom_view),
-            )
-            if custom_view:
-                custom_view.unlink()
-
-            self.env.registry.clear_cache("templates")
+            self._forget_rendered_templates()
         if "arch_db" in vals and not self.env.context.get("no_save_prev"):
-            saved = 0  # debuglog
-            for view in self.with_context(lang=None):
-                if view.arch_db:
-                    super(IrUiView, view).write({"arch_prev": view.arch_db})
-                    saved += 1  # debuglog
-            _debug.lifecycle("write.arch_prev_saved", views=len(self), saved=saved)
+            self._save_arch_prev()
 
         revalidate = not _REVALIDATE_ALWAYS.isdisjoint(vals)
         recombines = not revalidate and self._is_recombination_required(vals)
@@ -1146,17 +1116,70 @@ class IrUiView(models.Model):
             recombines=recombines,
         )
         vals = self._default_mode(vals)
-
         if revalidate:
-            res = super().write(vals)
-            if nested_arch_write:
-                _debug.logic("write.validation_deferred", views=self.ids)
-            else:
-                self._check_xml()
-            return res
-        if not recombines:
-            return super().write(vals)
+            return self._write_revalidating(vals, deferred=bool(nested_arch_write))
+        if recombines:
+            return self._write_recombining(vals)
+        return super().write(vals)
 
+    def _write_split_by_mode_default(self, vals: dict[str, Any]) -> bool:
+        """The mode an inherit_id change implies is per view (_default_mode):
+        a batch where some views already inherit and some do not is written
+        as two. True when it was."""
+        if "mode" in vals or not vals.get("inherit_id"):
+            return False
+        inheriting = self.filtered("inherit_id")
+        if not inheriting or inheriting == self:
+            return False
+        _debug.logic(
+            "write.split_by_mode_default",
+            inheriting=len(inheriting),
+            fresh=len(self - inheriting),
+        )
+        inheriting.write(vals)
+        (self - inheriting).write(vals)
+        return True
+
+    def _with_arch_updated(self, vals: dict[str, Any]) -> dict[str, Any]:
+        """An arch written outside a data file marks the view as modified."""
+        if (
+            "arch_updated" in vals
+            or not ("arch" in vals or "arch_base" in vals)
+            or "install_filename" in self.env.context
+        ):
+            return vals
+        return {**vals, "arch_updated": True}
+
+    def _forget_rendered_templates(self) -> None:
+        """What a change to how these views render invalidates: the users'
+        customizations of them and the registry-wide templates cache."""
+        custom_view = self._get_customizations()
+        _debug.lifecycle(
+            "write.template_cache_cleared",
+            views=len(self),
+            custom_views=len(custom_view),
+        )
+        if custom_view:
+            custom_view.unlink()
+        self.env.registry.clear_cache("templates")
+
+    def _save_arch_prev(self) -> None:
+        saved = 0  # debuglog
+        for view in self.with_context(lang=None):
+            if view.arch_db:
+                super(IrUiView, view).write({"arch_prev": view.arch_db})
+                saved += 1  # debuglog
+        _debug.lifecycle("write.arch_prev_saved", views=len(self), saved=saved)
+
+    def _write_revalidating(self, vals: dict[str, Any], *, deferred: bool) -> bool:
+        res = super().write(vals)
+        if deferred:
+            _debug.logic("write.validation_deferred", views=self.ids)
+        else:
+            self._check_xml()
+        return res
+
+    def _write_recombining(self, vals: dict[str, Any]) -> bool:
         # combine once on the written tree; only a tree that fails is asked
         # whether it combined before the write, and one that did not is
         # written without a verdict, the way a repair of a broken view needs
@@ -1693,48 +1716,14 @@ class IrUiView(models.Model):
 
     def _get_hierarchies(self) -> list[tuple[Self, dict[Self, list[Self]]]]:
         """For each view, its primary root and the overlay tree under it."""
-        self._prefetch_ancestry()
-        parented = []
-        root_ids = []
-        for root in self:
-            parented.append(view_ids := [])
-            while True:
-                view_ids.append(root.id)
-                if not root.inherit_id:
-                    root_ids.append(root.id)
-                    break
-                root = root.inherit_id
-        roots = self.browse(root_ids)
-        views = self.browse(
-            unique(view_id for view_ids in parented for view_id in view_ids)
-        )
+        chains = self._get_ancestor_chains()
+        roots = self.browse(chain[-1] for chain in chains)
+        views = self.browse(unique(view_id for chain in chains for view_id in chain))
 
         check_view_ids = views.env.context.get("check_view_ids") or []
         views = views.with_context(check_view_ids=[*check_view_ids, *views.ids])
-
         all_tree_views = views._get_views_inheriting()
-
-        # while loading, a tree holds the views of loaded modules and the
-        # chain of the view being resolved -- each view its own chain, as if
-        # resolved alone, so a batch admits no other view's ancestors
-        admitted: set[int] | None = None
-        if not self.pool.ready and not self.env.context.get("load_all_views"):
-            # only a view that can be a child needs its module looked up: not
-            # a root, not one every chain holds (admitted for every view)
-            in_every_chain = (
-                set.intersection(*map(set, parented)) if parented else set()
-            )
-            tree_root_ids = {view.id for view in all_tree_views if not view.inherit_id}
-            admitted = set(
-                all_tree_views._filter_loaded_views(
-                    set(check_view_ids) | in_every_chain | tree_root_ids
-                ).ids
-            )
-            _debug.logic(
-                "hierarchies.loaded_only",
-                unfiltered=len(all_tree_views),
-                loaded=len(admitted),
-            )
+        admitted = all_tree_views._get_admitted_view_ids(chains, check_view_ids)
         _debug.pipeline(
             "combined_archs",
             requested=len(self),
@@ -1748,7 +1737,7 @@ class IrUiView(models.Model):
 
         def get_hierarchy(
             root: Self,
-            parented_ids: list[int],
+            chain: list[int],
             _hierarchy: dict[Self, list[Self]] | None = None,
         ) -> dict[Self, list[Self]]:
             if _hierarchy is None:
@@ -1756,19 +1745,56 @@ class IrUiView(models.Model):
             _hierarchy[root.inherit_id].append(root)
             for child in children_views[root]:
                 if admitted is not None and (
-                    child.id not in admitted and child.id not in parented_ids
+                    child.id not in admitted and child.id not in chain
                 ):
                     continue
-                if child.id in parented_ids or child.mode != "primary":
-                    get_hierarchy(child, parented_ids, _hierarchy)
+                if child.id in chain or child.mode != "primary":
+                    get_hierarchy(child, chain, _hierarchy)
             return _hierarchy
 
         roots = roots.with_prefetch(all_tree_views._prefetch_ids)
-
         return [
-            (root, get_hierarchy(root, parented_ids))
-            for root, parented_ids in zip(roots, parented, strict=True)
+            (root, get_hierarchy(root, chain))
+            for root, chain in zip(roots, chains, strict=True)
         ]
+
+    def _get_ancestor_chains(self) -> list[list[int]]:
+        """For each view, the ids from itself up to its root, root last."""
+        self._prefetch_ancestry()
+        chains = []
+        for view in self:
+            chain = [view.id]
+            while view.inherit_id:
+                view = view.inherit_id
+                chain.append(view.id)
+            chains.append(chain)
+        return chains
+
+    def _get_admitted_view_ids(
+        self, chains: list[list[int]], check_view_ids: Collection[int]
+    ) -> set[int] | None:
+        """While loading, the views of this tree a combine may apply: those
+        of loaded modules, plus each view's own chain (checked by the caller
+        per chain). None once the registry is ready, or when every view is
+        asked for -- nothing is filtered then."""
+        if self.pool.ready or self.env.context.get("load_all_views"):
+            return None
+        # while loading, a tree holds the views of loaded modules and the
+        # chain of the view being resolved -- each view its own chain, as if
+        # resolved alone, so a batch admits no other view's ancestors. Only
+        # a view that can be a child needs its module looked up: not a root,
+        # not one every chain holds (admitted for every view)
+        in_every_chain = set.intersection(*map(set, chains)) if chains else set()
+        tree_root_ids = {view.id for view in self if not view.inherit_id}
+        admitted = set(
+            self._filter_loaded_views(
+                set(check_view_ids) | in_every_chain | tree_root_ids
+            ).ids
+        )
+        _debug.logic(
+            "hierarchies.loaded_only", unfiltered=len(self), loaded=len(admitted)
+        )
+        return admitted
 
     def _get_combined_archs(self) -> list[_Element]:
         # views under one root share the hierarchy: combine it once and hand
