@@ -28,7 +28,14 @@
                 <field name="purchase_line_id" string="Purchase Order" groups="purchase.group_purchase_user" column_invisible="parent.move_type not in ('in_invoice', 'in_receipt', 'in_refund')" optional="hide"
                        widget="purchase_line_match_field"
                        options="{'no_create': True}"
-                       domain="[('partner_id', 'child_of', parent.partner_id), '|', '|', ('id', '=', purchase_line_id), ('qty_to_invoice_raw', '!=', 0), ('qty_to_invoice', '!=', 0)] + ([('product_id', '=', product_id)] if product_id else [])"
+                       domain="[
+                           ('state', '=', 'purchase'),
+                           ('partner_id', 'child_of', parent.partner_id),
+                           '|', '|',
+                           ('id', '=', purchase_line_id),
+                           ('qty_to_invoice_raw', '!=', 0),
+                           ('qty_to_invoice', '!=', 0),
+                       ] + ([('product_id', '=', product_id)] if product_id else [])"
                        context="{'display_order_name': True, 'partner_id': parent.partner_id, 'list_view_ref': 'purchase.purchase_order_line_list_invoice', 'invoice_qty': quantity, 'invoice_price_unit': price_unit}"/>
             </xpath>
             <xpath expr="//field[@name='line_ids']/list/field[@name='company_id']" position="after">
