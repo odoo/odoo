@@ -7,7 +7,7 @@ import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_h
 describe.current.tags("desktop");
 defineHrHolidaysModels();
 
-test("out of office message on direct chat with out of office partner", async () => {
+test("show 'Back on' in header of dm chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
@@ -27,13 +27,16 @@ test("out of office message on direct chat with out of office partner", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".alert", { text: "Back on Jan 1, 2023" });
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 1, 2023')"
+    );
 });
 
-test("out of office message with timezone", async () => {
+test("show 'Back on' in header of dm chat even when showing local timezone", async () => {
     mockTimeZone(-7);
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.partner"].write([serverState.partnerId], { tz: "America/Los_Angeles" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", tz: "Europe/Brussels" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     const employee = pyEnv["hr.employee"].create({
         user_id: userId,
@@ -44,11 +47,15 @@ test("out of office message with timezone", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".alert", { text: "Back on Jan 3, 2023" });});
+    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-localDateTime");
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 3, 2023')"
+    );
+});
