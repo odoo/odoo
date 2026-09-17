@@ -580,6 +580,24 @@ class TestStockLot(TestStockCommon):
         self.assertAlmostEqual(lot.removal_date, expiration_date, delta=delta, msg=err_msg)
         self.assertAlmostEqual(lot.alert_date, expiration_date, delta=delta, msg=err_msg)
 
+    def test_product_expiry_alert_requires_use_expiration_date(self):
+        """No expiry alert should be raised when the product no longer uses
+        expiration dates, even if the lot keeps an expiration date in the past.
+        """
+        lot = self.env['stock.lot'].create({
+            'name': 'Lot expired',
+            'product_id': self.apple_product.id,
+            'expiration_date': fields.Datetime.to_string(
+                datetime.today() - timedelta(days=1)
+            ),
+        })
+        self.assertTrue(lot.product_expiry_alert)
+        # Disabling the expiration date on the product must clear the alert,
+        # regardless of the expiration date still stored on the lot.
+        self.apple_product.use_expiration_date = False
+        self.assertTrue(lot.expiration_date)
+        self.assertFalse(lot.product_expiry_alert)
+
     def test_no_expiration_date(self):
         """
         When use_expiration_date is set to True on the Product, but the lot have an expiration_date set to False,
