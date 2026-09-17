@@ -6502,11 +6502,12 @@ class AccountMove(models.Model):
         attachments_in_invoices = self.env['ir.attachment']
         for attachment in move_per_decodable_attachment:
             attachments_in_invoices += attachment
-        # Unlink the unused attachments (prevents storing marketing images sent with emails)
+        # Detach the unused attachments (prevents cluttering the invoice with
+        # marketing images sent with emails) but keep them on the message.
         if self._context.get('from_alias'):
             if not attachments_in_invoices:
                 attachments_in_invoices += attachments.filtered(lambda att: att.mimetype in ALLOWED_MIMETYPES)
-            (attachments - attachments_in_invoices).unlink()
+            (attachments - attachments_in_invoices).write({'res_model': False, 'res_id': 0})
         return move_per_decodable_attachment
 
     def _creation_subtype(self):
