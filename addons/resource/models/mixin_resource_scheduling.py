@@ -16,7 +16,6 @@ class MixinResourceScheduling(models.AbstractModel):
         domain=lambda self: [("res_model", "=", self._name)],
         bypass_search_access=True,
     )
-
     schedule_overlap_count = fields.Integer(
         string="Scheduling Conflicts",
         compute="_compute_schedule_overlap_count",

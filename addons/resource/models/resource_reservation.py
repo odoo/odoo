@@ -112,72 +112,6 @@ class ResourceReservation(models.Model):
         compute="_compute_booking_load",
     )
 
-    @api.model
-    def _booking_load_batch(self, resources, start, stop, domain=None):
-        bookings = self.sudo().search_fetch(
-            Domain.AND(
-                [
-                    Domain("resource_id", "in", resources.ids),
-                    Domain("active", "=", True),
-                    Domain("date_start", "<", stop),
-                    Domain("date_end", ">", start),
-                    Domain(domain or []),
-                ]
-            ),
-            ["resource_id", "date_start", "date_end", "allocated_percentage"],
-        )
-        result = {resource.id: [] for resource in resources}
-        for booking in bookings:
-            result[booking.resource_id.id].append(
-                (
-                    booking.date_start,
-                    booking.date_end,
-                    booking.allocated_percentage,
-                )
-            )
-        return result
-
-    @api.depends(
-        "resource_id",
-        "resource_id.booking_limit_percentage",
-        "date_start",
-        "date_end",
-        "allocated_percentage",
-        "active",
-    )
-    def _compute_booking_load(self):
-        dated = self.filtered(
-            lambda r: r.active and r.resource_id and r.date_start and r.date_end
-        )
-        loads = (
-            self._booking_load_batch(
-                dated.resource_id,
-                min(dated.mapped("date_start")),
-                max(dated.mapped("date_end")),
-            )
-            if dated
-            else {}
-        )
-        for record in self:
-            peak = (
-                peak_capacity(
-                    loads.get(record.resource_id.id, []),
-                    record.date_start,
-                    record.date_end,
-                )
-                if record in dated
-                else 0.0
-            )
-            record.peak_booking_percentage = peak
-            if peak > record.resource_id.booking_limit_percentage + 1e-7:
-                record.booking_state = "exceeded"
-            elif peak > 100 + 1e-7:
-                record.booking_state = "over"
-            elif peak >= 100 - 1e-7:
-                record.booking_state = "full"
-            else:
-                record.booking_state = "under"
-
     res_model = fields.Char(
         string="Source Model",
         index=True,
@@ -206,15 +140,6 @@ class ResourceReservation(models.Model):
 
     _resource_schedule_idx = models.Index("(resource_id, date_start, date_end)")
     _origin_idx = models.Index("(res_model, res_id)")
-
-    @api.model
-    def _enforced_booking_domain(self):
-        return Domain.OR(
-            [
-                Domain("enforcement_mode", "=", "hard"),
-                Domain("resource_id.enforce_booking_limit", "=", True),
-            ]
-        )
 
     @api.constrains("date_start", "date_end")
     def _check_date_sanity(self):
@@ -304,13 +229,6 @@ class ResourceReservation(models.Model):
                     )
                 )
 
-    @api.depends("resource_id.company_id")
-    def _compute_company_id(self):
-        for record in self:
-            record.company_id = (
-                record.resource_id.company_id or record.company_id or self.env.company
-            )
-
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
@@ -338,6 +256,54 @@ class ResourceReservation(models.Model):
             ["peak_booking_percentage", "booking_state", "schedule_overlap_count"]
         )
         return result
+
+    @api.depends("resource_id.company_id")
+    def _compute_company_id(self):
+        for record in self:
+            record.company_id = (
+                record.resource_id.company_id or record.company_id or self.env.company
+            )
+
+    @api.depends(
+        "resource_id",
+        "resource_id.booking_limit_percentage",
+        "date_start",
+        "date_end",
+        "allocated_percentage",
+        "active",
+    )
+    def _compute_booking_load(self):
+        dated = self.filtered(
+            lambda r: r.active and r.resource_id and r.date_start and r.date_end
+        )
+        loads = (
+            self._booking_load_batch(
+                dated.resource_id,
+                min(dated.mapped("date_start")),
+                max(dated.mapped("date_end")),
+            )
+            if dated
+            else {}
+        )
+        for record in self:
+            peak = (
+                peak_capacity(
+                    loads.get(record.resource_id.id, []),
+                    record.date_start,
+                    record.date_end,
+                )
+                if record in dated
+                else 0.0
+            )
+            record.peak_booking_percentage = peak
+            if peak > record.resource_id.booking_limit_percentage + 1e-7:
+                record.booking_state = "exceeded"
+            elif peak > 100 + 1e-7:
+                record.booking_state = "over"
+            elif peak >= 100 - 1e-7:
+                record.booking_state = "full"
+            else:
+                record.booking_state = "under"
 
     @api.depends("resource_id", "resource_id.calendar_id", "company_id")
     def _compute_resource_calendar_id(self):
@@ -433,10 +399,6 @@ class ResourceReservation(models.Model):
                     get_intervals_hours(clipped)
                 )
 
-    def _scale_allocation(self, work_hours):
-        self.check_singleton()
-        return round(work_hours * self.allocated_percentage / 100.0, 2)
-
     @api.depends(
         "date_start", "date_end", "resource_id", "allocated_percentage", "active"
     )
@@ -444,6 +406,65 @@ class ResourceReservation(models.Model):
         conflicts = self._conflicting_reservations()
         for record in self:
             record.schedule_overlap_count = len(conflicts[record.id])
+
+    @api.depends("res_model", "res_id")
+    def _compute_origin_display(self):
+        self.origin_display = False
+        with_origin = self.filtered(lambda r: r.res_model and r.res_id)
+        for model_name, records in with_origin.grouped("res_model").items():
+            if model_name not in self.env:
+                for record in records:
+                    record.origin_display = f"{model_name},{record.res_id}"
+                continue
+            sources = (
+                self.env[model_name]
+                .browse(records.mapped("res_id"))
+                .exists()
+                ._filtered_access("read")
+            )
+            names = dict(zip(sources.ids, sources.mapped("display_name"), strict=True))
+            for record in records:
+                record.origin_display = names.get(record.res_id) or (
+                    f"{model_name},{record.res_id}"
+                )
+
+    def _scale_allocation(self, work_hours):
+        self.check_singleton()
+        return round(work_hours * self.allocated_percentage / 100.0, 2)
+
+    @api.model
+    def _enforced_booking_domain(self):
+        return Domain.OR(
+            [
+                Domain("enforcement_mode", "=", "hard"),
+                Domain("resource_id.enforce_booking_limit", "=", True),
+            ]
+        )
+
+    @api.model
+    def _booking_load_batch(self, resources, start, stop, domain=None):
+        bookings = self.sudo().search_fetch(
+            Domain.AND(
+                [
+                    Domain("resource_id", "in", resources.ids),
+                    Domain("active", "=", True),
+                    Domain("date_start", "<", stop),
+                    Domain("date_end", ">", start),
+                    Domain(domain or []),
+                ]
+            ),
+            ["resource_id", "date_start", "date_end", "allocated_percentage"],
+        )
+        result = {resource.id: [] for resource in resources}
+        for booking in bookings:
+            result[booking.resource_id.id].append(
+                (
+                    booking.date_start,
+                    booking.date_end,
+                    booking.allocated_percentage,
+                )
+            )
+        return result
 
     def _conflicting_reservations(self):
         stored = self.filtered(
@@ -605,27 +626,6 @@ class ResourceReservation(models.Model):
             )
         )
         return {res_id: set(peers) for res_id, peers in self.env.cr.fetchall()}
-
-    @api.depends("res_model", "res_id")
-    def _compute_origin_display(self):
-        self.origin_display = False
-        with_origin = self.filtered(lambda r: r.res_model and r.res_id)
-        for model_name, records in with_origin.grouped("res_model").items():
-            if model_name not in self.env:
-                for record in records:
-                    record.origin_display = f"{model_name},{record.res_id}"
-                continue
-            sources = (
-                self.env[model_name]
-                .browse(records.mapped("res_id"))
-                .exists()
-                ._filtered_access("read")
-            )
-            names = dict(zip(sources.ids, sources.mapped("display_name"), strict=True))
-            for record in records:
-                record.origin_display = names.get(record.res_id) or (
-                    f"{model_name},{record.res_id}"
-                )
 
     @api.autovacuum
     def _gc_orphan_reservations(self):

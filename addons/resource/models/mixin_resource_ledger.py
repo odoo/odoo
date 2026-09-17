@@ -6,17 +6,6 @@ from odoo.models import ValuesType
 
 
 class MixinResourceLedger(models.AbstractModel):
-    """A ledger of rows a business record projects onto resources.
-
-    `resource.reservation` holds what a record claims of a resource's capacity
-    and `resource.schedule.exception` what it takes out of the schedule. Both
-    are written the same way: a record hands over the rows it wants, and the
-    ledger reconciles them against the rows it already carries for that record,
-    keyed by `_get_fields_projection_key`. Reconciling rather than deleting and
-    recreating keeps a row's identity, so its id stays valid for anything
-    pointing at it and a rewrite that changes nothing writes nothing.
-    """
-
     _name = "mixin.resource.ledger"
     _description = "Resource Ledger Mixin"
 
@@ -30,10 +19,6 @@ class MixinResourceLedger(models.AbstractModel):
             [("res_model", "=", record._name), ("res_id", "=", record.id)],
         )
 
-    @api.model
-    def _prepare_projection_link_vals(self, record: models.BaseModel) -> ValuesType:
-        return {"res_model": record._name, "res_id": record.id}
-
     def _get_projection_key(self, vals: ValuesType | None = None) -> tuple[Any, ...]:
         if vals is None:
             return tuple(
@@ -43,6 +28,10 @@ class MixinResourceLedger(models.AbstractModel):
         return tuple(
             vals.get(fname) or False for fname in self._get_fields_projection_key()
         )
+
+    @api.model
+    def _prepare_projection_link_vals(self, record: models.BaseModel) -> ValuesType:
+        return {"res_model": record._name, "res_id": record.id}
 
     @api.model
     def _sync_projection(

@@ -84,18 +84,6 @@ class MixinResource(models.AbstractModel):
             vals_list
         )
 
-    def _prepare_resource_values(self, vals: ValuesType, tz: str | bool) -> ValuesType:
-        resource_vals = {"name": vals.get(self._rec_name)}
-        if tz:
-            resource_vals["tz"] = tz
-        company_id = vals.get("company_id", self.env.company.id)
-        if company_id:
-            resource_vals["company_id"] = company_id
-        calendar_id = vals.get("resource_calendar_id")
-        if calendar_id:
-            resource_vals["calendar_id"] = calendar_id
-        return resource_vals
-
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -116,10 +104,69 @@ class MixinResource(models.AbstractModel):
                 resource.name = default[self._rec_name]
         return vals_list
 
+    def _adjust_to_calendar(self, start: datetime, end: datetime) -> dict:
+        resource_results = self.resource_id._adjust_to_calendar(start, end)
+        return {record: resource_results[record.resource_id] for record in self}
+
+    @staticmethod
+    def _fan_out_per_record(
+        result_per_resource: dict[int, dict[str, float]],
+        records_per_resource: dict[int, list[int]],
+    ) -> dict[int, dict[str, float]]:
+        return {
+            record_id: result_per_resource[resource_id]
+            for resource_id, record_ids in records_per_resource.items()
+            for record_id in record_ids
+            if resource_id in result_per_resource
+        }
+
     def _get_calendars(
         self, date_from: datetime | None = None
     ) -> dict[int, ResourceCalendar]:
         return {record.id: record.resource_calendar_id for record in self}
+
+    def _get_leave_days_data_batch(
+        self,
+        from_datetime: datetime,
+        to_datetime: datetime,
+        calendar: ResourceCalendar | None = None,
+        domain: list | None = None,
+    ) -> dict[int, dict[str, float]]:
+        records_per_resource = self._records_per_resource()
+        result = {}
+
+        from_datetime = localized(from_datetime)
+        to_datetime = localized(to_datetime)
+
+        mapped_resources = defaultdict(lambda: self.env["resource.resource"])
+        for record in self:
+            mapped_resources[calendar or record.resource_calendar_id] |= (
+                record.resource_id
+            )
+
+        for calendar, calendar_resources in mapped_resources.items():  # noqa: PLR1704  the parameter's value is consumed above; the loop reuses the name on purpose
+            if not calendar:
+                days = (to_datetime.date() - from_datetime.date()).days + 1
+                hours = (to_datetime - from_datetime).total_seconds() / 3600
+                for calendar_resource in calendar_resources:
+                    result[calendar_resource.id] = {"days": days, "hours": hours}
+                continue
+
+            attendances = calendar._attendance_intervals_batch(
+                from_datetime, to_datetime, calendar_resources
+            )
+            leaves = calendar._leave_intervals_batch(
+                from_datetime, to_datetime, calendar_resources, domain
+            )
+
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = (
+                    calendar._get_attendance_intervals_days_data(
+                        attendances[calendar_resource.id] & leaves[calendar_resource.id]
+                    )
+                )
+
+        return self._fan_out_per_record(result, records_per_resource)
 
     def _get_work_days_data_batch(
         self,
@@ -166,71 +213,6 @@ class MixinResource(models.AbstractModel):
                 )
 
         return self._fan_out_per_record(result, records_per_resource)
-
-    def _records_per_resource(self) -> dict[int, list[int]]:
-        grouped = defaultdict(list)
-        for record in self:
-            grouped[record.resource_id.id].append(record.id)
-        return grouped
-
-    @staticmethod
-    def _fan_out_per_record(
-        result_per_resource: dict[int, dict[str, float]],
-        records_per_resource: dict[int, list[int]],
-    ) -> dict[int, dict[str, float]]:
-        return {
-            record_id: result_per_resource[resource_id]
-            for resource_id, record_ids in records_per_resource.items()
-            for record_id in record_ids
-            if resource_id in result_per_resource
-        }
-
-    def _get_leave_days_data_batch(
-        self,
-        from_datetime: datetime,
-        to_datetime: datetime,
-        calendar: ResourceCalendar | None = None,
-        domain: list | None = None,
-    ) -> dict[int, dict[str, float]]:
-        records_per_resource = self._records_per_resource()
-        result = {}
-
-        from_datetime = localized(from_datetime)
-        to_datetime = localized(to_datetime)
-
-        mapped_resources = defaultdict(lambda: self.env["resource.resource"])
-        for record in self:
-            mapped_resources[calendar or record.resource_calendar_id] |= (
-                record.resource_id
-            )
-
-        for calendar, calendar_resources in mapped_resources.items():  # noqa: PLR1704  the parameter's value is consumed above; the loop reuses the name on purpose
-            if not calendar:
-                days = (to_datetime.date() - from_datetime.date()).days + 1
-                hours = (to_datetime - from_datetime).total_seconds() / 3600
-                for calendar_resource in calendar_resources:
-                    result[calendar_resource.id] = {"days": days, "hours": hours}
-                continue
-
-            attendances = calendar._attendance_intervals_batch(
-                from_datetime, to_datetime, calendar_resources
-            )
-            leaves = calendar._leave_intervals_batch(
-                from_datetime, to_datetime, calendar_resources, domain
-            )
-
-            for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = (
-                    calendar._get_attendance_intervals_days_data(
-                        attendances[calendar_resource.id] & leaves[calendar_resource.id]
-                    )
-                )
-
-        return self._fan_out_per_record(result, records_per_resource)
-
-    def _adjust_to_calendar(self, start: datetime, end: datetime) -> dict:
-        resource_results = self.resource_id._adjust_to_calendar(start, end)
-        return {record: resource_results[record.resource_id] for record in self}
 
     def _list_work_time_per_day(
         self,
@@ -304,3 +286,21 @@ class MixinResource(models.AbstractModel):
             hours = (stop - start).total_seconds() / 3600
             result.append((start.date(), hours, leave))
         return result
+
+    def _prepare_resource_values(self, vals: ValuesType, tz: str | bool) -> ValuesType:
+        resource_vals = {"name": vals.get(self._rec_name)}
+        if tz:
+            resource_vals["tz"] = tz
+        company_id = vals.get("company_id", self.env.company.id)
+        if company_id:
+            resource_vals["company_id"] = company_id
+        calendar_id = vals.get("resource_calendar_id")
+        if calendar_id:
+            resource_vals["calendar_id"] = calendar_id
+        return resource_vals
+
+    def _records_per_resource(self) -> dict[int, list[int]]:
+        grouped = defaultdict(list)
+        for record in self:
+            grouped[record.resource_id.id].append(record.id)
+        return grouped

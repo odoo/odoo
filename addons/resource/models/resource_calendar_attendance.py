@@ -17,7 +17,9 @@ class ResourceCalendarAttendance(models.Model):
         required=True,
         ondelete="cascade",
     )
-    duration_based = fields.Boolean(related="calendar_id.duration_based")
+    duration_based = fields.Boolean(
+        related="calendar_id.duration_based",
+    )
     two_weeks_calendar = fields.Boolean(
         related="calendar_id.two_weeks_calendar",
         string="Calendar in 2 weeks mode",
@@ -147,53 +149,10 @@ class ResourceCalendarAttendance(models.Model):
                     )
                 )
 
-    @api.onchange("hour_from", "hour_to")
-    def _onchange_hours(self):
-        self.hour_from = min(self.hour_from, 23.99)
-        self.hour_from = max(self.hour_from, 0.0)
-        self.hour_to = min(self.hour_to, 24)
-        self.hour_to = max(self.hour_to, 0.0)
-
-        self.hour_to = max(self.hour_to, self.hour_from)
-
-    @api.model
-    def get_week_type(self, date: date) -> int:
-        return (date.toordinal() - 1) // 7 % 2
-
-    def _derived_duration_hours(self) -> float:
-        self.check_singleton()
-        if self.day_period == "lunch":
-            return 0.0
-        return max(0.0, self.hour_to - self.hour_from)
-
     @api.depends("hour_from", "hour_to", "day_period")
     def _compute_duration_hours(self):
         for attendance in self:
             attendance.duration_hours = attendance._derived_duration_hours()
-
-    def _inverse_duration_hours(self):
-        for calendar, attendances in self.grouped("calendar_id").items():
-            if not calendar.duration_based:
-                for attendance in attendances:
-                    derived = attendance._derived_duration_hours()
-                    if attendance.duration_hours != derived:
-                        attendance.duration_hours = derived
-                continue
-            for attendance in attendances:
-                duration = attendance.duration_hours
-                if attendance.day_period == "full_day":
-                    bounds = (12 - duration / 2, 12 + duration / 2)
-                elif attendance.day_period == "morning":
-                    bounds = (12 - duration, 12)
-                elif attendance.day_period == "afternoon":
-                    bounds = (12, 12 + duration)
-                else:
-                    continue
-                vals = {"hour_from": bounds[0], "hour_to": bounds[1]}
-                if isinstance(attendance.id, int):
-                    attendance.write(vals)
-                else:
-                    attendance.update(vals)
 
     @api.depends("day_period", "duration_hours", "calendar_id.hours_per_day")
     def _compute_duration_days(self):
@@ -225,6 +184,39 @@ class ResourceCalendarAttendance(models.Model):
                 f"{week_name} ({section_info[this_week_type == record.week_type]})"
             )
 
+    def _inverse_duration_hours(self):
+        for calendar, attendances in self.grouped("calendar_id").items():
+            if not calendar.duration_based:
+                for attendance in attendances:
+                    derived = attendance._derived_duration_hours()
+                    if attendance.duration_hours != derived:
+                        attendance.duration_hours = derived
+                continue
+            for attendance in attendances:
+                duration = attendance.duration_hours
+                if attendance.day_period == "full_day":
+                    bounds = (12 - duration / 2, 12 + duration / 2)
+                elif attendance.day_period == "morning":
+                    bounds = (12 - duration, 12)
+                elif attendance.day_period == "afternoon":
+                    bounds = (12, 12 + duration)
+                else:
+                    continue
+                vals = {"hour_from": bounds[0], "hour_to": bounds[1]}
+                if isinstance(attendance.id, int):
+                    attendance.write(vals)
+                else:
+                    attendance.update(vals)
+
+    @api.onchange("hour_from", "hour_to")
+    def _onchange_hours(self):
+        self.hour_from = min(self.hour_from, 23.99)
+        self.hour_from = max(self.hour_from, 0.0)
+        self.hour_to = min(self.hour_to, 24)
+        self.hour_to = max(self.hour_to, 0.0)
+
+        self.hour_to = max(self.hour_to, self.hour_from)
+
     def _copy_attendance_vals(self) -> ValuesType:
         self.check_singleton()
         return {
@@ -237,3 +229,13 @@ class ResourceCalendarAttendance(models.Model):
             "display_type": self.display_type,
             "sequence": self.sequence,
         }
+
+    def _derived_duration_hours(self) -> float:
+        self.check_singleton()
+        if self.day_period == "lunch":
+            return 0.0
+        return max(0.0, self.hour_to - self.hour_from)
+
+    @api.model
+    def get_week_type(self, date: date) -> int:
+        return (date.toordinal() - 1) // 7 % 2

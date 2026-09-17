@@ -141,6 +141,27 @@ class ResourceScheduleException(models.Model):
             )
         return res
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._on_schedule_changed(records._get_schedule_scopes())
+        return records
+
+    def write(self, vals):
+        if self._get_fields_schedule_scope().isdisjoint(vals):
+            return super().write(vals)
+        scopes = self._get_schedule_scopes()
+        res = super().write(vals)
+        self._on_schedule_changed(scopes + self._get_schedule_scopes())
+        return res
+
+    def unlink(self):
+        scopes = self._get_schedule_scopes()
+        model = self.browse()
+        res = super().unlink()
+        model._on_schedule_changed(scopes)
+        return res
+
     @api.depends("resource_id.calendar_id")
     def _compute_calendar_id(self):
         for leave in self.filtered("resource_id"):
@@ -204,27 +225,6 @@ class ResourceScheduleException(models.Model):
                     ),
                 }
             )
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        records._on_schedule_changed(records._get_schedule_scopes())
-        return records
-
-    def write(self, vals):
-        if self._get_fields_schedule_scope().isdisjoint(vals):
-            return super().write(vals)
-        scopes = self._get_schedule_scopes()
-        res = super().write(vals)
-        self._on_schedule_changed(scopes + self._get_schedule_scopes())
-        return res
-
-    def unlink(self):
-        scopes = self._get_schedule_scopes()
-        model = self.browse()
-        res = super().unlink()
-        model._on_schedule_changed(scopes)
-        return res
 
     def _copy_leave_vals(self) -> ValuesType:
         self.check_singleton()

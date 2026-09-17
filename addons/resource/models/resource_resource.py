@@ -183,67 +183,15 @@ class ResourceResource(models.Model):
         "A person is one human resource per company.",
     )
 
-    @api.depends("role_ids")
-    def _compute_default_role_id(self):
+    @api.constrains("tz")
+    def _check_tz(self):
         for resource in self:
-            if resource.default_role_id not in resource.role_ids:
-                resource.default_role_id = resource.role_ids[:1]
-
-    def _inverse_default_role_id(self):
-        for resource in self:
-            if resource.default_role_id:
-                resource.role_ids |= resource.default_role_id
-            else:
-                resource.default_role_id = resource.role_ids[:1]
-
-    @api.model
-    def default_get(self, fields: list[str]) -> dict[str, Any]:
-        res = super().default_get(fields)
-        if not res.get("calendar_id") and res.get("company_id"):
-            company = self.env["res.company"].browse(res["company_id"])
-            res["calendar_id"] = company.resource_calendar_id.id
-        return res
-
-    @api.depends(
-        "assignment_ids.assignee_id",
-        "assignment_ids.date_start",
-        "assignment_ids.date_end",
-    )
-    def _compute_holder_id(self):
-        assignment_model = self.env["resource.assignment"]
-        for resource in self:
-            resource.holder_id = assignment_model._get_holder(resource)
-
-    def _search_holder_id(self, operator, value):
-        if operator not in ("=", "in", "!=", "not in"):
-            return NotImplemented
-        now = fields.Datetime.now()
-        live = self.env["resource.assignment"].search(
-            Domain("date_start", "<=", now)
-            & (Domain("date_end", "=", False) | Domain("date_end", ">", now))
-        )
-        # Same tie-break as _compute_holder_id's _get_holder(): the live
-        # assignment with the latest date_start wins per resource.
-        current_assignee_id_by_resource_id = {}
-        for assignment in live.sorted("date_start", reverse=True):
-            current_assignee_id_by_resource_id.setdefault(
-                assignment.resource_id.id, assignment.assignee_id.id
-            )
-        values = list(value) if operator in ("in", "not in") else [value]
-        domain = Domain(
-            "id",
-            "in",
-            [
-                resource_id
-                for resource_id, assignee_id in current_assignee_id_by_resource_id.items()
-                if assignee_id in values
-            ],
-        )
-        if False in values:
-            domain |= Domain("id", "not in", list(current_assignee_id_by_resource_id))
-        if operator in ("!=", "not in"):
-            domain = ~domain
-        return domain
+            if not resource.tz:
+                raise ValidationError(
+                    self.env._(
+                        "A resource needs a timezone: %s has none.", resource.name
+                    )
+                )
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -260,51 +208,6 @@ class ResourceResource(models.Model):
                     .resource_calendar_id.id
                 )
         return super().create(vals_list)
-
-    def _update_party_vals(self, vals_list: list[ValuesType]) -> None:
-        default_type = self.default_get(["resource_type"]).get("resource_type")
-        unbound = []
-        for values in vals_list:
-            if (
-                values.get("partner_id")
-                or values.get("resource_type", default_type) != "user"
-            ):
-                continue
-            if user := self.env["res.users"].sudo().browse(values.get("user_id")):
-                values["partner_id"] = user.partner_id.id
-            elif values.get("name"):
-                unbound.append(values)
-        parties = (
-            self.env["res.partner"]
-            .sudo()
-            .create(
-                [
-                    {"name": values["name"], "tz": values.get("tz") or False}
-                    for values in unbound
-                ]
-            )
-        )
-        for values, party in zip(unbound, parties, strict=True):
-            values["partner_id"] = party.id
-
-    def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
-        vals_list = super().copy_data(default=default)
-        given = set(default or ())
-        copies = []
-        for resource, vals in zip(self, vals_list, strict=True):
-            vals = dict(vals, name=self.env._("%s (copy)", resource.name))
-            company = self.env["res.company"].browse(
-                vals.get("company_id") or resource.company_id.id
-            )
-            calendar_company = resource.calendar_id.company_id
-            if (
-                "calendar_id" not in given
-                and calendar_company
-                and calendar_company != company
-            ):
-                vals["calendar_id"] = company.resource_calendar_id.id
-            copies.append(vals)
-        return copies
 
     def write(self, vals: ValuesType) -> bool:
         if self.env.context.get("check_idempotence") and len(self) == 1:
@@ -343,22 +246,48 @@ class ResourceResource(models.Model):
                     ).exists()._sync_reservations()
         return result
 
-    def _lock_for_scheduling(self):
-        if self:
-            self.env.cr.execute(
-                SQL(
-                    """
-                WITH locked AS MATERIALIZED (
-                    SELECT id FROM resource_resource
-                     WHERE id = ANY(%s) ORDER BY id FOR NO KEY UPDATE
-                )
-                UPDATE resource_resource AS resource
-                   SET write_date = resource.write_date
-                  FROM locked WHERE resource.id = locked.id
-                """,
-                    self.ids,
-                )
+    def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
+        vals_list = super().copy_data(default=default)
+        given = set(default or ())
+        copies = []
+        for resource, vals in zip(self, vals_list, strict=True):
+            vals = dict(vals, name=self.env._("%s (copy)", resource.name))
+            company = self.env["res.company"].browse(
+                vals.get("company_id") or resource.company_id.id
             )
+            calendar_company = resource.calendar_id.company_id
+            if (
+                "calendar_id" not in given
+                and calendar_company
+                and calendar_company != company
+            ):
+                vals["calendar_id"] = company.resource_calendar_id.id
+            copies.append(vals)
+        return copies
+
+    @api.model
+    def default_get(self, fields: list[str]) -> dict[str, Any]:
+        res = super().default_get(fields)
+        if not res.get("calendar_id") and res.get("company_id"):
+            company = self.env["res.company"].browse(res["company_id"])
+            res["calendar_id"] = company.resource_calendar_id.id
+        return res
+
+    @api.depends("role_ids")
+    def _compute_default_role_id(self):
+        for resource in self:
+            if resource.default_role_id not in resource.role_ids:
+                resource.default_role_id = resource.role_ids[:1]
+
+    @api.depends(
+        "assignment_ids.assignee_id",
+        "assignment_ids.date_start",
+        "assignment_ids.date_end",
+    )
+    def _compute_holder_id(self):
+        assignment_model = self.env["resource.assignment"]
+        for resource in self:
+            resource.holder_id = assignment_model._get_holder(resource)
 
     @api.depends("partner_id.name")
     def _compute_name(self):
@@ -385,14 +314,25 @@ class ResourceResource(models.Model):
         for resource in self:
             resource.email = resource.partner_id.sudo().email
 
+    @api.depends("partner_id.avatar_128", "user_id.avatar_128")
+    def _compute_avatar_128(self):
+        for resource in self:
+            resource.avatar_128 = (
+                resource.partner_id.avatar_128 or resource.user_id.avatar_128
+            )
+
+    def _inverse_default_role_id(self):
+        for resource in self:
+            if resource.default_role_id:
+                resource.role_ids |= resource.default_role_id
+            else:
+                resource.default_role_id = resource.role_ids[:1]
+
     def _inverse_email(self):
         for resource in self.filtered("partner_id"):
             party = resource.partner_id.sudo()
             if party.email != resource.email:
                 party.email = resource.email
-
-    def _search_email(self, operator, value):
-        return Domain("partner_id.email", operator, value)
 
     def _inverse_name(self):
         for resource in self.filtered("partner_id"):
@@ -400,19 +340,87 @@ class ResourceResource(models.Model):
             if party.name != resource.name:
                 party.name = resource.name
 
-    def _compute_tz(self):
-        """Seed the work zone once, at creation; never move it afterwards.
+    def _search_email(self, operator, value):
+        return Domain("partner_id.email", operator, value)
 
-        The chain below is guarded by `resource.tz or ...` and the field is
-        `required`, so once a value exists this can only reassign it. That is
-        the intent -- a calendar states hours and the resource states the zone
-        they are read in -- but it is why there is no `@api.depends` on
-        `calendar_id`: the dependency fired a recompute that could not change
-        anything, while telling every reader that the zone follows the calendar.
-        Two tests in two repositories were written against that reading and were
-        wrong. Changing an existing resource's zone is a write, not a side
-        effect of repointing its calendar.
-        """
+    def _search_holder_id(self, operator, value):
+        if operator not in ("=", "in", "!=", "not in"):
+            return NotImplemented
+        now = fields.Datetime.now()
+        live = self.env["resource.assignment"].search(
+            Domain("date_start", "<=", now)
+            & (Domain("date_end", "=", False) | Domain("date_end", ">", now))
+        )
+        current_assignee_id_by_resource_id = {}
+        for assignment in live.sorted("date_start", reverse=True):
+            current_assignee_id_by_resource_id.setdefault(
+                assignment.resource_id.id, assignment.assignee_id.id
+            )
+        values = list(value) if operator in ("in", "not in") else [value]
+        domain = Domain(
+            "id",
+            "in",
+            [
+                resource_id
+                for resource_id, assignee_id in current_assignee_id_by_resource_id.items()
+                if assignee_id in values
+            ],
+        )
+        if False in values:
+            domain |= Domain("id", "not in", list(current_assignee_id_by_resource_id))
+        if operator in ("!=", "not in"):
+            domain = ~domain
+        return domain
+
+    @api.onchange("company_id")
+    def _onchange_company_id(self):
+        if self.company_id:
+            self.calendar_id = self.company_id.resource_calendar_id.id
+
+    def _update_party_vals(self, vals_list: list[ValuesType]) -> None:
+        default_type = self.default_get(["resource_type"]).get("resource_type")
+        unbound = []
+        for values in vals_list:
+            if (
+                values.get("partner_id")
+                or values.get("resource_type", default_type) != "user"
+            ):
+                continue
+            if user := self.env["res.users"].sudo().browse(values.get("user_id")):
+                values["partner_id"] = user.partner_id.id
+            elif values.get("name"):
+                unbound.append(values)
+        parties = (
+            self.env["res.partner"]
+            .sudo()
+            .create(
+                [
+                    {"name": values["name"], "tz": values.get("tz") or False}
+                    for values in unbound
+                ]
+            )
+        )
+        for values, party in zip(unbound, parties, strict=True):
+            values["partner_id"] = party.id
+
+    def _lock_for_scheduling(self):
+        if self:
+            self.env.cr.execute(
+                SQL(
+                    """
+                WITH locked AS MATERIALIZED (
+                    SELECT id FROM resource_resource
+                     WHERE id = ANY(%s) ORDER BY id FOR NO KEY UPDATE
+                )
+                UPDATE resource_resource AS resource
+                   SET write_date = resource.write_date
+                  FROM locked WHERE resource.id = locked.id
+                """,
+                    self.ids,
+                )
+            )
+
+    def _compute_tz(self):
         for resource in self:
             resource.tz = (
                 resource.tz
@@ -424,28 +432,6 @@ class ResourceResource(models.Model):
                 or self.env.user.tz
                 or "UTC"
             )
-
-    @api.constrains("tz")
-    def _check_tz(self):
-        for resource in self:
-            if not resource.tz:
-                raise ValidationError(
-                    self.env._(
-                        "A resource needs a timezone: %s has none.", resource.name
-                    )
-                )
-
-    @api.depends("partner_id.avatar_128", "user_id.avatar_128")
-    def _compute_avatar_128(self):
-        for resource in self:
-            resource.avatar_128 = (
-                resource.partner_id.avatar_128 or resource.user_id.avatar_128
-            )
-
-    @api.onchange("company_id")
-    def _onchange_company_id(self):
-        if self.company_id:
-            self.calendar_id = self.company_id.resource_calendar_id.id
 
     def _adjust_to_calendar(
         self,

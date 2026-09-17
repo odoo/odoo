@@ -7,11 +7,11 @@ class ResourceRole(models.Model):
     _description = "Resource Role"
     _order = "sequence, name, id"
 
-    active = fields.Boolean(default=True)
     name = fields.Char(
         translate=True,
         required=True,
     )
+    active = fields.Boolean(default=True)
     color = fields.Integer(default=lambda self: self._default_color())
     sequence = fields.Integer(export_string_translation=False)
 

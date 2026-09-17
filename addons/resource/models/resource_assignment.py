@@ -77,10 +77,29 @@ class ResourceAssignment(models.Model):
     )
     _resource_period_idx = models.Index("(resource_id, date_start, date_end)")
 
-    @api.depends("assignee_id.partner_id")
-    def _compute_assignee_partner_id(self):
+    @api.constrains("resource_id", "assignee_id")
+    def _check_parties(self):
         for record in self:
-            record.assignee_partner_id = record.assignee_id.partner_id
+            if not record._has_holder():
+                raise ValidationError(
+                    self.env._(
+                        "%(resource)s is assigned to nobody: name who holds it.",
+                        resource=record.resource_id.name,
+                    )
+                )
+            if not record.assignee_id:
+                continue
+            if record.resource_id == record.assignee_id:
+                raise ValidationError(
+                    self.env._("A resource cannot be assigned to itself.")
+                )
+            if record.assignee_id.resource_type != "user":
+                raise ValidationError(
+                    self.env._(
+                        "%(name)s is not a human resource and cannot hold an assignment.",
+                        name=record.assignee_id.name,
+                    )
+                )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -103,24 +122,10 @@ class ResourceAssignment(models.Model):
             super(ResourceAssignment, records).write({**vals, "assignee_id": holder.id})
         return True
 
-    def _update_assignee_vals(self, vals_list):
-        default_resource_id = self.env.context.get("default_resource_id")
-        pending = defaultdict(list)
-        for vals in vals_list:
-            party_id = vals.pop("assignee_partner_id", None)
-            if not party_id or vals.get("assignee_id"):
-                continue
-            resource = self.env["resource.resource"].browse(
-                vals.get("resource_id") or default_resource_id
-            )
-            pending[resource.company_id].append((vals, party_id))
-        for company, entries in pending.items():
-            parties = self.env["res.partner"].browse(
-                [party_id for _vals, party_id in entries]
-            )
-            holders = parties.sudo()._get_or_create_resources(company)
-            for (vals, _party_id), holder in zip(entries, holders, strict=True):
-                vals["assignee_id"] = holder.id
+    @api.depends("assignee_id.partner_id")
+    def _compute_assignee_partner_id(self):
+        for record in self:
+            record.assignee_partner_id = record.assignee_id.partner_id
 
     @api.depends("resource_id.name", "assignee_id.name", "custody_role")
     @api.depends_context("lang")
@@ -168,36 +173,23 @@ class ResourceAssignment(models.Model):
         self.check_singleton()
         return self.assignee_id.name
 
-    def _has_holder(self):
-        self.check_singleton()
-        return bool(self.assignee_id)
-
-    @api.constrains("resource_id", "assignee_id")
-    def _check_parties(self):
-        for record in self:
-            if not record._has_holder():
-                raise ValidationError(
-                    self.env._(
-                        "%(resource)s is assigned to nobody: name who holds it.",
-                        resource=record.resource_id.name,
-                    )
-                )
-            if not record.assignee_id:
-                continue
-            if record.resource_id == record.assignee_id:
-                raise ValidationError(
-                    self.env._("A resource cannot be assigned to itself.")
-                )
-            if record.assignee_id.resource_type != "user":
-                raise ValidationError(
-                    self.env._(
-                        "%(name)s is not a human resource and cannot hold an assignment.",
-                        name=record.assignee_id.name,
-                    )
-                )
-
     def _get_fields_reservation_date(self):
         return ("date_start", "date_end")
+
+    def _get_fields_sync_trigger(self):
+        return super()._get_fields_sync_trigger() | {"resource_id", "name"}
+
+    @api.model
+    def _get_holder(self, resource, custody_role=None, at=None):
+        at = at or fields.Datetime.now()
+        domain = (
+            Domain("resource_id", "=", resource.id)
+            & Domain("date_start", "<=", at)
+            & (Domain("date_end", "=", False) | Domain("date_end", ">", at))
+        )
+        if custody_role:
+            domain &= Domain("custody_role", "=", custody_role)
+        return self.search(domain, order="date_start desc", limit=1).assignee_id
 
     def _prepare_reservation_vals_list(self):
         self.check_singleton()
@@ -216,17 +208,25 @@ class ResourceAssignment(models.Model):
             }
         ]
 
-    def _get_fields_sync_trigger(self):
-        return super()._get_fields_sync_trigger() | {"resource_id", "name"}
+    def _update_assignee_vals(self, vals_list):
+        default_resource_id = self.env.context.get("default_resource_id")
+        pending = defaultdict(list)
+        for vals in vals_list:
+            party_id = vals.pop("assignee_partner_id", None)
+            if not party_id or vals.get("assignee_id"):
+                continue
+            resource = self.env["resource.resource"].browse(
+                vals.get("resource_id") or default_resource_id
+            )
+            pending[resource.company_id].append((vals, party_id))
+        for company, entries in pending.items():
+            parties = self.env["res.partner"].browse(
+                [party_id for _vals, party_id in entries]
+            )
+            holders = parties.sudo()._get_or_create_resources(company)
+            for (vals, _party_id), holder in zip(entries, holders, strict=True):
+                vals["assignee_id"] = holder.id
 
-    @api.model
-    def _get_holder(self, resource, custody_role=None, at=None):
-        at = at or fields.Datetime.now()
-        domain = (
-            Domain("resource_id", "=", resource.id)
-            & Domain("date_start", "<=", at)
-            & (Domain("date_end", "=", False) | Domain("date_end", ">", at))
-        )
-        if custody_role:
-            domain &= Domain("custody_role", "=", custody_role)
-        return self.search(domain, order="date_start desc", limit=1).assignee_id
+    def _has_holder(self):
+        self.check_singleton()
+        return bool(self.assignee_id)

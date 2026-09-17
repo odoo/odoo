@@ -30,16 +30,6 @@ class MixinResourceAllocation(models.AbstractModel):
                     )
                 )
 
-    def _get_fields_sync_trigger(self):
-        return super()._get_fields_sync_trigger() | {"allocated_percentage"}
-
-    def _sync_reservations(self):
-        super()._sync_reservations()
-        if self:
-            records = self.sudo()
-            records.env.add_to_compute(records._fields["allocated_hours"], records)
-            records.mapped("allocated_hours")
-
     @api.depends("reservation_ids.allocated_hours", "reservation_ids.active")
     def _compute_allocated_hours(self):
         for record in self:
@@ -53,3 +43,13 @@ class MixinResourceAllocation(models.AbstractModel):
                 and record._prepare_reservation_vals_list()
             ):
                 record.allocated_hours = 0.0
+
+    def _get_fields_sync_trigger(self):
+        return super()._get_fields_sync_trigger() | {"allocated_percentage"}
+
+    def _sync_reservations(self):
+        super()._sync_reservations()
+        if self:
+            records = self.sudo()
+            records.env.add_to_compute(records._fields["allocated_hours"], records)
+            records.mapped("allocated_hours")
