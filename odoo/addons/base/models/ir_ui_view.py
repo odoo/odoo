@@ -664,12 +664,8 @@ class IrUiView(models.Model):
         return self._get_combined_arch()
 
     def _get_combined_archs_by_id(self) -> dict[int, _Element]:
-        if len(self) < 2 or not self.pool.ready:
-            _debug.logic(
-                "combined_archs_by_id.skipped",
-                views=len(self),
-                reason="single" if len(self) < 2 else "registry_loading",
-            )
+        if len(self) < 2:
+            _debug.logic("combined_archs_by_id.skipped", views=len(self))
             return {}
         try:
             return dict(zip(self.ids, self._get_combined_archs(), strict=True))
@@ -1610,15 +1606,25 @@ class IrUiView(models.Model):
 
         all_tree_views = views._get_views_inheriting()
 
+        # while loading, a tree holds the views of loaded modules and the
+        # chain of the view being resolved -- each view its own chain, as if
+        # resolved alone, so a batch admits no other view's ancestors
+        admitted: set[int] | None = None
         if not self.pool.ready and not self.env.context.get("load_all_views"):
-            unfiltered = len(all_tree_views)  # debuglog
-            all_tree_views = all_tree_views._filter_loaded_views(
-                set(views.env.context["check_view_ids"])
+            # a view every chain holds is admitted for every view: only the
+            # rest need their module looked up
+            in_every_chain = (
+                set.intersection(*map(set, parented)) if parented else set()
+            )
+            admitted = set(
+                all_tree_views._filter_loaded_views(
+                    set(check_view_ids) | in_every_chain
+                ).ids
             )
             _debug.logic(
                 "hierarchies.loaded_only",
-                unfiltered=unfiltered,
-                loaded=len(all_tree_views),
+                unfiltered=len(all_tree_views),
+                loaded=len(admitted),
             )
         _debug.pipeline(
             "combined_archs",
@@ -1640,6 +1646,10 @@ class IrUiView(models.Model):
                 _hierarchy = collections.defaultdict(list)
             _hierarchy[root.inherit_id].append(root)
             for child in children_views[root]:
+                if admitted is not None and (
+                    child.id not in admitted and child.id not in parented_ids
+                ):
+                    continue
                 if child.id in parented_ids or child.mode != "primary":
                     get_hierarchy(child, parented_ids, _hierarchy)
             return _hierarchy

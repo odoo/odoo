@@ -8402,13 +8402,13 @@ class TestCombineIsBatched(ViewCase):
         self.assertEqual(looped, batched)
 
 
-class TestCombineBatchingIsDeclinedAtInstall(ViewCase):
-    def test_the_batch_is_declined_while_the_registry_is_loading(self):
+class TestCombineBatchingAtInstall(ViewCase):
+    def test_the_batch_resolves_each_view_as_if_alone_while_loading(self):
         self.assertFalse(self.env.registry.ready, "this must run at install")
-        views = self.View.create(
+        roots = self.View.create(
             [
                 {
-                    "name": f"declined {index}",
+                    "name": f"batched {index}",
                     "model": "res.partner",
                     "type": "form",
                     "arch": f'<form><field name="name"/><!--{index}--></form>',
@@ -8416,7 +8416,26 @@ class TestCombineBatchingIsDeclinedAtInstall(ViewCase):
                 for index in range(3)
             ]
         )
-        self.assertEqual(views._get_combined_archs_by_id(), {})
+        extensions = self.View.create(
+            [
+                {
+                    "name": f"batched ext {index}",
+                    "model": "res.partner",
+                    "inherit_id": root.id,
+                    "arch": f'<field name="name" position="after"><field name="function"/><!--e{index}--></field>',
+                }
+                for index, root in enumerate(roots)
+            ]
+        )
+        views = roots + extensions
+        batched = views._get_combined_archs_by_id()
+        self.assertEqual(set(batched), set(views.ids))
+        for view in views:
+            self.assertEqual(
+                etree.tostring(batched[view.id]),
+                etree.tostring(view._get_combined_arch()),
+                view.name,
+            )
 
 
 class TestResetArchRejectsAnUnknownMode(ViewCase):
