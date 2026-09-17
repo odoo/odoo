@@ -2844,7 +2844,7 @@ class IrQweb(models.AbstractModel):
                 f"t-call must be on a <t> element (actually on <{el_tag}>)."
             )
 
-        code = self._flush_text(compile_context, level, rstrip=True)
+        code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == "t")
         path, xml = compile_context.element_path, compile_context.element_xml
 
         el.attrib.pop("t-consumed-options", None)

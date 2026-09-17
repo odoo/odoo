@@ -833,6 +833,47 @@ class TestQWebNS(TransactionCase):
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
+    def test_default_namespace_keeps_the_whitespace_before_a_t_call(self):
+        # Under a default namespace <t> is "{ns}t" to lxml, and every
+        # directive's whitespace rule tests el.tag against "t": the text
+        # before a t-call is kept there and stripped on a plain <t>.
+        self.env["ir.ui.view"].create(
+            {
+                "key": "base.ws_callee",
+                "name": "ws_callee",
+                "type": "qweb",
+                "arch": '<t t-name="base.ws_callee"><i>c</i></t>',
+            }
+        )
+        for arch, expected in (
+            (
+                '<Invoice xmlns="urn:d">text\n    <t t-call="base.ws_callee"/>\n</Invoice>',
+                '<Invoice xmlns="urn:d">text\n    <i>c</i>\n</Invoice>',
+            ),
+            (
+                '<Invoice>text\n    <t t-call="base.ws_callee"/>\n</Invoice>',
+                "<Invoice>text<i>c</i>\n</Invoice>",
+            ),
+        ):
+            view = self.env["ir.ui.view"].create(
+                {"name": "ws_caller", "type": "qweb", "arch": f"<t>{arch}</t>"}
+            )
+            self.assertEqual(str(self.env["ir.qweb"]._render(view.id)), expected)
+
+    def test_attribute_prefix_survives_a_later_default_declaration(self):
+        # lxml lists the default namespace after the prefix that shares its
+        # URI; the reverse map must never pick the None prefix for an attribute.
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "dual_ns",
+                "type": "qweb",
+                "arch": '<t><root xmlns:d="urn:d" xmlns="urn:d" d:k="v" t-att-a="1">x</root></t>',
+            }
+        )
+        rendered = str(self.env["ir.qweb"]._render(view.id))
+        self.assertIn(' d:k="v"', rendered)
+        self.assertNotIn("None:", rendered)
+
     def test_xml_prefixed_attributes_keep_their_prefix(self):
         for arch in (
             '<div xml:lang="en">x</div>',
