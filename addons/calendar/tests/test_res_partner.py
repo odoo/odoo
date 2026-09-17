@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
+from odoo import Command, fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -117,3 +120,37 @@ class TestResPartner(TransactionCase):
         self.env.invalidate_all()
         c1_partner_seen_from_c2 = company1_user.partner_id.with_user(allcompany_user).with_company(company2)
         self.assertEqual(c1_partner_seen_from_c2.meeting_count, 1, "Should compute meeting count without access error as partner is accessible in all companies")
+
+    def test_is_in_meeting(self):
+        now = fields.Datetime.now()
+        partner = self.env['res.partner'].create({'name': 'test_partner_meeting'})
+
+        def create_event(state='accepted', **vals):
+            vals.setdefault('name', 'meeting')
+            vals.setdefault('start', now - timedelta(minutes=30))
+            vals.setdefault('stop', now + timedelta(minutes=30))
+            vals.setdefault('show_as', 'busy')
+            vals.setdefault('partner_ids', [Command.set([partner.id])])
+            event = self.env['calendar.event'].create(vals)
+            event.attendee_ids.filtered(lambda a: a.partner_id == partner).state = state
+            return event
+
+        self.assertFalse(partner.is_in_meeting, "partner with no meeting should not be in a meeting")
+
+        event = create_event()
+        self.assertTrue(partner.is_in_meeting, "accepted busy ongoing meeting should mark partner as in a meeting")
+        event.unlink()
+
+        create_event(state='declined')
+        self.assertFalse(partner.is_in_meeting, "meeting not accepted by the partner should not mark partner as in a meeting")
+
+        create_event(start=now + timedelta(hours=1), stop=now + timedelta(hours=2))
+        self.assertFalse(partner.is_in_meeting, "meeting outside its time window should not mark partner as in a meeting")
+
+        create_event(is_draft=True)
+        self.assertFalse(partner.is_in_meeting, "unconfirmed draft meeting should not mark partner as in a meeting")
+
+        leave_model_id = self.env['ir.model']._get_id('hr.leave')
+        if leave_model_id:
+            create_event(res_model_id=leave_model_id)
+            self.assertFalse(partner.is_in_meeting, "leave-generated event should not mark partner as in a meeting")
