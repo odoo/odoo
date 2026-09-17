@@ -32,6 +32,8 @@ from odoo.tools.rendering_tools import (
     template_env_globals,
 )
 
+from odoo.addons.base.models.ir_qweb import RenderScopedDict
+
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
 
@@ -487,7 +489,11 @@ class MixinMailRender(models.AbstractModel):
     @api.model
     @tools.ormcache("template_src", cache="templates.mail")
     def _get_qweb_template_node(self, template_src: str) -> tuple:
-        return (html.fragment_fromstring(template_src, create_parent="div"), {}, {})
+        return (
+            html.fragment_fromstring(template_src, create_parent="div"),
+            RenderScopedDict(),
+            {},
+        )
 
     @api.model
     def _render_template_qweb(

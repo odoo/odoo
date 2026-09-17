@@ -4553,6 +4553,29 @@ class TestQWebCompileErrorLocation(TransactionCase):
             other.rollback()
 
 
+class TestQWebRenderScopedContext(TransactionCase):
+    def test_a_growing_render_memo_does_not_change_the_context_hash(self):
+        from odoo.tools import frozendict
+
+        qweb = self.env["ir.qweb"]._render_prepare({}, {})
+        context = qweb.env.context
+        before = hash(frozendict(dict(context)))
+        context["__qweb_loaded_codes"]["probe"] = "x" * 100_000
+        context["__qweb_compiled_cache"][("probe", ())] = ({}, "probe", frozendict())
+        context["_qweb_error_path_xml"][:] = ("probe", "/t", "<t/>")
+        self.assertEqual(
+            hash(frozendict(dict(context))),
+            before,
+            "the render memos are hashed by identity, not walked by content",
+        )
+
+    def test_a_caller_may_still_share_a_plain_dict_as_compiled_cache(self):
+        shared = {}
+        qweb = self.env["ir.qweb"].with_context(__qweb_compiled_cache=shared)
+        qweb._render(etree.fromstring("<t>x</t>"), {})
+        self.assertTrue(shared, "the caller's dict received the compiled template")
+
+
 class TestQWebDirectiveEdgeCases(TransactionCase):
     def _render(self, arch, values=None):
         return str(self.env["ir.qweb"]._render(etree.fromstring(arch), values or {}))

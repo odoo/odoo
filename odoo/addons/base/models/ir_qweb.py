@@ -329,6 +329,25 @@ class QwebContent:
         return Markup(self).__rmod__(other)
 
 
+class RenderScopedDict(dict):
+    # The environment interns itself on a content hash of its context, walking
+    # into every unhashable value; a render-scoped memo grows as templates load,
+    # so hashed by content it made every with_context in a render a new
+    # environment and cost a walk over the loaded code. By identity it is one
+    # object, hashed in O(1), equal to itself only.
+    __slots__ = ()
+    __hash__ = object.__hash__  # type: ignore[assignment]
+    __eq__ = object.__eq__  # type: ignore[assignment]
+    __ne__ = object.__ne__  # type: ignore[assignment]
+
+
+class RenderScopedList(list):
+    __slots__ = ()
+    __hash__ = object.__hash__  # type: ignore[assignment]
+    __eq__ = object.__eq__  # type: ignore[assignment]
+    __ne__ = object.__ne__  # type: ignore[assignment]
+
+
 class QwebJSON(json.JSON):
     def dumps(self, *args: Any, **kwargs: Any) -> str:
         prev_default = kwargs.pop("default", lambda obj: obj)
@@ -439,11 +458,13 @@ class IrQweb(models.AbstractModel):
 
         qweb = self.with_context(**options)._prepare_environment(values)
         _compiled_cache = qweb.env.context.get("__qweb_compiled_cache")
+        if _compiled_cache is None:
+            _compiled_cache = RenderScopedDict()
         qweb = qweb.with_context(
-            __qweb_compiled_cache={} if _compiled_cache is None else _compiled_cache,
-            __qweb_loaded_codes={},
-            __qweb_loaded_options={},
-            _qweb_error_path_xml=[None, None, None],
+            __qweb_compiled_cache=_compiled_cache,
+            __qweb_loaded_codes=RenderScopedDict(),
+            __qweb_loaded_options=RenderScopedDict(),
+            _qweb_error_path_xml=RenderScopedList((None, None, None)),
         )
 
         safe_eval.check_values(values)
