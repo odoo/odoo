@@ -1833,6 +1833,26 @@ $-product-radius-map: (
         }
     }
 
+    #o_wsale_address_form {
+        .col-form-label > .oi {
+            margin-left: map-get($spacers, 1);
+            pointer-events: auto;
+        }
+
+        &:is(.o_mark_none, .o_mark_optional) .col-form-label:not(.label-optional)::after {
+            content: none;
+        }
+
+        &:not(:is(.o_mark_none, .o_mark_optional)) .col-form-label:not(.label-optional),
+        &.o_mark_optional .col-form-label.label-optional {
+            &::after {
+                content: " " var(--form-mark);
+                color: var(--form-mark-color);
+                font-weight: normal;
+            }
+        }
+    }
+
     .o_address_signin {
         @include media-breakpoint-down(md) {
             border-radius: $border-radius;

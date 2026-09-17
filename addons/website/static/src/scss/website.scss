@@ -3731,6 +3731,78 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
+:is(.o_floating_labels, .o_floating_labels *):has(> label):has(> :is(.form-control, .form-select)) {
+    $-notch: map-get($spacers, 1);
+
+    display: grid;
+    margin-top: $form-floating-label-height * .5;
+
+    > label,
+    > .form-control,
+    > .form-select {
+        grid-area: 1 / 1;
+    }
+
+    > .form-control::placeholder {
+        color: transparent;
+    }
+
+    > label {
+        z-index: 1;
+        justify-self: start;
+        align-self: start;
+        max-width: 100%;
+        margin: $input-border-width;
+        padding: $input-padding-y $input-padding-x;
+        overflow: hidden;
+        color: $input-placeholder-color;
+        font-size: $input-font-size;
+        line-height: $input-line-height;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+        @include transition($form-floating-transition);
+    }
+
+    &:has(> :is(
+        .form-select,
+        .form-control:focus,
+        .form-control[value]:not([value=""]):not([placeholder]),
+        .form-control[placeholder]:not(:placeholder-shown)
+    )) {
+        > label {
+            margin: 0 0 0 calc(#{$input-border-width} + #{$input-padding-x} - #{$-notch});
+            padding: 0 $-notch;
+            color: $input-color;
+            background: $input-bg;
+            // background: linear-gradient(to bottom, transparent 50%, $input-bg 50%); TODO: better?
+            font-size: $input-font-size * .85;
+            transform: translateY(-50%);
+        }
+    }
+}
+
+:is(.o_labels_left, .o_labels_right) :has(> label):has(> :is(.form-control, .form-select)) {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    column-gap: map-get($spacers, 3);
+
+    > label {
+        flex: 0 0 var(--form-label-width);
+        text-align: var(--form-label-align, start);
+    }
+
+    > :is(.form-control, .form-select) {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+.o_labels_right {
+    --form-label-align: end;
+}
+
 // The `nav-link` and `btn` classes do not induce the same padding and border
 // radius. However, in some cases, we need to apply these properties of `btn`
 // with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
