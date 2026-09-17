@@ -188,6 +188,21 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             },
         }
 
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        siret = commercial_partner._get_additional_identifier('FR_SIRET')
+
+        if (not commercial_partner.vat or commercial_partner.vat == '/') and siret:
+            vals['party_node']['cac:PartyTaxScheme'] = [{
+                'cbc:CompanyID': {'_text': siret},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'TAX'},
+                },
+            }]
+
     def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
         # OVERRIDE
         line_node = vals['line_node']
