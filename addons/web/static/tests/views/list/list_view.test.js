@@ -2267,7 +2267,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button > [data-icon='more_vert']").click();
+        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
