@@ -511,3 +511,10 @@ def test_langs_do_not_leak_into_a_reused_registry():
     assert "locale" not in registry.__dict__
     with model_test_env(HWidget, registry=registry) as env:
         assert env.registry.locale is default_locale
+
+
+def test_fetchmany_defaults_to_one_row_like_psycopg():
+    with model_test_env(HWidget, fixtures={"SELECT 1": [(1,), (2,)]}) as env:
+        env.cr.execute("SELECT 1")
+        assert env.cr.fetchmany() == [(1,)]
+        assert env.cr.fetchmany(2) == [(1,), (2,)]

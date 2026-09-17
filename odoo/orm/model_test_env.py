@@ -273,7 +273,9 @@ class InMemoryCursor(BaseCursor):
         return self._last_result[0] if self._last_result else None
 
     def fetchmany(self, size: int = 0) -> list[tuple]:
-        return self._last_result[:size]
+        # psycopg substitutes the cursor's arraysize (default 1) for a
+        # falsy size instead of answering no rows
+        return self._last_result[: size or 1]
 
     _DICT_API_UNSUPPORTED = (
         "InMemoryCursor (DB-free model_test_env) cannot serve the dict cursor "
