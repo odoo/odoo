@@ -294,6 +294,8 @@ class NameManager:
             message, error_type = self._error_message_group_inconsistency(
                 name, missing_groups, reasons
             )
+            if not error_type:
+                continue
             _debug.logic(
                 "group_inconsistency",
                 view=view.id,
@@ -303,8 +305,7 @@ class NameManager:
             )
             if error_type == "does_not_exist":
                 raise view._prepare_view_error(message)
-            if error_type:
-                view._log_view_warning(message, None)
+            view._log_view_warning(message, None)
 
     def _error_message_group_inconsistency(
         self, name: str, missing_groups: Any, reasons: list[tuple]

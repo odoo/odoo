@@ -865,7 +865,8 @@ class IrUiView(models.Model):
             root=root.id,
             siblings=len(sibling_primary_views),
         )
-        sibling_primary_views._get_combined_archs()
+        if sibling_primary_views:
+            sibling_primary_views._get_combined_archs()
 
     @api.constrains("group_ids", "inherit_id", "mode")
     def _check_groups(self) -> None:
