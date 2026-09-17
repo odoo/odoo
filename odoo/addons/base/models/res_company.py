@@ -158,6 +158,7 @@ class ResCompany(models.Model):
         comodel_name="res.company",
         compute="_compute_hierarchy",
         compute_sudo=True,
+        search="_search_root_id",
     )
 
     currency_id = fields.Many2one(
@@ -473,6 +474,18 @@ class ResCompany(models.Model):
         res = super().unlink()
         self.env.registry.clear_cache()
         return res
+
+    def _search_root_id(self, operator: str, value: Any) -> Domain:
+        if operator not in ("in", "not in"):
+            return NotImplemented
+        roots = (
+            self.sudo()
+            .with_context(active_test=False)
+            .browse(value)
+            .filtered(lambda company: not company.parent_id)
+        )
+        domain = Domain("id", "child_of", roots.ids) if roots else Domain.FALSE
+        return ~domain if operator == "not in" else domain
 
     @api.depends("parent_path")
     def _compute_hierarchy(self) -> None:

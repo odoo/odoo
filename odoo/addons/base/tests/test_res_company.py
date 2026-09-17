@@ -233,6 +233,26 @@ class TestCompany(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
+class TestCompanyRootSearch(TransactionCase):
+    def test_root_id_search_returns_the_root_and_its_descendants(self):
+        Company = self.env["res.company"]
+        root = Company.create({"name": "Root Co"})
+        child = Company.create({"name": "Child Co", "parent_id": root.id})
+        grandchild = Company.create({"name": "Grandchild Co", "parent_id": child.id})
+        other = Company.create({"name": "Other Co"})
+        self.assertEqual(grandchild.root_id, root)
+        self.assertEqual(
+            Company.search([("root_id", "in", root.ids)]), root | child | grandchild
+        )
+        self.assertFalse(
+            Company.search([("root_id", "in", child.ids)]),
+            "a branch is nobody's root",
+        )
+        self.assertIn(other, Company.search([("root_id", "not in", root.ids)]))
+        self.assertNotIn(child, Company.search([("root_id", "not in", root.ids)]))
+
+
+@tagged("post_install", "-at_install")
 class TestCompanyPublicUser(TransactionCase):
     def test_get_public_user_creates_one_per_company(self):
         company = self.env["res.company"].create({"name": "Public Co"})
