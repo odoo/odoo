@@ -926,10 +926,6 @@ class PurchaseOrderLine(models.Model):
             uom_id=self.uom_id,
             params=self._get_select_sellers_params())
 
-    def _get_rounding(self):
-        self.ensure_one()
-        return self.uom_id.rounding
-
     def _get_section_totals(self):
         section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
         return sum(section_lines.mapped('price_subtotal'))
