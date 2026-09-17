@@ -46,7 +46,7 @@ function getDisplayUrl(url) {
 export class EmailImageFormatPlugin extends Plugin {
     static id = "emailImageFormat";
     static dependencies = ["imagePostProcess", "imageSave"];
-    static shared = ["sanitizeImages"];
+    static shared = ["sanitizeImages", "setImageIdentity"];
     static defaultConfig = {
         // TODO EGGMAIL: if transparency usage can be detected, prefer JPEG over PNG
         // currently there is no transparency detection logic, so PNG is used by default.
@@ -54,7 +54,6 @@ export class EmailImageFormatPlugin extends Plugin {
         defaultImageMimetype: "image/png",
     };
     resources = {
-        before_clean_for_save_with_pending_images_handlers: this.setImageIdentity.bind(this),
         system_attributes: ["data-oe-nodeid"],
     };
 
@@ -530,7 +529,7 @@ export class EmailImageFormatPlugin extends Plugin {
 
     async sanitizeImage(el, sourceEl, measureEl) {
         const unmodifiedSrc = getImageSrc(el)?.trimStart();
-        await Promise.all(this.trigger("on_save_pending_images_handlers", el, sourceEl));
+        await this.dependencies.imageSave.savePendingImagesInClone(el, sourceEl);
         let src = getImageSrc(el)?.trimStart();
         let data = { ...el.dataset, ...(await loadImageInfo(el)) };
         let attachmentId = this.getMainAttachmentId(data);
@@ -575,9 +574,7 @@ export class EmailImageFormatPlugin extends Plugin {
                 if (processedSrc && sourceEl.classList.contains("o_modified_image_to_save")) {
                     this.updateImageSource(el, processedSrc);
                     sourceEl.classList.add("o_modified_image_to_save");
-                    await Promise.all(
-                        this.trigger("on_save_pending_images_handlers", el, sourceEl)
-                    );
+                    await this.dependencies.imageSave.savePendingImagesInClone(el, sourceEl);
                     src = getImageSrc(el)?.trimStart();
                     if (!src || src === PLACEHOLDER_IMAGE) {
                         throw new EmailImageAttachmentCreationError(

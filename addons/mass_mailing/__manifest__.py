@@ -171,6 +171,7 @@
             'mass_mailing/static/src/views/fields/**/*',
             'mass_mailing/static/src/views/mailing_filter*/**/*.js',
             'mass_mailing/static/src/views/mailing_template_kanban_view/**/*',
+            'mass_mailing/static/src/convert_inline/**/*',
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/*',
