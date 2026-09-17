@@ -654,6 +654,83 @@ class TestFieldConverters(TransactionCase):
         self.assertEqual(len(warnings), 1)
         self.assertIn("2 matches", warnings[0]["message"])
 
+    def test_database_ids_and_external_ids_are_prefetched(self):
+        Partner = self.env["res.partner"]
+        parents = Partner.create([{"name": f"IFLD98 parent {i}"} for i in range(20)])
+        self.env["ir.model.data"].create(
+            [
+                {
+                    "module": "__import__",
+                    "name": f"ifld98_parent_{i}",
+                    "model": "res.partner",
+                    "res_id": parent.id,
+                }
+                for i, parent in enumerate(parents)
+            ]
+        )
+        self.env.flush_all()
+        self.env.registry.clear_cache()
+        converter_type = type(self.env["ir.fields.converter"])
+        misses = []
+        original_dbid = converter_type._get_ref_from_dbid
+        original_xmlid = converter_type._get_ref_from_xmlid
+
+        def spy_dbid(this, field, value):
+            misses.append((".id", value))
+            return original_dbid(this, field, value)
+
+        def spy_xmlid(this, field, value):
+            misses.append(("id", value))
+            return original_xmlid(this, field, value)
+
+        with (
+            patch.object(converter_type, "_get_ref_from_dbid", spy_dbid),
+            patch.object(converter_type, "_get_ref_from_xmlid", spy_xmlid),
+        ):
+            by_dbid = Partner.load(
+                ["name", "parent_id/.id"],
+                [[f"IFLD98 a{i}", str(parent.id)] for i, parent in enumerate(parents)],
+            )
+            by_xmlid = Partner.load(
+                ["name", "parent_id/id"],
+                [[f"IFLD98 b{i}", f"__import__.ifld98_parent_{i}"] for i in range(20)],
+            )
+            by_bare_xmlid = Partner.load(
+                ["name", "parent_id/id"],
+                [[f"IFLD98 c{i}", f"ifld98_parent_{i}"] for i in range(20)],
+            )
+        for result in (by_dbid, by_xmlid, by_bare_xmlid):
+            self.assertFalse(result["messages"])
+            self.assertEqual(Partner.browse(result["ids"]).mapped("parent_id"), parents)
+        self.assertEqual(misses, [], "every reference must come from the prefetch")
+
+    def test_a_prefetched_external_id_of_another_model_is_still_a_mismatch_error(self):
+        Partner = self.env["res.partner"]
+        lang = self.env["res.lang"].search([], limit=1)
+        self.env["ir.model.data"].create(
+            [
+                {
+                    "module": "base",
+                    "name": "ifld98_lang",
+                    "model": "res.lang",
+                    "res_id": lang.id,
+                },
+                {
+                    "module": "base",
+                    "name": "ifld98_lang2",
+                    "model": "res.lang",
+                    "res_id": lang.id,
+                },
+            ]
+        )
+        self.env.flush_all()
+        result = Partner.load(
+            ["name", "parent_id/id"],
+            [["IFLD98 x", "base.ifld98_lang"], ["IFLD98 y", "base.ifld98_lang2"]],
+        )
+        self.assertFalse(result["ids"])
+        self.assertIn("res.lang", result["messages"][0]["message"])
+
     def test_reference_miss_is_not_cached(self):
         converter = self.converter.with_context(
             import_file=True,

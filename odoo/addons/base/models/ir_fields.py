@@ -909,7 +909,7 @@ class IrFieldsConverter(models.AbstractModel):
         self, field: ConvertibleField, subfield: str | None, value: Any
     ) -> tuple[Any, tuple | None]:
         cache = self.env.context.get("import_cache")
-        if cache is None or subfield not in (None, ".id") or not isinstance(value, str):
+        if cache is None or not isinstance(value, str):
             return None, None
         return cache, (field.comodel_name, subfield, value)
 
@@ -1102,7 +1102,7 @@ class IrFieldsConverter(models.AbstractModel):
         cache = self.env.context.get("import_cache")
         if cache is None:
             return
-        wanted: dict[str, OrderedSet] = defaultdict(OrderedSet)
+        wanted: dict[tuple[str, str | None], OrderedSet] = defaultdict(OrderedSet)
         for record in records:
             for fname, value in record.items():
                 field = model._fields.get(fname)
@@ -1111,25 +1111,80 @@ class IrFieldsConverter(models.AbstractModel):
                 if not isinstance(value, list):
                     continue
                 for sub in value:
-                    if not (
-                        isinstance(sub, dict)
-                        and list(sub) == [None]
-                        and isinstance(sub[None], str)
-                    ):
+                    if not (isinstance(sub, dict) and len(sub) == 1):
+                        continue
+                    [(subfield, raw)] = sub.items()
+                    if subfield not in REFERENCING_FIELDS or not isinstance(raw, str):
                         continue
                     if field.is_many2many:
-                        names = self._split_references(sub[None])
+                        references = self._split_references(raw)
                     else:
-                        names = [sub[None].strip()]
-                    wanted[field.comodel_name].update(
-                        name
-                        for name in names
-                        if name and (field.comodel_name, None, name) not in cache
+                        references = [raw.strip()]
+                    wanted[field.comodel_name, subfield].update(
+                        reference
+                        for reference in references
+                        if reference
+                        and not self._is_falsy_token(reference)
+                        and (field.comodel_name, subfield, reference) not in cache
                     )
-        for comodel_name, names in wanted.items():
-            if len(names) < 2:
+        for (comodel_name, subfield), references in wanted.items():
+            if len(references) < 2:
                 continue
-            self._prefetch_names_of(comodel_name, names, cache)
+            if subfield is None:
+                self._prefetch_names_of(comodel_name, references, cache)
+            elif subfield == ".id":
+                self._prefetch_dbids_of(comodel_name, references, cache)
+            else:
+                self._prefetch_xmlids_of(comodel_name, references, cache)
+
+    @api.model
+    def _prefetch_dbids_of(
+        self, comodel_name: str, references: OrderedSet, cache: Any
+    ) -> None:
+        by_id: dict[int, list[str]] = defaultdict(list)
+        for reference in references:
+            with contextlib.suppress(ValueError):
+                by_id[int(reference)].append(reference)
+        if not by_id:
+            return
+        alive = set(self.env[comodel_name].browse(list(by_id)).exists()._ids)
+        for id_, spellings in by_id.items():
+            if id_ in alive:
+                for reference in spellings:
+                    cache[(comodel_name, ".id", reference)] = (id_, [])
+        _debug.perf.count(
+            "ref_dbid_prefetched",
+            model=comodel_name,
+            wanted=len(references),
+            alive=len(alive),
+        )
+
+    @api.model
+    def _prefetch_xmlids_of(
+        self, comodel_name: str, references: OrderedSet, cache: Any
+    ) -> None:
+        if "ir.model.data" not in self.env.registry:
+            return
+        module = self.env.context.get("_import_current_module", "")
+        by_xmlid: dict[str, list[str]] = defaultdict(list)
+        for reference in references:
+            xmlid = reference if "." in reference else f"{module}.{reference}"
+            by_xmlid[xmlid].append(reference)
+        comodel = self.env[comodel_name]
+        rows = self.env.registry.xmlids.resolve(self.env, list(by_xmlid), comodel)
+        found = 0
+        for _id, module, name, res_model, _res_id, _noupdate, alive_id in rows:
+            if res_model != comodel_name or not alive_id:
+                continue
+            found += 1
+            for reference in by_xmlid[f"{module}.{name}"]:
+                cache[(comodel_name, "id", reference)] = (alive_id, [])
+        _debug.perf.count(
+            "ref_xmlid_prefetched",
+            model=comodel_name,
+            wanted=len(references),
+            found=found,
+        )
 
     @api.model
     def _prefetch_names_of(
