@@ -1,5 +1,6 @@
 import functools
 import hashlib
+import importlib.metadata
 import json
 import logging
 import re
@@ -38,11 +39,13 @@ def _pipeline_sources() -> tuple[Path, ...]:
         package_dir,
         tools_dir / "assets",
         tools_dir / "sass_embedded.py",
+        tools_dir.parent / "libs" / "profiling" / "sourcemap_generator.py",
         package_dir.parent.parent / "data" / "rtlcss.json",
     )
 
 
 _OUTPUT_AFFECTING_NPM_TOOLS = ("sass-embedded", "rtlcss", "esbuild")
+_OUTPUT_AFFECTING_PY_TOOLS = ("rjsmin",)
 
 
 @functools.cache
@@ -73,6 +76,12 @@ def _toolchain_versions() -> str:
         except OSError, ValueError, AttributeError:
             version = None
         parts.append(f"{name}@{version or lock_versions.get(name) or 'absent'}")
+    for name in _OUTPUT_AFFECTING_PY_TOOLS:
+        try:
+            version = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            version = None
+        parts.append(f"{name}@{version or 'absent'}")
     _debug.logic("toolchain_versions", versions=";".join(parts))
     return ";".join(parts)
 
