@@ -131,6 +131,14 @@
             t-set="secondary_image_holder"
             t-value="all_images[1:2]"
         />
+        <!-- Videos are never shown in the product list, not even on hover: prefer an actual
+             photo over a video's own poster frame for the thumbnail, if the carousel has one.
+             `all_images` may fall back to the template/variant itself (no `video_url` field)
+             when there's no product.image record at all. -->
+        <t
+            t-set="static_image_holder"
+            t-value="all_images.filtered(lambda image: image._name != 'product.image' or not image.video_url)[:1] or primary_image_holder"
+        />
 
         <a
             t-att-href="product_href"
@@ -140,7 +148,7 @@
         >
             <!-- Primary image -->
             <span
-                t-field="primary_image_holder.image_1920"
+                t-field="static_image_holder.image_1920"
                 t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img h-100 w-100'}"
                 class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
             />
