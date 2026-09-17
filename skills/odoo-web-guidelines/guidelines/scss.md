@@ -16,5 +16,5 @@
   in BEM `--[root]__[element]-[property]--[modifier]`. Don't define CSS variables
   on `:root` (use SCSS for global design; core's few `:root` definitions are
   deliberate utility APIs); CSS variables are for contextual DOM adaptation.
-  The variable conventions bind *new* code — much of core (plain mixin
+  The variable conventions bind *new* code; much of core (plain mixin
   arguments, `--ComponentName-property` CSS variables) predates them.
