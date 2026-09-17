@@ -40,6 +40,13 @@ class MassMailController(main.MassMailController):
                 'toast_content': _("Suspicious activity detected by Google reCaptcha."),
             }
 
+        mailing_list = request.env['mailing.list'].sudo().browse(int(list_id)).exists()
+        if not mailing_list.is_public:
+            return {
+                'toast_type': 'danger',
+                'toast_content': _("Invalid mailing list."),
+            }
+
         ContactSubscription = request.env['mailing.contact.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
         if subscription_type == 'email':
