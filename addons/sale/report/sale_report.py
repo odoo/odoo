@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import clean_context
 
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
@@ -241,12 +242,20 @@ class SaleReport(models.Model):
     def _table_query(self):
         return self._query()
 
+<<<<<<< dda09c750d50846885665239fa627cba6314a0fd
     @api.readonly
     def action_open_order(self):
+||||||| e654b9277253f5029bf19cc280c297952cddbd03
+    def action_open_order(self):
+=======
+    def _get_order_reference(self):
+        """Resolve the order from the line id, without reading the view."""
+>>>>>>> b92a1fd8f7848394e261aaacb73e454a91a4ccf2
         self.ensure_one()
-        return {
-            'res_model': self.order_reference._name,
-            'type': 'ir.actions.act_window',
-            'views': [[False, 'form']],
-            'res_id': self.order_reference.id,
-        }
+        line = self.env["sale.order.line"].browse(self.id)
+        line.fetch(["order_id"])
+        return line.order_id
+
+    def action_open_order(self):
+        order = self._get_order_reference()
+        return order._get_records_action(context=clean_context(self.env.context))
