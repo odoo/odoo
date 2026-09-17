@@ -57,3 +57,24 @@ class TestSpecQueue:
         assert len(specs) == 1
         arch2 = etree.fromstring("<form><field name='a'/></form>")
         assert apply_inheritance_specs(arch2, specs)[0].get("x") == "1"
+
+
+class TestRootReplace:
+    def test_the_root_is_replaced_by_the_specs_element(self):
+        arch = etree.fromstring('<body t-name="page">old</body>')
+        spec = etree.fromstring(
+            '<xpath expr="/body" position="replace"><body>new</body></xpath>'
+        )
+
+        root = apply_inheritance_specs(arch, spec)
+
+        assert (root.tag, root.text, root.get("t-name")) == ("body", "new", "page")
+
+    def test_a_root_replace_holding_no_element_is_refused(self):
+        arch = etree.fromstring("<body>old</body>")
+        spec = etree.fromstring(
+            '<xpath expr="/body" position="replace">only text</xpath>'
+        )
+
+        with pytest.raises(ValueError, match="needs an element"):
+            apply_inheritance_specs(arch, spec)

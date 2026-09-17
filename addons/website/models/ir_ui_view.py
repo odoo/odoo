@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -439,28 +440,27 @@ class IrUiView(models.Model):
         )._get_views_inheriting()
         return views._filtered_most_specific().filtered("active")
 
-    @api.model
-    def _get_loaded_view_ids(self, res_ids, modules):
-        loaded = super()._get_loaded_view_ids(res_ids, modules)
+    def _get_sql_view_loaded(self, view, modules):
+        loaded = super()._get_sql_view_loaded(view, modules)
         if not self.env.context.get("website_id"):
             return loaded
-        views = self.with_context(active_test=False)
-        specific = views.search(
-            [("id", "in", list(res_ids)), ("website_id", "!=", False)]
-        )
-        if not specific:
-            return loaded
-        generic = views.search(
-            [("key", "in", specific.mapped("key")), ("website_id", "=", False)]
-        )
-        loaded_generic = super(IrUiView, views)._get_loaded_view_ids(
-            generic.ids, modules
-        )
-        loaded_keys = {view.key for view in generic if view.id in loaded_generic}
         _debug.logic(
-            "loaded_views_extended", generic=len(loaded), specific=len(specific)
+            "loaded_views_include_website_copies",
+            website=self.env.context.get("website_id"),
         )
-        return loaded | {view.id for view in specific if view.key in loaded_keys}
+        generic = SQL.identifier("generic")
+        return SQL(
+            """(%s OR (%s.website_id IS NOT NULL AND EXISTS (
+                SELECT 1 FROM ir_ui_view generic
+                WHERE generic.key = %s.key
+                AND generic.website_id IS NULL
+                AND %s
+            )))""",
+            loaded,
+            view,
+            view,
+            super()._get_sql_view_loaded(generic, modules),
+        )
 
     @api.model
     def _get_field_names_in_cached_template(self):

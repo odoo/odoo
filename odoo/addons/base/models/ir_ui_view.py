@@ -1263,19 +1263,32 @@ class IrUiView(models.Model):
     def _get_loaded_view_ids(
         self, res_ids: Collection[int], modules: Collection[str]
     ) -> set[int]:
-        return {
-            data.res_id
-            for data in self.env["ir.model.data"]
-            .sudo()
-            .search_fetch(
-                [
-                    ("model", "=", "ir.ui.view"),
-                    ("res_id", "in", list(res_ids)),
-                    ("module", "in", list(modules)),
-                ],
-                ["res_id"],
+        self.env["ir.model.data"].flush_model(["model", "res_id", "module"])
+        self.flush_model()
+        view = SQL.identifier("view")
+        with _debug.perf(
+            "loaded_view_ids", cr=self.env.cr, views=len(res_ids), modules=len(modules)
+        ):
+            rows = self.env.execute_query(
+                SQL(
+                    "SELECT view.id FROM ir_ui_view view WHERE view.id = ANY(%s) AND (%s)",
+                    list(res_ids),
+                    self._get_sql_view_loaded(view, list(modules)),
+                )
             )
-        }
+        return {view_id for (view_id,) in rows}
+
+    def _get_sql_view_loaded(self, view: SQL, modules: list[str]) -> SQL:
+        return SQL(
+            """EXISTS (
+                SELECT 1 FROM ir_model_data data
+                WHERE data.model = 'ir.ui.view'
+                AND data.res_id = %s.id
+                AND data.module = ANY(%s)
+            )""",
+            view,
+            modules,
+        )
 
     @api.model
     @tools.ormcache()

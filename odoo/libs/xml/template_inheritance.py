@@ -188,6 +188,12 @@ def _replace_outer(
             spec_content = content
             break
         comment = content
+    if spec_content is None:
+        _debug.logic("template_inheritance.root_replace_refused", target=node.tag)
+        raise ValueError(
+            f"A replace of the root <{node.tag}> needs an element to put in its place, "
+            "and this specification holds none."
+        )
     source = copy.deepcopy(spec_content)
     if t_name := node.get("t-name"):
         source.set("t-name", t_name)

@@ -2054,7 +2054,7 @@ class Crawler(HttpCase):
                 "name": "Child View W1",
                 "mode": "extension",
                 "inherit_id": main_view.id,
-                "arch": '<xpath expr="//body" position="replace">It is really not relevant!</xpath>',
+                "arch": '<xpath expr="//body" position="replace"><body>It is really not relevant!</body></xpath>',
                 "key": "_website_sale.child_view_w1",
                 "website_id": website_1.id,
                 "active": False,
@@ -2080,7 +2080,7 @@ class Crawler(HttpCase):
                 "name": "Products Theme Kea",
                 "mode": "extension",
                 "inherit_id": main_view.id,
-                "arch": '<xpath expr="//body" position="replace">Really really not important for this test</xpath>',
+                "arch": '<xpath expr="//body" position="replace"><body>Really really not important for this test</body></xpath>',
                 "key": "_theme_kea_sale.products",
                 "website_id": website_2.id,
                 "customize_show": True,
@@ -2155,7 +2155,10 @@ class Crawler(HttpCase):
             }
         )
         view_from_theme_view_on_w2.write(
-            {"arch": '<t t-call="_theme_kea_sale.t_called_view"/>'}
+            {
+                "arch": '<xpath expr="//body" position="inside">'
+                '<t t-call="_theme_kea_sale.t_called_view"/></xpath>'
+            }
         )
 
         views = View.with_context(website_id=website_1.id).get_related_views(
