@@ -82,7 +82,7 @@ export class FilePlugin extends Plugin {
         },
 
         /** Predicates */
-        should_paste_as_text_predicates: (selection) => {
+        should_insert_as_text_predicates: (selection) => {
             if (closestElement(selection.anchorNode, ".o_file_box")) {
                 return true;
             }

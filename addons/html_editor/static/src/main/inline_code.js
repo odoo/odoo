@@ -46,7 +46,7 @@ export class InlineCodePlugin extends Plugin {
         },
 
         /** Predicates */
-        should_paste_as_text_predicates: (selection) => {
+        should_insert_as_text_predicates: (selection) => {
             const caretNode =
                 selection.direction === DIRECTIONS.RIGHT
                     ? selection.anchorNode

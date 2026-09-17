@@ -93,9 +93,8 @@ export class CaptionPlugin extends Plugin {
                 return DISABLED_NAMESPACE;
             }
         }),
-        html_drop_overrides: this.onDrop.bind(this),
         should_process_text_for_insertion_predicates: captionSpanPredicates(false),
-        should_paste_as_text_predicates: captionSpanPredicates(true),
+        should_insert_as_text_predicates: captionSpanPredicates(true),
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
@@ -154,13 +153,6 @@ export class CaptionPlugin extends Plugin {
             figure.remove();
             this.addImageCaption(image, caption, false);
             this.dependencies.history.commit();
-        }
-    }
-
-    onDrop(selection, text) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            this.dependencies.dom.insert(text.replace(/\r?\n|\r/g, ""));
-            return true;
         }
     }
 
