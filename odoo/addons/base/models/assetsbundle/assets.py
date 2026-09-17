@@ -22,7 +22,12 @@ from odoo.tools.assets.esm_graph import (
 )
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
-from odoo.tools.sass_embedded import SassCompileError, SassNotFoundError, get_sass_path
+from odoo.tools.sass_embedded import (
+    SassCompileError,
+    SassNotFoundError,
+    SassProtocolError,
+    get_sass_path,
+)
 
 if TYPE_CHECKING:
     from .bundle import AssetsBundle
@@ -434,7 +439,9 @@ class ScssStylesheetAsset(PreprocessedCSS):
             raise
         except SassNotFoundError:
             raise
-        except Exception as exc:
+        except (SassProtocolError, OSError) as exc:
+            # a transport failure of the embedded protocol; anything else is a
+            # bug in this code and must surface, not run the slow path forever
             self._warn_embedded_fallback(exc)
             _debug.logic("sass_fallback_cli", error=type(exc).__name__)
             from odoo.tools.sass_embedded import close_sass_compiler

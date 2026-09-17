@@ -1406,12 +1406,27 @@ class TestAssetExtensionTable(TransactionCase):
 
         embedded = AssetsBundle("test.sass_emb", spec, env=self.env).preprocess_css()
         with patch.object(
-            sass_embedded, "get_sass_compiler", side_effect=RuntimeError("forced")
+            sass_embedded,
+            "get_sass_compiler",
+            side_effect=sass_embedded.SassProtocolError("forced"),
         ):
             cli = AssetsBundle("test.sass_cli", spec, env=self.env).preprocess_css()
 
         self.assertIn(".audit-sass:hover", embedded)
         self.assertEqual(embedded.strip(), cli.strip())
+
+    def test_a_bug_in_the_embedded_path_is_not_hidden_behind_the_cli(self):
+        from odoo.tools import sass_embedded
+
+        spec = [asset_file("/mod/static/src/a.scss", ".x{color:red}")]
+        bundle = AssetsBundle("test.sass_bug", spec, env=self.env)
+        with (
+            patch.object(
+                sass_embedded, "get_sass_compiler", side_effect=TypeError("bug")
+            ),
+            self.assertRaises(TypeError),
+        ):
+            bundle.preprocess_css()
 
     def test_mixed_dialects_degrade_instead_of_raising(self):
         bundle = AssetsBundle(
