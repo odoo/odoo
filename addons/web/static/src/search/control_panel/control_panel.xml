@@ -18,7 +18,7 @@
                     </div>
                     <t t-if="this.env.config.noBreadcrumbs">
                         <section class="o_control_panel_breadcrumbs_actions d-contents d-print-none">
-                            <t t-call-slot="control-panel-additional-actions"/>
+                            <t t-if="!this.uiService.isSmall" t-call-slot="control-panel-additional-actions"/>
                             <t t-call-slot="control-panel-status-indicator" />
                         </section>
                     </t>
@@ -37,7 +37,6 @@
                             <Breadcrumbs breadcrumbs="this.breadcrumbs"/>
                         </t>
                         <section class="o_control_panel_breadcrumbs_actions d-contents">
-                            <t t-call-slot="control-panel-additional-actions"/>
                             <t t-call-slot="control-panel-status-indicator" />
                         </section>
                     </t>
@@ -62,6 +61,7 @@
                 <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
                     <t t-if="this.uiService.isSmall">
                         <EmbeddedActionsPanel id="embedded-actions-panel-mobile" state="this.embeddedPanelState"/>
+                        <t t-call-slot="control-panel-additional-actions"/>
                     </t>
                     <div t-if="this.pagerProps and this.pagerProps.total > 0" class="o_cp_pager text-nowrap align-self-stretch" role="search">
                         <Pager t-props="this.pagerProps"/>
