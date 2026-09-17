@@ -3,10 +3,10 @@ import { ProductProduct as ProductModel } from './product_product';
 
 export class ProductProduct extends ProductModel {
     _records = [
-        { id: 1, name: "Black chair", type: 'goods', list_price: 50.0 },
-        { id: 2, name: "Blue chair", type: 'goods', list_price: 60.0 },
-        { id: 3, name: "Black table", type: 'goods', list_price: 70.0 },
-        { id: 4, name: "Blue table", type: 'goods', list_price: 80.0 },
+        { id: 1, name: "Black chair", type: 'consu', list_price: 50.0 },
+        { id: 2, name: "Blue chair", type: 'consu', list_price: 60.0 },
+        { id: 3, name: "Black table", type: 'consu', list_price: 70.0 },
+        { id: 4, name: "Blue table", type: 'consu', list_price: 80.0 },
         { id: 5, name: "Test Combo", type: 'combo', combo_ids: [1, 2] },
     ];
 }
