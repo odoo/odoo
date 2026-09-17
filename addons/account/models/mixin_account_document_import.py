@@ -382,7 +382,7 @@ class MixinAccountDocumentImport(models.AbstractModel):
     @api.model
     def _to_files_data(self, attachments):
         files_data = []
-        for attachment in attachments:
+        for attachment in attachments.sorted("id"):
             file_data = {
                 "name": attachment.name,
                 "raw": attachment.raw or b"",

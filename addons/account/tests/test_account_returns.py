@@ -1447,6 +1447,22 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
         self.assert_return_dates_equal(new_return, [("2023-11-01", "2023-11-30")])
 
+    def test_return_manual_creation_wizard_keeps_a_chosen_type_still_available(self):
+        wizard = self.env["account.return.creation.wizard"].new({"category": "audit"})
+        chosen = wizard.available_return_type_ids[:1]
+        self.assertTrue(chosen)
+        wizard.return_type_id = chosen
+
+        wizard._compute_return_type_id()
+
+        self.assertEqual(wizard.return_type_id, chosen)
+
+        wizard.category = "account_return"
+        wizard._compute_return_type_id()
+
+        self.assertIn(wizard.return_type_id, wizard.available_return_type_ids)
+        self.assertNotEqual(wizard.return_type_id, chosen)
+
     def test_return_manual_creation_wizard_multiple_returns(self):
         original_number_of_returns = self.env["account.return"].search_count([])
         wizard = self.env[

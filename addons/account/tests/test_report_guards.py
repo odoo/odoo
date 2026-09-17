@@ -533,8 +533,9 @@ class TestPaymentWizardBankExposure(TestAccountReportsCommon):
             self._wizard_on(self.bank_b).acc_number
 
     def test_the_wizard_still_shows_a_bank_account_the_reader_can_read(self):
+        stored = self.bank_a.acc_number
         self.env.invalidate_all()
-        self.assertEqual(self._wizard_on(self.bank_a).acc_number, "BE71096123456769")
+        self.assertEqual(self._wizard_on(self.bank_a).acc_number, stored)
 
 
 @tagged("post_install", "-at_install")

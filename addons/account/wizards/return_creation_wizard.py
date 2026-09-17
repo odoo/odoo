@@ -76,10 +76,14 @@ class AccountReturnCreationWizard(models.TransientModel):
     @api.depends("available_return_type_ids")
     def _compute_return_type_id(self):
         for wizard in self:
-            if self.available_return_type_ids and not self.return_type_id:
-                wizard.return_type_id = wizard.available_return_type_ids[0]
-            else:
-                wizard.return_type_id = False
+            if wizard.return_type_id not in wizard.available_return_type_ids:
+                _debug.logic(
+                    "return_type_defaulted",
+                    wizard=wizard,
+                    dropped=wizard.return_type_id,
+                    available=wizard.available_return_type_ids,
+                )
+                wizard.return_type_id = wizard.available_return_type_ids[:1]
 
     @api.depends(
         "show_warning_existing_return",

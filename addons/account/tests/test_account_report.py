@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import tagged, warmup
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -724,11 +724,12 @@ class TestAccountReport(AccountTestInvoicingCommon):
         self.assertEqual(len(aggregations), 5)
         self.assertEqual(set(aggregations.mapped("formula")), {"CWC0_COPY.balance"})
 
+    @warmup
     def test_option_filters_do_not_search_the_client_actions_of_a_plain_report(self):
         root = self._create_report("Filter Cost Root")
         variant = self._create_report("Filter Cost Variant", root_report_id=root.id)
         variant.flush_recordset()
-        with self.assertQueryCount(default=3, accountman=3):
+        with self.assertQueryCount(default=1, accountman=1):
             variant.root_report_id = False
             variant.flush_recordset()
 

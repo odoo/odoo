@@ -1788,7 +1788,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
         self.single_date_report.country_id = self.env.ref("base.be")
         self.single_date_report.availability_condition = "country"
 
-        tax_unit = self.env["account.tax.unit"].create(
+        self.env["account.tax.unit"].create(
             {
                 "name": "Test Tax Unit",
                 "country_id": self.single_date_report.country_id.id,
@@ -1808,7 +1808,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
         )
 
         _check_company_filter(
-            tax_unit.company_ids + branch_2_1,
+            main_company + branch_1_1 + branch_1_2 + branch_2 + other_company + branch_2_1,
             main_company + branch_1_2,
             "Opening the report with a company selector matching more than the content of the tax unit should not select the tax unit, "
             "but take the accessible branches with the same VAT number as the active company.",

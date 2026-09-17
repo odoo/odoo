@@ -441,7 +441,7 @@ class AccountPaymentRegister(models.TransientModel):
     @_debug.perf.timed
     def _compute_batches(self):
         for wizard in self:
-            lines = wizard.line_ids._origin
+            lines = wizard.line_ids._origin.sorted("id")
 
             if len(lines.company_id.root_id) > 1:
                 raise UserError(
@@ -897,7 +897,7 @@ class AccountPaymentRegister(models.TransientModel):
         for batch_result in batch_results:
             all_lines |= batch_result["lines"]
         all_lines = all_lines.sorted(
-            key=lambda line: (line.move_id, line.date_maturity or date.max)
+            key=lambda line: (line.move_id.id, line.date_maturity or date.max)
         )
         for lines in all_lines.grouped("move_id").values():
             installments = lines._prepare_installments_data(

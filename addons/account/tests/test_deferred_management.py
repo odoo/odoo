@@ -323,10 +323,8 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         move.action_draft()
         self.assertEqual(len(move.deferred_move_ids), 2)
         self.assertEqual(
-            move.deferred_move_ids[0].date, fields.Date.to_date("2023-01-31")
-        )
-        self.assertEqual(
-            move.deferred_move_ids[1].date, fields.Date.to_date("2023-02-28")
+            move.deferred_move_ids.sorted("date").mapped("date"),
+            [fields.Date.to_date("2023-01-31"), fields.Date.to_date("2023-02-28")],
         )
 
         move.action_post()
