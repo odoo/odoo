@@ -84,6 +84,22 @@ class FleetVehicleModel(models.Model):
                 name = f"{record.brand_id.name}/{name}"
             record.display_name = name
 
+    @api.model
+    def name_create(self, name):
+        if '/' in name:
+            brand_name, model_name = name.split('/', 1)
+            brand = self.env['fleet.vehicle.model.brand'].search([
+                ('name', '=ilike', brand_name.strip())
+            ], limit=1)
+            if not brand:
+                brand = self.env['fleet.vehicle.model.brand'].create({'name': brand_name.strip()})
+            record = self.create({
+                'name': model_name.strip(),
+                'brand_id': brand.id,
+            })
+            return record.id, record.display_name
+        return super().name_create(name)
+
     def _compute_vehicle_count(self):
         group = self.env['fleet.vehicle']._read_group(
             [('model_id', 'in', self.ids)], ['model_id'], aggregates=['__count'],
