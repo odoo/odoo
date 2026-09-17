@@ -1232,6 +1232,20 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         att.invalidate_recordset()
         self.assertEqual(att.raw, payload)
 
+    def test_streamed_create_refuses_a_served_url_before_storing(self):
+        Attachment = self.Attachment.with_user(self.user_demo)
+        with (
+            patch.object(
+                self.registry["ir.attachment"],
+                "_write_file_stream",
+                side_effect=AssertionError("nothing must be stored"),
+            ),
+            self.assertRaises(ValidationError),
+        ):
+            Attachment._create_from_stream(
+                io.BytesIO(b"served"), name="s.txt", mimetype="text/plain", url="/x"
+            )
+
     def test_invalid_base64_datas_raises_user_error(self):
         bad = b"a"
         with self.assertRaises(UserError):

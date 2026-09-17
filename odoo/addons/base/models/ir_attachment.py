@@ -423,7 +423,6 @@ class IrAttachment(models.Model):
         new_attachments = super().copy(default)
         if not (default or {}).keys() & {"datas", "db_datas", "raw"}:
             by_content: dict[tuple, list[int]] = defaultdict(list)
-            self.fetch(["store_fname", "checksum", "file_size", "index_content"])
             for origin, copied in zip(self, new_attachments, strict=True):
                 if origin.store_fname:
                     by_content[
