@@ -86,6 +86,19 @@ export class DiscussContent extends Component {
         );
     }
 
+    /** Whether an extra line is shown below the thread name in the header. */
+    get hasHeaderSubline() {
+        return Boolean(this.showsChatLocalDateTime);
+    }
+
+    get threadNameAttClass() {
+        return {
+            "o-mail-DiscussContent-threadNameBox fw-bold flex-shrink-0 py-0": true,
+            "fs-5": this.hasHeaderSubline,
+            "fs-4": !this.hasHeaderSubline,
+        };
+    }
+
     get threadAvatarAttClass() {
         return {};
     }

@@ -329,6 +329,10 @@ test("odoomark", () => {
     expect(odoomark("--test-- something else --test--").toString()).toBe(
         `<span class="text-muted">test</span> something else <span class="text-muted">test</span>`
     );
+    expect(odoomark("!!test!!").toString()).toBe(`<span class="text-warning">test</span>`);
+    expect(odoomark("!!test!! something else !!test!!").toString()).toBe(
+        `<span class="text-warning">test</span> something else <span class="text-warning">test</span>`
+    );
     expect(odoomark("`test`").toString()).toBe(
         `<span class="o_tag position-relative d-inline-flex align-items-center align-baseline mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
     );

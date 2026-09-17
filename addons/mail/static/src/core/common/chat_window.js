@@ -127,6 +127,26 @@ export class ChatWindow extends Component {
         };
     }
 
+    get displayNameFontSizeClass() {
+        return this.ui.isSmall ? "fs-4" : "fs-5";
+    }
+
+    get displayNameMarginClass() {
+        return "o-mx-0_5";
+    }
+
+    get displayNamePaddingClass() {
+        return "py-1";
+    }
+
+    get displayNameAttClass() {
+        return {
+            [this.displayNameFontSizeClass]: Boolean(this.displayNameFontSizeClass),
+            [this.displayNameMarginClass]: Boolean(this.displayNameMarginClass),
+            [this.displayNamePaddingClass]: Boolean(this.displayNamePaddingClass),
+        };
+    }
+
     get style() {
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
