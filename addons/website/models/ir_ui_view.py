@@ -275,6 +275,8 @@ class IrUiView(models.Model):
         super()._create_all_specific_views(processed_modules)
 
     def unlink(self):
+        if not self:
+            return True
         current_website_id = self.env.context.get("website_id")
 
         preserved_view_ids = set()
