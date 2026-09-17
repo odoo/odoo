@@ -13,25 +13,30 @@ const messagingMenuItemPatch = {
             () => {
                 const dt = this.channel?.livechat_looking_for_help_since_dt;
                 if (!dt) {
-                    return { text: "" };
+                    return { text: "", tooltip: "" };
                 }
                 const diff = luxon.DateTime.now().diff(dt, ["days", "hours", "minutes", "seconds"]);
+                const withTooltip = ({ text, ms }) => ({
+                    text,
+                    tooltip: _t("Looking for help for: %(duration)s", { duration: text }),
+                    ms,
+                });
                 if (diff.days >= 1) {
-                    return {
+                    return withTooltip({
                         text: _t("%(days)sd", { days: diff.days }),
                         ms: (diff.days + 1 - diff.as("days")) * 24 * 3600 * 1000,
-                    };
+                    });
                 }
                 if (diff.hours >= 1) {
-                    return {
+                    return withTooltip({
                         text: _t("%(hours)sh", { hours: diff.hours }),
                         ms: (diff.hours + 1 - diff.as("hours")) * 3600 * 1000,
-                    };
+                    });
                 }
-                return {
+                return withTooltip({
                     text: diff.minutes ? _t("%(minutes)sm", { minutes: diff.minutes }) : _t("< 1m"),
                     ms: (diff.minutes + 1 - diff.as("minutes")) * 60 * 1000,
-                };
+                });
             },
             ({ ms }) => ms
         );
