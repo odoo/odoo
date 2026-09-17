@@ -317,6 +317,10 @@ class PosConfig(models.Model):
         }
 
     @api.model
+    def load_pos_data_force_loading(self):
+        return True
+
+    @api.model
     def _load_pos_data_domain(self, data):
         return [('id', '=', data['pos.session'].config_id.id)]
 
