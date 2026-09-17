@@ -27,3 +27,27 @@ test("selectCashier", async () => {
     const result = await store.selectCashier("wrongpin", true);
     expect(result).toBeEmpty();
 });
+
+test("canEditPrice", async () => {
+    const store = await setupPosEnv();
+    const manager = store.models["hr.employee"].get(2);
+    const cashier = store.models["hr.employee"].get(3);
+    const restrictive = store.models["hr.employee"].get(4);
+
+    const checkCanEditPrice = (employee, result) => {
+        store.setCashier(employee);
+        expect(store.accessRight.canEditPrice).toBe(result);
+    };
+
+    // Without the restriction, both the manager and the cashier may set a price.
+    store.config.restrict_price_control = false;
+    checkCanEditPrice(manager, true);
+    checkCanEditPrice(cashier, true);
+    checkCanEditPrice(restrictive, false);
+
+    // With the restriction, only the manager may.
+    store.config.restrict_price_control = true;
+    checkCanEditPrice(manager, true);
+    checkCanEditPrice(cashier, false);
+    checkCanEditPrice(restrictive, false);
+});

@@ -245,7 +245,7 @@ export class ProductScreen extends Component {
                 value: "price",
                 text: _t("Price"),
                 disabled:
-                    !this.pos.accessRight.disablePriceButton ||
+                    !this.pos.accessRight.canEditPrice ||
                     order?.getSelectedOrderline()?.isPartOfCombo(),
             },
             {
