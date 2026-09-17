@@ -118,9 +118,7 @@ export class MoveBlockAction extends BuilderAction {
 export class SetBackdropAction extends BuilderAction {
     static id = "setBackdrop";
     isApplied({ editingElement }) {
-        const hasBackdropColor = !!editingElement.style.getPropertyValue("background-color").trim();
-        const hasNoBackdropClass = editingElement.classList.contains("s_popup_no_backdrop");
-        return hasBackdropColor && !hasNoBackdropClass;
+        return !editingElement.classList.contains("s_popup_no_backdrop");
     }
     apply({ editingElement }) {
         editingElement.classList.remove("s_popup_no_backdrop");
@@ -128,6 +126,11 @@ export class SetBackdropAction extends BuilderAction {
     }
     clean({ editingElement }) {
         editingElement.classList.add("s_popup_no_backdrop");
+        editingElement.classList.forEach((c) => {
+            if (c.startsWith("bg-o-color-")) {
+                editingElement.classList.remove(c);
+            }
+        });
         editingElement.style.removeProperty("background-color");
     }
 }
