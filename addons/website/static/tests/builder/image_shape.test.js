@@ -5,6 +5,7 @@ import { Plugin } from "@html_editor/plugin";
 import {
     addPlugin,
     defineWebsiteModels,
+    saveWebsiteBuilder,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
@@ -185,7 +186,7 @@ test("Should clean shape/hover related data on an incompatible image when saving
         return true;
     });
     queryOne(":iframe .test-options-target").classList.add("o_dirty");
-    await contains(".btn[data-action='save']").click();
+    await saveWebsiteBuilder();
     expect.verifySteps(["save"]);
 });
 
