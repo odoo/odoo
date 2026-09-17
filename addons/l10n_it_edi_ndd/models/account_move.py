@@ -1,7 +1,8 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.models.account_move import get_text
+from odoo.exceptions import ValidationError
 
 
 class AccountMove(models.Model):
@@ -114,9 +115,18 @@ class AccountMove(models.Model):
 
         document_type_code = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
         if document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type_code)]):
-            self.l10n_it_document_type = document_type
+            self.with_context(skip_l10n_it_td07_check=True).l10n_it_document_type = document_type
 
         return self
+
+    def _l10n_it_edi_get_simplified_blocking_errors(self):
+        """ Same as `_l10n_it_edi_is_simplified_checks` but excludes 'info'-level entries,
+        which are advisory only and should not block save/onchange/export. """
+        return {
+            k: v
+            for k, v in self._l10n_it_edi_is_simplified_checks().items()
+            if v.get('level') in ('error', 'warning')
+        }
 
     def _l10n_it_edi_base_export_check(self):
         """ Warnings can be ignored by setting `l10n_it_document_type == 'TD07'` """
@@ -125,9 +135,31 @@ class AccountMove(models.Model):
         simplified_moves = self.filtered(lambda move:
             move._l10n_it_edi_is_simplified_document_type(move.l10n_it_document_type.code)
         )
-        errors.update(
-            (k, v)
-            for k, v in simplified_moves._l10n_it_edi_is_simplified_checks().items()
-            if v.get('level') in ('error', 'warning')
-        )
+        errors.update(simplified_moves._l10n_it_edi_get_simplified_blocking_errors())
         return errors
+
+    @api.onchange('partner_id', 'invoice_line_ids')
+    def _onchange_partner_or_lines_td07(self):
+        for move in self:
+            if move.l10n_it_document_type and move.l10n_it_document_type.code == 'TD07':
+                errors = move._l10n_it_edi_get_simplified_blocking_errors()
+                if errors:
+                    error_messages = [error_data['message'] for error_data in errors.values()]
+                    move.l10n_it_document_type = False
+                    return {
+                        'warning': {
+                            'title': _("Type of document TD07 is not allowed anymore."),
+                            'message': "\n\n".join(error_messages)
+                        }
+                    }
+
+    @api.constrains('l10n_it_document_type', 'partner_id', 'invoice_line_ids')
+    def _check_td07_requirements_on_save(self):
+        for move in self:
+            if move.env.context.get('skip_l10n_it_td07_check'):
+                continue
+            if move.l10n_it_document_type and move.l10n_it_document_type.code == 'TD07':
+                errors = move._l10n_it_edi_get_simplified_blocking_errors()
+                if errors:
+                    error_messages = [error_data['message'] for error_data in errors.values()]
+                    raise ValidationError("\n".join(error_messages))
