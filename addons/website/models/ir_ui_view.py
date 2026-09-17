@@ -420,10 +420,13 @@ class IrUiView(models.Model):
         views = self
         if not views.env.context.get("website_id"):
             # a website-specific view resolves in its own website: outside
-            # one, the generic domain would drop it from its own tree
+            # one, the generic domain would drop it from its own tree. The
+            # generic resolution comes first -- its fetch is the one that
+            # reads the chain -- and only a specific chain resolves again
+            generic = super()._get_views_inheriting()
             website_ids = views.website_id.ids
             if len(website_ids) != 1:
-                return super()._get_views_inheriting()
+                return generic
             _debug.logic(
                 "views_inheriting.website_from_views",
                 views=len(views),
