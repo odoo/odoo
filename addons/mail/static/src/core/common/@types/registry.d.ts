@@ -1,5 +1,5 @@
 declare module "registries" {
-    import { ChannelMember, ResPartner, ResUsers } from "models";
+    import { ChannelMember, MailGuest, ResPartner, ResUsers } from "models";
     import { _t } from "@web/core/l10n/translation";
 
     type TranslatableString = ReturnType<typeof _t> | string;
@@ -22,9 +22,20 @@ declare module "registries" {
         default: TranslatableString;
     }
 
-    interface ImStatusDataItemShape {
-        condition: (data: { persona: ResPartner, member: ChannelMember, user: ResUsers }) => boolean;
+    interface ImStatusData {
+        icon: string;
+        iconClass: string;
+        title: TranslatableString;
+    }
+
+    interface ImStatusDataRegistryItem {
+        condition: (data: {
+            persona: MailGuest | ResPartner,
+            member?: ChannelMember,
+            user?: ResUsers,
+        }) => boolean;
         icon: IconInfo | string;
+        iconClass: IconInfo | string;
         title: TitleInfo | TranslatableString;
     }
 
@@ -41,7 +52,7 @@ declare module "registries" {
     }
 
     interface GlobalRegistryCategories {
-        "mail.im_status_data": ImStatusDataItemShape;
+        "mail.im_status_data": ImStatusDataRegistryItem;
         "mail.partner_compare": PartnerCompareDataItemShape;
     }
 }
