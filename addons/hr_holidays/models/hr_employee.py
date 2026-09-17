@@ -810,22 +810,26 @@ class HrEmployee(models.Model):
 
     def _adjust_leaves(self, leave_intervals):
         adjusted_leaves = Intervals([])
-        for (start, stop, leave) in leave_intervals:
+        for (start, stop, leaves) in leave_intervals:
             tz = start.tzinfo
-            holiday = leave.holiday_id
-            leave_start = start
-            leave_stop = stop
-            if holiday and holiday.work_entry_type_request_unit == 'half_day':
-                if holiday.request_date_from_period == 'am':
-                    leave_start = datetime.combine(start.date(), time.min, tz)
-                if holiday.request_date_from_period == 'pm':
-                    leave_start = datetime.combine(start.date(), time(12), tz)
-                if holiday.request_date_to_period == 'am':
-                    leave_stop = datetime.combine(stop.date(), time(12), tz)
-                if holiday.request_date_to_period == 'pm':
-                    leave_stop = datetime.combine(stop.date() + timedelta(days=1), time.min, tz)
-            elif holiday and holiday.work_entry_type_request_unit == 'day':
-                leave_start = datetime.combine(start.date(), time.min, tz)
-                leave_stop = datetime.combine(stop.date() + timedelta(days=1), time.min, tz)
-            adjusted_leaves |= Intervals([(leave_start, leave_stop, leave)])
+            # `leaves` may hold several records: `Intervals` merges touching/overlapping
+            # intervals (e.g. two half-day leaves on the same day), so each leave is adjusted
+            # on its own boundaries instead of the merged group's.
+            for leave in leaves:
+                holiday = leave.holiday_id
+                leave_start = max(start, leave.date_from.replace(tzinfo=UTC).astimezone(tz))
+                leave_stop = min(stop, leave.date_to.replace(tzinfo=UTC).astimezone(tz))
+                if holiday and holiday.work_entry_type_request_unit == 'half_day':
+                    if holiday.request_date_from_period == 'am':
+                        leave_start = datetime.combine(leave_start.date(), time.min, tz)
+                    if holiday.request_date_from_period == 'pm':
+                        leave_start = datetime.combine(leave_start.date(), time(12), tz)
+                    if holiday.request_date_to_period == 'am':
+                        leave_stop = datetime.combine(leave_stop.date(), time(12), tz)
+                    if holiday.request_date_to_period == 'pm':
+                        leave_stop = datetime.combine(leave_stop.date() + timedelta(days=1), time.min, tz)
+                elif holiday and holiday.work_entry_type_request_unit == 'day':
+                    leave_start = datetime.combine(leave_start.date(), time.min, tz)
+                    leave_stop = datetime.combine(leave_stop.date() + timedelta(days=1), time.min, tz)
+                adjusted_leaves |= Intervals([(leave_start, leave_stop, leave)])
         return adjusted_leaves
