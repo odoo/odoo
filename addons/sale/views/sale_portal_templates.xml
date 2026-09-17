@@ -831,7 +831,8 @@
                                                 class="text-nowrap"/>
                                         </div>
                                         <div class="d-flex flex-wrap align-items-center gap-2 mt-1 small text-muted">
-                                            <span>1 Units</span>
+                                            <span t-field="line.section_qty"/>
+                                            <span t-field="line.section_uom_id"/>
                                             <span>×</span>
                                             <span t-out="section_line['price_subtotal']"
                                                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
