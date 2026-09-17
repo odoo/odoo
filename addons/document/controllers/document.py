@@ -319,23 +319,9 @@ class ShareRoute(http.Controller):
         )
         counters = {"files": 0, "total": 0}
 
-        def account(size: int) -> None:
-            # Enforced against the RUNNING totals, while planning -- before the
-            # response has begun and while a 413 is still expressible. They no
-            # longer bound memory (the archive is streamed); they bound how much
-            # work one request, including an unauthenticated public folder
-            # share, can ask of a worker.
-            #
-            # Every planned entry counts, directories included. Counting only
-            # the files left the cap blind to the half of the walk that costs
-            # the most: a folder contributes no bytes but one
-            # `_get_folder_children` search, so a tree of empty subfolders --
-            # which any documents user can create and then share by link --
-            # asked a worker for one search per folder and was refused at no
-            # depth. Measured: 25 files against a cap of 3 was a 413, 25 empty
-            # subfolders against the same cap was a 200.
+        def account(size: int, path: str) -> None:
             counters["files"] += 1
-            counters["total"] += size
+            counters["total"] += size + 2 * len(path.encode())
             if counters["files"] > max_files or counters["total"] > max_total:
                 logger.warning(
                     "Refusing to build an oversized zip (%s files, %s bytes) for %r",
@@ -372,14 +358,13 @@ class ShareRoute(http.Controller):
                 return None
             if document.type == "folder":
                 document_name = _normalize_zip_name(document.name)
-                # A directory weighs nothing, so it is accounted at size 0 --
-                # it is the entry count, not the byte count, that it moves.
-                account(0)
                 # it is the ending slash that makes it appears as a
                 # folder inside the zip file.
-                return ZipEntry(
-                    unique(f"{folder.path}{document_name}") + "/", None, document
-                )
+                path = unique(f"{folder.path}{document_name}") + "/"
+                # A directory holds no content, so its size is 0 -- but its
+                # name is not free, and in a deep tree it is the whole cost.
+                account(0, path)
+                return ZipEntry(path, None, document)
             try:
                 stream = self._documents_content_stream(
                     document.shortcut_document_id or document
@@ -393,12 +378,12 @@ class ShareRoute(http.Controller):
                 reader = source.sudo()._get_zip_detached_reader()
                 if reader is None:
                     return None
-                account(source.file_size or 0)
-                return ZipEntry(
-                    unique(f"{folder.path}{download_name}"), stream, document, reader
-                )
-            account(stream.size or 0)
-            return ZipEntry(unique(f"{folder.path}{download_name}"), stream, document)
+                path = unique(f"{folder.path}{download_name}")
+                account(source.file_size or 0, path)
+                return ZipEntry(path, stream, document, reader)
+            path = unique(f"{folder.path}{download_name}")
+            account(stream.size or 0, path)
+            return ZipEntry(path, stream, document)
 
         def generate_zip_items(documents_sudo: Any, folder: Any) -> Any:
             documents_sudo = documents_sudo.sorted(lambda d: d.id)

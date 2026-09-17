@@ -277,6 +277,58 @@ class TestDocumentsPublicRouteHardening(HttpCase):
             response.content[:2], b"PK", "no partial archive may be served"
         )
 
+    def test_zip_cap_counts_entry_names_too(self):
+        Document = self.env["document.document"]
+        root = Document.create(
+            {"name": "Deep", "type": "folder", "access_via_link": "view"}
+        )
+        parent = root
+        for index in range(25):
+            parent = Document.create(
+                {
+                    "name": f"level-with-a-long-enough-name-{index}",
+                    "type": "folder",
+                    "folder_id": parent.id,
+                    "access_via_link": "view",
+                }
+            )
+        ICP = self.env["ir.config_parameter"].sudo()
+        ICP.set_param("document.zip_max_file_count", "10000")
+        ICP.set_param("document.zip_max_total_size", "1000")
+
+        response = self.url_open(f"/documents/content/{root.access_token}")
+
+        self.assertEqual(
+            response.status_code,
+            413,
+            "the names alone are far past a 1000-byte cap, whatever the content weighs",
+        )
+        self.assertNotEqual(
+            response.content[:2], b"PK", "no partial archive may be served"
+        )
+
+    def test_a_tree_within_the_byte_cap_is_still_served(self):
+        Document = self.env["document.document"]
+        root = Document.create(
+            {"name": "Shallow", "type": "folder", "access_via_link": "view"}
+        )
+        Document.create(
+            {
+                "name": "a.txt",
+                "type": "binary",
+                "folder_id": root.id,
+                "access_via_link": "view",
+                "raw": b"hello",
+            }
+        )
+        ICP = self.env["ir.config_parameter"].sudo()
+        ICP.set_param("document.zip_max_total_size", "100000")
+
+        response = self.url_open(f"/documents/content/{root.access_token}")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content[:2], b"PK")
+
     def _make_pdf_document(self, pages=3):
         stream = BytesIO()
         pdf = canvas.Canvas(stream)
