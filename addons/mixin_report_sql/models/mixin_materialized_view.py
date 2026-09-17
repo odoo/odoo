@@ -27,15 +27,17 @@ _MAX_IDENTIFIER = 63
 # Anything else (programming errors, auth, corruption) must propagate so the
 # cron's error log actually records it.
 #
-# All three are psycopg OperationalError subclasses, which means the cron's own
+# All four are psycopg OperationalError subclasses, which means the cron's own
 # `retrying()` wrapper would also roll back and retry them. The savepoint in
 # refresh() is not for these: it is for the errors that DO propagate, so a
 # programming error leaves the cursor usable and ir.cron can still write its
 # bookkeeping instead of dying in InFailedSqlTransaction.
+# QueryCanceled is what _refresh_statement_timeout raises on overrun.
 _TRANSIENT_REFRESH_ERRORS = (
     psycopg.errors.SerializationFailure,
     psycopg.errors.LockNotAvailable,
     psycopg.errors.DeadlockDetected,
+    psycopg.errors.QueryCanceled,
 )
 
 
@@ -78,6 +80,14 @@ class MixinMaterializedView(models.AbstractModel):
     # report sets False -- a table that is empty because the source is empty is
     # simply correct, and rebuilding to rediscover that is a scan for nothing.
     _relation_rebuild_when_empty = True
+
+    # Upper bound on any single statement of a refresh, as a PostgreSQL
+    # interval.  A refresh that overruns is cancelled and reported as
+    # transient, so a degraded query costs one failed tick instead of a
+    # connection held for hours: the GPS daily report ran 5h per tick once its
+    # source moved behind postgres_fdw, and the hourly ticks queueing behind it
+    # exhausted max_connections.  None disables the bound.
+    _refresh_statement_timeout = "30min"
 
     # ------------------------------------------------------------------
     # QUERY ACCESSOR
@@ -183,10 +193,22 @@ class MixinMaterializedView(models.AbstractModel):
         so the cron is where the check belongs.
 
         :param force_rebuild: rebuild from the source regardless of the hash.
-        :return: True on success; False if a transient error occurred.  Errors
-            that are not transient propagate so the cron's log records them —
-            the SAVEPOINT is what keeps the cursor usable when they do.
+        :return: True on success; False if a transient error occurred or another
+            transaction is already refreshing this relation.  Errors that are
+            not transient propagate so the cron's log records them — the
+            SAVEPOINT is what keeps the cursor usable when they do.
         """
+        # Skip, never queue. Every instance that runs crons ticks this refresh,
+        # and a tick that waits behind a slow one holds a connection for as
+        # long as the slow one runs; ninety of those is how the GPS report took
+        # production down. The lock is transaction-scoped so a dead worker
+        # releases it with its rollback.
+        if not self._refresh_try_lock():
+            _logger.warning(
+                "Refresh of %s skipped: another transaction is refreshing it",
+                self._table,
+            )
+            return False
         try:
             # Both branches inside the SAVEPOINT: a failed statement aborts the
             # whole transaction, so without this a propagating error would leave
@@ -199,6 +221,15 @@ class MixinMaterializedView(models.AbstractModel):
             # pending ORM writes are intentionally not flushed here; callers
             # needing them reflected must flush explicitly beforehand.
             with self.env.cr.savepoint(flush=False):
+                if self._refresh_statement_timeout:
+                    # set_config(..., true) is transaction-local, like SET LOCAL,
+                    # but takes a bound value.
+                    self.env.cr.execute(
+                        SQL(
+                            "SELECT set_config('statement_timeout', %s, true)",
+                            self._refresh_statement_timeout,
+                        )
+                    )
                 if force_rebuild or self._relation_definition_changed():
                     self._create_relation()
                 else:
@@ -214,6 +245,16 @@ class MixinMaterializedView(models.AbstractModel):
         # had already read stays in cache otherwise, reading as current.
         self.invalidate_model()
         return True
+
+    def _refresh_try_lock(self) -> bool:
+        """Take the transaction-scoped advisory lock for this relation.
+
+        :return: False when another transaction already holds it.
+        """
+        self.env.cr.execute(
+            SQL("SELECT pg_try_advisory_xact_lock(hashtext(%s))", self._table)
+        )
+        return bool(self.env.cr.fetchone()[0])
 
     def _refresh_contents(self) -> None:
         """Replace the relation's rows in place.  Runs inside ``refresh``'s savepoint."""

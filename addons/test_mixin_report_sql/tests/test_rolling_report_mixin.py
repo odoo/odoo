@@ -198,3 +198,41 @@ class TestStaleness(RollingCase):
         self.assertFalse(
             self.report._rolling_pop_stale(), "the flag is consumed by the rebuild"
         )
+
+
+class TestConcurrency(RollingCase):
+    """A slow refresh must cost one tick, never a connection per tick.
+
+    Every cron-running instance ticks the same refresh; the GPS daily report
+    once queued ninety of them behind a five-hour statement and exhausted
+    max_connections.
+    """
+
+    def test_a_refresh_already_running_elsewhere_is_skipped(self):
+        self._seed(0, value=1.0)
+        other = self.registry.cursor()
+        self.addCleanup(other.close)
+        other.execute(SQL("SELECT pg_advisory_xact_lock(hashtext(%s))", self.table))
+        with self.assertLogs(
+            "odoo.addons.mixin_report_sql.models.mixin_materialized_view",
+            level="WARNING",
+        ) as logs:
+            self.assertFalse(self.report.refresh())
+        self.assertIn("skipped", logs.output[0])
+        other.rollback()
+        self.assertTrue(self.report.refresh(), "released lock, refresh proceeds")
+
+    def test_a_refresh_that_overruns_its_timeout_is_a_transient_failure(self):
+        self._seed(0, value=1.0)
+        self.report.refresh(full=True)
+
+        def sleep_past_the_bound(report):
+            report.env.cr.execute(SQL("SELECT pg_sleep(1)"))
+
+        with (
+            patch.object(type(self.report), "_refresh_statement_timeout", "100ms"),
+            patch.object(type(self.report), "_refresh_contents", sleep_past_the_bound),
+        ):
+            self.assertFalse(self.report.refresh())
+        self.env.cr.execute(SQL("SELECT 1"))
+        self.assertEqual(self.env.cr.fetchone()[0], 1, "cursor still usable")

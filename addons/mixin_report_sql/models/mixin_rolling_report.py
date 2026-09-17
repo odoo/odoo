@@ -120,6 +120,9 @@ class MixinRollingReport(models.AbstractModel):
         per-partition range scan.
 
         Whichever form, it must cover the seed rows as well as the window.
+        Over a postgres_fdw source, every predicate must also be one the FDW
+        can ship -- constants and bound parameters, not a correlated subquery
+        -- or the remote scan fetches the whole table and filters it here.
         """
         raise NotImplementedError(
             f"{self._name}: override _rolling_scope() to narrow the scan to "
