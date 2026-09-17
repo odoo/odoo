@@ -591,6 +591,60 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             self.assertEqual(att._get_content_prefix(0), b"")
             self.assertEqual(att._get_content_prefix(4), b"0123")
 
+    def test_autoresize_config_disables_on_a_bad_or_false_resolution(self):
+        icp = self.env["ir.config_parameter"]
+        icp.set_param("base.image_autoresize_max_px", "1920x1920")
+        subtypes, width, height, quality = (
+            self.Attachment._get_image_autoresize_config()
+        )
+        self.assertEqual((width, height), (1920, 1920))
+        self.assertIn("png", subtypes)
+        self.assertTrue(quality)
+        icp.set_param("base.image_autoresize_max_px", "False")
+        self.assertEqual(self.Attachment._get_image_autoresize_config()[1:], (0, 0, 0))
+        icp.set_param("base.image_autoresize_max_px", "wide")
+        with self.assertLogs("odoo.addons.base.models.ir_attachment", "WARNING"):
+            config = self.Attachment._get_image_autoresize_config()
+        self.assertEqual(config[1:], (0, 0, 0), "a bad value disables, not crashes")
+
+    def test_an_attachment_cannot_point_at_itself(self):
+        attachment = self.Attachment.create({"name": "self", "raw": b"x"})
+        self.addCleanup(
+            Path(self.filestore, attachment.store_fname).unlink, missing_ok=True
+        )
+        with self.assertRaises(ValidationError):
+            attachment.write({"res_model": "ir.attachment", "res_id": attachment.id})
+        other = self.Attachment.create({"name": "other", "raw": b"y"})
+        self.addCleanup(Path(self.filestore, other.store_fname).unlink, missing_ok=True)
+        attachment.write({"res_model": "ir.attachment", "res_id": other.id})
+        self.assertEqual(attachment.res_id, other.id)
+
+    def test_condition_values_read_only_a_conjunctive_positive_term(self):
+        get = ir_attachment_module._get_condition_values
+        model = self.Attachment
+        self.assertEqual(list(get(model, "res_id", Domain("res_id", "=", 7))), [7])
+        self.assertEqual(
+            sorted(get(model, "res_id", Domain("res_id", "in", [7, 8]))), [7, 8]
+        )
+        self.assertIsNone(
+            get(model, "res_id", Domain("res_id", "not in", [7])),
+            "a negative term bounds nothing",
+        )
+        self.assertIsNone(
+            get(model, "res_id", Domain("res_id", "=", 7) | Domain("name", "=", "x")),
+            "a term under OR bounds nothing",
+        )
+        self.assertEqual(
+            list(
+                get(
+                    model,
+                    "res_id",
+                    Domain("res_id", "=", 7) & Domain("name", "=", "x"),
+                )
+            ),
+            [7],
+        )
+
     def test_xml_like_covers_every_xml_subtype(self):
         forced = (
             "application/x-xml",
@@ -2346,6 +2400,10 @@ class TestPermissions(TransactionCaseWithUserDemo):
         effective, keyset = model._get_seek_order_and_keyset("name")
         self.assertEqual(effective, "name, id", "a caller order must be made total")
         self.assertIsNone(keyset, "an unvetted leading term must stay on OFFSET")
+
+        effective, keyset = model._get_seek_order_and_keyset("name desc, id")
+        self.assertEqual(effective, "name desc, id", "an order ending in id is total")
+        self.assertIsNone(keyset)
 
         effective, keyset = model._get_seek_order_and_keyset(None)
         self.assertEqual(

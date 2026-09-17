@@ -1353,8 +1353,11 @@ class IrAttachment(models.Model):
         self, order: str | None
     ) -> tuple[str, Callable[[Self], Domain] | None]:
         if order:
-            column, _, direction = order.split(",")[0].strip().partition(" ")
+            terms = [term.strip().partition(" ") for term in order.split(",")]
+            column, _, direction = terms[0]
             if column != "id":
+                if any(term[0] == "id" for term in terms):
+                    return order, None
                 return f"{order}, id", None
             operator = ">" if not direction.strip().lower().startswith("desc") else "<"
             return order, lambda last: Domain("id", operator, last.id)
