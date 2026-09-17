@@ -238,15 +238,29 @@ def prepare_openapi_operation(
             if name not in path_param_names
         }
         if route_type == "http":
-            parameters += [
-                {
-                    "name": name,
-                    "in": "query",
-                    "required": spec.required,
-                    "schema": param_spec_to_schema(spec),
-                }
-                for name, spec in specs.items()
-            ]
+            for name, spec in specs.items():
+                if spec.fields is not None or spec.variants is not None:
+                    # The http dispatcher hands the handler query/form
+                    # strings and object coercion rejects any non-dict, so
+                    # an object-shaped query parameter as documented can
+                    # never be satisfied; leave it out rather than lie.
+                    _logger.warning(
+                        "OpenAPI: %r declares object-shaped parameter %r on a "
+                        "type='http' route; the http dispatcher only delivers "
+                        "strings, so the documented shape could never be "
+                        "satisfied. Parameter omitted from the document.",
+                        route.rule,
+                        name,
+                    )
+                    continue
+                parameters.append(
+                    {
+                        "name": name,
+                        "in": "query",
+                        "required": spec.required,
+                        "schema": param_spec_to_schema(spec),
+                    }
+                )
         elif specs:
             required = [name for name, spec in specs.items() if spec.required]
             body: dict[str, Any] = {

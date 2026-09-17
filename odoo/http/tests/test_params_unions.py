@@ -85,6 +85,24 @@ def test_a_union_without_a_unique_tag_per_member_is_declined():
     assert _specs(no_marker) == {}, "an undiscriminated union stays uncoerced"
 
 
+def test_an_object_param_on_an_http_route_is_omitted_with_a_warning(caplog):
+    def ep(self, payment: Payment, page: int = 1): ...
+
+    route = RouteInfo(
+        rule="/pay",
+        methods=frozenset({"GET"}),
+        routing={"type": "http", "auth": "none", "typed": True},
+        handler=ep,
+    )
+    with caplog.at_level("WARNING", logger="odoo.http.openapi"):
+        doc = prepare_openapi_document([route])
+    params = doc["paths"]["/pay"]["get"].get("parameters", [])
+    names = {p["name"] for p in params}
+    assert "payment" not in names, "the http dispatcher can never deliver a dict"
+    assert "page" in names, "scalar query parameters stay documented"
+    assert any("payment" in r.message for r in caplog.records)
+
+
 def test_a_nullable_union_gains_a_null_variant_not_the_removed_nullable_keyword():
     def ep(self, payment: Payment | None = None): ...
 
