@@ -141,7 +141,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 get_payment_node(date, subtotals, currency_code)
             )
 
-        if invoices or transactions:
+        if invoices or transactions or flow.initial_flow_id:
             document['PaymentsReport'] = {
                 'ReportPeriod': {
                     'StartDate': {'_text': self._format_date(flow.period_start)},
