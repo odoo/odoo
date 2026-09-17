@@ -163,6 +163,26 @@ class TestPatchAlgebra(unittest.TestCase):
         self.assertEqual(applied.managed[("field:date", "string")], "a")
         self.assertEqual(applied.conflicts, [])
 
+    def test_a_refused_attribute_change_leaves_the_node_as_it_was(self):
+        root = base()
+        before = dict(view_ir.identify(root)["field:date"].attrs)
+        with self.assertRaisesRegex(ValueError, "separator"):
+            apply(
+                root,
+                [
+                    Patch(
+                        "attributes",
+                        "field:date",
+                        attributes=(
+                            AttrChange("string", value="Date!"),
+                            AttrChange("invisible", add="x", separator="else"),
+                        ),
+                        origin="a",
+                    )
+                ],
+            )
+        self.assertEqual(view_ir.identify(root)["field:date"].attrs, before)
+
     def test_two_origins_setting_one_attribute_is_a_reported_conflict(self):
         applied = apply(
             base(),

@@ -99,49 +99,58 @@ def apply(root: Node, patches: Iterable[Patch]) -> Applied:
     refused, so the caller decides.
     """
     result = Applied(root=root)
-    ids = identify(root)
     for patch in patches:
-        target = ids.get(patch.target)
-        if target is None:
-            raise PatchError(
-                f"patch {patch.op!r} from {patch.origin!r}: no node {patch.target!r}"
-            )
-        if patch.op == "attributes":
-            _apply_attributes(result, target, patch)
-        elif patch.op == "remove":
-            if target is result.root:
-                raise PatchError("the root cannot be removed")
-            parent, index = _parent_of(result.root, target)
-            del parent.children[index]
-        else:
-            content = _materialise(result.root, ids, patch, target)
-            if patch.op == "inside":
-                _insert(target, len(target.children), content, patch.text)
-            elif patch.op == "replace_inner":
-                target.children = []
-                _insert(target, 0, content, patch.text)
-            elif target is result.root:
-                if patch.op != "replace":
-                    raise PatchError("only `replace` applies to the root")
-                if len(content) != 1:
-                    raise PatchError("replacing the root takes exactly one node")
-                result.root = content[0]
-            else:
-                parent, index = _parent_of(result.root, target)
-                if patch.op == "replace":
-                    del parent.children[index]
-                    _insert(parent, index, content, None)
-                elif patch.op == "before":
-                    _insert(parent, index, content, patch.text)
-                else:
-                    # what followed the target follows the content now
-                    trailing = target.tail
-                    target.tail = None
-                    _insert(parent, index + 1, content, patch.text)
-                    last = content[-1] if content else target
-                    last.tail = (last.tail or "") + (trailing or "") or None
-        ids = identify(result.root)
+        apply_one(result, patch, identify(result.root))
     return result
+
+
+def apply_one(result: Applied, patch: Patch, ids: dict[str, Node]) -> None:
+    """One patch onto ``result.root``, addressed through ``ids`` — the ids of
+    ``result.root`` as it stands (:func:`identify`). ``result`` accumulates
+    ``managed`` and ``conflicts`` across calls, so a caller that applies one
+    view's patches after another's sees the attribute two views both set.
+    A refused patch leaves the tree as it was."""
+    target = ids.get(patch.target)
+    if target is None:
+        raise PatchError(
+            f"patch {patch.op!r} from {patch.origin!r}: no node {patch.target!r}"
+        )
+    if patch.op == "attributes":
+        _apply_attributes(result, target, patch)
+        return
+    if patch.op == "remove":
+        if target is result.root:
+            raise PatchError("the root cannot be removed")
+        parent, index = _parent_of(result.root, target)
+        del parent.children[index]
+        return
+    if target is result.root and patch.op not in ("inside", "replace_inner"):
+        if patch.op != "replace":
+            raise PatchError("only `replace` applies to the root")
+        if len(patch.content) != 1:
+            raise PatchError("replacing the root takes exactly one node")
+    content = _materialise(result.root, ids, patch, target)
+    if patch.op == "inside":
+        _insert(target, len(target.children), content, patch.text)
+    elif patch.op == "replace_inner":
+        target.children = []
+        _insert(target, 0, content, patch.text)
+    elif target is result.root:
+        result.root = content[0]
+    else:
+        parent, index = _parent_of(result.root, target)
+        if patch.op == "replace":
+            del parent.children[index]
+            _insert(parent, index, content, None)
+        elif patch.op == "before":
+            _insert(parent, index, content, patch.text)
+        else:
+            # what followed the target follows the content now
+            trailing = target.tail
+            target.tail = None
+            _insert(parent, index + 1, content, patch.text)
+            last = content[-1] if content else target
+            last.tail = (last.tail or "") + (trailing or "") or None
 
 
 def _insert(parent: Node, index: int, content: list[Node], text: str | None) -> None:
@@ -207,6 +216,8 @@ def _place_target(node: Node, patch: Patch, target: Node) -> Node:
 
 
 def _apply_attributes(result: Applied, target: Node, patch: Patch) -> None:
+    # every value first, so a change the merge refuses leaves the node as it was
+    attrs = dict(target.attrs)
     for change in patch.attributes:
         if change.add or change.remove:
             if change.value:
@@ -215,13 +226,18 @@ def _apply_attributes(result: Applied, target: Node, patch: Patch) -> None:
                 )
             value = merge_attribute_value(
                 change.name,
-                target.attrs.get(change.name, ""),
+                attrs.get(change.name, ""),
                 change.add,
                 change.remove,
                 change.separator,
             )
         else:
             value = change.value or ""
+        if value:
+            attrs[change.name] = value
+        else:
+            attrs.pop(change.name, None)
+    for change in patch.attributes:
         key = (target.id or "", change.name)
         previous = result.managed.get(key, target.origin)
         if key in result.managed and previous != patch.origin:
@@ -229,7 +245,4 @@ def _apply_attributes(result: Applied, target: Node, patch: Patch) -> None:
                 Conflict(target.id or "", change.name, (previous, patch.origin))
             )
         result.managed[key] = patch.origin
-        if value:
-            target.attrs[change.name] = value
-        else:
-            target.attrs.pop(change.name, None)
+    target.attrs = attrs

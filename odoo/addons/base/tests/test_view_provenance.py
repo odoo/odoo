@@ -78,3 +78,54 @@ class TestViewProvenance(TransactionCase):
         self.assertEqual(
             self.primary.with_context(inherit_branding=True).get_provenance(), {}
         )
+
+    def test_provenance_survives_a_spec_the_ids_cannot_name(self):
+        # `$0` in running text is the XML combine's to apply; the nodes the
+        # earlier overlay put in are still its afterwards
+        View = self.env["ir.ui.view"]
+        wrapper = View.create(
+            {
+                "name": "provenance wrapper",
+                "model": "res.partner",
+                "inherit_id": self.primary.id,
+                "priority": 99,
+                "arch": """
+                    <field name="website" position="replace">
+                        <div>see $0 here</div>
+                    </field>
+                """,
+            }
+        )
+        provenance = self.primary.get_provenance()
+        self.assertEqual(provenance["field:email"]["view_id"], self.adder.id)
+        self.assertEqual(provenance["div"]["view_id"], wrapper.id)
+        self.assertEqual(provenance["form"]["view_id"], self.primary.id)
+
+    def test_a_later_overlay_still_addresses_the_tree_by_id(self):
+        View = self.env["ir.ui.view"]
+        View.create(
+            {
+                "name": "provenance wrapper",
+                "model": "res.partner",
+                "inherit_id": self.primary.id,
+                "priority": 98,
+                "arch": """
+                    <field name="website" position="replace">
+                        <div>see $0 here</div>
+                    </field>
+                """,
+            }
+        )
+        later = View.create(
+            {
+                "name": "provenance later",
+                "model": "res.partner",
+                "inherit_id": self.primary.id,
+                "priority": 99,
+                "arch": """
+                    <div position="inside"><field name="function"/></div>
+                """,
+            }
+        )
+        provenance = self.primary.get_provenance()
+        self.assertEqual(provenance["field:function"]["view_id"], later.id)

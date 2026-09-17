@@ -5,8 +5,8 @@ from lxml import etree
 
 from odoo.libs.xml import apply_inheritance_specs
 from odoo.tools import view_ir
-from odoo.tools.view_ir.patch import AttrChange, Move, Patch
-from odoo.tools.view_ir.resolve import translate_specs
+from odoo.tools.view_ir.patch import Applied, AttrChange, Move, Patch
+from odoo.tools.view_ir.resolve import apply_specs
 
 from .test_view_ir_corpus import iter_view_records
 
@@ -29,15 +29,13 @@ def specs(xml):
 
 
 def both_ways(base_xml, specs_xml, origin="mod"):
-    """The arch the XML combine yields and the one the translated patches yield."""
+    """The arch the XML combine yields and the one the applied specs yield."""
     xml_result = apply_inheritance_specs(
         etree.fromstring(base_xml), copy.deepcopy(specs(specs_xml))
     )
-    root = view_ir.from_string(base_xml)
-    translated = translate_specs(root, specs(specs_xml), origin)
-    patches = [t for t in translated if isinstance(t, Patch)]
+    applied = Applied(root=view_ir.from_string(base_xml))
+    translated = apply_specs(applied, specs(specs_xml), origin)
     fallbacks = [t for t in translated if not isinstance(t, Patch)]
-    applied = view_ir.apply_patches(root, patches) if not fallbacks else None
     return xml_result, translated, applied, fallbacks
 
 
@@ -123,30 +121,97 @@ class TestTranslateSpecs(unittest.TestCase):
         self.assertEqual(ids["field:ref"].origin, "mod")
         self.assertIsNone(ids["field:partner_id"].origin)
 
-    def test_a_spec_the_ids_cannot_name_stays_an_element(self):
-        translated = translate_specs(
-            view_ir.from_string(BASE),
+    def test_a_spec_the_ids_cannot_name_applies_the_xml_way(self):
+        specs_xml = """
+            <data>
+                <xpath expr="//field[@name='date']" position="replace">
+                    <div>before $0 after</div>
+                </xpath>
+                <xpath expr="//sheet" position="after"><footer/></xpath>
+                <xpath expr="//header" position="after"><div class="x"/></xpath>
+            </data>
+        """
+        xml_result, translated, applied, _fallbacks = both_ways(BASE, specs_xml)
+        # the `$0` in running text stays an element and applies the XML way;
+        # what follows still translates, against the tree it left
+        self.assertEqual(
+            [type(t).__name__ for t in translated], ["_Element", "Patch", "Patch"]
+        )
+        self.assertEqual(translated[1].target, "sheet")
+        self.assertEqual(canon(view_ir.to_arch(applied.root)), canon(xml_result))
+        # provenance survives the XML-applied spec: the base keeps none, the
+        # nodes the specs put in are the overlay's
+        ids = view_ir.identify(applied.root)
+        self.assertIsNone(ids["field:partner_id"].origin)
+        self.assertEqual(ids["footer"].origin, "mod")
+        self.assertEqual([div.origin for div in applied.root.find("div")], ["mod"] * 2)
+
+    def test_a_spec_the_xml_combine_refuses_is_raised_as_it_reports_it(self):
+        applied = Applied(root=view_ir.from_string(BASE))
+        with self.assertRaisesRegex(ValueError, "cannot be located in parent view"):
+            apply_specs(
+                applied,
+                specs(
+                    """
+                    <data>
+                        <xpath expr="//sheet" position="after"><footer/></xpath>
+                        <xpath expr="//field[@name='nope']" position="after"><div/></xpath>
+                    </data>
+                    """
+                ),
+                "mod",
+            )
+        # the spec before it was applied; the tree is what the XML combine
+        # would have left at the refusal
+        self.assertIsNotNone(next(applied.root.find("footer"), None))
+
+    def test_the_xml_way_may_replace_the_root(self):
+        xml_result, translated, applied, _fallbacks = both_ways(
+            BASE,
+            """
+            <data>
+                <xpath expr="//sheet" position="after"><footer/></xpath>
+                <xpath expr="/form" position="replace">
+                    <form string="wrapped">see $0 here</form>
+                </xpath>
+                <xpath expr="//form" position="inside"><div class="late"/></xpath>
+            </data>
+            """,
+        )
+        self.assertEqual(
+            [type(t).__name__ for t in translated], ["Patch", "_Element", "Patch"]
+        )
+        self.assertEqual(applied.root.attrs.get("string"), "wrapped")
+        self.assertEqual(canon(view_ir.to_arch(applied.root)), canon(xml_result))
+        ids = view_ir.identify(applied.root)
+        self.assertEqual(ids["form"].origin, "mod")
+        self.assertEqual(ids["div"].origin, "mod")
+
+    def test_the_xml_way_goes_through_the_caller(self):
+        seen = []
+
+        def apply_xml(source, spec):
+            seen.append(spec.get("expr"))
+            return apply_inheritance_specs(source, spec)
+
+        applied = Applied(root=view_ir.from_string(BASE))
+        translated = apply_specs(
+            applied,
             specs(
                 """
                 <data>
+                    <xpath expr="//sheet" position="after"><footer/></xpath>
                     <xpath expr="//field[@name='date']" position="replace">
                         <div>before $0 after</div>
                     </xpath>
-                    <xpath expr="//sheet" position="after"><footer/></xpath>
-                    <xpath expr="//field[@name='nope']" position="after"><div/></xpath>
-                    <xpath expr="//header" position="after"><div/></xpath>
                 </data>
                 """
             ),
             "mod",
+            apply_xml,
         )
-        # the `$0` in running text and the unlocatable target stay elements;
-        # after an unplaceable spec nothing more is translated
-        self.assertEqual(
-            [type(t).__name__ for t in translated],
-            ["_Element", "Patch", "_Element", "_Element"],
-        )
-        self.assertEqual(translated[1].target, "sheet")
+        self.assertEqual(seen, ["//field[@name='date']"])
+        self.assertEqual([type(t).__name__ for t in translated], ["Patch", "_Element"])
 
     def test_later_specs_address_the_tree_the_earlier_ones_left(self):
         xml_result, translated, applied, fallbacks = both_ways(
@@ -195,15 +260,12 @@ class TestTranslateCorpus(unittest.TestCase):
                 )
             except ValueError, etree.XPathError:
                 continue  # not resolvable against the primary alone
-            root = view_ir.from_string(base_xml)
-            items = translate_specs(root, specs_tree, xmlid)
+            applied = Applied(root=view_ir.from_string(base_xml))
+            items = apply_specs(applied, specs_tree, xmlid)
             if any(not isinstance(item, Patch) for item in items):
                 fallback += 1
                 continue
             translated += 1
-            applied = view_ir.apply_patches(
-                root, [i for i in items if isinstance(i, Patch)]
-            )
             if canon(view_ir.to_arch(applied.root)) == canon(xml_result):
                 matched += 1
             else:

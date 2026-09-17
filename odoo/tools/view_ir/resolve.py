@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import copy
 import re
+from collections.abc import Callable
 
 from lxml import etree
 
@@ -10,7 +10,7 @@ from odoo.libs.xml import SKIPPED_ELEMENT_TYPES, apply_inheritance_specs, locate
 from .arch import from_arch, to_arch
 from .identity import identify
 from .node import Node
-from .patch import AttrChange, Move, Op, Patch, apply
+from .patch import Applied, AttrChange, Move, Op, Patch, apply_one
 
 POSITIONS: dict[str, Op] = {
     "inside": "inside",
@@ -20,46 +20,47 @@ POSITIONS: dict[str, Op] = {
 }
 REPLACE_MODES: dict[str, Op] = {"outer": "replace", "inner": "replace_inner"}
 
+ApplyXml = Callable[[etree._Element, etree._Element], etree._Element]
 
-def translate_specs(
-    root: Node, specs_tree: etree._Element, origin: str | None = None
+
+def apply_specs(
+    state: Applied,
+    specs_tree: etree._Element,
+    origin: str | None = None,
+    apply_xml: ApplyXml = apply_inheritance_specs,
 ) -> list[Patch | etree._Element]:
-    """The XML inheritance specs of one view as id-addressed patches on ``root``.
+    """Apply the XML inheritance specs of one view onto ``state.root``.
 
     Each spec's target is located the way the XML combine locates it — the
-    same xpath, the same first match — on the arch ``root`` materialises to,
-    and named by the id ``identify()`` derives for that node. A spec whose
-    target cannot be located, whose content holds a ``$0`` in a text node
-    beside other text, or whose position is not one of the five, stays an
-    element: the caller applies it the XML way. Patches address the tree
-    the specs before them leave, so translation walks the specs in order and
-    applies each translated patch to a working copy as it goes.
+    same xpath, the same first match — on the arch ``state.root`` stands for,
+    and named by the id ``identify()`` derives for that node; the spec then
+    applies as an id-addressed :class:`Patch`, which is what the result lists
+    for it. A spec whose target cannot be located, whose content holds a
+    ``$0`` in a text node beside other text, whose position is not one of the
+    five, or whose patch the merge refuses (a bad separator, say) applies the
+    XML way through ``apply_xml`` — which reports a spec it cannot apply in
+    its own words, and that is what this raises — and the result lists the
+    spec element itself. Specs address the tree the specs before them leave,
+    so they apply in order; ``state`` accumulates the provenance, and a node
+    the XML way inserts carries ``origin`` like one a patch inserts.
     """
-    # the working tree is a copy, and so is what goes into it: the caller
-    # gets `root` untouched and patches whose nodes belong to no tree yet
-    work = _Working(copy.deepcopy(root))
+    work = _Working(state)
     out: list[Patch | etree._Element] = []
-    flat = _flatten(specs_tree)
-    for index, spec in enumerate(flat):
+    for spec in _flatten(specs_tree):
         patch = _translate(work, spec, origin)
-        if patch is None:
-            out.append(spec)
+        if patch is not None:
             try:
-                work.apply_xml(copy.deepcopy(spec))
-            except ValueError:
-                # the XML path will report it; what follows cannot be placed
-                out.extend(flat[index + 1 :])
-                break
-        else:
-            try:
-                work.root = apply(work.root, [copy.deepcopy(patch)]).root
+                apply_one(state, patch, work.ids())
             except ValueError:
                 # a change the merge refuses (a bad separator, say): the XML
                 # path applies the same spec and reports it in its own words
-                out.extend(flat[index:])
-                break
-            out.append(patch)
-            work.invalidate()
+                patch = None
+            else:
+                out.append(patch)
+                work.invalidate()
+        if patch is None:
+            work.apply_xml(spec, apply_xml, origin)
+            out.append(spec)
     return out
 
 
@@ -86,11 +87,15 @@ SIMPLE_XPATH = re.compile(
 class _Working:
     """The tree as the specs so far leave it, materialised on demand for xpath."""
 
-    def __init__(self, root: Node) -> None:
-        self.root = root
+    def __init__(self, state: Applied) -> None:
+        self.state = state
         self._arch: etree._Element | None = None
         self._nodes: dict[etree._Element, Node] | None = None
         self._ids: dict[str, Node] | None = None
+
+    @property
+    def root(self) -> Node:
+        return self.state.root
 
     def invalidate(self) -> None:
         self._arch = None
@@ -134,20 +139,33 @@ class _Working:
         if self._arch is None:
             self.ids()
             self._arch = to_arch(self.root)
-            elements = list(self._arch.iter())
-            nodes = [node for _path, node in self.root.walk()]
-            self._nodes = dict(zip(elements, nodes, strict=True))
+            self._nodes = self._nodes_of(self._arch)
         return self._arch
+
+    def _nodes_of(self, arch: etree._Element) -> dict[etree._Element, Node]:
+        elements = list(arch.iter())
+        nodes = [node for _path, node in self.root.walk()]
+        return dict(zip(elements, nodes, strict=True))
 
     def node_of(self, element: etree._Element) -> Node:
         self.arch()
         assert self._nodes is not None
         return self._nodes[element]
 
-    def apply_xml(self, spec: etree._Element) -> None:
-        arch = apply_inheritance_specs(self.arch(), spec)
-        self.root = from_arch(arch)
+    def apply_xml(
+        self, spec: etree._Element, apply_xml: ApplyXml, origin: str | None
+    ) -> None:
+        """The spec the XML way, on the materialised arch, read back as the
+        tree; an element the XML combine keeps keeps its node's provenance,
+        one it inserts is the spec's."""
+        arch = self.arch()
+        assert self._nodes is not None
+        kept = self._nodes
+        arch = apply_xml(arch, spec)
+        self.state.root = from_arch(arch)
         self.invalidate()
+        for element, node in self._nodes_of(arch).items():
+            node.origin = kept[element].origin if element in kept else origin
 
 
 def _simple_target(

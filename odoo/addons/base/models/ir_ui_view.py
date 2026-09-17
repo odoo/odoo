@@ -34,13 +34,13 @@ from odoo.tools.misc import ConstantMapping, file_path
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import TRANSLATED_ATTRS, xml_translate
 from odoo.tools.view_ir import (
+    Applied,
     Node,
     Patch,
-    apply_patches,
+    apply_specs,
     from_arch,
     identify,
     to_arch,
-    translate_specs,
 )
 from odoo.tools.view_validation import (
     get_class_accessibility_warnings,
@@ -110,7 +110,7 @@ _CTE_EXCLUDED_FIELDS = frozenset(
 )
 
 
-ref_re = re.compile(
+_VIEW_REF_RE = re.compile(
     r"""
 # first match 'form_view_ref' key, backrefs are used to handle single or
 # double quoting of the value
@@ -228,8 +228,8 @@ def _extract_view_arch(
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils["hasclass"] = _hasclass
 
-TRANSLATED_ATTRS_RE = re.compile(rf"@({'|'.join(TRANSLATED_ATTRS)})\b")
-WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
+_TRANSLATED_ATTRS_RE = re.compile(rf"@({'|'.join(TRANSLATED_ATTRS)})\b")
+_WRONG_CLASS_RE = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 _XML_ENCODING_DECL_RE = re.compile(r"<\?xml[^>]*encoding=.*?\?>", re.IGNORECASE)
 
@@ -467,7 +467,8 @@ class IrUiView(models.Model):
                     data["arch_updated"] = False
             _debug.lifecycle("arch_written", view=view.id, arch_fs=data.get("arch_fs"))
             view.write(data)
-            view.arch = view.arch_db
+        # xml_translate normalises what it stores, and the value depends on
+        # the language: no environment keeps the value it was handed
         self.invalidate_recordset(["arch"])
 
     @api.depends("arch")
@@ -497,9 +498,7 @@ class IrUiView(models.Model):
             else:
                 _debug.logic("reset_arch_refused", view=view.id, mode=mode)
                 raise ValueError(
-                    f"reset_arch() got mode={mode!r}; expected 'soft' or 'hard'. "
-                    f"Skipping silently makes a wrong mode indistinguishable "
-                    f"from a view that had nothing to reset."
+                    f"reset_arch() got mode={mode!r}; expected 'soft' or 'hard'"
                 )
             if not arch:
                 _debug.logic("reset_arch_skipped", view=view.id, mode=mode)
@@ -618,7 +617,7 @@ class IrUiView(models.Model):
     def _check_inheritance(self, arch: _Element) -> None:
         for node in _xpath_position(arch):
             if node.tag == "xpath":
-                match = TRANSLATED_ATTRS_RE.search(node.get("expr", ""))
+                match = _TRANSLATED_ATTRS_RE.search(node.get("expr", ""))
                 if match:
                     _debug.logic(
                         "inheritance_refused",
@@ -628,7 +627,7 @@ class IrUiView(models.Model):
                     )
                     message = f"View inheritance may not use attribute {match.group(1)!r} as a selector."
                     raise self._prepare_view_error(message, node)
-                if WRONGCLASS.search(node.get("expr", "")):
+                if _WRONG_CLASS_RE.search(node.get("expr", "")):
                     _debug.logic(
                         "inheritance_warned", view=self.id, reason="class_in_xpath"
                     )
@@ -650,6 +649,16 @@ class IrUiView(models.Model):
                         )
                         message = f"View inheritance may not use attribute {attr!r} as a selector."
                         raise self._prepare_view_error(message, node)
+
+    def _get_combined_arch_checked(
+        self, combined_archs: dict[int, _Element]
+    ) -> _Element:
+        self.check_singleton()
+        if self.inherit_id:
+            self._check_inheritance(etree.fromstring(self.arch or "<data/>"))
+        if self.id in combined_archs:
+            return combined_archs[self.id]
+        return self._get_combined_arch()
 
     def _get_combined_archs_by_id(self) -> dict[int, _Element]:
         if len(self) < 2 or not self.pool.ready:
@@ -686,18 +695,10 @@ class IrUiView(models.Model):
                 _debug.logic("check_xml.skipped", view=view.id, reason="no_arch")
                 continue
             try:
-                if view.inherit_id:
-                    view_arch = etree.fromstring(view.arch or "<data/>")
-                    view._check_inheritance(view_arch)
-
-                combined_arch = (
-                    combined_archs[view.id]
-                    if view.id in combined_archs
-                    else view._get_combined_arch()
-                )
+                combined_arch = view._get_combined_arch_checked(combined_archs)
 
                 if view.inherit_id or view.inherit_children_ids:
-                    self._check_sibling_primary_views(view)
+                    view._check_sibling_primary_views()
 
                 if view.type == "qweb":
                     _debug.logic("check_xml.skipped", view=view.id, reason="qweb")
@@ -811,15 +812,17 @@ class IrUiView(models.Model):
             )
         ) from None
 
-    def _check_sibling_primary_views(self, view: Self) -> None:
-        root = view
+    def _check_sibling_primary_views(self) -> None:
+        """The primary views hanging off this view's primary root still
+        combine: they inherit its extensions and one may no longer apply."""
+        self.check_singleton()
+        root = self
         while root.inherit_id and root.mode != "primary":
             root = root.inherit_id
         sibling_primary_views = self.env["ir.ui.view"]
         stack = [root]
         while stack:
-            root = stack.pop()
-            for child in root.inherit_children_ids:
+            for child in stack.pop().inherit_children_ids:
                 if child.mode == "primary":
                     sibling_primary_views += child
                 else:
@@ -832,14 +835,14 @@ class IrUiView(models.Model):
             )
             _debug.logic(
                 "sibling_primary_views_filtered",
-                view=view.id,
+                view=self.id,
                 found=found,
                 loaded=len(sibling_primary_views),
             )
 
         _debug.pipeline(
             "sibling_primary_views_checked",
-            view=view.id,
+            view=self.id,
             root=root.id,
             siblings=len(sibling_primary_views),
         )
@@ -872,19 +875,22 @@ class IrUiView(models.Model):
     )
     _model_type_inherit_id = models.Index("(model, inherit_id)")
 
-    def _prepare_view_defaults(self, values: dict[str, Any]) -> dict[str, Any]:
-        if "inherit_id" in values:
-            if not values["inherit_id"] or all(not view.inherit_id for view in self):
-                values.setdefault(
-                    "mode", "extension" if values["inherit_id"] else "primary"
-                )
-                _debug.logic(
-                    "mode_defaulted",
-                    views=len(self),
-                    inherit_id=values["inherit_id"] or None,
-                    mode=values["mode"],
-                )
-        return values
+    def _default_mode(self, values: dict[str, Any]) -> dict[str, Any]:
+        """The values with the mode an inherit_id change implies, when they
+        set none: an extension under a parent, a primary without one. A view
+        that already inherits keeps its mode when the parent changes."""
+        if "mode" in values or "inherit_id" not in values:
+            return values
+        if values["inherit_id"] and any(view.inherit_id for view in self):
+            return values
+        mode = "extension" if values["inherit_id"] else "primary"
+        _debug.logic(
+            "mode_defaulted",
+            views=len(self),
+            inherit_id=values["inherit_id"] or None,
+            mode=mode,
+        )
+        return {**values, "mode": mode}
 
     @api.depends("arch", "inherit_id", "type", "model")
     def _compute_warning_info(self) -> None:
@@ -897,14 +903,7 @@ class IrUiView(models.Model):
             if not view.arch:
                 continue
             try:
-                if view.inherit_id:
-                    view_arch = etree.fromstring(view.arch)
-                    view._check_inheritance(view_arch)
-                combined_arch = (
-                    combined_archs[view.id]
-                    if view.id in combined_archs
-                    else view._get_combined_arch()
-                )
+                combined_arch = view._get_combined_arch_checked(combined_archs)
                 if view.type != "qweb":
                     name_manager = view._postprocess_view(
                         combined_arch, view.model, preserve_groups=True
@@ -1025,8 +1024,8 @@ class IrUiView(models.Model):
                             name=values.get("name"),
                             arch_fs=path_info.addons_path,
                         )
-            self._prepare_view_defaults(values)
 
+        vals_list = [self._default_mode(values) for values in vals_list]
         self.env.registry.clear_cache("templates")
         result = super().create(vals_list)
         _debug.lifecycle(
@@ -1065,9 +1064,12 @@ class IrUiView(models.Model):
 
             self.env.registry.clear_cache("templates")
         if "arch_db" in vals and not self.env.context.get("no_save_prev"):
-            _debug.lifecycle("write.arch_prev_saved", views=len(self))
+            saved = 0  # debuglog
             for view in self.with_context(lang=None):
-                super(IrUiView, view).write({"arch_prev": view.arch_db})
+                if view.arch_db:
+                    super(IrUiView, view).write({"arch_prev": view.arch_db})
+                    saved += 1  # debuglog
+            _debug.lifecycle("write.arch_prev_saved", views=len(self), saved=saved)
 
         revalidate = not _REVALIDATE_ALWAYS.isdisjoint(vals)
         recombines = not revalidate and self._is_recombination_required(vals)
@@ -1078,7 +1080,7 @@ class IrUiView(models.Model):
             revalidate=revalidate,
             recombines=recombines,
         )
-        vals = self._prepare_view_defaults(vals)
+        vals = self._default_mode(vals)
 
         if revalidate:
             res = super().write(vals)
@@ -1382,35 +1384,36 @@ class IrUiView(models.Model):
                 node.set("data-oe-field", "arch")
         return specs_tree
 
-    def _add_validation_flag(
-        self,
-        combined_arch: _Element,
-        view: Self | None = None,
-        arch: _Element | None = None,
-    ) -> None:
+    def _validates_whole(self) -> bool:
         validate_view_ids = self.env.context.get("validate_view_ids")
-        if not validate_view_ids:
-            return
+        return bool(validate_view_ids) and (
+            validate_view_ids is True or self.id in validate_view_ids
+        )
 
-        if validate_view_ids is True or self.id in validate_view_ids:
-            _debug.logic("validation_flagged", view=self.id, scope="whole")
-            combined_arch.set("__validate__", "1")
-            return
-
-        if view is None or view.id not in validate_view_ids:
-            return
-
-        _debug.logic("validation_flagged", view=view.id, scope="specs")
+    def _flag_validated_specs(self, arch: _Element) -> bool:
+        """Mark what of this overlay's specs the validation covers: the nodes
+        an after/before/inside spec inserts, the attributes spec's target.
+        True when the overlay replaces a node, which validates the whole
+        combined view — the caller flags its root."""
+        validate_view_ids = self.env.context.get("validate_view_ids")
+        if (
+            not validate_view_ids
+            or validate_view_ids is True
+            or self.id not in validate_view_ids
+        ):
+            return False
+        _debug.logic("validation_flagged", view=self.id, scope="specs")
         for node in _xpath_position(arch):
-            if node.get("position") in ("after", "before", "inside"):
+            position = node.get("position")
+            if position in ("after", "before", "inside"):
                 for child in node.iterchildren(tag=etree.Element):
                     if not child.get("position"):
                         child.set("__validate__", "1")
-            if node.get("position") == "replace":
-                combined_arch.set("__validate__", "1")
-                break
-            if node.get("position") == "attributes":
+            elif position == "replace":
+                return True
+            elif position == "attributes":
                 node.append(E.attribute("1", name="__validate__"))
+        return False
 
     @api.model
     def apply_inheritance_specs(
@@ -1454,18 +1457,18 @@ class IrUiView(models.Model):
                     "data-oe-field": "arch",
                 }
             )
-        self._add_validation_flag(combined_arch)
+        validates_whole = self._validates_whole()
 
         queue = collections.deque(
             sorted(hierarchy[self], key=lambda v: v.mode == "primary")
         )
         tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
         # The overlays apply as id-addressed patches on the view IR; a spec
-        # the ids cannot name, and every spec while branding is on (the
-        # website editor reads the processing instructions and data-oe-*
-        # marks the XML path leaves), goes through the XML combine.
+        # the ids cannot name goes through the XML combine, and so does every
+        # spec while branding is on (the website editor reads the processing
+        # instructions and data-oe-* marks the XML path leaves).
         branding = bool(self.env.context.get("inherit_branding"))
-        combined = None if branding else from_arch(combined_arch)
+        combined = None if branding else Applied(root=from_arch(combined_arch))
         applied = patched = 0  # debuglog
         while queue:
             view = queue.popleft()
@@ -1476,15 +1479,11 @@ class IrUiView(models.Model):
             arch = etree.fromstring(view.arch or "<data/>")
             if branding:
                 view.inherit_branding(arch)
-            self._add_validation_flag(combined_arch, view, arch)
+            validates_whole |= view._flag_validated_specs(arch)
             if combined is None:
                 combined_arch = view.apply_inheritance_specs(combined_arch, arch)
             else:
-                # the whole-view flag lands on the element; the tree carries it
-                if combined_arch.get("__validate__"):
-                    combined.attrs["__validate__"] = "1"
-                combined, combined_arch, ok = self._patch_ir(combined, view, arch)
-                patched += ok  # debuglog
+                patched += view._apply_overlay(combined, arch)  # debuglog
 
             for child_view in reversed(hierarchy[view]):
                 if child_view.mode == "primary":
@@ -1492,12 +1491,47 @@ class IrUiView(models.Model):
                 else:
                     queue.appendleft(child_view)
 
-        if combined is not None:
-            combined_arch = to_arch(combined)
+        # the flag lands on the root the overlays leave, so a replaced root
+        # is validated whole too
+        if validates_whole:
+            _debug.logic("validation_flagged", view=self.id, scope="whole")
+            if combined is None:
+                combined_arch.set("__validate__", "1")
+            else:
+                combined.root.attrs["__validate__"] = "1"
+        if combined is None:
+            _debug.pipeline("combine", root=self.id, key=self.key, applied=applied)
+            return combined_arch, None
+        if _debug.logic.enabled and combined.conflicts:
+            _debug.logic(
+                "combine.attribute_conflicts",
+                root=self.id,
+                conflicts=len(combined.conflicts),
+                targets=[c.target for c in combined.conflicts],
+                attributes=[c.attribute for c in combined.conflicts],
+                origins=[c.origins for c in combined.conflicts],
+            )
         _debug.pipeline(
             "combine", root=self.id, key=self.key, applied=applied, patched=patched
         )
-        return combined_arch, combined
+        return to_arch(combined.root), combined.root
+
+    def _apply_overlay(self, combined: Applied, arch: _Element) -> int:
+        """This view's specs onto the IR: as patches where the ids name the
+        target, the XML combine for the rest. Returns how many were patches."""
+        # the record reference, not the xml id: a provenance that costs no
+        # query per overlay (the xml id is one ir.model.data lookup each)
+        origin = f"ir.ui.view,{self.id}"
+        items = apply_specs(combined, arch, origin, self.apply_inheritance_specs)
+        patches = sum(isinstance(item, Patch) for item in items)
+        if patches < len(items):
+            _debug.logic(
+                "combine.xml_fallback",
+                view=self.id,
+                specs=len(items),
+                fallbacks=len(items) - patches,
+            )
+        return patches
 
     def get_provenance(self) -> dict[str, dict[str, Any]]:
         """Which view put each node of this view's combined arch where it is.
@@ -1522,40 +1556,6 @@ class IrUiView(models.Model):
             node_id: {**origins.get(node.origin or "", primary), "kind": node.kind}
             for node_id, node in identify(combined).items()
         }
-
-    def _patch_ir(
-        self, combined: Any, view: Self, arch: _Element
-    ) -> tuple[Any, _Element, int]:
-        """One inheriting view onto the IR: its specs as patches when the ids
-        name every target, the XML combine otherwise. Returns the IR, the
-        arch it stands for, and whether the patches were used."""
-        # the record reference, not the xml id: a provenance that costs no
-        # query per overlay (the xml id is one ir.model.data lookup each)
-        origin = f"ir.ui.view,{view.id}"
-        items = translate_specs(combined, arch, origin)
-        if not all(isinstance(item, Patch) for item in items):
-            _debug.logic(
-                "combine.xml_fallback",
-                view=view.id,
-                specs=len(items),
-                fallbacks=sum(not isinstance(item, Patch) for item in items),
-            )
-            combined_arch = view.apply_inheritance_specs(to_arch(combined), arch)
-            return from_arch(combined_arch), combined_arch, 0
-        try:
-            result = apply_patches(combined, [i for i in items if isinstance(i, Patch)])
-        except ValueError as e:
-            _debug.logic("combine.patch_failed", view=view.id, error=type(e).__name__)
-            raise view._prepare_view_error(str(e), arch) from None
-        if _debug.logic.enabled and result.conflicts:
-            _debug.logic(
-                "combine.attribute_conflicts",
-                view=view.id,
-                conflicts=len(result.conflicts),
-                targets=[c.target for c in result.conflicts],
-                attributes=[c.attribute for c in result.conflicts],
-            )
-        return result.root, to_arch(result.root), 1
 
     def get_combined_arch(self) -> str:
         return etree.tostring(self._get_combined_arch(), encoding="unicode")
@@ -1655,7 +1655,8 @@ class IrUiView(models.Model):
         if not context:
             return {}
         return {
-            m.group("view_type"): m.group("view_id") for m in ref_re.finditer(context)
+            m.group("view_type"): m.group("view_id")
+            for m in _VIEW_REF_RE.finditer(context)
         }
 
     @api.model
@@ -1745,7 +1746,7 @@ class IrUiView(models.Model):
     def _get_views_by_ref(
         self, ids_or_xmlids: Sequence[int | str]
     ) -> dict[int | str, Self | Exception]:
-        IrUiView = (
+        views_sudo = (
             self.env["ir.ui.view"]
             .sudo()
             .with_context(load_all_views=True, raise_if_not_found=True)
@@ -1753,17 +1754,17 @@ class IrUiView(models.Model):
 
         ids, xmlids = partition(lambda v: isinstance(v, int), ids_or_xmlids)
 
-        view_by_id = {}
+        view_by_ref = {}
         if xmlids:
             field_names = [
-                f.name for f in IrUiView._fields.values() if f.prefetch is True
+                f.name for f in views_sudo._fields.values() if f.prefetch is True
             ]
             domain = Domain("id", "in", ids) | self._get_domain_template(xmlids)
-            views = IrUiView.search_fetch(
+            views = views_sudo.search_fetch(
                 domain, field_names, order=self._get_template_order()
             )
         else:
-            views = IrUiView.browse(ids)
+            views = views_sudo.browse(ids)
 
         for view in views:
             try:
@@ -1771,12 +1772,12 @@ class IrUiView(models.Model):
             except MissingError:
                 _debug.logic("views_by_ref.vanished", view=view.id)
                 continue
-            view_by_id[view.id] = view
-            if key and key not in view_by_id:
-                view_by_id[key] = view
+            view_by_ref[view.id] = view
+            if key and key not in view_by_ref:
+                view_by_ref[key] = view
 
         missing_xmlid_views = [
-            xmlid for xmlid in xmlids if "." in xmlid and xmlid not in view_by_id
+            xmlid for xmlid in xmlids if "." in xmlid and xmlid not in view_by_ref
         ]
         _debug.perf.count(
             "views_by_ref",
@@ -1795,7 +1796,7 @@ class IrUiView(models.Model):
             )
 
             model_data_records = self.env["ir.model.data"].sudo().search(domain)
-            all_views = IrUiView.browse(model_data_records.mapped("res_id")).exists()
+            all_views = views_sudo.browse(model_data_records.mapped("res_id")).exists()
             _debug.logic(
                 "views_by_ref.xmlid_fallback",
                 xmlids=len(missing_xmlid_views),
@@ -1807,17 +1808,17 @@ class IrUiView(models.Model):
             for model_data in model_data_records:
                 if model_data.res_id in existing_ids:
                     view = view_map[model_data.res_id]
-                    view_by_id[view.id] = view
+                    view_by_ref[view.id] = view
                     xmlid = f"{model_data.module}.{model_data.name}"
-                    view_by_id[xmlid] = view
-                    if view.key and view.key not in view_by_id:
-                        view_by_id[view.key] = view
+                    view_by_ref[xmlid] = view
+                    if view.key and view.key not in view_by_ref:
+                        view_by_ref[view.key] = view
 
-        for key, view in view_by_id.items():
+        for key, view in view_by_ref.items():
             self._get_cached_template_info(key, _view=view)
 
         for view_id in ids:
-            if view_id not in view_by_id:
+            if view_id not in view_by_ref:
                 _debug.logic("views_by_ref.missing", ref=view_id)
                 error = MissingError(
                     self.env._(
@@ -1826,14 +1827,14 @@ class IrUiView(models.Model):
                     )
                 )
                 self._get_cached_template_info(view_id, _error=error)
-                view_by_id[view_id] = error
+                view_by_ref[view_id] = error
         for xmlid in xmlids:
-            if xmlid not in view_by_id:
+            if xmlid not in view_by_ref:
                 _debug.logic("views_by_ref.missing", ref=xmlid)
                 error = MissingError(self.env._("Template not found: '%s'", xmlid))
                 self._get_cached_template_info(xmlid, _error=error)
-                view_by_id[xmlid] = error
-        return view_by_id
+                view_by_ref[xmlid] = error
+        return view_by_ref
 
     @tools.ormcache(cache="templates")
     def _clear_preload_views_cache_if_needed(self) -> None:
@@ -1850,8 +1851,9 @@ class IrUiView(models.Model):
             cache_key, {}
         )
 
+        # isdecimal, not isdigit: "²" is a digit int() refuses
         refs = [
-            int(ref) if isinstance(ref, int) or ref.isdigit() else ref
+            int(ref) if isinstance(ref, int) or ref.isdecimal() else ref
             for ref in refs
             if ref
         ]
@@ -1886,7 +1888,8 @@ class IrUiView(models.Model):
     def postprocess_and_fields(
         self, node: _Element, model: str | None = None, **options: Any
     ) -> tuple[str, dict[str, set[str]]]:
-        self and self.check_singleton()
+        if self:
+            self.check_singleton()
 
         with _debug.perf(
             "postprocess_view",
@@ -2808,17 +2811,23 @@ class IrUiView(models.Model):
         return self.env["ir.qweb"]._render(template, values)
 
     @api.model
-    def _has_valid_custom_views(self, model: str) -> bool:
-        # a custom view is one no module ships: no xmlid, or an xmlid whose module
-        # is not a module the database knows
-        views = self.sudo().search_fetch(
-            [("model", "=", model), ("active", "=", True)], ["inherit_id"]
-        )
-        module_names = set(
+    def _get_domain_shipping_modules(self) -> Domain:
+        """The modules whose xmlid makes a view shipped, not custom."""
+        return Domain.TRUE
+
+    @api.model
+    def _get_custom_views(self, models: Collection[str] | None = None) -> Self:
+        """The latest custom view of each model under each inheritance root,
+        over ``models`` or every model: a custom view is one no module ships
+        — no xmlid, or an xmlid whose module is not one the database knows."""
+        domain = Domain("active", "=", True)
+        if models is not None:
+            domain &= Domain("model", "in", list(models))
+        views = self.sudo().search_fetch(domain, ["model", "inherit_id"])
+        shipping_modules = (
             self.env["ir.module.module"]
             .sudo()
-            .search_fetch([], ["name"])
-            .mapped("name")
+            ._search(self._get_domain_shipping_modules())
         )
         shipped_ids = {
             data.res_id
@@ -2828,27 +2837,28 @@ class IrUiView(models.Model):
                 [
                     ("model", "=", "ir.ui.view"),
                     ("res_id", "in", views.ids),
-                    ("module", "in", list(module_names)),
+                    ("module", "in", shipping_modules.subselect("name")),
                 ],
                 ["res_id"],
             )
         }
-        _debug.perf.count(
-            "custom_views_scanned",
-            model=model,
-            views=len(views),
-            modules=len(module_names),
-            shipped=len(shipped_ids),
-        )
-        latest_by_root: dict[int, int] = {}
+        # a root's tree spans models (a primary of another model may hang off
+        # it), and each model's custom views are checked on their own
+        latest_by_root: dict[tuple[str | None, int], int] = {}
         for view in views:
             if view.id in shipped_ids:
                 continue
-            root = view.inherit_id.id or view.id
+            root = (view.model, view.inherit_id.id or view.id)
             latest_by_root[root] = max(latest_by_root.get(root, 0), view.id)
-        rec = self.browse(sorted(latest_by_root.values()))
-        _debug.pipeline("custom_views_check", model=model, views=len(rec))
-        return rec.with_context({"load_all_views": True})._check_xml()
+        custom = self.browse(sorted(latest_by_root.values()))
+        _debug.perf.count(
+            "custom_views_scanned",
+            models=len(models) if models is not None else None,
+            views=len(views),
+            shipped=len(shipped_ids),
+            custom=len(custom),
+        )
+        return custom
 
     @api.model
     def _check_module_views(self, module: str) -> None:
@@ -2910,13 +2920,13 @@ class IrUiView(models.Model):
         return specific
 
     def _load_records_write(self, values: dict[str, Any]) -> None:
-        self = self.with_context(ir_ui_view_loading_records=True)
-        if self.type == "qweb":
-            cow_views = self._get_views_specific()
+        view = self.with_context(ir_ui_view_loading_records=True)
+        if view.type == "qweb":
+            cow_views = view._get_views_specific()
             _debug.pipeline(
                 "load_records_write_cow",
-                view=self.id,
-                key=self.key,
+                view=view.id,
+                key=view.key,
                 specific=len(cow_views),
                 fields=list(values),
             )
@@ -2924,15 +2934,15 @@ class IrUiView(models.Model):
                 authorized_vals = {
                     key: value
                     for key, value in values.items()
-                    if key != "inherit_id" and cow_view[key] == self[key]
+                    if key != "inherit_id" and cow_view[key] == view[key]
                 }
                 inherit_id = values.get("inherit_id")
                 if (
                     inherit_id
-                    and self.inherit_id.id != inherit_id
-                    and cow_view.inherit_id.key == self.inherit_id.key
+                    and view.inherit_id.id != inherit_id
+                    and cow_view.inherit_id.key == view.inherit_id.key
                 ):
-                    self._load_records_write_on_cow(
+                    view._load_records_write_on_cow(
                         cow_view, inherit_id, authorized_vals
                     )
                 else:
@@ -2942,7 +2952,7 @@ class IrUiView(models.Model):
                         fields=list(authorized_vals),
                     )
                     cow_view.with_context(no_cow=True).write(authorized_vals)
-        super()._load_records_write(values)
+        super(IrUiView, view)._load_records_write(values)
 
     def _load_records_write_on_cow(
         self, cow_view: Self, inherit_id: int, values: dict[str, Any]

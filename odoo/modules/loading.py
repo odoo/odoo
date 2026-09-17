@@ -1709,18 +1709,21 @@ class _ModuleLoader:
     def warn_invalid_custom_views(self) -> None:
         if not self.update_module:
             return
-        View = self.env["ir.ui.view"]
+        View = self.env["ir.ui.view"].with_context(load_all_views=True)
         with _debug.perf(
             "modules.custom_views_check", cr=self.cr, models=len(self.registry)
         ) as span:
+            custom_views = View._get_custom_views().grouped("model")
             invalid = 0  # debuglog
-            for model in self.registry:
+            for model, views in custom_views.items():
+                if model not in self.registry:
+                    continue
                 try:
-                    View._has_valid_custom_views(model)
+                    views._check_xml()
                 except Exception as e:
                     invalid += 1  # debuglog
                     _logger.warning("invalid custom view(s) for model %s: %s", model, e)
-            span.set(invalid=invalid)
+            span.set(custom=len(custom_views), invalid=invalid)
 
     def log_assertion_report(self) -> None:
         report = self.report

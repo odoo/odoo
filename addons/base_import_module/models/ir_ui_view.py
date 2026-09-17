@@ -1,28 +1,11 @@
 from odoo import api, models
+from odoo.fields import Domain
 
 
 class IrUiView(models.Model):
     _inherit = "ir.ui.view"
 
     @api.model
-    def _has_valid_custom_views(self, model):
-        # views from imported modules should be considered as custom views
-        result = super()._has_valid_custom_views(model)
-
-        self.env.cr.execute(
-            """
-            SELECT max(v.id)
-               FROM ir_ui_view v
-          LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-          LEFT JOIN ir_module_module m ON (m.name = md.module)
-              WHERE m.imported = true
-                AND v.model = %s
-                AND v.active = true
-           GROUP BY coalesce(v.inherit_id, v.id)
-        """,
-            [model],
-        )
-
-        ids = (row[0] for row in self.env.cr.fetchall())
-        views = self.with_context(load_all_views=True).browse(ids)
-        return views._check_xml() and result
+    def _get_domain_shipping_modules(self):
+        # a view an imported module carries is a custom view
+        return super()._get_domain_shipping_modules() & Domain("imported", "=", False)

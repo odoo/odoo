@@ -5,7 +5,6 @@ import tempfile
 import time
 from collections import defaultdict
 from contextlib import contextmanager
-from functools import partial
 from unittest.mock import patch
 
 from lxml import etree
@@ -2189,7 +2188,10 @@ class TestViews(ViewCase):
 
     def test_custom_view_validation(self):
         model = "ir.actions.act_url"
-        validate = partial(self.View._has_valid_custom_views, model)
+
+        def validate():
+            views = self.View._get_custom_views([model])
+            return views.with_context(load_all_views=True)._check_xml()
 
         vid = self._insert_view(
             name="base view",
@@ -7803,6 +7805,149 @@ class TestViewRevalidation(ViewCase):
         ) as checked:
             first.write({"priority": 11})
         self.assertTrue(checked.called)
+
+
+@tagged("post_install", "-at_install")
+class TestViewWriteContract(ViewCase):
+    def test_write_leaves_the_callers_dict_alone(self):
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="wc p", model="res.partner"
+        )
+        other = self.assertValid(
+            '<form><field name="name"/></form>', name="wc o", model="res.partner"
+        )
+        # the form arch reads as a spec on the other's form, so it stays
+        vals = {"inherit_id": other.id}
+        primary.write(vals)
+        self.assertEqual(vals, {"inherit_id": other.id})
+        self.assertEqual(primary.mode, "extension")
+        vals = {"inherit_id": False}
+        primary.write(vals)
+        self.assertEqual(vals, {"inherit_id": False})
+        self.assertEqual(primary.mode, "primary")
+
+    def test_create_through_arch_base_keeps_the_arch_as_previous(self):
+        arch = '<form><field name="name"/></form>'
+        view = self.View.create(
+            {"name": "ab", "model": "res.partner", "arch_base": arch}
+        )
+        self.assertEqual(view.arch_prev, arch)
+        self.assertEqual(view.arch_db, arch)
+        # and a later write still saves what it overwrites
+        view.write({"arch_base": '<form><field name="email"/></form>'})
+        self.assertEqual(view.arch_prev, arch)
+
+    def test_an_overlay_replacing_the_root_is_validated_whole(self):
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="rr p", model="res.partner"
+        )
+        self.assertInvalid(
+            """
+            <xpath expr="/form" position="replace">
+                <form><field name="name" invisible="not_a_field"/></form>
+            </xpath>
+            """,
+            "not_a_field",
+            inherit_id=primary.id,
+            model="res.partner",
+        )
+
+    def test_two_overlays_setting_one_attribute_report_a_conflict(self):
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="cf p", model="res.partner"
+        )
+        for index in range(2):
+            self.assertValid(
+                f"""
+                <field name="name" position="attributes">
+                    <attribute name="string">Label {index}</attribute>
+                </field>
+                """,
+                name=f"cf {index}",
+                inherit_id=primary.id,
+                model="res.partner",
+            )
+        with self.assertLogs(
+            "odoo.debug.logic.base.ir_ui_view", level="DEBUG"
+        ) as log_catcher:
+            arch = primary.get_combined_arch()
+        self.assertIn('string="Label 1"', arch)
+        conflicts = [
+            line
+            for line in log_catcher.output
+            if "event=combine.attribute_conflicts" in line
+        ]
+        self.assertEqual(len(conflicts), 1, log_catcher.output)
+        self.assertIn("attributes=['string']", conflicts[0])
+        self.assertIn("targets=['field:name']", conflicts[0])
+
+
+@tagged("post_install", "-at_install")
+class TestPreloadViews(ViewCase):
+    def test_a_digit_int_refuses_is_a_missing_template_not_a_crash(self):
+        preload = self.View._preload_views(["²", "999999999", "no.such_template"])
+        self.assertIsInstance(preload["²"]["error"], MissingError)
+        self.assertIsInstance(preload["no.such_template"]["error"], MissingError)
+        self.assertIsInstance(preload[999999999]["error"], MissingError)
+
+
+@tagged("post_install", "-at_install")
+class TestCustomViews(ViewCase):
+    def test_each_model_under_a_root_keeps_its_latest_custom_view(self):
+        root = self.env.ref("base.view_partner_form")
+        older = self.assertValid(
+            "<data/>", name="c A0", inherit_id=root.id, model="res.partner"
+        )
+        newer = self.assertValid(
+            "<data/>", name="c A1", inherit_id=root.id, model="res.partner"
+        )
+        other_model = self.View.create(
+            {
+                "name": "c B",
+                "model": "res.users",
+                "inherit_id": root.id,
+                "mode": "primary",
+                "arch": "<data/>",
+            }
+        )
+        custom = self.View._get_custom_views()
+        self.assertIn(newer, custom)
+        self.assertIn(other_model, custom)
+        self.assertNotIn(older, custom)
+        self.assertEqual(custom & (older + newer + other_model), newer + other_model)
+        self.assertEqual(
+            self.View._get_custom_views(["res.partner"])
+            & (older + newer + other_model),
+            newer,
+        )
+
+    def test_a_view_of_a_module_the_database_knows_is_shipped(self):
+        root = self.env.ref("base.view_partner_form")
+        shipped = self.assertValid(
+            "<data/>", name="s", inherit_id=root.id, model="res.partner"
+        )
+        self.env["ir.model.data"].create(
+            {
+                "module": "base",
+                "name": "probe_shipped",
+                "model": "ir.ui.view",
+                "res_id": shipped.id,
+            }
+        )
+        unknown = self.assertValid(
+            "<data/>", name="u", inherit_id=root.id, model="res.partner"
+        )
+        self.env["ir.model.data"].create(
+            {
+                "module": "no_such_module",
+                "name": "probe_unknown",
+                "model": "ir.ui.view",
+                "res_id": unknown.id,
+            }
+        )
+        custom = self.View._get_custom_views(["res.partner"])
+        self.assertNotIn(shipped, custom)
+        self.assertIn(unknown, custom)
 
 
 @tagged("post_install", "-at_install")
