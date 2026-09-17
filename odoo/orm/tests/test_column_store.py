@@ -63,3 +63,34 @@ def test_in_memory_merge_json_layers_fallback_stored_and_value():
     )
     assert columns.read(_model(), "name", [2]) == {2: None}
     assert columns.merge_json(_model(), "name", 3, {}, {"fr_FR": "x"}) == 0
+
+
+from odoo import fields, models  # noqa: E402
+from odoo.orm.model_test_env import model_test_env  # noqa: E402
+
+_MOD = "test_column_store_contract"
+
+
+class Claim(models.Model):
+    _name = "cs.claim"
+    _module = _MOD
+    _description = "a row with a unique code and a nullable qty"
+    _log_access = False
+
+    code = fields.Char()
+    qty = fields.Integer()
+    _code_uniq = models.Constraint("unique(code)", "code must be unique")
+
+
+def test_in_memory_try_write_refuses_a_unique_duplicate_like_postgresql():
+    with model_test_env(Claim, check_cache=False) as env:
+        a = env["cs.claim"].create({"code": "X"})
+        b = env["cs.claim"].create({"code": "Y"})
+        env.flush_all()
+        columns = env.backend.columns
+        assert columns.try_write(env["cs.claim"], "code", b.id, "X") is False
+        assert columns.read(env["cs.claim"], "code", [b.id]) == {b.id: "Y"}
+        assert columns.try_write(env["cs.claim"], "code", b.id, "Z") is True
+        assert columns.read(env["cs.claim"], "code", [b.id]) == {b.id: "Z"}
+        # rewriting a row's own value is not a duplicate
+        assert columns.try_write(env["cs.claim"], "code", a.id, "X") is True

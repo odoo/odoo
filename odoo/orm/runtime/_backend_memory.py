@@ -128,6 +128,16 @@ class InMemoryColumnStore:
     def try_write(
         self, model: BaseModel, column: str, record_id: int, value: typing.Any
     ) -> bool:
+        # a value the table refuses under a unique constraint is an answer,
+        # not an error: the caller picks the next candidate (mirrors the
+        # UniqueViolation catch of the PostgreSQL twin)
+        row = dict(self.storage.get_row(model._table, record_id) or {})
+        row["id"] = record_id
+        row[column] = value
+        try:
+            _check_table_constraints(self.storage, model, [row])
+        except UniqueViolation:
+            return False
         self.storage.update_rows(model._table, [(record_id, {column: value})])
         return True
 
