@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import socket
 from dataclasses import dataclass
 from typing import Self
 
@@ -13,6 +14,7 @@ __all__ = [
     "INHERIT_FROM_CRON",
     "SD_LISTEN_FDS_START",
     "ServerSettings",
+    "adopt_activated_socket",
     "current",
     "installed",
     "override",
@@ -22,6 +24,31 @@ __all__ = [
 INHERIT_FROM_CRON = -1
 
 SD_LISTEN_FDS_START = 3
+
+
+def adopt_activated_socket(fileno: int) -> socket.socket:
+    """Adopt a systemd socket-activation fd, rejecting non-TCP sockets.
+
+    The server serves TCP: it reads ``getsockname()[:2]`` as (host, port) and
+    sets ``TCP_NODELAY`` on every connection.  A unit configured with
+    ``ListenStream=/path.sock`` hands over an ``AF_UNIX`` socket instead, which
+    survives adoption but fails cryptically at the first accept (``TCP_NODELAY``
+    raises ``OSError 95``, taking the accept loop or the worker down) after
+    producing a garbage server identity.  Reject it here, where the cause is
+    still nameable.
+    """
+    sock = socket.socket(fileno=fileno)
+    if sock.family not in (socket.AF_INET, socket.AF_INET6):
+        family = getattr(sock.family, "name", sock.family)
+        # Release the wrapper without closing the fd (the process exits below,
+        # which reclaims it); closing here would fight the fd's real owner.
+        sock.detach()
+        raise SystemExit(
+            f"Socket activation passed a {family} socket on fd {fileno}; the "
+            "server needs a TCP socket. Configure the unit with "
+            "ListenStream=<port> (or <address>:<port>), not a filesystem path."
+        )
+    return sock
 
 
 def _is_inherited(limit: int) -> bool:

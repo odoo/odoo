@@ -27,7 +27,7 @@ from ._transport import (
     WSGIApp,
     serve_one,
 )
-from .settings import SD_LISTEN_FDS_START, current
+from .settings import SD_LISTEN_FDS_START, adopt_activated_socket, current
 
 if TYPE_CHECKING:
     from .settings import ServerSettings
@@ -296,7 +296,7 @@ class ThreadedHTTPServer:
             _debug.lifecycle("httpd.bound", source="inherited", fd=inherited.fileno())
             return inherited, True
         if current().http_socket_activation:
-            sock = socket.socket(fileno=SD_LISTEN_FDS_START)
+            sock = adopt_activated_socket(SD_LISTEN_FDS_START)
             if announce:
                 _logger.info("HTTP service running through socket activation")
             sock.setblocking(False)

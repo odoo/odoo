@@ -91,3 +91,38 @@ class TestTheSnapshotIsDerivedOncePerChange:
             os.environ, {"LISTEN_FDS": "two", "LISTEN_PID": str(os.getpid())}
         ):
             assert server_settings.current().http_socket_activation is False
+
+
+class TestAdoptActivatedSocket:
+    def test_a_tcp_socket_is_adopted(self):
+        import socket
+
+        listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        listener.bind(("127.0.0.1", 0))
+        try:
+            adopted = server_settings.adopt_activated_socket(listener.fileno())
+            assert adopted.family == socket.AF_INET
+            adopted.detach()
+        finally:
+            listener.close()
+
+    def test_a_unix_socket_is_rejected_with_a_clear_message(self, tmp_path):
+        import socket
+
+        import pytest
+
+        path = str(tmp_path / "activated.sock")
+        listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        listener.bind(path)
+        try:
+            with pytest.raises(SystemExit) as caught:
+                server_settings.adopt_activated_socket(listener.fileno())
+            message = str(caught.value)
+            assert "TCP socket" in message, (
+                "an AF_UNIX socket survives adoption but dies cryptically at "
+                "the first accept (TCP_NODELAY raises OSError 95); the reason "
+                "has to be named here or the operator debugs the wrong thing"
+            )
+            assert "ListenStream" in message
+        finally:
+            listener.close()

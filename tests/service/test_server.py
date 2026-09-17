@@ -2451,6 +2451,7 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
             ),
             patch.object(signal, "signal"),
             patch.object(_prefork.socket, "socket") as mock_sock,
+            patch.object(_prefork, "adopt_activated_socket", return_value=MagicMock()),
             patch.object(
                 _prefork,
                 "take_inherited_socket",

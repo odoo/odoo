@@ -37,7 +37,7 @@ from ._reload import GenerationHandoff
 from ._sdnotify import Watchdog, notify, notify_ready
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
-from .settings import SD_LISTEN_FDS_START
+from .settings import SD_LISTEN_FDS_START, adopt_activated_socket
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -755,7 +755,7 @@ class PreforkServer(CommonServer):
                     self.port,
                 )
             elif self.settings.http_socket_activation:
-                self.socket = socket.socket(fileno=SD_LISTEN_FDS_START)
+                self.socket = adopt_activated_socket(SD_LISTEN_FDS_START)
                 os.set_inheritable(self.socket.fileno(), False)
                 _debug.lifecycle("prefork.socket_bound", source="socket_activation")
                 self.logger.info("HTTP service running through socket activation")
@@ -779,7 +779,7 @@ class PreforkServer(CommonServer):
                     fd=inherited.fileno(),
                 )
             elif self.settings.websocket_socket_activation:
-                self.websocket_socket = socket.socket(fileno=SD_LISTEN_FDS_START + 1)
+                self.websocket_socket = adopt_activated_socket(SD_LISTEN_FDS_START + 1)
                 os.set_inheritable(self.websocket_socket.fileno(), False)
                 _debug.lifecycle(
                     "prefork.websocket_socket_bound", source="socket_activation"
