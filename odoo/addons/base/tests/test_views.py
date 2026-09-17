@@ -7892,6 +7892,48 @@ class TestPreloadViews(ViewCase):
 
 
 @tagged("post_install", "-at_install")
+class TestCombineBatching(ViewCase):
+    def _tree(self, size):
+        root = self.assertValid(
+            '<form><field name="name"/></form>', name="cb root", model="res.partner"
+        )
+        extensions = self.View.browse()
+        for index in range(size):
+            extensions += self.assertValid(
+                f"""<field name="name" position="attributes">
+                    <attribute name="x{index}">1</attribute></field>""",
+                name=f"cb {index}",
+                inherit_id=root.id,
+                model="res.partner",
+            )
+        return root, extensions
+
+    def _combines(self, fn):
+        with self.assertLogs(
+            "odoo.debug.pipeline.base.ir_ui_view", level="DEBUG"
+        ) as log_catcher:
+            fn()
+        return sum("event=combine " in line for line in log_catcher.output)
+
+    def test_views_under_one_root_are_combined_once_per_check(self):
+        _root, extensions = self._tree(6)
+        self.assertEqual(self._combines(extensions._check_xml), 1)
+
+    def test_an_arch_write_on_many_views_validates_the_tree_once(self):
+        _root, extensions = self._tree(6)
+        self.assertEqual(
+            self._combines(lambda: extensions.write({"arch": "<data/>"})), 1
+        )
+        self.assertEqual(set(extensions.mapped("arch")), {"<data/>"})
+        # and it still validates: a broken arch is refused
+        with mute_logger("odoo.addons.base.models.ir_ui_view"):
+            with self.assertRaises(ValidationError):
+                extensions.write(
+                    {"arch": '<field name="nope" position="after"><div/></field>'}
+                )
+
+
+@tagged("post_install", "-at_install")
 class TestCustomViews(ViewCase):
     def test_each_model_under_a_root_keeps_its_latest_custom_view(self):
         root = self.env.ref("base.view_partner_form")

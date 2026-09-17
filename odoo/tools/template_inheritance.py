@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING
-
 from lxml import etree
 
 from odoo.exceptions import ValidationError
@@ -13,9 +11,6 @@ from odoo.libs.xml import (
 )
 from odoo.libs.xml.template_inheritance import _compile_xpath
 from odoo.tools.translate import LazyTranslate
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 __all__ = ["apply_inheritance_specs", "locate_node"]
 
@@ -52,18 +47,14 @@ def apply_inheritance_specs(
     source: etree._Element,
     specs_tree: etree._Element,
     inherit_branding: bool = False,
-    pre_locate: Callable[[etree._Element], None] | None = None,
 ) -> etree._Element:
     try:
         with _debug.perf(
             "template_inheritance.applied",
             specs=len(specs_tree),
             branding=inherit_branding,
-            pre_locate=pre_locate is not None,
         ):
-            return _apply_inheritance_specs_base(
-                source, specs_tree, inherit_branding, pre_locate
-            )
+            return _apply_inheritance_specs_base(source, specs_tree, inherit_branding)
     except XPathExpressionError as e:
         _debug.logic("template_inheritance.spec_failed", error=type(e).__name__)
         raise ValidationError(str(e)) from e

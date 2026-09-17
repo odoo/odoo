@@ -457,7 +457,9 @@ class IrUiView(models.Model):
         )
 
     def _inverse_arch(self) -> None:
-        for view in self:
+        # each view's arch_db is its own write; the set is validated once,
+        # and a tree several of them share combines once
+        for view in self.with_context(ir_ui_view_validate_later=True):
             self._check_xml_encoding(view.arch)
             data = {"arch_db": view.arch}
             if "install_filename" in self.env.context:
@@ -467,6 +469,7 @@ class IrUiView(models.Model):
                     data["arch_updated"] = False
             _debug.lifecycle("arch_written", view=view.id, arch_fs=data.get("arch_fs"))
             view.write(data)
+        self._check_xml()
         # xml_translate normalises what it stores, and the value depends on
         # the language: no environment keeps the value it was handed
         self.invalidate_recordset(["arch"])
@@ -1084,7 +1087,8 @@ class IrUiView(models.Model):
 
         if revalidate:
             res = super().write(vals)
-            self._check_xml()
+            if not self.env.context.get("ir_ui_view_validate_later"):
+                self._check_xml()
             return res
         if not recombines:
             return super().write(vals)
@@ -1417,14 +1421,13 @@ class IrUiView(models.Model):
 
     @api.model
     def apply_inheritance_specs(
-        self, source: _Element, specs_tree: _Element, pre_locate: Any = None
+        self, source: _Element, specs_tree: _Element
     ) -> _Element:
         try:
             source = apply_inheritance_specs(
                 source,
                 specs_tree,
                 inherit_branding=self.env.context.get("inherit_branding"),
-                pre_locate=pre_locate,
             )
         except ValueError as e:
             _debug.logic(
@@ -1588,16 +1591,17 @@ class IrUiView(models.Model):
         """For each view, its primary root and the overlay tree under it."""
         self._prefetch_ancestry()
         parented = []
-        roots = self.env["ir.ui.view"]
+        root_ids = []
         for root in self:
             parented.append(view_ids := [])
             while True:
                 view_ids.append(root.id)
                 if not root.inherit_id:
-                    roots += root
+                    root_ids.append(root.id)
                     break
                 root = root.inherit_id
-        views = self.env["ir.ui.view"].browse(
+        roots = self.browse(root_ids)
+        views = self.browse(
             unique(view_id for view_ids in parented for view_id in view_ids)
         )
 
@@ -1648,7 +1652,26 @@ class IrUiView(models.Model):
         ]
 
     def _get_combined_archs(self) -> list[_Element]:
-        return [root._combine(hierarchy) for root, hierarchy in self._get_hierarchies()]
+        # views under one root share the hierarchy: combine it once and hand
+        # each a copy, since a caller edits the arch it gets
+        combined: dict[tuple[Any, ...], _Element] = {}
+        archs = []
+        for root, hierarchy in self._get_hierarchies():
+            key = (
+                root.id,
+                tuple(
+                    (parent.id, tuple(child.id for child in children))
+                    for parent, children in hierarchy.items()
+                ),
+            )
+            if key in combined:
+                archs.append(copy.deepcopy(combined[key]))
+                continue
+            archs.append(combined.setdefault(key, root._combine(hierarchy)))
+        _debug.perf.count(
+            "combined_archs", requested=len(archs), combined=len(combined)
+        )
+        return archs
 
     def _get_view_refs(self, node: _Element) -> dict[str, str]:
         context = node.get("context")

@@ -8,7 +8,7 @@ from lxml import etree as ET
 from lxml import html
 from lxml.html import builder as h
 
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import HttpCase, common, tagged
 
@@ -1636,36 +1636,42 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         )
         base_footer.with_context(website_id=1).write({"active": True})
         specific_footer = base_footer._get_views_specific()
-        specific_footer.with_context(lang="en_US").arch_db = "<div>hello</div>"
+        # the specific view is an extension of website.layout and validates
+        # against it, website context or not: its arch is a spec
+        footer = '<xpath expr="//div[@id=\'footer\']" position="replace">%s</xpath>'
+        specific_footer.with_context(lang="en_US").arch_db = footer % "<div>hello</div>"
         specific_footer.update_field_translations(
             "arch_db", {"fr_BE": {"hello": "bonjour"}}
         )
 
         self.assertEqual(
-            specific_footer.with_context(lang="en_US").arch, "<div>hello</div>"
+            specific_footer.with_context(lang="en_US").arch, footer % "<div>hello</div>"
         )
         self.assertEqual(
-            specific_footer.with_context(lang="fr_BE").arch, "<div>bonjour</div>"
+            specific_footer.with_context(lang="fr_BE").arch,
+            footer % "<div>bonjour</div>",
         )
 
-        specific_footer.with_context(
-            delay_translations=True, lang="en_US"
-        ).arch_db = "<h1>hello</h1>"
+        specific_footer.with_context(delay_translations=True, lang="en_US").arch_db = (
+            footer % "<h1>hello</h1>"
+        )
 
         self.assertEqual(
-            specific_footer.with_context(lang="en_US").arch, "<h1>hello</h1>"
+            specific_footer.with_context(lang="en_US").arch, footer % "<h1>hello</h1>"
         )
         self.assertEqual(
-            specific_footer.with_context(lang="fr_BE").arch, "<div>bonjour</div>"
+            specific_footer.with_context(lang="fr_BE").arch,
+            footer % "<div>bonjour</div>",
         )
 
         self.env["ir.module.module"]._load_module_terms(["website"], ["en_US", "fr_BE"])
 
         self.assertEqual(
-            specific_footer.with_context(lang="en_US").arch, "<h1>hello</h1>"
+            specific_footer.with_context(lang="en_US").arch, footer % "<h1>hello</h1>"
         )
         self.assertEqual(
-            specific_footer.with_context(lang="fr_BE").arch, "<div>bonjour</div>"
+            specific_footer.with_context(lang="fr_BE").arch,
+            footer % "<div>bonjour</div>",
         )
 
     def test_soc_complete_flow(self):
@@ -2363,3 +2369,42 @@ class TestFirstPageIdBatchCost(common.TransactionCase):
             f"{small} for 2: it is searching per view. Two sizes rather than one, "
             f"and 2 rather than 1 so a warm cache cannot make it vacuous.",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestSpecificViewResolution(common.TransactionCase):
+    """A website-specific view is combined in its own website when the
+    context names none: outside one, the generic domain dropped it from its
+    own tree, so it resolved without itself and was written unvalidated."""
+
+    def setUp(self):
+        super().setUp()
+        View = self.env["ir.ui.view"]
+        self.base = View.create(
+            {
+                "name": "resolution base",
+                "type": "qweb",
+                "key": "website.probe_resolution_base",
+                "arch": "<div><span>base</span></div>",
+            }
+        )
+        self.specific = View.create(
+            {
+                "name": "resolution specific",
+                "type": "qweb",
+                "key": "website.probe_resolution_specific",
+                "inherit_id": self.base.id,
+                "website_id": self.env.ref("website.default_website").id,
+                "arch": '<xpath expr="//span" position="after"><b>specific</b></xpath>',
+            }
+        )
+
+    def test_a_specific_view_resolves_in_its_own_website(self):
+        self.assertIn("<b>specific</b>", self.specific.get_combined_arch())
+        self.assertNotIn("<b>specific</b>", self.base.get_combined_arch())
+
+    def test_a_specific_view_is_validated_against_its_tree(self):
+        with self.assertRaises(ValidationError):
+            self.specific.write(
+                {"arch": '<xpath expr="//nope" position="after"><b/></xpath>'}
+            )

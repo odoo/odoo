@@ -3,7 +3,7 @@ import functools
 import itertools
 import logging
 import re
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from lxml import etree
 from lxml.builder import E
@@ -340,10 +340,8 @@ def apply_inheritance_specs(
     source: etree._Element,
     specs_tree: etree._Element | list[etree._Element],
     inherit_branding: bool = False,
-    pre_locate: Callable[[etree._Element], Any] | None = None,
 ) -> etree._Element:
     specs = list(specs_tree) if isinstance(specs_tree, list) else [specs_tree]
-    pre_locate = pre_locate or (lambda _: True)
 
     def extract(spec: etree._Element) -> etree._Element:
         if len(spec):
@@ -351,7 +349,6 @@ def apply_inheritance_specs(
                 f"Invalid specification for moved nodes: "
                 f'"{etree.tostring(spec, encoding="unicode")}"'
             )
-        pre_locate(spec)
         to_extract = locate_node(source, spec)
         if to_extract is None:
             raise ValueError(
@@ -372,7 +369,6 @@ def apply_inheritance_specs(
                 continue
             applied += 1  # debuglog
 
-            pre_locate(spec)
             node = locate_node(source, spec)
             if node is None:
                 _debug.logic(

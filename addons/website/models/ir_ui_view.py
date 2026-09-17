@@ -417,11 +417,22 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_views_inheriting(self):
-        if not self.env.context.get("website_id"):
-            return super()._get_views_inheriting()
+        views = self
+        if not views.env.context.get("website_id"):
+            # a website-specific view resolves in its own website: outside
+            # one, the generic domain would drop it from its own tree
+            website_ids = views.website_id.ids
+            if len(website_ids) != 1:
+                return super()._get_views_inheriting()
+            _debug.logic(
+                "views_inheriting.website_from_views",
+                views=len(views),
+                website=website_ids[0],
+            )
+            views = views.with_context(website_id=website_ids[0])
 
         views = super(
-            IrUiView, self.with_context(active_test=False)
+            IrUiView, views.with_context(active_test=False)
         )._get_views_inheriting()
         return views._filtered_most_specific().filtered("active")
 
