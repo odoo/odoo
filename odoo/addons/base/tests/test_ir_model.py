@@ -427,6 +427,37 @@ class TestIrModelEdition(TransactionCase):
         setup.assert_not_called()
         self.assertEqual(self.env.registry["x_same"]._description, "Same")
 
+    def test_model_deletion_forgets_its_many2many_relation_and_rebuilds_named(self):
+        model = self.env["ir.model"].create(
+            {
+                "name": "Tagged",
+                "model": "x_tagged",
+                "field_id": [
+                    Command.create(
+                        {
+                            "name": "x_partner_ids",
+                            "ttype": "many2many",
+                            "relation": "res.partner",
+                        }
+                    )
+                ],
+            }
+        )
+        registry = self.env.registry
+        field = registry["x_tagged"]._fields["x_partner_ids"]
+        triple = (field.relation, field.column1, field.column2)
+        self.assertIn(
+            ("x_tagged", "x_partner_ids"), registry.many2many_relations[triple]
+        )
+        with patch.object(
+            type(registry), "setup_models", wraps=registry.setup_models
+        ) as setup:
+            model.unlink()
+        self.assertNotIn("x_tagged", registry)
+        self.assertNotIn(triple, registry.many2many_relations)
+        self.assertTrue(setup.call_args_list)
+        self.assertEqual(setup.call_args_list[-1].args[1], [])
+
     def test_manual_model_data_is_the_class_source(self):
         self.env["ir.model"].create({"name": "Rows", "model": "x_rows"})
         self.env.flush_all()
@@ -439,6 +470,12 @@ class TestIrModelEdition(TransactionCase):
         attrs = self.env["ir.model"]._prepare_class_attrs(row)
         self.assertEqual(attrs["_description"], "Rows")
         self.assertEqual(attrs["_order"], "id")
+        stored = {
+            fname
+            for fname, field in self.env["ir.model"]._fields.items()
+            if field.store and field.column_type
+        }
+        self.assertLessEqual(stored, set(row))
 
     def test_reflect_models_empty_no_raise(self):
         self.assertIsNone(self.env["ir.model"]._reflect_models([]))

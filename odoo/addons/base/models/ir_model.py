@@ -1,6 +1,7 @@
 import logging
 import re
 from collections import defaultdict
+from collections.abc import Callable
 from typing import Any, Self, override
 
 from odoo import api, fields, models, tools
@@ -26,7 +27,6 @@ from .ir_model_common import (
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
-MANUAL_CLASS_FIELDS = ("name", "order", "info", "abstract", "transient", "fold_name")
 MANUAL_CLASS_MUTABLE_FIELDS = ("name", "order", "info", "fold_name")
 
 
@@ -132,11 +132,11 @@ class IrModel(models.Model):
     @api.depends()
     def _compute_inherited_model_ids(self) -> None:
         self.inherited_model_ids = False
-        all_parent_names = set()
+        all_parent_names: set[str] = set()
         inherits_by_model: dict[str, list[str]] = {}
         for model in self:
             if (records := self.env.get(model.model)) is not None:
-                parent_names = list(records._inherits)
+                parent_names: list[str] = list(records._inherits)
                 if parent_names:
                     inherits_by_model[model.model] = parent_names
                     all_parent_names.update(parent_names)
@@ -152,10 +152,10 @@ class IrModel(models.Model):
             parents=len(parent_records),
         )
         for model in self:
-            if parent_names := inherits_by_model.get(model.model):
+            if parents := inherits_by_model.get(model.model):
                 model.inherited_model_ids = self.browse(
                     parent_records[name].id
-                    for name in parent_names
+                    for name in parents
                     if name in parent_records
                 )
 
@@ -393,7 +393,7 @@ class IrModel(models.Model):
         if not self.env.context.get(MODULE_UNINSTALL_FLAG):
             self.env.flush_all()
             with _debug.perf("registry_setup_after_unlink", cr=self.env.cr):
-                self.pool.setup_models(self.env.cr)
+                self.pool.setup_models(self.env.cr, [])
 
         return res
 
@@ -513,14 +513,14 @@ class IrModel(models.Model):
             _debug.logic("reflect_models.skipped", reason="no_models")
             return
         id_cache_generation = self._get_id.__cache__.get_cache_generation(self)
-        rows = [
+        vals_list = [
             self._prepare_model_vals(self.env[model_name]) for model_name in model_names
         ]
-        cols = list(rows[0])
-        expected = [tuple(row[col] for col in cols) for row in rows]
+        cols = list(vals_list[0])
+        expected = [tuple(vals[col] for col in cols) for vals in vals_list]
 
-        model_ids = {}
-        existing = {}
+        model_ids: dict[str, int] = {}
+        existing: dict[str, tuple[Any, ...]] = {}
         for row in select_en(self, ["id"] + cols, model_names):
             model_ids[row[1]] = row[0]
             existing[row[1]] = row[1:]
@@ -561,18 +561,11 @@ class IrModel(models.Model):
     @api.model
     def _get_manual_model_data(self) -> list[dict[str, Any]]:
         self.env.cr.execute(
-            SQL(
-                "SELECT %s FROM ir_model WHERE state = 'manual'",
-                SQL(", ").join(
-                    SQL("name->>'en_US' AS name")
-                    if col == "name"
-                    else SQL.identifier(col)
-                    for col in ("id", "model", *MANUAL_CLASS_FIELDS)
-                ),
-            ),
-            prepare=False,
+            "SELECT * FROM ir_model WHERE state = 'manual'", prepare=False
         )
         manual_models = self.env.cr.dictfetchall()
+        for model_data in manual_models:
+            model_data["name"] = (model_data["name"] or {}).get("en_US")
         _debug.perf.count("manual_model_data.loaded", count=len(manual_models))
         return manual_models
 
@@ -664,7 +657,7 @@ class IrModelInherit(models.Model):
         self, model_names: list[str]
     ) -> dict[tuple[int, int, int | None], OrderedSet]:
         IrModel = self.env["ir.model"]
-        definitions = {
+        definitions: dict[str, list[type[models.BaseModel]]] = {
             model_name: [
                 cls
                 for cls in reversed(type(self.env[model_name]).mro())
@@ -684,7 +677,9 @@ class IrModelInherit(models.Model):
         )
         get_model_id = IrModel._get_id
 
-        module_mapping = defaultdict(OrderedSet)
+        module_mapping: defaultdict[tuple[int, int, int | None], OrderedSet] = (
+            defaultdict(OrderedSet)
+        )
         for model_name, classes in definitions.items():
             model_id = get_model_id(model_name)
             if model_id is None:
@@ -709,11 +704,11 @@ class IrModelInherit(models.Model):
 
     @staticmethod
     def _get_inherit_items(
-        definition: type,
+        definition: type[models.BaseModel],
         model_name: str,
         model_id: int,
-        get_model_id: Any,
-        get_field_id: Any,
+        get_model_id: Callable[[str], int | None],
+        get_field_id: Callable[[str], int | None],
     ) -> list[tuple[int, int, int | None]]:
         inherit_parents = [
             parent_name
@@ -753,16 +748,18 @@ class IrModelInherit(models.Model):
                 "(model_id, parent_id) and cannot record both links."
             )
 
-        return [
+        items: list[tuple[int, int, int | None]] = [
             (model_id, parent_ids[parent_name], None) for parent_name in inherit_parents
-        ] + [
+        ]
+        items.extend(
             (
                 model_id,
                 parent_ids[parent_name],
                 get_field_id(definition._inherits[parent_name]),
             )
             for parent_name in delegated
-        ]
+        )
+        return items
 
     def _upsert_inherit_rows(
         self,

@@ -450,6 +450,16 @@ def test_clear_cache_honors_names():
             env.registry.clear_cache("templates.cached_values")
 
 
+def test_discard_fields_forgets_the_many2many_relation_pair():
+    with model_test_env(HPost) as env:
+        registry = env.registry
+        field = registry["h.post"]._fields["tag_ids"]
+        triple = (field.relation, field.column1, field.column2)
+        assert ("h.post", "tag_ids") in registry.many2many_relations[triple]
+        registry.discard_fields([field])
+        assert triple not in registry.many2many_relations
+
+
 def test_discard_fields_works_without_attributeerror():
     registry = ModelRegistry([HWidget])
     field = registry["h.widget"]._fields["total"]
