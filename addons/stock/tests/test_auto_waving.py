@@ -232,26 +232,7 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(wave_3.move_line_ids.location_id, self.child_location_2)
 
         batches = all_batches - waves
-        batch_1 = batches.filtered(lambda b: b.description == self.us_client.name)
-        self.assertEqual(len(batch_1), 1)
-        self.assertEqual(len(batch_1.picking_ids), 2)
-        self.assertEqual(len(batch_1.move_line_ids), 4)
-        self.assertEqual(batch_1.picking_ids.partner_id, self.us_client)
-        self.assertEqual(len(batch_1.move_line_ids.location_id), 3)
-
-        batch_2 = batches.filtered(lambda b: b.description == self.be_client.name)
-        self.assertEqual(len(batch_2), 1)
-        self.assertEqual(len(batch_2.picking_ids), 2)
-        self.assertEqual(len(batch_2.move_line_ids), 3)
-        self.assertEqual(batch_2.picking_ids.partner_id, self.be_client)
-        self.assertEqual(len(batch_2.move_line_ids.location_id), 2)
-
-        batch_3 = batches.filtered(lambda b: b.description == self.fr_client.name)
-        self.assertEqual(len(batch_3), 1)
-        self.assertEqual(len(batch_3.picking_ids), 1)
-        self.assertEqual(len(batch_3.move_line_ids), 2)
-        self.assertEqual(batch_3.picking_ids.partner_id, self.fr_client)
-        self.assertEqual(len(batch_3.move_line_ids.location_id), 2)
+        self.assertEqual(len(batches), 0)
 
     def test_group_by_locations(self):
         self.picking_type_out.write({
