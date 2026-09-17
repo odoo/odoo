@@ -703,7 +703,8 @@ class PosOrder(models.Model):
         if not prefix:
             prefix = session.config_id.name
         suffix = f" - {suffix}" if suffix else ''
-        return f"{prefix} - {last_reference_part}{suffix}"
+        device_id = self.pos_reference.split('-')[0][2:]
+        return f"{prefix} - {device_id}{last_reference_part}{suffix}"
 
     def _compute_order_name(self, session=None):
         session = session or self.session_id

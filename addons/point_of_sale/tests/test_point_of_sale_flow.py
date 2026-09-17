@@ -2465,7 +2465,26 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.env['pos.order'].sync_from_ui([product_order])
         order = self.env['pos.order'].search([])
-        self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
+        device_id = order.pos_reference.split('-')[0][2:]
+        self.assertEqual(order.name, f"/AA - {device_id}{order.pos_reference.split('-')[-1]} - 1.B")
+
+    def test_order_name_unique_across_device_identifiers(self):
+        """Two orders from different devices whose local per-device counters
+        independently reach the same number must still get different order names."""
+        order_1, _ = self.create_backend_pos_order({
+            'order_data': {'pos_reference': '261-1-000002'},
+            'line_data': [{'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id, 'amount': 20}],
+        })
+        order_2, _ = self.create_backend_pos_order({
+            'order_data': {'pos_reference': '262-1-000002'},
+            'line_data': [{'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id, 'amount': 20}],
+        })
+
+        self.assertNotEqual(order_1.name, order_2.name)
+        self.assertEqual(order_1.name, f"{self.pos_config_usd.name} - 1000002")
+        self.assertEqual(order_2.name, f"{self.pos_config_usd.name} - 2000002")
 
     def test_valuation_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.
