@@ -16,6 +16,7 @@ from werkzeug.exceptions import (
 )
 from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
 from werkzeug.wrappers import Response as WerkzeugResponse
+from werkzeug.wsgi import ClosingIterator
 
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.libs.debug_log import DebugLog
@@ -438,7 +439,14 @@ class Application:
         self._clear_thread_state()
         self._apply_proxy_fix(environ)
 
-        with HTTPRequest(environ) as httprequest:
+        httprequest = HTTPRequest(environ)
+        with contextlib.ExitStack() as request_guard:
+            # The WSGI iterable is consumed after __call__ returns, so a
+            # return path must NOT close the request here (a streamed body
+            # may read a request-owned resource, e.g. an uploaded file);
+            # ownership of close() moves into the returned ClosingIterator.
+            # Paths that exit without returning an iterable close it now.
+            request_guard.callback(httprequest.close)
             request: Request | None = None
             pushed = False
             try:
@@ -495,7 +503,9 @@ class Application:
                         queries=current_worker_thread().query_count,
                         query_ms=current_worker_thread().query_time * 1000.0,
                     )
-                return response(environ, start_response)
+                iterable = response(environ, start_response)
+                request_guard.pop_all()
+                return ClosingIterator(iterable, httprequest.close)
 
             except Exception as exc:
                 self._log_request_exception(exc)
@@ -516,7 +526,9 @@ class Application:
                 )
                 if error_response is None:
                     error_response = InternalServerError(str(exc) or None)
-                return error_response(environ, start_response)
+                iterable = error_response(environ, start_response)
+                request_guard.pop_all()
+                return ClosingIterator(iterable, httprequest.close)
 
             finally:
                 if pushed:

@@ -214,3 +214,36 @@ def test_a_memoised_singleton_shadows_a_class_level_replacement():
 
     reset_cached_properties(app)
     assert "session_store" not in app.__dict__, "reset first, patch second"
+
+
+def test_the_request_stays_open_until_the_response_iterable_is_consumed():
+    closed = []
+
+    class _TrackingHTTPRequest(application.HTTPRequest):
+        def close(self):
+            closed.append(True)
+            super().close()
+
+    app = application.Application()
+    req = _FakeRequest(None, app, db=None)
+
+    def _response(env, sr):
+        sr("200 OK", [])
+        return [b"body"]
+
+    req._serve = lambda name: _response
+
+    def _adopt(httprequest, app):
+        req.httprequest = httprequest
+        return req
+
+    with (
+        mock.patch.object(application, "HTTPRequest", _TrackingHTTPRequest),
+        mock.patch.object(application, "Request", _adopt),
+        mock.patch.object(app, "get_static_file_path", return_value=None),
+    ):
+        iterable = app(_environ(), lambda *a, **kw: None)
+    assert not closed, "the request must stay open while the body streams"
+    assert b"".join(iterable) == b"body"
+    iterable.close()
+    assert closed, "closing the iterable closes the request"
