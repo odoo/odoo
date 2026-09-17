@@ -18,8 +18,9 @@
             name="coupon_code"
         >
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
+            <div class="input-group w-100 o_floating_labels">
+                <input id="promo" name="promo" class="form-control" type="text"/>
+                <label for="promo">Discount code</label>
                 <button type="submit" class="btn btn-light border">Apply</button>
             </div>
         </form>
