@@ -75,5 +75,5 @@ class WebsiteEventMenu(models.Model):
             self._copy_children_views(new_child_view, view.inherit_children_ids, website_id)
 
     def unlink(self):
-        self.view_id.sudo().unlink()
+        self.view_id.sudo().with_context(cascade_unlink_views=True).unlink()
         return super().unlink()
