@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Template for seller list in website-->
+    <template id="seller_list" name="SellerList">
+        <t t-call="website.layout">
+            <div class="container">
+                <div style="display: flex;
+                        width: 90%;
+                        flex-wrap: wrap;
+                        padding: 50px;
+                        margin-left: 50px;">
+                    <t t-foreach="seller"
+                       t-as="sell">
+                        <div style="margin:20px">
+                            <a style="float: top;margin-left: 20px;"
+                               t-att-href="'/seller_shop?seller_id=%s' % sell.id">
+                                <t t-esc="sell.name"/>
+                            </a>
+                            <t t-if="sell.image_1920">
+                            <div align="left"
+                                 class="card"
+                                 style=" width:145px; margin-left: 13px;margin-top: 13px;height: 140px;"
+                                 t-esc="sell.image_1920"
+                                 t-options="{'widget':'image'}"/>
+                            </t>
+                            <t t-else="">
+                                 <div align="left"
+                                 class="card"
+                                 style=" width:145px; margin-left: 13px;margin-top: 13px;height: 140px;padding: 10px;">
+                                 <img t-attf-src="/multi_vendor_marketplace/static/src/img/user.png" width="125" height="125" alt=""/>
+                                 </div>
+                            </t>
+                            <div>
+                                <div class="o_website_rating_static" style="margin-left:40px;margin-top: 5px;">
+                                    <t t-if="sell.avg_rating == 1">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating &gt;1 and sell.avg_rating &lt; 2">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-half-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating ==2">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating &gt;2 and sell.avg_rating &lt; 3">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-half-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating ==3">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating &gt; 3 and sell.avg_rating &lt; 4">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-half-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating ==4">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating &gt;4 and sell.avg_rating &lt;5">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star-half-o"
+                                           role="img"/>
+                                    </t>
+                                    <t t-elif="sell.avg_rating==5">
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                        <i class="fa fa-star"
+                                           role="img"/>
+                                    </t>
+                                    <t t-else="">
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                        <i class="fa fa-star-o"
+                                           role="img"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
