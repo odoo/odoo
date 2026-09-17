@@ -1,5 +1,10 @@
+import io
+
+from lxml import etree
+
 from odoo.tests import tagged
 from odoo import Command
+from odoo.tools.convert import convert_file, convert_xml_import
 from odoo.addons.base.tests.common import BaseCommon, HttpCase
 from markupsafe import Markup
 
@@ -78,6 +83,57 @@ class TestTour(BaseCommon):
         tour = self.env["web_tour.tour"].get_current_tour()
         self.assertEqual(bool(tour), False)
 
+    def test_export_xml_file(self):
+        tour = self.env["web_tour.tour"].create({
+            "name": "My Tour (v2)!",
+            "url": "/odoo/my_action",
+            "sequence": 7,
+            "custom": True,
+            "active": False,
+            "rainbow_man_message": "<p>Well done</p>",
+            "step_ids": [
+                Command.create({"trigger": "button.first", "run": "click", "content": "First", "tooltip_position": "left", "sequence": 0}),
+                Command.create({"trigger": "input.second", "run": "edit 5", "sequence": 1}),
+                Command.create({"trigger": "button.third", "sequence": 2}),
+            ],
+        })
+        action = tour.export_xml_file()
+        self.assertEqual(action["type"], "ir.actions.act_url")
+
+        attachment = self.env["ir.attachment"].search([
+            ("res_model", "=", "web_tour.tour"),
+            ("res_id", "=", tour.id),
+            ("name", "=", "My Tour (v2)!.xml"),
+        ])
+        self.assertTrue(attachment)
+        self.assertIn(str(attachment.id), action["url"])
+
+        root = etree.fromstring(attachment.raw.content)
+        self.assertEqual(root.find("./record[@model='web_tour.tour']").get("id"), "My_Tour__v2__")
+
+        def tour_values(tour):
+            return {
+                "name": tour.name,
+                "url": tour.url,
+                "sequence": tour.sequence,
+                "custom": tour.custom,
+                "active": tour.active,
+                "rainbow_man_message": tour.rainbow_man_message,
+                "steps": [
+                    (step.trigger, step.run, step.content, step.tooltip_position)
+                    for step in tour.step_ids
+                ],
+            }
+
+        expected = tour_values(tour)
+        xml_file = io.BytesIO(attachment.raw.content)
+        xml_file.name = attachment.name
+        tour.unlink()
+
+        convert_xml_import(self.env, "web_tour", xml_file)
+        self.env.invalidate_all()
+        self.assertEqual(tour_values(self.env.ref("web_tour.My_Tour__v2__")), expected)
+
 
 @tagged('post_install', '-at_install')
 class WebTourHttp(HttpCase):
@@ -86,6 +142,11 @@ class WebTourHttp(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.eager_files = ["/web_tour/static/src/tour_helpers/tour_helpers.js"]
+
+    def test_xml_tour(self):
+        convert_file(self.env, "web_tour", "tests/test_xml_tour.xml", idref={}, mode="init", noupdate=False)
+        tour = self.env.ref("web_tour.test_xml_tour")
+        self.start_tour(tour.url, tour.name, login="admin")
 
     def test_sanity_automatic(self):
         ResUsers = self.env["res.users"]

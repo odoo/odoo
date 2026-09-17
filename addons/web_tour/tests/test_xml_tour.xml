@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="test_xml_tour" model="web_tour.tour">
+        <field name="name">test_xml_tour</field>
+        <field name="url">/odoo/action-web_tour.tour_action</field>
+        <field name="custom" eval="True"/>
+    </record>
+
+    <record id="test_xml_tour_step_1" model="web_tour.tour.step">
+        <field name="tour_id" ref="test_xml_tour"/>
+        <field name="sequence">10</field>
+        <field name="trigger">.o_list_view .o_data_row td[name=name]:contains(test_xml_tour)</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="test_xml_tour_step_2" model="web_tour.tour.step">
+        <field name="tour_id" ref="test_xml_tour"/>
+        <field name="sequence">20</field>
+        <field name="trigger">.o_form_view .o_breadcrumb .active:contains(test_xml_tour)</field>
+    </record>
+
+    <record id="test_xml_tour_step_3" model="web_tour.tour.step">
+        <field name="tour_id" ref="test_xml_tour"/>
+        <field name="sequence">30</field>
+        <field name="trigger">.o_notebook .nav-link:contains(Steps)</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="test_xml_tour_step_4" model="web_tour.tour.step">
+        <field name="tour_id" ref="test_xml_tour"/>
+        <field name="sequence">40</field>
+        <field name="trigger">.o_field_widget[name=step_ids] .o_data_row:eq(4)</field>
+    </record>
+
+    <record id="test_xml_tour_step_5" model="web_tour.tour.step">
+        <field name="tour_id" ref="test_xml_tour"/>
+        <field name="sequence">50</field>
+        <field name="trigger">.o_breadcrumb .o_back_button</field>
+        <field name="run">click</field>
+    </record>
+</odoo>
