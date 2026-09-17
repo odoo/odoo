@@ -100,3 +100,11 @@ class SaleReport(models.Model):
         if table.consolidation_rate != SQL("1"):
             groupby.append(table.consolidation_rate)
         return groupby
+
+    def _get_order_reference(self):
+        self.ensure_one()
+        if self.id < 0:
+            line = self.env['pos.order.line'].browse(-self.id)
+            line.fetch(['order_id'])
+            return line.order_id
+        return super()._get_order_reference()
