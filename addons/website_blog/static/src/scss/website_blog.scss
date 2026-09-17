@@ -132,8 +132,23 @@
         }
     }
 
-    #o_wblog_post_main.o_wblog_post_main_transition {
-        animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
+    #o_wblog_post_main {
+        &.o_wblog_post_main_transition {
+            animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
+        }
+
+        // Make sure the snippets container render correctly in the main post
+        // container.
+        > div:is(.o_container_small) {
+            .container-fluid > .o_grid_mode {
+                --gutter-x: 0px;
+            }
+        }
+
+        > div:is(.container) .o_container_small {
+            padding-right: $grid-gutter-width * 0.5;
+            padding-left: $grid-gutter-width * 0.5;
+        }
     }
 
     // Sidebar and table of contents
