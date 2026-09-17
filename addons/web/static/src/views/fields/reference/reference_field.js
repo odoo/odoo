@@ -2,6 +2,7 @@ import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@od
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 
@@ -41,7 +42,7 @@ export const referenceFieldProps = {
 
 export class ReferenceField extends Component {
     static template = "web.ReferenceField";
-    static components = { Many2One };
+    static components = { Many2One, SelectMenu };
 
     props = useProps(referenceFieldProps);
 
@@ -108,9 +109,20 @@ export class ReferenceField extends Component {
         }
         return [];
     }
+    get choices() {
+        return this.selection.map(([value, label]) => ({ value, label }));
+    }
 
     get hideModelSelector() {
         return this.props.hideModel || this.props.modelField;
+    }
+
+    get modelPlaceholder() {
+        return _t("Select a model...");
+    }
+
+    get recordPlaceholder() {
+        return _t("Search a record...");
     }
 
     getRelation() {
