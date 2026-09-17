@@ -172,8 +172,8 @@ export class PosAccessRightPlugin extends Plugin {
         return true;
     }
 
-    get disablePriceButton() {
-        return this.config.restrict_price_control || this.loggedCashier?._role !== "manager";
+    get canEditPrice() {
+        return !this.config.restrict_price_control || this.cashier?._role === "manager";
     }
 
     get canCancelOrder() {
@@ -225,7 +225,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get showEditPlanButton() {
-        return true;
+        return this.loggedCashier?._role === "manager";
     }
 
     get canAccessTotalDue() {

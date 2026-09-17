@@ -846,3 +846,7 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ServiceFeeRefundTour', login="pos_admin")
+
+    def test_table_merging_with_pos_user(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_table_merging_with_pos_user')
