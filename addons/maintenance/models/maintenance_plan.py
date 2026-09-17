@@ -34,6 +34,22 @@ class MaintenancePlan(models.Model):
     _order = "date_next_scheduled, id"
     _check_company_auto = True
 
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        required=True,
+    )
+    maintenance_team_id = fields.Many2one(
+        comodel_name="team.team",
+        string="Team",
+        domain=[("use_maintenance", "=", True)],
+        check_company=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Technician",
+        tracking=True,
+    )
     name = fields.Char(
         required=True,
         tracking=True,
@@ -42,10 +58,8 @@ class MaintenancePlan(models.Model):
         default=True,
         tracking=True,
     )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        default=lambda self: self.env.company,
-        required=True,
+    priority = fields.Selection(
+        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
     )
     resource_ids = fields.Many2many(
         comodel_name="resource.resource",
@@ -65,23 +79,9 @@ class MaintenancePlan(models.Model):
         string="Occurrences to Book Ahead",
         help="Block the resources for this many further occurrences in advance. Only a plan on fixed dates knows them.",
     )
-    maintenance_team_id = fields.Many2one(
-        comodel_name="team.team",
-        string="Team",
-        domain=[("use_maintenance", "=", True)],
-        check_company=True,
-    )
-    user_id = fields.Many2one(
-        comodel_name="res.users",
-        string="Technician",
-        tracking=True,
-    )
     duration = fields.Float(
         default=1.0,
         help="Duration in hours.",
-    )
-    priority = fields.Selection(
-        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
     )
     description = fields.Html()
     repeat_unit = fields.Selection(
