@@ -566,12 +566,12 @@ Asset compilation engine — concatenates, minifies, and bundles JS/CSS/SCSS.
 QWeb template engine — compiles XML templates to Python functions, renders to Markup.
 
 **Key Methods:**
-- `_render(template, values, ...)` — Main render entry point → Markup string
-- `_compile(template, options, ...)` — Compile template to Python function (ormcache)
-- `_compile_node(node, options, indent, ...)` — Recursively compile XML node
+- `_render(template, values, **options)` — Main render entry point → Markup string; `_render_batch` shares one prepared environment across many value dicts
+- `_compile(template)` — Compile a template to its Python functions (ormcache `templates`, keyed by `_get_template_cache_signature()`)
+- `_compile_node(el, compile_context, level)` — Recursively compile an XML node
 - `_compile_directive_if()`, `_compile_directive_foreach()`, `_compile_directive_set()`, `_compile_directive_call()`, `_compile_directive_out()`, `_compile_directive_field()` — Directive handlers
-- `_get_field(...)` — Get field value with widget formatting
-- `_eval_expr(expr, values)` — Evaluate Python expression safely
+- `_compile_expr(expr, raise_on_missing)` — Rewrite a template expression into sandboxed Python (`_SAFE_QWEB_OPCODES`)
+- `_get_field(record, field_name, expression, tag_name, field_options, values)` — Field value through its `ir.qweb.field.*` converter; merges the converter's attributes into the node
 
 ### models/ir_qweb_fields.py
 

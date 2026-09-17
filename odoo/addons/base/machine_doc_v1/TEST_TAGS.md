@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3828 methods, 780 classes, 138 files)
+# All base tests (3851 methods, 785 classes, 138 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 448 classes)
+### Tagged Files (78 files, 453 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -159,7 +159,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_partner_identifier_confidentiality.py` | `post_install`, `-at_install` | 2 | 11 | TransactionCase |
 | `test_partner_private_address_access.py` | `post_install`, `-at_install` | 1 | 11 | TransactionCase |
 | `test_profiler.py` | `post_install`, `-at_install`, `profiling`, `-standard`, `profiling_performance`, `profiling_memory` | 7 | 39 | TransactionCase, BaseCase, HttpCase |
-| `test_qweb.py` | `post_install`, `-at_install` | 24 | 197 | TransactionCase, TransactionCaseWithUserDemo |
+| `test_qweb.py` | `post_install`, `-at_install` | 26 | 211 | TransactionCase, TransactionCaseWithUserDemo |
 | `test_report_paperformat_audit.py` | `post_install`, `-at_install` | 1 | 10 | TransactionCase |
 | `test_res_company.py` | `post_install`, `-at_install` | 3 | 21 | TransactionCase |
 | `test_res_config.py` | `post_install`, `-at_install` | 3 | 12 | TransactionCase |
@@ -181,8 +181,8 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_tests_tags.py` | `nodatabase` | 4 | 14 | TransactionCase, BaseCase |
 | `test_translate.py` | `post_install`, `-at_install` | 12 | 89 | BaseCase, TransactionCase |
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
-| `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
-| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 51 | 289 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
+| `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
+| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 54 | 296 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
 | `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 3 | 11 | TransactionCase |
 
 ### Untagged Files (60 files)
@@ -255,11 +255,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 138 |
-| Total test classes | 780 |
-| Total test methods | 3828 |
+| Total test classes | 785 |
+| Total test methods | 3851 |
 | Files with @tagged | 78 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 247 |
+| Classes using post_install | 250 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 

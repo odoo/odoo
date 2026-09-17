@@ -2386,7 +2386,7 @@ class TestQWebBasic(TransactionCase):
                 str(e),
                 "Error while rendering the template:\n"
                 "    SyntaxError: Using variable names with '__' is not allowed: '__stuff'\n"
-                f"    Template: {view.id}\n"
+                f"    Template: {view.key}\n"
                 f"    Reference: {view.id}\n"
                 "    Path: /section/t\n"
                 '    Element: <t t-set="a" t-value="env.__stuff"/>\n'
@@ -3415,14 +3415,14 @@ class TestQWebHelpers(TransactionCase):
         qweb = self.env["ir.qweb"]
         el = etree.fromstring('<div xmlns:x="urn:x"/>')
         self.assertEqual(
-            qweb._new_namespaces(el, self._context(nsmap={})), {("x", "urn:x")}
+            qweb._new_namespaces(el, self._context(nsmap={})), [("x", "urn:x")]
         )
         self.assertEqual(
-            qweb._new_namespaces(el, self._context(nsmap={"x": "urn:x"})), set()
+            qweb._new_namespaces(el, self._context(nsmap={"x": "urn:x"})), []
         )
         eld = etree.fromstring('<div xmlns="urn:d"/>')
         self.assertEqual(
-            qweb._new_namespaces(eld, self._context(nsmap={})), {(None, "urn:d")}
+            qweb._new_namespaces(eld, self._context(nsmap={})), [(None, "urn:d")]
         )
         self.assertEqual(
             qweb._get_ns_prefix_map(el, self._context(nsmap={})), {"urn:x": "x"}
@@ -3796,11 +3796,15 @@ class TestQWebDirectiveContracts(TransactionCase):
             "lang_set", "<t><t t-call='base.lang_leaf' t-lang=\"'en_US'\"/></t>"
         )
         qweb = self.env["ir.qweb"]
-        marker = "attrs = values['__qweb_attrs__'] = {}"
-        self.assertEqual(
-            qweb._generate_code(with_lang.id)[0].count(marker),
-            qweb._generate_code(plain.id)[0].count(marker),
-        )
+        marker = "yield QwebCallParameters("
+        for view in (plain, with_lang):
+            code = qweb._generate_code(view.id)[0]
+            self.assertEqual(code.count(marker), 1)
+            after_yield = code.split(marker, 1)[1].split("\n", 1)[1]
+            self.assertTrue(
+                after_yield.startswith("def "),
+                f"dead code after the t-call yield:\n{after_yield[:200]}",
+            )
         self.assertEqual(str(qweb._render(with_lang.id)), "L")
 
     def test_t_set_beside_an_output_directive_is_a_syntax_error(self):
@@ -4335,13 +4339,14 @@ class TestQWebWidgetBranding(TransactionCase):
 
     def test_a_widget_without_branding_still_reports_force_display(self):
         for branding in (True, False):
-            attributes, _content, force_display = (
+            values = {}
+            _content, force_display = (
                 self.env["ir.qweb"]
                 .with_context(inherit_branding=branding)
-                ._get_widget(1234.5, "1234.5", "span", {"widget": "float"}, {})
+                ._get_widget(1234.5, "1234.5", "span", {"widget": "float"}, values)
             )
             self.assertEqual(bool(force_display), branding)
-            self.assertEqual(bool(attributes), branding)
+            self.assertEqual(bool(values.get("__qweb_attrs__")), branding)
 
 
 class TestQWebTranslationBoundary(TransactionCase):
@@ -4427,3 +4432,205 @@ class TestQWebErrorInfoSurvivesTName(TransactionCase):
     def test_a_comment_alone_between_t_if_and_t_else_is_fine(self):
         arch = '<t><t t-if="False">A</t><!-- c --> <t t-else="">B</t></t>'
         self.assertEqual(self._render_etree(arch), "B")
+
+
+class TestQWebCompileErrorLocation(TransactionCase):
+    def _view(self, key, arch):
+        return self.env["ir.ui.view"].create(
+            {"name": key, "type": "qweb", "key": key, "arch_db": arch}
+        )
+
+    def _render_error(self, template):
+        with self.assertRaises(QWebError) as cm:
+            self.env["ir.qweb"]._render(template, {})
+        return cm.exception.qweb
+
+    def test_a_called_template_that_does_not_compile_is_the_one_blamed(self):
+        callee = self._view("base.cel_callee", '<t><p><t t-out="1 +"/></p></t>')
+        caller = self._view(
+            "base.cel_caller", '<t><div><t t-call="base.cel_callee"/></div></t>'
+        )
+        info = self._render_error("base.cel_caller")
+        self.assertIn("Can not compile expression: 1 +", info.error)
+        self.assertEqual(info.template, "base.cel_callee")
+        self.assertEqual(info.ref, callee.id)
+        self.assertEqual(info.path, "/t/p/t")
+        self.assertEqual(info.element, '<t t-out="1 +"/>')
+        self.assertEqual(
+            info.source,
+            [
+                (caller.id, "/t/div/t", '<t t-call="base.cel_callee"/>'),
+                (callee.id, "/t/p/t", '<t t-out="1 +"/>'),
+            ],
+        )
+
+    def test_a_root_template_rendered_by_key_keeps_its_compile_location(self):
+        view = self._view("base.cel_root", '<t><p><t t-out="1 +"/></p></t>')
+        for template in ("base.cel_root", view.id):
+            info = self._render_error(template)
+            self.assertEqual((info.template, info.ref), ("base.cel_root", view.id))
+            self.assertEqual(info.path, "/t/p/t")
+
+    def test_an_etree_template_keeps_its_compile_location(self):
+        info = self._render_error(etree.fromstring('<t><p><t t-out="1 +"/></p></t>'))
+        self.assertEqual(info.template, "etree._Element")
+        self.assertEqual(info.path, "/t/p/t")
+        self.assertEqual(info.element, '<t t-out="1 +"/>')
+
+    def test_the_slot_location_does_not_depend_on_the_compile_cache(self):
+        self._view("base.cel_slot_callee", '<t><section><div t-out="0"/></section></t>')
+        self._view(
+            "base.cel_slot_wrap",
+            '<div><t t-call="base.cel_slot_callee"><span t-out="a + b"/></t></div>',
+        )
+        self._view("base.cel_slot_top", '<div><t t-call="base.cel_slot_wrap"/></div>')
+        cold = str(self._render_error("base.cel_slot_top"))
+        warm = str(self._render_error("base.cel_slot_top"))
+        self.assertEqual(cold, warm)
+        self.assertIn("""'/t/section/div', '<div t-out="0"/>'""", cold)
+
+    def test_a_parent_refused_after_its_children_is_the_element_named(self):
+        info = self._render_error(
+            etree.fromstring(
+                '<t><t t-if="x"><span t-out="1"/></t>X<t t-else="">B</t></t>'
+            )
+        )
+        self.assertIn("between t-if and t-else", info.error)
+        self.assertEqual(info.path, "/t/t[1]")
+        self.assertEqual(info.element, '<t t-if="x"/>')
+
+    def test_a_namespaced_subtree_keeps_its_compile_location(self):
+        info = self._render_error(
+            etree.fromstring(
+                '<t><svg xmlns="http://www.w3.org/2000/svg"><g t-out="1 +"/></svg></t>'
+            )
+        )
+        self.assertEqual(
+            info.element, '<g xmlns="http://www.w3.org/2000/svg" t-out="1 +"/>'
+        )
+
+    @mute_logger("odoo.db.cursor")
+    def test_a_recoverable_database_error_is_not_wrapped(self):
+        # Raised by psycopg under odoo/db/cursor.py, the frame walk of
+        # _is_error_raised_in_qweb reaches the template's own frame; a helper
+        # defined here would sit on the addons path and never be wrapped.
+        from psycopg.errors import LockNotAvailable
+
+        partner = self.env.ref(
+            "base.main_partner"
+        )  # committed, visible to a second cursor
+        arch = etree.fromstring('<t><p t-out="env.cr.execute(q)"/></t>')
+        query = f"SELECT id FROM res_partner WHERE id = {partner.id} FOR UPDATE NOWAIT"
+        with self.registry.cursor() as other:
+            other.execute(
+                "SELECT id FROM res_partner WHERE id = %s FOR UPDATE NOWAIT",
+                [partner.id],
+            )
+            with self.assertRaises(LockNotAvailable), self.env.cr.savepoint():
+                self.env["ir.qweb"]._render(arch, {"q": query})
+            other.rollback()
+
+
+class TestQWebDirectiveEdgeCases(TransactionCase):
+    def _render(self, arch, values=None):
+        return str(self.env["ir.qweb"]._render(etree.fromstring(arch), values or {}))
+
+    def _render_error(self, arch, values=None):
+        with self.assertRaises(QWebError) as cm:
+            self._render(arch, values)
+        return str(cm.exception)
+
+    def test_an_empty_groups_attribute_denies_like_has_groups(self):
+        self.assertEqual(self._render('<t><div groups="">x</div></t>'), "")
+        self.assertEqual(self._render('<t><div t-groups="">x</div></t>'), "")
+        self.assertEqual(
+            self._render('<t><div groups="base.group_user">x</div></t>'),
+            "<div>x</div>",
+        )
+
+    def test_a_non_ascii_digit_is_not_a_repeat_count_nor_a_view_id(self):
+        self.assertEqual(
+            self._render('<t><t t-foreach="²" t-as="i">x</t></t>'),
+            "",
+            "a superscript is an (unset) variable name, not a repeat count",
+        )
+        self.assertEqual(self._render('<t><t t-foreach="3" t-as="i">x</t></t>'), "xxx")
+        with self.assertRaises(MissingError):
+            self._render('<t><t t-call="½"/></t>')
+        with self.assertRaises(MissingError):
+            self._render('<t><t t-call="²"/></t>')
+        with self.assertRaises(MissingError):
+            self._render('<t><t t-call="{{x}}"/></t>', {"x": "½"})
+
+    def test_id_or_xmlid_converts_decimal_strings_only(self):
+        from odoo.addons.base.models.ir_qweb import _id_or_xmlid
+
+        for ref, expected in (
+            ("12", 12),
+            (12, 12),
+            (" 12", " 12"),
+            ("²", "²"),
+            ("base.view", "base.view"),
+        ):
+            self.assertEqual(_id_or_xmlid(ref), expected)
+
+    def test_a_t_node_without_an_attribute_reader_emits_no_attrs_reset(self):
+        qweb = self.env["ir.qweb"]
+        marker = "values['__qweb_attrs__'] = {}"
+        code = qweb._generate_code(etree.fromstring('<t><t t-if="x">y</t></t>'))[0]
+        self.assertNotIn(marker, code)
+        code = qweb._generate_code(etree.fromstring('<t><span t-if="x">y</span></t>'))[
+            0
+        ]
+        self.assertEqual(code.count(marker), 1)
+        code = qweb._generate_code(
+            etree.fromstring('<t><t t-if="x" t-att-a="f()"/></t>')
+        )[0]
+        self.assertIn("attrs['a'] = ", code, "a t-att expression is still evaluated")
+        self.assertEqual(
+            self._render(
+                '<t><t t-if="v" t-out="v" t-options-widget="\'float\'"/></t>',
+                {"v": 1.5},
+            ),
+            "1.5",
+        )
+
+    def test_namespace_declarations_are_emitted_in_a_fixed_order(self):
+        arch = (
+            '<t><svg xmlns:xlink="http://www.w3.org/1999/xlink" '
+            'xmlns="http://www.w3.org/2000/svg" xmlns:a="urn:a"><g t-if="v"/></svg></t>'
+        )
+        self.assertEqual(
+            self._render(arch, {"v": True}),
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:a="urn:a" '
+            'xmlns:xlink="http://www.w3.org/1999/xlink"><g></g></svg>',
+        )
+
+    def test_t_options_shapes_merge_into_one_dict(self):
+        arch = "<t><span t-out='v' t-options=\"{'widget': 'float'}\" t-options-precision='1'/></t>"
+        self.assertEqual(self._render(arch, {"v": 1.25}), "<span>1.3</span>")
+        arch = "<t><span t-out='v' t-options-widget=\"'float'\" t-options-precision='3'/></t>"
+        self.assertEqual(self._render(arch, {"v": 1.25}), "<span>1.250</span>")
+
+    def test_the_generated_module_is_flat_and_its_line_numbers_are_true(self):
+        qweb = self.env["ir.qweb"]
+        arch = '<t t-name="base.flat"><p>a</p><p>b</p><t t-out="1/0"/></t>'
+        code = qweb._generate_code(etree.fromstring(arch))[0]
+        self.assertNotIn("generate_functions", code)
+        with self.assertRaises(QWebError) as cm:
+            self._render(arch)
+        lines = code.split("\n")
+        error_line = [
+            trace.tb_lineno
+            for trace in iter_traceback(cm.exception.__cause__)
+            if trace.tb_frame.f_code.co_filename == "<base.flat>"
+        ][-1]
+        self.assertIn("1/0", lines[error_line - 1])
+        self.assertEqual(cm.exception.qweb.path, "/t/t")
+
+
+def iter_traceback(error):
+    trace = error.__traceback__
+    while trace is not None:
+        yield trace
+        trace = trace.tb_next

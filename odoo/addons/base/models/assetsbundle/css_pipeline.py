@@ -104,7 +104,7 @@ class CssPipeline:
         Read defensively so that logging never makes an attribute load-bearing
         that the pipeline itself does not require.
         """
-        return getattr(self._bundle, "name", "<unnamed bundle>")
+        return getattr(getattr(self, "_bundle", None), "name", "<unnamed bundle>")
 
     def preprocess(self) -> str:
         bundle = self._bundle

@@ -3,14 +3,11 @@ __all__ = [
     "CRON_TRIGGER_CHANNEL",
     "JOB_QUEUE_CHANNEL",
     "REGISTRY_CACHES",
-    "SUPPORTED_DEBUGGER",
 ]
 
 CRON_TRIGGER_CHANNEL = "cron_trigger"
 
 JOB_QUEUE_CHANNEL = "job_queue"
-
-SUPPORTED_DEBUGGER = {"pdb", "ipdb", "wdb", "pudb"}
 
 
 REGISTRY_CACHES = {
