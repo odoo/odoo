@@ -26,7 +26,7 @@ export class PaymentAdyen extends PaymentInterface {
     }
     async sendPaymentCancel(line) {
         await super.sendPaymentCancel(...arguments);
-        return this._adyenCancel();
+        return this._adyenCancel(line);
     }
 
     setMostRecentServiceId(id) {
@@ -181,9 +181,9 @@ export class PaymentAdyen extends PaymentInterface {
         return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }
 
-    _adyenCancel(ignore_error) {
+    _adyenCancel(line, ignore_error) {
         var config = this.pos.config;
-        var previous_service_id = this.most_recent_service_id;
+        var previous_service_id = line?.terminalServiceId ?? this.most_recent_service_id;
         var header = Object.assign(this._adyenCommonMessageHeader(), {
             MessageCategory: "Abort",
         });
