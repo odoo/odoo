@@ -138,7 +138,6 @@ class PaypalController(http.Controller):
 
         :param payment.transaction tx_sudo: The sudoed transaction to capture the order for
         :rtype: None
-        :raise ValidationError: If the 3D Secure authentication failed
         """
         order_id = tx_sudo.provider_reference
         if tx_sudo.payment_method_code == "card":
@@ -146,7 +145,10 @@ class PaypalController(http.Controller):
             card_info = order_details.get("payment_source", {}).get("card", {})
             auth_result = card_info.get("authentication_result", {})
             if auth_result and auth_result.get("liability_shift") != "POSSIBLE":
-                tx_sudo._set_error(self.env._("3D Secure authentication failed."))
+                tx_sudo._record({
+                    "status": "FAILED",
+                    "state_message": self.env._("3D Secure authentication failed."),
+                })
                 return
 
         idempotency_key = payment_utils.generate_idempotency_key(tx_sudo, scope="capture_order")
