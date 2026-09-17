@@ -581,7 +581,8 @@ class IrQweb(models.AbstractModel):
         # A t-set body captures the whole context it was written in, which is
         # nearly always the context it is rendered in: switching environments
         # and re-deriving the cache signature only when they differ.
-        if params.context and params.context != qweb.env.context:
+        context_switched = bool(params.context) and params.context != qweb.env.context
+        if context_switched:
             qweb = qweb.with_context(**params.context)
             cache_signature = qweb._get_template_cache_signature()
 
@@ -602,6 +603,7 @@ class IrQweb(models.AbstractModel):
             scope=params.scope,
             depth=len(stack),
             content=is_content,
+            context_switched=context_switched,
         )
 
         # The frame is pushed even when resolving or calling the template
@@ -3200,6 +3202,7 @@ class IrQweb(models.AbstractModel):
         # t-field: the converters format numbers, dates and images, and
         # None or False through them is a TypeError or "<img src='None'>".
         if value is None or value is False:
+            _debug.logic("widget_skipped", reason="no_value", expression=expression)
             content = None
         else:
             converter = self._get_field_converter(field_options["type"])

@@ -488,6 +488,7 @@ class IrQweb(models.AbstractModel):
     @classmethod
     def _get_specifier_literals(cls, descriptor: str, source: Any) -> frozenset[str]:
         literals = _SPECIFIER_LITERALS_CACHE.get(descriptor)
+        _debug.perf.count("specifier_literals", cached=literals is not None)
         if literals is None:
             body = _TRANSITIVE_IMPORT_RE.sub("", source.raw_content)
             literals = frozenset(cls._SPECIFIER_LITERAL_RE.findall(body))

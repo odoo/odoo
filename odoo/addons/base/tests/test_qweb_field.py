@@ -6,6 +6,7 @@ from odoo import Command, fields
 from odoo.tests import common, new_test_user
 from odoo.tools import NEGATIVE_SIGN_JOINER
 
+from odoo.addons.base.models.ir_qweb import IrQweb as BaseIrQweb
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
@@ -944,6 +945,17 @@ class TestFormatAmountNegativeZero(common.TransactionCase):
 
 
 class TestQwebFieldHtmlPostProcessing(common.TransactionCase):
+    # base's contract: an override such as website's may decline the name
+    # hook (None) and rewrite URLs; these tests read the base implementation
+    # whatever the DB has installed.
+    def setUp(self):
+        super().setUp()
+        IrQweb = self.registry["ir.qweb"]
+        for name in ("_get_post_processing_att_names", "_post_processing_att"):
+            patcher = patch.object(IrQweb, name, getattr(BaseIrQweb, name))
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
     def value_to_html(self, value):
         return str(self.env["ir.qweb.field.html"].value_to_html(value, {}))
 
