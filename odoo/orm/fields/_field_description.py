@@ -23,6 +23,11 @@ def description_key(attributes: Collection[str] | None) -> tuple[str, ...] | Non
     """The hashable form of a ``fields_get`` attribute selection."""
     if attributes is None:
         return None
+    if isinstance(attributes, str):
+        # a bare name would read as its letters
+        raise TypeError(
+            f"fields_get attributes must be a collection of names, got {attributes!r}"
+        )
     return tuple(sorted(set(attributes)))
 
 
