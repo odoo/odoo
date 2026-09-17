@@ -157,3 +157,55 @@ class TestNonCTemplateWarning:
             "the CREATE itself will report a missing template; warning about "
             "its collation first would bury that"
         )
+
+
+class TestRollbackTerminatesBackends:
+    def _rollback(self, execute_effects):
+        import psycopg
+
+        cr = MagicMock()
+        cr.execute.side_effect = execute_effects
+        terminated = []
+        with (
+            patch.object(lifecycle, "get_database_identifier", lambda _cr, n: n),
+            patch.object(
+                lifecycle,
+                "_terminate_backends",
+                lambda _cr, target: terminated.append(target),
+            ),
+            patch.object(lifecycle.time, "sleep"),
+        ):
+            try:
+                result = lifecycle._rollback_db_rename(cr, "old", "new")
+            except Exception as exc:
+                result = exc
+        return result, terminated, cr, psycopg
+
+    def test_a_backend_on_the_new_name_is_terminated_and_the_rename_retried(
+        self,
+    ):
+        import psycopg
+
+        result, terminated, cr, _ = self._rollback(
+            [psycopg.errors.ObjectInUse("accessed by other users"), None]
+        )
+        assert result is None, (
+            "the forward rename recovers from ObjectInUse by terminating "
+            "backends and retrying; the rollback of that same rename must "
+            "not give up on the first attempt and report the database and "
+            "filestore as out of sync"
+        )
+        assert terminated == ["new", "new"], (
+            "the backends squatting the NEW name are the ones holding the "
+            "reverse rename"
+        )
+        assert cr.execute.call_count == 2
+
+    def test_a_rollback_still_in_use_after_all_retries_reports_it(self):
+        import psycopg
+
+        result, _, _, _ = self._rollback(
+            psycopg.errors.ObjectInUse("accessed by other users")
+        )
+        assert isinstance(result, RuntimeError)
+        assert "still in use" in str(result)

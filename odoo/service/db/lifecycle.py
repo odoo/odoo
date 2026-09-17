@@ -600,10 +600,21 @@ def rename_database(old_name: str, new_name: str) -> Literal[True]:
 
 def _rollback_db_rename(cr: BaseCursor, old_name: str, new_name: str) -> None:
     _debug.lifecycle("database.rename.rolled_back", source=old_name, db=new_name)
-    cr.execute(
-        SQL(
-            "ALTER DATABASE %s RENAME TO %s",
-            get_database_identifier(cr, new_name),
-            get_database_identifier(cr, old_name),
+
+    def _rename_back() -> None:
+        cr.execute(
+            SQL(
+                "ALTER DATABASE %s RENAME TO %s",
+                get_database_identifier(cr, new_name),
+                get_database_identifier(cr, old_name),
+            )
         )
+
+    # A backend can connect to the new name between the rename and this
+    # rollback (a catalog sweep, another cluster member, a curious psql).
+    # The forward rename already terminates and retries on ObjectInUse;
+    # giving up here instead escalates a recoverable race to "database and
+    # filestore are out of sync — manual intervention required".
+    _retry_terminate_then_ddl(
+        cr, new_name, f"ROLLBACK RENAME DB: {new_name} -> {old_name}", _rename_back
     )
