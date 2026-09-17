@@ -19,6 +19,7 @@ from . import ir_ui_view_name_manager
 from . import ir_asset_paths
 from . import ir_asset
 
+from . import mixin_table_inheritance_root
 from . import ir_actions_actions
 from . import ir_actions_path
 from . import ir_actions_act_window_view

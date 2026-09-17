@@ -1766,7 +1766,7 @@ class TestIrActionsAsConcrete(TransactionCase):
         self.env.flush_all()
         for action in made:
             with self.subTest(model=action._name):
-                concrete = Actions.browse(action.id)._get_action_concrete()
+                concrete = Actions.browse(action.id)._get_concrete()
                 self.assertEqual(concrete._name, action._name)
                 self.assertEqual(concrete.id, action.id)
 
@@ -1781,7 +1781,7 @@ class TestIrActionsAsConcrete(TransactionCase):
         )
         self.env.invalidate_all()
         concrete = (
-            self.env["ir.actions.actions"].browse(action.id)._get_action_concrete()
+            self.env["ir.actions.actions"].browse(action.id)._get_concrete()
         )
         self.assertEqual(concrete._name, "ir.actions.act_window")
 

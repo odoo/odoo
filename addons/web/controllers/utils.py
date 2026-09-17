@@ -198,7 +198,7 @@ def get_action(env: Any, path_part: str) -> Any:
         return Actions._get_action_by_path(path_part)
 
     if action and action._name == "ir.actions.actions":
-        action = action._get_action_concrete()
+        action = action._get_concrete()
 
     dbg.pipeline.debug("[action_path:%s] -> %s", path_part, dbg.rec(action))
     return action

@@ -71,7 +71,7 @@ class IrActionsTodo(models.Model):
         self.check_singleton()
         self.state = "done"
 
-        action = self.action_id._get_action_concrete()
+        action = self.action_id._get_concrete()
         _debug.lifecycle(
             "todo_launched", todo=self.id, action=action.id, type=action._name
         )

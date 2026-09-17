@@ -11,7 +11,7 @@ from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
-from odoo.tools import SQL, _, frozendict
+from odoo.tools import _, frozendict
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -78,6 +78,7 @@ def _eval_list_or_default(
 class IrActionsActions(models.Model):
     _name = "ir.actions.actions"
     _description = "Actions"
+    _inherit = ["mixin.table.inheritance.root"]
     _table = "ir_actions"
     _table_inheritance_root = "ir_actions"
     _order = "name, id"
@@ -302,143 +303,10 @@ class IrActionsActions(models.Model):
             self.env.registry.clear_cache(*groups)
         return res
 
-    def unlink(self) -> bool:
-        if self._name == "ir.actions.actions":
-            _debug.logic("unlink_dispatched_to_concrete", count=len(self))
-            return self._unlink_as_concrete_types()
-        groups = self.exists()._get_cache_groups_holding() | {"actions"}
-        _debug.lifecycle("unlink", model=self._name, count=len(self))
-        with self.env.cr.savepoint():
-            self._apply_ondelete_unenforced()
-            res = super().unlink()
-        self.env.registry.clear_cache(*groups)
-        return res
-
-    def _unlink_as_concrete_types(self) -> bool:
-        groups = self.exists()._get_cache_groups_holding() | {"actions"}
-        by_model = defaultdict(list)
-        for action_id, model_name in self._get_model_names_concrete().items():
-            by_model[model_name].append(action_id)
-        result = True
-        _debug.pipeline(
-            "unlink_as_concrete_types",
-            actions=len(self),
-            models={model: len(ids) for model, ids in by_model.items()},
-            cache_groups=sorted(groups),
-        )
-        with self.env.cr.savepoint():
-            for model_name, ids in by_model.items():
-                if model_name != self._name:
-                    result = self.env[model_name].browse(ids).unlink() and result
-                    continue
-                records = self.browse(ids)
-                records._apply_ondelete_unenforced()
-                result = super(IrActionsActions, records).unlink() and result
-        self.env.registry.clear_cache(*groups)
-        return result
-
     def _compute_xml_id(self) -> None:
         res = self.get_external_id()
         for record in self:
             record.xml_id = res.get(record.id)
-
-    def _apply_ondelete_unenforced(self) -> None:
-        if not self:
-            return
-        found = defaultdict(list)
-        with _debug.perf(
-            "ondelete_references_scanned", cr=self.env.cr, actions=len(self)
-        ) as span:
-            fields_scanned = self._get_fields_ondelete_unenforced()
-            for model_name, field_name, ondelete in fields_scanned:
-                references = (
-                    self.env[model_name]
-                    .sudo()
-                    .with_context(active_test=False)
-                    .search([(field_name, "in", self.ids)])  # noqa: E8507  model varies
-                )
-                if references:
-                    found[ondelete].append((model_name, field_name, references))
-            span.set(fields=len(fields_scanned))
-        _debug.logic(
-            "ondelete_unenforced",
-            actions=self.ids,
-            found={key: len(items) for key, items in found.items()},
-        )
-
-        if restricted := found.get("restrict"):
-            _debug.logic(
-                "unlink_restricted",
-                actions=self.ids,
-                referrers=[model_name for model_name, __, __ in restricted],
-            )
-            raise ValidationError(
-                _(
-                    "Cannot delete this action: %s",
-                    ", ".join(
-                        _(
-                            "%(count)s %(model)s record(s) still reference it",
-                            count=len(references),
-                            model=self.env[model_name]._description,
-                        )
-                        for model_name, __, references in restricted
-                    ),
-                )
-            )
-        for __, __, references in found["cascade"]:
-            references.unlink()
-        for __, field_name, references in found["set null"]:
-            references.write({field_name: False})
-
-        values = [
-            f"{model_name},{action_id}"
-            for model_name in {self._name, "ir.actions.actions"}
-            for action_id in self.ids
-        ]
-        for model_name, field_name in self._get_selections_ondelete_unenforced():
-            referring = (
-                self.env[model_name]
-                .sudo()
-                .with_context(active_test=False)
-                .search([(field_name, "in", values)])  # noqa: E8507  model varies
-            )
-            if referring:
-                _debug.lifecycle(
-                    "reference_fields_cleared",
-                    model=model_name,
-                    field=field_name,
-                    count=len(referring),
-                )
-                referring.write({field_name: False})
-
-        for (
-            model_name,
-            field_name,
-            relation,
-            column,
-        ) in self._get_relations_ondelete_unenforced():
-            self.env.cr.execute(
-                SQL(
-                    "DELETE FROM %s WHERE %s IN %s",
-                    SQL.identifier(relation),
-                    SQL.identifier(column),
-                    tuple(self.ids),
-                )
-            )
-            _debug.lifecycle(
-                "relation_rows_deleted",
-                relation=relation,
-                column=column,
-                rows=self.env.cr.rowcount,
-            )
-            self.env[model_name].invalidate_model([field_name])
-
-    @api.model
-    def _get_model_names_in_tree(self) -> frozenset[str]:
-        root_table = self.env.registry["ir.actions.actions"]._table
-        return frozenset(
-            self.env.registry.model_names_by_inheritance_root.get(root_table, ())
-        )
 
     @api.model
     @tools.ormcache(cache="stable")
@@ -472,123 +340,10 @@ class IrActionsActions(models.Model):
         )
         return frozenset(view_modes)
 
-    @api.model
-    @tools.ormcache(cache="stable")
-    def _get_model_names_in_root_table(self) -> frozenset[str]:
-        root = self.env.registry["ir.actions.actions"]
-        return frozenset(
-            name
-            for name, model in self.env.registry.items()
-            if model._table == root._table
-        )
-
-    @api.model
-    @tools.ormcache(cache="stable")
-    def _get_fields_ondelete_unenforced(self) -> tuple[tuple[str, str, str], ...]:
-        root_models = self._get_model_names_in_root_table()
-        _debug.perf.count("ondelete_fields_scanned", root_models=len(root_models))
-        return tuple(
-            sorted(
-                (model_name, field.name, field.ondelete)
-                for model_name, model in self.env.registry.items()
-                if not model._abstract
-                for field in model._fields.values()
-                if field.type == "many2one"
-                and field.store
-                and not field.related
-                and field.comodel_name in root_models
-            )
-        )
-
-    @api.model
-    @tools.ormcache(cache="stable")
-    def _get_relations_ondelete_unenforced(
-        self,
-    ) -> tuple[tuple[str, str, str, str], ...]:
-        root_models = self._get_model_names_in_root_table()
-        return tuple(
-            sorted(
-                {
-                    (model_name, field.name, field.relation, column)
-                    for model_name, model in self.env.registry.items()
-                    if not model._abstract
-                    for field in model._fields.values()
-                    if field.type == "many2many" and field.store
-                    for column, end in (
-                        (field.column2, field.comodel_name),
-                        (field.column1, model_name),
-                    )
-                    if end in root_models
-                }
-            )
-        )
-
-    @api.model
-    @tools.ormcache(cache="stable")
-    def _get_selections_ondelete_unenforced(self) -> tuple[tuple[str, str], ...]:
-        tree_models = self._get_model_names_in_tree()
-        return tuple(
-            sorted(
-                (model_name, field.name)
-                for model_name, model in self.env.registry.items()
-                if not model._abstract
-                for field in model._fields.values()
-                if field.type == "reference"
-                and field.store
-                and (
-                    not isinstance(field.selection, list)
-                    or any(value in tree_models for value, __ in field.selection)
-                )
-            )
-        )
-
-    @api.model
-    @tools.ormcache(cache="stable")
-    def _get_model_names_by_table(self) -> frozendict:
-        by_table = defaultdict(list)
-        for model_name in self._get_model_names_in_tree():
-            by_table[self.env[model_name]._table].append(model_name)
-        return frozendict({table: tuple(sorted(n)) for table, n in by_table.items()})
-
     def _get_field_target_model(self) -> str:
+        """The field naming the model this kind of action opens, for the kinds
+        that open one. Empty where the action opens nothing."""
         return ""
-
-    def _get_model_names_concrete(self) -> dict[int, str]:
-        if not self.ids:
-            return {}
-        root = self.env.registry["ir.actions.actions"]
-        by_table = self._get_model_names_by_table()
-        self.env[root._name].flush_model()
-        self.env.cr.execute(
-            SQL(
-                "SELECT a.id, c.relname, a.type FROM %s a"
-                " JOIN pg_class c ON c.oid = a.tableoid WHERE a.id IN %s",
-                SQL.identifier(root._table),
-                tuple(self.ids),
-            )
-        )
-        found = {}
-        mismatched = 0  # debuglog
-        for action_id, table, action_type in self.env.cr.fetchall():
-            candidates = by_table.get(table) or (root._name,)
-            if action_type in candidates:
-                found[action_id] = action_type
-            else:
-                found[action_id] = candidates[0] if len(candidates) == 1 else root._name
-                mismatched += 1  # debuglog
-        _debug.perf.count(
-            "concrete_models_resolved",
-            actions=len(self),
-            found=len(found),
-            type_mismatched=mismatched,
-        )
-        return {action_id: found.get(action_id, root._name) for action_id in self.ids}
-
-    def _get_action_concrete(self) -> Self:
-        self.check_singleton()
-        [model_name] = self._get_model_names_concrete().values()
-        _debug.logic("action_concrete", action=self.id, model=model_name)
-        return self.env[model_name].browse(self.id)
 
     @api.model
     def _get_action_by_path(self, path: str) -> Self:
@@ -599,7 +354,7 @@ class IrActionsActions(models.Model):
             .action_id
         )
         _debug.logic("action_by_path", path=path, action=action.id)
-        return action._get_action_concrete() if action else action
+        return action._get_concrete() if action else action
 
     @api.model
     def _eval_action_domain(self, domain: str | None, **names: Any) -> list:
