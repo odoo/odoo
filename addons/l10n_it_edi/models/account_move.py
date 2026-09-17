@@ -24,6 +24,7 @@ _logger = logging.getLogger(__name__)
 
 
 WAITING_STATES = ('being_sent', 'processing', 'forward_attempt')
+SDI_RESETTABLE_STATES = (False, 'rejected', 'rejected_by_pa_partner')
 FATTURAPA_FILENAME_RE = r"[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}\.((?i:xml\.p7m|xml))"
 
 
@@ -261,12 +262,21 @@ class AccountMove(models.Model):
         reverse_moves = super()._reverse_moves(default_values_list, cancel)
         return reverse_moves
 
-    @api.depends('l10n_it_edi_transaction')
+    @api.depends('l10n_it_edi_state')
     def _compute_show_reset_to_draft_button(self):
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            move.show_reset_to_draft_button = not (move.l10n_it_edi_state not in (False, 'rejected') and move.l10n_it_edi_transaction) and move.show_reset_to_draft_button
+            if move.l10n_it_edi_state not in SDI_RESETTABLE_STATES:
+                move.show_reset_to_draft_button = False
+
+    def _check_draftable(self):
+        if self.filtered(lambda move: move.l10n_it_edi_state not in SDI_RESETTABLE_STATES):
+            raise UserError(self.env._(
+                "You cannot reset to draft invoices that were sent to the SdI. "
+                "If you need to modify them, you must issue a credit or debit note."
+            ))
+        return super()._check_draftable()
 
     def _parse_xml_with_recovery(self, content, name=None):
         def parse_xml(parser, content):
@@ -449,9 +459,9 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         # EXTENDS 'account'
-        for move in self:
-            move.l10n_it_edi_state = False
-        return super().button_draft()
+        res = super().button_draft()
+        self.l10n_it_edi_state = False
+        return res
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS 'account'
