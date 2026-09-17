@@ -1859,9 +1859,9 @@ class TestAccountAsset(TestAccountReportsCommon):
                 7,
             )
             self.assertEqual(
-                self.truck.depreciation_move_ids.filtered(
-                    lambda e: e.state == "draft"
-                ).mapped("amount_total"),
+                self.truck.depreciation_move_ids.filtered(lambda e: e.state == "draft")
+                .sorted(lambda move: (move.date, move.id))
+                .mapped("amount_total"),
                 [375.0, 750.0, 750.0, 750.0],
             )
 

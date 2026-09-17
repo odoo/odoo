@@ -189,8 +189,9 @@ class AccountMove(models.Model):
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        if default_values_list is None:
-            default_values_list = [{} for _i in self]
+        default_values_list = [
+            dict(values) for values in default_values_list or [{} for _i in self]
+        ]
         for move, default_values in zip(self, default_values_list, strict=True):
             if move.depreciation_asset_id:
                 first_draft = min(

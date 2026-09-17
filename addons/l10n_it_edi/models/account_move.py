@@ -329,7 +329,7 @@ class AccountMove(models.Model):
         # EXTENDS account
         default_values_list = [
             {**default_values, "l10n_it_document_type": False}
-            for default_values in (default_values_list or [{}] * len(self))
+            for default_values in (default_values_list or [{} for _move in self])
         ]
         return super()._reverse_moves(default_values_list, cancel)
 
