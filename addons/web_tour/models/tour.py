@@ -1,5 +1,8 @@
+import re
+
+from lxml import etree
+
 from odoo import api, fields, models, Command
-import json
 
 
 class Web_TourTour(models.Model):
@@ -58,17 +61,43 @@ class Web_TourTour(models.Model):
         tour_json["rainbowManMessage"] = self.rainbow_man_message
         return tour_json
 
-    def export_js_file(self):
-        js_content = f"""import {{ registry }} from '@web/core/registry';
+    def export_xml_file(self):
+        self.ensure_one()
+        tour_xmlid = re.sub(r"\W", "_", self.name, flags=re.ASCII)
 
-registry.category("web_tour.tours").add("{self.name}", {{
-    steps: () => {json.dumps(self.step_ids.get_steps_json(), indent=4)}
-}})"""
+        odoo_el = etree.Element("odoo")
+        tour_record = etree.SubElement(odoo_el, "record", {"id": tour_xmlid, "model": "web_tour.tour"})
+        etree.SubElement(tour_record, "field", {"name": "name"}).text = self.name
+        etree.SubElement(tour_record, "field", {"name": "sequence"}).text = str(self.sequence)
+        etree.SubElement(tour_record, "field", {"name": "custom", "eval": str(self.custom)})
+        etree.SubElement(tour_record, "field", {"name": "active", "eval": str(self.active)})
+        if self.url:
+            etree.SubElement(tour_record, "field", {"name": "url"}).text = self.url
+        if self.rainbow_man_message:
+            etree.SubElement(tour_record, "field", {"name": "rainbow_man_message"}).text = self.rainbow_man_message
+
+        for index, step in enumerate(self.step_ids, start=1):
+            step_record = etree.SubElement(odoo_el, "record", {
+                "id": f"{tour_xmlid}_step_{index}",
+                "model": "web_tour.tour.step",
+            })
+            etree.SubElement(step_record, "field", {"name": "tour_id", "ref": tour_xmlid})
+            etree.SubElement(step_record, "field", {"name": "sequence"}).text = str(index * 10)
+            etree.SubElement(step_record, "field", {"name": "trigger"}).text = step.trigger
+            if step.run:
+                etree.SubElement(step_record, "field", {"name": "run"}).text = step.run
+            if step.content:
+                etree.SubElement(step_record, "field", {"name": "content"}).text = step.content
+            if step.tooltip_position:
+                etree.SubElement(step_record, "field", {"name": "tooltip_position"}).text = step.tooltip_position
+
+        etree.indent(odoo_el, space="    ")
+        xml_content = etree.tostring(odoo_el, pretty_print=True, xml_declaration=True, encoding="utf-8")
 
         attachment_id = self.env["ir.attachment"].create({
-            "raw": bytes(js_content, 'utf-8'),
-            "name": f"{self.name}.js",
-            "mimetype": "application/javascript",
+            "raw": xml_content,
+            "name": f"{self.name}.xml",
+            "mimetype": "application/xml",
             "res_model": "web_tour.tour",
             "res_id": self.id,
         })
@@ -106,6 +135,8 @@ class Web_TourTourStep(models.Model):
 
             if not step["content"]:
                 del step["content"]
+            if not step["run"]:
+                del step["run"]
             steps.append(step)
 
         return steps
