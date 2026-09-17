@@ -1191,7 +1191,16 @@ patch(PosOrder.prototype, {
             return _t("Unknown discount type");
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
+<<<<<<< 630ed4e888522e8b1da4bd22db42057808b122b5:addons/pos_loyalty/static/src/app/models/pos_order.js
         discountable = Math.min(this.priceIncl, discountable);
+||||||| ceb23bb4d22c073ba0e621b0ea4963847ebe37c6:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+        discountable = Math.min(this.get_total_with_tax(), discountable);
+=======
+        // Other discounts may already cover part of the discountable lines
+        const totalFactor =
+            discountable > 0 ? Math.min(1, this.get_total_with_tax() / discountable) : 1;
+        discountable = Math.min(this.get_total_with_tax(), discountable);
+>>>>>>> 148ec013088f738e94e011e0f49d7b3ad60aa652:addons/pos_loyalty/static/src/overrides/models/pos_order.js
         if (floatIsZero(discountable)) {
             return [];
         }
@@ -1261,7 +1270,16 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
+<<<<<<< 630ed4e888522e8b1da4bd22db42057808b122b5:addons/pos_loyalty/static/src/app/models/pos_order.js
                 price_unit: -(Math.min(this.priceIncl, entry[1]) * discountFactor),
+||||||| ceb23bb4d22c073ba0e621b0ea4963847ebe37c6:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+                price_unit: -roundDecimals(
+                    Math.min(this.get_total_with_tax(), entry[1]) * discountFactor,
+                    priceDigits
+                ),
+=======
+                price_unit: -roundDecimals(entry[1] * totalFactor * discountFactor, priceDigits),
+>>>>>>> 148ec013088f738e94e011e0f49d7b3ad60aa652:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,

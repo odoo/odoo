@@ -3974,6 +3974,160 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
         self.main_pos_config.current_session_id.action_pos_session_closing_control()
 
+<<<<<<< 630ed4e888522e8b1da4bd22db42057808b122b5
+||||||| ceb23bb4d22c073ba0e621b0ea4963847ebe37c6
+    def test_specific_discount_price_unit_rounding(self):
+        """The reward line's price unit must be rounded to the 'Product Price'
+        precision: the UI computes taxes on the rounded value while the backend
+        re-taxes the raw stored one, drifting by one cent on a rounding
+        boundary (-17.385 -> 78.00 vs -17.38488 -> 78.01).
+        """
+        self.env.ref('product.decimal_price').digits = 3
+        self.env['loyalty.program'].search([]).write({'active': False})
+        tax_15 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        products = self.env['product.product'].create([{
+            'name': name,
+            'list_price': 42.609,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(tax_15.ids)],
+        } for name in ('Product A', 'Product B')])
+        self.env['loyalty.program'].create({
+            'name': 'Discount on specific products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 20.4,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(products.ids)],
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltySpecificDiscountPriceUnitRounding')
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        # 2 * 49.00 - 20.00 (20.4% discount, tax included)
+        self.assertAlmostEqual(order.amount_total, 78.00, places=2)
+        self.assertAlmostEqual(order.amount_paid, 78.00, places=2)
+
+=======
+    def test_specific_discount_price_unit_rounding(self):
+        """The reward line's price unit must be rounded to the 'Product Price'
+        precision: the UI computes taxes on the rounded value while the backend
+        re-taxes the raw stored one, drifting by one cent on a rounding
+        boundary (-17.385 -> 78.00 vs -17.38488 -> 78.01).
+        """
+        self.env.ref('product.decimal_price').digits = 3
+        self.env['loyalty.program'].search([]).write({'active': False})
+        tax_15 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        products = self.env['product.product'].create([{
+            'name': name,
+            'list_price': 42.609,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(tax_15.ids)],
+        } for name in ('Product A', 'Product B')])
+        self.env['loyalty.program'].create({
+            'name': 'Discount on specific products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 20.4,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(products.ids)],
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltySpecificDiscountPriceUnitRounding')
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        # 2 * 49.00 - 20.00 (20.4% discount, tax included)
+        self.assertAlmostEqual(order.amount_total, 78.00, places=2)
+        self.assertAlmostEqual(order.amount_paid, 78.00, places=2)
+
+    def test_specific_discount_with_negative_line(self):
+        """The reward lines of a fixed discount must add up to the discount when
+        a negative line is taxed differently from the discounted products.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        tax_10_incl = self.env['account.tax'].create({
+            'name': 'Tax 10% incl',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+        })
+        self.env['product.product'].create([{
+            'name': 'Product A',
+            'list_price': 1000,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(tax_10_incl.ids)],
+        }, {
+            'name': 'Voucher',
+            'list_price': -100,
+            'available_in_pos': True,
+            'taxes_id': [Command.clear()],
+        }])
+        self.env['loyalty.program'].create({
+            'name': 'Fixed discount on specific products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 50,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'specific',
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltySpecificDiscountNegativeLine')
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertAlmostEqual(sum(order.lines.filtered('is_reward_line').mapped('price_subtotal_incl')), -50.00, places=2)
+        self.assertAlmostEqual(order.amount_total, 850.00, places=2)
+
+>>>>>>> 148ec013088f738e94e011e0f49d7b3ad60aa652
     def test_partner_list_after_removing_code_activated_coupon(self):
         """A coupon assigned to a partner is loaded at POS boot and cached in
         `partnerId2CouponIds`. Activating its code and then removing the reward line
