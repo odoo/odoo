@@ -298,11 +298,20 @@ class RecomputeMixin(_ModelStubs):
         model = env[field.model_name]
         self_ids = set(self._ids)
         back = field._get_cache(env)
+        if field.is_many2one:
+
+            def points_back(value: typing.Any) -> bool:
+                return value in self_ids
+        else:
+            # a paired x2many caches a tuple of ids, never a bare id
+            def points_back(value: typing.Any) -> bool:
+                return not self_ids.isdisjoint(value)
+
         for dependent in subtree.root:
             ids = [
                 id_
                 for id_ in dependent._get_all_cache_ids(env)
-                if id_ not in back or back[id_] in self_ids
+                if id_ not in back or points_back(back[id_])
             ]
             _debug.logic(
                 "recompute.invalidated_from_cache",
