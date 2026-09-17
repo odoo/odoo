@@ -67,14 +67,6 @@ class CalendarEvent(models.Model):
                 'user_id', 'calendar_id', 'privacy',
                 'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active', 'videocall_location'}
 
-    @api.model
-    def _restart_microsoft_sync(self):
-        domain = self._get_microsoft_sync_domain()
-
-        self.env['calendar.event'].with_context(dont_notify=True).search(domain).write({
-            'need_sync_m': True,
-        })
-
     def _check_microsoft_sync_status(self):
         """
         Returns True if synchronization with Outlook Calendar is active and False otherwise.

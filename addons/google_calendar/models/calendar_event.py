@@ -58,12 +58,6 @@ class CalendarEvent(models.Model):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop', 'calendar_id',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
-    @api.model
-    def _restart_google_sync(self):
-        events = self.env['calendar.event'].search(self._get_sync_domain())
-        events.write({'need_sync': True})
-        events._check_alarm_ids_sync_limit()
-
     @api.model_create_multi
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)

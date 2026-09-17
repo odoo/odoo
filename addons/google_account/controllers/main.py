@@ -51,7 +51,7 @@ class GoogleAuth(http.Controller):
                 self._post_google_auth_success_hook()
             else:
                 raise Warning('No callback field for service <%s>' % service)
-            return request.redirect(_build_url_w_params(url_return, {"auth_success": "True"}))
+            return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect(_build_url_w_params(url_return, {"error": kw['error']}))
         else:

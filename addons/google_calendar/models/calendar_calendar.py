@@ -57,7 +57,7 @@ class CalendarCalendar(models.Model):
     def write(self, vals):
         synced_fields = self._get_google_synced_fields_map().keys()
 
-        if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
+        if 'need_sync' not in vals and vals.keys() & synced_fields:
             vals['need_sync'] = True
 
         result = super().write(vals)
@@ -235,11 +235,6 @@ class CalendarCalendar(models.Model):
 
     def _get_sync_domain(self):
         return Domain([('calendar_user_ids', 'any', [('user_id', '=', self.env.user.id), ('access_role', 'in', ['owner', 'writer'])])])
-
-    @api.model
-    def _restart_google_sync(self):
-        calendars = self.env['calendar.calendar'].search(self._get_sync_domain())
-        calendars.write({'need_sync': True})
 
     def get_google_path(self):
         """Return the api path to the calendar in Google, or false if it should not be synchronized."""
