@@ -264,7 +264,6 @@
             "website/static/src/xml/website.xml",
             "website/static/src/xml/website.background.video.xml",
             "website/static/src/xml/website.cookies_warning.xml",
-            "website/static/src/js/text_processing.js",
             "website/static/src/js/highlight_utils.js",
             "website/static/src/client_actions/website_preview/website_builder_action.editor.scss",
             "website/static/src/components/user_switch.*",
@@ -349,7 +348,6 @@
             "website/static/src/scss/website_visitor_views.scss",
             "website/static/src/js/backend/**/*",
             "website/static/src/js/tours/tour_utils.js",
-            "website/static/src/js/text_processing.js",
             "website/static/src/js/highlight_utils.js",
             "website/static/src/client_actions/*/*",
             (
