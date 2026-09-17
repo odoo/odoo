@@ -221,7 +221,7 @@ function _hasFloatingOrder(name, yes, click) {
         },
         {
             isActive: ["mobile"],
-            trigger: "[data-icon='west']",
+            trigger: "[data-icon='arrow_back']",
             run: "click",
         },
     ];

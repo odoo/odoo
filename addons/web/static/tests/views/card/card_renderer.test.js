@@ -454,7 +454,7 @@ test("support styling of anchor tags with action type", async () => {
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
-                        <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi" data-icon="east"/> Click me !</a>
+                        <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi" data-icon="arrow_forward"/> Click me !</a>
                     </div>
                 </templates>
             </card>`,
