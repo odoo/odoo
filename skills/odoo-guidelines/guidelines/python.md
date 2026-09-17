@@ -13,14 +13,14 @@ is enforced.
 
 - Model `_name`: dotted, prefixed by module, **singular** (`sale.order`, not
   `sale.orders`). Transient/wizard: `<base_model>.<action>` (avoiding the word
-  "wizard" is a soft preference — core ships many `.wizard` names). SQL-view report model: `<base_model>.report.<action>`.
+  "wizard" is a soft preference; core ships many `.wizard` names). SQL-view report model: `<base_model>.report.<action>`.
 - A variable holding a model class is PascalCase (`Partner =
   self.env['res.partner']`). Suffix a var holding a record id / list of ids
   with `_id` / `_ids` (don't name a `res.partner` record `partner_id`).
 - Method-name patterns: compute `_compute_<field>`, search `_search_<field>`,
   default `_default_<field>`, selection `_selection_<field>`, onchange
   `_onchange_<field>`, constraint `_check_<name>`, object action `action_*`
-  (acts on one record — start it with `self.ensure_one()`).
+  (acts on one record, so start it with `self.ensure_one()`).
 - Model body order: private attrs (`_name`, `_description`, `_inherit`) → default
   methods → field declarations → `models.Constraint`/`models.Index` attributes
   (core also places these right after the private attrs) → compute/inverse/search
@@ -36,19 +36,19 @@ arguments; in model code the current API is `self.env._(...)`.
 # good
 raise UserError(self.env._("Record %s cannot be modified", record.display_name))
 
-# good — several variables: name them so translators keep them straight
+# good (several variables): name them so translators keep them straight
 msg = self.env._("%(count)s records imported by %(user)s", count=len(records), user=user.name)
 
-# good — a list argument is formatted per language ("a, b and c")
+# good: a list argument is formatted per language ("a, b and c")
 raise UserError(self.env._("Missing fields: %s", missing_names))
 
-# bad — formats before the lookup: the dynamic string matches no exported term
+# bad (formats before the lookup): the dynamic string matches no exported term
 raise UserError(self.env._("Record %s cannot be modified" % record.display_name))
 
-# bad — formats after the lookup: bypasses placeholder validation and reordering
+# bad (formats after the lookup): bypasses placeholder validation and reordering
 raise UserError(self.env._("Record %s cannot be modified") % record.display_name)
 
-# bad — manual join ignores the user's language and its list rules
+# bad: manual join ignores the user's language and its list rules
 raise UserError(self.env._("Missing fields: %s", ", ".join(missing_names)))
 ```
 
@@ -66,8 +66,8 @@ raise UserError(self.env._("Missing fields: %s", ", ".join(missing_names)))
 - Bare `_` (imported from `odoo`) is the backward-compatible API: it locates
   the environment by inspecting the caller's frame; in plain functions and
   comprehensions it silently returns the untranslated (or wrong-language)
-  string with only a logged warning — prefer `self.env._`.
-- Never call `_()` at module or class level — it runs at import time with no
+  string with only a logged warning; prefer `self.env._`.
+- Never call `_()` at module or class level: it runs at import time with no
   user language and silently doesn't translate. Translate inside the method
   when you can; if a module-level constant is unavoidable, make it lazy
   (`_lt = LazyTranslate(__name__)`; `LABEL = _lt("...")`) and resolve it where
