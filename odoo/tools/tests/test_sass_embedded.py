@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 from odoo.tools.sass_embedded import (
     SassEmbeddedCompiler,
     SassNotFoundError,
+    SassProtocolError,
     _supports_embedded,
     get_sass_path,
 )
@@ -142,3 +143,16 @@ class TestRestartDoesNotLeakPipes(unittest.TestCase):
         self.assertIn("color: red", compiler.compile_string("a { b { color: red } }"))
         self._kill_running(compiler)
         self.assertIn("color: blue", compiler.compile_string("p { color: blue }"))
+
+
+class TestUndecodablePacketIsAProtocolError(unittest.TestCase):
+    def test_garbage_from_the_subprocess_is_named_as_transport(self):
+        compiler = SassEmbeddedCompiler()
+        self.addCleanup(compiler.close)
+        with (
+            patch.object(compiler, "_start"),
+            patch.object(compiler, "_send_packet"),
+            patch.object(compiler, "_recv_packet", return_value=(1, b"\xff\xff\xff")),
+            self.assertRaises(SassProtocolError),
+        ):
+            compiler.compile_string("a { color: red }")

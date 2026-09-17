@@ -10,6 +10,8 @@ from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import IO, Self
 
+from google.protobuf.message import DecodeError
+
 import odoo
 from odoo.libs._vendor.embedded_sass_pb2 import (  # type: ignore[attr-defined]
     COMPRESSED,
@@ -466,7 +468,14 @@ class SassEmbeddedCompiler:
         while True:
             recv_cid, recv_bytes = self._recv_packet()
             outbound = OutboundMessage()
-            outbound.ParseFromString(recv_bytes)
+            try:
+                outbound.ParseFromString(recv_bytes)
+            except DecodeError as exc:
+                # a framed packet that is not a protobuf message is the
+                # transport lying, not the stylesheet; name it as such
+                raise SassProtocolError(
+                    f"sass --embedded sent an undecodable packet: {exc}"
+                ) from exc
             msg_type = outbound.WhichOneof("message")
 
             if recv_cid != compilation_id and msg_type != "error":
