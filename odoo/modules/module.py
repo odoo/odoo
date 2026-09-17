@@ -266,10 +266,7 @@ class Manifest(Mapping[str, typing.Any]):
 
     @functools.cached_property
     def version(self) -> str:
-        try:
-            return self.__manifest_cached["version"]
-        except KeyError:
-            return adapt_version("1.0")
+        return self.__manifest_cached["version"]
 
     @functools.cached_property
     def icon(self) -> str:
