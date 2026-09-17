@@ -2,7 +2,10 @@
 
 from lxml import etree
 
+from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase, tagged
+
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('post_install', '-at_install')
@@ -28,9 +31,9 @@ class TestPayrollFieldsAccess(TransactionCase):
         fields_readonly = []
         for f_name, field in employee_fields.items():
             v_field = version_fields[f_name]
-            if not (field.groups and field.groups != v_field):
+            if field.groups != v_field.groups:
                 fields_without_group.append(f_name)
-            elif not (field.related and field.related == f'version_id.{f_name}'):
+            elif field.related != f'version_id.{f_name}':
                 fields_without_related.append(f_name)
             elif field.readonly != v_field.readonly:
                 fields_readonly.append(f_name)
@@ -99,3 +102,29 @@ class TestPayrollFieldsAccess(TransactionCase):
 
     def test_payroll_fields_are_hidden_to_non_payroll_users_in_version_form_view(self):
         self._test_payroll_fields_are_hidden_to_non_payroll_users('hr.version', 'hr.hr_contract_template_form_view', 'information')
+
+    def test_officer_access_address(self):
+        res_users_hr_officer = mail_new_test_user(
+            self.env,
+            email='hro@example.com',
+            login='hro',
+            groups='base.group_user,hr.group_hr_user',
+            name='HR Officer',
+        )
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Richard',
+            'sex': 'male',
+            'country_id': self.env.ref('base.be').id,
+            'user_id': self.env['res.users'].create({
+                'name': 'Richard',
+                'email': 'rmo23@example.com',
+                'image_1920': False,
+                'login': 'demo_1',
+                'password': 'demo_123',
+            }).id,
+        })
+
+        employee.with_user(res_users_hr_officer).user_id.partner_id.country_id = self.env.ref('base.fr')
+        with self.assertRaisesRegex(AccessError, 'access the field "country_id" on User'):
+            employee.with_user(res_users_hr_officer).user_id.country_id = self.env.ref('base.us')
