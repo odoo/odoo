@@ -758,6 +758,7 @@ class HrLeaveAllocation(models.Model):
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_time_off_manager = self.employee_id.leave_manager_id == self.env.user
+        is_hr_responsible = self.employee_id.sudo().hr_responsible_id == self.env.user
 
         if is_officer:
             if validation_type == 'both':
@@ -767,16 +768,26 @@ class HrLeaveAllocation(models.Model):
             state_result['confirm'].update({'validate', 'refuse'})
             state_result['validate'].update({'confirm', 'refuse'})
             state_result['refuse'].update({'confirm', 'validate'})
-        elif is_time_off_manager:
-            if validation_type != 'hr':
-                state_result['confirm'].add('refuse')
-                state_result['validate'].add('refuse')
-            if validation_type == 'both':
-                state_result['confirm'].add('validate1')
-                state_result['validate1'].add('refuse')
-            elif validation_type == 'manager':
-                state_result['confirm'].add('validate')
-                state_result['refuse'].add('validate')
+        else:
+            if is_time_off_manager:
+                if validation_type != 'hr':
+                    state_result['confirm'].add('refuse')
+                    state_result['validate'].add('refuse')
+                if validation_type == 'both':
+                    state_result['confirm'].add('validate1')
+                    state_result['validate1'].add('refuse')
+                elif validation_type == 'manager':
+                    state_result['confirm'].add('validate')
+                    state_result['refuse'].add('validate')
+            if is_hr_responsible:
+                if validation_type == 'both':
+                    state_result['confirm'].update({'validate1', 'refuse'})
+                    state_result['validate1'].add('refuse')
+                    state_result['validate'].add('refuse')
+                elif validation_type == 'hr':
+                    state_result['confirm'].update({'validate', 'refuse'})
+                    state_result['validate'].add('refuse')
+                    state_result['refuse'].add('validate')
 
         if validation_type == 'no_validation':
             state_result['confirm'].add('validate')
