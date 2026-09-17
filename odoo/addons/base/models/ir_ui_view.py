@@ -480,17 +480,22 @@ class IrUiView(models.Model):
         )
 
     def _inverse_arch(self) -> None:
-        # each view's arch_db is its own write; the set is validated once,
-        # and a tree several of them share combines once
-        for view in self.with_context(ir_ui_view_validate_later=True):
-            self._check_xml_encoding(view.arch)
-            data = {"arch_db": view.arch}
-            if "install_filename" in self.env.context:
-                path_info = get_resource_from_path(self.env.context["install_filename"])
-                if path_info:
-                    data["arch_fs"] = path_info.addons_path
-                    data["arch_updated"] = False
-            _debug.lifecycle("arch_written", view=view.id, arch_fs=data.get("arch_fs"))
+        self._write_arch_db({view: view.arch for view in self})
+
+    def _write_arch_db(self, arch_by_view: dict[Self, str]) -> None:
+        # each view's arch_db is its own write, nested in the one that set
+        # the arch: that write cleared the templates cache and dropped the
+        # customizations already, and the set is validated once at the end,
+        # so a tree several of them share combines once
+        arch_fs = self._get_install_arch_fs()
+        for view in self.with_context(ir_ui_view_nested_arch_write=True):
+            arch = arch_by_view[view]
+            self._check_xml_encoding(arch)
+            data = {"arch_db": arch}
+            if arch_fs:
+                data["arch_fs"] = arch_fs
+                data["arch_updated"] = False
+            _debug.lifecycle("arch_written", view=view.id, arch_fs=arch_fs)
             view.write(data)
         self._check_xml()
         # xml_translate normalises what it stores, and the value depends on
@@ -504,9 +509,13 @@ class IrUiView(models.Model):
             view.arch_base = view_wo_lang.arch
 
     def _inverse_arch_base(self) -> None:
-        for view, view_wo_lang in zip(self, self.with_context(lang=None), strict=True):
-            self._check_xml_encoding(view.arch_base)
-            view_wo_lang.arch = view.arch_base
+        views_wo_lang = self.with_context(lang=None)
+        views_wo_lang._write_arch_db(
+            {
+                view_wo_lang: view.arch_base
+                for view, view_wo_lang in zip(self, views_wo_lang, strict=True)
+            }
+        )
 
     def reset_arch(self, mode: str = "soft") -> Self:
         reset = self.browse()
@@ -747,43 +756,7 @@ class IrUiView(models.Model):
                 raise err from None
 
             try:
-                if _xpath_attrs(combined_arch) or _xpath_states(combined_arch):
-                    _debug.logic("check_xml.failed", view=view.id, stage="legacy_attrs")
-                    view_name = view._view_display_name()
-                    err = ValidationError(
-                        _(
-                            'Since 17.0, the "attrs" and "states" attributes are no longer used.\nView: %(name)s in %(file)s',
-                            name=view_name,
-                            file=view.arch_fs,
-                        )
-                    )
-                    err.context = {"name": "invalid view"}
-                    raise err
-
-                with _debug.perf(
-                    "check_view", cr=self.env.cr, view=view.id, model=view.model
-                ):
-                    view._check_view(combined_arch, view.model)
-
-                if combined_arch.tag == "data":
-                    view_archs = list(combined_arch)
-                else:
-                    view_archs = [combined_arch]
-                _debug.pipeline("check_xml.schema", view=view.id, archs=len(view_archs))
-                for view_arch in view_archs:
-                    for node in _xpath_validate(view_arch):
-                        del node.attrib["__validate__"]
-                    check = valid_view(view_arch, env=self.env, model=view.model)
-                    if not check:
-                        _debug.logic("check_xml.failed", view=view.id, stage="schema")
-                        view_name = view._view_display_name()
-                        raise ValidationError(
-                            _(
-                                "Invalid view %(name)s definition in %(file)s",
-                                name=view_name,
-                                file=view.arch_fs,
-                            )
-                        )
+                view._check_combined_arch(combined_arch)
             except ValueError as e:
                 _debug.logic(
                     "check_xml.failed",
@@ -794,6 +767,42 @@ class IrUiView(models.Model):
                 self._reraise_view_validation_error(e, view)
 
         return True
+
+    def _check_combined_arch(self, combined_arch: _Element) -> None:
+        """This non-qweb view's combined arch against the model and the
+        schema; raises the ValueError _check_xml reports."""
+        self.check_singleton()
+        if _xpath_attrs(combined_arch) or _xpath_states(combined_arch):
+            _debug.logic("check_xml.failed", view=self.id, stage="legacy_attrs")
+            err = ValidationError(
+                _(
+                    'Since 17.0, the "attrs" and "states" attributes are no longer used.\nView: %(name)s in %(file)s',
+                    name=self._view_display_name(),
+                    file=self.arch_fs,
+                )
+            )
+            err.context = {"name": "invalid view"}
+            raise err
+
+        with _debug.perf("check_view", cr=self.env.cr, view=self.id, model=self.model):
+            self._check_view(combined_arch, self.model)
+
+        view_archs = (
+            list(combined_arch) if combined_arch.tag == "data" else [combined_arch]
+        )
+        _debug.pipeline("check_xml.schema", view=self.id, archs=len(view_archs))
+        for view_arch in view_archs:
+            for node in _xpath_validate(view_arch):
+                del node.attrib["__validate__"]
+            if not valid_view(view_arch, env=self.env, model=self.model):
+                _debug.logic("check_xml.failed", view=self.id, stage="schema")
+                raise ValidationError(
+                    _(
+                        "Invalid view %(name)s definition in %(file)s",
+                        name=self._view_display_name(),
+                        file=self.arch_fs,
+                    )
+                )
 
     def _reraise_view_validation_error(
         self, error: ValueError, view: Self
@@ -971,89 +980,9 @@ class IrUiView(models.Model):
         if not vals_list:
             return self.browse()
         vals_list = [dict(vals) for vals in vals_list]
-        valid_types = self._get_view_type_tags()
-        inherit_ids = {
-            v["inherit_id"]
-            for v in vals_list
-            if v.get("inherit_id") and not v.get("type")
-        }
-        parent_types = {}
-        if inherit_ids:
-            parents = self.browse(inherit_ids)
-            parent_types = {p.id: p.type for p in parents}
-        _debug.perf.count(
-            "create.parent_types", count=len(vals_list), parents=len(parent_types)
-        )
-
+        parent_types = self._get_parent_types(vals_list)
         for values in vals_list:
-            if "arch_db" in values and _is_arch_absent(values["arch_db"]):
-                del values["arch_db"]
-
-            for fname in ("arch", "arch_base", "arch_db"):
-                self._check_xml_encoding(values.get(fname))
-
-            if not values.get("type"):
-                if values.get("inherit_id"):
-                    values["type"] = parent_types.get(values["inherit_id"])
-                else:
-                    try:
-                        arch = values.get("arch")
-                        if _is_arch_absent(arch):
-                            arch = values.get("arch_base")
-                        if _is_arch_absent(arch):
-                            arch = values.get("arch_db")
-                        if _is_arch_absent(arch):
-                            _debug.logic("create.type_refused", reason="no_arch")
-                            raise ValidationError(_("Missing view architecture."))
-                        values["type"] = etree.fromstring(arch).tag
-                        if values["type"] not in valid_types:
-                            _debug.logic(
-                                "create.type_refused",
-                                type=values["type"],
-                                reason="invalid_type",
-                            )
-                            raise ValidationError(
-                                _(
-                                    "Invalid view type: '%(view_type)s'.\n"
-                                    "You might have used an invalid starting tag in the architecture.\n"
-                                    "Allowed types are: %(valid_types)s",
-                                    view_type=values["type"],
-                                    valid_types=", ".join(sorted(valid_types)),
-                                )
-                            )
-                    except etree.ParseError, ValueError, TypeError:
-                        pass
-            if not values.get("key") and values.get("type") == "qweb":
-                values["key"] = f"gen_key.{str(uuid.uuid4())[:6]}"
-                _debug.logic("create.key_generated", model=values.get("model"))
-            if not values.get("name"):
-                known = [
-                    part for part in (values.get("model"), values.get("type")) if part
-                ]
-                values["name"] = " ".join(known) or _("Unnamed view")
-            values["arch_prev"] = next(
-                (
-                    values[fname]
-                    for fname in ("arch_base", "arch_db", "arch")
-                    if fname in values and not _is_arch_absent(values[fname])
-                ),
-                None,
-            )
-            if "arch" in values:
-                values["arch_db"] = values.pop("arch")
-                if "install_filename" in self.env.context:
-                    path_info = get_resource_from_path(
-                        self.env.context["install_filename"]
-                    )
-                    if path_info:
-                        values["arch_fs"] = path_info.addons_path
-                        values["arch_updated"] = False
-                        _debug.logic(
-                            "create.arch_fs_set",
-                            name=values.get("name"),
-                            arch_fs=path_info.addons_path,
-                        )
-
+            self._prepare_view_create_values(values, parent_types)
         vals_list = [self._default_mode(values) for values in vals_list]
         self.env.registry.clear_cache("templates")
         result = super().create(vals_list)
@@ -1065,6 +994,100 @@ class IrUiView(models.Model):
         )
         result.with_context(ir_ui_view_partial_validation=True)._check_xml()
         return result
+
+    def _get_parent_types(self, vals_list: list[dict[str, Any]]) -> dict[int, str]:
+        """The type of each parent a typeless view in the batch inherits."""
+        inherit_ids = {
+            values["inherit_id"]
+            for values in vals_list
+            if values.get("inherit_id") and not values.get("type")
+        }
+        parent_types = (
+            {parent.id: parent.type for parent in self.browse(inherit_ids)}
+            if inherit_ids
+            else {}
+        )
+        _debug.perf.count(
+            "create.parent_types", count=len(vals_list), parents=len(parent_types)
+        )
+        return parent_types
+
+    def _prepare_view_create_values(
+        self, values: dict[str, Any], parent_types: dict[int, str]
+    ) -> None:
+        if "arch_db" in values and _is_arch_absent(values["arch_db"]):
+            del values["arch_db"]
+        for fname in ("arch", "arch_base", "arch_db"):
+            self._check_xml_encoding(values.get(fname))
+
+        if not values.get("type"):
+            view_type = self._infer_view_type(values, parent_types)
+            if view_type:
+                values["type"] = view_type
+        if not values.get("key") and values.get("type") == "qweb":
+            values["key"] = f"gen_key.{str(uuid.uuid4())[:6]}"
+            _debug.logic("create.key_generated", model=values.get("model"))
+        if not values.get("name"):
+            known = [part for part in (values.get("model"), values.get("type")) if part]
+            values["name"] = " ".join(known) or _("Unnamed view")
+        values["arch_prev"] = self._first_arch(values, ("arch_base", "arch_db", "arch"))
+        if "arch" in values:
+            values["arch_db"] = values.pop("arch")
+            arch_fs = self._get_install_arch_fs()
+            if arch_fs:
+                values["arch_fs"] = arch_fs
+                values["arch_updated"] = False
+                _debug.logic(
+                    "create.arch_fs_set", name=values.get("name"), arch_fs=arch_fs
+                )
+
+    @staticmethod
+    def _first_arch(values: dict[str, Any], fnames: tuple[str, ...]) -> str | None:
+        return next(
+            (
+                values[fname]
+                for fname in fnames
+                if fname in values and not _is_arch_absent(values[fname])
+            ),
+            None,
+        )
+
+    def _infer_view_type(
+        self, values: dict[str, Any], parent_types: dict[int, str]
+    ) -> str | None:
+        """The type the values imply: the parent's, or the root tag of the
+        arch. None when the arch does not parse -- validation reports that."""
+        if values.get("inherit_id"):
+            return parent_types.get(values["inherit_id"])
+        arch = self._first_arch(values, ("arch", "arch_base", "arch_db"))
+        if arch is None:
+            _debug.logic("create.type_refused", reason="no_arch")
+            raise ValidationError(_("Missing view architecture."))
+        try:
+            view_type = etree.fromstring(arch).tag
+        except etree.ParseError, ValueError, TypeError:
+            return None
+        valid_types = self._get_view_type_tags()
+        if view_type not in valid_types:
+            _debug.logic("create.type_refused", type=view_type, reason="invalid_type")
+            raise ValidationError(
+                _(
+                    "Invalid view type: '%(view_type)s'.\n"
+                    "You might have used an invalid starting tag in the architecture.\n"
+                    "Allowed types are: %(valid_types)s",
+                    view_type=view_type,
+                    valid_types=", ".join(sorted(valid_types)),
+                )
+            )
+        return view_type
+
+    def _get_install_arch_fs(self) -> str | None:
+        """The addons-relative path of the data file being loaded, if any."""
+        install_filename = self.env.context.get("install_filename")
+        if not install_filename:
+            return None
+        path_info = get_resource_from_path(install_filename)
+        return path_info.addons_path if path_info else None
 
     def write(self, vals: dict[str, Any]) -> bool:
         for fname in ("arch", "arch_base", "arch_db"):
@@ -1089,7 +1112,8 @@ class IrUiView(models.Model):
         ):
             vals = {**vals, "arch_updated": True}
 
-        if _TEMPLATE_CACHE_FIELDS.intersection(vals):
+        nested_arch_write = self.env.context.get("ir_ui_view_nested_arch_write")
+        if not nested_arch_write and _TEMPLATE_CACHE_FIELDS.intersection(vals):
             custom_view = self._get_customizations()
             _debug.lifecycle(
                 "write.template_cache_cleared",
@@ -1121,7 +1145,7 @@ class IrUiView(models.Model):
 
         if revalidate:
             res = super().write(vals)
-            if self.env.context.get("ir_ui_view_validate_later"):
+            if nested_arch_write:
                 _debug.logic("write.validation_deferred", views=self.ids)
             else:
                 self._check_xml()

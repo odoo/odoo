@@ -8032,6 +8032,27 @@ class TestCombineBatching(ViewCase):
         _root, extensions = self._tree(6)
         self.assertEqual(self._combines(extensions._check_xml), 1)
 
+    def _cache_work(self, fn):
+        clears = []
+        searches = []
+        Custom = type(self.env["ir.ui.view.custom"])
+        original_search = Custom.search
+
+        def counting_search(model, *args, **kwargs):
+            searches.append(args)
+            return original_search(model, *args, **kwargs)
+
+        with (
+            patch.object(
+                type(self.env.registry),
+                "clear_cache",
+                lambda registry, *names: clears.append(names),
+            ),
+            patch.object(Custom, "search", counting_search),
+        ):
+            fn()
+        return len(clears), len(searches)
+
     def test_an_arch_write_on_many_views_validates_the_tree_once(self):
         _root, extensions = self._tree(6)
         self.assertEqual(
@@ -8043,6 +8064,28 @@ class TestCombineBatching(ViewCase):
             with self.assertRaises(ValidationError):
                 extensions.write(
                     {"arch": '<field name="nope" position="after"><div/></field>'}
+                )
+
+    def test_an_arch_write_clears_the_cache_and_drops_customizations_once(self):
+        _root, extensions = self._tree(6)
+        self.assertEqual(
+            self._cache_work(lambda: extensions.write({"arch": "<data/>"})), (1, 1)
+        )
+
+    def test_an_arch_base_write_on_many_views_validates_the_tree_once(self):
+        _root, extensions = self._tree(6)
+        self.assertEqual(
+            self._combines(lambda: extensions.write({"arch_base": "<data/>"})), 1
+        )
+        self.assertEqual(set(extensions.mapped("arch_base")), {"<data/>"})
+        self.assertEqual(
+            self._cache_work(lambda: extensions.write({"arch_base": "<data/>"})),
+            (1, 1),
+        )
+        with mute_logger("odoo.addons.base.models.ir_ui_view"):
+            with self.assertRaises(ValidationError):
+                extensions.write(
+                    {"arch_base": '<field name="nope" position="after"><div/></field>'}
                 )
 
 

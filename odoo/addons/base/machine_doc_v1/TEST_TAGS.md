@@ -182,7 +182,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_translate.py` | `post_install`, `-at_install` | 12 | 89 | BaseCase, TransactionCase |
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
-| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 57 | 307 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
+| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 57 | 309 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
 | `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 4 | 13 | TransactionCase |
 
 ### Untagged Files (60 files)
