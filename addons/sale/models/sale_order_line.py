@@ -2290,10 +2290,6 @@ class SaleOrderLine(models.Model):
             and not self._is_discount_line()
         )
 
-    def _get_rounding(self):
-        self.ensure_one()
-        return self.product_uom_id.rounding
-
     def _is_analytic_reinvoice_line(self):
         self.ensure_one()
         return (
