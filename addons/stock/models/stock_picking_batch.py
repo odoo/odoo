@@ -620,8 +620,14 @@ class StockPickingBatch(models.Model):
             self.env["ir.sequence"].with_company(company_id).next_by_code(sequence_code)
             or "/"
         )
-        sequence_prefix, _, sequence_number = sequence.rpartition("/")
-        parts = [sequence_prefix, picking_type.sequence_code, sequence_number]
+        # The operation type code goes right after the sequence root, never
+        # right before the number: a dated prefix such as BATCH/26/09/ must
+        # stay glued to its counter (BATCH/OUT/26/09/0001), not be split by
+        # the code. A single-level prefix is cut exactly where it was before.
+        sequence_root, separator, sequence_number = sequence.partition("/")
+        if not separator:
+            sequence_root, sequence_number = "", sequence
+        parts = [sequence_root, picking_type.sequence_code, sequence_number]
         return "/".join(part for part in parts if part)
 
     def _get_consignment_pickings(self):
