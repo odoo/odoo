@@ -218,7 +218,7 @@ class _RegistryFieldsMixin(_RegistryStubs):
             self.field_setup_dependents.discard_keys_and_values(fields)
 
             for f in fields:
-                if f.type == "many2many" and getattr(f, "relation", None):
+                if f.is_many2many and getattr(f, "relation", None):
                     triple = (f.relation, f.column1, f.column2)
                     pairs = self.many2many_relations.get(triple)
                     if pairs is not None:
