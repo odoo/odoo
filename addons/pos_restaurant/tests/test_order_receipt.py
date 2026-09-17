@@ -73,10 +73,10 @@ class TestPosOrderReceiptRestaurant(TestPosOrderReceipt):
             if any(d.get('product_id') == product_b.id for d in r['changes'].get('data', []))
         )
 
-        self.assertIn('grouped_data', soup_ticket['changes'], "Soup ticket should have grouped_data")
-        self.assertEqual(len(soup_ticket['changes']['grouped_data']), 1)
-        self.assertEqual(soup_ticket['changes']['grouped_data'][0]['name'], 'Starter')
+        self.assertIn('groupedData', soup_ticket['changes'], "Soup ticket should have groupedData")
+        self.assertEqual(len(soup_ticket['changes']['groupedData']), 1)
+        self.assertEqual(soup_ticket['changes']['groupedData'][0]['name'], 'Starter')
 
-        self.assertIn('grouped_data', steak_ticket['changes'], "Steak ticket should have grouped_data")
-        self.assertEqual(len(steak_ticket['changes']['grouped_data']), 1)
-        self.assertEqual(steak_ticket['changes']['grouped_data'][0]['name'], 'Main')
+        self.assertIn('groupedData', steak_ticket['changes'], "Steak ticket should have groupedData")
+        self.assertEqual(len(steak_ticket['changes']['groupedData']), 1)
+        self.assertEqual(steak_ticket['changes']['groupedData'][0]['name'], 'Main')
