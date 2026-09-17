@@ -685,6 +685,28 @@ test("drag and drop record at an invalid position", async () => {
     );
 });
 
+test("updateParentNode does not throw for a nodeId that no longer resolves", async () => {
+    let model;
+    patchWithCleanup(HierarchyModel.prototype, {
+        setup(...args) {
+            super.setup(...args);
+            model = this;
+        },
+    });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    let error;
+    try {
+        await model.updateParentNode(-1, {});
+    } catch (e) {
+        error = e;
+    }
+    expect(error).toBe(undefined);
+});
+
 test("drag and drop record on sibling node", async () => {
     Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
         "<hierarchy>",
