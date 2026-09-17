@@ -103,13 +103,14 @@ const makeSpacesVisible = (text) =>
  * @typedef {((nodesToInsert: Node[]) => container)[]} on_will_insert_handlers
  *
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
+ * @typedef {((fragment: DocumentFragment) => void)[]} text_to_insert_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
+ * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_as_text_processors
  * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
- * @typedef {((fragment: DocumentFragment) => void)[]} text_to_insert_processors
  * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
  *
- * @typedef {((selection: import("@html_editor/core/selection_plugin").EditorSelection) => boolean | void)[]} should_process_text_for_insertion_predicates
+ * @typedef {((selection: EditorSelection) => boolean | undefined)[]} should_insert_as_text_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  *
@@ -303,31 +304,35 @@ export class DomPlugin extends Plugin {
     /**
      * @param {string | DocumentFragment | Element | null} content
      * @param {object} [options]
-     * @param {boolean} [options.verbatim = false] if true, insert without processing.
+     * @param {boolean} [options.asPlainText] if true, insert as plain text.
      * @returns {Node[]} the inserted nodes
      */
-    insert(content, { verbatim = false } = {}) {
+    insert(content, { asPlainText } = {}) {
+        asPlainText ??=
+            this.checkPredicates(
+                "should_insert_as_text_predicates",
+                this.dependencies.selection.getEditableSelection()
+            ) ?? false;
         // Pre-process
         if (typeof content === "string") {
-            content = this.processTextForInsertion(content);
-            if (!verbatim) {
-                // The difference between this and `fragment_to_insert_processors` is
-                // that we know everything in the fragment was meant as text originally.
-                content = this.processThrough("text_to_insert_processors", content);
-            }
+            content = this.processTextForInsertion(content, asPlainText);
         }
         let fragment = this.document.createDocumentFragment();
         if (content) {
             (isElement(content) ? [content] : children(content)).forEach(this.normalize.bind(this));
             fragment.replaceChildren(content);
         }
-        if (!verbatim) {
-            fragment = this.processThrough("fragment_to_insert_processors", fragment);
-        }
+        fragment = this.processThrough(
+            asPlainText ? "fragment_to_insert_as_text_processors" : "fragment_to_insert_processors",
+            fragment
+        );
         this.dependencies.delete.deleteSelection();
-        const nodes = this.processFragmentToInsert(fragment);
+        let nodes = this.processFragmentToInsert(fragment);
         if (!nodes.length) {
             return [];
+        }
+        if (asPlainText) {
+            nodes = nodes.map((node) => this.document.createTextNode(node.textContent));
         }
 
         // Insert
@@ -346,17 +351,17 @@ export class DomPlugin extends Plugin {
      * Before inserting text, process its whitespace.
      *
      * @param {string} text
+     * @param {boolean} asPlainText
      * @returns {DocumentFragment}
      */
-    processTextForInsertion(text) {
+    processTextForInsertion(text, asPlainText) {
         const doc = this.document;
         const fragment = doc.createDocumentFragment();
-        const sel = this.dependencies.selection.getEditableSelection();
-        if (this.checkPredicates("should_process_text_for_insertion_predicates", sel) === false) {
+        if (asPlainText) {
             fragment.textContent = text;
             return fragment;
         }
-        const focusNode = sel.focusNode;
+        const { focusNode } = this.dependencies.selection.getEditableSelection();
         // Replace consecutive spaces with alternating nbsp/space.
         const lines = text.split(/\r?\n/).map(makeSpacesVisible);
         // Replace new lines with paragraph breaks or line breaks.
@@ -371,7 +376,9 @@ export class DomPlugin extends Plugin {
                 fragment.append(this.createBaseContainer({ children: [doc.createTextNode(line)] }));
             }
         }
-        return fragment;
+        // The difference between this and `fragment_to_insert_processors` is
+        // that we know everything in the fragment was meant as text originally.
+        return this.processThrough("text_to_insert_processors", fragment);
     }
 
     /**

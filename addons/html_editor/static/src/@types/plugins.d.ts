@@ -4,12 +4,12 @@ declare module "plugins" {
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
     import { BaseContainerShared, is_valid_for_base_container_predicates } from "@html_editor/core/base_container_plugin";
-    import { on_image_added_handlers, on_pasted_handlers, on_will_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides, should_insert_as_text_predicates } from "@html_editor/core/clipboard_plugin";
+    import { on_image_added_handlers, on_pasted_handlers, on_will_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, is_valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, serializable_descendants_processors, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
-    import { inserted_content_processors, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, edge_block_to_unwrap_processors, can_hold_selection_after_insertion_predicates, on_will_insert_handlers, text_to_insert_processors, position_after_insertion_processors } from "@html_editor/core/dom_plugin";
+    import { inserted_content_processors, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, edge_block_to_unwrap_processors, can_hold_selection_after_insertion_predicates, on_will_insert_handlers, text_to_insert_processors, position_after_insertion_processors, should_insert_as_text_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared } from "@html_editor/core/dom_reference_map_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, is_formattable_node_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
@@ -30,8 +30,7 @@ declare module "plugins" {
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers, before_color_element_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
-    import { fragment_to_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
-    import { fragment_to_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
+    import { font_type_items } from "@html_editor/main/font/font_type_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { on_link_created_handlers, immutable_link_selectors, is_link_editable_predicates, is_empty_link_legit_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
@@ -234,7 +233,6 @@ declare module "plugins" {
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
         should_insert_as_text_predicates: should_insert_as_text_predicates;
-        should_process_text_for_insertion_predicates: should_process_text_for_insertion_predicates;
         should_show_power_buttons_predicates: should_show_power_buttons_predicates;
         would_feff_be_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
@@ -250,7 +248,7 @@ declare module "plugins" {
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
         edge_block_to_unwrap_processors: edge_block_to_unwrap_processors;
         fragment_to_insert_processors: fragment_to_insert_processors;
-        fragment_to_insert_within_pre_processors: fragment_to_insert_within_pre_processors;
+        fragment_to_insert_as_text_processors: fragment_to_insert_as_text_processors;
         inserted_content_processors: inserted_content_processors;
         move_widget_position_processors: move_widget_position_processors;
         normalize_processors: normalize_processors;

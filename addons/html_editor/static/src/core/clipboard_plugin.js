@@ -112,7 +112,6 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @typedef {(() => void)[]} on_will_paste_handlers
  *
  * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
- * @typedef {((selection: EditorSelection) => boolean | undefined)[]} should_insert_as_text_predicates
  *
  * @typedef {((
  *     clonedContents: DocumentFragment,
@@ -206,16 +205,10 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        if (this.checkPredicates("should_insert_as_text_predicates", selection) ?? false) {
-            this.dependencies.dom.insert(ev.clipboardData.getData("text/plain"), {
-                verbatim: true,
-            });
-        } else {
-            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-                this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
-                this.handlePasteHtml(selection, ev.clipboardData) ||
-                this.handlePasteText(selection, ev.clipboardData);
-        }
+        this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
+            this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
+            this.handlePasteHtml(selection, ev.clipboardData) ||
+            this.handlePasteText(selection, ev.clipboardData);
 
         this.trigger("on_pasted_handlers", selection);
         this.dependencies.history.commit();
@@ -646,12 +639,7 @@ export class ClipboardPlugin extends Plugin {
                 deleteAndSetSelection(range.startContainer, range.startOffset);
             }
         }
-        if (this.checkPredicates("should_insert_as_text_predicates", selection) ?? false) {
-            this.dependencies.dom.insert(ev.dataTransfer.getData("text"), {
-                verbatim: true,
-            });
-            this.dependencies.history.commit();
-        } else if (odooEditorHtml) {
+        if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {

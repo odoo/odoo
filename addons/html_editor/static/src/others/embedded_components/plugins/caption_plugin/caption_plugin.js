@@ -16,11 +16,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 
 const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
-const captionSpanPredicates = (expectsToBeInside) => (selection) => {
-    if (closestElement(selection.focusNode, CAPTION_SPAN_SELECTOR)) {
-        return expectsToBeInside;
-    }
-};
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
@@ -93,8 +88,11 @@ export class CaptionPlugin extends Plugin {
                 return DISABLED_NAMESPACE;
             }
         }),
-        should_process_text_for_insertion_predicates: captionSpanPredicates(false),
-        should_insert_as_text_predicates: captionSpanPredicates(true),
+        should_insert_as_text_predicates: (selection) => {
+            if (closestElement(selection.focusNode, CAPTION_SPAN_SELECTOR)) {
+                return true;
+            }
+        },
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {

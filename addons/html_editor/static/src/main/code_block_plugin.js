@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { unwrapContents } from "@html_editor/utils/dom";
 import { isEmptyBlock, isInPre, isZWS } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -12,8 +11,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
-
-/** @typedef {((insertedNode: Node) => insertedNode)[]} fragment_to_insert_within_pre_processors */
+import { unwrapContents } from "@html_editor/utils/dom";
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
@@ -53,12 +51,15 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        should_process_text_for_insertion_predicates: (selection) => {
+        should_insert_as_text_predicates: (selection) => {
             if (isInPre(selection.focusNode)) {
-                return false;
+                return true;
             }
         },
-        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
+        fragment_to_insert_as_text_processors: withSequence(
+            Infinity,
+            this.processFragmentToInsertAsText.bind(this)
+        ),
     };
 
     blockFormatIsAvailable(selection) {
@@ -143,7 +144,7 @@ export class CodeBlockPlugin extends Plugin {
         return true;
     }
 
-    processFragmentToInsert(fragment) {
+    processFragmentToInsertAsText(fragment) {
         const block = closestBlock(this.dependencies.selection.getEditableSelection().anchorNode);
         if (block.nodeName !== "PRE") {
             return fragment;

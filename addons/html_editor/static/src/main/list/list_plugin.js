@@ -192,7 +192,7 @@ export class ListPlugin extends Plugin {
         /** Processors */
         normalize_processors: this.normalize.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
-        fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
+        fragment_to_insert_as_text_processors: this.processFragmentToInsertAsText.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
         edge_block_to_unwrap_processors: this.processEdgeNodeToUnwrap.bind(this),
 
@@ -1071,7 +1071,7 @@ export class ListPlugin extends Plugin {
         return clonedContents;
     }
 
-    processFragmentToInsertWithinPre(fragment) {
+    processFragmentToInsertAsText(fragment) {
         const listItems = fragment.querySelectorAll("li:not(.oe-nested)");
         for (const li of listItems) {
             const nestingLvl = ancestors(li).filter(isListElement).length - 1;
