@@ -100,3 +100,17 @@ def test_an_order_by_an_array_aggregate_compares_arrays_as_postgresql_does():
             [], ["kind"], ["points:array_agg"], order="points:array_agg desc"
         )
         assert rows == [("y", [5]), ("x", [3, 7]), (False, [1])]
+
+
+def test_aggregates_skip_null_numeric_cells_like_sql():
+    # count(col)/avg(col) ignore NULL cells in SQL; the cache reads a stored
+    # NULL integer as 0, so the readers must consult the stored cell
+    with model_test_env(Team, Score) as env:
+        _seed(env)
+        env["rg.score"].create({"kind": "x"})  # points is NULL
+        rows = env["rg.score"]._read_group(
+            [("kind", "=", "x")],
+            [],
+            ["points:count", "points:avg", "points:sum", "points:min", "__count"],
+        )
+        assert rows == [(2, 5.0, 10, 3, 3)]

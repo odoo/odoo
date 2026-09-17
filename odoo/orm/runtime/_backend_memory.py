@@ -312,8 +312,9 @@ class _InMemoryReadGroup:
     """read_group over the dict storage: one row per group, raw values shaped as
     the SQL rows are (a many2one is its id, a date is truncated, text NULLIF'd)."""
 
-    def __init__(self, model, domain, groupby, aggregates):
+    def __init__(self, model, domain, groupby, aggregates, storage=None):
         self.model = model
+        self.storage = storage
         # the compiled query carries a GROUP BY meant for SQL; the in-memory search
         # answers the domain itself
         self.records = model.browse(model._search(domain).get_result_ids())
@@ -501,11 +502,23 @@ class _InMemoryReadGroup:
         if not field.column_type:
             raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
 
+        storage = self.storage
+        table = self.model._table
+
         def raw(record):
             value = record[fname]
             if field.relational:
                 return value.id or None if field.is_many2one else list(value.ids)
-            return None if value is False and not field.is_boolean else value
+            if field.is_boolean:
+                return value
+            if not value and storage is not None:
+                # the cache reads a stored NULL as the type's falsy value
+                # (0, 0.0, ""), which SQL aggregates would have skipped:
+                # only the stored cell tells NULL apart from a real zero
+                row = storage.get_row(table, record.id)
+                if row is None or row.get(fname) is None:
+                    return None
+            return None if value is False else value
 
         def values(records):
             return [raw(record) for record in records]
@@ -1219,9 +1232,9 @@ class InMemoryBackend:
         limit: int | None,
         offset: int,
     ) -> list[tuple]:
-        return _InMemoryReadGroup(model, domain, groupby, aggregates).rows(
-            having, order, limit, offset
-        )
+        return _InMemoryReadGroup(
+            model, domain, groupby, aggregates, self.storage
+        ).rows(having, order, limit, offset)
 
     def read_grouping_sets_rows(
         self,
@@ -1259,7 +1272,7 @@ class InMemoryBackend:
             set_order = _order_within_grouping_set(
                 order, present, aggregates, all_specs
             )
-            group = _InMemoryReadGroup(model, domain, present, aggregates)
+            group = _InMemoryReadGroup(model, domain, present, aggregates, self.storage)
             for row in group.rows(None, set_order, None, 0):
                 values = dict(zip(present, row[: len(present)], strict=True))
                 rows.append(
