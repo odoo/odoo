@@ -641,6 +641,10 @@ def model_test_env(
 ):
     if registry is None:
         registry = ModelRegistry(model_classes, db_name=db_name)
+    # a reused registry keeps its own locale only for this call: without a
+    # restore, a later model_test_env without langs would still see them
+    had_own_locale = "locale" in registry.__dict__
+    prev_locale = registry.__dict__.get("locale")
     if langs:
         registry.locale = _InstalledLangs(langs)
 
@@ -667,6 +671,11 @@ def model_test_env(
         # TransactionCase asserts against PostgreSQL; a test that plants
         # cache values or expects a refused flush opts out, and a failing
         # test reports its own error
+        if langs:
+            if had_own_locale:
+                registry.locale = prev_locale
+            else:
+                registry.__dict__.pop("locale", None)
         if check_cache and not failed:
             env.cache.check(env)
 

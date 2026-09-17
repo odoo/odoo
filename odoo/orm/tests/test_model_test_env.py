@@ -501,3 +501,13 @@ def test_user_supplied_res_users_wins_over_stub():
 
     with model_test_env(HAudit, MyUsers) as env:
         assert "custom_flag" in env["res.users"]._fields
+
+
+def test_langs_do_not_leak_into_a_reused_registry():
+    registry = ModelRegistry((HWidget,), db_name=":memory:")
+    default_locale = type(registry).locale
+    with model_test_env(HWidget, registry=registry, langs=("en_US", "fr_FR")):
+        assert "locale" in registry.__dict__
+    assert "locale" not in registry.__dict__
+    with model_test_env(HWidget, registry=registry) as env:
+        assert env.registry.locale is default_locale
