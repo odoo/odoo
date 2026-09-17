@@ -218,7 +218,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
         await contains(
-            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
+            ".o_cp_action_menus [data-icon='more_vert']"
         ).click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
@@ -1449,12 +1449,12 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
@@ -1464,7 +1464,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
@@ -1541,13 +1541,12 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ).toEqual([
         "New",
         "display",
-        "", // mobile dropdown
-        "", // default selection
+        "", // the caret of the split button
     ]);
 
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
@@ -1563,8 +1562,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ).toEqual([
         "New",
         "display",
-        "", // mobile dropdown
-        "",
+        "", // the caret of the split button
     ]);
 });
 
@@ -4762,12 +4760,12 @@ test(`selection box: grouped list, all groups folded`, async () => {
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
-    expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(1);
+    expect(`.o_cp_action_menus`).toHaveCount(1);
 
     // click on the checkbox in the thead
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
-    expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(0);
+    expect(`.o_cp_action_menus`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(0);
     expect(`.o_selection_box`).toHaveText("All 4 selected");
 
