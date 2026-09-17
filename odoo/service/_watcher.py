@@ -484,7 +484,17 @@ class FSWatcherInotify(FSWatcherBase):
         _debug.pipeline("watcher.directory_created", path=str(created_dir))
         for directory in iter_watch_dirs(created_dir):
             self._watch_directory(Path(directory))
-            for entry in Path(directory).iterdir():
+            try:
+                entries = list(Path(directory).iterdir())
+            except OSError:
+                # The directory vanished between the CREATE event and this
+                # scan (git checkout/stash, mkdtemp and editors do that).  An
+                # unhandled error here propagates through _run() and kills
+                # the watcher thread for the rest of the session — nothing
+                # restarts it.
+                _debug.logic("watcher.created_dir_vanished", path=directory)
+                continue
+            for entry in entries:
                 if entry.is_file() and self.on_file_changed(str(entry)):
                     return True
         return False
