@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import _, api, fields, models
 
 
 class ResCompany(models.Model):
@@ -19,3 +19,24 @@ class ResCompany(models.Model):
     def _default_hr_presence_control_attendance(self):
         module = self.env['ir.module.module'].sudo().search([('name', '=', 'hr_attendance'), ('state', '=', 'installed')], limit=1)
         return bool(module)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        companies.sudo()._create_work_location()
+        return companies
+
+    def _create_work_location(self):
+        companies_without_work_location = self.filtered(
+            lambda c: not self.env['hr.work.location'].sudo().search_count([('company_id', '=', c.id)], limit=1))
+        if companies_without_work_location:
+            vals_list = [company._prepare_work_location_values() for company in companies_without_work_location]
+            self.env['hr.work.location'].sudo().create(vals_list)
+
+    def _prepare_work_location_values(self):
+        self.ensure_one()
+        return {
+            'name': _('Office'),
+            'company_id': self.id,
+            'location_type': 'office',
+        }
