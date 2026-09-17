@@ -63,6 +63,27 @@ class TestPlanDaysEndOfDay(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
+class TestResourceZoneSeeding(TransactionCase):
+    def test_a_falsy_tz_in_the_values_is_seeded_not_inserted(self):
+        calendar = self.env["resource.calendar"].create(
+            {"name": "Seed 40h", "tz": "Europe/Brussels"}
+        )
+        user = self.env["res.users"].create(
+            {"name": "No Zone", "login": "no_zone_seed", "tz": False}
+        )
+        self.assertFalse(user.tz)
+        resource = self.env["resource.resource"].create(
+            {
+                "name": user.name,
+                "user_id": user.id,
+                "calendar_id": calendar.id,
+                "tz": user.tz,
+            }
+        )
+        self.assertEqual(resource.tz, "Europe/Brussels")
+
+
+@tagged("post_install", "-at_install")
 class TestAllocatedPercentageBounds(TransactionCase):
     @classmethod
     def setUpClass(cls):

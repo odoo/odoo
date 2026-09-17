@@ -197,6 +197,10 @@ class ResourceResource(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         self._update_party_vals(vals_list)
         for values in vals_list:
+            # a falsy zone handed in, such as a user's unset tz, means "seed
+            # it": left in the values it would skip the precompute and insert NULL
+            if "tz" in values and not values["tz"]:
+                del values["tz"]
             if values.get("partner_id"):
                 party = self.env["res.partner"].sudo().browse(values["partner_id"])
                 if party.name:
