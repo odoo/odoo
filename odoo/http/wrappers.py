@@ -191,9 +191,8 @@ class _Response(werkzeug.wrappers.Response):
     def __init__(self, *args: Any, **kw: Any) -> None:
         template = kw.pop("template", None)
         qcontext = kw.pop("qcontext", None)
-        uid = kw.pop("uid", None)
         super().__init__(*args, **kw)
-        self.update_qweb_state(template, qcontext, uid)
+        self.update_qweb_state(template, qcontext)
 
     @classmethod
     def from_endpoint_result(cls, result: Any, fname: str = "<function>") -> Response:
@@ -234,12 +233,10 @@ class _Response(werkzeug.wrappers.Response):
         self,
         template: str | None = None,
         qcontext: dict[str, Any] | None = None,
-        uid: int | None = None,
     ) -> None:
         self.template = template
         self.qcontext = qcontext or {}
         self.qcontext["response_template"] = self.template
-        self.uid = uid
 
     @property
     def is_qweb(self) -> bool:

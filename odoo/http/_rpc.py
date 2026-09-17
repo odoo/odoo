@@ -1,5 +1,5 @@
 import contextlib
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Sequence
 from typing import Any
 
 import odoo.service.common
@@ -34,7 +34,7 @@ def _restore_thread_attr(thread: Any, attr: str, prev: Any, sentinel: Any) -> No
         setattr(thread, attr, prev)
 
 
-def dispatch_rpc(service_name: str, method: str, params: Mapping[str, Any]) -> Any:
+def dispatch_rpc(service_name: str, method: str, params: Sequence[Any]) -> Any:
     thread = current_worker_thread()
     sentinel = object()
     prev_uid = getattr(thread, "uid", sentinel)
